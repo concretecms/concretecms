@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ItemCategory
 {
-    
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -41,7 +41,7 @@ class ItemCategory
     {
         return $this->boardItemCategoryID;
     }
-    
+
     /**
      * @return mixed
      */
@@ -74,7 +74,7 @@ class ItemCategory
         $this->treeNodeID = $treeNodeID;
     }
 
-    
+
 
 
 

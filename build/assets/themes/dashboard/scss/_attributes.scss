@@ -7,15 +7,19 @@ div.ccm-attribute-list-wrapper {
     width: 16px;
     text-align: center;
     height: 16px;
-    line-height: 16px;
+    line-height: 12px;
+    margin-right: 5px;
     vertical-align: middle;
-  }
-
-  img.ccm-attribute-icon {
-
-    width: 16px;
-    height: 16px;
-
   }
 }
 
+@media (min-width: map-get($grid-breakpoints, "md")) {
+  .ccm-attribute-display {
+    @include concrete-data-row-dl-horizontal;
+  }
+}
+@media (max-width: map-get($grid-breakpoints, "md") - 1px) {
+  .ccm-attribute-display {
+    @include concrete-data-row-dl-vertical;
+  }
+}

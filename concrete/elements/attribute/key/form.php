@@ -4,7 +4,6 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\SetFactory;
 use Concrete\Core\Attribute\StandardSetManager;
-use Concrete\Core\Page;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
@@ -63,9 +62,7 @@ if ($key !== null) {
             <div class="input-group">
                 <?= $form->text('akHandle', $akHandle, ['autofocus' => 'autofocus']) ?>
                 <span class="input-group-append">
-                    <div class="input-group-text">
-                        <i class="fa fa-asterisk"></i>
-                    </div>
+                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
                 </span>
             </div>
         </div>
@@ -75,9 +72,9 @@ if ($key !== null) {
             <div class="input-group">
                 <?= $form->text('akName', $key === null ? '' : $key->getAttributeKeyName()) ?>
                 <span class="input-group-append">
-                    <div class="input-group-text">
-                        <i class="fa fa-asterisk"></i>
-                    </div>
+                    <span class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                    </span>
                 </span>
             </div>
         </div>
@@ -89,12 +86,12 @@ if ($key !== null) {
                 <?= $form->label('asID', t('Set')) ?>
                 <div class="controls">
                     <?php
-                    $sel = ['0' => t('** None')];
-                    $sets = $category->getSetManager()->getAttributeSets();
-                    foreach ($sets as $as) {
-                        $sel[$as->getAttributeSetID()] = $as->getAttributeSetDisplayName();
-                    }
-                    echo $form->select('asID', $sel, $asID);
+                        $sel = ['0' => t('** None')];
+                        $sets = $category->getSetManager()->getAttributeSets();
+                        foreach ($sets as $as) {
+                            $sel[$as->getAttributeSetID()] = $as->getAttributeSetDisplayName();
+                        }
+                        echo $form->select('asID', $sel, $asID);
                     ?>
                 </div>
             </div>
@@ -105,40 +102,43 @@ if ($key !== null) {
         <div class="form-group">
             <label class="control-label"><?= t('Searchable') ?></label>
             <div class="form-check">
-                <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ["class" => "form-check-input"]) ?>
-                <?= $form->label('akIsSearchableIndexed', t('Content included in search index.'), ["class" => "form-check-label"] ) ?>
+                <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ['class' => 'form-check-input']) ?>
+                <label class="form-check-label" for="akIsSearchableIndexed">
+                    <?= t('Content included in search index.') ?>
+                </label>
             </div>
             <div class="form-check">
-                <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable(), ["class" => "form-check-input"]) ?>
-                <?= $form->label('akIsSearchable', t('Field available in advanced search.'), ["class" => "form-check-label"] ) ?>
+                <?= $form->checkbox('akIsSearchable', 1, $key === null || $key->isAttributeKeySearchable(), ['class' => 'form-check-input']) ?>
+                <label class="form-check-label" for="akIsSearchable">
+                    <?= t('Field available in advanced search.') ?>
+                </label>
                 <?php
                 if ($key && $key->isAttributeKeySearchable()) {
                     ?>
-                    <div class="alert alert-danger small hide" id="akIsSearchable-warning">
-                        <?= t(
-                            'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
-                            '<strong>' . t('Index Search Engine - All') . '</strong>'
-                        ) ?>
-                    </div>
-                    <script>
-                    $(document).ready(function() {
-                        $('#akIsSearchable')
-                            .on('change', function() {
-                                $('#akIsSearchable-warning').toggleClass('hide', $(this).is(':checked'))
-                            })
-                            .trigger('change')
-                        ;
-                    });
-                    </script>
-                    <?php
+                <div class="alert alert-danger small d-none" id="akIsSearchable-warning">
+                    <?= t(
+                        'WARNING: you will need to re-run the %s automated job if you uncheck this value, save the attribute, and then re-check this value',
+                        '<strong>' . t('Index Search Engine - All') . '</strong>'
+                    ) ?>
+                </div>
+                <script>
+                $(document).ready(function() {
+                    $('#akIsSearchable')
+                        .on('change', function() {
+                            $('#akIsSearchable-warning').toggleClass('d-none', $(this).is(':checked'))
+                        })
+                        .trigger('change')
+                    ;
+                });
+                </script>
+                <?php
                 }
-                ?>
+            ?>
             </div>
         </div>
-
     </fieldset>
 
-    <?php
+<?php
     if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface) {
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
 
@@ -155,8 +155,9 @@ if ($key !== null) {
             }
         }
     }
+
     $valt->output('add_or_update_attribute');
-    $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), isset($key) ? $key : null);
+    $type->render(new \Concrete\Core\Attribute\Context\AttributeTypeSettingsContext(), $key ?? null);
     ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">

@@ -3,11 +3,11 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Basics;
 
 use Concrete\Controller\Element\Attribute\SiteStandardListHeader;
+use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\CategoryObjectInterface;
-use Concrete\Core\Attribute\Key\Category;
-use Concrete\Core\Attribute\Key\SiteKey;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Page\Controller\DashboardAttributesPageController;
+use Concrete\Core\Support\Facade\Url;
 
 class Attributes extends DashboardAttributesPageController
 {
@@ -18,28 +18,28 @@ class Attributes extends DashboardAttributesPageController
 
     public function edit($akID = null)
     {
-        $key = SiteKey::getByID($akID);
-        $this->renderEdit($key,
-            \URL::to('/dashboard/system/basics/attributes', 'view')
-        );
+        $akc = $this->getCategoryObject()->getAttributeKeyCategory();
+        $key = $akc->getAttributeKeyByID($akID);
+
+        $this->renderEdit($key, Url::to('/dashboard/system/basics/attributes', 'view'));
     }
 
     public function update($akID = null)
     {
         $this->edit($akID);
-        $key = SiteKey::getByID($akID);
-        $this->executeUpdate($key,
-            \URL::to('/dashboard/system/basics/attributes', 'view')
-        );
+
+        $akc = $this->getCategoryObject()->getAttributeKeyCategory();
+        $key = $akc->getAttributeKeyByID($akID);
+
+        $this->executeUpdate($key, Url::to('/dashboard/system/basics/attributes', 'view'));
     }
 
     public function select_type($type = null)
     {
         $typeFactory = $this->app->make(TypeFactory::class);
         $type = $typeFactory->getByID($type);
-        $this->renderAdd($type,
-            \URL::to('/dashboard/system/basics/attributes', 'view')
-        );
+
+        $this->renderAdd($type, Url::to('/dashboard/system/basics/attributes', 'view'));
     }
 
     public function add($type = null)
@@ -47,15 +47,16 @@ class Attributes extends DashboardAttributesPageController
         $this->select_type($type);
         $typeFactory = $this->app->make(TypeFactory::class);
         $type = $typeFactory->getByID($type);
-        $this->executeAdd($type, \URL::to('/dashboard/system/basics/attributes', 'view'));
+
+        $this->executeAdd($type, Url::to('/dashboard/system/basics/attributes', 'view'));
     }
 
     public function delete($akID = null)
     {
-        $key = SiteKey::getByID($akID);
-        $this->executeDelete($key,
-            \URL::to('/dashboard/system/basics/attributes', 'view')
-        );
+        $akc = $this->getCategoryObject()->getAttributeKeyCategory();
+        $key = $akc->getAttributeKeyByID($akID);
+
+        $this->executeDelete($key, Url::to('/dashboard/system/basics/attributes', 'view'));
     }
 
     /**
@@ -67,7 +68,9 @@ class Attributes extends DashboardAttributesPageController
      */
     protected function getCategoryObject()
     {
-        return Category::getByHandle('site');
+        $categoryService = $this->app->make(CategoryService::class);
+
+        return $categoryService->getByHandle('site');
     }
 
     /**

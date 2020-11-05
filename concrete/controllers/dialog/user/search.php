@@ -2,8 +2,6 @@
 namespace Concrete\Controller\Dialog\User;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Controller\Element\Search\Users\Header;
-use Loader;
 
 class Search extends BackendInterfaceController
 {
@@ -11,21 +9,13 @@ class Search extends BackendInterfaceController
 
     protected function canAccess()
     {
-        $tp = Loader::helper('concrete/user');
+        $tp = $this->app->make('helper/concrete/user');
 
         return $tp->canAccessUserSearchInterface();
     }
 
     public function view()
     {
-        $search = $this->app->make('Concrete\Controller\Search\Users');
-        $result = $search->getCurrentSearchObject();
-
-        if (is_object($result)) {
-            $this->set('result', $result);
-        }
-
-        $header = new Header();
-        $this->set('header', $header);
+        $this->set('multipleSelection', (bool)$this->request->request->get('multipleSelection', false));
     }
 }

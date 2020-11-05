@@ -16,7 +16,7 @@ $form = $app->make('helper/form');
             $entity = $assignment->getAccessEntityObject();
         ?>
             <div class="clearfix">
-            	<label class="control-label"><?=$entity->getAccessEntityLabel()?></label>
+            	<label class="col-form-label"><?=$entity->getAccessEntityLabel()?></label>
             	<div class="input">
             	    <?=$form->select('propertiesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All Attributes'), 'C' => t('Custom')), $assignment->getAttributesAllowedPermission())?>
                     <br>
@@ -99,7 +99,7 @@ $form = $app->make('helper/form');
             $entity = $assignment->getAccessEntityObject();
         ?>
             <div class="clearfix">
-            	<label class="control-label"><?=$entity->getAccessEntityLabel()?></label>
+            	<label class="col-form-label"><?=$entity->getAccessEntityLabel()?></label>
             	<div class="input">
                 	<?=$form->select('propertiesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Attributes'), 'C' => t('Custom')), $assignment->getAttributesAllowedPermission())?>
                     <br>

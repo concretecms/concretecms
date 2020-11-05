@@ -1,141 +1,151 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
-use AuthenticationType;
+use Concrete\Core\Authentication\AuthenticationType;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Validation\CSRF\Token;
 use Exception;
-use Session;
 
 class Authentication extends DashboardPageController
 {
-    const ERROR_INVALID_TYPE = 1;
-    const ERROR_INVALID_TOKEN = 2;
-
-    public function getErrorStrings()
-    {
-        return array(
-            self::ERROR_INVALID_TOKEN => t('Invalid Token'),
-            self::ERROR_INVALID_TYPE => t('Invalid Authentication Type'),
-        );
-    }
-
-    public function getErrorString($error)
-    {
-        return array_get($this->getErrorStrings(), $error, t('Invalid Error Code'));
-    }
+    protected const HEADER_ITEM = <<<'EOT'
+<style>
+#ccm-authentication-types>tbody>tr {
+    cursor:pointer;
+}
+#ccm-authentication-types>tbody>tr>td.ccm-authenticationtype-icon {
+    overflow:hidden;
+    text-align: center;
+    width: 50px;
+}
+#ccm-authentication-types>tbody>tr>td.ccm-authenticationtype-icon>div {
+    height: 15px;
+}
+#ccm-authentication-types>tbody>tr>td.ccm-authenticationtype-id {
+    width: 1px;
+    text-align: center;
+}
+#ccm-authentication-types>tbody i.ccm-authenticationtype-move {
+    cursor:move;
+}
+#ccm-authentication-types .ccm-concrete-authentication-type-svg > svg {
+    width:20px;
+    display:inline-block;
+}
+</style>
+EOT
+    ;
 
     public function view()
     {
-        $ats = AuthenticationType::getList(true);
-        $this->set('ats', $ats);
-        if (Session::has('authenticationTypesErrorCode')) {
-            $atec = Session::get('authenticationTypesErrorCode');
-            Session::remove('authenticationTypesErrorCode');
-
-            $this->error->add($this->getErrorString($atec));
-        }
+        $this->addHeaderItem(static::HEADER_ITEM);
+        $autenticationTypes = AuthenticationType::getList(true);
+        $this->set('autenticationTypes', $autenticationTypes);
     }
 
     public function reorder()
     {
-        $order = $this->post('order');
-        $l = count($order);
-        for ($i = 0; $i < $l; ++$i) {
+        if (!$this->token->validate('authentication_reorder')) {
+            throw new UserMessageException($this->token->getErrorMessage());
+        }
+        $authenticationTypeIDs = $this->request->request('order');
+        if (!is_array($authenticationTypeIDs)) {
+            throw new UserMessageException(t('Invalid data received.'));
+        }
+        $authenticationTypes = [];
+        foreach ($authenticationTypeIDs as $authenticationTypeID) {
             try {
-                $at = AuthenticationType::getByID($order[$i]);
-                $at->setAuthenticationTypeDisplayOrder($i);
-            } catch (exception $e) {
+                $authenticationTypes[] = AuthenticationType::getByID($authenticationTypeID);
+            } catch (Exception $x) {
+                throw new UserMessageException(t('Invalid data received.'));
             }
         }
-        exit;
+        foreach ($authenticationTypes as $position => $authenticationType) {
+            $authenticationType->setAuthenticationTypeDisplayOrder($position);
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
 
-    public function enable($atid)
+    public function edit($authenticationTypeID = '')
     {
+        $authenticationTypeID = (int) $authenticationTypeID;
         try {
-            $at = AuthenticationType::getByID($atid);
-
-            /** @var Token $token */
-            $token = \Core::make('token');
-
-            if (!$token->validate("auth_type_toggle.{$atid}")) {
-                Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
-                $this->redirect('dashboard/system/registration/authentication/');
-                exit;
-            }
-
-            $at->enable();
-            $this->set('message', t('The %s authentication type has been enabled.', $at->getAuthenticationTypeDisplayName('text')));
-        } catch (Exception $e) {
-            $this->error->add($e->getMessage());
+            $authenticationType = $authenticationTypeID === 0 ? null : AuthenticationType::getByID($authenticationTypeID);
+        } catch (Exception $x) {
+            $authenticationType = null;
         }
-        $this->view();
+        if ($authenticationType === null) {
+            $this->flash('error', t('Invalid Authentication Type'));
+
+            return $this->buildRedirect($this->action());
+        }
+        $breadcrumb = $this->createBreadcrumb();
+        $breadcrumb->add(new Item('', $authenticationType->getAuthenticationTypeDisplayName(), true));
+        $this->setBreadcrumb($breadcrumb);
+        $this->set('pageTitle', t('Edit %s Authentication Type', $authenticationType->getAuthenticationTypeDisplayName()));
+        $this->set('authenticationType', $authenticationType);
+        $this->render('/dashboard/system/registration/authentication/form');
     }
 
-    public function disable($atid)
+    public function save($authenticationTypeID = '')
     {
+        $post = $this->request->request;
+        $authenticationTypeID = (int) $authenticationTypeID;
         try {
-            $at = AuthenticationType::getByID($atid);
-
-            /** @var Token $token */
-            $token = \Core::make('token');
-
-            if (!$token->validate("auth_type_toggle.{$atid}")) {
-                Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
-                $this->redirect('dashboard/system/registration/authentication/');
-                exit;
-            }
-
-            $at->disable();
-            $this->set('message', t('The %s authentication type has been disabled.', $at->getAuthenticationTypeDisplayName('text')));
-        } catch (Exception $e) {
-            $this->error->add($e->getMessage());
+            $authenticationType = $authenticationTypeID === 0 ? null : AuthenticationType::getByID($authenticationTypeID);
+        } catch (Exception $x) {
+            $authenticationType = null;
         }
-        $this->view();
-    }
+        if ($authenticationType === null) {
+            $this->flash('error', t('Invalid Authentication Type'));
 
-    public function save($atid)
-    {
-        $values = $this->post();
-        try {
-            $at = AuthenticationType::getByID($atid);
-
-            /** @var Token $token */
-            $token = \Core::make('token');
-
-            if (!$token->validate("auth_type_save.{$atid}")) {
-                Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TOKEN);
-                $this->redirect('dashboard/system/registration/authentication/');
-                exit;
+            return $this->buildRedirect($this->action());
+        }
+        if (!$this->token->validate("auth_type_save.{$authenticationTypeID}")) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        $enable = (bool) $post->get('authentication_type_enabled');
+        $wasEnabled = (bool) $authenticationType->getAuthenticationTypeStatus();
+        if (!$this->error->has()) {
+            $values = $post->all();
+            unset($values['authentication_type_enabled']);
+            if ($enable === true) {
+                try {
+                    $authenticationType->controller->saveAuthenticationType($values);
+                } catch (Exception $x) {
+                    $this->error->add($x->getMessage());
+                }
             }
-
-            try {
-                $at->controller->saveAuthenticationType($values);
-                $this->set('message',
-                    t('The %s authentication type has been saved.', $at->getAuthenticationTypeName()));
-            } catch (Exception $e) {
-                $this->error->add($e->getMessage());
+            if (!$this->error->has()) {
+                try {
+                    if ($enable && !$wasEnabled) {
+                        $authenticationType->enable();
+                    } elseif (!$enable && $wasEnabled) {
+                        $authenticationType->disable();
+                    }
+                } catch (Exception $x) {
+                    $this->error->add($x->getMessage());
+                }
             }
-        } catch (Exception $e) {
-            Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TYPE);
-            $this->redirect('dashboard/system/registration/authentication/');
-            exit;
+        }
+        if ($this->error->has()) {
+            return $this->edit($authenticationType->getAuthenticationTypeID());
+        }
+        if ($enable === $wasEnabled) {
+            $this->flash('success', t('The %s authentication type has been saved.', $authenticationType->getAuthenticationTypeDisplayName('text')));
+        } elseif ($enable) {
+            $this->flash('success', t('The %s authentication type has been enabled.', $authenticationType->getAuthenticationTypeDisplayName('text')));
+        } else {
+            $this->flash('success', t('The %s authentication type has been disabled.', $authenticationType->getAuthenticationTypeDisplayName('text')));
+        }
+        if ($this->error->has()) {
+            return $this->edit($authenticationType->getAuthenticationTypeID());
         }
 
-        return $this->error->has() ? $this->edit($atid) : $this->view();
-    }
-
-    public function edit($atid)
-    {
-        try {
-            $at = AuthenticationType::getByID($atid);
-        } catch (Exception $e) {
-            Session::set('authenticationTypesErrorCode', self::ERROR_INVALID_TYPE);
-            $this->redirect('dashboard/system/registration/authentication/');
-            exit;
-        }
-        $this->set('at', $at);
-        $this->set('editmode', true);
+        return $this->buildRedirect($this->action());
     }
 }

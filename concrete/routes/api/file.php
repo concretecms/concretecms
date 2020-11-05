@@ -9,3 +9,5 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $router->get('/file/{fID}', '\Concrete\Core\File\Api\FilesController::read')
     ->setRequirement('fID', '[0-9]+')
     ->setScopes('files:read');
+$router->get('/files/mine', '\Concrete\Core\File\Api\FilesController::getMyFiles')
+    ->setScopes('files:read');

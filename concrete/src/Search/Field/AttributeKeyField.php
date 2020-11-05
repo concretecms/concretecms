@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Context\BasicSearchContext;
 use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Search\ItemList\ItemList;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class AttributeKeyField extends AbstractField
 {
@@ -51,10 +52,17 @@ class AttributeKeyField extends AbstractField
      *
      * @param Key $attributeKey the attribute key instance
      */
-    public function __construct(Key $attributeKey)
+    public function __construct(Key $attributeKey = null)
     {
-        $this->attributeKey = $attributeKey;
-        $this->akID = $attributeKey->getAttributeKeyID();
+        if ($attributeKey) {
+            $this->attributeKey = $attributeKey;
+            $this->akID = $attributeKey->getAttributeKeyID();
+        }
+    }
+
+    public function setData($key, $value)
+    {
+        $this->data['akID'][$this->attributeKey->getAttributeKeyID()][$key] = $value;
     }
 
     /**
@@ -105,6 +113,23 @@ class AttributeKeyField extends AbstractField
             $this->data['akID'][$this->attributeKey->getAttributeKeyID()]
                 = $request['akID'][$this->attributeKey->getAttributeKeyID()];
         }
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        $json = parent::jsonSerialize();
+        $json['akID'] = $this->attributeKey->getAttributeKeyID();
+        return $json;
+    }
+
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
+    {
+        $this->attributeKey = \Concrete\Core\Attribute\Key\Key::getByID($data['akID']);
+        parent::denormalize($denormalizer, $data, $format, $context);
+
     }
 
     /**

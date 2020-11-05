@@ -858,7 +858,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($folder = FileFolder::getByID($folderID)) {
                 return $folder;
             } else {
-                throw new \RuntimeException('Invalid Folder ID');
+                return new FileFolder;
             }
         }
 

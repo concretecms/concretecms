@@ -8,6 +8,6 @@ class Optimization extends DashboardPageController
 {
     public function view()
     {
-        return $this->buildRedirect('/dashboard/system/optimization/cache');
+        return $this->buildRedirectToFirstAccessibleChildPage();
     }
 }

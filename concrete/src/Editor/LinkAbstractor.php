@@ -14,13 +14,13 @@ namespace Concrete\Core\Editor;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Html\Image;
+use Concrete\Core\Html\Object\Picture;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
-use Core;
 use Doctrine\ORM\EntityManagerInterface;
-use Page;
 use Sunra\PhpSimple\HtmlDomParser;
-use URL;
 
 class LinkAbstractor extends ConcreteObject
 {
@@ -30,12 +30,19 @@ class LinkAbstractor extends ConcreteObject
      */
     private static $blackListImgAttributes = ['src', 'fid', 'data-verified', 'data-save-url'];
 
+    /**
+     * @param $text
+     *
+     * @return string
+     */
     public static function translateTo($text)
     {
+        $app = Application::getFacadeApplication();
+        $resolver = $app->make(ResolverManagerInterface::class);
+
         // images inline
-        $imgmatch = URL::to('/download_file', 'view_inline');
-        $imgmatch = str_replace('/', '\/', $imgmatch);
-        $imgmatch = str_replace('-', '\-', $imgmatch);
+        $imgmatch = $resolver->resolve(['/download_file', 'view_inline']);
+        $imgmatch = str_replace(['/', '-'], ['\/', '\-'], $imgmatch);
         $imgmatch = '/' . $imgmatch . '\/([0-9]+)/i';
 
         $dom = new HtmlDomParser();
@@ -45,7 +52,7 @@ class LinkAbstractor extends ConcreteObject
                 $attrString = '';
                 foreach ($img->attr as $key => $val) {
                     if (!in_array($key, self::$blackListImgAttributes)) {
-                        $attrString .= "$key=\"$val\" ";
+                        $attrString .= "{$key}=\"{$val}\" ";
                     }
                 }
 
@@ -57,13 +64,12 @@ class LinkAbstractor extends ConcreteObject
             $text = (string) $r->restore_noise($r);
         }
 
-        $appUrl = Core::getApplicationURL();
+        $appUrl = Application::getApplicationURL();
         if (!empty($appUrl)) {
             $url1 = str_replace('/', '\/', $appUrl . '/' . DISPATCHER_FILENAME);
             $url2 = str_replace('/', '\/', $appUrl);
-            $url4 = URL::to('/download_file', 'view');
-            $url4 = str_replace('/', '\/', $url4);
-            $url4 = str_replace('-', '\-', $url4);
+            $url4 = $resolver->resolve(['/download_file', 'view']);
+            $url4 = str_replace(['/', '-'], ['\/', '\-'], $url4);
             $text = preg_replace(
                 [
                     '/' . $url1 . '\?cID=([0-9]+)/i',
@@ -79,7 +85,7 @@ class LinkAbstractor extends ConcreteObject
             );
         }
 
-        return $text;
+        return (string) $text;
     }
 
     /**
@@ -87,6 +93,8 @@ class LinkAbstractor extends ConcreteObject
      * and expands them to full urls for displaying on the site front-end.
      *
      * @param mixed $text
+     *
+     * @return string
      */
     public static function translateFrom($text)
     {
@@ -115,6 +123,8 @@ class LinkAbstractor extends ConcreteObject
                         return $resolver->resolve([$c]);
                     }
                 }
+
+                return '';
             }
         );
 
@@ -138,26 +148,26 @@ class LinkAbstractor extends ConcreteObject
                         $style = preg_replace($heightPattern, '', $style);
                         $picture->height = $matches[1];
                     }
-                    if ('' === $style) {
+                    if ($style === '') {
                         unset($picture->style);
                     } else {
                         $picture->style = $style;
                     }
-                    $image = new \Concrete\Core\Html\Image($fo);
+                    $image = new Image($fo);
                     $tag = $image->getTag();
 
                     foreach ($picture->attr as $attr => $val) {
                         $attr = (string) $attr;
                         if (!in_array($attr, self::$blackListImgAttributes)) {
                             //Apply attributes to child img, if using picture tag.
-                            if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
+                            if ($tag instanceof Picture) {
                                 foreach ($tag->getChildren() as $child) {
                                     if ($child instanceof \HtmlObject\Image) {
-                                        $child->$attr($val);
+                                        $child->{$attr}($val);
                                     }
                                 }
                             } elseif (is_callable([$tag, $attr])) {
-                                $tag->$attr($val);
+                                $tag->{$attr}($val);
                             } else {
                                 $tag->setAttribute($attr, $val);
                             }
@@ -165,7 +175,7 @@ class LinkAbstractor extends ConcreteObject
                     }
 
                     if (!in_array('alt', array_keys($picture->attr))) {
-                        if ($tag instanceof \Concrete\Core\Html\Object\Picture) {
+                        if ($tag instanceof Picture) {
                             foreach ($tag->getChildren() as $child) {
                                 if ($child instanceof \HtmlObject\Image) {
                                     $child->alt('');
@@ -194,6 +204,8 @@ class LinkAbstractor extends ConcreteObject
                         return $f->getURL();
                     }
                 }
+
+                return '';
             }
         );
 
@@ -204,7 +216,12 @@ class LinkAbstractor extends ConcreteObject
             '{CCM:FID_DL_([0-9]+)}',
             function ($fID) use ($resolver, &$currentPage) {
                 if ($fID > 0) {
-                    $args = ['/download_file', 'view', $fID];
+                    $file = \Concrete\Core\File\File::getByID($fID);
+                    if ($file instanceof File && $file->hasFileUUID()) {
+                        $args = ['/download_file', 'view', $file->getFileUUID()];
+                    } else {
+                        $args = ['/download_file', 'view', $fID];
+                    }
                     if ($currentPage === null) {
                         $currentPage = Page::getCurrentPage();
                         if (!$currentPage || $currentPage->isError()) {
@@ -217,13 +234,17 @@ class LinkAbstractor extends ConcreteObject
 
                     return $resolver->resolve($args);
                 }
+
+                return '';
             }
         );
 
         // snippets
-        $snippets = Snippet::getActiveList();
-        foreach ($snippets as $sn) {
-            $text = $sn->findAndReplace($text);
+        if (strrpos($text, 'data-scs') !== false) {
+            $snippets = Snippet::getActiveList();
+            foreach ($snippets as $sn) {
+                $text = $sn->findAndReplace($text);
+            }
         }
 
         return $text;
@@ -234,11 +255,12 @@ class LinkAbstractor extends ConcreteObject
      * and expands them to urls suitable for the rich text editor.
      *
      * @param mixed $text
+     *
+     * @return string
      */
     public static function translateFromEditMode($text)
     {
         $app = Application::getFacadeApplication();
-        $entityManager = $app->make(EntityManagerInterface::class);
         $resolver = $app->make(ResolverManagerInterface::class);
         $appUrl = Application::getApplicationURL();
 
@@ -269,15 +291,25 @@ class LinkAbstractor extends ConcreteObject
                 $attrString = '';
                 foreach ($picture->attr as $attr => $val) {
                     if (!in_array($attr, self::$blackListImgAttributes)) {
-                        $attrString .= "$attr=\"$val\" ";
+                        $attrString .= "{$attr}=\"{$val}\" ";
                     }
                 }
 
-                $picture->outertext = '<img src="' . $resolver->resolve([
-                        '/download_file',
-                        'view_inline',
-                        $fID,
-                    ]) . '" ' . $attrString . '/>';
+                $file = \Concrete\Core\File\File::getByID($fID);
+                if ($file instanceof File && $file->hasFileUUID()) {
+                    $picture->outertext = '<img src="' . $resolver->resolve([
+                            '/download_file',
+                            'view_inline',
+                            $file->getFileUUID(),
+                        ]) . '" ' . $attrString . '/>';
+                } else {
+                    $picture->outertext = '<img src="' . $resolver->resolve([
+                            '/download_file',
+                            'view_inline',
+                            $fID,
+                        ]) . '" ' . $attrString . '/>';
+                }
+
             }
 
             $text = (string) $r->restore_noise($r);
@@ -289,8 +321,15 @@ class LinkAbstractor extends ConcreteObject
             '{CCM:FID_([0-9]+)}',
             function ($fID) use ($resolver) {
                 if ($fID > 0) {
-                    return $resolver->resolve(['/download_file', 'view_inline', $fID]);
+                    $file = \Concrete\Core\File\File::getByID($fID);
+                    if ($file instanceof File && $file->hasFileUUID()) {
+                        return $resolver->resolve(['/download_file', 'view_inline', $file->getFileUUID()]);
+                    } else {
+                        return $resolver->resolve(['/download_file', 'view_inline', $fID]);
+                    }
                 }
+
+                return '';
             }
         );
 
@@ -300,8 +339,15 @@ class LinkAbstractor extends ConcreteObject
             '{CCM:FID_DL_([0-9]+)}',
             function ($fID) use ($resolver) {
                 if ($fID > 0) {
-                    return $resolver->resolve(['/download_file', 'view', $fID]);
+                    $file = \Concrete\Core\File\File::getByID($fID);
+                    if ($file instanceof File && $file->hasFileUUID()) {
+                        return $resolver->resolve(['/download_file', 'view', $file->getFileUUID()]);
+                    } else {
+                        return $resolver->resolve(['/download_file', 'view', $fID]);
+                    }
                 }
+
+                return '';
             }
         );
 
@@ -311,11 +357,14 @@ class LinkAbstractor extends ConcreteObject
     /**
      * For the content block's getImportData() function.
      *
-     * @param mixed $text
+     * @param string $text
+     *
+     * @return string
      */
     public static function import($text)
     {
-        $inspector = \Core::make('import/value_inspector');
+        $app = Application::getFacadeApplication();
+        $inspector = $app->make('import/value_inspector');
         $result = $inspector->inspect((string) $text);
 
         return $result->getReplacedContent();
@@ -325,9 +374,14 @@ class LinkAbstractor extends ConcreteObject
      * For the content block's export() function.
      *
      * @param mixed $text
+     *
+     * @return string
      */
     public static function export($text)
     {
+        $app = Application::getFacadeApplication();
+        $entityManager = $app->make(EntityManagerInterface::class);
+
         $text = static::replacePlaceholder(
             $text,
             '{CCM:CID_([0-9]+)}',
@@ -349,7 +403,7 @@ class LinkAbstractor extends ConcreteObject
         if (is_object($r)) {
             foreach ($r->find('concrete-picture') as $picture) {
                 $fID = $picture->fid;
-                $f = \File::getByID($fID);
+                $f = $entityManager->find(File::class, $fID);
                 if (is_object($f)) {
                     $picture->fid = false;
                     $picture->file = $f->getPrefix() . ':' . $f->getFilename();

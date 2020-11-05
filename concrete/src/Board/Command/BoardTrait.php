@@ -6,29 +6,23 @@ use Concrete\Core\Entity\Board\Board;
 
 trait BoardTrait
 {
-
     /**
-     * @var Board
+     * @var \Concrete\Core\Entity\Board\Board
      */
     protected $board;
 
-    /**
-     * @param Board $board
-     */
-    public function setBoard(Board $board): void
-    {
-        $this->board = $board;
-    }
-
-    /**
-     * @return Board
-     */
     public function getBoard(): Board
     {
         return $this->board;
     }
 
+    /**
+     * @return $this
+     */
+    public function setBoard(Board $board): object
+    {
+        $this->board = $board;
 
-
-    
+        return $this;
+    }
 }

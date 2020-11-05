@@ -19,7 +19,7 @@ if ($entity) { ?>
                         <?=$form->label('keywords', t('Keyword Search'))?>
                         <?=$form->text('keywords')?>
                     </div>
-                    <button type="submit" class="btn btn-primary" name="search"><?=t('Search')?></button>
+                    <button type="submit" class="btn btn-primary" name="search" value="search"><?=t('Search')?></button>
                     <?php if (count($tableSearchProperties)) { ?>
                         <a href="#" data-express-entry-list-advanced-search="<?=$bID?>"
                         class="ccm-block-express-entry-list-advanced-search"><?=t('Advanced Search')?></a>
@@ -61,6 +61,26 @@ if ($entity) { ?>
 
     $results = $result->getItemListObject()->getResults();
     if (count($results)) { ?>
+
+        <?php if ($enableItemsPerPageSelection) { ?>
+            <div class="mt-3 mb-3">
+                <div class="form-inline">
+                <b><?=t('Items Per Page')?></b>
+                <select class="ml-3 form-control" data-express-entry-list-select-items-per-page="<?=$bID?>">
+                    <?php foreach($itemsPerPageOptions as $itemsPerPage) {
+                        $url = \League\Url\Url::createFromServer($_SERVER);
+                        $query = $url->getQuery();
+                        $query->modify(['itemsPerPage' => $itemsPerPage]);
+                        $url->setQuery($query);
+                        $itemsPerPageOptionUrl = (string) $url;
+                        ?>
+                        <option data-location="<?=$itemsPerPageOptionUrl?>" <?php if ($itemsPerPage == $itemsPerPageSelected) { ?>selected<?php } ?>><?=$itemsPerPage?></option>
+                    <?php } ?>
+                </select>
+                </div>
+            </div>
+        <?php } ?>
+
         <table id="ccm-block-express-entry-list-table-<?=$bID?>"
         class="table ccm-block-express-entry-list-table <?php if ($tableStriped) { ?><?php } ?>">
             <thead>
@@ -130,14 +150,12 @@ if ($entity) { ?>
         <p><?=t('No "%s" entries can be found', $entity->getEntityDisplayName())?></p>
     <?php } ?>
 
-    <?php if ($enableKeywordSearch) { ?>
-        <script>
-            $(function() {
-                $.concreteExpressEntryList({
-                    'bID': '<?=$bID?>',
-                    'hideFields': <?php echo !$app->request->request('advancedSearchDisplayed') ? 'true' : 'false'; ?>
-                });
+    <script>
+        $(function() {
+            $.concreteExpressEntryList({
+                'bID': '<?=$bID?>',
+                'hideFields': <?php echo !$app->request->request('advancedSearchDisplayed') ? 'true' : 'false'; ?>
             });
-        </script>
-    <?php } ?>
+        });
+    </script>
 <?php } ?>

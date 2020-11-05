@@ -1,25 +1,58 @@
 <?php
+
 namespace Concrete\Core\User\Point\Action;
 
-use Concrete\Core\Legacy\DatabaseItemList;
-use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
+use Concrete\Core\Search\Pagination\Pagination;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 class ActionList extends DatabaseItemList
 {
-    public function __construct()
-    {
-        $this->setBaseQuery();
-    }
+    protected $autoSortColumns = ['upa.upaName', 'upa.upaHandle', 'upa.upaDefaultPoints', 'upa.gBadgeID'];
 
-    protected function setBaseQuery()
+    public function createQuery()
     {
-        $db = Application::getFacadeApplication()->make(Connection::class);
-        $this->setQuery('SELECT UserPointActions.*, Groups.gName FROM UserPointActions LEFT JOIN ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' ON Groups.gID = UserPointActions.gBadgeID');
+        $db = $this->query->getConnection();
+        $this->query->select('upa.*', 'g.gName')
+            ->from('UserPointActions', 'upa')
+            ->leftJoin('upa', $db->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'upa.gBadgeID = g.gID')
+        ;
     }
 
     public function filterByIsActive($active)
     {
-        $this->filter('upaIsActive', $active);
+        $this->query->andWhere('upa.upaIsActive = :upaIsActive');
+        $this->query->setParameter('upaIsActive', $active);
+    }
+
+    /**
+     * The total results of the query.
+     *
+     * @return int
+     */
+    public function getTotalResults()
+    {
+        $query = $this->deliverQueryObject();
+
+        return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct upa.upaID)')->setMaxResults(1)->execute()->fetchColumn();
+    }
+
+    /**
+     * Gets the pagination object for the query.
+     *
+     * @return Pagination
+     */
+    public function createPaginationObject()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct upa.upaID)')->setMaxResults(1);
+        });
+
+        return new Pagination($this, $adapter);
+    }
+
+    public function getResult($mixed)
+    {
+        return $mixed;
     }
 }

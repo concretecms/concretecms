@@ -1,25 +1,24 @@
 <?php
+
 namespace Concrete\Core\Foundation\Command;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Error\ErrorList\ErrorList;
 use Illuminate\Config\Repository;
 
 class DispatcherFactory
 {
-
     /**
-     * @var Application
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
     /**
-     * @var Repository
+     * @var \Illuminate\Config\Repository
      */
     protected $config;
 
     /**
-     * @var Dispatcher
+     * @var \Concrete\Core\Foundation\Command\Dispatcher
      */
     protected $dispatcher;
 
@@ -28,20 +27,16 @@ class DispatcherFactory
         $this->app = $app;
         $this->config = $config;
         $this->dispatcher = $app->make(Dispatcher::class);
-        foreach($this->config->get('app.commands') as $entry) {
+        foreach ($this->config->get('app.commands') as $entry) {
             $command = $entry[0];
             $handler = $entry[1];
-            $bus = null;
-            if (isset($entry[2])) {
-                $bus = $entry[2];
-            }
+            $bus = $entry[2] ?? null;
             $this->dispatcher->registerCommand($this->app->make($handler), $command, $bus);
         }
     }
 
-    public function getDispatcher()
+    public function getDispatcher(): Dispatcher
     {
         return $this->dispatcher;
     }
-
 }

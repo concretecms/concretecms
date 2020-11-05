@@ -22,7 +22,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php
         if ($cp->canEditPageTemplate() && !$c->isGeneratedCollection()) {
             ?>
-            <div class="" id="ccm-panel-page-design-page-templates" data-panel-menu-id="page-templates" data-panel-menu="collapsible-list-group">
+            <div class="ccm-panel-page-design-page-group" id="ccm-panel-page-design-page-templates"
+                 class="ccm-panel-page-design-page-group" data-panel-menu-id="page-templates" data-panel-menu="collapsible-list-group">
                 <div class="ccm-panel-page-design-title">
                     <?= t('Page Template') ?>
                 </div>
@@ -43,7 +44,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <?php
                 }
                 ?>
+
             </div>
+            <hr>
+            <div class="ccm-panel-page-design-page-group">
+                <div class="ccm-panel-page-design-title">
+                    <?=t('Summary Templates')?>
+                </div>
+                <p class="text-muted"><?=t2('One summary template available for this page.', '%s summary templates available for this page.',
+                        $availableSummaryTemplatesCount)?></p>
+
+                <div><small><a dialog-title="<?=t('Summary Templates')?>" class="dialog-launch" dialog-width="90%" dialog-height="70%"
+                               href="<?=URL::to('/ccm/system/dialogs/page/summary_templates')?>?cID=<?=$c->getCollectionID()?>">
+                            <?=t('Choose summary templates.')?>
+                        </a></small></div>
+
+            </div>
+
             <?php
         }
         ?>

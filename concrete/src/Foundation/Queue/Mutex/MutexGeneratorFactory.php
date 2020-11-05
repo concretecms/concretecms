@@ -22,7 +22,7 @@ class MutexGeneratorFactory
         $config = $this->app->make('config');
         $mutexes = $config->get('app.mutex');
         foreach($config->get('app.commands') as $entry) {
-            if ($entry[2]) {
+            if ($entry[2] ?? null) {
                 $mutexes[$keyGenerator->getMutexKey($entry[2])] = true;
             }
         }

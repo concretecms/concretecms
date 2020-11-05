@@ -28,8 +28,6 @@
                 $('input[name="akTopicTreeID"]').val($(this).find(':selected').val());
                 $('.tree-view-template').remove();
                 $('.tree-view-container').append(treeViewTemplate);
-                var toolsURL = '<?php echo Loader::helper('concrete/urls')->getToolsURL('tree/load');
-    ?>';
                 var chosenTree = $(this).val();
                 $('.tree-view-template').concreteTree({
                     'treeID': chosenTree,

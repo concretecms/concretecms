@@ -80,7 +80,7 @@ class QueueService
         if (!$queue) {
             $queue = [];
             foreach($this->config->get('app.commands') as $entry) {
-                if ($entry[2]) {
+                if ($entry[2] ?? null) {
                     $queue[] = $entry[2];
                 }
             }

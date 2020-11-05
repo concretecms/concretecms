@@ -4,6 +4,7 @@ namespace Concrete\Core\User\Group;
 use CacheLocal;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
@@ -19,7 +20,7 @@ use GroupTree;
 use GroupTreeNode;
 use Concrete\Core\User\UserList;
 
-class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
+class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, \JsonSerializable
 {
     public $ctID;
     public $permissionSet;
@@ -637,6 +638,18 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $app = Facade::getFacadeApplication();
         $repository = $app->make(GroupRepository::class);
         return $repository->getGroupByPath($gPath);
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'gID' => $this->getGroupID(),
+            'gName' => $this->getGroupName(),
+            'gDisplayName' => $this->getGroupDisplayName(false)
+        ];
     }
 
 }

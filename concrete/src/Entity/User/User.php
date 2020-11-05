@@ -13,7 +13,7 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
  *     }
  * )
  */
-class User implements UserEntityInterface
+class User implements UserEntityInterface, \JsonSerializable
 {
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
@@ -128,6 +128,11 @@ class User implements UserEntityInterface
      */
     protected $uIsPasswordReset = false;
 
+    /**
+     * @var int
+     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
+     */
+    protected $uHomeFileManagerFolderID = null;
 
     public function __construct()
     {
@@ -444,6 +449,22 @@ class User implements UserEntityInterface
     }
 
     /**
+     * @return int
+     */
+    public function getHomeFileManagerFolderID()
+    {
+        return $this->uHomeFileManagerFolderID;
+    }
+
+    /**
+     * @param int $uHomeFileManagerFolderID
+     */
+    public function setHomeFileManagerFolderID($uHomeFileManagerFolderID)
+    {
+        $this->uHomeFileManagerFolderID = $uHomeFileManagerFolderID;
+    }
+
+    /**
      * @return \UserInfo|null
      */
     public function getUserInfoObject()
@@ -467,5 +488,17 @@ class User implements UserEntityInterface
     public function getIdentifier()
     {
         return $this->getUserID();
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getUserID(),
+            'name' => $this->getUserName(),
+            'email' => $this->getUserEmail(),
+        ];
     }
 }

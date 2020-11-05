@@ -8,15 +8,11 @@ import '@concretecms/bedrock/assets/bedrock/js/frontend';
 // Import the CMS components and the backend components
 // Note, this currently isn't technically necessary, but I'm putting here so we have some place to put components
 // as we create them.
-Concrete.Vue.createContext('backend', [], 'cms')
-if (document.querySelectorAll('[vue-enabled]').length) {
-    Concrete.Vue.activateContext('backend', function (Vue, config) {
-        new Vue({
-            el: '[vue-enabled]',
-            components: config.components
-        })
-    })
-}
+import BoardInstanceRule from './components/Board/InstanceRule'
+
+Concrete.Vue.createContext('backend', {
+    BoardInstanceRule
+}, 'cms')
 
 // Desktops and waiting for me
 import '@concretecms/bedrock/assets/desktop/js/frontend';
@@ -29,7 +25,6 @@ import '@concretecms/bedrock/assets/calendar/js/backend';
 
 // Advanced search and search bars
 import './search/advanced-search-launcher';
-import './search/field-selector';
 import './search/preset-selector';
 import './search/results-table';
 import './file-manager/file-manager';
@@ -191,11 +186,9 @@ var setupHeaderMenu = function() {
 };
 
 var setupSiteListMenuItem = function() {
-    $('select[data-select=ccm-header-site-list]').show().selectize({
-        'onItemAdd': function(option) {
-            window.location.href = option;
-        }
-    });
+    $('select[data-select=ccm-header-site-list]').on('changed.bs.select', function() {
+        window.location.href = $(this).val()
+    })
 };
 
 setupTooltips();

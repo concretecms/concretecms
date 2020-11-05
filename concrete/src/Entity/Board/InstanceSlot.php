@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class InstanceSlot
 {
-    
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -31,16 +31,11 @@ class InstanceSlot
      * @ORM\ManyToOne(targetEntity="SlotTemplate")
      */
     protected $template;
-    
+
     /**
      * @ORM\Column(type="integer")
      */
     protected $slot;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $isPinned = false;
 
     /**
      * @ORM\Column(type="integer")
@@ -141,25 +136,5 @@ class InstanceSlot
         $this->bID = $bID;
     }
 
-    /**
-     * @return mixed
-     */
-    public function isPinned()
-    {
-        return $this->isPinned;
-    }
 
-    /**
-     * @param mixed $isPinned
-     */
-    public function setIsPinned($isPinned): void
-    {
-        $this->isPinned = $isPinned;
-    }
-
-    
-    
-    
-    
-    
 }

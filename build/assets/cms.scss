@@ -22,7 +22,7 @@
 // The html and body tags are combined into the reboot_html_body.scss file, and the rest of the tags are
 // just copied into reboot_tags.scs
 @import "~@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
-div.ccm-ui {
+.ccm-ui {
   @import "~@concretecms/bedrock/assets/cms/scss/bootstrap/reboot-tags";
 
   // Import the bootstrap components we want. Note: I'm including everything in the list, and commenting out

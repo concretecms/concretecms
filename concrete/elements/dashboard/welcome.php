@@ -1,7 +1,11 @@
 <?php
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$resolver = $app->make(ResolverManagerInterface::class);
 $image = date('Ymd') . '.jpg';
 $c = \Concrete\Core\Page\Page::getCurrentPage();
 $cp = new \Concrete\Core\Permission\Checker($c);
@@ -21,7 +25,6 @@ $approveAction = $controller->action('submit');
 
 if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::get('concrete.white_label.background_url')) {
     $imagePath = Config::get('concrete.urls.background_feed') . '/' . $image;
-    $imageData = Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data';
 } else if (Config::get('concrete.white_label.background_url')) {
     $imagePath = Config::get('concrete.white_label.background_url');
 }
@@ -56,7 +59,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
                     <a href="#" id="ccm-dashboard-welcome-check-in" class="btn btn-secondary"><?= t('Save Changes'); ?></a>
                 <?php } ?>
                 <?php if (!$c->isEditMode()) { ?>
-                    <a href="<?= DIR_REL; ?>/<?= DISPATCHER_FILENAME; ?>?cID=<?= $c->getCollectionID(); ?>&ctask=check-out&<?= $token->getParameter(); ?>" id="ccm-nav-check-out" class="btn btn-secondary"><?= t('Customize'); ?></a>
+                    <a href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$c->getCollectionID()}/-/" . $token->generate()])) ?>" id="ccm-nav-check-out" class="btn btn-secondary"><?= t('Customize'); ?></a>
                 <?php } ?>
             <?php } ?>
         <?php if ($canEdit) { ?>

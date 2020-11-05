@@ -38,6 +38,16 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     protected $siteTree = self::SITE_TREE_CURRENT;
 
     /**
+     * Determines whether the list should automatically always sort by a column that's in the automatic sort.
+     * This is the default, but it's better to be able to use the AutoSortColumnRequestModifier on a search
+     * result class instead. In order to do that we disable the auto sort here, while still providing the array
+     * of possible auto sort columns.
+     *
+     * @var bool
+     */
+    protected $enableAutomaticSorting = false;
+
+    /**
      * Columns in this array can be sorted via the request.
      *
      * @var array

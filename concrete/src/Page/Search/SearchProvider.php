@@ -65,6 +65,7 @@ class SearchProvider extends AbstractSearchProvider
         $site = \Core::make('site')->getActiveSiteForEditing();
         $list = new PageList();
         $list->setSiteTreeObject($site);
+        $list->setupAutomaticSorting();
         return $list;
     }
 

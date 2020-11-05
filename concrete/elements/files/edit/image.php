@@ -1,6 +1,12 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-$editor = \Core::make('editor/image/core');
-echo $editor->getView($fv)->render();
+/**
+ * @var Concrete\Core\Entity\File\Version $fv
+ * @var Concrete\Core\Application\Application $app
+ */
+
+/*
+ * @TODO - add new editor functionality to this.
+*/

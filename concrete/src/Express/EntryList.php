@@ -5,20 +5,50 @@ use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\Search\ItemList\Pager\Manager\ExpressEntryListPagerManager;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PaginationProviderInterface;
 use Concrete\Core\Search\PermissionableListItemInterface;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
 
-class EntryList extends DatabaseItemList implements PermissionableListItemInterface, PaginationProviderInterface
+class EntryList extends DatabaseItemList implements PagerProviderInterface, PaginationProviderInterface
 {
 
     protected $category;
     protected $entity;
 
+    /**
+     * Determines whether the list should automatically always sort by a column that's in the automatic sort.
+     * This is the default, but it's better to be able to use the AutoSortColumnRequestModifier on a search
+     * result class instead. In order to do that we disable the auto sort here, while still providing the array
+     * of possible auto sort columns.
+     *
+     * @var bool
+     */
+    protected $enableAutomaticSorting = false;
+
+    /**
+     * Columns in this array can be sorted via the request.
+     *
+     * @var array
+     */
+    protected $autoSortColumns = [
+        'e.exEntryDateCreated',
+        'e.exEntryDateModified',
+    ];
+
     public function __construct(Entity $entity)
     {
+        $u = app(User::class);
+        if ($u->isSuperUser()) {
+            $this->ignorePermissions();
+        }
         $this->category = $entity->getAttributeKeyCategory();
         $this->entity = $entity;
         $this->setItemsPerPage($entity->getItemsPerPage());
@@ -54,6 +84,20 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         return $query->resetQueryParts(['groupBy', 'orderBy'])->select('count(distinct e.exEntryID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
+    public function filterBySite(Site $site)
+    {
+        if (!$this->entity->usesSeparateSiteResultsBuckets()) {
+            // This entity doesn't have site-specific entries, so we this filter by site does not apply.
+            return false;
+        }
+
+        // This entity does use site specific buckets. So let's figure out which results node we're going to be using for
+        // this site.
+        $node = $this->entity->getEntityResultsNodeObject($site);
+        $this->query->andWhere('resultsNodeID = :resultsNodeID');
+        $this->query->setParameter('resultsNodeID', $node->getTreeNodeID());
+    }
+
     public function sortByDisplayOrderAscending()
     {
         $this->query->orderBy('e.exEntryDisplayOrder', 'asc');
@@ -73,6 +117,16 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         } else {
             $this->query->andWhere('1 = 0');
         }
+    }
+
+    public function getPagerManager()
+    {
+        return new ExpressEntryListPagerManager($this->entity, $this);
+    }
+
+    public function getPagerVariableFactory()
+    {
+        return new VariableFactory($this);
     }
 
 
@@ -110,7 +164,7 @@ class EntryList extends DatabaseItemList implements PermissionableListItemInterf
         return $fp->canViewExpressEntry();
     }
 
-    public function setPermissionsChecker(\Closure $checker)
+    public function setPermissionsChecker(\Closure $checker = null)
     {
         $this->permissionsChecker = $checker;
     }

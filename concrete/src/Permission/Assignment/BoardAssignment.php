@@ -19,6 +19,7 @@ class BoardAssignment extends Assignment
         'edit_board_settings' => 'edit_boards_settings',
         'edit_board_permissions' => 'edit_boards_permissions',
         'edit_board_contents' => 'edit_boards_contents',
+        'edit_board_locked_rules' => 'edit_boards_locked_rules',
         'delete_board' => 'delete_boards',
     );
 
@@ -55,11 +56,16 @@ class BoardAssignment extends Assignment
         return false;
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
         $board = $this->getPermissionObject();
-
-        return parent::getPermissionKeyToolsURL($task) . '&boardID=' . $board->getBoardID();
+        
+        return parent::getPermissionKeyTaskURL($task, $options + ['boardID' => $board->getBoardID()]);
     }
 
     public function clearPermissionAssignment()

@@ -48,7 +48,7 @@ class Batch extends AbstractController
                 $this->service->consumeBatchFromPoll($batch);
                 return $this->batchProcessorResponseFactory->createResponse($batch);
             } else {
-                $this->batchProcessorResponseFactory->createEmptyResponse($handle);
+                return $this->batchProcessorResponseFactory->createEmptyResponse($handle);
             }
         }
         throw new \Exception(t('Access Denied'));

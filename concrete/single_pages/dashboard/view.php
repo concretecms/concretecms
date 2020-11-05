@@ -1,7 +1,19 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+
+
+<?php
+$navigation = app(\Concrete\Core\Application\UserInterface\Dashboard\Navigation\FullNavigationFactory::class)
+    ->createNavigation();
+$categories = $navigation->getItems();
+?>
+
 <div>
-<?php $rowCount = 0;
+<?php
+$rowCount = 0;
 for ($i = 0; $i < count($categories); ++$i) {
+    /**
+     * @var $cat \Concrete\Core\Navigation\Item\ItemInterface
+     */
     $cat = $categories[$i];
     if ($rowCount == 3 || $i == 0) {
         $offset = '';
@@ -13,53 +25,32 @@ for ($i = 0; $i < count($categories); ++$i) {
     ?>
 
         <div class="col-md-4 ccm-dashboard-section-menu">
-            <h2><?=t($cat->getCollectionName())?></h2>
+            <h2><?=t($cat->getName())?></h2>
 
-
-            <?php
-            $show = array();
-    $subcats = $cat->getCollectionChildrenArray(true);
-    foreach ($subcats as $catID) {
-        $subcat = Page::getByID($catID, 'ACTIVE');
-        if ($subcat->getAttribute('exclude_nav')) {
-            continue;
-        }
-        $catp = new Permissions($subcat);
-        if ($catp->canRead()) {
-            $show[] = $subcat;
-        }
-    }
-    ?>
 
             <ul class="list-unstyled">
-            
-            <?php if (count($show) > 0) {
-    ?>
 
-            <?php foreach ($show as $subcat) {
-    ?>
+            <?php
+            $children = $cat->getChildren();
+            if (count($children)) {
 
-            <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><i class="<?=$subcat->getAttribute('icon_dashboard')?>"></i> <?=t($subcat->getCollectionName())?></a></li>
+                foreach($children as $child) { ?>
+                    <li><a href="<?=$child->getUrl()?>"><?=t($child->getName())?></a></li>
+                <?php } ?>
 
-            <?php 
-}
-    ?>
+            <?php } else { ?>
 
-            <?php 
-} else {
-    ?>
+                <li><a href="<?=$cat->getUrl()?>"><?=$cat->getName()?></a></li>
 
-            <li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><i class="<?=$cat->getAttribute('icon_dashboard')?>"></i> <?=t('Home')?></a></li>
+            <?php } ?>
 
-            <?php 
-}
-    ?>
             </ul>
+
         </div>
     <?php if ($rowCount == 2 || $i == count($categories)) {
     ?>
     </div>
-    <?php 
+    <?php
 }
     ++$rowCount;
 } ?>

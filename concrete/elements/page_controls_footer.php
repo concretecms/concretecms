@@ -1,4 +1,8 @@
 <?php
+
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
@@ -15,6 +19,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     $token = '&' . $valt->getParameter();
     $cID = $c->getCollectionID();
     $permissions = new Permissions($c);
+    $resolver = $app->make(ResolverManagerInterface::class);
 
     $workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
 
@@ -36,209 +41,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
     <?=View::element('icons')?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
-            <?php /* <div class="ccm-mobile-menu-overlay" style="height: calc(100vh - 48px)">
-                <div class="ccm-mobile-menu-main">
-                    <ul class="ccm-mobile-menu-entries">
-                        <?php
-                        if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) {
-                            if ($c->isEditMode()) {
-                                ?>
-                                <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit">
-                                    <i class="fas fa-pencil-alt mobile-leading-icon"></i>
-                                    <a
-                                        <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
-                                        data-toolbar-action="check-in"
-                                        <?php
-                                        if ($vo->isNew() && !$c->isMasterCollection()) {
-                                            ?>
-                                            href="javascript:void(0)"
-                                            data-launch-panel="check-in"
-                                            ><?php echo t('Save Changes') ?><?php
-                                        } else {
-                                            ?>
-                                            href="<?= URL::to('/ccm/system/page/check_in', $cID, $valt->generate()) ?>"
-                                            data-panel-url="<?= URL::to('/ccm/system/panels/page/check_in') ?>"
-                                            ><?php echo t('Save Changes') ?><?php
-                                        }
-                                        ?>
-                                    </a>
-                                </li>
-                                <?php
-                            } elseif ($permissions->canEditPageContents()) {
-                                ?>
-                                <li class="ccm-toolbar-page-edit">
-                                    <i class="fas fa-pencil-alt mobile-leading-icon"></i>
-                                    <a
-                                        <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
-                                        data-toolbar-action="check-out"
-                                        href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
-                                    ><?php echo t('Edit this Page') ?></a>
-                                </li>
-                                <?php
-                            }
-                            ?>
-                            <li class="parent-ul">
-                                <i class="fa fa-cog mobile-leading-icon"></i>
-                                <a href="#"><?php echo t('Page Properties') ?></a><i class="fa fa-caret-down drop-down-toggle"></i>
-                                <ul class="list-unstyled">
-                                    <?php
-                                    $pagetype = PageType::getByID($c->getPageTypeID());
-                                    if (is_object($pagetype) && $cp->canEditPageContents()) {
-                                        ?>
-                                        <li>
-                                            <a
-                                                class="dialog-launch"
-                                                dialog-width="640"
-                                                dialog-height="640"
-                                                dialog-modal="false"
-                                                dialog-title="<?= t('Composer') ?>"
-                                                href="<?= URL::to('/ccm/system/panels/details/page/composer') ?>?cID=<?= $cID ?>"
-                                            ><?= t('Composer') ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    if (
-                                        $permissions->canEditPageProperties() ||
-                                        $permissions->canEditPageTheme() ||
-                                        $permissions->canEditPageTemplate() ||
-                                        $permissions->canDeletePage() ||
-                                        $permissions->canEditPagePermissions()
-                                    ) {
-                                        ?>
-                                        <li>
-                                            <a
-                                                class="dialog-launch"
-                                                dialog-width="640"
-                                                dialog-height="360"
-                                                dialog-modal="false"
-                                                dialog-title="<?= t('SEO') ?>"
-                                                href="<?= URL::to('/ccm/system/panels/details/page/seo') ?>?cID=<?= $cID ?>"
-                                            ><?= t('SEO') ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    if ($permissions->canEditPageProperties()) {
-                                        if ($cID > 1) {
-                                            ?>
-                                            <li>
-                                                <a
-                                                    class="dialog-launch"
-                                                    dialog-width="500"
-                                                    dialog-height="500"
-                                                    dialog-modal="false"
-                                                    dialog-title="<?= t('Location') ?>"
-                                                    href="<?= URL::to('/ccm/system/panels/details/page/location') ?>?cID=<?= $cID ?>"
-                                                ><?= t('Location'); ?></a>
-                                            </li>
-                                            <?php
-                                        }
-                                        ?>
-                                        <li>
-                                            <a
-                                                class="dialog-launch"
-                                                dialog-width="90%"
-                                                dialog-height="70%"
-                                                dialog-modal="false"
-                                                dialog-title="<?= t('Attributes') ?>"
-                                                href="<?= URL::to('/ccm/system/dialogs/page/attributes') ?>?cID=<?= $cID ?>"
-                                            ><?= t('Attributes') ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    if ($permissions->canEditPageSpeedSettings()) {
-                                        ?>
-                                        <li>
-                                            <a
-                                                class="dialog-launch"
-                                                dialog-width="550"
-                                                dialog-height="280"
-                                                dialog-modal="false"
-                                                dialog-title="<?= t('Caching') ?>"
-                                                href="<?= URL::to('/ccm/system/panels/details/page/caching') ?>?cID=<?= $cID ?>"
-                                            ><?= t('Caching') ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    if ($permissions->canEditPagePermissions()) {
-                                        ?>
-                                        <li>
-                                            <a
-                                                class="dialog-launch"
-                                                dialog-width="500"
-                                                dialog-height="630"
-                                                dialog-modal="false"
-                                                dialog-title="<?= t('Permissions') ?>"
-                                                href="<?= URL::to('/ccm/system/panels/details/page/permissions') ?>?cID=<?= $cID ?>"
-                                            ><?= t('Permissions') ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    if ($permissions->canEditPageTheme() || $permissions->canEditPageTemplate()) {
-                                        ?>
-                                        <li>
-                                            <a
-                                                class="dialog-launch"
-                                                dialog-width="350"
-                                                dialog-height="250"
-                                                dialog-modal="false"
-                                                dialog-title="<?= t('Design') ?>"
-                                                href="<?= URL::to('/ccm/system/dialogs/page/design') ?>?cID=<?= $cID ?>"
-                                            ><?= t('Design') ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    if ($permissions->canViewPageVersions()) {
-                                        ?>
-                                        <li>
-                                            <a
-                                                class="dialog-launch"
-                                                dialog-width="640"
-                                                dialog-height="340"
-                                                dialog-modal="false"
-                                                dialog-title="<?= t('Versions') ?>"
-                                                href="<?= URL::to('/ccm/system/panels/page/versions') ?>?cID=<?= $cID ?>"
-                                            ><?= t('Versions') ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    if ($permissions->canDeletePage()) {
-                                        ?>
-                                        <li>
-                                            <a
-                                                class="dialog-launch"
-                                                dialog-width="360"
-                                                dialog-height="250"
-                                                dialog-modal="false"
-                                                dialog-title="<?= t('Delete') ?>"
-                                                href="<?= URL::to('/ccm/system/dialogs/page/delete') ?>?cID=<?= $cID ?>"
-                                            ><?php echo t('Delete') ?></a>
-                                        </li>
-                                        <?php
-                                    }
-                                    ?>
-                                </ul>
-                            </li>
-                            <?php
-                        }
-                        if ($dh->canRead()) {
-                            ?>
-                            <li class="parent-ul">
-                                <?php
-                               // $dashboardMenu = new \Concrete\Controller\Element\Navigation\DashboardMobileMenu();
-                               // $dashboardMenu->render();
-                                ?>
-                            </li>
-                            <?php
-                        }
-                        ?>
-                        <li>
-                            <i class="fa fa-sign-out mobile-leading-icon"></i>
-                            <a href="<?= URL::to('/login', 'do_logout', $valt->generate('do_logout')); ?>"><?= t('Sign Out'); ?></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            */ ?><ul class="ccm-toolbar-item-list">
+						<?php
+              $mobileMenu = Element::get('dashboard/navigation/mobile');
+              $mobileMenu->render();
+            ?> 
+            <ul class="ccm-toolbar-item-list">
                 <li class="ccm-logo float-left"><span><?= $cih->getToolbarLogoSRC() ?></span></li>
                 <?php
                 if ($c->isMasterCollection()) {
@@ -253,7 +60,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) {
                     if ($c->isEditMode()) {
                         ?>
-                        <li data-guide-toolbar-action="check-in" class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit float-left hidden-xs">
+                        <li data-guide-toolbar-action="check-in" class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit float-left d-none d-md-block">
                             <a
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-in"
@@ -273,11 +80,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         <?php
                     } elseif ($permissions->canEditPageContents()) {
                         ?>
-                        <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit float-left hidden-xs">
+                        <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit float-left d-none d-md-block">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-out"
-                                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out<?= $token ?>"
+                                href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $valt->generate()])) ?>"
                                 title="<?= t('Edit This Page') ?>"
                             >
                                 <svg><use xlink:href="#icon-pencil" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?= tc('toolbar', 'Edit Mode') ?></span>
@@ -296,7 +103,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ) {
                         $hasComposer = isset($pagetype) && is_object($pagetype) && $cp->canEditPageContents();
                         ?>
-                        <li data-guide-toolbar-action="page-settings" class="float-left hidden-xs">
+                        <li data-guide-toolbar-action="page-settings" class="float-left d-none d-md-block">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 href="#"
                                 data-launch-panel="page"
@@ -322,13 +129,13 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
                 if ($cp->canEditPageContents() && (!$pageInUseBySomeoneElse)) {
                     ?>
-                    <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add float-left hidden-xs">
+                    <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add float-left d-none d-md-block">
                         <?php if ($c->isEditMode()) { ?>
                             <a href="#" data-launch-panel="add-block" data-panel-url="<?= URL::to('/ccm/system/panels/add') ?>" title="<?= t('Add Content to The Page') ?>">
                                 <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } else { ?>
-                            <a href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $cID ?>&ctask=check-out-add-block<?= $token ?>" <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
+                            <a href="<?= h($resolver->resolve(["/ccm/system/page/checkout/{$cID}/add-block/" . $valt->generate()])) ?>" <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' title="<?= t('Add Content to The Page') ?>">
                                 <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
                             </a>
                         <?php } ?>
@@ -342,7 +149,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets();
                         ?>
-                        <li class="float-left hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
+                        <li class="float-left d-none d-md-block"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }
@@ -356,7 +163,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 <?php
                 if ($dh->canRead()) {
                     ?>
-                    <li data-guide-toolbar-action="dashboard" class="float-right hidden-xs ">
+                    <li data-guide-toolbar-action="dashboard" class="float-right d-none d-md-block ">
                         <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard" title="<?= t('Dashboard – Change Site-wide Settings') ?>">
                             <svg><use xlink:href="#icon-dashboard" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard') ?></span>
                         </a>
@@ -364,7 +171,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     <?php
                 } else {
                     ?>
-                    <li class="float-right hidden-xs">
+                    <li class="float-right d-none d-md-block">
                         <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?=URL::to('/login', 'logout', $valt->generate('logout'))?>" title="<?=t('Sign Out')?>">
                             <i class="fa fa-sign-out"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Sign Out') ?></span>
                         </a>
@@ -374,7 +181,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 <?php
                 if ($sh->canViewSitemapPanel()) {
                     ?>
-                    <li data-guide-toolbar-action="sitemap" class="float-right hidden-xs">
+                    <li data-guide-toolbar-action="sitemap" class="float-right d-none d-md-block">
                         <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip"
                            data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
                            data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
@@ -392,12 +199,12 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets();
                         ?>
-                        <li class="float-right hidden-xs"><?= $cnt->getMenuItemLinkElement() ?></li>
+                        <li class="float-right d-none d-md-block"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }
                 ?>
-                <li data-guide-toolbar-action="help" class="float-right hidden-xs">
+                <li data-guide-toolbar-action="help" class="float-right d-none d-md-block">
                     <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip"
                        data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
                        data-panel-url="<?= URL::to('/ccm/system/panels/help') ?>"
@@ -406,42 +213,42 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help') ?></span>
                     </a>
                 </li>
-                <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search float-right hidden-xs">
-                    <svg><use xlink:href="#icon-search" /></svg>
-                    <input type="search" id="ccm-nav-intelligent-search" autocomplete="off" tabindex="1"/>
+                <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search float-right d-none d-md-block">
+                    <?php
+                    $menu = Element::get('navigation/intelligent_search');
+                    $menu->render();
+                    ?>
                 </li>
             </ul>
         </div>
         <?php
 
-        echo $dh->getIntelligentSearchMenu();
-
         if ($pageInUseBySomeoneElse) {
             $buttons = [];
             if ($canApprovePageVersions) {
-                $buttons[] = '<a onclick="$.get(\'' . REL_DIR_FILES_TOOLS_REQUIRED . '/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '\', function() { window.location.reload(); })" href="javascript:void(0)" class="btn btn-xs btn-secondary">' . t('Force Exit Edit Mode') . '</a>';
+                $buttons[] = '<a onclick="' . h('$.get(CCM_DISPATCHER_FILENAME + "/ccm/system/backend/dashboard/sitemap_check_in?cID=' . $c->getCollectionID() . $token . '", function() { window.location.reload(); })') . '" href="javascript:void(0)" class="btn btn-secondary">' . t('Force Exit Edit Mode') . '</a>';
             }
 
             echo $cih->notify([
                 'title' => t('Editing Unavailable.'),
                 'text' => t('%s is currently editing this page.', $c->getCollectionCheckedOutUserName()),
                 'type' => 'info',
-                'icon' => 'fa fa-exclamation-circle',
+                'icon' => 'fas fa-exclamation-circle',
                 'buttons' => $buttons,
             ]);
         } else {
             if ($c->getCollectionPointerID() > 0) {
                 $buttons = [];
-                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-secondary btn-xs">' . t('View/Edit Original') . '</a>';
+                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-secondary btn-sm">' . t('View/Edit Original') . '</a>';
                 if ($canApprovePageVersions) {
                     $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
-                    $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-xs btn-danger">' . t('Remove Alias') . '</a>';
+                    $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-sm btn-danger">' . t('Remove Alias') . '</a>';
                 }
                 echo $cih->notify([
                     'title' => t('Page Alias.'),
                     'text' => t('This page is an alias of one that actually appears elsewhere.'),
                     'type' => 'info',
-                    'icon' => 'fa fa-info-circle',
+                    'icon' => 'fas fa-info-circle',
                     'buttons' => $buttons,
                 ]);
             }
@@ -461,7 +268,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 'title' => t('Page Draft.'),
                                 'text' => t('This is an un-published draft.'),
                                 'type' => 'info',
-                                'icon' => 'fa fa-exclamation-circle',
+                                'icon' => 'fas fa-exclamation-circle',
                             ]);
                         } else {
                             $buttons = [];
@@ -485,13 +292,13 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 if (!isset($appLabel) || !$appLabel) {
                                     $appLabel = t('Approve Version');
                                 }
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/approve_recent/{$cID}/" . $valt->generate()])) . '" class="btn btn-primary">' . $appLabel . '</a>';
                             }
                             echo $cih->notify([
                                 'title' => t('Page is Pending Approval.'),
                                 'text' => t('This page is newer than what appears to visitors on your live site.'),
                                 'type' => 'info',
-                                'icon' => 'fa fa-cog',
+                                'icon' => 'fas fa-cog',
                                 'buttons' => $buttons,
                             ]);
                         }
@@ -503,14 +310,14 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
                             $buttons = [];
                             if ($canApprovePageVersions && !$c->isCheckedOut()) {
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=publish-now' . $token . '"> ' . t('Publish Now') . '</a>';
-                                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=cancel-schedule' . $token . '"> ' . t('Cancel Scheduled Publish') . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/publish_now/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Publish Now') . '</a>';
+                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/cancel_schedule/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Cancel Scheduled Publish') . '</a>';
                             }
                             echo $cih->notify([
                                 'title' => t('Publish Pending.'),
                                 'text' => $message,
                                 'type' => 'info',
-                                'icon' => 'fa fa-cog',
+                                'icon' => 'fas fa-cog',
                                 'buttons' => $buttons,
                             ]);
                         }

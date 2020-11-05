@@ -35,7 +35,9 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                     </div>
 
                     <?php echo Loader::helper('validation/token')->output('copy_tree') ?>
-                    <button class="btn btn-default pull-left" type="submit" name="copy"><?= t('Copy Tree') ?></button>
+                    <div class="form-group">
+                        <button class="btn btn-secondary float-left" type="submit" name="copy"><?= t('Copy Tree') ?></button>
+                    </div>
 
                     <?php
                 } elseif (count($locales) == 1) {
@@ -102,8 +104,10 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                     </div>
 
                     <?php echo Loader::helper('validation/token')->output('rescan_locale') ?>
-                    <button class="btn btn-default pull-left" type="submit"
-                            name="rescan_locale"><?= t('Rescan Locale') ?></button>
+                    <div class="form-group">
+                        <button class="btn btn-secondary float-left" type="submit"
+                                name="rescan_locale"><?= t('Rescan Locale') ?></button>
+                    </div>
 
                     <?php
                 } elseif (count($pages) == 1) {

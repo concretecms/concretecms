@@ -31,6 +31,7 @@ class AccountPageController extends CorePageController
                 new DashboardFormContext(),
                 $profile
             ));
+            
         } else {
             $this->setTheme('concrete');
             $this->set('profileFormRenderer', new Renderer(

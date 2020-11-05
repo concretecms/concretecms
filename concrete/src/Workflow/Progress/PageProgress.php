@@ -6,6 +6,8 @@ use Database;
 use Page;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Validation\CSRF\Token;
 
 class PageProgress extends Progress implements SiteProgressInterface
 {
@@ -63,7 +65,16 @@ class PageProgress extends Progress implements SiteProgressInterface
 
     public function getWorkflowProgressFormAction()
     {
-        return REL_DIR_FILES_TOOLS_REQUIRED . '/' . DIRNAME_WORKFLOW . '/categories/page?task=save_workflow_progress&cID=' . $this->cID . '&wpID=' . $this->getWorkflowProgressID() . '&' . Core::make('helper/validation/token')->getParameter('save_workflow_progress');
+        $url = app(ResolverManagerInterface::class)->resolve(['/ccm/system/workflow/categories/page/save_progress']);
+        $token = app(Token::class);
+        $query = $url->getQuery();
+        $query->modify([
+            'cID' => $this->cID,
+            'wpID' => $this->getWorkflowProgressID(),
+            $token::DEFAULT_TOKEN_NAME => $token->generate('save_workflow_progress')
+        ]);
+        
+        return (string) $url->setQuery($query);
     }
 
     public function getPendingWorkflowProgressList()

@@ -100,6 +100,16 @@ class PageTemplate implements RenderableTemplateInterface
         $this->data = $data;
     }
 
-    
-    
+    public function jsonSerialize()
+    {
+        $data = [
+            'template' => $this->getTemplate(),
+            'data' => $this->getData(),
+            'id' => $this->getId(),
+            'pageID' => $this->getPageID(),
+        ];
+        return $data;
+    }
+
+
 }

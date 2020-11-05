@@ -22,14 +22,13 @@ if (is_object($c)) {
 }
 ?>
 
-<title><?= htmlspecialchars($c->getCollectionName(), ENT_COMPAT, APP_CHARSET); ?></title>
+<title><?=t('Preview')?></title>
 <script type="text/javascript">
     var CCM_DISPATCHER_FILENAME = "<?= DIR_REL . '/' . DISPATCHER_FILENAME; ?>";
     var CCM_CID = <?= $cID ?? 0; ?>;
     var CCM_EDIT_MODE = false;
     var CCM_ARRANGE_MODE = false;
     var CCM_IMAGE_PATH = "<?= ASSETS_URL_IMAGES; ?>";
-    var CCM_TOOLS_PATH = "<?= REL_DIR_FILES_TOOLS_REQUIRED; ?>";
     var CCM_APPLICATION_URL = "<?= rtrim((string) app('url/canonical'), '/'); ?>";
     var CCM_REL = "<?= app('app_relative_path'); ?>";
     var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale()) ?>;

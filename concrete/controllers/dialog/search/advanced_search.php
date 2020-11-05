@@ -21,22 +21,12 @@ abstract class AdvancedSearch extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/search/advanced_search';
     protected $supportsSavedSearch = true;
-    public $objectID = null;
-
-    public function getObjectID()
-    {
-        return (string) $this->objectID;
-    }
 
     abstract public function getFieldManager();
 
+    abstract public function getSearchPresets();
+
     abstract public function getSavedSearchBaseURL(SavedSearch $search);
-
-    abstract public function getBasicSearchBaseURL();
-
-    abstract public function getCurrentSearchBaseURL();
-
-    abstract public function getSavedSearchEntity();
 
     public function getAddFieldAction()
     {
@@ -46,6 +36,11 @@ abstract class AdvancedSearch extends BackendInterfaceController
     public function getSubmitAction()
     {
         return $this->action('submit');
+    }
+
+    public function getSavePresetAction()
+    {
+        return $this->action('save_preset');
     }
 
     public function getSubmitMethod()
@@ -74,8 +69,9 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     protected function getSearchFieldSelectorElement()
     {
-        if ($this->request->query->has('query')) {
-            $query = $this->deserializeQuery($this->request->query->get('query'));
+        $bag = $this->request->getMethod() === Request::METHOD_POST ? $this->request->request : $this->request->query;
+        if ($bag->has('query')) {
+            $query = $this->deserializeQuery($bag->get('query'));
         } else {
             $query = new Query();
         }
@@ -84,28 +80,17 @@ abstract class AdvancedSearch extends BackendInterfaceController
         return $element;
     }
 
+
     protected function getCustomizeResultsElement()
     {
         $query = null;
-        if ($this->request->query->has('query')) {
-            $query = $this->deserializeQuery($this->request->query->get('query'));
+        $bag = $this->request->getMethod() === Request::METHOD_POST ? $this->request->request : $this->request->query;
+        if ($bag->has('query')) {
+            $query = $this->deserializeQuery($bag->get('query'));
         }
         $provider = $this->getSearchProvider();
         $element = new CustomizeResults($provider, $query);
-
         return $element;
-    }
-
-    protected function getSearchPresets()
-    {
-        $searchPresets = [];
-        $app = Application::getFacadeApplication();
-        $searchEntity = $this->getSavedSearchEntity();
-        if (!empty($searchEntity)) {
-            $searchPresets = $searchEntity->findAll();
-        }
-
-        return $searchPresets;
     }
 
     public function view()

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Navigation\Item;
 
-class Item implements ItemInterface
+class Item implements ItemInterface, \JsonSerializable
 {
 
     /**
@@ -20,6 +20,11 @@ class Item implements ItemInterface
     protected $isActive;
 
     /**
+     * @var bool
+     */
+    protected $isActiveParent = false;
+
+    /**
      * @var Item[]
      */
     protected $children = [];
@@ -30,11 +35,12 @@ class Item implements ItemInterface
      * @param string $name
      * @param bool $isActive
      */
-    public function __construct(string $url, string $name, bool $isActive = false)
+    public function __construct(string $url, string $name, bool $isActive = false, $isActiveParent = false)
     {
         $this->url = $url;
         $this->name = $name;
         $this->isActive = $isActive;
+        $this->isActiveParent = $isActiveParent;
     }
 
     /**
@@ -69,9 +75,78 @@ class Item implements ItemInterface
         return $this->children;
     }
 
+    /**
+     * @param Item[] $children
+     */
+    public function setChildren(array $children): void
+    {
+        $this->children = $children;
+    }
+
     public function addChild(Item $item)
     {
         $this->children[] = $item;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl(string $url): void
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param bool $isActive
+     */
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActiveParent(): bool
+    {
+        return $this->isActiveParent;
+    }
+
+    /**
+     * @param bool $isActiveParent
+     */
+    public function setIsActiveParent(bool $isActiveParent): void
+    {
+        $this->isActiveParent = $isActiveParent;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'url' => $this->getUrl(),
+            'name' => $this->getName(),
+            'isActive' => $this->isActive(),
+            'isActiveParent' => $this->isActiveParent(),
+            'children' => $this->getChildren(),
+        ];
+    }
+
+    public function __clone()
+    {
+        $children = $this->getChildren();
+        $newChildren = [];
+        foreach($children as $child) {
+            $newChildren[] = clone $child;
+        }
+        $this->setChildren($newChildren);
     }
 
 

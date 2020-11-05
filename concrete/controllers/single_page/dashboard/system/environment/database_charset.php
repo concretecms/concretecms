@@ -5,9 +5,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 use Concrete\Core\Database\CharacterSetCollation\Exception;
 use Concrete\Core\Database\CharacterSetCollation\Manager;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class DatabaseCharset extends DashboardPageController
 {
@@ -29,23 +27,21 @@ class DatabaseCharset extends DashboardPageController
             try {
                 $manager->apply('', $collation, '', '', null, $warnings);
             } catch (Exception $x) {
-                $this->errors->add($x);
+                $this->error->add($x);
             }
         }
-        if ($this->error->has()) {
-            $this->view();
-        } else {
-            if ($warnings->has()) {
-                $this->flash('set_connection_collation_warnings', $warnings);
-            } else {
-                $this->flash('success', t('The character set and the collation of the connection and all the tables have been updated.'));
-            }
 
-            return $this->app->make(ResponseFactoryInterface::class)->redirect(
-                $this->app->make(ResolverManagerInterface::class)->resolve([$this->request->getCurrentPage()]),
-                302
-            );
+        if ($this->error->has()) {
+            return $this->view();
         }
+
+        if ($warnings->has()) {
+            $this->flash('set_connection_collation_warnings', $warnings);
+        } else {
+            $this->flash('success', t('The character set and the collation of the connection and all the tables have been updated.'));
+        }
+
+        return $this->buildRedirect($this->action());
     }
 
     /**
@@ -53,7 +49,7 @@ class DatabaseCharset extends DashboardPageController
      *
      * @return array
      */
-    protected function listCharsetsAndCollations(Connection $connection)
+    protected function listCharsetsAndCollations(Connection $connection): array
     {
         $charsetsAndDefaultCollation = $connection->getSupportedCharsets();
         ksort($charsetsAndDefaultCollation, SORT_NATURAL);
@@ -64,11 +60,13 @@ class DatabaseCharset extends DashboardPageController
             $collations = [
                 $defaultCollation => $defaultCollation,
             ];
+
             foreach ($collationsForCharsets as $collation => $forCharset) {
                 if ($forCharset === $charset && $collation !== $defaultCollation) {
                     $collations[$collation] = $collation;
                 }
             }
+
             $result[t('Character set: %s', $charset)] = $collations;
         }
 
@@ -80,12 +78,13 @@ class DatabaseCharset extends DashboardPageController
      *
      * @return string
      */
-    protected function getConfiguredCollation(Connection $connection)
+    protected function getConfiguredCollation(Connection $connection): string
     {
         $params = $connection->getParams();
         if (!empty($params['collation'])) {
             return $params['collation'];
         }
+
         // legacy support
         if (!empty($params['charset'])) {
             $charsetsAndDefaultCollation = $connection->getSupportedCharsets();

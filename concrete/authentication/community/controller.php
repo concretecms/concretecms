@@ -1,17 +1,18 @@
 <?php
+
 namespace Concrete\Authentication\Community;
 
 use Concrete\Core\Authentication\Type\Community\Factory\CommunityServiceFactory;
 use Concrete\Core\Authentication\Type\Community\Service\Community;
 use Concrete\Core\Authentication\Type\Community\Service\Community as CommunityService;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
-use Concrete\Core\Support\Facade\Application;
-use Core;
+use Concrete\Core\Form\Service\Widget\GroupSelector;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\Group\GroupRepository;
 use OAuth\ServiceFactory;
 
 class Controller extends GenericOauth2TypeController
 {
-
     public function registrationGroupID()
     {
         return \Config::get('auth.community.registration.group');
@@ -54,20 +55,26 @@ class Controller extends GenericOauth2TypeController
 
     public function saveAuthenticationType($args)
     {
-        \Config::save('auth.community.appid', $args['apikey']);
-        \Config::save('auth.community.secret', $args['apisecret']);
-        \Config::save('auth.community.registration.enabled', (bool) $args['registration_enabled']);
-        \Config::save('auth.community.registration.group', intval($args['registration_group'], 10));
+        $config = $this->app->make('config');
+        $config->save('auth.community.appid', (string) ($args['apikey'] ?? ''));
+        $config->save('auth.community.secret', (string) ($args['apisecret'] ?? ''));
+        $config->save('auth.community.registration.enabled', !empty($args['registration_enabled']));
+        $config->save('auth.community.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
     }
 
     public function edit()
     {
-        $this->set('form', Core::make('helper/form'));
-        $this->set('apikey', \Config::get('auth.community.appid', ''));
-        $this->set('apisecret', \Config::get('auth.community.secret', ''));
-
-        $list = new \GroupList();
-        $this->set('groups', $list->getResults());
+        $config = $this->app->make('config');
+        $this->set('groupSelector', $this->app->make(GroupSelector::class));
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('concrete5SecurePrefix', (string) $config->get('concrete.urls.concrete5_secure'));
+        $this->set('callbackURI', $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/authentication/oauth2/community/callback']));
+        $this->set('apikey', (string) $config->get('auth.community.appid', ''));
+        $this->set('apisecret', (string) $config->get('auth.community.secret', ''));
+        $this->set('registrationEnabled', (bool) $config->get('auth.community.registration.enabled'));
+        $registrationGroupID = (int) $config->get('auth.community.registration.group');
+        $registrationGroup = $registrationGroupID === 0 ? null : $this->app->make(GroupRepository::class)->getGroupById($registrationGroupID);
+        $this->set('registrationGroup', $registrationGroup === null ? null : (int) $registrationGroup->getGroupID());
     }
 
     /**
@@ -75,7 +82,7 @@ class Controller extends GenericOauth2TypeController
      */
     public function getAdditionalRequestParameters()
     {
-        return array('state' => time());
+        return ['state' => time()];
     }
 
     public function getExtractor($new = false)
@@ -90,10 +97,10 @@ class Controller extends GenericOauth2TypeController
     /**
      * Get the URL of the concrete5 account associated to a user.
      *
-    * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
-    *
-    * @return string|null Returns null if the user is not bound to a concrete5 account.
-    */
+     * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
+     *
+     * @return string|null returns null if the user is not bound to a concrete5 account
+     */
     public function getConcrete5ProfileURL($user)
     {
         $result = null;
@@ -101,7 +108,7 @@ class Controller extends GenericOauth2TypeController
         if ($binding !== null) {
             $concrete5UserID = (int) $binding;
             if ($concrete5UserID !== 0) {
-                $result = "https://www.concrete5.org/profile/-/view/$concrete5UserID/";
+                $result = "https://www.concrete5.org/profile/-/view/{$concrete5UserID}/";
             }
         }
 

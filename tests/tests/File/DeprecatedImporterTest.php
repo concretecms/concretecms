@@ -167,10 +167,10 @@ class DeprecatedImporterTest extends FileStorageTestCase
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
         $config = Core::make('config');
-        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
+        $file = DIR_BASE . '/concrete/config/install/packages/elemental_full/files/123412345678_plants.jpg';
         $humbnailTypes = ThumbnailType::getList();
         foreach ([
-            'auto' => ['png', IMAGETYPE_PNG],
+            'auto' => ['jpg', IMAGETYPE_JPEG],
             'jpeg' => ['jpg', IMAGETYPE_JPEG],
             'png' => ['png', IMAGETYPE_PNG],
         ] as $thumbnailFormat => list($expectedExtension, $expectedFileType)) {
@@ -178,7 +178,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
             foreach (['async', 'now'] as $strategy) {
                 $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
                 $fi = new Importer();
-                $fo = $fi->import($file, 'background-slider-night-road.png');
+                $fo = $fi->import($file, '123412345678_plants.jpg');
                 $this->assertTrue(is_object($fo), 'Import failed (' . (is_object($fo) ? null : Importer::getErrorMessage($fo)) . ')');
                 $type = $fo->getTypeObject();
                 $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
@@ -188,7 +188,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
                 $this->assertFalse((bool) $fo->hasThumbnail(3));
 
                 $this->assertEquals(
-                    '/application/files/thumbnails/file_manager_detail' . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), $expectedExtension), 2),
+                    'http://www.dummyco.com/application/files/thumbnails/file_manager_detail' . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), $expectedExtension), 2),
                     $fo->getThumbnailURL('file_manager_detail'),
                     "Check thumbnail URL with: format={$thumbnailFormat}, strategy={$strategy}"
                 );
@@ -258,7 +258,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
 
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
-        $this->assertEquals('/application/files/thumbnails/file_manager_detail'
+        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
             . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }

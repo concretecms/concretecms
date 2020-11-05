@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ItemTag
 {
-    
+
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -45,7 +45,7 @@ class ItemTag
     {
         return $this->boardItemTagID;
     }
-    
+
     /**
      * @return mixed
      */
@@ -78,8 +78,8 @@ class ItemTag
         $this->tag = $tag;
     }
 
-    
 
-    
+
+
 
 }

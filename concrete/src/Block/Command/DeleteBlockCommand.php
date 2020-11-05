@@ -6,10 +6,13 @@ use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
 class DeleteBlockCommand extends BlockCommand implements BatchableCommandInterface
 {
-
-    public function getBatchHandle()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
+     */
+    public function getBatchHandle(): string
     {
         return 'delete_block';
     }
-
 }

@@ -1,17 +1,29 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
+defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var Concrete\Core\Page\Type\Composer\Control\Control $control
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var string $label
+ * @var string $description
+ */
+$resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <div class="form-group">
-	<label class="control-label"><?=$label?></label>
-    <?php if ($control->isPageTypeComposerFormControlRequiredOnThisRequest()) : ?>
+    <?= $form->label('', $label) ?>
+    <?php if ($control->isPageTypeComposerFormControlRequiredOnThisRequest()) { ?>
         <span class="label label-info"><?= t('Required') ?></span>
-    <?php endif; ?>
-	<?php if ($description): ?>
-	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
-	<?php endif; ?>
+    <?php } ?>
+
+	<?php if ($description) { ?>
+	    <i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?= $description ?>"></i>
+	<?php } ?>
+
 	<div data-composer-field="name">
-		<?=$form->text($this->field('name'), $control->getPageTypeComposerControlDraftValue(), ['autofocus' => 'autofocus'])?>
+		<?= $form->text($this->field('name'), $control->getPageTypeComposerControlDraftValue(), ['autofocus' => 'autofocus']) ?>
 	</div>
 </div>
 
@@ -23,7 +35,7 @@ $(function() {
 		$('div[data-composer-field=name] input').on('keyup', function() {
 			var input = $(this);
 			var send = {
-				token: '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
+				token: '<?= app('helper/validation/token')->generate('get_url_slug') ?>',
 				name: input.val()
 			};
 			var parentID = input.closest('form').find('input[name=cParentID]').val();
@@ -34,7 +46,7 @@ $(function() {
 			concreteComposerAddPageTimer = setTimeout(function() {
 				$('.ccm-composer-url-slug-loading').show();
 				$.post(
-					'<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug',
+					<?= json_encode((string) $resolverManager->resolve(['/ccm/system/page/url_slug'])) ?>,
 					send,
 					function(r) {
 						$('.ccm-composer-url-slug-loading').hide();

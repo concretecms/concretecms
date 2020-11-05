@@ -25,11 +25,10 @@ $dh = Loader::helper('concrete/dashboard');
         $v->requireAsset('core/cms');
         
         $editMode = $c->isEditMode();
-        $tools = REL_DIR_FILES_TOOLS_REQUIRED;
         $htmlTagClasses = 'ccm-toolbar-visible';
 
         if ($c->isEditMode()) {
-            $startEditMode = 'new Concrete.EditMode();';
+            $startEditMode = 'window.concreteEditMode = new Concrete.EditMode();';
             $htmlTagClasses .= ' ccm-edit-mode';
         } else {
             $startEditMode = '';
@@ -37,7 +36,7 @@ $dh = Loader::helper('concrete/dashboard');
 
         if (!$dh->inDashboard()) {
             $launchPageComposer = '';
-            if ($cp->canEditPageContents() && $request->get('ctask') == 'check-out-first') {
+            if ($cp->canEditPageContents() && $request->query->get('ccmCheckoutFirst') === '1') {
                 $pagetype = $c->getPageTypeObject();
                 if (is_object($pagetype) && $pagetype->doesPageTypeLaunchInComposer()) {
                     $launchPageComposer = "$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active'); ConcretePanelManager.getByIdentifier('page').show();";

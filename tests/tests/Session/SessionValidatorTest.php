@@ -7,6 +7,8 @@ use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use IPLib\Address\AddressInterface;
+use IPLib\Factory;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -31,6 +33,9 @@ class SessionValidatorTest extends TestCase
     public function setUp()
     {
         $this->app = clone Application::getFacadeApplication();
+        $this->app->singleton(AddressInterface::class, function () {
+            return Factory::addressFromString($this->request->getClientIp(), true, true, true);
+        });
         $this->app['config'] = clone $this->app['config'];
 
         $this->request = Request::create('http://url.com/');

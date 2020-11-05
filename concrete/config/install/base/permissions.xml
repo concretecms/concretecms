@@ -32,6 +32,7 @@
         <category handle="express_entry" package=""/>
         <category handle="board_admin" package=""/>
         <category handle="board" package=""/>
+        <category handle="logs" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -95,7 +96,7 @@
         <permissionkey handle="edit_file_folder_file_contents" name="Edit File Contents" description="Can edit or replace files in folder." package="" category="file_folder"/>
         <permissionkey handle="copy_file_folder_files" name="Copy File" description="Can copy files in file folder." package="" category="file_folder"/>
         <permissionkey handle="edit_file_folder_permissions" name="Edit File Access" description="Can edit access to file folder." package="" category="file_folder"/>
-        <permissionkey handle="delete_file_folder" name="Delete File Set" description="Can delete file folder." package="" category="file_folder"/>
+        <permissionkey handle="delete_file_folder" name="Delete File Folder" description="Can delete file folder." package="" category="file_folder"/>
         <permissionkey handle="delete_file_folder_files" name="Delete File" description="Can delete files in folder." package="" category="file_folder"/>
         <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="Can add files to folder." package="" category="file_folder"/>
 
@@ -135,6 +136,23 @@
         <permissionkey handle="rate_conversation_message" name="Rate Message" description="" package="" category="conversation" />
         <permissionkey handle="flag_conversation_message" name="Flag Message" description="" package="" category="conversation" />
         <permissionkey handle="approve_conversation_message" name="Approve Message" description="" package="" category="conversation" />
+
+        <!-- logs //-->
+        <permissionkey handle="view_log_entries" name="View Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_log_entries" name="Delete Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="export_log_entries" name="Export Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
 
         <!-- users //-->
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
@@ -220,16 +238,56 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="view_calendar" name="View Calendar" description="" package="" category="calendar"/>
-        <permissionkey handle="view_calendar_in_edit_interface" name="View in Edit Interface" description="" package="" category="calendar"/>
-        <permissionkey handle="edit_calendar_permissions" name="Edit Permissions" description="" package="" category="calendar"/>
-        <permissionkey handle="edit_calendar" name="Edit Calendar" description="" package="" category="calendar"/>
-        <permissionkey handle="add_calendar_event" name="Add Calendar Event" description="" package="" category="calendar"/>
-        <permissionkey handle="approve_calendar_event" name="Approve Calendar Event" can-trigger-workflow="true" description="" package="" category="calendar"/>
-        <permissionkey handle="edit_calendar_event_more_details_location" name="Modify More Details Location" description="" package="" category="calendar"/>
-        <permissionkey handle="edit_calendar_events" name="Edit Calendar Events" description="" package="" category="calendar"/>
-        <permissionkey handle="access_calendar_rss_feed" name="Access RSS Feed" description="" package="" category="calendar"/>
-        <permissionkey handle="delete_calendar" name="Delete Calendar" description="" package="" category="calendar"/>
+        <permissionkey handle="view_calendar" name="View Calendar" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="view_calendar_in_edit_interface" name="View in Edit Interface" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendar_permissions" name="Edit Permissions" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendar" name="Edit Calendar" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="add_calendar_event" name="Add Calendar Event" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="approve_calendar_event" name="Approve Calendar Event" can-trigger-workflow="true" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendar_event_more_details_location" name="Modify More Details Location" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendar_events" name="Edit Calendar Events" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="access_calendar_rss_feed" name="Access RSS Feed" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_calendar" name="Delete Calendar" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
 
         <!-- boards //-->
         <permissionkey handle="add_board" name="Add Board" description="" package="" category="board_admin">
@@ -257,6 +315,11 @@
                 <entity type="group" name="Administrators"/>
             </access>
         </permissionkey>
+        <permissionkey handle="edit_boards_locked_rules" name="Edit Locked Rules" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
         <permissionkey handle="delete_boards" name="Delete Boards" description="" package="" category="board_admin">
             <access>
                 <entity type="group" name="Administrators"/>
@@ -267,6 +330,7 @@
         <permissionkey handle="edit_board_settings" name="Edit Settings" description="" package="" category="board"/>
         <permissionkey handle="edit_board_permissions" name="Edit Permissions" description="" package="" category="board"/>
         <permissionkey handle="edit_board_contents" name="Edit Contents" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_locked_rules" name="Edit Locked Rules" description="" package="" category="board"/>
         <permissionkey handle="delete_board" name="Delete Board" description="" package="" category="board"/>
 
         <!-- express //-->

@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div class="<?= $c->getPageWrapperClass() ?>">
+        <div class="<?= isset($c) ? $c->getPageWrapperClass() : 'ccm-page'?>">
             <div class="ccm-block-preview">
                 <?= $innerContent ?>
             </div>

@@ -77,7 +77,7 @@
                 <g id="Header-Editor-Default" transform="translate(-1345.000000, -16.000000)">
                     <g id="Group-2">
                         <g id="Screen-Shot-2020-01-30-at-2.48.35-PM">
-                            <g id="icons8-documents" mask="url(#mask-2)" fill-rule="nonzero">
+                            <g id="icons8-documents" fill-rule="nonzero">
                                 <g transform="translate(1345.000000, 16.000000)" id="Shape">
                                     <path d="M1.45454545,0 C0.654545455,0 0,0.654545455 0,1.45454545 L0,11.6363636 L1.45454545,11.6363636 L1.45454545,1.45454545 L10.1818182,1.45454545 L10.1818182,0 L1.45454545,0 Z M2.90909091,2.90909091 L2.90909091,16 L13.8181818,16 L13.8181818,6.54545455 L10.1818182,2.90909091 L2.90909091,2.90909091 Z M5.81818182,8.72727273 L10.9090909,8.72727273 L10.9090909,10.1818182 L5.81818182,10.1818182 L5.81818182,8.72727273 Z M5.81818182,11.6363636 L10.9090909,11.6363636 L10.9090909,13.0909091 L5.81818182,13.0909091 L5.81818182,11.6363636 Z"></path>
                                 </g>
@@ -92,7 +92,7 @@
                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
                 <g id="Header-Editor-Default" transform="translate(-1403.000000, -16.000000)">
-                    <g id="icons8-slider" mask="url(#mask-2)" fill-rule="nonzero">
+                    <g id="icons8-slider" fill-rule="nonzero">
                         <g transform="translate(1403.000000, 16.000000)" id="Shape">
                             <path d="M6.4,0 C5.35871248,0 4.47828872,0.67099888 4.14687504,1.6 L0,1.6 L0,3.2 L4.14687504,3.2 C4.47828872,4.12900112 5.35871248,4.8 6.4,4.8 C7.7232,4.8 8.8,3.7232 8.8,2.4 C8.8,1.0768 7.7232,0 6.4,0 Z M10.4,1.6 L10.4,3.2 L16,3.2 L16,1.6 L10.4,1.6 Z M10.4,5.6 C9.3587128,5.6 8.4782888,6.27099888 8.1468752,7.2 L0,7.2 L0,8.8 L8.1468752,8.8 C8.4782888,9.7290008 9.3587128,10.4 10.4,10.4 C11.7232,10.4 12.8,9.3232 12.8,8 C12.8,6.6768 11.7232,5.6 10.4,5.6 Z M14.4,7.2 L14.4,8.8 L16,8.8 L16,7.2 L14.4,7.2 Z M4,11.2 C2.95871248,11.2 2.07828872,11.8709992 1.74687504,12.8 L0,12.8 L0,14.4 L1.74687504,14.4 C2.07828872,15.3290008 2.95871248,16 4,16 C5.3232,16 6.4,14.9232 6.4,13.6 C6.4,12.2768 5.3232,11.2 4,11.2 Z M8,12.8 L8,14.4 L16,14.4 L16,12.8 L8,12.8 Z"></path>
                         </g>
@@ -107,7 +107,7 @@
                 <g id="Header-Editor---Page-Nav" transform="translate(-1038.000000, -16.000000)">
                     <g id="Group-2">
                         <g id="Screen-Shot-2020-01-30-at-2.48.35-PM">
-                            <g id="icons8-search" mask="url(#mask-2)" fill-rule="nonzero">
+                            <g id="icons8-search" fill-rule="nonzero">
                                 <g transform="translate(1038.000000, 16.000000)" id="Shape">
                                     <path d="M6.38123167,0 C2.85337262,0 0,2.7879658 0,6.23495702 C0,9.68194861 2.85337262,12.469914 6.38123167,12.469914 C7.64076256,12.469914 8.8064518,12.1088825 9.79472141,11.495702 L14.4046921,16 L16,14.4412607 L11.4486804,10.0057307 C12.2668624,8.95702006 12.7624633,7.65759303 12.7624633,6.23495702 C12.7624633,2.7879658 9.9090911,0 6.38123167,0 Z M6.38123167,1.46704871 C9.08357781,1.46704871 11.2609971,3.59455578 11.2609971,6.23495702 C11.2609971,8.87535826 9.08357781,11.0028653 6.38123167,11.0028653 C3.67888554,11.0028653 1.50146628,8.87535826 1.50146628,6.23495702 C1.50146628,3.59455578 3.67888554,1.46704871 6.38123167,1.46704871 Z"></path>
                                 </g>
@@ -279,6 +279,34 @@
                 </g>
             </g>
         </symbol>
+
+        <symbol id="icon-loader-circles" version="1.1" id="L4" style="background: black" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  viewBox="0 0 250 100" enable-background="new 0 0 0 0" xml:space="preserve">
+  <circle stroke="none" cx="32" cy="50" r="32">
+    <animate
+      attributeName="opacity"
+      dur="1s"
+      values="0;1;0"
+      repeatCount="indefinite"
+      begin="0.1"/>
+  </circle>
+  <circle stroke="none" cx="124" cy="50" r="32">
+    <animate
+      attributeName="opacity"
+      dur="1s"
+      values="0;1;0"
+      repeatCount="indefinite"
+      begin="0.2"/>
+  </circle>
+  <circle stroke="none" cx="216" cy="50" r="32">
+    <animate
+      attributeName="opacity"
+      dur="1s"
+      values="0;1;0"
+      repeatCount="indefinite"
+      begin="0.3"/>
+  </circle>
+</symbol>
 
     </defs>
 </svg>

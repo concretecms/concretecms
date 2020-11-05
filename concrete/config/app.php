@@ -136,6 +136,7 @@ return [
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
+        'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
@@ -220,6 +221,7 @@ return [
         'workflow',
         'workflow_progress_category',
         'workflow_type',
+        'external_file_provider_type',
     ],
 
     'importer_routines' => [
@@ -236,6 +238,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeComposerControlTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBannedWordsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSocialLinksRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportDesignTagsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
@@ -290,9 +293,9 @@ return [
     'routes' => [
     ],
 
-/*
- * Route themes
- */
+    /*
+     * Route themes
+     */
     'theme_paths' => [
         '/dashboard' => 'dashboard',
         '/dashboard/*' => 'dashboard',
@@ -316,9 +319,9 @@ return [
      * - handle of the package
      */
     'file_types' => [
-        'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'],
-        'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image', 'image'],
-        'PNG' => ['png', FileType::T_IMAGE, 'image', 'image', 'image'],
+        'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image'],
+        'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image'],
+        'PNG' => ['png', FileType::T_IMAGE, 'image', 'image'],
         'Windows Bitmap' => ['bmp', FileType::T_IMAGE, 'image'],
         'TIFF' => ['tif,tiff', FileType::T_IMAGE, 'image'],
         'HTML' => ['htm,html', FileType::T_IMAGE],
@@ -375,13 +378,16 @@ return [
         'ccm.image.svg' => Concrete\Core\File\Import\Processor\SvgProcessor::class,
         'ccm.image.resize' => Concrete\Core\File\Import\Processor\ImageSizeConstrain::class,
         'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
+        'ccm.image.exif_data' => Concrete\Core\File\Import\Processor\ExifDataExtractor::class,
     ],
 
     /*
      * Assets
      */
     'assets' => [
-        // Basic JavaScript requirements
+        // External vendor libraries required to run concrete5 or our themes at a fundamental level that can't
+        // or shouldn't be bundled with our own SCSS/JS files.
+
         'jquery' => [
             [
                 'javascript',
@@ -397,11 +403,27 @@ return [
             ],
         ],
 
+        'bootstrap' => [
+            [
+                'javascript',
+                'js/bootstrap.js',
+                [
+                    'position' => Asset::ASSET_POSITION_FOOTER,
+                    'version' => '4.0.0'
+                ]
+            ]
+        ],
+
+        'moment' => [
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript-localized', '/ccm/assets/localization/moment/js'],
+        ],
+
         // This is the base CKEditor library from CKEditor
         'ckeditor' => [
             [
                 'javascript',
-                'js/ckeditor/ckeditor.js'
+                'js/ckeditor/ckeditor.js',
             ],
         ],
 
@@ -411,10 +433,23 @@ return [
             ['css', 'css/ckeditor/concrete.css'],
         ],
 
+        'fullcalendar' => [
+            ['javascript', 'js/fullcalendar.js'],
+            ['css', 'css/fullcalendar.css'],
+        ],
+
         'font-awesome' => [
             [
                 'css',
-                'css/fontawesome/all.css'
+                'css/fontawesome/all.css',
+            ],
+        ],
+
+        'google-charts' => [
+            [
+                'javascript',
+                'https://www.gstatic.com/charts/loader.js',
+                ['local' => false],
             ],
         ],
 
@@ -450,7 +485,9 @@ return [
             ['javascript', 'js/features/conversations/frontend.js'],
             ['css', 'css/features/conversations/frontend.css'],
         ],
-
+        'ace' => [
+            ['javascript', 'js/ace/ace.js'],
+        ],
         'feature/documents/frontend' => [
             ['javascript', 'js/features/documents/frontend.js'],
             ['css', 'css/features/documents/frontend.css'],
@@ -503,20 +540,24 @@ return [
             ['javascript', 'js/features/maps/frontend.js'],
             ['css', 'css/features/maps/frontend.css'],
         ],
-
-        'google-charts' => [
-            [
-                'javascript',
-                'https://www.gstatic.com/charts/loader.js',
-                ['local' => false],
-            ],
-        ],
     ],
     'asset_groups' => [
-
         'jquery' => [
             [
                 ['javascript', 'jquery'],
+            ],
+        ],
+
+        'bootstrap' => [
+            [
+                ['javascript', 'bootstrap']
+            ],
+        ],
+
+        'moment' => [
+            [
+                ['javascript', 'moment'],
+                ['javascript-localized', 'moment'],
             ],
         ],
 
@@ -539,16 +580,29 @@ return [
                 ['css', 'ckeditor/concrete'],
             ],
         ],
-
+        'ace' => [
+            [
+                ['javascript', 'ace'],
+            ],
+        ],
         'core/cms' => [
             [
                 ['javascript', 'jquery'],
+                ['javascript', 'bootstrap'],
+                ['javascript', 'moment'],
                 ['javascript', 'vue'],
                 ['css', 'font-awesome'],
                 ['javascript', 'core/cms'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'core/cms'],
-            ]
+            ],
+        ],
+
+        'fullcalendar' => [
+            [
+                ['javascript', 'fullcalendar'],
+                ['css', 'fullcalendar'],
+            ],
         ],
 
         // Fallback/minimal assets groups
@@ -557,28 +611,28 @@ return [
             [
                 ['javascript', 'feature/account/frontend'],
                 ['css', 'feature/account/frontend'],
-            ]
+            ],
         ],
 
         'feature/desktop/frontend' => [
             [
                 ['javascript', 'feature/desktop/frontend'],
                 ['css', 'feature/desktop/frontend'],
-            ]
+            ],
         ],
 
         'feature/calendar/frontend' => [
             [
                 ['javascript', 'feature/calendar/frontend'],
                 ['css', 'feature/calendar/frontend'],
-            ]
+            ],
         ],
 
         'feature/conversations/frontend' => [
             [
                 ['javascript', 'feature/conversations/frontend'],
                 ['css', 'feature/conversations/frontend'],
-            ]
+            ],
         ],
 
         'feature/documents/frontend' => [
@@ -586,83 +640,78 @@ return [
                 ['javascript', 'feature/documents/frontend'],
                 ['javascript-localized', 'core/cms'],
                 ['css', 'feature/documents/frontend'],
-            ]
+            ],
         ],
 
         'feature/faq/frontend' => [
             [
                 ['css', 'feature/faq/frontend'],
-            ]
+            ],
         ],
 
         'feature/imagery/frontend' => [
             [
                 ['javascript', 'feature/imagery/frontend'],
                 ['css', 'feature/imagery/frontend'],
-            ]
+            ],
         ],
 
         'feature/navigation/frontend' => [
             [
                 ['javascript', 'feature/navigation/frontend'],
                 ['css', 'feature/navigation/frontend'],
-            ]
+            ],
         ],
 
         'feature/video/frontend' => [
             [
                 ['css', 'feature/video/frontend'],
-            ]
+            ],
         ],
 
         'feature/social/frontend' => [
             [
                 ['css', 'feature/social/frontend'],
-            ]
+            ],
         ],
 
         'feature/express/frontend' => [
             [
                 ['javascript', 'feature/express/frontend'],
                 ['css', 'feature/express/frontend'],
-            ]
+            ],
         ],
 
         'feature/maps/frontend' => [
             [
                 ['javascript', 'feature/maps/frontend'],
                 ['css', 'feature/maps/frontend'],
-            ]
+            ],
         ],
 
         'feature/search/frontend' => [
             [
                 ['css', 'feature/search/frontend'],
-            ]
+            ],
         ],
 
         'feature/taxonomy/frontend' => [
             [
                 ['css', 'feature/taxonomy/frontend'],
-            ]
+            ],
         ],
 
         'feature/testimonials/frontend' => [
             [
                 ['css', 'feature/testimonials/frontend'],
-            ]
+            ],
         ],
 
         'feature/basics/frontend' => [
             [
                 ['css', 'feature/basics/frontend'],
-            ]
+            ],
         ],
-
-
-
-
-
     ],
     // HTTP Client options
     'http_client' => [
@@ -722,6 +771,8 @@ return [
     ],
 
     'commands' => [
+        ['Concrete\Core\User\Command\UpdateUserAvatarCommand', 'Concrete\Core\User\Command\UpdateUserAvatarCommandHandler'],
+
         ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
         ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
         ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
@@ -739,20 +790,38 @@ return [
         ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
         ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
         ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
+        ['Concrete\Core\Calendar\Event\Summary\Template\Command\EnableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
+        ['Concrete\Core\Calendar\Event\Summary\Template\Command\DisableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
 
         ['Concrete\Core\Board\Command\CreateBoardCommand', 'Concrete\Core\Board\Command\CreateBoardCommandHandler'],
         ['Concrete\Core\Board\Command\UpdateBoardCommand', 'Concrete\Core\Board\Command\UpdateBoardCommandHandler'],
         ['Concrete\Core\Board\Command\DeleteBoardCommand', 'Concrete\Core\Board\Command\DeleteBoardCommandHandler'],
         ['Concrete\Core\Board\Command\SetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\SetBoardCustomWeightingCommandHandler'],
         ['Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\ResetBoardCustomWeightingCommandHandler'],
-        ['Concrete\Core\Board\Command\ClearBoardDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardDataPoolCommandHandler'],
-        ['Concrete\Core\Board\Command\PopulateBoardDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommandHandler'],
+        ['Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommandHandler'],
         ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommandHandler'],
         ['Concrete\Core\Board\Command\EnableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
         ['Concrete\Core\Board\Command\DisableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
         ['Concrete\Core\Board\Command\RefreshBoardInstanceCommand', 'Concrete\Core\Board\Command\RefreshBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\ClearBoardInstanceCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\GenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\GenerateBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\RegenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\RegenerateBoardInstanceCommandHandler'],
-    ],
+        ['Concrete\Core\Board\Command\AddContentToBoardInstanceCommand', 'Concrete\Core\Board\Command\AddContentToBoardInstanceCommandHandler'],
 
+        ['Concrete\Core\Board\Command\PinSlotToBoardCommand', 'Concrete\Core\Board\Command\PinSlotToBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\ClearSlotFromBoardCommand', 'Concrete\Core\Board\Command\ClearSlotFromBoardCommandHandler'],
+        ['Concrete\Core\Board\Command\AddCustomSlotToBoardCommand', 'Concrete\Core\Board\Command\AddCustomSlotToBoardCommandHandler'],
+        ['Concrete\Core\Express\Command\RescanEntityCommand', 'Concrete\Core\Express\Command\RescanEntityCommandHandler'],
+
+        ['Concrete\Core\Board\Designer\Command\CreateItemSelectorCustomElementCommand', 'Concrete\Core\Board\Designer\Command\CreateItemSelectorCustomElementCommandHandler'],
+        ['Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommand', 'Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommandHandler'],
+        ['Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand', 'Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommandHandler'],
+        ['Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommand', 'Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommandHandler'],
+
+        ['Concrete\Core\Attribute\Command\SaveAttributesCommand', 'Concrete\Core\Attribute\Command\SaveAttributesCommandHandler'],
+        ['Concrete\Core\Attribute\Command\ClearAttributesCommand', 'Concrete\Core\Attribute\Command\ClearAttributesCommandHandler'],
+    ],
 ];

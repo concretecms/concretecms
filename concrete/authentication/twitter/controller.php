@@ -1,18 +1,21 @@
 <?php
+
 namespace Concrete\Authentication\Twitter;
 
 defined('C5_EXECUTE') or die('Access Denied');
 
 use Concrete\Core\Authentication\Type\OAuth\OAuth1a\GenericOauth1aTypeController;
 use Concrete\Core\Authentication\Type\Twitter\Factory\TwitterServiceFactory;
-use OAuth\OAuth1\Service\Twitter;
-use Concrete\Core\User\User;
-use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Form\Service\Widget\GroupSelector;
 use Concrete\Core\Routing\RedirectResponse;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\User\User;
+use OAuth\OAuth1\Service\Twitter;
 
 class Controller extends GenericOauth1aTypeController
 {
-    public $apiMethods = array('handle_error', 'handle_success', 'handle_register');
+    public $apiMethods = ['handle_error', 'handle_success', 'handle_register'];
 
     /**
      * @var string
@@ -52,7 +55,7 @@ class Controller extends GenericOauth1aTypeController
 
     public function getAuthenticationTypeIconHTML()
     {
-        return '<i class="fa fa-twitter"></i>';
+        return '<i class="fab fa-twitter"></i>';
     }
 
     public function getHandle()
@@ -77,21 +80,24 @@ class Controller extends GenericOauth1aTypeController
     public function saveAuthenticationType($args)
     {
         $config = $this->app->make('config');
-        $config->save('auth.twitter.appid', $args['apikey']);
-        $config->save('auth.twitter.secret', $args['apisecret']);
-        $config->save('auth.twitter.registration.enabled', (bool) $args['registration_enabled']);
-        $config->save('auth.twitter.registration.group', intval($args['registration_group'], 10));
+        $config->save('auth.twitter.appid', (string) ($args['apikey'] ?? ''));
+        $config->save('auth.twitter.secret', (string) ($args['apisecret'] ?? ''));
+        $config->save('auth.twitter.registration.enabled', !empty($args['registration_enabled']));
+        $config->save('auth.twitter.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
     }
 
     public function edit()
     {
         $config = $this->app->make('config');
+        $this->set('groupSelector', $this->app->make(GroupSelector::class));
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('apikey', $config->get('auth.twitter.appid', ''));
-        $this->set('apisecret', $config->get('auth.twitter.secret', ''));
-
-        $list = new \GroupList();
-        $this->set('groups', $list->getResults());
+        $this->set('callbackUrl', $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/authentication/oauth2/twitter/callback']));
+        $this->set('apikey', (string) $config->get('auth.twitter.appid', ''));
+        $this->set('apisecret', (string) $config->get('auth.twitter.secret', ''));
+        $this->set('registrationEnabled', (bool) $config->get('auth.twitter.registration.enabled'));
+        $registrationGroupID = (int) $config->get('auth.twitter.registration.group');
+        $registrationGroup = $registrationGroupID === 0 ? null : $this->app->make(GroupRepository::class)->getGroupById($registrationGroupID);
+        $this->set('registrationGroup', $registrationGroup === null ? null : (int) $registrationGroup->getGroupID());
     }
 
     public function handle_detach_attempt()
@@ -104,7 +110,6 @@ class Controller extends GenericOauth1aTypeController
         }
         $uID = $user->getUserID();
         $namespace = $this->getHandle();
-
 
         $binding = $this->getBindingForUser($user);
 

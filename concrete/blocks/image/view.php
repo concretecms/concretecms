@@ -36,16 +36,14 @@ if (is_object($f) && $f->getFileID()) {
     }
 
     if ($linkURL) {
-        echo '<a href="' . $linkURL . '" '. ($openLinkInNewWindow ? 'target="_blank" rel="noopener noreferrer"' : '') .'>';
+        echo '<a href="' . $linkURL . '" ' . ($openLinkInNewWindow ? 'target="_blank" rel="noopener noreferrer"' : '') . '>';
     }
 
     // add data attributes for hover effect
-    if (is_object($f) && is_object($foS)) {
-        if (($maxWidth > 0 || $maxHeight > 0) && !$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
-            $tag->addClass('ccm-image-block-hover');
-            $tag->setAttribute('data-default-src', $imgPaths['default']);
-            $tag->setAttribute('data-hover-src', $imgPaths['hover']);
-        }
+    if (is_object($foS) && !$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
+        $tag->addClass('ccm-image-block-hover');
+        $tag->setAttribute('data-default-src', $imgPaths['default']);
+        $tag->setAttribute('data-hover-src', $imgPaths['hover']);
     }
 
     echo $tag;

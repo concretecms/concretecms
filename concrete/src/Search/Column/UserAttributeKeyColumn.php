@@ -1,10 +1,13 @@
 <?php
 namespace Concrete\Core\Search\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class UserAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function filterListAtOffset(PagerProviderInterface $itemList, $mixed)
     {
@@ -15,6 +18,6 @@ class UserAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnIn
         $where = sprintf('(' . $this->getColumnKey() . ', u.uID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $this->andWhereNotExists($query, $where);
     }
 }

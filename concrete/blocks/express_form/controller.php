@@ -181,7 +181,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
             // Important – are other blocks in the system using this form? If so, we don't want to delete it!
             $db = $entityManager->getConnection();
             $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
-            if (0 == $r) {
+            if (0 == $r && !$entity->getIncludeInPublicList()) {
                 $entityManager->remove($entity);
                 $entityManager->flush();
             }
@@ -212,10 +212,16 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
                 $manager = $controller->getEntryManager($this->request);
-                $entry = $manager->createEntry($entity);
                 $e = $validator->getErrorList();
-                if (isset($e) && !$e->has() && $this->areFormSubmissionsStored()) {
-                    $entry = $manager->addEntry($entity);
+                if ($e->has()) {
+                    $this->set('error', $e);
+                    $this->view();
+                    return false;
+                }
+
+
+                if ($this->areFormSubmissionsStored()) {
+                    $entry = $manager->addEntry($entity, $this->app->make('site')->getSite());
                     $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
                     // Check antispam
@@ -267,36 +273,39 @@ class Controller extends BlockController implements NotificationProviderInterfac
                             }
                         }
                     }
-                }
-                if (isset($e) && !$e->has()) {
-                    $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
-                    $notifier = $controller->getNotifier($this);
-                    $notifications = $notifier->getNotificationList();
-                    array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues,$key) {
-                        if (method_exists($notification, "setAttributeValues")) {
-                            $notification->setAttributeValues($submittedAttributeValues);
-                        }
-                    });
-                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
-                    $r = null;
-                    if ($this->redirectCID > 0) {
-                        $c = Page::getByID($this->redirectCID);
-                        if (is_object($c) && !$c->isError()) {
-                            $r = Redirect::page($c);
-                            $r->setTargetUrl($r->getTargetUrl() . '?form_success=1&entry=' . $entry->getID());
-                        }
-                    }
-
-                    if (!$r) {
-                        $url = Url::to($this->request->getCurrentPage(), 'form_success', $this->bID);
-                        $r = Redirect::to($url);
-                        $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
-                    }
-
-                    return $processor->deliverResponse($entry, ProcessorInterface::REQUEST_TYPE_ADD, $r);
                 } else {
-                    $this->set('error', $e);
+                    $entry = $manager->createEntry($entity);
                 }
+                if ($this->areFormSubmissionsStored()) {
+                    $submittedAttributeValues = $entry->getAttributeValues();
+                } else {
+                    $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
+                }
+                $notifier = $controller->getNotifier($this);
+                $notifications = $notifier->getNotificationList();
+                array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues) {
+                    if (method_exists($notification, "setAttributeValues")) {
+                        $notification->setAttributeValues($submittedAttributeValues);
+                    }
+                });
+                $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
+                $r = null;
+                if ($this->redirectCID > 0) {
+                    $c = Page::getByID($this->redirectCID);
+                    if (is_object($c) && !$c->isError()) {
+                        $r = Redirect::page($c);
+                        $target = strpos($r->getTargetUrl(),"?") === false ? $r->getTargetUrl()."?" : $r->getTargetUrl()."&";
+                        $r->setTargetUrl($target . 'form_success=1&entry=' . $entry->getID());
+                    }
+                }
+
+                if (!$r) {
+                    $url = Url::to($this->request->getCurrentPage(), 'form_success', $this->bID);
+                    $r = Redirect::to($url);
+                    $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+                }
+
+                return $processor->deliverResponse($entry, ProcessorInterface::REQUEST_TYPE_ADD, $r);
             }
         }
         $this->view();
@@ -690,7 +699,6 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
-        $this->requireAsset('core/tree');
         $this->clearSessionControls();
         $list = Type::getList();
 

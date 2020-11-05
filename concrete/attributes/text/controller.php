@@ -108,6 +108,6 @@ class Controller extends DefaultController
 
     public function getIconFormatter()
     {
-        return new FontAwesomeIconFormatter('file-text');
+        return new FontAwesomeIconFormatter('file-alt');
     }
 }

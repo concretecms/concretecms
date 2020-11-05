@@ -1,22 +1,20 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Containers;
 
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Page\Container\Command\AddContainerCommand;
 use Concrete\Core\Page\Container\Command\ContainerCommandValidator;
-use Concrete\Core\Page\Container\IconRepository;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Page\Theme\Theme;
 
 class Add extends DashboardPageController
 {
-
     public function view()
     {
         $this->set('tokenMessage', 'add_container');
         $this->render('/dashboard/pages/containers/form');
     }
-    
+
     public function add_container()
     {
         if ($this->token->validate('add_container')) {
@@ -34,12 +32,13 @@ class Add extends DashboardPageController
             } else {
                 $this->executeCommand($command);
                 $this->flash('success', t('Container added successfully.'));
-                return $this->redirect('/dashboard/pages/containers');
+
+                return $this->buildRedirect('/dashboard/pages/containers');
             }
         } else {
             $this->error->add($this->token->getErrorMessage());
         }
-        
+
         $this->view();
     }
 }

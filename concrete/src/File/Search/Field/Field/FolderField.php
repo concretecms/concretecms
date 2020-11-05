@@ -61,7 +61,7 @@ class FolderField extends AbstractField
     {
         $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
         return $selector->selectFileFolder('folderID', isset($this->data['folderID']) ?
-            $this->data['folderID'] : null
+            $this->data['folderID'] : null, false
         );
     }
 

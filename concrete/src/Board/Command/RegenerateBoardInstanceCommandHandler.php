@@ -3,46 +3,43 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Block\Block;
-use Concrete\Core\Board\Instance\Slot\CollectionFactory;
-use Concrete\Core\Board\Instance\Slot\Content\ObjectCollection;
-use Concrete\Core\Foundation\Serializer\JsonSerializer;
-use Doctrine\ORM\EntityManager;
 
 class RegenerateBoardInstanceCommandHandler
 {
 
     /**
-     * @var EntityManager 
+     * @var Application
      */
-    protected $entityManager;
+    protected $app;
 
-    /**
-     * @var CollectionFactory 
-     */
-    protected $collectionFactory;
-
-    public function __construct(EntityManager $entityManager, CollectionFactory $collectionFactory)
+    public function __construct(Application $app)
     {
-        $this->entityManager = $entityManager;
-        $this->collectionFactory = $collectionFactory;
+        $this->app = $app;
     }
 
+    /**
+     * Clears out the board data pool, repopulates it, clears the instance of the board and regenerates it.
+     * @param RegenerateBoardInstanceCommand $command
+     */
     public function handle(RegenerateBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
-        $slots = $instance->getSlots();
-        foreach($slots as $slot) {
-            $this->entityManager->remove($slot);
-        }
-        $this->entityManager->flush();
+        $command = new ClearBoardInstanceDataPoolCommand();
+        $command->setInstance($instance);
+        $this->app->executeCommand($command);
 
-        $collection = $this->collectionFactory->createSlotCollection($instance);
-        $instance->setSlots($collection);
-        $this->entityManager->persist($instance);
-        $this->entityManager->flush();
-        
+        $command = new PopulateBoardInstanceDataPoolCommand();
+        $command->setInstance($instance);
+        $this->app->executeCommand($command);
+
+        $command = new ClearBoardInstanceCommand();
+        $command->setInstance($instance);
+        $this->app->executeCommand($command);
+
+        $command = new GenerateBoardInstanceCommand();
+        $command->setInstance($instance);
+        $this->app->executeCommand($command);
     }
 
-    
+
 }

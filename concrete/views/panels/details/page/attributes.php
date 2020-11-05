@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <div id="ccm-detail-page-attributes">
 
-    <section class="ccm-ui col-xl-9">
+    <section class="ccm-ui">
         <form method="post" action="<?= $controller->action('submit') ?>" data-dialog-form="attributes"
               data-panel-detail-form="attributes" data-action-after-save="reload">
 

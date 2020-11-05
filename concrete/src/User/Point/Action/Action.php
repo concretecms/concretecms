@@ -37,7 +37,7 @@ class Action
     /**
      * @param $upaID
      *
-     * @return UserPointAction
+     * @return static
      */
     public static function getByID($upaID)
     {

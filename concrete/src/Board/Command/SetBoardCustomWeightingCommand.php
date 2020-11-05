@@ -7,14 +7,18 @@ use Concrete\Core\Foundation\Command\CommandInterface;
 
 class SetBoardCustomWeightingCommand implements CommandInterface
 {
-    
     use BoardTrait;
 
     protected $weightings = [];
-    
-    public function addWeighting(ConfiguredDataSource $dataSource, int $weight)
+
+    /**
+     * @return $this
+     */
+    public function addWeighting(ConfiguredDataSource $dataSource, int $weight): object
     {
         $this->weightings[] = [$dataSource, $weight];
+
+        return $this;
     }
 
     /**
@@ -24,8 +28,4 @@ class SetBoardCustomWeightingCommand implements CommandInterface
     {
         return $this->weightings;
     }
-    
-    
-
-    
 }

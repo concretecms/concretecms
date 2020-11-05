@@ -2,16 +2,13 @@
 
 namespace Concrete\Core\Page\Command;
 
-use Concrete\Core\Entity\File\File;
 use Concrete\Core\Foundation\Queue\Batch\BatchProcessFactoryInterface;
-use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 use Concrete\Core\Page\Page;
 
 class CopyPageBatchProcessFactory implements BatchProcessFactoryInterface
 {
-
     /**
-     * @var Page
+     * @var \Concrete\Core\Page\Page
      */
     protected $destination;
 
@@ -20,23 +17,36 @@ class CopyPageBatchProcessFactory implements BatchProcessFactoryInterface
      */
     protected $isMultilingual;
 
-    public function __construct(Page $destination, $isMultilingual)
+    public function __construct(Page $destination, bool $isMultilingual)
     {
         $this->destination = $destination;
         $this->isMultilingual = $isMultilingual;
     }
 
-    public function getBatchHandle()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\BatchProcessFactoryInterface::getBatchHandle()
+     */
+    public function getBatchHandle(): string
     {
         return 'copy_page';
     }
 
-    public function getCommands($pages) : array
+    /**
+     * {@inheritdoc}
+     *
+     * @param int[] $pages
+     *
+     * @see \Concrete\Core\Foundation\Queue\Batch\BatchProcessFactoryInterface::getCommands()
+     */
+    public function getCommands($pages): array
     {
         $commands = [];
         foreach ($pages as $cID) {
             $commands[] = new CopyPageCommand($cID, $this->destination->getCollectionID(), $this->isMultilingual);
         }
+
         return $commands;
     }
 }

@@ -3,10 +3,11 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var $renderer \Concrete\Core\Board\Instance\Slot\Content\ContentRenderer
- * @var $template \Concrete\Core\Entity\Board\SlotTemplate
+ * @var \Concrete\Core\Board\Instance\Slot\Content\ContentRenderer $renderer
+ * @var \Concrete\Core\Entity\Board\SlotTemplate|null $template
+ * @var \Concrete\Core\Board\Instance\Slot\Content\ObjectCollection $dataCollection
  */
 
-$renderer->render($dataCollection, $template);
-?>
-
+if ($template) {
+    echo $renderer->render($dataCollection, $template);
+}

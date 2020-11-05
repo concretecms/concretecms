@@ -1,178 +1,241 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
 
-$ih = Core::make('helper/concrete/ui');
-$dh = Core::make('helper/date');
+defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\File\FileList;
+use Concrete\Core\File\Set\Set;
+use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\Validation\CSRF\Token;
+
+/** @var int $fsType */
+/** @var Set $fs */
+/** @var Token $validation_token */
+$app = Application::getFacadeApplication();
+$app->make('helper/concrete/ui');
+/** @var Date $dh */
+$dh = $app->make(Date::class);
 
 ?>
-<?php if ($this->controller->getTask() == 'view_detail') {
-    ?>
+
+<?php if ($this->controller->getTask() == 'view_detail'): ?>
 
     <script type="text/javascript">
-        deleteFileSet = function () {
-            if (confirm('<?=t('Are you sure you want to permanently remove this file set?')?>')) {
-                location.href = "<?=$view->url('/dashboard/files/sets', 'delete', $fs->getFileSetID(),
-                    Core::make('helper/validation/token')->generate('delete_file_set'))?>";
+        let deleteFileSet = function () {
+            if (confirm('<?php echo h(t('Are you sure you want to permanently remove this file set?')); ?>')) {
+                location.href = "<?php echo Url::to('/dashboard/files/sets', 'delete', $fs->getFileSetID(), $validation_token->generate('delete_file_set'))?>";
             }
         }
     </script>
 
     <div class="ccm-dashboard-header-buttons">
-        <button class="btn btn-danger" onclick="deleteFileSet()"><?= t('Delete Set') ?></button>
+        <button class="btn btn-danger" onclick="deleteFileSet()">
+            <?php echo t('Delete Set') ?>
+        </button>
     </div>
 
     <form method="post" class="form-horizontal" id="file_sets_edit"
-          action="<?= $view->url('/dashboard/files/sets', 'file_sets_edit') ?>">
-        <?= $validation_token->output('file_sets_edit');
-        ?>
+          action="<?php echo Url::to('/dashboard/files/sets', 'file_sets_edit') ?>">
 
+        <?php echo $validation_token->output('file_sets_edit'); ?>
 
         <div class="form-group">
-            <?= $form->label('file_set_name', t('Name')) ?>
-            <?= $form->text('file_set_name', $fs->fsName, array('class' => 'span5'));
-            ?>
+            <?php echo $form->label('file_set_name', t('Name')) ?>
+            <?php echo $form->text('file_set_name', $fs->fsName, ['class' => 'span5']); ?>
         </div>
 
-        <?= $form->hidden('fsID', $fs->getFileSetID()); ?>
+        <?php echo $form->hidden('fsID', $fs->getFileSetID()); ?>
 
         <?php
-        $fl = new FileList();
-        $fl->filterBySet($fs);
-        $fl->sortByFileSetDisplayOrder();
-        $files = $fl->get();
-        if (count($files) > 0) {
-            ?>
-
-            <span
-                class="help-block"><?= t('Click and drag to reorder the files in this set. New files added to this set will automatically be appended to the end.') ?></span>
-            <div class="ccm-spacer">&nbsp;</div>
-
-            <div class="table-responsive">
-                <table class="ccm-search-results-table compact-results">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th><span><?= t('Thumbnail') ?></span></th>
-                        <th><a href="javascript:void(0)" class="sort-link" data-sort="type"><?= t('Type') ?></a></th>
-                        <th><a href="javascript:void(0)" class="sort-link" data-sort="title"><?= t('Title') ?></a></th>
-                        <th><a href="javascript:void(0)" class="sort-link"
-                               data-sort="filename"><?= t('File name') ?></a></th>
-                        <th><a href="javascript:void(0)" class="sort-link" data-sort="added"><?= t('Added') ?></a></th>
-                    </tr>
-                    </thead>
-
-                    <tbody class="ccm-file-set-file-list">
-
-                    <?php foreach ($files as $f) {
-                        ?>
-                        <tr id="fID_<?= $f->getFileID() ?>" class="">
-                            <td><i class="fa fa-arrows-v"></i></td>
-                            <td class="ccm-file-manager-search-results-thumbnail"><?= $f->getListingThumbnailImage() ?>
-                                <input type="hidden" name="fsDisplayOrder[]" value="<?= $f->getFileID() ?>"/></td>
-                            <td data-key="type"><?= $f->getGenericTypetext() ?>/<?= $f->getType() ?></td>
-                            <td data-key="title"><?= h($f->getTitle()) ?></td>
-                            <td data-key="filename"><?= h($f->getFileName()) ?></td>
-                            <td data-key="added"
-                                data-sort="<?= $f->getDateAdded()->getTimestamp() ?>"><?= $dh->formatDateTime($f->getDateAdded()->getTimestamp()) ?></td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                    </tbody>
-                </table>
-            </div>
-            <?php
-        } else {
-            ?>
-            <div class="alert alert-info"><?= t('There are no files in this set.') ?></div>
-            <?php
-        }
+            $fl = new FileList();
+            $fl->filterBySet($fs);
+            $fl->sortByFileSetDisplayOrder();
+            /** @noinspection PhpDeprecationInspection */
+            $files = $fl->get();
         ?>
+
+        <?php if (count($files) > 0): ?>
+
+            <p class="help-block">
+                <?php echo t('Click and drag to reorder the files in this set. New files added to this set will automatically be appended to the end.') ?>
+            </p>
+
+            <div class="ccm-spacer">
+                &nbsp;
+            </div>
+
+            <table class="ccm-search-results-table compact-results">
+                <thead>
+                    <tr>
+                        <th>
+                            &nbsp;
+                        </th>
+
+                        <th>
+                            <span>
+                                <?php echo t('Thumbnail') ?>
+                            </span>
+                        </th>
+
+                        <th>
+                            <a href="javascript:void(0)" class="sort-link" data-sort="type">
+                                <?php echo t('Type') ?>
+                            </a>
+                        </th>
+
+                        <th>
+                            <a href="javascript:void(0)" class="sort-link" data-sort="title">
+                                <?php echo t('Title') ?>
+                            </a>
+                        </th>
+
+                        <th>
+                            <a href="javascript:void(0)" class="sort-link" data-sort="filename">
+                                <?php echo t('File name') ?>
+                            </a>
+                        </th>
+
+                        <th>
+                            <a href="javascript:void(0)" class="sort-link" data-sort="added">
+                                <?php echo t('Added') ?>
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody class="ccm-file-set-file-list">
+                    <?php foreach ($files as $f): ?>
+                        <tr id="fID_<?php echo $f->getFileID() ?>" class="">
+                            <td>
+                                <i class="fa fa-arrows-v"></i>
+                            </td>
+
+                            <td class="ccm-file-manager-search-results-thumbnail">
+                                <?php echo $f->getListingThumbnailImage() ?>
+
+                                <input type="hidden" name="fsDisplayOrder[]" value="<?php echo $f->getFileID() ?>"/>
+                            </td>
+
+                            <td data-key="type">
+                                <?php echo $f->getGenericTypetext() ?>/<?php echo $f->getType() ?>
+                            </td>
+
+                            <td data-key="title">
+                                <?php echo h($f->getTitle()) ?>
+                            </td>
+
+                            <td data-key="filename">
+                                <?php echo h($f->getFileName()) ?>
+                            </td>
+
+                            <td data-key="added" data-sort="<?php echo $f->getDateAdded()->getTimestamp() ?>">
+                                <?php
+                                    /** @noinspection PhpUnhandledExceptionInspection */
+                                    echo $dh->formatDateTime($f->getDateAdded()->getTimestamp())
+                                ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+        <?php else: ?>
+            <div class="alert alert-info">
+                <?php echo t('There are no files in this set.') ?>
+            </div>
+        <?php endif; ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= View::url('/dashboard/files/sets') ?>"
-                   class="btn btn-default pull-left"><?= t('Cancel') ?></a>
-                <?= Core::make("helper/form")->submit('save', t('Save'),
-                    array('class' => 'btn btn-primary pull-right')) ?>
+                <a href="<?php echo Url::to('/dashboard/files/sets') ?>" class="btn btn-secondary float-left">
+                    <?php echo t('Back') ?>
+                </a>
+
+                <?php echo $form->submit('save', t('Save'), ['class' => 'btn btn-primary float-right']); ?>
             </div>
         </div>
     </form>
 
     <script>
-        $(function () {
-            var baseClass = "ccm-results-list-active-sort-"; // asc desc
+        (function($) {
+            $(function () {
+                let baseClass = "ccm-results-list-active-sort-"; // asc desc
 
-            function ccmFileSetResetSortIcons() {
-                $(".ccm-search-results-table thead tr th").removeClass(baseClass + 'asc');
-                $(".ccm-search-results-table thead tr th").removeClass(baseClass + 'desc');
-                $(".ccm-search-results-table thead tr th a").css("color", "#999");
-            }
+                function ccmFileSetResetSortIcons() {
+                    $(".ccm-search-results-table thead tr th")
+                        .removeClass(baseClass + 'asc')
+                        .removeClass(baseClass + 'desc');
 
-            function ccmFileSetDoSort() {
-                var $this = $(this);
-                var $parent = $(this).parent();
-                var asc = $parent.hasClass(baseClass + 'asc');
-                var key = $this.attr('data-sort');
-
-                ccmFileSetResetSortIcons();
-                var sortableList = $('.ccm-file-set-file-list');
-                var listItems = $('tr', sortableList);
-
-                if (asc) {
-                    $parent.addClass(baseClass + 'desc');
-                    $(".ccm-search-results-table thead tr th." + baseClass + "desc a").css("color", "#333");
-                } else {
-                    $parent.addClass(baseClass + 'asc');
-                    $(".ccm-search-results-table thead tr th." + baseClass + "asc a").css("color", "#333");
+                    $(".ccm-search-results-table thead tr th a").css("color", "#999");
                 }
 
-                listItems.sort(function (a, b) {
-                    var aTD = $('td[data-key=' + key + ']', $(a));
-                    var bTD = $('td[data-key=' + key + ']', $(b));
+                function ccmFileSetDoSort() {
+                    let $this = $(this);
+                    let $parent = $(this).parent();
+                    let asc = $parent.hasClass(baseClass + 'asc');
+                    let key = $this.attr('data-sort');
 
-                    var aVal = typeof( aTD.attr('data-sort') ) == 'undefined' ? aTD.text().toUpperCase() : parseInt(aTD.attr('data-sort'));
-                    var bVal = typeof( bTD.attr('data-sort') ) == 'undefined' ? bTD.text().toUpperCase() : parseInt(bTD.attr('data-sort'));
+                    ccmFileSetResetSortIcons();
+
+                    let sortableList = $('.ccm-file-set-file-list');
+                    let listItems = $('tr', sortableList);
 
                     if (asc) {
-                        return bVal < aVal ? -1 : 1;
+                        $parent.addClass(baseClass + 'desc');
+                        $(".ccm-search-results-table thead tr th." + baseClass + "desc a").css("color", "#333");
                     } else {
-                        return aVal < bVal ? -1 : 1;
+                        $parent.addClass(baseClass + 'asc');
+                        $(".ccm-search-results-table thead tr th." + baseClass + "asc a").css("color", "#333");
+                    }
+
+                    listItems.sort(function (a, b) {
+                        let aTD = $('td[data-key=' + key + ']', $(a));
+                        let bTD = $('td[data-key=' + key + ']', $(b));
+
+                        let aVal = typeof (aTD.attr('data-sort')) == 'undefined' ? aTD.text().toUpperCase() : parseInt(aTD.attr('data-sort'));
+                        let bVal = typeof (bTD.attr('data-sort')) == 'undefined' ? bTD.text().toUpperCase() : parseInt(bTD.attr('data-sort'));
+
+                        if (asc) {
+                            return bVal < aVal ? -1 : 1;
+                        } else {
+                            return aVal < bVal ? -1 : 1;
+                        }
+                    });
+
+                    sortableList.append(listItems);
+                }
+
+                $('.ccm-search-results-table thead th a.sort-link').click(ccmFileSetDoSort);
+
+                $(".ccm-file-set-file-list").sortable({
+                    cursor: 'move',
+                    opacity: 0.5,
+                    axis: 'y',
+                    helper: function (evt, elem) {
+                        let ret = $(elem).clone();
+                        let i;
+
+                        ret.width(elem.outerWidth());
+
+                        let retChilds = $(ret.children());
+                        let elemChilds = $(elem.children());
+
+                        for (i = 0; i < elemChilds.length; i++)
+                            $(retChilds[i]).width($(elemChilds[i]).outerWidth());
+
+                        return ret;
+                    },
+                    placeholder: "ccm-file-set-file-placeholder",
+                    stop: function () {
+                        ccmFileSetResetSortIcons();
                     }
                 });
-                sortableList.append(listItems);
-            }
-
-            $('.ccm-search-results-table thead th a.sort-link').click(ccmFileSetDoSort);
-
-            $(".ccm-file-set-file-list").sortable({
-                cursor: 'move',
-                opacity: 0.5,
-                axis: 'y',
-                helper: function (evt, elem) {
-                    var ret = $(elem).clone();
-                    var i;
-                    // copy the actual width of the elements
-
-                    ret.width(elem.outerWidth());
-                    retChilds = $(ret.children());
-                    elemChilds = $(elem.children());
-
-                    for (i = 0; i < elemChilds.length; i++)
-                        $(retChilds[i]).width($(elemChilds[i]).outerWidth());
-
-                    return ret;
-                },
-                placeholder: "ccm-file-set-file-placeholder",
-                stop: function (e, ui) {
-                    ccmFileSetResetSortIcons();
-                }
             });
-
-
-        });
-
+        })(jQuery);
     </script>
 
+    <!--suppress CssUnusedSymbol -->
     <style type="text/css">
         .ccm-file-set-file-list:hover {
             cursor: move
@@ -187,87 +250,75 @@ $dh = Core::make('helper/date');
         }
     </style>
 
-    <?php
-} else {
-    ?>
-
-
-    <?php if (count($fileSets) > 0) { ?>
-
+<?php else: ?>
+    <?php if (count($fileSets) > 0): ?>
         <div class="table-responsive">
             <table class="ccm-search-results-table">
                 <thead>
-                <tr>
-                    <th class="ccm-results-list-active-sort-asc"><a><?= t('Set Name') ?></a></th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($fileSets as $fs) { ?>
-
-                    <tr data-details-url="<?= $view->url('/dashboard/files/sets/', 'view_detail',
-                        $fs->getFileSetID()) ?>">
-                        <td>
-                            <?= $fs->getFileSetDisplayName() ?>
-                        </td>
+                    <tr>
+                        <th class="ccm-results-list-active-sort-asc"><a><?php echo t('Set Name') ?></a></th>
                     </tr>
+                </thead>
 
-                    <?php
-                }
-                ?>
-
+                <tbody>
+                    <?php foreach ($fileSets as $fs): ?>
+                        <tr data-details-url="<?php echo Url::to('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID()) ?>">
+                            <td>
+                                <?php echo $fs->getFileSetDisplayName() ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-        <?php if ($fsl->requiresPaging()) {
-            ?>
-            <?php $fsl->displayPagingV2();
-            ?>
-        <?php } ?>
 
-        <?php
-    } else { ?>
+        <?php if ($fsl->requiresPaging()): ?>
+            <?php $fsl->displayPagingV2(); ?>
+        <?php endif; ?>
+
+    <?php else: ?>
         <section>
-
-            <p><?= t('No file sets found.') ?></p>
-
+            <p>
+                <?php echo t('No file sets found.') ?>
+            </p>
         </section>
-
-    <?php } ?>
+    <?php endif; ?>
 
     <div class="ccm-dashboard-header-buttons">
-
         <form class="form-inline" method="get" action="#">
 
-            <?=$form->search('fsKeywords', [
+            <?php echo $form->search('fsKeywords', [
                 'placeholder' => t('Search'),
                 'class' => 'form-control-sm',
                 'autocomplete' => 'off']);
             ?>
-            <select name="fsType" class="ml-2 custom-select-sm custom-select">
-                <option
-                        value="<?= FileSet::TYPE_PUBLIC ?>" <?php if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?= t('Public Sets') ?></option>
-                <option
-                        value="<?= FileSet::TYPE_PRIVATE ?>" <?php if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <?php } ?>><?= t('My Sets') ?></option>
-            </select>
 
-            <button type="submit" class="btn-secondary ml-2 btn-sm">
-                <svg width="16" height="16"><use xlink:href="#icon-search"/></svg>
+            <?php echo $form->select(
+                "fsType",
+                [
+                    Set::TYPE_PUBLIC => t("Public Sets"),
+                    Set::TYPE_PRIVATE => t("My Sets")
+                ],
+                $fsType == Set::TYPE_PRIVATE ? $fsType : Set::TYPE_PUBLIC,
+                [
+                    "class" => "ml-2 custom-select-sm custom-select"
+                ]
+            ); ?>
+
+            <button type="submit" class="btn btn-secondary ml-2 btn-sm">
+                <svg width="16" height="16">
+                    <use xlink:href="#icon-search"/>
+                </svg>
             </button>
 
-
-            <a class="btn btn-secondary btn-sm ml-2" href="<?= View::url('/dashboard/files/add_set') ?>" title="<?= t('Add File Set') ?>">
-                <?=t('Add File Set')?> <i class="fa fa-plus-circle"></i>
+            <a class="btn btn-secondary btn-sm ml-2"
+               href="<?php echo Url::to('/dashboard/files/add_set') ?>"
+               title="<?php echo t('Add File Set') ?>">
+                <?php echo t('Add File Set') ?> <i class="fa fa-plus-circle"></i>
             </a>
-
         </form>
-
-
-
-
     </div>
-
-
-<?php } ?>
+<?php endif; ?>
 
 
 

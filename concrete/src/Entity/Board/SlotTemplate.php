@@ -3,8 +3,11 @@ namespace Concrete\Core\Entity\Board;
 
 use Concrete\Core\Board\Template\Slot\Driver\DriverInterface;
 use Concrete\Core\Board\Template\Slot\Driver\Manager;
+use Concrete\Core\Design\Tag\ProvidesTagsInterface;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Support\Facade\Facade;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use HtmlObject\Image;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="BoardSlotTemplates"
  * )
  */
-class SlotTemplate
+class SlotTemplate implements \JsonSerializable, ProvidesTagsInterface
 {
     use PackageTrait;
 
@@ -44,6 +47,17 @@ class SlotTemplate
      * @ORM\Column(type="string")
      */
     protected $handle = '';
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\Design\DesignTag")
+     * @ORM\JoinTable(name="BoardSlotTemplateTags")
+     */
+    protected $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -116,6 +130,14 @@ class SlotTemplate
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
      * @return \HtmlObject\Image|string|null
      */
     public function getTemplateIconImage(bool $asTag = true)
@@ -127,6 +149,11 @@ class SlotTemplate
             }
             return $image;
         }
+    }
+
+    public function getDesignTags(): array
+    {
+        return $this->getTags()->toArray();
     }
 
     public function getDriver() : DriverInterface
@@ -145,4 +172,17 @@ class SlotTemplate
         $template->addAttribute('icon', h($this->getIcon()));
         $template->addAttribute('package', $this->getPackageHandle());
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'icon' => $this->getIcon(),
+            'handle' => $this->getHandle(),
+            'name' => $this->getName(),
+            'contentSlots' => $this->getDriver()->getTotalContentSlots(),
+            'formFactor' => $this->getFormFactor(),
+        ];
+    }
+
 }

@@ -195,7 +195,7 @@ class LoggedStorage implements SessionStorageInterface, LoggerAwareInterface
     {
         $this->logInfo('Regenerating session', ['destroy' => $destroy, 'lifetime' => $lifetime]);
 
-        return $this->wrappedStorage->start();
+        return $this->wrappedStorage->regenerate($destroy, $lifetime);
     }
 
     /**

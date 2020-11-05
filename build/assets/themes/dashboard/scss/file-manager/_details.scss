@@ -1,0 +1,52 @@
+.ccm-file-manager-details-preview {
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: -2rem;
+  margin-left: -2rem;
+  >div {
+    margin-top: 2rem;
+    margin-left: 2rem;
+  }
+  .ccm-file-manager-details-preview-thumbnail {
+    img, svg {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  .ccm-file-manager-details-preview-actions {
+    flex-grow: 1;
+    flex-basis: 200px;
+  }
+}
+
+@media (min-width: map-get($grid-breakpoints, "md")) {
+  .ccm-file-manager-details-sets,
+  .ccm-file-manager-details-attributes {
+    @include concrete-data-row-dl-horizontal;
+  }
+}
+@media (max-width: map-get($grid-breakpoints, "md") - 1px) {
+  .ccm-file-manager-details-sets,
+  .ccm-file-manager-details-attributes {
+    @include concrete-data-row-dl-vertical;
+  }
+}
+
+.ccm-file-manager-details-statistics,
+.ccm-file-manager-details-storage {
+  @include concrete-data-row-dl-vertical;
+}
+
+.ccm-file-manager-details-download, .ccm-file-manager-details-usage {
+  width: auto;
+  margin-bottom: 0.5rem;
+}
+
+.ccm-file-manager-details-usage {
+  >thead>tr>th {
+    font-weight: normal;
+  }
+  >tbody>tr>td {
+    font-weight: bold;
+  }
+}

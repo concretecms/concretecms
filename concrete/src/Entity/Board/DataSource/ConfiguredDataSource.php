@@ -28,6 +28,16 @@ class ConfiguredDataSource
     protected $board;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    protected $populationDayIntervalFuture = 0;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $populationDayIntervalPast = 0;
+
+    /**
      * @ORM\ManyToOne(targetEntity="DataSource")
      * @ORM\JoinColumn(name="dataSourceID", referencedColumnName="dataSourceID")
      * @var DataSource
@@ -35,7 +45,7 @@ class ConfiguredDataSource
     protected $data_source;
 
     /**
-     * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Board\Item", cascade={"remove"}, mappedBy="data_source", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Concrete\Core\Entity\Board\InstanceItem", cascade={"remove"}, mappedBy="data_source", fetch="EXTRA_LAZY")
      */
     protected $items;
 
@@ -50,7 +60,7 @@ class ConfiguredDataSource
     protected $customWeight = 0;
 
     /**
-     * @ORM\OneToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\Configuration\Configuration", 
+     * @ORM\OneToOne(targetEntity="Concrete\Core\Entity\Board\DataSource\Configuration\Configuration",
      *     mappedBy="data_source",  cascade={"persist","remove"})
      **/
     protected $configuration;
@@ -91,7 +101,7 @@ class ConfiguredDataSource
     {
         $this->data_source = $data_source;
     }
-    
+
     /**
      * @return mixed
      */
@@ -140,11 +150,61 @@ class ConfiguredDataSource
         $this->customWeight = $customWeight;
     }
 
-    public function getItemCount()
+    /**
+     * @return int
+     */
+    public function getPopulationIntervalFuture(): int
     {
-        return $this->items->count();
+        return $this->populationIntervalFuture;
     }
-    
-    
-    
+
+    /**
+     * @param int $populationIntervalFuture
+     */
+    public function setPopulationIntervalFuture(int $populationIntervalFuture): void
+    {
+        $this->populationIntervalFuture = $populationIntervalFuture;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPopulationDayIntervalFuture(): int
+    {
+        return $this->populationDayIntervalFuture;
+    }
+
+    /**
+     * @param int $populationDayIntervalFuture
+     */
+    public function setPopulationDayIntervalFuture(int $populationDayIntervalFuture): void
+    {
+        $this->populationDayIntervalFuture = $populationDayIntervalFuture;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPopulationDayIntervalPast(): int
+    {
+        return $this->populationDayIntervalPast;
+    }
+
+    /**
+     * @param int $populationDayIntervalPast
+     */
+    public function setPopulationDayIntervalPast(int $populationDayIntervalPast): void
+    {
+        $this->populationDayIntervalPast = $populationDayIntervalPast;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+
 }

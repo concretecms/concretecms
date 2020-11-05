@@ -26,5 +26,15 @@ class ManagerServiceProvider extends ServiceProvider
             $manager = $this->app->make('Concrete\Core\Express\Search\Field\Manager');
             return $manager;
         });
+        $this->app['manager/search_field/calendar_event'] = $this->app->share(function ($app) {
+            $manager = $this->app->make('Concrete\Core\Calendar\Event\Search\Field\Manager');
+
+            return $manager;
+        });
+        $this->app['manager/search_field/logging'] = $this->app->share(function ($app) {
+            $manager = $this->app->make('Concrete\Core\Logging\Search\Field\Manager');
+
+            return $manager;
+        });
     }
 }

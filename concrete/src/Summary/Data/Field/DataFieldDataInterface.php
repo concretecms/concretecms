@@ -10,7 +10,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 interface DataFieldDataInterface extends \JsonSerializable, DenormalizableInterface
 {
 
-    public function __toString();
-    
+
 
 }

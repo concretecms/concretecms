@@ -9,7 +9,10 @@
 @import "~@concretecms/bedrock/assets/cms/scss/forms";
 @import "~@concretecms/bedrock/assets/cms/scss/login-page";
 
+@import "./features/desktop/desktop";
+
 @import "container";
 @import "install";
 @import "background-image";
+@import "account";
 

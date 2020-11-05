@@ -10,7 +10,7 @@
 <ul class="item-select-list">
 <?php foreach ($entities as $entity) {
 ?>
-    <li><a href="<?=$this->action('view', $entity->getID())?>"><i class="fa fa-database"></i> <?=$entity->getEntityDisplayName()?></a></li>
+    <li><a href="<?=$this->action('results', $entity->getID())?>"><i class="fa fa-database"></i> <?=$entity->getEntityDisplayName()?></a></li>
 <?php
 }
 ?>

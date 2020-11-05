@@ -34,5 +34,10 @@ abstract class AbstractMenu implements ModifiableMenuInterface
         return $html;
     }
 
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
+    }
+
 
 }

@@ -2,114 +2,92 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
-use Concrete\Core\Http\ResponseAssetGroup;
-use Permissions;
-use File;
-use FileAttributeKey;
-use Concrete\Core\File\EditResponse as FileEditResponse;
-use Loader;
-use Exception;
+use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\Category\FileCategory;
+use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait;
+use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\File\EditResponse;
+use Concrete\Core\File\File;
+use Concrete\Core\Filesystem\ElementManager;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Permission\Checker;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Properties extends BackendInterfaceFileController
 {
-    protected $viewPath = '/dialogs/file/properties';
-    protected $controllerActionPath = '/ccm/system/dialogs/file/properties';
 
-    protected function canAccess()
+    use ControllerTrait;
+
+    protected $viewPath = '/dialogs/file/properties';
+
+    /**
+     * @var FileCategory
+     */
+    protected $category;
+
+    public function __construct(
+        CategoryService $attributeCategoryService,
+        JsonSerializer $serializer
+    )
     {
-        return $this->permissions->canViewFileInFileManager();
+        parent::__construct();
+        $this->serializer = $serializer;
+        $categoryEntity = $attributeCategoryService->getByHandle('file');
+        $this->category = $categoryEntity->getController();
+    }
+
+    public function canAccess()
+    {
+        $permissions = new Checker($this->file);
+        return $permissions->canEditFileProperties();
+    }
+
+    public function getObjects(): array
+    {
+        return [$this->file->getVersionToModify()];
+    }
+
+    public function getCategory(): CategoryInterface
+    {
+        return $this->category;
+    }
+
+    public function canEditAttributeKey(int $akID): bool
+    {
+        return true;
     }
 
     public function view()
     {
-        if (isset($_REQUEST['fvID'])) {
-            $fv = $this->file->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
-            $this->set('previewMode', true);
+        $version = $this->file->getRecentVersion();
+        $keySelector = $this->app->make(ElementManager::class)
+            ->get('attribute/component/key_selector', [$this->category]);
+        $controller = $keySelector->getElementController();
+        $controller->setSelectAttributeUrl($this->action('get_attribute'));
+        $controller->setObjects([$version]);
+        $this->set('keySelector', $keySelector);
+        $this->set('file', $version);
+        $this->set('form', $this->app->make('helper/form'));
+        $this->set('token', $this->app->make('token'));
+    }
+
+    public function submit()
+    {
+        if ($this->validateAction()) {
+            $fv = $this->file->getVersionToModify();
+            $fv->updateTitle($this->request->request->get('title'));
+            $fv->updateDescription($this->request->request->get('description'));
+            $fv->updateTags($this->request->request->get('tags'));
+            $this->saveAttributes();
+            $sr = new EditResponse();
+            $sr->setFile($this->file);
+            $this->flash('success', t('File updated successfully.'));
+            return new JsonResponse($sr);
         } else {
-            $fv = $this->file->getApprovedVersion();
-            $this->set('previewMode', false);
-        }
-
-        $this->set('fv', $fv);
-        $this->set('form', Loader::helper('form'));
-        $this->set('dateHelper', Loader::helper('date'));
-    }
-
-    public function clear_attribute()
-    {
-        if ($this->validateAction()) {
-            $fp = new Permissions($this->file);
-            if ($fp->canEditFileProperties()) {
-                $fv = $this->file->getVersionToModify();
-
-                $ak = FileAttributeKey::getByID($_REQUEST['akID']);
-                $fv->clearAttribute($ak);
-
-                $sr = new FileEditResponse();
-                $sr->setFile($this->file);
-                $sr->setMessage(t('Attribute cleared successfully.'));
-                $sr->outputJSON();
-            }
-        }
-
-        throw new Exception(t('Access Denied'));
-    }
-
-    public function update_attribute()
-    {
-        if ($this->validateAction()) {
-            $fp = new Permissions($this->file);
-            if ($fp->canEditFileProperties()) {
-                $fv = $this->file->getVersionToModify();
-
-                $ak = FileAttributeKey::getByID($_REQUEST['name']);
-                $controller = $ak->getController();
-                $value = $controller->createAttributeValueFromRequest();
-                $fv->setAttribute($ak, $value);
-
-                $file = File::getByID($this->file->getFileID());
-                $value = $file->getAttributeValueObject($ak); // ugh this is some kind of race condition or cache issue.
-
-                $sr = new FileEditResponse();
-                $sr->setFile($this->file);
-                $sr->setMessage(t('Attribute saved successfully.'));
-                $sr->setAdditionalDataAttribute('value', $value->getDisplayValue());
-                $sr->outputJSON();
-            }
-        }
-
-        throw new Exception(t('Access Denied'));
-    }
-
-    public function save()
-    {
-        if ($this->validateAction()) {
-            $fp = new Permissions($this->file);
-            if ($fp->canEditFileProperties()) {
-                $fv = $this->file->getVersionToModify();
-                $value = $this->request->request->get('value');
-                switch ($this->request->request->get('name')) {
-                    case 'fvTitle':
-                        $fv->updateTitle($value);
-                        break;
-                    case 'fvDescription':
-                        $fv->updateDescription($value);
-                        break;
-                    case 'fvTags':
-                        $fv->updateTags($value);
-                        break;
-                }
-
-                $sr = new FileEditResponse();
-                $sr->setFile($this->file);
-                $sr->setMessage(t('File updated successfully.'));
-                $sr->setAdditionalDataAttribute('value', $value);
-                $sr->outputJSON();
-            } else {
-                throw new Exception(t('Access Denied.'));
-            }
-        } else {
-            throw new Exception(t('Access Denied.'));
+            throw new \Exception(t('Access Denied.'));
         }
     }
 }
+
+

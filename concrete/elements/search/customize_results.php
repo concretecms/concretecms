@@ -31,9 +31,14 @@ if (!isset($type)) {
                 foreach ($columns as $col) {
                     ?>
                     <div class="form-check">
-                        <?= $form->checkbox($col->getColumnKey(), 1,
-                            $current->contains($col)) ?>
-                        <label for="<?=$col->getColumnKey()?>" class="form-check-label"><?= $col->getColumnName() ?></label>
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="<?= $col->getColumnKey() ?>"
+                               id="<?= $col->getColumnKey() ?>"
+                               value="1"
+                               <?php if ($current->contains($col)) { ?>checked<?php } ?>>
+                        <label class="form-check-label"
+                               for="<?= $col->getColumnKey() ?>"><?= $col->getColumnName() ?></label>
                     </div>
                     <?php
                 }
@@ -52,9 +57,14 @@ if (!isset($type)) {
                 foreach ($list as $ak) {
                     ?>
                     <div class="form-check">
-                        <?= $form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1,
-                            $current->contains($ak)) ?>
-                        <label for="ak_<?=$ak->getAttributeKeyHandle()?>" class="form-check-label"><?= $ak->getAttributeKeyDisplayName() ?></label>
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"
+                               id="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"
+                               value="1"
+                               <?php if ($current->contains($ak)) { ?>checked<?php } ?>>
+                        <label class="form-check-label"
+                               for="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"><?= $ak->getAttributeKeyDisplayName() ?></label>
                     </div>
                     <?php
                 }
@@ -68,20 +78,22 @@ if (!isset($type)) {
     <fieldset>
         <legend><?= t('Column Order') ?></legend>
 
-        <p><?= t('Click and drag to change column order.') ?></p>
-        <ul class="item-select-list" data-search-column-list="<?= $type ?>">
-            <?php
-            foreach ($current->getColumns() as $col) {
-                ?>
-                <li style="cursor: move" data-field-order-column="<?= $col->getColumnKey() ?>"><input type="hidden"
-                                                                                                      name="column[]"
-                                                                                                      value="<?= $col->getColumnKey() ?>"/><?= $col->getColumnName() ?>
-                    <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
-                </li>
+        <div class="form-group">
+            <p><?= t('Click and drag to change column order.') ?></p>
+            <ul class="item-select-list" data-search-column-list="<?= $type ?>">
                 <?php
-            }
-            ?>
-        </ul>
+                foreach ($current->getColumns() as $col) {
+                    ?>
+                    <li style="cursor: move" data-field-order-column="<?= $col->getColumnKey() ?>"><input type="hidden"
+                                                                                                          name="column[]"
+                                                                                                          value="<?= $col->getColumnKey() ?>"/><?= $col->getColumnName() ?>
+                        <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </div>
     </fieldset>
     <hr>
     <fieldset>
@@ -92,8 +104,8 @@ if (!isset($type)) {
         <div class="form-group">
             <label class="control-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
-                class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
-                name="fSearchDefaultSort">
+                    class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
+                    name="fSearchDefaultSort">
                 <?php
                 foreach ($all->getSortableColumns() as $col) {
                     ?>
@@ -108,12 +120,12 @@ if (!isset($type)) {
         <div class="form-group">
             <label class="control-label" for="fSearchDefaultSortDirection"><?= t('Direction') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
-                class="form-control" data-search-select-default-column-direction="<?= $type ?>"
-                name="fSearchDefaultSortDirection">
+                    class="form-control" data-search-select-default-column-direction="<?= $type ?>"
+                    name="fSearchDefaultSortDirection">
                 <option
-                    value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="selected"<?php } ?>><?= t('Ascending') ?></option>
+                        value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="selected"<?php } ?>><?= t('Ascending') ?></option>
                 <option
-                    value="desc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="selected"<?php } ?>><?= t('Descending') ?></option>
+                        value="desc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="selected"<?php } ?>><?= t('Descending') ?></option>
             </select>
         </div>
 
@@ -124,18 +136,21 @@ if (!isset($type)) {
 
         <fieldset>
             <legend><?= t('Number of Results') ?></legend>
-            <select class="form-control" name="fSearchItemsPerPage">
-                <?php
-                foreach ($itemsPerPageOptions as $option) {
-                    ?>
-                    <option <?php if ($itemsPerPage == $option) { ?> selected="selected"<?php } ?>
-                        value="<?= $option ?>">
-                        <?= $option ?>
-                    </option>
+
+            <div class="form-group">
+                <select class="form-control" name="fSearchItemsPerPage">
                     <?php
-                }
-                ?>
-            </select>
+                    foreach ($itemsPerPageOptions as $option) {
+                        ?>
+                        <option <?php if ($itemsPerPage == $option) { ?> selected="selected"<?php } ?>
+                                value="<?= $option ?>">
+                            <?= $option ?>
+                        </option>
+                        <?php
+                    }
+                    ?>
+                </select>
+            </div>
         </fieldset>
 
     <?php } ?>

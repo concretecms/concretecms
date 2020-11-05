@@ -1943,52 +1943,6 @@
     </index>
   </table>
 
-  <table name="DownloadStatistics">
-    <field name="dsID" type="integer" size="10">
-      <unsigned/>
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="fID" type="integer" size="10">
-      <unsigned/>
-      <notnull/>
-    </field>
-    <field name="fvID" type="integer" size="10">
-      <unsigned/>
-      <notnull/>
-    </field>
-    <field name="uID" type="integer" size="10">
-      <unsigned/>
-      <notnull/>
-    </field>
-    <field name="rcID" type="integer" size="10">
-      <unsigned/>
-      <notnull/>
-    </field>
-    <field name="timestamp" type="timestamp">
-      <deftimestamp/>
-      <notnull/>
-    </field>
-    <index name="fID">
-      <col>fID</col>
-      <col>timestamp</col>
-    </index>
-    <index name="fvID">
-      <col>fID</col>
-      <col>fvID</col>
-    </index>
-    <index name="uID">
-      <col>uID</col>
-    </index>
-    <index name="rcID">
-      <col>rcID</col>
-    </index>
-    <index name="timestamp">
-      <col>timestamp</col>
-    </index>
-  </table>
-
-
   <table name="FilePermissionFileTypes">
     <field name="fsID" type="integer" size="10">
       <unsigned/>
@@ -2463,6 +2417,9 @@
       <default value="0"/>
     </field>
     <field name="uDefaultLanguage" type="boolean">
+      <default value="0"/>
+    </field>
+    <field name="uHomeFileManagerFolderID" type="boolean">
       <default value="0"/>
     </field>
     <field name="attributePermission" type="string" size="1">
@@ -4230,6 +4187,21 @@
       <col>gID</col>
     </index>
   </table>
+
+  <table name="TreeExpressEntrySiteResultNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <key/>
+    </field>
+    <field name="siteID" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <index name="siteID">
+      <col>siteID</col>
+    </index>
+  </table>
+
 
   <table name="TreeFileFolderNodes">
     <field name="treeNodeID" type="integer" size="11">

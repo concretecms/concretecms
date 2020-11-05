@@ -74,6 +74,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $data['calendarID'] = isset($data['calendarID']) ? intval($data['calendarID']) : 0;
         $data['eventID'] = isset($data['eventID']) ? intval($data['eventID']) : 0;
 
+        $data['allowExport'] = isset($data['allowExport']) && $data['allowExport'] ? 1 : 0;
         $data['displayEventName'] = isset($data['displayEventName']) && $data['displayEventName'] ? 1 : 0;
         $data['displayEventDate'] = isset($data['displayEventDate']) && $data['displayEventDate'] ? 1 : 0;
         $data['displayEventDescription'] = isset($data['displayEventDescription']) && $data['displayEventDescription'] ? 1 : 0;

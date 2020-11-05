@@ -2,12 +2,10 @@
 
 /**
  * @var $menu \Concrete\Core\Board\Instance\Slot\Menu\Menu
- * @var $slot \Concrete\Core\Entity\Board\InstanceSlot
+ * @var $slot \Concrete\Core\Board\Instance\Slot\RenderedSlot
  */
 ?>
 
 <div class="ccm-ui"><?=$menu->getMenuElement()?></div>
 
-<board-slot 
-        :is-pinned="<?=$slot->isPinned() ? 'true' : 'false' ?>" 
-        :instance-slot-id="<?=$slot->getBoardInstanceSlotID()?>">
+<board-slot :slot-data='<?=json_encode($slot)?>'>

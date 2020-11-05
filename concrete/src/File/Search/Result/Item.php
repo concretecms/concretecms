@@ -2,13 +2,18 @@
 namespace Concrete\Core\File\Search\Result;
 
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\Entity\File\Folder\FavoriteFolder;
+use Concrete\Core\Entity\User\User;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Search\Result\Item as SearchResultItem;
 use Concrete\Core\Search\Result\Result as SearchResult;
 use Concrete\Core\Search\Column\Set;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Tree\Node\Type\SearchPreset;
 use Concrete\Core\Tree\Node\Type\File as FileNode;
+use Doctrine\ORM\EntityManagerInterface;
 
 class Item extends SearchResultItem
 {
@@ -29,10 +34,32 @@ class Item extends SearchResultItem
         return $icon;
     }
 
+    public function isFavoredItem()
+    {
+        if ($this->getItem() instanceof FileFolder) {
+            $user = new \Concrete\Core\User\User();
+            $app = Application::getFacadeApplication();
+            /** @var EntityManagerInterface $entityManager */
+            $entityManager = $app->make(EntityManagerInterface::class);
+            $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+            $userRepository = $entityManager->getRepository(User::class);
+            $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+
+            $favoriteFolderEntry= $favoriteFolderRepository->findOneBy([
+                "owner" => $userEntity,
+                "treeNodeFolderId" => $this->getItem()->getTreeNodeId()
+            ]);
+
+            return $favoriteFolderEntry instanceof FavoriteFolder;
+        }
+
+        return false;
+    }
+
     public function getDetailsURL()
     {
         if ($this->getItem() instanceof FileNode) {
-            return app('url/resolver/path')->resolve(['/dashboard/files/details', 'view',
+            return app('url/resolver/path')->resolve(['/dashboard/files/details',
                 $this->getItem()->getTreeNodeFileID()]
             );
         }
@@ -43,6 +70,18 @@ class Item extends SearchResultItem
         }
 
         return '#';
+    }
+
+    /**
+     * Returns an integer for a file ID if the result is a file, otherwise returns null.
+     * @return int
+     */
+    public function getResultFileUUID()
+    {
+        if ($this->getItem() instanceof FileNode) {
+            return $this->getItem()->getTreeNodeFileUUID();
+        }
+        return null;
     }
 
     /**

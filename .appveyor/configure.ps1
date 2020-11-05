@@ -80,10 +80,10 @@ Update-PhpCAInfo -Path $phpInstallPath -Source LocalMachine -Verbose
 $Env:Path = 'C:\tools\bin;' + $Env:Path
 if (-Not(Test-Path -PathType Leaf -Path C:\tools\bin\composer.bat)) {
     Write-Host 'Installing Composer'
-    Install-Composer -Path C:\tools\bin -PhpPath $phpInstallPath -NoAddToPath -Verbose
+    Install-Composer -Path C:\tools\bin -PhpPath $phpInstallPath -Version 1 -NoAddToPath -Verbose
 } else {
     Write-Host 'Updating Composer'
-    & composer self-update
+    & composer self-update --1
 }
 
 # Install hirak/prestissimo composer global package

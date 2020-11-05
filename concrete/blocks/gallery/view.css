@@ -1,0 +1,37 @@
+.ccm-gallery-container {
+    margin-left: -0.25em;
+    margin-right: -0.25em;
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+.ccm-gallery-container .gallery-16-9 {
+    padding-top: calc(9/16 * 100%);
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+}
+
+.ccm-gallery-container .gallery-16-9 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.25em;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ccm-gallery-container .gallery-h-auto {
+    height: auto;
+}
+
+.ccm-gallery-container .gallery-w-100 {
+    width: 100%;
+}
+.ccm-gallery-container .gallery-w-50 {
+    width: 50%;
+}

@@ -1,5 +1,4 @@
-<?php 
-defined('C5_EXECUTE') or die('Access Denied.');
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 $u = Core::make(Concrete\Core\User\User::class);
 $ui = UserInfo::getByID($u->uID);
 ?>
