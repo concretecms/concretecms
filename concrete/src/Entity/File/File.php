@@ -53,7 +53,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     public $fID;
 
     /**
-     * @ORM\Column(type="string", options={"unsigned": true}, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=36, options={"fixed": true}, nullable=true, unique=true)
      * @var string|null
      */
     protected $fUUID;
