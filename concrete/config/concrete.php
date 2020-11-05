@@ -341,6 +341,8 @@ return [
         'buses' => [
             Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT =>
             'Concrete\Core\Messenger\Registry\CommandBus',
+            Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT_SYNCHRONOUS =>
+                'Concrete\Core\Messenger\Registry\SynchronousCommandBus',
         ],
 
         'routing' => [

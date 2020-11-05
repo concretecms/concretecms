@@ -5,6 +5,7 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Entity\Messenger\BatchProcess;
+use Concrete\Core\Entity\Messenger\Process;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
@@ -20,6 +21,7 @@ final class Version20201029023919 extends AbstractMigration implements Repeatabl
         $this->createSinglePage('/dashboard/system/automation/settings', 'Automation Settings');
 
         $this->refreshEntities([
+            Process::class,
             BatchProcess::class,
             Task::class
        ]);

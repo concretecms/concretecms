@@ -11,6 +11,7 @@ use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\RejectRedeliveredMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\SendMessageMiddleware;
 use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
+use Symfony\Component\Messenger\Transport\Sender\SendersLocatorInterface;
 
 class CommandBus implements RegistryInterface
 {
@@ -24,6 +25,11 @@ class CommandBus implements RegistryInterface
         $this->app = $app;
     }
 
+    protected function getSendersLocator(): SendersLocatorInterface
+    {
+        return $this->app->make(SendersLocator::class);
+    }
+
     public function getBusBuilder(string $handle): callable
     {
         return function() use ($handle) {
@@ -33,7 +39,7 @@ class CommandBus implements RegistryInterface
                     new RejectRedeliveredMessageMiddleware(),
                     new DispatchAfterCurrentBusMiddleware(),
                     new FailedMessageProcessingMiddleware(),
-                    new SendMessageMiddleware($this->app->make(SendersLocator::class)),
+                    new SendMessageMiddleware($this->getSendersLocator()),
                     new HandleMessageMiddleware($this->app->make(HandlersLocator::class)),
                 ]
             );

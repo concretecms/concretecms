@@ -2,9 +2,11 @@
 namespace Concrete\Core\Messenger;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Messenger\Batch\Command\HandleBatchMessageCommandHandler;
 use Concrete\Core\Messenger\Registry\RegistryInterface;
 use Concrete\Core\Messenger\Transport\TransportInterface;
 use Concrete\Core\Messenger\Transport\TransportManager;
@@ -95,6 +97,14 @@ class MessengerServiceProvider extends ServiceProvider
             }
         );
 
+        $this->app->when(HandleBatchMessageCommandHandler::class)
+            ->needs(MessageBusInterface::class)
+            ->give(
+                function (Application $app) {
+                    return $app->make(MessageBusManager::class)->getBus(MessageBusManager::BUS_DEFAULT_SYNCHRONOUS);
+                }
+            );
+
         $this->app->when(ConsumeMessagesCommand::class)
             ->needs(ContainerInterface::class)
             ->give(
@@ -102,11 +112,6 @@ class MessengerServiceProvider extends ServiceProvider
                     return $app->make(TransportManager::class)->getReceivers();
                 }
             );
-
-        $this->app
-            ->when(RoutableMessageBus::class)
-            ->needs('$fallbackBus')
-            ->give('messenger/bus/command');
 
         $this->app
             ->when(RoutableMessageBus::class)
@@ -120,6 +125,13 @@ class MessengerServiceProvider extends ServiceProvider
                 $factory = $this->app->make(LoggerFactory::class);
                 return $factory->createLogger(Channels::CHANNEL_MESSENGER);
             });
+
+        /**
+         * @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcher
+         */
+        $dispatcher = $this->app->make(EventDispatcher::class)->getEventDispatcher();
+        $dispatcher->addSubscriber($this->app->make(MessengerEventSubscriber::class));
+
 
     }
 }

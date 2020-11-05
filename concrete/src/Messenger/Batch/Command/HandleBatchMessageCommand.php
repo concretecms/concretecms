@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class HandleBatchMessageCommand extends Command implements NormalizableInterface, DenormalizableInterface
+class HandleBatchMessageCommand extends Command implements NormalizableInterface, DenormalizableInterface, BatchProcessMessageInterface
 {
 
     /**

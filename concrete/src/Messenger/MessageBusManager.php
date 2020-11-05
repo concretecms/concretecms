@@ -8,6 +8,7 @@ class MessageBusManager implements ContainerInterface
 {
 
     const BUS_DEFAULT = 'command';
+    const BUS_DEFAULT_SYNCHRONOUS = 'command_sync';
 
     protected $buses = [];
 

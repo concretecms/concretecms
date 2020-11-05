@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Messenger\Batch;
 
 use Concrete\Core\Entity\Messenger\BatchProcess;
@@ -26,11 +27,21 @@ class BatchProcessor
      */
     protected $messageBus;
 
-    public function __construct(EntityManager $entityManager, Date $dateService, MessageBusInterface $messageBus)
-    {
+    /**
+     * @var BatchProcessUpdater
+     */
+    protected $batchProcessUpdater;
+
+    public function __construct(
+        EntityManager $entityManager,
+        Date $dateService,
+        MessageBusInterface $messageBus,
+        BatchProcessUpdater $batchProcessUpdater
+    ) {
         $this->entityManager = $entityManager;
         $this->dateService = $dateService;
         $this->messageBus = $messageBus;
+        $this->batchProcessUpdater = $batchProcessUpdater;
     }
 
     /**
@@ -67,10 +78,15 @@ class BatchProcessor
         $this->entityManager->persist($process);
         $this->entityManager->flush();
 
-        foreach($batch->getMessages() as $message) {
+        $totalJobs = 0;
+        foreach ($batch->getMessages() as $message) {
             $command = new HandleBatchMessageCommand($process->getID(), $message);
             $this->messageBus->dispatch($command);
+            $totalJobs++;
         }
+
+        $this->batchProcessUpdater->updateJobs($process->getID(), BatchProcessUpdater::COLUMN_TOTAL, $totalJobs);
+        $this->batchProcessUpdater->updateJobs($process->getID(), BatchProcessUpdater::COLUMN_PENDING, $totalJobs);
 
         return $process;
     }
