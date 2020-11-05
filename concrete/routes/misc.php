@@ -39,7 +39,7 @@ $router->all('/ccm/system/upgrade/submit', '\Concrete\Controller\Upgrade::submit
 $router->all('/ccm/system/country-stateprovince-link/get_stateprovinces', '\Concrete\Controller\Frontend\CountryDataLink::getStateprovinces');
 $router->all('/ccm/system/country-data-link/all', '\Concrete\Controller\Frontend\CountryDataLink::getAll');
 
-$router->all('/ccm/system/batch/monitor/{handle}/{token}', '\Concrete\Controller\Backend\Batch::monitor');
+$router->all('/ccm/system/batch/monitor/{batchId}/{token}', '\Concrete\Controller\Backend\Batch::monitor');
 $router->all('/ccm/system/dialogs/editor/settings/preview', 'Concrete\Controller\Dialog\Editor\Settings\Preview::view');
 $router->all('/ccm/system/dashboard/attribute/set/update_order', 'Concrete\Controller\Backend\Attribute\Set\UpdateOrder::view');
 $router->all('/ccm/system/heartbeat', '\Concrete\Controller\Frontend\Heartbeat::view');

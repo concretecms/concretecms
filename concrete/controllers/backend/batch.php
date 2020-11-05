@@ -2,19 +2,13 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\AbstractController;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
-use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponseFactory;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\QueueProgressResponse;
+use Concrete\Core\Entity\Messenger\BatchProcess;
+use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Validation\CSRF\Token;
+use Doctrine\ORM\EntityManager;
 
 class Batch extends AbstractController
 {
-
-    /**
-     * @var QueueService
-     */
-    protected $service;
 
     /**
      * @var Token
@@ -22,33 +16,29 @@ class Batch extends AbstractController
     protected $token;
 
     /**
-     * @var BatchFactory
+     * @var EntityManager
      */
-    protected $batchFactory;
+    protected $entityManager;
 
     /**
      * @var BatchProcessorResponseFactory
      */
-    protected $batchProcessorResponseFactory;
+    protected $responseFactory;
 
-    public function __construct(QueueService $service, Token $token, BatchFactory $batchFactory, BatchProcessorResponseFactory $batchProcessorResponseFactory)
+    public function __construct(Token $token, EntityManager $entityManager, BatchProcessorResponseFactory $responseFactory)
     {
-        $this->service = $service;
         $this->token = $token;
-        $this->batchFactory = $batchFactory;
-        $this->batchProcessorResponseFactory = $batchProcessorResponseFactory;
+        $this->entityManager = $entityManager;
+        $this->responseFactory = $responseFactory;
         parent::__construct();
     }
 
-    public function monitor($handle, $token)
+    public function monitor($batchId, $token)
     {
-        if ($this->token->validate($handle, $token)) {
-            $batch = $this->batchFactory->getBatch($handle);
-            if ($batch) {
-                $this->service->consumeBatchFromPoll($batch);
-                return $this->batchProcessorResponseFactory->createResponse($batch);
-            } else {
-                return $this->batchProcessorResponseFactory->createEmptyResponse($handle);
+        if ($this->token->validate($batchId, $token)) {
+            $batchProcess = $this->entityManager->find(BatchProcess::class, $batchId);
+            if ($batchProcess) {
+                return $this->responseFactory->createResponse($batchProcess);
             }
         }
         throw new \Exception(t('Access Denied'));

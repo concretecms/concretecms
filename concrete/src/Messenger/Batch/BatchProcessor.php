@@ -87,7 +87,8 @@ class BatchProcessor
 
         $this->batchProcessUpdater->updateJobs($process->getID(), BatchProcessUpdater::COLUMN_TOTAL, $totalJobs);
         $this->batchProcessUpdater->updateJobs($process->getID(), BatchProcessUpdater::COLUMN_PENDING, $totalJobs);
-
+        $this->entityManager->refresh($process);
+        
         return $process;
     }
 

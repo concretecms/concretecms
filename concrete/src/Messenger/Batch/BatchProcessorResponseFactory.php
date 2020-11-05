@@ -27,7 +27,8 @@ class BatchProcessorResponseFactory
     public function createResponse(BatchProcess $batch)
     {
         $data = [
-            'batch' => $batch->getName(),
+            'id' => $batch->getID(),
+            'name' => $batch->getName(),
             'totalJobs' => $batch->getTotalJobs(),
             'completedJobs' => $batch->getCompletedJobs(),
             'pendingJobs' => $batch->getPendingJobs(),
