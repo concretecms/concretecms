@@ -4,10 +4,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @var \Concrete\Core\Routing\Router
- * @var $app \Concrete\Core\Application\Application
+ * @var \Concrete\Core\Application\Application $app
  */
 $router->get('/file/{fID}', '\Concrete\Core\File\Api\FilesController::read')
     ->setRequirement('fID', '[0-9]+')
-    ->setScopes('files:read');
+    ->setScopes('files:read')
+;
 $router->get('/files/mine', '\Concrete\Core\File\Api\FilesController::getMyFiles')
-    ->setScopes('files:read');
+    ->setScopes('files:read')
+;

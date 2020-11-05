@@ -3,8 +3,8 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var \Concrete\Core\Routing\Router
- * Base path: /ccm/system/dialogs/block
- * Namespace: Concrete\Controller\Dialog\Block\
+ *                                    Base path: /ccm/system/dialogs/block
+ *                                    Namespace: Concrete\Controller\Dialog\Block\
  */
 $router->all('/aliasing/', 'Aliasing::view');
 $router->all('/aliasing/submit', 'Aliasing::submit');

@@ -18,4 +18,3 @@ $router
 $router
     ->all('sitemap_update', 'SitemapUpdate::view')
 ;
-    

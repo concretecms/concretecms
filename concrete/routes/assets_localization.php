@@ -3,8 +3,8 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var \Concrete\Core\Routing\Router
- * Base path: /ccm/assets/localization
- * Namespace: Concrete\Controller\Frontend\
+ *                                    Base path: /ccm/assets/localization
+ *                                    Namespace: Concrete\Controller\Frontend\
  */
 $router->get('/core/js', 'AssetsLocalization::getCoreJavascript');
 $router->get('/select2/js', 'AssetsLocalization::getSelect2Javascript');

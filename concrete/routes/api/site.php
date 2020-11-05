@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @var \Concrete\Core\Routing\Router
- * @var $app \Concrete\Core\Application\Application
+ * @var \Concrete\Core\Application\Application $app
  */
 use Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider;
 

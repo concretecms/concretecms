@@ -3,10 +3,9 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var \Concrete\Core\Routing\Router
- * Base path: /ccm/system/dialogs/logs
- * Namespace: Concrete\Controller\Dialog\Logs\
+ *                                    Base path: /ccm/system/dialogs/logs
+ *                                    Namespace: Concrete\Controller\Dialog\Logs\
  */
-
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
 $router->all('/advanced_search/submit', 'AdvancedSearch::submit');

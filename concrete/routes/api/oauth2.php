@@ -6,7 +6,7 @@ use Concrete\Core\Api\OAuth\Controller as OAuthController;
 
 /**
  * @var \Concrete\Core\Routing\Router
- * @var $app \Concrete\Core\Application\Application
+ * @var \Concrete\Core\Application\Application $app
  */
 $router->post('/oauth/2.0/token', [OAuthController::class, 'token']);
 $router->all('/oauth/2.0/authorize', [OAuthController::class, 'authorize']);
