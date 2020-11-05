@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
@@ -11,11 +12,13 @@ use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
 use Concrete\Core\Export\Item\Express\Entry as EntryExporter;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Permission\Assignment\ExpressEntryAssignment;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Permission\Response\ExpressEntryResponse;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Url;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -412,7 +415,12 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
             $name = $this->entryFormatter->getLabel($this);
         }
 
-        return (string) $name;
+        return (string)$name;
+    }
+
+    public function getURL()
+    {
+        return (string)Url::to("/dashboard/express/entries/view_entry/", $this->getID());
     }
 
     /**
@@ -420,9 +428,15 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function jsonSerialize()
     {
+        $app = Application::getFacadeApplication();
+        /** @var Date $dateHelper */
+        $dateHelper = $app->make(Date::class);
         $data = [
             'exEntryID' => $this->getID(),
             'label' => $this->getLabel(),
+            'url' => $this->getURL(),
+            'exEntryDateCreated' => $dateHelper->formatDateTime($this->getDateCreated()),
+            'exEntryDateModified' => $dateHelper->formatDateTime($this->getDateModified()),
         ];
 
         return $data;

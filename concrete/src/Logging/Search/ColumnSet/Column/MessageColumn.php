@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Logging\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Logging\LogEntry;
 use Concrete\Core\Logging\LogList;
 use Concrete\Core\Search\Column\Column;
@@ -10,6 +11,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class MessageColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -37,7 +40,7 @@ class MessageColumn extends Column implements PagerColumnInterface
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
         $where = sprintf('l.message %s :message', $sort);
         $query->setParameter('message', $mixed->getMessage());
-        $query->andWhere($where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }

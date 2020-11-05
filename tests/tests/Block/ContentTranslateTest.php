@@ -12,6 +12,10 @@ class ContentTranslateTest extends ConcreteDatabaseTestCase
         'SystemContentEditorSnippets',
     ];
 
+    protected $metadatas = [
+        'Concrete\Core\Entity\File\File',
+    ];
+
     public function setUp(): void
     {
         \Core::forgetInstance('url/canonical');

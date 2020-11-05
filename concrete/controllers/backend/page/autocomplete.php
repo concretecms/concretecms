@@ -45,7 +45,7 @@ class Autocomplete extends AbstractController
 
     protected function getTerm(): string
     {
-        $term = $this->request->query->get('term');
+        $term = $this->request->request->get('term');
 
         return is_string($term) ? $term : '';
     }
@@ -55,7 +55,7 @@ class Autocomplete extends AbstractController
         $pageNames = [];
         foreach ($pageList->getPagination() as $c) {
             $pageNames[] = [
-                'label' => $c->getCollectionName(),
+                'text' => $c->getCollectionName(),
                 'value' => $c->getCollectionID(),
             ];
         }

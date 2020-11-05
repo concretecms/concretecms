@@ -405,6 +405,25 @@ class Version implements ObjectInterface
     }
 
     /**
+     * Get the ID of the associated file instance.
+     *
+     * @return string
+     */
+    public function getFileUUID()
+    {
+        return $this->file->getFileUUID();
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function hasFileUUID()
+    {
+        return $this->file->hasFileUUID();
+    }
+
+    /**
      * Set the progressive file version identifier.
      *
      * @param int $fvID
@@ -987,7 +1006,11 @@ class Version implements ObjectInterface
         $c = Page::getCurrentPage();
         $cID = $c instanceof Page && !$c->isError() ? $c->getCollectionID() : 0;
 
-        return $urlResolver->resolve(['/download_file', $this->getFileID(), $cID]);
+        if ($this->hasFileUUID()) {
+            return $urlResolver->resolve(['/download_file', $this->getFileUUID(), $cID]);
+        } else {
+            return $urlResolver->resolve(['/download_file', $this->getFileID(), $cID]);
+        }
     }
 
     /**
@@ -1002,7 +1025,11 @@ class Version implements ObjectInterface
         $cID = $c instanceof Page && !$c->isError() ? $c->getCollectionID() : 0;
         $urlResolver = $app->make(ResolverManagerInterface::class);
 
-        return $urlResolver->resolve(['/download_file', 'force', $this->getFileID(), $cID]);
+        if ($this->hasFileUUID()) {
+            return $urlResolver->resolve(['/download_file', 'force',$this->getFileUUID(), $cID]);
+        } else {
+            return $urlResolver->resolve(['/download_file', 'force',$this->getFileID(), $cID]);
+        }
     }
 
     /**
@@ -1649,11 +1676,27 @@ class Version implements ObjectInterface
                 if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
                     $path_resolver = $app->make(Resolver::class);
                     $path = $path_resolver->getPath($this, $type);
+                    if ($path) {
+                        $url = $app->make('site')->getSite()->getSiteCanonicalURL();
+                        if ($url) {
+                            // Note: this logic seems like the wrong place to put this. getThumbnailURL() should
+                            // definitely return a URL and not a relative path, so I don't have a problem with
+                            // changing what this method returns. However it seems like the thumbnail path resolver
+                            // itself should have an option to get a full URL, and we should be using that
+                            // method and move this canonical URL logic into the thumbnail path resolver instead.
+                            // @TODO - refactor this and make it more elegant, while retaining this URL behavior.
+                            $path = rtrim($url, '/') . $path;
+                        }
+                    }
                 }
             }
         } else {
             $urlResolver = $app->make(ResolverManagerInterface::class);
-            $path = $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
+            if ($this->hasFileUUID()) {
+                $path = $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileUUID()]);
+            } else {
+                $path = $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
+            }
         }
         if (!$path) {
             $url = $this->getURL();
@@ -1889,8 +1932,13 @@ class Version implements ObjectInterface
         $r->canViewFile = $this->canView();
         $r->canEditFile = $this->canEdit();
         $r->url = $this->getURL();
-        $r->urlInline = (string) $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
-        $r->urlDownload = (string) $urlResolver->resolve(['/download_file', 'view', $this->getFileID()]);
+        if ($this->hasFileUUID()) {
+            $r->urlInline = (string) $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileUUID()]);
+            $r->urlDownload = (string) $urlResolver->resolve(['/download_file', 'view', $this->getFileUUID()]);
+        } else {
+            $r->urlInline = (string) $urlResolver->resolve(['/download_file', 'view_inline', $this->getFileID()]);
+            $r->urlDownload = (string) $urlResolver->resolve(['/download_file', 'view', $this->getFileID()]);
+        }
         $r->urlDetail = (string) $urlResolver->resolve(['/dashboard/files/details', 'view', $this->getFileID()]);
         $r->title = $this->getTitle();
         $r->genericTypeText = $this->getGenericTypeText();

@@ -201,7 +201,7 @@ class FileImporterTest extends FileStorageTestCase
                 $this->assertFalse((bool) $fo->hasThumbnail(3));
 
                 $this->assertEquals(
-                    '/application/files/thumbnails/file_manager_detail' . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), $expectedExtension), 2),
+                    'http://www.dummyco.com/application/files/thumbnails/file_manager_detail' . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), $expectedExtension), 2),
                     $fo->getThumbnailURL('file_manager_detail'),
                     "Check thumbnail URL with: format={$thumbnailFormat}, strategy={$strategy}"
                 );
@@ -271,7 +271,7 @@ class FileImporterTest extends FileStorageTestCase
 
         $cf = static::$app->make('helper/concrete/file');
         $fh = static::$app->make('helper/file');
-        $this->assertEquals('/application/files/thumbnails/file_manager_detail'
+        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
             . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }

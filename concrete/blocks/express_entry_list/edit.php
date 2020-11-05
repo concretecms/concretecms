@@ -112,6 +112,13 @@ echo $userInterface->tabs([
         </div>
 
         <div class="form-group">
+            <div class="form-check">
+                <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection) ?>
+                <?php echo $form->label('enableItemsPerPageSelection', t('Allow users to select items per page.'), ["class" => "form-check-label"]) ?>
+            </div>
+        </div>
+
+        <div class="form-group">
             <?php echo $form->label('detailPage', t('Link to Detail Page')) ?>
             <?php echo $pageSelector->selectPage('detailPage', $detailPage) ?>
 

@@ -95,7 +95,7 @@
     "theorchard/monolog-cascade": "0.5.x-dev",
     "commerceguys/addressing": "^1.0",
     "sabre/vobject": "^4.3",
-    "symfony/property-info": "^5.1"
+    "ramsey/uuid": "^4.1"
   },
   "extra": {
     "branch-alias": {

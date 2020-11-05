@@ -120,7 +120,6 @@ const DIRNAME_MAIL_TEMPLATES = 'mail';
 const DIRNAME_THEMES = 'themes';
 const DIRNAME_THEMES_CORE = 'core';
 const DIRNAME_CONFIG = 'config';
-const DIRNAME_TOOLS = 'tools';
 const DIRNAME_BLOCK_TEMPLATES = 'templates';
 const DIRNAME_BLOCK_TEMPLATES_COMPOSER = 'composer';
 const DIRNAME_CSS = 'css';
@@ -239,8 +238,6 @@ define('DIR_BASE_CORE', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(_
 define('DIR_PACKAGES', DIR_BASE . '/packages');
 define('DIR_FILES_BLOCK_TYPES', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
 define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
-define('DIR_FILES_TOOLS', DIR_APPLICATION . '/tools');
-define('DIR_FILES_TOOLS_REQUIRED', DIR_BASE_CORE . '/tools');
 define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
 defined('DIR_STARTING_POINT_PACKAGES') or define('DIR_STARTING_POINT_PACKAGES', DIR_CONFIG_SITE . '/install/packages');
 define('DIR_STARTING_POINT_PACKAGES_CORE', DIR_BASE_CORE . '/config/install/packages');

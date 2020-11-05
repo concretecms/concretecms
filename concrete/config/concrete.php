@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a3',
     'version_installed' => '9.0.0a3',
-    'version_db' => '20201029023919', // the key of the latest database migration
+    'version_db' => '20201031143314', // the key of the latest database migration
 
     /*
      * Installation status
@@ -658,13 +658,6 @@ return [
          */
         'enable_move_blocktypes_across_sets' => false,
         /*
-         * Control whether or not the image editor should add crossOrigin when loading images from external sources (s3, etc)
-         */
-        'image_editor_cors_policy' => [
-            'enable_cross_origin' => false,
-            'anonymous_request' => true,
-        ],
-        /*
          * Check whether to add a "generator" tag with the concrete5 version to the site pages
          *
          * @var bool
@@ -748,13 +741,6 @@ return [
                 // Space-separated list of attributes to be kept
                 'allowed_attributes' => '',
             ],
-            /*
-             * Background color of the Image Editor saveArea
-             * Leave empty to use a transparent background
-             *
-             * @var string
-             */
-            'image_editor_save_area_background_color' => '',
         ],
         /*
          * Options for the results per page dropdown

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
@@ -8,6 +9,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class DateLastLoginColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -32,7 +35,7 @@ class DateLastLoginColumn extends Column implements PagerColumnInterface
         $date = $mixed->getLastLogin();
         $query->setParameter('sortDate', $date);
         $query->setParameter('sortID', $mixed->getUserID());
-        $query->andWhere($where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }

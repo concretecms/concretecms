@@ -145,4 +145,28 @@ class Process extends AbstractController
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);
     }
+
+    public function removeFromClipboard($pcID, $cID)
+    {
+        $u = $this->app->make(User::class);
+        if (!$u->isRegistered()) {
+            throw new UserMessageException(t('Access Denied.'));
+        }
+        $valt = $this->app->make(Token::class);
+        if (!($valt->validate('tools/clipboard/from'))) {
+            throw new UserMessageException($valt->getErrorMessage());
+        }
+        $c = Page::getByID($cID);
+        $cp = new Checker($c);
+        if (!$cp->canViewPage()) {
+            die(t('Access Denied.'));
+        }
+        $pileContent = PileContent::get($pcID);
+        if (!$pileContent || !$pileContent->getPileContentID() || !$pileContent->getPile()->isMyPile()) {
+            throw new UserMessageException(t('Access Denied.'));
+        }
+        $pileContent->delete();
+
+        return $this->app->make(ResponseFactoryInterface::class)->json(true);
+    }
 }
