@@ -1,9 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: <none>
+ * Namespace: <none>
+ */
+
 $router->all('/ccm/system/dialogs/express/association/reorder', '\Concrete\Controller\Dialog\Express\Association\Reorder::view');
 $router->all('/ccm/system/dialogs/express/association/reorder/submit', '\Concrete\Controller\Dialog\Express\Association\Reorder::submit');
 $router->all('/ccm/system/dialogs/express/entry/search', '\Concrete\Controller\Dialog\Express\Search::entries');

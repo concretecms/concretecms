@@ -1,11 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router $router
- *                                    Base path: /ccm/system/panels
- *                                    Namespace: Concrete\Controller\Panel\
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: /ccm/system/panels
+ * Namespace: Concrete\Controller\Panel\
+ */
+
 $router->all('/add', 'Add::view');
 $router->all('/add/get_stack_contents', 'Add::getStackContents');
 $router->all('/add/get_stack_folder_contents', 'Add::getStackFolderContents');

@@ -1,12 +1,18 @@
 <?php
 
+use Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var \Concrete\Core\Routing\Router
- * @var \Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
-use Concrete\Core\Application\UserInterface\Sitemap\StandardSitemapProvider;
+
+/*
+ * Base path: /ccm/api/v1
+ * Namespace: <none>
+ */
 
 $router->get('/site/trees', function () use ($app) {
     $provider = $app->make(StandardSitemapProvider::class);

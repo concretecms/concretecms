@@ -1,13 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router $router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
 /*
  * Base path: /ccm/system/dialogs/page
  * Namespace: Concrete\Controller\Dialog\Page\
  */
+
 $router->all('/add', 'Add::view');
 $router->all('/versions', 'Versions::view');
 $router->all('/versions/duplicate', 'Versions::duplicate');

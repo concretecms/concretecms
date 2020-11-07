@@ -1,9 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: <none>
+ * Namespace: <none>
+ */
+
 $router->all('/ccm/system/panels/details/page/attributes', '\Concrete\Controller\Panel\Detail\Page\Attributes::view');
 $router->all('/ccm/system/panels/details/page/attributes/add_attribute', '\Concrete\Controller\Panel\Detail\Page\Attributes::add_attribute');
 $router->all('/ccm/system/panels/details/page/attributes/submit', '\Concrete\Controller\Panel\Detail\Page\Attributes::submit');

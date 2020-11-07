@@ -1,9 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: <none>
+ * Namespace: <none>
+ */
+
 $router->all('/ccm/calendar/dialogs/event/edit', '\Concrete\Controller\Dialog\Event\Edit::edit');
 $router->all('/ccm/calendar/dialogs/event/add', '\Concrete\Controller\Dialog\Event\Edit::add');
 $router->all('/ccm/calendar/dialogs/event/add/save', '\Concrete\Controller\Dialog\Event\Edit::addEvent');

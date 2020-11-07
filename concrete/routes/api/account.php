@@ -3,9 +3,15 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var \Concrete\Core\Routing\Router
- * @var \Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: /ccm/api/v1
+ * Namespace: <none>
+ */
+
 $router->all('/account/info', function () use ($app) {
     $request = $app->make(\Concrete\Core\Http\Request::class);
     $loggedInUser = $request->attributes->get('oauth_user_id');

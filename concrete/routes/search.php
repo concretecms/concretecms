@@ -1,9 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router $router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: <none>
+ * Namespace: <none>
+ */
+
 /*$router->all('/ccm/system/search/files/basic', '\Concrete\Controller\Search\Files::searchBasic');
 $router->all('/ccm/system/search/files/current', '\Concrete\Controller\Search\Files::searchCurrent');
 $router->all('/ccm/system/search/files/preset/{presetID}', '\Concrete\Controller\Search\Files::searchPreset');
