@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\System\Status;
 
-use Bernard\Driver;
 use Concrete\Core\Application\Application;
 
 class QueueStatusQueue implements \JsonSerializable

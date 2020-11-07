@@ -3,9 +3,8 @@
 namespace Concrete\Core\Job\Command;
 
 use Concrete\Core\Foundation\Command\Command;
-use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 
-class ExecuteJobItemCommand extends Command implements BatchableCommandInterface
+class ExecuteJobItemCommand extends Command
 {
     /**
      * @var string
@@ -27,26 +26,6 @@ class ExecuteJobItemCommand extends Command implements BatchableCommandInterface
         $this->setBatchHandle($batchHandle);
         $this->setJobHandle($jobHandle);
         $this->setData($data);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
-     */
-    public function getBatchHandle(): string
-    {
-        return $this->batchHandle;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setBatchHandle(string $batchHandle)
-    {
-        $this->batchHandle = $batchHandle;
-
-        return $this;
     }
 
     public function getJobHandle(): string

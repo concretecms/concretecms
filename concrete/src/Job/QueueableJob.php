@@ -4,7 +4,6 @@ namespace Concrete\Core\Job;
 
 use Config;
 use Job as AbstractJob;
-use Concrete\Core\Foundation\Queue\QueueService;
 
 abstract class QueueableJob extends AbstractJob
 {
@@ -75,8 +74,7 @@ abstract class QueueableJob extends AbstractJob
     public function getQueueObject()
     {
         if ($this->jQueueObject === null) {
-            $service = \Core::make(QueueService::class);
-            $this->jQueueObject = $service->getJobQueue($this);
+            throw new \Exception('Make this work again.');
         }
 
         return $this->jQueueObject;

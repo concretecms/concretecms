@@ -3,8 +3,6 @@
 namespace Concrete\Core\Automation\Task\Runner;
 
 use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface;
-use Concrete\Core\Foundation\Command\DispatcherFactory;
-use Concrete\Core\Foundation\Command\SynchronousBus;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class TaskRunner

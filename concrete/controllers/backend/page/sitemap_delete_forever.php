@@ -3,7 +3,6 @@ namespace Concrete\Controller\Backend\Page;
 
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Messenger\Batch\BatchProcessor;
 use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\Command\CopyPageCommand;

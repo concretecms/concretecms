@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Controller\Frontend;
 
-use Concrete\Core\Foundation\Queue\Batch\Response\BatchProcessorResponseFactory;
 use Concrete\Core\Job\QueueableJob;
 use Controller;
 use stdClass;

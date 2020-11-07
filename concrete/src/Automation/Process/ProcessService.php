@@ -2,12 +2,9 @@
 
 namespace Concrete\Core\Automation\Process;
 
-use Concrete\Core\Automation\AbstractService;
 use Concrete\Core\Automation\Task\Input\InputInterface;
 use Concrete\Core\Automation\Task\TaskService;
-use Concrete\Core\Entity\Automation\Process;
 use Concrete\Core\Entity\Automation\Task;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Doctrine\ORM\EntityManager;
 
 /**

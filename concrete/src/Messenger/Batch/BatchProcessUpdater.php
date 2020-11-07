@@ -4,7 +4,6 @@ namespace Concrete\Core\Messenger\Batch;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

@@ -66,8 +66,6 @@ return [
         'PermissionKey' => '\Concrete\Core\Permission\Key\Key',
         'PermissionKeyCategory' => '\Concrete\Core\Permission\Category',
         'Permissions' => '\Concrete\Core\Permission\Checker',
-        'Queue' => '\Concrete\Core\Foundation\Queue\Queue',
-        'QueueableJob' => '\Concrete\Core\Job\QueueableJob',
         'Redirect' => '\Concrete\Core\Routing\Redirect',
         'RedirectResponse' => '\Concrete\Core\Routing\RedirectResponse',
         'Response' => '\Concrete\Core\Http\Response',

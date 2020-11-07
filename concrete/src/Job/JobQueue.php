@@ -1,14 +1,7 @@
 <?php
 namespace Concrete\Core\Job;
 
-use Bernard\Queue;
 use Concrete\Core\Application\Application;
-use Concrete\Core\Entity\Queue\Batch;
-use Concrete\Core\Foundation\Command\AsynchronousBus;
-use Concrete\Core\Foundation\Command\SynchronousBus;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
-use Concrete\Core\Foundation\Queue\Batch\BatchProgressUpdater;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Job\Command\ExecuteJobItemCommand;
 use Doctrine\ORM\EntityManager;
 

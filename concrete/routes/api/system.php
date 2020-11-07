@@ -17,6 +17,5 @@ $router->get('/system/info', function () {
 
 $router->get('/system/status/queue', function() use ($app){
     $status = $app->make(QueueStatus::class);
-    // @TODO fix this.
     return new \League\Fractal\Resource\Item($status, false);
 })->setScopes('system:queue:read');

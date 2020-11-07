@@ -11,7 +11,6 @@ use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
@@ -1843,7 +1842,7 @@ EOT
      * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
      * @param bool $updateForkedBlocks
      *
-     * @return \ZendQueue\Queue
+     * @return array
      */
     public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks)
     {

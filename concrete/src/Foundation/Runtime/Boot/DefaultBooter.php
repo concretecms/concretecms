@@ -8,7 +8,6 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
-use Concrete\Core\Foundation\Queue\BernardSubscriber;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\Routing\SystemRouteList;
@@ -209,11 +208,7 @@ class DefaultBooter implements BootInterface, ApplicationAwareInterface
     private function initializeEvents(Application $app)
     {
         if ($app->isInstalled()) {
-            /*
-            $subscriber = $app->make(BernardSubscriber::class);
-            $dispatcher = $app->make('director');
-            $dispatcher->addSubscriber($subscriber);
-            */
+            return; // Currently this is not necessary
         }
     }
 

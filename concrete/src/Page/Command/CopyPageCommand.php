@@ -2,9 +2,7 @@
 
 namespace Concrete\Core\Page\Command;
 
-use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
-
-class CopyPageCommand extends PageCommand implements BatchableCommandInterface
+class CopyPageCommand extends PageCommand
 {
     /**
      * @var int
@@ -21,16 +19,6 @@ class CopyPageCommand extends PageCommand implements BatchableCommandInterface
         parent::__construct($pageID);
         $this->setDestinationPageID($destinationPageID);
         $this->isMultilingual = $isMultilingual;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
-     */
-    public function getBatchHandle(): string
-    {
-        return 'copy_page';
     }
 
     public function getDestinationPageID(): int

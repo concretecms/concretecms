@@ -6,7 +6,6 @@ use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\View\View;
 use Permissions;

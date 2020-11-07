@@ -2,10 +2,9 @@
 
 namespace Concrete\Core\Page\Type\Command;
 
-use Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface;
 use Concrete\Core\Foundation\Command\Command;
 
-class UpdatePageTypeDefaultsCommand extends Command implements BatchableCommandInterface
+class UpdatePageTypeDefaultsCommand extends Command
 {
     /**
      * @var int
@@ -41,16 +40,6 @@ class UpdatePageTypeDefaultsCommand extends Command implements BatchableCommandI
             ->setBlocksToUpdate($blocksToUpdate)
             ->setBlocksToAdd($blocksToAdd)
         ;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Foundation\Queue\Batch\Command\BatchableCommandInterface::getBatchHandle()
-     */
-    public function getBatchHandle(): string
-    {
-        return 'update_page_type_defaults';
     }
 
     public function getPageTypeDefaultPageID(): int

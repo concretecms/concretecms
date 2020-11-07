@@ -2,7 +2,6 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
-use Concrete\Core\Foundation\Queue\Response\QueueProgressResponse;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Summary\Category\Driver\DriverInterface;
 use Concrete\Core\Summary\Category\Driver\Manager;
