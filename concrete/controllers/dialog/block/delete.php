@@ -2,14 +2,10 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
-use Concrete\Core\Block\Command\DeleteBlockBatchProcessFactory;
 use Concrete\Core\Block\Command\DeleteBlockCommand;
 use Concrete\Core\Block\Events\BlockDelete;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
-use Concrete\Core\Page\EditResponse as PageEditResponse;
-use Concrete\Core\Page\EditResponse;
+use Concrete\Core\Messenger\Batch\BatchProcessor;
+use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
 
 class Delete extends BackendInterfaceBlockController
 {
@@ -68,15 +64,21 @@ class Delete extends BackendInterfaceBlockController
     {
         if ($this->validateAction()) {
             if ($this->permissions->canDeleteBlock() && $this->page->isMasterCollection()) {
-                $queue = $this->app->make(QueueService::class);
                 $blocks = $this->block->queueForDefaultsUpdate($_POST);
-                $factory = new DeleteBlockBatchProcessFactory();
-                $processor = $this->app->make(Processor::class);
-                return $processor->process($factory, $blocks, [
-                    'bID' => $this->block->getBlockID(),
-                    'aID' => $this->area->getAreaID(),
-                    'message' => t('All child blocks deleted successfully.')
-                ]);
+                $processor = $this->app->make(BatchProcessor::class);
+                $batch = $processor->createBatch(function() use ($blocks) {
+                    foreach ($blocks as $b) {
+                        yield new DeleteBlockCommand(
+                            $b['bID'],
+                            $b['cID'],
+                            $b['cvID'],
+                            $b['arHandle']
+                        );
+                    }
+                }, t('Delete Child Pages Blocks'));
+                $batchProcess = $processor->dispatch($batch);
+                $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
+                return $responseFactory->createResponse($batchProcess);
             }
         }
     }

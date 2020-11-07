@@ -4,12 +4,10 @@ namespace Concrete\Controller\Dialog\Type;
 use Block;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Http\ResponseFactory;
+use Concrete\Core\Messenger\Batch\BatchProcessor;
+use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\PageList;
-use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsBatchProcessFactory;
 use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand;
 use Page;
 use PageTemplate;
@@ -156,12 +154,21 @@ class UpdateFromType extends BackendInterfaceController
             ];
         }
 
-
-        $factory = new UpdatePageTypeDefaultsBatchProcessFactory($pageTypeDefaultPage);
-        $processor = $this->app->make(Processor::class);
-        return $processor->process($factory, $records, [
-            'message' => t('All child pages updated successfully')
-        ]);
+        $processor = $this->app->make(BatchProcessor::class);
+        $batch = $processor->createBatch(function() use ($records, $pageTypeDefaultPage) {
+            foreach ($records as $record) {
+                yield new UpdatePageTypeDefaultsCommand(
+                    $pageTypeDefaultPage->getCollectionID(),
+                    $record['cID'],
+                    $record['cvID'],
+                    $record['blocksToUpdate'],
+                    $record['blocksToAdd']
+                );
+            }
+        }, t('Update Page Type Defaults'));
+        $batchProcess = $processor->dispatch($batch);
+        $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
+        return $responseFactory->createResponse($batchProcess);
     }
 
     public function submit($ptID, $pTemplateID)

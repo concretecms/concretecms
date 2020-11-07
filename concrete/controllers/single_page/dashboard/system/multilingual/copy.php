@@ -2,13 +2,12 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use Concrete\Controller\Panel\Multilingual;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
-use Concrete\Core\Multilingual\Page\Section\Processor\MultilingualProcessorTarget;
+use Concrete\Core\Messenger\Batch\BatchProcessor;
+use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Page\Command\RescanMultilingualPageBatchProcessFactory;
+use Concrete\Core\Page\Command\RescanMultilingualPageCommand;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
+use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\User\User;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -37,12 +36,38 @@ class Copy extends DashboardSitePageController
         if ($this->token->validate('rescan_locale')) {
             $u = $this->app->make(User::class);
             if ($u->isSuperUser()) {
-                $queue = $this->app->make(QueueService::class);
-                $q = $queue->get('rescan_multilingual_page');
+
                 $section = Section::getByID($_REQUEST['locale']);
-                $factory = new RescanMultilingualPageBatchProcessFactory();
-                $processor = $this->app->make(Processor::class);
-                return $processor->process($factory, $section);
+                $pages = $section->populateRecursivePages(
+                    [],
+                    [
+                        'cID' => $section->getCollectionID(), ],
+                    $section->getCollectionParentID(),
+                    0,
+                    false
+                );
+
+                // Add in all the stack pages found for the current locale.
+                $list = new StackList();
+                $list->filterByLanguageSection($section);
+                $results = $list->get();
+                foreach ($results as $result) {
+                    $pages[] = ['cID' => $result->getCollectionID()];
+                }
+
+                $commands = [];
+                foreach ($pages as $page) {
+                    $commands[] = new RescanMultilingualPageCommand($page['cID']);
+                }
+
+                /**
+                 * @var $processor BatchProcessor
+                 */
+                $processor = $this->app->make(BatchProcessor::class);
+                $batch = $processor->createBatch($commands, t('Rescan Files'));
+                $batchProcess = $processor->dispatch($batch);
+                $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
+                return $responseFactory->createResponse($batchProcess);
             }
         }
     }
