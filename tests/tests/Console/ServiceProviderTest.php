@@ -152,7 +152,6 @@ class ServiceProviderTest extends TestCase
             ConcreteCommand\InstallThemeCommand::class,
             ConcreteCommand\BlacklistClear::class,
             ConcreteCommand\SetDatabaseCharacterSetCommand::class,
-            ConcreteCommand\QueueProcessCommand::class,
             ConcreteCommand\JobCommand::class,
             ConcreteCommand\UpdateCommand::class,
             ConcreteCommand\RescanFilesCommand::class,
