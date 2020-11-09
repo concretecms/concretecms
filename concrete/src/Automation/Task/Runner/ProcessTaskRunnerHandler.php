@@ -30,7 +30,6 @@ class ProcessTaskRunnerHandler
         $process = $this->processService->createProcess(
             $runner->getTask(),
             $runner->getInput(),
-            $runner->getTransport()
         );
 
         $this->messageBus->dispatch($runner->getMessage());

@@ -6,7 +6,7 @@ use Concrete\Core\Automation\Task\Input\InputInterface;
 use Concrete\Core\Automation\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Automation\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Automation\Task\TaskInterface;
-use Concrete\Core\Entity\Automation\Process;
+use Concrete\Core\Entity\Messenger\Process;
 use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\Messenger\MessengerServiceProvider;
 
@@ -52,8 +52,7 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
         TaskInterface $task,
         object $message,
         InputInterface $input,
-        string $responseMessage,
-        string $transport = MessengerServiceProvider::TRANSPORT_ASYNC
+        string $responseMessage
     ) {
         $this->task = $task;
         $this->message = $message;
@@ -112,22 +111,6 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
     public function getInput(): ?InputInterface
     {
         return $this->input;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTransport(): string
-    {
-        return $this->transport;
-    }
-
-    /**
-     * @param string $transport
-     */
-    public function setTransport(string $transport): void
-    {
-        $this->transport = $transport;
     }
 
 

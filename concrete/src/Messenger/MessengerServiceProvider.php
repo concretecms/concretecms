@@ -78,6 +78,7 @@ class MessengerServiceProvider extends ServiceProvider
 
         $routing = (array) $config->get('concrete.messenger.routing');
         $routing['Concrete\Core\Messenger\Batch\Command\HandleBatchMessageCommand'] = ['async'];
+        $routing['Concrete\Core\Messenger\Batch\Command\ProcessTaskRunnerCommand'] = ['async'];
 
         $this->app
             ->when(SendersLocator::class)

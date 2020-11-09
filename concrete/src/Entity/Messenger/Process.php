@@ -36,15 +36,15 @@ class Process implements \JsonSerializable
     protected $dateCompleted;
 
     /**
+     * @ORM\OneToOne(targetEntity="Batch", cascade={"persist"})
+     **/
+    protected $batch;
+
+    /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
      */
     protected $user;
-
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
-    protected $input;
 
     /**
      * @return mixed
@@ -121,17 +121,17 @@ class Process implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getInput()
+    public function getBatch()
     {
-        return $this->input;
+        return $this->batch;
     }
 
     /**
-     * @param mixed $input
+     * @param mixed $batch
      */
-    public function setInput($input): void
+    public function setBatch($batch): void
     {
-        $this->input = $input;
+        $this->batch = $batch;
     }
 
     public function jsonSerialize()

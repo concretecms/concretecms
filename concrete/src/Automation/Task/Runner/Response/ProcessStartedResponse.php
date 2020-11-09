@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Automation\Task\Runner\Response;
 
-use Concrete\Core\Entity\Automation\Process;
+use Concrete\Core\Entity\Messenger\Process;
 
 class ProcessStartedResponse implements ResponseInterface
 {

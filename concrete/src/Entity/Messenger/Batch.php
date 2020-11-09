@@ -2,15 +2,20 @@
 
 namespace Concrete\Core\Entity\Messenger;
 
-use Concrete\Core\Automation\Task\TaskInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="MessengerBatchProcesses")
+ * @ORM\Table(name="MessengerBatches")
  */
-class BatchProcess extends Process
+class Batch
 {
+
+    /**
+     * @ORM\Id @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
+     */
+    protected $id;
 
     /**
      * @ORM\Column(type="integer")
@@ -78,6 +83,14 @@ class BatchProcess extends Process
     public function getCompletedJobs(): int
     {
         return $this->getTotalJobs() - $this->getPendingJobs();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
 
