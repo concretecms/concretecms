@@ -47,19 +47,9 @@ $dropZoneId = "ccm-drop-zone-" . $idHelper->getString();
 
     <div class="tab-content">
         <div class="tab-pane fade show active" id="local" role="tabpanel" aria-labelledby="local-tab">
-            <div id="ccm-drop-zone-dialog-container">
 
-            </div>
+            <concrete-file-uploader <?php if (isset($replacingFile) && $replacingFile) { ?>replace-file-id="<?=$replacingFile->getFileID()?>"<?php } ?> :max-files="1"></concrete-file-uploader>
 
-            <div class="dialog-buttons">
-                <button class="btn btn-secondary float-left" data-dialog-action="cancel">
-                    <?php echo t('Cancel') ?>
-                </button>
-
-                <button type="button" id="ccm-import-files-button" class="btn btn-primary float-right">
-                    <?php echo t('Import') ?>
-                </button>
-            </div>
         </div>
 
         <div class="tab-pane fade" id="incoming" role="tabpanel" aria-labelledby="incoming-tab">
@@ -125,36 +115,20 @@ $dropZoneId = "ccm-drop-zone-" . $idHelper->getString();
                                             $key = $formID . "-incoming-" . $index;
 
                                             if ($file['allowed']) {
-                                                if ($replacingFile === null) {
-                                                    echo $form->checkbox("send_file[]", h($file['basename']), false, [
-                                                        "class" => "ccm-file-select-incoming",
-                                                        "id" => $key
-                                                    ]);
-                                                } else {
-                                                    echo $form->radio("send_file[]", h($file['basename']), false, [
-                                                        "required" => "required",
-                                                        "class" => "ccm-file-select-incoming",
-                                                        "id" => $key
-                                                    ]);
-                                                }
+                                                if ($replacingFile === null) { ?>
+                                                    <input type="checkbox" id="<?=$key?>" class="ccm-file-select-incoming" name="send_file[]" value="<?=h($file['basename'])?>">
+                                                <?php } else { ?>
+                                                    <input type="radio" required="required" id="<?=$key?>" class="ccm-file-select-incoming" name="send_file[]"  value="<?=h($file['basename'])?>">
+                                            <?php }
                                             } else {
-                                                if ($replacingFile === null) {
-                                                    echo $form->checkbox("send_file[]", null, false, [
-                                                        "disabled" => "disabled",
-                                                        "class" => "launch-tooltip",
-                                                        "title" => t('File extension not allowed'),
-                                                        "id" => $key
-                                                    ]);
-                                                } else {
-                                                    echo $form->radio("send_file[]", null, false, [
-                                                        "disabled" => "disabled",
-                                                        "class" => "launch-tooltip",
-                                                        "title" => t('File extension not allowed'),
-                                                        "id" => $key
-                                                    ]);
-                                                }
+                                                if ($replacingFile === null) { ?>
+                                                    <input disabled="disabled" title="<?=t('File extension not allowed.')?>" type="checkbox" id="<?=$key?>" value="" class="launch-tooltip ccm-file-select-incoming" name="send_file[]">
+                                                <?php
+                                                } else { ?>
+                                                    <input disabled="disabled" title="<?=t('File extension not allowed.')?>" type="radio" id="<?=$key?>" value="" class="launch-tooltip ccm-file-select-incoming" name="send_file[]">
+                                                <?php }
                                             }
-                                        ?>
+                                            ?>
                                     </td>
 
                                     <td class="incoming_file_table-thumbnail">
@@ -236,4 +210,36 @@ $dropZoneId = "ccm-drop-zone-" . $idHelper->getString();
             </form>
         </div>
     </div>
+    <div class="dialog-buttons">
+        <button class="btn btn-secondary float-left" data-dialog-action="cancel">
+            <?php echo t('Cancel') ?>
+        </button>
+
+        <button type="button" id="ccm-import-files-button" @click="uploadFiles" class="btn btn-primary float-right">
+            <?php echo t('Import') ?>
+        </button>
+    </div>
+
 </div>
+
+<script type="text/javascript">
+
+    ConcreteEvent.subscribe('FileManagerSelectFile', function(e, files) {
+        setTimeout(function() {
+            window.location.reload()
+        }, 1000)
+    })
+
+    Concrete.Vue.activateContext('backend', function (Vue, config) {
+        new Vue({
+            el: 'div.ccm-file-manager-import-files',
+            components: config.components,
+            methods: {
+                uploadFiles() {
+                    ConcreteEvent.publish('FileUploaderUploadSelectedFiles')
+                }
+            }
+        })
+    })
+
+</script>

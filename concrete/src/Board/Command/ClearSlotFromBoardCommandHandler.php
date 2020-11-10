@@ -3,6 +3,8 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\InstanceSlotRule;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Doctrine\ORM\EntityManager;
 
 class ClearSlotFromBoardCommandHandler
@@ -13,8 +15,14 @@ class ClearSlotFromBoardCommandHandler
      */
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * @var LoggerFactory
+     */
+    protected $loggerFactory;
+
+    public function __construct(LoggerFactory $loggerFactory, EntityManager $entityManager)
     {
+        $this->loggerFactory = $loggerFactory;
         $this->entityManager = $entityManager;
     }
 
@@ -22,9 +30,18 @@ class ClearSlotFromBoardCommandHandler
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->delete(InstanceSlotRule::class, 'r')
-            ->where('r.slot = :slot');
+            ->where('r.slot = :slot')
+            ->andWhere('r.instance = :instance');
         $qb->setParameter('slot', $command->getSlot());
+        $qb->setParameter('instance', $command->getInstance());
         $qb->getQuery()->execute();
+
+        $logger = $this->loggerFactory->createLogger(Channels::CHANNEL_BOARD);
+        $logger->info(t('Slot {slot} in instance {instanceID} was cleared.'), [
+            'slot' => $command->getSlot(),
+            'instanceID' => $command->getInstance()->getBoardInstanceID(),
+        ]);
+
     }
 
 

@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class PageDriver extends AbstractDriver
 {
 
-    public function getCategoryMemberFromIdentifier($identifier): CategoryMemberInterface
+    public function getCategoryMemberFromIdentifier($identifier): ?CategoryMemberInterface
     {
         return Page::getByID($identifier, 'ACTIVE');
     }

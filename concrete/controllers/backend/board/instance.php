@@ -2,11 +2,14 @@
 namespace Concrete\Controller\Backend\Board;
 
 use Concrete\Core\Board\Command\ClearSlotFromBoardCommand;
+use Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommand;
 use Concrete\Core\Board\Command\PinSlotToBoardCommand;
 use Concrete\Core\Board\Command\UnpinSlotFromBoardCommand;
 use Concrete\Core\Board\Instance\Slot\RenderedSlotCollectionFactory;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManager;
@@ -36,8 +39,8 @@ class Instance extends AbstractController
         $entityManager = $this->app->make(EntityManager::class);
         $rule = $entityManager->find(InstanceSlotRule::class, $this->request->request->get('boardInstanceSlotRuleID'));
         if ($rule && $this->canDeleteRule($rule)) {
-            $entityManager->remove($rule);
-            $entityManager->flush();
+            $command = new DeleteBoardInstanceSlotRuleCommand($rule);
+            $this->app->executeCommand($command);
             return new JsonResponse($rule);
         }
         throw new \Exception(t('Access Denied.'));
@@ -71,9 +74,9 @@ class Instance extends AbstractController
             }
             if ($canProceed) {
                 foreach($rules as $rule) {
-                    $entityManager->remove($rule);
+                    $command = new DeleteBoardInstanceSlotRuleCommand($rule);
+                    $this->app->executeCommand($command);
                 }
-                $entityManager->flush();
                 return new JsonResponse([]);
             }
             throw new \Exception(t('Access Denied.'));

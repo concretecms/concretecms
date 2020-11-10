@@ -136,6 +136,7 @@ return [
         'core_calendar' => 'Concrete\Core\Calendar\CalendarServiceProvider',
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
+        'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
 
         // Console CLI commands
         'core_console' => \Concrete\Core\Console\ServiceProvider::class,
@@ -220,6 +221,7 @@ return [
         'workflow',
         'workflow_progress_category',
         'workflow_type',
+        'external_file_provider_type',
     ],
 
     'importer_routines' => [
@@ -236,6 +238,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeComposerControlTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBannedWordsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSocialLinksRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportDesignTagsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
@@ -316,9 +319,9 @@ return [
      * - handle of the package
      */
     'file_types' => [
-        'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'],
-        'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image', 'image'],
-        'PNG' => ['png', FileType::T_IMAGE, 'image', 'image', 'image'],
+        'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image'],
+        'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image'],
+        'PNG' => ['png', FileType::T_IMAGE, 'image', 'image'],
         'Windows Bitmap' => ['bmp', FileType::T_IMAGE, 'image'],
         'TIFF' => ['tif,tiff', FileType::T_IMAGE, 'image'],
         'HTML' => ['htm,html', FileType::T_IMAGE],
@@ -375,6 +378,7 @@ return [
         'ccm.image.svg' => Concrete\Core\File\Import\Processor\SvgProcessor::class,
         'ccm.image.resize' => Concrete\Core\File\Import\Processor\ImageSizeConstrain::class,
         'ccm.image.thumbnails' => Concrete\Core\File\Import\Processor\ThumbnailGenerator::class,
+        'ccm.image.exif_data' => Concrete\Core\File\Import\Processor\ExifDataExtractor::class,
     ],
 
     /*
@@ -397,6 +401,22 @@ return [
                 'javascript',
                 'js/vue.js',
             ],
+        ],
+
+        'bootstrap' => [
+            [
+                'javascript',
+                'js/bootstrap.js',
+                [
+                    'position' => Asset::ASSET_POSITION_FOOTER,
+                    'version' => '4.0.0'
+                ]
+            ]
+        ],
+
+        'moment' => [
+            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
 
         // This is the base CKEditor library from CKEditor
@@ -528,6 +548,19 @@ return [
             ],
         ],
 
+        'bootstrap' => [
+            [
+                ['javascript', 'bootstrap']
+            ],
+        ],
+
+        'moment' => [
+            [
+                ['javascript', 'moment'],
+                ['javascript-localized', 'moment'],
+            ],
+        ],
+
         'vue' => [
             [
                 ['javascript', 'vue'],
@@ -555,6 +588,8 @@ return [
         'core/cms' => [
             [
                 ['javascript', 'jquery'],
+                ['javascript', 'bootstrap'],
+                ['javascript', 'moment'],
                 ['javascript', 'vue'],
                 ['css', 'font-awesome'],
                 ['javascript', 'core/cms'],
@@ -767,11 +802,13 @@ return [
         ['Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommandHandler'],
         ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommandHandler'],
         ['Concrete\Core\Board\Command\EnableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
         ['Concrete\Core\Board\Command\DisableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
         ['Concrete\Core\Board\Command\RefreshBoardInstanceCommand', 'Concrete\Core\Board\Command\RefreshBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\ClearBoardInstanceCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\GenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\GenerateBoardInstanceCommandHandler'],
+        ['Concrete\Core\Board\Command\RegenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\RegenerateBoardInstanceCommandHandler'],
         ['Concrete\Core\Board\Command\AddContentToBoardInstanceCommand', 'Concrete\Core\Board\Command\AddContentToBoardInstanceCommandHandler'],
 
         ['Concrete\Core\Board\Command\PinSlotToBoardCommand', 'Concrete\Core\Board\Command\PinSlotToBoardCommandHandler'],

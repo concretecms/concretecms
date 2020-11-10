@@ -45,20 +45,11 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
             $dataSourceDriver = $dataSource->getDriver();
             $populator = $dataSourceDriver->getItemPopulator();
 
-            $since = $command->getRetrieveDataObjectsAfter();
-            if ($since === -1) {
-                // That means this is the first time we're populating the board. So we run the new
-                // population routine.
-                $mode = PopulatorInterface::RETRIEVE_FIRST_RUN;
-            } else {
-                $mode = PopulatorInterface::RETRIEVE_NEW_ITEMS;
-            }
-
-            $items = $populator->createItemsFromDataSource($instance, $configuredDataSource, $mode);
+            $items = $populator->createItemsFromDataSource($instance, $configuredDataSource);
 
             $this->logger->debug(
-                t(/*i18n: %1$s is a number, %2$s is the name of a data source*/'Retrieved %1$s objects from %2$s data source after timestamp %3$s',
-            count($items), $dataSource->getName(), $command->getRetrieveDataObjectsAfter()
+                t(/*i18n: %1$s is a number, %2$s is the name of a data source*/'Retrieved %1$s objects from %2$s data source',
+            count($items), $dataSource->getName()
                 )
             );
 
@@ -68,7 +59,7 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
                 inner join BoardItems i on bi.boardItemID = i.boardItemID where i.uniqueItemId = ? and bi.configuredDataSourceID = ?', [
                     $item->getUniqueItemId(), $configuredDataSource->getConfiguredDataSourceID()
                 ]);
-                if ($existing->fetchColumn() !== 0) {
+                if ($existing->fetchColumn() === "0") {
                     $instanceItem = new InstanceItem();
                     $instanceItem->setInstance($instance);
                     $instanceItem->setDataSource($configuredDataSource);

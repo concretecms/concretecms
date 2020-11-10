@@ -2,13 +2,14 @@
 
 namespace Concrete\Core\Permission;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Utility\IPAddress;
 use DateTime;
 use IPLib\Address\AddressInterface;
@@ -18,8 +19,9 @@ use IPLib\Range\RangeInterface;
 /**
  * @deprecated check single methods to see the non-deprecated alternatives
  */
-class IPService implements LoggerAwareInterface
+class IPService implements ApplicationAwareInterface, LoggerAwareInterface
 {
+    use ApplicationAwareTrait;
     use LoggerAwareTrait;
 
     /**
@@ -115,7 +117,7 @@ class IPService implements LoggerAwareInterface
      */
     public function getRequestIPAddress()
     {
-        return IPFactory::addressFromString($this->request->getClientIp());
+        return $this->app->make(AddressInterface::class);
     }
 
     /**
@@ -278,10 +280,9 @@ class IPService implements LoggerAwareInterface
      */
     public function getRequestIP()
     {
-        $app = Application::getFacadeApplication();
-        $ip = $app->make(\IPLib\Address\AddressInterface::class);
+        $ip = $this->app->make(\IPLib\Address\AddressInterface::class);
 
-        return new IPAddress($ip === null ? null : (string) $ip);
+        return new IPAddress((string) $ip);
     }
 
     /**
@@ -363,8 +364,6 @@ class IPService implements LoggerAwareInterface
      */
     private function getFailedLoginService()
     {
-        $app = Application::getFacadeApplication();
-
-        return $app->make('failed_login');
+        return $this->app->make('failed_login');
     }
 }

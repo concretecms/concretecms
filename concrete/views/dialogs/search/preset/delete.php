@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="ccm-ui">
-    <form method="post" data-dialog-form="remove-search-preset" class="form-horizontal" action="<?= $controller->action('remove_search_preset'); ?>">
+    <form method="post" data-dialog-form="remove-search-preset" class="form-horizontal" action="<?= $controller->getDeleteSearchPresetAction(); ?>">
         <?= $token->output('remove_search_preset'); ?>
         <?= $form->hidden('presetID', $searchPreset->getId()); ?>
         <p><?= t('Are you sure you want to remove the "%s" search preset?', $searchPreset->getPresetName()); ?></p>

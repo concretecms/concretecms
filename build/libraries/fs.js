@@ -1,6 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 
+const WEBROOT = path.dirname(path.dirname(__dirname));
+
 /** Escape a parameter so that it's safe to use it with terminal scripts.
 * @function
 * @param {string} arg The argument to be escaped.
@@ -328,6 +330,7 @@ function copyFile(from, to, callback) {
 	});
 }
 
+exports.WEBROOT = WEBROOT;
 exports.isDirectory = isDirectory;
 exports.isFile = isFile;
 exports.fileExists = fileExists;

@@ -98,7 +98,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <label class="col-form-label"><?=t('Current Permission Set')?></label>
 
         <?php $cat = PermissionKeyCategory::getByHandle('page');?>
-        <form method="post" id="ccm-permission-list-form" data-dialog-form="permissions" data-panel-detail-form="permissions" action="<?=$cat->getToolsURL('save_permission_assignments')?>&cID=<?=$c->getCollectionID()?>">
+        <form method="post" id="ccm-permission-list-form" data-dialog-form="permissions" data-panel-detail-form="permissions" action="<?= h($cat->getTaskURL('save_permission_assignments', ['cID' => $c->getCollectionID()])) ?>">
             <?php Loader::element('permission/lists/page', array(
                 'page' => $c, 'editPermissions' => $editPermissions,
             ))?>
@@ -134,7 +134,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     ccm_pagePermissionsConfirmInheritanceChange = function() {
         jQuery.fn.dialog.showLoader();
-        $.getJSON('<?=$cat->getToolsURL('change_permission_inheritance')?>&cID=<?=$c->getCollectionID()?>&mode=' + $('#ccm-page-permissions-inherit').val(), function(r) {
+        $.getJSON(<?= json_encode($cat->getTaskURL('change_permission_inheritance', ['cID' => $c->getCollectionID()])) ?> + '&mode=' + $('#ccm-page-permissions-inherit').val(), function(r) {
             if (r.deferred) {
                 jQuery.fn.dialog.closeAll();
                 jQuery.fn.dialog.hideLoader();
@@ -193,7 +193,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         $('#ccm-page-permissions-subpages-override-template-permissions').change(function() {
             jQuery.fn.dialog.showLoader();
-            $.getJSON('<?=$cat->getToolsURL('change_subpage_defaults_inheritance')?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function(r) {
+            $.getJSON(<?= json_encode($cat->getTaskURL('change_subpage_defaults_inheritance', ['cID' => $c->getCollectionID()])) ?> + '&inherit=' + $(this).val(), function(r) {
                 if (r.deferred) {
                     ConcretePanelManager.exitPanelMode();
                     jQuery.fn.dialog.hideLoader();

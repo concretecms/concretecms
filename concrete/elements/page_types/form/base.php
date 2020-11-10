@@ -111,8 +111,8 @@ if (isset($pagetype) && is_object($pagetype)) {
 
 <script type="text/javascript">
 $(function() {
-    $('#ptPageTemplateID').removeClass('form-control').selectize({
-        plugins: ['remove_button']
+    $('#ptPageTemplateID').removeClass('form-control').selectpicker({
+        width: '100%'
     });
 
 	$('input[name=ptPublishTargetTypeID]').on('click', function() {

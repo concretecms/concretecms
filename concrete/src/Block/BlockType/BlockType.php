@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Block\BlockType;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
 use Concrete\Core\Filesystem\FileLocator;
@@ -44,15 +45,30 @@ class BlockType
      */
     public static function getByID($btID)
     {
+        $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $key = '/BlockType/' . $btID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
         $result = null;
         $btID = (int) $btID;
         if ($btID !== 0) {
-            $app = Application::getFacadeApplication();
             $em = $app->make(EntityManagerInterface::class);
             $result = $em->find(BlockTypeEntity::class, $btID);
             if ($result !== null) {
                 $result->loadController();
             }
+        }
+
+        if (is_object($result) && isset($item) && $item->isMiss()) {
+            $item->set($result);
+            $cache->save($item);
         }
 
         return $result;

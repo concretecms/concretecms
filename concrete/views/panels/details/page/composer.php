@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var Concrete\Controller\Panel\Detail\Page\Composer $controller */
@@ -129,7 +132,7 @@ var ConcretePageComposerDetail = {
         $('button[data-page-type-composer-form-btn=preview]').on('click', function() {
             my.disableAutosave();
             function redirect() {
-                window.location.href = CCM_DISPATCHER_FILENAME + <?= json_encode('?cID=' . $cID . '&ctask=check-out&' . $token->getParameter()); ?>;
+                window.location.href = <?= json_encode((string) app(ResolverManagerInterface::class)->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $token->generate()])) ?>;
             }
             if (!my.saving) {
                 my.saveDraft(redirect);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Update;
+namespace Concrete\Tests\System;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Error\UserMessageException;

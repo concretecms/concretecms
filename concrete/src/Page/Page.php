@@ -20,6 +20,7 @@ use Concrete\Core\Localization\Locale\Service as LocaleService;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Page\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Statistics as PageStatistics;
 use Concrete\Core\Page\Theme\Theme;
@@ -61,11 +62,11 @@ use UserInfo;
  * The page object in Concrete encapsulates all the functionality used by a typical page and their contents including blocks, page metadata, page permissions.
  */
 class Page extends Collection implements CategoryMemberInterface,
-    \Concrete\Core\Permission\ObjectInterface, 
-    AttributeObjectInterface, 
-    AssignableObjectInterface, 
-    TreeInterface, 
-    SiteAggregateInterface, 
+    \Concrete\Core\Permission\ObjectInterface,
+    AttributeObjectInterface,
+    AssignableObjectInterface,
+    TreeInterface,
+    SiteAggregateInterface,
     ExportableInterface
 {
     use AssignableObjectTrait;
@@ -163,7 +164,7 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Whether this page has a custom summary template collection assigned to it. If null/false,
      * then we just use any that are found to fit the criteria.
-     * 
+     *
      * @var bool|null
      */
     protected $hasCustomSummaryTemplateCollection;
@@ -174,11 +175,6 @@ class Page extends Collection implements CategoryMemberInterface,
     public function __construct()
     {
         $this->loadError(COLLECTION_INIT); // init collection until we populate.
-    }
-
-    public function __destruct()
-    {
-        parent::__destruct();
     }
 
     /**
@@ -328,7 +324,11 @@ class Page extends Collection implements CategoryMemberInterface,
     public function getJSONObject()
     {
         $r = new \stdClass();
+        $r->type = $this->getPageTypeName();
         $r->name = $this->getCollectionName() !== '' ? $this->getCollectionName() : t('(No Title)');
+        $r->datePublic = DefaultSet::getCollectionDatePublic($this);
+        $r->dateModified = DefaultSet::getCollectionDateModified($this);
+        $r->author = DefaultSet::getCollectionAuthor($this);
         if ($this->isAliasPage()) {
             $r->cID = $this->getCollectionPointerOriginalID();
         } else {
@@ -849,7 +849,7 @@ class Page extends Collection implements CategoryMemberInterface,
             }
         }
     }
-    
+
     public function getSummaryTemplates(): array
     {
         $app = Application::getFacadeApplication();
@@ -2188,9 +2188,8 @@ EOT
         if (is_object($this->vObj)) {
             $this->vObj->cvName = $name;
 
-            $txt = Core::make('helper/text');
-            $cHandle = $txt->urlify($name);
-            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
+            $app = Application::getFacadeApplication();
+            $cHandle = $app->make(HandleGenerator::class)->generate($this, ['cName' => $name]);
 
             $db->executeQuery('update CollectionVersions set cvName = ?, cvHandle = ? where cID = ? and cvID = ?', [$name, $cHandle, $this->getCollectionID(), $cvID]);
 
@@ -2402,22 +2401,10 @@ EOT
         if (!$cDatePublic) {
             $cDatePublic = Core::make('helper/date')->getOverridableNow();
         }
-        $txt = Core::make('helper/text');
-        $isHomePage = $this->isHomePage();
-        if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
-            // No passed cHandle, and there is an existing handle.
-            $cHandle = $this->getCollectionHandle();
-        } elseif (!$isHomePage && (!isset($data['cHandle']) || !Core::make('helper/validation/strings')->notempty($data['cHandle']))) {
-            // no passed cHandle, and no existing handle
-            // make the handle out of the title
-            $cHandle = $txt->urlify($cName);
-            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
-        } else {
-            // passed cHandle, no existing handle
-            $cHandle = isset($data['cHandle']) ? $txt->slugSafeString($data['cHandle']) : ''; // we DON'T run urlify
-            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
-        }
+        $app = Application::getFacadeApplication();
+        $txt = $app->make('helper/text');
         $cName = $txt->sanitize($cName);
+        $cHandle = $app->make(HandleGenerator::class)->generate($this, $data);
 
         if ($this->isGeneratedCollection()) {
             if (isset($data['cFilename'])) {
@@ -4057,7 +4044,6 @@ EOT
                     }
                 }
             }
-            $r->free();
         }
     }
 

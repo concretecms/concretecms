@@ -10,6 +10,8 @@ use Concrete\Core\Support\Facade\Url;
 <div class="form-inline">
     <?php if (!empty($itemsPerPageOptions)): ?>
         <div class="btn-group">
+            <select id="favoriteFolderSelector" class="selectpicker mr-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
+
             <button
                 type="button"
                 class="btn btn-secondary p-2 dropdown-toggle"

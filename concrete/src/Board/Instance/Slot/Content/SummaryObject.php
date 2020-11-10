@@ -2,12 +2,15 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Design\Tag\Tag;
+use Concrete\Core\Design\Tag\TagCollection;
 use Concrete\Core\Entity\Summary\Category;
 use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverManager;
 use Concrete\Core\Summary\Template\Renderer;
 use Doctrine\ORM\EntityManager;
+use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Concrete\Core\Summary\SummaryObjectInterface;
 use Concrete\Core\Summary\SummaryObject as BaseSummaryObject;
@@ -56,6 +59,11 @@ class SummaryObject implements ObjectInterface
                 $this->summaryObject->setData($data);
             }
         }
+    }
+
+    public function getDesignTags(): array
+    {
+        return $this->summaryObject->getTemplate()->getTags()->toArray();
     }
 
     public function display(Application $app): void

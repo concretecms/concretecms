@@ -60,11 +60,16 @@ class CalendarAssignment extends Assignment
         return false;
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
         $calendar = $this->getPermissionObject();
-
-        return parent::getPermissionKeyToolsURL($task) . '&caID=' . $calendar->getId();
+        
+        return parent::getPermissionKeyTaskURL($task, $options + ['caID' => $calendar->getId()]);
     }
 
     public function clearPermissionAssignment()

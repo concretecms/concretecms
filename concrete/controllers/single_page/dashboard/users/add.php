@@ -67,7 +67,7 @@ class Add extends DashboardPageController
 
         if (!$this->error->has()) {
             // do the registration
-            $data = ['uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']];
+            $data = ['uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage'], 'uHomeFileManagerFolderID' => ($_POST['uHomeFileManagerFolderID'] == 0 ? '' : $_POST['uHomeFileManagerFolderID'])];
             $uo = $this->app['user/registration']->create($data);
             if (is_object($uo)) {
                 if ($assignment->allowEditAvatar()) {

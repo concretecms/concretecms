@@ -1,4 +1,5 @@
 <?php
+use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Url\SeoCanonical;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -182,7 +183,6 @@ if (!empty($alternateHreflangTags)) {
     var CCM_EDIT_MODE = <?php echo $isEditMode ? 'true' : 'false'; ?>;
     var CCM_ARRANGE_MODE = <?php echo $isArrangeMode ? 'true' : 'false'; ?>;
     var CCM_IMAGE_PATH = "<?php echo ASSETS_URL_IMAGES; ?>";
-    var CCM_TOOLS_PATH = "<?php echo REL_DIR_FILES_TOOLS_REQUIRED; ?>";
     var CCM_APPLICATION_URL = "<?php echo rtrim((string) $app->make('url/canonical'), '/'); ?>";
     var CCM_REL = "<?php echo $app->make('app_relative_path'); ?>";
     var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale()) ?>;
@@ -196,7 +196,7 @@ if ($cp) {
         $cookie = $app->make('cookie');
         if ($cookie->get('ccmLoadAddBlockWindow')) {
             $v->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>');
-            $cookie->clear('ccmLoadAddBlockWindow');
+            $app->make(ResponseCookieJar::class)->clear('ccmLoadAddBlockWindow');
         }
     }
 }

@@ -3,6 +3,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 
 use Concrete\Core\Entity\Board\SlotTemplate;
+use Concrete\Core\Entity\Design\DesignTag;
 
 class ImportBoardSlotTemplatesRoutine extends AbstractRoutine
 {
@@ -14,6 +15,7 @@ class ImportBoardSlotTemplatesRoutine extends AbstractRoutine
     public function import(\SimpleXMLElement $sx)
     {
         $em = \Database::connection()->getEntityManager();
+        $tagRepository = $em->getRepository(DesignTag::class);
         if (isset($sx->boardslottemplates)) {
             foreach ($sx->boardslottemplates->template as $bt) {
                 $pkg = static::getPackageObject($bt['package']);
@@ -29,6 +31,19 @@ class ImportBoardSlotTemplatesRoutine extends AbstractRoutine
                     $template->setHandle($handle);
                     $template->setName($name);
                     $template->setPackage($pkg);
+
+                    if (isset($bt->tags)) {
+                        foreach ($bt->tags->children() as $templateTag) {
+                            $templateTagValue = (string) $templateTag['value'];
+                            if ($templateTagValue !== null) {
+                                $tag = $tagRepository->findOneByValue($templateTagValue);
+                                if ($tag) {
+                                    $template->getTags()->add($tag);
+                                }
+                            }
+                        }
+                    }
+
                     $em->persist($template);
                 }
             }

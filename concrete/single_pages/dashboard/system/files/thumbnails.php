@@ -5,20 +5,20 @@ use Concrete\Core\Permission\Checker;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Core\Page\View\PageView $view */
-/* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Form\Service\Widget\Color $form_color */
-/* @var Concrete\Controller\SinglePage\Dashboard\System\Files\Thumbnails $controller */
+// @var Concrete\Core\Page\View\PageView $view
+// @var Concrete\Core\Form\Service\Form $form
+// @var Concrete\Core\Validation\CSRF\Token $token
+// @var Concrete\Core\Form\Service\Widget\Color $form_color
+// @var Concrete\Controller\SinglePage\Dashboard\System\Files\Thumbnails $controller
 
 if (isset($type)) {
-    /* @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type $type */
-    /* @var array $sizingModes */
-    /* @var array $sizingModeHelps */
-    /* @var bool $allowConditionalThumbnails */
-    /* @var array $fileSetOptions [if $allowConditionalThumbnails is true] */
-    /* @var array $fileSets [if $allowConditionalThumbnails is true] */
-    /* @var bool $manipulationLibrarySupportsAnimations */
+    // @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type $type
+    // @var array $sizingModes
+    // @var array $sizingModeHelps
+    // @var bool $allowConditionalThumbnails
+    // @var array $fileSetOptions [if $allowConditionalThumbnails is true]
+    // @var array $fileSets [if $allowConditionalThumbnails is true]
+    // @var bool $manipulationLibrarySupportsAnimations
     if ($type->getID() !== null && !$type->isRequired()) {
         ?>
         <div class="ccm-dashboard-header-buttons">
@@ -35,7 +35,7 @@ if (isset($type)) {
         <div class="form-group">
             <?= $form->label('ftTypeHandle', t('Handle')) ?>
             <div class="input-group">
-                <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : []) ) ?>
+                <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : [])) ?>
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
                 </div>
@@ -197,32 +197,33 @@ if (isset($type)) {
             .trigger('change')
         ;
         <?php
-        
+
         if ($allowConditionalThumbnails) {
             ?>
             var $fileSets = $('#fileSets');
-            $fileSets.selectize({
-                plugins: ['remove_button']
+            $fileSets.selectpicker({
+                width: '100%'
             });
             $('#fileSetOption')
                 .on('change', function() {
                     if ($(this).val() === <?= json_encode($controller::FILESETOPTION_ALL) ?>) {
-                        $fileSets[0].selectize.disable();
+                        $fileSets.prop('disabled', true);
                     } else {
-                        $fileSets[0].selectize.enable();
+                        $fileSets.prop('disabled', false);
                     }
+                    $fileSets.selectpicker('refresh');
                 })
                 .trigger('change')
             ;
             <?php
         }
-        
+
         ?>
     });
     </script>
     <?php
 } else {
-    /* @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type[] $types */
+    // @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type[] $types
     ?>
     <div class="ccm-dashboard-header-buttons btn-group">
         <a href="<?= $view->action('options')?>" class="btn btn-secondary"><?= t('Options') ?></a>

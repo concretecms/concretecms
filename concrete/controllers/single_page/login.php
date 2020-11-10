@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -151,7 +152,6 @@ class Login extends PageController implements LoggerAwareInterface
         User $u
     )
     {
-        $this->app->instance(User::class, $u);
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
         }
@@ -207,6 +207,10 @@ class Login extends PageController implements LoggerAwareInterface
 
         $ue = new \Concrete\Core\User\Event\User($u);
         $this->app->make('director')->dispatch('on_user_login', $ue);
+
+        /** @var NavigationCache $navigationCache */
+        $navigationCache = $this->app->make(NavigationCache::class);
+        $navigationCache->clear();
 
         return new RedirectResponse(
             $this->app->make('url/manager')->resolve(['/login', 'login_complete'])

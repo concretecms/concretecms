@@ -2419,6 +2419,9 @@
     <field name="uDefaultLanguage" type="boolean">
       <default value="0"/>
     </field>
+    <field name="uHomeFileManagerFolderID" type="boolean">
+      <default value="0"/>
+    </field>
     <field name="attributePermission" type="string" size="1">
       <default value="1"/>
       <notnull/>

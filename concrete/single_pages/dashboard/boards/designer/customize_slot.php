@@ -10,6 +10,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <div data-form="customize-slot" v-cloak>
 
+        <h3><?=t('Choose Template')?></h3>
+        
         <input type="hidden" name="selectedTemplateJson" :value="selectedTemplateJson">
 
         <div v-for="(templateOption, index) in templateOptions">
@@ -34,13 +36,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         </div>
 
+        <div v-if="templateOptions.length === 0">
+            <p class="text-muted"><?=t('There are no summary templates available for the item or items you have selected.')?>
+        </div>
+
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
+                <button type="submit" class="btn float-right btn-secondary" :disabled="selectedTemplateOption < 1"><?=t('Next')?></button>
+            </div>
+        </div>
+
     </div>
 
-    <div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">
-            <button type="submit" class="btn float-right btn-secondary"><?=t('Next')?></button>
-        </div>
-    </div>
 </form>
 
 <script type="text/javascript">

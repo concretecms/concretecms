@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "83d000632818efb9f857147532620d1b",
+    "content-hash": "14dc7e93c43ae19d75804b81241da1a8",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -339,9 +339,9 @@
             "authors": [
                 {
                     "name": "Michele Locati",
+                    "role": "author",
                     "email": "michele@locati.it",
-                    "homepage": "https://mlocati.github.io",
-                    "role": "author"
+                    "homepage": "https://mlocati.github.io"
                 }
             ],
             "description": "Patches required for concrete5 dependencies",
@@ -1717,6 +1717,7 @@
                 "reflection",
                 "static"
             ],
+            "abandoned": "roave/better-reflection",
             "time": "2020-03-27T11:06:43+00:00"
         },
         {
@@ -3266,6 +3267,7 @@
                 "command-bus",
                 "tactician"
             ],
+            "abandoned": true,
             "time": "2016-10-30T13:36:21+00:00"
         },
         {
@@ -3549,16 +3551,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.9.0",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "b844659e3b87a461d1a8fe8e3e374aa6c4a5d902"
+                "reference": "334de586c7894afd838be44d73e72d8e97e5b0ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/b844659e3b87a461d1a8fe8e3e374aa6c4a5d902",
-                "reference": "b844659e3b87a461d1a8fe8e3e374aa6c4a5d902",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/334de586c7894afd838be44d73e72d8e97e5b0ff",
+                "reference": "334de586c7894afd838be44d73e72d8e97e5b0ff",
                 "shasum": ""
             },
             "require": {
@@ -3595,13 +3597,25 @@
                 "addresses",
                 "ipv4",
                 "ipv6",
+                "manage",
+                "managing",
                 "matching",
                 "network",
                 "networking",
                 "range",
                 "subnet"
             ],
-            "time": "2019-09-20T08:26:10+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/mlocati",
+                    "type": "github"
+                },
+                {
+                    "url": "https://paypal.me/mlocati",
+                    "type": "other"
+                }
+            ],
+            "time": "2020-10-04T12:22:58+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -4590,6 +4604,219 @@
             ],
             "description": "A polyfill for getallheaders.",
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "sabre/uri",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sabre-io/uri.git",
+                "reference": "059d11012603be2e32ddb7543602965563ddbb09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sabre-io/uri/zipball/059d11012603be2e32ddb7543602965563ddbb09",
+                "reference": "059d11012603be2e32ddb7543602965563ddbb09",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.16.1",
+                "phpunit/phpunit": "^7 || ^8"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/functions.php"
+                ],
+                "psr-4": {
+                    "Sabre\\Uri\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Evert Pot",
+                    "email": "me@evertpot.com",
+                    "homepage": "http://evertpot.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Functions for making sense out of URIs.",
+            "homepage": "http://sabre.io/uri/",
+            "keywords": [
+                "rfc3986",
+                "uri",
+                "url"
+            ],
+            "time": "2020-01-31T18:53:43+00:00"
+        },
+        {
+            "name": "sabre/vobject",
+            "version": "4.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sabre-io/vobject.git",
+                "reference": "a7feca8311462e5da16952454e420b92c20d3586"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sabre-io/vobject/zipball/a7feca8311462e5da16952454e420b92c20d3586",
+                "reference": "a7feca8311462e5da16952454e420b92c20d3586",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1",
+                "sabre/xml": "^2.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.16.1",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.0"
+            },
+            "suggest": {
+                "hoa/bench": "If you would like to run the benchmark scripts"
+            },
+            "bin": [
+                "bin/vobject",
+                "bin/generate_vcards"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sabre\\VObject\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Evert Pot",
+                    "email": "me@evertpot.com",
+                    "homepage": "http://evertpot.com/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Dominik Tobschall",
+                    "email": "dominik@fruux.com",
+                    "homepage": "http://tobschall.de/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Ivan Enderlin",
+                    "email": "ivan.enderlin@hoa-project.net",
+                    "homepage": "http://mnt.io/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The VObject library for PHP allows you to easily parse and manipulate iCalendar and vCard objects",
+            "homepage": "http://sabre.io/vobject/",
+            "keywords": [
+                "availability",
+                "freebusy",
+                "iCalendar",
+                "ical",
+                "ics",
+                "jCal",
+                "jCard",
+                "recurrence",
+                "rfc2425",
+                "rfc2426",
+                "rfc2739",
+                "rfc4770",
+                "rfc5545",
+                "rfc5546",
+                "rfc6321",
+                "rfc6350",
+                "rfc6351",
+                "rfc6474",
+                "rfc6638",
+                "rfc6715",
+                "rfc6868",
+                "vCalendar",
+                "vCard",
+                "vcf",
+                "xCal",
+                "xCard"
+            ],
+            "time": "2020-07-13T11:23:30+00:00"
+        },
+        {
+            "name": "sabre/xml",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sabre-io/xml.git",
+                "reference": "41c6ba148966b10cafd31d1a4e5feb1e2138d95c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sabre-io/xml/zipball/41c6ba148966b10cafd31d1a4e5feb1e2138d95c",
+                "reference": "41c6ba148966b10cafd31d1a4e5feb1e2138d95c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-xmlreader": "*",
+                "ext-xmlwriter": "*",
+                "lib-libxml": ">=2.6.20",
+                "php": "^7.1",
+                "sabre/uri": ">=1.0,<3.0.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.16.1",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sabre\\Xml\\": "lib/"
+                },
+                "files": [
+                    "lib/Deserializer/functions.php",
+                    "lib/Serializer/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Evert Pot",
+                    "email": "me@evertpot.com",
+                    "homepage": "http://evertpot.com/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Markus Staab",
+                    "email": "markus.staab@redaxo.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "sabre/xml is an XML library that you may not hate.",
+            "homepage": "https://sabre.io/xml/",
+            "keywords": [
+                "XMLReader",
+                "XMLWriter",
+                "dom",
+                "xml"
+            ],
+            "time": "2020-05-11T09:44:55+00:00"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -6077,6 +6304,82 @@
                 }
             ],
             "time": "2020-05-12T16:14:59+00:00"
+        },
+        {
+            "name": "symfony/polyfill-uuid",
+            "version": "v1.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-uuid.git",
+                "reference": "7095799250ff244f3015dc492480175a249e7b55"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-uuid/zipball/7095799250ff244f3015dc492480175a249e7b55",
+                "reference": "7095799250ff244f3015dc492480175a249e7b55",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "suggest": {
+                "ext-uuid": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.20-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Uuid\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Pineau",
+                    "email": "lyrixx@lyrixx.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for uuid functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "uuid"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-10-23T14:02:19+00:00"
         },
         {
             "name": "symfony/property-access",
@@ -7998,16 +8301,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.16.1",
+            "version": "v2.16.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "c8afb599858876e95e8ebfcd97812d383fa23f02"
+                "reference": "1023c3458137ab052f6ff1e09621a721bfdeca13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/c8afb599858876e95e8ebfcd97812d383fa23f02",
-                "reference": "c8afb599858876e95e8ebfcd97812d383fa23f02",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/1023c3458137ab052f6ff1e09621a721bfdeca13",
+                "reference": "1023c3458137ab052f6ff1e09621a721bfdeca13",
                 "shasum": ""
             },
             "require": {
@@ -8039,11 +8342,12 @@
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.1",
                 "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.1",
                 "phpunitgoodpractices/traits": "^1.8",
-                "symfony/phpunit-bridge": "^4.3 || ^5.0",
+                "symfony/phpunit-bridge": "^5.1",
                 "symfony/yaml": "^3.0 || ^4.0 || ^5.0"
             },
             "suggest": {
-                "ext-mbstring": "For handling non-UTF8 characters in cache signature.",
+                "ext-dom": "For handling output formats in XML",
+                "ext-mbstring": "For handling non-UTF8 characters.",
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "For IsIdenticalString constraint.",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "For XmlMatchesXsd constraint.",
                 "symfony/polyfill-mbstring": "When enabling `ext-mbstring` is not possible."
@@ -8065,6 +8369,7 @@
                     "tests/Test/IntegrationCaseFactory.php",
                     "tests/Test/IntegrationCaseFactoryInterface.php",
                     "tests/Test/InternalIntegrationCaseFactory.php",
+                    "tests/Test/IsIdenticalConstraint.php",
                     "tests/TestCase.php"
                 ]
             },
@@ -8083,7 +8388,13 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2019-11-25T22:10:32+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/keradus",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-06-27T23:57:46+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -8979,6 +9290,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2019-09-17T06:23:10+00:00"
         },
         {

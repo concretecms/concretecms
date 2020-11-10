@@ -97,6 +97,9 @@ class SearchProvider extends AbstractSearchProvider
     public function getItemList()
     {
         $list = new EntryList($this->entity);
+        if (!$this->entity->supportsEntrySpecificPermissions()) {
+            $list->ignorePermissions();
+        }
         $list->setupAutomaticSorting();
         return $list;
     }
@@ -126,6 +129,8 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getSavedSearch()
     {
-        return new SavedExpressSearch();
+        $search = new SavedExpressSearch();
+        $search->setEntity($this->getEntity());
+        return $search;
     }
 }

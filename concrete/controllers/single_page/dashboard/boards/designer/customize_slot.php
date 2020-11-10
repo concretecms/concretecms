@@ -77,7 +77,7 @@ class CustomizeSlot extends DashboardSitePageController
 
             $element->setContentObjectCollection($objectCollection);
             $element->setSlotTemplate($template);
-            $element->setIsDraft(false);
+            $element->setStatus(CustomElement::STATUS_READY_TO_PUBLISH);
             $this->entityManager->persist($element);
             $this->entityManager->flush();
 

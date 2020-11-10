@@ -95,9 +95,13 @@ class FileAssignment extends TreeNodeAssignment
         $pa->markAsInUse();
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
-        return Assignment::getPermissionKeyToolsURL($task) . '&fID=' . $this->getPermissionObject()->getFileID();
+        return Assignment::getPermissionKeyTaskURL($task, $options + ['fID' => $this->getPermissionObject()->getFileID()]);
     }
-
 }

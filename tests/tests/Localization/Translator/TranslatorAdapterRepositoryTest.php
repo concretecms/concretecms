@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator;
+namespace Concrete\Tests\Localization\Translator;
 
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\TestHelpers\Localization\Translator\Fixtures\DummyTranslatorAdapter;

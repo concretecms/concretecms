@@ -38,13 +38,3 @@ define('BLOCK_TYPE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_block_type_ge
 define('PACKAGE_GENERIC_ICON', ASSETS_URL_IMAGES . '/icons/icon_package_generic.png');
 define('ASSETS_URL_THEMES_NO_THUMBNAIL', ASSETS_URL_IMAGES . '/spacer.gif');
 define('AL_ICON_DEFAULT', ASSETS_URL_IMAGES . '/icons/filetypes/default.svg');
-
-/*
- * ----------------------------------------------------------------------------
- * Relative paths to tools. Passes through concrete5.
- * ----------------------------------------------------------------------------
- */
-define('REL_DIR_FILES_TOOLS', $app['app_relative_path'] . '/' . DISPATCHER_FILENAME . '/tools');
-define('REL_DIR_FILES_TOOLS_REQUIRED', $app['app_relative_path'] . '/' . DISPATCHER_FILENAME . '/tools/required'); // front-end
-define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
-define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages');

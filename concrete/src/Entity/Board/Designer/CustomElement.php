@@ -15,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class CustomElement implements \JsonSerializable
 {
 
+    const STATUS_DRAFT = 'D';
+    const STATUS_READY_TO_PUBLISH = 'R';
+
     abstract public function createBlock() : Block;
 
     /**
@@ -40,14 +43,14 @@ abstract class CustomElement implements \JsonSerializable
     protected $dateCreated;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $isDraft = true;
-
-    /**
      * @ORM\Column(type="guid")
      */
     protected $batchIdentifier;
+
+    /**
+     * @ORM\Column(type="string", length=1)
+     */
+    protected $status = self::STATUS_DRAFT;
 
     /**
      * @return mixed
@@ -122,19 +125,19 @@ abstract class CustomElement implements \JsonSerializable
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
-    public function isDraft(): bool
+    public function getStatus()
     {
-        return $this->isDraft;
+        return $this->status;
     }
 
     /**
-     * @param bool $isDraft
+     * @param mixed $status
      */
-    public function setIsDraft(bool $isDraft): void
+    public function setStatus($status): void
     {
-        $this->isDraft = $isDraft;
+        $this->status = $status;
     }
 
     public function getDateCreatedDateTime()

@@ -12,3 +12,14 @@ div.ccm-attribute-list-wrapper {
     vertical-align: middle;
   }
 }
+
+@media (min-width: map-get($grid-breakpoints, "md")) {
+  .ccm-attribute-display {
+    @include concrete-data-row-dl-horizontal;
+  }
+}
+@media (max-width: map-get($grid-breakpoints, "md") - 1px) {
+  .ccm-attribute-display {
+    @include concrete-data-row-dl-vertical;
+  }
+}

@@ -7,6 +7,7 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
 use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\File\Menu\Item\DeleteFileItem;
 use Concrete\Core\Tree\Menu\Item\DeleteItem;
 
 class Menu extends DropdownMenu
@@ -26,7 +27,7 @@ class Menu extends DropdownMenu
 
             if ($file->canView()) {
                 $this->addItem(new DialogLinkItem(
-                        REL_DIR_FILES_TOOLS_REQUIRED . '/files/view?fID=' . $file->getFileID(),
+                        \URL::to('/ccm/system/file/view?fID=' . $file->getFileID()),
                         t('View'), t('View'), '90%', '75%')
                 );
             }
@@ -41,7 +42,7 @@ class Menu extends DropdownMenu
         $this->addItem(new DividerItem());
 
 
-        if ($file->canEdit() && $fp->canEditFileContents()) {
+        if ($fp->canViewFileInFileManager()) {
             $this->addItem(new LinkItem(
                 \URL::to('/dashboard/files/details', $file->getFileID()),
                     t('Details')
@@ -60,7 +61,7 @@ class Menu extends DropdownMenu
         }
         if ($fp->canDeleteFile()) {
             $this->addItem(new DividerItem());
-            $this->addItem(new DeleteItem($file->getFileNodeObject()));
+            $this->addItem(new DeleteFileItem($file));
         }
     }
 }

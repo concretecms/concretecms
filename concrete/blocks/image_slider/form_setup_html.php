@@ -156,7 +156,7 @@ echo $userInterface->tabs([
     ?>
 
     if (typeof launchEditor === "undefined") {
-        let launchEditor = <?php echo $editorJavascript; ?>;
+        var launchEditor = <?php echo $editorJavascript; ?>;
     }
 
     $(document).ready(function () {

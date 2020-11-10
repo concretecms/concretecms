@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
 use SimpleXMLElement;
 
 class Controller extends AbstractController implements AttributeInterface
@@ -239,12 +240,19 @@ class Controller extends AbstractController implements AttributeInterface
      */
     public function getAttributeValueObject()
     {
-        $class = $this->getAttributeValueClass();
-        if ($class && $this->attributeValue && !empty($this->attributeValue->getAttributeValueID())) {
-            $result = $this->entityManager->find($class, $this->attributeValue->getGenericValue());
-        } elseif ($class && $this->attributeValue) {
-            $result=$this->attributeValue;
-        } else {
+        try {
+            $class = $this->getAttributeValueClass();
+            if ($class && $this->attributeValue && !empty($this->attributeValue->getAttributeValueID())) {
+                $result = $this->entityManager->find($class, $this->attributeValue->getGenericValue());
+            } else {
+                if ($class && $this->attributeValue) {
+                    $result = $this->attributeValue;
+                } else {
+                    $result = null;
+                }
+            }
+        } catch (EntityNotFoundException $entityNotFoundException) {
+            // This is horrendous but something about this sometimes gets off in corrupted environments.
             $result = null;
         }
 

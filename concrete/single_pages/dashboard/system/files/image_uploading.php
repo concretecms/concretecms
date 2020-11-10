@@ -16,6 +16,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var bool $use_exif_data_to_rotate_images */
 /* @var bool $exif_reader_supported */
 /* @var string|null $thumbnailOptionsURL */
+/** @var bool $use_exif_data_for_file_name_attribute */
+/** @var bool $use_exif_data_for_description_attribute */
+/** @var bool $use_exif_data_for_keyword_attribute */
+/** @var bool $use_exif_data_for_additional_attributes */
 ?>
 <form method="POST" action="<?= $view->action('save') ?>">
     <?= $token->output('image-options') ?>
@@ -75,7 +79,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?= $form->label('', t('Other Options')) ?>
         <div class="form-check">
             <?= $form->checkbox('use_exif_data_to_rotate_images', 1, $use_exif_data_to_rotate_images) ?>
-            <label for="use_exif_data_to_rotate_images">
+            <label for="use_exif_data_to_rotate_images" class="form-check-label">
                 <?= t('Use EXIF metadata to auto-rotate images uploaded images.') ?>
                 <?php
                 if (!$exif_reader_supported) {
@@ -100,6 +104,29 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 ?>
             </label>
         </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("use_exif_data_for_file_name_attribute", 1, $use_exif_data_for_file_name_attribute, ["class" => "form-check-input"]); ?>
+            <?php echo $form->label("use_exif_data_for_file_name_attribute", t("Use EXIF metadata to populate the file name."), ["class" => "form-check-label"]); ?>
+        </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("use_exif_data_for_description_attribute", 1, $use_exif_data_for_description_attribute, ["class" => "form-check-input"]); ?>
+            <?php echo $form->label("use_exif_data_for_description_attribute", t("Use EXIF metadata to populate the description."), ["class" => "form-check-label"]); ?>
+        </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("use_exif_data_for_keyword_attribute", 1, $use_exif_data_for_keyword_attribute, ["class" => "form-check-input"]); ?>
+            <?php echo $form->label("use_exif_data_for_keyword_attribute", t("Use EXIF metadata to populate the keywords."), ["class" => "form-check-label"]); ?>
+        </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("use_exif_data_for_additional_attributes", 1, $use_exif_data_for_additional_attributes, ["class" => "form-check-input"]); ?>
+            <?php echo $form->label("use_exif_data_for_additional_attributes", t("Use EXIF metadata to populate additional data if available."), ["class" => "form-check-label"]); ?>
+        </div>
+
+
+
     </div>
 
     <?php
