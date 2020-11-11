@@ -1,6 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
+/** @var bool $includeDownloadLink */
+
 $images = $images ?? [];
 
 // Strip out any file instances before serializing
@@ -24,6 +26,7 @@ $images = array_map(function($image) {
                 return {
                     data: JSON.parse(<?= json_encode(json_encode($images)) ?>),
                     choices: JSON.parse(<?= json_encode(json_encode($displayChoices)) ?>),
+                    includeDownloadLink: <?php echo $includeDownloadLink ? "true" : "false"; ?>
                 }
             }
         })
