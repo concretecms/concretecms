@@ -34,7 +34,7 @@ if (!$images && $page && $page->isEditMode()) { ?>
         $downloadLink = null;
         $fileVersion = $image['file']->getApprovedVersion();
         if ($includeDownloadLink && $fileVersion instanceof Version) {
-            $downloadLink = $fileVersion->getDownloadURL();
+            $downloadLink = $fileVersion->getForceDownloadURL();
         }
         ?>
         <div class="<?php echo $size === 'wide' ? 'gallery-w-100' : 'gallery-w-50' ?>"
