@@ -28,7 +28,7 @@ class Search extends BackendInterfaceController
     public function view()
     {
         $this->set('configuration', $this->app->make(ChooserConfigurationInterface::class));
-        $this->set('multipleSelection', $this->request->request->getBoolean('multipleSelection'));
+        $this->set('multipleSelection', $this->request->query->getBoolean('multipleSelection') || $this->request->request->getBoolean('multipleSelection'));
     }
 
     /**
