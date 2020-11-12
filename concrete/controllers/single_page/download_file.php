@@ -20,15 +20,6 @@ class DownloadFile extends PageController
     /** @var ResponseFactory */
     protected $responseFactory;
 
-    private function isValidUuid($uuid)
-    {
-        if (!is_string($uuid) || (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) !== 1)) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function on_start()
     {
         parent::on_start();
@@ -46,16 +37,18 @@ class DownloadFile extends PageController
     {
         $fUUID = null;
 
-        if ($this->isValidUuid($fID)) {
+        if (is_string($fID) && uuid_is_valid($fID)) {
             $fUUID = $fID;
             $file = File::getByUUID($fID);
             if ($file instanceof FileEntity) {
                 $fID = $file->getFileID();
+            } else {
+                $fID = null;
             }
         }
 
         // get the file
-        if ($fID > 0 && $this->app->make('helper/validation/numbers')->integer($fID) || $this->isValidUuid($fID)) {
+        if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $file = File::getByID($fID);
 
             if ($file instanceof FileEntity && $file->getFileID() > 0) {
@@ -143,15 +136,17 @@ class DownloadFile extends PageController
     {
         $fUUID = null;
 
-        if ($this->isValidUuid($fID)) {
+        if (is_string($fID) && uuid_is_valid($fID)) {
             $fUUID = $fID;
             $file = File::getByUUID($fID);
             if ($file instanceof FileEntity) {
                 $fID = $file->getFileID();
+            } else {
+                $fID = null;
             }
         }
 
-        if ($fID > 0 && $this->app->make('helper/validation/numbers')->integer($fID)) {
+        if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $file = File::getByID($fID);
 
             $permissionChecker = new Checker($file);
@@ -193,15 +188,17 @@ class DownloadFile extends PageController
     {
         $fUUID = null;
 
-        if ($this->isValidUuid($fID)) {
+        if (is_string($fID) && uuid_is_valid($fID)) {
             $fUUID = $fID;
             $file = File::getByUUID($fID);
             if ($file instanceof FileEntity) {
                 $fID = $file->getFileID();
+            } else {
+                $fID  = null;
             }
         }
 
-        if ($fID > 0 && $this->app->make('helper/validation/numbers')->integer($fID)) {
+        if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $f = File::getByID($fID);
 
             $rcID = $this->post('rcID');
