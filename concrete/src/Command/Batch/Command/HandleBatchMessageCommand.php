@@ -19,11 +19,11 @@ class HandleBatchMessageCommand extends Command implements NormalizableInterface
     /**
      * @var string
      */
-    protected $batchProcess;
+    protected $batchId;
 
-    public function __construct(string $batchProcess = null, $message = null)
+    public function __construct(string $batchId = null, $message = null)
     {
-        $this->batchProcess = $batchProcess;
+        $this->batchId = $batchId;
         $this->message = $message;
     }
 
@@ -46,9 +46,9 @@ class HandleBatchMessageCommand extends Command implements NormalizableInterface
     /**
      * @return string
      */
-    public function getBatchProcess(): string
+    public function getBatch(): string
     {
-        return $this->batchProcess;
+        return $this->batchId;
     }
 
     public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
@@ -56,14 +56,14 @@ class HandleBatchMessageCommand extends Command implements NormalizableInterface
         return [
             'type' => get_class($this->message),
             'message' => $normalizer->normalize($this->message),
-            'batchProcess' => $this->batchProcess,
+            'batch' => $this->batchId,
         ];
     }
 
     public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
     {
         $message = $denormalizer->denormalize($data['message'], $data['type']);
-        $this->batchProcess = $data['batchProcess'];
+        $this->batchId = $data['batch'];
         $this->message = $message;
     }
 

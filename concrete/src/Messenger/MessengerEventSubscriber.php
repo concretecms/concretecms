@@ -32,7 +32,7 @@ class MessengerEventSubscriber implements EventSubscriberInterface
     {
         $message = $event->getEnvelope()->getMessage();
         if ($message instanceof BatchProcessMessageInterface) {
-            $this->batchUpdater->updateJobs($message->getBatchProcess(), BatchUpdater::COLUMN_PENDING, -1);
+            $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_PENDING, -1);
         }
     }
 
@@ -40,8 +40,8 @@ class MessengerEventSubscriber implements EventSubscriberInterface
     {
         $message = $event->getEnvelope()->getMessage();
         if ($message instanceof BatchProcessMessageInterface) {
-            $this->batchUpdater->updateJobs($message->getBatchProcess(), BatchUpdater::COLUMN_PENDING, -1);
-            $this->batchUpdater->updateJobs($message->getBatchProcess(), BatchUpdater::COLUMN_FAILED, 1);
+            $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_PENDING, -1);
+            $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_FAILED, 1);
         }
     }
 

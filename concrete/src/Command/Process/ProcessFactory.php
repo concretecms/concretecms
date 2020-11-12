@@ -81,7 +81,7 @@ class ProcessFactory
 
         $totalJobs = 0;
         foreach ($batch->getMessages() as $message) {
-            $command = new HandleBatchMessageCommand($process->getID(), $message);
+            $command = new HandleBatchMessageCommand($batchEntity->getID(), $message);
             $this->messageBus->dispatch($command);
             $totalJobs++;
         }

@@ -12,11 +12,11 @@ interface BatchProcessMessageInterface
 {
 
     /**
-     * Returns the UUID of the batch process this message belongs to.
+     * Returns the UUID of the batch this message belongs to.
      *
      * @return string
      */
-    public function getBatchProcess(): string;
+    public function getBatch(): string;
 
 
 }
