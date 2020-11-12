@@ -14,10 +14,7 @@ class ExpressEntrySelector
     public function selectEntry(Entity $entity, $fieldName, Entry $entry = null)
     {
         $permissionChecker = new Checker($entity);
-        $responseObject = $permissionChecker->getResponseObject();
-
-        /** @noinspection PhpUnhandledExceptionInspection */
-        if ($responseObject->validate("view_express_entries")) {
+        if ($permissionChecker->canViewExpressEntries()) {
             $entityId = $entity->getID();
             $entryId = $entry instanceof Entry ? $entry->getID() : 0;
             $chooseText = t('Choose Entry');
