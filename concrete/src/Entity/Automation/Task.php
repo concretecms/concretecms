@@ -3,9 +3,9 @@
 namespace Concrete\Core\Entity\Automation;
 
 use Carbon\Carbon;
-use Concrete\Core\Automation\Task\Controller\ControllerInterface;
-use Concrete\Core\Automation\Task\Manager;
-use Concrete\Core\Automation\Task\TaskInterface;
+use Concrete\Core\Command\Task\Controller\ControllerInterface;
+use Concrete\Core\Command\Task\Manager;
+use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Support\Facade\Facade;

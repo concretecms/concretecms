@@ -1,11 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Entity\Automation\Task;
-use Concrete\Core\Entity\Messenger\BatchProcess;
-use Concrete\Core\Entity\Messenger\Process;
+use Concrete\Core\Entity\Command\Batch;
+use Concrete\Core\Entity\Command\Process;
+use Concrete\Core\Entity\Command\TaskProcess;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
@@ -16,15 +18,25 @@ final class Version20201029023919 extends AbstractMigration implements Repeatabl
     public function upgradeDatabase()
     {
         $this->createSinglePage('/dashboard/system/automation', 'Automation');
-        $this->createSinglePage('/dashboard/system/automation/tasks', 'Tasks', ['meta_keywords' => 'automated jobs, tasks, commands, console, cli']);
-        $this->createSinglePage('/dashboard/system/automation/processes', 'Processes', ['meta_keywords' => 'queues, jobs, running']);
+        $this->createSinglePage(
+            '/dashboard/system/automation/tasks',
+            'Tasks',
+            ['meta_keywords' => 'automated jobs, tasks, commands, console, cli']
+        );
+        $this->createSinglePage(
+            '/dashboard/system/automation/processes',
+            'Processes',
+            ['meta_keywords' => 'queues, jobs, running']
+        );
         $this->createSinglePage('/dashboard/system/automation/settings', 'Automation Settings');
 
-        $this->refreshEntities([
-            Process::class,
-            BatchProcess::class,
-            Task::class
-       ]);
+        $this->refreshEntities(
+            [
+                Batch::class,
+                Process::class,
+                TaskProcess::class
+            ]
+        );
 
         $this->output(t('Installing automated tasks upgrade XML...'));
         $importer = new ContentImporter();

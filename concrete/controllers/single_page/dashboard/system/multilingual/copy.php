@@ -2,8 +2,8 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use Concrete\Controller\Panel\Multilingual;
-use Concrete\Core\Messenger\Batch\BatchProcessor;
-use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
+use Concrete\Core\Command\Batch\BatchProcessor;
+use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Command\RescanMultilingualPageCommand;
 use Concrete\Core\Page\Controller\DashboardSitePageController;

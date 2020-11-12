@@ -6,7 +6,7 @@ use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
-use Concrete\Core\Messenger\Batch\Command\HandleBatchMessageCommandHandler;
+use Concrete\Core\Command\Batch\Command\HandleBatchMessageCommandHandler;
 use Concrete\Core\Messenger\Registry\RegistryInterface;
 use Concrete\Core\Messenger\Transport\TransportInterface;
 use Concrete\Core\Messenger\Transport\TransportManager;
@@ -77,8 +77,8 @@ class MessengerServiceProvider extends ServiceProvider
         );
 
         $routing = (array) $config->get('concrete.messenger.routing');
-        $routing['Concrete\Core\Messenger\Batch\Command\HandleBatchMessageCommand'] = ['async'];
-        $routing['Concrete\Core\Messenger\Batch\Command\ProcessTaskRunnerCommand'] = ['async'];
+        $routing['Concrete\Core\Command\Batch\Command\HandleBatchMessageCommand'] = ['async'];
+        $routing['Concrete\Core\Command\Batch\Command\ProcessTaskRunnerCommand'] = ['async'];
 
         $this->app
             ->when(SendersLocator::class)

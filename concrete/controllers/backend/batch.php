@@ -2,8 +2,8 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\AbstractController;
-use Concrete\Core\Entity\Messenger\BatchProcess;
-use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
+use Concrete\Core\Entity\Command\BatchProcess;
+use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Validation\CSRF\Token;
 use Doctrine\ORM\EntityManager;
 

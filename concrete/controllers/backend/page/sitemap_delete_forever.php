@@ -3,8 +3,8 @@ namespace Concrete\Controller\Backend\Page;
 
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Messenger\Batch\BatchProcessor;
-use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
+use Concrete\Core\Command\Batch\BatchProcessor;
+use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\Command\CopyPageCommand;
 use Concrete\Core\Page\Command\DeletePageForeverCommand;
 use Concrete\Core\Page\Page;

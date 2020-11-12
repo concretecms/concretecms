@@ -5,8 +5,8 @@ use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockCont
 use Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand;
 use Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Messenger\Batch\BatchProcessor;
-use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
+use Concrete\Core\Command\Batch\BatchProcessor;
+use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;

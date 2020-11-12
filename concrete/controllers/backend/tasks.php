@@ -2,9 +2,9 @@
 
 namespace Concrete\Controller\Backend;
 
-use Concrete\Core\Automation\Task\Input\Input;
-use Concrete\Core\Automation\Task\Response\HttpResponseFactory;
-use Concrete\Core\Automation\Task\Runner\TaskRunner;
+use Concrete\Core\Command\Task\Input\Input;
+use Concrete\Core\Command\Task\Response\HttpResponseFactory;
+use Concrete\Core\Command\Task\Runner\TaskRunner;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Error\ErrorList\ErrorList;

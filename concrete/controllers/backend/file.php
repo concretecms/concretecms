@@ -3,10 +3,12 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Command\Batch\Batch as BatchBuilder;
+use Concrete\Core\Command\Process\ProcessFactory;
+use Concrete\Core\Command\Process\ProcessResponse;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Folder\FavoriteFolder;
-use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -21,21 +23,16 @@ use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\File\ValidationService;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Messenger\Batch\BatchProcessor;
-use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Url;
-use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Utility\Service\Number;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\CSRF\Token;
-use Concrete\Core\View\View;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use FileSet;
 use GuzzleHttp\Client;
@@ -44,9 +41,7 @@ use IPLib\Factory as IPFactory;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
 use RuntimeException;
-use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use ZipArchive;
 
 class File extends Controller
@@ -112,18 +107,16 @@ class File extends Controller
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('edit_file_contents');
-        /**
-         * @var $processor BatchProcessor
-         */
-        $processor = $this->app->make(BatchProcessor::class);
-        $batch = $processor->createBatch(function() use ($files) {
+        $batch = BatchBuilder::create(function() use ($files) {
             foreach ($files as $file) {
                 yield new RescanFileCommand($file->getFileID());
             }
         }, t('Rescan Files'));
-        $batchProcess = $processor->dispatch($batch);
-        $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
-        return $responseFactory->createResponse($batchProcess);
+        /**
+         * @var $processor BatchProcessor
+         */
+        $process = $this->app->make(ProcessFactory::class)->createWithBatch($batch);
+        return new ProcessResponse($process);
     }
 
     public function approveVersion()

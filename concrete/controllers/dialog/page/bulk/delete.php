@@ -2,8 +2,8 @@
 namespace Concrete\Controller\Dialog\Page\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Messenger\Batch\BatchProcessor;
-use Concrete\Core\Messenger\Batch\BatchProcessorResponseFactory;
+use Concrete\Core\Command\Batch\BatchProcessor;
+use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\Command\DeletePageCommand;
 use Page;
 use Permissions;
