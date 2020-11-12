@@ -541,6 +541,17 @@ return [
             ['javascript', 'js/features/maps/frontend.js'],
             ['css', 'css/features/maps/frontend.css'],
         ],
+
+        'tui-image-editor' => [
+            [
+                'javascript',
+                'js/tui-image-editor.js',
+            ],
+            [
+                'css',
+                'css/tui-image-editor.css',
+            ],
+        ],
     ],
     'asset_groups' => [
         'jquery' => [
@@ -604,6 +615,13 @@ return [
                 ['javascript', 'fullcalendar'],
                 ['css', 'fullcalendar'],
             ],
+        ],
+
+        'tui-image-editor' => [
+            [
+                ['javascript', 'tui-image-editor'],
+                ['css', 'tui-image-editor']
+            ]
         ],
 
         // Fallback/minimal assets groups

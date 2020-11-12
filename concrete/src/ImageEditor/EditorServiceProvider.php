@@ -8,13 +8,11 @@ use Concrete\Core\Entity\File\Image\Editor;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Filesystem\Element;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Foundation\Service\Provider;
-use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\View\BasicFileView;
 use Doctrine\ORM\EntityManager;
 use Exception;
-use Illuminate\Filesystem\Filesystem;
 
 class EditorServiceProvider extends Provider
 {
@@ -215,22 +213,20 @@ class EditorServiceProvider extends Provider
     )
     {
         if ($fileVersion instanceof Version) {
-            $locator = new FileLocator(new Filesystem(), $this->app);
             $activeEditor = $this->getActiveEditor();
+            /** @var ElementManager $elementManager */
+            $elementManager = $this->app->make(ElementManager::class);
 
-            if ($activeEditor->getPackageHandle()) {
-                $locator->addPackageLocation($activeEditor->getPackageHandle());
-            }
+            $element = $elementManager->get(
+                'files/edit/image_editor/' . $activeEditor->getHandle(),
+                null,
+                null,
+                $activeEditor->getPackageHandle()
+            );
 
-            $record = $locator->getRecord(DIRNAME_ELEMENTS . DIRECTORY_SEPARATOR . 'image_editors' . DIRECTORY_SEPARATOR . $activeEditor->getHandle() . '.php');
-
-            if ($record->exists()) {
-                extract([
-                    "fileVersion" => $fileVersion
-                ]);
-
-                /** @noinspection PhpIncludeInspection */
-                require_once($record->getFile());
+            if ($element instanceof Element) {
+                $element->getElementController()->set("fileVersion", $fileVersion);
+                $element->render();
             }
         }
     }

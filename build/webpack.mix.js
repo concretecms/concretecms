@@ -67,7 +67,10 @@ mix
     .sass('node_modules/@concretecms/bedrock/assets/ckeditor/scss/concrete.scss', 'css/ckeditor/concrete.css')
     .js('node_modules/@concretecms/bedrock/assets/ckeditor/js/concrete.js', 'js/ckeditor/concrete.js');
 
-    
+// TUI Image Editor
+mix
+    .js('assets/tui-image-editor/tui-image-editor.js', 'js/tui-image-editor.js')
+    .sass('assets/tui-image-editor/tui-image-editor.scss', 'css/tui-image-editor.css');
 
 // The CMS entry point
 mix

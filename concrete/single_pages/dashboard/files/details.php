@@ -148,7 +148,7 @@ $file = $fileVersion->getFile();
                 <?php
             } else {
             ?>
-            <sapn><?= implode(', ', $tags) ?></span>
+            <span><?= implode(', ', $tags) ?></span>
                 <?php
                 }
                 ?>
