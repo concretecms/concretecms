@@ -13,6 +13,11 @@ class CoreLocation implements LocationInterface
         return 'core';
     }
 
+    public function __construct(Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
+
     /**
      * @param mixed $filesystem
      */
