@@ -6,6 +6,7 @@ use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Command\Batch\Batch as BatchBuilder;
 use Concrete\Core\Command\Process\ProcessFactory;
 use Concrete\Core\Command\Process\ProcessResponse;
+use Concrete\Core\Command\Process\ProcessResponseFactory;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Folder\FavoriteFolder;
@@ -112,11 +113,9 @@ class File extends Controller
                 yield new RescanFileCommand($file->getFileID());
             }
         }, t('Rescan Files'));
-        /**
-         * @var $processor BatchProcessor
-         */
         $process = $this->app->make(ProcessFactory::class)->createWithBatch($batch);
-        return new ProcessResponse($process);
+        $processResponseFactory = $this->app->make(ProcessResponseFactory::class);
+        return $processResponseFactory->createResponse($process);
     }
 
     public function approveVersion()
