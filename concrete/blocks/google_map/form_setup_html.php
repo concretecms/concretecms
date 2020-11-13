@@ -226,7 +226,7 @@
                         },
                         function (place, status) {
                             if (status === 'REQUEST_DENIED') {
-                                placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places.')) ?>);
+                                placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places or not linked to billing account.')) ?>);
                             } else {
                                 placesLoaded(null, places);
                             }
