@@ -2,6 +2,7 @@
 namespace Concrete\Core\Filesystem;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Cache\Level\OverridesCache;
 use Concrete\Core\Filesystem\FileLocator\ApplicationLocation;
 use Concrete\Core\Filesystem\FileLocator\CoreLocation;
 use Concrete\Core\Filesystem\FileLocator\LocationInterface;
@@ -15,6 +16,8 @@ class FileLocator
     protected $filesystem;
     protected $app;
     protected $locations = [];
+    /** @var OverridesCache */
+    protected $cache;
 
     /**
      * @return Filesystem
