@@ -20,13 +20,7 @@ class Search extends UserInterface
 
         if ($entity instanceof Entity) {
             $permissionChecker = new Checker($entity);
-            $responseObject = $permissionChecker->getResponseObject();
-
-            try {
-                return $responseObject->validate("view_express_entries");
-            } catch (Exception $e) {
-                return false;
-            }
+            return $permissionChecker->canViewExpressEntries();
         }
 
         return false;

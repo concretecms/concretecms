@@ -64,15 +64,9 @@ class Entry extends AbstractController
 
                     if ($entry instanceof EntryEntity) {
                         $permissionChecker = new Checker($entry->getEntity());
-                        $responseObject = $permissionChecker->getResponseObject();
-
-                        try {
-                            if ($responseObject->validate('view_express_entries')) {
-                                $data["entries"][] = $entry->jsonSerialize();
-                            } else {
-                                $errorList->add(t('Access Denied.'));
-                            }
-                        } catch (Exception $e) {
+                        if ($permissionChecker->canViewExpressEntries()) {
+                            $data["entries"][] = $entry->jsonSerialize();
+                        } else {
                             $errorList->add(t('Access Denied.'));
                         }
                     }
@@ -94,30 +88,24 @@ class Entry extends AbstractController
 
             if ($entity instanceof Entity) {
                 $permissionChecker = new Checker($entity);
-                $responseObject = $permissionChecker->getResponseObject();
+                if ($permissionChecker->canViewExpressEntries()) {
+                    $list = new EntryList($entity);
 
-                try {
-                    if ($responseObject->validate('view_express_entries')) {
-                        $list = new EntryList($entity);
+                    $list->filterByKeywords($keyword);
 
-                        $list->filterByKeywords($keyword);
-
-                        if ($this->request->query->has("itemsPerPage")) {
-                            $list->setItemsPerPage((int)$this->request->query->get("itemsPerPage"));
-                        }
-
-                        if ($this->request->query->has($list->getQuerySortColumnParameter())) {
-                            $sortBy = $this->request->query->get($list->getQuerySortColumnParameter());
-                            $sortByDirection = strtoupper($this->request->query->get($list->getQuerySortDirectionParameter())) === "ASC" ? "ASC" : "DESC";
-
-                            $list->sortBy($sortBy, $sortByDirection);
-                        }
-
-                        $data = $this->buildExpressListFractalArray($list);
-                    } else {
-                        $errorList->add(t('Access Denied.'));
+                    if ($this->request->query->has("itemsPerPage")) {
+                        $list->setItemsPerPage((int)$this->request->query->get("itemsPerPage"));
                     }
-                } catch (Exception $e) {
+
+                    if ($this->request->query->has($list->getQuerySortColumnParameter())) {
+                        $sortBy = $this->request->query->get($list->getQuerySortColumnParameter());
+                        $sortByDirection = strtoupper($this->request->query->get($list->getQuerySortDirectionParameter())) === "ASC" ? "ASC" : "DESC";
+
+                        $list->sortBy($sortBy, $sortByDirection);
+                    }
+
+                    $data = $this->buildExpressListFractalArray($list);
+                } else {
                     $errorList->add(t('Access Denied.'));
                 }
             } else {
