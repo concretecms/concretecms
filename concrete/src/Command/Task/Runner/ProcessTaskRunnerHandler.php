@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Command\Task\Runner;
 
-use Concrete\Core\Command\Process\ProcessService;
+use Concrete\Core\Command\Process\Command\HandleProcessMessageCommand;
+use Concrete\Core\Command\Process\ProcessFactory;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -15,27 +16,25 @@ class ProcessTaskRunnerHandler
     protected $messageBus;
 
     /**
-     * @var ProcessService
+     * @var ProcessFactory
      */
-    protected $processService;
+    protected $processFactory;
 
-    public function __construct(ProcessService $processService, MessageBusInterface $messageBus)
+    public function __construct(ProcessFactory $processFactory, MessageBusInterface $messageBus)
     {
-        $this->processService = $processService;
+        $this->processFactory = $processFactory;
         $this->messageBus = $messageBus;
     }
 
     public function __invoke(ProcessTaskRunner $runner)
     {
-        $process = $this->processService->createProcess(
-            $runner->getTask(),
-            $runner->getInput(),
-        );
+        $process = $this->processFactory->createTaskProcess($runner->getTask());
 
-        $this->messageBus->dispatch($runner->getMessage());
+        $wrappedMessage = new HandleProcessMessageCommand($process->getID(), $runner->getMessage());
+
+        $this->messageBus->dispatch($wrappedMessage);
 
         $runner->setProcess($process);
-
     }
 
 

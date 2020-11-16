@@ -3,6 +3,7 @@
 namespace Concrete\Core\Command\Batch;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Command\Process\ProcessUpdater;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Command\Process;
@@ -18,29 +19,23 @@ class BatchUpdater
     const COLUMN_FAILED = 'failedJobs';
 
     /**
-     * @var Date
-     */
-    protected $dateService;
-
-    /**
      * @var Application
      */
-    protected $app;
+    protected $entityManager;
 
     /**
-     * @var Repository
+     * @var ProcessUpdater
      */
-    protected $config;
+    protected $processUpdater;
 
     /**
      * BatchProgressUpdater constructor.
      * @param Application $app
      */
-    public function __construct(Application $app, EntityManager $entityManager, Date $dateService, Repository $config)
+    public function __construct(EntityManager $entityManager, ProcessUpdater $processUpdater)
     {
         $this->entityManager = $entityManager;
-        $this->dateService = $dateService;
-        $this->config = $config;
+        $this->processUpdater = $processUpdater;
     }
 
     public function checkBatchProcessForClose(string $batchId)
@@ -51,24 +46,10 @@ class BatchUpdater
             if ($batch->getPendingJobs() < 1) {
                 $process = $this->entityManager->getRepository(Process::class)->findOneByBatch($batch);
                 if ($process) {
-                    $process->setDateCompleted($this->dateService->toDateTime()->getTimestamp());
-                    $this->entityManager->persist($process);
-                    $this->entityManager->flush();
-                    $this->clearOldProcesses();
+                    $this->processUpdater->closeProcess($process);
                 }
             }
         }
-    }
-
-    protected function clearOldProcesses()
-    {
-        $threshold = (int) $this->config->get('concrete.processes.delete_threshold');
-        $now = new \DateTime();
-        $now->sub(new \DateInterval('P' . $threshold . 'D'));
-        $minTimestamp = $now->getTimestamp();
-        $query = $this->entityManager->createQuery("delete from \Concrete\Core\Entity\Command\Process p where p.dateCompleted < :minTimestamp and p.dateCompleted is not null");
-        $query->setParameter('minTimestamp', $minTimestamp);
-        $query->execute();
     }
 
     public function updateJobs(string $batchId, string $column, int $jobs)

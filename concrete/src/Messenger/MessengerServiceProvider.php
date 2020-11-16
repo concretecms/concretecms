@@ -2,6 +2,7 @@
 namespace Concrete\Core\Messenger;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Command\Batch\Command\HandleProcessMessageCommandHandler;
 use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Logging\Channels;
@@ -78,7 +79,7 @@ class MessengerServiceProvider extends ServiceProvider
 
         $routing = (array) $config->get('concrete.messenger.routing');
         $routing['Concrete\Core\Command\Batch\Command\HandleBatchMessageCommand'] = ['async'];
-        $routing['Concrete\Core\Command\Batch\Command\ProcessTaskRunnerCommand'] = ['async'];
+        $routing['Concrete\Core\Command\Process\Command\HandleProcessMessageCommand'] = ['async'];
 
         $this->app
             ->when(SendersLocator::class)
@@ -99,6 +100,13 @@ class MessengerServiceProvider extends ServiceProvider
         );
 
         $this->app->when(HandleBatchMessageCommandHandler::class)
+            ->needs(MessageBusInterface::class)
+            ->give(
+                function (Application $app) {
+                    return $app->make(MessageBusManager::class)->getBus(MessageBusManager::BUS_DEFAULT_SYNCHRONOUS);
+                }
+            );
+        $this->app->when(HandleProcessMessageCommandHandler::class)
             ->needs(MessageBusInterface::class)
             ->give(
                 function (Application $app) {

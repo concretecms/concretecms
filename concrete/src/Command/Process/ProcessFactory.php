@@ -4,8 +4,10 @@ namespace Concrete\Core\Command\Process;
 
 use Concrete\Core\Command\Batch\Batch as PendingBatch;
 use Concrete\Core\Command\Batch\BatchUpdater;
+use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Entity\Command\Process;
+use Concrete\Core\Entity\Command\TaskProcess;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManager;
@@ -47,14 +49,24 @@ class ProcessFactory
         $this->batchUpdater = $batchUpdater;
     }
 
+    public function createTaskProcess(TaskInterface $task)
+    {
+        $process = new TaskProcess();
+        $process->setTask($task);
+        $process->setName($task->getController()->getName());
+        return $this->fillProcess($process);
+    }
+
     public function createProcess(string $name): Process
     {
         $process = new Process();
-        // First, create the underlying batch object
-        $process = new Process();
-        $process->setDateStarted($this->dateService->toDateTime()->getTimestamp());
         $process->setName($name);
+        return $this->fillProcess($process);
+    }
 
+    protected function fillProcess(Process $process): Process
+    {
+        $process->setDateStarted($this->dateService->toDateTime()->getTimestamp());
         $user = new User();
         if ($user) {
             $userInfo = $user->getUserInfoObject();
@@ -62,7 +74,6 @@ class ProcessFactory
                 $process->setUser($userInfo->getEntityObject());
             }
         }
-
         $this->entityManager->persist($process);
         $this->entityManager->flush();
         return $process;
