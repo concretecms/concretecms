@@ -2,8 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use Concrete\Controller\Panel\Multilingual;
-use Concrete\Core\Command\Batch\BatchProcessor;
-use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Command\RescanMultilingualPageCommand;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
@@ -60,14 +59,8 @@ class Copy extends DashboardSitePageController
                     $commands[] = new RescanMultilingualPageCommand($page['cID']);
                 }
 
-                /**
-                 * @var $processor BatchProcessor
-                 */
-                $processor = $this->app->make(BatchProcessor::class);
-                $batch = $processor->createBatch($commands, t('Rescan Files'));
-                $batchProcess = $processor->dispatch($batch);
-                $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
-                return $responseFactory->createResponse($batchProcess);
+                $batch = Batch::create($commands, t('Rescan Files'));
+                return $this->dispatchBatch($batch);
             }
         }
     }

@@ -4,6 +4,9 @@ namespace Concrete\Core\Controller;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Command\Batch\Batch;
+use Concrete\Core\Command\Process\ProcessFactory;
+use Concrete\Core\Command\Process\ProcessResponseFactory;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -338,4 +341,10 @@ abstract class AbstractController implements ApplicationAwareInterface
         return $this->app->executeCommand($command);
     }
 
+    public function dispatchBatch(Batch $batch)
+    {
+        $process = $this->app->make(ProcessFactory::class)->createWithBatch($batch);
+        $processResponseFactory = $this->app->make(ProcessResponseFactory::class);
+        return $processResponseFactory->createResponse($process);
+    }
 }

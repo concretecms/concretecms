@@ -2,8 +2,7 @@
 namespace Concrete\Controller\Dialog\Page\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Command\Batch\BatchProcessor;
-use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Page\Command\DeletePageCommand;
 use Page;
 use Permissions;
@@ -61,17 +60,14 @@ class Delete extends BackendInterfaceController
     {
         if ($this->canAccess()) {
             $u = new \User();
-            $processor = $this->app->make(BatchProcessor::class);
             $uID = $u->getUserID();
             $pages = $this->pages;
-            $batch = $processor->createBatch(function() use ($uID, $pages) {
+            $batch = Batch::create(function() use ($uID, $pages) {
                 foreach ($pages as $page) {
                     yield new DeletePageCommand($page->getCollectionID(), $uID);
                 }
             }, t('Delete Pages'));
-            $batchProcess = $processor->dispatch($batch);
-            $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
-            return $responseFactory->createResponse($batchProcess);
+            return $this->dispatchBatch($batch);
         }
     }
 

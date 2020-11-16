@@ -3,10 +3,9 @@
 namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface as UserInterfaceController;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Command\Batch\BatchProcessor;
-use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Command\CopyPageCommand;
@@ -88,18 +87,12 @@ class DragRequest extends UserInterfaceController
             $pages = [];
             $pages = $oc->populateRecursivePages($pages, ['cID' => $oc->getCollectionID()], $oc->getCollectionParentID(), 0, !$dragRequestData->isCopyChildrenOnly());
             usort($pages, ['\Concrete\Core\Page\Page', 'queueForDuplicationSort']);
-            /**
-             * @var $processor BatchProcessor
-             */
-            $processor = $this->app->make(BatchProcessor::class);
-            $batch = $processor->createBatch(function() use ($pages, $dragRequestData, $isMultilingual) {
+            $batch = Batch::create(function() use ($pages, $dragRequestData, $isMultilingual) {
                 foreach ($pages as $page) {
                     yield new CopyPageCommand($page['cID'], $dragRequestData->getDestinationPage()->getCollectionID(), $isMultilingual);
                 }
             }, t('Copy Pages'));
-            $batchProcess = $processor->dispatch($batch);
-            $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
-            return $responseFactory->createResponse($batchProcess);
+            return $this->dispatchBatch($batch);
         }
     }
 

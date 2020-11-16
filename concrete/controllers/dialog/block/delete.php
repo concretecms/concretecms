@@ -4,8 +4,7 @@ namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\Command\DeleteBlockCommand;
 use Concrete\Core\Block\Events\BlockDelete;
-use Concrete\Core\Command\Batch\BatchProcessor;
-use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
+use Concrete\Core\Command\Batch\Batch;
 
 class Delete extends BackendInterfaceBlockController
 {
@@ -65,8 +64,7 @@ class Delete extends BackendInterfaceBlockController
         if ($this->validateAction()) {
             if ($this->permissions->canDeleteBlock() && $this->page->isMasterCollection()) {
                 $blocks = $this->block->queueForDefaultsUpdate($_POST);
-                $processor = $this->app->make(BatchProcessor::class);
-                $batch = $processor->createBatch(function() use ($blocks) {
+                $batch = Batch::create(function() use ($blocks) {
                     foreach ($blocks as $b) {
                         yield new DeleteBlockCommand(
                             $b['bID'],
@@ -76,9 +74,7 @@ class Delete extends BackendInterfaceBlockController
                         );
                     }
                 }, t('Delete Child Pages Blocks'));
-                $batchProcess = $processor->dispatch($batch);
-                $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
-                return $responseFactory->createResponse($batchProcess);
+                return $this->dispatchBatch($batch);
             }
         }
     }

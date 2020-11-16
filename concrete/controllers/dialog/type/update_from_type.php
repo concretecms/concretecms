@@ -3,10 +3,9 @@ namespace Concrete\Controller\Dialog\Type;
 
 use Block;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Http\ResponseFactory;
-use Concrete\Core\Command\Batch\BatchProcessor;
-use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand;
 use Page;
@@ -154,8 +153,7 @@ class UpdateFromType extends BackendInterfaceController
             ];
         }
 
-        $processor = $this->app->make(BatchProcessor::class);
-        $batch = $processor->createBatch(function() use ($records, $pageTypeDefaultPage) {
+        $batch = Batch::create(function() use ($records, $pageTypeDefaultPage) {
             foreach ($records as $record) {
                 yield new UpdatePageTypeDefaultsCommand(
                     $pageTypeDefaultPage->getCollectionID(),
@@ -166,9 +164,7 @@ class UpdateFromType extends BackendInterfaceController
                 );
             }
         }, t('Update Page Type Defaults'));
-        $batchProcess = $processor->dispatch($batch);
-        $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
-        return $responseFactory->createResponse($batchProcess);
+        return $this->dispatchBatch($batch);
     }
 
     public function submit($ptID, $pTemplateID)

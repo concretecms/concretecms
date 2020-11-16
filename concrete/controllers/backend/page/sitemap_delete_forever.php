@@ -1,11 +1,9 @@
 <?php
 namespace Concrete\Controller\Backend\Page;
 
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Command\Batch\BatchProcessor;
-use Concrete\Core\Command\Batch\BatchProcessorResponseFactory;
-use Concrete\Core\Page\Command\CopyPageCommand;
 use Concrete\Core\Page\Command\DeletePageForeverCommand;
 use Concrete\Core\Page\Page;
 
@@ -39,23 +37,14 @@ class SitemapDeleteForever extends AbstractController
                         $ids[] = $page['cID'];
                     }
 
-                    /**
-                     * @var $processor BatchProcessor
-                     */
-                    $processor = $this->app->make(BatchProcessor::class);
-                    $batch = $processor->createBatch(function() use ($pages) {
+                    $batch = Batch::create(function() use ($pages) {
                         foreach ($pages as $page) {
                             yield new DeletePageForeverCommand($page['cID']);
                         }
                     }, t('Delete Pages'));
-                    $batchProcess = $processor->dispatch($batch);
-                    $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
-                    return $responseFactory->createResponse($batchProcess);
+                    return $this->dispatchBatch($batch);
                 }
             }
-
-            $q = $this->app->make(QueueService::class)->get('delete_page_forever');
-            return new EnqueueItemsResponse($q);
         } else {
             throw new UserMessageException(t('Access Denied.'));
         }

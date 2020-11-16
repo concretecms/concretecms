@@ -113,9 +113,7 @@ class File extends Controller
                 yield new RescanFileCommand($file->getFileID());
             }
         }, t('Rescan Files'));
-        $process = $this->app->make(ProcessFactory::class)->createWithBatch($batch);
-        $processResponseFactory = $this->app->make(ProcessResponseFactory::class);
-        return $processResponseFactory->createResponse($process);
+        return $this->dispatchBatch($batch);
     }
 
     public function approveVersion()

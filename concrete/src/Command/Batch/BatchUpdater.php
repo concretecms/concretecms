@@ -65,7 +65,10 @@ class BatchUpdater
         $threshold = (int) $this->config->get('concrete.processes.delete_threshold');
         $now = new \DateTime();
         $now->sub(new \DateInterval('P' . $threshold . 'D'));
-        $timestamp = $now->getTimestamp();
+        $minTimestamp = $now->getTimestamp();
+        $query = $this->entityManager->createQuery("delete from \Concrete\Core\Entity\Command\Process p where p.dateCompleted < :minTimestamp and p.dateCompleted is not null");
+        $query->setParameter('minTimestamp', $minTimestamp);
+        $query->execute();
     }
 
     public function updateJobs(string $batchId, string $column, int $jobs)
