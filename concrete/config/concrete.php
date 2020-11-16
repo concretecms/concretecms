@@ -333,9 +333,18 @@ return [
 
     /*
      * ------------------------------------------------------------------------
-     * Queue settings
+     * Queue/Command/Messenger settings
      * ------------------------------------------------------------------------
      */
+    'processes' => [
+
+        /**
+         * The point after which old completed are automatically removed from the system.
+         */
+        'delete_threshold' => 7 // days
+
+    ],
+
     'messenger' => [
 
         'buses' => [

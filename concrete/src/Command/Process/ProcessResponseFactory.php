@@ -1,17 +1,13 @@
 <?php
 
-namespace Concrete\Core\Command\Batch;
+namespace Concrete\Core\Command\Process;
 
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Validation\CSRF\Token;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProcessResponseFactory
 {
-
-    /**
-     * @var Batch
-     */
-    protected $batch;
 
     /**
      * @var Token
@@ -26,16 +22,11 @@ class ProcessResponseFactory
     public function createResponse(Process $process)
     {
         $data = [
-            'id' => $process->getID(),
-            'name' => $process->getName(),
-            'totalJobs' => $batch->getTotalJobs(),
-            'completedJobs' => $batch->getCompletedJobs(),
-            'pendingJobs' => $batch->getPendingJobs(),
-            'failedJobs' => $batch->getFailedJobs(),
-            'token' => $this->tokenService->generate($batch->getID())
+            'process' => $process,
+            'token' => $this->tokenService->generate($process->getID())
         ];
 
-        return new BatchProcessorResponse($data);
+        return new JsonResponse($data);
     }
 
 }

@@ -34,6 +34,7 @@ class MessengerEventSubscriber implements EventSubscriberInterface
         if ($message instanceof BatchProcessMessageInterface) {
             $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_PENDING, -1);
         }
+        $this->batchUpdater->checkBatchProcessForClose($message->getBatch());
     }
 
     public function handleWorkerMessageFailedEvent(WorkerMessageFailedEvent $event)
@@ -43,6 +44,7 @@ class MessengerEventSubscriber implements EventSubscriberInterface
             $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_PENDING, -1);
             $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_FAILED, 1);
         }
+        $this->batchUpdater->checkBatchProcessForClose($message->getBatch());
     }
 
 }

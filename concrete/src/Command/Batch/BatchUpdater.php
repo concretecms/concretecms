@@ -3,9 +3,12 @@
 namespace Concrete\Core\Command\Batch;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Command\Process;
+use Concrete\Core\Localization\Service\Date;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Entity\Command\Batch as BatchEntity;
 
 class BatchUpdater
 {
@@ -15,45 +18,70 @@ class BatchUpdater
     const COLUMN_FAILED = 'failedJobs';
 
     /**
+     * @var Date
+     */
+    protected $dateService;
+
+    /**
      * @var Application
      */
     protected $app;
 
     /**
+     * @var Repository
+     */
+    protected $config;
+
+    /**
      * BatchProgressUpdater constructor.
      * @param Application $app
      */
-    public function __construct(Application $app)
+    public function __construct(Application $app, EntityManager $entityManager, Date $dateService, Repository $config)
     {
-        // FYI - I know that the actual dependency here is the entity manager, not the application object. But
-        // unfortunately, we can't pass the entity manager in here because this dependency is created
-        // too early in the booting process, and it screws up the tests.
-        $this->app = $app;
+        $this->entityManager = $entityManager;
+        $this->dateService = $dateService;
+        $this->config = $config;
     }
 
-    public function updateJobs(string $batchProcessId, string $column, int $jobs)
+    public function checkBatchProcessForClose(string $batchId)
+    {
+        $batch = $this->entityManager->find(BatchEntity::class, $batchId);
+        if ($batch) {
+            $this->entityManager->refresh($batch);
+            if ($batch->getPendingJobs() < 1) {
+                $process = $this->entityManager->getRepository(Process::class)->findOneByBatch($batch);
+                if ($process) {
+                    $process->setDateCompleted($this->dateService->toDateTime()->getTimestamp());
+                    $this->entityManager->persist($process);
+                    $this->entityManager->flush();
+                    $this->clearOldProcesses();
+                }
+            }
+        }
+    }
+
+    protected function clearOldProcesses()
+    {
+        $threshold = (int) $this->config->get('concrete.processes.delete_threshold');
+        $now = new \DateTime();
+        $now->sub(new \DateInterval('P' . $threshold . 'D'));
+        $timestamp = $now->getTimestamp();
+    }
+
+    public function updateJobs(string $batchId, string $column, int $jobs)
     {
         if (!in_array($column, [self::COLUMN_TOTAL, self::COLUMN_FAILED, self::COLUMN_PENDING])) {
             throw new \Exception(t('Invalid column passed to BatchUpdater::updateJobs: %s', $column));
         }
-
-        $db = $this->app->make(Connection::class);
         if ($jobs < 0) {
             $jobs = abs($jobs);
-            $db->executeUpdate(
-                "update MessengerBatches set $column = $column - $jobs where id = ?",
-                [
-                    $batchProcessId
-                ]
-            );
+            $query = $this->entityManager->createQuery("update \Concrete\Core\Entity\Command\Batch b set b.$column = b.$column - :jobs where b.id = :batch");
         } else {
-            $db->executeUpdate(
-                "update MessengerBatches set $column = $column + $jobs where id = ?",
-                [
-                    $batchProcessId
-                ]
-            );
+            $query = $this->entityManager->createQuery("update \Concrete\Core\Entity\Command\Batch b set b.$column = b.$column + :jobs where b.id = :batch");
         }
+        $query->setParameter('batch', $batchId);
+        $query->setParameter('jobs', $jobs);
+        $query->execute();
     }
 
 }
