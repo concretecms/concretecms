@@ -495,7 +495,6 @@ class Collection extends ConcreteObject implements TrackableInterface
             $qb2 = $db->createQueryBuilder();
             if ($r !== false) {
                 $qb2->update('PageSearchIndex')
-                    ->set('cID', $this->getCollectionID())
                     ->set('cRequiresReindex', 1)
                     ->where('cID = :cID')
                     ->setParameter('cID', $this->getCollectionID());
