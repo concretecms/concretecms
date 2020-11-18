@@ -78,7 +78,17 @@ class Page extends Controller implements TaskHandlerInterface
         $pd = empty($options['pdID']) ? null : Duration::getByID($options['pdID']);
         foreach ($pages as $c) {
             $pk->setPermissionObject($c);
-            $pa = Access::getByID($options['paID'], $pk);
+            if (isset($options['paID'])) {
+                $pa = Access::getByID($options['paID'], $pk);
+            } else {
+                $pa = Access::getByID($pk->getPermissionAccessID(), $pk);
+            }
+            if (isset($options['replace']) && $options['replace']) {
+                $listItems = $pa->getAccessListItems(Key::ACCESS_TYPE_ALL);
+                foreach ($listItems as $listItem) {
+                    $pa->removeListItem($listItem->getAccessEntityObject());
+                }
+            }
             $pa->addListItem($pe, $pd, $options['accessType']);
         }
 

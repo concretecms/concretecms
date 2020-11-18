@@ -132,6 +132,10 @@ var ccmi18n = ' . json_encode([
             'progressiveOperationLoading' => t('Determining items remaining...'),
             'notifications' => t('Notifications'),
             'selectNoResult' => t('No result for %s. Add it?', '{0}'),
+            'permissionsUpdatedTitle' => t('Permissions Updated'),
+            'permissionsUpdatedMessage' => t('The assign permissions has been successfully updated.'),
+            'permissionsOverrideWarning' => t('Changing this setting will affect this page immediately. Are you sure?'),
+            'addAccessEntityDialogTitle' => t('Add Access Entity')
         ]) . ';
 var ccmi18n_editor = ' . json_encode([
             'insertLinkToFile' => t('Insert Link to File'),
