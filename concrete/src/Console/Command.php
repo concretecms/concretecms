@@ -61,6 +61,13 @@ abstract class Command extends SymfonyCommand
     protected $signature;
 
     /**
+     * The return code we should return when running the command is successful.
+     *
+     * @var int
+     */
+    const RETURN_CODE_ON_SUCCESS = 0;
+
+    /**
      * The return code we should return when an exception is thrown while running the command.
      *
      * @var int
