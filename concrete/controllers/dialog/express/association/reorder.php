@@ -2,7 +2,6 @@
 namespace Concrete\Controller\Dialog\Express\Association;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Controller\Search\Express\Entries;
 use Concrete\Controller\Element\Dashboard\Express\Entries\Header;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Express\Form\Control\SaveHandler\ManySaveHandlerInterface;
