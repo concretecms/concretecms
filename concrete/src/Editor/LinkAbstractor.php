@@ -43,7 +43,7 @@ class LinkAbstractor extends ConcreteObject
         // images inline
         $imgmatch = $resolver->resolve(['/download_file', 'view_inline']);
         $imgmatch = str_replace(['/', '-'], ['\/', '\-'], $imgmatch);
-        $imgmatch = '/' . $imgmatch . '\/([0-9]+|[a-f0-9-]{36})/i';
+        $imgmatch = '/' . $imgmatch . '\/([a-f0-9-]{36}|[0-9]+)/i';
 
         $dom = new HtmlDomParser();
         $r = $dom->str_get_html($text, true, true, DEFAULT_TARGET_CHARSET, false);
@@ -196,7 +196,7 @@ class LinkAbstractor extends ConcreteObject
         // now we add in support for the links
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_([0-9]+|[a-f0-9-]{36})}',
+            '{CCM:FID_([a-f0-9-]{36}|[0-9]+)}',
             function ($fID) use ($entityManager) {
                 if ($fID > 0) {
                     $f = $entityManager->find(File::class, $fID);
@@ -213,7 +213,7 @@ class LinkAbstractor extends ConcreteObject
         $currentPage = null;
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_DL_([0-9]+|[a-f0-9-]{36})}',
+            '{CCM:FID_DL_([a-f0-9-]{36}|[0-9]+)}',
             function ($fID) use ($resolver, &$currentPage) {
                 if ($fID > 0) {
                     $file = \Concrete\Core\File\File::getByID($fID);
@@ -318,7 +318,7 @@ class LinkAbstractor extends ConcreteObject
         // now we add in support for the links
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_([0-9]+|[a-f0-9-]{36})}',
+            '{CCM:FID_([a-f0-9-]{36}|[0-9]+)}',
             function ($fID) use ($resolver) {
                 if ($fID > 0) {
                     $file = \Concrete\Core\File\File::getByID($fID);
@@ -336,7 +336,7 @@ class LinkAbstractor extends ConcreteObject
         //file downloads...
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_DL_([0-9]+|[a-f0-9-]{36})}',
+            '{CCM:FID_DL_([a-f0-9-]{36}|[0-9]+)}',
             function ($fID) use ($resolver) {
                 if ($fID > 0) {
                     $file = \Concrete\Core\File\File::getByID($fID);
@@ -392,7 +392,7 @@ class LinkAbstractor extends ConcreteObject
 
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_DL_([0-9]+|[a-f0-9-]{36})}',
+            '{CCM:FID_DL_([a-f0-9-]{36}|[0-9]+)}',
             function ($fID) {
                 return ContentExporter::replaceFileWithPlaceHolder($fID);
             }
