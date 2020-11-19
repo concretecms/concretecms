@@ -73,7 +73,7 @@ class LinkAbstractor extends ConcreteObject
             $text = preg_replace(
                 [
                     '/' . $url1 . '\?cID=([0-9]+)/i',
-                    '/' . $url4 . '\/([0-9]+)/i',
+                    '/' . $url4 . '\/([^"\'<>]+)/i',
                     '/' . $url2 . '/i',
                 ],
                 [
@@ -213,7 +213,7 @@ class LinkAbstractor extends ConcreteObject
         $currentPage = null;
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_DL_([0-9]+)}',
+            '{CCM:FID_DL_(.+)}',
             function ($fID) use ($resolver, &$currentPage) {
                 if ($fID > 0) {
                     $file = \Concrete\Core\File\File::getByID($fID);
@@ -336,7 +336,7 @@ class LinkAbstractor extends ConcreteObject
         //file downloads...
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_DL_([0-9]+)}',
+            '{CCM:FID_DL_(.+)}',
             function ($fID) use ($resolver) {
                 if ($fID > 0) {
                     $file = \Concrete\Core\File\File::getByID($fID);
