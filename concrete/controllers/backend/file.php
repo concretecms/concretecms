@@ -521,15 +521,6 @@ class File extends Controller
         $rescanner->rescanFileVersion($fv);
     }
 
-    private function isValidUuid($uuid)
-    {
-        if (!is_string($uuid) || (preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid) !== 1)) {
-            return false;
-        }
-
-        return true;
-    }
-
     protected function getRequestFiles($permissionKey = 'view_file_in_file_manager', $checkUUID = false)
     {
         $files = [];
@@ -542,7 +533,7 @@ class File extends Controller
         foreach ($fileIDs as $fID) {
             $fUUID = null;
 
-            if ($this->isValidUuid($fID)) {
+            if (is_string($fID) && uuid_is_valid($fID)) {
                 $f = \Concrete\Core\File\File::getByUUID($fID);
                 $fUUID = $fID;
             } else {

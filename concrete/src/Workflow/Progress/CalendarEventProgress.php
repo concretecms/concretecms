@@ -74,7 +74,7 @@ class CalendarEventProgress extends Progress implements SiteProgressInterface
 
     public function getWorkflowProgressFormAction()
     {
-        $url = app(ResolverManagerInterface::class)->resolve(['/ccm/system/workflow/categories/page/save_progress']);
+        $url = app(ResolverManagerInterface::class)->resolve(['/ccm/system/workflow/categories/calendar_event/save_progress']);
         $token = app(Token::class);
         $query = $url->getQuery();
         $query->modify([
