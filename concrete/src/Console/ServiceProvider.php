@@ -63,6 +63,7 @@ class ServiceProvider extends Provider
         Command\FixDatabaseForeignKeys::class,
         Command\ReindexCommand::class,
         Command\GenerateFileIdentifiersCommand::class,
+        Command\BulkUserAssignCommand::class
     ];
 
     /**
