@@ -213,7 +213,7 @@ class LinkAbstractor extends ConcreteObject
         $currentPage = null;
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_DL_(.+)}',
+            '{CCM:FID_DL_([0-9]+|[a-f0-9-]{36})}',
             function ($fID) use ($resolver, &$currentPage) {
                 if ($fID > 0) {
                     $file = \Concrete\Core\File\File::getByID($fID);
@@ -336,7 +336,7 @@ class LinkAbstractor extends ConcreteObject
         //file downloads...
         $text = static::replacePlaceholder(
             $text,
-            '{CCM:FID_DL_(.+)}',
+            '{CCM:FID_DL_([0-9]+|[a-f0-9-]{36})}',
             function ($fID) use ($resolver) {
                 if ($fID > 0) {
                     $file = \Concrete\Core\File\File::getByID($fID);
