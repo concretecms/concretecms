@@ -159,6 +159,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             ConcreteCommand\RefreshEntitiesCommand::class,
             ConcreteCommand\Express\ExportCommand::class,
             ConcreteCommand\FixDatabaseForeignKeys::class,
+            ConcreteCommand\FixThemeValuesCommand::class,
             DBALCommand\ImportCommand::class,
             DBALCommand\RunSqlCommand::class,
             ORMCommand\ClearCache\MetadataCommand::class,
