@@ -41,6 +41,12 @@ class Menu extends DropdownMenu
 
         $this->addItem(new DividerItem());
 
+        if ($file->canEdit() && $fp->canEditFileContents()) {
+            $this->addItem(new DialogLinkItem(
+                    \URL::to('/ccm/system/file/edit?fID=' . $file->getFileID()),
+                    t('Edit'), t('Edit'), '90%', '75%')
+            );
+        }
 
         if ($fp->canViewFileInFileManager()) {
             $this->addItem(new LinkItem(

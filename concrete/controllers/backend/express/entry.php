@@ -7,10 +7,17 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\ExpressTransformer;
+use Concrete\Core\Express\Search\Field\SiteField;
+use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Entity\Express\Entry as EntryEntity;
+use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
+use Concrete\Core\Search\Query\QueryFactory;
+use Concrete\Core\Search\Query\QueryModifier;
+use Concrete\Core\Search\Result\ResultFactory;
 use Doctrine\ORM\EntityManager;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\PagerfantaPaginatorAdapter;
@@ -18,6 +25,7 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Exception;
+use Symfony\Component\HttpFoundation\Request;
 
 class Entry extends AbstractController
 {
@@ -64,15 +72,9 @@ class Entry extends AbstractController
 
                     if ($entry instanceof EntryEntity) {
                         $permissionChecker = new Checker($entry->getEntity());
-                        $responseObject = $permissionChecker->getResponseObject();
-
-                        try {
-                            if ($responseObject->validate('view_express_entries')) {
-                                $data["entries"][] = $entry->jsonSerialize();
-                            } else {
-                                $errorList->add(t('Access Denied.'));
-                            }
-                        } catch (Exception $e) {
+                        if ($permissionChecker->canViewExpressEntries()) {
+                            $data["entries"][] = $entry->jsonSerialize();
+                        } else {
                             $errorList->add(t('Access Denied.'));
                         }
                     }
@@ -85,43 +87,30 @@ class Entry extends AbstractController
 
         } elseif ($this->request->query->has('exEntityID')) {
             $exEntityID = $this->request->query->get('exEntityID');
-            $keyword = $this->request->query->get('keyword');
-
             $entityRepository = $this->entityManager->getRepository(Entity::class);
-
-            /** @var Entity $entity */
             $entity = $entityRepository->find($exEntityID);
-
             if ($entity instanceof Entity) {
                 $permissionChecker = new Checker($entity);
-                $responseObject = $permissionChecker->getResponseObject();
-
-                try {
-                    if ($responseObject->validate('view_express_entries')) {
-                        $list = new EntryList($entity);
-
-                        $list->filterByKeywords($keyword);
-
-                        if ($this->request->query->has("itemsPerPage")) {
-                            $list->setItemsPerPage((int)$this->request->query->get("itemsPerPage"));
-                        }
-
-                        if ($this->request->query->has($list->getQuerySortColumnParameter())) {
-                            $sortBy = $this->request->query->get($list->getQuerySortColumnParameter());
-                            $sortByDirection = strtoupper($this->request->query->get($list->getQuerySortDirectionParameter())) === "ASC" ? "ASC" : "DESC";
-
-                            $list->sortBy($sortBy, $sortByDirection);
-                        }
-
-                        $data = $this->buildExpressListFractalArray($list);
-                    } else {
-                        $errorList->add(t('Access Denied.'));
-                    }
-                } catch (Exception $e) {
-                    $errorList->add(t('Access Denied.'));
+                if ($permissionChecker->canViewExpressEntries()) {
+                    /** @var Entity $entity */
+                    $entity = $entityRepository->find($exEntityID);
+                    $provider = $this->app->make(SearchProvider::class, ['entity' => $entity]);
+                    $resultFactory = $this->app->make(ResultFactory::class);
+                    $queryFactory = $this->app->make(QueryFactory::class);
+                    $query = $queryFactory->createQuery(
+                        $provider,
+                        [
+                            new SiteField(),
+                            new KeywordsField($this->request->query->get('keyword'))
+                        ]
+                    );
+                    $queryModifier = new QueryModifier();
+                    $queryModifier->addModifier(new AutoSortColumnRequestModifier($provider, $this->request, Request::METHOD_GET));
+                    $query = $queryModifier->process($query);
+                    $result = $resultFactory->createFromQuery($provider, $query);
+                    $list = $result->getItemListObject();
+                    $data = $this->buildExpressListFractalArray($list);
                 }
-            } else {
-                $errorList->add(t("Invalid entity id."));
             }
         }
 

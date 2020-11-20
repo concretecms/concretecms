@@ -31,7 +31,7 @@ $delConfirmJS = t('Are you sure you want to remove this workflow?');
 } ?>
         <?php
         if ($type->getPackageID() > 0) {
-            View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+            View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', array('type' => $type, 'workflow' => $workflow), $type->getPackageHandle());
         } ?>
         <a href="<?=$view->action('edit_details', $workflow->getWorkflowID())?>" class="btn btn-primary"><?=t('Edit Details')?></a>
 </div>
@@ -41,7 +41,7 @@ $delConfirmJS = t('Are you sure you want to remove this workflow?');
 
 <?php
 if ($type->getPackageID() > 0) {
-    View::element('workflow/types/' . $type->getWorkflowTypeHandle()  . '/type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+    View::element('workflow/types/' . $type->getWorkflowTypeHandle()  . '/type_form', array('type' => $type, 'workflow' => $workflow), $type->getPackageHandle());
 } else {
     View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form', array('type' => $type, 'workflow' => $workflow));
 }

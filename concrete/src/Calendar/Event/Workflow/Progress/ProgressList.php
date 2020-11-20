@@ -9,6 +9,7 @@ class ProgressList extends EventList
     public function createQuery()
     {
         parent::createQuery();
+        $this->query->addSelect('cwp.wpID');
         $this->query->innerJoin('e', 'CalendarEventWorkflowProgress', 'cwp', 'e.eventID = cwp.eventID');
         $this->query->innerJoin('cwp', 'WorkflowProgress', 'wp', 'cwp.wpID = wp.wpID');
         $this->query->andWhere('wp.wpIsCompleted = :wpIsCompleted');
