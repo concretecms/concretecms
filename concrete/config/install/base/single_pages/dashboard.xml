@@ -150,7 +150,7 @@
         <page name="Move Multiple Groups" path="/dashboard/users/groups/bulkupdate"
               filename="/dashboard/users/groups/bulkupdate.php" pagetype="" description="" package="">
         </page>
-        <page name="Move Multiple Groups" path="/dashboard/users/groups/bulk_user_assignment"
+        <page name="Bulk User Assignment" path="/dashboard/users/groups/bulk_user_assignment"
               filename="/dashboard/users/groups/bulk_user_assignment.php" pagetype="" description="" package="">
         </page>
         <page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php"
