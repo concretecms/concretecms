@@ -942,6 +942,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Image Editor" path="/dashboard/system/files/image_editor"
+              filename="/dashboard/system/files/image_editor.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>image, editor, active, default, edit, png, jpg, jpeg</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="File Storage Locations" path="/dashboard/system/files/storage"
               filename="/dashboard/system/files/storage.php" pagetype="" description="" package="">
             <attributes>
