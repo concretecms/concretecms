@@ -7,6 +7,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -66,6 +67,9 @@ class PreviewVersion extends AbstractController
     {
         $this->request->setCustomRequestUser(-1);
         $this->request->setCurrentPage($page);
+        $this->app->singleton(User::class, function() {
+            return new User(); // Not super thrilled about this. We need to clean up all setCustomRequest user code including this.
+        });
     }
 
     protected function preparePage(Page $page): ?Response

@@ -49,6 +49,11 @@ class Manager extends CoreManager
         return new ExternalFileProviderType();
     }
 
+    public function createImageEditorDriver()
+    {
+        return new ImageEditor();
+    }
+
     public function createAntispamLibraryDriver()
     {
         return new AntispamLibrary();

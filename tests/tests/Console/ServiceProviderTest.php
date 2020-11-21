@@ -163,6 +163,7 @@ class ServiceProviderTest extends TestCase
             ConcreteCommand\ReindexCommand::class,
             ConcreteCommand\RefreshBoardsCommand::class,
             ConcreteCommand\GenerateFileIdentifiersCommand::class,
+            ConcreteCommand\BulkUserAssignCommand::class,
             DBALCommand\ImportCommand::class,
             DBALCommand\RunSqlCommand::class,
             DBALCommand\ReservedWordsCommand::class,

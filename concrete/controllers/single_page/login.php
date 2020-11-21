@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
@@ -20,7 +19,6 @@ use UserInfo;
 
 class Login extends PageController implements LoggerAwareInterface
 {
-
     use LoggerAwareTrait;
 
     public function getLoggerChannel()
@@ -150,8 +148,7 @@ class Login extends PageController implements LoggerAwareInterface
     public function finishAuthentication(
         AuthenticationType $type,
         User $u
-    )
-    {
+    ) {
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
         }
@@ -230,6 +227,17 @@ class Login extends PageController implements LoggerAwareInterface
             $pll = $this->app->make(PostLoginLocation::class);
             $response = $pll->getPostLoginRedirectResponse(true);
 
+            // Expire the site cache in the logged in user's browser to avoid
+            // their full page cache serving local cached versions of the pages
+            // as they are now logged in and should probably see extra elements
+            // on the pages.
+            //
+            // Unfortunately this does not work in all browsers for insecure
+            // origins by default and you may see an error in the browser
+            // console. To get it to work, see the following e.g. in Chrome:
+            // chrome://flags/#unsafely-treat-insecure-origin-as-secure
+            $response->headers->set('Clear-Site-Data', '"cache"');
+
             return $response;
         } else {
             $session = $this->app->make('session');
@@ -283,7 +291,6 @@ class Login extends PageController implements LoggerAwareInterface
 
     /**
      * @deprecated Use the getPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
-     *
      * @see \Concrete\Core\User\PostLoginLocation::getPostLoginUrl()
      *
      * @return string
@@ -298,7 +305,6 @@ class Login extends PageController implements LoggerAwareInterface
 
     /**
      * @deprecated Use the getSessionPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
-     *
      * @see \Concrete\Core\User\PostLoginLocation::getSessionPostLoginUrl()
      *
      * @return string|false

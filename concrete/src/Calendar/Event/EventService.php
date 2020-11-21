@@ -92,6 +92,7 @@ class EventService implements ApplicationAwareInterface
             $return = clone $recent;
             $return->setAuthor($u->getUserInfoObject()->getEntityObject());
             $return->setIsApproved(false);
+            $return->setDateActivated(null);
 
             // Persist the cloned version
             $this->entityManager->persist($return);

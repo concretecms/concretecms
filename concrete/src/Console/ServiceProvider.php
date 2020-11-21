@@ -80,6 +80,7 @@ class ServiceProvider extends Provider
         MessengerCommand\ConsumeMessagesCommand::class,
         */
 
+        Command\BulkUserAssignCommand::class
     ];
 
     /**
