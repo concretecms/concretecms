@@ -51,7 +51,7 @@ class BulkUserAssignment extends DashboardPageController
                             $csvData = $fileHelper->getContents($csvFile->getPathname());
 
                             /*
-                             * Validate the CSV and extract all mail addresses.
+                             * Validate the CSV file and extract all mail addresses.
                              */
 
                             foreach (explode(PHP_EOL, $csvData) as $line) {
@@ -61,10 +61,10 @@ class BulkUserAssignment extends DashboardPageController
                                     if (filter_var($rows[0], FILTER_VALIDATE_EMAIL)) {
                                         $mailAddresses[] = $rows[0];
                                     } else if ($rows[0] !== null) {
-                                        $this->error->add(t('The given CSV contains invalid mail addresses.'));
+                                        $this->error->add(t('The given CSV file contains invalid mail addresses.'));
                                     }
                                 } else {
-                                    $this->error->add(t('The given CSV contains more then one column.'));
+                                    $this->error->add(t('The given CSV file contains more then one column.'));
                                     break;
                                 }
                             }
