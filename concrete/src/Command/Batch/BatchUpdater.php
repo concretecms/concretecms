@@ -21,32 +21,33 @@ class BatchUpdater
     /**
      * @var Application
      */
-    protected $entityManager;
+    protected $app;
 
     /**
-     * @var ProcessUpdater
-     */
-    protected $processUpdater;
-
-    /**
-     * BatchProgressUpdater constructor.
+     * BatchUpdater constructor.
      * @param Application $app
+     * @param ProcessUpdater $processUpdater
      */
-    public function __construct(EntityManager $entityManager, ProcessUpdater $processUpdater)
+    public function __construct(Application $app)
     {
-        $this->entityManager = $entityManager;
-        $this->processUpdater = $processUpdater;
+        // Yes, I know the dependencies are actually entity manager and processupdater but don't change it. This fires too early
+        // in the booting process and it breaks uninstalled concrete5 sites entirely because it tries to boot
+        // the database with credentials that don't exist.
+
+        $this->app = $app;
     }
 
     public function checkBatchProcessForClose(string $batchId)
     {
-        $batch = $this->entityManager->find(BatchEntity::class, $batchId);
+        $entityManager = $this->app->make(EntityManager::class);
+        $processUpdater = $this->app->make(ProcessUpdater::class);
+        $batch = $entityManager->find(BatchEntity::class, $batchId);
         if ($batch) {
-            $this->entityManager->refresh($batch);
+            $entityManager->refresh($batch);
             if ($batch->getPendingJobs() < 1) {
-                $process = $this->entityManager->getRepository(Process::class)->findOneByBatch($batch);
+                $process = $entityManager->getRepository(Process::class)->findOneByBatch($batch);
                 if ($process) {
-                    $this->processUpdater->closeProcess($process);
+                    $processUpdater->closeProcess($process);
                 }
             }
         }
@@ -54,14 +55,15 @@ class BatchUpdater
 
     public function updateJobs(string $batchId, string $column, int $jobs)
     {
+        $entityManager = $this->app->make(EntityManager::class);
         if (!in_array($column, [self::COLUMN_TOTAL, self::COLUMN_FAILED, self::COLUMN_PENDING])) {
             throw new \Exception(t('Invalid column passed to BatchUpdater::updateJobs: %s', $column));
         }
         if ($jobs < 0) {
             $jobs = abs($jobs);
-            $query = $this->entityManager->createQuery("update \Concrete\Core\Entity\Command\Batch b set b.$column = b.$column - :jobs where b.id = :batch");
+            $query = $entityManager->createQuery("update \Concrete\Core\Entity\Command\Batch b set b.$column = b.$column - :jobs where b.id = :batch");
         } else {
-            $query = $this->entityManager->createQuery("update \Concrete\Core\Entity\Command\Batch b set b.$column = b.$column + :jobs where b.id = :batch");
+            $query = $entityManager->createQuery("update \Concrete\Core\Entity\Command\Batch b set b.$column = b.$column + :jobs where b.id = :batch");
         }
         $query->setParameter('batch', $batchId);
         $query->setParameter('jobs', $jobs);
