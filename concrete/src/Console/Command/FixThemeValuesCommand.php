@@ -82,12 +82,12 @@ EOT
         if ($changes['removed_invalid'] === []) {
             $this->output->writeln('- removed invalid variables: <none>');
         } else {
-            $this->output->writeln("- removed invalid variables:\n  -" . implode("\n  -", $changes['removed_invalid']));
+            $this->output->writeln("- removed invalid variables:\n  - " . implode("\n  - ", $changes['removed_invalid']));
         }
         if ($changes['warnings'] === []) {
             $this->output->writeln('- warnings: <none>');
         } else {
-            $this->output->writeln("- warnings:\n  -" . implode("\n  -", $changes['warnings']));
+            $this->output->writeln("- warnings:\n  - " . implode("\n  - ", $changes['warnings']));
         }
     }
 }
