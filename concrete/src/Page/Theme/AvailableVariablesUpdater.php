@@ -2,11 +2,11 @@
 namespace Concrete\Core\Page\Theme;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\StyleCustomizer\Style\Value\BasicValue;
 use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
 use Concrete\Core\StyleCustomizer\Style\Value\Value;
 use Concrete\Core\StyleCustomizer\Style\ValueList;
 use PDO;
-use Concrete\Core\StyleCustomizer\Style\Value\BasicValue;
 
 class AvailableVariablesUpdater
 {
@@ -129,6 +129,7 @@ class AvailableVariablesUpdater
             return $stats;
         }
         $flags = (int) $flags;
+        $stats['_variablesWithoutValues'] = [];
         $simulate = (bool) ($flags & self::FLAG_SIMULATE);
         foreach ($this->listValueListIDs($theme) as $valueListID => $presetHandle) {
             $themeValueList = $this->buildThemeValueList($theme, $presets, $presetHandle, $stats);
@@ -146,6 +147,10 @@ class AvailableVariablesUpdater
             if ($flags & self::FLAG_ADD) {
                 $currentValues = $this->addNewValues($currentValues, $themeValueList, $valueListID, $stats, $simulate);
             }
+        }
+        unset($stats['_variablesWithoutValues']);
+        foreach (['added', 'updated', 'removed_invalid', 'removed_duplicated', 'removed_unused'] as $key) {
+            $stats[$key] = array_values(array_unique($stats[$key]));
         }
 
         return $stats;
@@ -213,11 +218,9 @@ class AvailableVariablesUpdater
                 }
                 if ($styleValue !== null) {
                     $themeValueList->addValue($styleValue);
-                } else {
-                    $warning = t('No value found for the variable %1$s (set of styles: %2$s)', $style->getVariable(), $set->getDisplayName('text'));
-                    if (!in_array($warning, $stats['warnings'], true)) {
-                        $stats['warnings'][] = $warning;
-                    }
+                } elseif (!in_array($style, $stats['_variablesWithoutValues'], true)) {
+                    $stats['_variablesWithoutValues'][] = $style;
+                    $stats['warnings'][] = t('No value found for the variable %1$s (set of styles: %2$s)', $style->getVariable(), $set->getDisplayName('text'));
                 }
             }
         }
@@ -388,7 +391,7 @@ class AvailableVariablesUpdater
     {
         $result = [];
         foreach ($currentValues as $currentValueID => $currentValue) {
-            if ($this->isValueUnused($currentValue, $themeValueList)) {
+            if ($this->isValueUnused($currentValue, $themeValueList, $stats)) {
                 if (!$simulate) {
                     $this->deleteValue($currentValueID);
                 }
@@ -406,7 +409,7 @@ class AvailableVariablesUpdater
      *
      * @return bool
      */
-    protected function isValueUnused(Value $value, ValueList $themeValueList)
+    protected function isValueUnused(Value $value, ValueList $themeValueList, array $stats)
     {
         foreach ($themeValueList->getValues() as $presetValue) {
             if ($this->areValuesForTheSameVariable($value, $presetValue)) {
@@ -415,6 +418,11 @@ class AvailableVariablesUpdater
         }
         if ($value instanceof BasicValue && $value->getVariable() === 'preset-fonts-file') {
             return false;
+        }
+        foreach ($stats['_variablesWithoutValues'] as $style) {
+            if ($style->getVariable() === $value->getVariable()) {
+                return false;
+            }
         }
 
         return true;
