@@ -46,7 +46,7 @@ class AvailableVariablesUpdater
     public function fixThemes($flags)
     {
         $stats = [];
-        foreach (Theme::getAvailableThemes() as $theme) {
+        foreach (Theme::getList() as $theme) {
             $stats[$theme->getThemeHandle()] = $this->fixTheme($theme, $flags);
         }
 
