@@ -3,9 +3,9 @@ namespace Concrete\Job;
 
 use Concrete\Core\Job\JobQueue;
 use Concrete\Core\Job\JobQueueMessage;
+use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\User\Group\GroupList;
 use Loader;
-use QueueableJob;
 use Group;
 use Concrete\Core\User\User;
 

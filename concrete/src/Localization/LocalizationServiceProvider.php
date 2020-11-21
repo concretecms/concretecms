@@ -2,6 +2,7 @@
 namespace Concrete\Core\Localization;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Http\Client\Factory;
 use Concrete\Core\Localization\Service\AddressFormat;
 use Concrete\Core\Localization\Translation\Local\Factory as LocalTranslationsFactory;
 use Concrete\Core\Localization\Translation\Local\FactoryInterface as LocalTranslationsFactoryInterface;
@@ -51,7 +52,11 @@ class LocalizationServiceProvider extends ServiceProvider
             $this->app->alias(CommunityStoreTranslationProvider::class, RemoteTranslationsProviderInterface::class);
         }
         $this->app->bind(CommunityStoreTranslationProvider::class, function ($app) {
-            return $app->make(CommunityStoreTranslationProvider::class, ['cache' => $app->make('cache/expensive')]);
+            return new CommunityStoreTranslationProvider(
+                $app->make('config'),
+                $app->make('cache'),
+                $app->make(Factory::class)
+            );
         });
 
         $this->app->singleton(AddressFormat::class);
