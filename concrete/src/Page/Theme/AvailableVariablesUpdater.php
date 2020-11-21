@@ -6,6 +6,7 @@ use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
 use Concrete\Core\StyleCustomizer\Style\Value\Value;
 use Concrete\Core\StyleCustomizer\Style\ValueList;
 use PDO;
+use Concrete\Core\StyleCustomizer\Style\Value\BasicValue;
 
 class AvailableVariablesUpdater
 {
@@ -411,6 +412,9 @@ class AvailableVariablesUpdater
             if ($this->areValuesForTheSameVariable($value, $presetValue)) {
                 return false;
             }
+        }
+        if ($value instanceof BasicValue && $value->getVariable() === 'preset-fonts-file') {
+            return false;
         }
 
         return true;
