@@ -118,7 +118,7 @@ class BulkUserAssignment extends DashboardPageController
                     }
 
                     $this->set('success', t(
-                        'Done! %s user records are found in the given CSV. %s users were added to the target group and %s users were removed from target group. For further details please check the logs.',
+                        'Done! %s user records are found in the given CSV file. %s users were added to the target group and %s users were removed from target group. For further details please check the logs.',
                         $totalUsersProvided,
                         $totalUsersAddedToTargetGroup,
                         $totalUsersRemovedFromTargetGroup
