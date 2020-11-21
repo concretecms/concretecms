@@ -75,5 +75,7 @@ EOT
         $output->writeln('');
         $output->writeln('<info># PHP Settings</info>');
         $output->writeln($info->getPhpSettings());
+
+        return Command::RETURN_CODE_ON_SUCCESS;
     }
 }
