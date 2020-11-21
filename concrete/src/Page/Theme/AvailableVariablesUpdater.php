@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Page\Theme;
 
 use Concrete\Core\Database\Connection\Connection;
@@ -10,25 +9,65 @@ use PDO;
 
 class AvailableVariablesUpdater
 {
+    /**
+     * Operation flag: no operations.
+     *
+     * @var int
+     */
     const FLAG_NONE = 0b0000;
 
+    /**
+     * Operation flag: only simulate operations, don't persist anything.
+     *
+     * @var int
+     */
     const FLAG_SIMULATE = 0b1;
 
+    /**
+     * Operation flag: delete invalid values.
+     *
+     * @var int
+     */
     const FLAG_REMOVE_INVALID = 0b10;
 
+    /**
+     * Operation flag: delete duplicated values.
+     *
+     * @var int
+     */
     const FLAG_REMOVE_DUPLICATED = 0b100;
 
-    const FLAG_REMOVE_UNUSED = 0b10000;
+    /**
+     * Operation flag: delete values present in the database but not in any preset.
+     *
+     * @var int
+     */
+    const FLAG_REMOVE_UNUSED = 0b1000;
 
-    const FLAG_ADD = 0b1000;
+    /**
+     * Operation flag: add values present in presets but not in the database.
+     *
+     * @var int
+     */
+    const FLAG_ADD = 0b10000;
 
+    /**
+     * Operation flag: update values present in presets and in the database, but with wrong definition.
+     *
+     * @var int
+     */
     const FLAG_UPDATE = 0b100000;
 
     /**
+     * The database connection.
+     *
      * @var \Concrete\Core\Database\Connection\Connection
      */
     protected $db;
 
+    /**
+     * Initialize the instance.
+     */
     public function __construct(Connection $db)
     {
         $this->db = $db;
@@ -46,7 +85,7 @@ class AvailableVariablesUpdater
     public function fixThemes($flags)
     {
         $stats = [];
-        foreach (Theme::getAvailableThemes() as $theme) {
+        foreach (Theme::getList() as $theme) {
             $stats[$theme->getThemeHandle()] = $this->fixTheme($theme, $flags);
         }
 
@@ -91,7 +130,7 @@ class AvailableVariablesUpdater
         $flags = (int) $flags;
         $simulate = (bool) ($flags & self::FLAG_SIMULATE);
         foreach ($this->listValueListIDs($theme) as $valueListID => $presetHandle) {
-            $themeValueList = $this->buildPresetValueList($theme, $presets, $presetHandle);
+            $themeValueList = $this->buildThemeValueList($theme, $presets, $presetHandle, $stats);
             $currentValues = $this->listValues($valueListID);
             $currentValues = $this->processInvalid($currentValues, $stats, (bool) ($flags & self::FLAG_REMOVE_INVALID), $simulate);
             if ($flags && self::FLAG_REMOVE_DUPLICATED) {
@@ -112,7 +151,7 @@ class AvailableVariablesUpdater
     }
 
     /**
-     * Get the list of the variable lists, and the associated preset.
+     * Get the list of the IDs of the currently used variable lists and the associated preset.
      *
      * @return \Generator|string[] keys are the value list IDs, values are the preset name (empty string if none)
      */
@@ -141,29 +180,43 @@ class AvailableVariablesUpdater
     }
 
     /**
-     * @param \Concrete\Core\StyleCustomizer\Preset[] $presets
-     * @param string $preferredPreset
-     * @param mixed $presetHandle
+     * Build the list of all the style values defined by a theme.
+     *
+     * @param \Concrete\Core\StyleCustomizer\Preset[] $presets the presets provided by the theme (the default one should be the first one)
+     * @param string $presetHandle The handle of the preferred preset (empty string if not available)
+     *
+     * @return \Concrete\Core\StyleCustomizer\Style\ValueList
      */
-    protected function buildPresetValueList(Theme $theme, array $presets, $presetHandle)
+    protected function buildThemeValueList(Theme $theme, array $presets, $presetHandle, array &$stats)
     {
-        $presetValueList = null;
-        if ($presetHandle !== '') {
-            foreach ($presets as $preset) {
-                if ($preset->getPresetHandle === $presetHandle) {
-                    $presetValueList = $preset->getStyleValueList();
+        if ((string) $presetHandle !== '') {
+            // Prepend the preset with handle $presetHandle
+            foreach (array_keys($presets) as $index) {
+                $preset = $presets[$index];
+                if ($preset->getPresetHandle() === $presetHandle) {
+                    array_splice($presets, $index, 1);
+                    array_unshift($presets, $preset);
+                    break;
                 }
             }
-        }
-        if ($presetValueList === null) {
-            $presetValueList = $presets[0]->getStyleValueList();
         }
         $themeValueList = new ValueList();
         foreach ($theme->getThemeCustomizableStyleList()->getSets() as $set) {
             foreach ($set->getStyles() as $style) {
-                $styleValue = $style->getValueFromList($presetValueList);
+                $styleValue = null;
+                foreach ($presets as $preset) {
+                    $styleValue = $style->getValueFromList($preset->getStyleValueList());
+                    if ($styleValue !== null) {
+                        break;
+                    }
+                }
                 if ($styleValue !== null) {
                     $themeValueList->addValue($styleValue);
+                } else {
+                    $warning = t('No value found for the variable %1$s (set of styles: %2$s)', $style->getVariable(), $set->getDisplayName('text'));
+                    if (!in_array($warning, $stats['warnings'], true)) {
+                        $stats['warnings'][] = $warning;
+                    }
                 }
             }
         }
@@ -231,11 +284,10 @@ class AvailableVariablesUpdater
      * Save a new variable to the database.
      *
      * @param int $valueListID The associated list ID
-     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value $value
      *
      * @return int the ID of the newly created record
      */
-    protected function addValue($valueListID, $value)
+    protected function addValue($valueListID, Value $value)
     {
         $this->db->insert('StyleCustomizerValues', [
             'scvlID' => $valueListID,
@@ -249,9 +301,8 @@ class AvailableVariablesUpdater
      * Update a value saved in the database.
      *
      * @param int $valueID the ID of the value
-     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value $value
      */
-    protected function updateValue($valueID, $value)
+    protected function updateValue($valueID, Value $value)
     {
         $this->db->update('StyleCustomizerValues', ['value' => serialize($value)], ['scvID' => $valueID]);
     }
@@ -301,7 +352,6 @@ class AvailableVariablesUpdater
      *
      * @param \Concrete\Core\StyleCustomizer\Style\Value\Value[] $currentValues keys are the value IDs
      * @param bool $simulate
-     * @param bool $delete
      *
      * @return \Concrete\Core\StyleCustomizer\Style\Value\Value[] keys are the value IDs
      */
@@ -330,7 +380,6 @@ class AvailableVariablesUpdater
      *
      * @param \Concrete\Core\StyleCustomizer\Style\Value\Value[] $currentValues keys are the value IDs
      * @param bool $simulate
-     * @param bool $delete
      *
      * @return \Concrete\Core\StyleCustomizer\Style\Value\Value[] keys are the value IDs
      */
@@ -354,14 +403,12 @@ class AvailableVariablesUpdater
     /**
      * Check if a value is not used.
      *
-     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value $value
-     *
      * @return bool
      */
-    protected function isValueUnused($value, ValueList $themeValueList)
+    protected function isValueUnused(Value $value, ValueList $themeValueList)
     {
         foreach ($themeValueList->getValues() as $presetValue) {
-            if ($value->getVariable() === $presetValue->getVariable()) {
+            if ($this->areValuesForTheSameVariable($value, $presetValue)) {
                 return false;
             }
         }
@@ -399,11 +446,9 @@ class AvailableVariablesUpdater
     /**
      * Create a new Value instance, if it needs to be fixed.
      *
-     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value $value
-     *
      * @return \Concrete\Core\StyleCustomizer\Style\Value\Value|null NULL if the value doesn't need to be fixed
      */
-    protected function buildUpdatedValue($value, ValueList $themeValueList)
+    protected function buildUpdatedValue(Value $value, ValueList $themeValueList)
     {
         if ($value instanceof TypeValue) {
             return $this->buildUpdatedTypeValue($value, $themeValueList);
@@ -512,9 +557,35 @@ class AvailableVariablesUpdater
             return false;
         }
         foreach ($currentValues as $currentValue) {
-            if ($presetValue->getVariable() === $currentValue->getVariable()) {
+            if ($this->areValuesForTheSameVariable($presetValue, $currentValue)) {
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if two variables are the values of the same variable.
+     *
+     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value|mixed $value1
+     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value|mixed $value2
+     *
+     * @return bool
+     */
+    protected function areValuesForTheSameVariable($value1, $value2)
+    {
+        if (!($value1 instanceof Value)) {
+            return false;
+        }
+        if (!($value2 instanceof Value)) {
+            return false;
+        }
+        if ((string) $value1->getVariable() !== (string) $value2->getVariable()) {
+            return false;
+        }
+        if (get_class($value1) !== get_class($value2)) {
+            return false;
         }
 
         return true;
