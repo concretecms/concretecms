@@ -64,7 +64,7 @@ class BulkUserAssignment extends DashboardPageController
                                         $this->error->add(t('The given CSV file contains invalid mail addresses.'));
                                     }
                                 } else {
-                                    $this->error->add(t('The given CSV file contains more then one column.'));
+                                    $this->error->add(t('The given CSV file contains more than one column.'));
                                     break;
                                 }
                             }
