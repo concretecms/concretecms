@@ -3,13 +3,11 @@
 namespace Concrete\Core\Command\Batch;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
 use Concrete\Core\Command\Process\ProcessUpdater;
-use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Entity\Command\Process;
-use Concrete\Core\Localization\Service\Date;
-use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Command\Batch as BatchEntity;
+use Concrete\Core\Entity\Command\Process;
+use Doctrine\ORM\EntityManager;
 
 class BatchUpdater
 {
@@ -47,7 +45,7 @@ class BatchUpdater
             if ($batch->getPendingJobs() < 1) {
                 $process = $entityManager->getRepository(Process::class)->findOneByBatch($batch);
                 if ($process) {
-                    $processUpdater->closeProcess($process);
+                    $processUpdater->closeProcess($process, ProcessMessageInterface::EXIT_CODE_SUCCESS);
                 }
             }
         }

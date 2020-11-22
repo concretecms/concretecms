@@ -36,6 +36,16 @@ class Process implements \JsonSerializable
     protected $dateCompleted;
 
     /**
+     * @ORM\Column(type="integer", options={"unsigned":true}, nullable=true)
+     */
+    protected $exitCode;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $exitMessage;
+
+    /**
      * @ORM\OneToOne(targetEntity="Batch", cascade={"persist"})
      **/
     protected $batch;
@@ -132,6 +142,38 @@ class Process implements \JsonSerializable
     public function setBatch($batch): void
     {
         $this->batch = $batch;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExitCode()
+    {
+        return $this->exitCode;
+    }
+
+    /**
+     * @param mixed $exitCode
+     */
+    public function setExitCode($exitCode): void
+    {
+        $this->exitCode = $exitCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExitMessage()
+    {
+        return $this->exitMessage;
+    }
+
+    /**
+     * @param mixed $exitMessage
+     */
+    public function setExitMessage($exitMessage): void
+    {
+        $this->exitMessage = $exitMessage;
     }
 
     public function jsonSerialize()

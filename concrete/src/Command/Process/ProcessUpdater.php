@@ -41,12 +41,14 @@ class ProcessUpdater
     /**
      * @param string|Process $process
      */
-    public function closeProcess($process)
+    public function closeProcess($process, int $exitCode, string $exitMessage = null)
     {
         if (is_string($process)) {
             $process = $this->entityManager->find(Process::class, $process);
         }
         $process->setDateCompleted($this->dateService->toDateTime()->getTimestamp());
+        $process->setExitCode($exitCode);
+        $process->setExitMessage($exitMessage);
         $this->entityManager->persist($process);
         $this->entityManager->flush();
         $this->clearOldProcesses();
