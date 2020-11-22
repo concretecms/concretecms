@@ -1,7 +1,9 @@
 <?php
+
 namespace Concrete\Core\Page\Theme;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Page\Theme\AvailableVariablesUpdater\Result;
 use Concrete\Core\StyleCustomizer\Style\Value\BasicValue;
 use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
 use Concrete\Core\StyleCustomizer\Style\Value\Value;
@@ -79,18 +81,18 @@ class AvailableVariablesUpdater
      *
      * @param int $flags A combination of the values of the FLAG_... constants.
      *
-     * @return array array keys are the theme handles, array values are the result of the fixTheme() method
+     * @return \Concrete\Core\Page\Theme\AvailableVariablesUpdater\Result[] array keys are the theme handles, array values are the result of the fixTheme() method
      *
      * @see \Concrete\Core\Page\Theme\AvailableVariablesUpdater::fixTheme()
      */
     public function fixThemes($flags)
     {
-        $stats = [];
+        $result = [];
         foreach (Theme::getList() as $theme) {
-            $stats[$theme->getThemeHandle()] = $this->fixTheme($theme, $flags);
+            $result[$theme->getThemeHandle()] = $this->fixTheme($theme, $flags);
         }
 
-        return $stats;
+        return $result;
     }
 
     /**
@@ -98,62 +100,39 @@ class AvailableVariablesUpdater
      *
      * @param int $flags A combination of the values of the FLAG_... constants.
      *
-     * @return array Array keys are:<ul>
-     *               <li><code>added</code> the list of the names of the added variables</li>
-     *               <li><code>updated</code> the list of the names of the updated variables</li>
-     *               <li><code>removed_invalid</code> the list of errors explaining why some variables has been removed</li>
-     *               <li><code>removed_duplicated</code> the list of the names of the variables removed because duplicated</li>
-     *               <li><code>removed_unused</code> the list of the names of the variables removed because not used</li>
-     *               <li><code>warnings</code> a list of warnings thrown while processing</li>
-     *               </ul>
+     * @return \Concrete\Core\Page\Theme\AvailableVariablesUpdater\Result
      */
     public function fixTheme(Theme $theme, $flags)
     {
-        $stats = [
-            'added' => [],
-            'updated' => [],
-            'removed_invalid' => [],
-            'removed_duplicated' => [],
-            'removed_unused' => [],
-            'warnings' => [],
-        ];
+        $fixResult = new Result();
         if (!$theme->isThemeCustomizable()) {
-            $stats['warnings'][] = t('The theme is not customizable');
-
-            return $stats;
+            return $fixResult->addWarning(t('The theme is not customizable'));
         }
         $presets = $theme->getThemeCustomizableStylePresets();
         if ($presets === []) {
-            $stats['warnings'][] = t('The theme does not have presets');
-
-            return $stats;
+            return $fixResult->addWarning(t('The theme does not have presets'));
         }
         $flags = (int) $flags;
-        $stats['_variablesWithoutValues'] = [];
         $simulate = (bool) ($flags & self::FLAG_SIMULATE);
         foreach ($this->listValueListIDs($theme) as $valueListID => $presetHandle) {
-            $themeValueList = $this->buildThemeValueList($theme, $presets, $presetHandle, $stats);
+            $themeValueList = $this->buildThemeValueList($theme, $presets, $presetHandle, $fixResult);
             $currentValues = $this->listValues($valueListID);
-            $currentValues = $this->processInvalid($currentValues, $stats, (bool) ($flags & self::FLAG_REMOVE_INVALID), $simulate);
+            $currentValues = $this->processInvalid($currentValues, $fixResult, (bool) ($flags & self::FLAG_REMOVE_INVALID), $simulate);
             if ($flags && self::FLAG_REMOVE_DUPLICATED) {
-                $currentValues = $this->deleteDuplicated($currentValues, $themeValueList, $stats, $simulate);
+                $currentValues = $this->deleteDuplicated($currentValues, $themeValueList, $fixResult, $simulate);
             }
             if ($flags && self::FLAG_REMOVE_UNUSED) {
-                $currentValues = $this->deleteUnused($currentValues, $themeValueList, $stats, $simulate);
+                $currentValues = $this->deleteUnused($currentValues, $themeValueList, $fixResult, $simulate);
             }
             if ($flags && self::FLAG_UPDATE) {
-                $currentValues = $this->updateCurrentValues($currentValues, $themeValueList, $stats, $simulate);
+                $currentValues = $this->updateCurrentValues($currentValues, $themeValueList, $fixResult, $simulate);
             }
             if ($flags & self::FLAG_ADD) {
-                $currentValues = $this->addNewValues($currentValues, $themeValueList, $valueListID, $stats, $simulate);
+                $currentValues = $this->addNewValues($currentValues, $themeValueList, $valueListID, $fixResult, $simulate);
             }
         }
-        unset($stats['_variablesWithoutValues']);
-        foreach (['added', 'updated', 'removed_invalid', 'removed_duplicated', 'removed_unused'] as $key) {
-            $stats[$key] = array_values(array_unique($stats[$key]));
-        }
 
-        return $stats;
+        return $fixResult;
     }
 
     /**
@@ -193,7 +172,7 @@ class AvailableVariablesUpdater
      *
      * @return \Concrete\Core\StyleCustomizer\Style\ValueList
      */
-    protected function buildThemeValueList(Theme $theme, array $presets, $presetHandle, array &$stats)
+    protected function buildThemeValueList(Theme $theme, array $presets, $presetHandle, Result $fixResult)
     {
         if ((string) $presetHandle !== '') {
             // Prepend the preset with handle $presetHandle
@@ -218,9 +197,8 @@ class AvailableVariablesUpdater
                 }
                 if ($styleValue !== null) {
                     $themeValueList->addValue($styleValue);
-                } elseif (!in_array($style, $stats['_variablesWithoutValues'], true)) {
-                    $stats['_variablesWithoutValues'][] = $style;
-                    $stats['warnings'][] = t('No value found for the variable %1$s (set of styles: %2$s)', $style->getVariable(), $set->getDisplayName('text'));
+                } else {
+                    $fixResult->addVariableWithoutValueInPresets($style);
                 }
             }
         }
@@ -330,7 +308,7 @@ class AvailableVariablesUpdater
      *
      * @return \Concrete\Core\StyleCustomizer\Style\Value\Value[] keys are the value IDs
      */
-    protected function processInvalid(array $currentValues, array &$stats, $delete, $simulate)
+    protected function processInvalid(array $currentValues, Result $fixResult, $delete, $simulate)
     {
         $result = [];
         foreach ($currentValues as $currentValueID => $currentValue) {
@@ -339,9 +317,9 @@ class AvailableVariablesUpdater
                     if (!$simulate) {
                         $this->deleteValue($currentValueID);
                     }
-                    $stats['removed_invalid'][] = $currentValue;
+                    $fixResult->addRemovedInvalidValue($currentValue);
                 } else {
-                    $stats['warnings'][] = $currentValue;
+                    $fixResult->addWarning($currentValue);
                 }
             } else {
                 $result[$currentValueID] = $currentValue;
@@ -359,7 +337,7 @@ class AvailableVariablesUpdater
      *
      * @return \Concrete\Core\StyleCustomizer\Style\Value\Value[] keys are the value IDs
      */
-    protected function deleteDuplicated(array $currentValues, ValueList $themeValueList, array &$stats, $simulate)
+    protected function deleteDuplicated(array $currentValues, ValueList $themeValueList, Result $fixResult, $simulate)
     {
         $result = [];
         $dictionary = [];
@@ -369,7 +347,7 @@ class AvailableVariablesUpdater
                 if (!$simulate) {
                     $this->deleteValue($currentValueID);
                 }
-                $stats['removed_duplicated'][] = $currentValue->getVariable();
+                $fixResult->addRemovedDuplicatedValue($currentValue);
             } else {
                 $dictionary[] = $dictionaryKey;
                 $result[$currentValueID] = $currentValue;
@@ -387,15 +365,15 @@ class AvailableVariablesUpdater
      *
      * @return \Concrete\Core\StyleCustomizer\Style\Value\Value[] keys are the value IDs
      */
-    protected function deleteUnused(array $currentValues, ValueList $themeValueList, array &$stats, $simulate)
+    protected function deleteUnused(array $currentValues, ValueList $themeValueList, Result $fixResult, $simulate)
     {
         $result = [];
         foreach ($currentValues as $currentValueID => $currentValue) {
-            if ($this->isValueUnused($currentValue, $themeValueList, $stats)) {
+            if ($this->isValueUnused($currentValue, $themeValueList, $fixResult)) {
                 if (!$simulate) {
                     $this->deleteValue($currentValueID);
                 }
-                $stats['removed_unused'][] = $currentValue->getVariable();
+                $fixResult->addRemovedUnusedValue($currentValue);
             } else {
                 $result[$currentValueID] = $currentValue;
             }
@@ -409,7 +387,7 @@ class AvailableVariablesUpdater
      *
      * @return bool
      */
-    protected function isValueUnused(Value $value, ValueList $themeValueList, array $stats)
+    protected function isValueUnused(Value $value, ValueList $themeValueList, Result $fixResult)
     {
         foreach ($themeValueList->getValues() as $presetValue) {
             if ($this->areValuesForTheSameVariable($value, $presetValue)) {
@@ -419,8 +397,8 @@ class AvailableVariablesUpdater
         if ($value instanceof BasicValue && $value->getVariable() === 'preset-fonts-file') {
             return false;
         }
-        foreach ($stats['_variablesWithoutValues'] as $style) {
-            if ($style->getVariable() === $value->getVariable()) {
+        foreach ($fixResult->getVariablesWithoutValueInPresets() as $variable) {
+            if ($variable->getVariable() === $value->getVariable()) {
                 return false;
             }
         }
@@ -436,7 +414,7 @@ class AvailableVariablesUpdater
      *
      * @return \Concrete\Core\StyleCustomizer\Style\Value\Value[] keys are the value IDs
      */
-    protected function updateCurrentValues(array $currentValues, ValueList $themeValueList, array &$stats, $simulate)
+    protected function updateCurrentValues(array $currentValues, ValueList $themeValueList, Result $fixResult, $simulate)
     {
         $result = [];
         foreach ($currentValues as $currentValueID => $currentValue) {
@@ -446,7 +424,7 @@ class AvailableVariablesUpdater
                     $this->updateValue($currentValueID, $updatedCurrentValue);
                 }
                 $result[$currentValueID] = $updatedCurrentValue;
-                $stats['updated'][] = $updatedCurrentValue->getVariable();
+                $fixResult->addUpdatedValue($updatedCurrentValue);
             } else {
                 $result[$currentValueID] = $currentValue;
             }
@@ -538,7 +516,7 @@ class AvailableVariablesUpdater
      *
      * @return \Concrete\Core\StyleCustomizer\Style\Value\Value[] $currentValues keys are the value IDs
      */
-    protected function addNewValues(array $currentValues, ValueList $themeValueList, $valueListID, array &$stats, $simulate)
+    protected function addNewValues(array $currentValues, ValueList $themeValueList, $valueListID, Result $fixResult, $simulate)
     {
         $result = $currentValues;
         foreach ($themeValueList->getValues() as $presetValue) {
@@ -548,7 +526,7 @@ class AvailableVariablesUpdater
                     $currentValueID = $this->addValue($valueListID, $currentValue);
                     $result[$currentValueID] = $result;
                 }
-                $stats['added'][] = $presetValue->getVariable();
+                $fixResult->addAddedValue($presetValue);
             }
         }
 

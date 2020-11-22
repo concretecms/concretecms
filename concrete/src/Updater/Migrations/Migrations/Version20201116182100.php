@@ -21,7 +21,8 @@ class Version20201116182100 extends AbstractMigration implements RepeatableMigra
         foreach (Theme::getInstalledHandles() as $themeHandle) {
             $this->output(t('Updating style customizer variables for theme %s... ', $themeHandle));
             $theme = Theme::getByHandle($themeHandle);
-            $updater->fixTheme($theme, AvailableVariablesUpdater::FLAG_ADD | AvailableVariablesUpdater::FLAG_UPDATE);
+            $fixResult = $updater->fixTheme($theme, AvailableVariablesUpdater::FLAG_ADD | AvailableVariablesUpdater::FLAG_UPDATE);
+            $this->output((string) $fixResult);
         }
     }
 }
