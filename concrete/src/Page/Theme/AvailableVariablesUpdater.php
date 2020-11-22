@@ -133,13 +133,13 @@ class AvailableVariablesUpdater
             $themeValueList = $this->buildThemeValueList($theme, $presets, $presetHandle, $fixResult);
             $currentValues = $this->listValues($valueListID);
             $currentValues = $this->processInvalid($currentValues, $fixResult, (bool) ($flags & self::FLAG_REMOVE_INVALID), $simulate);
-            if ($flags && self::FLAG_REMOVE_DUPLICATED) {
+            if ($flags & self::FLAG_REMOVE_DUPLICATED) {
                 $currentValues = $this->deleteDuplicated($currentValues, $themeValueList, $fixResult, $simulate);
             }
-            if ($flags && self::FLAG_REMOVE_UNUSED) {
+            if ($flags & self::FLAG_REMOVE_UNUSED) {
                 $currentValues = $this->deleteUnused($currentValues, $themeValueList, $fixResult, $simulate);
             }
-            if ($flags && self::FLAG_UPDATE) {
+            if ($flags & self::FLAG_UPDATE) {
                 $currentValues = $this->updateCurrentValues($currentValues, $themeValueList, $fixResult, $simulate);
             }
             if ($flags & self::FLAG_ADD) {
