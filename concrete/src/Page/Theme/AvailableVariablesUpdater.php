@@ -2,9 +2,9 @@
 
 namespace Concrete\Core\Page\Theme;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Theme\AvailableVariablesUpdater\Result;
-use Concrete\Core\StyleCustomizer\Style\Value\BasicValue;
 use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
 use Concrete\Core\StyleCustomizer\Style\Value\Value;
 use Concrete\Core\StyleCustomizer\Style\ValueList;
@@ -69,11 +69,26 @@ class AvailableVariablesUpdater
     protected $db;
 
     /**
+     * The application configuration repository.
+     *
+     * @var \Concrete\Core\Config\Repository\Repository
+     */
+    protected $config;
+
+    /**
+     * The list of values to be ignored (array keys are the variable names, array values are the value class name, or true for any class).
+     *
+     * @var string[]|true[]|null
+     */
+    private $ignoredValues;
+
+    /**
      * Initialize the instance.
      */
-    public function __construct(Connection $db)
+    public function __construct(Connection $db, Repository $config)
     {
         $this->db = $db;
+        $this->config = $config;
     }
 
     /**
@@ -133,6 +148,54 @@ class AvailableVariablesUpdater
         }
 
         return $fixResult;
+    }
+
+    /**
+     * Get the list of values to be ignored.
+     *
+     * @return string[]|true[] array keys are the variable names, array values are the value class name, or true for any class
+     */
+    protected function getIgnoredValues()
+    {
+        if ($this->ignoredValues === null) {
+            $ignoredValues = $this->config->get('concrete.style_customizer.updater.ignored_values', []);
+            $this->ignoredValues = is_array($ignoredValues) ? array_filter($ignoredValues) : [];
+        }
+
+        return $this->ignoredValues;
+    }
+
+    /**
+     * Set the list of values to be ignored.
+     *
+     * @param string[]|true[] $value array keys are the variable names, array values are the value class name, or true for any class
+     *
+     * @return $this
+     */
+    protected function setIgnoredValues(array $value)
+    {
+        $this->ignoredValues = $value;
+
+        return $this;
+    }
+
+    /**
+     * Check if a value should be ignored.
+     *
+     * @return bool
+     */
+    protected function shouldIgnoreValue(Value $value)
+    {
+        $ignoredValues = $this->getIgnoredValues();
+        $ignored = isset($ignoredValues[$value->getVariable()]) ? $ignoredValues[$value->getVariable()] : false;
+        if (empty($ignored)) {
+            return false;
+        }
+        if (is_string($ignored) && class_exists($ignored) && !is_a($value, $ignored)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -394,7 +457,7 @@ class AvailableVariablesUpdater
                 return false;
             }
         }
-        if ($value instanceof BasicValue && $value->getVariable() === 'preset-fonts-file') {
+        if ($this->shouldIgnoreValue($value)) {
             return false;
         }
         foreach ($fixResult->getVariablesWithoutValueInPresets() as $variable) {
