@@ -104,7 +104,6 @@ class BulkUserAssignCommand extends Command
                 if (!$user->inGroup($targetGroup)) {
                     if (!$dryRun) {
                         $user->enterGroup($targetGroup);
-                        $logger->info(t('User %s was added to group %s.', $user->getUserName(), $targetGroup->getGroupName()));
                     }
 
                     $totalUsersAddedToTargetGroup++;
@@ -124,7 +123,6 @@ class BulkUserAssignCommand extends Command
 
                     if (!$dryRun) {
                         $user->exitGroup($targetGroup);
-                        $logger->info(t('User %s was removed from group %s.', $user->getUserName(), $targetGroup->getGroupName()));
                     }
 
                     $totalUsersRemovedFromTargetGroup++;

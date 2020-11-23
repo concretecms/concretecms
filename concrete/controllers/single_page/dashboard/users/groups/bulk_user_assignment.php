@@ -95,7 +95,6 @@ class BulkUserAssignment extends DashboardPageController
 
                             if (!$user->inGroup($targetGroup)) {
                                 $user->enterGroup($targetGroup);
-                                $logger->info(t('User %s was added to group %s.', $user->getUserName(), $targetGroup->getGroupName()));
                                 $totalUsersAddedToTargetGroup++;
                             }
                         }
@@ -111,7 +110,6 @@ class BulkUserAssignment extends DashboardPageController
                             if (!in_array($groupMember->getUserEmail(), $mailAddresses)) {
                                 $user = $groupMember->getUserObject();
                                 $user->exitGroup($targetGroup);
-                                $logger->info(t('User %s was removed from group %s.', $user->getUserName(), $targetGroup->getGroupName()));
                                 $totalUsersRemovedFromTargetGroup++;
                             }
                         }
