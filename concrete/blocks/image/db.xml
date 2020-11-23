@@ -25,6 +25,10 @@
             <unsigned/>
             <default value="0" />
         </field>
+        <field name="thumbnailTypeId" type="integer">
+            <unsigned/>
+            <default value="0" />
+        </field>
         <field name="externalLink" type="string" size="255" />
         <field name="internalLinkCID" type="integer">
             <unsigned/>

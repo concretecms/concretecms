@@ -7,6 +7,7 @@ use Concrete\Core\Error\Error;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
@@ -69,6 +70,10 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $imgPaths = [];
 
         if (is_object($f) && is_object($foS)) {
+            /** @var Type $thumbnailTypeService */
+            $thumbnailTypeService = $this->app->make(Type::class);
+            $thumbnailType = $thumbnailTypeService::getByID((int)$this->thumbnailTypeId);
+
             if (!$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
                 if ($this->cropImage && ($this->maxWidth > 0 && $this->maxHeight > 0)) {
                     $im = $this->app->make('helper/image');
@@ -78,6 +83,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
                     $fOnstateThumb = $im->getThumbnail($foS, $this->maxWidth, $this->maxHeight, true);
                     $imgPaths['hover'] = $fOnstateThumb->src;
+                } else if ($thumbnailType instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type) {
+                    $imgPaths['default'] = File::getByID($this->getFileID())->getApprovedVersion()->getThumbnailURL($thumbnailType->getBaseVersion());
+                    $imgPaths['hover'] = File::getByID($this->getFileOnstateID())->getApprovedVersion()->getThumbnailURL($thumbnailType->getBaseVersion());
                 } else {
                     $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
                     $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);

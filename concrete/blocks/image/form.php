@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Application\Service\FileManager;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Form\Service\Widget\PageSelector;
 use Concrete\Core\Support\Facade\Application;
@@ -11,6 +12,7 @@ use Concrete\Core\Support\Facade\Application;
 /**
  * @var DestinationPicker $destinationPicker
  * @var array $imageLinkPickers
+ * @var int $thumbnailTypeId
  * @var string $imageLinkHandle
  * @var mixed $imageLinkValue
  * @var int $constrainImage
@@ -22,50 +24,74 @@ $app = Application::getFacadeApplication();
 $pageSelector = $app->make(PageSelector::class);
 /** @var FileManager $fileManager */
 $fileManager = $app->make(FileManager::class);
+
+$thumbnailTypes = [];
+
+/** @var Type $thumbnailTypeService */
+$thumbnailTypeService = $app->make(Type::class);
+
+foreach ($thumbnailTypeService::getList() as $thumbnailTypeListItem) {
+    $thumbnailTypes["thumbnail-type-" . $thumbnailTypeListItem->getID()] = $thumbnailTypeListItem->getDisplayName('text');
+}
+
+$constrainImageSizes = array_merge(
+    [
+        "full-size" => t("Show full-sized image")
+    ],
+    $thumbnailTypes,
+    [
+        "custom-size" => t("Custom Size")
+    ]
+);
 ?>
 
 <fieldset>
     <legend>
-        <?php echo t('Files'); ?>
+        <?php echo t('Image'); ?>
     </legend>
 
     <div class="form-group">
-        <?php
-        echo $form->label('ccm-b-image', t('Image'));
-        echo $fileManager->image('ccm-b-image', 'fID', t('Choose Image'), $bf);
-        ?>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label">
-            <?php echo t('Image Hover') ?>
-
-            <small style="color: #999999; font-weight: 200;">
-                <?php echo t('(Optional)'); ?>
-            </small>
-        </label>
-
-        <i class="fa fa-question-circle launch-tooltip" title=""
-           data-original-title="<?php echo t('The image hover effect requires constraining the image size.'); ?>"></i>
-
-        <?php echo $fileManager->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo); ?>
+        <?php echo $form->label('ccm-b-image', t('Image')); ?>
+        <?php echo $fileManager->image('ccm-b-image', 'fID', t('Choose Image'), $bf); ?>
     </div>
 </fieldset>
 
 <fieldset>
     <legend>
-        <?php echo t('HTML'); ?>
+        <?php echo t('Behaviours'); ?>
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label('imageLink', t('Image Link')) ?>
-        <?php echo $destinationPicker->generate(
-            'imageLink',
-            $imageLinkPickers,
-            $imageLinkHandle,
-            $imageLinkValue
-        )
-        ?>
+        <div class="form-check">
+            <?php
+            echo $form->checkbox('changeImageOnHover', 'changeImageOnHover', isset($openLinkInNewWindow) ? $openLinkInNewWindow : false);
+            echo $form->label("changeImageOnHover", t('Change Image on Hover'), ["class" => "form-check-label"]);
+            ?>
+        </div>
+    </div>
+
+    <div id="changeImageOnHoverContainer">
+        <div class="form-group">
+            <label class="control-label">
+                <?php echo t('Image Hover') ?>
+            </label>
+
+            <i class="fa fa-question-circle launch-tooltip" title=""
+               data-original-title="<?php echo t('The image hover effect requires constraining the image size.'); ?>"></i>
+
+            <?php echo $fileManager->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo); ?>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->label('imageLink', t('Image Link')) ?>
+            <?php echo $destinationPicker->generate(
+                'imageLink',
+                $imageLinkPickers,
+                $imageLinkHandle,
+                $imageLinkValue
+            )
+            ?>
+        </div>
     </div>
 
     <div id="imageLinkOpenInNewWindow" style="display: none;" class="form-group">
@@ -76,6 +102,76 @@ $fileManager = $app->make(FileManager::class);
             ?>
         </div>
     </div>
+</fieldset>
+
+<fieldset>
+    <legend>
+        <?php echo t('Sizing'); ?>
+    </legend>
+
+    <div class="form-group">
+        <?php echo $form->label('constrainImageSize', t('Constrain Image Size')); ?>
+        <?php echo $form->select('constrainImageSize', $constrainImageSizes); ?>
+    </div>
+
+    <div id="fullSizeNotice" class="form-group">
+        <p class="help-block">
+            <?php echo t("Note: themes may determine how large images can display, even if the image is not constrained."); ?>
+        </p>
+    </div>
+
+    <?php echo $form->hidden('thumbnailTypeId', $thumbnailTypeId); ?>
+    <?php echo $form->hidden('constrainImage'); ?>
+
+    <div id="customImageSize">
+        <div class="form-group">
+            <?php echo $form->label('maxWidth', t('Max Width')); ?>
+
+            <div class="input-group">
+                <?php echo $form->number('maxWidth', isset($maxWidth) ? $maxWidth : '', ['min' => 0]); ?>
+
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <?php echo t('px'); ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->label('maxHeight', t('Max Height')); ?>
+
+            <div class="input-group">
+                <?php echo $form->number('maxHeight', isset($maxHeight) ? $maxHeight : '', ['min' => 0]); ?>
+
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <?php echo t('px'); ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check">
+                <?php echo $form->checkbox('cropImage', 1, isset($cropImage) ? $cropImage : false); ?>
+                <?php echo $form->label('cropImage', t("Crop Image"), ["class" => "form-check-label"]); ?>
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>
+        <?php echo t("Advanced"); ?>
+    </legend>
+
+    <div class="form-group">
+        <?php
+        echo $form->label('title', t('HTML Tag Title'));
+        echo $form->text('title', isset($title) ? $title : '', ['maxlength' => 255]);
+        ?>
+    </div>
 
     <div class="form-group">
         <?php
@@ -83,82 +179,61 @@ $fileManager = $app->make(FileManager::class);
         echo $form->text('altText', isset($altText) ? $altText : '', ['maxlength' => 255]);
         ?>
     </div>
-
-    <div class="form-group">
-        <?php
-        echo $form->label('title', t('Title'));
-        echo $form->text('title', isset($title) ? $title : '', ['maxlength' => 255]);
-        ?>
-    </div>
-</fieldset>
-
-<fieldset>
-    <legend>
-        <?php echo t('Resize Image'); ?>
-    </legend>
-
-    <div class="form-group">
-        <div class="form-check" data-checkbox-wrapper="constrain-image">
-            <?php
-            echo $form->checkbox('constrainImage', 1, $constrainImage);
-            echo $form->label('constrainImage', t("Constrain Image Size"), ["class" => "form-check-label"]);
-            ?>
-        </div>
-    </div>
-
-    <div data-fields="constrain-image" style="display: none">
-        <div class="well">
-            <div class="form-group">
-                <div class="form-check">
-                    <?php echo $form->checkbox('cropImage', 1, isset($cropImage) ? $cropImage : false); ?>
-                    <?php echo $form->label('cropImage', t("Crop Image"), ["class" => "form-check-label"]); ?>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->label('maxWidth', t('Max Width')); ?>
-
-                <div class="input-group">
-                    <?php echo $form->number('maxWidth', isset($maxWidth) ? $maxWidth : '', ['min' => 0]); ?>
-
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <?php echo t('px'); ?>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <?php echo $form->label('maxHeight', t('Max Height')); ?>
-
-                <div class="input-group">
-                    <?php echo $form->number('maxHeight', isset($maxHeight) ? $maxHeight : '', ['min' => 0]); ?>
-
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <?php echo t('px'); ?>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </fieldset>
 
 <script>
     $(function () {
-        $('#imageLink__which').change(function () {
-            $('#imageLinkOpenInNewWindow').toggle($('#imageLink__which').val() !== 'none');
+        var $constrainImageSize = $("#constrainImageSize");
+        var $customImageSize = $("#customImageSize");
+        var $thumbnailTypeId = $("#thumbnailTypeId");
+        var $constrainImage = $("#constrainImage");
+        var $fullSizeNotice = $("#fullSizeNotice");
+        var $maxHeight = $("#maxHeight");
+        var $maxWidth = $("#maxWidth");
+        var $cropImage = $("#cropImage");
+
+        if ($thumbnailTypeId.val() > 0) {
+            $constrainImageSize.val("thumbnail-type-" + $thumbnailTypeId.val())
+        } else if ($maxHeight.val() > 0 || $maxWidth.val() > 0) {
+            $constrainImageSize.val("custom-size")
+        }
+
+        if ($("input[name='fOnstateID']").val() > 0) {
+            $("#changeImageOnHover").prop("checked", true);
+        }
+
+        $constrainImageSize.change(function () {
+            $customImageSize.addClass("d-none");
+            $fullSizeNotice.addClass("d-none");
+            $thumbnailTypeId.val(0);
+            $constrainImage.val(0);
+
+            switch ($(this).val()) {
+                case "custom-size":
+                    $customImageSize.removeClass("d-none");
+                    $constrainImage.val(1);
+                    break;
+                case "full-size":
+                    $fullSizeNotice.removeClass("d-none");
+                    $maxHeight.val(0);
+                    $maxWidth.val(0);
+                    $cropImage.prop("checked", false);
+                    break;
+                default:
+                    var thumbnailTypeId = $(this).val().substr(15);
+                    $thumbnailTypeId.val(thumbnailTypeId);
+                    $maxHeight.val(0);
+                    $maxWidth.val(0);
+                    $cropImage.prop("checked", false);
+                    break;
+            }
         }).trigger('change');
 
-        $('#constrainImage').on('change', function () {
-            $('div[data-fields=constrain-image]').toggle($(this).is(':checked'));
-
-            if (!$(this).is(':checked')) {
-                $('#cropImage').prop('checked', false);
-                $('#maxWidth').val('');
-                $('#maxHeight').val('');
+        $("#changeImageOnHover").change(function () {
+            if ($(this).is(':checked')) {
+                $("#changeImageOnHoverContainer").removeClass("d-none");
+            } else {
+                $("#changeImageOnHoverContainer").addClass("d-none");
             }
         }).trigger('change');
     });
