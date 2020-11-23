@@ -12,6 +12,11 @@ if ($akTextareaDisplayMode == 'text' || $akTextareaDisplayMode == '') { ?>
     ?>
 
 <?php } else {
+    $requestValue = $form->getRequestValue($view->controller->field('value'));
+    if (is_string($requestValue)) {
+        $value = $requestValue;
+    }
+    
     echo Core::make('editor')->outputStandardEditor(
         $view->controller->field('value'),
         h($value)
