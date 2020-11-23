@@ -546,12 +546,12 @@ return [
 
         'tui-image-editor' => [
             [
-                'javascript',
-                'js/tui-image-editor.js',
-            ],
-            [
                 'css',
                 'css/tui-image-editor.css',
+            ],
+            [
+                'javascript',
+                'js/tui-image-editor.js',
             ],
         ],
     ],
@@ -621,9 +621,9 @@ return [
 
         'tui-image-editor' => [
             [
+                ['css', 'tui-image-editor'],
                 ['javascript', 'tui-image-editor'],
-                ['css', 'tui-image-editor']
-            ]
+            ],
         ],
 
         // Fallback/minimal assets groups
