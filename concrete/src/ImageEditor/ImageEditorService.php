@@ -32,9 +32,10 @@ class ImageEditorService
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->imageEditorRepository = $this->entityManager->getRepository(Editor::class);
+        $this->checkDefaultEditor();
     }
 
-    public function checkDefaultEditor()
+    private function checkDefaultEditor()
     {
         $editor = $this->getDefaultEditor();
 
