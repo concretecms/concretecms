@@ -28,15 +28,9 @@ class EditorServiceProvider extends Provider
     {
         parent::__construct($app);
 
-        try {
-            $this->entityManager = $this->app->make(EntityManager::class);
-            $this->imageEditorRepository = $this->entityManager->getRepository(Editor::class);
-            $this->config = $this->app->make(Repository::class);
-
-            $this->checkDefaultEditor();
-        } catch (Exception $exception) {
-            // Database is not ready (concrete5 is not installed)
-        }
+        $this->entityManager = $this->app->make(EntityManager::class);
+        $this->imageEditorRepository = $this->entityManager->getRepository(Editor::class);
+        $this->config = $this->app->make(Repository::class);
     }
 
     private function checkDefaultEditor()
@@ -233,6 +227,8 @@ class EditorServiceProvider extends Provider
 
     public function register()
     {
+        $this->checkDefaultEditor();
+
         $this->app->bind('editor/image', function () {
             return $this->getActiveEditor();
         });
