@@ -23,7 +23,6 @@ class BulkUserAssignCommand extends Command
         $this
             ->setName('c5:user-group:bulk-assign-users')
             ->setDescription('Bulk assign users to groups by a given CSV file.')
-            ->addEnvOption()
             ->addOption('csv-file', 'c', InputOption::VALUE_REQUIRED, 'Path to CSV file.')
             ->addOption('group-id', 'g', InputOption::VALUE_REQUIRED, 'The id of the target group.')
             ->addOption('remove-unlisted-users', 'r', InputOption::VALUE_OPTIONAL, 'Remove users from this group if they don\'t appear in CSV.')
