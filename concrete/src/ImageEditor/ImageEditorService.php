@@ -10,12 +10,12 @@ use Concrete\Core\Entity\Package;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Filesystem\ElementManager;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 class ImageEditorService
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     protected $entityManager;
     protected $imageEditorRepository;
     /** @var Repository */
@@ -23,7 +23,7 @@ class ImageEditorService
     protected $app;
 
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         Application $app,
         Repository $config
     )
