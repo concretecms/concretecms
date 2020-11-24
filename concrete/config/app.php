@@ -127,7 +127,9 @@ return [
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
+        /*
         'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
+        */
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
@@ -222,6 +224,7 @@ return [
         'workflow_progress_category',
         'workflow_type',
         'external_file_provider_type',
+        'image_editor'
     ],
 
     'importer_routines' => [
@@ -319,9 +322,9 @@ return [
      * - handle of the package
      */
     'file_types' => [
-        'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image'],
-        'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image'],
-        'PNG' => ['png', FileType::T_IMAGE, 'image', 'image'],
+        'JPEG' => ['jpg,jpeg,jpe', FileType::T_IMAGE, 'image', 'image', 'image'],
+        'GIF' => ['gif', FileType::T_IMAGE, 'image', 'image', 'image'],
+        'PNG' => ['png', FileType::T_IMAGE, 'image', 'image', 'image'],
         'Windows Bitmap' => ['bmp', FileType::T_IMAGE, 'image'],
         'TIFF' => ['tif,tiff', FileType::T_IMAGE, 'image'],
         'HTML' => ['htm,html', FileType::T_IMAGE],
@@ -540,6 +543,17 @@ return [
             ['javascript', 'js/features/maps/frontend.js'],
             ['css', 'css/features/maps/frontend.css'],
         ],
+
+        'tui-image-editor' => [
+            [
+                'javascript',
+                'js/tui-image-editor.js',
+            ],
+            [
+                'css',
+                'css/tui-image-editor.css',
+            ],
+        ],
     ],
     'asset_groups' => [
         'jquery' => [
@@ -603,6 +617,13 @@ return [
                 ['javascript', 'fullcalendar'],
                 ['css', 'fullcalendar'],
             ],
+        ],
+
+        'tui-image-editor' => [
+            [
+                ['javascript', 'tui-image-editor'],
+                ['css', 'tui-image-editor']
+            ]
         ],
 
         // Fallback/minimal assets groups

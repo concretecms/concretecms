@@ -262,9 +262,9 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     }
 
     /**
-     * Clear the IP addresses automatically blacklisted.
+     * @deprecated use $app->make('failed_login')->deleteAutomaticBlacklist()
      *
-     * @param bool $onlyExpired Clear only the expired bans?
+     * @param bool $onlyExpired
      *
      * @return int
      */
@@ -301,7 +301,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     }
 
     /**
-     * * @deprecated use $app->make('failed_login')->addToBlacklistForThresholdReached()
+     * @deprecated use $app->make('failed_login')->addToBlacklistForThresholdReached()
      *
      * @param mixed $ip
      * @param mixed $ignoreConfig

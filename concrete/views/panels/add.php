@@ -223,6 +223,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-dragging-avatar="<%=result.draggingAvatar%>"
                         data-block-id="<%=result.blockId%>"
                 >
+                    <div class="delete float-right">
+                        <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger">
+                            <?php echo t('Delete') ?>
+                        </button>
+                    </div>
+
                     <div class="block-content">
                         <div class="block-name float-left">
                                 <span class="handle">
@@ -230,15 +236,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 </span>
                         </div>
 
-                        <div class="delete float-right">
-                            <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger">
-                                <?php echo t('Delete') ?>
-                            </button>
-                        </div>
-
                         <div class="blocks">
                             <div class="block ccm-panel-add-block-draggable-block-type" title="<%=result.name%>">
-                                <div class="block-content">
+                                <div class="block-content-inner">
                                     <%=result.blockContent%>
                                 </div>
 
@@ -373,6 +373,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-supports-inline-add="<%=result.supportsInlineAdd%>"
                         data-btID="<%=result.blockTypeId%>"
                 >
+                    <div class="delete float-right">
+                        <button class="ccm-delete-orphaned-block-item btn btn-sm btn-link text-danger">
+                            <?php echo t('Delete') ?>
+                        </button>
+                    </div>
+
                     <div class="block-content">
                         <div class="block-name float-left">
                             <span class="handle">
@@ -380,15 +386,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             </span>
                         </div>
 
-                        <div class="delete float-right">
-                            <button class="ccm-delete-orphaned-block-item btn btn-sm btn-link text-danger">
-                                <?php echo t('Delete') ?>
-                            </button>
-                        </div>
-
                         <div class="blocks">
                             <div class="block ccm-panel-add-block-draggable-block-type" title="<%=result.arHandle%>">
-                                <div class="block-content">
+                                <div class="block-content-inner">
                                     <%=result.blockContent%>
                                 </div>
 
@@ -449,7 +449,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 areaHandles.push($(this).data("areaHandle"));
                             });
 
-                            $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/panels/add/get_orphaned_block_contents', {
+                            $.post(CCM_DISPATCHER_FILENAME + '/ccm/system/panels/add/get_orphaned_block_contents', {
                                 cID: <?php echo $c->getCollectionID(); ?>,
                                 usedAreas: areaHandles,
                                 curPage: curPage

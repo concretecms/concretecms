@@ -116,11 +116,10 @@ class Add extends BackendInterfacePageController
 
     public function showOrphanedBlockOption(): bool
     {
-        // @TODO - in order to make orphaned blocks work, we have to change the logic of this method to
-        // check whether there are used areas on this page not included in the DOM. This controls whether the
-        // orphaned blocks header shows up in the panel. Right now by returning false we are simply disabling
-        // this feature.
-        return false;
+        /** @var Request $request */
+        $request = $this->app->make(Request::class);
+        $usedAreas = $request->request->get("usedAreas", []);
+        return count($this->getOrphanedBlockIds($usedAreas)) > 0;
     }
 
     public function getOrphanedBlockContents()
@@ -131,7 +130,7 @@ class Add extends BackendInterfacePageController
         /** @var Request $request */
         $request = $this->app->make(Request::class);
 
-        $usedAreas = $request->query->get("usedAreas", []);
+        $usedAreas = $request->request->get("usedAreas", []);
 
         $contents = [];
 
@@ -179,7 +178,7 @@ class Add extends BackendInterfacePageController
             }
         }
 
-        $curPage = (int)$this->request->query->get("curPage", 0);
+        $curPage = (int)$this->request->request->get("curPage", 0);
         $maxItems = 10;
 
         return $responseFactory->json(
@@ -208,7 +207,7 @@ class Add extends BackendInterfacePageController
          * Therefore all results will be fetched from the database and splitted with PHP.
          */
 
-        $curPage = (int)$this->request->query->get("curPage", 0);
+        $curPage = (int)$this->request->request->get("curPage", 0);
         $maxItems = 10;
 
         return $responseFactory->json(
@@ -335,6 +334,7 @@ class Add extends BackendInterfacePageController
     public function view()
     {
         $tab = $this->getSelectedTab();
+
         switch ($tab) {
             case 'containers':
                 $theme = $this->page->getCollectionThemeObject();
@@ -366,6 +366,7 @@ class Add extends BackendInterfacePageController
                 $this->set('blockTypesForSets', $this->buildSetsAndBlockTypes());
                 break;
         }
+
         $this->set('tab', $tab);
         $this->set('ci', $this->app->make('helper/concrete/urls'));
         $this->set('showOrphanedBlockOption', $this->showOrphanedBlockOption());
@@ -413,6 +414,10 @@ class Add extends BackendInterfacePageController
             $tab = $requestTab;
         } else {
             $tab = $session->get('panels_page_add_block_tab');
+        }
+
+        if (!$this->showOrphanedBlockOption() && $tab === "orphaned_blocks") {
+            $tab = "blocks";
         }
 
         return $tab;

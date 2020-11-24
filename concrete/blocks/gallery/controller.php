@@ -22,7 +22,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceWidth = '750';
     protected $btInterfaceHeight = '820';
     protected $btExportTables = ['btGallery', 'btGalleryEntries', 'btGalleryEntryDisplayChoices'];
-
+    protected $btCacheBlockRecord = false;
+    /** @var int */
+    protected $includeDownloadLink;
     /** @var Connection|null */
     private $connection;
 
@@ -63,6 +65,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function view()
     {
         $this->set('images', iterator_to_array($this->getEntries()));
+        $this->set('includeDownloadLink', (int)$this->includeDownloadLink === 1);
     }
 
     /**
@@ -75,6 +78,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $this->set('images', []);
         $this->set('displayChoices', $this->getDisplayChoices());
+        $this->set('includeDownloadLink', false);
     }
 
     /**
@@ -87,6 +91,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $this->set('images', iterator_to_array($this->getEntries()));
         $this->set('displayChoices', $this->getDisplayChoices());
+        $this->set('includeDownloadLink', (int)$this->includeDownloadLink === 1);
     }
 
     /**
@@ -187,6 +192,8 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function save($args)
     {
+        $args["includeDownloadLink"] = isset($args["includeDownloadLink"]) ? 1 : 0;
+
         parent::save($args);
 
         /** @var \Concrete\Core\Database\Connection\Connection $db */

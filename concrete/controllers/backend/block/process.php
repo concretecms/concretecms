@@ -27,23 +27,31 @@ class Process extends AbstractController
      * @param int $bID
      * @param int $pcID
      * @param int|null $dragAreaBlockID
+     * @param int|null $orphanedBlockID
      *
      * @throws \Concrete\Core\Error\UserMessageException
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function alias($cID, $arHandle, $pcID, $dragAreaBlockID = null): SymphonyResponse
+    public function alias($cID, $arHandle, $pcID, $dragAreaBlockID = null, $orphanedBlockID = null): SymphonyResponse
     {
+        $isOrphanedBlock = (int)$orphanedBlockID > 0;
         $token = $this->app->make('token');
+
         if (!$token->validate()) {
             throw new UserMessageException($token->getErrorMessage());
         }
+
         $c = Page::getByID($cID);
+
         if (!$c || $c->isError()) {
             throw new UserMessageException(t('Unable to find the specified page'));
         }
+
         $this->request->setCurrentPage($c);
+
         $a = Area::getOrCreate($c, $arHandle);
+
         if ($a->isGlobalArea()) {
             $cx = Stack::getByName($arHandle);
             $ax = Area::get($c, STACKS_AREA_NAME);
@@ -51,37 +59,58 @@ class Process extends AbstractController
             $cx = $c;
             $ax = $a;
         }
-        $pc = PileContent::get($pcID);
-        if (!$pc || $pc->isError() || $pc->getItemType() !== 'BLOCK') {
-            throw new UserMessageException(t('Unable to find the specified block'));
+
+        if ($isOrphanedBlock) {
+            $b = Block::getByID($orphanedBlockID);
+        } else {
+            $pc = PileContent::get($pcID);
+            if (!$pc || $pc->isError() || $pc->getItemType() !== 'BLOCK') {
+                throw new UserMessageException(t('Unable to find the specified block'));
+            }
+            $bID = $pc->getItemID();
+            $b = Block::getByID($bID);
         }
-        $bID = $pc->getItemID();
-        $b = Block::getByID($bID);
+
         if (!$b) {
             throw new UserMessageException(t('Unable to find the specified block'));
         }
+
         $b->setBlockAreaObject($ax);
+
         $bt = BlockType::getByHandle($b->getBlockTypeHandle());
+
         $ap = new Checker($ax);
+
         if (!$ap->canAddBlock($bt)) {
             throw new UserMessageException(t('Access Denied'));
         }
+
         $nvc = $cx->getVersionToModify();
+
         if ($a->isGlobalArea()) {
             $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
             $xvc->relateVersionEdits($nvc);
         }
-        if (!$bt->isCopiedWhenPropagated()) {
-            $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
-            $nb = $nvc->addBlock($btx, $ax, ['bOriginalID' => $bID]);
-        } else {
+
+        if ($isOrphanedBlock) {
             $nb = $b->duplicate($nvc);
             $nb->move($nvc, $ax);
             if (!$nb) {
                 throw new UserMessageException(t('Unable to find the specified block'));
             }
+            $b->delete(true);
+        } else {
+            if (!$bt->isCopiedWhenPropagated()) {
+                $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+                $nb = $nvc->addBlock($btx, $ax, ['bOriginalID' => $bID]);
+            } else {
+                $nb = $b->duplicate($nvc);
+                $nb->move($nvc, $ax);
+                if (!$nb) {
+                    throw new UserMessageException(t('Unable to find the specified block'));
+                }
+            }
         }
-
         $nb->refreshCache();
         $dragAreaBlockID = (int) $dragAreaBlockID;
         if ($dragAreaBlockID !== 0) {
@@ -141,6 +170,7 @@ class Process extends AbstractController
             throw new UserMessageException(t('Unable to find the block specified.'));
         }
         $p = Pile::getDefault();
+
         $p->add($b);
 
         return $this->app->make(ResponseFactoryInterface::class)->json(true);

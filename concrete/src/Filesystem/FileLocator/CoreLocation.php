@@ -1,12 +1,17 @@
 <?php
+
 namespace Concrete\Core\Filesystem\FileLocator;
 
 use Illuminate\Filesystem\Filesystem;
 
 class CoreLocation implements LocationInterface
 {
-
     protected $filesystem;
+
+    public function __construct(Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
 
     public function getCacheKey()
     {
@@ -21,13 +26,12 @@ class CoreLocation implements LocationInterface
         $this->filesystem = $filesystem;
     }
 
-
     public function contains($file)
     {
         $record = new Record($this->filesystem);
         $record->setFile(DIR_BASE_CORE . '/' . $file);
         $record->setUrl(ASSETS_URL . '/' . $file);
+
         return $record;
     }
-
 }

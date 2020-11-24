@@ -28,6 +28,7 @@ $router->all('/fetch_incoming_files', 'File::fetchIncomingFiles');
 $router->all('/fetch_directories', 'File::fetchDirectories');
 $router->all('/create_directory', 'File::createDirectory');
 $router->all('/edit', 'File\Edit::view');
+$router->all('/edit/save/{fID}', 'File\Edit::save');
 $router->all('/permissions', 'File\Permissions::view');
 $router->post('/permissions/set_password', 'File\Permissions::setPassword');
 $router->post('/permissions/set_location', 'File\Permissions::setLocation');

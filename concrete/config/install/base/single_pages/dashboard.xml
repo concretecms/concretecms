@@ -150,6 +150,9 @@
         <page name="Move Multiple Groups" path="/dashboard/users/groups/bulkupdate"
               filename="/dashboard/users/groups/bulkupdate.php" pagetype="" description="" package="">
         </page>
+        <page name="Bulk User Assignment" path="/dashboard/users/groups/bulk_user_assignment"
+              filename="/dashboard/users/groups/bulk_user_assignment.php" pagetype="" description="" package="">
+        </page>
         <page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php"
               pagetype="" description="" package="">
             <attributes>
@@ -936,6 +939,14 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>uploading, upload, images, image, resizing, manager, exif, rotation, rotate, quality, compression, png, jpg, jpeg</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Image Editor" path="/dashboard/system/files/image_editor"
+              filename="/dashboard/system/files/image_editor.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>image, editor, active, default, edit, png, jpg, jpeg</value>
                 </attributekey>
             </attributes>
         </page>

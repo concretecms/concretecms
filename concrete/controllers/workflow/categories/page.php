@@ -31,7 +31,7 @@ class Page extends AbstractController
             'redirect' => $workflowResponse instanceof WorkflowProgressResponse ? (string) $workflowResponse->getWorkflowProgressResponseURL() : '',
         ];
         if ($responseData['redirect'] === '') {
-            $responseData['redirect'] = $this->app->make(ResolverManagerInterface::class)->resolve([$this->getPage()]);
+            $responseData['redirect'] = (string) $this->app->make(ResolverManagerInterface::class)->resolve([$this->getPage()]);
         }
 
         return $this->app->make(ResponseFactoryInterface::class)->json($responseData);
