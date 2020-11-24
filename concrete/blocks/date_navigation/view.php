@@ -3,7 +3,7 @@
 <div class="ccm-block-date-navigation-wrapper">
 
     <div class="ccm-block-date-navigation-header">
-        <h5><?=h($title)?></h5>
+        <<?php echo $titleFormat; ?>><?php echo h($title); ?></<?php echo $titleFormat; ?>>
     </div>
 
     <?php if (count($dates)) {
