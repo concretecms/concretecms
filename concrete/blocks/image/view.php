@@ -6,6 +6,7 @@ use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Support\Facade\Application;
+use HtmlObject\Element;
 use HtmlObject\Image;
 
 $app = Application::getFacadeApplication();
@@ -17,6 +18,7 @@ $app = Application::getFacadeApplication();
 /** @var string $altText */
 /** @var string $linkURL */
 /** @var bool $openLinkInNewWindow */
+/** @var bool $openLinkInLightbox */
 /** @var Type $thumbnailTypeService */
 /** @var Version $foS */
 /** @var Version $f */
@@ -26,9 +28,9 @@ $thumbnailTypeService = $app->make(Type::class);
 $thumbnailType = $thumbnailTypeService::getByID((int)$thumbnailTypeId);
 
 if (is_object($f) && $f->getFileID()) {
-    if ($f->getTypeObject()->isSVG()) {
-        $tag = new Image();
+    $tag = new Image();
 
+    if ($f->getTypeObject()->isSVG()) {
         $tag->setAttribute("src", $f->getRelativePath());
 
         if ($maxWidth > 0) {
@@ -42,18 +44,17 @@ if (is_object($f) && $f->getFileID()) {
         $tag->addClass('ccm-svg');
 
     } else if ($thumbnailType instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type) {
-        $tag = new Image();
         $tag->setAttribute("src", $f->getThumbnailURL($thumbnailType->getBaseVersion()));
     } elseif ($maxWidth > 0 || $maxHeight > 0) {
         /** @var BasicThumbnailer $im */
         $im = $app->make(BasicThumbnailer::class);
         $thumb = $im->getThumbnail($f, $maxWidth, $maxHeight, $cropImage);
-        $tag = new Image();
         $tag->setAttribute("src", $thumb->src);
         $tag->setAttribute("width", $thumb->width);
         $tag->setAttribute("height", $thumb->height);
     } else {
-        $image = $app->make('html/image', [$f]);
+        /** @var \Concrete\Core\Html\Image $image */
+        $image = $app->make(\Concrete\Core\Html\Image::class, [$f]);
         $tag = $image->getTag();
     }
 
@@ -69,10 +70,6 @@ if (is_object($f) && $f->getFileID()) {
         $tag->setAttribute("title", h($title));
     }
 
-    if ($linkURL) {
-        echo '<a href="' . $linkURL . '" ' . ($openLinkInNewWindow ? 'target="_blank" rel="noopener noreferrer"' : '') . '>';
-    }
-
     // add data attributes for hover effect
     if (is_object($foS) && !$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
         $tag->addClass('ccm-image-block-hover');
@@ -80,15 +77,41 @@ if (is_object($f) && $f->getFileID()) {
         $tag->setAttribute('data-hover-src', $imgPaths['hover']);
     }
 
-    echo $tag;
+    if (strlen($linkURL) > 0) {
+        $a = new Element("a");
 
-    if ($linkURL) {
-        echo '</a>';
+        $a->addClass('ccm-image-block-link bID-' . $bID);
+        $a->setAttribute("href", $linkURL);
+
+        if ($openLinkInNewWindow) {
+            $a->setAttribute("target", "_blank");
+            $a->setAttribute("rel", "noopener noreferrer");
+        }
+
+        $a->setChild($tag);
+
+        echo $a;
+    } else {
+        echo $tag;
     }
+
 } elseif ($c->isEditMode()) { ?>
     <div class="ccm-edit-mode-disabled-item">
         <?php echo t('Empty Image Block.'); ?>
     </div>
+<?php } ?>
+
+<?php if ($openLinkInLightbox) { ?>
+    <script>
+        $(function () {
+            $('.ccm-image-block-link.bID-<?php echo $bID ?> ').magnificPopup({
+                type: 'iframe',
+                gallery: {
+                    enabled: true
+                }
+            });
+        })
+    </script>
 <?php } ?>
 
 <?php if (isset($foS) && $foS) { ?>

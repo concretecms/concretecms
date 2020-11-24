@@ -42,6 +42,10 @@
             <default value="0"/>
             <notnull/>
         </field>
+        <field name="openLinkInLightbox" type="boolean">
+            <default value="0"/>
+            <notnull/>
+        </field>
         <field name="altText" type="string" size="255" />
         <field name="title" type="string" size="255" />
         <index name="fID">

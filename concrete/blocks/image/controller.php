@@ -98,6 +98,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('title', $this->getTitle());
         $this->set('linkURL', $this->getLinkURL());
         $this->set('openLinkInNewWindow', $this->shouldLinkOpenInNewWindow());
+        $this->set('openLinkInLightbox', $this->shouldLinkOpenInLightbox());
         $this->set('c', Page::getCurrentPage());
     }
 
@@ -321,6 +322,14 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
+     * @return bool
+     */
+    public function shouldLinkOpenInLightbox()
+    {
+        return (bool) $this->openLinkInLightbox;
+    }
+
+    /**
      * @return Error
      */
     public function validate_composer()
@@ -387,6 +396,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             'maxHeight' => 0,
             'constrainImage' => 0,
             'openLinkInNewWindow' => 0,
+            'openLinkInLightbox' => 0,
         ];
 
         $args['fID'] = $args['fID'] != '' ? $args['fID'] : 0;
@@ -407,6 +417,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $args['externalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
 
         $args['openLinkInNewWindow'] = $args['openLinkInNewWindow'] ? 1 : 0;
+        $args['openLinkInLightbox'] = $args['openLinkInLightbox'] ? 1 : 0;
 
         parent::save($args);
         $this->getTracker()->track($this);

@@ -17,6 +17,8 @@ use Concrete\Core\Support\Facade\Application;
  * @var mixed $imageLinkValue
  * @var int $constrainImage
  * @var File|null $bfo
+ * @var bool $openLinkInLightbox
+ * @var bool $openLinkInNewWindow
  */
 
 $app = Application::getFacadeApplication();
@@ -92,14 +94,21 @@ $constrainImageSizes = array_merge(
             )
             ?>
         </div>
-    </div>
 
-    <div id="imageLinkOpenInNewWindow" style="display: none;" class="form-group">
-        <div class="form-check">
-            <?php
-            echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', isset($openLinkInNewWindow) ? $openLinkInNewWindow : false);
-            echo $form->label("openLinkInNewWindow", t('Open link in new window'), ["class" => "form-check-label"]);
-            ?>
+        <div id="openLinkContainer" class="form-group">
+            <div class="form-check">
+                <?php
+                echo $form->checkbox('openLinkInLightbox', 'openLinkInLightbox', isset($openLinkInLightbox) ? $openLinkInLightbox : false);
+                echo $form->label("openLinkInLightbox", t('Open link in Lightbox'), ["class" => "form-check-label"]);
+                ?>
+            </div>
+
+            <div class="form-check">
+                <?php
+                echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', isset($openLinkInNewWindow) ? $openLinkInNewWindow : false);
+                echo $form->label("openLinkInNewWindow", t('Open link in new window'), ["class" => "form-check-label"]);
+                ?>
+            </div>
         </div>
     </div>
 </fieldset>
@@ -162,22 +171,26 @@ $constrainImageSizes = array_merge(
 </fieldset>
 
 <fieldset>
-    <legend>
+    <legend data-toggle="collapse" data-target="#advancedContainer" aria-expanded="false"
+            aria-controls="advancedContainer" style="cursor: pointer;" class="launch-tooltip"
+            title="<?php echo h(t("Click to toggle the advanced settings.")); ?>">
         <?php echo t("Advanced"); ?>
     </legend>
 
-    <div class="form-group">
-        <?php
-        echo $form->label('title', t('HTML Tag Title'));
-        echo $form->text('title', isset($title) ? $title : '', ['maxlength' => 255]);
-        ?>
-    </div>
+    <div class="collapse" id="advancedContainer">
+        <div class="form-group">
+            <?php
+            echo $form->label('title', t('HTML Tag Title'));
+            echo $form->text('title', isset($title) ? $title : '', ['maxlength' => 255]);
+            ?>
+        </div>
 
-    <div class="form-group">
-        <?php
-        echo $form->label('altText', t('Alt Text'));
-        echo $form->text('altText', isset($altText) ? $altText : '', ['maxlength' => 255]);
-        ?>
+        <div class="form-group">
+            <?php
+            echo $form->label('altText', t('Alt Text'));
+            echo $form->text('altText', isset($altText) ? $altText : '', ['maxlength' => 255]);
+            ?>
+        </div>
     </div>
 </fieldset>
 
@@ -191,6 +204,9 @@ $constrainImageSizes = array_merge(
         var $maxHeight = $("#maxHeight");
         var $maxWidth = $("#maxWidth");
         var $cropImage = $("#cropImage");
+        var $openLinkContainer = $("#openLinkContainer");
+        var $openLinkInLightbox = $("#openLinkInLightbox");
+        var $openLinkInNewWindow = $("#openLinkInNewWindow");
 
         if ($thumbnailTypeId.val() > 0) {
             $constrainImageSize.val("thumbnail-type-" + $thumbnailTypeId.val())
@@ -236,5 +252,31 @@ $constrainImageSizes = array_merge(
                 $("#changeImageOnHoverContainer").addClass("d-none");
             }
         }).trigger('change');
+
+        $("#imageLink__which").change(function () {
+            $openLinkContainer.addClass("d-none");
+
+            if ($(this).val() !== "none") {
+                $openLinkContainer.removeClass("d-none");
+            }
+        }).trigger("change");
+
+        $openLinkInLightbox.change(function () {
+            if ($(this).is(":checked")) {
+                $openLinkInNewWindow.prop("disabled", true);
+                $openLinkInNewWindow.prop("checked", false);
+            } else {
+                $openLinkInNewWindow.prop("disabled", false);
+            }
+        }).trigger("change");
+
+        $openLinkInNewWindow.change(function () {
+            if ($(this).is(":checked")) {
+                $openLinkInLightbox.prop("disabled", true);
+                $openLinkInLightbox.prop("checked", false);
+            } else {
+                $openLinkInLightbox.prop("disabled", false);
+            }
+        }).trigger("change");
     });
 </script>
