@@ -27,13 +27,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div class="form-group">
         <?= $form->label('tracking_code_body', t('Body Tracking Codes')) ?>
         <?= $form->textarea('tracking_code_body', $tracking_code_body, ['style' => 'height: 250px;', 'class' => 'text-monospace', 'spellcheck' => 'false']) ?>
-        <small class="form-text text-muted"><?= t('This code will be inserted after the &lt;body&gt; tag. Some themes does not support this code.') ?></small>
+        <small class="form-text text-muted"><?= h(t(/*i18n: %s is an HTML tag */'This code will be inserted after the %s tag. Some themes does not support this code.', '<body>')) ?></small>
     </div>
 
     <div class="form-group">
         <?= $form->label('tracking_code_footer', t('Footer Tracking Codes')) ?>
         <?= $form->textarea('tracking_code_footer', $tracking_code_footer, ['style' => 'height: 250px;', 'class' => 'text-monospace', 'spellcheck' => 'false']) ?>
-        <small class="form-text text-muted"><?= t('This code will be inserted before the &lt;/body&gt; tag.') ?></small>
+        <small class="form-text text-muted"><?= h(t(/*i18n: %s is an HTML tag */'This code will be inserted before the %s tag.', '</body>')) ?></small>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
