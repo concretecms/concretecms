@@ -1186,4 +1186,12 @@ return [
             // Where 'icon' is the handle of a FontAwesome 4 icon (see https://fontawesome.com/v4.7.0/icons/ )
         ],
     ],
+
+    'style_customizer' => [
+        'updater' => [
+            'ignored_values' => [
+                'preset-fonts-file' => 'Concrete\Core\StyleCustomizer\Style\Value\BasicValue',
+            ],
+        ],
+    ],
 ];

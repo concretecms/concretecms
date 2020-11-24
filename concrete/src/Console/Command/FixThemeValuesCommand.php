@@ -43,10 +43,10 @@ EOT
             $flags |= AvailableVariablesUpdater::FLAG_SIMULATE;
         }
         if ($themeHandle === null) {
-            $changes = $updater->fixThemes($flags);
+            $fixResults = $updater->fixThemes($flags);
             if (!$this->output->isQuiet()) {
-                foreach ($changes as $themeHandle => $changedValues) {
-                    $this->writeResult($themeHandle, $changedValues);
+                foreach ($fixResults as $themeHandle => $fixResult) {
+                    $this->writeResult($themeHandle, $fixResult);
                 }
             }
         } else {
@@ -63,31 +63,18 @@ EOT
 
                 return -1;
             }
-            $changes = $updater->fixTheme($theme, $flags);
+            $fixResult = $updater->fixTheme($theme, $flags);
             if (!$this->output->isQuiet()) {
-                $this->writeResult($theme->getThemeHandle(), $changes);
+                $this->writeResult($theme->getThemeHandle(), $fixResult);
             }
         }
 
         return 0;
     }
 
-    private function writeResult($themeHandle, array $changes)
+    private function writeResult($themeHandle, AvailableVariablesUpdater\Result $fixResult)
     {
         $this->output->writeln("## Theme {$themeHandle}");
-        $this->output->writeln('- added variables: ' . ($changes['added'] === [] ? '<none>' : implode(', ', $changes['added'])));
-        $this->output->writeln('- updated variables: ' . ($changes['updated'] === [] ? '<none>' : implode(', ', $changes['updated'])));
-        $this->output->writeln('- removed unused variables: ' . ($changes['removed_unused'] === [] ? '<none>' : implode(', ', $changes['removed_unused'])));
-        $this->output->writeln('- removed duplicated variables: ' . ($changes['removed_duplicated'] === [] ? '<none>' : implode(', ', $changes['removed_duplicated'])));
-        if ($changes['removed_invalid'] === []) {
-            $this->output->writeln('- removed invalid variables: <none>');
-        } else {
-            $this->output->writeln("- removed invalid variables:\n  -" . implode("\n  -", $changes['removed_invalid']));
-        }
-        if ($changes['warnings'] === []) {
-            $this->output->writeln('- warnings: <none>');
-        } else {
-            $this->output->writeln("- warnings:\n  -" . implode("\n  -", $changes['warnings']));
-        }
+        $this->output->writeln((string) $fixResult);
     }
 }
