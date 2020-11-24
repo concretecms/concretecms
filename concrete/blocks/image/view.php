@@ -17,6 +17,7 @@ $app = Application::getFacadeApplication();
 /** @var int $cropImage */
 /** @var string $altText */
 /** @var string $linkURL */
+/** @var bool $hasImageLink */
 /** @var bool $openLinkInNewWindow */
 /** @var bool $openLinkInLightbox */
 /** @var Type $thumbnailTypeService */
@@ -105,7 +106,7 @@ if (is_object($f) && $f->getFileID()) {
     <script>
         $(function () {
             $('.ccm-image-block-link.bID-<?php echo $bID ?> ').magnificPopup({
-                type: 'iframe',
+                type: '<?php echo $hasImageLink ? "image" : "iframe"; ?>',
                 gallery: {
                     enabled: true
                 }

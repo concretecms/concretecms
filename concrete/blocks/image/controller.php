@@ -97,6 +97,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('altText', $this->getAltText());
         $this->set('title', $this->getTitle());
         $this->set('linkURL', $this->getLinkURL());
+        $this->set('hasImageLink', $this->hasImageLink());
         $this->set('openLinkInNewWindow', $this->shouldLinkOpenInNewWindow());
         $this->set('openLinkInLightbox', $this->shouldLinkOpenInLightbox());
         $this->set('c', Page::getCurrentPage());
@@ -311,6 +312,21 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         }
 
         return $linkUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function hasImageLink()
+    {
+        if (!empty($this->fileLinkID)) {
+            $fileLinkObject = $this->getFileLinkObject();
+            if ($fileLinkObject instanceof \Concrete\Core\Entity\File\File) {
+                return substr($fileLinkObject->getApprovedVersion()->getMimeType(), 0, 5) === "image";
+            }
+        }
+
+        return false;
     }
 
     /**
