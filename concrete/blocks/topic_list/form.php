@@ -57,9 +57,12 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label" for="title"><?=t('Title')?></label>
-        <input class="form-control" name="title" id="title" value="<?=$title?>" />
-    </div>
+        <?php echo $form->label("title", t('Title')); ?>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+		</div>
+	</div>
 
 </fieldset>
 
