@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
         </tr>
         </thead>
         <tbody>
-        <tr :key="task.id" v-for="task in tasks">
+        <tr :key="'task-' + task.id" v-for="task in tasks">
             <td><input type="radio" :id="task.id" v-model="selectedTask" :value="task"></td>
             <td><b><label :for="task.id" class="mb-0">{{task.name}}</label></b></td>
             <td class="small">{{task.description}}</td>
@@ -31,11 +31,40 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
+            <button class="btn btn-primary float-right"
+                    v-if="selectedTask !== null && selectedTask.inputDefinition !== null"
+                    @click="configureTask"><?= t('Configure Task') ?></button>
             <button @click="runTask" type="submit" class="btn btn-primary float-right"
-                    :disabled="selectedTask === null"><?= t('Run Task') ?></button>
+                    v-if="selectedTask !== null && selectedTask.inputDefinition === null"><?= t('Run Task') ?></button>
         </div>
     </div>
 
+
+    <div :key="'modal-' + task.id" class="modal fade" tabindex="-1" role="dialog" v-for="task in tasks" :id="'configure-task-' + task.id" v-if="task.inputDefinition !== null">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <form>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{task.name}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <svg><use xlink:href="#icon-dialog-close" /></svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" :key="'task-' + task.id" v-for="field in task.inputDefinition.fields">
+                            <label class="control-label">{{field.label}}</label>
+                            <input :name="field.key" class="form-control"></input>
+                            <div class="help-block" v-if="field.description">{{field.description}}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=t('Cancel')?></button>
+                        <button type="button" class="btn btn-primary" @click="runTask"><?=t('Execute')?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -49,20 +78,21 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     selectedTask: null,
                     tasks: <?=json_encode($tasks)?>
                 },
-
-                computed: {},
-
-                watch: {},
                 methods: {
+                    configureTask() {
+                        var $modal = $('#configure-task-' + this.selectedTask.id)
+                        $modal.modal('show')
+                    },
                     runTask() {
                         const my = this;
                         if (this.selectedTask) {
+                            var $form = $('#configure-task-' + this.selectedTask.id + ' form')
+                            var data = $form.serializeArray()
+                            data.push({'name': 'id', 'value': my.selectedTask.id})
+                            data.push({'name': 'ccm_token', 'value': '<?=$token->generate('execute')?>'})
                             new ConcreteAjaxRequest({
                                 url: '<?=URL::to('/ccm/system/tasks/execute')?>',
-                                data: {
-                                    'id': my.selectedTask.id,
-                                    'ccm_token': '<?=$token->generate('execute')?>'
-                                },
+                                data: data,
                                 success: function (r) {
                                     if (r.status === 'completed') {
                                         window.location.reload();

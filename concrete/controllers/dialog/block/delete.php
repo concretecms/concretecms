@@ -64,7 +64,7 @@ class Delete extends BackendInterfaceBlockController
         if ($this->validateAction()) {
             if ($this->permissions->canDeleteBlock() && $this->page->isMasterCollection()) {
                 $blocks = $this->block->queueForDefaultsUpdate($_POST);
-                $batch = Batch::create(function() use ($blocks) {
+                $batch = Batch::create(t('Delete Child Pages Blocks'), function() use ($blocks) {
                     foreach ($blocks as $b) {
                         yield new DeleteBlockCommand(
                             $b['bID'],
@@ -73,7 +73,7 @@ class Delete extends BackendInterfaceBlockController
                             $b['arHandle']
                         );
                     }
-                }, t('Delete Child Pages Blocks'));
+                });
                 return $this->dispatchBatch($batch);
             }
         }

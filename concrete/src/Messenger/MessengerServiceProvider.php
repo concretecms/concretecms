@@ -2,7 +2,7 @@
 namespace Concrete\Core\Messenger;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Command\Batch\Command\HandleProcessMessageCommandHandler;
+use Concrete\Core\Command\Process\Command\HandleProcessMessageCommandHandler;
 use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Logging\Channels;

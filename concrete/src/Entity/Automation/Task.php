@@ -154,6 +154,7 @@ class Task implements \JsonSerializable, TaskInterface
             'id' => $this->getID(),
             'name' => $controller->getName(),
             'description' => $controller->getDescription(),
+            'inputDefinition' => $controller->getInputDefinition(),
             'help' => $controller->getHelpText(),
             'dateLastStarted' => $this->getDateLastStarted(),
             'dateLastCompleted' => $this->getDateLastCompleted(),

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Command\Task\Controller;
 
+use Concrete\Core\Command\Task\Input\Definition\Definition;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
 use Concrete\Core\Command\Task\Input\InputInterface;
 use Concrete\Core\Command\Task\TaskInterface;
@@ -18,5 +19,7 @@ interface ControllerInterface
     public function getHelpText(): string;
 
     public function getTaskRunner(TaskInterface $task, InputInterface $input): TaskRunnerInterface;
+
+    public function getInputDefinition():? Definition;
 
 }

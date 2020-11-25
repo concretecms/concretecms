@@ -59,7 +59,7 @@ class Copy extends DashboardSitePageController
                     $commands[] = new RescanMultilingualPageCommand($page['cID']);
                 }
 
-                $batch = Batch::create($commands, t('Rescan Files'));
+                $batch = Batch::create(t('Rescan Pages'), $commands);
                 return $this->dispatchBatch($batch);
             }
         }

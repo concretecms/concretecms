@@ -87,11 +87,11 @@ class DragRequest extends UserInterfaceController
             $pages = [];
             $pages = $oc->populateRecursivePages($pages, ['cID' => $oc->getCollectionID()], $oc->getCollectionParentID(), 0, !$dragRequestData->isCopyChildrenOnly());
             usort($pages, ['\Concrete\Core\Page\Page', 'queueForDuplicationSort']);
-            $batch = Batch::create(function() use ($pages, $dragRequestData, $isMultilingual) {
+            $batch = Batch::create(t('Copy Pages'), function() use ($pages, $dragRequestData, $isMultilingual) {
                 foreach ($pages as $page) {
                     yield new CopyPageCommand($page['cID'], $dragRequestData->getDestinationPage()->getCollectionID(), $isMultilingual);
                 }
-            }, t('Copy Pages'));
+            });
             return $this->dispatchBatch($batch);
         }
     }

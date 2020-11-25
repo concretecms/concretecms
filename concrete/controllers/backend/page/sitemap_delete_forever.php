@@ -37,11 +37,11 @@ class SitemapDeleteForever extends AbstractController
                         $ids[] = $page['cID'];
                     }
 
-                    $batch = Batch::create(function() use ($pages) {
+                    $batch = Batch::create(t('Delete Pages'), function() use ($pages) {
                         foreach ($pages as $page) {
                             yield new DeletePageForeverCommand($page['cID']);
                         }
-                    }, t('Delete Pages'));
+                    });
                     return $this->dispatchBatch($batch);
                 }
             }

@@ -3,6 +3,7 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Command\Task\Input\Input;
+use Concrete\Core\Command\Task\Input\InputFactory;
 use Concrete\Core\Command\Task\Response\HttpResponseFactory;
 use Concrete\Core\Command\Task\Runner\TaskRunner;
 use Concrete\Core\Controller\AbstractController;
@@ -83,7 +84,11 @@ class Tasks extends AbstractController
         if ($this->errorList->has()) {
             return new JsonResponse($this->errorList);
         } else {
-            $input = new Input();
+            /**
+             * @var $inputFactory InputFactory
+             */
+            $inputFactory = $this->app->make(InputFactory::class);
+            $input = $inputFactory->createFromRequest($this->request, $task->getController()->getInputDefinition());
             $runner = $task->getController()->getTaskRunner($task, $input);
             $response = $this->taskRunner->run($runner);
             return $this->httpResponseFactory->createResponse($response);

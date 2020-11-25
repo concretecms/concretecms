@@ -64,6 +64,7 @@ class TaskService
     {
         $task->setLastRunBy($this->getCurrentUserEntity());
         $task->setDateLastStarted($this->dateService->toDateTime()->getTimestamp());
+        $task->setDateLastCompleted(null);
         $this->entityManager->persist($task);
         $this->entityManager->flush();
     }

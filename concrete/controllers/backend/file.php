@@ -4,9 +4,6 @@ namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Command\Batch\Batch as BatchBuilder;
-use Concrete\Core\Command\Process\ProcessFactory;
-use Concrete\Core\Command\Process\ProcessResponse;
-use Concrete\Core\Command\Process\ProcessResponseFactory;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Folder\FavoriteFolder;
@@ -108,11 +105,11 @@ class File extends Controller
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('edit_file_contents');
-        $batch = BatchBuilder::create(function() use ($files) {
+        $batch = BatchBuilder::create(t('Rescan Files'), function() use ($files) {
             foreach ($files as $file) {
                 yield new RescanFileCommand($file->getFileID());
             }
-        }, t('Rescan Files'));
+        });
         return $this->dispatchBatch($batch);
     }
 

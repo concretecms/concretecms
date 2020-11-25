@@ -39,6 +39,9 @@ class Batch
      */
     public function getMessages(): iterable
     {
+        if (!$this->messages) {
+            return [];
+        }
         return $this->messages;
     }
 
@@ -54,16 +57,26 @@ class Batch
         return $this;
     }
 
+    public function add(object $message)
+    {
+        $this->messages[] = $message;
+        return $this;
+    }
+
     /**
-     * @param iterable|callable $messages
      * @param string $name
+     * @param iterable|callable $messages
      * @return Batch
      */
-    public static function create($messages, string $name)
+    public static function create(string $name = null, $messages = null)
     {
         $batch = new self();
-        $batch->setName($name);
-        $batch->setMessages($messages);
+        if ($name) {
+            $batch->setName($name);
+        }
+        if ($messages) {
+            $batch->setMessages($messages);
+        }
         return $batch;
     }
 

@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Command\Process;
+use Concrete\Core\Entity\Command\TaskProcess;
 use Concrete\Core\Localization\Service\Date;
 use Doctrine\ORM\EntityManager;
 use Concrete\Core\Entity\Command\Batch as BatchEntity;
@@ -46,12 +47,19 @@ class ProcessUpdater
         if (is_string($process)) {
             $process = $this->entityManager->find(Process::class, $process);
         }
-        $process->setDateCompleted($this->dateService->toDateTime()->getTimestamp());
+        $dateCompleted = $this->dateService->toDateTime()->getTimestamp();
+        $process->setDateCompleted($dateCompleted);
         $process->setExitCode($exitCode);
         $process->setExitMessage($exitMessage);
         $this->entityManager->persist($process);
         $this->entityManager->flush();
         $this->clearOldProcesses();
+        if ($process instanceof TaskProcess) {
+            $task = $process->getTask();
+            $task->setDateLastCompleted($dateCompleted);
+            $this->entityManager->persist($process);
+            $this->entityManager->flush();
+        }
     }
 
     protected function clearOldProcesses()

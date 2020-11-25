@@ -8,7 +8,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class ProcessTaskRunnerHandler
+class BatchProcessTaskRunnerHandler
 {
 
     /**
@@ -33,16 +33,10 @@ class ProcessTaskRunnerHandler
         $this->messageBus = $messageBus;
     }
 
-    public function __invoke(ProcessTaskRunner $runner)
+    public function __invoke(BatchProcessTaskRunner $runner)
     {
         $this->taskService->start($runner->getTask());
-
-        $process = $this->processFactory->createTaskProcess($runner->getTask(), $runner->getInput());
-
-        $wrappedMessage = new HandleProcessMessageCommand($process->getID(), $runner->getMessage());
-
-        $this->messageBus->dispatch($wrappedMessage);
-
+        $process = $this->processFactory->createWithBatch($runner->getBatch(), $runner->getTask(), $runner->getInput());
         $runner->setProcess($process);
     }
 

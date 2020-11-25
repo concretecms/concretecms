@@ -62,11 +62,11 @@ class Delete extends BackendInterfaceController
             $u = new \User();
             $uID = $u->getUserID();
             $pages = $this->pages;
-            $batch = Batch::create(function() use ($uID, $pages) {
+            $batch = Batch::create(t('Delete Pages'), function() use ($uID, $pages) {
                 foreach ($pages as $page) {
                     yield new DeletePageCommand($page->getCollectionID(), $uID);
                 }
-            }, t('Delete Pages'));
+            });
             return $this->dispatchBatch($batch);
         }
     }

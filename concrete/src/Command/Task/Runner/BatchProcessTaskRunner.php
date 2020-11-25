@@ -2,26 +2,19 @@
 
 namespace Concrete\Core\Command\Task\Runner;
 
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Command\Task\Input\InputInterface;
 use Concrete\Core\Command\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Command\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Foundation\Command\Command;
-use Concrete\Core\Messenger\MessengerServiceProvider;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-/**
- * Receives a command and asynchronously executes it on a process.
- */
-class ProcessTaskRunner extends Command implements TaskRunnerInterface
+class BatchProcessTaskRunner extends Command implements TaskRunnerInterface
 {
 
-    /**
-     * @var object
-     */
-    protected $message;
 
     /**
      * @var string
@@ -43,14 +36,19 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
      */
     protected $process;
 
+    /**
+     * @var Batch
+     */
+    protected $batch;
+
     public function __construct(
         TaskInterface $task,
-        object $message,
+        Batch $batch,
         InputInterface $input,
         string $responseMessage
     ) {
         $this->task = $task;
-        $this->message = $message;
+        $this->batch = $batch;
         $this->responseMessage = $responseMessage;
         $this->input = $input;
     }
@@ -80,14 +78,6 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
     }
 
     /**
-     * @return object
-     */
-    public function getMessage(): object
-    {
-        return $this->message;
-    }
-
-    /**
      * @return string
      */
     public function getResponseMessage(): string
@@ -98,6 +88,14 @@ class ProcessTaskRunner extends Command implements TaskRunnerInterface
     public function getTaskRunnerResponse(): ResponseInterface
     {
         return new ProcessStartedResponse($this->process, $this->getResponseMessage());
+    }
+
+    /**
+     * @return Batch
+     */
+    public function getBatch(): Batch
+    {
+        return $this->batch;
     }
 
     /**

@@ -153,7 +153,7 @@ class UpdateFromType extends BackendInterfaceController
             ];
         }
 
-        $batch = Batch::create(function() use ($records, $pageTypeDefaultPage) {
+        $batch = Batch::create(t('Update Page Type Defaults'), function() use ($records, $pageTypeDefaultPage) {
             foreach ($records as $record) {
                 yield new UpdatePageTypeDefaultsCommand(
                     $pageTypeDefaultPage->getCollectionID(),
@@ -163,7 +163,7 @@ class UpdateFromType extends BackendInterfaceController
                     $record['blocksToAdd']
                 );
             }
-        }, t('Update Page Type Defaults'));
+        });
         return $this->dispatchBatch($batch);
     }
 

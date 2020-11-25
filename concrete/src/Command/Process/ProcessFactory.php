@@ -4,6 +4,7 @@ namespace Concrete\Core\Command\Process;
 
 use Concrete\Core\Command\Batch\Batch as PendingBatch;
 use Concrete\Core\Command\Batch\BatchUpdater;
+use Concrete\Core\Command\Task\Input\InputInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Entity\Command\Process;
@@ -49,11 +50,12 @@ class ProcessFactory
         $this->batchUpdater = $batchUpdater;
     }
 
-    public function createTaskProcess(TaskInterface $task)
+    public function createTaskProcess(TaskInterface $task, InputInterface $input = null)
     {
         $process = new TaskProcess();
         $process->setTask($task);
         $process->setName($task->getController()->getName());
+        $process->setInput($input);
         return $this->fillProcess($process);
     }
 
@@ -82,9 +84,13 @@ class ProcessFactory
     /**
      * @param PendingBatch $batch
      */
-    public function createWithBatch(PendingBatch $batch): Process
+    public function createWithBatch(PendingBatch $batch, TaskInterface $task = null, InputInterface $input = null): Process
     {
-        $process = $this->createProcess($batch->getName());
+        if ($task) {
+            $process = $this->createTaskProcess($task, $input);
+        } else {
+            $process = $this->createProcess($batch->getName());
+        }
 
         $batchEntity = new Batch();
         $this->entityManager->persist($batchEntity);
