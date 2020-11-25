@@ -555,8 +555,11 @@ echo $userInterface->tabs([
 
             <div class="form-group">
                 <?php echo $form->label('pageListTitle', t('Title of Page List')); ?>
-                <?php echo $form->text("pageListTitle", $pageListTitle); ?>
-            </div>
+			    <div class="input-group">
+                	<?php echo $form->text("pageListTitle", $pageListTitle); ?>
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+				</div>
+			</div>
 
             <div class="form-group">
                 <?php echo $form->label("noResultsMessage", ('Message to Display When No Pages Listed.')); ?>
