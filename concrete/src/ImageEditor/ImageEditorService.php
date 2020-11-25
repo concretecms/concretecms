@@ -10,33 +10,29 @@ use Concrete\Core\Entity\Package;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Filesystem\ElementManager;
-use Concrete\Core\Foundation\Service\Provider;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-class EditorServiceProvider extends Provider
+class ImageEditorService
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     protected $entityManager;
     protected $imageEditorRepository;
     /** @var Repository */
     protected $config;
+    protected $app;
 
     public function __construct(
-        Application $app
+        EntityManagerInterface $entityManager,
+        Application $app,
+        Repository $config
     )
     {
-        parent::__construct($app);
-
-        try {
-            $this->entityManager = $this->app->make(EntityManager::class);
-            $this->imageEditorRepository = $this->entityManager->getRepository(Editor::class);
-            $this->config = $this->app->make(Repository::class);
-
-            $this->checkDefaultEditor();
-        } catch (Exception $exception) {
-            // Database is not ready (concrete5 is not installed)
-        }
+        $this->app = $app;
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+        $this->imageEditorRepository = $this->entityManager->getRepository(Editor::class);
+        $this->checkDefaultEditor();
     }
 
     private function checkDefaultEditor()
@@ -229,16 +225,5 @@ class EditorServiceProvider extends Provider
                 $element->render();
             }
         }
-    }
-
-    public function register()
-    {
-        $this->app->bind('editor/image', function () {
-            return $this->getActiveEditor();
-        });
-
-        $this->app->bindShared('editor/image/core', function () {
-            return $this->getActiveEditor();
-        });
     }
 }

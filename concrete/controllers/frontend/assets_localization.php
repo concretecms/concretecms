@@ -133,7 +133,7 @@ var ccmi18n = ' . json_encode([
             'notifications' => t('Notifications'),
             'selectNoResult' => t('No result for %s. Add it?', '{0}'),
             'permissionsUpdatedTitle' => t('Permissions Updated'),
-            'permissionsUpdatedMessage' => t('The assign permissions has been successfully updated.'),
+            'permissionsUpdatedMessage' => t('The permissions has been successfully updated.'),
             'permissionsOverrideWarning' => t('Changing this setting will affect this page immediately. Are you sure?'),
             'addAccessEntityDialogTitle' => t('Add Access Entity')
         ]) . ';
