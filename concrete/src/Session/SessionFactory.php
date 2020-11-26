@@ -288,12 +288,11 @@ class SessionFactory implements SessionFactoryInterface
      *
      * @return \Redis | \RedisArray | \Predis\Client
      */
-    private function getRedisInstance(array $servers, $database = null)
+    private function getRedisInstance(array $servers, int $database = 1)
     {
-        $database = !empty($database)?(int) $database : 1;
-        // This is a way to load our predis client without creating new instances
-        if ($this->app->isShared(Client::class)) {
-            $redis = $this->app->make(Client::class);
+        // This is a way to load our predis client or php redis without creating new instances
+        if ($this->app->isShared('session/redis')) {
+            $redis = $this->app->make('session/redis');
             return $redis;
         }
         if (count($servers) == 1) {
@@ -301,38 +300,38 @@ class SessionFactory implements SessionFactoryInterface
             $server = $servers[0];
             $redis = null;
             $pass = array_get($server, 'password', null);
+            $socket = array_get($server, 'socket', null);
+            if ($socket === null) {
+                $host = array_get($server, 'host', '');
+                $port = array_get($server, 'port', 6379);
+                $ttl = array_get($server, 'ttl', 5);
+                // Check for both server/host - fallback due to cache using server
+                $host = !empty($host) ? $host : array_get($server, 'server', '127.0.0.1');
+            }
             if (class_exists('Redis')) {
-                /** @var Redis $redis */
-                $redis = $this->app->make(Redis::class);
-            }
-
-            if (array_get($server, 'socket', false)) {
-                if ($redis === null) {
-                    $redis = new Client(['scheme'=>'unix','path'=>$server['socket']]);
-                    $this->app->instance(Client::class, $redis);
-                } else {
+                $redis = new Redis();
+                if ($socket !== null) {
                     $redis->connect($server['socket']);
+                } else {
+                    $redis->connect($host, $port, $ttl);
+                    if ($pass !== null) {
+                        $redis->auth($pass);
+                    }
+                    $redis->select($database);
                 }
-                $redis->select($database);
-                if ($pass !== null) {
-                    $redis->auth($pass);
-                }
-                return $redis;
-            }
-             $host = array_get($server, 'host', '');
-             $port = array_get($server, 'port', 6379);
-             $ttl = array_get($server, 'ttl', 5);
-             // Check for both server/host - fallback due to cache using server
-             $host = !empty($host) ? $host : array_get($server, 'server', '127.0.0.1');
-            if ($redis === null) {
-                $scheme = array_get($server, 'scheme', 'tcp');
-                $redis = new Client(['scheme'=>$scheme, 'host'=>$host, 'port'=>$port, 'timeout'=>$ttl, 'database'=>$database, 'password'=>$pass]);
-                $this->app->instance(Client::class, $redis);
             } else {
-                $redis->connect($host, $port, $ttl);
-                $redis->select($database);
-                if ($pass !== null) {
-                    $redis->auth($pass);
+                if ($socket !== null) {
+                    $redis = new Client(['scheme'=>'unix','path'=>$server['socket'],'database'=>$database,'password'=>$pass]);
+                } else {
+                    $scheme = array_get($server, 'scheme', 'tcp');
+                    $redis = new Client([
+                        'scheme' => $scheme,
+                        'host' => $host,
+                        'port' => $port,
+                        'timeout' => $ttl,
+                        'database' => $database,
+                        'password' => $pass
+                    ]);
                 }
             }
         } else {
@@ -372,15 +371,15 @@ class SessionFactory implements SessionFactoryInterface
                 $options['auth'] = $password;
             }
             if (class_exists('RedisArray')) {
-                $redis = $this->app->make(RedisArray::class, [$serverArray, $options]);
+                $redis = new RedisArray($serverArray, $options);
                 $redis->select($database);
+
             } else {
                 $redis = new Client($serverArray);
-                $this->app->instance(Client::class, $redis);
             }
 
         }
-
+        $this->app->instance('session/redis', $redis);
         return $redis;
     }
 
