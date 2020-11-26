@@ -1,0 +1,92 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - "**.php"
+  push:
+    branches:
+      - develop
+    tags-ignore:
+      - "**"
+    paths:
+      - "**.php"
+
+jobs:
+  php-unit:
+    if: '!startsWith(github.event.head_commit.message, "[skip ci]")'
+    env:
+      MYSQL_PWD: "12345"
+      CODE_COVERAGE: n
+      EXTRA_COMPOSER_INSTALL_OPTIONS: ""
+      EXTRA_PHPUNUIT_OPTIONS: ""
+    strategy:
+      matrix:
+        operating-system:
+          - ubuntu-latest
+        php-version:
+          - "7.2"
+          - "7.3"
+          - "7.4"
+        mysql-version:
+          - "5.7"
+        include:
+          - operating-system: windows-latest
+            php-version: "7.2"
+          - operating-system: windows-latest
+            php-version: "7.4"
+          - operating-system: ubuntu-latest
+            php-version: "7.2"
+            env:
+              EXTRA_COMPOSER_INSTALL_OPTIONS: "--prefer-lowest"
+          - operating-system: ubuntu-latest
+            php-version: "7.2"
+            env:
+              EXTRA_PHPUNUIT_OPTIONS: "--group docker"
+    services:
+      mysql:
+        image: mysql:${{ matrix.mysql-version }}
+        env:
+          # See https://dev.mysql.com/doc/refman/5.7/en/docker-mysql-more-topics.html
+          MYSQL_ROOT_PASSWORD: "12345"
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    name: PHP ${{ matrix.php-version }} on ${{ matrix.operating-system }}
+    runs-on: ${{ matrix.operating-system }}
+    steps:
+      - name: Configure MySQL user
+        run: |
+          mysql --user=root -e "CREATE USER 'concrete5_tester'@'localhost' IDENTIFIED BY '12345';"
+          mysql --user=root -e "GRANT ALL PRIVILEGES ON *.* TO 'concrete5_tester'@'localhost' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+      - name: Set code coverage
+        if: matrix.php-version == '7.2' && startsWith(matrix.operating-system, 'ubuntu')
+        run: printf 'CODE_COVERAGE=y\n' >> "$GITHUB_ENV"
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v1,prestissimo
+          coverage: none
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Composer packages - merger
+        if: env.FILES_TO_CHECK != ''
+        run: composer --no-interaction --ansi --no-cache --optimize-autoloader $EXTRA_COMPOSER_INSTALL_OPTIONS update
+      - name: Install Composer packages - merged
+        if: env.FILES_TO_CHECK != ''
+        run: composer --no-interaction --ansi --no-cache --optimize-autoloader $EXTRA_COMPOSER_INSTALL_OPTIONS update
+      - name: Run tests
+        run: |
+          if test "$CODE_COVERAGE" -eq 'y'; then
+            phpdbg -qrr ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover $EXTRA_PHPUNUIT_OPTIONS
+          else
+            composer test -- $EXTRA_PHPUNUIT_OPTIONS
+          fi
+      - name: Upload code coverage results
+        if: emv.CODE_COVERAGE == 'y'
+        run: |
+          wget --tries=5 https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover

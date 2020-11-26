@@ -1,0 +1,50 @@
+name: Check Coding Style
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  php:
+    if: '!startsWith(github.event.head_commit.message, "[skip ci]")'
+    name: PHP Coding Style
+    runs-on: ubuntu-latest
+    env:
+      FILES_TO_CHECK: ""
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Detect changed files
+        run: |
+          CHANGED_FILES="$(git diff --name-only --diff-filter=ACMRTUXB "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}")"
+          if test -z "$CHANGED_FILES"; then
+            echo 'No changed files'
+          else
+            echo 'Changed files:'
+            printf '%s\n\n' "$CHANGED_FILES"
+            CHANGED_FILES="$(printf '%s' "$CHANGED_FILES" | grep -i -E '\.php$|^concrete/bin/concrete5$|^\.php_cs\.dist$')"
+            if test -z "$CHANGED_FILES"; then
+              echo 'No relevant files changed'
+            else
+              echo 'Relevant files:'
+              printf '%s\n\n' "$CHANGED_FILES"
+              printf 'FILES_TO_CHECK=%s\n' "$CHANGED_FILES" >> "$GITHUB_ENV"
+            fi
+          fi
+      - name: Install PHP
+        if: env.FILES_TO_CHECK != ''
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.2"
+          tools: composer:v1,prestissimo
+          coverage: none
+      - name: Install Composer packages - merger
+        if: env.FILES_TO_CHECK != ''
+        run: composer --no-interaction --ansi --no-cache --optimize-autoloader update
+      - name: Install Composer packages - merged
+        if: env.FILES_TO_CHECK != ''
+        run: composer --no-interaction --ansi --no-cache --optimize-autoloader update
+      - name: Check coding style
+        if: env.FILES_TO_CHECK != ''
+        run: ./concrete/bin/concrete5 --no-interaction --ansi --no-cache c5:phpcs check ${FILES_TO_CHECK}

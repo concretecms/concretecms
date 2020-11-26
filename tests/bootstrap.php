@@ -12,7 +12,7 @@ if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
 }
 
 // Define test constants
-putenv('CONCRETE5_ENV=travis');
+putenv('CONCRETE5_ENV=tests');
 define('DIR_TESTS', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
 define('DIR_CONFIG_SITE', DIR_TESTS . '/config');
 define('DIR_BASE', dirname(DIR_TESTS));
@@ -55,10 +55,10 @@ error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
 Notice::$enabled = false;
 
 // Initialize the database
-$cn = $app->make('database')->connection('travisWithoutDB');
+$cn = $app->make('database')->connection('testsWithoutDB');
 $cn->connect();
 if (!$cn->isConnected()) {
-    throw new Exception('Unable to connect to test database, please create a user "travis" with no password with full privileges to a database "concrete5_tests"');
+    throw new Exception('Unable to connect to test database, please create a user "ci" with no password with full privileges to a database "concrete5_tests"');
 }
 $cn->query('DROP DATABASE IF EXISTS concrete5_tests');
 $cn->query('CREATE DATABASE concrete5_tests');

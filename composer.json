@@ -8,7 +8,7 @@
   "prefer-stable": true,
   "archive": {
     "exclude": [
-      "/tests", "/build", "/.github", "/.gitattributes", "/.travis.yml", "/CONTRIBUTING.md", "/phpunit.xml"
+      "/build", "/tests", "/CONTRIBUTING.md", "/phpunit.xml", "/.*", "!/.php_cs.dist"
     ]
   },
   "require": {

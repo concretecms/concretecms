@@ -12,13 +12,11 @@ As described [here](../README.md#installation)
 
 The test system expects to have access to a MySQL installation on the same computer where the tests will be executed.
 The tests needs to have administration rights on MySQL in order to create and drop the test database and the tables inside it.
-You need to create a MySQL account with login `travis` and an empty password, and give the testing database access to it:
+You need to create a MySQL account with login `concrete5_tester` and password `12345`, and give it administration rights:
 
 ```sql
-CREATE USER 'travis'@'localhost' IDENTIFIED BY '';
-CREATE USER 'travis'@'::1' IDENTIFIED BY '';
-GRANT ALL ON concrete5_tests.* TO 'travis'@'localhost' WITH GRANT OPTION;
-GRANT ALL ON concrete5_tests.* TO 'travis'@'::1' WITH GRANT OPTION;
+CREATE USER 'concrete5_tester'@'localhost' IDENTIFIED BY '12345';
+GRANT ALL PRIVILEGES ON *.* TO 'concrete5_tester'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 ```
 
