@@ -13,8 +13,7 @@
 
 namespace Concrete\Core\Session\Storage\Handler;
 
-
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
+use SessionHandler;
 
 /**
  * Redis based session storage handler based on the Redis class
@@ -23,7 +22,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandle
  * @author Dalibor Karlović <dalibor@flexolabs.io>
  * modified by Derek Cameron <derek@concrete5.co.jp> for concrete5 from symfony 4.1
  */
-class RedisSessionHandler extends NativeSessionHandler
+class RedisSessionHandler extends SessionHandler
 {
 
     private $redis;
