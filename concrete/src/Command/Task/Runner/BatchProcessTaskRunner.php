@@ -8,18 +8,17 @@ use Concrete\Core\Command\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Command\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Entity\Command\Process;
-use Concrete\Core\Foundation\Command\Command;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class BatchProcessTaskRunner extends Command implements TaskRunnerInterface
+class BatchProcessTaskRunner implements TaskRunnerInterface
 {
 
 
     /**
      * @var string
      */
-    protected $responseMessage;
+    protected $processStartedMessage;
 
     /**
      * @var TaskInterface
@@ -45,11 +44,11 @@ class BatchProcessTaskRunner extends Command implements TaskRunnerInterface
         TaskInterface $task,
         Batch $batch,
         InputInterface $input,
-        string $responseMessage
+        string $processStartedMessage
     ) {
         $this->task = $task;
         $this->batch = $batch;
-        $this->responseMessage = $responseMessage;
+        $this->processStartedMessage = $processStartedMessage;
         $this->input = $input;
     }
 
@@ -80,14 +79,9 @@ class BatchProcessTaskRunner extends Command implements TaskRunnerInterface
     /**
      * @return string
      */
-    public function getResponseMessage(): string
+    public function getProcessStartedMessage(): string
     {
-        return $this->responseMessage;
-    }
-
-    public function getTaskRunnerResponse(): ResponseInterface
-    {
-        return new ProcessStartedResponse($this->process, $this->getResponseMessage());
+        return $this->processStartedMessage;
     }
 
     /**
@@ -105,6 +99,12 @@ class BatchProcessTaskRunner extends Command implements TaskRunnerInterface
     {
         return $this->input;
     }
+
+    public function getTaskRunnerHandler(): string
+    {
+        return BatchProcessTaskRunnerHandler::class;
+    }
+
 
 
 }

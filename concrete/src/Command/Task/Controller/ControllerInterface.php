@@ -14,6 +14,8 @@ interface ControllerInterface
 
     public function getName(): string;
 
+    public function getConsoleCommandName(): string;
+
     public function getDescription(): string;
 
     public function getHelpText(): string;

@@ -28,5 +28,4 @@ class ClearCacheController extends AbstractController
     }
 
 
-
 }

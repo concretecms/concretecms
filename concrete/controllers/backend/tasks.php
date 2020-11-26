@@ -2,10 +2,9 @@
 
 namespace Concrete\Controller\Backend;
 
-use Concrete\Core\Command\Task\Input\Input;
 use Concrete\Core\Command\Task\Input\InputFactory;
+use Concrete\Core\Command\Task\Output\OutputFactory;
 use Concrete\Core\Command\Task\Response\HttpResponseFactory;
-use Concrete\Core\Command\Task\Runner\TaskRunner;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -33,11 +32,6 @@ class Tasks extends AbstractController
     protected $entityManager;
 
     /**
-     * @var TaskRunner
-     */
-    protected $taskRunner;
-
-    /**
      * @var HttpResponseFactory
      */
     protected $httpResponseFactory;
@@ -46,14 +40,12 @@ class Tasks extends AbstractController
         ErrorList $errorList,
         Token $token,
         EntityManager $entityManager,
-        TaskRunner $taskRunner,
         HttpResponseFactory $httpResponseFactory
     ) {
         parent::__construct();
         $this->errorList = $errorList;
         $this->token = $token;
         $this->entityManager = $entityManager;
-        $this->taskRunner = $taskRunner;
         $this->httpResponseFactory = $httpResponseFactory;
     }
 
@@ -86,12 +78,20 @@ class Tasks extends AbstractController
         } else {
             /**
              * @var $inputFactory InputFactory
+             * @var $outputFactory OutputFactory
              */
             $inputFactory = $this->app->make(InputFactory::class);
             $input = $inputFactory->createFromRequest($this->request, $task->getController()->getInputDefinition());
+            $outputFactory = $this->app->make(OutputFactory::class);
+            $output = $outputFactory->createDashboardOutput();
+
             $runner = $task->getController()->getTaskRunner($task, $input);
-            $response = $this->taskRunner->run($runner);
-            return $this->httpResponseFactory->createResponse($response);
+            $handler = $this->app->make($runner->getTaskRunnerHandler());
+
+            $handler->start($runner, $output);
+            $handler->run($runner, $output);
+            $completedResponse = $handler->complete($runner, $output);
+            return $this->httpResponseFactory->createResponse($completedResponse);
         }
     }
 

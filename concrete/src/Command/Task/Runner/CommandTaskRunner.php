@@ -1,17 +1,14 @@
 <?php
 namespace Concrete\Core\Command\Task\Runner;
 
-use Concrete\Core\Command\Task\Runner\Response\ResponseInterface;
-use Concrete\Core\Command\Task\Runner\Response\TaskCompletedResponse;
 use Concrete\Core\Command\Task\TaskInterface;
-use Concrete\Core\Foundation\Command\Command;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * Receives a task and a command, and synchronously executes the command. On complete, returns the response.
  */
-class CommandTaskRunner extends Command implements TaskRunnerInterface
+class CommandTaskRunner implements TaskRunnerInterface
 {
 
     /**
@@ -22,18 +19,18 @@ class CommandTaskRunner extends Command implements TaskRunnerInterface
     /**
      * @var string
      */
-    protected $responseMessage;
+    protected $completionMessage;
 
     /**
      * @var TaskInterface
      */
     protected $task;
 
-    public function __construct(TaskInterface $task, object $command, string $responseMessage)
+    public function __construct(TaskInterface $task, object $command, string $completionMessage)
     {
         $this->task = $task;
         $this->command = $command;
-        $this->responseMessage = $responseMessage;
+        $this->completionMessage = $completionMessage;
     }
 
     /**
@@ -55,15 +52,14 @@ class CommandTaskRunner extends Command implements TaskRunnerInterface
     /**
      * @return string
      */
-    public function getResponseMessage(): string
+    public function getCompletionMessage(): string
     {
-        return $this->responseMessage;
+        return $this->completionMessage;
     }
 
-    public function getTaskRunnerResponse(): ResponseInterface
+    public function getTaskRunnerHandler(): string
     {
-        return new TaskCompletedResponse($this->getResponseMessage());
+        return CommandTaskRunnerHandler::class;
     }
-
 
 }

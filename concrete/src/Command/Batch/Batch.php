@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Command\Batch;
 
+use Concrete\Core\Command\Batch\Command\HandleBatchMessageCommand;
+use Concrete\Core\Entity\Command\Batch as BatchEntity;
+
 /**
  * Batch builder object for use before the batch is actually dispatched and converted into an entity.
  */
@@ -61,6 +64,15 @@ class Batch
     {
         $this->messages[] = $message;
         return $this;
+    }
+
+    public function getWrappedMessages(BatchEntity $batchEntity)
+    {
+        $messages = [];
+        foreach ($this->getMessages() as $message) {
+            $messages[] = new HandleBatchMessageCommand($batchEntity->getID(), $message);
+        }
+        return $messages;
     }
 
     /**

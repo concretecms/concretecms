@@ -13,6 +13,11 @@ abstract class AbstractController implements ControllerInterface
         return '';
     }
 
+    public function getConsoleCommandName(): string
+    {
+        return snake_case($this->getName(), '-');
+    }
+
     public function getInputDefinition(): ?Definition
     {
         return null;

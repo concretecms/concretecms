@@ -1,44 +1,31 @@
 <?php
 namespace Concrete\Core\Command\Task\Runner;
 
-use Concrete\Core\Command\Process\Command\HandleProcessMessageCommand;
-use Concrete\Core\Command\Process\ProcessFactory;
-use Concrete\Core\Command\Task\TaskService;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Concrete\Core\Command\Batch\Command\HandleBatchMessageCommand;
+use Concrete\Core\Entity\Command\Batch;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class BatchProcessTaskRunnerHandler
+class BatchProcessTaskRunnerHandler extends ProcessTaskRunnerHandler
 {
 
     /**
-     * @var MessageBusInterface
+     * @param BatchProcessTaskRunner $runner
      */
-    protected $messageBus;
-
-    /**
-     * @var ProcessFactory
-     */
-    protected $processFactory;
-
-    /**
-     * @var TaskService
-     */
-    protected $taskService;
-
-    public function __construct(TaskService $taskService, ProcessFactory $processFactory, MessageBusInterface $messageBus)
+    public function run(TaskRunnerInterface $runner)
     {
-        $this->taskService = $taskService;
-        $this->processFactory = $processFactory;
-        $this->messageBus = $messageBus;
-    }
+        $batch = $runner->getBatch();
+        $process = $runner->getProcess();
+        $batchEntity = $this->processFactory->createBatchEntity($batch);
+        $process->setBatch($batchEntity);
 
-    public function __invoke(BatchProcessTaskRunner $runner)
-    {
-        $this->taskService->start($runner->getTask());
-        $process = $this->processFactory->createWithBatch($runner->getBatch(), $runner->getTask(), $runner->getInput());
-        $runner->setProcess($process);
-    }
+        $total = 0;
+        foreach ($batch->getWrappedMessages($batchEntity) as $message) {
+            $this->messageBus->dispatch($message);
+            $total++;
+        }
 
+        $this->processFactory->setBatchTotal($batchEntity, $process, $total);
+    }
 
 }

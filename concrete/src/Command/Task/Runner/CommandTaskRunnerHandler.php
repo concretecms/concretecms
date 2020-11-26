@@ -1,23 +1,26 @@
 <?php
 namespace Concrete\Core\Command\Task\Runner;
 
+use Concrete\Core\Command\Task\Output\OutputInterface;
+use Concrete\Core\Command\Task\Runner\Response\ResponseInterface;
+use Concrete\Core\Command\Task\Runner\Response\TaskCompletedResponse;
 use Concrete\Core\Command\Task\TaskService;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class CommandTaskRunnerHandler
+class CommandTaskRunnerHandler implements HandlerInterface
 {
-
-    /**
-     * @var MessageBusInterface
-     */
-    protected $messageBus;
 
     /**
      * @var TaskService
      */
     protected $taskService;
+
+    /**
+     * @var MessageBusInterface
+     */
+    protected $messageBus;
 
     public function __construct(TaskService $taskService, MessageBusInterface $messageBus)
     {
@@ -25,15 +28,29 @@ class CommandTaskRunnerHandler
         $this->messageBus = $messageBus;
     }
 
-    public function __invoke(CommandTaskRunner $command)
+    /**
+     * @param CommandTaskRunner $runner
+     */
+    public function start(TaskRunnerInterface $runner, OutputInterface $output)
     {
-        $this->taskService->start($command->getTask());
-
-        $this->messageBus->dispatch($command->getCommand());
-
-        $this->taskService->complete($command->getTask());
-
+        $this->taskService->start($runner->getTask());
     }
 
+    /**
+     * @param CommandTaskRunner $runner
+     */
+    public function run(TaskRunnerInterface $runner)
+    {
+        $this->messageBus->dispatch($runner->getCommand());
+    }
+
+    /**
+     * @param CommandTaskRunner $runner
+     */
+    public function complete(TaskRunnerInterface $runner, OutputInterface $output): ResponseInterface
+    {
+        $output->write($runner->getTask(), $runner->getCompletionMessage());
+        return new TaskCompletedResponse($runner->getCompletionMessage());
+    }
 
 }

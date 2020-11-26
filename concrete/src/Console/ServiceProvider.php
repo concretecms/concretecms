@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Console;
 
+use Concrete\Core\Command\Task\TaskService;
+use Concrete\Core\Console\Command\TaskCommand;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
@@ -114,9 +116,20 @@ class ServiceProvider extends Provider
             $this->cli = $cli;
             $this->setupDefaultCommands();
             $this->setupDoctrineCommands();
+            $this->setupTaskCommands();
 
             return $cli;
         });
+    }
+
+    protected function setupTaskCommands()
+    {
+        if ($this->installed()) {
+            $tasks = $this->app->make(TaskService::class)->getList();
+            foreach($tasks as $task) {
+                $this->add(new TaskCommand($task));
+            }
+        }
     }
 
     public function setupDoctrineCommands()

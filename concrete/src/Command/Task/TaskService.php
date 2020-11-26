@@ -8,6 +8,7 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfoRepository;
 use Doctrine\ORM\EntityManager;
+use Punic\Comparer;
 
 /**
  * Methods useful for working with Task objects.
@@ -49,6 +50,17 @@ class TaskService
         $this->user = $user;
         $this->userInfoRepository = $userInfoRepository;
         $this->entityManager = $entityManager;
+    }
+
+    public function getList()
+    {
+        $tasks = $this->entityManager->getRepository(Task::class)
+            ->findAll();
+        $comparer = new Comparer();
+        usort($tasks, function($a, $b) use ($comparer) {
+            return $comparer->compare($a->getController()->getName(), $b->getController()->getName());
+        });
+        return $tasks;
     }
 
     protected function getCurrentUserEntity(): ?UserEntity

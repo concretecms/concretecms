@@ -8,6 +8,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 interface TaskRunnerInterface
 {
 
-    public function getTaskRunnerResponse(): ResponseInterface;
+    public function getTaskRunnerHandler(): string;
 
 }

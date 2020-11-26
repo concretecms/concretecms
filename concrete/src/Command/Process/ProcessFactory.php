@@ -81,34 +81,40 @@ class ProcessFactory
         return $process;
     }
 
-    /**
-     * @param PendingBatch $batch
-     */
-    public function createWithBatch(PendingBatch $batch, TaskInterface $task = null, InputInterface $input = null): Process
+    public function createBatchEntity(PendingBatch $batch): Batch
     {
-        if ($task) {
-            $process = $this->createTaskProcess($task, $input);
-        } else {
-            $process = $this->createProcess($batch->getName());
-        }
-
         $batchEntity = new Batch();
         $this->entityManager->persist($batchEntity);
         $this->entityManager->flush();
 
-        $totalJobs = 0;
-        foreach ($batch->getMessages() as $message) {
-            $command = new HandleBatchMessageCommand($batchEntity->getID(), $message);
-            $this->messageBus->dispatch($command);
-            $totalJobs++;
-        }
+        return $batchEntity;
+    }
+
+    public function setBatchTotal(Batch $batchEntity, Process $process, $totalJobs)
+    {
         $this->batchUpdater->updateJobs($batchEntity->getID(), BatchUpdater::COLUMN_TOTAL, $totalJobs);
         $this->batchUpdater->updateJobs($batchEntity->getID(), BatchUpdater::COLUMN_PENDING, $totalJobs);
         $this->entityManager->refresh($batchEntity);
-
-        $process->setBatch($batchEntity);
         $this->entityManager->persist($process);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param PendingBatch $batch
+     */
+    public function createWithBatch(PendingBatch $batch): Process
+    {
+        $batchEntity = $this->createBatchEntity($batch);
+        $process = $this->createProcess($batch->getName());
+        $process->setBatch($batchEntity);
+
+        $total = 0;
+        foreach ($batch->getWrappedMessages($batchEntity) as $message) {
+            $this->messageBus->dispatch($message);
+            $total++;
+        }
+
+        $this->setBatchTotal($batchEntity, $process, $total);
 
         return $process;
     }

@@ -48,7 +48,7 @@ class RescanFilesController extends AbstractController
     {
         $query = $this->db->createQueryBuilder();
         $query->select('fID')->from('Files', 'f');
-        if ($input->hasField('after') !== null) {
+        if ($input->hasField('after')) {
             $after = $input->getField('after');
             $query->andWhere('f.fID > :after');
             $query->setParameter('after', $after->getValue());
