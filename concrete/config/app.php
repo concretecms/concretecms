@@ -312,7 +312,7 @@ return [
         'PNG' => ['png', FileType::T_IMAGE, 'image', 'image', 'image'],
         'Windows Bitmap' => ['bmp', FileType::T_IMAGE, 'image'],
         'TIFF' => ['tif,tiff', FileType::T_IMAGE, 'image'],
-        'HTML' => ['htm,html', FileType::T_IMAGE],
+        'HTML' => ['htm,html', FileType::T_DOCUMENT],
         'Flash' => ['swf', FileType::T_IMAGE, 'image'],
         'Icon' => ['ico', FileType::T_IMAGE],
         'SVG' => ['svg', FileType::T_IMAGE, false, 'image'],
