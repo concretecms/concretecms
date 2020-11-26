@@ -36,7 +36,7 @@ final class Broadcaster
         if (!isset($this->driver)) {
             $broadcast = $this->config->get('concrete.events.broadcast');
             if ($broadcast['driver'] == 'redis') {
-                $client = $this->app->make('redis');
+                $client = $this->app->make('database/redis');
                 $this->driver = new RedisDriver($client);
             } else {
                 throw new \RuntimeException(t('Attempted to broadcast events but no valid broadcaster is created.'));
