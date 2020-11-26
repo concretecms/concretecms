@@ -108,7 +108,7 @@ abstract class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_Test
     protected function connection()
     {
         if (!static::$connection) {
-            static::$connection = Core::make('database')->connection('travis');
+            static::$connection = Core::make('database')->connection('tests');
         }
 
         return static::$connection;
