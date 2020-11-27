@@ -85,7 +85,6 @@ function getSkippablePaths()
         'themes/dashboard/main.js',
         'themes/elemental/main.js',
         'themes/elemental/main.css',
-        'mix-manifest.json',
     ].concat(
         listCopiedFiles(path.join(fsUtil.WEBROOT, 'build/node_modules/@fortawesome/fontawesome-free/webfonts'), 'css/webfonts')
     ).concat(
