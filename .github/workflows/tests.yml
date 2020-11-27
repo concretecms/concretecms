@@ -68,6 +68,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+          ini-values: short_open_tag=On
           tools: composer:v1,prestissimo
           coverage: none
       - name: Checkout
