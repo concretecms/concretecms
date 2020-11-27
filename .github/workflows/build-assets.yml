@@ -19,17 +19,29 @@ on:
       - "build/**.json"
       - "concrete/css/build/**"
       - "concrete/js/build/**"
+  repository_dispatch:
+    types:
+      - build-assets-develop
 
 jobs:
   build:
-    if: '!startsWith(github.event.head_commit.message, "[skip ci]")'
+    if: >
+      github.event_name == 'pull_request'
+      || (github.event_name == 'push' && !startsWith(github.event.head_commit.message, "[skip ci]")')
+      || (github.event_name == 'repository_dispatch' && github.repository == 'concrete5/concrete5')
     name: Build CSS and JavaScript assets
     runs-on: ubuntu-latest
     env:
       PUSH_CHANGES: n
     steps:
-      - name: Checkout
+      - name: Checkout (for pull requests)
+        if: github.event_name == 'pull_request'
         uses: actions/checkout@v2
+      - name: Checkout (branch)
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v2
+        with:
+          ref: develop
       - name: Install Node
         uses: actions/setup-node@v1
         with:
@@ -38,34 +50,45 @@ jobs:
         run: npm -g install grunt
       - name: Install dependencies
         run: cd build && npm ci && cd ..
+      - name: Update bedrock
+        if: github.event_name == 'repository_dispatch'
+        run: cd build && npm update bedrock && cd ..
       - name: Build assets
         run: cd build && npm run prod && cd ..
       - name: Check changes
-        if: github.event_name == 'push' && github.repository == 'concrete5/concrete5' && !startsWith(github.event.head_commit.message, '[skip ci]')
+        if: github.repository == 'concrete5/concrete5' && github.event_name != 'pull_request'
         run: |
           PUSH_CHANGES=n
-          cd concrete/css
-          if test -n "$(git status --porcelain .)"; then
+          if test "${{ github.event_name }}" = 'repository_dispatch'; then
+            CHECKME='build/composer.json build/composer-lock.json'
+            if test -n "$(git status --porcelain $CHECKME)"; then
+              echo '- changes detected in node packages'
+              git add --all $CHECKME
+              PUSH_CHANGES=y
+            else
+              echo '- no changes in node packages'
+            fi
+          fi
+          CHECKME='concrete/css'
+          if test -n "$(git status --porcelain $CHECKME)"; then
             echo '- changes detected in CSS assets'
-            git add --all .
+            git add --all $CHECKME
             PUSH_CHANGES=y
           else
             echo '- no changes in CSS assets'
           fi
-          cd ../..
-          cd concrete/js
-          if test -n "$(git status --porcelain .)"; then
+          CHECKME='concrete/js'
+          if test -n "$(git status --porcelain $CHECKME)"; then
             echo '- changes detected in JS assets'
-            git add --all .
+            git add --all $CHECKME
             PUSH_CHANGES=y
           else
             echo '- no changes in JS assets'
           fi
-          cd ../..
-          cd concrete/themes
-          if test -n "$(git status --porcelain .)"; then
+          CHECKME='concrete/themes'
+          if test -n "$(git status --porcelain $CHECKME)"; then
             echo '- changes detected in themes assets'
-            git add --all .
+            git add --all $CHECKME
             PUSH_CHANGES=y
           else
             echo '- no changes in themes assets'
