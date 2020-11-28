@@ -46,7 +46,7 @@ class TaskCommand extends SymfonyCommand
         }
 
         $handler->start($runner, $taskOutput);
-        $handler->run($runner);
+        $handler->run($runner, $taskOutput);
         $handler->complete($runner, $taskOutput);
 
         return self::SUCCESS;

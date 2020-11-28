@@ -35,7 +35,7 @@ class BatchUpdater
         $this->app = $app;
     }
 
-    public function checkBatchProcessForClose(string $batchId)
+    public function checkBatchProcessForClose(string $batchId, int $exitCode, string $exitMessage = null)
     {
         $entityManager = $this->app->make(EntityManager::class);
         $processUpdater = $this->app->make(ProcessUpdater::class);
@@ -45,7 +45,7 @@ class BatchUpdater
             if ($batch->getPendingJobs() < 1) {
                 $process = $entityManager->getRepository(Process::class)->findOneByBatch($batch);
                 if ($process) {
-                    $processUpdater->closeProcess($process, ProcessMessageInterface::EXIT_CODE_SUCCESS);
+                    $processUpdater->closeProcess($process, $exitCode, $exitMessage);
                 }
             }
         }

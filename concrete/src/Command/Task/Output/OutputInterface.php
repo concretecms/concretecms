@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 interface OutputInterface
 {
 
-    public function write(TaskInterface $task, $message);
+    public function write($message);
 
 
 }

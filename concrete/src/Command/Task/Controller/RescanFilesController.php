@@ -10,6 +10,7 @@ use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\File\Command\RescanFileCommand;
+use Concrete\Core\File\Command\RescanFileTaskCommand;
 use Concrete\Core\Page\Sitemap\Command\GenerateSitemapCommand;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -58,7 +59,7 @@ class RescanFilesController extends AbstractController
 
         $batch = Batch::create();
         foreach($query->execute()->fetchAll() as $result) {
-            $batch->add(new RescanFileCommand($result['fID']));
+            $batch->add(new RescanFileTaskCommand($result['fID']));
         }
 
         return new BatchProcessTaskRunner($task, $batch, $input, t('File rescan beginning...'));

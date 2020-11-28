@@ -7,6 +7,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Concrete\Core\Messenger\Handler\DeferredMessageHandler;
 
 class HandleProcessMessageCommand extends Command implements NormalizableInterface, DenormalizableInterface, ProcessMessageInterface
 {
@@ -25,6 +26,11 @@ class HandleProcessMessageCommand extends Command implements NormalizableInterfa
     {
         $this->processId = $processId;
         $this->message = $message;
+    }
+
+    public static function getHandler(): string
+    {
+        return DeferredMessageHandler::class;
     }
 
     /**

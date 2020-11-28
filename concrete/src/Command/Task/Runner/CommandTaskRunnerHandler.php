@@ -4,7 +4,9 @@ namespace Concrete\Core\Command\Task\Runner;
 use Concrete\Core\Command\Task\Output\OutputInterface;
 use Concrete\Core\Command\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Command\Task\Runner\Response\TaskCompletedResponse;
+use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Concrete\Core\Command\Task\TaskService;
+use Concrete\Core\Task\Output\OutputAwareInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -39,9 +41,10 @@ class CommandTaskRunnerHandler implements HandlerInterface
     /**
      * @param CommandTaskRunner $runner
      */
-    public function run(TaskRunnerInterface $runner)
+    public function run(TaskRunnerInterface $runner, OutputInterface $output)
     {
-        $this->messageBus->dispatch($runner->getCommand());
+        $message = $runner->getCommand();
+        $this->messageBus->dispatch($message, [new OutputStamp($output)]);
     }
 
     /**
@@ -49,7 +52,7 @@ class CommandTaskRunnerHandler implements HandlerInterface
      */
     public function complete(TaskRunnerInterface $runner, OutputInterface $output): ResponseInterface
     {
-        $output->write($runner->getTask(), $runner->getCompletionMessage());
+        $output->write($runner->getCompletionMessage());
         return new TaskCompletedResponse($runner->getCompletionMessage());
     }
 

@@ -19,7 +19,7 @@ class ConsoleOutput implements OutputInterface
         $this->symfonyOutput = $symfonyOutput;
     }
 
-    public function write(TaskInterface $task, $message)
+    public function write($message)
     {
         $this->symfonyOutput->writeln($message);
     }

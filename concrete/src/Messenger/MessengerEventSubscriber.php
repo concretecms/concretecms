@@ -5,6 +5,7 @@ use Concrete\Core\Command\Batch\BatchUpdater;
 use Concrete\Core\Command\Batch\Command\BatchProcessMessageInterface;
 use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
 use Concrete\Core\Command\Process\ProcessUpdater;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
@@ -22,10 +23,19 @@ class MessengerEventSubscriber implements EventSubscriberInterface
      */
     protected $processUpdater;
 
-    public function __construct(BatchUpdater $batchUpdater, ProcessUpdater $processUpdater)
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(
+        BatchUpdater $batchUpdater,
+        ProcessUpdater $processUpdater,
+        LoggerInterface $logger)
     {
         $this->batchUpdater = $batchUpdater;
         $this->processUpdater = $processUpdater;
+        $this->logger = $logger;
     }
 
     public static function getSubscribedEvents()
@@ -41,7 +51,7 @@ class MessengerEventSubscriber implements EventSubscriberInterface
         $message = $event->getEnvelope()->getMessage();
         if ($message instanceof BatchProcessMessageInterface) {
             $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_PENDING, -1);
-            $this->batchUpdater->checkBatchProcessForClose($message->getBatch());
+            $this->batchUpdater->checkBatchProcessForClose($message->getBatch(), ProcessMessageInterface::EXIT_CODE_SUCCESS);
         } else if ($message instanceof ProcessMessageInterface) {
             $this->processUpdater->closeProcess($message->getProcess(), ProcessMessageInterface::EXIT_CODE_SUCCESS);
         }
@@ -50,10 +60,24 @@ class MessengerEventSubscriber implements EventSubscriberInterface
     public function handleWorkerMessageFailedEvent(WorkerMessageFailedEvent $event)
     {
         $message = $event->getEnvelope()->getMessage();
+        $exception = $event->getThrowable();
+        $this->logger->alert(
+            sprintf(
+                "Messenger Worker Message Failed: %s:%d %s\n",
+                $exception->getFile(),
+                $exception->getLine(),
+                $exception->getMessage()
+            ),
+            [$exception]
+        );
         if ($message instanceof BatchProcessMessageInterface) {
             $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_PENDING, -1);
             $this->batchUpdater->updateJobs($message->getBatch(), BatchUpdater::COLUMN_FAILED, 1);
-            $this->batchUpdater->checkBatchProcessForClose($message->getBatch());
+            $this->batchUpdater->checkBatchProcessForClose(
+                $message->getBatch(),
+                ProcessMessageInterface::EXIT_CODE_FAILURE,
+                $event->getThrowable()->getMessage()
+            );
         } else if ($message instanceof ProcessMessageInterface) {
             $this->processUpdater->closeProcess(
                 $message->getProcess(),

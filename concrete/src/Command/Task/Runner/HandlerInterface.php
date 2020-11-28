@@ -11,7 +11,7 @@ interface HandlerInterface
 
     public function start(TaskRunnerInterface $runner, OutputInterface $output);
 
-    public function run(TaskRunnerInterface $runner);
+    public function run(TaskRunnerInterface $runner, OutputInterface $output);
 
     public function complete(TaskRunnerInterface $runner, OutputInterface $output): ResponseInterface;
 

@@ -3,6 +3,8 @@ namespace Concrete\Core\Messenger;
 
 use Closure;
 use Concrete\Core\Application\Application;
+use Concrete\Core\Command\Task\Output\OutputAwareInterface;
+use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Command\HandlerAwareCommandInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -41,7 +43,17 @@ class HandlersLocator implements HandlersLocatorInterface
             $handlerClass = $message->getHandler();
         }
         if (isset($handlerClass)) {
-            $callable = [$this->app->build($handlerClass), '__invoke'];
+            $builtClass = $this->app->build($handlerClass);
+            if ($builtClass instanceof OutputAwareInterface) {
+                $outputStamp = $envelope->last(OutputStamp::class);
+                if ($outputStamp) {
+                    /**
+                     * @var $outputStamp OutputStamp
+                     */
+                    $builtClass->setOutput($outputStamp->getOutput());
+                }
+            }
+            $callable = [$builtClass, '__invoke'];
             if (!is_callable($callable)) {
                 throw new NoHandlerForMessageException(t('Unable to locate command handler for command: %s', $class));
             }

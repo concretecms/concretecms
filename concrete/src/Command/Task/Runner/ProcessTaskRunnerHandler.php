@@ -7,6 +7,7 @@ use Concrete\Core\Command\Task\Output\OutputInterface;
 use Concrete\Core\Command\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Command\Task\Runner\Response\ResponseInterface;
 use Concrete\Core\Command\Task\Runner\Response\TaskCompletedResponse;
+use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Concrete\Core\Command\Task\TaskService;
 use Concrete\Core\Messenger\MessageBusAwareInterface;
 use Concrete\Core\Messenger\MessageBusAwareTrait;
@@ -46,7 +47,7 @@ class ProcessTaskRunnerHandler implements HandlerInterface, MessageBusAwareInter
      */
     public function start(TaskRunnerInterface $runner, OutputInterface $output)
     {
-        $output->write($runner->getTask(), $runner->getProcessStartedMessage());
+        $output->write($runner->getProcessStartedMessage());
         $this->taskService->start($runner->getTask());
         $process = $this->processFactory->createTaskProcess($runner->getTask(), $runner->getInput());
         $runner->setProcess($process);
@@ -55,11 +56,11 @@ class ProcessTaskRunnerHandler implements HandlerInterface, MessageBusAwareInter
     /**
      * @param ProcessTaskRunner $runner
      */
-    public function run(TaskRunnerInterface $runner)
+    public function run(TaskRunnerInterface $runner, OutputInterface $output)
     {
         $process = $runner->getProcess();
         $wrappedMessage = new HandleProcessMessageCommand($process->getID(), $runner->getMessage());
-        $this->messageBus->dispatch($wrappedMessage);
+        $this->messageBus->dispatch($wrappedMessage, [new OutputStamp($output)]);
     }
 
     /**
