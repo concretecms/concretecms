@@ -53,11 +53,12 @@ class Comparator
             }
         }
 
-        if ($r1->getRepeatPeriodWeekDays() != $r2->getRepeatPeriodWeekDays()) {
+        $r1Days = $r1->getRepeatPeriodWeekDays();
+        $r2Days = $r2->getRepeatPeriodWeekDays();
+        if (array_diff($r1Days, $r2Days) || array_diff($r2Days, $r1Days)) {
             return false;
         }
-        
+
         return true;
     }
 }
-
