@@ -54,7 +54,10 @@ class Comparator
         }
 
         if ($r1->getRepeatPeriodWeekDays() != $r2->getRepeatPeriodWeekDays()) {
-        }return true;
+            return false;
+        }
+        
+        return true;
     }
 }
 
