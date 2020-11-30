@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\ExpressSetManager;
+use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
@@ -234,9 +235,9 @@ class ExpressCategory extends AbstractStandardCategory
      */
     public function getAttributeTypes()
     {
-        return $this->entityManager
-            ->getRepository('\Concrete\Core\Entity\Attribute\Type')
-            ->findAll();
+        /** @var TypeFactory $typeFactory */
+        $typeFactory = $this->application->make(TypeFactory::class);
+        return $typeFactory->getList("express");
     }
 
     /**
