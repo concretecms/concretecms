@@ -338,6 +338,27 @@ return [
      */
     'processes' => [
 
+        'logging' => [
+
+            /*
+             * Do we log task process output (triggered in the dashboard or in the CLI) to a file somewhere?
+             *
+             * @var string (none|file)
+             */
+            'method' => 'none',
+
+            'file' => [
+
+                /*
+                 * The directory that holds process logs
+                 *
+                 * @var string
+                 */
+                'directory' => '',
+
+            ],
+
+        ],
         /**
          * The point after which old completed are automatically removed from the system.
          */

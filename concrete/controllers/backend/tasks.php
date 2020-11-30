@@ -81,11 +81,11 @@ class Tasks extends AbstractController
              * @var $outputFactory OutputFactory
              */
             $inputFactory = $this->app->make(InputFactory::class);
-            $input = $inputFactory->createFromRequest($this->request, $task->getController()->getInputDefinition());
             $outputFactory = $this->app->make(OutputFactory::class);
-            $output = $outputFactory->createDashboardOutput();
-
+            $input = $inputFactory->createFromRequest($this->request, $task->getController()->getInputDefinition());
             $runner = $task->getController()->getTaskRunner($task, $input);
+            $output = $outputFactory->createDashboardOutput($runner);
+
             $handler = $this->app->make($runner->getTaskRunnerHandler());
 
             $handler->start($runner, $output);

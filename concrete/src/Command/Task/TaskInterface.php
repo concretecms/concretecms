@@ -8,6 +8,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 interface TaskInterface
 {
 
+    public function getID();
+
     public function getController(): ControllerInterface;
 
 }

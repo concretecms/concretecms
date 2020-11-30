@@ -47,8 +47,8 @@ class TaskCommand extends SymfonyCommand
         $inputFactory = $app->make(InputFactory::class);
         $outputFactory = $app->make(OutputFactory::class);
         $taskInput = $inputFactory->createFromConsoleInput($input, $this->task->getController()->getInputDefinition());
-        $taskOutput = $outputFactory->createConsoleOutput($output);
         $runner = $this->task->getController()->getTaskRunner($this->task, $taskInput);
+        $taskOutput = $outputFactory->createConsoleOutput($output, $runner);
         $handler = $app->make($runner->getTaskRunnerHandler());
 
         if ($handler instanceof MessageBusAwareInterface) {

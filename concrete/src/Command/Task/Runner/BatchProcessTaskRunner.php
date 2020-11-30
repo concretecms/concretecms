@@ -6,14 +6,16 @@ use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Command\Task\Input\InputInterface;
 use Concrete\Core\Command\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Command\Task\Runner\Response\ResponseInterface;
+use Concrete\Core\Command\Task\Runner\Traits\GetProcessLogFileNameTrait;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Entity\Command\Process;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class BatchProcessTaskRunner implements TaskRunnerInterface
+class BatchProcessTaskRunner implements TaskRunnerInterface, LoggableToFileRunnerInterface
 {
 
+    use GetProcessLogFileNameTrait;
 
     /**
      * @var string
