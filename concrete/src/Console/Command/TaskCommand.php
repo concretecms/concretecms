@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Command\Task\Input\InputFactory;
 use Concrete\Core\Messenger\MessageBusAwareInterface;
 use Concrete\Core\Command\Task\Input\Input;
 use Concrete\Core\Command\Task\Output\OutputFactory;
@@ -9,6 +10,7 @@ use Concrete\Core\Messenger\MessageBusManager;
 use Concrete\Core\Support\Facade\Facade;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TaskCommand extends SymfonyCommand
@@ -30,15 +32,23 @@ class TaskCommand extends SymfonyCommand
         $controller = $this->task->getController();
         $this->setName(sprintf('task:%s', $controller->getConsoleCommandName()));
         $this->setDescription($controller->getDescription());
+
+        $definition = $controller->getInputDefinition();
+        if ($definition) {
+            foreach($definition->getFields() as $field) {
+                $this->addOption($field->getKey(), null, InputOption::VALUE_REQUIRED, $field->getDescription());
+            }
+        }
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $app = Facade::getFacadeApplication();
-        $input = new Input();
+        $inputFactory = $app->make(InputFactory::class);
         $outputFactory = $app->make(OutputFactory::class);
+        $taskInput = $inputFactory->createFromConsoleInput($input, $this->task->getController()->getInputDefinition());
         $taskOutput = $outputFactory->createConsoleOutput($output);
-        $runner = $this->task->getController()->getTaskRunner($this->task, $input);
+        $runner = $this->task->getController()->getTaskRunner($this->task, $taskInput);
         $handler = $app->make($runner->getTaskRunnerHandler());
 
         if ($handler instanceof MessageBusAwareInterface) {

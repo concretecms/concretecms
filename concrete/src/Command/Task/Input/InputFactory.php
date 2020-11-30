@@ -4,6 +4,7 @@ namespace Concrete\Core\Command\Task\Input;
 
 use Concrete\Core\Command\Task\Input\Definition\Definition;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Console\Input\InputInterface as ConsoleInputInterface;
 
 class InputFactory
 {
@@ -35,5 +36,23 @@ class InputFactory
 
         return $input;
     }
+
+    public function createFromConsoleInput(ConsoleInputInterface $consoleInput, Definition $definition = null): InputInterface
+    {
+        $input = new Input();
+        if (!$definition) {
+            return $input;
+        }
+
+        foreach($definition->getFields() as $field) {
+            $loadedField = $field->loadFieldFromConsoleInput($consoleInput);
+            if ($loadedField) {
+                $input->addField($loadedField);
+            }
+        }
+
+        return $input;
+    }
+
 
 }

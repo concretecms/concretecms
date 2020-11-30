@@ -3,6 +3,7 @@ namespace Concrete\Core\Command\Task\Input\Definition;
 
 use Concrete\Core\Command\Task\Input\FieldInterface as LoadedFieldInterface;
 use Concrete\Core\Command\Task\Input\Field as LoadedField;
+use Symfony\Component\Console\Input\InputInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -61,10 +62,17 @@ class Field implements FieldInterface
         return $this->description;
     }
 
-    public function loadFieldFromRequest(array $data): LoadedFieldInterface
+    public function loadFieldFromRequest(array $data): ?LoadedFieldInterface
     {
-        $field = new LoadedField($this->getKey(), $data[$this->getKey()]);
-        return $field;
+        return new LoadedField($this->getKey(), $data[$this->getKey()]);
+    }
+
+    public function loadFieldFromConsoleInput(InputInterface $consoleInput): ?LoadedFieldInterface
+    {
+        if ($consoleInput->hasOption($this->getKey()) && $consoleInput->getOption($this->getKey()) != '') {
+            return new LoadedField($this->getKey(), $consoleInput->getOption($this->getKey()));
+        }
+        return null;
     }
 
     public function jsonSerialize()
