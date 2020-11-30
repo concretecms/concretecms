@@ -12,7 +12,7 @@ use Concrete\Core\Entity\Package;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExpressCategory extends AbstractCategory
+class ExpressCategory extends AbstractStandardCategory
 {
     /**
      * The Express entity owning this attribute category.
