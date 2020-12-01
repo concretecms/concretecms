@@ -1255,6 +1255,21 @@ return [
         ],
     ],
 
+    /*
+     * ------------------------------------------------------------------------
+     * Notification settings
+     * ------------------------------------------------------------------------
+     */
+    'notification' => [
+        /*
+         * Enable Server-Sent Events?
+         *
+         * @var bool
+         */
+        'server_sent_events' => false,
+
+    ],
+
     'mutex' => [
         'semaphore' => [
             'priority' => 100,

@@ -995,7 +995,25 @@
         <page name="Automation Settings" path="/dashboard/system/automation/settings"
               filename="/dashboard/system/automation/settings.php" pagetype="" description="" package="">
         </page>
-        <page name="Optimization" path="/dashboard/system/optimization"
+        <page name="Notification" path="/dashboard/system/notification"
+              filename="/dashboard/system/notification/view.php" pagetype="" description="Run and automate commands."
+              package=""/>
+        <page name="Tasks" path="/dashboard/system/notification/events"
+              filename="/dashboard/system/notification/events.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>websocket, socket, socket.io, push, push notifications, mercure</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Processes" path="/dashboard/system/automation/processes"
+              filename="/dashboard/system/automation/processes.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>queues, jobs, running</value>
+                </attributekey>
+            </attributes>
+        </page>        <page name="Optimization" path="/dashboard/system/optimization"
               filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well."
               package=""/>
         <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache"

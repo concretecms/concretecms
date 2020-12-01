@@ -18,6 +18,7 @@ final class Version20201029023919 extends AbstractMigration implements Repeatabl
     public function upgradeDatabase()
     {
         $this->createSinglePage('/dashboard/system/automation', 'Automation');
+        $this->createSinglePage('/dashboard/system/notification', 'Notification');
         $this->createSinglePage(
             '/dashboard/system/automation/tasks',
             'Tasks',
@@ -29,6 +30,11 @@ final class Version20201029023919 extends AbstractMigration implements Repeatabl
             ['meta_keywords' => 'queues, jobs, running']
         );
         $this->createSinglePage('/dashboard/system/automation/settings', 'Automation Settings');
+        $this->createSinglePage(
+            '/dashboard/system/notification/events',
+            'Server-Sent Events',
+            ['meta_keywords' => 'websocket, socket, socket.io, push, push notifications, mercure']
+        );
 
         $this->refreshEntities(
             [
