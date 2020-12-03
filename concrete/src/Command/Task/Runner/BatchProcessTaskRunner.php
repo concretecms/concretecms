@@ -12,7 +12,7 @@ use Concrete\Core\Entity\Command\Process;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class BatchProcessTaskRunner implements TaskRunnerInterface, LoggableToFileRunnerInterface
+class BatchProcessTaskRunner implements TaskRunnerInterface, LoggableToFileRunnerInterface, ProcessTaskRunnerInterface
 {
 
     use GetProcessLogFileNameTrait;

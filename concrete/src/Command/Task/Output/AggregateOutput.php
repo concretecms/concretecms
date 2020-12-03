@@ -2,10 +2,12 @@
 
 namespace Concrete\Core\Command\Task\Output;
 
-use Concrete\Core\Command\Task\TaskInterface;
-use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class AggregateOutput implements OutputInterface
+class AggregateOutput implements OutputInterface, NormalizableInterface, DenormalizableInterface
 {
 
     /**
@@ -31,6 +33,24 @@ class AggregateOutput implements OutputInterface
     {
         foreach($this->outputs as $output) {
             $output->write($message);
+        }
+    }
+
+    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    {
+        $outputs = [];
+        foreach($this->outputs as $output) {
+            $outputs[] = ['type' => get_class($output), 'output' => $normalizer->normalize($output)];
+        }
+        return ['outputs' => $outputs];
+    }
+
+    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    {
+        $outputs = [];
+        foreach($data['outputs'] as $dataOutput) {
+            $output = $denormalizer->denormalize($dataOutput['output'], $dataOutput['type']);
+            $this->outputs[] = $output;
         }
     }
 

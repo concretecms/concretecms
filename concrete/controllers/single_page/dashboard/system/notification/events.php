@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Notification;
 
+use Concrete\Core\Notification\Mercure\MercureService;
+use Concrete\Core\Notification\Mercure\Update\TestConnection;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Utility\Service\Identifier;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Mercure\PublisherInterface;
-use Symfony\Component\Mercure\Update;
 
 class Events extends DashboardPageController
 {
@@ -25,10 +25,9 @@ class Events extends DashboardPageController
     public function test_connection()
     {
         $ping = $this->request->request->get('ping');
-        $publisher = $this->app->make(PublisherInterface::class);
-        $update = new Update('https://concretecms/test_connection', json_encode(['pong' => $ping]));
-        $publisher($update);
-        return new JsonResponse([]);
+        $service = $this->app->make(MercureService::class);
+        $service->sendUpdate(new TestConnection($ping));
+        return new JsonResponse([]); // This is just here for our ajax requets, it has nothing to do with mercure
     }
 
     public function submit()

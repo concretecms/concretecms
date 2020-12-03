@@ -45,17 +45,18 @@ class ProcessTaskRunnerHandler implements HandlerInterface, MessageBusAwareInter
     /**
      * @param ProcessTaskRunner $runner
      */
-    public function start(TaskRunnerInterface $runner, OutputInterface $output)
+    public function boot(TaskRunnerInterface $runner)
     {
         $this->taskService->start($runner->getTask());
         $process = $this->processFactory->createTaskProcess($runner->getTask(), $runner->getInput());
         $runner->setProcess($process);
+    }
+
+    public function start(TaskRunnerInterface $runner, OutputInterface $output)
+    {
         $output->write($runner->getProcessStartedMessage());
     }
 
-    /**
-     * @param ProcessTaskRunner $runner
-     */
     public function run(TaskRunnerInterface $runner, OutputInterface $output)
     {
         $process = $runner->getProcess();

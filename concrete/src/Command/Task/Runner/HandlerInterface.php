@@ -9,6 +9,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 interface HandlerInterface
 {
 
+    public function boot(TaskRunnerInterface $runner);
+
     public function start(TaskRunnerInterface $runner, OutputInterface $output);
 
     public function run(TaskRunnerInterface $runner, OutputInterface $output);

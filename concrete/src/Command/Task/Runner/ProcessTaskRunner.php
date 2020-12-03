@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * Receives a command and asynchronously executes it on a process.
  */
-class ProcessTaskRunner implements TaskRunnerInterface, LoggableToFileRunnerInterface
+class ProcessTaskRunner implements TaskRunnerInterface, LoggableToFileRunnerInterface, ProcessTaskRunnerInterface
 {
 
     use GetProcessLogFileNameTrait;

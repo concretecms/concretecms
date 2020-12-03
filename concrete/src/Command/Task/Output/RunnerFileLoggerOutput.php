@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class RunnerFileLogger implements OutputInterface, NormalizableInterface, DenormalizableInterface
+class RunnerFileLoggerOutput implements OutputInterface, NormalizableInterface, DenormalizableInterface
 {
 
     /**

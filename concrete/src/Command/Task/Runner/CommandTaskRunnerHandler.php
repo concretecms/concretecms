@@ -30,26 +30,22 @@ class CommandTaskRunnerHandler implements HandlerInterface
         $this->messageBus = $messageBus;
     }
 
-    /**
-     * @param CommandTaskRunner $runner
-     */
-    public function start(TaskRunnerInterface $runner, OutputInterface $output)
+    public function boot(TaskRunnerInterface $runner)
     {
         $this->taskService->start($runner->getTask());
     }
 
-    /**
-     * @param CommandTaskRunner $runner
-     */
+    public function start(TaskRunnerInterface $runner, OutputInterface $output)
+    {
+        // Nothing.
+    }
+
     public function run(TaskRunnerInterface $runner, OutputInterface $output)
     {
         $message = $runner->getCommand();
         $this->messageBus->dispatch($message, [new OutputStamp($output)]);
     }
 
-    /**
-     * @param CommandTaskRunner $runner
-     */
     public function complete(TaskRunnerInterface $runner, OutputInterface $output): ResponseInterface
     {
         $output->write($runner->getCompletionMessage());

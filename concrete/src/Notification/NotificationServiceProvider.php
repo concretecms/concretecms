@@ -4,6 +4,7 @@ namespace Concrete\Core\Notification;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Notification\Mercure\MercureService;
 use Concrete\Core\Notification\Type\UserDeactivatedType;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -44,28 +45,13 @@ class NotificationServiceProvider extends ServiceProvider
             }
         );
 
+        $this->app->singleton(MercureService::class);
+
         $this->app->singleton(
             PublisherInterface::class,
             function (Application $app) {
-                $config = $app->make('config');
-                $dbConfig = $app->make('config/database');
-                $tokenFunction = function () use ($config, $dbConfig) {
-                    $token = (new Builder())
-                        ->withClaim('mercure', ['publish' => ['*']])
-                        ->getToken(
-                            new Sha256(),
-                            new Key(
-                                $dbConfig->get('concrete.notification.mercure.default.jwt_key')
-                            )
-                        );
-
-                    return (string) $token;
-                };
-
-                return new Publisher(
-                    $config->get('concrete.notification.mercure.default.publish_url'),
-                    $tokenFunction
-                );
+                $service = $app->make(MercureService::class);
+                return $service->getPublisher();
             }
         );
     }
