@@ -48,6 +48,11 @@ class MercureService
         return (bool) $this->config->get('concrete.notification.server_sent_events');
     }
 
+    public function getPublisherUrl(): string
+    {
+        return (string) $this->config->get('concrete.notification.mercure.default.publish_url');
+    }
+
     /**
      * @return PublisherInterface
      */
@@ -70,7 +75,7 @@ class MercureService
             };
 
             $this->publisher = new Publisher(
-                $config->get('concrete.notification.mercure.default.publish_url'),
+                $this->getPublisherUrl(),
                 $tokenFunction
             );
         }

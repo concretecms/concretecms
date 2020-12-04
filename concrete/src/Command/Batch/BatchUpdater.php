@@ -7,6 +7,8 @@ use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
 use Concrete\Core\Command\Process\ProcessUpdater;
 use Concrete\Core\Entity\Command\Batch as BatchEntity;
 use Concrete\Core\Entity\Command\Process;
+use Concrete\Core\Notification\Mercure\MercureService;
+use Concrete\Core\Notification\Mercure\Update\BatchUpdated;
 use Doctrine\ORM\EntityManager;
 
 class BatchUpdater
@@ -66,6 +68,13 @@ class BatchUpdater
         $query->setParameter('batch', $batchId);
         $query->setParameter('jobs', $jobs);
         $query->execute();
+
+        $mercureService = $this->app->make(MercureService::class);
+        if ($mercureService->isEnabled()) {
+            $batch = $entityManager->find(BatchEntity::class, $batchId);
+            $entityManager->refresh($batch);
+            $mercureService->sendUpdate(new BatchUpdated($batch));
+        }
     }
 
 }

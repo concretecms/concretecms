@@ -5,6 +5,7 @@ use Concrete\Core\Command\Batch\BatchUpdater;
 use Concrete\Core\Command\Batch\Command\BatchProcessMessageInterface;
 use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
 use Concrete\Core\Command\Process\ProcessUpdater;
+use Concrete\Core\Notification\Mercure\MercureService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
@@ -27,11 +28,12 @@ class MessengerEventSubscriber implements EventSubscriberInterface
      * @var LoggerInterface
      */
     protected $logger;
-
+    
     public function __construct(
         BatchUpdater $batchUpdater,
         ProcessUpdater $processUpdater,
-        LoggerInterface $logger)
+        LoggerInterface $logger
+    )
     {
         $this->batchUpdater = $batchUpdater;
         $this->processUpdater = $processUpdater;
