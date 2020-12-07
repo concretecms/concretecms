@@ -32,6 +32,7 @@ class Controller extends BlockController
         $this->edit();
         $this->set('maxResults', 3);
         $this->set('title', t('Archives'));
+        $this->set('titleFormat', 'h5');
     }
 
     public function edit()

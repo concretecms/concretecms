@@ -240,43 +240,43 @@ class DateTime
                 $html .= '>' . sprintf('%02d', $i) . '</option>';
             }
             $html .= '</select>';
-            if ($timeFormat === 12) {
-                $html .= '<select class="form-control" id="' . $id . '_a" name="' . $fieldAMPM . '"' . $disabled . '>';
-                $html .= '<option value="AM"';
-                if ($timeAMPM === 'AM') {
+        }
+        if ($timeFormat === 12) {
+            $html .= '<select class="form-control" id="' . $id . '_a" name="' . $fieldAMPM . '"' . $disabled . '>';
+            $html .= '<option value="AM"';
+            if ($timeAMPM === 'AM') {
+                $html .= ' selected="selected"';
+            }
+            $html .= '>';
+            // This prints out the translation of "AM" in the current language
+            $html .= $dh->date('A', mktime(1), 'system');
+            $html .= '</option>';
+            $html .= '<option value="PM"';
+            if ($timeAMPM === 'PM') {
+                $html .= ' selected="selected"';
+            }
+            $html .= '>';
+            // This prints out the translation of "PM" in the current language
+            $html .= $dh->date('A', mktime(13), 'system');
+            $html .= '</option>';
+            $html .= '</select>';
+        }
+        if ($stepSeconds !== 0) {
+            $html .= '<span class="separator">:</span>';
+            $html .= '<select class="form-control"  id="' . $id . '_s" name="' . $fieldSeconds . '"' . $disabled . '>';
+            $secondsList = [];
+            for ($i = 0; $i < 60; $i += $stepSeconds) {
+                $secondsList[] = $i;
+            }
+            $timeSecond = $this->selectNearestValue($secondsList, $timeSecond);
+            foreach ($secondsList as $i) {
+                $html .= '<option value="' . sprintf('%02d', $i) . '"';
+                if ($i === $timeSecond) {
                     $html .= ' selected="selected"';
                 }
-                $html .= '>';
-                // This prints out the translation of "AM" in the current language
-                $html .= $dh->date('A', mktime(1), 'system');
-                $html .= '</option>';
-                $html .= '<option value="PM"';
-                if ($timeAMPM === 'PM') {
-                    $html .= ' selected="selected"';
-                }
-                $html .= '>';
-                // This prints out the translation of "PM" in the current language
-                $html .= $dh->date('A', mktime(13), 'system');
-                $html .= '</option>';
-                $html .= '</select>';
+                $html .= '>' . sprintf('%02d', $i) . '</option>';
             }
-            if ($stepSeconds !== 0) {
-                $html .= '<span class="separator">:</span>';
-                $html .= '<select class="form-control"  id="' . $id . '_s" name="' . $fieldSeconds . '"' . $disabled . '>';
-                $secondsList = [];
-                for ($i = 0; $i < 60; $i += $stepSeconds) {
-                    $secondsList[] = $i;
-                }
-                $timeSecond = $this->selectNearestValue($secondsList, $timeSecond);
-                foreach ($secondsList as $i) {
-                    $html .= '<option value="' . sprintf('%02d', $i) . '"';
-                    if ($i === $timeSecond) {
-                        $html .= ' selected="selected"';
-                    }
-                    $html .= '>' . sprintf('%02d', $i) . '</option>';
-                }
-                $html .= '</select>';
-            }
+            $html .= '</select>';
         }
         $html .= '</span>';
         $html .= '</div>';

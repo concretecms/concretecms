@@ -2,6 +2,7 @@
 namespace Concrete\Core\Cache\Page;
 
 
+use Concrete\Core\Logging\Channels;
 use Stash\Pool;
 use Concrete\Core\Page\Page as ConcretePage;
 use Concrete\Core\Support\Facade\Facade;
@@ -25,8 +26,8 @@ class RedisPageCache extends PageCache
     {
         $app = Facade::getFacadeApplication();
         $driver = new Redis($app['config']->get('concrete.cache.page.redis'));
-
         self::$pool = new Pool($driver);
+        self::$pool->setLogger($app->make('log/factory')->createLogger(Channels::CHANNEL_APPLICATION));
     }
 
     /**

@@ -46,6 +46,20 @@ class SlotRenderer
         $this->renderedSlotCollection = $renderedSlotCollection;
     }
 
+    /**
+     * Returns true if the slot has a block inside it.
+     *
+     * @param int $slot
+     */
+    public function hasContents(int $slot)
+    {
+        $slot = $this->renderedSlotCollection->getRenderedSlot($slot);
+        if ($slot) {
+            return $slot->getBlockID() > 0;
+        }
+        return false;
+    }
+
     public function display(int $slot)
     {
         $slot = $this->renderedSlotCollection->getRenderedSlot($slot);

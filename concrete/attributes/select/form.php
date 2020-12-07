@@ -13,9 +13,10 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
     foreach ($options as $opt) {
         ?>
 
-        <div class="checkbox"><label>
-                <?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
+        <div class="form-check">
+            <?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
         ?>
+            <label class="form-check-label">
                 <?=$opt->getSelectAttributeOptionDisplayValue()?>
             </label>
         </div>

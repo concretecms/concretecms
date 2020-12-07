@@ -39,7 +39,7 @@ $token = $app->make(Token::class);
 
         <div class="form-check">
             <?php echo $form->checkbox('removeUnlistedUsers', 1, false, ["class" => "form-check-input"]) ?>
-            <?php echo $form->label('removeUnlistedUsers', t("Remove users from this group if they don't appear in CSV."), ["class" => "form-check-label"]) ?>
+            <?php echo $form->label('removeUnlistedUsers', t("Remove users from this group if they don't appear in the CSV file."), ["class" => "form-check-label"]) ?>
         </div>
     </div>
 
