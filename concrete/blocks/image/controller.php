@@ -3,6 +3,7 @@
 namespace Concrete\Block\Image;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Error\Error;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -25,6 +26,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = ['fID', 'fOnstateID', 'fileLinkID'];
     protected $btExportPageColumns = ['internalLinkCID'];
+    protected $btExportTables = ['btContentImage', 'btContentImageThumbnails'];
 
     /**
      * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
@@ -55,6 +57,27 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
+     * @return array
+     */
+    public function getThumbnails()
+    {
+        $thumbnails = [];
+
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        /** @noinspection SqlDialectInspection */
+        /** @noinspection SqlNoDataSourceInspection */
+        /** @noinspection PhpDeprecationInspection */
+        $rows = $db->fetchAll("SELECT breakpointHandle, thumbnailTypeId FROM btContentImageThumbnails WHERE bID = ?", [$this->bID]);
+
+        foreach($rows as $row) {
+            $thumbnails[$row["breakpointHandle"]] = $row["thumbnailTypeId"];
+        }
+
+        return $thumbnails;
+    }
+
+    /**
      * @return bool|null
      */
     public function view()
@@ -70,10 +93,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $imgPaths = [];
 
         if (is_object($f) && is_object($foS)) {
-            /** @var Type $thumbnailTypeService */
-            $thumbnailTypeService = $this->app->make(Type::class);
-            $thumbnailType = $thumbnailTypeService::getByID((int)$this->thumbnailTypeId);
-
             if (!$f->getTypeObject()->isSVG() && !$foS->getTypeObject()->isSVG()) {
                 if ($this->cropImage && ($this->maxWidth > 0 && $this->maxHeight > 0)) {
                     $im = $this->app->make('helper/image');
@@ -83,9 +102,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
                     $fOnstateThumb = $im->getThumbnail($foS, $this->maxWidth, $this->maxHeight, true);
                     $imgPaths['hover'] = $fOnstateThumb->src;
-                } else if ($thumbnailType instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type) {
-                    $imgPaths['default'] = File::getByID($this->getFileID())->getApprovedVersion()->getThumbnailURL($thumbnailType->getBaseVersion());
-                    $imgPaths['hover'] = File::getByID($this->getFileOnstateID())->getApprovedVersion()->getThumbnailURL($thumbnailType->getBaseVersion());
                 } else {
                     $imgPaths['default'] = File::getRelativePathFromID($this->getFileID());
                     $imgPaths['hover'] = File::getRelativePathFromID($this->fOnstateID);
@@ -93,6 +109,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             }
         }
 
+        $this->set('thumbnails', $this->getThumbnails());
         $this->set('imgPaths', $imgPaths);
         $this->set('altText', $this->getAltText());
         $this->set('title', $this->getTitle());
@@ -112,6 +129,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('imageLinkPickers', $this->getImageLinkPickers());
         $this->set('imageLinkHandle', 'none');
         $this->set('imageLinkValue', null);
+        $this->set('thumbnails', []);
     }
 
     public function edit()
@@ -147,6 +165,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         // None, Internal, or External
         $this->set('destinationPicker', $this->app->make(DestinationPicker::class));
         $this->set('imageLinkPickers', $this->getImageLinkPickers());
+        $this->set('thumbnails', $this->getThumbnails());
         if ($this->getInternalLinkCID()) {
             $this->set('imageLinkHandle', 'page');
             $this->set('imageLinkValue', $this->getInternalLinkCID());
@@ -385,7 +404,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         if ($svg && isset($args['cropImage'])) {
             $e->add(t('SVG images cannot be cropped.'));
         }
-        
+
         $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), $e, t('Image Link'), $args);
 
         return $e;
@@ -396,8 +415,29 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     public function delete()
     {
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $db->delete('btContentImageThumbnails', ['bID' => $this->bID]);
         $this->getTracker()->forget($this);
         parent::delete();
+    }
+
+    public function duplicate($newBID)
+    {
+        parent::duplicate($newBID);
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        /** @noinspection SqlDialectInspection */
+        /** @noinspection SqlNoDataSourceInspection */
+        $db->executeStatement(
+            "INSERT INTO btContentImageThumbnails (bID, breakpointHandle, thumbnailTypeId) SELECT ?, breakpointHandle, thumbnailTypeId FROM btContentImageThumbnails WHERE bID = ?",
+            [
+                $newBID,
+                $this->bID
+            ]
+        );
     }
 
     /**
@@ -435,7 +475,31 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $args['openLinkInNewWindow'] = $args['openLinkInNewWindow'] ? 1 : 0;
         $args['openLinkInLightbox'] = $args['openLinkInLightbox'] ? 1 : 0;
 
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+
+        /** @noinspection SqlDialectInspection */
+        /** @noinspection SqlNoDataSourceInspection */
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $db->executeQuery('DELETE from btContentImageThumbnails WHERE bID = ?', [$this->bID]);
+
         parent::save($args);
+
+        if (isset($args["thumbnails"]) && is_array($args["thumbnails"])) {
+            foreach ($args["thumbnails"] as $breakpointHandle => $thumbnailTypeId) {
+                /** @noinspection SqlDialectInspection */
+                /** @noinspection SqlNoDataSourceInspection */
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $db->executeQuery('INSERT INTO btContentImageThumbnails (bID, breakpointHandle, thumbnailTypeId) values(?, ?, ?)',
+                    [
+                        $this->bID,
+                        $breakpointHandle,
+                        $thumbnailTypeId
+                    ]
+                );
+            }
+        }
+
         $this->getTracker()->track($this);
     }
 

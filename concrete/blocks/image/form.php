@@ -8,17 +8,18 @@ use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Form\Service\Widget\PageSelector;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Theme\Concrete\PageTheme;
 
 /**
  * @var DestinationPicker $destinationPicker
  * @var array $imageLinkPickers
- * @var int $thumbnailTypeId
  * @var string $imageLinkHandle
  * @var mixed $imageLinkValue
  * @var int $constrainImage
  * @var File|null $bfo
  * @var bool $openLinkInLightbox
  * @var bool $openLinkInNewWindow
+ * @var array $thumbnails
  */
 
 $app = Application::getFacadeApplication();
@@ -26,25 +27,20 @@ $app = Application::getFacadeApplication();
 $pageSelector = $app->make(PageSelector::class);
 /** @var FileManager $fileManager */
 $fileManager = $app->make(FileManager::class);
-
-$thumbnailTypes = [];
-
 /** @var Type $thumbnailTypeService */
 $thumbnailTypeService = $app->make(Type::class);
 
+$thumbnailTypes = [];
+
 foreach ($thumbnailTypeService::getList() as $thumbnailTypeListItem) {
-    $thumbnailTypes["thumbnail-type-" . $thumbnailTypeListItem->getID()] = $thumbnailTypeListItem->getDisplayName('text');
+    if ($thumbnailTypeListItem->isAvailableInBlocks()) {
+        $thumbnailTypes[$thumbnailTypeListItem->getID()] = $thumbnailTypeListItem->getDisplayName('text');
+    }
 }
 
-$constrainImageSizes = array_merge(
-    [
-        "full-size" => t("Show full-sized image")
-    ],
-    $thumbnailTypes,
-    [
-        "custom-size" => t("Custom Size")
-    ]
-);
+$siteTheme = PageTheme::getSiteTheme();
+$responsiveImageMap = $siteTheme->getThemeResponsiveImageMap();
+
 ?>
 
 <fieldset>
@@ -83,32 +79,32 @@ $constrainImageSizes = array_merge(
 
             <?php echo $fileManager->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo); ?>
         </div>
+    </div>
 
-        <div class="form-group">
-            <?php echo $form->label('imageLink', t('Image Link')) ?>
-            <?php echo $destinationPicker->generate(
-                'imageLink',
-                $imageLinkPickers,
-                $imageLinkHandle,
-                $imageLinkValue
-            )
+    <div class="form-group">
+        <?php echo $form->label('imageLink', t('Image Link')) ?>
+        <?php echo $destinationPicker->generate(
+            'imageLink',
+            $imageLinkPickers,
+            $imageLinkHandle,
+            $imageLinkValue
+        )
+        ?>
+    </div>
+
+    <div id="openLinkContainer" class="form-group">
+        <div class="form-check">
+            <?php
+            echo $form->checkbox('openLinkInLightbox', 'openLinkInLightbox', isset($openLinkInLightbox) ? $openLinkInLightbox : false);
+            echo $form->label("openLinkInLightbox", t('Open link in Lightbox'), ["class" => "form-check-label"]);
             ?>
         </div>
 
-        <div id="openLinkContainer" class="form-group">
-            <div class="form-check">
-                <?php
-                echo $form->checkbox('openLinkInLightbox', 'openLinkInLightbox', isset($openLinkInLightbox) ? $openLinkInLightbox : false);
-                echo $form->label("openLinkInLightbox", t('Open link in Lightbox'), ["class" => "form-check-label"]);
-                ?>
-            </div>
-
-            <div class="form-check">
-                <?php
-                echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', isset($openLinkInNewWindow) ? $openLinkInNewWindow : false);
-                echo $form->label("openLinkInNewWindow", t('Open link in new window'), ["class" => "form-check-label"]);
-                ?>
-            </div>
+        <div class="form-check">
+            <?php
+            echo $form->checkbox('openLinkInNewWindow', 'openLinkInNewWindow', isset($openLinkInNewWindow) ? $openLinkInNewWindow : false);
+            echo $form->label("openLinkInNewWindow", t('Open link in new window'), ["class" => "form-check-label"]);
+            ?>
         </div>
     </div>
 </fieldset>
@@ -120,7 +116,11 @@ $constrainImageSizes = array_merge(
 
     <div class="form-group">
         <?php echo $form->label('constrainImageSize', t('Constrain Image Size')); ?>
-        <?php echo $form->select('constrainImageSize', $constrainImageSizes); ?>
+        <?php echo $form->select('constrainImageSize', [
+            "full-size" => t("Show full-sized image"),
+            "thumbnails" => t("Thumbnails"),
+            "custom-size" => t("Custom Size")
+        ]); ?>
     </div>
 
     <div id="fullSizeNotice" class="form-group">
@@ -129,8 +129,35 @@ $constrainImageSizes = array_merge(
         </p>
     </div>
 
-    <?php echo $form->hidden('thumbnailTypeId', $thumbnailTypeId); ?>
     <?php echo $form->hidden('constrainImage'); ?>
+
+    <div id="thumbnails">
+        <?php if (count($responsiveImageMap) === 0) { ?>
+            <div class="alert alert-warning">
+                <?php echo t("Responsive Breakpoints are not defined in your theme. To use Thumbnails please define Breakpoints in your theme settings."); ?>
+            </div>
+        <?php } else if (count($thumbnailTypes) === 0) { ?>
+            <div class="alert alert-warning">
+                <?php echo t("You don't have any thumbnail types. Thumbnail types can be managed in Dashboard > System > Files > Thumbnails."); ?>
+            </div>
+        <?php } else { ?>
+            <?php foreach ($responsiveImageMap as $breakpointHandle => $breakpointSize) { ?>
+                <div class="form-group">
+                    <?php echo $form->label('thumbnails_' . $breakpointHandle, t('Thumbnail type for Breakpoint %s', $breakpointHandle)); ?>
+                    <?php echo $form->select(
+                        'thumbnails[]',
+                        $thumbnailTypes,
+                        isset($thumbnails[$breakpointHandle]) ? $thumbnails[$breakpointHandle] : null,
+                        [
+                            'name' => 'thumbnails[' . $breakpointHandle . ']',
+                            'id' => 'thumbnails_' . $breakpointHandle,
+                            'class' => 'ccm-thumbnail-selector'
+                        ]
+                    ); ?>
+                </div>
+            <?php } ?>
+        <?php } ?>
+    </div>
 
     <div id="customImageSize">
         <div class="form-group">
@@ -194,11 +221,12 @@ $constrainImageSizes = array_merge(
     </div>
 </fieldset>
 
+<!--suppress JSJQueryEfficiency, ES6ConvertVarToLetConst -->
 <script>
     $(function () {
         var $constrainImageSize = $("#constrainImageSize");
+        var $thumbnails = $("#thumbnails");
         var $customImageSize = $("#customImageSize");
-        var $thumbnailTypeId = $("#thumbnailTypeId");
         var $constrainImage = $("#constrainImage");
         var $fullSizeNotice = $("#fullSizeNotice");
         var $maxHeight = $("#maxHeight");
@@ -207,11 +235,13 @@ $constrainImageSizes = array_merge(
         var $openLinkContainer = $("#openLinkContainer");
         var $openLinkInLightbox = $("#openLinkInLightbox");
         var $openLinkInNewWindow = $("#openLinkInNewWindow");
+        var hasThumbnailItems = <?php /** @noinspection PhpComposerExtensionStubsInspection */echo json_encode(count($thumbnails) > 0) ?>;
+        var $thumbnailSelectors = $(".ccm-thumbnail-selector");
 
-        if ($thumbnailTypeId.val() > 0) {
-            $constrainImageSize.val("thumbnail-type-" + $thumbnailTypeId.val())
-        } else if ($maxHeight.val() > 0 || $maxWidth.val() > 0) {
+        if ($maxHeight.val() > 0 || $maxWidth.val() > 0) {
             $constrainImageSize.val("custom-size")
+        } else if (hasThumbnailItems) {
+            $constrainImageSize.val("thumbnails")
         }
 
         if ($("input[name='fOnstateID']").val() > 0) {
@@ -219,9 +249,10 @@ $constrainImageSizes = array_merge(
         }
 
         $constrainImageSize.change(function () {
+            $thumbnails.addClass("d-none");
             $customImageSize.addClass("d-none");
             $fullSizeNotice.addClass("d-none");
-            $thumbnailTypeId.val(0);
+            $thumbnailSelectors.prop('disabled', true);
             $constrainImage.val(0);
 
             switch ($(this).val()) {
@@ -236,8 +267,8 @@ $constrainImageSizes = array_merge(
                     $cropImage.prop("checked", false);
                     break;
                 default:
-                    var thumbnailTypeId = $(this).val().substr(15);
-                    $thumbnailTypeId.val(thumbnailTypeId);
+                    $thumbnails.removeClass("d-none");
+                    $thumbnailSelectors.prop('disabled', false);
                     $maxHeight.val(0);
                     $maxWidth.val(0);
                     $cropImage.prop("checked", false);
