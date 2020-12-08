@@ -654,7 +654,7 @@ abstract class Package implements LocalizablePackageInterface
 
     /**
      * @deprecated
-     * Use $app->make('Concrete\Core\Package\PackageService')->getInstalledHandles()
+     * Use $app->make('Concrete\Core\Package\PackageService')->getByHandle($pkgHandle)
      *
      * @param string $pkgHandle
      *

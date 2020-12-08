@@ -342,7 +342,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function getResult($queryRow)
     {
-        $c = Page::getByID($queryRow['cID'], 'ACTIVE');
+        $c = Page::getByID($queryRow['cID']);
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
@@ -359,12 +359,18 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT_UNAPPROVED');
                 }
+            } else {
+                $c->loadVersionObject('ACTIVE');
             }
+
             if (isset($queryRow['cIndexScore'])) {
                 $c->setPageIndexScore($queryRow['cIndexScore']);
             }
 
-            return $c;
+            $vo = $c->getVersionObject();
+            if ($vo && $vo->getVersionID()) {
+                return $c;
+            }
         }
     }
 
