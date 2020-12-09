@@ -1,3 +1,38 @@
+# 8.5.5
+
+## Behavioral Improvements
+
+* Removed version from meta generator tag. 
+* CKEditor updated to 4.15.0 (thanks mlocati)
+* Page drafts are now viewable by the view page draft permission (thanks HMone23)
+* Updated list of UK counties (thanks Mesuva)
+* Update CKEditor from 4.15.0 to 4.15.1 (thanks mlocati)
+
+## Bug Fixes
+
+* Page Selector attribute now properly searchable (thanks dimger)
+* No longer fire event `execute_job` twice (thanks deek87)
+* Fixing error when rescanning a multilingual locale (thanks mlocati)
+* Fixed error or max execution timeout that can occur when logging out of multilingual websites (thanks hissy)
+* Fixed: [CKEDITOR] Error code: editor-element-conflict. (thanks mlocati)
+* Fixed error: No such file or directory error when editing an aliased block which is not editable (thanks mlocati)
+* Fixed: Stacks don't update if caching is enabled (thanks hissy)
+* Correctly parse non-decimal IP addresses (thanks mlocati)
+* Fixed: Redis cookie handler always use the session name as a prefix (thanks mlocati)
+* Fixed an error where 404 does not work in multi language cases under certain situations (thanks hissy)
+* More resilient upgrade routine when dealing with conflicting character sets in mysql (thanks mlocati)
+* Fix issue where a rich text field on a form block doesn't re-populate contents after submit (thanks Mesuva)
+* Fixed: Express Forms - CSV Export does not respect datetime format from config (thanks 1stthomas)
+* Fixes filtering by multiple topic attributes on an item list (thanks hissy)
+* Banned words with multibyte characters are now accurately detected (thanks hissy)
+* Use UserMessageException when invalid path traversal is detected (thanks mlocati)
+ * Do not remove picture elements on rendering textarea attribute value (thanks hissy)
+* Fix "call to a member function overrideCollectionPermissions() on a non-object" in AreaAssignment (thanks mlocati)
+
+## Developer Updates
+
+* Allow routes with optional arguments (thanks mlocati)
+
 # 8.5.4
 
 ## Bug Fixes
