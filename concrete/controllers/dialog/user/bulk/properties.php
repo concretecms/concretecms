@@ -77,7 +77,9 @@ class Properties extends BackendInterfaceController
 
     public function view()
     {
-        $keySelector = $this->app->make(ElementManager::class)->get('attribute/component/key_selector', [$this->getCategory()]);
+        $keySelector = $this->app->make(ElementManager::class)->get('attribute/component/key_selector', [
+            'category' => $this->getCategory()
+        ]);
         /** @var \Concrete\Controller\Element\Attribute\Component\KeySelector $controller */
         $controller = $keySelector->getElementController();
         $controller->setSelectAttributeUrl($this->action('get_attribute'));
