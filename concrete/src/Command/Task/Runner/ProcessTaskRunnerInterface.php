@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Command\Process;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-interface ProcessTaskRunnerInterface
+interface ProcessTaskRunnerInterface extends TaskRunnerInterface
 {
 
     public function getProcess(): Process;

@@ -8,51 +8,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <div v-if="runningProcesses.length">
         <h3><?=t('Currently Running')?></h3>
+        <div v-if="runningProcesses.length">
+            <task-process-list :processes="runningProcesses"></task-process-list>
+        </div>
     </div>
 
     <div class="mt-4">
         <div v-if="completedProcesses.length">
             <h3><?=t('History')?></h3>
-            <div class="p-2">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h5>asdf</h5>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-muted">alsdfkj</div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="text-muted">alsdfkj</div>
-                    </div>
-                    <div class="col-md-2 d-flex">
+            <task-process-list :processes="completedProcesses"
+                               delete-action="<?=$view->action('delete', $token->generate('delete'))?>">
 
-                    </div>
-                </div>
-            </div>
-            <div class="card card-body p-2 mb-2" v-for="process in completedProcesses" :key="process.id">
-                <a data-toggle="collapse" :data-target="'#process-' + process.id"
-                   class="text-decoration-none text-dark" role="button"
-                   aria-expanded="false"
-                   @click="toggleProcess(process)">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div>{{process.name}}</div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="text-muted">alsdfkj</div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="text-muted">alsdfkj</div>
-                        </div>
-                        <div class="col-md-2 d-flex">
-                            <div class="ml-auto"><Icon :icon="openProcesses.includes(process.id) ? 'chevron-down' : 'chevron-right'" type="fas" /></div>
-                        </div>
-                    </div>
-                </a>
-                <div :id="'process-' + process.id" class="collapse">
-                    wat
-                </div>
-            </div>
+            </task-process-list>
         </div>
         <div v-else>
             <p><?=t('The process history is empty.')?></p>
@@ -60,6 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </div>
 
 </div>
+
 
 <script type="text/javascript">
     $(function() {
@@ -69,7 +37,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 components: config.components,
                 data: {
                     'processes': <?=json_encode($processes)?>,
-                    'openProcesses': []
                 },
 
                 computed: {
@@ -96,6 +63,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 watch: {
                 },
                 methods: {
+                    deleteProcess(process) {
+                        var modalTarget = '#delete-process-' + process.id
+                        $(modalTarget).modal('show')
+                    },
                     toggleProcess(process) {
                         if (!this.openProcesses.includes(process.id)) {
                             this.openProcesses.push(process.id)

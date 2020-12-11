@@ -178,13 +178,28 @@ class Process implements \JsonSerializable
 
     public function jsonSerialize()
     {
+        $timezone = date_default_timezone_get();
+        $dateStartedString = (new \DateTime('@' . $this->getDateStarted()))
+            ->setTimezone(new \DateTimeZone($timezone))
+            ->format('F d, Y g:i a');
+
+        $dateCompletedString = null;
+        if ($this->getDateCompleted()) {
+            $dateCompletedString = (new \DateTime('@' . $this->getDateCompleted()))
+                ->setTimezone(new \DateTimeZone($timezone))
+                ->format('F d, Y g:i a');
+        }
+
         $data = [
             'id' => $this->getID(),
             'name' => $this->getName(),
             'dateStarted' => $this->getDateStarted(),
             'dateCompleted' => $this->getDateCompleted(),
+            'dateStartedString' => $dateStartedString,
+            'dateCompletedString' => $dateCompletedString,
             'user' => $this->getUser(),
             'batch' => $this->getBatch(),
+            'hasDetails' => false,
         ];
         return $data;
     }

@@ -3,7 +3,6 @@
 namespace Concrete\Core\Command\Task\Runner;
 
 use Concrete\Core\Command\Task\Input\InputInterface;
-use Concrete\Core\Command\Task\Runner\Traits\GetProcessLogFileNameTrait;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Entity\Command\Process;
 
@@ -12,10 +11,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * Receives a command and asynchronously executes it on a process.
  */
-class ProcessTaskRunner implements TaskRunnerInterface, LoggableToFileRunnerInterface, ProcessTaskRunnerInterface
+class ProcessTaskRunner implements ProcessTaskRunnerInterface
 {
-
-    use GetProcessLogFileNameTrait;
 
     /**
      * @var object

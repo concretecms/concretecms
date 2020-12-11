@@ -2,10 +2,11 @@
 
 namespace Concrete\Core\Command\Task\Output;
 
-use Concrete\Core\Command\Task\Runner\LoggableToFileRunnerInterface;
+use Concrete\Core\Command\Process\Logger\LoggerFactoryInterface;
+use Concrete\Core\Command\Process\Logger\LoggerInterface;
 use Concrete\Core\Command\Task\Runner\ProcessTaskRunnerInterface;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
-use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Notification\Mercure\MercureService;
 use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 
@@ -13,47 +14,19 @@ class OutputFactory
 {
 
     /**
-     * @var Repository
-     */
-    protected $config;
-
-    /**
      * @var MercureService
      */
     protected $mercureService;
 
-    public function __construct(Repository $config, MercureService $mercureService)
+    /**
+     * @var LoggerFactoryInterface
+     */
+    protected $loggerFactory;
+
+    public function __construct(LoggerFactoryInterface $loggerFactory, MercureService $mercureService)
     {
-        $this->config = $config;
+        $this->loggerFactory = $loggerFactory;
         $this->mercureService = $mercureService;
-    }
-
-    public function createDashboardOutput(TaskRunnerInterface $runner): ?OutputInterface
-    {
-        $fileLogger = $this->getFileLoggerOutput($runner);
-        $pushOutput = $this->getPushOutput($runner);
-        if ($fileLogger) {
-            $outputs[] = $fileLogger;
-        }
-        if ($pushOutput) {
-            $outputs[] = $pushOutput;
-        }
-        if ($outputs > 0) {
-            return new AggregateOutput($outputs);
-        }
-    }
-
-    protected function getFileLoggerOutput(TaskRunnerInterface $runner): ?RunnerFileLoggerOutput
-    {
-        if ($this->config->get('concrete.processes.logging.method') == 'file') {
-            if ($runner instanceof LoggableToFileRunnerInterface) {
-                return new RunnerFileLoggerOutput(
-                    $this->config->get('concrete.processes.logging.file.directory'),
-                    $runner
-                );
-            }
-        }
-        return null;
     }
 
     protected function getPushOutput(TaskRunnerInterface $runner): ?PushOutput
@@ -64,13 +37,21 @@ class OutputFactory
         return null;
     }
 
+    protected function getProcessLoggerOutput(TaskRunnerInterface $runner): ?LoggerInterface
+    {
+        if ($this->loggerFactory->runnerSupportsLogging($runner)) {
+            return $this->loggerFactory->createLogger($runner);
+        }
+        return null;
+    }
+
     public function createConsoleOutput(ConsoleOutputInterface $output, TaskRunnerInterface $runner)
     {
-        $fileLogger = $this->getFileLoggerOutput($runner);
+        $processLogger = $this->getProcessLoggerOutput($runner);
         $pushOutput = $this->getPushOutput($runner);
         $outputs = [new ConsoleOutput($output)];
-        if ($fileLogger) {
-            $outputs[] = $fileLogger;
+        if ($processLogger) {
+            $outputs[] = $processLogger;
         }
         if ($pushOutput) {
             $outputs[] = $pushOutput;
@@ -81,5 +62,24 @@ class OutputFactory
             return new AggregateOutput($outputs);
         }
     }
+
+    public function createDashboardOutput(TaskRunnerInterface $runner): OutputInterface
+    {
+        $processLogger = $this->getProcessLoggerOutput($runner);
+        $pushOutput = $this->getPushOutput($runner);
+        if ($processLogger) {
+            $outputs[] = $processLogger;
+        }
+        if ($pushOutput) {
+            $outputs[] = $pushOutput;
+        }
+        if ($outputs > 0) {
+            return new AggregateOutput($outputs);
+        } else {
+            return new NullOutput();
+        }
+    }
+
+
 
 }
