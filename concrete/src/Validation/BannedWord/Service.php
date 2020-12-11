@@ -163,10 +163,12 @@ class Service
     {
         $out = 0;
         $bannedWords = $this->getBannedWords();
-        foreach ($bannedWords as $bannedWord) {
-            if (mb_stripos($string, $bannedWord) !== false) {
-                $out = 1;
-                break;
+        foreach (preg_split('/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/u', $string) as $str) {
+            foreach ($bannedWords as $bannedWord) {
+                if (mb_strtolower($str) === mb_strtolower($bannedWord)) {
+                    $out = 1;
+                    break 2;
+                }
             }
         }
 
