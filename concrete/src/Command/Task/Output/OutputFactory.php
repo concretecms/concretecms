@@ -37,17 +37,9 @@ class OutputFactory
         return null;
     }
 
-    protected function getProcessLoggerOutput(TaskRunnerInterface $runner): ?LoggerInterface
-    {
-        if ($this->loggerFactory->runnerSupportsLogging($runner)) {
-            return $this->loggerFactory->createLogger($runner);
-        }
-        return null;
-    }
-
     public function createConsoleOutput(ConsoleOutputInterface $output, TaskRunnerInterface $runner)
     {
-        $processLogger = $this->getProcessLoggerOutput($runner);
+        $processLogger = $this->loggerFactory->createFromRunner($runner);
         $pushOutput = $this->getPushOutput($runner);
         $outputs = [new ConsoleOutput($output)];
         if ($processLogger) {
@@ -65,7 +57,7 @@ class OutputFactory
 
     public function createDashboardOutput(TaskRunnerInterface $runner): OutputInterface
     {
-        $processLogger = $this->getProcessLoggerOutput($runner);
+        $processLogger = $this->loggerFactory->createFromRunner($runner);
         $pushOutput = $this->getPushOutput($runner);
         if ($processLogger) {
             $outputs[] = $processLogger;

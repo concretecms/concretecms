@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Command;
 
+use Concrete\Core\Command\Process\Logger\LoggerFactoryInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -190,6 +191,12 @@ class Process implements \JsonSerializable
                 ->format('F d, Y g:i a');
         }
 
+        $hasDetails = false;
+        $logger = app(LoggerFactoryInterface::class)->createFromProcess($this);
+        if ($logger) {
+            $hasDetails = $logger->logExists();
+        }
+
         $data = [
             'id' => $this->getID(),
             'name' => $this->getName(),
@@ -199,7 +206,8 @@ class Process implements \JsonSerializable
             'dateCompletedString' => $dateCompletedString,
             'user' => $this->getUser(),
             'batch' => $this->getBatch(),
-            'hasDetails' => false,
+            'hasDetails' => $hasDetails,
+            'details' => [],
         ];
         return $data;
     }

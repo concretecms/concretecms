@@ -4,12 +4,13 @@ namespace Concrete\Core\Command\Process;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Command\Batch as BatchEntity;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Entity\Command\TaskProcess;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Notification\Mercure\MercureService;
+use Concrete\Core\Notification\Mercure\Update\BatchUpdated;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\Entity\Command\Batch as BatchEntity;
 
 class ProcessUpdater
 {
@@ -29,14 +30,23 @@ class ProcessUpdater
     protected $entityManager;
 
     /**
-     * BatchProgressUpdater constructor.
-     * @param Application $app
+     * @var MercureService
      */
-    public function __construct(EntityManager $entityManager, Date $dateService, Repository $config)
+    protected $mercureService;
+
+    /**
+     * ProcessUpdater constructor.
+     * @param EntityManager $entityManager
+     * @param Date $dateService
+     * @param Repository $config
+     * @param MercureService $mercureService
+     */
+    public function __construct(EntityManager $entityManager, Date $dateService, Repository $config, MercureService $mercureService)
     {
         $this->entityManager = $entityManager;
         $this->dateService = $dateService;
         $this->config = $config;
+        $this->mercureService = $mercureService;
     }
 
     /**
@@ -53,6 +63,11 @@ class ProcessUpdater
         $process->setExitMessage($exitMessage);
         $this->entityManager->persist($process);
         $this->entityManager->flush();
+
+        if ($this->mercureService->isEnabled()) {
+            $this->mercureService->sendUpdate(new BatchUpdated($batch));
+        }
+
         $this->clearOldProcesses();
         if ($process instanceof TaskProcess) {
             $task = $process->getTask();

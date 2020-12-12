@@ -32,7 +32,8 @@ class MessengerEventSubscriber implements EventSubscriberInterface
     public function __construct(
         BatchUpdater $batchUpdater,
         ProcessUpdater $processUpdater,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        MercureService $mercureService
     )
     {
         $this->batchUpdater = $batchUpdater;

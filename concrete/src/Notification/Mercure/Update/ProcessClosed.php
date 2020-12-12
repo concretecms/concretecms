@@ -4,7 +4,7 @@ namespace Concrete\Core\Notification\Mercure\Update;
 
 use Concrete\Core\Entity\Command\Process;
 
-class ProcessOutput implements UpdateInterface
+class ProcessClosed implements UpdateInterface
 {
 
     /**

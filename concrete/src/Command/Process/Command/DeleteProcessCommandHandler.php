@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Command\Process\Command;
 
+use Concrete\Core\Command\Process\Logger\LoggerFactoryInterface;
 use Concrete\Core\Entity\Command\Process;
 use Doctrine\ORM\EntityManager;
 
@@ -13,8 +14,14 @@ class DeleteProcessCommandHandler
      */
     protected $entityManager;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * @var LoggerFactoryInterface
+     */
+    protected $loggerFactory;
+
+    public function __construct(LoggerFactoryInterface $loggerFactory, EntityManager $entityManager)
     {
+        $this->loggerFactory = $loggerFactory;
         $this->entityManager = $entityManager;
     }
 
@@ -22,6 +29,10 @@ class DeleteProcessCommandHandler
     {
         $process = $this->entityManager->find(Process::class, $command->getProcessId());
         if ($process) {
+            $logger = $this->loggerFactory->createFromProcess($process);
+            if ($logger) {
+                $logger->remove();
+            }
             $this->entityManager->remove($process);
             $this->entityManager->flush();
         }

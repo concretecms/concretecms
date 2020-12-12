@@ -2,8 +2,11 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Automation;
 
 use Concrete\Core\Command\Process\Command\DeleteProcessCommand;
+use Concrete\Core\Command\Process\Logger\LoggerFactoryInterface;
 use Concrete\Core\Entity\Command\Process;
+use Concrete\Core\Notification\Mercure\MercureService;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Processes extends DashboardPageController
 {
@@ -11,8 +14,16 @@ class Processes extends DashboardPageController
     public function view($processID = null)
     {
         $r = $this->entityManager->getRepository(Process::class);
+        $mercureService = $this->app->make(MercureService::class);
+        $eventSource = null;
+        if ($mercureService->isEnabled()) {
+            $eventSource = $mercureService->getPublisherUrl();
+        }
         $this->set('processes', $r->findAll());
+        $this->set('processID', $processID);
+        $this->set('eventSource', $eventSource);
     }
+
 
     public function delete($token = null)
     {
@@ -34,5 +45,30 @@ class Processes extends DashboardPageController
 
         $this->view();
     }
+
+    public function details($token = null)
+    {
+        $process = $this->entityManager->find(
+            Process::class,
+            $this->request->request->get('processId')
+        );
+        if (!$this->token->validate('details', $token)) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$process) {
+            $this->error->add(t('Invalid process ID'));
+        }
+        if (!$this->error->has()) {
+            $logger = $this->app->make(LoggerFactoryInterface::class)->createFromProcess($process);
+            if ($logger) {
+                if ($logger->logExists()) {
+                    return new JsonResponse($logger->readAsArray());
+                }
+            }
+        }
+
+        return new JsonResponse([]);
+    }
+
 
 }

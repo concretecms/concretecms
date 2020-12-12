@@ -9,8 +9,8 @@ use Concrete\Core\Entity\Command\Process;
 interface LoggerFactoryInterface
 {
 
-    public function runnerSupportsLogging(TaskRunnerInterface $runner): bool;
+    public function createFromRunner(ProcessTaskRunnerInterface $runner): ?LoggerInterface;
 
-    public function createLogger(ProcessTaskRunnerInterface $runner): LoggerInterface;
+    public function createFromProcess(Process $process): ?LoggerInterface;
 
 }

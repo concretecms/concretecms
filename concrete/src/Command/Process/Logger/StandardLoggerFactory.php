@@ -6,6 +6,7 @@ use Concrete\Core\Command\Task\Runner\ProcessTaskRunnerInterface;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Command\Process;
+use Illuminate\Filesystem\Filesystem;
 
 class StandardLoggerFactory implements LoggerFactoryInterface
 {
@@ -15,28 +16,47 @@ class StandardLoggerFactory implements LoggerFactoryInterface
      */
     protected $config;
 
-    public function __construct(Repository $config)
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    public function __construct(Repository $config, Filesystem $filesystem)
     {
         $this->config = $config;
+        $this->filesystem = $filesystem;
     }
 
-    public function runnerSupportsLogging(TaskRunnerInterface $runner): bool
+    protected function isLoggingEnabled(): bool
     {
-        if ($runner instanceof ProcessTaskRunnerInterface) {
-            if ($this->config->get('concrete.processes.logging.method') == 'file') {
-                return true;
-            }
+        if ($this->config->get('concrete.processes.logging.method') == 'file') {
+            return true;
         }
         return false;
     }
 
-    public function createLogger(ProcessTaskRunnerInterface $runner): LoggerInterface
+    protected function createLogger(Process $process): LoggerInterface
     {
         return new FileLogger(
             $this->config->get('concrete.processes.logging.file.directory'),
-            $runner->getProcess()
+            $process
         );
     }
 
+    public function createFromRunner(ProcessTaskRunnerInterface $runner): ?LoggerInterface
+    {
+        if ($this->isLoggingEnabled()) {
+            return $this->createLogger($runner->getProcess());
+        }
+        return null;
+    }
+
+    public function createFromProcess(Process $process): ?LoggerInterface
+    {
+        if ($this->isLoggingEnabled()) {
+            return $this->createLogger($process);
+        }
+        return null;
+    }
 
 }

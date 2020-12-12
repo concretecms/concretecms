@@ -2,11 +2,14 @@
 
 namespace Concrete\Core\Command\Process\Logger;
 
-use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Command\Process;
 use Illuminate\Filesystem\Filesystem;
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class FileLogger implements LoggerInterface
+class FileLogger implements LoggerInterface, NormalizableInterface, DenormalizableInterface
 {
 
     /**
@@ -29,7 +32,7 @@ class FileLogger implements LoggerInterface
      * @param string $directory
      * @param Process $process
      */
-    public function __construct(string $directory, Process $process)
+    public function __construct(string $directory = null, Process $process = null)
     {
         $this->filesystem = new Filesystem();
         $this->directory = $directory;
@@ -54,4 +57,38 @@ class FileLogger implements LoggerInterface
     {
         $this->filesystem->append($this->getFilePath(), $message . "\n");
     }
+
+    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    {
+        return [
+            'filePath' => $this->getFilePath(),
+        ];
+    }
+
+    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    {
+        $this->filePath = $data['filePath'];
+    }
+
+    public function remove(): void
+    {
+        if ($this->logExists()) {
+            $this->filesystem->delete($this->getFilePath());
+        }
+    }
+
+    public function readAsArray(): array
+    {
+        $output = [];
+        if ($this->logExists()) {
+            $output = explode("\n", trim($this->filesystem->get($this->getFilePath())));
+        }
+        return $output;
+    }
+
+    public function logExists(): bool
+    {
+        return $this->filesystem->exists($this->getFilePath());
+    }
+
 }

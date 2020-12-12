@@ -9,7 +9,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div v-if="runningProcesses.length">
         <h3><?=t('Currently Running')?></h3>
         <div v-if="runningProcesses.length">
-            <task-process-list :processes="runningProcesses"></task-process-list>
+            <task-process-list :processes="runningProcesses"
+                               <?php if ($eventSource) { ?>event-source="<?=$eventSource?>"<?php } ?>
+                               current-process-id="<?=$processID?>"
+                               details-action="<?=$view->action('details', $token->generate('details'))?>">
+
+            </task-process-list>
         </div>
     </div>
 
@@ -17,7 +22,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div v-if="completedProcesses.length">
             <h3><?=t('History')?></h3>
             <task-process-list :processes="completedProcesses"
-                               delete-action="<?=$view->action('delete', $token->generate('delete'))?>">
+                               <?php if ($eventSource) { ?>event-source="<?=$eventSource?>"<?php } ?>
+                               current-process-id="<?=$processID?>"
+                               delete-action="<?=$view->action('delete', $token->generate('delete'))?>"
+                               details-action="<?=$view->action('details', $token->generate('details'))?>">
 
             </task-process-list>
         </div>
@@ -57,22 +65,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             }
                         })
                         return running
-                    }
-                },
-
-                watch: {
-                },
-                methods: {
-                    deleteProcess(process) {
-                        var modalTarget = '#delete-process-' + process.id
-                        $(modalTarget).modal('show')
-                    },
-                    toggleProcess(process) {
-                        if (!this.openProcesses.includes(process.id)) {
-                            this.openProcesses.push(process.id)
-                        } else {
-                            this.openProcesses.splice(this.openProcesses.indexOf(process.id), 1)
-                        }
                     }
                 }
             })

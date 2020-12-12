@@ -3,7 +3,6 @@
 namespace Concrete\Core\Command\Batch;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
 use Concrete\Core\Command\Process\ProcessUpdater;
 use Concrete\Core\Entity\Command\Batch as BatchEntity;
 use Concrete\Core\Entity\Command\Process;

@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Console\Command;
 
+use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
+use Concrete\Core\Command\Process\ProcessUpdater;
 use Concrete\Core\Command\Task\Input\InputFactory;
+use Concrete\Core\Command\Task\Runner\ProcessTaskRunnerInterface;
 use Concrete\Core\Messenger\MessageBusAwareInterface;
 use Concrete\Core\Command\Task\Input\Input;
 use Concrete\Core\Command\Task\Output\OutputFactory;
@@ -61,6 +64,11 @@ class TaskCommand extends SymfonyCommand
         $handler->start($runner, $taskOutput);
         $handler->run($runner, $taskOutput);
         $handler->complete($runner, $taskOutput);
+
+        if ($runner instanceof ProcessTaskRunnerInterface) {
+            $updater = $app->make(ProcessUpdater::class);
+            $updater->closeProcess($runner->getProcess(), ProcessMessageInterface::EXIT_CODE_SUCCESS);
+        }
 
         return self::SUCCESS;
     }
