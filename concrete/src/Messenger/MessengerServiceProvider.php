@@ -8,7 +8,6 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Command\Batch\Command\HandleBatchMessageCommandHandler;
-use Concrete\Core\Messenger\Handler\DeferredMessageHandler;
 use Concrete\Core\Messenger\Registry\RegistryInterface;
 use Concrete\Core\Messenger\Transport\TransportInterface;
 use Concrete\Core\Messenger\Transport\TransportManager;
@@ -100,7 +99,14 @@ class MessengerServiceProvider extends ServiceProvider
             }
         );
 
-        $this->app->when(DeferredMessageHandler::class)
+        $this->app->when(HandleBatchMessageCommandHandler::class)
+            ->needs(MessageBusInterface::class)
+            ->give(
+                function (Application $app) {
+                    return $app->make(MessageBusManager::class)->getBus(MessageBusManager::BUS_DEFAULT_SYNCHRONOUS);
+                }
+            );
+        $this->app->when(HandleProcessMessageCommandHandler::class)
             ->needs(MessageBusInterface::class)
             ->give(
                 function (Application $app) {

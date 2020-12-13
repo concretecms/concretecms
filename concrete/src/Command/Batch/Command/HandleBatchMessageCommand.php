@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Command\Batch\Command;
 
-use Concrete\Core\Messenger\Handler\DeferredMessageHandler;
 use Concrete\Core\Foundation\Command\Command;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -26,11 +25,6 @@ class HandleBatchMessageCommand extends Command implements NormalizableInterface
     {
         $this->batchId = $batchId;
         $this->message = $message;
-    }
-
-    public static function getHandler(): string
-    {
-        return DeferredMessageHandler::class;
     }
 
     /**

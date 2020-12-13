@@ -8,31 +8,36 @@ class ProcessClosed implements UpdateInterface
 {
 
     /**
-     * @var string
+     * @var array
      */
-    protected $processId;
+    protected $processData;
 
     /**
-     * @var string
+     * @var integer
      */
-    protected $message;
+    protected $exitCode;
 
-    public function __construct(string $processId, string $message)
+    /**
+     * ProcessClosed constructor.
+     * @param array $processData
+     * @param int $exitCode
+     */
+    public function __construct(array $processData, int $exitCode)
     {
-        $this->processId = $processId;
-        $this->message = $message;
+        $this->processData = $processData;
+        $this->exitCode = $exitCode;
     }
 
     public function getTopicURL(): string
     {
-        return 'https://global.concretecms.com/task/processes/' . $this->processId;
+        return 'https://global.concretecms.com/task/close-process/' . $this->processData['id'];
     }
 
     public function getData(): array
     {
         return [
-            'processId' => $this->processId,
-            'message' => $this->message
+            'process' => $this->processData,
+            'exitCode' => $this->exitCode,
         ];
     }
 

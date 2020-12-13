@@ -43,9 +43,9 @@ class StandardLoggerFactory implements LoggerFactoryInterface
         );
     }
 
-    public function createFromRunner(ProcessTaskRunnerInterface $runner): ?LoggerInterface
+    public function createFromRunner(TaskRunnerInterface $runner): ?LoggerInterface
     {
-        if ($this->isLoggingEnabled()) {
+        if ($runner instanceof ProcessTaskRunnerInterface && $this->isLoggingEnabled()) {
             return $this->createLogger($runner->getProcess());
         }
         return null;

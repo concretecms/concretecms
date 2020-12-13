@@ -10,7 +10,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <h3><?=t('Currently Running')?></h3>
         <div v-if="runningProcesses.length">
             <task-process-list :processes="runningProcesses"
-                               <?php if ($eventSource) { ?>event-source="<?=$eventSource?>"<?php } ?>
                                current-process-id="<?=$processID?>"
                                details-action="<?=$view->action('details', $token->generate('details'))?>">
 
@@ -22,7 +21,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div v-if="completedProcesses.length">
             <h3><?=t('History')?></h3>
             <task-process-list :processes="completedProcesses"
-                               <?php if ($eventSource) { ?>event-source="<?=$eventSource?>"<?php } ?>
                                current-process-id="<?=$processID?>"
                                delete-action="<?=$view->action('delete', $token->generate('delete'))?>"
                                details-action="<?=$view->action('details', $token->generate('details'))?>">
@@ -47,6 +45,53 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     'processes': <?=json_encode($processes)?>,
                 },
 
+                mounted() {
+                    <?php if ($eventSource) { ?>
+                        const my = this
+                        const messageUrl = new URL('<?=$eventSource?>')
+                        messageUrl.searchParams.append('topic', 'https://global.concretecms.com/task/processes/{processId}')
+                        const messageEventSource = new EventSource(messageUrl)
+                        messageEventSource.onmessage = event => {
+                            var data = JSON.parse(event.data)
+                            if (data.processId) {
+                                my.processes.forEach(function(process) {
+                                    if (process.id === data.processId) {
+                                        process.details.push(data.message)
+                                    }
+                                })
+                            }
+                        }
+
+                        const closeUrl = new URL('<?=$eventSource?>')
+                        closeUrl.searchParams.append('topic', 'https://global.concretecms.com/task/close-process/{processId}')
+                        const closeEventSource = new EventSource(closeUrl)
+                        closeEventSource.onmessage = event => {
+                            var data = JSON.parse(event.data)
+                            my.processes.forEach(function(process) {
+                                if (process.id == data.process.id) {
+                                    process.dateCompleted = data.process.dateCompleted
+                                }
+                            })
+                        }
+
+                        const progressUrl = new URL('<?=$eventSource?>')
+                        progressUrl.searchParams.append('topic', 'https://global.concretecms.com/batches/{batchId}')
+                        const progressEventSource = new EventSource(progressUrl)
+                        progressEventSource.onmessage = event => {
+                            const data = JSON.parse(event.data)
+                            const total = data.batch.totalJobs
+                            const progress = total - data.batch.pendingJobs
+                            const percent = Math.round(progress / total * 100)
+
+                            my.processes.forEach(function(process) {
+                                if (process.batch && process.batch.id == data.batch.id) {
+                                    process.progress = percent
+                                }
+                            })
+                        }
+
+                <?php } ?>
+                },
                 computed: {
                     completedProcesses: function() {
                         var completed = [];

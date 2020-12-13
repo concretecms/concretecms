@@ -39,11 +39,10 @@ class Processes extends DashboardPageController
         }
         if (!$this->error->has()) {
             $this->executeCommand(new DeleteProcessCommand($process->getID()));
-            $this->flash('success', t('Process Deleted'));
-            return $this->buildRedirect(['/dashboard/system/automation/processes']);
+            return new JsonResponse($process);
         }
 
-        $this->view();
+        return new JsonResponse($this->error);
     }
 
     public function details($token = null)
