@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <h3><?=t('Currently Running')?></h3>
         <div v-if="runningProcesses.length">
             <task-process-list :processes="runningProcesses"
-                               current-process-id="<?=$processID?>"
+<?php /*                               current-process-id="<?=$processID?>" */ ?>
                                details-action="<?=$view->action('details', $token->generate('details'))?>">
 
             </task-process-list>
@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <div v-if="completedProcesses.length">
             <h3><?=t('History')?></h3>
             <task-process-list :processes="completedProcesses"
-                               current-process-id="<?=$processID?>"
+<?php /*                               current-process-id="<?=$processID?>" */ ?>
                                delete-action="<?=$view->action('delete', $token->generate('delete'))?>"
                                details-action="<?=$view->action('details', $token->generate('details'))?>">
 
@@ -70,6 +70,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             my.processes.forEach(function(process) {
                                 if (process.id == data.process.id) {
                                     process.dateCompleted = data.process.dateCompleted
+                                    process.dateCompletedString = data.process.dateCompletedString
                                 }
                             })
                         }

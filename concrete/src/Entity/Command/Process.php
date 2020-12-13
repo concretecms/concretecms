@@ -208,6 +208,7 @@ class Process implements \JsonSerializable
             'batch' => $this->getBatch(),
             'hasDetails' => $hasDetails,
             'details' => [],
+            'progress' => 0, // this is set by the vue component but if it doesn't exist in the json vue gets confused
         ];
         return $data;
     }

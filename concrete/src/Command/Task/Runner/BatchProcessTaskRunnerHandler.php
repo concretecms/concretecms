@@ -21,13 +21,13 @@ class BatchProcessTaskRunnerHandler extends ProcessTaskRunnerHandler
         $batchEntity = $this->processFactory->createBatchEntity($batch);
         $process->setBatch($batchEntity);
 
-        $total = 0;
-        foreach ($batch->getWrappedMessages($batchEntity) as $message) {
-            $this->messageBus->dispatch($message, [new OutputStamp($output)]);
-            $total++;
-        }
-
+        $messages = $batch->getWrappedMessages($batchEntity);
+        $total = count($messages);
         $this->processFactory->setBatchTotal($batchEntity, $process, $total);
+
+        foreach ($messages as $message) {
+            $this->messageBus->dispatch($message, [new OutputStamp($output)]);
+        }
     }
 
 }

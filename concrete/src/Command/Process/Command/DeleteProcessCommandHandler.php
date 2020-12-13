@@ -33,6 +33,12 @@ class DeleteProcessCommandHandler
             if ($logger) {
                 $logger->remove();
             }
+            $batch = $process->getBatch();
+            if ($batch) {
+                $process->setBatch(null);
+                $this->entityManager->remove($batch);
+                $this->entityManager->flush();
+            }
             $this->entityManager->remove($process);
             $this->entityManager->flush();
         }
