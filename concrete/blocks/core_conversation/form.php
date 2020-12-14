@@ -29,9 +29,9 @@ if ($controller->getTask() == 'add') {
     $maxFilesGuest = $config->get('conversations.files.guest.max');
     $maxFilesRegistered = $config->get('conversations.files.registered.max');
     $fileExtensions = implode(',', $fileAccessFileTypes);
-    $attachmentsEnabled = intval($config->get('conversations.attachments_enabled'));
+    $attachmentsEnabled = (int) ($config->get('conversations.attachments_enabled'));
     $notificationUsers = Conversation::getDefaultSubscribedUsers();
-    $subscriptionEnabled = intval($config->get('conversations.subscription_enabled'));
+    $subscriptionEnabled = (int) ($config->get('conversations.subscription_enabled'));
     $fileAccessFileTypesBlacklist = $config->get('conversations.files.disallowed_types');
     if ($fileAccessFileTypesBlacklist === null) {
         $fileAccessFileTypesBlacklist = $config->get('concrete.upload.extensions_blacklist');
@@ -63,7 +63,7 @@ if (!$dateFormat) {
     </div>
     <div class="form-group">
         <label class="control-label"><?=t('Ordering')?></label>
-        <?=$form->select('orderBy', array('date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')), $orderBy)?>
+        <?=$form->select('orderBy', ['date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')], $orderBy)?>
         <div class="checkbox">
             <label>
                 <?=$form->checkbox('enableOrdering', 1, $enableOrdering)?>
@@ -130,7 +130,7 @@ if (!$dateFormat) {
     </div>
     <div class="form-group" data-row="itemsPerPage">
         <label class="control-label"><?=t('Messages Per Page')?></label>
-        <?=$form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1'))?>
+        <?=$form->text('itemsPerPage', $itemsPerPage, ['class' => 'span1'])?>
     </div>
 </fieldset>
 
@@ -238,7 +238,7 @@ if (!$dateFormat) {
     <div class="form-group attachment-overrides">
         <label class="control-label"><?=t('Max Attachments Per Message for Registered Users')?></label>
         <div class="controls">
-            <?=$form->text('maxFilesRegistered', $maxFilesRegistered > 0 ?  $maxFilesRegistered : '')?>
+            <?=$form->text('maxFilesRegistered', $maxFilesRegistered > 0 ? $maxFilesRegistered : '')?>
         </div>
     </div>
     <div class="form-group attachment-overrides">
@@ -270,7 +270,7 @@ if (!$dateFormat) {
     </div>
     <div class="form-group notification-overrides">
         <label class="control-label"><?=t('Users To Receive Conversation Notifications')?></label>
-        <?=$app->make("helper/form/user_selector")->selectMultipleUsers('notificationUsers', $notificationUsers)?>
+        <?=$app->make('helper/form/user_selector')->selectMultipleUsers('notificationUsers', $notificationUsers)?>
     </div>
     <div class="form-group notification-overrides">
         <label class="control-label"><?=t('Subscribe Option')?></label>
