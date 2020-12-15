@@ -25,9 +25,14 @@ final class Version20201029023919 extends AbstractMigration implements Repeatabl
             ['meta_keywords' => 'automated jobs, tasks, commands, console, cli']
         );
         $this->createSinglePage(
-            '/dashboard/system/automation/processes',
-            'Processes',
-            ['meta_keywords' => 'queues, jobs, running']
+            '/dashboard/system/automation/activity',
+            'Activity',
+            ['meta_keywords' => 'processes, queues, jobs, running']
+        );
+        $this->createSinglePage(
+            '/dashboard/system/automation/schedule',
+            'Schedule',
+            ['meta_keywords' => 'cron, scheduling']
         );
         $this->createSinglePage('/dashboard/system/automation/settings', 'Automation Settings');
         $this->createSinglePage(

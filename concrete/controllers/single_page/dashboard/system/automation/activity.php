@@ -8,7 +8,7 @@ use Concrete\Core\Notification\Mercure\MercureService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Processes extends DashboardPageController
+class Activity extends DashboardPageController
 {
 
     public function view($processID = null)

@@ -64,6 +64,31 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
         ); ?></div>
 
 
+    <div class="form-group">
+        <label class="control-label">
+            <?= t('Scheduler') ?>
+        </label>
+        <div class="form-check">
+            <?= $form->radio('scheduling', 0, $scheduling, ['v-model' => 'scheduling']) ?>
+            <label class="form-check-label" for="scheduling5"><?= t(
+                    'Disabled – Tasks cannot be scheduled from the web interface.'
+                ) ?></label>
+        </div>
+        <div class="form-check">
+            <?= $form->radio('scheduling', '1', $scheduling, ['v-model' => 'scheduling']) ?>
+            <label class="form-check-label" for="scheduling6"><?= t(
+                    'Enabled - Schedule tasks when running them.'
+                ) ?></label>
+        </div>
+    </div>
+
+    <div class="alert alert-warning" v-show="scheduling === '1'"><?= t(
+            'If you enable scheduling, you <b>must</b> ensure that the scheduling worker runs every minute.'
+        ); ?>
+        <br/><br/>
+        <textarea class="form-control" rows="1" readonly onclick="this.select()">* * * * * concrete/bin/concrete5 schedule:run >> /dev/null 2>&1</textarea>
+    </div>
+
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
@@ -81,6 +106,7 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
             new Vue({
                 el: '#ccm-system-automation-settings',
                 data: {
+                    scheduling: document.querySelector('input[name="scheduling"]:checked').value,
                     listening: document.querySelector('input[name="listening"]:checked').value,
                     loggingMethod: document.querySelector('input[name="loggingMethod"]:checked').value,
                 },

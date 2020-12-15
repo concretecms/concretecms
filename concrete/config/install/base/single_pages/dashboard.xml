@@ -984,11 +984,19 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Processes" path="/dashboard/system/automation/processes"
-              filename="/dashboard/system/automation/processes.php" pagetype="" description="" package="">
+        <page name="Activity" path="/dashboard/system/automation/activity"
+              filename="/dashboard/system/automation/activity.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>queues, jobs, running</value>
+                    <value>processes, queues, jobs, running</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Schedule" path="/dashboard/system/automation/schedule"
+              filename="/dashboard/system/automation/schedule.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>cron, scheduling, jobs</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1006,14 +1014,7 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Processes" path="/dashboard/system/automation/processes"
-              filename="/dashboard/system/automation/processes.php" pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>queues, jobs, running</value>
-                </attributekey>
-            </attributes>
-        </page>        <page name="Optimization" path="/dashboard/system/optimization"
+        <page name="Optimization" path="/dashboard/system/optimization"
               filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well."
               package=""/>
         <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache"

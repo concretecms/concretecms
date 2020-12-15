@@ -359,6 +359,19 @@ return [
             ],
 
         ],
+
+        'scheduler' => [
+
+            /*
+             * Are scheduled tasks available? Scheduled tasks require running a console command every minute.
+             *
+             * @var bool
+             */
+            'enable' => false,
+
+        ],
+
+
         /**
          * The point after which old completed are automatically removed from the system.
          */

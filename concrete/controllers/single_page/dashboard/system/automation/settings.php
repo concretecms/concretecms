@@ -10,6 +10,7 @@ class Settings extends DashboardPageController
     public function view()
     {
         $this->set('listening', (string) $this->app->make('config')->get('concrete.messenger.consume.method'));
+        $this->set('scheduling', $this->app->make('config')->get('concrete.processes.scheduler.enable') ? 1 : 0);
         $this->set('loggingMethod', (string) $this->app->make('config')->get('concrete.processes.logging.method'));
         $this->set('logDirectory', (string) $this->app->make('config')->get('concrete.processes.logging.file.directory'));
     }
@@ -42,8 +43,10 @@ class Settings extends DashboardPageController
 
         if (!$this->error->has()) {
             $config = $this->app->make('config');
+            $scheduling = $this->request->request->get('scheduling') === '1' ? true : false;
             $listening = $this->request->request->get('listening') === 'worker' ? 'worker' : 'app';
             $config->save('concrete.messenger.consume.method', $listening);
+            $config->save('concrete.processes.scheduler.enable', $scheduling);
             $config->save('concrete.processes.logging.method', $loggingMethod);
             $config->save('concrete.processes.logging.file.directory', $logDirectory);
             $this->flash('success', t('Automation settings saved.'));

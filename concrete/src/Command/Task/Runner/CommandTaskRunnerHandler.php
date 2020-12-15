@@ -49,6 +49,7 @@ class CommandTaskRunnerHandler implements HandlerInterface
     public function complete(TaskRunnerInterface $runner, OutputInterface $output): ResponseInterface
     {
         $output->write($runner->getCompletionMessage());
+        $this->taskService->complete($runner->getTask());
         return new TaskCompletedResponse($runner->getCompletionMessage());
     }
 
