@@ -200,7 +200,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             } else {
                 $options = $this->getSelectedOptions();
                 foreach ($options as $opt) {
-                    $selectedOptions[] = ['id' => 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID(), 'text' => $opt->getSelectAttributeOptionValue()];
+                    $selectedOptions[] = [
+                        'id' => 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID(),
+                        'label' => $opt->getSelectAttributeOptionDisplayValue(),
+                        'text' => $opt->getSelectAttributeOptionValue()
+                    ];
                     $selectedOptionIDs[] = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
                 }
             }
@@ -530,7 +534,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             foreach ($options as $opt) {
                 $o = new \stdClass();
                 $o->id = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
-                $o->text = $opt->getSelectAttributeOptionValue(false);
+                $o->label = $opt->getSelectAttributeOptionDisplayValue();
+                $o->text = $opt->getSelectAttributeOptionValue();
                 $values[] = $o;
             }
         }
@@ -923,10 +928,12 @@ EOT
                 $option = $r->findOneBy(['list' => $type->getOptionList(), 'avSelectOptionID' => $optionID]);
                 if (is_object($option)) {
                     $o->id = $value;
+                    $o->label = $option->getSelectAttributeOptionDisplayValue();
                     $o->text = $option->getSelectAttributeOptionValue();
                 }
             } else {
                 $o->id = $value;
+                $o->label = $value;
                 $o->text = $value;
             }
 
