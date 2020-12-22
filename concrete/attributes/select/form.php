@@ -13,7 +13,7 @@ $form = $app->make(Form::class);
 /** @var Identifier $idHelper */
 $idHelper = $app->make(Identifier::class);
 ?>
-    // Checkbox list.
+
 <?php if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) { ?>
     <?php $options = $controller->getOptions(); ?>
     <?php foreach ($options as $opt) { ?>
