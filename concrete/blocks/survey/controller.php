@@ -3,8 +3,11 @@
 namespace Concrete\Block\Survey;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Doctrine\DBAL\Types\Types;
 use Page;
 use Concrete\Core\User\User;
 use Core;
@@ -189,72 +192,109 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function duplicate($newBID)
     {
         $this->setPollOptions();
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
+        $db = $this->app->make('database/connection');
 
-        $db = Database::connection();
-
+        /** @var Option[] $opt */
         foreach ($this->options as $opt) {
-            $v1 = [$newBID, $opt->getOptionName(), $opt->getOptionDisplayOrder()];
-            $q1 = "INSERT INTO btSurveyOptions (bID, optionName, displayOrder) VALUES (?, ?, ?)";
-            $db->query($q1, $v1);
-
-            $v2 = [$opt->getOptionID()];
-            $newOptionID = $db->Insert_ID();
-            $q2 = "SELECT * FROM btSurveyResults WHERE optionID = ?";
-            $r2 = $db->query($q2, $v2);
-            if ($r2) {
-                while ($row = $r2->fetchRow()) {
-                    $v3 = [$newOptionID, $row['uID'], $row['ipAddress'], $row['timestamp']];
-                    $q3 = "INSERT INTO btSurveyResults (optionID, uID, ipAddress, timestamp) VALUES (?, ?, ?, ?)";
-                    $db->query($q3, $v3);
+            $db->insert('btSurveyOptions',['bID'=>$newBID, 'optionName'=>$opt->getOptionName(), 'displayOrder'=>$opt->getOptionDisplayOrder()]);
+            $newOptionID = $db->lastInsertId();
+            $results = $db->executeQuery('SELECT uID, ipAddress, timestamp FROM btSurveyResults WHERE optionID = :optID',['optID'=>$newOptionID])->fetchAll();
+            if (!empty($results)) {
+                foreach ($results as $row) {
+                    $db->insert('btSurveyResults',['optionID'=>$newOptionID, 'uID'=>$row['uID'], 'ipAddress'=>$row['ipAddress'], 'timestamp'=>$row['timestamp']]);
                 }
             }
+
         }
 
         return parent::duplicate($newBID);
     }
 
+    /**
+     * Validates the survey block data, requiring at least survey options
+     *
+     * @param array|string|null $args
+     * @version 9.0.0a3 Method added for survey block
+     * @return ErrorList
+     */
+    public function validate($args)
+    {
+        /** @var ErrorList $e */
+        $e = $this->app->make(ErrorList::class);
+        $sanitizer = $this->app->make('helper/security');
+
+        if (!isset($args['question']) || empty($sanitizer->sanitizeString($args['question']))) {
+            $e->addError(t('Question must not be blank.'), false, 'question');
+        }
+
+        if ((!isset($args['survivingOptionNames']) || !is_array($args['survivingOptionNames'])) && (!isset($args['pollOption']) || !is_array($args['pollOption']))) {
+            $e->addError(t('Survey must have at least 1 answer.'), false, 'optionValue');
+        }
+
+        return $e;
+    }
+
     public function save($args)
     {
+
+        $sanitizer = $this->app->make('helper/security');
         if (!$args['showResults']) {
             $args['showResults'] = 0;
             $args['customMessage'] = '';
         }
 
+        $args['customMessage'] = $sanitizer->sanitizeString($args['customMessage']);
+
+        $args['question'] = $sanitizer->sanitizeString($args['question']);
+
+
         parent::save($args);
-        $db = Database::connection();
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
+        $db = $this->app->make('database/connection');
 
         if (!isset($args['survivingOptionNames']) || !is_array($args['survivingOptionNames'])) {
             $args['survivingOptionNames'] = [];
         }
 
-        $slashedArgs = [];
+        $sanitizedArgs = [];
+
         foreach ($args['survivingOptionNames'] as $arg) {
-            $slashedArgs[] = addslashes($arg);
+            $sanitizedArgs[] = $sanitizer->sanitizeString($arg);
         }
-        $db->query(
-            "DELETE FROM btSurveyOptions WHERE optionName NOT IN ('" . implode(
-                "','",
-                $slashedArgs) . "') AND bID = " . intval($this->bID));
+        $queryBuilder = $db->createQueryBuilder();
 
-        $max = $db->getOne(
-            "SELECT MAX(displayOrder) AS maxDisplayOrder FROM btSurveyOptions WHERE bID = " . intval($this->bID));
 
-        $displayOrder = $max ? (int)$max + 1 : 0;
+        $queryBuilder->delete('btSurveyOptions')
+            ->andWhere($queryBuilder->expr()->eq('bID',':blockID'))
+            ->setParameter('blockID', (int) $this->bID, Types::INTEGER);
+        if (!empty($sanitizedArgs)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->notIn('optionName',':names'))->setParameter('names',$sanitizedArgs, Connection::PARAM_STR_ARRAY);
+        }
+        $queryBuilder->execute();
+
+
+        $max = $db->fetchColumn(
+            "SELECT MAX(displayOrder) AS maxDisplayOrder FROM btSurveyOptions WHERE bID = :bID", ['bID'=> (int) $this->bID]);
+
+        $displayOrder = $max ? (int) $max + 1 : 0;
 
         if (isset($args['pollOption']) && is_array($args['pollOption'])) {
+            $db->beginTransaction();
             foreach ($args['pollOption'] as $optionName) {
-                $v1 = [$this->bID, $optionName, $displayOrder];
-                $q1 = "INSERT INTO btSurveyOptions (bID, optionName, displayOrder) VALUES (?, ?, ?)";
-                $db->query($q1, $v1);
-                ++$displayOrder;
+                $optionName = $sanitizer->sanitizeString($optionName);
+                // Dont add if the sanitized string is empty
+                if (!empty($optionName)) {
+                    $db->insert('btSurveyOptions', ['bID'=> (int) $this->bID, 'optionName'=>$optionName, 'displayOrder'=>$displayOrder]);
+                    ++$displayOrder;
+                }
             }
+            $db->commit();
         }
 
-        $query = "DELETE FROM btSurveyResults
-			WHERE optionID NOT IN (
-				SELECT optionID FROM btSurveyOptions WHERE bID = {$this->bID}
-				)
-			AND bID = {$this->bID} ";
-        $db->query($query);
+        $queryBuilder = $db->createQueryBuilder();
+        $queryBuilder->delete('btSurveyResults')->where($queryBuilder->expr()->notIn(
+            'optionID','SELECT optionID from btSurveyOptions WHERE bID = :bID'
+        ))->andWhere($queryBuilder->expr()->eq('bID',':bID'))->setParameter('bID', (int) $this->bID, Types::INTEGER)->execute();
     }
 }

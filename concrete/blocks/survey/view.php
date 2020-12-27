@@ -64,7 +64,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             <div class="row">
                 <div<?= $show_graph ? ' class="col-sm-9"' : '' ?>>
                     <div id="surveyQuestion">
-                        <strong><?= t("Question") ?>:</strong> <span><?= $controller->getQuestion() ?></span>
+                        <strong><?= t("Question") ?>:</strong> <span><?= h($controller->getQuestion()) ?></span>
                     </div>
 
                     <div id="surveyResults">
@@ -82,7 +82,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                                     </td>
                                     <td>
                                         <strong>
-                                            <?= $opt->getOptionName() ?>
+                                            <?= h($opt->getOptionName()) ?>
                                         </strong>
                                     </td>
                                 </tr>
@@ -142,7 +142,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
         ?>
 
         <div id="surveyQuestion" class="form-group">
-            <?= $controller->getQuestion() ?>
+            <?= h($controller->getQuestion()) ?>
         </div>
 
         <?php
@@ -159,7 +159,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             <div class="radio">
                 <label>
                     <input type="radio" name="optionID" value="<?= $opt->getOptionID() ?>"/>
-                    <?= $opt->getOptionName() ?>
+                    <?= h($opt->getOptionName()) ?>
                 </label>
             </div>
         <?php

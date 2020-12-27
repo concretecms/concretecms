@@ -78,8 +78,8 @@
                 foreach ($options as $opt) {
                     ?>
                     <div class="survey-block-option">
-                        <a href="#" class="pull-right delete">
-                            <i class="fa fa-trash-o"></i>
+                        <a href="javascript:void(0);" class="float-right ccm-icon-wrapper text-danger delete">
+                            <i class="fas fa-trash-alt"></i>
                         </a>
                         <?= h($opt->getOptionName()) ?>
                         <input type="hidden" name="survivingOptionNames[]"
@@ -106,8 +106,8 @@
     </div>
     <script type="text/template" role="option">
         <div class="survey-block-option">
-            <a href="#" class="delete pull-right">
-                <i class="fa fa-trash-o"></i>
+            <a href="javascript:void(0);" class="float-right ccm-icon-wrapper text-danger delete">
+                <i class="fas fa-trash-alt"></i>
             </a>
             <%- value %>
             <input type="hidden" name="pollOption[]"
