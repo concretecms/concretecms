@@ -1,12 +1,12 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 // basically a stub that includes some other files
 $u = Core::make(Concrete\Core\User\User::class);
 $uID = $u->getUserID();
 $c = Page::getCurrentPage();
 
 //available chart colors are duplicated in content/surveys.php
-$availableChartColors = array(
+$availableChartColors = [
     '00CCdd',
     'cc3333',
     '330099',
@@ -26,20 +26,20 @@ $availableChartColors = array(
     '66DD00',
     '6699FF',
     'FFFF33',
-    'FFCC33', );
+    'FFCC33', ];
 $options = $controller->getPollOptions();
-$optionNames = array();
-$optionResults = array();
-$graphColors = array();
+$optionNames = [];
+$optionResults = [];
+$graphColors = [];
 $i = 1;
 $totalVotes = 0;
 $optionNamesAbbrev = [];
 foreach ($options as $opt) {
     $optionNamesAbbrev[] = $i;
     $optionResults[] = $opt->getResults();
-    ++$i;
+    $i++;
     $graphColors[] = array_pop($availableChartColors);
-    $totalVotes += intval($opt->getResults());
+    $totalVotes += (int) ($opt->getResults());
 }
 foreach ($optionResults as &$value) {
     if ($totalVotes) {
@@ -64,7 +64,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             <div class="row">
                 <div<?= $show_graph ? ' class="col-sm-9"' : '' ?>>
                     <div id="surveyQuestion">
-                        <strong><?= t("Question") ?>:</strong> <span><?= h($controller->getQuestion()) ?></span>
+                        <strong><?= t('Question') ?>:</strong> <span><?= h($controller->getQuestion()) ?></span>
                     </div>
 
                     <div id="surveyResults">
@@ -87,7 +87,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                                     </td>
                                 </tr>
                                 <?php
-                                ++$i;
+                                $i++;
                                 ?>
                                 <?php
 
@@ -95,7 +95,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                             ?>
                         </table>
                         <div class="help-block">
-                            <?= t2('%d Vote', '%d Votes', intval($totalVotes), intval($totalVotes)) ?>
+                            <?= t2('%d Vote', '%d Votes', (int) $totalVotes, (int) $totalVotes) ?>
                         </div>
                     </div>
                 </div>
@@ -106,10 +106,12 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                         <img
                                 border=""
                                 src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= implode(
-                                    ',',
-                                    $optionResults) ?>&chs=180x180&chco=<?= implode(
-                                    ',',
-                                    $graphColors) ?>"
+                        ',',
+                        $optionResults
+                    ) ?>&chs=180x180&chco=<?= implode(
+                                        ',',
+                                        $graphColors
+                                    ) ?>"
                                 alt="<?php echo t('survey results');
                                 ?>"/>
                     </div>
@@ -146,7 +148,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
         </div>
 
         <?php
-        if (!$controller->requiresRegistration() || intval($uID) > 0) {
+        if (!$controller->requiresRegistration() || (int) $uID > 0) {
             ?>
             <form method="post" action="<?= $view->action('form_save_vote') ?>">
                 <input type="hidden" name="rcID" value="<?= $c->getCollectionID() ?>"/>
@@ -165,7 +167,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
         <?php
 
         }
-        if (!$controller->requiresRegistration() || intval($uID) > 0) {
+        if (!$controller->requiresRegistration() || (int) $uID > 0) {
             ?>
             <div class="form-group">
                 <button class="btn btn-primary">
@@ -185,7 +187,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
         ?>
 
         <?php
-        if (!$controller->requiresRegistration() || intval($uID) > 0) {
+        if (!$controller->requiresRegistration() || (int) $uID > 0) {
             ?>
             </form>
         <?php

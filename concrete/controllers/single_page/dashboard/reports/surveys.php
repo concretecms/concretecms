@@ -13,6 +13,7 @@ class Surveys extends DashboardPageController
             return '';
         }
         $dh = $this->app->make('helper/date'); // @var $dh \Concrete\Core\Localization\Service\Date
+
         return $dh->formatPrettyDateTime($inputTime);
     }
 

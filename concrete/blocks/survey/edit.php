@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <style type="text/css">
     div.survey-block-option {
         position: relative;
@@ -32,7 +32,8 @@
                        style="vertical-align: middle" <?php if (!$controller->requiresRegistration()) {
         ?> checked <?php
     } ?> />&nbsp;<?= t(
-                    'Public') ?>
+            'Public'
+        ) ?>
             </label>
         </div>
         <div class="radio">
@@ -41,7 +42,8 @@
                        style="vertical-align: middle" <?php if ($controller->requiresRegistration()) {
         ?> checked <?php
     } ?> />&nbsp;<?= t(
-                    'Only Registered Users') ?>
+            'Only Registered Users'
+        ) ?>
             </label>
         </div>
     </div>
@@ -119,7 +121,7 @@
     Concrete.event.fire('survey-edit-open');
 
     $(document).ready(function(){
-      let showCustomMessage = <?= (int)$controller->getShowResults() ?>;
+      let showCustomMessage = <?= (int) $controller->getShowResults() ?>;
 
       if(showCustomMessage) {
         $('.custom-message-container').show();
