@@ -2,9 +2,11 @@
 
 namespace Concrete\Controller\Backend;
 
+use Concrete\Core\Command\Scheduler\Scheduler;
 use Concrete\Core\Command\Task\Input\InputFactory;
 use Concrete\Core\Command\Task\Output\OutputFactory;
 use Concrete\Core\Command\Task\Response\HttpResponseFactory;
+use Concrete\Core\Command\Scheduler\Response\HttpResponseFactory as ScheduleHttpResponseFactory;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -36,17 +38,24 @@ class Tasks extends AbstractController
      */
     protected $httpResponseFactory;
 
+    /**
+     * @var ScheduleHttpResponseFactory
+     */
+    protected $scheduleHttpResponseFactory;
+
     public function __construct(
         ErrorList $errorList,
         Token $token,
         EntityManager $entityManager,
-        HttpResponseFactory $httpResponseFactory
+        HttpResponseFactory $httpResponseFactory,
+        ScheduleHttpResponseFactory $scheduleHttpResponseFactory
     ) {
         parent::__construct();
         $this->errorList = $errorList;
         $this->token = $token;
         $this->entityManager = $entityManager;
         $this->httpResponseFactory = $httpResponseFactory;
+        $this->scheduleHttpResponseFactory = $scheduleHttpResponseFactory;
     }
 
     public function execute()
@@ -83,16 +92,23 @@ class Tasks extends AbstractController
             $inputFactory = $this->app->make(InputFactory::class);
             $outputFactory = $this->app->make(OutputFactory::class);
             $input = $inputFactory->createFromRequest($this->request, $task->getController()->getInputDefinition());
-            $runner = $task->getController()->getTaskRunner($task, $input);
-            $handler = $this->app->make($runner->getTaskRunnerHandler());
-            $handler->boot($runner);
 
-            $output = $outputFactory->createDashboardOutput($runner);
+            if ($this->request->request->get('scheduleTask')) {
+                $scheduler = $this->app->make(Scheduler::class);
+                $scheduledTask = $scheduler->createScheduledTask($task, $input, $this->request->request->get('cronExpression'));
+                return $this->scheduleHttpResponseFactory->createResponse($scheduledTask);
+            } else {
+                $runner = $task->getController()->getTaskRunner($task, $input);
+                $handler = $this->app->make($runner->getTaskRunnerHandler());
+                $handler->boot($runner);
 
-            $handler->start($runner, $output);
-            $handler->run($runner, $output);
-            $completedResponse = $handler->complete($runner, $output);
-            return $this->httpResponseFactory->createResponse($completedResponse);
+                $output = $outputFactory->createDashboardOutput($runner);
+
+                $handler->start($runner, $output);
+                $handler->run($runner, $output);
+                $response = $handler->complete($runner, $output);
+                return $this->httpResponseFactory->createResponse($response);
+            }
         }
     }
 

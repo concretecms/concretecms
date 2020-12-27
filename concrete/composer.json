@@ -96,7 +96,8 @@
     "commerceguys/addressing": "^1.0",
     "sabre/vobject": "^4.3",
     "symfony/polyfill-uuid": "^1.20",
-    "symfony/mercure": "^0.4.1"
+    "symfony/mercure": "^0.4.1",
+    "dragonmantank/cron-expression": "^3.1"
   },
   "extra": {
     "branch-alias": {

@@ -7,7 +7,7 @@ use Concrete\Core\Command\Task\TaskInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ProcessRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="processType", type="string")
  * @ORM\Table(name="MessengerProcesses")

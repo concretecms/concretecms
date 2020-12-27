@@ -52,6 +52,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                 completed.push(process)
                             }
                         })
+                        completed.sort((a, b) => (a.dateCompleted < b.dateCompleted) ? 1 : -1)
                         return completed
                     },
                     runningProcesses: function() {
@@ -61,6 +62,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                 running.push(process)
                             }
                         })
+                        running.sort((a, b) => (a.dateStarted < b.dateStarted) ? 1 : -1)
                         return running
                     }
                 }

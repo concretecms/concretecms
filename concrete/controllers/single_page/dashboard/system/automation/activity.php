@@ -19,7 +19,7 @@ class Activity extends DashboardPageController
         if ($mercureService->isEnabled()) {
             $eventSource = $mercureService->getPublisherUrl();
         }
-        $this->set('processes', $r->findAll());
+        $this->set('processes', $r->findBy([], ['dateCompleted' => 'desc']));
         $this->set('processID', $processID);
         $this->set('eventSource', $eventSource);
     }
