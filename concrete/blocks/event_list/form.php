@@ -144,8 +144,11 @@ if (count($pageAttributeKeys)) {
 
     <div class="form-group">
         <?php echo $form->label('eventListTitle', t('Title')); ?>
-        <?php echo $form->text('eventListTitle', $eventListTitle) ?>
-    </div>
+	    <div class="input-group">
+        	<?php echo $form->text('eventListTitle', $eventListTitle) ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+		</div>
+	</div>
 
     <div class="form-group">
         <?php echo $form->label('totalToRetrieve', t('Total Number of Events to Retrieve')); ?>

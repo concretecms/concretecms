@@ -4,7 +4,7 @@ namespace Concrete\Core\Package\ItemCategory;
 
 use Concrete\Core\Entity\File\Image\Editor;
 use Concrete\Core\Entity\Package;
-use Concrete\Core\ImageEditor\EditorServiceProvider;
+use Concrete\Core\ImageEditor\ImageEditorService;
 use Concrete\Core\Support\Facade\Application;
 
 class ImageEditor extends AbstractCategory
@@ -26,8 +26,8 @@ class ImageEditor extends AbstractCategory
     public function getPackageItems(Package $package)
     {
         $app = Application::getFacadeApplication();
-        /** @var EditorServiceProvider $editorService */
-        $editorService = $app->make(EditorServiceProvider::class);
+        /** @var ImageEditorService $editorService */
+        $editorService = $app->make(ImageEditorService::class);
         return $editorService->getListByPackage($package);
     }
 }

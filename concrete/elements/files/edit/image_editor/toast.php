@@ -39,6 +39,7 @@ foreach ($output as $position => $assets) {
 </div>
 
 <script>
+$(document).ready(function() {
     var imageEditor = new window.tuiImageEditor('#tui-image-editor-container', {
         includeUI: {
             loadImage: {
@@ -69,4 +70,5 @@ foreach ($output as $position => $assets) {
             }
         });
     });
+});
 </script>

@@ -71,11 +71,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </div>
 
             </div>
+            <div v-if="templateOptions.length === 0">
+                <?=t('No available templates found for selected items.')?>
+            </div>
         </div>
 
         <div class="dialog-buttons">
             <button class="btn btn-secondary" @click="handleCancelButton">{{cancelButtonText}}</button>
-            <button type="button" @click="handleSaveButton" :disabled="selectedItemIds.length === 0"
+            <button type="button" @click="handleSaveButton"
+                    :disabled="selectedItemIds.length === 0 || (currentStep == 'templates' && selectedTemplateOption < 0)"
                     class="btn btn-primary">{{saveButtonText}}
             </button>
         </div>
@@ -193,7 +197,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 dataSources: <?=$dataSourcesJson?>,
                 activeDataSource: 0,
                 templateOptions: [],
-                selectedTemplateOption: 0
+                selectedTemplateOption: -1
             }
         })
     })

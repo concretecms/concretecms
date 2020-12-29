@@ -3,19 +3,19 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 
 use Concrete\Core\Entity\File\Image\Editor;
-use Concrete\Core\ImageEditor\EditorServiceProvider;
+use Concrete\Core\ImageEditor\ImageEditorService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 class ImageEditor extends DashboardPageController
 {
-    /** @var EditorServiceProvider */
+    /** @var ImageEditorService */
     protected $editorService;
 
     public function on_start()
     {
         parent::on_start();
 
-        $this->editorService = $this->app->make(EditorServiceProvider::class);
+        $this->editorService = $this->app->make(ImageEditorService::class);
     }
 
     public function view()
