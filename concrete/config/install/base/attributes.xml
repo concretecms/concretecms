@@ -21,6 +21,16 @@
                 <category handle="express"/>
             </categories>
         </attributetype>
+        <attributetype handle="duration" name="Duration" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+                <category handle="site"/>
+                <category handle="event"/>
+                <category handle="site_type"/>
+            </categories>
+        </attributetype>
         <attributetype handle="textarea" name="Text Area" package="">
             <categories>
                 <category handle="collection"/>
