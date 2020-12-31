@@ -7,6 +7,7 @@
         <category handle="site" allow-sets="1" package=""/>
         <category handle="event" allow-sets="1" package=""/>
         <category handle="site_type" allow-sets="1" package=""/>
+        <category handle="express" allow-sets="1" package=""/>
     </attributecategories>
     <attributetypes>
         <attributetype handle="text" name="Text" package="">
@@ -17,6 +18,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="duration" name="Duration" package="">
@@ -37,6 +39,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="boolean" name="Checkbox" package="">
@@ -47,6 +50,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="date_time" name="Date/Time" package="">
@@ -57,6 +61,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="image_file" name="Image/File" package="">
@@ -65,6 +70,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="number" name="Number" package="">
@@ -75,6 +81,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
 
@@ -86,6 +93,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="address" name="Address" package="">
@@ -94,6 +102,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
 
@@ -105,6 +114,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="url" name="URL" package="">
@@ -115,6 +125,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="email" name="Email" package="">
@@ -125,6 +136,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
 
@@ -132,6 +144,7 @@
             <categories>
                 <category handle="collection"/>
                 <category handle="file"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="topics" name="Topics" package="">
@@ -142,6 +155,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="social_links" name="Social Links" package="">
@@ -154,6 +168,7 @@
                 <category handle="collection"/>
                 <category handle="site"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="calendar_event" name="Calendar Event" package="">
@@ -168,6 +183,7 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="page_selector" name="Page Selector" package="">
@@ -175,6 +191,7 @@
                 <category handle="collection"/>
                 <category handle="site"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="user_selector" name="User Selector" package="">
@@ -185,6 +202,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="site" name="Site" package="">
@@ -192,12 +210,14 @@
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="user_group" name="User Group" package="">
             <categories>
                 <category handle="site"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
     </attributetypes>

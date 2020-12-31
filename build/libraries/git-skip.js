@@ -62,6 +62,7 @@ function getSkippablePaths()
         'css/features/video/frontend.css',
         'css/fontawesome/all.css',
         'css/fullcalendar.css',
+        'css/tui-image-editor.css',
         'images/icons/bedrock/sprites.svg',
         'js/ckeditor/concrete.js',
         'js/cms.js',
@@ -76,6 +77,7 @@ function getSkippablePaths()
         'js/features/navigation/frontend.js',
         'js/fullcalendar.js',
         'js/jquery.js',
+        'js/tui-image-editor.js',
         'js/vue.js',
         'themes/concrete/main.css',
         'themes/concrete/main.js',
@@ -83,7 +85,6 @@ function getSkippablePaths()
         'themes/dashboard/main.js',
         'themes/elemental/main.js',
         'themes/elemental/main.css',
-        'mix-manifest.json',
     ].concat(
         listCopiedFiles(path.join(fsUtil.WEBROOT, 'build/node_modules/@fortawesome/fontawesome-free/webfonts'), 'css/webfonts')
     ).concat(

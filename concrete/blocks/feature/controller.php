@@ -77,6 +77,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function add()
     {
+        $this->set('titleFormat', 'h4');
         $this->edit();
     }
 

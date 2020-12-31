@@ -48,7 +48,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $topics = [$value];
         }
 
-        $i = 1;
         $expressions = [];
         $qb = $list->getQueryObject();
         foreach ($topics as $value) {
@@ -61,10 +60,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                     $topic instanceof \Concrete\Core\Tree\Node\Type\Topic ||
                     $topic instanceof Category)) {
                 $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
-                $expressions[] = $qb->expr()->like($column, ':topicPath' . $i);
-                $qb->setParameter('topicPath' . $i, '%||' . $topic->getTreeNodeDisplayPath() . '%||');
+                $expressions[] = $qb->expr()->like($column, $qb->createNamedParameter('%||' . $topic->getTreeNodeDisplayPath() . '%||'));
             }
-            ++$i;
         }
 
         $expr = $qb->expr();

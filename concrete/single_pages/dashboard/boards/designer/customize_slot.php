@@ -42,7 +42,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button type="submit" class="btn float-right btn-secondary" :disabled="selectedTemplateOption < 1"><?=t('Next')?></button>
+                <button type="submit" class="btn float-right btn-secondary" :disabled="selectedTemplateOption < 0"><?=t('Next')?></button>
             </div>
         </div>
 
@@ -63,7 +63,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 },
                 data: {
                     templateOptions: <?=$templateOptions?>,
-                    selectedTemplateOption: 0
+                    selectedTemplateOption: -1
                 },
 
                 watch: {},
