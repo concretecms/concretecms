@@ -119,6 +119,10 @@ class Controller extends AttributeTypeController
             $this->unitType = $type->getUnitType();
         }
 
+        if (!in_array($this->unitType, array_keys($unitTypes))) {
+            $this->unitType = "seconds";
+        }
+
         $this->set('unitType', $this->unitType);
         $this->set("unitTypes", $this->unitTypes);
     }

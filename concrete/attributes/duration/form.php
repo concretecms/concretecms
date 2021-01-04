@@ -18,9 +18,11 @@ $form = $app->make(Form::class);
 ?>
 
 <div class="input-group">
-    <?php echo $form->number($view->field('value'), $value); ?>
+    <?php echo $form->number($view->field('value'), $value, ["class" => "form-control"]); ?>
 
     <div class="input-group-append">
-        <?php echo $unitTypes[$unitType]; ?>
+        <div class="input-group-text">
+            <?php echo $unitTypes[$unitType]; ?>
+        </div>
     </div>
 </div>
