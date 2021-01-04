@@ -51,7 +51,7 @@ class BulkUserAssignment extends DashboardPageController
                             $csvData = $fileHelper->getContents($csvFile->getPathname());
 
                             /*
-                             * Validate the CSV and extract all mail addresses.
+                             * Validate the CSV file and extract all mail addresses.
                              */
 
                             foreach (explode(PHP_EOL, $csvData) as $line) {
@@ -61,10 +61,10 @@ class BulkUserAssignment extends DashboardPageController
                                     if (filter_var($rows[0], FILTER_VALIDATE_EMAIL)) {
                                         $mailAddresses[] = $rows[0];
                                     } else if ($rows[0] !== null) {
-                                        $this->error->add(t('The given CSV contains invalid mail addresses.'));
+                                        $this->error->add(t('The given CSV file contains invalid mail addresses.'));
                                     }
                                 } else {
-                                    $this->error->add(t('The given CSV contains more then one column.'));
+                                    $this->error->add(t('The given CSV file contains more than one column.'));
                                     break;
                                 }
                             }
@@ -95,7 +95,6 @@ class BulkUserAssignment extends DashboardPageController
 
                             if (!$user->inGroup($targetGroup)) {
                                 $user->enterGroup($targetGroup);
-                                $logger->info(t('User %s was added to group %s.', $user->getUserName(), $targetGroup->getGroupName()));
                                 $totalUsersAddedToTargetGroup++;
                             }
                         }
@@ -111,14 +110,13 @@ class BulkUserAssignment extends DashboardPageController
                             if (!in_array($groupMember->getUserEmail(), $mailAddresses)) {
                                 $user = $groupMember->getUserObject();
                                 $user->exitGroup($targetGroup);
-                                $logger->info(t('User %s was removed from group %s.', $user->getUserName(), $targetGroup->getGroupName()));
                                 $totalUsersRemovedFromTargetGroup++;
                             }
                         }
                     }
 
                     $this->set('success', t(
-                        'Done! %s user records are found in the given CSV. %s users were added to the target group and %s users were removed from target group. For further details please check the logs.',
+                        'Done! %s user records are found in the given CSV file. %s users were added to the target group and %s users were removed from target group. For further details please check the logs.',
                         $totalUsersProvided,
                         $totalUsersAddedToTargetGroup,
                         $totalUsersRemovedFromTargetGroup

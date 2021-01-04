@@ -83,7 +83,10 @@ class Detector
             $locale = $site->getDefaultLocale();
             $home = Section::getByLocale($locale);
             if ($home) {
-                $result = [$locale, $home];
+                if (!is_object($locale)) {
+                    $locale = $home->getLocaleObject();
+                }
+                $result = [$locale->getLocale(), $home];
             }
         }
 

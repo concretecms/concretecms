@@ -700,7 +700,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
         $this->clearSessionControls();
-        $list = Type::getList();
+        $list = Type::getList("express");
 
         $attribute_fields = [];
 
