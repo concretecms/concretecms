@@ -19,6 +19,9 @@ class Activity extends DashboardPageController
         if ($mercureService->isEnabled()) {
             $eventSource = $mercureService->getPublisherUrl();
         }
+        $consumeMethod = $this->app->make('config')->get('concrete.messenger.consume.method');
+        $this->set('consume', $consumeMethod === 'app' ? true : false);
+        $this->set('consumeToken', $this->token->generate('consume_messages'));
         $this->set('processes', $r->findBy([], ['dateCompleted' => 'desc']));
         $this->set('processID', $processID);
         $this->set('eventSource', $eventSource);

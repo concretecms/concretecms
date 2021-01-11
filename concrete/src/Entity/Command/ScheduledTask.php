@@ -2,6 +2,10 @@
 
 namespace Concrete\Core\Entity\Command;
 
+use Concrete\Core\Command\Task\Input\Input;
+use Concrete\Core\Command\Task\Input\InputInterface;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Cron\CronExpression;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -133,6 +137,11 @@ class ScheduledTask implements \JsonSerializable
         $this->dateScheduled = $dateScheduled;
     }
 
+    public function getCronExpressionObject(): CronExpression
+    {
+        return new CronExpression($this->getCronExpression());
+    }
+
     public function jsonSerialize()
     {
         $timezone = date_default_timezone_get();
@@ -140,9 +149,7 @@ class ScheduledTask implements \JsonSerializable
             ->setTimezone(new \DateTimeZone($timezone))
             ->format('F d, Y g:i a');
 
-        $cronExpression = $this->getCronExpression();
-
-        $cronExpressionString = $cronExpression;
+        $cronExpression = $this->getCronExpressionObject();
 
         $data = [
             'id' => $this->getID(),
@@ -150,13 +157,21 @@ class ScheduledTask implements \JsonSerializable
             'input' => $this->getInput(),
             'dateScheduled' => $this->getDateScheduled(),
             'dateScheduledString' => $dateScheduledString,
-            'cronExpression' => $cronExpression,
-            'cronExpressionString' => $cronExpressionString,
+            'cronExpression' => $this->getCronExpression(),
+            'nextRunDate' => $cronExpression->getNextRunDate()->format('Y-m-d H:i:s'),
             'user' => $this->getUser(),
         ];
         return $data;
     }
 
+    public function getTaskInput(): InputInterface
+    {
+        $serializer = app(JsonSerializer::class);
+        /**
+         * @var $serializer Serializer
+         */
+        return $serializer->denormalize($this->getInput(), Input::class);
+    }
 
 
 

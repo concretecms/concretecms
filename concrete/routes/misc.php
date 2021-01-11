@@ -39,7 +39,8 @@ $router->all('/ccm/system/upgrade/submit', '\Concrete\Controller\Upgrade::submit
 $router->all('/ccm/system/country-stateprovince-link/get_stateprovinces', '\Concrete\Controller\Frontend\CountryDataLink::getStateprovinces');
 $router->all('/ccm/system/country-data-link/all', '\Concrete\Controller\Frontend\CountryDataLink::getAll');
 
-$router->all('/ccm/system/process/monitor/{processId}/{token}', '\Concrete\Controller\Backend\Process::monitor');
+$router->all('/ccm/system/dialog/process/activity/{viewToken}', '\Concrete\Controller\Dialog\Process\Activity::view');
+$router->all('/ccm/system/messenger/consume', '\Concrete\Controller\Backend\Messenger::consume');
 $router->all('/ccm/system/dialogs/editor/settings/preview', 'Concrete\Controller\Dialog\Editor\Settings\Preview::view');
 $router->all('/ccm/system/dashboard/attribute/set/update_order', 'Concrete\Controller\Backend\Attribute\Set\UpdateOrder::view');
 $router->all('/ccm/system/heartbeat', '\Concrete\Controller\Frontend\Heartbeat::view');

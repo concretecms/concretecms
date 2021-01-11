@@ -197,6 +197,11 @@ class Process implements \JsonSerializable
             $hasDetails = $logger->logExists();
         }
 
+        $progress = 0;
+        if ($this->getBatch()) {
+            $remaining = $this->getBatch()->getTotalJobs() - $this->getBatch()->getPendingJobs();
+            $progress = round($remaining / $this->getBatch()->getTotalJobs(), 2) * 100;
+        }
         $data = [
             'id' => $this->getID(),
             'name' => $this->getName(),
@@ -208,7 +213,7 @@ class Process implements \JsonSerializable
             'batch' => $this->getBatch(),
             'hasDetails' => $hasDetails,
             'details' => [],
-            'progress' => 0, // this is set by the vue component but if it doesn't exist in the json vue gets confused
+            'progress' => $progress
         ];
         return $data;
     }

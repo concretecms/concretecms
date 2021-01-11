@@ -98,6 +98,7 @@ var ccmi18n = ' . json_encode([
             'advancedSearch' => t('Advanced Search'),
             'customizeSearch' => t('Customize Search'),
             'properties' => t('Page Saved'),
+             'siteActivity' => t('Activity'),
             'savePropertiesMsg' => t('Page Properties saved.'),
             'saveSpeedSettingsMsg' => t('Full page caching settings saved.'),
             'saveUserSettingsMsg' => t('User Settings saved.'),

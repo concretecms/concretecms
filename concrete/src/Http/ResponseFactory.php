@@ -4,6 +4,7 @@ namespace Concrete\Core\Http;
 use Concrete\Controller\Frontend\PageForbidden;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Command\Process\Menu\Item\RunningProcessesItem;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\Service\Ajax;
@@ -354,10 +355,13 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $menu = $this->app->make('helper/concrete/ui/menu');
         $menu->addMenuItem($item);
 
+        // Running processes item
+        $item = new RunningProcessesItem();
+        $menu->addMenuItem($item);
+
         // Multisite item
         $item = new SiteListItem();
         $menu->addMenuItem($item);
-
         $controller = $collection->getPageController();
 
         // we update the current page with the one bound to this controller.

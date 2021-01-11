@@ -10,8 +10,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <h3><?=t('Currently Running')?></h3>
         <div v-if="runningProcesses.length">
             <task-process-list :processes="runningProcesses"
+               <?php if ($consume) { ?>consume<?php } ?>
                 <?php if ($eventSource) { ?> event-source="<?=h($eventSource)?>" <?php } ?>
 <?php /*                               current-process-id="<?=$processID?>" */ ?>
+                               consume-token="<?=$consumeToken?>"
                                details-action="<?=$view->action('details', $token->generate('details'))?>">
 
             </task-process-list>

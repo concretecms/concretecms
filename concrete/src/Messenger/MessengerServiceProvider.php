@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Messenger;
 
+use Concrete\Controller\Backend\Messenger;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Command\Process\Command\HandleProcessMessageCommandHandler;
 use Concrete\Core\Events\EventDispatcher;
@@ -134,6 +135,14 @@ class MessengerServiceProvider extends ServiceProvider
                 $factory = $this->app->make(LoggerFactory::class);
                 return $factory->createLogger(Channels::CHANNEL_MESSENGER);
             });
+        $this->app
+            ->when(Messenger::class)
+            ->needs(LoggerInterface::class)
+            ->give(function () {
+                $factory = $this->app->make(LoggerFactory::class);
+                return $factory->createLogger(Channels::CHANNEL_MESSENGER);
+            });
+
         $this->app
             ->when(MessengerEventSubscriber::class)
             ->needs(LoggerInterface::class)

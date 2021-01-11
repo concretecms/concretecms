@@ -80,9 +80,11 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             <h4 class="mt-3"><?= t('Executing...') ?></h4>
             <task-process-list :processes="executedProcesses"
                 <?php
+                if ($consume) { ?>consume<?php }
                 if ($eventSource) { ?> event-source="<?= h($eventSource) ?>" <?php
                 } ?>
                                :current-process-id="executedProcess.id"
+                               consume-token="<?=$consumeToken?>"
                                details-action="<?= URL::to(
                                    '/dashboard/system/automation/activity',
                                    'details',

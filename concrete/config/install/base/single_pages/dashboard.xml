@@ -1006,7 +1006,7 @@
         <page name="Notification" path="/dashboard/system/notification"
               filename="/dashboard/system/notification/view.php" pagetype="" description="Run and automate commands."
               package=""/>
-        <page name="Tasks" path="/dashboard/system/notification/events"
+        <page name="Server-Sent Events" path="/dashboard/system/notification/events"
               filename="/dashboard/system/notification/events.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">

@@ -162,6 +162,8 @@ class ServiceProviderTest extends TestCase
             ConcreteCommand\FixDatabaseForeignKeys::class,
             ConcreteCommand\ReindexCommand::class,
             ConcreteCommand\RefreshBoardsCommand::class,
+            ConcreteCommand\RunSchedulerCommand::class,
+            ConcreteCommand\RunSchedulerInForegroundCommand::class,
             ConcreteCommand\GenerateFileIdentifiersCommand::class,
             ConcreteCommand\BulkUserAssignCommand::class,
             DBALCommand\ImportCommand::class,

@@ -1,8 +1,7 @@
 <?php
 namespace Concrete\Core\Command\Task\Output;
 
-use Concrete\Core\Command\Task\TaskInterface;
-use Symfony\Component\Console\Output\Output as SymfonyConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface as SymfonyConsoleOutputInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -10,11 +9,11 @@ class ConsoleOutput implements OutputInterface
 {
 
     /**
-     * @var SymfonyConsoleOutput
+     * @var SymfonyConsoleOutputInterface
      */
     protected $symfonyOutput;
 
-    public function __construct(SymfonyConsoleOutput $symfonyOutput)
+    public function __construct(SymfonyConsoleOutputInterface $symfonyOutput)
     {
         $this->symfonyOutput = $symfonyOutput;
     }

@@ -9,14 +9,17 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
         <div v-if="scheduledTasks.length">
             <div class="p-2">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h5>Name</h5>
                     </div>
                     <div class="col-md-3">
                         <h5>Date Scheduled</h5>
                     </div>
-                    <div class="col-md-5">
-                        <h5>Scheduled For</h5>
+                    <div class="col-md-2">
+                        <h5>Expression</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Next Run Date</h5>
                     </div>
                 </div>
             </div>
@@ -24,7 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                 <div class="card process-card"
                      v-for="scheduledTask in scheduledTasks" :key="scheduledTask.id">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div>
                                 {{scheduledTask.task.name}}
                             </div>
@@ -32,10 +35,13 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                         <div class="col-md-3">
                             <div class="text-muted">{{scheduledTask.dateScheduledString}}</div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="text-muted">{{scheduledTask.cronExpressionString}}</div>
+                        <div class="col-md-2">
+                            <div class="text-muted">{{scheduledTask.cronExpression}}</div>
                         </div>
-                        <div class="col-md-2 d-flex">
+                        <div class="col-md-3">
+                            <div class="text-muted">{{scheduledTask.nextRunDate}}</div>
+                        </div>
+                        <div class="col-md-1 d-flex">
                             <div class="ml-auto">
                                 <a href="#" class="ccm-hover-icon" @click.stop="deleteScheduledTask(scheduledTask)">
                                     <icon icon="trash"></icon>

@@ -1,9 +1,12 @@
 <?php
 namespace Concrete\Core\Command\Task\Input;
 
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Field implements FieldInterface
+class Field implements FieldInterface, DenormalizableInterface
 {
 
 
@@ -22,7 +25,7 @@ class Field implements FieldInterface
      * @param string $key
      * @param string $value
      */
-    public function __construct(string $key, string $value)
+    public function __construct(string $key = null, string $value = null)
     {
         $this->key = $key;
         $this->value = $value;
@@ -52,6 +55,11 @@ class Field implements FieldInterface
         ];
     }
 
+    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    {
+        $this->key = $data['key'];
+        $this->value = $data['value'];
+    }
 
 
 }

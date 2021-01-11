@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Command\Process;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Notification\Mercure\MercureService;
 use Concrete\Core\Validation\CSRF\Token;
@@ -20,27 +21,28 @@ class ProcessResponseFactory
      */
     protected $mercureService;
 
-    public function __construct(MercureService $mercureService, Token $tokenService)
+    /**
+     * @var Repository
+     */
+    protected $config;
+
+    public function __construct(Repository $config, MercureService $mercureService, Token $tokenService)
     {
+        $this->config = $config;
         $this->mercureService = $mercureService;
         $this->tokenService = $tokenService;
     }
 
     public function createResponse(Process $process)
     {
-        $requiresPolling = true;
-        if ($this->mercureService->isEnabled()) {
-            $requiresPolling = false;
-        }
         $data = [
-            'requiresPolling' => $requiresPolling,
             'process' => $process,
-            'token' => $this->tokenService->generate($process->getID())
+            'viewToken' => $this->tokenService->generate('view_activity')
         ];
 
-        if (!$requiresPolling) {
-            // @TODO - this shouldn't be sent here, we should have this known at the dashboard level for real server-sent functionality
-            $data['eventSource'] = $this->mercureService->getPublisherUrl();
+        $consumeMethod = $this->config->get('concrete.messenger.consume.method');
+        if ($consumeMethod === 'app') { // this is the default. we consume through the UI
+            $data['consumeToken'] = $this->tokenService->generate('consume_messages');
         }
 
         return new JsonResponse($data);

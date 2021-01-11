@@ -3,6 +3,7 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
 use Concrete\Core\Command\Process\ProcessUpdater;
+use Concrete\Core\Command\Task\Command\ExecuteConsoleTaskCommand;
 use Concrete\Core\Command\Task\Input\InputFactory;
 use Concrete\Core\Command\Task\Runner\ProcessTaskRunnerInterface;
 use Concrete\Core\Messenger\MessageBusAwareInterface;
@@ -48,27 +49,10 @@ class TaskCommand extends SymfonyCommand
     {
         $app = Facade::getFacadeApplication();
         $inputFactory = $app->make(InputFactory::class);
-        $outputFactory = $app->make(OutputFactory::class);
+
         $taskInput = $inputFactory->createFromConsoleInput($input, $this->task->getController()->getInputDefinition());
-        $runner = $this->task->getController()->getTaskRunner($this->task, $taskInput);
-        $handler = $app->make($runner->getTaskRunnerHandler());
-
-        if ($handler instanceof MessageBusAwareInterface) {
-            $handler->setMessageBus($app->make(MessageBusManager::class)->getBus(MessageBusManager::BUS_DEFAULT_SYNCHRONOUS));
-        }
-
-        $handler->boot($runner);
-
-        $taskOutput = $outputFactory->createConsoleOutput($output, $runner); // Must come after boot.
-
-        $handler->start($runner, $taskOutput);
-        $handler->run($runner, $taskOutput);
-        $handler->complete($runner, $taskOutput);
-
-        if ($runner instanceof ProcessTaskRunnerInterface) {
-            $updater = $app->make(ProcessUpdater::class);
-            $updater->closeProcess($runner->getProcess(), ProcessMessageInterface::EXIT_CODE_SUCCESS);
-        }
+        $command = new ExecuteConsoleTaskCommand($this->task, $taskInput, $output);
+        $app->executeCommand($command);
 
         return self::SUCCESS;
     }

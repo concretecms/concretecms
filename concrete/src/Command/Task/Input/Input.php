@@ -2,6 +2,8 @@
 namespace Concrete\Core\Command\Task\Input;
 
 use Concrete\Core\Command\Task\Input\FieldInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -11,7 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  * @package Concrete\Core\Command\Task\Input
  */
-class Input implements InputInterface
+class Input implements InputInterface, DenormalizableInterface
 {
 
     /**
@@ -56,6 +58,13 @@ class Input implements InputInterface
         ];
     }
 
+    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    {
+        foreach ($data['fields'] as $field) {
+            $field = $denormalizer->denormalize($field, Field::class, 'json', $context);
+            $this->addField($field);
+        }
+    }
 
 
 }

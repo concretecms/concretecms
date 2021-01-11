@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a3',
     'version_installed' => '9.0.0a3',
-    'version_db' => '20201119123200', // the key of the latest database migration
+    'version_db' => '20210103123200', // the key of the latest database migration
 
     /*
      * Installation status
@@ -401,7 +401,7 @@ return [
 
             /**
              * Listener. If set to app, then queueable operations like rescanning files and deleting bulk pages
-             * will be polled and executed through an in-page dialog window on demand only. If set to worker you must run
+             * will be polled and executed through browser XHR processes. If set to worker you must run
              * `concrete/bin/messenger:consume` from the command line. This command can be run multiple times to
              * add additional queue workers for command processing.
              *

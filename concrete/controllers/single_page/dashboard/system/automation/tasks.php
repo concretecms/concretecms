@@ -18,6 +18,9 @@ class Tasks extends DashboardPageController
         if ($mercureService->isEnabled()) {
             $eventSource = $mercureService->getPublisherUrl();
         }
+        $consumeMethod = $this->app->make('config')->get('concrete.messenger.consume.method');
+        $this->set('consume', $consumeMethod === 'app' ? true : false);
+        $this->set('consumeToken', $this->token->generate('consume_messages'));
         $this->set('eventSource', $eventSource);
         $this->set('tasks', $tasks);
         $this->set('schedulingEnabled', $this->app->make(Scheduler::class)->isEnabled());
