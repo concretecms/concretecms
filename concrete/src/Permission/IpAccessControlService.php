@@ -241,7 +241,7 @@ class IpAccessControlService implements LoggerAwareInterface
         if ($this->getCategory()->getBanDuration() === null) {
             $banExpiration = null;
         } else {
-            $banExpiration = new DateTime('+' . $this->getCategory()->getBanDuration() . ' minutes');
+            $banExpiration = new DateTime('+' . $this->getCategory()->getBanDuration() . ' seconds');
         }
 
         $range = $this->createRange(
