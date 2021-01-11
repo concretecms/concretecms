@@ -70,7 +70,13 @@ class Controller extends DefaultController
     {
         $value = $this->getValue();
         if ($this->akTextareaDisplayMode == 'rich_text') {
-            return htmLawed($value, ['safe' => 1]);
+            return htmLawed($value, [
+                'balance' => 0, // off
+                'comment' => 3, // allow
+                'safe' => 1,
+                // default allowed elements for safe option + picture
+                'elements' => '* -applet -audio -canvas -embed -iframe -object -script -video +picture'
+            ]);
         }
 
         return nl2br(h($value));
