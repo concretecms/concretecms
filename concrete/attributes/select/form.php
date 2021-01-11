@@ -83,7 +83,8 @@ if ($akSelectAllowOtherValues) {
 			$('input[data-select-and-add=<?=$akID?>]').selectize({
                 plugins: ['remove_button'],
 				valueField: 'id',
-				labelField: 'text',
+                labelField: 'label',
+                searchField: 'text',
 				options: <?=json_encode($selectedOptions)?>,
 				items: <?=json_encode($selectedOptionIDs)?>,
 				openOnFocus: false,
