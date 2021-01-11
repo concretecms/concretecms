@@ -36,22 +36,6 @@ matrix:
       script:
         - ./.travis/check-php-coding-style.sh
 
-    - name: Check JS coding style
-      language: node_js
-      node_js: '10'
-      before_script:
-        - ./.travis/setup-build.sh
-      script:
-        - pushd build && grunt js:check && popd
-
-    - name: Rebuild JS assets
-      language: node_js
-      node_js: '10'
-      before_script:
-        - ./.travis/setup-build.sh
-      script:
-        - ./.travis/rebuild-assets.sh
-
     - name: Test with PHP 5.5
       php: '5.5'
       before_script:
