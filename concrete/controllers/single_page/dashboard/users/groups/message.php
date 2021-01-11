@@ -134,7 +134,7 @@ class Message extends DashboardPageController
     /**
      * Get the recipients.
      *
-     * @return \Concrete\Core\Entity\User\User[]
+     * @return UserInfo[]
      */
     protected function getRecipients()
     {
@@ -142,7 +142,7 @@ class Message extends DashboardPageController
 
         // If the groupID is set to the "All" value, just get all active users
         if ($groupId === self::ALL_GROUPS_ID) {
-            return $this->repository->allUsers(true);
+            return $this->repository->all(true);
         }
 
         // Otherwise resolve the users from the group
