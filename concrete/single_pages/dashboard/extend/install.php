@@ -298,6 +298,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                             } else {
                                 ?>
                                 <a href="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn float-right btn-sm btn-secondary"><?= t('Install'); ?></a>
+                                <a href="javascript:void(0)" class="btn float-right btn-sm btn-danger" onclick="deletePackage('<?= $obj->getPackageHandle() ?>', '<?= $obj->getPackageName() ?>')"><?= t('Delete') ?></a>
                                 <?php
                             }
                             ?>
@@ -328,4 +329,19 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             }
         }
     }
+    ?>
+    <script>
+        deletePackage = function (packageHandle, packageName) {
+            ConcreteAlert.confirm(
+                <?= json_encode(t('Are you sure you want to delete this package?')) ?> + '<br/><code>' + packageName + '</code>',
+                function() {
+                    $("button[data-dialog-action='submit-confirmation-dialog']").prop("disabled", true);
+                    location.href = "<?= $controller->action('delete_package') ?>/" + packageHandle + "/<?= $valt->generate('delete_package') ?>";
+                },
+                'btn-danger',
+                <?= json_encode(t('Delete')) ?>
+            );
+        };
+    </script>
+<?php
 }
