@@ -202,9 +202,13 @@ class Install extends DashboardPageController
             if ($tp->canUninstallPackages()) {
                 $pkg = $this->app->make(PackageService::class)->getClass($pkgHandle);
                 if (is_object($pkg)) {
-                    $r = $pkg->backup();
-                    if ($r instanceof ErrorList) {
-                        $this->error->add($r);
+                    if ($pkg->getPackageEntity() && $pkg->getPackageEntity()->isPackageInstalled()) {
+                        $this->error->add(t('You can not delete an installed package.'));
+                    } else {
+                        $r = $pkg->backup();
+                        if ($r instanceof ErrorList) {
+                            $this->error->add($r);
+                        }
                     }
                 } else {
                     $this->error->add(t('Invalid package.'));
