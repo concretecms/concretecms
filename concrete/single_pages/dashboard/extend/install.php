@@ -18,6 +18,8 @@ $pkgArray = Package::getInstalledList();
 $ci = $app->make('helper/concrete/urls');
 $txt = $app->make('helper/text');
 $nav = $app->make('helper/navigation');
+$config = $app->make('config');
+$displayDeleteBtn = $config->get('concrete.misc.display_package_delete_button');
 
 $catList = AttributeCategory::getList();
 
@@ -299,6 +301,11 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                                 ?>
                                 <a href="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn float-right btn-sm btn-secondary"><?= t('Install'); ?></a>
                                 <?php
+                                if ($displayDeleteBtn) {
+                                    ?>
+                                    <a href="javascript:void(0)" class="btn float-right btn-sm btn-danger" onclick="deletePackage('<?= $obj->getPackageHandle() ?>', '<?= $obj->getPackageName() ?>')"><?= t('Delete') ?></a>
+                                    <?php
+                                }
                             }
                             ?>
                             <h4 class="media-heading"><?= t($obj->getPackageName()) ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
@@ -328,4 +335,19 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             }
         }
     }
+    ?>
+    <script>
+        deletePackage = function (packageHandle, packageName) {
+            ConcreteAlert.confirm(
+                <?= json_encode(t('Are you sure you want to delete this package?')) ?> + '<br/><code>' + packageName + '</code>',
+                function() {
+                    $("button[data-dialog-action='submit-confirmation-dialog']").prop("disabled", true);
+                    location.href = "<?= $controller->action('delete_package') ?>/" + packageHandle + "/<?= $valt->generate('delete_package') ?>";
+                },
+                'btn-danger',
+                <?= json_encode(t('Delete')) ?>
+            );
+        };
+    </script>
+<?php
 }
