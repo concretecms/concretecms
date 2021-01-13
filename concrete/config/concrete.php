@@ -609,6 +609,7 @@ return [
     'misc' => [
         'user_timezones' => false,
         'package_backup_directory' => DIR_FILES_UPLOADED_STANDARD . '/trash',
+        'display_package_delete_button' => true,
         'enable_progressive_page_reindex' => true,
         'mobile_theme_id' => 0,
         'sitemap_approve_immediately' => true,

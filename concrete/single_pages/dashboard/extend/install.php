@@ -18,6 +18,8 @@ $pkgArray = Package::getInstalledList();
 $ci = $app->make('helper/concrete/urls');
 $txt = $app->make('helper/text');
 $nav = $app->make('helper/navigation');
+$config = $app->make('config');
+$displayDeleteBtn = $config->get('concrete.misc.display_package_delete_button');
 
 $catList = AttributeCategory::getList();
 
@@ -298,8 +300,12 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                             } else {
                                 ?>
                                 <a href="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn float-right btn-sm btn-secondary"><?= t('Install'); ?></a>
-                                <a href="javascript:void(0)" class="btn float-right btn-sm btn-danger" onclick="deletePackage('<?= $obj->getPackageHandle() ?>', '<?= $obj->getPackageName() ?>')"><?= t('Delete') ?></a>
                                 <?php
+                                if ($displayDeleteBtn) {
+                                    ?>
+                                    <a href="javascript:void(0)" class="btn float-right btn-sm btn-danger" onclick="deletePackage('<?= $obj->getPackageHandle() ?>', '<?= $obj->getPackageName() ?>')"><?= t('Delete') ?></a>
+                                    <?php
+                                }
                             }
                             ?>
                             <h4 class="media-heading"><?= t($obj->getPackageName()) ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
