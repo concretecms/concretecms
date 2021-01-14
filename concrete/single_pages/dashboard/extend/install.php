@@ -27,7 +27,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
     ?>
     <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
         <?php
-        echo $app->make('helper/validation/token')->output('install_options_selected');
+        echo $valt->output('install_options_selected');
         echo View::element('dashboard/install', null, $pkg->getPackageHandle());
         $swapper = $pkg->getContentSwapper();
         if ($swapper->allowsFullContentSwap($pkg)) {
