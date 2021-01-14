@@ -63,7 +63,7 @@ use Concrete\Core\Block\BlockController;
                 }
             } else if (is_object($result)) {
                 $entity = $result->getEntity();
-                $this->set('formName', $entity->getName());
+                $this->set('formName', h($entity->getName()));
                 $this->set('date', \Core::make('date')->formatDateTime($result->getDateCreated()));
                 $this->set('link', \URL::to('/dashboard/reports/forms/view_entry', $result->getID()));
             }

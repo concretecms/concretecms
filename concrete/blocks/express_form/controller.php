@@ -708,7 +708,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if (is_object($form)) {
             $entity = $form->getEntity();
             $controls = $form->getControls();
-            $this->set('formName', $entity->getName());
+            $this->set('formName', h($entity->getName()));
             $this->set('submitLabel', $this->submitLabel);
             $node = Node::getByID($entity->getEntityResultsNodeId());
             if (is_object($node)) {

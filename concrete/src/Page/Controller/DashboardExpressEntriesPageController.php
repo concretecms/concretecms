@@ -235,7 +235,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
             }
         }
         $this->set('subEntities', $subEntities);
-        $this->set('pageTitle', t('View %s Entry', $entity->getName()));
+        $this->set('pageTitle', t('View %s Entry', h($entity->getName())));
         $this->render('/dashboard/express/entries/view_entry', false);
     }
 
@@ -267,7 +267,7 @@ abstract class DashboardExpressEntriesPageController extends DashboardPageContro
 
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackURL($entry->getEntity()));
-        $this->set('pageTitle', t('Edit %s Entry', $entity->getName()));
+        $this->set('pageTitle', t('Edit %s Entry', h($entity->getName())));
         $this->render('/dashboard/express/entries/update', false);
     }
 
