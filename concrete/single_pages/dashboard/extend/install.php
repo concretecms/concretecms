@@ -3,7 +3,6 @@
 use Concrete\Core\Attribute\Key\Category as AttributeCategory;
 
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
-$valt = $app->make('helper/validation/token');
 $ci = $app->make('helper/concrete/urls');
 $ch = $app->make('helper/concrete/ui');
 $tp = new TaskPermission();
@@ -27,7 +26,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
     ?>
     <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
         <?php
-        echo $valt->output('install_options_selected');
+        echo $token->output('install_options_selected');
         echo View::element('dashboard/install', null, $pkg->getPackageHandle());
         $swapper = $pkg->getContentSwapper();
         if ($swapper->allowsFullContentSwap($pkg)) {
@@ -68,7 +67,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
     $pkgID = $pkg->getPackageID();
     ?>
     <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package'); ?>">
-        <?= $valt->output('uninstall'); ?>
+        <?= $token->output('uninstall'); ?>
         <input type="hidden" name="pkgID" value="<?=$pkgID ?>" />
         <fieldset>
             <h2><?= t('Uninstall Package'); ?></h2>
@@ -342,7 +341,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <?= json_encode(t('Are you sure you want to delete this package?')) ?> + '<br/><code>' + packageName + '</code>',
                 function() {
                     $("button[data-dialog-action='submit-confirmation-dialog']").prop("disabled", true);
-                    location.href = "<?= $controller->action('delete_package') ?>/" + packageHandle + "/<?= $valt->generate('delete_package') ?>";
+                    location.href = "<?= $controller->action('delete_package') ?>/" + packageHandle + "/<?= $token->generate('delete_package') ?>";
                 },
                 'btn-danger',
                 <?= json_encode(t('Delete')) ?>
