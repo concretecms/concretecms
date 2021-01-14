@@ -18,6 +18,7 @@ use Concrete\Core\Tree\Node\Type\File;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\UrlImmutable;
 use Concrete\Core\User\User;
+use Concrete\Core\Tree\Node\NodeType;
 use Core;
 use FileAttributeKey;
 
@@ -96,7 +97,12 @@ class Controller extends BlockController
 
     public function loadData()
     {
-        $this->set('folders', $this->getFileFolders($this->getRootFolder(true)));
+        $folderNodes = Node::getNodesOfType('file_folder');
+        $folders = [];
+        foreach($folderNodes as $folderNode) {
+            $folders[$folderNode->getTreeNodeID()] = $folderNode->getTreeNodeDisplayPath();
+        }
+        $this->set('folders', $folders);
 
         $fsl = new SetList();
         $fsl->filterByType(Set::TYPE_PUBLIC);
@@ -281,23 +287,6 @@ class Controller extends BlockController
         }
 
         return $list;
-    }
-
-    protected function getFileFolders(FileFolder $rootFolder)
-    {
-        /** @var \Concrete\Core\File\FolderItemList $list */
-        $list = $rootFolder->getFolderItemList($this->app->make(User::class), $this->app->make('request'));
-
-        foreach ($list->getResults() as $folder) {
-            if ($folder instanceof FileFolder) {
-                yield $folder->getTreeNodeID() => $folder->getTreeNodeDisplayPath();
-
-                // yield from $this->getFileFolders($folder); // PHP 7.0+ :'(
-                foreach ($this->getFileFolders($folder) as $key => $value) {
-                    yield $key => $value;
-                }
-            }
-        }
     }
 
     protected function getTableColumns($results)
