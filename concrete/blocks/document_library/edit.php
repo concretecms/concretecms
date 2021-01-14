@@ -16,7 +16,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     <div class="form-group">
         <?=$form->label('folderID', t('File Folder'))?>
         <?php
-        $folders = [0 => '* Any folder'] + iterator_to_array($folders);
+        $folders = [0 => '* Any folder'] + $folders;
         echo $form->select('folderID', $folders, empty($folderID) ? 0 : $folderID);
         ?>
     </div>
