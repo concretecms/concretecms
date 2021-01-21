@@ -82,7 +82,7 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
     protected function getFormName(Entry $entry)
     {
         $entity = $entry->getEntity();
-        $formName = $entity->getName();
+        $formName = $entity->getEntityDisplayName();
 
         return $formName;
     }
