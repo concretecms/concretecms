@@ -3,12 +3,13 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
+ * @var Concrete\Core\Application\Application $app
  * @var Concrete\Core\Routing\Router $router
  */
 
 /*
  * Base path: /ccm/system/file
- * Namespace: Concrete\Controller\Backend\
+ * Namespace: Concrete\Controller\Backend
  */
 
 $router->all('/view', 'File\View::view');

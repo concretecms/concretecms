@@ -2,11 +2,14 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/** @var \Concrete\Core\Routing\Router $router */
+/**
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
+ */
 
 /*
  * Base path: /ccm/system/page
- * Namespace: Concrete\Controller\Backend\
+ * Namespace: Concrete\Controller\Backend
  */
 
 $router->all('/arrange_blocks/', 'Page\ArrangeBlocks::arrange');

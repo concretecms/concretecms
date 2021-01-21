@@ -5,39 +5,55 @@ const child_process = require('child_process')
 
 const DIR_GITROOT = path.join(fsUtil.WEBROOT, 'concrete')
 
+const OPERATION_SKIP = 1
+const OPERATION_UNSKIP = 2
+const OPERATION_REVERT = 3
+
+const OPERATION_NAMEMAP = {
+    skip: OPERATION_SKIP,
+    unskip: OPERATION_UNSKIP,
+    revert: OPERATION_REVERT,
+}
+
 if (process.argv.indexOf('-h') > 1 || process.argv.indexOf('--help') > 1 || process.argv.indexOf('/?') > 1) {
     exitWithSyntax(0)
 }
 
-setSkipWorktree(getSkippablePaths(), getSkipOption())
+const operation = getOperation()
+if (operation === OPERATION_SKIP || operation === OPERATION_UNSKIP || operation === OPERATION_REVERT) {
+    let expandedFiles = [].concat(getBuiltFiles())
+    for (const [destinationDir, sourceDir] of Object.entries(getCopiedDirectories())) {
+        expandedFiles = expandedFiles.concat(listCopiedFiles(sourceDir, destinationDir))
+    }
+    setSkipWorktree(expandedFiles, operation === OPERATION_SKIP)
+}
+if (operation === OPERATION_REVERT) {
+    revertPaths([].concat(getBuiltFiles(), Object.keys(getCopiedDirectories())))
+}
+
 
 function exitWithSyntax(returnCode)
 {
-    console.log(`Syntax: ${fsUtil.escapeShellArg(process.argv[0])} ${fsUtil.escapeShellArg(process.argv[1])} <0|no|off|false|1|yes|on|true>`)
+    console.log(`Syntax: ${fsUtil.escapeShellArg(process.argv[0])} ${fsUtil.escapeShellArg(process.argv[1])} <${Object.keys(OPERATION_NAMEMAP).join('|')}>`)
     process.exit(returnCode)
 }
 
-function getSkipOption()
+function getOperation()
 {
     if (process.argv.length !== 3) {
         exitWithSyntax(1)
     }
-    switch (process.argv[2].toLowerCase()) {
-        case '0':
-        case 'no':
-        case 'off':
-        case 'false':
-            return false
-        case '1':
-        case 'yes':
-        case 'on':
-        case 'true':
-            return true
+    const arg = process.argv[2].toLowerCase()
+    if (OPERATION_NAMEMAP.hasOwnProperty(arg)) {
+        return OPERATION_NAMEMAP[arg]
     }
     exitWithSyntax(1)
 }
 
-function getSkippablePaths()
+/**
+ * Return the list of files that are generated automatically (relative to the concrete directory).
+ */
+function getBuiltFiles()
 {
     return [
         'blocks/gallery/auto.js',
@@ -85,14 +101,21 @@ function getSkippablePaths()
         'themes/dashboard/main.js',
         'themes/elemental/main.js',
         'themes/elemental/main.css',
-        'mix-manifest.json',
-    ].concat(
-        listCopiedFiles(path.join(fsUtil.WEBROOT, 'build/node_modules/@fortawesome/fontawesome-free/webfonts'), 'css/webfonts')
-    ).concat(
-        listCopiedFiles(path.join(fsUtil.WEBROOT, 'build/node_modules/ace-builds/src-min'), 'js/ace')
-    ).concat(
-        listCopiedFiles(path.join(fsUtil.WEBROOT, 'build/node_modules/ckeditor4'), 'js/ckeditor')
-    )
+    ]
+}
+
+/**
+ * Return the directories that are copied from the dependencies.
+ * Object keys are the path to the destination directory (relative to the concrete directory).
+ * Object values are the absolute path of the source directory.
+ */
+function getCopiedDirectories()
+{
+    return {
+        'css/webfonts': path.join(fsUtil.WEBROOT, 'build/node_modules/@fortawesome/fontawesome-free/webfonts'),
+        'js/ace': path.join(fsUtil.WEBROOT, 'build/node_modules/ace-builds/src-min'),
+        'js/ckeditor': path.join(fsUtil.WEBROOT, 'build/node_modules/ckeditor4'),
+    }
 }
 
 function listCopiedFiles(sourceDir, relDestDir)
@@ -141,6 +164,25 @@ function listAllFiles(path, callback)
     return result
 }
 
+function runGit(args)
+{
+    const gitResult = child_process.spawnSync(
+        'git',
+        args,
+        {
+            cwd: DIR_GITROOT,
+            stdio: 'inherit',
+            shell: true,
+        }
+    )
+    if (gitResult.status !== 0) {
+        if (gitResult.error) {
+            throw gitResult.error
+        }
+        process.exit(1)
+    }
+}
+
 function setSkipWorktree(paths, skip)
 {
     const CHUNK_SIZE = 150
@@ -153,20 +195,17 @@ function setSkipWorktree(paths, skip)
         paths.slice(index, index + CHUNK_SIZE).forEach(path => {
             args.push(fsUtil.escapeShellArg(path))
         })
-        const gitResult = child_process.spawnSync(
-            'git',
-            args,
-            {
-                cwd: DIR_GITROOT,
-                stdio: 'inherit',
-                shell: true,
-            }
-        )
-        if (gitResult.status !== 0) {
-            if (gitResult.error) {
-                throw gitResult.error
-            }
-            process.exit(1)
-        }
+        runGit(args)
     }
+}
+
+function revertPaths(paths)
+{
+    runGit(
+        [
+            'checkout',
+            'HEAD',
+            '--'
+        ].concat(paths)
+    )
 }

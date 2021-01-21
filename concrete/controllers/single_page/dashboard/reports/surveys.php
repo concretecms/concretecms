@@ -13,6 +13,7 @@ class Surveys extends DashboardPageController
             return '';
         }
         $dh = $this->app->make('helper/date'); // @var $dh \Concrete\Core\Localization\Service\Date
+
         return $dh->formatPrettyDateTime($inputTime);
     }
 
@@ -176,7 +177,7 @@ class Surveys extends DashboardPageController
         foreach ($options as $option) {
             $chart_options .= '<tr>';
             $chart_options .= '<td>';
-            $chart_options .= '<strong>' . trim($options[$i - 1]['name']) . '</strong>';
+            $chart_options .= '<strong>' . trim(h($options[$i - 1]['name'])) . '</strong>';
             $chart_options .= '</td>';
             $chart_options .= '<td style="text-align:right; white-space: nowrap">';
             $chart_options .= ($option['amount'] > 0) ? round($option['amount'] / $total_results * 100) : 0;

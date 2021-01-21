@@ -43,13 +43,23 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         $this->assertNull(Type::getByID(1));
         $type = Type::add('new', 'New type');
         $this->assertInstanceOf(Type::class, Type::getByID($type->getWorkflowTypeID()));
+        $this->assertEquals(0, Type::getByID($type->getWorkflowTypeID())->getPackageID());
+        $pkg = M::mock(Package::class);
+        $pkg->shouldReceive('getPackageID')->andReturn(1);
+        $type2 = Type::add('new2', 'New type 2', $pkg);
+        $this->assertEquals(1, Type::getByID($type2->getWorkflowTypeID())->getPackageID());
     }
 
     public function testGetByHandle()
     {
         $this->assertNull(Type::getByHandle('new'));
-        Type::add('new', 'New type');
+        $type = Type::add('new', 'New type');
         $this->assertInstanceOf(Type::class, Type::getByHandle('new'));
+        $this->assertEquals(0, Type::getByHandle($type->getWorkflowTypeHandle())->getPackageID());
+        $pkg = M::mock(Package::class);
+        $pkg->shouldReceive('getPackageID')->andReturn(1);
+        $type2 = Type::add('new2', 'New type 2', $pkg);
+        $this->assertEquals(1, Type::getByHandle($type2->getWorkflowTypeHandle())->getPackageID());
     }
 
     public function testGetList()
@@ -57,6 +67,14 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         $this->assertSame([], Type::getList());
         Type::add('sample', 'Example');
         $this->assertCount(1, Type::getList());
+        $pkg = M::mock(Package::class);
+        $pkg->shouldReceive('getPackageID')->andReturn(1);
+        Type::add('sample2', 'Example 2', $pkg);
+        $this->assertCount(2, Type::getList());
+
+        $list = Type::getList();
+        $this->assertEquals('Example', $list[0]->getWorkflowTypeName());
+        $this->assertEquals('Example 2', $list[1]->getWorkflowTypeName());
     }
 
     public function testGetListByPackage()
@@ -68,6 +86,9 @@ class WorkflowTypeTest extends ConcreteDatabaseTestCase
         $this->assertCount(0, Type::getListByPackage($pkg));
         Type::add('new2', 'New type 2', $pkg);
         $this->assertCount(1, Type::getListByPackage($pkg));
+
+        $list = Type::getListByPackage($pkg);
+        $this->assertEquals('New type 2', $list[0]->getWorkflowTypeName());
     }
 
     public function testProperties()
