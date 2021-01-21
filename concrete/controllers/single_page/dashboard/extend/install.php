@@ -49,14 +49,12 @@ class Install extends DashboardPageController
     {
         $pkgID = $this->post('pkgID');
 
-        $valt = Loader::helper('validation/token');
-
         if ($pkgID > 0) {
             $pkg = Package::getByID($pkgID);
         }
 
-        if (!$valt->validate('uninstall')) {
-            $this->error->add($valt->getErrorMessage());
+        if (!$this->token->validate('uninstall')) {
+            $this->error->add($this->token->getErrorMessage());
         }
 
         $tp = new TaskPermission();
@@ -137,7 +135,7 @@ class Install extends DashboardPageController
                 $loader->registerPackageCustomAutoloaders($p);
                 if (
                     (!$p->showInstallOptionsScreen()) ||
-                    Loader::helper('validation/token')->validate('install_options_selected')
+                    $this->token->validate('install_options_selected')
                 ) {
                     $tests = $p->testForInstall();
                     if (is_object($tests)) {
