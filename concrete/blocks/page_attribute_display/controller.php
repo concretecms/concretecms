@@ -98,7 +98,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                             ); //<-- set these 2 numbers to max width and height of thumbnails
                             $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
                         } else {
-                            $image = Core::make('html/image', [$content]);
+                            $image = Core::make('html/image', ['f' => $content]);
                             $content = (string) $image->getTag();
                         }
                     } elseif (is_object($content_alt)) {

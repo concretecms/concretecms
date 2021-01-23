@@ -435,7 +435,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $page->setCustomStyleSet($area, $set);
             }
             foreach ($columnNode->block as $bx) {
-                $bt = \BlockType::getByHandle($bx['type']);
+                $bt = \BlockType::getByHandle((string) $bx['type']);
                 if (!is_object($bt)) {
                     throw new \Exception(t('Invalid block type handle: %s', (string) ($bx['type'])));
                 }

@@ -1757,7 +1757,7 @@ class Version implements ObjectInterface
                 }
                 $result .= ' />';
             } else {
-                $image = $app->make('html/image', [$this->getFile()]);
+                $image = $app->make('html/image', ['f' => $this->getFile()]);
                 $tag = $image->getTag();
                 $tag->setAttribute('width', $config->get('concrete.icons.file_manager_detail.width'));
                 $tag->setAttribute('height', $config->get('concrete.icons.file_manager_detail.height'));
@@ -1802,7 +1802,7 @@ class Version implements ObjectInterface
                 }
                 $result .= ' />';
             } else {
-                $image = $app->make('html/image', [$this->getFile()]);
+                $image = $app->make('html/image', ['f' => $this->getFile()]);
                 $tag = $image->getTag();
                 $tag->addClass('ccm-file-manager-list-thumbnail');
                 $tag->addClass('ccm-thumbnail-' . $config->get('concrete.file_manager.images.preview_image_size'));

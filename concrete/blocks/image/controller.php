@@ -30,9 +30,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     protected $tracker;
 
-    public function __construct($blockType = null, AggregateTracker $tracker = null)
+    public function __construct($obj = null, AggregateTracker $tracker = null)
     {
-        parent::__construct($blockType);
+        parent::__construct($obj); // it has to be named $obj because we use laravel's container for this.
         $this->tracker = $tracker;
     }
 
@@ -393,7 +393,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $args['maxHeight'] = 0;
         }
 
-        list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+        // @TODO - this is not working on install. fix it.
+        // list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+
         $args['internalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['fileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
         $args['externalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';

@@ -13,13 +13,13 @@ if (is_object($f) && $f->getFileID()) {
         }
         $tag->addClass('ccm-svg');
     } elseif ($maxWidth > 0 || $maxHeight > 0) {
-        $im = $app->make('helper/image');
+        $image = new \Concrete\Core\Html\Image();
         $thumb = $im->getThumbnail($f, $maxWidth, $maxHeight, $cropImage);
 
         $tag = new \HtmlObject\Image();
         $tag->src($thumb->src)->width($thumb->width)->height($thumb->height);
     } else {
-        $image = $app->make('html/image', [$f]);
+        $image = new \Concrete\Core\Html\Image($f);
         $tag = $image->getTag();
     }
 

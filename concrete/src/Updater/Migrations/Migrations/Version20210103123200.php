@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Entity\Command\TaskProcess;
+use Concrete\Core\Job\Job;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
@@ -52,5 +53,17 @@ final class Version20210103123200 extends AbstractMigration implements Repeatabl
         $this->output(t('Installing automated tasks upgrade XML...'));
         $importer = new ContentImporter();
         $importer->importContentFile(DIR_BASE_CORE . '/config/install/base/tasks.xml');
+
+        $jobsToUninstall = [
+            'fill_thumbnails_table',
+            'update_gatherings',
+            'generate_sitemap'
+        ];
+        foreach($jobsToUninstall as $jHandle) {
+            $job = Job::getByHandle($jHandle);
+            if ($job) {
+                $job->uninstall();
+            }
+        }
     }
 }
