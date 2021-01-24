@@ -28,15 +28,15 @@ class RunningProcessesController extends Controller
     protected $config;
 
     /**
-     * @var TransportManager
+     * @var EntityManager
      */
-    protected $transportManager;
+    protected $entityManager;
 
-    public function __construct(Repository $config, Token $token, TransportManager $transportManager)
+    public function __construct(Repository $config, Token $token, EntityManager $entityManager)
     {
         $this->config = $config;
         $this->token = $token;
-        $this->transportManager = $transportManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -46,8 +46,8 @@ class RunningProcessesController extends Controller
      */
     public function displayItem()
     {
-        $transport = $this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC);
-        if ($transport instanceof MessageCountAwareInterface && $transport->getMessageCount() > 0) {
+        $processes = $this->entityManager->getRepository(Process::class)->findRunning();
+        if (count($processes) > 0) {
             return true;
         }
         return false;

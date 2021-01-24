@@ -43,20 +43,13 @@ class MessengerConsumeResponseFactory
      * @param string[] $watchedProcessIds
      * @return JsonResponse
      */
-    public function createResponse(array $watchedProcessIds)
+    public function createResponse()
     {
-        $processes = [];
-        foreach($watchedProcessIds as $processId) {
-            $process = $this->entityManager->find(ProcessEntity::class, $processId);
-            if ($process) {
-                $processes[] = $process;
-            }
-        }
         $messages = -1;
         $transport = $this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC);
         if ($transport instanceof MessageCountAwareInterface && $transport->getMessageCount() > 0) {
             $messages = $transport->getMessageCount();
         }
-        return new JsonResponse(['processes' => $processes, 'messages' => $messages]);
+        return new JsonResponse(['messages' => $messages]);
     }
 }

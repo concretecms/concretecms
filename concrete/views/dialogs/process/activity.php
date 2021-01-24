@@ -7,9 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div v-if="runningProcesses.length">
         <div v-if="runningProcesses.length">
             <task-process-list
-                    <?php if ($consume) { ?>consume<?php } ?>
                     <?php if ($eventSource) { ?> event-source="<?= h($eventSource) ?>" <?php } ?>
-                    consume-token="<?=$consumeToken?>"
                     :processes="runningProcesses">
             </task-process-list>
         </div>

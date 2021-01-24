@@ -74,7 +74,7 @@ abstract class QueueableJob extends AbstractJob
     public function getQueueObject()
     {
         if ($this->jQueueObject === null) {
-            throw new \Exception('Make this work again.');
+            $this->jQueueObject = new JobQueue($this);
         }
 
         return $this->jQueueObject;
@@ -86,7 +86,7 @@ abstract class QueueableJob extends AbstractJob
     public function reset()
     {
         parent::reset();
-        $this->getQueueObject()->deleteQueue();
+//        $this->getQueueObject()->deleteQueue();
     }
 
     /**

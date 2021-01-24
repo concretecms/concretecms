@@ -10,106 +10,15 @@ use Doctrine\ORM\EntityManager;
  */
 class JobQueue
 {
-    /**
-     * @var BatchFactory
-     */
-    protected $batchFactory;
-
-    /**
-     * @var Application
-     */
-    protected $app;
 
     /**
      * @var QueueableJob
      */
     protected $job;
 
-    /**
-     * @var QueueService
-     */
-    protected $service;
-
-    /**
-     * @var Batch
-     */
-    protected $batch;
-
-    /**
-     * @var int
-     */
-    protected $totalMessages = 0;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var BatchProgressUpdater
-     */
-    protected $batchProgressUpdater;
-
-    /**
-     * @var bool
-     */
-    protected $isAsynchronous = true;
-
-    public function __construct(QueueableJob $job, Application $app, QueueService $service, BatchProgressUpdater $batchProgressUpdater, BatchFactory $batchFactory, EntityManager $em)
+    public function __construct(QueueableJob $job)
     {
-        $this->service = $service;
-        $this->batchFactory = $batchFactory;
-        $this->batchProgressUpdater = $batchProgressUpdater;
         $this->job = $job;
-        $this->entityManager = $em;
-        $this->app = $app;
-        $this->queue = $service->get($service->getDefaultQueueHandle());
-
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAsynchronous(): bool
-    {
-        return $this->isAsynchronous;
-    }
-
-    /**
-     * @param bool $isAsynchronous
-     */
-    public function setIsAsynchronous(bool $isAsynchronous): void
-    {
-        $this->isAsynchronous = $isAsynchronous;
-    }
-
-    /**
-     * @return Queue
-     */
-    public function getQueue()
-    {
-        return $this->queue;
-    }
-
-    public function close()
-    {
-        return $this->queue->close();
-    }
-
-    public function getBatch()
-    {
-        return $this->batchFactory->createOrGetBatch(sprintf('job_%s', $this->job->getJobHandle()));
-    }
-
-    public function saveBatch()
-    {
-        $this->batchProgressUpdater->incrementTotals($this->getBatch(), $this->totalMessages);
-    }
-
-    public function deleteQueue()
-    {
-        $this->entityManager->remove($this->getBatch());
-        $this->entityManager->flush();
     }
 
     public function send($mixed)

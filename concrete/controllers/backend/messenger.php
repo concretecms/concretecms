@@ -67,7 +67,7 @@ class Messenger extends AbstractController
     {
         if ($this->token->validate('consume_messages', $this->request->request->get('token'))) {
             session_write_close();
-            $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(1, $this->logger));
+            $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(5, $this->logger));
             $worker = new Worker(
                 [$this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC)],
                 $this->bus,
@@ -75,7 +75,8 @@ class Messenger extends AbstractController
                 $this->logger
             );
             $worker->run();
-            return $this->responseFactory->createResponse($this->request->request->get('watchedProcessIds'));
+            sleep(1); // just to get passed rate limiting.
+            return $this->responseFactory->createResponse();
         }
         throw new \Exception(t('Access Denied'));
     }
