@@ -21,7 +21,6 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
     public static function setupBeforeClass()
     {
         parent::setUpBeforeClass();
-        \Core::make('cache/request')->disable();
     }
 
     public function testExpressHandleGenerator()
