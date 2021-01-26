@@ -33,19 +33,38 @@ class ProcessResponseFactory
         $this->tokenService = $tokenService;
     }
 
-    public function createResponse(Process $process)
+    /**
+     * @param Process|Process[] $process
+     * @return array
+     */
+    public function getData($process)
     {
-        $data = [
-            'process' => $process,
-            'viewToken' => $this->tokenService->generate('view_activity')
-        ];
+        $data = ['viewToken' => $this->tokenService->generate('view_activity')];
+        if (is_array($process)) {
+            $data['processes'] = [];
+            foreach($process as $individualProcess) {
+                $data['processes'][] = $individualProcess;
+            }
+        } else {
+            $data['process'] = $process;
+        }
 
         $consumeMethod = $this->config->get('concrete.messenger.consume.method');
         if ($consumeMethod === 'app') { // this is the default. we consume through the UI
             $data['consumeToken'] = $this->tokenService->generate('consume_messages');
         }
 
-        return new JsonResponse($data);
+        return $data;
+    }
+
+
+    /**
+     * @param Process|Process[] $process
+     * @return JsonResponse
+     */
+    public function createResponse($process)
+    {
+        return new JsonResponse($this->getData($process));
     }
 
 }

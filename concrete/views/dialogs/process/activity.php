@@ -7,7 +7,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div v-if="runningProcesses.length">
         <div v-if="runningProcesses.length">
             <task-process-list
+                    <?php if ($poll) { ?>poll<?php } ?>
                     <?php if ($eventSource) { ?> event-source="<?= h($eventSource) ?>" <?php } ?>
+                    poll-token="<?=$pollToken?>"
                     :processes="runningProcesses">
             </task-process-list>
         </div>

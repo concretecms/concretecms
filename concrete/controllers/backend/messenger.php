@@ -75,7 +75,6 @@ class Messenger extends AbstractController
                 $this->logger
             );
             $worker->run();
-            sleep(1); // just to get passed rate limiting.
             return $this->responseFactory->createResponse();
         }
         throw new \Exception(t('Access Denied'));

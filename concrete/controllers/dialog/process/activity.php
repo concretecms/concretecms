@@ -16,15 +16,17 @@ class Activity extends BackendInterfaceController
     {
         $token = $this->app->make('token');
         $processes = $this->app->make(EntityManager::class)->getRepository(Process::class)->findRunning();
-        $consumeMethod = $this->app->make('config')->get('concrete.messenger.consume.method');
         $mercureService = $this->app->make(MercureService::class);
         $eventSource = null;
+        $poll = false;
         if ($mercureService->isEnabled()) {
             $eventSource = $mercureService->getPublisherUrl();
+        } else {
+            $poll = true;
         }
-        $this->set('consume', $consumeMethod === 'app' ? true : false);
+        $this->set('poll', $poll);
+        $this->set('pollToken', $token->generate('poll'));
         $this->set('eventSource', $eventSource);
-        $this->set('consumeToken', $token->generate('consume_messages'));
         $this->set('runningProcesses', $processes);
     }
 

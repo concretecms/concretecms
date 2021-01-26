@@ -80,9 +80,11 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             <h4 class="mt-3"><?= t('Executing...') ?></h4>
             <task-process-list :processes="executedProcesses"
                 <?php
+                if ($poll) { ?>poll<?php }
                 if ($eventSource) { ?> event-source="<?= h($eventSource) ?>" <?php
                 } ?>
                                :current-process-id="executedProcess.id"
+                               poll-token="<?=$pollToken?>"
                                details-action="<?= URL::to(
                                    '/dashboard/system/automation/activity',
                                    'details',
@@ -144,7 +146,10 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                                     } else if (r.status === 'completed') {
                                         window.location.reload();
                                     } else if (r.status === 'process_started') {
-                                        my.executedProcess = r.process
+                                        if (r.response.consumeToken) {
+                                            ConcreteQueueConsumer.consume(r.response.consumeToken)
+                                        }
+                                        my.executedProcess = r.response.process
                                     }
                                 }
                             })

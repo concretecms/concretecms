@@ -16,12 +16,15 @@ class Activity extends DashboardPageController
         $r = $this->entityManager->getRepository(Process::class);
         $mercureService = $this->app->make(MercureService::class);
         $eventSource = null;
+        $poll = false;
         if ($mercureService->isEnabled()) {
             $eventSource = $mercureService->getPublisherUrl();
+        } else {
+            $poll = true;
         }
-        $consumeMethod = $this->app->make('config')->get('concrete.messenger.consume.method');
-        $this->set('consume', $consumeMethod === 'app' ? true : false);
-        $this->set('consumeToken', $this->token->generate('consume_messages'));
+        $this->set('poll', $poll);
+        $this->set('pollToken', $this->token->generate('poll'));
+        $this->set('eventSource', $eventSource);
         $this->set('processes', $r->findBy([], ['dateCompleted' => 'desc']));
         $this->set('processID', $processID);
         $this->set('eventSource', $eventSource);

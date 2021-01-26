@@ -15,12 +15,14 @@ class Tasks extends DashboardPageController
         $tasks = $this->app->make(TaskService::class)->getList();
         $mercureService = $this->app->make(MercureService::class);
         $eventSource = null;
+        $poll = false;
         if ($mercureService->isEnabled()) {
             $eventSource = $mercureService->getPublisherUrl();
+        } else {
+            $poll = true;
         }
-        $consumeMethod = $this->app->make('config')->get('concrete.messenger.consume.method');
-        $this->set('consume', $consumeMethod === 'app' ? true : false);
-        $this->set('consumeToken', $this->token->generate('consume_messages'));
+        $this->set('poll', $poll);
+        $this->set('pollToken', $this->token->generate('poll'));
         $this->set('eventSource', $eventSource);
         $this->set('tasks', $tasks);
         $this->set('schedulingEnabled', $this->app->make(Scheduler::class)->isEnabled());
