@@ -30,7 +30,6 @@ $router->all('/ccm/system/tasks/execute', '\Concrete\Controller\Backend\Tasks::e
 
 $router->all('/ccm/system/jobs', '\Concrete\Controller\Frontend\Jobs::view');
 $router->all('/ccm/system/jobs/run_single', '\Concrete\Controller\Frontend\Jobs::run_single');
-$router->all('/ccm/system/jobs/check_queue', '\Concrete\Controller\Frontend\Jobs::check_queue');
 
 $router->all('/ccm/system/summary_template/render/{categoryHandle}/{memberIdentifier}/{templateID}', '\Concrete\Controller\Backend\SummaryTemplate::render');
 

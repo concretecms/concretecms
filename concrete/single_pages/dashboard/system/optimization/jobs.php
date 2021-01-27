@@ -170,6 +170,7 @@ if ($editingJobSet !== null) {
     ?>
     <div class="tab-content">
 
+        <div class="alert alert-warning"><?=t('<b>Warning</b>: Jobs have been deprecated in Concrete version 9 and may not run in future versions. Additionally, job queueing is no longer support. Instead, look at using <a href="%s">tasks</a> instead. Tasks support queueing, asynchronous operation, full logging, parameters, scheduling and more.', URL::to('/dashboard/system/automation/tasks'))?></div>
         <div class="tab-pane<?= $activeTab === 'jobs' ? ' show active' : '' ?>" id="jobs" role="tabpanel">
             <?php
             if ($installedJobs !== []) {
@@ -205,10 +206,7 @@ if ($editingJobSet !== null) {
                                 </td>
                                 <td class="jLastStatusText"><?= $j->getJobLastStatusText() ?></td>
                                 <td class="ccm-jobs-button">
-                                    <button data-jID="<?= $j->getJobID() ?>" data-jSupportsQueue="<?= $j->supportsQueue() ?>" data-jName="<?= h($j->getJobName()) ?>" class="btn-run-job btn btn-secondary btn-sm float-right"><i class="fas fa-play"></i> <?= t('Run') ?></button>
-                                </td>
-                                <td style="width: 25px">
-                                    <a href="javascript:void(0)" class="ccm-automate-job-instructions btn btn-secondary btn-sm icon-link launch-tooltip" data-jSupportsQueue="<?= $j->supportsQueue() ?>" data-jID="<?= $j->getJobID() ?>" title="<?= t('Automate this Job') ?>"><i class="far fa-clock"></i></a>
+                                    <button data-jID="<?= $j->getJobID() ?>" data-jName="<?= h($j->getJobName()) ?>" class="btn-run-job btn btn-secondary btn-sm float-right"><i class="fas fa-play"></i> <?= t('Run') ?></button>
                                 </td>
                                 <td style="width: 25px">
                                     <?php
@@ -225,110 +223,6 @@ if ($editingJobSet !== null) {
                         ?>
                     </tbody>
                 </table>
-                <div class="d-none">
-                    <?php
-                    foreach ($installedJobs as $j) {
-                        ?>
-                        <div id="jd<?= $j->getJobID() ?>" class="ccm-ui" title="<?= t('Automation Instructions') ?>">
-                            <form action="<?= $controller->action('update_job_schedule', $j->getJobID()) ?>" method="post" data-schedule-form="<?= $j->getJobID() ?>">
-                                <?php $token->output("update_job_schedule{$j->getJobID()}") ?>
-                                <?= $form->select(
-                            "isScheduled{$j->getJobID()}",
-                            [
-                                '1' => t('Run job when people browse a page'),
-                                '0' => t('Run job through cron'),
-                            ],
-                            $j->isScheduled ? '1' : '0',
-                            [
-                                'class' => 'ccm-jobs-automation-schedule-type',
-                            ]
-                        ) ?>
-                                <div class="mt-3 ccm-jobs-automation-schedule-auto<?= $j->isScheduled ? '' : ' d-none' ?>">
-                                    <div class="form-group">
-                                        <?= $form->label("value{$j->getJobID()}", t('Run this Job Every')) ?>
-                                        <div class="input-group">
-                                            <?= $form->number("value{$j->getJobID()}", $j->scheduledValue, ['min' => '0']) ?>
-                                            <?= $form->select(
-                                    "unit{$j->getJobID()}",
-                                    [
-                                        'minutes' => t('Minutes'),
-                                        'hours' => t('Hours'),
-                                        'days' => t('Days'),
-                                        'weeks' => t('Weeks'),
-                                        'months' => t('Months'),
-                                    ],
-                                    $j->scheduledInterval
-                                ) ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-3 ccm-jobs-automation-schedule-cron<?= $j->isScheduled ? ' d-none' : '' ?>">
-                                    <?php
-                                    if ($j->supportsQueue()) {
-                                        ?>
-                                        <p><?= t('The "%s" job supports queueing, meaning it can be run in a couple different ways:', h($j->getJobName())) ?></p>
-
-                                        <h4><?= t('No Queueing') ?></h4>
-                                        <p><?= t('This will treat the job as though it were like any other concrete5 job. The entire job will be run at once.') ?></p>
-                                        <?= $form->textarea(
-                                            '',
-                                            (string) $urlResolver->resolve(["/ccm/system/jobs?auth={$auth}&jID={$j->getJobID()}"]),
-                                            [
-                                                'class' => 'ccm-default-jobs-url',
-                                                'rows' => '2',
-                                                'readonly' => 'readonly',
-                                            ]
-                                        ) ?>
-
-                                        <h4><?= t('Queueing') ?></h4>
-                                        <p><?= t("First, schedule this URL for when you'd like this job to run:") ?></p>
-                                        <?= $form->textarea(
-                                            '',
-                                            (string) $urlResolver->resolve(["/ccm/system/jobs/run_single?auth={$auth}&jID={$j->getJobID()}"]),
-                                            [
-                                                'class' => 'ccm-default-jobs-url',
-                                                'rows' => '2',
-                                                'readonly' => 'readonly',
-                                            ]
-                                        ) ?>
-                                        <p><?= t('Then, make sure this URL is scheduled to run frequently, like every 3-5 minutes:') ?></p>
-                                        <?= $form->textarea(
-                                            '',
-                                            (string) $urlResolver->resolve(["/ccm/system/jobs/check_queue?auth={$auth}"]),
-                                            [
-                                                'class' => 'ccm-default-jobs-url',
-                                                'rows' => '2',
-                                                'readonly' => 'readonly',
-                                            ]
-                                        ) ?>
-                                        <p><?= t('The first URL starts the process - the second ensures that it completes in batches.') ?></p>
-                                        <?php
-                                    } else {
-                                        ?>
-                                        <p><?= t('To run the "%s" job, automate the following URL using cron or a similar system:', h($j->getJobName())) ?></p>
-                                        <?= $form->textarea(
-                                            '',
-                                            (string) $urlResolver->resolve(["/ccm/system/jobs/run_single?auth={$auth}&jID={$j->getJobID()}"]),
-                                            [
-                                                'class' => 'ccm-default-jobs-url',
-                                                'rows' => '2',
-                                                'readonly' => 'readonly',
-                                            ]
-                                        ) ?>
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
-                                <div class="dialog-buttons">
-                                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                                    <button onclick="$('form[data-schedule-form=<?= $j->getJobID() ?>]').submit()" class="btn btn-primary float-right"><?= t('Save') ?></button>
-                                </div>
-                            </form>
-                        </div>
-                        <?php
-                    }
-                    ?>
-                </div>
                 <?php
             } else {
                 ?>

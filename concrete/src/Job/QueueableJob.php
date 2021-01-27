@@ -81,39 +81,12 @@ abstract class QueueableJob extends AbstractJob
     }
 
     /**
-     * Delete the queue
-     */
-    public function reset()
-    {
-        parent::reset();
-//        $this->getQueueObject()->deleteQueue();
-    }
-
-    /**
      * Mark the queue as started
      */
     public function markStarted()
     {
         parent::markStarted();
         return $this->getQueueObject();
-    }
-
-    /**
-     * Mark the queue as having completed
-     *
-     * @param int $code 0 for success, otherwise the exception error code
-     * @param bool $message The message to show
-     * @return \Concrete\Core\Job\JobResult
-     */
-    public function markCompleted($code = 0, $message = false)
-    {
-        $obj = parent::markCompleted($code, $message);
-        $queue = $this->getQueueObject();
-        if (!$this->didFail()) {
-            $queue->deleteQueue();
-        }
-
-        return $obj;
     }
 
     /**
@@ -124,7 +97,6 @@ abstract class QueueableJob extends AbstractJob
         try {
             if ($this->getJobStatus() !== 'RUNNING') {
                 $queue = $this->markStarted();
-                $queue->setIsAsynchronous(false);
                 $this->start($queue);
             } else {
                 $queue = $this->getQueueObject();

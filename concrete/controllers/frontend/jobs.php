@@ -105,23 +105,12 @@ class Jobs extends Controller
             }
 
             if (is_object($job)) {
-                if ($job instanceof QueueableJob && $job->supportsQueue()) {
-                    $q = $job->markStarted();
-                    $job->start($q);
-                    /**
-                     * @var $responseFactory BatchProcessorResponseFactory
-                     */
-                    $q->saveBatch();
-                    $responseFactory = $this->app->make(BatchProcessorResponseFactory::class);
-                    return $responseFactory->createResponse($q->getBatch());
-                    
-                } else {
-                    $r = $job->executeJob();
-                    $response->setStatusCode(Response::HTTP_OK);
-                    $response->setContent(json_encode($r));
-                    $response->send();
-                    \Core::shutdown();
-                }
+                // Note - we used to have queue logic in here, but queueing with jobs is no longer supported.
+                $r = $job->executeJob();
+                $response->setStatusCode(Response::HTTP_OK);
+                $response->setContent(json_encode($r));
+                $response->send();
+                \Core::shutdown();
             } else {
                 $r->error = t('Unknown Job');
                 $response->setStatusCode(Response::HTTP_NOT_FOUND);
