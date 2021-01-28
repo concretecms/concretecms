@@ -10,6 +10,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
     array('results', t('Results'))
 ));
 
+$hideFolders = isset($hideFolders) ? $hideFolders : false;
 ?>
 
 <div class="ccm-tab-content" id="ccm-tab-content-sources">
@@ -31,6 +32,17 @@ echo Core::make('helper/concrete/ui')->tabs(array(
                     <?=$set->getFileSetDisplayName()?>
                 </label></div>
             <?php } ?>
+        </div>
+
+        <div class="form-group">
+            <?= $form->label('showFolders', t('Show Folders')) ?>
+
+            <div class="checkbox">
+                <label>
+                    <?= $form->checkbox('showFolders', '1', !$hideFolders) ?>
+                    <?= t('Show Folders') ?>
+                </label>
+            </div>
         </div>
 
         <div class="form-group">
