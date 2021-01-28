@@ -73,7 +73,7 @@ foreach ($fileSetService->get() as $fileSet) {
 }
 
 /** @noinspection PhpParamsInspection */
-$folders = [0 => '* Any folder'] + iterator_to_array($folders);
+$folders = [0 => '* Any folder'] + (array) $folders;
 
 echo $userInterface->tabs([
     ['sources', t('Sources'), true],
