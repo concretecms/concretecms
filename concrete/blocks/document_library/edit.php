@@ -46,6 +46,7 @@ use Concrete\Core\Support\Facade\Url;
 /** @var string $tableDescription */
 /** @var bool $tableStriped */
 /** @var string $rowBackgroundColorAlternate */
+/** @var bool $hideFolders */
 
 $app = Application::getFacadeApplication();
 /** @var Color $color */
@@ -81,6 +82,7 @@ echo $userInterface->tabs([
     ['results', t('Results')]
 ]);
 
+$hideFolders = isset($hideFolders) ? $hideFolders : false;
 ?>
 
 <div class="tab-content">
@@ -100,6 +102,17 @@ echo $userInterface->tabs([
                         <?php echo $form->label("fsID_" . $set->getFileSetID(), $set->getFileSetDisplayName(), ["class" => "form-check-label"]); ?>
                     </div>
                 <?php } ?>
+            </div>
+
+            <div class="form-group">
+                <?= $form->label('showFolders', t('Show Folders')) ?>
+
+                <div class="form-check">
+                    <label>
+                        <?= $form->checkbox('showFolders', '1', !$hideFolders) ?>
+                        <?= t('Show Folders') ?>
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">

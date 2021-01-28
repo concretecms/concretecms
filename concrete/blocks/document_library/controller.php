@@ -22,6 +22,7 @@ use Concrete\Core\Url\UrlImmutable;
 use Concrete\Core\User\User;
 use Concrete\Core\Tree\Node\NodeType;
 use Core;
+use Doctrine\DBAL\Connection;
 use FileAttributeKey;
 
 class Controller extends BlockController implements UsesFeatureInterface
@@ -56,8 +57,8 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function action_navigate($blockID, $folderID = 0)
     {
-        if ($blockID != $this->bID) {
-            return;
+        if ($blockID != $this->bID || $this->hideFolders) {
+            return $this->view();
         }
 
         $parentID = intval($this->folderID);
@@ -269,23 +270,38 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         if (count($sets)) {
             $query = $list->getQueryObject();
-            $query->leftJoin('tf', 'FileSetFiles', 'fsf', 'tf.fID = fsf.fID');
 
             switch ($this->setMode) {
                 case 'all':
                     // Show files in ALL sets
-                    $query->andWhere(
-                        $query->expr()->orX(
-                            'nt.treeNodeTypeHandle = "file_folder"',
-                            $query->expr()->in('fsf.fsID', $sets)
-                        )
-                    );
+                    asort($sets);
+                    $sets = array_unique(array_map('intval', $sets));
+
+                    // Set up a subselect that we can join to get file set files
+                    $subselect = $query->getConnection()->createQueryBuilder();
+                    $subselect
+                        ->select('count(distinct fsf.fsID) as sets')
+                        ->addSelect('fsf.fID')
+                        ->from('FileSetFiles', 'fsf')
+                        ->where('fsf.fsID in (:sets)')
+                        ->groupBy('fsf.fID');
+
+                    $query
+                        ->leftJoin('tf', sprintf('(%s)', $subselect->getSQL()), 'fsf', 'tf.fID = fsf.fID')
+                        ->where($query->expr()->andX('fsf.sets=:count', 'fsf.sets > 0'))
+                        ->setParameter('sets', $sets, Connection::PARAM_INT_ARRAY)
+                        ->setParameter('count', count($sets));
+
+                    if (!$this->hideFolders) {
+                        $query->orWhere('nt.treeNodeTypeHandle = "file_folder"');
+                    }
                     break;
                 case 'any':
                 default:
-                    // Show files in ANY of the sets
-                    $expr = $query->expr()->orX('nt.treeNodeTypeHandle = "file_folder"');
+                    $query->leftJoin('tf', 'FileSetFiles', 'fsf', 'tf.fID = fsf.fID');
 
+                    // Show files in ANY of the sets
+                    $expr = $query->expr()->orX($this->hideFolders ? '1=0' : 'nt.treeNodeTypeHandle = "file_folder"');
                     foreach ($sets as $set) {
                         $expr->add($query->expr()->eq('fsf.fsID', $set));
                     }
@@ -668,8 +684,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         if ($this->rootNode) {
             $list->filterByParentFolder($this->rootNode);
-        } else {
+        } elseif ((int) $this->folderID !== 0 || !$this->hideFolders) {
+            // If we have a subfolder selected, or if hidefolders is disabled
             $list->filterByParentFolder($this->getRootFolder());
+        } elseif ((int) $this->folderID === 0 && $this->hideFolders) {
+            // If we have the top level folder selected and hidefolders is enabled
+            $list->enableSubFolderSearch();
         }
 
         return $list;
@@ -747,6 +767,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('tableSearchProperties', $this->getTableSearchProperties());
         $this->set('list', $list);
         $this->set('results', $results);
+        $this->set('hideFolders', $this->hideFolders);
 
         $this->requireAsset('css', 'font-awesome');
         $this->set('canAddFiles', false);
@@ -818,6 +839,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'tableDescription' => $args['tableDescription'],
             'tableStriped' => empty($args['tableStriped']) ? 0 : 1,
             'rowBackgroundColorAlternate' => empty($args['tableStriped']) ? '' : $args['rowBackgroundColorAlternate'],
+            'hideFolders' => (int) !filter_var(array_get($args, 'showFolders'), FILTER_VALIDATE_BOOLEAN),
         ];
         if ((int) $args['addFilesToSetID'] > 0) {
             $fs = \FileSet::getByID($args['addFilesToSetID']);
