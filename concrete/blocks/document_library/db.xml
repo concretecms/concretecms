@@ -85,6 +85,9 @@
     <field name="rowBackgroundColorAlternate" type="string" size="32">
       <default value=""/>
     </field>
+    <field name="hideFolders" type="integer">
+      <default value="0"/>
+    </field>
   </table>
 
 </schema>
