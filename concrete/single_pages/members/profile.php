@@ -70,45 +70,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <?php 
         } ?>
 
-		<h4><?=t("Badges")?></h4>
-		<?php if (count($badges) > 0) {
-    ?>
-
-
-		<ul class="thumbnails">
-
-			<?php foreach ($badges as $ub) {
-    $uf = $ub->getGroupBadgeImageObject();
-    if (is_object($uf)) {
-        ?>
-
-			  <li class="span2">
-
-			    <div class="thumbnail launch-tooltip ccm-profile-badge-image" title="<?=h($ub->getGroupBadgeDescription())?>">
-			      <div><img src="<?=$uf->getRelativePath()?>" /></div>
-			      <div><?=t("Awarded %s", $dh->formatDate($ub->getGroupDateTimeEntered($profile)))?></div>
-			    </div>
-
-			</li>
-
-			    <?php 
-    }
-    ?>
-
-			<?php 
-}
-    ?>
-
-		</ul>
-
-		<?php 
-} else {
-    ?>
-			<p><?=t("This user hasn't won any badges.")?></p>
-		<?php 
-} ?>
-
-
 		<?php
             $a = new Area('Main');
             //$a->setAttribute('profile', $profile);

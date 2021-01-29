@@ -509,7 +509,6 @@ class StartingPointPackage extends Package
         $u = User::getByUserID(USER_SUPER_ID, true, false);
 
         MailImporter::add(['miHandle' => 'private_message']);
-        UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
 
         // Install conversation default email
         \Conversation::setDefaultSubscribedUsers([$superuser]);

@@ -20,7 +20,7 @@ class CheckAutomatedGroups extends QueueableJob
 
     public function getJobDescription()
     {
-        return t("Automatically add users to groups and assign badges.");
+        return t("Automatically add users to groups.");
     }
 
     public function start(JobQueue $q)

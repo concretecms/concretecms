@@ -272,21 +272,37 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $this->cgEndDate;
     }
 
+    /**
+     * @deprecated
+     * @return mixed
+     */
     public function isGroupBadge()
     {
         return $this->gIsBadge;
     }
 
+    /**
+     * @deprecated
+     * @return mixed
+     */
     public function getGroupBadgeDescription()
     {
         return $this->gBadgeDescription;
     }
 
+    /**
+     * @deprecated
+     * @return mixed
+     */
     public function getGroupBadgeCommunityPointValue()
     {
         return $this->gBadgeCommunityPointValue;
     }
 
+    /**
+     * @deprecated
+     * @return mixed
+     */
     public function getGroupBadgeImageID()
     {
         return $this->gBadgeFID;
@@ -335,6 +351,10 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $class;
     }
 
+    /**
+     * @deprecated
+     * @return bool
+     */
     public function getGroupBadgeImageObject()
     {
         $bf = false;
@@ -459,6 +479,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $app->executeCommand($command);
     }
 
+    /**
+     * @deprecated
+     */
     public static function getBadges()
     {
         $gs = new GroupList();
@@ -509,6 +532,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return static::getAutomationControllers('gCheckAutomationOnJobRun');
     }
 
+    /**
+     * @deprecated
+     */
     public function clearBadgeOptions()
     {
         $db = Database::connection();
@@ -536,6 +562,12 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
+    /**
+     * @deprecated
+     * @param $gBadgeFID
+     * @param $gBadgeDescription
+     * @param $gBadgeCommunityPointValue
+     */
     public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue)
     {
         $db = Database::connection();

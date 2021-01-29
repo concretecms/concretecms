@@ -1,6 +1,11 @@
 <?php
 namespace Concrete\Core\User\Point\Action;
 
+/**
+ * @deprecated
+ * Class WonBadgeAction
+ * @package Concrete\Core\User\Point\Action
+ */
 class WonBadgeAction extends Action
 {
     public function addDetailedEntry($user, $group)

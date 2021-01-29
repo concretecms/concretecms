@@ -59,12 +59,17 @@ trait GroupDetailsTrait
         return $this;
     }
 
+    /**
+     * @deprecated
+     * @return bool
+     */
     public function isBadge(): bool
     {
         return $this->isBadge;
     }
 
     /**
+     * @deprecated
      * @return $this
      */
     public function setIsBadge(bool $isBadge): object
@@ -74,12 +79,17 @@ trait GroupDetailsTrait
         return $this;
     }
 
+    /**
+     * @deprecated
+     * @return string
+     */
     public function getBadgeDescription(): string
     {
         return $this->badgeDescription;
     }
 
     /**
+     * @deprecated
      * @return $this
      */
     public function setBadgeDescription(string $badgeDescription): object

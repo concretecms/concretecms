@@ -702,23 +702,6 @@ class User extends ConcreteObject
                 ],
                 ['uID', 'gID'], true);
 
-                if ($g->isGroupBadge()) {
-                    $action = UserPointAction::getByHandle('won_badge');
-                    if (is_object($action)) {
-                        $action->addDetailedEntry($this, $g);
-                    }
-
-                    $mh = $app->make('mail');
-                    $ui = UserInfo::getByID($this->getUserID());
-                    $mh->addParameter('badgeName', $g->getGroupDisplayName(false));
-                    $mh->addParameter('uDisplayName', $ui->getUserDisplayName());
-                    $mh->addParameter('uProfileURL', (string) $ui->getUserPublicProfileURL());
-                    $mh->addParameter('siteName', tc('SiteName', $app['site']->getSite()->getSiteName()));
-                    $mh->to($ui->getUserEmail());
-                    $mh->load('won_badge');
-                    $mh->sendMail();
-                }
-
                 $ue = new \Concrete\Core\User\Event\UserGroup($this);
                 $ue->setGroupObject($g);
 

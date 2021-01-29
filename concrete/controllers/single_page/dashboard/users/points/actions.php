@@ -46,16 +46,10 @@ class Actions extends DashboardPageController
         }
 
         $actionList = $this->getActionList();
-        $badges = Group::getBadges();
-        $select = ['' => t('** None')];
-        foreach ($badges as $g) {
-            $select[$g->getGroupID()] = $g->getGroupDisplayName(false);
-        }
 
         $factory = $this->app->make(PaginationFactory::class, [$this->request]);
         $pagination = $factory->createPaginationObject($actionList);
 
-        $this->set('badges', $select);
         $this->set('pagination', $pagination);
         $this->set('actionList', $actionList);
         $this->set('actions', $pagination->getCurrentPageResults());

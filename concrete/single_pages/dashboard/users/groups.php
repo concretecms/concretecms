@@ -80,32 +80,6 @@ if (isset($group)) { ?>
         </fieldset>
 
         <fieldset>
-            <div class="form-group">
-                <div class="form-check">
-                    <?php echo $form->checkbox('gIsBadge', 1, $group->isGroupBadge()) ?>
-                    <?php echo $form->label("gIsBadge", t('This group is a badge.'), ["class" => "form-check-label launch-tooltip", t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')]); ?>
-                </div>
-            </div>
-
-            <div id="gUserBadgeOptions" style="display: none">
-                <div class="form-group">
-                    <?php echo $form->label("gBadgeFID", t('Image')); ?>
-                    <?php echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $group->getGroupBadgeImageObject()); ?>
-                </div>
-
-                <div class="form-group">
-                    <?php echo $form->label("gBadgeDescription", t('Badge Description')); ?>
-                    <?php echo $form->textarea('gBadgeDescription', h($group->getGroupBadgeDescription()), ['rows' => 6, 'class' => 'form-control']) ?>
-                </div>
-
-                <div class="form-group">
-                    <?php echo $form->label("gBadgeCommunityPointValue", t('Community Points')); ?>
-                    <?php echo $form->text('gBadgeCommunityPointValue', h($group->getGroupBadgeCommunityPointValue()), ['class' => 'form-control']) ?>
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
             <legend>
                 <?php echo t('Automation') ?>
             </legend>

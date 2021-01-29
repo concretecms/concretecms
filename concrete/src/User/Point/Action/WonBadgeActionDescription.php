@@ -3,6 +3,11 @@ namespace Concrete\Core\User\Point\Action;
 
 use Group;
 
+/**
+ * Class WonBadgeActionDescription
+ * @deprecated
+ * @package Concrete\Core\User\Point\Action
+ */
 class WonBadgeActionDescription extends ActionDescription
 {
     public function setBadgeGroupID($gID)
