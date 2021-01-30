@@ -8,6 +8,8 @@ class Manager
 {
     protected $providers = array();
 
+    protected $presets;
+
     public function register(ProviderInterface $provider)
     {
         $this->providers[$provider->getName()] = $provider;
@@ -31,17 +33,18 @@ class Manager
 
     public function getPresets()
     {
-        $presets = array();
-        foreach ($this->providers as $provider) {
-            $presets = array_merge($presets, $provider->getPresets());
-        }
-        array_map(function ($preset) {
-            if (!($preset instanceof PresetInterface)) {
-                throw new InvalidPresetException(t('Items returned by getPresets() must implement the PresetInterface'));
+        if (!isset($this->presets)) {
+            $this->presets = array();
+            foreach ($this->providers as $provider) {
+                $this->presets = array_merge($this->presets, $provider->getPresets());
             }
-        }, $presets);
-
-        return $presets;
+            array_map(function ($preset) {
+                if (!($preset instanceof PresetInterface)) {
+                    throw new InvalidPresetException(t('Items returned by getPresets() must implement the PresetInterface'));
+                }
+            }, $this->presets);
+        }
+        return $this->presets;
     }
 
     public function getPresetByIdentifier($identifier)
