@@ -13,12 +13,19 @@ class Manager
     public function register(ProviderInterface $provider)
     {
         $this->providers[$provider->getName()] = $provider;
+        $this->reset();
+    }
+
+    public function reset()
+    {
+        unset($this->presets);
     }
 
     public function unregister($nameOrObject)
     {
         $plugin = ($nameOrObject instanceof ProviderInterface) ? $nameOrObject : $this->providers[$nameOrObject];
         unset($this->providers[$plugin->getName()]);
+        $this->reset();
     }
 
     public function getByName($name)
@@ -54,6 +61,9 @@ class Manager
         });
         $results = array_values($results);
 
-        return $results[0];
+        if (!empty($results[0])) {
+            return $results[0];
+        }
+        return null;
     }
 }
