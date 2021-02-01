@@ -9,41 +9,41 @@ use Concrete\Core\Support\Facade\Url;
 
 <div class="form-inline">
     <?php if (!empty($itemsPerPageOptions)): ?>
-        <div class="btn-group">
             <select id="favoriteFolderSelector" class="selectpicker mr-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
 
-            <button
-                type="button"
-                class="btn btn-secondary p-2 dropdown-toggle"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false">
+            <div class="dropdown">
+                <button
+                    type="button"
+                    class="btn btn-secondary p-2 dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
 
-                <span id="selected-option">
-                    <?php echo $itemsPerPage; ?>
-                </span>
-            </button>
+                    <span id="selected-option">
+                        <?php echo $itemsPerPage; ?>
+                    </span>
+                </button>
 
-            <ul class="dropdown-menu">
-                <li class="dropdown-header">
-                    <?php echo t('Items per page') ?>
-                </li>
-
-                <?php foreach ($itemsPerPageOptions as $itemsPerPageOption): ?>
-                    <?php
-                        $url = $urlHelper->setVariable([
-                            'itemsPerPage' => $itemsPerPageOption
-                        ]);
-                    ?>
-
-                    <li data-items-per-page="<?php echo $itemsPerPageOption; ?>">
-                        <a class="dropdown-item <?php echo ($itemsPerPageOption === $itemsPerPage) ? 'active' : ''; ?>" href="<?php echo $url ?>">
-                            <?php echo $itemsPerPageOption; ?>
-                        </a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-header">
+                        <?php echo t('Items per page') ?>
                     </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
+
+                    <?php foreach ($itemsPerPageOptions as $itemsPerPageOption): ?>
+                        <?php
+                            $url = $urlHelper->setVariable([
+                                'itemsPerPage' => $itemsPerPageOption
+                            ]);
+                        ?>
+
+                        <li data-items-per-page="<?php echo $itemsPerPageOption; ?>">
+                            <a class="dropdown-item <?php echo ($itemsPerPageOption === $itemsPerPage) ? 'active' : ''; ?>" href="<?php echo $url ?>">
+                                <?php echo $itemsPerPageOption; ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
     <?php endif; ?>
 
     <ul class="ccm-dashboard-header-icons">
