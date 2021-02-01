@@ -35,7 +35,7 @@ use Concrete\Core\Support\Facade\Url;
                             'itemsPerPage' => $itemsPerPageOption
                         ]);
                     ?>
-                
+
                     <li data-items-per-page="<?php echo $itemsPerPageOption; ?>">
                         <a class="dropdown-item <?php echo ($itemsPerPageOption === $itemsPerPage) ? 'active' : ''; ?>" href="<?php echo $url ?>">
                             <?php echo $itemsPerPageOption; ?>
