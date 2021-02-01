@@ -533,6 +533,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         $attributeKeyCategory = $entity->getAttributeKeyCategory();
+        $attributeKeyHandleGenerator = new AttributeKeyHandleGenerator($attributeKeyCategory);
 
         // First, we get the existing controls, so we can check them
         // to see if controls should be removed later.
@@ -566,7 +567,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $mergedKey = $entityManager->merge($key);
                         $mergedKey->setAttributeType($mergedType);
                         $mergedKey->setEntity($entity);
-                        $mergedKey->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($mergedKey));
+                        $mergedKey->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($mergedKey));
                         $entityManager->persist($mergedKey);
                         $entityManager->flush();
 
@@ -596,7 +597,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
                                 // question name
                                 $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
-                                $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
+                                $key->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($key));
 
                                 // Key Type
                                 $key = $entityManager->merge($key);
