@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Support\Facade\Facade;
 use URL;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Utility\Service\Validation\Numbers;
@@ -17,22 +18,6 @@ use Permissions;
 
 class PageSelector
 {
-    /**
-     * The application container instance.
-     *
-     * @var \Concrete\Core\Application\Application
-     */
-    protected $app;
-
-    /**
-     * Initialize the instance.
-     *
-     * @param \Concrete\Core\Application\Application $app
-     */
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
 
     /**
      * Creates form fields and JavaScript page chooser for choosing a page. For use with inclusion in blocks.
@@ -94,14 +79,16 @@ EOL;
     {
         $selectedCID = null;
 
+        $app = Facade::getFacadeApplication();
+
         /** @var Request $request */
-        $request = $this->app->make(Request::class);
+        $request = $app->make(Request::class);
         /** @var Token $valt */
-        $valt = $this->app->make(Token::class);
+        $valt = $app->make(Token::class);
         /** @var Identifier $idHelper */
-        $idHelper = $this->app->make(Identifier::class);
+        $idHelper = $app->make(Identifier::class);
         /** @var Form $form */
-        $form = $this->app->make(Form::class);
+        $form = $app->make(Form::class);
 
         if ($request->request->has($key)) {
             $selectedCID = $request->request->get($key);
@@ -116,8 +103,8 @@ EOL;
 
         $pageList = [];
 
-        if ($selectedCID && $this->app->make(Numbers::class)->integer($selectedCID, 1)) {
-            $page = $this->app->make(Page::class)->getByID((int)$selectedCID);
+        if ($selectedCID && $app->make(Numbers::class)->integer($selectedCID, 1)) {
+            $page = $app->make(Page::class)->getByID((int)$selectedCID);
             $cp = new Permissions($page);
             if ($cp->canViewPage()) {
                 $pageList[(int)$selectedCID] = $page->getCollectionName();
