@@ -71,9 +71,7 @@ $class = 'ccm-area-footer';
                                     $btc = $bx->getController();
                                     $arLayout = $btc->getAreaLayoutObject();
 
-                                    if ($arLayout instanceof \Concrete\Core\Area\Layout\PresetLayout) { ?>
-                                        <li><a href="#" class="disabled" disabled"><?=t('Save Layout as Preset')?></a></li>
-                                    <?php } else { ?>
+                                    if (!($arLayout instanceof \Concrete\Core\Area\Layout\PresetLayout)) { ?>
                                         <li><a class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID())?>" dialog-title="<?=t('Save Layout as Preset')?>" dialog-width="360" dialog-height="300" dialog-modal="true"><?=t("Save Layout as Preset")?></a></li>
                                     <?php } ?>
                                     <li><a class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/area/layout/presets/manage')?>" dialog-title="<?=t('Manage Presets')?>" dialog-width="360" dialog-height="240" dialog-modal="true"><?=t("Manage Presets")?></a></li>
