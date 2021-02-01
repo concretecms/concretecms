@@ -40,6 +40,8 @@ class AreaLayoutPresetTest extends PageTestCase
 
     public function tearDown()
     {
+        $manager = Core::make('manager/area_layout_preset_provider');
+        $manager->reset();
         parent::tearDown();
         $this->truncateTables();
     }
@@ -125,6 +127,7 @@ class AreaLayoutPresetTest extends PageTestCase
         $req = Request::getInstance();
         $req->setCurrentPage($c);
 
+        $manager->reset();
         $presets = $manager->getPresets();
         $this->assertCount(1, $presets);
         $c = Page::getCurrentPage();
