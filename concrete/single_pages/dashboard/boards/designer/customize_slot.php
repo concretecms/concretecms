@@ -4,8 +4,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 ?>
 
+<style>
+    iframe {
+        border: 0;
+        height: 0;
+        overflow: hidden;
+        width: 1400px;
+    }
+</style>
 
-<form method="post" action="<?=$view->action('submit', $element->getID())?>">
+    <form method="post" action="<?=$view->action('submit', $element->getID())?>">
     <?=$token->output('submit')?>
 
     <div data-form="customize-slot" v-cloak>
@@ -22,13 +30,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <input type="radio" class="form-check-input" :value="index" name="selectedTemplateOption"
                                v-model="selectedTemplateOption">
                         <span class="text-muted"><?= t('Template Name:') ?> {{templateOption.template.name}}</span>
+
+                        <i class="ml-2 fa fa-spinner fa-spin" v-if="!loadedTemplateOptions.includes(index)"></i>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 pl-0">
 
-                    <span v-html="templateOption.content"></span>
+                    <iframe :data-index="index" src="<?=$view->action('load_preview_window')?>"></iframe>
+
                     <hr>
 
                 </div>
@@ -61,9 +72,31 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         return JSON.stringify(this.templateOptions[this.selectedTemplateOption])
                     }
                 },
+
+                mounted() {
+                    var my = this
+                    this.templateOptions.forEach(function(templateOption, i) {
+
+                        const iframe = $('iframe[data-index=' + i + ']').get(0)
+                        iframe.onload = function() {
+                            const innerDoc = iframe.contentWindow.document
+                            const innerPage = innerDoc.querySelector('div.ccm-page')
+                            innerPage.innerHTML = templateOption.content
+
+                            const offsetHeight = iframe.contentWindow.document.body.offsetHeight
+                            var frameHeight = offsetHeight > 650 ? 650 : offsetHeight
+                            frameHeight = frameHeight < 300 ? 300 : frameHeight
+
+                            $(iframe).css('height', frameHeight);
+                            
+                            my.loadedTemplateOptions.push(i)
+                        }
+                    });
+                },
                 data: {
                     templateOptions: <?=$templateOptions?>,
-                    selectedTemplateOption: -1
+                    selectedTemplateOption: -1,
+                    loadedTemplateOptions: []
                 },
 
                 watch: {},
