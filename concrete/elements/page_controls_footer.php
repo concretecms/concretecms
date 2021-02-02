@@ -153,12 +153,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         <?php
                     }
                 }
-
-                if ($cih->showWhiteLabelMessage()) {
-                    ?>
-                    <li class="float-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', $config->get('concrete.urls.concrete5')) ?></li>
-                    <?php
-                }
                 ?>
                 <?php
                 if ($dh->canRead()) {
@@ -213,7 +207,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help') ?></span>
                     </a>
                 </li>
-                <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search float-right d-none d-md-block">
+                <li data-guide-toolbar-action="intelligent-search" class="ccm-toolbar-search float-right d-none d-lg-block">
                     <?php
                     $menu = Element::get('navigation/intelligent_search');
                     $menu->render();
