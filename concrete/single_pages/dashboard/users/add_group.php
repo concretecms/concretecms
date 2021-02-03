@@ -73,15 +73,6 @@ $request = Request::getInstance();
     </fieldset>
 
     <fieldset>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                <?=$form->checkbox('gIsBadge', 1, false)?>
-                <span><?=t('This group is a badge.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')?>"></i> </span>
-                </label>
-            </div>
-        </div>
-
         <div id="gUserBadgeOptions" style="display: none">
             <div class="form-group">
                 <label class="control-label"><?=t('Image')?></label>

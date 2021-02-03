@@ -26,6 +26,10 @@ class AddGroup extends DashboardPageController
         }
     }
 
+    /**
+     * @deprecated
+     * @param $g
+     */
     public function checkBadgeOptions($g)
     {
         if ($this->request->post('gIsBadge')) {

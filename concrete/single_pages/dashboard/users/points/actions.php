@@ -47,15 +47,6 @@ if ($showForm) {
         		<?= $form->number('upaDefaultPoints', $upaDefaultPoints) ?>
         	</div>
 
-        	<div class="form-group">
-        	    <?= $form->label(
-        'gBadgeID',
-        t('Badge Associated') . ' <i class="fas fa-question-circle launch-tooltip" title="' . t('If a badge is assigned to this action, the first time this user performs this action they will be granted the badge.') . '"></i>'
-    )
-                ?>
-        		<?= $form->select('gBadgeID', $badges, $gBadgeID) ?>
-        	</div>
-
             <?php
                 $label = t('Add Action');
                 if ($upaID > 0) {
@@ -90,7 +81,6 @@ if ($showForm) {
                         <th class="<?=$actionList->getSortClassName('upa.upaName')?>"><a href="<?=$actionList->getSortURL('upa.upaName', 'desc')?>"><?=t('Action Name')?></a></th>
                         <th class="<?=$actionList->getSortClassName('upa.upaHandle')?>"><a href="<?=$actionList->getSortURL('upa.upaHandle')?>"><?=t('Action Handle')?></a></th>
                         <th class="<?=$actionList->getSortClassName('upa.upaDefaultPoints')?>"><a href="<?=$actionList->getSortURL('upa.upaDefaultPoints')?>"><?=t('Default Points')?></a></th>
-                        <th class="<?=$actionList->getSortClassName('upa.gBadgeID')?>"><a href="<?=$actionList->getSortURL('upa.gBadgeID')?>"><?=t('Group')?></a></th>
                         <th></th>
                     </tr>
     			</thead>
@@ -104,7 +94,6 @@ if ($showForm) {
                             <td><?= h($upa['upaName']) ?></td>
                             <td><?= h($upa['upaHandle']) ?></td>
                             <td><?= number_format($upa['upaDefaultPoints']) ?></td>
-                            <td><?= h($upa['gName']) ?></td>
                             <td class="text-right">
                                 <?php
                                     $deleteUrl = \Concrete\Core\Url\Url::createFromUrl($view->action('delete', $upa['upaID']));
