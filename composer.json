@@ -12,16 +12,6 @@
     ]
   },
   "require": {
-    "php": "^7.4||^8.0",
-    "ext-dom": "*",
-    "ext-fileinfo": "*",
-    "ext-gd": "*",
-    "ext-iconv": "*",
-    "ext-mbstring": "*",
-    "ext-pdo_mysql": "*",
-    "ext-SimpleXML": "*",
-    "ext-curl": "*",
-    "ext-zip": "*",
     "wikimedia/composer-merge-plugin": "~1.3",
     "concrete5/dependency-patches": "^1.5.0"
   },
