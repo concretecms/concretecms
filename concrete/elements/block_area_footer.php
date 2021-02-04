@@ -78,7 +78,7 @@ $class = 'ccm-area-footer';
                                         $arLayout = $btc->getAreaLayoutObject();
 
                                         if ($arLayout instanceof \Concrete\Core\Area\Layout\PresetLayout) { ?>
-                                            <a href="#" class="dropdown-item disabled" disabled"><?=t('Save Layout as Preset')?></a>
+                                            <a href="#" class="dropdown-item disabled"><?=t('Save Layout as Preset')?></a>
                                         <?php } else { ?>
                                         <a class="dropdown-item dialog-launch"
                                                href="<?= URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID()) ?>"
