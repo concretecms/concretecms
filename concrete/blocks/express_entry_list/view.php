@@ -112,7 +112,7 @@ if ($entity) { ?>
             </tbody>
         </table>
 
-        <?php if ($pagination) { ?>
+        <?php if ($enablePagination && $pagination) { ?>
             <?=$pagination ?>
         <?php } ?>
 
