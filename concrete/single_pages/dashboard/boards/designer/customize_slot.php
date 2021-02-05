@@ -29,7 +29,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <div class="form-check">
                         <input type="radio" class="form-check-input" :value="index" name="selectedTemplateOption"
                                v-model="selectedTemplateOption">
-                        <span class="text-muted"><?= t('Template Name:') ?> {{templateOption.template.name}}</span>
+                        <span class="badge badge-dark mr-3">{{templateOption.template.name}}</span>
+
+                        <span v-for="contentObject in templateOption.collection.objects">
+                            <span class="badge badge-light mr-3" v-if="contentObject.title">{{contentObject.title}}</span>
+                        </span>
 
                         <i class="ml-2 fa fa-spinner fa-spin" v-if="!loadedTemplateOptions.includes(index)"></i>
                     </div>
@@ -88,7 +92,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             frameHeight = frameHeight < 300 ? 300 : frameHeight
 
                             $(iframe).css('height', frameHeight);
-                            
+
+
+                            $(innerPage).find('a').click(function(e) {
+                                e.preventDefault()
+                                e.stopPropagation()
+                            })
+
+
+                            $(innerPage).find('.ew-stripe-clickable').removeAttr('onclick')
+
                             my.loadedTemplateOptions.push(i)
                         }
                     });

@@ -21,4 +21,11 @@ interface ObjectInterface extends \JsonSerializable, DenormalizableInterface, Pr
      */
     public function display(Application $app) : void;
 
+    /**
+     * Returns the title of the content object. Useful in admin interfaces when we choose from potential
+     * content object form factors
+     *
+     * @return string|null
+     */
+    public function getSlotContentObjectTitle() :? string;
 }
