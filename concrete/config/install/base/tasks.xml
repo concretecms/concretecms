@@ -1,8 +1,14 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <tasks>
-        <task handle="generate_sitemap" package=""/>
         <task handle="clear_cache" package=""/>
+        <task handle="generate_sitemap" package=""/>
         <task handle="rescan_files" package=""/>
+        <task handle="check_automated_groups" package=""/>
+        <task handle="deactivate_users" package=""/>
+        <task handle="remove_old_page_versions" package=""/>
+        <task handle="reindex_content" package=""/>
+        <task handle="process_email" package=""/>
+        <task handle="update_statistics" package=""/>
     </tasks>
 </concrete5-cif>

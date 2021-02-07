@@ -34,7 +34,7 @@ class HttpResponseFactory implements ResponseFactoryInterface
     public function createResponse(RunnerResponseInterface $response)
     {
         if ($response instanceof TaskCompletedResponse) {
-            //$this->session->getFlashBag()->add('page_message', ['success', $response->getMessage()]);
+            $this->session->getFlashBag()->add('page_message', ['success', $response->getMessage()]);
             return new JsonResponse(['status' => self::STATUS_COMPLETED]);
         }
         if ($response instanceof ProcessStartedResponse) {

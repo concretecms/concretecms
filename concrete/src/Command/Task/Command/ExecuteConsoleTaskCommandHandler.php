@@ -73,9 +73,11 @@ class ExecuteConsoleTaskCommandHandler
         $handler->run($runner, $taskOutput);
         $handler->complete($runner, $taskOutput);
 
-        if ($runner instanceof ProcessTaskRunnerInterface) {
-            $this->processUpdater->closeProcess($runner->getProcess(), ProcessMessageInterface::EXIT_CODE_SUCCESS);
-        }
+        // Note, this was here, but I don't think it's necessary because the batch command handler should handle this.
+        // Also, if it's here it incorrectly takes tasks that should finish right and makes them fail.
+        //if ($runner instanceof ProcessTaskRunnerInterface) {
+        //    $this->processUpdater->closeProcess($runner->getProcess(), ProcessMessageInterface::EXIT_CODE_SUCCESS);
+        //}
     }
 
 }

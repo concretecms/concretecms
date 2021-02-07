@@ -48,11 +48,11 @@ class HandleBatchMessageCommandHandler implements OutputAwareInterface
             $this->batchUpdater->updateJobs($command->getBatch(), BatchUpdater::COLUMN_PENDING, -1);
             $this->batchUpdater->updateJobs($command->getBatch(), BatchUpdater::COLUMN_FAILED, 1);
             $this->batchUpdater->checkBatchProcessForClose(
-                $message->getBatch(),
+                $command->getBatch(),
                 ProcessMessageInterface::EXIT_CODE_FAILURE,
                 $e->getMessage()
             );
-
+            throw $e;
         }
     }
 

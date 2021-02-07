@@ -167,9 +167,6 @@ class ClassloaderTest extends ClassLoaderTestCase
             ['Concrete\Block\CoreAreaLayout\Controller'],
             ['Concrete\Block\ExpressForm\Controller'],
             ['Concrete\Block\SocialLinks\Controller'],
-            ['Concrete\Job\IndexSearch'],
-            ['Concrete\Job\ProcessEmail'],
-            ['Concrete\Job\RemoveOldPageVersions'],
             ['Concrete\Theme\Elemental\PageTheme'],
             ['Concrete\Theme\Dashboard\PageTheme'],
 
