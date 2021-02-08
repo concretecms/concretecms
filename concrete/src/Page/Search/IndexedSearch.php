@@ -127,7 +127,7 @@ class IndexedSearch
         $blarray = [];
         $db = Loader::db();
         $r = $db->Execute(
-            'select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?',
+            'SELECT `bID`, `arHandle` FROM `CollectionVersionBlocks` WHERE `cID` = ? AND `cvID` = ? ORDER BY `arHandle` ASC, `cbDisplayOrder` ASC',
             [$c->getCollectionID(), $c->getVersionID()]
         );
         $th = Loader::helper('text');
