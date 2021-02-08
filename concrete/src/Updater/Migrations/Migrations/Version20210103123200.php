@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Entity\Automation\TaskSetTask;
 use Concrete\Core\Entity\Automation\Task;
+use Concrete\Core\Entity\Automation\TaskSet;
 use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Entity\Command\TaskProcess;
@@ -44,6 +46,9 @@ final class Version20210103123200 extends AbstractMigration implements Repeatabl
 
         $this->refreshEntities(
             [
+                Task::class,
+                TaskSet::class,
+                TaskSetTask::class,
                 Batch::class,
                 Process::class,
                 TaskProcess::class

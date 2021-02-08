@@ -265,6 +265,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionAccessEntityTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTasksRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTaskSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTemplatesRoutine',

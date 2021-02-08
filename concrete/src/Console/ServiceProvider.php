@@ -127,9 +127,14 @@ class ServiceProvider extends Provider
     protected function setupTaskCommands()
     {
         if ($this->installed()) {
-            $tasks = $this->app->make(TaskService::class)->getList();
-            foreach($tasks as $task) {
-                $this->add(new TaskCommand($task));
+            try {
+                $tasks = $this->app->make(TaskService::class)->getList();
+                foreach($tasks as $task) {
+                    $this->add(new TaskCommand($task));
+                }
+            } catch (\Exception $e) {
+                // Something isn't right. Probably the proxies aren't built yet or are in the process of being rebuilt?
+                // Don't let us use task commands unless the proxies are present.
             }
         }
     }

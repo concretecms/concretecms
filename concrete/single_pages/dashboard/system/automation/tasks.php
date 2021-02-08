@@ -6,8 +6,6 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
     <form>
 
-        <h3 class="mb-3"><?= t('Choose a Task to Run') ?></h3>
-
         <table class="table table-striped" id="ccm-jobs-list">
             <thead>
             <tr>
@@ -19,14 +17,18 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                 <th><?= t('Last Run By') ?></th>
             </tr>
             </thead>
-            <tbody>
-            <tr :key="'task-' + task.id" v-for="task in tasks">
+            <tbody v-for="taskSet in taskSets">
+            <tr>
+                <th class="table-secondary"></th>
+                <th colspan="5" class="table-secondary text-muted">{{taskSet.name}}</th>
+            </tr>
+            <tr :key="'task-' + task.id" v-for="task in taskSet.tasks">
                 <td><input type="radio" :id="task.id" v-model="selectedTask" :value="task"></td>
-                <td><b><label :for="task.id" class="mb-0">{{task.name}}</label></b></td>
-                <td class="small">{{task.description}}</td>
-                <td>{{task.dateLastStartedFormatted}}</td>
-                <td>{{task.dateLastCompletedFormatted}}</td>
-                <td>{{task.lastRunBy ? task.lastRunBy.name : ''}}</td>
+                <td class="w-25"><label :for="task.id" class="mb-0">{{task.name}}</label></td>
+                <td class="text-muted small">{{task.description}}</td>
+                <td class="text-muted small">{{task.dateLastStartedFormatted}}</td>
+                <td class="text-muted small">{{task.dateLastCompletedFormatted}}</td>
+                <td class="text-muted small">{{task.lastRunBy ? task.lastRunBy.name : ''}}</td>
             </tr>
             </tbody>
         </table>
@@ -115,7 +117,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                 data: {
                     selectedTask: null,
                     schedulingEnabled: <?= $schedulingEnabled ? 'true' : 'false'?>,
-                    tasks: <?=json_encode($tasks)?>,
+                    taskSets: <?=json_encode($taskSets)?>,
                     scheduleTask: false,
                     executedProcess: null,
                     executedProcesses: [],
