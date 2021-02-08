@@ -11,5 +11,5 @@ use Concrete\Core\System\InfoTransformer;
 use League\Fractal\Resource\Item;
 
 $router->get('/system/info', function () {
-    return new Item(new Info(), new InfoTransformer());
+    return new JsonResponse(['data' => (new InfoTransformer())->transform(new Info())],200);
 })->setScopes('system:info:read');
