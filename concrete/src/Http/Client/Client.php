@@ -52,22 +52,31 @@ class Client extends ZendClient implements LoggerAwareInterface
      */
     public function send(ZendRequest $request = null)
     {
-        $response = parent::send($request);
         $logger = $this->getLogger();
+        try {
+            $response = parent::send($request);
+        } catch (Throwable $e) {
+            $this->logError($e, 'send');
+
+            // Rethrow the caught throwable
+            throw $e;
+        }
+
         if ($logger !== null) {
             $statusCode = $response->getStatusCode();
+
             try {
                 $body = $response->getBody();
-            } catch (Exception $x) {
-                $body = '';
             } catch (Throwable $x) {
                 $body = '';
             }
+
             if (mb_strlen($body) <= 200) {
                 $shortBody = $body;
             } else {
                 $shortBody = mb_substr($body, 0, 197) . '...';
             }
+
             $logger->debug(
                 'The response code was {statusCode} and the body was {shortBody}',
                 [
@@ -109,6 +118,37 @@ class Client extends ZendClient implements LoggerAwareInterface
             );
         }
 
-        return parent::doRequest($uri, $method, $secure, $headers, $body);
+        try {
+            return parent::doRequest($uri, $method, $secure, $headers, $body);
+        } catch (Throwable $e) {
+            $this->logError($e, 'doRequest');
+
+            // Rethrow the caught throwable
+            throw $e;
+        }
+
+    }
+
+    /**
+     * Report a caught error to the logger if one is available
+     *
+     * @param Throwable $e
+     * @param $action
+     */
+    protected function logError(Throwable $e, $action)
+    {
+        $logger = $this->getLogger();
+
+        if ($logger) {
+            $this->logger->error(
+                'Failed to send request: {error}',
+                [
+                    'action' => $action,
+                    'error' => (string) $e,
+                    'message' => $e->getMessage(),
+                    'error_class' => get_class($e)
+                ]
+            );
+        }
     }
 }
