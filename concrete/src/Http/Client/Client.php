@@ -52,27 +52,36 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
 
     public function send(RequestInterface $request, array $options = [])
     {
-        $response = parent::send($request, $options);
         $logger = $this->getLogger();
+        try {
+            $response = parent::send($request);
+        } catch (Throwable $e) {
+            $this->logError($e, 'send');
+
+            // Rethrow the caught throwable
+            throw $e;
+        }
+
         if ($logger !== null) {
             $statusCode = $response->getStatusCode();
+
             try {
-                $body = $response->getBody();
-            } catch (Exception $x) {
-                $body = '';
+                $body = $response->getBody()->getContents();
             } catch (Throwable $x) {
                 $body = '';
             }
+
             if (mb_strlen($body) <= 200) {
                 $shortBody = $body;
             } else {
                 $shortBody = mb_substr($body, 0, 197) . '...';
             }
+
             $logger->debug(
                 'The response code was {statusCode} and the body was {shortBody}',
                 [
                     'statusCode' => $statusCode,
-                    'headers' => $response->getHeaders()->toArray(),
+                    'headers' => $response->getHeaders(),
                     'shortBody' => $shortBody,
                     'body' => $body,
                 ]
@@ -110,8 +119,38 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
                 ]
             );
         }
-        return parent::request($method, $uri, $options);
+        try {
+            return parent::request($method, $uri, $options);
+        } catch (Throwable $e) {
+            $this->logError($e, 'doRequest');
 
+            // Rethrow the caught throwable
+            throw $e;
+        }
+
+    }
+
+    /**
+     * Report a caught error to the logger if one is available
+     *
+     * @param Throwable $e
+     * @param $action
+     */
+    protected function logError(Throwable $e, $action)
+    {
+        $logger = $this->getLogger();
+
+        if ($logger) {
+            $this->logger->error(
+                'Failed to send request: {error}',
+                [
+                    'action' => $action,
+                    'error' => (string) $e,
+                    'message' => $e->getMessage(),
+                    'error_class' => get_class($e)
+                ]
+            );
+        }
     }
 
 }
