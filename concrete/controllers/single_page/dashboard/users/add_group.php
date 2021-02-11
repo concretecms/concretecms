@@ -4,8 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
+use Concrete\Core\Tree\Node\Type\GroupFolder as GroupFolderTreeNode;
 use Concrete\Core\Tree\Node\Node as TreeNode;
-use Group as ConcreteGroup;
+use Concrete\Core\User\Group\Group;
 
 class AddGroup extends DashboardPageController
 {
@@ -75,23 +76,24 @@ class AddGroup extends DashboardPageController
             }
         }
 
-        $parentGroup = null;
+        $parentFolder = null;
         if ($this->request->post('gParentNodeID')) {
             $parentGroupNode = TreeNode::getByID($this->request->post('gParentNodeID'));
-            if ($parentGroupNode instanceof GroupTreeNode) {
-                $parentGroup = $parentGroupNode->getTreeNodeGroupObject();
+            if ($parentGroupNode instanceof GroupFolderTreeNode) {
+                $parentFolder = $parentGroupNode;
             }
         }
 
-        if (is_object($parentGroup)) {
-            $pp = new \Permissions($parentGroup);
+        if (is_object($parentFolder)) {
+            $pp = new \Permissions($parentFolder);
             if (!$pp->canAddSubGroup()) {
-                $this->error->add(t('You do not have permission to add a group beneath %s', $parentGroup->getGroupDisplayName()));
+                $this->error->add(t('You do not have permission to add a group beneath %s', $parentFolder->getGroupDisplayName()));
             }
         }
 
         if (!$this->error->has()) {
-            $g = ConcreteGroup::add($gName, $this->request->post('gDescription'), $parentGroup);
+            $g = Group::addBeneathFolder($gName, $this->request->post('gDescription'), $parentFolder);
+
             $this->checkExpirationOptions($g);
             $this->checkBadgeOptions($g);
             $this->checkAutomationOptions($g);

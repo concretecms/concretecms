@@ -4201,6 +4201,14 @@
     </index>
   </table>
 
+  <table name="TreeGroupFolderNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+  </table>
+
   <table name="TreeExpressEntrySiteResultNodes">
     <field name="treeNodeID" type="integer" size="11">
       <unsigned/>

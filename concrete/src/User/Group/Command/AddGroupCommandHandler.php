@@ -3,6 +3,7 @@
 namespace Concrete\Core\User\Group\Command;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\User\Group\Command\Traits\ParentNodeRetrieverTrait;
 use Concrete\Core\User\Group\Event;
 use Concrete\Core\User\Group\GroupRepository;
@@ -56,6 +57,8 @@ class AddGroupCommandHandler
         $node = null;
         if ($command->getParentGroupID()) {
             $node = GroupNode::getTreeNodeByGroupID($command->getParentGroupID());
+        } else if ($command->getParentNodeID()) {
+            $node = TreeNode::getByID($command->getParentNodeID());
         }
         if (!is_object($node)) {
             $tree = GroupTree::get();

@@ -8,6 +8,7 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Tree\Node\Type\GroupFolder;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\Command\DeleteGroupCommand;
 use Concrete\Core\User\User;
@@ -101,9 +102,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $parents = $node->getTreeNodeParentArray();
             $parents = array_reverse($parents);
             foreach ($parents as $node) {
-                $g = $node->getTreeNodeGroupObject();
-                if (is_object($g)) {
-                    $path .= '/' . $g->getGroupName();
+                if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                    $g = $node->getTreeNodeGroupObject();
+                    if (is_object($g)) {
+                        $path .= '/' . $g->getGroupName();
+                    }
                 }
             }
         }
@@ -121,8 +124,12 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
         $node->populateDirectChildrenOnly();
         foreach ($node->getChildNodes() as $child) {
-            $group = $child->getTreeNodeGroupObject();
-            $group->rescanGroupPathRecursive();
+            if ($child instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                $group = $child->getTreeNodeGroupObject();
+                if ($group instanceof Group) {
+                    $group->rescanGroupPathRecursive();
+                }
+            }
         }
     }
 
@@ -186,9 +193,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $parents = $node->getTreeNodeParentArray();
             $parents = array_reverse($parents);
             foreach ($parents as $node) {
-                $g = $node->getTreeNodeGroupObject();
-                if (is_object($g)) {
-                    $parentGroups[] = $g;
+                if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                    $g = $node->getTreeNodeGroupObject();
+                    if (is_object($g)) {
+                        $parentGroups[] = $g;
+                    }
                 }
             }
         }
@@ -204,9 +213,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $node->populateDirectChildrenOnly();
             $node_children = $node->getChildNodes();
             foreach ($node_children as $node_child) {
-                $group = $node_child->getTreeNodeGroupObject();
-                if (is_object($group)) {
-                    $children[] = $group;
+                if ($node_child instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                    $group = $node_child->getTreeNodeGroupObject();
+                    if (is_object($group)) {
+                        $children[] = $group;
+                    }
                 }
             }
         }
@@ -473,6 +484,31 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($parentGroup) {
             $command->setParentGroupID($parentGroup->getGroupID());
         }
+        if ($pkg) {
+            $command->setPackageID($pkg->getPackageID());
+        }
+        return $app->executeCommand($command);
+    }
+
+    /** Creates a new user group.
+     *
+     * This is deprecated; use the AddGroupCommand and the command bus.
+     * @param string $gName
+     * @param string $gDescription
+     * @param GroupFolder $parentFolder
+     *
+     * @return Group
+     */
+    public static function addBeneathFolder($gName, $gDescription, $parentFolder = false, $pkg = null)
+    {
+        $app = Facade::getFacadeApplication();
+        $command = new AddGroupCommand();
+        $command->setName($gName);
+        $command->setDescription($gDescription);
+        if ($parentFolder instanceof GroupFolder) {
+            $command->setParentNodeID($parentFolder->getTreeNodeID());
+        }
+
         if ($pkg) {
             $command->setPackageID($pkg->getPackageID());
         }

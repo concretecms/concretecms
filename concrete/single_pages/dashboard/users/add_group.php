@@ -33,7 +33,7 @@ $request = Request::getInstance();
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"><?=t('Parent Group')?></label>
+            <label class="control-label"><?=t('Create Group Beneath')?></label>
             <div class="controls">
                 <div class="groups-tree" style="width: 460px" data-groups-tree="<?=$tree->getTreeID()?>"></div>
                 <?=$form->hidden('gParentNodeID')?>
@@ -43,6 +43,9 @@ $request = Request::getInstance();
                             'treeID': '<?=$tree->getTreeID()?>',
                             'chooseNodeInForm': 'single',
                             'enableDragAndDrop': false,
+                            ajaxData: {
+                                displayOnly: 'group_folder'
+                            },
                             <?php
                             if ($this->controller->isPost()) {
                                 ?>
@@ -207,8 +210,8 @@ $request = Request::getInstance();
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=$app->make('url/manager')->resolve(['/dashboard/users/groups'])?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
-            <?=$form->submit('add', t('Add Group'), ['class' => 'btn btn-primary pull-right'])?>
+            <a href="<?=$app->make('url/manager')->resolve(['/dashboard/users/groups'])?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
+            <?=$form->submit('add', t('Add Group'), ['class' => 'btn btn-primary float-right'])?>
         </div>
     </div>
 
