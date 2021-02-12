@@ -14,6 +14,7 @@ use Concrete\Core\User\Group\Command\DeleteGroupCommand;
 use Concrete\Core\User\User;
 use Config;
 use Database;
+use Doctrine\DBAL\Exception;
 use Events;
 use File;
 use Gettext\Translations;
@@ -173,6 +174,215 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function getGroupID()
     {
         return $this->gID;
+    }
+
+    public function getOverrideGroupTypeSettings()
+    {
+        return (bool)$this->gOverrideGroupTypeSettings;
+    }
+
+    public function setOverrideGroupTypeSettings($gOverrideGroupTypeSettings)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gOverrideGroupTypeSettings = $gOverrideGroupTypeSettings;
+
+        try {
+            $db->executeQuery("update Groups set gOverrideGroupTypeSettings = ? where gID = ?", [(int)$gOverrideGroupTypeSettings, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getGroupTypeId()
+    {
+        return $this->gtID;
+    }
+
+    /**
+     * @return bool|GroupType
+     */
+    public function getGroupType()
+    {
+        return GroupType::getByID($this->gtID);
+    }
+
+    /**
+     * @return bool|GroupType
+     */
+    public function setGroupType(GroupType $groupType)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gtID = $groupType->getId();
+
+        try {
+            $db->executeQuery("update Groups set gtID = ? where gID = ?", [$this->gtID, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultRoleId()
+    {
+        return $this->gDefaultRoleID;
+    }
+
+    /**
+     * @return GroupRole
+     */
+    public function getDefaultRole()
+    {
+        if ($this->getOverrideGroupTypeSettings()) {
+            return GroupRole::getByID($this->gDefaultRoleID);
+        } else {
+            return $this->getGroupType()->getDefaultRole();
+        }
+    }
+
+    /**
+     * @param GroupRole $role
+     * @return bool
+     */
+    public function setDefaultRole($role)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gDefaultRoleID = $role->getId();
+
+        try {
+            $db->executeQuery("update Groups set gDefaultRoleID = ? where gID = ?", [(int)$this->gDefaultRoleID, (int)$this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\File|bool
+     */
+    public function getThumbnailImage()
+    {
+        $bf = false;
+
+        if ($this->gThumbnailFID) {
+            $bf = \Concrete\Core\File\File::getByID($this->gThumbnailFID);
+            if (!is_object($bf) || $bf->isError()) {
+                unset($bf);
+            }
+        }
+
+        return $bf;
+    }
+
+    public function removeThumbnailImage()
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        try {
+            $db->executeQuery("update Groups set gThumbnailFID = ? where gID = ?", [0, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\File\File $file
+     * @return bool
+     */
+    public function setThumbnailImage(\Concrete\Core\Entity\File\File $file)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gThumbnailFID = $file->getFileID();
+
+        try {
+            $db->executeQuery("update Groups set gThumbnailFID = ? where gID = ?", [$this->gThumbnailFID, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function isPetitionForPublicEntry()
+    {
+        if ($this->getOverrideGroupTypeSettings()) {
+            return (bool)$this->gPetitionForPublicEntry;
+        } else {
+            return (bool)$this->getGroupType()->isPetitionForPublicEntry();
+        }
+    }
+
+    public function setPetitionForPublicEntry($gPetitionForPublicEntry)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gPetitionForPublicEntry = $gPetitionForPublicEntry;
+
+        try {
+            $db->executeQuery("update Groups set gPetitionForPublicEntry = ? where gID = ?", [(int)$gPetitionForPublicEntry, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return GroupRole[]
+     */
+    public function getRoles()
+    {
+        if ($this->getOverrideGroupTypeSettings()) {
+            return GroupRole::getListByGroup($this);
+        } else {
+            return GroupRole::getListByGroupType($this->getGroupType());
+        }
+    }
+
+    /**
+     * @param GroupRole $role
+     * @return bool
+     */
+    public function addRole($role)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        try {
+            $db->executeQuery('insert into GroupSelectedRoles (grID, gID) values (?,?)', [(int)$role->getId(), (int)$this->getGroupID()]);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getGroupName()

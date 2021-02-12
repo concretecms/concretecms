@@ -109,6 +109,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Group Types" path="/dashboard/users/group_types" filename="/dashboard/users/group_types.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>group types, group type</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Send Message to Group" path="/dashboard/users/groups/message" filename="/dashboard/users/groups/message.php" pagetype=""
               description="" package="">
             <attributes>

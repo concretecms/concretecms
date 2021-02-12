@@ -1,15 +1,152 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
+
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\File\File;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\Tree\Node\Type\GroupFolder as GroupFolderTreeNode;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupRole;
+use Concrete\Core\User\Group\GroupType;
 
 class AddGroup extends DashboardPageController
 {
+
+    /**
+     * @return ErrorList
+     */
+    public function validateRoles()
+    {
+        $errorList = new ErrorList();
+
+        if ((bool)$this->request->request->get('gOverrideGroupTypeSettings')) {
+            $hasManagerRole = false;
+
+            if (is_array($this->request->request->get("roles"))) {
+                foreach ($this->request->request->get("roles") as $roleId => $role) {
+                    if (strlen($role["name"]) === 0) {
+                        $errorList->add(t("You need to enter a role name."));
+                    }
+
+                    if (isset($role["manager"])) {
+                        $hasManagerRole = true;
+                    }
+                }
+
+                if (!$hasManagerRole) {
+                    //$errorList->add(t("You need to have at least one manager role."));
+                }
+
+                if (!in_array($this->request->request->get("defaultRole"), array_keys($this->request->request->get("roles")))) {
+                    $errorList->add(t("You need to set a default role."));
+                }
+            } else {
+                $errorList->add(t("You need to have at least one role."));
+            }
+        }
+
+        return $errorList;
+    }
+
+    /**
+     * @param Group $g
+     */
+    public function checkGroupTypeOptions($g)
+    {
+        $typeWasInherited = !$g->getOverrideGroupTypeSettings();
+
+        $g->setOverrideGroupTypeSettings((bool)$this->request->request->get('gOverrideGroupTypeSettings'));
+
+        if ($this->request->request->has('gThumbnailFID')) {
+            $thumbnailFileId = $this->request->request->get('gThumbnailFID');
+            $fileEntity = File::getByID($thumbnailFileId);
+
+            if ($fileEntity instanceof \Concrete\Core\Entity\File\File) {
+                $g->setThumbnailImage($fileEntity);
+            } else {
+                $g->removeThumbnailImage();
+            }
+        } else {
+            $g->removeThumbnailImage();
+        }
+
+        $g->setPetitionForPublicEntry($this->request->request->has('gtPetitionForPublicEntry'));
+
+        $defaultGroupType = GroupType::getByID(DEFAULT_GROUP_TYPE_ID);
+
+        if ($this->request->post('gtID')) {
+            $groupType = GroupType::getByID($this->request->post('gtID'));
+
+            if ($groupType === false) {
+                $g->setGroupType($defaultGroupType);
+            } else {
+                $g->setGroupType($groupType);
+            }
+
+        } else {
+            $g->setGroupType($defaultGroupType);
+        }
+
+        // Update Roles
+        if ($g->getOverrideGroupTypeSettings()) {
+            $newRoles = [];
+            $updateRoleIds = [];
+            $defaultRole = null;
+
+            if ($typeWasInherited) {
+                $newRoles = $this->request->request->get("roles");
+            } else {
+                foreach ($this->request->request->get("roles") as $roleId => $role) {
+                    if (substr($roleId, 0, 1) === "_") {
+                        $newRoles[$roleId] = $role;
+                    } else {
+                        $updateRoleIds[$roleId] = $roleId;
+                    }
+                }
+            }
+
+            // update existing roles and remove removed items
+            foreach ($g->getRoles() as $role) {
+                if (in_array($role->getId(), array_keys($updateRoleIds))) {
+                    $updateData = $this->request->request->get("roles")[$role->getId()];
+                    $role->setName($updateData["name"]);
+                    $role->setIsManager(isset($updateData["manager"]));
+
+                    if ($role->getId() == $this->request->request->get("defaultRole")) {
+                        $defaultRole = $role;
+                    }
+                } else {
+                    try {
+                        $role->delete();
+                    } catch (\Exception $e) {
+                        $this->error->add($e->getMessage());
+                    }
+                }
+            }
+
+            // append new roles
+            foreach ($newRoles as $roleId => $role) {
+                $groupRole = GroupRole::add($role["name"], isset($role["manager"]));
+
+                if (is_object($groupRole)) {
+                    $g->addRole($groupRole);
+                }
+
+                if ($roleId == $this->request->request->get("defaultRole")) {
+                    $defaultRole = $groupRole;
+                }
+            }
+
+            if ($defaultRole !== null) {
+                $g->setDefaultRole($defaultRole);
+            }
+        }
+    }
+
     public function checkExpirationOptions($g)
     {
         if ($this->request->post('gUserExpirationIsEnabled')) {
@@ -91,12 +228,17 @@ class AddGroup extends DashboardPageController
             }
         }
 
+        foreach($this->validateRoles()->getList() as $error) {
+            $this->error->add($error);
+        }
+
         if (!$this->error->has()) {
             $g = Group::addBeneathFolder($gName, $this->request->post('gDescription'), $parentFolder);
 
             $this->checkExpirationOptions($g);
             $this->checkBadgeOptions($g);
             $this->checkAutomationOptions($g);
+            $this->checkGroupTypeOptions($g);
             $this->redirect('/dashboard/users/groups', 'group_added');
         }
         $this->view();

@@ -285,6 +285,10 @@ class Groups extends DashboardPageController
 
     public function update_group()
     {
+        $cntp = Page::getByPath('/dashboard/users/add_group');
+        /** @var \Concrete\Controller\SinglePage\Dashboard\Users\AddGroup $cnta */
+        $cnta = $cntp->getController();
+
         $g = Group::getByID(intval($_REQUEST['gID']));
         if (is_object($g)) {
             $this->set('group', $g);
@@ -313,13 +317,16 @@ class Groups extends DashboardPageController
             }
         }
 
+        foreach($cnta->validateRoles()->getList() as $error) {
+            $this->error->add($error);
+        }
+
         if (!$this->error->has()) {
             $g->update($gName, $_POST['gDescription']);
-            $cntp = Page::getByPath('/dashboard/users/add_group');
-            $cnta = $cntp->getController();
             $cnta->checkExpirationOptions($g);
             $cnta->checkBadgeOptions($g);
             $cnta->checkAutomationOptions($g);
+            $cnta->checkGroupTypeOptions($g);
             $this->redirect('/dashboard/users/groups', 'group_updated');
         } else {
             $this->render("/dashboard/users/groups/edit");

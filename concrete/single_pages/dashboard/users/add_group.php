@@ -1,5 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Application\Service\FileManager;
+
 $section = 'groups';
 
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -9,6 +12,8 @@ $valt = $app->make('helper/validation/token');
 
 $date = $app->make('helper/form/date_time');
 $form = $app->make('helper/form');
+/** @var FileManager $af */
+$af = $app->make(FileManager::class);
 
 $rootNode = $tree->getRootTreeNodeObject();
 
@@ -16,7 +21,9 @@ $guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
 $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
 $request = Request::getInstance();
-?>
+
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\User\Group\GroupType; ?>
 
 <form class="form-stacked" method="post" id="add-group-form" action="<?=$view->url('/dashboard/users/add_group/', 'do_add')?>">
     <?=$valt->output('add_or_update_group')?>
@@ -32,6 +39,40 @@ $request = Request::getInstance();
                 <?=$form->textarea('gDescription', ['rows' => 6, 'class' => 'span6'])?>
             </div>
         </div>
+
+        <div class="form-group">
+            <?php echo $form->label('gtID', t('Group Type')); ?>
+            <?php echo $form->select('gtID', GroupType::getSelectList()); ?>
+
+            <div class="help-block">
+                <?php echo t("Click %s to manage the group types.", sprintf(
+                    "<a href=\"%s\">%s</a>",
+                    (string)Url::to("/dashboard/users/group_types"),
+                    t("here")
+                )); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->label('gOverrideGroupTypeSettings', t('Type Settings')); ?>
+            <?php echo $form->select('gOverrideGroupTypeSettings', [
+                0 => t("Inherit settings from group type"),
+                1 => t("Override settings from group type"),
+            ]); ?>
+        </div>
+
+        <div class="form-group override-group-type-setting">
+            <div class="form-check">
+                <?php echo $form->checkbox('gtPetitionForPublicEntry', 1, false, ["class" => "form-check-input"]); ?>
+                <?php echo $form->label('gtPetitionForPublicEntry', t('Petition For Public Entry'), ["class" => "form-check-label"]); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->label('gThumbnailFID', t('Thumbnail Image')); ?>
+            <?php echo  $af->image('gThumbnailFID','gThumbnailFID', t("Please select")); ?>
+        </div>
+
         <div class="form-group">
             <label class="control-label"><?=t('Create Group Beneath')?></label>
             <div class="controls">
@@ -73,6 +114,15 @@ $request = Request::getInstance();
                 </script>
             </div>
         </div>
+    </fieldset>
+
+    <fieldset class="override-group-type-setting">
+        <legend>
+            <?php echo t("Roles"); ?>
+        </legend>
+
+        <?php /** @noinspection PhpUnhandledExceptionInspection */
+        echo View::element("groups/roles_list", ["roles" => [], "defaultRole" => null]); ?>
     </fieldset>
 
     <fieldset>
@@ -261,5 +311,13 @@ $(function() {
         }).triggerHandler('click');
     $('.icon-question-sign').tooltip();
     ccm_checkGroupExpirationOptions();
+
+    $("#gOverrideGroupTypeSettings").change(function() {
+        if($(this).val() == 1) {
+            $(".override-group-type-setting").removeClass("d-none");
+        } else {
+            $(".override-group-type-setting").addClass("d-none");
+        }
+    }).trigger("change");
 });
 </script>

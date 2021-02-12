@@ -8,7 +8,9 @@ use Concrete\Core\Application\Service\FileManager;
 use Concrete\Core\Application\Service\UserInterface;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\GroupType;
 use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Text;
 use Concrete\Core\Validation\CSRF\Token;
@@ -72,6 +74,48 @@ $text = $app->make(Text::class);
             <?php echo $form->label("gDescription", t('Description')); ?>
             <?php echo $form->textarea("gDescription", $text->entities($group->getGroupDescription()), ["rows" => 6]); ?>
         </div>
+
+        <div class="form-group">
+            <?php echo $form->label('gtID', t('Group Type')); ?>
+            <?php echo $form->select('gtID', GroupType::getSelectList(), $group->getGroupTypeId()); ?>
+
+            <div class="help-block">
+                <?php echo t("Click %s to manage the group types.", sprintf(
+                    "<a href=\"%s\">%s</a>",
+                    (string)Url::to("/dashboard/users/group_types"),
+                    t("here")
+                )); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->label('gOverrideGroupTypeSettings', t('Group Type Settings')); ?>
+            <?php echo $form->select('gOverrideGroupTypeSettings', [
+                0 => t("Inherit settings from group type"),
+                1 => t("Override settings from group type"),
+            ], (int)$group->getOverrideGroupTypeSettings()); ?>
+        </div>
+
+        <div class="form-group override-group-type-setting">
+            <div class="form-check">
+                <?php echo $form->checkbox('gtPetitionForPublicEntry', 1, $group->isPetitionForPublicEntry(), ["class" => "form-check-input"]); ?>
+                <?php echo $form->label('gtPetitionForPublicEntry', t('Petition for public entry'), ["class" => "form-check-label"]); ?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->label('gThumbnailFID', t('Thumbnail Image')); ?>
+            <?php echo $af->image('gThumbnailFID', 'gThumbnailFID', t("Please select"), $group->getThumbnailImage()); ?>
+        </div>
+    </fieldset>
+
+    <fieldset class="override-group-type-setting">
+        <legend>
+            <?php echo t("Roles"); ?>
+        </legend>
+
+        <?php /** @noinspection PhpUnhandledExceptionInspection */
+        echo View::element("groups/roles_list", ["roles" => $group->getRoles(), "defaultRole" => $group->getDefaultRole()]); ?>
     </fieldset>
 
     <fieldset>
@@ -253,5 +297,14 @@ $text = $app->make(Text::class);
                 $('#gAutomationOptions').hide();
             }
         }).triggerHandler('click');
+
+        $("#gOverrideGroupTypeSettings").change(function() {
+            if($(this).val() == 1) {
+                $(".override-group-type-setting").removeClass("d-none");
+            } else {
+                $(".override-group-type-setting").addClass("d-none");
+            }
+        }).trigger("change");
     });
+
 </script>
