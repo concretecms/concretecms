@@ -14,6 +14,7 @@ use Concrete\Core\User\Group\Group;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\User\Group\GroupRole;
 use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
@@ -683,6 +684,31 @@ class User extends ConcreteObject
 
     /**
      * @param Group $g
+     * @param GroupRole $r
+     */
+    public function changeGroupRole($g, $r)
+    {
+        $app = Application::getFacadeApplication();
+        $db = $app['database']->connection();
+
+        if (is_object($g)) {
+            if (!$this->inExactGroup($g)) {
+                $db->Replace('UserGroups', [
+                    'uID' => $this->getUserID(),
+                    'gID' => $g->getGroupID(),
+                    'grID' => $r->getId()
+                ], ['uID', 'gID'], true);
+
+                $ue = new \Concrete\Core\User\Event\UserGroup($this);
+                $ue->setGroupObject($g);
+
+                $app['director']->dispatch('on_user_change_group_role', $ue);
+            }
+        }
+    }
+
+    /**
+     * @param Group $g
      */
     public function enterGroup($g)
     {
@@ -694,11 +720,19 @@ class User extends ConcreteObject
             if (!$this->inExactGroup($g)) {
                 $gID = $g->getGroupID();
                 $db = $app['database']->connection();
+                $grID = DEFAULT_GROUP_ROLE_ID;
+
+                $role = $g->getDefaultRole();
+
+                if (is_object($role)) {
+                    $grID = $role->getId();
+                }
 
                 $db->Replace('UserGroups', [
                     'uID' => $this->getUserID(),
                     'gID' => $g->getGroupID(),
                     'ugEntered' => $dt->getOverridableNow(),
+                    'grID' => $grID
                 ],
                 ['uID', 'gID'], true);
 
