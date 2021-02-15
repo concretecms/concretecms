@@ -100,11 +100,12 @@ class FolderItemList extends DatabaseItemList implements PagerProviderInterface,
     {
         $this->query->select('distinct n.treeNodeID')
             ->addSelect('if(nt.treeNodeTypeHandle=\'group\', g.gName, n.treeNodeName) as name')
-            ->addSelect('if(nt.treeNodeTypeHandle=\'group_folder\', 1, 2) as type')
+            ->addSelect('if(nt.treeNodeTypeHandle=\'group_folder\', 1, 10 + gt.gtID) as type')
             ->from('TreeNodes', 'n')
             ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
             ->leftJoin('n', 'TreeGroupNodes', 'tf', 'tf.treeNodeID = n.treeNodeID')
             ->leftJoin('n', 'Groups', 'g', 'tf.gID = g.gID')
+            ->leftJoin('n', 'GroupTypes', 'gt', 'g.gtID = gt.gtID')
             ->andWhere("nt.treeNodeTypeHandle='group_folder' OR nt.treeNodeTypeHandle='group' AND g.gID")
         ;
     }

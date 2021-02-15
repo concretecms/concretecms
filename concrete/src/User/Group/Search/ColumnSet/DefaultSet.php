@@ -13,7 +13,7 @@ class DefaultSet extends ColumnSet
     public function __construct()
     {
         $this->addColumn(new NameColumn());
-        $this->addColumn(new TypeColumn());
+        $this->addColumn(new Column('type', t('Type'), ['Concrete\Core\User\Group\Search\ColumnSet\Available', 'getType'], false));
         $this->addColumn(new Column('members', t('Members'), ['Concrete\Core\User\Group\Search\ColumnSet\Available', 'getMemberCount'], false));
         $groupId = $this->getColumnByKey('name');
         $this->setDefaultSortColumn($groupId, 'asc');

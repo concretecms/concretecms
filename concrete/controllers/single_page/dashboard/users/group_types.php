@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
 
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
@@ -10,6 +10,7 @@ use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\User\Group\GroupRole;
 use Concrete\Core\User\Group\GroupType;
 use Doctrine\DBAL\Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GroupTypes extends DashboardPageController
 {
@@ -60,6 +61,17 @@ class GroupTypes extends DashboardPageController
         if (!$this->error->has()) {
             return $this->responseFactory->redirect((string)Url::to("/dashboard/users/group_types/removed"), Response::HTTP_TEMPORARY_REDIRECT);
         }
+    }
+
+    public function get_group_type($groupTypeId)
+    {
+        $groupType = GroupType::getByID($groupTypeId);
+
+        if ($groupType === false) {
+            return $this->responseFactory->notFound(t("Invalid Group Type."));
+        }
+
+        return new JsonResponse($groupType);
     }
 
     private function validate()

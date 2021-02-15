@@ -4296,6 +4296,26 @@
       <autoincrement/>
       <key/>
     </field>
+    <field name="contains" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+  </table>
+
+  <table name="TreeGroupFolderNodeSelectedGroupTypes">
+    <field name="id" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="gtID" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
   </table>
 
   <table name="TreeExpressEntrySiteResultNodes">

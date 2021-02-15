@@ -305,6 +305,12 @@ $text = $app->make(Text::class);
                 $(".override-group-type-setting").addClass("d-none");
             }
         }).trigger("change");
+
+        //$("#gtID").change(function () {
+        //    if ($("#gOverrideGroupTypeSettings").val() == 0) {
+        //        $(".ccm-role-list").data("ajaxRefreshRoleList")($(this).val());
+        //    }
+        //});
     });
 
 </script>

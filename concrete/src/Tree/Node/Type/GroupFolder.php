@@ -1,9 +1,11 @@
 <?php
+
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Tree\Node\Type\Menu\GroupFolderMenu;
 use Concrete\Core\User\Group\FolderItemList;
+use Concrete\Core\User\Group\GroupType;
 use Concrete\Core\User\Group\Search\ColumnSet\Available;
 use Concrete\Core\User\Group\Search\ColumnSet\FolderSet;
 use Concrete\Core\Support\Facade\Application;
@@ -15,6 +17,73 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GroupFolder extends TreeNode
 {
+    const CONTAINS_GROUP_FOLDERS = 0;
+    const CONTAINS_GROUP_FOLDERS_AND_GROUPS = 1;
+    const CONTAINS_SPECIFIC_GROUPS = 2;
+
+    /**
+     * @return int|null
+     */
+    protected $contains = null;
+
+    /**
+     * @return GroupType|null
+     */
+    protected $selectedGroupTypes = null;
+
+    /**
+     * @return int
+     */
+    public function getContains()
+    {
+        return $this->contains;
+    }
+
+    /**
+     * @param int $contains
+     */
+    public function setContains($contains)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $db->replace('TreeGroupFolderNodes', [
+            'treeNodeID' => $this->getTreeNodeID(),
+            'contains' => (int)$contains,
+        ], ['treeNodeID'], true);
+        $this->contains = (int)$contains;
+    }
+
+    /**
+     * @return GroupType[]
+     */
+    public function getSelectedGroupTypes()
+    {
+        return $this->selectedGroupTypes;
+    }
+
+    /**
+     * @param GroupType[] $selectedGroupTypes
+     */
+    public function setSelectedGroupTypes($selectedGroupTypes)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $db->executeQuery('DELETE FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
+            $this->treeNodeID,
+        ]);
+
+        foreach($selectedGroupTypes as $selectedGroupType) {
+            $db->insert('TreeGroupFolderNodeSelectedGroupTypes', [
+                'treeNodeID' => $this->getTreeNodeID(),
+                'gtID' => $selectedGroupType->getId(),
+            ]);
+        }
+
+        $this->selectedGroupTypes = $selectedGroupTypes;
+    }
 
     public function getTreeNodeTranslationContext()
     {
@@ -60,12 +129,21 @@ class GroupFolder extends TreeNode
     public function loadDetails()
     {
         $app = Application::getFacadeApplication();
+        /** @var Connection $db */
         $db = $app->make(Connection::class);
         $row = $db->fetchAssoc('SELECT * FROM TreeGroupFolderNodes WHERE treeNodeID = ?', [
             $this->treeNodeID,
         ]);
         if (!empty($row)) {
             $this->setPropertiesFromArray($row);
+        }
+
+        $this->selectedGroupTypes = [];
+
+        foreach($db->fetchAllAssociative('SELECT gtID FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
+            $this->treeNodeID,
+        ]) as $row) {
+            $this->selectedGroupTypes[] = GroupType::getByID($row["gtID"]);
         }
     }
 
@@ -76,12 +154,15 @@ class GroupFolder extends TreeNode
         $db->executeQuery('DELETE FROM TreeGroupFolderNodes WHERE treeNodeID = ?', [
             $this->treeNodeID,
         ]);
+        $db->executeQuery('DELETE FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
+            $this->treeNodeID,
+        ]);
     }
 
     /**
-     * @param \Concrete\Core\Tree\Node\Node|bool $parent Node's parent folder
+     * @param TreeNode|bool $parent Node's parent folder
      *
-     * @return \Concrete\Core\Tree\Node\Node
+     * @return TreeNode
      */
     public function duplicate($parent = false)
     {
@@ -115,14 +196,18 @@ class GroupFolder extends TreeNode
 
     /**
      * @param string $treeNodeName Node name
-     * @param \Concrete\Core\Tree\Node\Node|bool $parent Node's parent folder
+     * @param TreeNode|bool $parent Node's parent folder
      *
-     * @return \Concrete\Core\Tree\Node\Node|GroupFolder
+     * @param int $contains
+     * @param GroupType[] $selectedGroupTypes
+     * @return TreeNode|GroupFolder
      */
-    public static function add($treeNodeName = '', $parent = false)
+    public static function add($treeNodeName = '', $parent = false, $contains = self::CONTAINS_GROUP_FOLDERS, $selectedGroupTypes = [])
     {
         $node = parent::add($parent);
         $node->setTreeNodeName($treeNodeName);
+        $node->setContains($contains);
+        $node->setSelectedGroupTypes($selectedGroupTypes);
 
         return $node;
     }
@@ -181,7 +266,9 @@ class GroupFolder extends TreeNode
             $childNodes = $this->childNodes;
         } else {
             $childNodesData = $this->getHierarchicalNodesOfType($typeHandle, 1, true, false, 1);
-            $childNodes = array_map(function ($item) { return $item['treeNodeObject']; }, $childNodesData);
+            $childNodes = array_map(function ($item) {
+                return $item['treeNodeObject'];
+            }, $childNodesData);
         }
         $result = null;
         foreach ($childNodes as $childNode) {

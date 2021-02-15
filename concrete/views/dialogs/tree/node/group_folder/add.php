@@ -10,6 +10,9 @@ use Concrete\Core\Validation\CSRF\Token;
 
 /** @var Add $controller */
 /** @var Node $node */
+/** @var array $containsList */
+/** @var array $allGroupTypes */
+/** @var array $selectedGroupTypeIds */
 
 $app = Application::getFacadeApplication();
 /** @var Form $form */
@@ -27,6 +30,24 @@ $token = $app->make(Token::class);
         <div class="form-group">
             <?php echo $form->label('treeNodeGroupFolderName', t('Name')) ?>
             <?php echo $form->text('treeNodeGroupFolderName') ?>
+        </div>
+
+        <div class="form-group">
+            <?php echo $form->label('contains', t('Contains')) ?>
+            <?php echo $form->select('contains', $containsList) ?>
+        </div>
+
+        <div id="ccm-group-types">
+            <div class="form-group">
+                <?php echo $form->label('', t('Group Types')) ?>
+
+                <?php foreach ($allGroupTypes as $groupTypeId => $groupTypeName) { ?>
+                    <div class="form-check">
+                        <?php echo $form->checkbox('groupTypes[' . $groupTypeId . ']', $groupTypeId, false, ["class" => "form-check-input", "id" => "ccm-group-type-" . $groupTypeId]) ?>
+                        <?php echo $form->label("ccm-group-type-" . $groupTypeId, $groupTypeName, ["class" => "form-check-label"]) ?>
+                    </div>
+                <?php } ?>
+            </div>
         </div>
 
         <div class="dialog-buttons">
@@ -51,6 +72,14 @@ $token = $app->make(Token::class);
                     ConcreteEvent.publish('ConcreteTreeAddTreeNode', {'node': data.response});
                 }
             });
+
+            $("#contains").change(function () {
+                if ($(this).val() == 2) {
+                    $("#ccm-group-types").removeClass("d-none");
+                } else {
+                    $("#ccm-group-types").addClass("d-none");
+                }
+            }).trigger("change");
         });
     </script>
 </div>

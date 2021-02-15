@@ -13,7 +13,7 @@ use Concrete\Core\User\Group\FolderManager;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Schema;
 
-final class Version20210211182900 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20210215182900 extends AbstractMigration implements RepeatableMigrationInterface
 {
     public function upgradeDatabase()
     {
@@ -70,7 +70,17 @@ final class Version20210211182900 extends AbstractMigration implements Repeatabl
         if (!$schema->hasTable('TreeGroupFolderNodes')) {
             $treeFileFolderNodesTable = $schema->createTable('TreeGroupFolderNodes');
             $treeFileFolderNodesTable->addColumn('treeNodeID', 'integer', ['notnull' => true, 'unsigned' => true, 'autoincrement' => true]);
+            $treeFileFolderNodesTable->addColumn('contains', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => '0']);
             $treeFileFolderNodesTable->setPrimaryKey(['treeNodeID']);
+        }
+
+        // Create the TreeFileFolderNodes table
+        if (!$schema->hasTable('TreeGroupFolderNodeSelectedGroupTypes')) {
+            $treeGroupFolderNodeSelectedGroupTypesTable = $schema->createTable('TreeGroupFolderNodeSelectedGroupTypes');
+            $treeGroupFolderNodeSelectedGroupTypesTable->addColumn('id', 'integer', ['notnull' => true, 'unsigned' => true, 'autoincrement' => true]);
+            $treeGroupFolderNodeSelectedGroupTypesTable->addColumn('treeNodeID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => '0']);
+            $treeGroupFolderNodeSelectedGroupTypesTable->addColumn('gtID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => '0']);
+            $treeGroupFolderNodeSelectedGroupTypesTable->setPrimaryKey(['id']);
         }
 
         // Create the GroupTypes table

@@ -236,7 +236,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         return [
             "id" => $this->getId(),
             "name" => $this->getName(),
-            "isManager" => $this->isManager(),
+            "manager" => $this->isManager(),
         ];
     }
 }

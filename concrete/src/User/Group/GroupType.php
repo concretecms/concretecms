@@ -258,6 +258,11 @@ class GroupType extends ConcreteObject implements JsonSerializable
 
     public function jsonSerialize()
     {
-        return [];
+        return [
+            "id" => $this->getId(),
+            "isPetitionForPublicEntry" => $this->isPetitionForPublicEntry(),
+            "defaultRole" => $this->getDefaultRole(),
+            "roles" => $this->getRoles()
+        ];
     }
 }

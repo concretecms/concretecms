@@ -25,6 +25,12 @@ class Available extends DefaultSet
 
                     if ($countOfChildGroups > 0) {
                         return t('Group with child groups');
+                    } else {
+                        $groupType = $group->getGroupType();
+
+                        if (is_object($groupType)) {
+                            return $groupType->getName();
+                        }
                     }
                 }
                 return t('Group');
