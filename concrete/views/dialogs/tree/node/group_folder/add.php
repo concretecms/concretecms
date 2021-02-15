@@ -34,7 +34,7 @@ $token = $app->make(Token::class);
 
         <div class="form-group">
             <?php echo $form->label('contains', t('Contains')) ?>
-            <?php echo $form->select('contains', $containsList) ?>
+            <?php echo $form->select('contains', $containsList, \Concrete\Core\Tree\Node\Type\GroupFolder::CONTAINS_GROUP_FOLDERS_AND_GROUPS) ?>
         </div>
 
         <div id="ccm-group-types">

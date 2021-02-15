@@ -7,6 +7,7 @@ use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\User\Group\Command\Traits\ParentNodeRetrieverTrait;
 use Concrete\Core\User\Group\Event;
 use Concrete\Core\User\Group\GroupRepository;
+use Concrete\Core\User\User;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Concrete\Core\Tree\Node\Type\Group as GroupNode;
 use Concrete\Core\Tree\Type\Group as GroupTree;
@@ -43,10 +44,13 @@ class AddGroupCommandHandler
 
     public function handle(AddGroupCommand $command)
     {
+        $user = new User();
+
         $data = [
             'gName' => $command->getName(),
             'gDescription' => $command->getDescription(),
             'pkgID' => (int) $command->getPackageID(),
+            'gAuthorID' => (int) $user->getUserID()
         ];
         $this->connection->insert(
             $this->connection->getDatabasePlatform()->quoteSingleIdentifier('Groups'),

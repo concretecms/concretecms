@@ -24,7 +24,7 @@ class GroupFolder extends TreeNode
     /**
      * @return int|null
      */
-    protected $contains = null;
+    protected $contains = self::CONTAINS_GROUP_FOLDERS_AND_GROUPS;
 
     /**
      * @return GroupType|null

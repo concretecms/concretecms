@@ -5,6 +5,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\File\File;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Tree\Node\Type\GroupFolder;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\Tree\Node\Type\GroupFolder as GroupFolderTreeNode;
@@ -230,6 +231,33 @@ class AddGroup extends DashboardPageController
 
         foreach($this->validateRoles()->getList() as $error) {
             $this->error->add($error);
+        }
+
+        switch($parentFolder->getContains()) {
+            case GroupFolder::CONTAINS_GROUP_FOLDERS:
+                $this->error->add(t("You can't create a group beneath the selected parent folder."));
+                break;
+
+            case GroupFolder::CONTAINS_SPECIFIC_GROUPS:
+                $isGroupTypeAllowed = false;
+
+                if ($this->request->post('gtID')) {
+                    $groupType = GroupType::getByID($this->request->post('gtID'));
+                    if (is_object($groupType)) {
+                        foreach($parentFolder->getSelectedGroupTypes() as $allowedGroupType) {
+                            if ($groupType->getId() == $allowedGroupType->getId()) {
+                                $isGroupTypeAllowed = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!$isGroupTypeAllowed) {
+                    $this->error->add(t("You can't create a group of this group type beneath the selected parent folder."));
+                }
+
+                break;
         }
 
         if (!$this->error->has()) {

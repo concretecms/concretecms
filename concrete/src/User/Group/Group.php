@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\User\Group;
 
 use CacheLocal;
@@ -12,6 +13,7 @@ use Concrete\Core\Tree\Node\Type\GroupFolder;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\Command\DeleteGroupCommand;
 use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfoRepository;
 use Config;
 use Database;
 use Doctrine\DBAL\Exception;
@@ -149,9 +151,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function getGroupDateTimeEntered($user)
     {
         if (is_object($user)) {
-            $userID = (int) $user->getUserID();
+            $userID = (int)$user->getUserID();
         } elseif (is_numeric($user)) {
-            $userID = (int) $user;
+            $userID = (int)$user;
         } else {
             $userID = 0;
         }
@@ -180,6 +182,55 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     {
         return (bool)$this->gOverrideGroupTypeSettings;
     }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function sendJoinRequest()
+    {
+        $user = new User();
+        if ($user->isRegistered() && $this->isPetitionForPublicEntry()) {
+            $app = Application::getFacadeApplication();
+            /** @var Connection $db */
+            $db = $app->make(Connection::class);
+            $dt = $app->make('helper/date');
+
+            $db->executeQuery("DELETE FROM GroupJoinRequests WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
+            $db->insert("GroupJoinRequests", [
+                "gID" => $this->getGroupID(),
+                "uID" => $user->getUserID(),
+                "gjrRequested" => $dt->getOverridableNow()
+            ]);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return GroupJoinRequest[]
+     */
+    public function getJoinRequests()
+    {
+        $joinRequests = [];
+
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        /** @var UserInfoRepository $userInfoRepository */
+        $userInfoRepository = $app->make(UserInfoRepository::class);
+
+        foreach ($db->fetchAllAssociative("SELECT uID FROM GroupJoinRequests WHERE gID = ?", [$this->getGroupID()]) as $row) {
+            $userInfo = $userInfoRepository->getByID($row["uID"]);
+            $userObject = $userInfo->getUserObject();
+            $joinRequests[] = new GroupJoinRequest($this, $userObject);
+        }
+
+        return $joinRequests;
+    }
+
 
     public function setOverrideGroupTypeSettings($gOverrideGroupTypeSettings)
     {
@@ -355,6 +406,42 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasUserManagerPermissions($user) {
+        if ($user->isRegistered() && $user->isSuperUser()) {
+            return true;
+        } else {
+            $userRole = $this->getUserRole();
+            if (is_object($userRole)) {
+                return $userRole->isManager();
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return GroupRole|null
+     */
+    public function getUserRole($user)
+    {
+        if ($user->isRegistered()) {
+            $app = Application::getFacadeApplication();
+            /** @var Connection $db */
+            $db = $app->make(Connection::class);
+            $row = $db->fetchAssociative("SELECT grID FROM UserGroups WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
+            if (isset($row)) {
+                return GroupRole::getByID($row["grID"]);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return GroupRole[]
      */
     public function getRoles()
@@ -494,8 +581,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return mixed
+     * @deprecated
      */
     public function isGroupBadge()
     {
@@ -503,8 +590,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return mixed
+     * @deprecated
      */
     public function getGroupBadgeDescription()
     {
@@ -512,8 +599,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return mixed
+     * @deprecated
      */
     public function getGroupBadgeCommunityPointValue()
     {
@@ -521,8 +608,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return mixed
+     * @deprecated
      */
     public function getGroupBadgeImageID()
     {
@@ -573,8 +660,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return bool
+     * @deprecated
      */
     public function getGroupBadgeImageObject()
     {
@@ -678,12 +765,12 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /** Creates a new user group.
-     * @deprecated
-     * This is deprecated; use the AddGroupCommand and the command bus.
      * @param string $gName
      * @param string $gDescription
      *
      * @return Group
+     * @deprecated
+     * This is deprecated; use the AddGroupCommand and the command bus.
      */
     public static function add($gName, $gDescription, $parentGroup = false, $pkg = null)
     {
@@ -809,10 +896,10 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @param $gBadgeFID
      * @param $gBadgeDescription
      * @param $gBadgeCommunityPointValue
+     * @deprecated
      */
     public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue)
     {
@@ -827,7 +914,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $gCheckAutomationOnRegister,
         $gCheckAutomationOnLogin,
         $gCheckAutomationOnJobRun
-    ) {
+    )
+    {
         $db = Database::connection();
         $db->executeQuery(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gIsAutomated = 1, gCheckAutomationOnRegister = ?, gCheckAutomationOnLogin = ?, gCheckAutomationOnJobRun = ? where gID = ?',
@@ -877,11 +965,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * Takes the numeric id of a group and returns a group object.
-     * @deprecated
-     * This is deprecated, user the grouprepository instead.
      * @param string $gID
      *
      * @return Group
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
      */
     public static function getByID($gID)
     {
@@ -892,11 +980,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * Takes the name of a group and returns a group object.
-     * @deprecated
-     * This is deprecated, user the grouprepository instead.
      * @param string $gName
      *
      * @return Group
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
      */
     public static function getByName($gName)
     {
@@ -906,10 +994,10 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
-     * This is deprecated, user the grouprepository instead.
      * @param string $gPath The group path
      * @return Group
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
      */
     public static function getByPath($gPath)
     {

@@ -2754,6 +2754,11 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="gAuthorID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="gBadgeDescription" type="string" size="255"/>
     <field name="gBadgeCommunityPointValue" type="integer" size="11">
       <default value="0"/>
@@ -2791,7 +2796,28 @@
       <col>pkgID</col>
     </index>
   </table>
-
+  <table name="GroupJoinRequests">
+    <field name="uID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="gID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="gjrRequested" type="datetime">
+      <default value="1000-01-01 00:00:00"/>
+      <notnull/>
+    </field>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+    <index name="gID">
+      <col>gID</col>
+    </index>
+  </table>
   <table name="GroupTypes">
     <field name="gtID" type="integer" size="10">
       <unsigned/>

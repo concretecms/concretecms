@@ -13,7 +13,7 @@ use Concrete\Core\User\Group\FolderManager;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Schema;
 
-final class Version20210215182900 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20210215183900 extends AbstractMigration implements RepeatableMigrationInterface
 {
     public function upgradeDatabase()
     {
@@ -118,6 +118,15 @@ final class Version20210215182900 extends AbstractMigration implements Repeatabl
             $groupTypeSelectedRolesTable->setPrimaryKey(['gtID', 'grID']);
         }
 
+        // Create the GroupJoinRequests table
+        if (!$schema->hasTable('GroupJoinRequests')) {
+            $groupJoinRequestsTable = $schema->createTable('GroupJoinRequests');
+            $groupJoinRequestsTable->addColumn('uID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => '0']);
+            $groupJoinRequestsTable->addColumn('gID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => '0']);
+            $groupJoinRequestsTable->addColumn('gjrRequested', 'datetime', ['notnull' => false]);
+            $groupJoinRequestsTable->setPrimaryKey(['uID', 'gID']);
+        }
+
         // Extend the Groups table
         $groupsTable = $schema->getTable('Groups');
 
@@ -139,6 +148,10 @@ final class Version20210215182900 extends AbstractMigration implements Repeatabl
 
         if (!$groupsTable->hasColumn('gDefaultRoleID')) {
             $groupsTable->addColumn('gDefaultRoleID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => '0']);
+        }
+
+        if (!$groupsTable->hasColumn('gAuthorID')) {
+            $groupsTable->addColumn('gAuthorID', 'integer', ['notnull' => true, 'unsigned' => true, 'default' => '0']);
         }
 
         // Extend the User Groups table
