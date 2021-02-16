@@ -3,6 +3,10 @@
 namespace Concrete\Core\User\Group\Command;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Notification\GroupCreateNotification;
+use Concrete\Core\Entity\User\GroupCreate;
+use Concrete\Core\Notification\Type\GroupCreateType;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\User\Group\Command\Traits\ParentNodeRetrieverTrait;
 use Concrete\Core\User\Group\Event;
@@ -77,6 +81,19 @@ class AddGroupCommandHandler
 
         $ge = new Event($ng);
         $this->dispatcher->dispatch('on_group_add', $ge);
+
+        $app = Application::getFacadeApplication();
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $subject = new GroupCreate($ng, $user);
+        /** @var GroupCreateType $type */
+        $type = $app->make('manager/notification/types')->driver('group_create');
+        $notifier = $type->getNotifier();
+        if (method_exists($notifier, 'notify')) {
+            $subscription = $type->getSubscription($subject);
+            $users = $notifier->getUsersToNotify($subscription, $subject);
+            $notification = new GroupCreateNotification($subject);
+            $notifier->notify($users, $notification);
+        }
 
         $ng->rescanGroupPath();
 

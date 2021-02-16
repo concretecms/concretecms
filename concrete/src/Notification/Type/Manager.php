@@ -63,6 +63,21 @@ class Manager extends CoreManager
         return $this->app->make('Concrete\Core\Notification\Type\GroupRoleChangeType');
     }
 
+    public function createGroupCreateDriver()
+    {
+        return $this->app->make('Concrete\Core\Notification\Type\GroupCreateType');
+    }
+
+    public function createGroupSignupRequestAcceptDriver()
+    {
+        return $this->app->make('Concrete\Core\Notification\Type\GroupSignupRequestAcceptType');
+    }
+
+    public function createGroupSignupRequestDeclineDriver()
+    {
+        return $this->app->make('Concrete\Core\Notification\Type\GroupSignupRequestDeclineType');
+    }
+
     public function __construct(Application $application)
     {
         parent::__construct($application);

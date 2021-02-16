@@ -519,7 +519,7 @@ class Search extends DashboardPageController
 
     }
 
-    public function view($uID = false, $status = false)
+    public function view($uID = null, $status = false)
     {
         if (isset($uID)) {
             $this->edit($uID, $status);
