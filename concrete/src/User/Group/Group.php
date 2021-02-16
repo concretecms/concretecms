@@ -4,8 +4,14 @@ namespace Concrete\Core\User\Group;
 
 use CacheLocal;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Notification\GroupRoleChangeNotification;
+use Concrete\Core\Entity\Notification\GroupSignupRequestNotification;
+use Concrete\Core\Entity\User\GroupRoleChange;
+use Concrete\Core\Entity\User\GroupSignupRequest;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Notification\Type\GroupRoleChangeType;
+use Concrete\Core\Notification\Type\GroupSignupRequestType;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
@@ -184,6 +190,41 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
+     * @param User $user
+     * @param GroupRole $userRole
+     * @return bool
+     */
+    public function changeUserRole($user, $userRole)
+    {
+        $activeUser = new User();
+
+        if ($this->hasUserManagerPermissions($activeUser) && $user->inGroup($this)) {
+            if ($user->isRegistered() && $this->isPetitionForPublicEntry()) {
+                $app = Application::getFacadeApplication();
+                /** @var Connection $db */
+                $db = $app->make(Connection::class);
+                $db->executeQuery("UPDATE UserGroups SET grID = ? WHERE gID = ? AND uID = ?", [$userRole->getId(), $this->getGroupID(), $user->getUserID()]);
+
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $subject = new GroupRoleChange($this, $user, $userRole);
+                /** @var GroupRoleChangeType $type */
+                $type = $app->make('manager/notification/types')->driver('group_role_change');
+                $notifier = $type->getNotifier();
+                if (method_exists($notifier, 'notify')) {
+                    $subscription = $type->getSubscription($subject);
+                    $users = $notifier->getUsersToNotify($subscription, $subject);
+                    $notification = new GroupRoleChangeNotification($subject);
+                    $notifier->notify($users, $notification);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return bool
      * @throws Exception
      */
@@ -202,6 +243,19 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 "uID" => $user->getUserID(),
                 "gjrRequested" => $dt->getOverridableNow()
             ]);
+
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $subject = new GroupSignupRequest($this, $user);
+            /** @var GroupSignupRequestType $type */
+            $type = $app->make('manager/notification/types')->driver('group_signup_request');
+            $notifier = $type->getNotifier();
+
+            if (method_exists($notifier, 'notify')) {
+                $subscription = $type->getSubscription($subject);
+                $users = $notifier->getUsersToNotify($subscription, $subject);
+                $notification = new GroupSignupRequestNotification($subject);
+                $notifier->notify($users, $notification);
+            }
 
             return true;
         } else {

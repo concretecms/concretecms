@@ -3,7 +3,13 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Notification\GroupRoleChangeNotification;
+use Concrete\Core\Entity\Notification\GroupSignupNotification;
+use Concrete\Core\Entity\Notification\GroupSignupRequestNotification;
 use Concrete\Core\Entity\Search\SavedGroupSearch;
+use Concrete\Core\Entity\User\GroupRoleChange;
+use Concrete\Core\Entity\User\GroupSignup;
+use Concrete\Core\Entity\User\GroupSignupRequest;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Tree\Node\NodeType;
@@ -13,12 +19,18 @@ use Concrete\Core\User\Group\FolderManager;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Schema;
 
-final class Version20210215183900 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20210215184000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     public function upgradeDatabase()
     {
         $this->refreshEntities([
-            SavedGroupSearch::class
+            SavedGroupSearch::class,
+            GroupRoleChangeNotification::class,
+            GroupSignupNotification::class,
+            GroupSignupRequestNotification::class,
+            GroupRoleChange::class,
+            GroupSignup::class,
+            GroupSignupRequest::class
         ]);
 
         if (Category::getByHandle("group_folder") === null) {

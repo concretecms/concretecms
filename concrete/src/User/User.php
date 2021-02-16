@@ -3,10 +3,13 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Database\Query\LikeBuilder;
+use Concrete\Core\Entity\Notification\GroupSignupNotification;
+use Concrete\Core\Entity\User\GroupSignup;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
+use Concrete\Core\Notification\Type\GroupSignupType;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
@@ -740,6 +743,19 @@ class User extends ConcreteObject
                 $ue->setGroupObject($g);
 
                 $app['director']->dispatch('on_user_enter_group', $ue);
+
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $subject = new GroupSignup($g, $this);
+                /** @var GroupSignupType $type */
+                $type = $app->make('manager/notification/types')->driver('group_signup');
+                $notifier = $type->getNotifier();
+
+                if (method_exists($notifier, 'notify')) {
+                    $subscription = $type->getSubscription($subject);
+                    $users = $notifier->getUsersToNotify($subscription, $subject);
+                    $notification = new GroupSignupNotification($subject);
+                    $notifier->notify($users, $notification);
+                }
             }
         }
     }

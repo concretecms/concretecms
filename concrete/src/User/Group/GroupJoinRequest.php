@@ -6,10 +6,12 @@ namespace Concrete\Core\User\Group;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
+use DateTime;
 
-class GroupJoinRequest extends ConcreteObject
+class GroupJoinRequest extends ConcreteObject implements SubjectInterface
 {
     /** @var Group */
     protected $group;
@@ -71,5 +73,25 @@ class GroupJoinRequest extends ConcreteObject
         } else {
             return false;
         }
+    }
+
+    public function getNotificationDate()
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->user->enterGroup($this->group);
+
+        $row = $db->fetchAssociative("SELECT gjrRequested GroupJoinRequests WHERE uID = ? AND gID = ?", [$this->user->getUserID(), $this->group->getGroupID()]);
+
+        if (isset($row)) {
+            return DateTime::createFromFormat("Y-m-d H:i:s", $row["gjrRequested"]);
+        }
+    }
+
+    public function getUsersToExcludeFromNotification()
+    {
+        return [];
     }
 }
