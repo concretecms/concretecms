@@ -125,6 +125,12 @@ class GroupList extends DatabaseItemList implements PagerProviderInterface, Pagi
         $this->query->setParameter('gPath', $parent->getGroupPath() . '/%');
     }
 
+    public function filterByGroupType(GroupType $groupType)
+    {
+        $this->query->andWhere('g.gtID = :gtID');
+        $this->query->setParameter('gtID', $groupType->getId());
+    }
+
     public function filterByUserID($uID)
     {
         $this->query->innerJoin('g', 'UserGroups', 'ug', 'g.gID = ug.gID');

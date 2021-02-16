@@ -3,6 +3,7 @@ namespace Concrete\Core\Entity\User;
 
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\UserInfo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -58,7 +59,9 @@ class GroupSignupRequest implements SubjectInterface
         }
 
         if ($user instanceof \Concrete\Core\User\User) {
-            $this->user = $user->getUserInfoObject()->getEntityObject();
+            if ($user->getUserInfoObject() instanceof UserInfo) {
+                $this->user = $user->getUserInfoObject()->getEntityObject();
+            }
         }
 
         $this->requested = new \DateTime();

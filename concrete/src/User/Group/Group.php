@@ -465,9 +465,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      */
     public function hasUserManagerPermissions($user) {
         if ($user->isRegistered() && $user->isSuperUser()) {
-            return true;
+            return true; // super-admin
+        } else if ($this->getAuthorID() == $user->getUserID()) {
+            return true; // owner
         } else {
-            $userRole = $this->getUserRole();
+            $userRole = $this->getUserRole($user);
             if (is_object($userRole)) {
                 return $userRole->isManager();
             } else {
@@ -668,6 +670,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function getGroupBadgeImageID()
     {
         return $this->gBadgeFID;
+    }
+
+    public function getAuthorID()
+    {
+        return $this->gAuthorID;
     }
 
     public function isGroupAutomated()
