@@ -519,8 +519,13 @@ class Search extends DashboardPageController
 
     }
 
-    public function view()
+    public function view($uID = false, $status = false)
     {
+        if (isset($uID)) {
+            $this->edit($uID, $status);
+            return;
+        }
+
         $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
             $this->getSearchKeywordsField()
         ]);
