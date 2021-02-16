@@ -76,6 +76,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('linkedProperties', []);
         $this->set('displayLimit', 20);
         $this->set('titleFormat', 'h2');
+        $this->set('enablePagination', 1);
     }
 
     protected function getSearchFieldManager(Entity $entity)
