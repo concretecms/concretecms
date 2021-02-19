@@ -139,7 +139,7 @@ class IndexedSearch
                 }
                 $bi = $b->getInstance();
                 if (method_exists($bi, 'getSearchableContent')) {
-                    $searchableContent = $bi->getSearchableContent();
+                    $searchableContent = $this->stripBadTagContents($bi->getSearchableContent());
                     if (strlen(trim($searchableContent))) {
                         $text .= $th->decodeEntities(
                                 strip_tags(str_ireplace($tagsToSpaces, ' ', $searchableContent)),
@@ -209,5 +209,33 @@ class IndexedSearch
         $result->count = $num;
 
         return $result;
+    }
+
+    /**
+     * Strip bad tags (like script tags) and their contents from searchable content
+     * This prevents scripts in blocks from being searchable
+     *
+     * @param string $content
+     *
+     * @return string
+     */
+    protected function stripBadTagContents($content)
+    {
+        // List of tags that will be stripped
+        $tags = implode('|', [
+            'script',
+        ]);
+
+        // Use htmLawed to tidy the contents so that we can have more reliable regex matching
+        $content = htmLawed($content, [
+            'elements' => '0',
+            'tidy' => true,
+        ]);
+
+        // Remove any script content
+        return preg_replace(
+            "~<({$tags}).*?>.*?</\\1>~sm",
+            '',
+            $content);
     }
 }
