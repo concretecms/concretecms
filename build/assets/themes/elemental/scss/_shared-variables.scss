@@ -1,8 +1,22 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+
+// ---- Set up our theme colors
+$green: #75ca2a;
+$blue: #0099ff;
+$light-green: #0c6;
+
+// ---- Map those to theme conventions
+$theme-colors: (
+  'primary': $green,
+  'secondary': $blue,
+  'light-green': $light-green,
+);
+
+$link-color: theme-color('secondary');
+
 // ---- Fonts
 @import url(//fonts.googleapis.com/css?family=Titillium+Web:200,400,700,900);
-
-// ---- Relative path from the theme's CSS directory to the concrete/ directory
-$concrete-path: '../../';
 
 // ---- Theme variables
 $primary-margin-y: 100px;
