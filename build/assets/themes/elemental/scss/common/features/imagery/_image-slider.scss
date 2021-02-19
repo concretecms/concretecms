@@ -12,8 +12,7 @@
 
   .ccm-image-slider {
     @include make-container();
-    @include make-container-max-widths();
-
+    @extend .container;
 
     .rslides {
       li {

@@ -1,28 +1,17 @@
 @import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
 
-// ---- Set up our theme colors
-$green: #75ca2a;
-$blue: #0099ff;
-$light-green: #0c6;
-
-// ---- Map those to theme conventions
+// ---- Map our theme customizer variables to the bootstrap variables
 $theme-colors: (
-  'primary': $green,
-  'secondary': $blue,
-  'light-green': $light-green,
+  'primary': $color-primary,
+  'secondary': $color-secondary,
 );
 
 $link-color: theme-color('secondary');
 
-// ---- Fonts
-@import url(//fonts.googleapis.com/css?family=Titillium+Web:200,400,700,900);
-
 // ---- Theme variables
 $primary-margin-y: 100px;
 $header-footer-padding: 30px;
-$font-header-site-title: normal ($font-size-base * 2) 'Titillium Web';
-$font-footer-site-title: 700 $font-size-base 'Titillium Web';
 $font-family-footer-site-title: 'Titillium Web';
 $font-family-headings: 'Titillium Web';
 $font-family-header-navigation: 'Titillium Web';
@@ -35,7 +24,7 @@ $hr-border-color: $gray-300;
 $btn-border-radius: 20px;
 $btn-padding-x: 30px;
 $btn-padding-y: 10px;
-$btn-success-background-color: theme-color('light-green');
+$btn-success-background-color: #0c6;
 $btn-success-border-color: #4cae4c;
 
 // colors

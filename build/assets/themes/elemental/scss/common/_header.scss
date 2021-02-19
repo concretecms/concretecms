@@ -1,6 +1,6 @@
 header {
 
-  background-color: $body-bg;
+  background-color: $logo-bar-background-color;
   padding-top: $header-footer-padding;
   padding-bottom: $header-footer-padding;
   border-bottom: 1px solid $border-color;
@@ -8,7 +8,7 @@ header {
   #header-site-title {
 
     transition: color 0.2s linear;
-    font: $font-header-site-title;
+    font: normal ($font-size-base * 2) $logo-font-family;
     color: theme-color('primary');
 
     &:hover {

@@ -31,8 +31,7 @@ footer#footer-theme {
   #footer-site-title {
 
     transition: color 0.2s linear;
-    font: $font-footer-site-title;
-    text-transform: uppercase;
+    font: 700 $font-size-base $logo-font-family;
     color: theme-color('primary');
 
     &:hover {

@@ -88,7 +88,7 @@ mix
 
 // Elemental Theme
 mix
-    .sass('assets/themes/elemental/scss/main.scss', 'themes/elemental')
+    .sass('assets/themes/elemental/scss/skins/default/main.scss', 'themes/elemental')
     .js('assets/themes/elemental/js/main.js', 'themes/elemental');
 
 

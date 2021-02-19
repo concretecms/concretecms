@@ -1,6 +1,5 @@
 div.main-container {
-  @include make-container();
-  @include make-container-max-widths();
+  @include make-row();
   display: flex;
   min-height: 100vh;
 }
