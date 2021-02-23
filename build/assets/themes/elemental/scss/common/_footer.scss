@@ -21,7 +21,7 @@ footer#footer-theme {
   }
 
   section:first-child {
-
+    background-color: $logo-bar-background-color;
   }
 
   section:last-child {
@@ -31,10 +31,12 @@ footer#footer-theme {
   #footer-site-title {
 
     transition: color 0.2s linear;
-    font: 700 $font-size-base $logo-font-family;
-    color: theme-color('primary');
+    font-size: $font-size-base;
+    font-family: $logo-font-family;
+    color: $logo-bar-logo-color;
 
     &:hover {
+      color: darken($logo-bar-logo-color, 10%);
       text-decoration: none !important;
     }
   }

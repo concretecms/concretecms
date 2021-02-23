@@ -8,11 +8,12 @@ header {
   #header-site-title {
 
     transition: color 0.2s linear;
-    font: normal ($font-size-base * 2) $logo-font-family;
-    color: theme-color('primary');
+    font-size: $logo-font-size;
+    font-family: $logo-font-family;
+    color: $logo-bar-logo-color;
 
     &:hover {
-      color: darken(theme-color('primary'), 10%);
+      color: darken($logo-bar-logo-color, 10%);
       text-decoration: none !important;
     }
   }
@@ -22,25 +23,29 @@ header {
     &:before {
       content: "\f002";
       font-family: 'Font Awesome 5 Free';
-      font-weight: 900;
+      font-weight: 700;
+      font-style: normal;
+      font-size: 14px;
       display: inline-block;
-      color: $border-color;
       position: absolute;
       left: 14px;
-      top: 11px;
+      top: 12px;
       text-decoration: inherit;
+      color: $header-search-input-icon-color;
     }
     .ccm-search-block-text {
-      border-color: $border-color;
-      border-style: solid;
+      border: 1px solid $header-search-input-border-color;
       border-radius: 30px;
       padding: 10px 20px 10px 35px;
+      color: $header-search-input-icon-color;
+      background-color: $header-search-input-background-color;
 
       &:focus {
         outline: 0;
       }
     }
   }
+
 
   nav {
 
@@ -57,12 +62,14 @@ header {
 
     ul {
       a {
-        color: theme-color('secondary');
         padding-right: 40px;
-        font-family: $font-family-header-navigation;
-        font-weight: bold;
+        font-family: $header-navigation-type-font-family;
+        font-size: $header-navigation-type-font-size;
+        font-weight: $header-navigation-type-font-weight;
+        color: $header-navigation-type-color;
+        text-transform: $header-navigation-type-text-transform;
         &:hover {
-          color: lighten(theme-color('secondary'), 40%);
+          color: $header-navigation-hover-color;
           text-decoration: none;
         }
       }

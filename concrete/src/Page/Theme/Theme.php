@@ -223,7 +223,7 @@ class Theme extends ConcreteObject
     {
         $env = Environment::get();
         $r = $env->getRecord(
-            DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.DIRNAME_CSS.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
+            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/'. FILENAME_STYLE_CUSTOMIZER_STYLES,
             $this->getPackageHandle()
         );
 
@@ -240,8 +240,7 @@ class Theme extends ConcreteObject
         if (!isset($this->styleList)) {
             $env = Environment::get();
             $r = $env->getRecord(
-                DIRNAME_THEMES.'/'.$this->getThemeHandle(
-                ).'/'.DIRNAME_CSS.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
+                DIRNAME_THEMES.'/'.$this->getThemeHandle() . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES,
                 $this->getPackageHandle()
             );
             $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
@@ -277,7 +276,7 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Get all presets available to this theme.
+     * Get all preset skins available to this theme. Looks for theme preset skins as well as user presets.
      *
      * @return \Concrete\Core\StyleCustomizer\Preset[]
      */

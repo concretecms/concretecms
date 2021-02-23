@@ -1,0 +1,18 @@
+/* These are variables that are unique to the skin but are NOT customizable */
+
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web:200,400,700,900);
+
+$logo-bar-background-color: #fff; // not just named "header" because it also occurs near the bottom of the page
+$logo-font-size: 2.2em;
+
+$header-navigation-type-color: #0099ff;
+$header-navigation-type-font-size: 1.0em;
+$header-navigation-type-font-weight: 700;
+$header-navigation-type-font-family: 'Titillium Web';
+$header-navigation-type-text-transform: none;
+$header-navigation-hover-color: #abddff;
+
+// Top Header Search
+$header-search-input-icon-color: #cbcbcb;
+$header-search-input-border-color: #cbcbcb;
+$header-search-input-background-color: #ffffff;

@@ -1,0 +1,20 @@
+/* These are variables that are unique to the skin but are NOT customizable */
+
+@import url(//fonts.googleapis.com/css?family=Abril+Fatface:400);
+@import url(//fonts.googleapis.com/css?family=Oswald:300,400,700);
+@import url(//fonts.googleapis.com/css?family=Oxygen:400);
+
+$logo-bar-background-color: rgb(18, 18, 18);
+$logo-font-size: 2.2em;
+
+$header-navigation-type-color: #8c979d;
+$header-navigation-type-font-size: 1.0em;
+$header-navigation-type-font-weight: 300;
+$header-navigation-type-font-family: 'Oswald';
+$header-navigation-type-text-transform: uppercase;
+$header-navigation-hover-color: #fa9c38;
+
+// Top Header Search
+$header-search-input-icon-color: #cbcbcb;
+$header-search-input-border-color: #121212;
+$header-search-input-background-color: #313131;

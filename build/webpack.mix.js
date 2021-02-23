@@ -88,8 +88,10 @@ mix
 
 // Elemental Theme
 mix
-    .sass('assets/themes/elemental/scss/skins/default/main.scss', 'themes/elemental')
+    .sass('assets/themes/elemental/scss/skins/default/main.scss', 'themes/elemental/skins/default/')
     .js('assets/themes/elemental/js/main.js', 'themes/elemental');
+mix
+    .sass('assets/themes/elemental/scss/skins/night-road/main.scss', 'themes/elemental/skins/night-road/')
 
 
 // Dashboard Theme
