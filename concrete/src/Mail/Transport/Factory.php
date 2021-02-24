@@ -77,6 +77,10 @@ class Factory
         if ($encryption) {
             $options['connection_config']['ssl'] = (string) $encryption;
         }
+        $heloDomain = (string) array_get($array, 'helo_domain');
+        if ($heloDomain !== '') {
+            $options['name'] = $heloDomain;
+        }
         $mpc = array_get($array, 'messages_per_connection');
         $messagesPerConnection = $mpc ? (int) $mpc : 0;
 
