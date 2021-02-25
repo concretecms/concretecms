@@ -18,10 +18,12 @@ class AuthorSaveHandler implements SaveHandlerInterface
      */
     public function saveFromRequest(Control $control, Entry $entry, Request $request)
     {
-        $author = $request->request->get('author');
-        if ($author) {
-            $ui = UserInfo::getById($request->request->get('author'));
+        $authorID = $request->request->get('author');
+        if ($authorID) {
+            $ui = UserInfo::getById($authorID);
             $entry->setAuthor($ui->getEntityObject());
+        } else {
+            $entry->setAuthor(null);
         }
     }
 }

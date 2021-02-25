@@ -41,9 +41,18 @@ class SummaryObject implements ObjectInterface
             'class' => self::class,
             'templateID' => $this->summaryObject->getTemplate()->getId(),
             'dataSourceCategoryHandle' => $this->summaryObject->getDataSourceCategoryHandle(),
+            'title' => $this->getSlotContentObjectTitle(),
             'identifier' => $this->summaryObject->getIdentifier(),
-            'data' => $this->summaryObject->getData()
+            'data' => $this->summaryObject->getData(),
         ];
+    }
+
+    public function getSlotContentObjectTitle(): ?string
+    {
+        if ($this->summaryObject && $this->summaryObject->getTemplate()) {
+            return $this->summaryObject->getTemplate()->getName();
+        }
+        return null;
     }
 
     public function refresh(Application $app): void
