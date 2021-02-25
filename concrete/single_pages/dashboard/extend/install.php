@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Attribute\Key\Category as AttributeCategory;
+use Concrete\Core\Form\Service\Form;
 
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $ci = $app->make('helper/concrete/urls');
@@ -19,7 +20,8 @@ $txt = $app->make('helper/text');
 $nav = $app->make('helper/navigation');
 $config = $app->make('config');
 $displayDeleteBtn = $config->get('concrete.misc.display_package_delete_button');
-
+/** @var Form $form */
+$form = $app->make(Form::class);
 $catList = AttributeCategory::getList();
 
 if ($this->controller->getTask() == 'install_package' && isset($showInstallOptionsScreen) && $showInstallOptionsScreen && $tp->canInstallPackages()) {
@@ -52,9 +54,18 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></label></div>
                 <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <?=t('Yes. Reset site content with the content found in this package')?></label></div>
             </div>
+            <?php if (count($pkg->getContentSwapFiles()) === 1) {?>
+                <?php echo $form->hidden("contentSwapFile", array_pop(array_keys($pkg->getContentSwapFiles()))) ?>
+            <?php } else {?>
+                <div class="form-group">
+                    <?php echo $form->label("contentSwapFile", t("Starting Point")); ?>
+                    <?php echo $form->select("contentSwapFile", $pkg->getContentSwapFiles()); ?>
+                </div>
+            <?php } ?>
             <?php
         }
         ?>
+
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=$this->url('/dashboard/extend/install')?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
