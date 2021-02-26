@@ -5,11 +5,13 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Config;
 use Exception;
 
-class Themes extends DashboardPageController
+class Themes extends DashboardSitePageController
 {
     public function view()
     {
@@ -18,13 +20,18 @@ class Themes extends DashboardPageController
 
         $this->set('tArray', $tArray);
         $this->set('tArray2', $tArray2);
-        $siteThemeID = 0;
-        $obj = Theme::getSiteTheme();
-        if (is_object($obj)) {
-            $siteThemeID = $obj->getThemeID();
+
+        $activeTheme = Theme::getSiteTheme();
+        $this->set('activeTheme', $activeTheme);
+
+        if ($activeTheme->hasSkins()) {
+            $themeSkinIdentifier = $this->site->getThemeSkinIdentifier();
+            if (!$themeSkinIdentifier) {
+                $themeSkinIdentifier = SkinInterface::SKIN_DEFAULT;
+            }
+            $this->set('themeSkinIdentifier', $themeSkinIdentifier);
         }
 
-        $this->set('siteThemeID', $siteThemeID);
         $this->set('activate', $this->action('activate'));
         $this->set('install', $this->action('install'));
     }
@@ -46,6 +53,23 @@ class Themes extends DashboardPageController
 
         return $this->buildRedirect($this->action('mobile_theme_saved'));
     }
+
+    public function save_selected_skin()
+    {
+        $activeTheme = Theme::getSiteTheme();
+        if (!$this->token->validate('save_selected_skin')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
+        if (!$this->error->has()) {
+            $this->site->setThemeSkinIdentifier($this->request->request->get('themeSkinIdentifier'));
+            $this->entityManager->persist($this->site);
+            $this->entityManager->flush();
+            $this->flash('success', t('Theme skin updated.'));
+        }
+        return $this->buildRedirect($this->action());
+    }
+
 
     public function mobile_theme_saved()
     {

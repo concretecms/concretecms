@@ -2,7 +2,7 @@
 /**
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Validation\CSRF\Token $token
- * @var int $siteThemeID
+ * @var Concrete\Core\Page\Theme\Theme $activeTheme
  */
 // HELPERS
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -40,7 +40,7 @@ if (isset($activate_confirm)) {
             <?php
             foreach ($tArray as $t) {
                 ?>
-                <tr <?php if ($siteThemeID == $t->getThemeID()) {
+                <tr <?php if ($activeTheme->getThemeID() == $t->getThemeID()) {
                     ?> class="ccm-theme-active" <?php
                 } ?>>
                     <td>
@@ -50,13 +50,13 @@ if (isset($activate_confirm)) {
                     </td>
                     <td width="100%" style="vertical-align:middle;">
                         <div class="btn-group float-right"><?php
-                            if ($siteThemeID == $t->getThemeID()) {
+                            if ($activeTheme->getThemeID() == $t->getThemeID()) {
                                 echo $ih->buttonJs(t('Activate'), "alert('" . $alreadyActiveMessage . "')", 'left', 'btn-secondary ccm-button-inactive', ['disabled' => 'disabled']);
                             } else {
                                 echo $ih->button(t('Activate'), $view->action('activate', $t->getThemeID()), 'left', 'btn-secondary');
                             }
                 echo $ih->button(t('Page Templates'), $view->action('inspect', $t->getThemeID()), 'left', 'btn-secondary');
-                if ($siteThemeID == $t->getThemeID()) {
+                if ($activeTheme->getThemeID() == $t->getThemeID()) {
                     echo $ih->button(t('Remove'), '', 'right', 'btn-danger', ['disabled' => 'disabled']);
                 } else {
                     echo $ih->button(t('Remove'), $view->action('remove', $t->getThemeID(), $token->generate('remove')), 'right', 'btn-danger');
@@ -68,6 +68,29 @@ if (isset($activate_confirm)) {
                 <?php
             } ?></tbody><?php
         } ?></table>
+
+    <?php if ($activeTheme->hasSkins()) {
+        $skins = $activeTheme->getSkins(); ?>
+        <form method="post" action="<?=$view->action('save_selected_skin'); ?>" >
+            <?php $token->output('save_selected_skin'); ?>
+            <div class="form-group">
+                <label class="control-label"><?= t('Skins') ?></label>
+                <?php
+                $skinIndex = 1;
+                foreach($skins as $skin) { ?>
+                    <div class="form-check">
+                        <?= $form->radio('themeSkinIdentifier', $skin->getIdentifier(), $themeSkinIdentifier) ?>
+                        <label class="form-check-label" for="themeSkinIdentifier<?=$skinIndex?>"><?=$skin->getName() ?></label>
+                    </div>
+                <?php
+                    $skinIndex++;
+                } ?>
+            </div>
+            <button class="btn btn-secondary" type="submit"><?=t('Save'); ?></button>
+        </form>
+    <?php } ?>
+
+    <hr>
     <form method="post" action="<?=$view->action('save_mobile_theme'); ?>" >
         <?php $token->output('save_mobile_theme'); ?>
         <h3><?=t('Mobile Theme'); ?></h3>
@@ -84,10 +107,11 @@ if (isset($activate_confirm)) {
             <button class="btn btn-secondary" type="submit"><?=t('Save'); ?></button>
         </div>
     </form>
-    <br/><br/>
+
     <?php
     if (count($tArray2) > 0) {
         ?>
+        <hr>
         <h3><?=t('Themes Available to Install'); ?></h3>
         <table class="table">
         
@@ -119,8 +143,8 @@ if (isset($activate_confirm)) {
     }
         if (Config::get('concrete.marketplace.enabled') == true) {
             ?>
-            <div  style="padding:10px 20px;background-color:#fafbfc;
-                         border: solid 1px rgba(231, 231, 231 ,0.5);" >
+            <hr>
+            <div>
                 <h3 class="mt-2"><?=t('Want more themes?'); ?></h3>
                 <p><?=t('You can download themes and add-ons from the concrete5 marketplace.'); ?></p>
                 <p><a class="btn btn-success" href="<?=URL::to('/dashboard/extend/themes'); ?>"><?=t('Get More Themes'); ?></a></p>

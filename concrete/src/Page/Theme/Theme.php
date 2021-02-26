@@ -3,9 +3,13 @@ namespace Concrete\Core\Page\Theme;
 
 use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Filesystem\FileLocator\Record;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
+use Illuminate\Filesystem\Filesystem;
 use Loader;
 use Page;
 use Environment;
@@ -215,6 +219,79 @@ class Theme extends ConcreteObject
     }
 
     /**
+     * Returns true if theme or user preset skins are available
+     *
+     * @return bool
+     */
+    public function hasSkins(): bool
+    {
+        return $this->hasPresetSkins();
+    }
+
+
+    /**
+     * Checks the filesystem and returns true if custom skins are available for the theme.
+     *
+     * @return bool
+     */
+    public function hasPresetSkins(): bool
+    {
+        $env = Environment::get();
+        $r = $env->getRecord(
+            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
+            $this->getPackageHandle()
+        );
+        return $r->exists();
+    }
+
+    public function getSkinDirectoryRecord(): Record
+    {
+        $env = Environment::get();
+        return $env->getRecord(
+            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
+            $this->getPackageHandle()
+        );
+    }
+
+    /**
+     *
+     * @return SkinInterface[]
+     */
+    public function getSkins(): array
+    {
+        $factory = app(SkinFactory::class);
+        $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile());
+        return $skins;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
      * Checks the theme for a styles.xml file (which is how customizations happen).
      *
      * @return bool
@@ -223,7 +300,7 @@ class Theme extends ConcreteObject
     {
         $env = Environment::get();
         $r = $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/'. FILENAME_STYLE_CUSTOMIZER_STYLES,
+            DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.DIRNAME_CSS.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
             $this->getPackageHandle()
         );
 
@@ -240,7 +317,8 @@ class Theme extends ConcreteObject
         if (!isset($this->styleList)) {
             $env = Environment::get();
             $r = $env->getRecord(
-                DIRNAME_THEMES.'/'.$this->getThemeHandle() . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES,
+                DIRNAME_THEMES.'/'.$this->getThemeHandle(
+                ).'/'.DIRNAME_CSS.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
                 $this->getPackageHandle()
             );
             $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
@@ -276,7 +354,7 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Get all preset skins available to this theme. Looks for theme preset skins as well as user presets.
+     * Get all presets available to this theme.
      *
      * @return \Concrete\Core\StyleCustomizer\Preset[]
      */

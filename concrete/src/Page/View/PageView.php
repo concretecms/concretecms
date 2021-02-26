@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\View;
 
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Theme\Theme;
 use Environment;
@@ -156,71 +157,6 @@ class PageView extends View
         }
     }
 
-    public function getStyleSheet($stylesheet)
-    {
-        if ($this->themeObject->isThemePreviewRequest()) {
-            return $this->themeObject->getStylesheet($stylesheet);
-        }
-
-        if ($this->c->hasPageThemeCustomizations()) {
-            // page has theme customizations, check if we need to serve an uncached version of the style sheet,
-            // either because caching is deactivated or because the version is not approved yet
-            if ($this->c->getVersionObject()->isApprovedNow()) {
-                // approved page, return handler script if caching is deactivated
-                if (!Config::get('concrete.cache.theme_css')) {
-                    return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
-                }
-            } else {
-                // this means that we're potentially viewing customizations that haven't been approved yet. So we're going to
-                // pipe them all through a handler script, basically uncaching them.
-                return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet, $this->c->getVersionID());
-            }
-        }
-
-        $env = Environment::get();
-        $output = Config::get('concrete.cache.directory') . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
-        $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
-        $r = $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
-            $this->themeObject->getPackageHandle());
-        if ($r->exists()) {
-            $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet(
-                $stylesheet,
-                $r->file,
-                $r->url,
-                $output,
-                $relative);
-            if ($sheetObject->outputFileExists()) {
-                return $sheetObject->getOutputRelativePath();
-            } else {
-                // cache output file doesn't exist, check if page has theme customizations
-                if ($this->c->hasPageThemeCustomizations()) {
-                    // build style sheet with page theme customizations
-                    $style = $this->c->getCustomStyleObject();
-                    if (is_object($style)) {
-                        $scl = $style->getValueList();
-                        $sheetObject->setValueList($scl);
-                        // write cache output file
-                        $sheetObject->output();
-                        // return cache output file
-                        return $sheetObject->getOutputRelativePath();
-                    }
-                }
-            }
-
-            return $this->themeObject->getStylesheet($stylesheet);
-        }
-
-        /*
-         * deprecated - but this is for backward compatibility. If we don't have a stylesheet in the css/
-         * directory we just pass through and return the passed file in the current directory.
-         */
-        return $env->getURL(
-            DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . $stylesheet,
-            $this->themeObject->getPackageHandle()
-        );
-    }
-
     public function startRender()
     {
         parent::startRender();
@@ -298,5 +234,83 @@ class PageView extends View
         if (!isset($this->pThemeID)) {
             $this->pThemeID = $this->c->getPageTemplateID(); // @TODO kill this code? It looks completely wrong.
         }
+    }
+
+    public function getSelectedSkinStylesheet()
+    {
+        $site = $this->c->getSite();
+        $path = $this->themeObject->getSkinDirectoryRecord()->getUrl();
+        $skin = $site->getThemeSkinIdentifier() ?? SkinInterface::SKIN_DEFAULT;
+        return $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
+    }
+
+    /**
+     * @deprecated
+     * @param $stylesheet
+     * @return string
+     */
+    public function getStyleSheet($stylesheet)
+    {
+        if ($this->themeObject->isThemePreviewRequest()) {
+            return $this->themeObject->getStylesheet($stylesheet);
+        }
+
+        if ($this->c->hasPageThemeCustomizations()) {
+            // page has theme customizations, check if we need to serve an uncached version of the style sheet,
+            // either because caching is deactivated or because the version is not approved yet
+            if ($this->c->getVersionObject()->isApprovedNow()) {
+                // approved page, return handler script if caching is deactivated
+                if (!Config::get('concrete.cache.theme_css')) {
+                    return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet);
+                }
+            } else {
+                // this means that we're potentially viewing customizations that haven't been approved yet. So we're going to
+                // pipe them all through a handler script, basically uncaching them.
+                return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $stylesheet, $this->c->getVersionID());
+            }
+        }
+
+        $env = Environment::get();
+        $output = Config::get('concrete.cache.directory') . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $r = $env->getRecord(
+            DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
+            $this->themeObject->getPackageHandle());
+        if ($r->exists()) {
+            $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet(
+                $stylesheet,
+                $r->file,
+                $r->url,
+                $output,
+                $relative);
+            if ($sheetObject->outputFileExists()) {
+                return $sheetObject->getOutputRelativePath();
+            } else {
+                // cache output file doesn't exist, check if page has theme customizations
+                if ($this->c->hasPageThemeCustomizations()) {
+                    // build style sheet with page theme customizations
+                    $style = $this->c->getCustomStyleObject();
+                    if (is_object($style)) {
+                        $scl = $style->getValueList();
+                        $sheetObject->setValueList($scl);
+                        // write cache output file
+                        $sheetObject->output();
+                        // return cache output file
+                        return $sheetObject->getOutputRelativePath();
+                    }
+                }
+            }
+
+            return $this->themeObject->getStylesheet($stylesheet);
+        }
+
+        /*
+         * deprecated - but this is for backward compatibility. If we don't have a stylesheet in the css/
+         * directory we just pass through and return the passed file in the current directory.
+         */
+        return $env->getURL(
+            DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . $stylesheet,
+            $this->themeObject->getPackageHandle()
+        );
     }
 }
