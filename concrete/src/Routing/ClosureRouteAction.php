@@ -34,14 +34,15 @@ class ClosureRouteAction implements RouteActionInterface
         $echoedResponse = ob_get_contents();
         ob_end_clean();
 
-        if ($response instanceof Response) {
-            return $response;
-        }
         $r = new Response();
         if (is_string($response)) {
             $r->setContent($response);
         } else {
-            $r->setContent($echoedResponse);
+            if ($response) {
+                return $response; // Someone has returned an object, closure, array, etc... so we let the middlewares handle it.
+            } else {
+                $r->setContent($echoedResponse);
+            }
         }
 
         return $r;
