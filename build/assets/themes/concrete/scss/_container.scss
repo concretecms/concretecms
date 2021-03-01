@@ -1,5 +1,6 @@
 div.main-container {
-  @include make-row();
+  @include make-container();
+  @extend .container;
   display: flex;
   min-height: 100vh;
 }

@@ -36,24 +36,6 @@ class Themes extends DashboardSitePageController
         $this->set('install', $this->action('install'));
     }
 
-    public function save_mobile_theme()
-    {
-        if (!$this->token->validate('save_mobile_theme')) {
-            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
-
-            return $this->view();
-        }
-
-        $pt = Theme::getByID($this->post('MOBILE_THEME_ID'));
-        if (is_object($pt)) {
-            Config::save('concrete.misc.mobile_theme_id', $pt->getThemeID());
-        } else {
-            Config::save('concrete.misc.mobile_theme_id', 0);
-        }
-
-        return $this->buildRedirect($this->action('mobile_theme_saved'));
-    }
-
     public function save_selected_skin()
     {
         $activeTheme = Theme::getSiteTheme();
@@ -70,11 +52,27 @@ class Themes extends DashboardSitePageController
         return $this->buildRedirect($this->action());
     }
 
-
-    public function mobile_theme_saved()
+    public function customize($pThemeID = null)
     {
-        $this->set('success', t('Mobile theme saved.'));
-        $this->view();
+        $theme = Theme::getByID($pThemeID);
+        if ($theme) {
+            $skins = $theme->getSkins();
+            foreach ($skins as $skin) {
+                if ($skin->getIdentifier() == SkinInterface::SKIN_DEFAULT) {
+                    $selectedSkin = $skin;
+                }
+            }
+            $styles = $theme->getThemeCustomizableStyleList();
+            $this->set('customizeTheme', $theme);
+            $this->set('skins', $skins);
+            $this->set('selectedSkin', $selectedSkin);
+            $this->set('styles', $styles);
+            $this->setTheme('concrete');
+            $this->setThemeViewTemplate('empty.php');
+            $this->render('/dashboard/pages/themes/customize');
+        } else {
+            return $this->buildRedirect($this->action());
+        }
     }
 
     public function remove($pThemeID, $token = '')

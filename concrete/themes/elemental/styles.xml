@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<styles version="1.0">
+	<set name="Colors">
+		<style name="Primary Color" variable="color-primary" type="color" />
+		<style name="Secondary Color" variable="color-secondary" type="color" />
+		<style name="Logo Color" variable="logo-bar-logo-color" type="color" />
+	</set>
+	<set name="Typography">
+		<style name="Logo Font Family" variable="logo-font-family" type="type" />
+	</set>
+</styles>

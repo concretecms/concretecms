@@ -264,33 +264,6 @@ class Theme extends ConcreteObject
         return $skins;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * Checks the theme for a styles.xml file (which is how customizations happen).
      *
@@ -300,7 +273,7 @@ class Theme extends ConcreteObject
     {
         $env = Environment::get();
         $r = $env->getRecord(
-            DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.DIRNAME_CSS.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
+            DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
             $this->getPackageHandle()
         );
 
@@ -308,7 +281,7 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Gets the style list object for this theme.
+     * Retrieves the list of customizable styles for this theme..
      *
      * @return \Concrete\Core\StyleCustomizer\StyleList
      */
@@ -318,14 +291,41 @@ class Theme extends ConcreteObject
             $env = Environment::get();
             $r = $env->getRecord(
                 DIRNAME_THEMES.'/'.$this->getThemeHandle(
-                ).'/'.DIRNAME_CSS.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
+                ).'/'.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
                 $this->getPackageHandle()
             );
             $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
         }
-
         return $this->styleList;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Get a preset for this theme by handle.

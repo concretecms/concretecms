@@ -53,5 +53,12 @@ class PresetSkin implements SkinInterface
         return $this->identifier;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'identifier' => $this->getIdentifier(),
+            'name' => $this->getName(),
+        ];
+    }
 
 }

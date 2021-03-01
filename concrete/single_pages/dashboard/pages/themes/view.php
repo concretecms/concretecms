@@ -49,64 +49,51 @@ if (isset($activate_confirm)) {
                         </div>
                     </td>
                     <td width="100%" style="vertical-align:middle;">
-                        <div class="btn-group float-right"><?php
-                            if ($activeTheme->getThemeID() == $t->getThemeID()) {
-                                echo $ih->buttonJs(t('Activate'), "alert('" . $alreadyActiveMessage . "')", 'left', 'btn-secondary ccm-button-inactive', ['disabled' => 'disabled']);
-                            } else {
-                                echo $ih->button(t('Activate'), $view->action('activate', $t->getThemeID()), 'left', 'btn-secondary');
-                            }
-                echo $ih->button(t('Page Templates'), $view->action('inspect', $t->getThemeID()), 'left', 'btn-secondary');
-                if ($activeTheme->getThemeID() == $t->getThemeID()) {
-                    echo $ih->button(t('Remove'), '', 'right', 'btn-danger', ['disabled' => 'disabled']);
-                } else {
-                    echo $ih->button(t('Remove'), $view->action('remove', $t->getThemeID(), $token->generate('remove')), 'right', 'btn-danger');
-                } ?></div>
+                        <div class="btn-group float-right">
+                        <?php
+                        if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>
+                            <button disabled class="btn btn-secondary btn-sm"><?=t('Activate')?></button>
+                        <?php } else { ?>
+                            <a href="<?=$view->action('activate', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Activate')?></a>
+                        <?php } ?>
+                        <?php if ($t->isThemeCustomizable()) { ?>
+                            <a href="<?=$view->action('customize', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Customize')?></a>
+                       <?php } ?>
+                        <a href="<?=$view->action('inspect', $t->getThemeID())?>" class="btn btn-sm btn-secondary"><?=t('Page Templates')?></a>
+                        <?php
+                        if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>
+                            <button disabled class="btn btn-danger btn-sm"><?=t('Remove')?></button>
+                        <?php } else { ?>
+                            <a href="<?=$view->action('remove', $t->getThemeID(), $token->generate('remove'))?>" class="btn btn-secondary btn-sm"><?=t('Remove')?></a>
+                        <?php } ?>
+                    </div>
                         <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName(); ?></strong></p>
                         <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription(); ?></em></p>
+
+                        <?php if ($activeTheme->getThemeID() == $t->getThemeID() && $activeTheme->hasSkins()) {
+
+                            $skins = $activeTheme->getSkins(); ?>
+                            <form method="post" action="<?=$view->action('save_selected_skin'); ?>" >
+                                <div><strong><?=t('Skins')?></strong></div>
+                                <?php $token->output('save_selected_skin'); ?>
+                                <?php
+                                foreach($skins as $skin) { ?>
+                                    <button type="submit" name="themeSkinIdentifier"
+                                            value="<?=$skin->getIdentifier()?>"
+                                            class="<?php if ($themeSkinIdentifier == $skin->getIdentifier()) { ?>active<?php } ?> btn btn-sm btn-secondary">
+                                        <?=$skin->getName()?>
+                                    </button>
+                                <?php } ?>
+                                </div>
+                            </form>
+
+
+                        <?php } ?>
                     </td>
                 </tr>
                 <?php
             } ?></tbody><?php
         } ?></table>
-
-    <?php if ($activeTheme->hasSkins()) {
-        $skins = $activeTheme->getSkins(); ?>
-        <form method="post" action="<?=$view->action('save_selected_skin'); ?>" >
-            <?php $token->output('save_selected_skin'); ?>
-            <div class="form-group">
-                <label class="control-label"><?= t('Skins') ?></label>
-                <?php
-                $skinIndex = 1;
-                foreach($skins as $skin) { ?>
-                    <div class="form-check">
-                        <?= $form->radio('themeSkinIdentifier', $skin->getIdentifier(), $themeSkinIdentifier) ?>
-                        <label class="form-check-label" for="themeSkinIdentifier<?=$skinIndex?>"><?=$skin->getName() ?></label>
-                    </div>
-                <?php
-                    $skinIndex++;
-                } ?>
-            </div>
-            <button class="btn btn-secondary" type="submit"><?=t('Save'); ?></button>
-        </form>
-    <?php } ?>
-
-    <hr>
-    <form method="post" action="<?=$view->action('save_mobile_theme'); ?>" >
-        <?php $token->output('save_mobile_theme'); ?>
-        <h3><?=t('Mobile Theme'); ?></h3>
-        <p><?=t('To use a separate theme for mobile browsers, specify it below.'); ?></p>
-        <div class="form-group form-inline">
-            <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'), ['class' => 'mr-3']); ?>
-            <?php
-                $themes[0] = t('** Same as website (default)');
-                foreach ($tArray as $pt) {
-                    $themes[$pt->getThemeID()] = $pt->getThemeDisplayName();
-                }
-            ?>
-            <?=$form->select('MOBILE_THEME_ID', $themes, Config::get('concrete.misc.mobile_theme_id'), ['class' => 'mr-1']); ?>
-            <button class="btn btn-secondary" type="submit"><?=t('Save'); ?></button>
-        </div>
-    </form>
 
     <?php
     if (count($tArray2) > 0) {
@@ -143,8 +130,8 @@ if (isset($activate_confirm)) {
     }
         if (Config::get('concrete.marketplace.enabled') == true) {
             ?>
-            <hr>
-            <div>
+
+            <div class="mt-5">
                 <h3 class="mt-2"><?=t('Want more themes?'); ?></h3>
                 <p><?=t('You can download themes and add-ons from the concrete5 marketplace.'); ?></p>
                 <p><a class="btn btn-success" href="<?=URL::to('/dashboard/extend/themes'); ?>"><?=t('Get More Themes'); ?></a></p>

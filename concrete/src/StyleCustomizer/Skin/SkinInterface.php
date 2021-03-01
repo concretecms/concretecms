@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\StyleCustomizer\Skin;
 
-interface SkinInterface
+interface SkinInterface extends \JsonSerializable
 {
 
     const SKIN_DEFAULT = 'default';

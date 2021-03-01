@@ -240,7 +240,12 @@ class PageView extends View
     {
         $site = $this->c->getSite();
         $path = $this->themeObject->getSkinDirectoryRecord()->getUrl();
-        $skin = $site->getThemeSkinIdentifier() ?? SkinInterface::SKIN_DEFAULT;
+        $skin = SkinInterface::SKIN_DEFAULT;
+        if ($site) {
+            if ($site->getThemeSkinIdentifier()) {
+                $skin = $site->getThemeSkinIdentifier();
+            }
+        }
         return $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
     }
 

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * @method static \Concrete\Core\StyleCustomizer\Style\Value\Value[] getValuesFromVariables($rules = [])
  */
-abstract class Style
+abstract class Style implements \JsonSerializable
 {
     /**
      * The name of this style.
@@ -165,5 +165,12 @@ abstract class Style
         $record = $locator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_STYLE_CUSTOMIZER . '/' . DIRNAME_STYLE_CUSTOMIZER_TYPES . '/' . $element . '.php');
 
         return $record->getFile();
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->getDisplayName('text'),
+        ];
     }
 }

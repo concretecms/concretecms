@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\StyleCustomizer;
 
-class StyleList
+class StyleList implements \JsonSerializable
 {
     /**
      * The list of the style sets.
@@ -63,5 +63,12 @@ class StyleList
     public function getSets()
     {
         return $this->sets;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'sets' => $this->getSets(),
+        ];
     }
 }
