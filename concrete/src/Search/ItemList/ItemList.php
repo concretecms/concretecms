@@ -11,7 +11,7 @@ abstract class ItemList
 {
     protected $sortColumnParameter = 'ccm_order_by';
     protected $sortDirectionParameter = 'ccm_order_by_direction';
-    protected $paginationPageParameter = 'ccm_paging_p';
+    protected $paginationPageParameter;
     protected $sortBy;
     protected $sortByDirection;
     protected $sortBySearchColumn;
@@ -158,9 +158,20 @@ abstract class ItemList
 
     public function getQueryPaginationPageParameter()
     {
+        if (!isset($this->paginationPageParameter)) {
+            $this->loadQueryStringPagingVariable();
+        }
         return $this->paginationPageParameter;
     }
 
+    /**
+    * Get paging parameter from Concrete configuration
+    */
+    protected function loadQueryStringPagingVariable()
+    {
+        $this->paginationPageParameter = \Config::get('concrete.seo.paging_string');
+    }
+    
     public function getQuerySortDirectionParameter()
     {
         return $this->sortDirectionParameter;
@@ -242,8 +253,14 @@ abstract class ItemList
      */
     public function setNameSpace($nameSpace)
     {
-        $this->paginationPageParameter .= '_' . $nameSpace;
-        $this->sortColumnParameter .= '_' . $nameSpace;
-        $this->sortDirectionParameter .= '_' . $nameSpace;
+        if (!isset($this->paginationPageParameter)) {
+            $this->loadQueryStringPagingVariable();
+        }
+
+        if(!is_null($nameSpace) && $nameSpace!=""){
+            $this->paginationPageParameter .= '_' . $nameSpace;
+            $this->sortColumnParameter .= '_' . $nameSpace;
+            $this->sortDirectionParameter .= '_' . $nameSpace;
+        }
     }
 }
