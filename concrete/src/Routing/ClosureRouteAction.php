@@ -35,7 +35,7 @@ class ClosureRouteAction implements RouteActionInterface
         ob_end_clean();
 
         $r = new Response();
-        if (is_string($response)) {
+        if (is_scalar($response)) {
             $r->setContent($response);
         } else {
             if ($response) {
