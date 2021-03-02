@@ -17,7 +17,6 @@ $router->all('/jump_to_folder', 'JumpToFolder::view');
 $router->all('/bulk/delete', 'Bulk\Delete::view');
 $router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
 
-$router->all('/search', 'Search::view');
 $router->all('/advanced_search', 'AdvancedSearch::view');
 $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
 $router->all('/advanced_search/submit', 'AdvancedSearch::submit');
