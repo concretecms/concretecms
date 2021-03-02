@@ -1,18 +1,28 @@
 <?php
+
 namespace Concrete\Core\User\Group;
 
 use CacheLocal;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Notification\GroupRoleChangeNotification;
+use Concrete\Core\Entity\Notification\GroupSignupRequestNotification;
+use Concrete\Core\Entity\User\GroupRoleChange;
+use Concrete\Core\Entity\User\GroupSignupRequest;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Notification\Type\GroupRoleChangeType;
+use Concrete\Core\Notification\Type\GroupSignupRequestType;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\Tree\Node\Type\GroupFolder;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\Command\DeleteGroupCommand;
 use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfoRepository;
 use Config;
 use Database;
+use Doctrine\DBAL\Exception;
 use Events;
 use File;
 use Gettext\Translations;
@@ -103,9 +113,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $parents = $node->getTreeNodeParentArray();
             $parents = array_reverse($parents);
             foreach ($parents as $node) {
-                $g = $node->getTreeNodeGroupObject();
-                if (is_object($g)) {
-                    $path .= '/' . $g->getGroupName();
+                if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                    $g = $node->getTreeNodeGroupObject();
+                    if (is_object($g)) {
+                        $path .= '/' . $g->getGroupName();
+                    }
                 }
             }
         }
@@ -123,8 +135,12 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
         $node->populateDirectChildrenOnly();
         foreach ($node->getChildNodes() as $child) {
-            $group = $child->getTreeNodeGroupObject();
-            $group->rescanGroupPathRecursive();
+            if ($child instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                $group = $child->getTreeNodeGroupObject();
+                if ($group instanceof Group) {
+                    $group->rescanGroupPathRecursive();
+                }
+            }
         }
     }
 
@@ -143,9 +159,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function getGroupDateTimeEntered($user)
     {
         if (is_object($user)) {
-            $userID = (int) $user->getUserID();
+            $userID = (int)$user->getUserID();
         } elseif (is_numeric($user)) {
-            $userID = (int) $user;
+            $userID = (int)$user;
         } else {
             $userID = 0;
         }
@@ -170,6 +186,358 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $this->gID;
     }
 
+    public function getOverrideGroupTypeSettings()
+    {
+        return (bool)$this->gOverrideGroupTypeSettings;
+    }
+
+    /**
+     * @param User $user
+     * @param GroupRole $userRole
+     * @return bool
+     */
+    public function changeUserRole($user, $userRole)
+    {
+        $activeUser = new User();
+
+        if ($this->hasUserManagerPermissions($activeUser) && $user->inGroup($this)) {
+            if ($user->isRegistered() && $this->isPetitionForPublicEntry()) {
+                $app = Application::getFacadeApplication();
+                /** @var Connection $db */
+                $db = $app->make(Connection::class);
+                $db->executeQuery("UPDATE UserGroups SET grID = ? WHERE gID = ? AND uID = ?", [$userRole->getId(), $this->getGroupID(), $user->getUserID()]);
+
+                /** @noinspection PhpUnhandledExceptionInspection */
+                $subject = new GroupRoleChange($this, $user, $userRole);
+                /** @var GroupRoleChangeType $type */
+                $type = $app->make('manager/notification/types')->driver('group_role_change');
+                $notifier = $type->getNotifier();
+                if (method_exists($notifier, 'notify')) {
+                    $subscription = $type->getSubscription($subject);
+                    $users = $notifier->getUsersToNotify($subscription, $subject);
+                    $notification = new GroupRoleChangeNotification($subject);
+                    $notifier->notify($users, $notification);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function sendJoinRequest()
+    {
+        $user = new User();
+        if ($user->isRegistered() && $this->isPetitionForPublicEntry()) {
+            $app = Application::getFacadeApplication();
+            /** @var Connection $db */
+            $db = $app->make(Connection::class);
+            $dt = $app->make('helper/date');
+
+            $db->executeQuery("DELETE FROM GroupJoinRequests WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
+            $db->insert("GroupJoinRequests", [
+                "gID" => $this->getGroupID(),
+                "uID" => $user->getUserID(),
+                "gjrRequested" => $dt->getOverridableNow()
+            ]);
+
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $subject = new GroupSignupRequest($this, $user);
+            /** @var GroupSignupRequestType $type */
+            $type = $app->make('manager/notification/types')->driver('group_signup_request');
+            $notifier = $type->getNotifier();
+
+            if (method_exists($notifier, 'notify')) {
+                $subscription = $type->getSubscription($subject);
+                $users = $notifier->getUsersToNotify($subscription, $subject);
+                $notification = new GroupSignupRequestNotification($subject);
+                $notifier->notify($users, $notification);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return GroupJoinRequest[]
+     */
+    public function getJoinRequests()
+    {
+        $joinRequests = [];
+
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        /** @var UserInfoRepository $userInfoRepository */
+        $userInfoRepository = $app->make(UserInfoRepository::class);
+
+        foreach ($db->fetchAll("SELECT uID FROM GroupJoinRequests WHERE gID = ?", [$this->getGroupID()]) as $row) {
+            $userInfo = $userInfoRepository->getByID($row["uID"]);
+            $userObject = $userInfo->getUserObject();
+            $joinRequests[] = new GroupJoinRequest($this, $userObject);
+        }
+
+        return $joinRequests;
+    }
+
+
+    public function setOverrideGroupTypeSettings($gOverrideGroupTypeSettings)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gOverrideGroupTypeSettings = $gOverrideGroupTypeSettings;
+
+        try {
+            $db->executeQuery("update Groups set gOverrideGroupTypeSettings = ? where gID = ?", [(int)$gOverrideGroupTypeSettings, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getGroupTypeId()
+    {
+        return $this->gtID;
+    }
+
+    /**
+     * @return bool|GroupType
+     */
+    public function getGroupType()
+    {
+        if (is_object(GroupType::getByID($this->gtID))) {
+            return GroupType::getByID($this->gtID);
+        } else {
+            return GroupType::getByID(DEFAULT_GROUP_TYPE_ID);
+        }
+    }
+
+    /**
+     * @return bool|GroupType
+     */
+    public function setGroupType(GroupType $groupType)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gtID = $groupType->getId();
+
+        try {
+            $db->executeQuery("update Groups set gtID = ? where gID = ?", [$this->gtID, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultRoleId()
+    {
+        return $this->gDefaultRoleID;
+    }
+
+    /**
+     * @return GroupRole
+     */
+    public function getDefaultRole()
+    {
+        if ($this->getOverrideGroupTypeSettings()) {
+            return GroupRole::getByID($this->gDefaultRoleID);
+        } else {
+            if (is_object($this->getGroupType())) {
+                return $this->getGroupType()->getDefaultRole();
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * @param GroupRole $role
+     * @return bool
+     */
+    public function setDefaultRole($role)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gDefaultRoleID = $role->getId();
+
+        try {
+            $db->executeQuery("update Groups set gDefaultRoleID = ? where gID = ?", [(int)$this->gDefaultRoleID, (int)$this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\File|bool
+     */
+    public function getThumbnailImage()
+    {
+        $bf = false;
+
+        if ($this->gThumbnailFID) {
+            $bf = \Concrete\Core\File\File::getByID($this->gThumbnailFID);
+            if (!is_object($bf) || $bf->isError()) {
+                unset($bf);
+            }
+        }
+
+        return $bf;
+    }
+
+    public function removeThumbnailImage()
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        try {
+            $db->executeQuery("update Groups set gThumbnailFID = ? where gID = ?", [0, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\File\File $file
+     * @return bool
+     */
+    public function setThumbnailImage(\Concrete\Core\Entity\File\File $file)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gThumbnailFID = $file->getFileID();
+
+        try {
+            $db->executeQuery("update Groups set gThumbnailFID = ? where gID = ?", [$this->gThumbnailFID, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function isPetitionForPublicEntry()
+    {
+        if ($this->getOverrideGroupTypeSettings()) {
+            return (bool)$this->gPetitionForPublicEntry;
+        } else {
+            return (bool)$this->getGroupType()->isPetitionForPublicEntry();
+        }
+    }
+
+    public function setPetitionForPublicEntry($gPetitionForPublicEntry)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        $this->gPetitionForPublicEntry = $gPetitionForPublicEntry;
+
+        try {
+            $db->executeQuery("update Groups set gPetitionForPublicEntry = ? where gID = ?", [(int)$gPetitionForPublicEntry, $this->getGroupID()]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasUserManagerPermissions($user) {
+        if ($user->isRegistered() && $user->isSuperUser()) {
+            return true; // super-admin
+        } else if ($this->getAuthorID() == $user->getUserID()) {
+            return true; // owner
+        } else {
+            $userRole = $this->getUserRole($user);
+            if (is_object($userRole)) {
+                return $userRole->isManager();
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return GroupRole|null
+     */
+    public function getUserRole($user)
+    {
+        if ($user->isRegistered()) {
+            $app = Application::getFacadeApplication();
+            /** @var Connection $db */
+            $db = $app->make(Connection::class);
+            $row = $db->fetchAssoc("SELECT grID FROM UserGroups WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
+            if (isset($row)) {
+                return GroupRole::getByID($row["grID"]);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return GroupRole[]
+     */
+    public function getRoles()
+    {
+        if ($this->getOverrideGroupTypeSettings()) {
+            return GroupRole::getListByGroup($this);
+        } else {
+            return GroupRole::getListByGroupType($this->getGroupType());
+        }
+    }
+
+    /**
+     * @param GroupRole $role
+     * @return bool
+     */
+    public function addRole($role)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+
+        try {
+            $db->executeQuery('insert into GroupSelectedRoles (grID, gID) values (?,?)', [(int)$role->getId(), (int)$this->getGroupID()]);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function getGroupName()
     {
         return $this->gName;
@@ -188,9 +556,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $parents = $node->getTreeNodeParentArray();
             $parents = array_reverse($parents);
             foreach ($parents as $node) {
-                $g = $node->getTreeNodeGroupObject();
-                if (is_object($g)) {
-                    $parentGroups[] = $g;
+                if ($node instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                    $g = $node->getTreeNodeGroupObject();
+                    if (is_object($g)) {
+                        $parentGroups[] = $g;
+                    }
                 }
             }
         }
@@ -206,9 +576,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $node->populateDirectChildrenOnly();
             $node_children = $node->getChildNodes();
             foreach ($node_children as $node_child) {
-                $group = $node_child->getTreeNodeGroupObject();
-                if (is_object($group)) {
-                    $children[] = $group;
+                if ($node_child instanceof \Concrete\Core\Tree\Node\Type\Group) {
+                    $group = $node_child->getTreeNodeGroupObject();
+                    if (is_object($group)) {
+                        $children[] = $group;
+                    }
                 }
             }
         }
@@ -275,8 +647,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return mixed
+     * @deprecated
      */
     public function isGroupBadge()
     {
@@ -284,8 +656,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return mixed
+     * @deprecated
      */
     public function getGroupBadgeDescription()
     {
@@ -293,8 +665,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return mixed
+     * @deprecated
      */
     public function getGroupBadgeCommunityPointValue()
     {
@@ -302,12 +674,17 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return mixed
+     * @deprecated
      */
     public function getGroupBadgeImageID()
     {
         return $this->gBadgeFID;
+    }
+
+    public function getAuthorID()
+    {
+        return $this->gAuthorID;
     }
 
     public function isGroupAutomated()
@@ -354,8 +731,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @return bool
+     * @deprecated
      */
     public function getGroupBadgeImageObject()
     {
@@ -459,12 +836,12 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /** Creates a new user group.
-     * @deprecated
-     * This is deprecated; use the AddGroupCommand and the command bus.
      * @param string $gName
      * @param string $gDescription
      *
      * @return Group
+     * @deprecated
+     * This is deprecated; use the AddGroupCommand and the command bus.
      */
     public static function add($gName, $gDescription, $parentGroup = false, $pkg = null)
     {
@@ -475,6 +852,31 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($parentGroup) {
             $command->setParentGroupID($parentGroup->getGroupID());
         }
+        if ($pkg) {
+            $command->setPackageID($pkg->getPackageID());
+        }
+        return $app->executeCommand($command);
+    }
+
+    /** Creates a new user group.
+     *
+     * This is deprecated; use the AddGroupCommand and the command bus.
+     * @param string $gName
+     * @param string $gDescription
+     * @param GroupFolder $parentFolder
+     *
+     * @return Group
+     */
+    public static function addBeneathFolder($gName, $gDescription, $parentFolder = false, $pkg = null)
+    {
+        $app = Facade::getFacadeApplication();
+        $command = new AddGroupCommand();
+        $command->setName($gName);
+        $command->setDescription($gDescription);
+        if ($parentFolder instanceof GroupFolder) {
+            $command->setParentNodeID($parentFolder->getTreeNodeID());
+        }
+
         if ($pkg) {
             $command->setPackageID($pkg->getPackageID());
         }
@@ -565,10 +967,10 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
      * @param $gBadgeFID
      * @param $gBadgeDescription
      * @param $gBadgeCommunityPointValue
+     * @deprecated
      */
     public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue)
     {
@@ -583,7 +985,8 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $gCheckAutomationOnRegister,
         $gCheckAutomationOnLogin,
         $gCheckAutomationOnJobRun
-    ) {
+    )
+    {
         $db = Database::connection();
         $db->executeQuery(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gIsAutomated = 1, gCheckAutomationOnRegister = ?, gCheckAutomationOnLogin = ?, gCheckAutomationOnJobRun = ? where gID = ?',
@@ -633,11 +1036,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * Takes the numeric id of a group and returns a group object.
-     * @deprecated
-     * This is deprecated, user the grouprepository instead.
      * @param string $gID
      *
      * @return Group
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
      */
     public static function getByID($gID)
     {
@@ -648,11 +1051,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     /**
      * Takes the name of a group and returns a group object.
-     * @deprecated
-     * This is deprecated, user the grouprepository instead.
      * @param string $gName
      *
      * @return Group
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
      */
     public static function getByName($gName)
     {
@@ -662,10 +1065,10 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     }
 
     /**
-     * @deprecated
-     * This is deprecated, user the grouprepository instead.
      * @param string $gPath The group path
      * @return Group
+     * @deprecated
+     * This is deprecated, user the grouprepository instead.
      */
     public static function getByPath($gPath)
     {

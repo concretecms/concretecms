@@ -190,6 +190,15 @@ abstract class Package implements LocalizablePackageInterface
     protected $pkgAllowsFullContentSwap = false;
 
     /**
+     * Override this value to add additional content swap templates.
+     *
+     * @var array
+     */
+    protected $pkgContentSwapFiles = [
+        "content.xml" => "Default"
+    ];
+
+    /**
      * Override this value and set it to true if your package provides the file thumbnails.
      * If it's false, the file thumbnails are generated during the install process.
      *
@@ -260,6 +269,24 @@ abstract class Package implements LocalizablePackageInterface
     public function setPackageEntity(PackageEntity $entity)
     {
         $this->entity = $entity;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContentSwapFiles(): array
+    {
+        return $this->pkgContentSwapFiles;
+    }
+
+    /**
+     * @param array $pkgContentSwapFiles
+     * @return Package
+     */
+    public function setContentSwapFiles(array $pkgContentSwapFiles): Package
+    {
+        $this->pkgContentSwapFiles = $pkgContentSwapFiles;
+        return $this;
     }
 
     /**

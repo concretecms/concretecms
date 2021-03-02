@@ -2722,11 +2722,39 @@
       <notnull/>
     </field>
     <field name="gUserExpirationAction" type="string" size="20"/>
+    <field name="gThumbnailFID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="gPetitionForPublicEntry" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="gOverrideGroupTypeSettings" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="gtID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="gDefaultRoleID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="gIsBadge" type="boolean">
       <default value="0"/>
       <notnull/>
     </field>
     <field name="gBadgeFID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="gAuthorID" type="integer" size="10">
       <unsigned/>
       <default value="0"/>
       <notnull/>
@@ -2767,6 +2795,88 @@
     <index name="pkgID">
       <col>pkgID</col>
     </index>
+  </table>
+  <table name="GroupJoinRequests">
+    <field name="uID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="gID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="gjrRequested" type="datetime">
+      <default value="1000-01-01 00:00:00"/>
+      <notnull/>
+    </field>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+    <index name="gID">
+      <col>gID</col>
+    </index>
+  </table>
+  <table name="GroupTypes">
+    <field name="gtID" type="integer" size="10">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="gtName" type="string" size="128">
+      <notnull/>
+    </field>
+    <field name="gtDefaultRoleID" type="integer" size="10">
+      <unsigned/>
+      <default value="0"/>
+      <notnull/>
+    </field>
+    <field name="gtPetitionForPublicEntry" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+  </table>
+
+  <table name="GroupRoles">
+    <field name="grID" type="integer" size="10">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="grName" type="string" size="128">
+      <notnull/>
+    </field>
+    <field name="grIsManager" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
+  </table>
+
+  <table name="GroupSelectedRoles">
+    <field name="gID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="grID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+  </table>
+
+  <table name="GroupTypeSelectedRoles">
+    <field name="gtID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="grID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
   </table>
 
   <table name="Jobs">
@@ -3462,6 +3572,11 @@
       <default value="0"/>
     </field>
     <field name="gID" type="integer" size="10">
+      <unsigned/>
+      <key/>
+      <default value="0"/>
+    </field>
+    <field name="grID" type="integer" size="10">
       <unsigned/>
       <key/>
       <default value="0"/>
@@ -4199,6 +4314,34 @@
     <index name="gID">
       <col>gID</col>
     </index>
+  </table>
+
+  <table name="TreeGroupFolderNodes">
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="contains" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+  </table>
+
+  <table name="TreeGroupFolderNodeSelectedGroupTypes">
+    <field name="id" type="integer" size="11">
+      <unsigned/>
+      <autoincrement/>
+      <key/>
+    </field>
+    <field name="treeNodeID" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="gtID" type="integer" size="11">
+      <unsigned/>
+      <default value="0"/>
+    </field>
   </table>
 
   <table name="TreeExpressEntrySiteResultNodes">

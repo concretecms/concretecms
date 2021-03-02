@@ -43,7 +43,7 @@ class RemoveOldFileAttachments extends AbstractJob
         msg.msgDateCreated < NOW() - INTERVAL %s DAY;
 SQL;
 
-        foreach ($connection->fetchAllAssociative(sprintf($sql, $attachmentsLifetime)) as $row) {
+        foreach ($connection->fetchAll(sprintf($sql, $attachmentsLifetime)) as $row) {
             $file = File::getByID($row["fID"]);
 
             if ($file instanceof \Concrete\Core\Entity\File\File) {

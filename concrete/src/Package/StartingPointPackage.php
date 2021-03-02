@@ -20,6 +20,7 @@ use Concrete\Core\Permission\Access\Entity\UserEntity;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
+use Concrete\Core\User\Group\FolderManager;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Config;
 use Core;
@@ -514,6 +515,17 @@ class StartingPointPackage extends Package
         \Conversation::setDefaultSubscribedUsers([$superuser]);
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/conversation.xml');
+
+        $folderManager = new FolderManager();
+        $folderManager->create();
+
+        // Add Group Type + Default Role and assign them to the groups
+        $db = Database::get();
+        $db->executeQuery('insert into GroupTypes (gtID, gtName, gtDefaultRoleID) values (?,?, ?)', [DEFAULT_GROUP_TYPE_ID, t("Group"), DEFAULT_GROUP_ROLE_ID]);
+        $db->executeQuery('insert into GroupRoles (grID, grName) values (?,?)', [DEFAULT_GROUP_ROLE_ID, t("Member")]);
+        $db->executeQuery('insert into GroupTypeSelectedRoles (gtID, grID) values (?,?)', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
+        $db->executeQuery('update Groups set gtID = ?, gDefaultRoleID = ?', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
+        $db->executeQuery('update UserGroups set grID = ?', [DEFAULT_GROUP_ROLE_ID]);
     }
 
     protected function make_directories()

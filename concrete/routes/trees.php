@@ -36,6 +36,11 @@ $router->all('/ccm/system/dialogs/tree/node/add/file_folder/add_file_folder_node
 $router->all('/ccm/system/dialogs/tree/node/edit/file_folder', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Edit::view');
 $router->all('/ccm/system/dialogs/tree/node/edit/file_folder/update_file_folder_node', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Edit::update_file_folder_node');
 
+$router->all('/ccm/system/dialogs/tree/node/add/group_folder', '\Concrete\Controller\Dialog\Tree\Node\GroupFolder\Add::view');
+$router->all('/ccm/system/dialogs/tree/node/add/group_folder/add_group_folder_node', '\Concrete\Controller\Dialog\Tree\Node\GroupFolder\Add::add_group_folder_node');
+$router->all('/ccm/system/dialogs/tree/node/edit/group_folder', '\Concrete\Controller\Dialog\Tree\Node\GroupFolder\Edit::view');
+$router->all('/ccm/system/dialogs/tree/node/edit/group_folder/update_group_folder_node', '\Concrete\Controller\Dialog\Tree\Node\GroupFolder\Edit::update_group_folder_node');
+
 $router->all('/ccm/system/dialogs/tree/node/delete', '\Concrete\Controller\Dialog\Tree\Node\Delete::view');
 $router->all('/ccm/system/dialogs/tree/node/delete/remove_tree_node', '\Concrete\Controller\Dialog\Tree\Node\Delete::remove_tree_node');
 $router->all('/ccm/system/dialogs/tree/node/permissions', '\Concrete\Controller\Dialog\Tree\Node\Permissions::view');
