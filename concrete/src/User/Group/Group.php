@@ -316,7 +316,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      */
     public function getGroupType()
     {
-        return GroupType::getByID($this->gtID);
+        if (is_object(GroupType::getByID($this->gtID))) {
+            return GroupType::getByID($this->gtID);
+        } else {
+            return GroupType::getByID(DEFAULT_GROUP_TYPE_ID);
+        }
     }
 
     /**
@@ -355,7 +359,11 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         if ($this->getOverrideGroupTypeSettings()) {
             return GroupRole::getByID($this->gDefaultRoleID);
         } else {
-            return $this->getGroupType()->getDefaultRole();
+            if (is_object($this->getGroupType())) {
+                return $this->getGroupType()->getDefaultRole();
+            } else {
+                return null;
+            }
         }
     }
 
