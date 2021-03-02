@@ -140,7 +140,7 @@ class GroupFolder extends TreeNode
 
         $this->selectedGroupTypes = [];
 
-        foreach($db->fetchAllAssociative('SELECT gtID FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
+        foreach($db->fetchAll('SELECT gtID FROM TreeGroupFolderNodeSelectedGroupTypes WHERE treeNodeID = ?', [
             $this->treeNodeID,
         ]) as $row) {
             $this->selectedGroupTypes[] = GroupType::getByID($row["gtID"]);

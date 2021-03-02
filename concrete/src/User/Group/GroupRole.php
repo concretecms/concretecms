@@ -96,7 +96,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $row = $db->fetchAssociative('select grID, grName, grIsManager from GroupRoles where grID = ?', [$grID]);
+            $row = $db->fetchAssoc('select grID, grName, grIsManager from GroupRoles where grID = ?', [$grID]);
         } catch (Exception $e) {
             return false;
         }
@@ -124,7 +124,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $rows = $db->fetchAllAssociative('select grID from GroupTypeSelectedRoles where gtID = ?', [$groupType->getId()]);
+            $rows = $db->fetchAll('select grID from GroupTypeSelectedRoles where gtID = ?', [$groupType->getId()]);
 
             foreach ($rows as $row) {
                 $list[] = static::getByID($row['grID']);
@@ -148,7 +148,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $rows = $db->fetchAllAssociative('select grID from GroupSelectedRoles where gID = ?', [$group->getGroupID()]);
+            $rows = $db->fetchAll('select grID from GroupSelectedRoles where gID = ?', [$group->getGroupID()]);
 
             foreach ($rows as $row) {
                 $list[] = static::getByID($row['grID']);
@@ -171,7 +171,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $rows = $db->fetchAllAssociative('select grID from GroupRoles order by grName asc');
+            $rows = $db->fetchAll('select grID from GroupRoles order by grName asc');
 
             foreach ($rows as $row) {
                 $list[] = static::getByID($row['grID']);

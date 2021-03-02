@@ -113,7 +113,7 @@ class GroupJoinRequest extends ConcreteObject implements SubjectInterface
 
         $this->user->enterGroup($this->group);
 
-        $row = $db->fetchAssociative("SELECT gjrRequested GroupJoinRequests WHERE uID = ? AND gID = ?", [$this->user->getUserID(), $this->group->getGroupID()]);
+        $row = $db->fetchAssoc("SELECT gjrRequested GroupJoinRequests WHERE uID = ? AND gID = ?", [$this->user->getUserID(), $this->group->getGroupID()]);
 
         if (isset($row)) {
             return DateTime::createFromFormat("Y-m-d H:i:s", $row["gjrRequested"]);

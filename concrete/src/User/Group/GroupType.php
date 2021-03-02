@@ -96,7 +96,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $row = $db->fetchAssociative('select gtID, gtName, gtPetitionForPublicEntry, gtDefaultRoleID from GroupTypes where gtID = ?', [$gtID]);
+            $row = $db->fetchAssoc('select gtID, gtName, gtPetitionForPublicEntry, gtDefaultRoleID from GroupTypes where gtID = ?', [$gtID]);
         } catch (Exception $e) {
             return false;
         }
@@ -145,7 +145,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
         $db = $app->make(Connection::class);
 
         try {
-            $rows = $db->fetchAllAssociative('select gtID from GroupTypes order by gtName asc');
+            $rows = $db->fetchAll('select gtID from GroupTypes order by gtName asc');
 
             foreach ($rows as $row) {
                 $list[] = static::getByID($row['gtID']);

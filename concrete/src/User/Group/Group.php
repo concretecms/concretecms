@@ -276,7 +276,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         /** @var UserInfoRepository $userInfoRepository */
         $userInfoRepository = $app->make(UserInfoRepository::class);
 
-        foreach ($db->fetchAllAssociative("SELECT uID FROM GroupJoinRequests WHERE gID = ?", [$this->getGroupID()]) as $row) {
+        foreach ($db->fetchAll("SELECT uID FROM GroupJoinRequests WHERE gID = ?", [$this->getGroupID()]) as $row) {
             $userInfo = $userInfoRepository->getByID($row["uID"]);
             $userObject = $userInfo->getUserObject();
             $joinRequests[] = new GroupJoinRequest($this, $userObject);
@@ -488,7 +488,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             $app = Application::getFacadeApplication();
             /** @var Connection $db */
             $db = $app->make(Connection::class);
-            $row = $db->fetchAssociative("SELECT grID FROM UserGroups WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
+            $row = $db->fetchAssoc("SELECT grID FROM UserGroups WHERE gID = ? AND uID = ?", [$this->getGroupID(), $user->getUserID()]);
             if (isset($row)) {
                 return GroupRole::getByID($row["grID"]);
             }
