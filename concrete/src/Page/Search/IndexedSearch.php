@@ -87,7 +87,7 @@ class IndexedSearch
     public function reindexPage($page)
     {
         $db = Loader::db();
-        if (is_object($page) && ($page instanceof Collection) && (1 != $page->getAttribute('exclude_search_index'))) {
+        if (is_object($page) && ($page instanceof Collection || $page instanceof Page) && (1 != $page->getAttribute('exclude_search_index'))) {
             $datetime = Loader::helper('date')->getOverridableNow();
             $db->Replace(
                 'PageSearchIndex',
