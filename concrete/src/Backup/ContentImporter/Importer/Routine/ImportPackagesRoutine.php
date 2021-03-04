@@ -26,7 +26,18 @@ class ImportPackagesRoutine extends AbstractRoutine
                     if ($pkgClass) {
                         $app = Facade::getFacadeApplication();
                         $service = $app->make(PackageService::class);
-                        $service->install($pkgClass, []);
+
+                        $data = [];
+
+                        if (isset($p['full-content-swap'])) {
+                            $data["pkgDoFullContentSwap"] = true;
+                        }
+
+                        if (isset($p['content-swap-file'])) {
+                            $data["contentSwapFile"] = (string)$p['content-swap-file'];
+                        }
+
+                        $service->install($pkgClass, $data);
                     }
                 }
             }
