@@ -1,5 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+$sitemap = Loader::helper('concrete/dashboard/sitemap');
 ?>
 <section class="ccm-ui">
 	<header><?=t('Location')?></header>
