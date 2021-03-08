@@ -63,7 +63,10 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        $args['forceDownload'] = ($args['forceDownload']) ? '1' : '0';
+        if (is_array($args) && isset($args['forceDownload'])) {
+            $args['forceDownload'] = ($args['forceDownload']) ? '1' : '0';
+        }
+
         parent::save($args);
     }
 
