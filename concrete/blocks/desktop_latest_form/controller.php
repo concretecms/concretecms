@@ -24,7 +24,10 @@ use Concrete\Core\Block\BlockController;
             $r = $db->query('select * from btFormAnswerSet order by created desc limit 1');
             $row = $r->fetch();
 
-            $legacyDateCreated = strtotime($row['created']);
+            $legacyDateCreated = 0;
+            if (is_array($row) && isset($row['created'])) {
+                $legacyDateCreated = strtotime($row['created']);
+            }
 
             $entityManager = $db->getEntityManager();
             $forms = $entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
