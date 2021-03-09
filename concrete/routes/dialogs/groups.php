@@ -22,6 +22,7 @@ $router->all('/advanced_search/add_field', 'AdvancedSearch::addField');
 $router->all('/advanced_search/submit', 'AdvancedSearch::submit');
 $router->all('/advanced_search/save_preset', 'AdvancedSearch::savePreset');
 
+$router->all('/search', 'Search::view');
 $router->all('/advanced_search/preset/edit', 'Preset\Edit::view');
 $router->all('/advanced_search/preset/edit/edit_search_preset', 'Preset\Edit::edit_search_preset');
 $router->all('/advanced_search/preset/delete', 'Preset\Delete::view');
