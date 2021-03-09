@@ -36,7 +36,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         dialog-modal="false"
         dialog-title="<?= t('Add Group') ?>"
         id="ccm-permissions-access-entity-members-add-group"
-        href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/group/search'])) ?>"
+        href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/groups/search'])) ?>"
         value="<?= t('Add Group') ?>"
     />
 </div>
