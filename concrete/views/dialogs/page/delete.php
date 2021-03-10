@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$sitemap = Loader::helper('concrete/dashboard/sitemap');
+$sitemap = isset($sitemap) ? $sitemap : null;
 ?>
 
 <div class="ccm-ui">
