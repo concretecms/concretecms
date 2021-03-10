@@ -1,6 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>  
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<div id="ccm-block-html-value"><?php echo htmlspecialchars($this->controller->content,ENT_QUOTES,APP_CHARSET) ?></div>
+$content = isset($content) ? $content : null;
+?>
+
+<div id="ccm-block-html-value"><?php echo htmlspecialchars($content,ENT_QUOTES,APP_CHARSET) ?></div>
 <textarea style="display: none" id="ccm-block-html-value-textarea" name="content"></textarea>
 
 <style type="text/css">
