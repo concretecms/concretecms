@@ -1,14 +1,12 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-
-$sitemap = Loader::helper('concrete/dashboard/sitemap');
 ?>
 <section class="ccm-ui">
 	<header><?=t('Location')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
         <input type="hidden" name="cParentID" value="<?=$cParentID?>" />
 
-        <?php if ($isHome == false && !isset($sitemap) && $sitemap == false) {
+        <?php if ((!isset($isHome) || $isHome === false) && (!isset($sitemap) || $sitemap === false)) {
     ?>
             <div style="min-height: 140px">
                 <?php if ($c->isPageDraft()) {
