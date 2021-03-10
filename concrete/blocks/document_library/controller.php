@@ -743,6 +743,11 @@ class Controller extends BlockController
             }
         }
 
+        if ($this->hideFolders) {
+            $query = $list->getQueryObject();
+            $query->orWhere('nt.treeNodeTypeHandle != "file_folder"');
+        }
+
         $list = $this->setupFolderAdvancedSearch($list);
         $list->setItemsPerPage($this->displayLimit);
 
