@@ -37,6 +37,7 @@ use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -168,6 +169,22 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         $this->view();
+    }
+
+    public function validate($args)
+    {
+        $e = $this->app->make('helper/validation/error');
+        if (!empty($args['recipientEmail'])) {
+            $inputtedEmails = array_map('trim', explode(',', $args['recipientEmail']));
+            $validator = new EmailValidator();
+            foreach($inputtedEmails as $email) {
+                if (!$validator->isValid($email)) {
+                    $e->add(t('Email address for recipient "%s" is invalid', $email));
+                }
+            }
+        }
+
+        return $e;
     }
 
     public function delete()
