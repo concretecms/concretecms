@@ -304,8 +304,10 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                             $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be published on %1$s at %2$s.', $date, $time);
                             $buttons = [];
                             if ($canApprovePageVersions && !$c->isCheckedOut()) {
-                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/publish_now/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Publish Now') . '</a>';
-                                $buttons[] = '<a href="' . h($resolver->resolve(["/ccm/system/page/cancel_schedule/{$cID}/" . $valt->generate()])) . '" class="btn btn-sm btn-secondary"> ' . t('Cancel Scheduled Publish') . '</a>';
+                                $button1 = new \HtmlObject\Link($resolver->resolve(["/ccm/system/page/publish_now", $cID, $valt->generate()]), t('Publish Now'));
+                                $button2 = new \HtmlObject\Link($resolver->resolve(["/ccm/system/page/cancel_schedule", $cID, $valt->generate()]), t('Cancel Scheduled Publish'));
+                                $buttons[] = $button1;
+                                $buttons[] = $button2;
                             }
                             echo $cih->notify([
                                 'title' => t('Publish Pending.'),
