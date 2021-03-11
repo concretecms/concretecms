@@ -32,6 +32,7 @@ $router->all('/folder/submit', 'Folder::submit');
 $router->all('/properties/', 'Properties::view');
 $router->all('/properties/submit', 'Properties::submit');
 $router->all('/properties/get_attribute', 'Properties::getAttribute');
+$router->all('/versions/', 'Versions::view');
 $router->all('/delete/{fID}', 'Delete::view');
 $router->all('/delete/{fID}/submit', 'Delete::submit');
 

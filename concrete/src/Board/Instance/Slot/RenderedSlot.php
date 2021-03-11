@@ -28,6 +28,14 @@ class RenderedSlot implements \JsonSerializable
     protected $bID;
 
     /**
+     * Does the current rendered slot contain content based on a board instance rule? If so the ID of the rule
+     * is present here
+     *
+     * @var int
+     */
+    protected $boardInstanceSlotRuleID;
+
+    /**
      * @var int
      */
     protected $slot;
@@ -127,10 +135,27 @@ class RenderedSlot implements \JsonSerializable
         $this->slotType = $slotType;
     }
 
+    /**
+     * @return int
+     */
+    public function getBoardInstanceSlotRuleID(): ?int
+    {
+        return $this->boardInstanceSlotRuleID;
+    }
+
+    /**
+     * @param int $boardInstanceSlotRuleID
+     */
+    public function setBoardInstanceSlotRuleID(int $boardInstanceSlotRuleID): void
+    {
+        $this->boardInstanceSlotRuleID = $boardInstanceSlotRuleID;
+    }
+
     public function jsonSerialize()
     {
         return [
             'boardInstanceID' => $this->instance->getBoardInstanceID(),
+            'boardInstanceSlotRuleID' => $this->getBoardInstanceSlotRuleID(),
             'slot' => $this->slot,
             'bID' => $this->bID,
             'slotType' => $this->getSlotType(),

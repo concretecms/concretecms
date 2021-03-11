@@ -1062,7 +1062,18 @@ class File extends Controller
 
                 $filesystem = new Filesystem();
 
-                $folder = $filesystem->getRootFolder();
+                $folder = null;
+                if ($this->request->request->has('currentFolder')) {
+                    $folder = $filesystem->getFolder($this->request->request->get('currentFolder'));
+                }
+                if (!$folder) {
+                    $folder = $filesystem->getRootFolder();
+                }
+
+                $permissions = new Checker($folder);
+                if (!$permissions->canEditTreeNode()) {
+                    throw new UserMessageException(t('You are not allowed to create folders at this location.'), 401);
+                }
 
                 // the storage location of the root folder is used.
                 $directory = $filesystem->addFolder($folder, $directoryName, $folder->getTreeNodeStorageLocationID());

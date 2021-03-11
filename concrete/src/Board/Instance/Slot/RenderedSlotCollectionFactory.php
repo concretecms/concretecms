@@ -62,6 +62,7 @@ class RenderedSlotCollectionFactory
             }
             $renderedSlot->setIsLocked($rule->isLocked());
             $renderedSlot->setBlockID($rule->getBlockID());
+            $renderedSlot->setBoardInstanceSlotRuleID($rule->getBoardInstanceSlotRuleID());
             $renderedSlots[] = $renderedSlot;
         }
 
