@@ -28,14 +28,14 @@ class ResultFactory
             $column = $columns->getDefaultSortColumn();
             $list->sortBySearchColumn($column);
         } else {
-            $columns = $this->getDefaultColumnSet();
+            $columns = $searchProvider->getDefaultColumnSet();
         }
 
         if ($list instanceof PagerProviderInterface) {
             $manager = $list->getPagerManager();
             $manager->sortListByCursor($list, $list->getActiveSortDirection());
         }
-
+        
         $list->setItemsPerPage($query->getItemsPerPage());
         $result = $searchProvider->createSearchResultObject($columns, $list);
         $result->setQuery($query);
