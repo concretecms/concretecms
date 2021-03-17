@@ -46,21 +46,45 @@ class Theme extends ConcreteObject
         $this->setStylesheetCachePath(Config::get('concrete.cache.directory'));
     }
 
+    /**
+     * Get the installed themes provided by packages.
+     *
+     * @return \Concrete\Core\Page\Theme\Theme[]
+     */
     public static function getGlobalList()
     {
         return static::getList('pkgID > 0');
     }
 
+    /**
+     * Get the installed themes provided by the core.
+     *
+     * @return \Concrete\Core\Page\Theme\Theme[]
+     */
     public static function getLocalList()
     {
         return static::getList('pkgID = 0');
     }
 
+    /**
+     * Get the installed themes provided by a package.
+     *
+     * @var \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package $pkg
+     *
+     * @return \Concrete\Core\Page\Theme\Theme[]
+     */
     public static function getListByPackage($pkg)
     {
         return static::getList('pkgID = '.$pkg->getPackageID());
     }
 
+    /**
+     * Get the installed themes.
+     *
+     * @param string|null $where a custom SQL criteria to filter the installed themes.
+     *
+     * @return \Concrete\Core\Page\Theme\Theme[]
+     */
     public static function getList($where = null)
     {
         if ($where != null) {
@@ -78,6 +102,11 @@ class Theme extends ConcreteObject
         return $themes;
     }
 
+    /**
+     * Get the handles of all the installed themes.
+     *
+     * @return string[]
+     */
     public static function getInstalledHandles()
     {
         $db = Loader::db();
@@ -85,12 +114,24 @@ class Theme extends ConcreteObject
         return $db->GetCol('select pThemeHandle from PageThemes');
     }
 
+    /**
+     * Mark an asset as provided by this theme.
+     *
+     * @param string $assetType E.g. 'css' or 'javascript' (or an asset group identifier like 'jquery/ui')
+     * @param string|false $assetHandle E.g. 'core/colorpicker'.
+     */
     public function providesAsset($assetType, $assetHandle = null)
     {
         $r = ResponseAssetGroup::get();
         $r->markAssetAsIncluded($assetType, $assetHandle);
     }
 
+    /**
+     * Mark an asset as reuired by this theme.
+     * Accepts the same arguments as \Concrete\Core\Http\ResponseAssetGroup::requireAsset().
+     *
+     * @see \Concrete\Core\Http\ResponseAssetGroup::requireAsset()
+     */
     public function requireAsset()
     {
         $r = ResponseAssetGroup::get();
@@ -99,11 +140,11 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * scans the directory for available themes. For those who don't want to go through the hassle of uploading.
+     * Get the all the themes available in the /application/themes directory.
      *
-     * @param bool $filterInstalled
+     * @param bool $filterInstalled true (default) to exclude the already installed themes, false to include them.
      *
-     * @return static[]
+     * @return \Concrete\Core\Page\Theme\Theme[]
      */
     public static function getAvailableThemes($filterInstalled = true)
     {
@@ -138,6 +179,15 @@ class Theme extends ConcreteObject
         return $themes;
     }
 
+    /**
+     * Get a theme from the file system.
+     *
+     * @param string $handle the theme handle
+     * @param string $dir the parent directory that contains the theme directory
+     * @param string $pkgHandle the handle of the package providing the theme
+     *
+     * @return \Concrete\Core\Page\Theme\Theme|null
+     */
     public static function getByFileHandle($handle, $dir = DIR_FILES_THEMES, $pkgHandle = '')
     {
         $dirt = $dir.'/'.$handle;
@@ -163,7 +213,7 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Checks the theme for a styles.xml file (which is how customizations happen.).
+     * Checks the theme for a styles.xml file (which is how customizations happen).
      *
      * @return bool
      */
@@ -199,7 +249,9 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Gets a preset for this theme by handle.
+     * Get a preset for this theme by handle.
+     *
+     * @return \Concrete\Core\StyleCustomizer\Preset|null
      */
     public function getThemeCustomizablePreset($handle)
     {
@@ -223,7 +275,9 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Gets all presets available to this theme.
+     * Get all presets available to this theme.
+     *
+     * @return \Concrete\Core\StyleCustomizer\Preset[]
      */
     public function getThemeCustomizableStylePresets()
     {
@@ -264,6 +318,9 @@ class Theme extends ConcreteObject
         return $presets;
     }
 
+    /**
+     * Set this instance to be a preview for the current request.
+     */
     public function enablePreviewRequest()
     {
         $this->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE.'/preview');
@@ -281,11 +338,21 @@ class Theme extends ConcreteObject
         }
     }
 
+    /**
+     * Is this instance a preview for the current request?
+     *
+     * @return bool
+     */
     public function isThemePreviewRequest()
     {
         return $this->pThemeIsPreview;
     }
 
+    /**
+     * Get all the customizable LESS stylesheets.
+     *
+     * @return \Concrete\Core\StyleCustomizer\Stylesheet[]
+     */
     public function getThemeCustomizableStyleSheets()
     {
         $sheets = [];
@@ -307,6 +374,13 @@ class Theme extends ConcreteObject
         return $sheets;
     }
 
+    /**
+     * Get a customizable LESS stylesheet given the stylesheed base file name.
+     *
+     * @param string $stylesheet
+     *
+     * @return \Concrete\Core\StyleCustomizer\Stylesheet
+     */
     public function getStylesheetObject($stylesheet)
     {
         $env = Environment::get();
@@ -323,8 +397,8 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Looks into the current CSS directory and returns a fully compiled stylesheet
-     * when passed a LESS stylesheet. Also serves up custom value list values for the stylesheet if they exist.
+     * Look into the current CSS directory and return a fully compiled stylesheet when passed a LESS stylesheet.
+     * Also serves up custom value list values for the stylesheet if they exist.
      *
      * @param string $stylesheet The LESS stylesheet to compile
      *
@@ -353,7 +427,9 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Returns a Custom Style Object for the theme if one exists.
+     * Get a CustomStyle object for the theme if one exists.
+     *
+     * @return \Concrete\Core\Page\CustomStyle|null
      */
     public function getThemeCustomStyleObject()
     {
@@ -371,9 +447,9 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Returns the value list of the custom style object if one exists.
+     * Get the value list of the custom style object if one exists.
      *
-     * @return ValueList
+     * @return \Concrete\Core\StyleCustomizer\Style\ValueList|null
      */
     public function getThemeCustomStyleObjectValues()
     {
@@ -385,6 +461,13 @@ class Theme extends ConcreteObject
         return null;
     }
 
+    /**
+     * Create a CustomStyle (and optionally a preset and the custom CSS) for this theme.
+     *
+     * @param \Concrete\Core\StyleCustomizer\Preset|null|false $selectedPreset
+     *
+     * @return \Concrete\Core\Page\CustomStyle
+     */
     public function setCustomStyleObject(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
     {
         $db = Loader::db();
@@ -423,9 +506,11 @@ class Theme extends ConcreteObject
     }
 
     /**
+     * Get an installed theme given its handle.
+     *
      * @param string $pThemeHandle
      *
-     * @return PageTheme
+     * @return \Concrete\Core\Page\Theme\Theme|null
      */
     public static function getByHandle($pThemeHandle)
     {
@@ -437,9 +522,11 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * @param int $ptID
+     * Get an installed theme given its ID.
      *
-     * @return PageTheme
+     * @param int $pThemeID
+     *
+     * @return \Concrete\Core\Page\Theme\Theme|null
      */
     public static function getByID($pThemeID)
     {
@@ -451,8 +538,10 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * @param string $where
-     * @param array  $args
+     * Get the instance representing an installed theme.
+     *
+     * @param string $where the SQL part used in the SELECT query
+     * @param array $args the parameters of the SQL query
      *
      * @return \Concrete\Core\Page\Theme\Theme|null
      */
@@ -493,6 +582,16 @@ class Theme extends ConcreteObject
         return $pl;
     }
 
+    /**
+     * Install a theme given its handle.
+     *
+     * @param string $pThemeHandle the handle of the theme to be installed.
+     * @param \Concrete\Core\Entity\Package|\Concrete\Core\Package\Package|null $pkg
+     *
+     * @throws \Exception in case of errors.
+     *
+     * @return \Concrete\Core\Page\Theme\Theme|null returns NULL if the directory containing the theme could not be found
+     */
     public static function add($pThemeHandle, $pkg = null)
     {
         if (is_object($pkg)) {
@@ -516,8 +615,12 @@ class Theme extends ConcreteObject
         return $l;
     }
 
-    // grabs all files in theme that are PHP based (or html if we go that route) and then
-    // lists them out, by type, allowing people to install them as page type, etc...
+    /**
+     * Grab all files in theme that are PHP based (or html if we go that route)
+     * and then lists them out, by type, allowing people to install them as page type, etc...
+     *
+     * @return \Concrete\Core\Page\Theme\File[]
+     */
     public function getFilesInTheme()
     {
         $dh = Loader::helper('file');
@@ -562,6 +665,15 @@ class Theme extends ConcreteObject
         return $files;
     }
 
+    /**
+     * Get the theme details by reading a directory containing the theme.
+     *
+     * @param string $dir
+     * @param string $pThemeHandle
+     * @param string $pkgHandle
+     *
+     * @return \stdClass
+     */
     private static function getThemeNameAndDescription($dir, $pThemeHandle, $pkgHandle = '')
     {
         $res = new \stdClass();
@@ -630,6 +742,11 @@ class Theme extends ConcreteObject
         return $res;
     }
 
+    /**
+     * Export this theme by creating the XML nodes under the provided XML node.
+     *
+     * @param \SimpleXMLElement $node
+     */
     public function export($node)
     {
         $pst = static::getSiteTheme();
@@ -643,6 +760,11 @@ class Theme extends ConcreteObject
         $type->addAttribute('activated', $activated);
     }
 
+    /**
+     * Export all the installed themes by creating the XML nodes under the provided XML node.
+     *
+     * @param \SimpleXMLElement $xml
+     */
     public static function exportList($xml)
     {
         $nxml = $xml->addChild('themes');
@@ -652,6 +774,17 @@ class Theme extends ConcreteObject
         }
     }
 
+    /**
+     * Install a theme.
+     *
+     * @param string $dir
+     * @param string $pThemeHandle
+     * @param int|null $pkgID
+     *
+     * @throws \Exception in case of errors.
+
+     * @return \Concrete\Core\Page\Theme\Theme|null returns NULL if $dir does not exist
+     */
     protected static function install($dir, $pThemeHandle, $pkgID)
     {
         $result = null;
@@ -695,6 +828,9 @@ class Theme extends ConcreteObject
         return $result;
     }
 
+    /**
+     * (Re)Scan the theme folder to check if it contains the page_theme.php file: if so, marks the theme as having a controller.
+     */
     public function updateThemeCustomClass()
     {
         $env = Environment::get();
@@ -712,20 +848,30 @@ class Theme extends ConcreteObject
         }
     }
 
+    /**
+     * Get the ID of the installed theme (if available).
+     *
+     * @return int|null
+     */
     public function getThemeID()
     {
         return $this->pThemeID;
     }
 
+    /**
+     * Get the (English) name of the theme.
+     *
+     * @return string
+     */
     public function getThemeName()
     {
         return $this->pThemeName;
     }
 
-    /** Returns the display name for this theme (localized and escaped accordingly to $format)
-     * @param string $format = 'html'
-     *                       Escape the result in html format (if $format is 'html').
-     *                       If $format is 'text' or any other value, the display name won't be escaped
+    /**
+     * Get the localized name for this theme (escaped accordingly to $format).
+     *
+     * @param string $format Escape the result in html format (if $format is 'html'); if $format is 'text' or any other value, the display name won't be escaped
      *
      * @return string
      */
@@ -746,11 +892,21 @@ class Theme extends ConcreteObject
         }
     }
 
+    /**
+     * Get the ID of the package providing this theme (if available).
+     *
+     * @return int|null
+     */
     public function getPackageID()
     {
         return $this->pkgID;
     }
 
+    /**
+     * Get the handle of the package providing this theme (if available).
+     *
+     * @return string|false|null
+     */
     public function getPackageHandle()
     {
         return \Concrete\Core\Package\PackageList::getHandle($this->pkgID);
@@ -764,16 +920,33 @@ class Theme extends ConcreteObject
         return $this->pThemeHasCustomClass;
     }
 
+    /**
+     * Get the handle of this theme.
+     *
+     * @return string
+     */
     public function getThemeHandle()
     {
         return $this->pThemeHandle;
     }
 
+    /**
+     * Get the (English) description of this theme.
+     *
+     * @return string
+     */
     public function getThemeDescription()
     {
         return $this->pThemeDescription;
     }
 
+    /**
+     * Get the localized description for this theme (escaped accordingly to $format).
+     *
+     * @param string $format Escape the result in html format (if $format is 'html'); if $format is 'text' or any other value, the display name won't be escaped
+     *
+     * @return string
+     */
     public function getThemeDisplayDescription($format = 'html')
     {
         $value = $this->getThemeDescription();
@@ -791,61 +964,121 @@ class Theme extends ConcreteObject
         }
     }
 
+    /**
+     * Get the directory containing this theme.
+     *
+     * @return string
+     */
     public function getThemeDirectory()
     {
         return $this->pThemeDirectory;
     }
 
+    /**
+     * Get the URL prefix of the assets provided by this theme.
+     *
+     * @return string
+     */
     public function getThemeURL()
     {
         return $this->pThemeURL;
     }
 
+    /**
+     * Get the URL of the theme typography.css file.
+     *
+     * @return string
+     */
     public function getThemeEditorCSS()
     {
         return $this->pThemeURL.'/'.static::FILENAME_TYPOGRAPHY_CSS;
     }
 
+    /**
+     * Set the URL prefix of the assets provided by this theme.
+     *
+     * @param string $pThemeURL
+     */
     public function setThemeURL($pThemeURL)
     {
         $this->pThemeURL = $pThemeURL;
     }
 
+    /**
+     * Set the absolute path of the theme folder.
+     *
+     * @param string $pThemeDirectory
+     */
     public function setThemeDirectory($pThemeDirectory)
     {
         $this->pThemeDirectory = $pThemeDirectory;
     }
 
+    /**
+     * Set the handle of this theme.
+     *
+     * @param string $pThemeHandle
+     */
     public function setThemeHandle($pThemeHandle)
     {
         $this->pThemeHandle = $pThemeHandle;
     }
 
+    /**
+     * Set the absolute path of a directory where the CSS stylesheet files should be stored.
+     *
+     * @param string $path
+     */
     public function setStylesheetCachePath($path)
     {
         $this->stylesheetCachePath = $path;
     }
 
+    /**
+     * Set the path of a directory where the CSS stylesheet files should be stored, relative to the website root directory.
+     *
+     * @param string $path
+     */
     public function setStylesheetCacheRelativePath($path)
     {
         $this->stylesheetCacheRelativePath = $path;
     }
 
+    /**
+     * Get the absolute path of a directory where the CSS stylesheet files should be stored.
+     *
+     * @return string
+     */
     public function getStylesheetCachePath()
     {
         return $this->stylesheetCachePath;
     }
 
+    /**
+     * Get the path of a directory where the CSS stylesheet files should be stored, relative to the website root directory.
+     *
+     * @return string
+     */
     public function getStylesheetCacheRelativePath()
     {
         return $this->stylesheetCacheRelativePath;
     }
 
+    /**
+     * Is this theme uninstallable?
+     *
+     * @return bool
+     */
     public function isUninstallable()
     {
         return $this->pThemeDirectory != DIR_FILES_THEMES_CORE.'/'.$this->getThemeHandle();
     }
 
+    /**
+     * Get the theme thumbnail image.
+     *
+     * @return \HtmlObject\Image
+     */
     public function getThemeThumbnail()
     {
         if (file_exists($this->pThemeDirectory.'/'.FILENAME_THEMES_THUMBNAIL)) {
@@ -862,6 +1095,11 @@ class Theme extends ConcreteObject
         return $img;
     }
 
+    /**
+     * Apply this theme to all the pages of a site.
+     *
+     * @param \Concrete\Core\Entity\Site\Site|null $site if null, we'll use the current site.
+     */
     public function applyToSite(Site $site = null)
     {
         if (!is_object($site)) {
@@ -890,7 +1128,9 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * @return static
+     * Get the theme for the current site.
+     *
+     * @return \Concrete\Core\Page\Theme\Theme|null
      */
     public static function getSiteTheme()
     {
@@ -899,6 +1139,9 @@ class Theme extends ConcreteObject
         return static::getByID($site->getThemeID());
     }
 
+    /**
+     * Uninstall this theme.
+     */
     public function uninstall()
     {
         $db = Loader::db();
@@ -909,21 +1152,33 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Special items meant to be extended by custom theme classes.
+     * The handle of the grid framework supported by this theme.
+     *
+     * @var string|null|false
      */
     protected $pThemeGridFrameworkHandle = false;
 
+    /**
+     * Register the assets provided by this theme.
+     */
     public function registerAssets()
     {
     }
 
+    /**
+     * Does this theme support a grid framework?
+     *
+     * @return bool
+     */
     public function supportsGridFramework()
     {
         return $this->pThemeGridFrameworkHandle != false;
     }
 
     /**
-     * @return GridFramework|null
+     * Get the grid framework supported by this theme.
+     *
+     * @return \Concrete\Core\Page\Theme\GridFramework\GridFramework|null
      */
     public function getThemeGridFrameworkObject()
     {
@@ -934,41 +1189,85 @@ class Theme extends ConcreteObject
         }
     }
 
+    /**
+     * Get the theme-specific CSS classes for every block.
+     *
+     * @return array array keys are the block type handles, array values are a list of the CSS classes.
+     *
+     * @see \Concrete\Theme\Elemental\PageTheme::getThemeBlockClasses() for an example
+     */
     public function getThemeBlockClasses()
     {
         return [];
     }
 
+    /**
+     * Get the theme-specific CSS classes for every area.
+     *
+     * @return array array keys are the area names, array values are a list of the CSS classes.
+     *
+     * @see \Concrete\Theme\Elemental\PageTheme::getThemeAreaClasses() for an example
+     */
     public function getThemeAreaClasses()
     {
         return [];
     }
 
+    /**
+     * Get the theme-specific style names to be used in the rich text editor.
+     *
+     * @return array Every array item is an array with the keys 'title', 'menuClass', 'spanClass', 'forceBlock'.
+     *
+     * @see \Concrete\Theme\Elemental\PageTheme::getThemeEditorClasses() for an example
+     */
     public function getThemeEditorClasses()
     {
         return [];
     }
 
+    /**
+     * Get the theme-specific templates for every block.
+     *
+     * @return array array keys are the block type handles, array values are a list of the block templates.
+     *
+     * @see \Concrete\Theme\Elemental\PageTheme::getThemeDefaultBlockTemplates() for an example
+     */
     public function getThemeDefaultBlockTemplates()
     {
         return [];
     }
 
+    /**
+     * Get the handles of the thumbnail types and related resolution breakpoint.
+     *
+     * @return array
+     *
+     * @see \Concrete\Theme\Elemental\PageTheme::getThemeResponsiveImageMap() for an example
+     */
     public function getThemeResponsiveImageMap()
     {
         return [];
     }
 
+    /**
+     * @deprecated
+     */
     public function getThemeGatheringGridItemMargin()
     {
         return 20;
     }
 
+    /**
+     * @deprecated
+     */
     public function getThemeGatheringGridItemWidth()
     {
         return 150;
     }
 
+    /**
+     * @deprecated
+     */
     public function getThemeGatheringGridItemHeight()
     {
         return 150;

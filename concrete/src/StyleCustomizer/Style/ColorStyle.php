@@ -95,7 +95,7 @@ EOT
         $cv = null;
         if ($value instanceof Less_Tree_Color) {
             if ($value->isTransparentKeyword) {
-                return false;
+                return self::getTransparentColorValue((string) $variable);
             }
             $cv = new ColorValue($variable);
             $cv->setRed($value->rgb[0]);
@@ -130,7 +130,7 @@ EOT
     {
         $color = $request->get($this->getVariable());
         if (!$color['color']) { // transparent
-            return null;
+            return self::getTransparentColorValue($this->getVariable());
         }
         $cv = new Parser($color['color']);
         $result = $cv->getResult();
@@ -170,5 +170,22 @@ EOT
         }
 
         return $values;
+    }
+
+    /**
+     * @param string $variable
+     *
+     * @return \Concrete\Core\StyleCustomizer\Style\Value\ColorValue
+     */
+    private static function getTransparentColorValue($variable = '')
+    {
+        $cv = new ColorValue($variable);
+
+        return $cv
+            ->setRed(0)
+            ->setGreen(0)
+            ->setBlue(0)
+            ->setAlpha(0)
+        ;
     }
 }

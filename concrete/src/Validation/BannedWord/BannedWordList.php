@@ -3,6 +3,9 @@ namespace Concrete\Core\Validation\BannedWord;
 
 use Concrete\Core\Legacy\DatabaseItemList;
 
+/**
+ * @deprecated This class will be removed from version 9.
+ */
 class BannedWordList extends DatabaseItemList
 {
     public function __construct()

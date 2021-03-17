@@ -15,7 +15,6 @@ use URL;
 use Concrete\Core\User\User;
 use View;
 use Config;
-use Concrete\Core\Error\UserMessageException;
 
 class PageView extends View
 {
@@ -154,9 +153,6 @@ class PageView extends View
                             $this->themePkgHandle));
                 }
             }
-        }
-        if(!file_exists($this->template)) {
-            throw new UserMessageException(t('No file found to render template with handle "%s"', $this->c && $this->c->getPageTemplateHandle() ? $this->c->getPageTemplateHandle() : '<UNKNOWN TEMPLATE>'));
         }
     }
 

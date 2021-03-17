@@ -681,12 +681,12 @@ class File extends Controller
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
-            $ip = IPFactory::addressFromString($host);
+            $ip = IPFactory::addressFromString($host, true, true, true);
             if ($ip === null) {
                 $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
                 while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
                     $dns = array_shift($dnsList);
-                    $ip = IPFactory::addressFromString($dns['ip']);
+                    $ip = IPFactory::addressFromString($dns['ip'], true, true, true);
                 }
             }
             if ($ip !== null && !in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {

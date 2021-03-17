@@ -192,6 +192,7 @@ class Application extends Container
                     $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
                     $dbPkg->upgradeCoreData();
                     $dbPkg->upgrade();
+                    $dbPkg->upgradePackageThemes();
                     $loc->popActiveContext();
                 }
             }

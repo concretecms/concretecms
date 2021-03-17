@@ -1,9 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 // Content
 if ($this->controller->getTask() == 'viewDetail') { ?>
     <?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(
-        t('Results for &#34;%s&#34;', $current_survey),
+        t('Results for &#34;%s&#34;', h($current_survey)),
         false,
         false,
         false);
@@ -33,7 +33,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
             <tbody>
             <?php foreach ($survey_details as $detail) { ?>
                 <tr>
-                    <td><?= $detail['option']; ?></td>
+                    <td><?= h($detail['option']); ?></td>
                     <td><?= $detail['ipAddress']; ?></td>
                     <td><?= $detail['date']; ?></td>
                     <td><?= $detail['user']; ?></td>
@@ -86,7 +86,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
                                     'viewDetail',
                                     $survey['bID'],
                                     $survey['cID']); ?>">
-                                    <?= $survey['question']; ?>
+                                    <?= h($survey['question']); ?>
                                 </a>
                             </strong>
                         </td>

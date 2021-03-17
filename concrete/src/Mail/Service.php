@@ -674,7 +674,12 @@ class Service
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
             }
             $l->write(t('Template Used') . ': ' . $this->template);
-            $l->write(t('Mail Details: %s', $mail->toString()));
+            $detail = $mail->toString();
+            $encoding = $mail->getHeaders()->get('Content-Transfer-Encoding');
+            if (is_object($encoding) && $encoding->getFieldValue() === 'quoted-printable') {
+                $detail = quoted_printable_decode($detail);
+            }
+            $l->write(t('Mail Details: %s', $detail));
             $l->close();
         }
 

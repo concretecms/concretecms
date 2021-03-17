@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Update;
+namespace Concrete\Tests\System;
 
 use PHPUnit_Framework_TestCase;
 use RuntimeException;

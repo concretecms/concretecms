@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Controller;
+namespace Concrete\Tests\Console;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Console\Application as ConsoleApplication;
@@ -159,6 +159,7 @@ class ServiceProviderTest extends PHPUnit_Framework_TestCase
             ConcreteCommand\RefreshEntitiesCommand::class,
             ConcreteCommand\Express\ExportCommand::class,
             ConcreteCommand\FixDatabaseForeignKeys::class,
+            ConcreteCommand\FixThemeValuesCommand::class,
             DBALCommand\ImportCommand::class,
             DBALCommand\RunSqlCommand::class,
             ORMCommand\ClearCache\MetadataCommand::class,

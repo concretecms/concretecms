@@ -17,7 +17,7 @@ $(function() {
 	$('div[data-search=files]').concreteFileManager({
 		result: <?=json_encode($result->getJSONObject())?>,
     <?php
-    if ($selectMultiple === true) {
+    if (isset($selectMultiple) && $selectMultiple === true) {
         ?>
         selectMode: 'multiple',
         chooseMultiple: true,

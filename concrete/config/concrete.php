@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.4',
-    'version_installed' => '8.5.4',
-    'version_db' => '20200609145307', // the key of the latest database migration
+    'version' => '8.5.5',
+    'version_installed' => '8.5.5',
+    'version_db' => '20201116182100', // the key of the latest database migration
 
     /*
      * Installation status
@@ -149,6 +149,8 @@ return [
                 'password' => '',
                 'encryption' => '',
                 'messages_per_connection' => null,
+                // The domain to be used in the HELO/EHLO step (if empty we'll use localhost)
+                'helo_domain' => 'localhost',
             ],
         ],
     ],
@@ -558,7 +560,6 @@ return [
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime' => 259200,
         'enable_trash_can' => true,
-        'app_version_display_in_header' => true,
         /*
          * The JPEG compression level (in range 0... 100)
          */
@@ -1185,6 +1186,14 @@ return [
             // Add here a list of arrays like this:
             // ['service_handle', 'Service Name', 'icon']
             // Where 'icon' is the handle of a FontAwesome 4 icon (see https://fontawesome.com/v4.7.0/icons/ )
+        ],
+    ],
+
+    'style_customizer' => [
+        'updater' => [
+            'ignored_values' => [
+                'preset-fonts-file' => 'Concrete\Core\StyleCustomizer\Style\Value\BasicValue',
+            ],
         ],
     ],
 ];
