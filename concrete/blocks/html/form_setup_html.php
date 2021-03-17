@@ -1,6 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
-$content = isset($content) ? $content : null;
 ?>
 
 <div id="ccm-block-html-value"><?php echo htmlspecialchars($content,ENT_QUOTES,APP_CHARSET) ?></div>
