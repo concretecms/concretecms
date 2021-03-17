@@ -1,7 +1,5 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-
-$sitemap = isset($sitemap) ? $sitemap : null;
 ?>
 
 <div class="ccm-ui">
