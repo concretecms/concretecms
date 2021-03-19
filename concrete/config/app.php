@@ -552,6 +552,11 @@ return [
                 'js/tui-image-editor.js',
             ],
         ],
+        'core/translator' => [
+            ['javascript', 'js/translator.js', ['minify' => false]],
+            ['javascript-localized', '/ccm/assets/localization/translator/js'],
+            ['css', 'css/translator.css', ['minify' => false]],
+        ],
     ],
     'asset_groups' => [
         'jquery' => [
@@ -609,7 +614,6 @@ return [
                 ['css', 'core/cms'],
             ],
         ],
-
         'fullcalendar' => [
             [
                 ['javascript', 'fullcalendar'],
@@ -621,6 +625,14 @@ return [
             [
                 ['css', 'tui-image-editor'],
                 ['javascript', 'tui-image-editor'],
+            ],
+        ],
+
+        'core/translator' => [
+            [
+                ['css', 'core/translator'],
+                ['javascript-localized', 'core/translator'],
+                ['javascript', 'core/translator'],
             ],
         ],
 
