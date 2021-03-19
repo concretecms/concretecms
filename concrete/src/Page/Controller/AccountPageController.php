@@ -29,29 +29,30 @@ class AccountPageController extends CorePageController
         $collection = $this->app->make(ThemeRouteCollection::class);
         $theme = $collection->getThemeByRoute('/account');
 
+        $profileFormRenderer = null;
         if ($theme[0] === VIEW_CORE_THEME || !$theme[0]) {
             // We're using the default theme, so let's do our fancy dashboard overriding of the theme if we can.
             if ($dh->inDashboard($desktop) && $this->getPageObject()->getCollectionPath() != '/account/welcome') {
                 $this->setTheme('dashboard');
                 $this->set('pageTitle', t('My Account'));
-                $this->set(
-                    'profileFormRenderer',
-                    new Renderer(
-                        new DashboardFormContext(),
-                        $profile
-                    )
+                $profileFormRenderer = new Renderer(
+                    new DashboardFormContext(),
+                    $profile
                 );
+
             } else {
                 $this->setTheme('concrete');
-                $this->set(
-                    'profileFormRenderer',
-                    new Renderer(
-                        new FrontendFormContext(),
-                        $profile
-                    )
-                );
             }
         }
+
+        if (!$profileFormRenderer) {
+            $profileFormRenderer = new Renderer(
+                new FrontendFormContext(),
+                $profile
+            );
+        }
+
+        $this->set('profileFormRenderer', $profileFormRenderer);
 
         $this->setThemeViewTemplate('account.php');
         $this->error = Loader::helper('validation/error');
