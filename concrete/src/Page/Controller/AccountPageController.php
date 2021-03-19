@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Context\DashboardFormContext;
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
 use Concrete\Core\Page\Desktop\DesktopList;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\User\User;
 use Loader;
 use Concrete\Core\Page\Controller\PageController as CorePageController;
@@ -24,20 +25,32 @@ class AccountPageController extends CorePageController
 
         $dh = \Core::make('helper/concrete/dashboard');
         $desktop = DesktopList::getMyDesktop();
-        if ($dh->inDashboard($desktop) && $this->getPageObject()->getCollectionPath() != '/account/welcome') {
-            $this->setTheme('dashboard');
-            $this->set('pageTitle', t('My Account'));
-            $this->set('profileFormRenderer', new Renderer(
-                new DashboardFormContext(),
-                $profile
-            ));
-            
-        } else {
-            $this->setTheme('concrete');
-            $this->set('profileFormRenderer', new Renderer(
-                new FrontendFormContext(),
-                $profile
-            ));
+
+        $collection = $this->app->make(ThemeRouteCollection::class);
+        $theme = $collection->getThemeByRoute('/account');
+
+        if ($theme[0] === VIEW_CORE_THEME) {
+            // We're using the default theme, so let's do our fancy dashboard overriding of the theme if we can.
+            if ($dh->inDashboard($desktop) && $this->getPageObject()->getCollectionPath() != '/account/welcome') {
+                $this->setTheme('dashboard');
+                $this->set('pageTitle', t('My Account'));
+                $this->set(
+                    'profileFormRenderer',
+                    new Renderer(
+                        new DashboardFormContext(),
+                        $profile
+                    )
+                );
+            } else {
+                $this->setTheme('concrete');
+                $this->set(
+                    'profileFormRenderer',
+                    new Renderer(
+                        new FrontendFormContext(),
+                        $profile
+                    )
+                );
+            }
         }
 
         $this->setThemeViewTemplate('account.php');
