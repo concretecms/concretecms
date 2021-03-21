@@ -5,7 +5,7 @@ use Concrete\Core\Command\Task\Input\InputInterface;
 use Concrete\Core\Command\Task\Runner\ProcessTaskRunner;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
 use Concrete\Core\Command\Task\TaskInterface;
-use Concrete\Core\Page\Sitemap\Command\GenerateSitemapCommand;
+use Concrete\Core\Mail\Command\ProcessEmailCommand;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -26,9 +26,9 @@ class ProcessEmailController extends AbstractController
     {
         return new ProcessTaskRunner(
             $task,
-            new GenerateSitemapCommand(),
+            new ProcessEmailCommand(),
             $input,
-            t('Generation of sitemap.xml started.')
+            t('Scanning email accounts...')
         );
     }
 

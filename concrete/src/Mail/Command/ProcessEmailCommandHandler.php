@@ -1,23 +1,12 @@
 <?php
-namespace Concrete\Job;
+namespace Concrete\Core\Mail\Command;
 
-use Job as AbstractJob;
 use Concrete\Core\Mail\Importer\MailImporter;
-use Loader;
 
-class ProcessEmail extends AbstractJob
+class ProcessEmailCommandHandler
 {
-    public function getJobName()
-    {
-        return t("Process Email Posts");
-    }
 
-    public function getJobDescription()
-    {
-        return t("Polls an email account and grabs private messages/postings that are sent there..");
-    }
-
-    public function run()
+    public function __invoke(ProcessEmailCommand $command)
     {
         $mailImporter = new MailImporter();
         $list = $mailImporter->getEnabledList();
@@ -39,5 +28,6 @@ class ProcessEmail extends AbstractJob
                 $mi->cleanup($me);
             }
         }
+
     }
 }
