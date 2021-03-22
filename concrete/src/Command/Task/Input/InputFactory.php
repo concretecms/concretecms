@@ -30,7 +30,9 @@ class InputFactory
         foreach($definition->getFields() as $field) {
             $loadedField = $field->loadFieldFromRequest($data);
             if ($loadedField) {
-                $input->addField($loadedField);
+                if ($field->isValid($loadedField)) {
+                    $input->addField($loadedField);
+                }
             }
         }
 
@@ -47,7 +49,9 @@ class InputFactory
         foreach($definition->getFields() as $field) {
             $loadedField = $field->loadFieldFromConsoleInput($consoleInput);
             if ($loadedField) {
-                $input->addField($loadedField);
+                if ($field->isValid($loadedField)) {
+                    $input->addField($loadedField);
+                }
             }
         }
 

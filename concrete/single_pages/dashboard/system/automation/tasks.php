@@ -39,7 +39,25 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     <h4 class="mt-2"><?= t('Task Options') ?></h4>
                     <div class="form-group" v-for="field in selectedTask.inputDefinition.fields">
                         <label class="control-label">{{field.label}}</label>
-                        <input :name="field.key" class="form-control"/>
+                        <select v-if="field.type === 'select'" :name="field.key" class="form-control">
+                            <option value="" v-if="!field.isRequired"><?=t('** None')?></option>
+                            <option v-for="(option, optionValue) in field.options" :value="optionValue">{{option}}</option>
+                        </select>
+                        <div v-else-if="field.type === 'boolean'">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '1'" value="" checked>
+                                <label class="form-check-label" :for="field.key + '1'">
+                                    <?=t('No')?>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '2'" value="1">
+                                <label class="form-check-label" :for="field.key + '2'">
+                                    <?=t('Yes')?>
+                                </label>
+                            </div>
+                        </div>
+                        <input v-else :name="field.key" class="form-control"/>
                         <div class="help-block" v-if="field.description">{{field.description}}</div>
                     </div>
                 </div>

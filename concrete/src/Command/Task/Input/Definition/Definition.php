@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Command\Task\Input\Definition;
 
+use Concrete\Core\Console\Command\TaskCommand;
+use Symfony\Component\Console\Input\InputOption;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Definition implements \JsonSerializable
@@ -26,5 +29,12 @@ class Definition implements \JsonSerializable
         return [
             'fields' => $this->fields,
         ];
+    }
+
+    public function addToCommand(TaskCommand $command)
+    {
+        foreach($this->getFields() as $field) {
+            $field->addToCommand($command);
+        }
     }
 }

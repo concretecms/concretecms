@@ -39,9 +39,7 @@ class TaskCommand extends SymfonyCommand
 
         $definition = $controller->getInputDefinition();
         if ($definition) {
-            foreach($definition->getFields() as $field) {
-                $this->addOption($field->getKey(), null, InputOption::VALUE_REQUIRED, $field->getDescription());
-            }
+            $definition->addToCommand($this);
         }
     }
 
