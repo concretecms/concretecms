@@ -1071,7 +1071,7 @@ class File extends Controller
                 }
 
                 $permissions = new Checker($folder);
-                if (!$permissions->canEditTreeNode()) {
+                if (!$permissions->canAddTreeSubNode()) {
                     throw new UserMessageException(t('You are not allowed to create folders at this location.'), 401);
                 }
 
