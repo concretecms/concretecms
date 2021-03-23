@@ -34,6 +34,7 @@ class Controller extends BlockController
 
     public function add()
     {
+        $this->set('content', '');
         $this->edit();
     }
 
