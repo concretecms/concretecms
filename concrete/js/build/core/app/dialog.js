@@ -176,7 +176,8 @@
                 // jshint -W061
                 var $dialog = $(this);
                 var nd = $(".ui-dialog").length;
-                if (nd == 1) {
+                var lastOverflow = $('body').css('overflow');
+                if (nd == 1 && lastOverflow !== 'hidden') {
                     $("body").attr('data-last-overflow', $('body').css('overflow'));
                     $("body").css("overflow", "hidden");
                 }
@@ -216,8 +217,9 @@
             },
             'beforeClose': function() {
                 var nd = $(".ui-dialog:visible").length;
+                var lastOverflow = $('body').attr('data-last-overflow');
                 if (nd == 1) {
-                    $("body").css("overflow", $('body').attr('data-last-overflow'));
+                    $("body").css("overflow", lastOverflow);
                 }
             },
             'close': function(ev, u) {
