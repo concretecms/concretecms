@@ -218,7 +218,7 @@
             'beforeClose': function() {
                 var nd = $(".ui-dialog:visible").length;
                 var lastOverflow = $('body').attr('data-last-overflow');
-                if (nd == 1) {
+                if (nd == 1 && lastOverflow) {
                     $("body").css("overflow", lastOverflow);
                 }
             },
