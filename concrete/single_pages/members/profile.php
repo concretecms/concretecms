@@ -41,7 +41,7 @@ $packageService = $app->make(\Concrete\Core\Package\PackageService::class);
 	<div class="ccm-profile-statistics-item">
 		<i class="icon-time"></i> <?=t(/*i18n: %s is a date */'Joined on %s', $dh->formatDate($profile->getUserDateAdded(), true))?>
 	</div>
-    <?php if ($packageService->getByHandle("concrete_cms_community") instanceof \Concrete\Core\Entity\Package) {?>
+    <?php if ($packageService->getByHandle("community_badges") instanceof \Concrete\Core\Entity\Package) {?>
 	<div class="ccm-profile-statistics-item">
 		<i class="icon-fire"></i> <?=number_format(\PortlandLabs\Community\User\Point\Entry::getTotal($profile))?> <?=t('Community Points')?>
 	</div>
