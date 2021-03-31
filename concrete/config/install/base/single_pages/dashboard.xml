@@ -169,25 +169,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Community Points" path="/dashboard/users/points" filename="/dashboard/users/points/view.php"
-              pagetype="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>community, points, karma</value>
-                </attributekey>
-            </attributes>
-        </page>
-        <page name="Assign Points" path="/dashboard/users/points/assign" filename="/dashboard/users/points/assign.php"
-              pagetype="" package="">
-        </page>
-        <page name="Actions" path="/dashboard/users/points/actions" filename="/dashboard/users/points/actions.php"
-              pagetype="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>action, community actions</value>
-                </attributekey>
-            </attributes>
-        </page>
 
         <page name="Express" path="/dashboard/express" filename="/dashboard/express/view.php" pagetype=""
               description="Express Data Objects" package=""/>

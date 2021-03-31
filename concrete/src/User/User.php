@@ -20,7 +20,6 @@ use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\Group\GroupRole;
 use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Concrete\Core\Encryption\PasswordHasher;
 
 class User extends ConcreteObject
