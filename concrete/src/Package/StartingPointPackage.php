@@ -21,7 +21,6 @@ use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\User\Group\FolderManager;
-use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Config;
 use Core;
 use Database;

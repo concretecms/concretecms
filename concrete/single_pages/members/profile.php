@@ -1,6 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+/** @var \Concrete\Core\Package\PackageService $packageService */
+$packageService = $app->make(\Concrete\Core\Package\PackageService::class);
+
 ?>
 <div id="ccm-profile-header">
 
@@ -37,9 +41,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 	<div class="ccm-profile-statistics-item">
 		<i class="icon-time"></i> <?=t(/*i18n: %s is a date */'Joined on %s', $dh->formatDate($profile->getUserDateAdded(), true))?>
 	</div>
+    <?php if ($packageService->getByHandle("community_badges") instanceof \Concrete\Core\Entity\Package) {?>
 	<div class="ccm-profile-statistics-item">
-		<i class="icon-fire"></i> <?=number_format(\Concrete\Core\User\Point\Entry::getTotal($profile))?> <?=t('Community Points')?>
+		<i class="icon-fire"></i> <?=number_format(\PortlandLabs\Community\User\Point\Entry::getTotal($profile))?> <?=t('Community Points')?>
 	</div>
+    <?php } ?>
 	<div class="ccm-profile-statistics-item">
 		<i class="icon-bookmark"></i> <a href="#badges"><?=number_format(count($badges))?> <?=t2('Badge', 'Badges', count($badges))?></a>
 	</div>
