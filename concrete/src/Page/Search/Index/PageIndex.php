@@ -42,22 +42,14 @@ class PageIndex extends AbstractIndex implements ApplicationAwareInterface
      */
     public function clear()
     {
-        /** @var PageCategory $pageCategory */
-        $pageCategory = $this->app[PageCategory::class];
-
-        /** @var PageKey $key */
-        foreach ($pageCategory->getList() as $key) {
-            /** @var SearchIndexerInterface $indexer */
-            $indexer = $key->getSearchIndexer();
-
-            // Update the key tables
-            $indexer->updateSearchIndexKeyColumns($pageCategory, $key);
-        }
-
         // Truncate the existing search index
         $database = $this->app['database']->connection();
-        $database->Execute('truncate table PageSearchIndex');
-        $database->Execute('truncate table CollectionSearchIndexAttributes');
+        if ($database->tableExists('PageSearchIndex')) {
+            $database->Execute('truncate table PageSearchIndex');
+        }
+        if ($database->tableExists('CollectionSearchIndexAttributes')) {
+            $database->Execute('truncate table CollectionSearchIndexAttributes');
+        }
     }
 
 }
