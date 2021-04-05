@@ -42,6 +42,8 @@ class Details extends DashboardPageController
         $this->set('recentDownloads', $this->getRecentDownloads($fileVersion->getFile()));
     }
 
+
+
     public function rescan($fID = '')
     {
         try {

@@ -2,6 +2,9 @@
 namespace Concrete\Controller\Dialog\File\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Command\Batch\Batch as BatchBuilder;
+use Concrete\Core\File\Command\ChangeFileStorageLocationCommand;
+use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set;
@@ -74,50 +77,17 @@ class Storage extends BackendInterfaceController
                 $err->add(t('Please select valid file storage location.'));
             }
         }
+        $files = $this->files;
+        if (!$err->has()) {
+            $batch = BatchBuilder::create(t('Change File Storage Location'), function() use ($files, $fsl) {
+                foreach ($files as $file) {
+                    yield new ChangeFileStorageLocationCommand($fsl->getID(), $file->getFileID());
+                }
+            });
+            return $this->dispatchBatch($batch);
+        }
         $json->setError($err);
         return $json->outputJSON();
     }
 
-    public function doChangeStorageLocation()
-    {
-        if ($this->validateAction()) {
-            $post = $this->request->request->all();
-            $fsl = $this->app->make(StorageLocationFactory::class)->fetchByID($post['fslID']);
-            if (is_object($fsl)) {
-                $fIDs = $post['fID'];
-                $q = $this->app->make(QueueService::class)->get('change_files_storage_location');
-                if ($this->request->request->get('process')) {
-                    $obj = new stdClass();
-                    $messages = $q->receive(5);
-                    foreach ($messages as $key => $msg) {
-                        $fID = $msg->body;
-                        if ($fID !== false) {
-                            $file = File::getByID($fID);
-                            if (is_object($file)) {
-                                $fp = new Permissions($file);
-                                if ($fp->canEditFilePermissions()) {
-                                    $file->setFileStorageLocation($fsl);
-                                }
-                            }
-                        }
-                        $q->deleteMessage($msg);
-                    }
-                    $obj->totalItems = $q->count();
-                    $obj->files = $fIDs;
-                    if ($q->count() == 0) {
-                        $q->deleteQueue();
-                    }
-
-                    return $this->app->make(ResponseFactoryInterface::class)->json($obj);
-                } elseif ($q->count() == 0) {
-                    foreach ($fIDs as $fID) {
-                        $q->send($fID);
-                    }
-                }
-
-                $totalItems = $q->count();
-                View::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d file', '%d files', $totalItems)]);
-            }
-        }
-    }
 }
