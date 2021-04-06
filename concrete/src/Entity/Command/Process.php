@@ -47,7 +47,7 @@ class Process implements \JsonSerializable
     protected $exitMessage;
 
     /**
-     * @ORM\OneToOne(targetEntity="Batch", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Batch", cascade={"persist", "remove"})
      **/
     protected $batch;
 

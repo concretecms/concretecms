@@ -3,10 +3,12 @@
 namespace Concrete\Core\Command\Process;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Command\Process\Event\ProcessEvent;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Command\Batch as BatchEntity;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Entity\Command\TaskProcess;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Notification\Mercure\MercureService;
 use Concrete\Core\Notification\Mercure\Update\BatchUpdated;
@@ -36,14 +38,18 @@ class ProcessUpdater
     protected $mercureService;
 
     /**
-     * ProcessUpdater constructor.
-     * @param EntityManager $entityManager
-     * @param Date $dateService
-     * @param Repository $config
-     * @param MercureService $mercureService
+     * @var EventDispatcher
      */
-    public function __construct(EntityManager $entityManager, Date $dateService, Repository $config, MercureService $mercureService)
-    {
+    protected $eventDispatcher;
+
+    public function __construct(
+        EntityManager $entityManager,
+        EventDispatcher $eventDispatcher,
+        Date $dateService,
+        Repository $config,
+        MercureService $mercureService
+    ) {
+        $this->eventDispatcher = $eventDispatcher;
         $this->entityManager = $entityManager;
         $this->dateService = $dateService;
         $this->config = $config;
@@ -77,15 +83,19 @@ class ProcessUpdater
             $this->entityManager->persist($process);
             $this->entityManager->flush();
         }
+
+        $this->eventDispatcher->dispatch('on_close_process', new ProcessEvent($process));
     }
 
     protected function clearOldProcesses()
     {
-        $threshold = (int) $this->config->get('concrete.processes.delete_threshold');
+        $threshold = (int)$this->config->get('concrete.processes.delete_threshold');
         $now = new \DateTime();
         $now->sub(new \DateInterval('P' . $threshold . 'D'));
         $minTimestamp = $now->getTimestamp();
-        $query = $this->entityManager->createQuery("delete from \Concrete\Core\Entity\Command\Process p where p.dateCompleted < :minTimestamp and p.dateCompleted is not null");
+        $query = $this->entityManager->createQuery(
+            "delete from \Concrete\Core\Entity\Command\Process p where p.dateCompleted < :minTimestamp and p.dateCompleted is not null"
+        );
         $query->setParameter('minTimestamp', $minTimestamp);
         $query->execute();
     }

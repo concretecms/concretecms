@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"\Concrete\Core\Command\Batch\Listener"})
  * @ORM\Table(name="MessengerBatches")
  */
 class Batch implements \JsonSerializable

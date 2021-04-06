@@ -22,6 +22,15 @@ class ReceiverLocator implements ContainerInterface
         return $receiver;
     }
 
+    public function getAll()
+    {
+        $receivers = [];
+        foreach($this->receivers as $id => $value) {
+            $receivers[] = $this->get($id);
+        }
+        return $receivers;
+    }
+
     public function addReceiver(string $handle, callable $receiver)
     {
         $this->receivers[$handle] = $receiver;

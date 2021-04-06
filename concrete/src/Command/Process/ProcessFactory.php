@@ -4,6 +4,7 @@ namespace Concrete\Core\Command\Process;
 
 use Concrete\Core\Command\Batch\Batch as PendingBatch;
 use Concrete\Core\Command\Batch\BatchUpdater;
+use Concrete\Core\Command\Batch\Stamp\BatchStamp;
 use Concrete\Core\Command\Task\Input\InputInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Entity\Command\Batch;
@@ -13,7 +14,6 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Concrete\Core\Command\Batch\Command\HandleBatchMessageCommand;
 
 class ProcessFactory
 {
@@ -110,7 +110,7 @@ class ProcessFactory
 
         $total = 0;
         foreach ($batch->getWrappedMessages($batchEntity) as $message) {
-            $this->messageBus->dispatch($message);
+            $this->messageBus->dispatch($message, [new BatchStamp($batchEntity->getId())]);
             $total++;
         }
 
