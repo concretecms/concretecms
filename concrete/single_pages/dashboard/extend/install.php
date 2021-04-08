@@ -1,9 +1,9 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Attribute\Key\Category as AttributeCategory;
+use Concrete\Core\Form\Service\Form;
 
 $app = Concrete\Core\Support\Facade\Application::getFacadeApplication();
-$valt = $app->make('helper/validation/token');
 $ci = $app->make('helper/concrete/urls');
 $ch = $app->make('helper/concrete/ui');
 $tp = new TaskPermission();
@@ -18,14 +18,17 @@ $pkgArray = Package::getInstalledList();
 $ci = $app->make('helper/concrete/urls');
 $txt = $app->make('helper/text');
 $nav = $app->make('helper/navigation');
-
+$config = $app->make('config');
+$displayDeleteBtn = $config->get('concrete.misc.display_package_delete_button');
+/** @var Form $form */
+$form = $app->make(Form::class);
 $catList = AttributeCategory::getList();
 
 if ($this->controller->getTask() == 'install_package' && isset($showInstallOptionsScreen) && $showInstallOptionsScreen && $tp->canInstallPackages()) {
     ?>
     <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
         <?php
-        echo $app->make('helper/validation/token')->output('install_options_selected');
+        echo $token->output('install_options_selected');
         echo View::element('dashboard/install', null, $pkg->getPackageHandle());
         $swapper = $pkg->getContentSwapper();
         if ($swapper->allowsFullContentSwap($pkg)) {
@@ -51,9 +54,18 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></label></div>
                 <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <?=t('Yes. Reset site content with the content found in this package')?></label></div>
             </div>
+            <?php if (count($pkg->getContentSwapFiles()) === 1) {?>
+                <?php echo $form->hidden("contentSwapFile", array_pop(array_keys($pkg->getContentSwapFiles()))) ?>
+            <?php } else {?>
+                <div class="form-group">
+                    <?php echo $form->label("contentSwapFile", t("Starting Point")); ?>
+                    <?php echo $form->select("contentSwapFile", $pkg->getContentSwapFiles()); ?>
+                </div>
+            <?php } ?>
             <?php
         }
         ?>
+
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=$this->url('/dashboard/extend/install')?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
@@ -66,7 +78,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
     $pkgID = $pkg->getPackageID();
     ?>
     <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package'); ?>">
-        <?= $valt->output('uninstall'); ?>
+        <?= $token->output('uninstall'); ?>
         <input type="hidden" name="pkgID" value="<?=$pkgID ?>" />
         <fieldset>
             <h2><?= t('Uninstall Package'); ?></h2>
@@ -299,6 +311,11 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                                 ?>
                                 <a href="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn float-right btn-sm btn-secondary"><?= t('Install'); ?></a>
                                 <?php
+                                if ($displayDeleteBtn) {
+                                    ?>
+                                    <a href="javascript:void(0)" class="btn float-right btn-sm btn-danger" onclick="deletePackage('<?= $obj->getPackageHandle() ?>', '<?= $obj->getPackageName() ?>')"><?= t('Delete') ?></a>
+                                    <?php
+                                }
                             }
                             ?>
                             <h4 class="media-heading"><?= t($obj->getPackageName()) ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
@@ -328,4 +345,19 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             }
         }
     }
+    ?>
+    <script>
+        deletePackage = function (packageHandle, packageName) {
+            ConcreteAlert.confirm(
+                <?= json_encode(t('Are you sure you want to delete this package?')) ?> + '<br/><code>' + packageName + '</code>',
+                function() {
+                    $("button[data-dialog-action='submit-confirmation-dialog']").prop("disabled", true);
+                    location.href = "<?= $controller->action('delete_package') ?>/" + packageHandle + "/<?= $token->generate('delete_package') ?>";
+                },
+                'btn-danger',
+                <?= json_encode(t('Delete')) ?>
+            );
+        };
+    </script>
+<?php
 }

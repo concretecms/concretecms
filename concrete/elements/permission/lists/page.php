@@ -6,7 +6,13 @@
     <?php
     $permissions = PermissionKey::getList('page');
     foreach ($permissions as $pk) {
-        $pk->setPermissionObject($page);
+        if (isset($pages)) {
+            $page = $pages[0];
+            $pk->setPermissionObject($page);
+            $pk->setMultiplePageArray($pages);
+        } else {
+            $pk->setPermissionObject($page);
+        }
         ?>
         <tr>
             <td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><?php if ($editPermissions) {

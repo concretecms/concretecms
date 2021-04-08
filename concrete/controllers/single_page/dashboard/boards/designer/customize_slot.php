@@ -19,12 +19,16 @@ use Concrete\Core\Entity\Board\Designer\CustomElementItem;
 use Concrete\Core\Entity\Board\Designer\ItemSelectorCustomElement;
 use Concrete\Core\Entity\Board\SlotTemplate;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Http\Response;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\SanitizeService;
+use Concrete\Core\View\View;
 
 class CustomizeSlot extends DashboardSitePageController
 {
@@ -45,6 +49,14 @@ class CustomizeSlot extends DashboardSitePageController
         } else {
             return $this->redirect('/dashboard/boards/designer');
         }
+    }
+
+    public function load_preview_window()
+    {
+        $view = new View('/frontend/empty');
+        $view->setViewTemplate('block_preview.php');
+        $view->setViewTheme(Theme::getSiteTheme());
+        return new Response($view->render());
     }
 
     /**

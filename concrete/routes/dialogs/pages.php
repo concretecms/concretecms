@@ -1,13 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router $router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
 /*
  * Base path: /ccm/system/dialogs/page
  * Namespace: Concrete\Controller\Dialog\Page\
  */
+
 $router->all('/add', 'Add::view');
 $router->all('/versions', 'Versions::view');
 $router->all('/versions/duplicate', 'Versions::duplicate');
@@ -28,6 +32,9 @@ $router->all('/bulk/properties/get_attribute', 'Bulk\Properties::getAttribute');
 $router->all('/bulk/properties/submit', 'Bulk\Properties::submit');
 $router->all('/bulk/delete', 'Bulk\Delete::view');
 $router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
+$router->all('/bulk/permissions/get_all_access_entities', 'Bulk\Permissions::getAllAccessEntities');
+$router->all('/bulk/permissions', 'Bulk\Permissions::view');
+$router->all('/bulk/permissions/{task}', 'Bulk\Permissions::view');
 $router->all('/clipboard', 'Clipboard::view');
 $router->all('/delete', 'Delete::view');
 $router->all('/delete/submit', 'Delete::submit');

@@ -28,8 +28,17 @@
   },
   "bin": [ "bin/concrete5" ],
   "require": {
+    "php": "^7.2||^8.0",
+    "ext-dom": "*",
+    "ext-fileinfo": "*",
+    "ext-gd": "*",
+    "ext-iconv": "*",
+    "ext-mbstring": "*",
     "ext-PDO": "*",
-    "php": ">=7.2",
+    "ext-pdo_mysql": "*",
+    "ext-SimpleXML": "*",
+    "ext-curl": "*",
+    "ext-zip": "*",
     "doctrine/dbal": "~2.5",
     "symfony/class-loader": "3.*",
     "symfony/http-foundation": "^3.4.17",
@@ -96,7 +105,8 @@
     "theorchard/monolog-cascade": "0.5.*",
     "commerceguys/addressing": "^1.0",
     "sabre/vobject": "^4.3",
-    "ramsey/uuid": "^4.1"
+    "symfony/polyfill-uuid": "^1.20",
+    "predis/predis": "^1.1"
   },
   "extra": {
     "branch-alias": {

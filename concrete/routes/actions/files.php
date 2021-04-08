@@ -3,12 +3,13 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
+ * @var Concrete\Core\Application\Application $app
  * @var Concrete\Core\Routing\Router $router
  */
 
 /*
  * Base path: /ccm/system/file
- * Namespace: Concrete\Controller\Backend\
+ * Namespace: Concrete\Controller\Backend
  */
 
 $router->all('/view', 'File\View::view');
@@ -28,6 +29,7 @@ $router->all('/fetch_incoming_files', 'File::fetchIncomingFiles');
 $router->all('/fetch_directories', 'File::fetchDirectories');
 $router->all('/create_directory', 'File::createDirectory');
 $router->all('/edit', 'File\Edit::view');
+$router->all('/edit/save/{fID}', 'File\Edit::save');
 $router->all('/permissions', 'File\Permissions::view');
 $router->post('/permissions/set_password', 'File\Permissions::setPassword');
 $router->post('/permissions/set_location', 'File\Permissions::setLocation');

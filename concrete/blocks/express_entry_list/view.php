@@ -4,12 +4,12 @@ $c = Page::getCurrentPage();
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 if ($tableName) { ?>
-    <h2><?=$tableName?></h2>
-    <?php if ($tableDescription) { ?>
-        <p><?=$tableDescription?></p>
-    <?php } ?>
-<?php }
-
+    <<?php echo $titleFormat; ?>><?=$tableName?></<?php echo $titleFormat; ?>>
+<?php } ?>
+<?php if ($tableDescription) { ?>
+    <p><?=$tableDescription?></p>
+<?php } 
+	
 if ($entity) { ?>
     <?php if ($enableSearch) { ?>
         <form method="get" action="<?=$c->getCollectionLink()?>">
@@ -112,7 +112,7 @@ if ($entity) { ?>
             </tbody>
         </table>
 
-        <?php if ($pagination) { ?>
+        <?php if ($enablePagination && $pagination) { ?>
             <?=$pagination ?>
         <?php } ?>
 

@@ -37,6 +37,7 @@ use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -168,6 +169,22 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         $this->view();
+    }
+
+    public function validate($args)
+    {
+        $e = $this->app->make('helper/validation/error');
+        if (!empty($args['recipientEmail'])) {
+            $inputtedEmails = array_map('trim', explode(',', $args['recipientEmail']));
+            $validator = new EmailValidator();
+            foreach($inputtedEmails as $email) {
+                if (!$validator->isValid($email)) {
+                    $e->add(t('Email address for recipient "%s" is invalid', $email));
+                }
+            }
+        }
+
+        return $e;
     }
 
     public function delete()
@@ -533,6 +550,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         $attributeKeyCategory = $entity->getAttributeKeyCategory();
+        $attributeKeyHandleGenerator = new AttributeKeyHandleGenerator($attributeKeyCategory);
 
         // First, we get the existing controls, so we can check them
         // to see if controls should be removed later.
@@ -566,7 +584,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $mergedKey = $entityManager->merge($key);
                         $mergedKey->setAttributeType($mergedType);
                         $mergedKey->setEntity($entity);
-                        $mergedKey->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($mergedKey));
+                        $mergedKey->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($mergedKey));
                         $entityManager->persist($mergedKey);
                         $entityManager->flush();
 
@@ -596,7 +614,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
                                 // question name
                                 $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
-                                $key->setAttributeKeyHandle((new AttributeKeyHandleGenerator($attributeKeyCategory))->generate($key));
+                                $key->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($key));
 
                                 // Key Type
                                 $key = $entityManager->merge($key);
@@ -700,7 +718,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
         $this->clearSessionControls();
-        $list = Type::getList();
+        $list = Type::getList("express");
 
         $attribute_fields = [];
 

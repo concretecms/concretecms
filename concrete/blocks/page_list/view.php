@@ -20,7 +20,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
         <?php if (isset($pageListTitle) && $pageListTitle) {
             ?>
             <div class="ccm-block-page-list-header">
-                <h5><?php echo h($pageListTitle) ?></h5>
+                <<?php echo $titleFormat; ?>><?php echo h($pageListTitle) ?></<?php echo $titleFormat; ?>>
             </div>
             <?php
         } ?>

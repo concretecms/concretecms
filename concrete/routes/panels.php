@@ -1,11 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router $router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
+ */
+
+/*
  * Base path: /ccm/system/panels
  * Namespace: Concrete\Controller\Panel\
  */
+
 $router->all('/add', 'Add::view');
 $router->all('/add/get_stack_contents', 'Add::getStackContents');
 $router->all('/add/get_stack_folder_contents', 'Add::getStackFolderContents');
@@ -42,5 +48,5 @@ $router->all('/page/versions/approve', 'Page\Versions::approve');
 $router->all('/page/versions/unapprove', 'Page\Versions::unapprove');
 $router->all('/page/devices', 'Page\Devices::view');
 $router->all('/page/devices/preview', 'Page\Devices::preview');
-$router->get('/sitemap', 'Sitemap::view');
-$router->get('/help', 'Help::view');
+$router->all('/sitemap', 'Sitemap::view');
+$router->all('/help', 'Help::view');

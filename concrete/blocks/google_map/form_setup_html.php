@@ -32,8 +32,11 @@
 
         <div class="form-group">
             <?= $form->label('title', t('Map Title (optional)')) ?>
-            <?= $form->text('title', $title) ?>
-        </div>
+		    <div class="input-group">
+            	<?= $form->text('title', $title) ?>
+				<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+			</div>
+		</div>
 
         <div id="ccm-google-map-block-location" class="form-group">
             <?= $form->label('location', t('Location') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>') ?>
@@ -226,7 +229,7 @@
                         },
                         function (place, status) {
                             if (status === 'REQUEST_DENIED') {
-                                placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places.')) ?>);
+                                placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places or not linked to billing account.')) ?>);
                             } else {
                                 placesLoaded(null, places);
                             }

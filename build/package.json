@@ -1,8 +1,9 @@
 {
   "name": "concrete5",
   "scripts": {
-    "git-skip": "node ./libraries/git-skip yes",
-    "git-unskip": "node ./libraries/git-skip no",
+    "git-skip": "node ./libraries/built-assets skip",
+    "git-unskip": "node ./libraries/built-assets unskip",
+    "git-revert": "node ./libraries/built-assets revert",
     "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -22,5 +23,8 @@
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.12"
+  },
+  "dependencies": {
+    "tui-image-editor": "^3.10.0"
   }
 }

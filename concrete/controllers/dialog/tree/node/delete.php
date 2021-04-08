@@ -3,6 +3,7 @@ namespace Concrete\Controller\Dialog\Tree\Node;
 
 use Concrete\Controller\Dialog\Tree\Node;
 use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Permission\Checker;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Delete extends Node
@@ -12,7 +13,7 @@ class Delete extends Node
     protected function canAccess()
     {
         $node = $this->getNode();
-        $np = new \Permissions($node);
+        $np = new Checker($node);
         return $np->canDeleteTreeNode();
     }
 

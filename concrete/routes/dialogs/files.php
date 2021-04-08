@@ -3,12 +3,13 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
+ * @var Concrete\Core\Application\Application $app
  * @var Concrete\Core\Routing\Router $router
  */
 
 /*
  * Base path: /ccm/system/dialogs/file
- * Namespace: Concrete\Controller\Dialog\File\
+ * Namespace: Concrete\Controller\Dialog\File
  */
 
 $router->all('/upload_complete', 'UploadComplete::view');
@@ -31,6 +32,7 @@ $router->all('/folder/submit', 'Folder::submit');
 $router->all('/properties/', 'Properties::view');
 $router->all('/properties/submit', 'Properties::submit');
 $router->all('/properties/get_attribute', 'Properties::getAttribute');
+$router->all('/versions/', 'Versions::view');
 $router->all('/delete/{fID}', 'Delete::view');
 $router->all('/delete/{fID}/submit', 'Delete::submit');
 

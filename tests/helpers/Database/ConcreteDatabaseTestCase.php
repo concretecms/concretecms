@@ -293,6 +293,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
             }
             $namespaceChunks = explode('\\', $testClass);
             $fixturePath = DIR_TESTS . '/assets/' . $namespaceChunks[2];
+
             foreach ((array) $fixtures as $fixture) {
                 $path = $fixturePath . "/$fixture.xml";
                 $ds = $this->createMySQLXMLDataSet($path);

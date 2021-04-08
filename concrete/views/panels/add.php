@@ -238,7 +238,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
                         <div class="blocks">
                             <div class="block ccm-panel-add-block-draggable-block-type" title="<%=result.name%>">
-                                <div class="block-content">
+                                <div class="block-content-inner">
                                     <%=result.blockContent%>
                                 </div>
 
@@ -388,7 +388,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
                         <div class="blocks">
                             <div class="block ccm-panel-add-block-draggable-block-type" title="<%=result.arHandle%>">
-                                <div class="block-content">
+                                <div class="block-content-inner">
                                     <%=result.blockContent%>
                                 </div>
 

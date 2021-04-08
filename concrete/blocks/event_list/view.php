@@ -16,7 +16,8 @@ if ($calendar) {
     <div class="ccm-block-calendar-event-list-wrapper widget-featured-events unbound" data-page="<?= $totalPerPage ?: 3 ?>">
     <?php if ($eventListTitle) {
     ?>
-        <h2><?=$eventListTitle?></h2>
+        <<?php echo $titleFormat; ?>><?=$eventListTitle?></<?php echo $titleFormat; ?>>
+
     <?php
 
 }

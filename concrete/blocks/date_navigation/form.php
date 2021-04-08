@@ -73,8 +73,11 @@ foreach ($pagetypes as $ct) {
 
     <div class="form-group">
         <?php echo $form->label("title", t('Title')); ?>
-        <?php echo $form->text('title', $title); ?>
-    </div>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+		</div>
+	</div>
 </fieldset>
 
 <script type="text/javascript">

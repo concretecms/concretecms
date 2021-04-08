@@ -193,7 +193,7 @@ trait DashboardExpressEntryListTrait
         $result = $this->createSearchResult($entity, $query);
         $this->set(
             'pageTitle',
-            tc(/*i18n: %s is an entity name*/ 'EntriesOfEntityName', '%s Entries', $entity->getName())
+            tc(/*i18n: %s is an entity name*/ 'EntriesOfEntityName', '%s Entries', $entity->getEntityDisplayName())
         );
         $this->renderSearchResult($result);
     }

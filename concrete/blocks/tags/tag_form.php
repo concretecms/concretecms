@@ -34,9 +34,12 @@ $pageSelector = $app->make(PageSelector::class);
     <?php echo $form->hidden("attributeHandle", $controller->attributeHandle); ?>
 
     <div class="form-group">
-        <?php echo $form->label('title', t('Title')) ?>
-        <?php echo $form->text('title', $title); ?>
-    </div>
+        <?php echo $form->label("title", t('Title')); ?>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+		</div>
+	</div>
 
     <div class="form-group">
         <label class="control-label">
