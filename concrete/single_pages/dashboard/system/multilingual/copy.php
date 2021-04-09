@@ -63,6 +63,7 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                                         {'name': 'origCID', 'value': ctf},
                                         {'name': 'destCID', 'value': ctt},
                                         {'name': 'copyChildrenOnly', 'value': true},
+                                        {'name': 'multilingual', 'value': true},
                                         {name: <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>, value: <?= json_encode($token->generate('/dialogs/page/drag_request'))?>}
                                     ],
                                     title: "<?=t('Copy Locale Tree')?>",
