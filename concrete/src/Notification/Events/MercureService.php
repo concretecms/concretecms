@@ -1,11 +1,12 @@
 <?php
 
-namespace Concrete\Core\Notification\Mercure;
+namespace Concrete\Core\Notification\Events;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Notification\Mercure\Topic\TopicInterface;
-use Concrete\Core\Notification\Mercure\Update\UpdateInterface;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Notification\Events\ServerEvent\EventInterface;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Symfony\Component\Mercure\PublisherInterface;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
@@ -18,6 +19,11 @@ use Symfony\Component\Mercure\Update;
  */
 class MercureService
 {
+
+    /**
+     * @var JsonSerializer
+     */
+    protected $serializer;
 
     /**
      * @var Repository
@@ -34,10 +40,17 @@ class MercureService
      */
     protected $publisher;
 
-    public function __construct(Application $app, Repository $config)
+    /**
+     * @var ResolverManagerInterface
+     */
+    protected $urlResolver;
+
+    public function __construct(JsonSerializer $serializer, Application $app, Repository $config, ResolverManagerInterface $urlResolver)
     {
+        $this->serializer = $serializer;
         $this->app = $app;
         $this->config = $config;
+        $this->urlResolver = $urlResolver;
     }
 
     /**
@@ -82,10 +95,12 @@ class MercureService
         return $this->publisher;
     }
 
-    public function sendUpdate(UpdateInterface $update): void
+    public function sendUpdate(EventInterface $event): void
     {
         $publisher = $this->getPublisher();
-        $update = new Update($update->getTopicURL(), json_encode($update->getData()));
+//        $url = $this->urlResolver->resolve(['/ccm/events', $event->getEvent()]);
+        $url = '/ccm/events/' . $event->getEvent();
+        $update = new Update((string) $url, $this->serializer->serialize($event, 'json'));
         $publisher($update);
     }
 }

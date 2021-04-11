@@ -98,20 +98,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
         <div v-if="executedProcesses.length > 0">
             <hr class="mt-3"/>
             <h4 class="mt-3"><?= t('Executing...') ?></h4>
-            <task-process-list :processes="executedProcesses"
-                <?php
-                if ($poll) { ?>poll<?php }
-                if ($eventSource) { ?> event-source="<?= h($eventSource) ?>" <?php
-                } ?>
-                               :current-process-id="executedProcess.id"
-                               poll-token="<?=$pollToken?>"
-                               details-action="<?= URL::to(
-                                   '/dashboard/system/automation/activity',
-                                   'details',
-                                   $token->generate('details')
-                               ) ?>">
-
-            </task-process-list>
+            <running-process-list :processes="executedProcesses"></running-process-list>
         </div>
 
 

@@ -4,7 +4,6 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Automation;
 use Concrete\Core\Command\Process\Command\DeleteProcessCommand;
 use Concrete\Core\Command\Process\Logger\LoggerFactoryInterface;
 use Concrete\Core\Entity\Command\Process;
-use Concrete\Core\Notification\Mercure\MercureService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -14,20 +13,8 @@ class Activity extends DashboardPageController
     public function view($processID = null)
     {
         $r = $this->entityManager->getRepository(Process::class);
-        $mercureService = $this->app->make(MercureService::class);
-        $eventSource = null;
-        $poll = false;
-        if ($mercureService->isEnabled()) {
-            $eventSource = $mercureService->getPublisherUrl();
-        } else {
-            $poll = true;
-        }
-        $this->set('poll', $poll);
-        $this->set('pollToken', $this->token->generate('poll'));
-        $this->set('eventSource', $eventSource);
         $this->set('processes', $r->findBy([], ['dateCompleted' => 'desc']));
         $this->set('processID', $processID);
-        $this->set('eventSource', $eventSource);
     }
 
 

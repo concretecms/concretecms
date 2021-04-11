@@ -1,8 +1,8 @@
 <?php
 
-namespace Concrete\Core\Notification\Mercure\Update;
+namespace Concrete\Core\Notification\Events\ServerEvent;
 
-class TestConnection implements UpdateInterface
+class TestConnection implements EventInterface
 {
 
     /**
@@ -15,9 +15,9 @@ class TestConnection implements UpdateInterface
         $this->ping = $ping;
     }
 
-    public function getTopicURL(): string
+    public function getEvent(): string
     {
-        return 'https://global.concretecms.com/test-connection';
+        return 'TestConnection';
     }
 
     public function getData(): array

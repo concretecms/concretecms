@@ -1,11 +1,10 @@
 <?php
 
-namespace Concrete\Core\Notification\Mercure\Update;
+namespace Concrete\Core\Notification\Events\ServerEvent;
 
 use Concrete\Core\Entity\Command\Batch;
-use Concrete\Core\Entity\Command\Process;
 
-class BatchUpdated implements UpdateInterface
+class BatchUpdated implements EventInterface
 {
 
     /**
@@ -22,9 +21,9 @@ class BatchUpdated implements UpdateInterface
         $this->batch = $batch;
     }
 
-    public function getTopicURL(): string
+    public function getEvent(): string
     {
-        return 'https://global.concretecms.com/batches/' . $this->batch->getId();
+        return 'BatchUpdated';
     }
 
     public function getData(): array

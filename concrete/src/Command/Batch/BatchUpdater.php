@@ -6,8 +6,8 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Command\Process\ProcessUpdater;
 use Concrete\Core\Entity\Command\Batch as BatchEntity;
 use Concrete\Core\Entity\Command\Process;
-use Concrete\Core\Notification\Mercure\MercureService;
-use Concrete\Core\Notification\Mercure\Update\BatchUpdated;
+use Concrete\Core\Notification\Events\MercureService;
+use Concrete\Core\Notification\Events\ServerEvent\BatchUpdated;
 use Doctrine\ORM\EntityManager;
 
 class BatchUpdater

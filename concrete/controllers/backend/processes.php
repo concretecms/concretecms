@@ -2,11 +2,13 @@
 
 namespace Concrete\Controller\Backend;
 
+use Concrete\Core\Command\Process\ProcessConfigurationResponseFactory;
 use Concrete\Core\Command\Process\ProcessResponseFactory;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Validation\CSRF\Token;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Processes extends AbstractController
 {
@@ -26,15 +28,30 @@ class Processes extends AbstractController
      */
     protected $responseFactory;
 
+    /**
+     * @var ProcessConfigurationResponseFactory
+     */
+    protected $configurationResponseFactory;
+
     public function __construct(
         Token $token,
         EntityManager $entityManager,
-        ProcessResponseFactory $responseFactory
+        ProcessResponseFactory $responseFactory,
+        ProcessConfigurationResponseFactory $configurationResponseFactory
     ) {
         $this->token = $token;
         $this->entityManager = $entityManager;
         $this->responseFactory = $responseFactory;
+        $this->configurationResponseFactory = $configurationResponseFactory;
         parent::__construct();
+    }
+
+    public function getConfiguration()
+    {
+        if ($this->token->validate()) {
+            return $this->configurationResponseFactory->createResponse();
+        }
+        throw new \Exception(t('Access Denied'));
     }
 
     public function poll()

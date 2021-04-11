@@ -2,8 +2,8 @@
 namespace Concrete\Core\Command\Task\Output;
 
 use Concrete\Core\Entity\Command\Process;
-use Concrete\Core\Notification\Mercure\MercureService;
-use Concrete\Core\Notification\Mercure\Update\ProcessOutput;
+use Concrete\Core\Notification\Events\MercureService;
+use Concrete\Core\Notification\Events\ServerEvent\ProcessOutput;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;

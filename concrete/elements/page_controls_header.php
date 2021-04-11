@@ -2,6 +2,8 @@
 
 use Concrete\Core\Messenger\Transport\TransportInterface;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
+use Concrete\Core\Notification\Events\MercureService;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
@@ -98,6 +100,18 @@ EOL;
                     '<script type="text/javascript">$(function() { ConcreteQueueConsumer.consume(\'' . $valt->generate('consume_messages') . '\') });</script>'
                 );
             }
+        }
+        $mercureService = app(MercureService::class);
+        if ($mercureService->isEnabled()) {
+            $resolver = app(ResolverManagerInterface::class);
+            //$siteUrl = $resolver->resolve(['/ccm/events']);
+            $siteUrl = '/ccm/events';
+            /**
+             * @var \Concrete\Core\Url\UrlImmutable $siteUrl
+             */
+            $v->addFooterItem(
+                '<script type="text/javascript">$(function() { ConcreteServerEvents.listen(\'' . $mercureService->getPublisherUrl() . '\', \'' . (string) $siteUrl . '\') });</script>'
+            );
         }
     }
 }

@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Notification;
 
-use Concrete\Core\Notification\Mercure\MercureService;
-use Concrete\Core\Notification\Mercure\Update\TestConnection;
+use Concrete\Core\Notification\Events\MercureService;
+use Concrete\Core\Notification\Events\ServerEvent\TestConnection;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Utility\Service\Identifier;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,13 +32,17 @@ class Events extends DashboardPageController
 
     public function submit()
     {
+        $enable_server_sent_events = $this->request->request->get("enable_server_sent_events") ? true : false;
+
         if (!$this->token->validate('submit')) {
             $this->error->add($this->token->getErrorMessage());
         }
 
+        if ($enable_server_sent_events) {
+
+        }
         if (!$this->error->has()) {
 
-            $enable_server_sent_events = $this->request->request->get("enable_server_sent_events") ? true : false;
             $config = $this->app->make('config');
             $dbConfig = $this->app->make('config/database');
             $events_previously_enabled = (bool) $config->get('concrete.notification.server_sent_events');

@@ -9,25 +9,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div v-if="runningProcesses.length">
         <h3><?=t('Currently Running')?></h3>
         <div v-if="runningProcesses.length">
-            <task-process-list :processes="runningProcesses"
-               <?php if ($poll) { ?>poll<?php } ?>
-                <?php if ($eventSource) { ?> event-source="<?=h($eventSource)?>" <?php } ?>
-<?php /*                               current-process-id="<?=$processID?>" */ ?>
-                               poll-token="<?=$pollToken?>"
-                               details-action="<?=$view->action('details', $token->generate('details'))?>">
-
-            </task-process-list>
+            <running-process-list :processes="runningProcesses"></running-process-list>
         </div>
     </div>
 
     <div :class="{'mt-4': runningProcesses.length > 0}">
         <h3><?=t('History')?></h3>
         <div v-if="completedProcesses.length">
-            <task-process-list :processes="completedProcesses"
-                <?php if ($eventSource) { ?> event-source="<?=h($eventSource)?>" <?php } ?>
+            <completed-process-list :processes="completedProcesses"
                 delete-action="<?=$view->action('delete', $token->generate('delete'))?>"
                 details-action="<?=$view->action('details', $token->generate('details'))?>">
-            </task-process-list>
+            </completed-process-list>
         </div>
         <div v-else>
             <p><?=t('The process history is empty.')?></p>

@@ -40,6 +40,7 @@ $router->all('/ccm/system/country-data-link/all', '\Concrete\Controller\Frontend
 
 $router->all('/ccm/system/dialog/process/activity/{viewToken}', '\Concrete\Controller\Dialog\Process\Activity::view');
 $router->all('/ccm/system/messenger/consume', '\Concrete\Controller\Backend\Messenger::consume');
+$router->post('/ccm/system/processes/get_configuration', '\Concrete\Controller\Backend\Processes::getConfiguration');
 $router->all('/ccm/system/processes/poll', '\Concrete\Controller\Backend\Processes::poll');
 $router->all('/ccm/system/dialogs/editor/settings/preview', 'Concrete\Controller\Dialog\Editor\Settings\Preview::view');
 $router->all('/ccm/system/dashboard/attribute/set/update_order', 'Concrete\Controller\Backend\Attribute\Set\UpdateOrder::view');

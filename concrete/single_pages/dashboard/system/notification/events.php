@@ -59,13 +59,9 @@
                         },
                         mounted() {
                             var my = this
-                            const eventSource = new EventSource('<?=h($publishUrl)?>?topic=*');
-                            eventSource.onmessage = event => {
-                                // Will be called every time an update is published by the server
-                                var data = JSON.parse(event.data)
-                                my.pong = data.pong;
-                            }
-
+                            ConcreteEvent.subscribe('ConcreteServerEventTestConnection', function(e, data) {
+                                my.pong = data.pong
+                            })
                         },
                         methods: {
                             testConnection() {

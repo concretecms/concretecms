@@ -7,7 +7,7 @@ use Concrete\Core\Command\Process\Logger\LoggerInterface;
 use Concrete\Core\Command\Task\Runner\ProcessTaskRunnerInterface;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
 use Concrete\Core\Entity\Command\Process;
-use Concrete\Core\Notification\Mercure\MercureService;
+use Concrete\Core\Notification\Events\MercureService;
 use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 
 class OutputFactory

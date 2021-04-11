@@ -1,10 +1,8 @@
 <?php
 
-namespace Concrete\Core\Notification\Mercure\Update;
+namespace Concrete\Core\Notification\Events\ServerEvent;
 
-use Concrete\Core\Entity\Command\Process;
-
-class ProcessOutput implements UpdateInterface
+class ProcessOutput implements EventInterface
 {
 
     /**
@@ -23,9 +21,9 @@ class ProcessOutput implements UpdateInterface
         $this->message = $message;
     }
 
-    public function getTopicURL(): string
+    public function getEvent(): string
     {
-        return 'https://global.concretecms.com/task/processes/' . $this->processId;
+        return 'ProcessOutput';
     }
 
     public function getData(): array

@@ -10,9 +10,9 @@ use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Entity\Command\TaskProcess;
 use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Localization\Service\Date;
-use Concrete\Core\Notification\Mercure\MercureService;
+use Concrete\Core\Notification\Events\MercureService;
 use Concrete\Core\Notification\Mercure\Update\BatchUpdated;
-use Concrete\Core\Notification\Mercure\Update\ProcessClosed;
+use Concrete\Core\Notification\Events\ServerEvent\ProcessClosed;
 use Doctrine\ORM\EntityManager;
 
 class ProcessUpdater

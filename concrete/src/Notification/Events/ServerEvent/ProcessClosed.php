@@ -1,10 +1,8 @@
 <?php
 
-namespace Concrete\Core\Notification\Mercure\Update;
+namespace Concrete\Core\Notification\Events\ServerEvent;
 
-use Concrete\Core\Entity\Command\Process;
-
-class ProcessClosed implements UpdateInterface
+class ProcessClosed implements EventInterface
 {
 
     /**
@@ -28,9 +26,9 @@ class ProcessClosed implements UpdateInterface
         $this->exitCode = $exitCode;
     }
 
-    public function getTopicURL(): string
+    public function getEvent(): string
     {
-        return 'https://global.concretecms.com/task/close-process/' . $this->processData['id'];
+        return 'CloseProcess';
     }
 
     public function getData(): array

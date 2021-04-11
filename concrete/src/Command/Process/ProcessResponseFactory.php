@@ -4,7 +4,6 @@ namespace Concrete\Core\Command\Process;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Command\Process;
-use Concrete\Core\Notification\Mercure\MercureService;
 use Concrete\Core\Validation\CSRF\Token;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -17,19 +16,13 @@ class ProcessResponseFactory
     protected $tokenService;
 
     /**
-     * @var MercureService
-     */
-    protected $mercureService;
-
-    /**
      * @var Repository
      */
     protected $config;
 
-    public function __construct(Repository $config, MercureService $mercureService, Token $tokenService)
+    public function __construct(Repository $config, Token $tokenService)
     {
         $this->config = $config;
-        $this->mercureService = $mercureService;
         $this->tokenService = $tokenService;
     }
 

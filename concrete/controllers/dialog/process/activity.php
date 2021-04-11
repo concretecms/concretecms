@@ -6,7 +6,6 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Filesystem\ElementManager;
-use Concrete\Core\Notification\Mercure\MercureService;
 use Doctrine\ORM\EntityManager;
 
 class Activity extends BackendInterfaceController
@@ -23,9 +22,7 @@ class Activity extends BackendInterfaceController
     public function view()
     {
         $processes = $this->app->make(EntityManager::class)->getRepository(Process::class)->findRunning();
-        $element = $this->app->make(ElementManager::class)->get('process_list');
-        $element->getElementController()->setProcesses($processes);
-        $this->set('element', $element);
+        $this->set('processes', $processes);
     }
 
 }

@@ -4,12 +4,8 @@ namespace Concrete\Core\Notification;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\Notification\Mercure\MercureService;
+use Concrete\Core\Notification\Events\MercureService;
 use Concrete\Core\Notification\Type\UserDeactivatedType;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Signer\Key;
-use Symfony\Component\Mercure\Publisher;
 use Symfony\Component\Mercure\PublisherInterface;
 
 class NotificationServiceProvider extends ServiceProvider
