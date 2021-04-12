@@ -16,11 +16,11 @@ class CopyPageCommand extends PageCommand implements BatchableCommandInterface
      */
     protected $isMultilingual;
 
-    public function __construct(int $pageID, int $destinationPageID, bool $isMultilingual = false)
+    public function __construct(int $pageID, int $destinationPageID, bool $multilingualCopy = false)
     {
         parent::__construct($pageID);
         $this->setDestinationPageID($destinationPageID);
-        $this->isMultilingual = $isMultilingual;
+        $this->isMultilingual = $multilingualCopy;
     }
 
     /**
