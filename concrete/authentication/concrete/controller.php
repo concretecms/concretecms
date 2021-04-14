@@ -59,32 +59,20 @@ class Controller extends AuthenticationTypeController
         $uID = (int) $u->getUserID();
         $db = $this->app->make(Connection::class);
         $hasher = $this->app->make(PasswordHasher::class);
-        $validRow = null;
-        foreach ($db->fetchAll('select validThrough, token from authTypeConcreteCookieMap WHERE uID = ? ORDER BY validThrough DESC', [$uID]) as $row) {
+        $validRow = false;
+        $validThrough = (new \DateTime())->getTimestamp();
+        $rows = $db->fetchAll('SELECT validThrough, token FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough > ? ORDER BY validThrough DESC', [$uID, $validThrough]);
+        foreach ($rows as $row) {
             if ($hasher->checkPassword($hash, $row['token'])) {
-                $validRow = $row;
+                $validRow = true;
                 break;
             }
         }
-        if ($validRow === null) {
-            return;
-        }
-        $stillValid = time() < $validRow['validThrough'];
-        if ($stillValid) {
-            $newTime = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
-            $db->update(
-                'authTypeConcreteCookieMap',
-                ['validThrough' => $newTime],
-                ['uID' => $uID, 'token' => $row['token']]
-            );
-        } else {
-            $db->delete(
-                'authTypeConcreteCookieMap',
-                ['uID' => $uID, 'token' => $row['token']]
-            );
-        }
 
-        return $stillValid;
+        // delete all invalid entries for this user
+        $db->executeUpdate('DELETE FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough < ?', [$uID, $validThrough]);
+
+        return $validRow;
     }
 
     public function view()
