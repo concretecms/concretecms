@@ -1004,13 +1004,21 @@
               filename="/dashboard/system/automation/settings.php" pagetype="" description="" package="">
         </page>
         <page name="Notification" path="/dashboard/system/notification"
-              filename="/dashboard/system/notification/view.php" pagetype="" description="Run and automate commands."
+              filename="/dashboard/system/notification/view.php" pagetype="" description="Notification settings."
               package=""/>
         <page name="Server-Sent Events" path="/dashboard/system/notification/events"
               filename="/dashboard/system/notification/events.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>websocket, socket, socket.io, push, push notifications, mercure</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Waiting for Me" path="/dashboard/system/notification/alerts"
+              filename="/dashboard/system/notification/alerts.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>waiting for me, inbox, notifications</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1169,9 +1177,6 @@
                     <value>global, password, reset, change password, force, sign out</value>
                 </attributekey>
             </attributes>
-        </page>
-        <page name="Notification Settings" path="/dashboard/system/registration/notification"
-              filename="/dashboard/system/registration/notification.php" pagetype="" description="" package="">
         </page>
 
         <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"

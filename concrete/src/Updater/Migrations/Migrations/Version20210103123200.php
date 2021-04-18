@@ -11,6 +11,7 @@ use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Entity\Command\TaskProcess;
 use Concrete\Core\Job\Job;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Doctrine\DBAL\Schema\Schema;
@@ -43,7 +44,17 @@ final class Version20210103123200 extends AbstractMigration implements Repeatabl
             'Server-Sent Events',
             ['meta_keywords' => 'websocket, socket, socket.io, push, push notifications, mercure']
         );
+        $this->createSinglePage(
+            '/dashboard/system/notification/alerts',
+            'Waiting for Me',
+            ['meta_keywords' => 'waiting for me, inbox, notifications']
+        );
 
+        $page = Page::getByPath('/dashboard/system/registration/notification');
+        if ($page && !$page->isError()) {
+            $page->delete();
+        }
+        
         $this->refreshEntities(
             [
                 Task::class,
