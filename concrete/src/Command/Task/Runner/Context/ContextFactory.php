@@ -1,16 +1,21 @@
 <?php
+namespace Concrete\Core\Command\Task\Runner\Context;
 
-namespace Concrete\Core\Command\Task\Output;
-
+use Concrete\Core\Application\Application;
 use Concrete\Core\Command\Process\Logger\LoggerFactoryInterface;
-use Concrete\Core\Command\Process\Logger\LoggerInterface;
+use Concrete\Core\Command\Task\Output\AggregateOutput;
+use Concrete\Core\Command\Task\Output\ConsoleOutput;
+use Concrete\Core\Command\Task\Output\NullOutput;
+use Concrete\Core\Command\Task\Output\PushOutput;
 use Concrete\Core\Command\Task\Runner\ProcessTaskRunnerInterface;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
-use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Notification\Events\MercureService;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 
-class OutputFactory
+defined('C5_EXECUTE') or die("Access Denied.");
+
+class ContextFactory
 {
 
     /**
@@ -23,10 +28,16 @@ class OutputFactory
      */
     protected $loggerFactory;
 
-    public function __construct(LoggerFactoryInterface $loggerFactory, MercureService $mercureService)
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    public function __construct(LoggerFactoryInterface $loggerFactory, MercureService $mercureService, Application $app)
     {
         $this->loggerFactory = $loggerFactory;
         $this->mercureService = $mercureService;
+        $this->app = $app;
     }
 
     protected function getPushOutput(TaskRunnerInterface $runner): ?PushOutput
@@ -37,7 +48,7 @@ class OutputFactory
         return null;
     }
 
-    public function createConsoleOutput(ConsoleOutputInterface $output, TaskRunnerInterface $runner)
+    protected function createConsoleOutput(TaskRunnerInterface $runner, ConsoleOutputInterface $output)
     {
         $processLogger = $this->loggerFactory->createFromRunner($runner);
         $pushOutput = $this->getPushOutput($runner);
@@ -55,7 +66,7 @@ class OutputFactory
         }
     }
 
-    public function createDashboardOutput(TaskRunnerInterface $runner): OutputInterface
+    protected function createDashboardOutput(TaskRunnerInterface $runner): \Concrete\Core\Command\Task\Output\OutputInterface
     {
         $processLogger = $this->loggerFactory->createFromRunner($runner);
         $pushOutput = $this->getPushOutput($runner);
@@ -70,6 +81,16 @@ class OutputFactory
         } else {
             return new NullOutput();
         }
+    }
+
+    public function createDashboardContext(TaskRunnerInterface $runner): ContextInterface
+    {
+        return $this->app->make(DashboardContext::class, ['output' => $this->createDashboardOutput($runner)]);
+    }
+
+    public function createConsoleContext(TaskRunnerInterface $runner, OutputInterface $output): ContextInterface
+    {
+        return $this->app->make(ConsoleContext::class, ['output' => $this->createConsoleOutput($runner, $output)]);
     }
 
 

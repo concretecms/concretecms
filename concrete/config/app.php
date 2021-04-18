@@ -138,9 +138,6 @@ return [
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
         'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
 
-        // Console CLI commands
-        'core_console' => \Concrete\Core\Console\ServiceProvider::class,
-
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',

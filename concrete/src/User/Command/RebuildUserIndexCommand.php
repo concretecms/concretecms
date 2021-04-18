@@ -5,10 +5,9 @@ namespace Concrete\Core\User\Command;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Attribute\Command\RebuildIndexCommandHandler;
-use Concrete\Core\Attribute\Command\RebuildIndexCommandInterface;
-use Concrete\Core\Foundation\Command\HandlerAwareCommandInterface;
+use Concrete\Core\Page\Command\AbstractRebuildIndexCommand;
 
-class RebuildUserIndexCommand implements RebuildIndexCommandInterface, HandlerAwareCommandInterface
+class RebuildUserIndexCommand extends AbstractRebuildIndexCommand
 {
 
     public function getAttributeKeyCategory(): CategoryInterface

@@ -4,6 +4,7 @@ namespace Concrete\Core\Foundation\Runtime\Run;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Console\Application as ConsoleApplication;
+use Concrete\Core\Console\CommandRegistry;
 use Symfony\Component\Console\Input\ArgvInput;
 
 class CLIRunner implements RunInterface, ApplicationAwareInterface
@@ -60,10 +61,11 @@ class CLIRunner implements RunInterface, ApplicationAwareInterface
             }
         }
 
-        // Handle legacy backwards compatibility
-        if (method_exists($console, 'setupDefaultCommands')) {
-            $console->setupDefaultCommands();
-        }
+        $registry = new CommandRegistry($this->console);
+        $registry->setApplication($this->app);
+        $registry->registerCommands();
+
+        // Load the console commands
 
         \Events::dispatch('on_before_console_run');
 

@@ -153,10 +153,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                                     } else if (r.status === 'completed') {
                                         window.location.reload();
                                     } else if (r.status === 'process_started') {
-                                        if (r.response.consumeToken) {
-                                            ConcreteQueueConsumer.consume(r.response.consumeToken)
-                                        }
-                                        my.executedProcess = r.response.process
+                                        window.location.href = '<?=URL::to('/dashboard/system/automation/activity')?>'
                                     }
                                 }
                             })

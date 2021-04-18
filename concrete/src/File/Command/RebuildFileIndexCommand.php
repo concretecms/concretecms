@@ -5,10 +5,9 @@ namespace Concrete\Core\File\Command;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Command\RebuildIndexCommandHandler;
-use Concrete\Core\Attribute\Command\RebuildIndexCommandInterface;
-use Concrete\Core\Foundation\Command\HandlerAwareCommandInterface;
+use Concrete\Core\Page\Command\AbstractRebuildIndexCommand;
 
-class RebuildFileIndexCommand implements RebuildIndexCommandInterface, HandlerAwareCommandInterface
+class RebuildFileIndexCommand extends AbstractRebuildIndexCommand
 {
 
     public function getAttributeKeyCategory(): CategoryInterface

@@ -2,30 +2,32 @@
 
 namespace Concrete\Core\Console;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Command\Task\TaskService;
 use Concrete\Core\Console\Command\TaskCommand;
-use Concrete\Core\Foundation\Service\Provider;
-use Concrete\Core\Logging\Channels;
-use Concrete\Core\Logging\LoggerFactory;
-use Concrete\Core\Tools\Console\Doctrine\ConsoleRunner as DeprecatedConsoleRunner;
 use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
 use Doctrine\Migrations\OutputWriter;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Messenger\Command as MessengerCommand;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\RoutableMessageBus;
+use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
 
-class ServiceProvider extends Provider
+/**
+ * Adds commands to the console
+ *
+ * Important note: this used to be a part of the Console service provider (which has been removed). We had to remove it
+ * because it fired too early. Packages could not modify the dependencies passed to the command classes because they
+ * fired after the commands were registered. This is simplified and provides exactly the same functionality.
+ */
+class CommandRegistry implements ApplicationAwareInterface
 {
-    /** @var \Concrete\Core\Console\Application */
-    protected $cli;
 
-    /** @var bool */
-    protected $installed;
+    use ApplicationAwareTrait;
+
+    /**
+     * @var Application
+     */
+    protected $console;
 
     /**
      * Commands that are always available.
@@ -73,7 +75,7 @@ class ServiceProvider extends Provider
         Command\FixDatabaseForeignKeys::class,
         Command\ReindexCommand::class,
         Command\GenerateFileIdentifiersCommand::class,
-        MessengerCommand\ConsumeMessagesCommand::class,
+        ConsumeMessagesCommand::class,
 
         /*
         MessengerCommand\FailedMessagesShowCommand::class,
@@ -102,58 +104,54 @@ class ServiceProvider extends Provider
     ];
 
     /**
-     * Registers the services provided by this provider.
+     * CommandRegistry constructor.
+     * @param Application $console
      */
-    public function register()
+    public function __construct(Application $console)
     {
-        /*
-         * @deprecated Use the final ConsoleRunner class directly
-         * @todo Remove in v9
-         */
-        if (!class_exists(DeprecatedConsoleRunner::class)) {
-            class_alias(ConsoleRunner::class, DeprecatedConsoleRunner::class);
-        }
-
-        $this->app->extend(Application::class, function (Application $cli) {
-            $this->cli = $cli;
-            $this->setupDefaultCommands();
-            $this->setupDoctrineCommands();
-            $this->setupTaskCommands();
-
-            return $cli;
-        });
+        $this->console = $console;
     }
 
-    protected function setupTaskCommands()
+    public function registerCommands()
     {
-        if ($this->installed()) {
-            try {
-                $tasks = $this->app->make(TaskService::class)->getList();
-                foreach($tasks as $task) {
-                    $this->add(new TaskCommand($task));
-                }
-            } catch (\Exception $e) {
-                // Something isn't right. Probably the proxies aren't built yet or are in the process of being rebuilt?
-                // Don't let us use task commands unless the proxies are present.
+        $this->setupDefaultCommands();
+        $this->setupInstalledCommands();
+        $this->setupDoctrineCommands();
+        $this->setupTaskCommands();
+    }
+
+    protected function setupDefaultCommands()
+    {
+        // Add commands that always work
+        foreach($this->commands as $commandClass) {
+            $this->console->add($this->app->make($commandClass));
+        }
+    }
+
+    public function setupInstalledCommands()
+    {
+        if ($this->app->isInstalled()) {
+            foreach ($this->installedCommands as $commandClass) {
+                $this->console->add($this->app->make($commandClass));
             }
         }
     }
 
     public function setupDoctrineCommands()
     {
-        if ($this->installed()) {
+        if ($this->app->isInstalled()) {
             // Set the doctrine helperset to the CLI
             $doctrineHelperSet = $this->app->call([ConsoleRunner::class, 'createHelperSet']);
-            if ($this->cli->getHelperSet()) {
+            if ($this->console->getHelperSet()) {
                 foreach ($doctrineHelperSet as $key => $helper) {
-                    $this->cli->getHelperSet()->set($helper, $key);
+                    $this->console->getHelperSet()->set($helper, $key);
                 }
             } else {
-                $this->cli->setHelperSet($doctrineHelperSet);
+                $this->console->setHelperSet($doctrineHelperSet);
             }
 
             // Add Doctrine ConsoleRunner commands
-            ConsoleRunner::addCommands($this->cli);
+            ConsoleRunner::addCommands($this->console);
 
             // Add migration commands
             $migrationsConfiguration = $this->getMigrationConfiguration();
@@ -161,78 +159,24 @@ class ServiceProvider extends Provider
             foreach ($this->migrationCommands as $migrationsCommand) {
                 $command = $this->app->make($migrationsCommand);
                 $command->setMigrationConfiguration($migrationsConfiguration);
-                $this->add($command, true);
+                $this->console->add($command);
             }
         }
     }
 
-    protected function setupDefaultCommands()
+    protected function setupTaskCommands()
     {
-        // Add commands that always work
-        $this->add($this->commands);
-
-        // Add commands that require install to work
-        $this->add($this->installedCommands, true);
-    }
-
-    /**
-     * Add a class to the CLI application.
-     *
-     * @param array|string|\Symfony\Component\Console\Command\Command $param
-     * @param bool $requireInstall
-     * @param callable|null $callback
-     *
-     * @return null|\Symfony\Component\Console\Command\Command
-     */
-    private function add($param, $requireInstall = false, callable $callback = null)
-    {
-        // Handle array input
-        if (is_array($param)) {
-            foreach ($param as $item) {
-                $this->add($item, $requireInstall, $callback);
-            }
-
-            return null;
-        }
-
-        // If we're not installed, only register commands that are marked to handle that
-        if ($requireInstall && !$this->installed()) {
-            return null;
-        }
-
-        // Inflate the passed command
-        $command = is_string($param) ? $this->app->make($param) : $param;
-
-        // Make sure we have a command instance
-        if (!$command || !$command instanceof SymfonyCommand) {
-            throw new \InvalidArgumentException('Invalid command provided.');
-        }
-
-        // Handle callback function
-        if ($callback) {
-            $command = $callback($command);
-
-            if (!$command) {
-                return null;
+        if ($this->app->isInstalled()) {
+            try {
+                $tasks = $this->app->make(TaskService::class)->getList();
+                foreach($tasks as $task) {
+                    $this->console->add(new TaskCommand($task));
+                }
+            } catch (\Exception $e) {
+                // Something isn't right. Probably the proxies aren't built yet or are in the process of being rebuilt?
+                // Don't let us use task commands unless the proxies are present.
             }
         }
-
-        // Add the cli command
-        return $this->cli->add($command);
-    }
-
-    /**
-     * Determine if the app is currently installed.
-     *
-     * @return bool
-     */
-    private function installed()
-    {
-        if ($this->installed === null) {
-            $this->installed = $this->app->isInstalled();
-        }
-
-        return $this->installed;
     }
 
     /**
@@ -248,4 +192,8 @@ class ServiceProvider extends Provider
 
         return $migrationsConfiguration;
     }
+
+
+
+
 }

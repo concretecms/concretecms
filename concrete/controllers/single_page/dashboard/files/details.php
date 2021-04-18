@@ -8,6 +8,7 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Command\RescanFileAsyncCommand;
 use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\Rescanner;
 use Concrete\Core\Navigation\Item\Item;
@@ -59,7 +60,7 @@ class Details extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
 
-        $rescanFileCommand = new RescanFileCommand($fID);
+        $rescanFileCommand = new RescanFileAsyncCommand($fID);
         $this->app->executeCommand($rescanFileCommand);
 
         $this->flash('success', t('The file has been rescanned.'));

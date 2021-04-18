@@ -381,16 +381,17 @@ return [
 
     'messenger' => [
 
+        'default_bus' => 'default',
+
         'buses' => [
-            Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT =>
-            'Concrete\Core\Messenger\Registry\CommandBus',
-            Concrete\Core\Messenger\MessageBusManager::BUS_DEFAULT_SYNCHRONOUS =>
-                'Concrete\Core\Messenger\Registry\SynchronousCommandBus',
+            'default' => [
+                'default_middleware' => true,
+                'middleware' => [],
+            ]
         ],
 
         'routing' => [
-            'Concrete\Core\File\Command\RescanFileCommand' => ['async'],
-            'Concrete\Core\Page\Command\ReindexPageCommand' => ['async'],
+            'Concrete\Core\Foundation\Command\AsyncCommandInterface' => ['async'],
         ],
 
         'transports' => [

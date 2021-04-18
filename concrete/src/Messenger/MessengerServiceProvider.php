@@ -9,7 +9,7 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Command\Batch\Command\HandleBatchMessageCommandHandler;
-use Concrete\Core\Messenger\Registry\RegistryInterface;
+use Concrete\Core\Messenger\Bus\BusInterface;
 use Concrete\Core\Messenger\Transport\TransportInterface;
 use Concrete\Core\Messenger\Transport\TransportManager;
 use Psr\Container\ContainerInterface;
@@ -17,7 +17,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\RoutableMessageBus;
-use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
+use Concrete\Core\Messenger\Transport\Sender\SendersLocator;
 use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -51,14 +51,7 @@ class MessengerServiceProvider extends ServiceProvider
         $this->app->singleton(
             MessageBusManager::class,
             function (Application $app) use ($config) {
-                $manager = new MessageBusManager();
-                foreach ((array) $config->get('concrete.messenger.buses') as $handle => $registryClass) {
-                    /**
-                     * @var $registry RegistryInterface
-                     */
-                    $registry = $app->make($registryClass);
-                    $manager->addBus($handle, $registry->getBusBuilder($handle));
-                }
+                $manager = new MessageBusManager($app, $config);
                 return $manager;
             }
         );
@@ -95,25 +88,12 @@ class MessengerServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             MessageBusInterface::class,
-            function (Application $app) {
-                return $app->make(MessageBusManager::class)->getBus(MessageBusManager::BUS_DEFAULT);
+            function (Application $app) use ($config) {
+                return $app->make(MessageBusManager::class)->getBus(
+                    $config->get('concrete.messenger.default_bus')
+                );
             }
         );
-
-        $this->app->when(HandleBatchMessageCommandHandler::class)
-            ->needs(MessageBusInterface::class)
-            ->give(
-                function (Application $app) {
-                    return $app->make(MessageBusManager::class)->getBus(MessageBusManager::BUS_DEFAULT_SYNCHRONOUS);
-                }
-            );
-        $this->app->when(HandleProcessMessageCommandHandler::class)
-            ->needs(MessageBusInterface::class)
-            ->give(
-                function (Application $app) {
-                    return $app->make(MessageBusManager::class)->getBus(MessageBusManager::BUS_DEFAULT_SYNCHRONOUS);
-                }
-            );
 
         $this->app->when(ConsumeMessagesCommand::class)
             ->needs(ContainerInterface::class)

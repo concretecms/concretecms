@@ -4,26 +4,16 @@ namespace Concrete\Core\Command\Task\Runner;
 use Concrete\Core\Command\Process\Command\HandleProcessMessageCommand;
 use Concrete\Core\Command\Process\ProcessFactory;
 use Concrete\Core\Command\Task\Output\OutputInterface;
+use Concrete\Core\Command\Task\Runner\Context\ContextInterface;
 use Concrete\Core\Command\Task\Runner\Response\ProcessStartedResponse;
 use Concrete\Core\Command\Task\Runner\Response\ResponseInterface;
-use Concrete\Core\Command\Task\Runner\Response\TaskCompletedResponse;
 use Concrete\Core\Command\Task\Stamp\OutputStamp;
 use Concrete\Core\Command\Task\TaskService;
-use Concrete\Core\Messenger\MessageBusAwareInterface;
-use Concrete\Core\Messenger\MessageBusAwareTrait;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class ProcessTaskRunnerHandler implements HandlerInterface, MessageBusAwareInterface
+class ProcessTaskRunnerHandler implements HandlerInterface
 {
-
-    use MessageBusAwareTrait;
-
-    /**
-     * @var MessageBusInterface
-     */
-    protected $messageBus;
 
     /**
      * @var ProcessFactory
@@ -35,11 +25,10 @@ class ProcessTaskRunnerHandler implements HandlerInterface, MessageBusAwareInter
      */
     protected $taskService;
 
-    public function __construct(TaskService $taskService, ProcessFactory $processFactory, MessageBusInterface $messageBus)
+    public function __construct(TaskService $taskService, ProcessFactory $processFactory)
     {
         $this->taskService = $taskService;
         $this->processFactory = $processFactory;
-        $this->messageBus = $messageBus;
     }
 
     /**
@@ -52,16 +41,19 @@ class ProcessTaskRunnerHandler implements HandlerInterface, MessageBusAwareInter
         $runner->setProcess($process);
     }
 
-    public function start(TaskRunnerInterface $runner, OutputInterface $output)
+    public function start(TaskRunnerInterface $runner, ContextInterface $context)
     {
+        $output = $context->getOutput();
         $output->write($runner->getProcessStartedMessage());
     }
 
-    public function run(TaskRunnerInterface $runner, OutputInterface $output)
+    public function run(TaskRunnerInterface $runner, ContextInterface $context)
     {
+        $output = $context->getOutput();
+        $messageBus = $context->getMessageBus();
         $process = $runner->getProcess();
         $wrappedMessage = new HandleProcessMessageCommand($process->getID(), $runner->getMessage());
-        $this->messageBus->dispatch($wrappedMessage, [new OutputStamp($output)]);
+        $context->dispatchCommand($wrappedMessage);
     }
 
     /**
@@ -71,7 +63,7 @@ class ProcessTaskRunnerHandler implements HandlerInterface, MessageBusAwareInter
      *
      * @param ProcessTaskRunner $runner
      */
-    public function complete(TaskRunnerInterface $runner, OutputInterface $output): ResponseInterface
+    public function complete(TaskRunnerInterface $runner, ContextInterface $context): ResponseInterface
     {
         return new ProcessStartedResponse($runner->getProcess(), $runner->getProcessStartedMessage());
     }

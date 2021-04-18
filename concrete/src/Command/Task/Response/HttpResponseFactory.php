@@ -38,7 +38,10 @@ class HttpResponseFactory implements ResponseFactoryInterface
             return new JsonResponse(['status' => self::STATUS_COMPLETED]);
         }
         if ($response instanceof ProcessStartedResponse) {
-            //$this->session->getFlashBag()->add('page_message', ['message', $response->getMessage()]);
+            if (!$response->getProcess()->getBatch()) {
+                // we show a message if you're not starting a batch process.
+                $this->session->getFlashBag()->add('page_message', ['message', $response->getMessage()]);
+            }
             return new JsonResponse(
                 [
                     'response' => $this->responseFactory->getData($response->getProcess()),

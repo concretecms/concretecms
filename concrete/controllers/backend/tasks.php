@@ -7,6 +7,7 @@ use Concrete\Core\Command\Task\Input\InputFactory;
 use Concrete\Core\Command\Task\Output\OutputFactory;
 use Concrete\Core\Command\Task\Response\HttpResponseFactory;
 use Concrete\Core\Command\Scheduler\Response\HttpResponseFactory as ScheduleHttpResponseFactory;
+use Concrete\Core\Command\Task\Runner\Context\ContextFactory;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -87,10 +88,10 @@ class Tasks extends AbstractController
         } else {
             /**
              * @var $inputFactory InputFactory
-             * @var $outputFactory OutputFactory
+             * @var $contextFactory ContextFactory
              */
             $inputFactory = $this->app->make(InputFactory::class);
-            $outputFactory = $this->app->make(OutputFactory::class);
+            $contextFactory = $this->app->make(ContextFactory::class);
             $input = $inputFactory->createFromRequest($this->request, $task->getController()->getInputDefinition());
 
             if ($this->request->request->get('scheduleTask')) {
@@ -102,11 +103,12 @@ class Tasks extends AbstractController
                 $handler = $this->app->make($runner->getTaskRunnerHandler());
                 $handler->boot($runner);
 
-                $output = $outputFactory->createDashboardOutput($runner);
+                $context = $contextFactory->createDashboardContext($runner);
 
-                $handler->start($runner, $output);
-                $handler->run($runner, $output);
-                $response = $handler->complete($runner, $output);
+                $handler->start($runner, $context);
+                $handler->run($runner, $context);
+                $response = $handler->complete($runner, $context);
+
                 return $this->httpResponseFactory->createResponse($response);
             }
         }

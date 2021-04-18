@@ -4,11 +4,12 @@ namespace Concrete\Core\Express\Command;
 
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Command\RebuildIndexCommandHandler;
-use Concrete\Core\Attribute\Command\RebuildIndexCommandInterface;
 use Concrete\Core\Express\ObjectManager;
-use Concrete\Core\Foundation\Command\HandlerAwareCommandInterface;
+use Concrete\Core\Page\Command\AbstractRebuildIndexCommand;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class RebuildEntityIndexCommand implements RebuildIndexCommandInterface, HandlerAwareCommandInterface
+class RebuildEntityIndexCommand extends AbstractRebuildIndexCommand
 {
 
     /**
@@ -19,7 +20,7 @@ class RebuildEntityIndexCommand implements RebuildIndexCommandInterface, Handler
     /**
      * @param string $entityId
      */
-    public function __construct(string $entityId)
+    public function __construct(string $entityId = null)
     {
         $this->entityId = $entityId;
     }
@@ -51,6 +52,18 @@ class RebuildEntityIndexCommand implements RebuildIndexCommandInterface, Handler
         if ($entity) {
             return $entity->getName();
         }
+    }
+
+    public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
+    {
+        return [
+            'entityId' => $this->entityId
+        ];
+    }
+
+    public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
+    {
+        $this->entityId = $data['entityId'];
     }
 
 

@@ -51,7 +51,7 @@ class Application extends Container
      * @param string $onBus
      * @return mixed
      */
-    public function executeCommand($command, $onBus = MessageBusManager::BUS_DEFAULT)
+    public function executeCommand($command, $onBus = 'default')
     {
         $messageBus = $this->make(MessageBusManager::class)->getBus($onBus);
         $envelope = $messageBus->dispatch($command);
