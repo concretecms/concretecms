@@ -72,7 +72,7 @@ class Theme extends ConcreteObject
         $db = Loader::db();
         $r = $db->query('select pThemeID from PageThemes'.$where);
         $themes = [];
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $pl = static::getByID($row['pThemeID']);
             $themes[] = $pl;
         }

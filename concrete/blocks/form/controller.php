@@ -265,7 +265,7 @@ class Controller extends BlockController
         $v = [$this->bID];
         $q = "select * from {$this->btTable} where bID = ? LIMIT 1";
         $r = $db->query($q, $v);
-        $row = $r->fetchRow();
+        $row = $r->fetch();
 
         //if the same block exists in multiple collections with the same questionSetID
         if (count($row) > 0) {
@@ -292,7 +292,7 @@ class Controller extends BlockController
             $result = $db->executeQuery($q, $v);
 
             $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId={$oldQuestionSetId} AND bID=" . (int) ($this->bID));
-            while ($row = $rs->fetchRow()) {
+            while ($row = $rs->fetch()) {
                 $v = [$newQuestionSetId, (int) ($row['msqID']), (int) $newBID, $row['question'], $row['inputType'], $row['options'], $row['position'], $row['width'], $row['height'], $row['required'], $row['defaultDate']];
                 $sql = "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                 $db->executeQuery($sql, $v);

@@ -86,11 +86,11 @@ class Type extends ConcreteObject
             $r = $db->Execute('select petID from PermissionAccessEntityTypes order by petID asc');
         }
 
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['petID']);
         }
 
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -138,10 +138,10 @@ class Type extends ConcreteObject
         $list = array();
         $r = $db->Execute('select petID from PermissionAccessEntityTypes where pkgID = ? order by petID asc',
             array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['petID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }

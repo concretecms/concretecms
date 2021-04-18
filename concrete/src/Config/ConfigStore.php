@@ -28,7 +28,7 @@ class ConfigStore
             return;
         }
         $r = $this->db->Execute('select * from ConfigStore where uID = 0 order by cfKey asc');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             if (!$row['pkgID']) {
                 $row['pkgID'] = 0;
             }

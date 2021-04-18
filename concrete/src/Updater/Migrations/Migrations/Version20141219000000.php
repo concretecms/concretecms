@@ -114,7 +114,7 @@ class Version20141219000000 extends AbstractMigration implements RepeatableMigra
         }
         $db = \Database::get();
         $r = $db->Execute('select cID from Pages where cInheritPermissionsFrom = "OVERRIDE" order by cID asc');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $c = Page::getByID($row['cID']);
             if (is_object($c) && !$c->isError()) {
                 $epk->setPermissionObject($c);

@@ -177,7 +177,7 @@ class Service
         $db = $this->entityManager->getConnection();
         $siteTreeID = $skeleton->getLocales()[0]->getSiteTree()->getSiteTreeID();
         $r = $db->executeQuery('select cID from Pages where cIsTemplate = 0 and siteTreeID = ? and cParentID = 0 and cID <> ?', [$siteTreeID, $skeletonHome->getCollectionID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $c = \Page::getByID($row['cID']);
             $c = $c->duplicateAll($home, false, $site);
             $c->moveToRoot();

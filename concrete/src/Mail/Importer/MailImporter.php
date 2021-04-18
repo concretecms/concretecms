@@ -33,7 +33,7 @@ class MailImporter extends ConcreteObject
         $db = Database::connection();
         $r = $db->Execute('select miID from MailImporters order by miID asc');
         $importers = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $importers[] = static::getByID($row['miID']);
         }
 
@@ -48,7 +48,7 @@ class MailImporter extends ConcreteObject
         $db = Database::connection();
         $r = $db->Execute('select miID from MailImporters where miIsEnabled = 1 order by miID asc');
         $importers = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $importers[] = static::getByID($row['miID']);
         }
 
@@ -89,10 +89,10 @@ class MailImporter extends ConcreteObject
         $db = Database::connection();
         $list = array();
         $r = $db->Execute('select miID from MailImporters where pkgID = ? order by miID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['miID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }

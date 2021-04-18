@@ -73,7 +73,7 @@ abstract class DataSource extends ConcreteObject
         $db = Loader::db();
         $list = array();
         $r = $db->Execute('select gasID from GatheringDataSources where pkgID = ? order by gasID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $gas = static::getByID($row['gasID']);
             if (is_object($gas)) {
                 $list[] = $gas;
@@ -89,7 +89,7 @@ abstract class DataSource extends ConcreteObject
         $db = Loader::db();
         $list = array();
         $r = $db->Execute('select gasID from GatheringDataSources order by gasDisplayOrder asc');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $gas = static::getByID($row['gasID']);
             if (is_object($gas)) {
                 $list[] = $gas;
@@ -180,7 +180,7 @@ abstract class DataSource extends ConcreteObject
         $db = Loader::db();
         $r = $db->Execute('select gasID from GatheringDataSources order by gasID asc');
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $gas = static::getByID($row['gasID']);
             if (is_object($gas)) {
                 $list[] = $gas;

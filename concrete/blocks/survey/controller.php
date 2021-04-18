@@ -74,7 +74,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $r = $db->query($q, $v);
             $this->options = [];
             if ($r) {
-                while ($row = $r->fetchRow()) {
+                while ($row = $r->fetch()) {
                     $opt = new Option();
                     $opt->optionID = $row['optionID'];
                     $opt->cID = $this->cID;
@@ -202,7 +202,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $q2 = "SELECT * FROM btSurveyResults WHERE optionID = ?";
             $r2 = $db->query($q2, $v2);
             if ($r2) {
-                while ($row = $r2->fetchRow()) {
+                while ($row = $r2->fetch()) {
                     $v3 = [$newOptionID, $row['uID'], $row['ipAddress'], $row['timestamp']];
                     $q3 = "INSERT INTO btSurveyResults (optionID, uID, ipAddress, timestamp) VALUES (?, ?, ?, ?)";
                     $db->query($q3, $v3);

@@ -310,7 +310,7 @@ class Conversation extends ConcreteObject implements \Concrete\Core\Permission\O
 
         $r = $db->Execute('select uID, type from ConversationSubscriptions where cnvID = ?',
             array($this->getConversationID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             if ($row['type'] == 'U' && in_array($row['uID'], $ids)) {
                 $ids = array_diff($ids, array($row['uID']));
             } else {

@@ -62,7 +62,7 @@ class GroupList extends DatabaseItemList
             $excludeGroupIDs = [GUEST_GROUP_ID, REGISTERED_GROUP_ID];
             $db = Loader::db();
             $r = $db->executeQuery('select gID from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' where gID > ?', [REGISTERED_GROUP_ID]);
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $g = Group::getByID($row['gID']);
                 $gp = new Permissions($g);
                 if (!$gp->canAssignGroup()) {

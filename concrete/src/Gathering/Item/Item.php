@@ -132,7 +132,7 @@ abstract class Item extends ConcreteObject
             'select gatID, gatTypeID from GatheringItemSelectedTemplates where gaiID = ?',
             array($this->gaiID)
         );
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $this->templates[$row['gatTypeID']] = $row['gatID'];
         }
     }
@@ -235,7 +235,7 @@ abstract class Item extends ConcreteObject
             )
         );
         $items = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $item = GatheringItem::getByID($row['gaiID']);
             if (is_object($item)) {
                 $items[] = $item;
@@ -393,7 +393,7 @@ abstract class Item extends ConcreteObject
                 'select gatID from GatheringItemTemplates where gatTypeID = ?',
                 array($type->getGatheringItemTemplateTypeID())
             );
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $templateFeatureHandles = $db->GetCol(
                     'select feHandle from Features f inner join GatheringItemTemplateFeatures af on f.feID = af.feID where gatID = ?',
                     array($row['gatID'])

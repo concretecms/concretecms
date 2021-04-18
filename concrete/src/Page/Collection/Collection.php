@@ -133,7 +133,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             'select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?',
             [$handle]
             );
-        if ($r->numRows() == 0) {
+        if ($r->rowCount() == 0) {
             // there is nothing in the collections table for this page, so we create and grab
 
             $data = [
@@ -141,7 +141,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             ];
             $cObj = self::createCollection($data);
         } else {
-            $row = $r->fetchRow();
+            $row = $r->fetch();
             if ($row['cID'] > 0 && $row['pcID'] == null) {
                 // there is a collection, but it is not a page. so we grab it
                 $cObj = self::getByID($row['cID']);
@@ -538,7 +538,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         $r = $db->query($q, $v);
         $bIDArray = [];
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $bIDArray[] = $row['bID'];
             }
             if (count($bIDArray) > 0) {
@@ -971,9 +971,9 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
         $r = $db->query($q, $v);
         if ($r) {
-            if ($r->numRows() > 0) {
+            if ($r->rowCount() > 0) {
                 // then we know we got a value; we increment it and return
-                $res = $r->fetchRow();
+                $res = $r->fetch();
                 $displayOrder = $res['cbdis'];
                 if ($displayOrder === null) {
                     return 0;
@@ -1006,7 +1006,7 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         if ($r) {
             $displayOrder = 0;
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $args = [$displayOrder, $cID, $cvID, $arHandle, $row['bID']];
                 $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?';
                 $db->query($q, $args);

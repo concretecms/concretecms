@@ -55,7 +55,7 @@ class Version20141113000000 extends AbstractMigration implements RepeatableMigra
 
         // Clean up File stupidity
         $r = $db->Execute('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $db->Execute('delete from Files where fID = ?', [$row['fID']]);
         }
     }

@@ -39,7 +39,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
         $r = $db->executeQuery(
             'SELECT * FROM FilePermissionFileTypeAccessList WHERE paID = ?',
             array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
             $db->executeQuery(
                 'INSERT INTO FilePermissionFileTypeAccessList (peID, paID, permission) VALUES (?, ?, ?)',
@@ -48,7 +48,7 @@ class AddFileFileFolderAccess extends FileFolderAccess
         $r = $db->executeQuery(
             'SELECT * FROM FilePermissionFileTypeAccessListCustom WHERE paID = ?',
             array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['extension']);
             $db->executeQuery(
                 'INSERT INTO FilePermissionFileTypeAccessListCustom  (peID, paID, extension) VALUES (?, ?, ?)',

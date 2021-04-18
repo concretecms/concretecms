@@ -12,7 +12,7 @@ class EditUserPropertiesUserAccess extends UserAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery('select * from UserPermissionEditPropertyAccessList where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$newPA->getPermissionAccessID(),
             $row['peID'],
             $row['attributePermission'],
@@ -27,7 +27,7 @@ class EditUserPropertiesUserAccess extends UserAccess
             $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['akID']];
             $db->executeQuery('insert into UserPermissionEditPropertyAttributeAccessListCustom (peID, paID, akID) values (?, ?, ?)', $v);
         }

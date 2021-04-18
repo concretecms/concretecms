@@ -159,7 +159,7 @@ class Legacy extends DashboardPageController
 
         //index surveys by question set id
         $surveys = [];
-        while ($survey = $surveysRS->fetchRow()) {
+        while ($survey = $surveysRS->fetch()) {
             //get Survey Answers
             $survey['answerSetCount'] = MiniSurvey::getAnswerCount($survey['questionSetId']);
             $surveys[$survey['questionSetId']] = $survey;
@@ -172,7 +172,7 @@ class Legacy extends DashboardPageController
             //get Survey Questions
             $questionsRS = MiniSurvey::loadQuestions($questionSet);
             $questions = [];
-            while ($question = $questionsRS->fetchRow()) {
+            while ($question = $questionsRS->fetch()) {
                 $questions[$question['msqID']] = $question;
             }
 
@@ -228,7 +228,7 @@ class Legacy extends DashboardPageController
         $q = 'SELECT asID FROM btFormAnswerSet WHERE questionSetId = ?';
 
         $r = $db->query($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $asID = $row['asID'];
             $this->deleteAnswers($asID);
         }

@@ -494,7 +494,7 @@ EOT
             $q = 'select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?';
             $r = $db->query($q, [$bID]);
             if ($r) {
-                while ($row = $r->fetchRow()) {
+                while ($row = $r->fetch()) {
                     $cArray[] = Page::getByID($row['cID'], 'RECENT');
                 }
             }
@@ -772,7 +772,7 @@ EOT
             $q = 'select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?';
             $r = $db->query($q, [$this->getBlockID(), $cID, $cvID]);
             if ($r) {
-                return $r->numRows() > 0;
+                return $r->rowCount() > 0;
             }
         } else {
             return isset($this->isOriginal) ? (!$this->isOriginal) : false;
@@ -1626,7 +1626,7 @@ EOT
         $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
         $r = $db->query($q, [$this->getBlockID(), $ovID]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $db->Replace(
                     'BlockPermissionAssignments',
                     [
@@ -1780,7 +1780,7 @@ EOT
                 'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
                 [$bID]
                 );
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $c = Page::getByID($row['cID'], $row['cvID']);
                 $b = self::getByID($row['bID'], $c, $row['arHandle']);
                 $b->delete();

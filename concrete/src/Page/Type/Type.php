@@ -243,7 +243,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             'select pTemplateID from PageTypePageTemplates where ptID = ? order by pTemplateID asc',
             array($this->ptID)
         );
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $pt = PageTemplate::getByID($row['pTemplateID']);
             if (is_object($pt)) {
                 $templates[] = $pt;
@@ -624,7 +624,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $db = \Database::get();
         $r = $db->Execute('select cID from Pages where cIsTemplate = 1 and ptID = ?', array($this->getPageTypeID()));
         $home = Page::getByID(Page::getHomePageID());
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $c = Page::getByID($row['cID']);
             if (is_object($c)) {
                 $nc = $c->duplicate($home);

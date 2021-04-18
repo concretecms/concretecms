@@ -433,7 +433,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $v = array($c->getCollectionID());
             $q = 'select arID, arHandle, cID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal, arParentID from Areas where cID = ?';
             $r = $db->executeQuery($q, $v);
-            while ($arRow = $r->FetchRow()) {
+            while ($arRow = $r->fetch()) {
                 if ($arRow['arID'] > 0) {
                     if ($arRow['arIsGlobal']) {
                         $obj = new GlobalArea($arHandle);
@@ -532,7 +532,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $db = Database::connection();
         $r = $db->executeQuery('select distinct arHandle from Areas where arParentID = 0 and arIsGlobal = 0 order by arHandle asc');
         $handles = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $handles[] = $row['arHandle'];
         }
         unset($r);
@@ -558,7 +558,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $db = Database::connection();
             $r = $db->executeQuery('select arHandle from Areas where cID = ?', array($c->getCollectionID()));
             $areas = array();
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $area = self::get($c, $row['arHandle']);
                 if (is_object($area)) {
                     $areas[] = $area;
@@ -699,7 +699,7 @@ class Area extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             'select Areas.arID, Areas.cID from Areas inner join Pages on (Areas.cID = Pages.cID) where Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cParentID = ?',
             $v
         );
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             // these are all the areas we need to update.
             if ($this->getAreaCollectionInheritID() > 0) {
                 $db->executeQuery(

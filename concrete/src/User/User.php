@@ -47,7 +47,7 @@ class User extends ConcreteObject
         $v = [$uID];
         $q = 'SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage, uLastPasswordChange FROM Users WHERE uID = ? LIMIT 1';
         $r = $db->query($q, $v);
-        $row = $r ? $r->FetchRow() : null;
+        $row = $r ? $r->fetch() : null;
         $nu = null;
         if ($row) {
             $nu = new static();
@@ -184,7 +184,7 @@ class User extends ConcreteObject
             $db = $app->make('Concrete\Core\Database\Connection\Connection');
             $r = $db->query($q, $v);
             if ($r) {
-                $row = $r->fetchRow();
+                $row = $r->fetch();
                 $pw_is_valid_legacy = ($config->get('concrete.user.password.legacy_salt') && self::legacyEncryptPassword($password) == $row['uPassword']);
                 $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
                 if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get('concrete.user.registration.validate_email')) {
@@ -850,7 +850,7 @@ class User extends ConcreteObject
         $q = 'select cIsCheckedOut, cCheckedOutDatetime from Pages where cID = ?';
         $r = $db->executeQuery($q, [$cID]);
         if ($r) {
-            $row = $r->fetchRow();
+            $row = $r->fetch();
             if (!$row['cIsCheckedOut']) {
                 $app['session']->set('editCID', $cID);
                 $uID = $this->getUserID();

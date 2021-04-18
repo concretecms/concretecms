@@ -12,12 +12,12 @@ class EditPageThemePageAccess extends PageAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery('select * from PagePermissionThemeAccessList where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['permission']];
             $db->executeQuery('insert into PagePermissionThemeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from PagePermissionThemeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['pThemeID']];
             $db->executeQuery('insert into PagePermissionThemeAccessListCustom  (peID, paID, pThemeID) values (?, ?, ?)', $v);
         }

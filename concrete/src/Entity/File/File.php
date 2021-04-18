@@ -651,7 +651,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         $v = [$this->fID];
         $q = 'select fID, paID, pkID from FilePermissionAssignments where fID = ?';
         $r = $db->query($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$nf->getFileID(), $row['paID'], $row['pkID']];
             $q = 'insert into FilePermissionAssignments (fID, paID, pkID) values (?, ?, ?)';
             $db->query($q, $v);

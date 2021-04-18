@@ -103,7 +103,7 @@ class Statistics
         //load answers into a nicer multi-dimensional array
         $answerSets = [];
         $answerSetIds = [0];
-        while ($answer = $answerSetsRS->fetchRow()) {
+        while ($answer = $answerSetsRS->fetch()) {
             //answer set id - question id
             $answerSets[$answer['asID']] = $answer;
             $answerSetIds[] = $answer['asID'];
@@ -114,7 +114,7 @@ class Statistics
         $answersRS = $db->query($sql);
 
         //load answers into a nicer multi-dimensional array
-        while ($answer = $answersRS->fetchRow()) {
+        while ($answer = $answersRS->fetch()) {
             //answer set id - question id
             $answerSets[$answer['asID']]['answers'][$answer['msqID']] = $answer;
         }

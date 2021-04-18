@@ -131,7 +131,7 @@ class IndexedSearch
             [$c->getCollectionID(), $c->getVersionID()]
         );
         $th = Loader::helper('text');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             if ($this->matchesArea($row['arHandle'])) {
                 $b = Block::getByID($row['bID'], $c, $row['arHandle']);
                 if (!is_object($b)) {

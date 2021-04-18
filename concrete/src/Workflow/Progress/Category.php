@@ -47,10 +47,10 @@ class Category extends ConcreteObject
         $db = Loader::db();
         $list = array();
         $r = $db->Execute('select wpCategoryID from WorkflowProgressCategories where pkgID = ? order by wpCategoryID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['wpCategoryID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -105,7 +105,7 @@ class Category extends ConcreteObject
         $db = Loader::db();
         $cats = array();
         $r = $db->Execute('select wpCategoryID from WorkflowProgressCategories order by wpCategoryID asc');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $cats[] = static::getByID($row['wpCategoryID']);
         }
 

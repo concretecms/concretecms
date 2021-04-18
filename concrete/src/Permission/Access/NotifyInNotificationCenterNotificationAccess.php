@@ -12,12 +12,12 @@ class NotifyInNotificationCenterNotificationAccess extends NotificationAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery('select * from NotificationPermissionSubscriptionList where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['permission']];
             $db->executeQuery('insert into NotificationPermissionSubscriptionList (peID, paID, permission) values (?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from NotificationPermissionSubscriptionListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['nSubscriptionIdentifier']];
             $db->executeQuery('insert into NotificationPermissionSubscriptionListCustom  (peID, paID, nSubscriptionIdentifier) values (?, ?, ?)', $v);
         }

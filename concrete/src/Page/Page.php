@@ -613,7 +613,7 @@ class Page extends Collection implements CategoryMemberInterface,
         $r = $db->executeQuery($q);
 
         if ($r) {
-            $row = $r->fetchRow();
+            $row = $r->fetch();
             // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
             if (!empty($row['cCheckedOutDatetimeLastEdit'])) {
                 $dh = Core::make('helper/date');
@@ -772,7 +772,7 @@ class Page extends Collection implements CategoryMemberInterface,
         $nc = self::getDraftsParentPage($site);
         $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? order by cDateAdded desc', [$nc->getCollectionID()]);
         $pages = [];
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $entry = self::getByID($row['cID']);
             if (is_object($entry)) {
                 $pages[] = $entry;
@@ -2149,7 +2149,7 @@ EOT
         $q = 'select cID from Pages where cParentID = ? and cIsTemplate = 0 order by cDisplayOrder asc';
         $r = $db->executeQuery($q, [$this->getCollectionID()]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 if ($row['cID'] > 0) {
                     $c = self::getByID($row['cID']);
                     $children[] = $c;
@@ -2570,7 +2570,7 @@ EOT
     {
         $db = Database::connection();
         $r = $db->executeQuery('select arHandle, arIsGlobal from Areas where cID = ?', [$this->getCollectionID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $a = Area::getOrCreate($this, $row['arHandle'], $row['arIsGlobal']);
             $a->rescanAreaPermissionsChain();
         }
@@ -2605,7 +2605,7 @@ EOT
         $q = "select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFromCID = {$pcID}";
         $r = $db->query($q);
         $cList = [];
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $cList[] = $row['cID'];
         }
         if (count($cList) > 0) {
@@ -2632,7 +2632,7 @@ EOT
         $v = [$permissionsCollectionID];
         $q = 'select cID, arHandle, paID, pkID from AreaPermissionAssignments where cID = ?';
         $r = $db->executeQuery($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$this->cID, $row['arHandle'], $row['paID'], $row['pkID']];
             $q = 'insert into AreaPermissionAssignments (cID, arHandle, paID, pkID) values (?, ?, ?, ?)';
             $db->executeQuery($q, $v);
@@ -2643,7 +2643,7 @@ EOT
         $v = [$permissionsCollectionID];
         $q = 'select * from Areas where cID = ? and arOverrideCollectionPermissions';
         $r = $db->executeQuery($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$this->cID, $row['arHandle'], $row['arOverrideCollectionPermissions'], $row['arInheritPermissionsFromAreaOnCID'], $row['arIsGlobal']];
             $q = 'insert into Areas (cID, arHandle, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal) values (?, ?, ?, ?, ?)';
             $db->executeQuery($q, $v);
@@ -2665,7 +2665,7 @@ EOT
         $v = [$permissionsCollectionID];
         $q = 'select cID, paID, pkID from PagePermissionAssignments where cID = ?';
         $r = $db->executeQuery($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$this->cID, $row['paID'], $row['pkID']];
             $q = 'insert into PagePermissionAssignments (cID, paID, pkID) values (?, ?, ?)';
             $db->executeQuery($q, $v);
@@ -2685,7 +2685,7 @@ EOT
         $q = "select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFrom = 'PARENT'";
         $r = $db->query($q);
         $cList = [];
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $cList[] = $row['cID'];
         }
         if (count($cList) > 0) {
@@ -2943,7 +2943,7 @@ EOT
 
         // remove all pages where the pointer is this cID
         $r = $db->executeQuery('select cID from Pages where cPointerID = ?', [$cID]);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             PageStatistics::decrementParents($row['cID']);
             $db->executeQuery('DELETE FROM PagePaths WHERE cID=?', [$row['cID']]);
         }
@@ -2967,7 +2967,7 @@ EOT
 
         $r = $db->executeQuery('select cID from Pages where cParentID = ?', [$cID]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 if ($row['cID'] > 0) {
                     $nc = self::getByID($row['cID']);
                     $nc->delete();
@@ -3930,7 +3930,7 @@ EOT
         $q = "select cID from Pages where cParentID = {$cID} and cIsTemplate = 0 order by {$sortColumn}";
         $r = $db->query($q);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 if ($row['cID'] > 0) {
                     $this->childrenCIDArray[] = $row['cID'];
                     if (!$oneLevelOnly) {
@@ -3958,7 +3958,7 @@ EOT
         $q = 'select cID, ptHandle from Pages p left join PageTypes pt on p.ptID = pt.ptID where cParentID = ? order by cDisplayOrder asc';
         $r = $db->executeQuery($q, [$cID]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 // This is a terrible hack.
                 if ($row['ptHandle'] === STACKS_PAGE_TYPE) {
                     $tc = Stack::getByID($row['cID']);
@@ -4035,7 +4035,7 @@ EOT
         $r = $db->query($q);
 
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $b = Block::getByID($row['bID'], $mc, $row['arHandle']);
                 if ($cAcquireComposerOutputControls || !in_array($b->getBlockTypeHandle(), ['core_page_type_composer_control_output'])) {
                     if ($row['btCopyWhenPropagate']) {
@@ -4088,7 +4088,7 @@ EOT
             // now we acquire
             $q = 'select issID, arHandle from CollectionVersionAreaStyles where cID = ?';
             $r = $db->executeQuery($q, [$mc->getCollectionID()]);
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $db->executeQuery(
                     'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
                     [

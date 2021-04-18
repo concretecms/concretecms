@@ -63,7 +63,7 @@ class History extends ConcreteObject
         $db = Loader::db();
         $r = $db->Execute('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp desc', [$wp->getWorkflowProgressID()]);
         $list = [];
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $obj = $wp->getWorkflowProgressHistoryObjectByID($row['wphID']);
             if (is_object($obj)) {
                 $list[] = $obj;

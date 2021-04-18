@@ -56,13 +56,13 @@ abstract class Template extends ConcreteObject
         $db = Database::connection();
         $list = array();
         $r = $db->executeQuery('select gatID from GatheringItemTemplates where pkgID = ? order by gatID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $agt = static::getByID($row['gatID']);
             if (is_object($agt)) {
                 $agt[] = $agt;
             }
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -72,13 +72,13 @@ abstract class Template extends ConcreteObject
         $db = Database::connection();
         $list = array();
         $r = $db->executeQuery('select gatID from GatheringItemTemplates where gatTypeID = ? order by gatName asc', array($type->getGatheringItemTemplateTypeID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $agt = static::getByID($row['gatID']);
             if (is_object($agt)) {
                 $list[] = $agt;
             }
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -88,13 +88,13 @@ abstract class Template extends ConcreteObject
         $db = Database::connection();
         $list = array();
         $r = $db->executeQuery('select gatID from GatheringItemTemplates order by gatName asc');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $agt = static::getByID($row['gatID']);
             if (is_object($agt)) {
                 $list[] = $agt;
             }
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -266,7 +266,7 @@ abstract class Template extends ConcreteObject
         $db = Database::connection();
         $r = $db->executeQuery('select feID from GatheringItemTemplateFeatures where gatID = ?', array($this->getGatheringItemTemplateID()));
         $features = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $fe = Feature::getByID($row['feID']);
             if (is_object($fe)) {
                 $features[] = $fe;
@@ -319,7 +319,7 @@ abstract class Template extends ConcreteObject
         $db = Database::connection();
         $r = $db->executeQuery('select gatID from GatheringItemTemplates order by gatID asc');
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $agt = static::getByID($row['gatID']);
             if (is_object($agt)) {
                 $list[] = $agt;

@@ -350,7 +350,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             // remove columns we don't want
             unset($columns['bid']);
             $r = $db->Execute('select * from ' . $tbl . ' where bID = ?', [$this->bID]);
-            while ($record = $r->FetchRow()) {
+            while ($record = $r->fetch()) {
                 $tableRecord = $data->addChild('record');
                 foreach ($record as $key => $value) {
                     if (isset($columns[strtolower($key)])) {

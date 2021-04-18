@@ -79,7 +79,7 @@ class ThreadedList extends ItemList
         $v = array($this->cnvID, $cnvMessageParentID);
         $r = $db->Execute('select cnvMessageID from ConversationMessages where cnvID = ? and cnvMessageParentID = ?', $v);
         $messages = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $msg = ConversationMessage::getByID($row['cnvMessageID']);
             if (is_object($msg)) {
                 $msg->messages = $this->getMessages($msg->getConversationMessageID());

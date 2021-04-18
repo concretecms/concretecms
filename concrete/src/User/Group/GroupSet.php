@@ -12,7 +12,7 @@ class GroupSet extends ConcreteObject
         $db = Loader::db();
         $r = $db->Execute('select gsID from GroupSets order by gsName asc');
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['gsID']);
         }
 
@@ -48,10 +48,10 @@ class GroupSet extends ConcreteObject
         $db = Loader::db();
         $list = array();
         $r = $db->Execute('select gsID from GroupSets where pkgID = ? order by gsID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['gsID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -129,7 +129,7 @@ class GroupSet extends ConcreteObject
         $db = Loader::db();
         $r = $db->Execute('select gID from GroupSetGroups where gsID = ? order by gID asc', $this->getGroupSetId());
         $groups = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $g = Group::getByID($row['gID']);
             if (is_object($g)) {
                 $groups[] = $g;

@@ -105,7 +105,7 @@ class Pile extends ConcreteObject
         $v = array($pID);
         $q = "select pID, uID, isDefault, name, state from Piles where pID = ?";
         $r = $db->query($q, $v);
-        $row = $r->fetchRow();
+        $row = $r->fetch();
 
         $p = new self();
         if (is_array($row)) {
@@ -252,7 +252,7 @@ class Pile extends ConcreteObject
         $piles = array();
         $r = $db->query($q, $v);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $piles[] = self::get($row['pID']);
             }
         }
@@ -338,7 +338,7 @@ class Pile extends ConcreteObject
         $v = array($this->pID);
         $q = "select pcID from PileContents where pID = ? order by {$order}";
         $r = $db->query($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $pc[] = PileContent::get($row['pcID']);
         }
 
@@ -433,7 +433,7 @@ class Pile extends ConcreteObject
         $q = "select pcID from PileContents where pID = ? order by displayOrder asc";
         $r = $db->query($q, $v);
         $currentDisplayOrder = 0;
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v1 = array($currentDisplayOrder, $row['pcID']);
             $q1 = "update PileContents set displayOrder = ? where pcID = ?";
             $db->query($q1, $v1);
