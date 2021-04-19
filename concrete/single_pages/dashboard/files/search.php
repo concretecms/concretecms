@@ -32,7 +32,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
         <table class="ccm-search-results-table" data-search-results="files">
             <thead>
             <tr>
-                <th colspan="2" class="ccm-search-results-bulk-selector">
+                <th colspan="3" class="ccm-search-results-bulk-selector">
                     <div class="btn-group dropdown">
                             <span class="btn btn-secondary" data-search-checkbox-button="select-all">
                                 <!--suppress HtmlFormInputWithoutLabel -->

@@ -44,13 +44,6 @@ class AddGroupCommandValidator
             $errorList->add(t("Name required."));
         }
 
-        if ($command->isBadge()) {
-            $badgeDescription = $this->textService->sanitize($command->getBadgeDescription());
-            if (!$badgeDescription) {
-                $errorList->add(t('You must specify a description for this badge. It will be displayed publicly.'));
-            }
-        }
-
         if ($this->checkPermissions) {
             if ($command->getParentGroupID()) {
                 $parentGroupNode = GroupNode::getTreeNodeByGroupID($command->getParentGroupID());

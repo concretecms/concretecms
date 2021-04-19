@@ -35,6 +35,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $this->edit();
         $this->set('title', t('Topics'));
+        $this->set('titleFormat', 'h5');
     }
     
     public function getRequiredFeatures(): array

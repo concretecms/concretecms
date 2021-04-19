@@ -30,6 +30,10 @@
     <field name="ptID" type="smallint">
       <unsigned/>
     </field>
+    <field name="titleFormat" type="string" size="20">
+        <default value="h5" />
+		<notnull/>
+    </field>
   </table>
 
 </schema>

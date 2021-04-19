@@ -114,6 +114,10 @@ class ExifDataExtractor implements PostProcessorInterface
             // create a handle
             $handle = 'exif_' . str_replace(' ', '_', strtolower($label));
 
+            if (!is_string($value)) {
+                continue;
+            }
+            
             if (preg_match('/[a-zA-Z]/i', $value)) {
                 // collect the keyword
                 $keywords[] = $value;

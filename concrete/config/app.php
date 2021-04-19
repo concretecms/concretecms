@@ -125,9 +125,7 @@ return [
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
-        /*
-        'core_imageeditor' => '\Concrete\Core\ImageEditor\EditorServiceProvider',
-        */
+
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
@@ -324,7 +322,7 @@ return [
         'PNG' => ['png', FileType::T_IMAGE, 'image', 'image', 'image'],
         'Windows Bitmap' => ['bmp', FileType::T_IMAGE, 'image'],
         'TIFF' => ['tif,tiff', FileType::T_IMAGE, 'image'],
-        'HTML' => ['htm,html', FileType::T_IMAGE],
+        'HTML' => ['htm,html', FileType::T_DOCUMENT],
         'Flash' => ['swf', FileType::T_IMAGE, 'image'],
         'Icon' => ['ico', FileType::T_IMAGE],
         'SVG' => ['svg', FileType::T_IMAGE, false, 'image'],
@@ -543,13 +541,18 @@ return [
 
         'tui-image-editor' => [
             [
-                'javascript',
-                'js/tui-image-editor.js',
-            ],
-            [
                 'css',
                 'css/tui-image-editor.css',
             ],
+            [
+                'javascript',
+                'js/tui-image-editor.js',
+            ],
+        ],
+        'core/translator' => [
+            ['javascript', 'js/translator.js', ['minify' => false]],
+            ['javascript-localized', '/ccm/assets/localization/translator/js'],
+            ['css', 'css/translator.css', ['minify' => false]],
         ],
     ],
     'asset_groups' => [
@@ -608,7 +611,6 @@ return [
                 ['css', 'core/cms'],
             ],
         ],
-
         'fullcalendar' => [
             [
                 ['javascript', 'fullcalendar'],
@@ -618,9 +620,17 @@ return [
 
         'tui-image-editor' => [
             [
+                ['css', 'tui-image-editor'],
                 ['javascript', 'tui-image-editor'],
-                ['css', 'tui-image-editor']
-            ]
+            ],
+        ],
+
+        'core/translator' => [
+            [
+                ['css', 'core/translator'],
+                ['javascript-localized', 'core/translator'],
+                ['javascript', 'core/translator'],
+            ],
         ],
 
         // Fallback/minimal assets groups

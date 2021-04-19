@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a3',
     'version_installed' => '9.0.0a3',
-    'version_db' => '20210103123200', // the key of the latest database migration
+    'version_db' => '20210419000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -149,6 +149,8 @@ return [
                 'password' => '',
                 'encryption' => '',
                 'messages_per_connection' => null,
+                // The domain to be used in the HELO/EHLO step (if empty we'll use localhost)
+                'helo_domain' => 'localhost',
             ],
         ],
     ],
@@ -668,6 +670,7 @@ return [
     'misc' => [
         'user_timezones' => false,
         'package_backup_directory' => DIR_FILES_UPLOADED_STANDARD . '/trash',
+        'display_package_delete_button' => true,
         'enable_progressive_page_reindex' => true,
         'mobile_theme_id' => 0,
         'sitemap_approve_immediately' => true,

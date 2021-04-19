@@ -113,6 +113,10 @@ echo $userInterface->tabs([
 
         <div class="form-group">
             <div class="form-check">
+                <?php echo $form->checkbox('enablePagination', 1, $enablePagination) ?>
+                <?php echo $form->label('enablePagination', t('Display pagination interface in results.'), ["class" => "form-check-label"]) ?>
+            </div>
+            <div class="form-check">
                 <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection) ?>
                 <?php echo $form->label('enableItemsPerPageSelection', t('Allow users to select items per page.'), ["class" => "form-check-label"]) ?>
             </div>
@@ -138,8 +142,11 @@ echo $userInterface->tabs([
         <div>
             <div class="form-group">
                 <?php echo $form->label('tableName', t('Name')) ?>
-                <?php echo $form->text('tableName', $tableName, array('maxlength' => '128')) ?>
-            </div>
+			    <div class="input-group">
+                	<?php echo $form->text('tableName', $tableName, array('maxlength' => '128')) ?>
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+				</div>
+			</div>
 
             <div class="form-group">
                 <?php echo $form->label('tableDescription', t('Description')) ?>

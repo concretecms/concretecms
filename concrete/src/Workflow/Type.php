@@ -238,8 +238,8 @@ class Type extends ConcreteObject
             ->where($qb->expr()->eq('pkgID', $pkg->getPackageID()))
         ;
         $list = [];
-        foreach ($qb->execute()->fetchAll() as $id) {
-            $list[] = static::getByID($id);
+        foreach ($qb->execute()->fetchAll() as $row) {
+            $list[] = static::getByID($row['wftID']);
         }
         $cmp = new Comparer();
         usort($list, function (Type $a, Type $b) use ($cmp) {

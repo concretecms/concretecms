@@ -74,6 +74,7 @@ class DeleteGroupCommandHandler
         $table = $this->connection->getDatabasePlatform()->quoteSingleIdentifier('Groups');
         $this->connection->query('DELETE FROM UserGroups WHERE gID = ?', [intval($groupID)]);
         $this->connection->query('DELETE FROM ' . $table . ' WHERE gID = ?', [(int) $groupID]);
+        $this->connection->query('delete from GroupSelectedRoles where gID = ?', [(int) $groupID]);
     }
 
 

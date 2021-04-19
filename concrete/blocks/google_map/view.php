@@ -20,7 +20,7 @@ if ($c->isEditMode()) {
     <?php
     $loc->popActiveContext();
 } else { ?>
-    <?php if (strlen($title) > 0) { ?><h3><?= $title; ?></h3><?php } ?>
+    <?php if (strlen($title) > 0) { ?><<?php echo $titleFormat; ?>><?= $title; ?></<?php echo $titleFormat; ?>><?php } ?>
     <div class="googleMapCanvas"
          style="width: <?= $width; ?>; height: <?= $height; ?>"
          data-zoom="<?= $zoom; ?>"

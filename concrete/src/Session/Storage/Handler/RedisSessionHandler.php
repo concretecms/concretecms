@@ -13,6 +13,7 @@
 
 namespace Concrete\Core\Session\Storage\Handler;
 
+use SessionHandler;
 
 /**
  * Redis based session storage handler based on the Redis class
@@ -21,7 +22,7 @@ namespace Concrete\Core\Session\Storage\Handler;
  * @author Dalibor Karlović <dalibor@flexolabs.io>
  * modified by Derek Cameron <derek@concrete5.co.jp> for concrete5 from symfony 4.1
  */
-class RedisSessionHandler extends \SessionHandler
+class RedisSessionHandler extends SessionHandler
 {
 
     private $redis;
@@ -80,7 +81,7 @@ class RedisSessionHandler extends \SessionHandler
      */
     protected function doWrite($sessionId, $data)
     {
-        $result = $this->redis->setEx($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'), $data);
+        $result = $this->redis->setex($this->prefix.$sessionId, (int) ini_get('session.gc_maxlifetime'), $data);
 
         return $result;
     }

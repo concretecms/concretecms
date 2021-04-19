@@ -105,7 +105,15 @@
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>user, group, people, permissions, expire, badges</value>
+                    <value>user, group, people, permissions, expire</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Group Types" path="/dashboard/users/group_types" filename="/dashboard/users/group_types.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>group types, group type</value>
                 </attributekey>
             </attributes>
         </page>

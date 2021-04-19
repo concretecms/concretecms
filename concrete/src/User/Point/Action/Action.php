@@ -221,6 +221,7 @@ class Action
     }
 
     /**
+     * @deprecated
      * @return int
      */
     public function getUserPointActionBadgeGroupID()
@@ -234,6 +235,7 @@ class Action
     }
 
     /**
+     * @deprecated
      * @return Group
      */
     public function getUserPointActionBadgeGroupObject()

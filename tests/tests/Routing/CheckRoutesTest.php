@@ -43,6 +43,7 @@ class CheckRoutesTest extends TestCase
     public function testRouteDestination(Application $app, $path, $callable)
     {
         $checked = false;
+
         if (preg_match('/^([^:]+)::([^:]+)$/', $callable, $m)) {
             $class = $m[1];
             $method = $m[2];

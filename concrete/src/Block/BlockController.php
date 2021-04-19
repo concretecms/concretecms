@@ -54,6 +54,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btTable = null;
     protected $btID;
 
+    public static $btTitleFormats = ['h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3', 'h4' => 'H4', 'h5' => 'H5', 'h6' => 'H6', 'p' => 'Normal'];
+
     /**
      * Set this to true if the data sent to the save/performSave methods can contain NULL values that should be persisted.
      *

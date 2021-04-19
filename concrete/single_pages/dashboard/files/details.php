@@ -25,7 +25,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 $file = $fileVersion->getFile();
-?>
+if ($view->controller->getAction() == 'preview_version') { ?>
+    <div class="alert alert-info d-flex align-items-center"><div><?=t('You are currently previewing file version %s.', $fileVersion->getFileVersionID())?></div>
+    <a href="<?=URL::to('/dashboard/files', 'details', $file->getFileID())?>" class="btn-sm btn btn-secondary d-flex ml-auto"><?=t('Exit Preview')?></a>
+    </div>
+<?php } ?>
+
 <section>
     <h3><?= t('Preview') ?></h3>
     <div class="ccm-file-manager-details-preview">
@@ -34,87 +39,113 @@ $file = $fileVersion->getFile();
         </div>
         <div class="ccm-file-manager-details-preview-actions">
             <?php
-            if ($filePermissions->canEditFileContents()) {
-                ?>
-                <div class="mb-4">
-                    <a
-                            class="btn btn-secondary dialog-launch"
-                            dialog-title="<?= t('Swap') ?>"
-                            dialog-width="80%" dialog-height="600"
-                            href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
-                    ><?= t('Swap') ?></a>
-                    <div class="text-muted">
-                        <i><?= t('Upload a new file to be used everywhere this current file is referenced.') ?></i>
-                    </div>
-                </div>
-                <?php
-            }
-            if ($filePermissions->canEditFileContents()) {
-                ?>
-                <div class="mb-4">
-                    <form method="POST" action="<?= h($controller->action('rescan', $file->getFileID())) ?>">
-                        <?php $token->output("ccm-filedetails-rescan-{$file->getFileID()}") ?>
-                        <button type="submit" class="btn btn-secondary"><?= t('Rescan') ?></button>
-                    </form>
-                    <div class="text-muted">
-                        <i><?= t('Automatically regenerate thumbnails for all sizes of this image.') ?></i></div>
-                </div>
-                <?php
-            }
-            if ($fileVersion->getTypeObject()->getGenericType() === \Concrete\Core\File\Type\Type::T_IMAGE
-                && $filePermissions->canEditFileContents()) {
-                ?>
-                <div class="mb-4">
-                    <a
-                            class="btn btn-secondary dialog-launch"
-                            dialog-title="<?= t('Edit') ?>"
-                            dialog-width="90%" dialog-height="75%"
-                            href="<?=URL::to('/ccm/system/dialogs/file/thumbnails?fID=' . $file->getFileID())?>"
-                    ><?= t('Thumbnails') ?></a>
-                    <div class="text-muted">
-                        <i><?= t('Adjust the thumbnails for this image.') ?></i></div>
-                </div>
-                <?php
-            }
-            if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
-                ?>
-                <div class="mb-4">
-                    <a
-                            class="btn btn-secondary dialog-launch"
-                            dialog-title="<?= t('Edit') ?>"
-                            dialog-width="90%" dialog-height="75%"
-                            href="<?= h($resolverManager->resolve(['/ccm/system/file/edit?fID=' . $file->getFileID()])) ?>"
-                    ><?= t('Edit') ?></a>
-                    <div class="text-muted">
-                        <?php
-                        if ($fileVersion->getTypeObject()->getGenericType() === \Concrete\Core\File\Type\Type::T_IMAGE) { ?>
-                            <i><?= t('Resize, crop or apply filters to this image.') ?></i>
-                        <?php } else { ?>
-                            <i><?= t('Edit this file.') ?></i>
+            if ($view->controller->getAction() == 'preview_version') { ?>
 
-                        <?php
-                        }
-                        ?>
+                <div class="card mb-3 h-100 d-flex align-items-center justify-content-center">
+                    <div>
+                        <h2 class="card-title"><?=t('File Preview')?></h2>
+                        <p class="card-text"><?=t('File actions are not available in preview mode.')?></p>
                     </div>
                 </div>
-                <?php
-            }
-            if ($filePermissions->canEditFilePermissions()) {
+
+            <?php } else {
+                if ($filePermissions->canEditFileContents()) {
+                    ?>
+                    <div class="mb-4">
+                        <a
+                                class="btn btn-secondary dialog-launch"
+                                dialog-title="<?= t('Swap') ?>"
+                                dialog-width="80%" dialog-height="600"
+                                href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
+                        ><?= t('Swap') ?></a>
+                        <div class="text-muted">
+                            <i><?= t('Upload a new file to be used everywhere this current file is referenced.') ?></i>
+                        </div>
+                    </div>
+                    <?php
+                }
+                if ($filePermissions->canEditFileContents()) {
+                    ?>
+                    <div class="mb-4">
+                        <form method="POST" action="<?= h($controller->action('rescan', $file->getFileID())) ?>">
+                            <?php $token->output("ccm-filedetails-rescan-{$file->getFileID()}") ?>
+                            <button type="submit" class="btn btn-secondary"><?= t('Rescan') ?></button>
+                        </form>
+                        <div class="text-muted">
+                            <i><?= t('Automatically regenerate thumbnails for all sizes of this image.') ?></i></div>
+                    </div>
+                    <?php
+                }
+                if ($fileVersion->getTypeObject()->getGenericType() === \Concrete\Core\File\Type\Type::T_IMAGE
+                    && $filePermissions->canEditFileContents()) {
+                    ?>
+                    <div class="mb-4">
+                        <a
+                                class="btn btn-secondary dialog-launch"
+                                dialog-title="<?= t('Edit') ?>"
+                                dialog-width="90%" dialog-height="75%"
+                                href="<?=URL::to('/ccm/system/dialogs/file/thumbnails?fID=' . $file->getFileID())?>"
+                        ><?= t('Thumbnails') ?></a>
+                        <div class="text-muted">
+                            <i><?= t('Adjust the thumbnails for this image.') ?></i></div>
+                    </div>
+                    <?php
+                }
+                if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
+                    ?>
+                    <div class="mb-4">
+                        <a
+                                class="btn btn-secondary dialog-launch"
+                                dialog-title="<?= t('Edit') ?>"
+                                dialog-width="90%" dialog-height="75%"
+                                href="<?= h($resolverManager->resolve(['/ccm/system/file/edit?fID=' . $file->getFileID()])) ?>"
+                        ><?= t('Edit') ?></a>
+                        <div class="text-muted">
+                            <?php
+                            if ($fileVersion->getTypeObject()->getGenericType() === \Concrete\Core\File\Type\Type::T_IMAGE) { ?>
+                                <i><?= t('Resize, crop or apply filters to this image.') ?></i>
+                            <?php } else { ?>
+                                <i><?= t('Edit this file.') ?></i>
+
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                }
+                if ($filePermissions->canEditFilePermissions()) {
+                    ?>
+                    <div class="mb-4">
+                        <a
+                            class="btn btn-secondary dialog-launch"
+                            dialog-title="<?= t('Permissions') ?>"
+                            dialog-width="520" dialog-height="500"
+                            href="<?=URL::to('/ccm/system/file/permissions?fID=' . $file->getFileID())?>"
+                        ><?= t('Permissions') ?></a>
+                        <div class="text-muted">
+                            <i><?= t('Configure who can view or edit this file.') ?></i>
+                        </div>
+                    </div>
+                    <?php
+                }
+                if ($filePermissions->canEditFileProperties()) {
+                    ?>
+                    <div>
+                        <a
+                                class="btn btn-secondary dialog-launch"
+                                dialog-title="<?= t('Versions') ?>"
+                                dialog-width="80%" dialog-height="600"
+                                href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/versions?fID=' . $file->getFileID()])) ?>"
+                        ><?= t('Versions') ?></a>
+                        <div class="text-muted">
+                            <i><?= t('Access or approve old versions of this file.') ?></i>
+                        </div>
+                    </div>
+                    <?php
+                }
                 ?>
-                <div>
-                    <a
-                        class="btn btn-secondary dialog-launch"
-                        dialog-title="<?= t('Permissions') ?>"
-                        dialog-width="520" dialog-height="500"
-                        href="<?=URL::to('/ccm/system/file/permissions?fID=' . $file->getFileID())?>"
-                    ><?= t('Permissions') ?></a>
-                    <div class="text-muted">
-                        <i><?= t('Configure who can view or edit this file.') ?></i>
-                    </div>
-                </div>
-                <?php
-            }
-            ?>
+            <?php } ?>
         </div>
     </div>
 </section>
@@ -122,12 +153,14 @@ $file = $fileVersion->getFile();
 <hr class="mt-5 mb-4"/>
 
 <section>
+    <?php if ($view->controller->getAction() != 'preview_version') { ?>
     <a
             class="btn btn-secondary btn-section dialog-launch"
             dialog-title="<?= t('Attributes') ?>"
             dialog-width="850" dialog-height="80%"
             href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/properties?fID=' . $file->getFileID()])) ?>"
     ><?= t('Edit') ?></a>
+    <?php } ?>
     <h3><?= t('Attributes') ?></h3>
     <dl class="ccm-file-manager-details-attributes">
         <dt><?= t('Title') ?></dt>
@@ -207,13 +240,15 @@ $file = $fileVersion->getFile();
 
 <section>
     <h3><?=t('Sets')?></h3>
-    <a
-            class="btn btn-secondary btn-section dialog-launch"
-            dialog-title="<?= t('Sets') ?>"
-            dialog-width="850" dialog-height="600"
-            href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/sets?fID=' . $file->getFileID()])) ?>">
-        <?=t('Edit')?>
-        </a>
+    <?php if ($view->controller->getAction() != 'preview_version') { ?>
+        <a
+                class="btn btn-secondary btn-section dialog-launch"
+                dialog-title="<?= t('Sets') ?>"
+                dialog-width="850" dialog-height="600"
+                href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/sets?fID=' . $file->getFileID()])) ?>">
+            <?=t('Edit')?>
+            </a>
+        <?php } ?>
     <dl class="ccm-file-manager-details-sets">
         <dt><?= t('Sets') ?></dt>
         <dd>
@@ -361,18 +396,20 @@ $file = $fileVersion->getFile();
 <hr class="mt-5 mb-4"/>
 
 <section>
-    <?php
-    if ($filePermissions->canEditFilePermissions()) {
-        ?>
-        <a
-                class="btn btn-secondary float-right dialog-launch"
-                dialog-title="<?= t('Storage Location') ?>"
-                dialog-width="500" dialog-height="400"
-                href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()])) ?>"
-        ><?= t('Edit') ?></a>
+    <?php if ($view->controller->getAction() != 'preview_version') { ?>
         <?php
-    }
-    ?>
+        if ($filePermissions->canEditFilePermissions()) {
+            ?>
+            <a
+                    class="btn btn-secondary float-right dialog-launch"
+                    dialog-title="<?= t('Storage Location') ?>"
+                    dialog-width="500" dialog-height="400"
+                    href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()])) ?>"
+            ><?= t('Edit') ?></a>
+            <?php
+        }
+        ?>
+    <?php } ?>
     <h3><?= t('Storage') ?></h3>
     <dl class="ccm-file-manager-details-storage">
         <dt><?= t('Tracked URL') ?></dt>

@@ -3,7 +3,7 @@
 <div class="ccm-block-topic-list-wrapper">
 
     <div class="ccm-block-topic-list-header">
-        <h5><?php echo h($title); ?></h5>
+		<<?php echo $titleFormat; ?>><?php echo h($title); ?></<?php echo $titleFormat; ?>>
     </div>
 
     <?php

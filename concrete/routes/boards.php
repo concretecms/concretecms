@@ -1,9 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: <none>
+ * Namespace: <none>
+ */
+
 $router->all('/ccm/system/dialogs/boards/permissions/{pkCategoryHandle}', '\Concrete\Controller\Dialog\Board\Permissions::view');
 $router->all('/ccm/system/dialogs/boards/custom_slot/replace', '\Concrete\Controller\Dialog\Board\CustomSlot::replace');
 $router->post('/ccm/system/dialogs/boards/custom_slot/search_items', '\Concrete\Controller\Dialog\Board\CustomSlot::searchItems');

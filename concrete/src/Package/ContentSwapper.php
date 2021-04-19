@@ -97,7 +97,12 @@ class ContentSwapper implements ContentSwapperInterface
             // now we parse the content.xml if it exists.
 
             $ci = new ContentImporter();
-            $ci->importContentFile($package->getPackagePath() . '/content.xml');
+
+            if (isset($options["contentSwapFile"])) {
+                $ci->importContentFile($package->getPackagePath() . '/' . $options["contentSwapFile"]);
+            } else {
+                $ci->importContentFile($package->getPackagePath() . '/content.xml');
+            }
 
             \Core::make('cache/request')->enable();
         }

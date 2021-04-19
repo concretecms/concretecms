@@ -36,6 +36,10 @@ class ManagerServiceProvider extends ServiceProvider
 
             return $manager;
         });
+        $this->app->singleton('manager/search_field/group', function($app) {
+            $manager = $this->app->make('Concrete\Core\User\Group\Search\Field\Manager');
 
+            return $manager;
+        });
     }
 }

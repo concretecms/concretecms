@@ -28,8 +28,17 @@
   },
   "bin": [ "bin/concrete5" ],
   "require": {
+    "php": "^7.2||^8.0",
+    "ext-dom": "*",
+    "ext-fileinfo": "*",
+    "ext-gd": "*",
+    "ext-iconv": "*",
+    "ext-mbstring": "*",
     "ext-PDO": "*",
-    "php": ">=7.2",
+    "ext-pdo_mysql": "*",
+    "ext-SimpleXML": "*",
+    "ext-curl": "*",
+    "ext-zip": "*",
     "symfony/class-loader": "^3.4",
     "symfony/http-foundation": "^5.2",
     "symfony/routing": "^5.2",
@@ -98,6 +107,8 @@
     "symfony/polyfill-uuid": "^1.20",
     "symfony/mercure": "^0.4.1",
     "dragonmantank/cron-expression": "^3.1"
+    "symfony/polyfill-uuid": "^1.20",
+    "predis/predis": "^1.1"
   },
   "extra": {
     "branch-alias": {

@@ -139,7 +139,9 @@ if ($key !== null) {
     </fieldset>
 
 <?php
-    if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface) {
+    if ($category && $category instanceof \Concrete\Core\Attribute\Category\StandardCategoryInterface &&
+        !$category instanceof \Concrete\Core\Attribute\Category\ExpressCategory) {
+
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
 
         try {

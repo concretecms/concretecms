@@ -8,4 +8,9 @@ use Concrete\Core\User\Group\Command\Traits\ExistingGroupTrait;
 class DeleteGroupCommand extends Command
 {
     use ExistingGroupTrait;
+
+    public function __construct(int $groupId)
+    {
+        $this->setGroupID($groupId);
+    }
 }

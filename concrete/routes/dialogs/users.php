@@ -1,13 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router $router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
 /*
  * Base path: /ccm/system/dialogs/user
- * Namespace: Concrete\Controller\Dialog\User\
+ * Namespace: Concrete\Controller\Dialog\User
  */
+
 $router->all('/bulk/properties', 'Bulk\Properties::view');
 $router->all('/bulk/properties/get_attribute', 'Bulk\Properties::getAttribute');
 $router->all('/bulk/properties/submit', 'Bulk\Properties::submit');

@@ -77,14 +77,14 @@ if ($controller->getAction() == 'add') {
     $attachmentsEnabled = intval($config->get('conversations.attachments_enabled'));
     $notificationUsers = Conversation::getDefaultSubscribedUsers();
     $subscriptionEnabled = intval($config->get('conversations.subscription_enabled'));
-    $fileAccessFileTypesBlacklist = $config->get('conversations.files.disallowed_types');
-
-    if ($fileAccessFileTypesBlacklist === null) {
-        $fileAccessFileTypesBlacklist = $config->get('concrete.upload.extensions_blacklist');
-    }
-
-    $fileAccessFileTypesBlacklist = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesBlacklist);
 }
+$fileAccessFileTypesBlacklist = $config->get('conversations.files.disallowed_types');
+
+if ($fileAccessFileTypesBlacklist === null) {
+    $fileAccessFileTypesBlacklist = $config->get('concrete.upload.extensions_blacklist');    
+}
+
+$fileAccessFileTypesBlacklist = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesBlacklist);
 
 if (!$dateFormat) {
     $dateFormat = 'default';
