@@ -28,7 +28,7 @@
   },
   "bin": [ "bin/concrete5" ],
   "require": {
-    "php": "^7.2||^8.0",
+    "php": "^7.3||^8.0",
     "ext-dom": "*",
     "ext-fileinfo": "*",
     "ext-gd": "*",
@@ -46,7 +46,7 @@
     "symfony/event-dispatcher": "^5.2",
     "symfony/messenger": "^5.2",
     "symfony/serializer": "^5.2",
-    "symfony/yaml":"^5.2",
+    "symfony/yaml":"^4",
     "doctrine/dbal": "~2.5",
     "doctrine/orm": "^2.6.3",
     "doctrine/common": "^2",
@@ -104,9 +104,8 @@
     "theorchard/monolog-cascade": "0.5.x-dev",
     "commerceguys/addressing": "^1.0",
     "sabre/vobject": "^4.3",
-    "symfony/polyfill-uuid": "^1.20",
     "symfony/mercure": "^0.4.1",
-    "dragonmantank/cron-expression": "^3.1"
+    "dragonmantank/cron-expression": "^3.1",
     "symfony/polyfill-uuid": "^1.20",
     "predis/predis": "^1.1"
   },
