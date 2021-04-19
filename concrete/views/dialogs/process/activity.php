@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/javascript">
     $(function() {
-        Concrete.Vue.activateContext('backend', function (Vue, config) {
+        Concrete.Vue.activateContext('cms', function (Vue, config) {
             new Vue({
                 el: '#ccm-process-list',
                 components: config.components,

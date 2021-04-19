@@ -10,6 +10,7 @@ use Concrete\Core\Validation\CSRF\Token;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\EventListener\StopWorkerOnMessageLimitListener;
+use Symfony\Component\Messenger\EventListener\StopWorkerOnTimeLimitListener;
 use Symfony\Component\Messenger\RoutableMessageBus;
 use Symfony\Component\Messenger\Worker;
 
@@ -68,6 +69,7 @@ class Messenger extends AbstractController
         if ($this->token->validate('consume_messages', $this->request->request->get('token'))) {
             session_write_close();
             $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(5, $this->logger));
+            $this->eventDispatcher->addSubscriber(new StopWorkerOnTimeLimitListener(5, $this->logger));
             $worker = new Worker(
                 [$this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC)],
                 $this->bus,

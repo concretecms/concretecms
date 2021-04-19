@@ -8,6 +8,9 @@ use Job;
 use JobSet;
 use Response;
 
+/**
+ * @Deprecated. Use tasks instead.
+ */
 class Jobs extends Controller
 {
     public function view()

@@ -60,7 +60,6 @@ class RunningProcessesController extends Controller
         $link = new Link('#', '');
         $link->setAttribute('onclick', "ConcreteEvent.publish('TaskActivityWindowShow', {'token': '$token'})");
         $link->setAttribute('title', t('Active Processes'));
-        $link->setAttribute('data-launch-dialog', 'activity');
         $show_tooltips = (bool) \Config::get('concrete.accessibility.toolbar_tooltips');
         if ($show_tooltips) {
             $link->setAttribute('class', 'launch-tooltip');

@@ -345,7 +345,6 @@ class StartingPointPackage extends Package
     protected function install_tasks()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/jobs.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/tasks.xml');
     }
 

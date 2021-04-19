@@ -30,7 +30,7 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
             'If set to automatic, queued actions like file rescans and bulk page deletions be performed when triggered, but may abort if leaving a page. Want to improve their efficiency and/or ensure they run in the background? Enable manual queue processing.'
         ) ?></div>
     <div class="alert alert-warning" v-show="listening === 'worker'"><?= t(
-            'If you enable manual listening you <b>must</b> ensure the queue listener is running at least one worker: <code>concrete/bin/concrete5 messenger:consume</code>'
+            'If you enable manual listening you <b>must</b> ensure the queue listener is running at least one worker: <code>concrete/bin/concrete5 messenger:consume async</code>'
         ); ?></div>
 
 

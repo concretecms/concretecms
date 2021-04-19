@@ -43,7 +43,6 @@ class RemoveOldPageVersionsController extends AbstractController
         return $definition;
     }
 
-
     public function getTaskRunner(TaskInterface $task, InputInterface $input): TaskRunnerInterface
     {
         $query = $this->db->createQueryBuilder();

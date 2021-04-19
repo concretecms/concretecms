@@ -8,6 +8,7 @@ use Concrete\Core\Command\Task\Controller\DeactivateUsersController;
 use Concrete\Core\Command\Task\Controller\GenerateSitemapController;
 use Concrete\Core\Command\Task\Controller\ProcessEmailController;
 use Concrete\Core\Command\Task\Controller\ReindexContentController;
+use Concrete\Core\Command\Task\Controller\RemoveOldFileAttachmentsController;
 use Concrete\Core\Command\Task\Controller\RemoveOldPageVersionsController;
 use Concrete\Core\Command\Task\Controller\RescanFilesController;
 use Concrete\Core\Command\Task\Controller\UpdateStatisticsController;
@@ -61,6 +62,11 @@ class Manager extends CoreManager
     public function createProcessEmailDriver()
     {
         return $this->container->make(ProcessEmailController::class);
+    }
+
+    public function createRemoveOldFileAttachmentsDriver()
+    {
+        return $this->container->make(RemoveOldFileAttachmentsController::class);
     }
 
     public function __construct(Application $app)
