@@ -522,7 +522,13 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      */
     public function getBindingForUser($user)
     {
-        return $this->getBindingService()->getUserBinding($user, $this->getHandle());
+        if (is_object($user)) {
+            $userID = $user->getUserID();
+        } else {
+            $userID = (int) $user;
+        }
+
+        return $this->getBindingService()->getUserBinding($userID, $this->getHandle());
     }
 
     public function getUniqueId()
