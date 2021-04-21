@@ -66,10 +66,9 @@ class Controller extends GeolocatorController
         $configuration = $this->geolocator->getGeolocatorConfiguration();
         $uri = str_replace('[[IP]]', rawurlencode((string) $address), $configuration['url']);
         $httpClient = $this->app->make(HttpClient::class);
-        $httpClient->setUri($uri);
         $result = new GeolocationResult();
         try {
-            $response = $httpClient->send();
+            $response = $httpClient->get($uri);
         } catch (Exception $x) {
             $result->setError(GeolocationResult::ERR_NETWORK, t('Request to geoPlugin failed: %s', $x->getMessage()), $x);
         }
