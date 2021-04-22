@@ -22,6 +22,7 @@
 
     function attachDelete(elem) {
         elem.find('a.delete').click(function(e) {
+            e.preventDefault();
             $(this).closest('div.survey-block-option').remove();
             if (options.children().length === 0) {
                 $("<div class='empty'>None</div>").appendTo(options)

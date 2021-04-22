@@ -29,6 +29,7 @@
                 element.attr('href', '#'); // Just to make the pointer nice instead of a text handle.
             },
             eventClick: function(event, jsView, view) {
+                jsView.preventDefault();
                 ConcreteEvent.publish('CalendarEventSearchDialogSelectEvent', {
                     id: event.id,
                     title: event.title
