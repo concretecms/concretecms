@@ -54,8 +54,14 @@ class ContainerArea
             $subArea->setSubAreaBlockObject($block);
             return $subArea;
         }
+        return null;
     }
 
+    public function getTotalBlocksInArea(Page $page): int
+    {
+        $blocks = $this->getAreaBlocksArray($page);
+        return count($blocks);
+    }
 
     public function display(Page $page)
     {
