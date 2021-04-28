@@ -23,7 +23,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'PageTypes',
         'Collections',
         'CollectionVersions',
-        'CollectionVersionFeatureAssignments',
         'CollectionVersionBlockStyles',
         'CollectionVersionThemeCustomStyles',
         'CollectionVersionRelatedEdits',
@@ -42,7 +41,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks',
         'PageTypeComposerFormLayoutSets',
-        'BlockFeatureAssignments',
         'BlockPermissionAssignments',
     ]; // so brutal
 

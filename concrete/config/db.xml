@@ -1575,27 +1575,6 @@
     </index>
   </table>
 
-  <table name="CollectionVersionFeatureAssignments">
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="cvID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="1"/>
-    </field>
-    <field name="faID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <index name="faID">
-      <col>faID</col>
-    </index>
-  </table>
-
   <table name="CollectionVersionThemeCustomStyles">
     <field name="cID" type="integer" size="10">
       <unsigned/>
@@ -1629,37 +1608,6 @@
     </index>
     <index name="sccRecordID">
       <col>sccRecordID</col>
-    </index>
-  </table>
-
-  <table name="BlockFeatureAssignments">
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="cvID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="bID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="faID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <index name="faID">
-      <col>faID</col>
-      <col>cID</col>
-      <col>cvID</col>
-    </index>
-    <index name="bID">
-      <col>bID</col>
     </index>
   </table>
 
