@@ -73,9 +73,9 @@ class Logging extends DashboardPageController
         $logFile = $handler === 'file' ? (string) $request->request->get('logFile') : null;
         $enableDashboardReport = $request->request->get('enable_dashboard_report') ? true : false;
         $loggingLevel = strtoupper((string) $request->request->get('logging_level'));
-        $intLogErrorsPost = $request->request->get('ENABLE_LOG_ERRORS') === 1 ? 1 : 0;
-        $intLogEmailsPost = $request->request->get('ENABLE_LOG_EMAILS') === 1 ? 1 : 0;
-        $intLogApiPost = $request->request->get('ENABLE_LOG_API') === 1 ? 1 : 0;
+        $intLogErrorsPost = $request->request->get('ENABLE_LOG_ERRORS') ? 1 : 0;
+        $intLogEmailsPost = $request->request->get('ENABLE_LOG_EMAILS') ? 1 : 0;
+        $intLogApiPost = $request->request->get('ENABLE_LOG_API') ? 1 : 0;
 
 
         // Handle 'file' based logging
