@@ -61,7 +61,6 @@
       <col>ptID</col>
     </index>
   </table>
-
   <table name="PageTypePageTemplates">
     <field name="ptID" type="integer" size="10">
       <unsigned/>
