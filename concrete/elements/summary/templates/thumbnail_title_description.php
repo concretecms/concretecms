@@ -1,10 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="row">
-    <div class="col-4">
-        <img class="img-fluid" src="<?=$thumbnail?>">
+<div class="row mb-3">
+    <div class="col-sm-4 d-flex">
+        <img class="img-fluid ml-auto mr-auto" src="<?=$thumbnail?>">
     </div>
-    <div class="col-8">
+    <div class="col-sm-8">
         <a href="<?=$link?>"><?=$title?></a>
         <?php if ($date) { ?>
             <div><small class="text-muted"><?=date('F d, Y', (string) $date)?></small></div>
