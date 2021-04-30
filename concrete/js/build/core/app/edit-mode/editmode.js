@@ -325,7 +325,7 @@
 
                 if (block instanceof Concrete.Layout) {
                     areas = areas.filter(function (a) {
-                        return (a.getElem().hasClass('ccm-global-area') === false);
+                        return block.getArea() === a;
                     });
                     ConcreteMenuManager.$clickProxy.show();
                     $('div.ccm-area').removeClass('ccm-area-inline-edit-disabled');
