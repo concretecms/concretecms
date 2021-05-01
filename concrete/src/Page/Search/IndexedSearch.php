@@ -8,7 +8,7 @@ use Concrete\Core\Support\Facade\Application;
 use Loader;
 use Config;
 use PageList;
-use Collection;
+use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Area\SubArea;
 use Block;
