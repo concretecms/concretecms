@@ -71,6 +71,15 @@ class Factory
             ->findAll();
         foreach($keys as $key) {
             $translations->insert('AttributeKeyName', $key->getAttributeKeyName());
+
+            // text attribute placeholder
+            $type = $key->getAttributeKeySettings();
+            if ($type instanceof \Concrete\Core\Entity\Attribute\Key\Settings\TextSettings) {
+                $placeholder = $type->getPlaceholder();
+                if ($placeholder !== '') {
+                    $translations->insert('AttributeKeyPlaceholder', $placeholder);
+                }
+            }
         }
         return $translations;
     }
