@@ -229,6 +229,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             throw new \RuntimeException('Cannot resolve collections without a reference to the application');
         }
 
+        $dl = $this->app->make('multilingual/detector');
+        $dl->setupSiteInterfaceLocalization($collection);
+
         $request = $this->request;
 
         if ($collection->isError() && $collection->getError() == COLLECTION_NOT_FOUND) {
@@ -311,8 +314,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $response;
         }
 
-        $dl = $cms->make('multilingual/detector');
-
         if (!$request->getPath()
             && $request->isMethod('GET')
             && !$request->query->has('cID')
@@ -338,7 +339,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
-        $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);
         $u = $this->app->make(User::class);
