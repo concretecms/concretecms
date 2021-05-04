@@ -217,7 +217,6 @@ return [
         'single_page',
         'storage_location_type',
         'theme',
-        'user_point_action',
         'workflow',
         'workflow_progress_category',
         'workflow_type',
