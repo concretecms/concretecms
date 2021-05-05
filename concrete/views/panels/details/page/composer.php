@@ -179,6 +179,7 @@ var ConcretePageComposerDetail = {
             // otherwise lead to an extra version being created for the page
             // after the publish action has been already called.
             my.saver.disable();
+            window.onbeforeunload = null;
             var submitSuccess = false;
             $.concreteAjax({
                 data: data.data,
