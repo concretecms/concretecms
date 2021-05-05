@@ -36,6 +36,7 @@ var ConcretePageComposerDetail = {
     saving: false,
     saver: null,
     $form: $('form[data-panel-detail-form=compose]'),
+    confirmClose: false,
 
     saveDraft: function(onComplete) {
         var my = this;
@@ -58,19 +59,14 @@ var ConcretePageComposerDetail = {
         if (this.saver) {
             this.saver.resetIdleTimer();
         }
-        // #7692
-        window.onbeforeunload = function (event) {
-            // @see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload#example
-            event.preventDefault();
-            event.returnValue = '';
-        }
+        this.confirmClose = true;
     },
 
     disableAutosave: function() {
         if (this.saver) {
             this.saver.disableIdleTimer();
         }
-        window.onbeforeunload = null;
+        this.confirmClose = false;
     },
 
     updateWatchers: function() {
@@ -179,7 +175,7 @@ var ConcretePageComposerDetail = {
             // otherwise lead to an extra version being created for the page
             // after the publish action has been already called.
             my.saver.disable();
-            window.onbeforeunload = null;
+            my.confirmClose = false;
             var submitSuccess = false;
             $.concreteAjax({
                 data: data.data,
@@ -198,7 +194,7 @@ var ConcretePageComposerDetail = {
         });
 
         ConcreteEvent.subscribe('AjaxRequestError',function(r) {
-            if (this.saver) {
+            if (my.saver) {
                 my.saver.disable();
             }
         });
@@ -207,8 +203,16 @@ var ConcretePageComposerDetail = {
             this.saver.enable();
         }
         my.enableAutosave();
-    }
 
+        // #7692
+        window.addEventListener('beforeunload', function (event) {
+            if (my.confirmClose) {
+                // @see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload#example
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        });
+    }
 };
 
 $(function() {
