@@ -58,12 +58,19 @@ var ConcretePageComposerDetail = {
         if (this.saver) {
             this.saver.resetIdleTimer();
         }
+        // #7692
+        window.onbeforeunload = function (event) {
+            // @see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload#example
+            event.preventDefault();
+            event.returnValue = '';
+        }
     },
 
     disableAutosave: function() {
         if (this.saver) {
             this.saver.disableIdleTimer();
         }
+        window.onbeforeunload = null;
     },
 
     updateWatchers: function() {
