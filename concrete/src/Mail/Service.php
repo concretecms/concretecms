@@ -144,6 +144,15 @@ class Service
         $this->reset();
     }
 
+    public function __destruct()
+    {
+        try {
+            $this->transport = null;
+        } catch (Exception $x) {
+        } catch (Throwable $x) {
+        }
+    }
+
     /**
      * Clean up the instance of this object (reset the class scope variables).
      */
