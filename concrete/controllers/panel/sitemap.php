@@ -47,9 +47,10 @@ class Sitemap extends BackendInterfaceController
         $drafts = ConcretePage::getDrafts($this->site);
         $mydrafts = array();
         foreach ($drafts as $d) {
+            $dp = new Permissions($d);
             $pt = $d->getPagetypeObject();
             $tp = new Permissions($pt);
-            if ($tp->canEditPageTypeDrafts()) {
+            if ($tp->canEditPageTypeDrafts() || $dp->canEditPageContents()) {
                 $mydrafts[] = $d;
             }
         }
