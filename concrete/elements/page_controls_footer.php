@@ -233,10 +233,21 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
         } else {
             if ($c->getCollectionPointerID() > 0) {
                 $buttons = [];
-                $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '" class="btn btn-secondary btn-sm">' . t('View/Edit Original') . '</a>';
+                $buttons[] = \HtmlObject\Link::create(
+                    DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID,
+                    t('View/Edit Original'),
+                    ['class' => 'btn btn-secondary btn-sm']
+                );
                 if ($canApprovePageVersions) {
                     $url = URL::to('/ccm/system/dialogs/page/delete_alias?cID=' . $c->getCollectionPointerOriginalID());
-                    $buttons[] = '<a href="' . $url . '" dialog-title="' . t('Remove Alias') . '" class="dialog-launch btn btn-sm btn-danger">' . t('Remove Alias') . '</a>';
+                    $buttons[] = \HtmlObject\Link::create(
+                        $url,
+                        t('Remove Alias'),
+                        [
+                            'class' => 'dialog-launch btn btn-sm btn-danger',
+                            'dialog-title' => t('Remove Alias')
+                        ]
+                    );
                 }
                 echo $cih->notify([
                     'title' => t('Page Alias.'),
