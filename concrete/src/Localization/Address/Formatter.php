@@ -6,6 +6,8 @@ use CommerceGuys\Addressing\AddressFormat\AddressFormat;
 use CommerceGuys\Addressing\Formatter\DefaultFormatter;
 use CommerceGuys\Addressing\Locale;
 use CommerceGuys\Addressing\Subdivision\Subdivision;
+use Concrete\Core\Localization\Service\StatesProvincesList;
+use Concrete\Core\Support\Facade\Application;
 
 class Formatter extends DefaultFormatter
 {
@@ -100,6 +102,42 @@ class Formatter extends DefaultFormatter
                 $subdivisionValue,
                 $parents
             );
+
+            if (!$subdivision && $field === 'administrativeArea') {
+                // The states/provinces are formatted differently in the c5
+                // states and provinces list than in commerceguys/addressing.
+                // E.g. for Japan, c5 knows Tokyo as '13' where
+                // commerceguys/addressing knows it as 'JP-13'. Therefore, try
+                // if the alternative ISO code exists.
+                $subdivision = $this->subdivisionRepository->get(
+                    $address->getCountryCode() . '-' . $subdivisionValue,
+                    $parents
+                );
+                foreach ($this->subdivisionRepository->getAll($parents) as $sd) {
+                    if ($sd->getIsoCode() === $subdivisionValue ||
+                        $sd->getIsoCode() === $address->getCountryCode() . '-' . $subdivisionValue
+                    ) {
+                        $subdivision = $sd;
+                        break;
+                    }
+                }
+
+                if (!$subdivision) {
+                    // Finally, if the subdivision is unknown to
+                    // commerceguys/addressing, fallback to the c5 states and
+                    // provinces.
+                    $app = Application::getFacadeApplication();
+                    $spList = $app->make(StatesProvincesList::class);
+                    $subValue = $spList->getStateProvinceName(
+                        $subdivisionValue,
+                        $address->getCountryCode()
+                    );
+
+                    if (!empty($subValue)) {
+                        $values[$field] = $subValue;
+                    }
+                }
+            }
 
             if (!$subdivision) {
                 break;
