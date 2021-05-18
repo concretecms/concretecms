@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Core\Localization\Address;
 
-use CommerceGuys\Addressing\AddressInterface;
 use CommerceGuys\Addressing\AddressFormat\AddressFormat;
+use CommerceGuys\Addressing\AddressInterface;
 use CommerceGuys\Addressing\Formatter\DefaultFormatter;
 use CommerceGuys\Addressing\Locale;
 use CommerceGuys\Addressing\Subdivision\Subdivision;
@@ -72,15 +73,15 @@ class Formatter extends DefaultFormatter
      * This only gets the subdivision values and possibly converts the normally
      * returned codes to subdivision names.
      *
-     * @param  AddressInterface $address       the address for which to fetch
-     *                                         the subdivisions
-     * @param  AddressFormat    $addressFormat the address format object
-     *                                         defining the used subdivision
-     *                                         fields
+     * @param AddressInterface $address the address for which to fetch
+     *                                  the subdivisions
+     * @param AddressFormat $addressFormat the address format object
+     *                                     defining the used subdivision
+     *                                     fields
      *
-     * @return array                           an array containing the keys of
-     *                                         the subdivision fields and their
-     *                                         corresponding values
+     * @return array an array containing the keys of
+     *               the subdivision fields and their
+     *               corresponding values
      */
     protected function getSubdivisionValuesWithNames(
         AddressInterface $address,
@@ -92,7 +93,7 @@ class Formatter extends DefaultFormatter
         $parents = [$address->getCountryCode()];
         foreach ($subdivisionFields as $index => $field) {
             $getter = 'get' . ucfirst($field);
-            $subdivisionValue = $address->$getter();
+            $subdivisionValue = $address->{$getter}();
             if (empty($subdivisionValue)) {
                 // This level is empty, so there can be no sublevels.
                 break;
@@ -166,15 +167,15 @@ class Formatter extends DefaultFormatter
     /**
      * Gets the subdivision's name value.
      *
-     * @param  AddressInterface $address     the address for which to get the
-     *                                       name
-     * @param  Subdivision      $subdivision the subdivision's code to get
-     *                                       the name for
+     * @param AddressInterface $address the address for which to get the
+     *                                  name
+     * @param Subdivision $subdivision the subdivision's code to get
+     *                                 the name for
      *
-     * @return string|null                   a text representation of the
-     *                                       subdivision's name or null if a
-     *                                       corresponding text representation
-     *                                       does not exist
+     * @return string|null a text representation of the
+     *                     subdivision's name or null if a
+     *                     corresponding text representation
+     *                     does not exist
      */
     protected function getSubdivisionNameValue(
         AddressInterface $address,
