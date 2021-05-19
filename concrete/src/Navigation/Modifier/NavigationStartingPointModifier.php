@@ -23,7 +23,9 @@ class NavigationStartingPointModifier implements ModifierInterface
     public function modify(NavigationInterface $navigation)
     {
         $startingPageItem = $this->getPageItemFromNavigation($this->startingPage, $navigation->getItems());
-        $navigation->setItems($startingPageItem->getChildren());
+        if ($startingPageItem) {
+            $navigation->setItems($startingPageItem->getChildren());
+        }
     }
 
 }
