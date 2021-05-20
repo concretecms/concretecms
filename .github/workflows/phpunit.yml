@@ -1,4 +1,4 @@
-name: "PHPUnit tests"
+name: "PHPUnit"
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   phpunit:
-    name: "PHPUnit tests"
+    name: "PHPUnit"
     env:
       LC_ALL: en_US.UTF-8
       CODE_COVERAGE: n
@@ -102,4 +102,4 @@ jobs:
         if: env.CODE_COVERAGE == 'y'
         run: |
           wget --tries=5 https://scrutinizer-ci.com/ocular.phar
-          php ocular.phar code-coverage:upload --format=php-clover --access-token="af5bb16e306ccb703dfafefeec6ed989084edc4712fe417203e122975129b406" coverage.clover
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover
