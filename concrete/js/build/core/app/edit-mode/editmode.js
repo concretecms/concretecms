@@ -324,9 +324,12 @@
                     contenders;
 
                 if (block instanceof Concrete.Layout) {
-                    areas = [_(areas).find(function (a) {
+                    areas = areas.filter(function (a) {
                         return block.getArea() === a;
-                    })];
+                    });
+                    ConcreteMenuManager.$clickProxy.show();
+                    $('div.ccm-area').removeClass('ccm-area-inline-edit-disabled');
+                    block.getElem().removeClass('ccm-block-edit-inline-active');
                 }
 
                 contenders = _.flatten(_(areas).map(function (area) {
@@ -367,6 +370,11 @@
                 Concrete.event.fire('EditModeContenders', []);
                 Concrete.event.fire('EditModeSelectableContender');
                 html.removeClass('ccm-block-dragging');
+                if (data.block instanceof Concrete.Layout) {
+                    ConcreteMenuManager.$clickProxy.hide();
+                    $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
+                    data.block.getElem().addClass('ccm-block-edit-inline-active');
+                }
 
                 if (data.block instanceof Concrete.BlockType) return;
                 my.scanBlocks();
