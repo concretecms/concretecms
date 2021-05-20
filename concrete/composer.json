@@ -112,5 +112,8 @@
     "branch-alias": {
       "dev-develop": "8.x-dev"
     }
+  },
+  "conflict": {
+    "doctrine/dbal": ">=2.12"
   }
 }
