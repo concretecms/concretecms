@@ -71,13 +71,13 @@ class FormatterTest extends TestCase
         // out and defines in which language the administrative area is printed
         $address = $address->withLocale('en');
         $address = $address->withCountryCode('JP');
-        $address = $address->withAddressLine1('13, Chiyoda 1-Chome');
+        $address = $address->withAddressLine1('1-13, Chiyoda');
         $address = $address->withAdministrativeArea('13');
         $address = $address->withLocality('Tokyo');
         $address = $address->withPostalCode('101-0054');
 
         $this->assertEquals(
-            '13, Chiyoda 1-Chome' . "\n" .
+            '1-13, Chiyoda' . "\n" .
             'Tokyo, Tokyo' . "\n" .
             '101-0054' . "\n" .
             'Japan',
