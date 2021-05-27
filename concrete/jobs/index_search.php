@@ -3,7 +3,11 @@ namespace Concrete\Job;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\File\File;
 use Concrete\Core\Job\JobQueueMessage;
+use Concrete\Core\Page\Page;
+use Concrete\Core\User\User;
 
 class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
 {
