@@ -3,11 +3,14 @@ namespace Concrete\Job;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\File\File;
+use Concrete\Core\Job\JobQueue;
 use Concrete\Core\Job\JobQueueMessage;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\User;
+use Punic\Misc as PunicMisc;
 
 class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
 {
@@ -30,24 +33,35 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
 
     protected function queueMessages()
     {
-        $generator = parent::queueMessages();
+        $pages = $pagesToRemove = $usersToRemove = $filesToRemove = $sitesToRemove = $expressEntriesToRemove = 0;
 
-        foreach ($generator as $item) {
-            yield $item;
+        foreach ($this->pagesToQueue() as $id) {
+            yield "P{$id}";
+            $pages++;
         }
-
         foreach ($this->pagesToRemove() as $id) {
             yield "RP{$id}";
+            $pagesToRemove++;
         }
         foreach ($this->usersToRemove() as $id) {
             yield "RU{$id}";
+            $usersToRemove++;
         }
         foreach ($this->filesToRemove() as $id) {
             yield "RF{$id}";
+            $filesToRemove++;
         }
         foreach ($this->sitesToRemove() as $id) {
             yield "RS{$id}";
+            $sitesToRemove++;
         }
+        foreach ($this->expressEntriesToRemove() as $id) {
+            yield "RE{$id}";
+            $expressEntriesToRemove++;
+        }
+
+        // Yield the result very last
+        yield 'R' . json_encode([$pages, $pagesToRemove, $usersToRemove, $filesToRemove, $sitesToRemove, $expressEntriesToRemove]);
     }
 
 
@@ -79,6 +93,9 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
                 break;
             case 'S':
                 $index->forget(Site::class, $message);
+                break;
+            case 'E':
+                $index->forget(Entry::class, $message);
                 break;
         }
     }
@@ -116,6 +133,27 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
         }
     }
 
+    public function finish(JobQueue $q)
+    {
+        if ($this->result) {
+            list($pages, $pagesToRemove, $usersToRemove, $filesToRemove, $sitesToRemove, $expressEntriesToRemove) = $this->result;
+
+            return t(
+                'Index performed on: %s',
+                PunicMisc::joinAnd([
+                    t2('%d page', '%d pages', $pages),
+                    t2('%d deleted page', '%d deleted pages', $pagesToRemove),
+                    t2('%d deleted user', '%d deleted users', $usersToRemove),
+                    t2('%d deleted file', '%d deleted files', $filesToRemove),
+                    t2('%d deleted site', '%d deleted sites', $sitesToRemove),
+                    t2('%d deleted express entry', '%d deleted express entries', $expressEntriesToRemove),
+                ])
+            );
+        }
+
+        return t('Indexed pages, users, files, sites and express data.');
+    }
+
     /**
      * Get a list of sites to remove from the search index
      *
@@ -141,6 +179,16 @@ class IndexSearch extends IndexSearchAll implements ApplicationAwareInterface
      * @return int[]
      */
     protected function usersToRemove()
+    {
+        return [];
+    }
+
+    /**
+     * Get a list of express entries to remove from the search index
+     *
+     * @return int[]
+     */
+    protected function expressEntriesToRemove()
     {
         return [];
     }
