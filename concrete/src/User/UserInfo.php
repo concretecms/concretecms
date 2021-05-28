@@ -338,7 +338,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             ]
         );
 
-        $this->connection->executeQuery('update Users set uHasAvatar = 1 where uID = ? limit 1', [$this->getUserID()]);
+        $this->connection->executeQuery('update Users set uHasAvatar = 1, uDateLastUpdated = NOW() where uID = ? limit 1', [$this->getUserID()]);
 
         // run any internal event we have for user update
         $ui = $this->application->make(UserInfoRepository::class)->getByID($this->getUserID());
@@ -893,6 +893,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function getUserID()
     {
         return $this->entity->getUserID();
+    }
+
+    /**
+     * @see \Concrete\Core\Entity\User\User::getUserID()
+     */
+    public function getUserDateLastUpdated()
+    {
+        return $this->entity->getUserDateLastUpdated();
     }
 
     /**
