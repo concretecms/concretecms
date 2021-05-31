@@ -56,7 +56,7 @@ $idHelper = $app->make(Identifier::class);
                 <?php echo t('Cancel'); ?>
             </button>
 
-            <button type="button" data-dialog-action="submit" class="btn btn-primary float-right">
+            <button type="button" data-dialog-action="submit" class="btn btn-primary float-end">
                 <?php echo t('Move Location'); ?>
             </button>
         </div>

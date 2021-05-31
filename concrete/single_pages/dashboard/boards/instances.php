@@ -93,7 +93,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=t('Cancel')?></button>
-                            <button type="submit" class="btn btn-primary float-right"><?=t('Create Instance')?></button>
+                            <button type="submit" class="btn btn-primary float-end"><?=t('Create Instance')?></button>
                         </div>
                     </div>
                 </div>

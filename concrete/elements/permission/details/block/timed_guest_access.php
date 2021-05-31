@@ -70,7 +70,7 @@ foreach ($list as $pa) {
                    class="btn btn-secondary float-left"/>
 
             <input type="submit" onclick="$('#ccm-permissions-timed-guest-access-form').submit()"
-                   value="<?php echo h(t('Save')) ?>" class="btn btn-primary float-right"/>
+                   value="<?php echo h(t('Save')) ?>" class="btn btn-primary float-end"/>
         </div>
     </form>
 </div>

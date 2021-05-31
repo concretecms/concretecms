@@ -100,7 +100,7 @@ $form = $app->make(Form::class);
                     </td>
 
                     <td>
-                        <a class="btn btn-danger btn-sm float-right ccm-remove-access-entity" href="javascript:void(0);"
+                        <a class="btn btn-danger btn-sm float-end ccm-remove-access-entity" href="javascript:void(0);"
                            data-access-entity-id="<%=accessEntityItem.accessEntityId%>"
                            data-access-id="<%=accessEntityItem.accessId%>">
                             <i class="fa fa-trash"></i> <?php echo t("Remove Access Entity"); ?>

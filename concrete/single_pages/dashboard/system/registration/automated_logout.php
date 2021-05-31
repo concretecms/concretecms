@@ -44,7 +44,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-right">
+            <div class="float-end">
                 <a href="javascript:void(0)" class="btn btn-danger" id="invalidate-sessions-button"><?= t('Log out all active users') ?></a>
                 <button class="btn btn-primary" type="submit"><?= t('Save') ?></button>
             </div>

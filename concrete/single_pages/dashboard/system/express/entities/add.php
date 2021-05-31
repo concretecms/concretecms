@@ -25,7 +25,7 @@ $form = $app->make(Form::class);
     <div class="form-group <?php if ($error->containsField('name')) { ?>has-error<?php } ?>">
         <?php echo $form->label('name', t('Name')); ?>
 
-        <div class="float-right">
+        <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
             </span>
@@ -41,7 +41,7 @@ $form = $app->make(Form::class);
     <div class="form-group <?php if ($error->containsField('handle')) { ?>has-error<?php } ?>">
         <?php echo $form->label('handle', t('Handle')); ?>
 
-        <div class="float-right">
+        <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
             </span>
@@ -125,7 +125,7 @@ $form = $app->make(Form::class);
                 <?php echo t('Back to List') ?>
             </a>
 
-            <button class="float-right btn btn-primary" type="submit">
+            <button class="float-end btn btn-primary" type="submit">
                 <?php echo t('Save') ?>
             </button>
         </div>

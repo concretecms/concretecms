@@ -34,7 +34,7 @@ $url = $app->make('url/manager');
         <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu float-right" role="menu">
+        <ul class="dropdown-menu float-end" role="menu">
             <li><a href="<?=$url->resolve([$desktop])?>"><?=t('My Account')?></a></li>
             <li class="divider"></li>
             <?php

@@ -65,7 +65,7 @@ $form = $app->make(Form::class);
                     <?php echo t('Cancel') ?>
                 </a>
 
-                <button type="submit" class="btn btn-primary float-right">
+                <button type="submit" class="btn btn-primary float-end">
                     <?php echo t('Update Set') ?>
                 </button>
             </div>
@@ -88,7 +88,7 @@ $form = $app->make(Form::class);
                         <?php echo t('Cancel') ?>
                     </button>
 
-                    <button class="btn btn-danger float-right" onclick="$('div[data-dialog=delete-set] form').submit()">
+                    <button class="btn btn-danger float-end" onclick="$('div[data-dialog=delete-set] form').submit()">
                         <?php echo t('Delete Set') ?>
                     </button>
                 </div>
@@ -148,7 +148,7 @@ $form = $app->make(Form::class);
                         </div>
 
                         <div class="control-group">
-                            <?php echo $form->submit('submit', t('Add Set'), ['class' => 'btn btn-primary float-right']); ?>
+                            <?php echo $form->submit('submit', t('Add Set'), ['class' => 'btn btn-primary float-end']); ?>
                         </div>
                     </fieldset>
                 </form>

@@ -73,7 +73,7 @@ foreach ($customRegex as $regex => $description) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-right">
+            <div class="float-end">
                 <a href="#" class="btn btn-danger" v-on:click.prevent="restoreDefaultValues"><?= t('Restore to Default Values') ?></a>
                 <button class="btn btn-primary" type="submit"><?= t('Save') ?></button>
             </div>

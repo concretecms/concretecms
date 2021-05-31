@@ -47,7 +47,7 @@ class UserInterface
     public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' float-right';
+            $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
             $innerClass .= ' float-left';
         }
@@ -77,7 +77,7 @@ class UserInterface
     public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' float-right';
+            $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
             $innerClass .= ' float-left';
         }
@@ -103,7 +103,7 @@ class UserInterface
     public function buttonJs($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' float-right';
+            $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
             $innerClass .= ' float-left';
         }

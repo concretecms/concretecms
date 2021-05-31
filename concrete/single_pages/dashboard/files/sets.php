@@ -152,7 +152,7 @@ $dh = $app->make(Date::class);
                     <?php echo t('Back') ?>
                 </a>
 
-                <?php echo $form->submit('save', t('Save'), ['class' => 'btn btn-primary float-right']); ?>
+                <?php echo $form->submit('save', t('Save'), ['class' => 'btn btn-primary float-end']); ?>
             </div>
         </div>
     </form>

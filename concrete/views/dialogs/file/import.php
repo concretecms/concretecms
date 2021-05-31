@@ -215,7 +215,7 @@ $dropZoneId = "ccm-drop-zone-" . $idHelper->getString();
             <?php echo t('Cancel') ?>
         </button>
 
-        <button type="button" id="ccm-import-files-button" @click="uploadFiles" class="btn btn-primary float-right">
+        <button type="button" id="ccm-import-files-button" @click="uploadFiles" class="btn btn-primary float-end">
             <?php echo t('Import') ?>
         </button>
     </div>

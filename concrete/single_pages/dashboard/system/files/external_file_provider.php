@@ -100,11 +100,11 @@ switch ($controller->getAction()) {
                     </a>
 
                     <?php if ($externalFileProvider !== null) { ?>
-                        <button type="submit" class="btn btn-primary float-right">
+                        <button type="submit" class="btn btn-primary float-end">
                             <?php echo t('Save'); ?>
                         </button>
                     <?php } else { ?>
-                        <button type="submit" class="btn btn-primary float-right">
+                        <button type="submit" class="btn btn-primary float-end">
                             <?php echo t('Add'); ?>
                         </button>
                     <?php } ?>

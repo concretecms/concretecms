@@ -70,7 +70,7 @@ foreach ($locales as $locale) {
                     <p><?= t('Delete this multilingual section? This will remove the entire site tree and its content from your website.') ?></p>
                     <div class="dialog-buttons">
                         <button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-                        <button class="btn btn-danger float-right" onclick="$('form[data-form=delete-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Delete') ?></button>
+                        <button class="btn btn-danger float-end" onclick="$('form[data-form=delete-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Delete') ?></button>
                     </div>
                 </form>
                 <?php
@@ -95,7 +95,7 @@ foreach ($locales as $locale) {
                 </div>
                 <div class="dialog-buttons">
                     <button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-                    <button class="btn btn-primary float-right" onclick="$('form[data-form=change-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Update') ?></button>
+                    <button class="btn btn-primary float-end" onclick="$('form[data-form=change-locale-<?= $locale->getLocaleID() ?>]').submit()" type="submit"><?= t('Update') ?></button>
                 </div>
             </form>
         </div>
@@ -160,7 +160,7 @@ foreach ($locales as $locale) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <?php $token->output('set_default') ?>
-            <button class="float-right btn btn-primary" type="submit" name="save"><?= t('Save Settings') ?></button>
+            <button class="float-end btn btn-primary" type="submit" name="save"><?= t('Save Settings') ?></button>
         </div>
     </div>
 </form>
@@ -201,7 +201,7 @@ foreach ($locales as $locale) {
             </fieldset>
             <div class="dialog-buttons">
                 <button class="btn btn-secondary float-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
-                <button class="btn btn-primary float-right" data-dialog-action="submit"><?= t('Add Locale') ?></button>
+                <button class="btn btn-primary float-end" data-dialog-action="submit"><?= t('Add Locale') ?></button>
             </div>
             <?php $token->output('add_content_section') ?>
         </form>

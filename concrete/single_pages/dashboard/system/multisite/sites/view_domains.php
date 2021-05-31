@@ -53,7 +53,7 @@ $siteMenu->render();
                 <li>
                     <span>
                         <?= h($domain->getDomain()) ?>
-                        <a href="<?= $controller->action('delete_domain', $domain->getDomainID(), $token->generate('delete_domain')) ?>" class="float-right icon-link"><i class="fas fa-trash-alt"></i></a>
+                        <a href="<?= $controller->action('delete_domain', $domain->getDomainID(), $token->generate('delete_domain')) ?>" class="float-end icon-link"><i class="fas fa-trash-alt"></i></a>
                     </span>
                 </li>
                 <?php
@@ -67,7 +67,7 @@ $siteMenu->render();
 
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
-        <div class="float-right">
+        <div class="float-end">
             <button class="btn btn-primary" data-dialog="add-domain" data-dialog-title="<?= t('Add Domain') ?>"><?= t('Add Domain') ?></button>
         </div>
     </div>

@@ -16,7 +16,7 @@
         <div class="dialog-buttons">
             <button class="btn btn-secondary float-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
             <button type="button" data-dialog-action="submit"
-                    class="btn btn-danger float-right"><?= t('Delete') ?></button>
+                    class="btn btn-danger float-end"><?= t('Delete') ?></button>
         </div>
 
 

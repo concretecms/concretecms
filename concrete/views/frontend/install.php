@@ -281,7 +281,7 @@ if ($install_config) {
                     <?= t('Back') ?>
                 </a>
 
-                <button class="float-right btn btn-primary btn-sm" onclick="$(this).parent().submit()">
+                <button class="float-end btn btn-primary btn-sm" onclick="$(this).parent().submit()">
                     <?= t('Continue to Installation') ?>
                 </button>
             </form>
@@ -580,7 +580,7 @@ if ($install_config) {
             <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
             <div class="ccm-install-actions">
                 <div class="w-100">
-                    <button type="submit" class="btn btn-primary btn-sm float-right">
+                    <button type="submit" class="btn btn-primary btn-sm float-end">
                         <?= t('Install concrete5') ?>
                     </button>
                 </div>
@@ -731,7 +731,7 @@ if ($install_config) {
         <div class="w-100">
             <div id="install-progress-summary"><?= t('Beginning Installation') ?></div>
             <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'"
-                    data-button="installation-complete" class="float-right btn btn-sm btn-primary">
+                    data-button="installation-complete" class="float-end btn btn-sm btn-primary">
                 <?= t('Installing...') ?>
                 <i class="fa fa-spinner fa-spin"></i>
             </button>

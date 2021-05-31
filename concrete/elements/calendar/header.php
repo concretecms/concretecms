@@ -94,7 +94,7 @@ if (!isset($month)) {
         </form>
         <div class="dialog-buttons">
             <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-            <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?= t(
+            <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?= t(
                     'Delete Calendar') ?></button>
         </div>
     </div>

@@ -72,7 +72,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     }
                 }
                 ?>
-                <li class="float-right d-none d-sm-none d-md-block">
+                <li class="float-end d-none d-sm-none d-md-block">
                     <?php
                     $dashboardPanelClasses = [];
                     if ($show_tooltips) {
@@ -91,7 +91,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard'); ?></span>
                     </a>
                 </li>
-                <li class="float-right d-none d-sm-none d-md-block">
+                <li class="float-end d-none d-sm-none d-md-block">
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php
                     } ?>  data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap'); ?>" title="<?= t('Add Pages and Navigate Your Site'); ?>" data-launch-panel="sitemap">
@@ -99,7 +99,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages'); ?></span>
                     </a>
                 </li>
-                <li data-guide-toolbar-action="help" class="float-right d-none d-sm-block">
+                <li data-guide-toolbar-action="help" class="float-end d-none d-sm-block">
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php
                     } ?> data-toggle="tooltip"
@@ -110,7 +110,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                                 class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help'); ?></span>
                     </a>
                 </li>
-                <li class="ccm-toolbar-search float-right d-none d-sm-none d-lg-block">
+                <li class="ccm-toolbar-search float-end d-none d-sm-none d-lg-block">
                     <?php
                     $menu = Element::get('navigation/intelligent_search');
                     $menu->render();
@@ -122,7 +122,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     $cnt = $ih->getController();
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets(); ?>
-                        <li class="float-right"><?= $cnt->getMenuItemLinkElement(); ?></li>
+                        <li class="float-end"><?= $cnt->getMenuItemLinkElement(); ?></li>
                         <?php
                     }
                 }

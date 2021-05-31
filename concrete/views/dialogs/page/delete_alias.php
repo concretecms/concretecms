@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </button>
 
             <button type="button" data-dialog-action="submit"
-                    class="btn btn-danger float-right">
+                    class="btn btn-danger float-end">
                 <?php echo t('Delete') ?>
             </button>
         </div>

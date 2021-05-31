@@ -169,11 +169,11 @@ if (isset($type)) {
                 <?php
                 if ($type->getID() !== null) {
                     ?>
-                    <button type="submit" class="btn btn-primary float-right"><?= t('Save') ?></button>
+                    <button type="submit" class="btn btn-primary float-end"><?= t('Save') ?></button>
                     <?php
                 } else {
                     ?>
-                    <button type="submit" class="btn btn-primary float-right"><?= t('Add') ?></button>
+                    <button type="submit" class="btn btn-primary float-end"><?= t('Add') ?></button>
                     <?php
                 }
                 ?>

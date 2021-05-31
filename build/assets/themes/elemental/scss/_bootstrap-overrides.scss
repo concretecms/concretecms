@@ -5,6 +5,8 @@ $light-green: #0c6;
 
 // scss-docs-start theme-color-variables
 $secondary: $blue;
+$primary: $green;
+$light-green: $light-green;
 
 // ---- Map those to theme conventions
 $theme-colors: (
@@ -12,5 +14,6 @@ $theme-colors: (
   'secondary': $blue,
   'light-green': $light-green,
 );
+
 $link-color: $secondary;
 

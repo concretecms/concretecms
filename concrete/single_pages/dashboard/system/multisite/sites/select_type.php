@@ -46,7 +46,7 @@ foreach($types as $type) {
 
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
-        <div class="float-right">
+        <div class="float-end">
             <a class="btn btn-secondary" href="<?= $controller->action('') ?>"><?= t('Back to Sites') ?></a>
         </div>
     </div>

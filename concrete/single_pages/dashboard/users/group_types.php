@@ -57,7 +57,7 @@ $token = $app->make(Token::class);
                     <?php echo t('Cancel') ?>
                 </a>
 
-                <button type="submit" class="btn btn-primary float-right">
+                <button type="submit" class="btn btn-primary float-end">
                     <?php echo t('Add') ?>
                 </button>
             </div>
@@ -114,7 +114,7 @@ $token = $app->make(Token::class);
                     <?php echo t('Cancel') ?>
                 </a>
 
-                <button type="submit" class="btn btn-primary float-right">
+                <button type="submit" class="btn btn-primary float-end">
                     <?php echo t('Update') ?>
                 </button>
             </div>

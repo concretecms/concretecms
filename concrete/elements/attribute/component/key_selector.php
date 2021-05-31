@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div v-for="attribute in selectedAttributes" :key="attribute.akID">
         <div class="form-group">
-            <a class="float-right ccm-hover-icon" href="#" @click.prevent="removeAttribute(attribute.akID)">
+            <a class="float-end ccm-hover-icon" href="#" @click.prevent="removeAttribute(attribute.akID)">
                 <i class="fa fa-minus-circle"></i>
             </a>
             <label class="control-label" :for="attribute.controlID">{{attribute.label}}</label>
@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                    :aria-controls="'ccm-attribute-key-mv-body-' + attribute.akID"
                    @click="attribute.mvBoxExpanded = !attribute.mvBoxExpanded">
                     Multiple Values
-                    <span class="float-right mt-1">
+                    <span class="float-end mt-1">
                         <Icon :icon="attribute.mvBoxExpanded ? 'ban' : 'edit'" type="fas" :color="attribute.mvBoxExpanded ? '#c32a2a' : 'currentColor'"/>
                     </span>
                 </a>
@@ -76,7 +76,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 if (isBulkMode) {
                     for (let i = 0; i < selectedAttributes.length; i++) {
                         if (selectedAttributes[i].hasMultipleValues) {
-                            selectedAttributes[i].mvBoxExpanderIconClasses = ['fas', 'float-right', 'mt-1', 'fa-edit']
+                            selectedAttributes[i].mvBoxExpanderIconClasses = ['fas', 'float-end', 'mt-1', 'fa-edit']
                             selectedAttributes[i].mvBoxExpanded = false
                         }
                     }

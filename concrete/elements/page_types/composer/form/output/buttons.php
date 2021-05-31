@@ -13,7 +13,7 @@ $publishDate = $v->getPublishDate();
 
     ?>
 
-    <div class="float-right btn-group" data-page-type-composer-form-btns="publish">
+    <div class="float-end btn-group" data-page-type-composer-form-btns="publish">
         <button type="button" data-page-type-composer-form-btn="publish" class="pl-3 pr-3 btn btn-primary"><?=$publishTitle?></button>
         <button data-page-type-composer-form-btn="schedule" type="button" class="pl-3 pr-3 btn btn-primary <?php if ($publishDate) { ?>active<?php } ?>">
             <i class="far fa-clock"></i>
@@ -34,11 +34,11 @@ $publishDate = $v->getPublishDate();
 
 <?php if (!is_object($page) || $page->isPageDraft()) {
     ?>
-    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success float-right"><?=t('Edit Mode')?></button>
+    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success float-end"><?=t('Edit Mode')?></button>
 <?php
 } else {
     ?>
-    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success float-right"><?=t('Save')?></button>
+    <button type="button" data-page-type-composer-form-btn="preview" class="btn btn-success float-end"><?=t('Save')?></button>
 <?php
 } ?>
 

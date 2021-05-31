@@ -80,7 +80,7 @@ $token = $app->make(Token::class);
                 <?php echo t('Cancel') ?>
             </button>
 
-            <button type="button" data-dialog-action="submit" class="btn btn-danger float-right">
+            <button type="button" data-dialog-action="submit" class="btn btn-danger float-end">
                 <?php echo t('Delete') ?>
             </button>
         </div>

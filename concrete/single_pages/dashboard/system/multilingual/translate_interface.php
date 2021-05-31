@@ -176,7 +176,7 @@ if ($this->controller->getTask() == 'translate_po') {
                         </form>
                         <div class="dialog-buttons">
                             <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?php echo t('Cancel'); ?></button>
-                            <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-reset-languages form').submit()"><?php echo t('Confirm Reset'); ?></button>
+                            <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-reset-languages form').submit()"><?php echo t('Confirm Reset'); ?></button>
                         </div>
                         <?php
                     } else {

@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <input type="hidden" name="field[]" value="<%=field.key%>">
             <div class="form-group">
                 <label><strong><%=field.label%></strong></label>
-                <a data-search-remove="search-field" class="ccm-hover-icon float-right" href="#">
+                <a data-search-remove="search-field" class="ccm-hover-icon float-end" href="#">
                     <svg width="20" height="20"><use xlink:href="#icon-minus-circle" /></svg>
                     </i></a>
                 <% if (typeof(field) != 'undefined') { %><%=field.element%><% } %>

@@ -15,7 +15,7 @@ $form = $app->make(Form::class);
 /** @var Closure $getCheckbox */
 ?>
 
-<div class="form-inline float-right">
+<div class="form-inline float-end">
     <label for="search" class="mr-2"><?=t('Search')?></label>
     <?php
         echo $form->search("search", "", [

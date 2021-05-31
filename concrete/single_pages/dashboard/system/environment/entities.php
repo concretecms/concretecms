@@ -78,7 +78,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="float-left btn btn-danger" name="refresh" value="1" type="submit"><?= t('Refresh Entities'); ?></button>
-            <button class="float-right btn btn-primary" type="submit"><?= t('Save'); ?></button>
+            <button class="float-end btn btn-primary" type="submit"><?= t('Save'); ?></button>
         </div>
     </div>
 

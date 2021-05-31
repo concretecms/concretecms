@@ -243,13 +243,13 @@
     data-form-control-id="<%=control.id%>">
     <input type="hidden" name="controlID[]" value="<%=control.id%>">
     <%=control.displayLabel%>
-    <span class="float-right">
+    <span class="float-end">
         <a href="javascript:void(0)" class="icon-link"><i style="cursor: move" class="fas fa-arrows-alt"></i></a>
         <a href="javascript:void(0)" class="icon-link" data-action="edit-control"><i class="fas fa-pencil-alt"></i></a>
         <a href="javascript:void(0)" class="icon-link" data-action="delete-control"><i class="fa fa-trash"></i></a>
         </span>
     <% if (control.isRequired) { %>
-    <span style="margin-right: 20px" class="float-right badge badge-info"><?=t('Required'); ?></span>
+    <span style="margin-right: 20px" class="float-end badge badge-info"><?=t('Required'); ?></span>
     <% } %>
 </li>
 </script>

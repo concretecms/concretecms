@@ -46,7 +46,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-right">
+            <div class="float-end">
                 <a class="btn btn-secondary" href="<?= $controller->action() ?>"><?= t('Cancel') ?></a>
                 <button class="btn btn-primary" type="submit"><?= t('Add') ?></button>
             </div>

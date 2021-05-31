@@ -261,7 +261,7 @@ use Concrete\Core\User\Group\GroupType; ?>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?=$app->make('url/manager')->resolve(['/dashboard/users/groups'])?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
-            <?=$form->submit('add', t('Add Group'), ['class' => 'btn btn-primary float-right'])?>
+            <?=$form->submit('add', t('Add Group'), ['class' => 'btn btn-primary float-end'])?>
         </div>
     </div>
 

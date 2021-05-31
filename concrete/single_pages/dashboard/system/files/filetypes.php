@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <input type="submit" class="float-right btn btn-primary" value="<?= t('Save') ?>" />
+            <input type="submit" class="float-end btn btn-primary" value="<?= t('Save') ?>" />
         </div>
     </div>
 

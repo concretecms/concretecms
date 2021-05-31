@@ -57,7 +57,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button type="submit" class="btn float-right btn-secondary" :disabled="selectedTemplateOption < 0"><?=t('Next')?></button>
+                <button type="submit" class="btn float-end btn-secondary" :disabled="selectedTemplateOption < 0"><?=t('Next')?></button>
             </div>
         </div>
 

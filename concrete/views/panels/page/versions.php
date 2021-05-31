@@ -168,7 +168,7 @@ use Concrete\Core\Support\Facade\Url;
                 <% } %>
 
                 <% if (hasNextPage == '1') { %>
-                    <a href="#" class="float-right" data-version-navigation="<%=nextPageNum%>">
+                    <a href="#" class="float-end" data-version-navigation="<%=nextPageNum%>">
                         <?php echo t('Older Versions &rarr;') ?>
                     </a>
                 <% } %>
@@ -508,7 +508,7 @@ use Concrete\Core\Support\Facade\Url;
                 <?php echo t('Cancel') ?>
             </button>
 
-            <button type="button" class="btn btn-danger float-right" disabled data-version-action="delete">
+            <button type="button" class="btn btn-danger float-end" disabled data-version-action="delete">
                 <?php echo t('Delete') ?>
             </button>
         </div>
@@ -534,7 +534,7 @@ use Concrete\Core\Support\Facade\Url;
 
         <hr/>
 
-        <button type="button" class="btn btn-danger float-right" disabled data-version-action="delete">
+        <button type="button" class="btn btn-danger float-end" disabled data-version-action="delete">
             <?php echo t('Delete') ?>
         </button>
     </section>

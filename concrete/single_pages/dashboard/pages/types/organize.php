@@ -26,7 +26,7 @@
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
         <a href="<?=URL::to('/dashboard/pages/types', $siteTypeID); ?>" class="btn float-left btn-secondary"><?=t('Back to Page Types'); ?></a>
-        <button class="float-right btn btn-primary" type="button" data-submit="save"><?=t('Save Ordering'); ?></button>
+        <button class="float-end btn btn-primary" type="button" data-submit="save"><?=t('Save Ordering'); ?></button>
     </div>
 </div>
 

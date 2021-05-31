@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <p><?=t('Are you sure you want to delete this attribute? This cannot be undone.')?></p>
         <div class="dialog-buttons">
             <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-            <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-attribute form').submit()"><?=t('Delete Attribute')?></button>
+            <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-attribute form').submit()"><?=t('Delete Attribute')?></button>
         </div>
     </form>
 </div>

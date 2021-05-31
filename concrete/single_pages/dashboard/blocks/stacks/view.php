@@ -385,7 +385,7 @@ if (isset($neutralStack)) {
                 <div class="ccm-dashboard-form-actions">
                     <a href="<?= $view->action('view_details', $duplicateStack->getCollectionID()) ?>"
                        class="btn btn-secondary"><?= t('Cancel') ?></a>
-                    <button type="submit" class="btn float-right btn-primary"><?= t('Duplicate') ?></button>
+                    <button type="submit" class="btn float-end btn-primary"><?= t('Duplicate') ?></button>
                 </div>
             </div>
         </form>
@@ -415,7 +415,7 @@ if (isset($neutralStack)) {
                 <div class="ccm-dashboard-form-actions">
                     <a href="<?= $view->action('view_details', $renamePage->getCollectionID()) ?>"
                        class="btn btn-secondary"><?= t('Cancel') ?></a>
-                    <button type="submit" class="btn float-right btn-primary"><?= t('Rename') ?></button>
+                    <button type="submit" class="btn float-end btn-primary"><?= t('Rename') ?></button>
                 </div>
             </div>
         </form>
@@ -645,7 +645,7 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
             <div class="dialog-buttons">
                 <button class="btn btn-secondary mr-auto"
                         onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                <button class="btn btn-primary float-right"
+                <button class="btn btn-primary float-end"
                         onclick="$('#ccm-dialog-add-stack form').submit()"><?= t('Add Stack') ?></button>
             </div>
         </div>
@@ -661,7 +661,7 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
             </form>
             <div class="dialog-buttons">
                 <button class="btn btn-secondary mr-auto" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                <button class="btn btn-primary float-right" onclick="$('#ccm-dialog-add-folder form').submit()"><?= t('Add Folder') ?></button>
+                <button class="btn btn-primary float-end" onclick="$('#ccm-dialog-add-folder form').submit()"><?= t('Add Folder') ?></button>
             </div>
         </div>
     </div>

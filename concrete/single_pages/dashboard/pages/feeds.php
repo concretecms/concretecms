@@ -69,7 +69,7 @@ if ($controller->getAction() == 'add'
                 <div class="dialog-buttons">
                     <button class="btn btn-secondary float-left"
                             onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                    <button class="btn btn-danger float-right"
+                    <button class="btn btn-danger float-end"
                             onclick="$('#ccm-dialog-delete-feed form').submit()"><?= t('Delete Feed') ?></button>
                 </div>
             </div>
@@ -209,7 +209,7 @@ if ($controller->getAction() == 'add'
             <div class="ccm-dashboard-form-actions">
                 <a href="<?= URL::to('/dashboard/pages/feeds') ?>"
                    class="btn btn-primary float-left"><?= t('Cancel') ?></a>
-                <button class="float-right btn btn-success" type="submit"><?= $button ?></button>
+                <button class="float-end btn btn-success" type="submit"><?= $button ?></button>
             </div>
         </div>
     </form>

@@ -79,7 +79,7 @@ foreach ($permissions as $pk) {
     ?>
 <div class="dialog-buttons">
 	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
-	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-end"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 </div>
 <?php 
 } ?>

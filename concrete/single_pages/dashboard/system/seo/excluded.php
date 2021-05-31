@@ -19,7 +19,7 @@ if ($excludedWords !== $defaultExcludedWords) {
                 <p><?= t('Are you sure you want to reset the reserved word list to the default value?') ?></p>
                 <div class="dialog-buttons">
                     <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                    <button class="btn btn-danger float-right" onclick="$('div[data-dialog-wrapper=ccm-seowords-reset] form').submit()"><?= t('Reset') ?></button>
+                    <button class="btn btn-danger float-end" onclick="$('div[data-dialog-wrapper=ccm-seowords-reset] form').submit()"><?= t('Reset') ?></button>
                 </div>
             </form>
         </div>
@@ -40,7 +40,7 @@ if ($excludedWords !== $defaultExcludedWords) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-right">
+            <div class="float-end">
                 <?php
                 if ($excludedWords !== $defaultExcludedWords) {
                     ?>

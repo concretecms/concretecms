@@ -223,7 +223,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-dragging-avatar="<%=result.draggingAvatar%>"
                         data-block-id="<%=result.blockId%>"
                 >
-                    <div class="delete float-right">
+                    <div class="delete float-end">
                         <button class="ccm-delete-clipboard-item btn btn-sm btn-link text-danger">
                             <?php echo t('Delete') ?>
                         </button>
@@ -373,7 +373,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         data-supports-inline-add="<%=result.supportsInlineAdd%>"
                         data-btID="<%=result.blockTypeId%>"
                 >
-                    <div class="delete float-right">
+                    <div class="delete float-end">
                         <button class="ccm-delete-orphaned-block-item btn btn-sm btn-link text-danger">
                             <?php echo t('Delete') ?>
                         </button>
@@ -560,7 +560,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         aria-expanded="true"
                         aria-controls="ccm-block-set-<?= $i ?>"
                 >
-                    <?= $setName ?><i class="fa fa-chevron-up float-right"></i>
+                    <?= $setName ?><i class="fa fa-chevron-up float-end"></i>
                 </header>
                 <div id="ccm-block-set-<?= $i ?>" class="ccm-block-set collapse show">
                     <?php

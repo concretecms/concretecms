@@ -57,7 +57,7 @@ if (isset($template) && is_object($template) && ($controller->getAction() == 'ed
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=$view->action(''); ?>" class="btn btn-secondary float-left"><?=t('Cancel'); ?></a>
-                <div class="btn-toolbar float-right">
+                <div class="btn-toolbar float-end">
                     <button class="btn btn-danger mr-1" data-toggle="modal" data-target="#delete-template" type="button"><?=t('Delete Template'); ?></button>
                     <button type="submit" class="btn btn-primary"><?=t('Update'); ?></button>
                 </div>
@@ -111,7 +111,7 @@ if ($template) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal"><?=t('Cancel'); ?></button>
-                        <button type="submit" class="btn btn-danger float-right"><?=t('Delete Template'); ?></button>
+                        <button type="submit" class="btn btn-danger float-end"><?=t('Delete Template'); ?></button>
                     </div>
                 </div>
             </div>

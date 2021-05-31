@@ -151,11 +151,11 @@ if (is_object($category)) {
 	<a href="<?=$back?>" class="btn float-left btn-secondary"><?=t('Back')?></a>
 <?php if (is_object($key)) {
     ?>
-	<button type="submit" class="btn btn-primary float-right"><?=t('Save')?></button>
+	<button type="submit" class="btn btn-primary float-end"><?=t('Save')?></button>
 <?php 
 } else {
     ?>
-	<button type="submit" class="btn btn-primary float-right"><?=t('Add')?></button>
+	<button type="submit" class="btn btn-primary float-end"><?=t('Add')?></button>
 <?php 
 } ?>
 </div>

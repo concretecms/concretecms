@@ -297,7 +297,7 @@ $token = $app->make(Token::class);
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <?php echo $form->submit('button_submit', t('Send Message'), ['class' => 'float-right btn btn-primary']); ?>
+                    <?php echo $form->submit('button_submit', t('Send Message'), ['class' => 'float-end btn btn-primary']); ?>
                     <?php echo $form->submit('button_cancel', t('Cancel'), ['class' => 'btn-secondary', 'onclick' => 'window.location.href=\'' . $backURL . '\'; return false']); ?>
                 </div>
             </div>

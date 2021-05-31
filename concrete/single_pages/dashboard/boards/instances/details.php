@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <hr>
 
-        <form method="post" class="float-right" action="<?=$view->action('refresh_pool', $instance->getBoardInstanceID())?>">
+        <form method="post" class="float-end" action="<?=$view->action('refresh_pool', $instance->getBoardInstanceID())?>">
             <?=$token->output('refresh_pool')?>
             <button type="submit" class="btn btn-sm btn-secondary"><?=t("Refresh Data Pool")?></button>
         </form>
@@ -75,7 +75,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <p><?=t('Refresh the dynamic elements within board slots without getting new items or changing any positioning.')?></p>
                     </div>
                     <div class="col-4">
-                        <button type="submit" class="btn float-right btn-secondary"><?=t("Refresh")?></button>
+                        <button type="submit" class="btn float-end btn-secondary"><?=t("Refresh")?></button>
                     </div>
                 </div>
             </form>
@@ -87,7 +87,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <p><?=t('Refreshes dynamic elements within board slots, and adds new items to the board in applicable spots.')?></p>
                     </div>
                     <div class="col-4">
-                        <button type="submit" class="btn float-right btn-secondary"><?=t("Add Content")?></button>
+                        <button type="submit" class="btn float-end btn-secondary"><?=t("Add Content")?></button>
                     </div>
                 </div>
             </form>
@@ -99,7 +99,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <p><?=t('Regenerate board instance based on current items. Completely removes and rebuilds any board contents.')?></p>
                     </div>
                     <div class="col-4">
-                        <button type="submit" class="btn float-right btn-secondary"><?=t("Regenerate")?></button>
+                        <button type="submit" class="btn float-end btn-secondary"><?=t("Regenerate")?></button>
                     </div>
                 </div>
             </form>
@@ -133,7 +133,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal"><?=t('Cancel')?></button>
-                            <button type="submit" class="btn btn-danger float-right"><?=t('Delete Instance')?></button>
+                            <button type="submit" class="btn btn-danger float-end"><?=t('Delete Instance')?></button>
                         </div>
                     </div>
                 </div>

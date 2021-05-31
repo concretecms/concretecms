@@ -72,7 +72,7 @@ $token = $app->make(Token::class);
                 <?php echo t('Back to Association') ?>
             </a>
 
-            <button class="float-right btn btn-primary" type="submit">
+            <button class="float-end btn btn-primary" type="submit">
                 <?php echo t('Save') ?>
             </button>
         </div>

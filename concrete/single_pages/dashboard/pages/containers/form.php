@@ -81,10 +81,10 @@ if (isset($container) && $container) {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?=URL::to('/dashboard/pages/containers'); ?>" class="btn btn-secondary float-left"><?=t('Cancel'); ?></a>
-            <button type="submit" class="btn float-right btn-primary"><?=$buttonText; ?></button>
+            <button type="submit" class="btn float-end btn-primary"><?=$buttonText; ?></button>
             <?php if ($container) {
                 ?>
-                <button type="button" class="btn float-right btn-danger mr-1" data-toggle="modal" data-target="#delete-container"><?=t('Delete Container'); ?></button>
+                <button type="button" class="btn float-end btn-danger mr-1" data-toggle="modal" data-target="#delete-container"><?=t('Delete Container'); ?></button>
             <?php
             } ?>
         </div>
@@ -108,7 +108,7 @@ if (isset($container) && $container) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal"><?=t('Cancel'); ?></button>
-                        <button type="submit" class="btn btn-danger float-right"><?=t('Delete Container'); ?></button>
+                        <button type="submit" class="btn btn-danger float-end"><?=t('Delete Container'); ?></button>
                     </div>
                 </div>
             </div>

@@ -76,7 +76,7 @@ foreach ($permissions as $pk) {
     ?>
 <div id="ccm-file-permissions-advanced-buttons" style="display: none">
 	<button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary float-left"><?=t('Cancel')?></button>
-	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-right"><?=t('Save')?></i></button>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-end"><?=t('Save')?></i></button>
 </div>
 <?php 
 } ?>

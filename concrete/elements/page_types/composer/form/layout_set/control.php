@@ -52,7 +52,7 @@ $resolverManager = app(ResolverManagerInterface::class);
 
 				<div class="dialog-buttons">
 					<button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
-					<button class="btn btn-danger float-right" onclick="Composer.deleteFromLayoutSetControl(<?= $control->getPageTypeComposerFormLayoutSetControlID() ?>)"><?= t('Delete Control') ?></button>
+					<button class="btn btn-danger float-end" onclick="Composer.deleteFromLayoutSetControl(<?= $control->getPageTypeComposerFormLayoutSetControlID() ?>)"><?= t('Delete Control') ?></button>
 				</div>
 			</div>
 		</div>

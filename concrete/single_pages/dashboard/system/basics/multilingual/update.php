@@ -36,7 +36,7 @@ $packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url
                     <?php
                     if ($packageUrl) {
                         ?>
-                        <a target="_blank" class="float-right" href="<?= h("{$packageUrl}/{$handle}") ?>"><span class="label label-default" style="font-weight: normal"><?= t('more details') ?></span></a>
+                        <a target="_blank" class="float-end" href="<?= h("{$packageUrl}/{$handle}") ?>"><span class="label label-default" style="font-weight: normal"><?= t('more details') ?></span></a>
                         <?php
                     }
                     ?>
@@ -105,7 +105,7 @@ if ($someUpdateAvailable) {
         <?php $token->output('update-all-outdated') ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <input type="submit" class="btn btn-primary float-right" value="<?= h(t('Update all outdated languages')) ?>" />
+                <input type="submit" class="btn btn-primary float-end" value="<?= h(t('Update all outdated languages')) ?>" />
             </div>
         </div>
     </form>

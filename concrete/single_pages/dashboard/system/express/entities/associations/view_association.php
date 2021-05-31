@@ -55,7 +55,7 @@ $token = $app->make(Token::class);
                     <?php echo t('Cancel') ?>
                 </button>
 
-                <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-association form').submit()">
+                <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-association form').submit()">
                     <?php echo t('Delete Association') ?>
                 </button>
             </div>

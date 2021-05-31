@@ -10,7 +10,7 @@ use Concrete\Core\Sharing\ShareThisPage\Service;
 
 <fieldset>
     <legend>
-        <button class="btn btn-xs float-right btn-secondary" type="button"
+        <button class="btn btn-xs float-end btn-secondary" type="button"
                 id="ccm-block-share-this-page-add-service">
 
             <?php echo t('Add Service') ?>
@@ -26,7 +26,7 @@ use Concrete\Core\Sharing\ShareThisPage\Service;
 
 <script type="text/template" class="service-template">
     <div class="form-group">
-        <a href="#" data-remove="service" class="float-right">
+        <a href="#" data-remove="service" class="float-end">
             <i class="fa fa-minus-circle"></i>
         </a>
 

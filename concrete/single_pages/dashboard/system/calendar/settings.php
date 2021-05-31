@@ -16,7 +16,7 @@
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="float-right btn btn-success" type="submit" ><?=t('Save')?></button>
+            <button class="float-end btn btn-success" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 

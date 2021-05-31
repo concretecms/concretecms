@@ -75,7 +75,7 @@ $navHelper = $app->make(Navigation::class);
                         <tbody></tbody>
                     </table>
 
-                    <button class="btn btn-secondary float-right mt-1 mb-2" type="button" data-action="add-url">
+                    <button class="btn btn-secondary float-end mt-1 mb-2" type="button" data-action="add-url">
                         <?php echo t('Add URL') ?>
                     </button>
 
@@ -145,7 +145,7 @@ $navHelper = $app->make(Navigation::class);
         <?php echo t('Cancel') ?>
     </button>
 
-    <button class="float-right btn btn-success" type="button" data-dialog-action="submit"
+    <button class="float-end btn btn-success" type="button" data-dialog-action="submit"
             data-panel-detail-action="submit">
         <?php echo t('Save Changes') ?>
     </button>

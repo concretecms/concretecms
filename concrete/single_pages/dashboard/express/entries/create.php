@@ -22,7 +22,7 @@ if (is_object($renderer)) { ?>
                         <?php echo t('Back') ?>
                     </a>
                 <?php } ?>
-                <button class="float-right btn btn-primary" type="submit">
+                <button class="float-end btn btn-primary" type="submit">
                     <?php echo t('Add %s', $entity->getEntityDisplayName()) ?>
                 </button>
             </div>

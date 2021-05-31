@@ -28,7 +28,7 @@ $form = $app->make(Form::class);
                 <?php echo t('Cancel') ?>
             </a>
 
-            <?php echo $form->submit('add', t('Add'), ['class' => 'btn btn-primary float-right']); ?>
+            <?php echo $form->submit('add', t('Add'), ['class' => 'btn btn-primary float-end']); ?>
         </div>
     </div>
 </form>

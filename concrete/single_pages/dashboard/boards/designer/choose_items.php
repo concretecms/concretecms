@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div data-form="choose-items" v-cloak>
         <div v-for="(item, index) in items" :key="index">
 
-            <a @click="removeItem(index)" href="#" class="ccm-hover-icon float-right">
+            <a @click="removeItem(index)" href="#" class="ccm-hover-icon float-end">
                 <svg width="20" height="20"><use xlink:href="#icon-minus-circle" /></svg>
             </a>
 
@@ -72,7 +72,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button type="submit" class="btn float-right btn-secondary"><?=t('Next')?></button>
+            <button type="submit" class="btn float-end btn-secondary"><?=t('Next')?></button>
         </div>
     </div>
 </form>

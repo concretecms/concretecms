@@ -108,7 +108,7 @@ $responseObject = $permissionChecker->getResponseObject();
             </button>
 
             <button type="button" data-dialog-action="submit"
-                    class="btn btn-primary float-right">
+                    class="btn btn-primary float-end">
                 <?php echo t('Save') ?>
             </button>
         </div>

@@ -48,7 +48,7 @@ $request = $app->make(Request::class);
                 <?php echo t('Cancel') ?>
             </button>
 
-            <button type="button" data-dialog-action="submit" class="btn btn-success float-right">
+            <button type="button" data-dialog-action="submit" class="btn btn-success float-end">
                 <?php echo t('Save Preset') ?>
             </button>
         </div>

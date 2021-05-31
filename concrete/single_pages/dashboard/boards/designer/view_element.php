@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
            class="btn btn-danger"
            data-toggle="modal" data-target="#delete-element"><?=t('Delete')?></a>
         <a href="<?=URL::to('/dashboard/boards/scheduler', 'view', $element->getID())?>"
-           class="btn btn-secondary float-right "><?=t('Schedule')?></a>
+           class="btn btn-secondary float-end "><?=t('Schedule')?></a>
     </div>
 </div>
 

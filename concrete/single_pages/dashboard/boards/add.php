@@ -61,7 +61,7 @@ $buttonText = t("Add");
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions ">
                 <a href="<?=$view->url('/dashboard/boards/boards')?>" class="btn btn-secondary float-left"><?=t("Cancel")?></a>
-                <button type="submit" class="btn btn-primary float-right"><?=$buttonText?></button>
+                <button type="submit" class="btn btn-primary float-end"><?=$buttonText?></button>
             </div>
         </div>
     </fieldset>

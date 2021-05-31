@@ -70,7 +70,7 @@ $buttonText = t("Add");
                 <div class="ccm-dashboard-form-actions-wrapper">
                     <div class="ccm-dashboard-form-actions ">
                         <button type="button" class="btn btn-danger float-left" data-toggle="modal" data-target="#delete-board"><?=t("Delete")?></button>
-                        <button type="submit" class="btn btn-primary float-right"><?=t('Save')?></button>
+                        <button type="submit" class="btn btn-primary float-end"><?=t('Save')?></button>
                     </div>
                 </div>
             </fieldset>
@@ -95,7 +95,7 @@ $buttonText = t("Add");
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal"><?=t('Cancel')?></button>
-                    <button type="submit" class="btn btn-danger float-right"><?=t('Delete Board')?></button>
+                    <button type="submit" class="btn btn-danger float-end"><?=t('Delete Board')?></button>
                 </div>
             </div>
         </div>

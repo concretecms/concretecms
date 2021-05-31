@@ -41,7 +41,7 @@ $view->inc('elements/header.php'); ?>
         <?=t('Image served from concrete5.org. <a href="%s" target="_blank">View Privacy Policy</a>.',
             Config::get('concrete.urls.privacy_policy'))?>
     </div>
-    <div class="ccm-page-background-photo-credit float-right">
+    <div class="ccm-page-background-photo-credit float-end">
         <?= t('Photo Credit:') ?>
         <a href="#"></a>
     </div>

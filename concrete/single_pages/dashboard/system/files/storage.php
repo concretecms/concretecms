@@ -93,9 +93,9 @@ switch ($controller->getTask()) {
                 <div class="ccm-dashboard-form-actions">
                     <a href="<?= URL::to($c); ?>" class="btn float-left btn-secondary"><?= t('Back'); ?></a>
                     <?php if ($location !== null) { ?>
-                        <button type="submit" class="btn btn-primary float-right"><?= t('Save'); ?></button>
+                        <button type="submit" class="btn btn-primary float-end"><?= t('Save'); ?></button>
                     <?php } else { ?>
-                        <button type="submit" class="btn btn-primary float-right"><?= t('Add'); ?></button>
+                        <button type="submit" class="btn btn-primary float-end"><?= t('Add'); ?></button>
                     <?php } ?>
                 </div>
             </div>

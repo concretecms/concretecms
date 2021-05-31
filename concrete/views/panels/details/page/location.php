@@ -53,7 +53,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <tbody></tbody>
                     </table>
 
-                    <button class="btn btn-secondary float-right mt-1 mb-2" type="button" data-action="add-url"><?=t('Add URL')?></button>
+                    <button class="btn btn-secondary float-end mt-1 mb-2" type="button" data-action="add-url"><?=t('Add URL')?></button>
 
                     <div class="clearfix"></div>
                     <p class="text-right"><small class="text-muted"><?=t('Note: Additional page paths are not versioned.<br> They will be available immediately.')?></small></p>
@@ -109,7 +109,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </script>
 <div class="ccm-panel-detail-form-actions dialog-buttons">
     <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-    <button class="float-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+    <button class="float-end btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 </div>
 
 <script type="text/javascript">

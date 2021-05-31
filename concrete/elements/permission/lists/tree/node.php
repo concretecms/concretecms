@@ -96,7 +96,7 @@ foreach ($permissions as $pk) {
 
 		<div id="topics-tree-node-permissions-buttons" class="dialog-buttons">
 		<button href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary float-left"><?=t('Cancel')?></button>
-		<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+		<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-end"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 	</div>
 	<?php } ?>
 <?php

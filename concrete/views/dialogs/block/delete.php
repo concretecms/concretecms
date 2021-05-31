@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		<div class="dialog-buttons">
 		<button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-		<button type="button" data-submit="delete-block-form" class="btn btn-danger float-right"><?=t('Delete')?></button>
+		<button type="button" data-submit="delete-block-form" class="btn btn-danger float-end"><?=t('Delete')?></button>
 		</div>
 
 		<p><?=$message?></p>
