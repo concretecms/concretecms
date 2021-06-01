@@ -29,9 +29,7 @@ defined('C5_EXECUTE') or die('Access denied.');
     <?= $form->label('apisecret', t('Consumer Secret (API Secret)')) ?>
     <div class="input-group">
         <?= $form->password('apisecret', $apisecret, ['autocomplete' => 'off', 'class' => 'text-monospace']) ?>
-        <div class="input-group-append">
-            <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="far fa-eye"></i></button>
-        </div>
+        <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="far fa-eye"></i></button>
     </div>
 </div>
 

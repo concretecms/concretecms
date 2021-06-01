@@ -254,15 +254,16 @@
                 <?= $form->textarea('thankyouMsg', $this->controller->thankyouMsg, ['rows' => 3]) ?>
             </div>
             <div class="form-group">
-                <div class="input-group-append">
-                    <span class="input-group-text btn btn-secondary">
-                        <div class="form-check">
+
+                <span class="input-group-text btn btn-secondary">
+                    <div class="form-check">
                         <?= $form->checkbox('notifyMeOnSubmission', 1, isset($miniSurveyInfo['notifyMeOnSubmission']) && $miniSurveyInfo['notifyMeOnSubmission'] == 1, ['onclick' => "$('input[name=recipientEmail]').focus()"]) ?>
-                    <label class="form-check-label" for="notifyMeOnSubmission"></label>
-                </div>
-                    </span>
-                    <?= $form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], ['style' => 'z-index:2000;']) ?>
-                </div>
+                        <label class="form-check-label" for="notifyMeOnSubmission"></label>
+                    </div>
+                </span>
+
+                <?= $form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], ['style' => 'z-index:2000;']) ?>
+
                 <span class="help-block"><?= t('(Separate multiple emails with a comma)') ?></span>
             </div>
             <div class="form-group">

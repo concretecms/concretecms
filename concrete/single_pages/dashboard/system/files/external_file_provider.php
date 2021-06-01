@@ -73,11 +73,9 @@ switch ($controller->getAction()) {
                     <div class="input-group">
                         <?php echo $form->text('efpName', $efpName); ?>
 
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <i class="fa fa-asterisk"></i>
-                            </span>
-                        </div>
+                        <span class="input-group-text">
+                            <i class="fa fa-asterisk"></i>
+                        </span>
                     </div>
                 </div>
             </fieldset>

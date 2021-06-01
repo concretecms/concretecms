@@ -59,9 +59,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </template>
 
         </select>
-        <div class="input-group-append">
-            <button class="btn btn-primary" type="button" @click="addSelectedAttribute"><?=t('Go')?></button>
-        </div>
+        <button class="btn btn-primary" type="button" @click="addSelectedAttribute"><?=t('Go')?></button>
     </div>
 
 </div>

@@ -93,11 +93,9 @@ echo $userInterface->tabs([
             <div class="input-group" style="width: 150px">
                 <?php echo $form->number($view->field('timeout'), $timeout ? $timeout : 4000, ['min' => '1', 'max' => '99999']); ?>
 
-                <div class="input-group-append">
-                    <span class="input-group-text">
-                        <?php echo t('ms'); ?>
-                    </span>
-                </div>
+                <span class="input-group-text">
+                    <?php echo t('ms'); ?>
+                </span>
             </div>
         </div>
 
@@ -107,11 +105,9 @@ echo $userInterface->tabs([
             <div class="input-group" style="width: 150px">
                 <?php echo $form->number($view->field('speed'), $speed ? $speed : 500, ['min' => '1', 'max' => '99999']); ?>
 
-                <div class="input-group-append">
-                    <span class="input-group-text">
-                        <?php echo t('ms'); ?>
-                    </span>
-                </div>
+                <span class="input-group-text">
+                    <?php echo t('ms'); ?>
+                </span>
             </div>
         </div>
 
@@ -135,11 +131,9 @@ echo $userInterface->tabs([
             <div class="input-group" style="width: 150px">
                 <?php echo $form->number($view->field('maxWidth'), $maxWidth ? $maxWidth : 0, ['min' => '0', 'max' => '9999']); ?>
 
-                <div class="input-group-append">
-                    <span class="input-group-text">
-                        <?php echo t('px'); ?>
-                    </span>
-                </div>
+                <span class="input-group-text">
+                    <?php echo t('px'); ?>
+                </span>
             </div>
         </div>
     </div>

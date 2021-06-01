@@ -172,7 +172,7 @@ $info += [
                     <div class="input-group">
                         <input type="text" name="displaySubPageLevelsNum" value="<?= $info['displaySubPageLevelsNum'] ?>"
                             class="form-control">
-                        <div class="input-group-append"><span class="input-group-text"><?= t('levels') ?></span></div>
+                        <span class="input-group-text"><?= t('levels') ?></span>
                     </div>
                 </div>
             </fieldset>

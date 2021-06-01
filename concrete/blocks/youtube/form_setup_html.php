@@ -79,11 +79,9 @@ echo $ui->tabs([
                 <div class="input-group">
                     <?php echo $form->number('vWidth', $vWidth, ["id" => "YouTubeVideoWidth", "name" => "vWidth", "min" => 0, "step" => "1"]); ?>
 
-                    <div class="input-group-append">
                     <span class="input-group-text">
                         <?php echo t('px'); ?>
                     </span>
-                    </div>
                 </div>
             </div>
 
@@ -93,11 +91,9 @@ echo $ui->tabs([
                 <div class="input-group">
                     <?php echo $form->number('vHeight', $vHeight, ["id" => "YouTubeVideoHeight", "name" => "vHeight", "min" => 0, "step" => "1"]); ?>
 
-                    <div class="input-group-append">
                     <span class="input-group-text">
                         <?php echo t('px'); ?>
                     </span>
-                    </div>
                 </div>
             </div>
         </div>

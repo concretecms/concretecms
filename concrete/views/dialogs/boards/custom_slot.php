@@ -22,9 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <div class="col-md-12">
                             <div class="input-group mb-3">
                                 <input type="text" v-model="searchKeywords" class="form-control" placeholder="<?=t('Search items')?>">
-                                <div class="input-group-append">
-                                    <button class="btn btn-secondary" type="submit"><?=t('Search')?></button>
-                                </div>
+                                <button class="btn btn-secondary" type="submit"><?=t('Search')?></button>
                             </div>
                         </div>
                     </div>

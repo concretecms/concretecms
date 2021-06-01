@@ -121,11 +121,9 @@ $fileManager = $app->make(FileManager::class);
                 <div class="input-group">
                     <?php echo $form->number('maxWidth', isset($maxWidth) ? $maxWidth : '', ['min' => 0]); ?>
 
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <?php echo t('px'); ?>
-                        </span>
-                    </div>
+                    <span class="input-group-text">
+                        <?php echo t('px'); ?>
+                    </span>
                 </div>
             </div>
 
@@ -135,11 +133,9 @@ $fileManager = $app->make(FileManager::class);
                 <div class="input-group">
                     <?php echo $form->number('maxHeight', isset($maxHeight) ? $maxHeight : '', ['min' => 0]); ?>
 
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <?php echo t('px'); ?>
-                        </span>
-                    </div>
+                    <span class="input-group-text">
+                        <?php echo t('px'); ?>
+                    </span>
                 </div>
             </div>
         </div>

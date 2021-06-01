@@ -23,13 +23,9 @@ use Concrete\Core\Support\Facade\Package as PackageFacade;
         <?php $token->output('add_single_page'); ?>
         <div class="form-group">
             <div class="input-group">
-                <div class="input-group-prepend">
-                   <span class="input-group-text"  ><?= $base; ?>/</span>
-                </div>
+                <span class="input-group-text"  ><?= $base; ?>/</span>
                 <input type="text" style="width: 200px" class="form-control" name="pageURL" value="<?= h($this->post('pageURL')); ?>" />
-                <div class="input-group-append">
-                    <button class="btn btn-secondary" type="submit"><?=t('Add'); ?></button>
-                </div>
+                <button class="btn btn-secondary" type="submit"><?=t('Add'); ?></button>
             </div>
         </div>
     </form>

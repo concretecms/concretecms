@@ -49,17 +49,16 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 			
 			<div class="form-group">
 				<div class="input-group">
-				  <div class="input-group-prepend"><?=$form->label('wfName', t('Name'), ['class'=>'input-group-text'])?></div>
+                    <?=$form->label('wfName', t('Name'), ['class'=>'input-group-text'])?>
 					<?=$form->text('wfName', $wfName)?>
-					<span class="input-group-append"><div class="input-group-text"><i class="fa fa-asterisk"></i></div></span>
+                    <div class="input-group-text"><i class="fa fa-asterisk"></i></div>
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<div class="input-group">
-          <div class="input-group-prepend"><?=$form->label('wftID', t('Type'), ['class'=>'input-group-text'])?></div>
-					<?=$form->select('wftID', $types, ['class'=>'form-select'])?>
-				</div>
+                <?=$form->label('wftID', t('Type'), ['class'=>'input-group-text'])?></div>
+                <?=$form->select('wftID', $types, ['class'=>'form-select'])?>
 			</div>
 
 			<?php foreach ($typeObjects as $type) {

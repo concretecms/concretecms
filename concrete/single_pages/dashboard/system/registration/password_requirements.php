@@ -64,9 +64,7 @@ foreach ($customRegex as $regex => $description) {
             <div class="input-group">
                 <?= $form->text('regex[]', '', ['autocomplete' => 'off', 'v-model.trim' => 'regex.regex', 'class' => 'text-monospace', 'spellcheck' => 'false', 'placeholder' => t('Regular Expression')]) ?>
                 <?= $form->text('regex_desc[]', '', ['autocomplete' => 'off', 'v-model.trim' => 'regex.description', 'placeholder' => t('Description (optional)')]) ?>
-                <div class="input-group-append">
-                    <a href="#" class="btn btn-outline-danger" v-on:click.prevent="removeRegex(regexIndex)"><i class="fas fa-trash"></i></a>
-                  </div>
+                <a href="#" class="btn btn-outline-danger" v-on:click.prevent="removeRegex(regexIndex)"><i class="fas fa-trash"></i></a>
             </div>
         </div>
     </fieldset>

@@ -199,10 +199,8 @@
             <div class="form-group">
                 <?=$form->label('recipientEmail', t('Send form submissions to email addresses')); ?>
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <input type="checkbox" name="notifyMeOnSubmission" value="1" <?php if ($notifyMeOnSubmission == 1) { ?>checked<?php } ?>>
-                        </div>
+                    <div class="input-group-text">
+                        <input type="checkbox" name="notifyMeOnSubmission" value="1" <?php if ($notifyMeOnSubmission == 1) { ?>checked<?php } ?>>
                     </div>
                     <?=$form->text('recipientEmail', $recipientEmail, ['autocomplete' => 'off', 'style' => 'z-index:2000;']); ?>
                 </div>

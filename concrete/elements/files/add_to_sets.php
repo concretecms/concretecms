@@ -50,20 +50,18 @@ $form = $app->make(Form::class);
         <!--suppress HtmlFormInputWithoutLabel -->
         <input type="text" placeholder="<?php echo t('Set Name') ?>" class="form-control" name="fsNew[]">
 
-        <div class="input-group-append">
-            <div class="input-group-text">
-                <input type="checkbox" name="fsNewShare[]" value="1" checked/>
-            </div>
-            <div class="input-group-text border-left-0 pl-0">
+        <div class="input-group-text">
+            <input type="checkbox" name="fsNewShare[]" value="1" checked/>
+        </div>
+        <div class="input-group-text border-left-0 pl-0">
                 <span class="small">
                     <?php echo t('Public Set.') ?>
                 </span>
-            </div>
-            <div class="input-group-text">
-                <a href="javascript:void(0);" class="ccm-hover-icon">
-                    <i class="fa fa-minus-circle"></i>
-                </a>
-            </div>
+        </div>
+        <div class="input-group-text">
+            <a href="javascript:void(0);" class="ccm-hover-icon">
+                <i class="fa fa-minus-circle"></i>
+            </a>
         </div>
     </div>
 </script>

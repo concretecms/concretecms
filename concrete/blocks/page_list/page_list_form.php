@@ -413,11 +413,9 @@ echo $userInterface->tabs([
                             <?php echo $form->label('', t('RSS Feed Location')); ?>
 
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <?php echo (string)Url::to('/rss') ?>/
-                                    </span>
-                                </div>
+                                <span class="input-group-text">
+                                    <?php echo (string)Url::to('/rss') ?>/
+                                </span>
 
                                 <?php echo $form->text("rssHandle"); ?>
                             </div>
@@ -463,13 +461,11 @@ echo $userInterface->tabs([
                     </label>
 
                     <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <!--suppress HtmlFormInputWithoutLabel -->
-                                <input id="ccm-pagelist-truncateSummariesOn" name="truncateSummaries" type="checkbox"
-                                       value="1" <?php echo($truncateSummaries ? 'checked="checked"' : '') ?> />
-                            </span>
-                        </div>
+                        <span class="input-group-text">
+                            <!--suppress HtmlFormInputWithoutLabel -->
+                            <input id="ccm-pagelist-truncateSummariesOn" name="truncateSummaries" type="checkbox"
+                                   value="1" <?php echo($truncateSummaries ? 'checked="checked"' : '') ?> />
+                        </span>
 
                         <?php
                         $miscFields = ["id" => "ccm-pagelist-truncateChars", "name" => "truncateChars", "step" => 1, "min" => 0];
@@ -481,11 +477,9 @@ echo $userInterface->tabs([
                         echo $form->number("truncateChars", (int)$truncateChars, $miscFields);
                         ?>
 
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <?php echo t('characters') ?>
-                            </span>
-                        </div>
+                        <span class="input-group-text">
+                            <?php echo t('characters') ?>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -557,7 +551,7 @@ echo $userInterface->tabs([
                 <?php echo $form->label('pageListTitle', t('Title of Page List')); ?>
 			    <div class="input-group">
                 	<?php echo $form->text("pageListTitle", $pageListTitle); ?>
-					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select input-group-append')); ?>
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 				</div>
 			</div>
 

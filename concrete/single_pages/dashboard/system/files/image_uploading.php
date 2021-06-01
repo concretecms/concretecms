@@ -55,18 +55,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?= $form->label('restrict_max_width', t('Maximum width of uploaded images'), ['class' => 'launch-tooltip', 'title' => t('Here you can set the maximum width of uploaded images: images wider that this value will be scaled down. Leave empty to allow any image width.')]) ?>
         <div class="input-group">
             <?= $form->number('restrict_max_width', $restrict_max_width > 0 ? $restrict_max_width : '', ['min' => '0']) ?>
-            <div class="input-group-append">
-                <div class="input-group-text"><?= t(/* i18n: short for pixels */ 'px') ?></div>
-            </div>
+            <div class="input-group-text"><?= t(/* i18n: short for pixels */ 'px') ?></div>
         </div>
     </div>
     <div class="form-group">
         <?= $form->label('restrict_max_height', t('Maximum height of uploaded images'), ['class' => 'launch-tooltip', 'title' => t('Here you can set the maximum height of uploaded images: images taller that this value will be scaled down. Leave empty to allow any image height.')]) ?>
         <div class="input-group">
             <?= $form->number('restrict_max_height', $restrict_max_height > 0 ? $restrict_max_height : '', ['min' => '0']) ?>
-            <div class="input-group-append">
-                <div class="input-group-text"><?= t(/* i18n: short for pixels */ 'px') ?></div>
-            </div>
+            <div class="input-group-text"><?= t(/* i18n: short for pixels */ 'px') ?></div>
         </div>
     </div>
 

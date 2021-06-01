@@ -41,11 +41,9 @@ $resolverManager = app(ResolverManagerInterface::class);
                 <?= $form->label('', $entity->getAccessEntityLabel()) ?>
                 <div class="input-group">
                     <?= $form->select('subscriptionsIncluded[' . $entity->getAccessEntityID() . ']', ['A' => t('All Subscriptions'), 'C' => t('Custom')], $assignment->getSubscriptionsAllowedPermission()) ?>
-                    <div class="input-group-append">
-                        <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </div>
+                    <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </div>
                 <div class="subscription-list<?= $assignment->getSubscriptionsAllowedPermission() != 'C' ? ' d-none"' : '' ?>">
                     <?php
@@ -97,11 +95,9 @@ $resolverManager = app(ResolverManagerInterface::class);
                 <?= $form->label('', $entity->getAccessEntityLabel()) ?>
                 <div class="input-group">
                     <?= $form->select('subscriptionsExcluded[' . $entity->getAccessEntityID() . ']', ['N' => t('No Subscriptions'), 'C' => t('Custom')], $assignment->getSubscriptionsAllowedPermission()) ?>
-                    <div class="input-group-append">
-                        <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </div>
+                    <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
+                        <i class="fas fa-trash"></i>
+                    </a>
                     
                 </div>
                 <div class="subscription-list<?= $assignment->getSubscriptionsAllowedPermission() != 'C' ? ' d-none"' : '' ?>">

@@ -22,18 +22,14 @@ if (($type & IpAccessControlService::IPRANGEFLAG_MANUAL) === IpAccessControlServ
             <legend><?= t('Add IP Range') ?></legend>
             <div class="form-group">
               <div class="input-group mb-3">
-                <div class="input-group-prepend">
                   <label for="new-range" class="input-group-text launch-tooltip col-form-label" data-html="true" title="<?= h(t(
                     'Enter a single address<br />(example: %s) or a range<br />(example: %s or %s).<br />Accept both IPv4 and IPv6 ranges.',
                     '<code>1.2.3.4</code>',
                     '<code>1.2.3.*</code>',
                     '<code>1.2.3.0/8</code>'
                 )) ?>"><?= t('IP Range') ?></label>
-                </div>
                 <input type="text" class="form-control" id="ccm-new-range" required="required" aria-describedby="button-addon2" />
-                <div class="input-group-append">
-                    <button type="submit" id="button-addon2" class="btn btn-outline-secondary"><?= t('Add') ?></button>
-                </div>
+                <button type="submit" id="button-addon2" class="btn btn-outline-secondary"><?= t('Add') ?></button>
               </div>
             </div>
             <br />

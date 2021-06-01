@@ -55,9 +55,7 @@ switch ($controller->getTask()) {
                     <?= $form->label('fslName', t('Name')); ?>
                     <div class="input-group">
                         <?= $form->text('fslName', $fslName); ?>
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
-                        </div>
+                        <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
                     </div>
                 </div>
                 <?php

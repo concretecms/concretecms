@@ -37,11 +37,9 @@ $form = $app->make(Form::class);
             <div class="input-group">
                 <?php echo $form->select("ccm-permission-key-selector", $permissionKeyList); ?>
 
-                <div class="input-group-append">
-                    <a href="javascript:void(0);" class="btn btn-secondary" id="ccm-add-access-entity">
-                        <?php echo t('Add Access Entity') ?>
-                    </a>
-                </div>
+                <a href="javascript:void(0);" class="btn btn-secondary" id="ccm-add-access-entity">
+                    <?php echo t('Add Access Entity') ?>
+                </a>
             </div>
         </div>
 

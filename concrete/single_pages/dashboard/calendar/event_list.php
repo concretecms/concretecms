@@ -26,9 +26,7 @@ $topic_id = Request::getInstance()->get('topic_id');
 
         <?php } ?>
 
-        <div class="input-group-append">
-            <button type="submit" class="btn btn-secondary"><?= t('Search') ?></button>
-        </div>
+        <button type="submit" class="btn btn-secondary"><?= t('Search') ?></button>
     </div>
 </form>
 

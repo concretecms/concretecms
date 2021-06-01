@@ -43,14 +43,12 @@ use Concrete\Core\Support\Facade\Url;
                     'autocomplete' => 'off'
                 ]);
             ?>
-            
-            <div class="input-group-append">
-                <button type="submit" class="input-group-icon">
-                    <svg width="16" height="16">
-                        <use xlink:href="#icon-search"/>
-                    </svg>
-                </button>
-            </div>
+
+            <button type="submit" class="input-group-icon">
+                <svg width="16" height="16">
+                    <use xlink:href="#icon-search"/>
+                </svg>
+            </button>
         </div>
     </form>
 </div>
