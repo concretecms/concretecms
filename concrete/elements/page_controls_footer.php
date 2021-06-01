@@ -46,11 +46,11 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
               $mobileMenu->render();
             ?> 
             <ul class="ccm-toolbar-item-list">
-                <li class="ccm-logo float-left"><span><?= $cih->getToolbarLogoSRC() ?></span></li>
+                <li class="ccm-logo float-start"><span><?= $cih->getToolbarLogoSRC() ?></span></li>
                 <?php
                 if ($c->isMasterCollection()) {
                     ?>
-                    <li class="float-left">
+                    <li class="float-start">
                         <a href="<?php echo URL::to('/dashboard/pages/types/output', $c->getPageTypeID()); ?>">
                             <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?php echo tc('toolbar', 'Exit Edit Defaults'); ?></span>
                          </a>
@@ -60,7 +60,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                 if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) {
                     if ($c->isEditMode()) {
                         ?>
-                        <li data-guide-toolbar-action="check-in" class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit float-left d-none d-md-block">
+                        <li data-guide-toolbar-action="check-in" class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit float-start d-none d-md-block">
                             <a
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-in"
@@ -80,7 +80,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                         <?php
                     } elseif ($permissions->canEditPageContents()) {
                         ?>
-                        <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit float-left d-none d-md-block">
+                        <li data-guide-toolbar-action="edit-page" class="ccm-toolbar-page-edit float-start d-none d-md-block">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 <?php if ($c->isMasterCollection()) { ?>data-disable-panel="check-in"<?php } ?>
                                 data-toolbar-action="check-out"
@@ -103,7 +103,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ) {
                         $hasComposer = isset($pagetype) && is_object($pagetype) && $cp->canEditPageContents();
                         ?>
-                        <li data-guide-toolbar-action="page-settings" class="float-left d-none d-md-block">
+                        <li data-guide-toolbar-action="page-settings" class="float-start d-none d-md-block">
                             <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }'
                                 href="#"
                                 data-launch-panel="page"
@@ -129,7 +129,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 
                 if ($cp->canEditPageContents() && (!$pageInUseBySomeoneElse)) {
                     ?>
-                    <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add float-left d-none d-md-block">
+                    <li data-guide-toolbar-action="add-content" class="ccm-toolbar-add float-start d-none d-md-block">
                         <?php if ($c->isEditMode()) { ?>
                             <a href="#" data-launch-panel="add-block" data-panel-url="<?= URL::to('/ccm/system/panels/add') ?>" title="<?= t('Add Content to The Page') ?>">
                                 <svg><use xlink:href="#icon-plus" /></svg><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add"><?= tc('toolbar', 'Add Content') ?></span>
@@ -149,7 +149,7 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets();
                         ?>
-                        <li class="float-left d-none d-md-block"><?= $cnt->getMenuItemLinkElement() ?></li>
+                        <li class="float-start d-none d-md-block"><?= $cnt->getMenuItemLinkElement() ?></li>
                         <?php
                     }
                 }

@@ -41,7 +41,7 @@ $token = $app->make(Token::class);
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?php echo (string)Url::to('/dashboard/system/express/entities/forms', $entity->getID()) ?>"
-               class="float-left btn btn-secondary" type="button">
+               class="float-start btn btn-secondary" type="button">
                 <?php echo t('Back to Forms') ?>
             </a>
 

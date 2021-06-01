@@ -49,7 +49,7 @@ class UserInterface
         if ('right' == $buttonAlign) {
             $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' float-left';
+            $innerClass .= ' float-start';
         }
 
         if (!$formID) {
@@ -79,7 +79,7 @@ class UserInterface
         if ('right' == $buttonAlign) {
             $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' float-left';
+            $innerClass .= ' float-start';
         }
         $argsstr = '';
         foreach ($args as $k => $v) {
@@ -105,7 +105,7 @@ class UserInterface
         if ('right' == $buttonAlign) {
             $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' float-left';
+            $innerClass .= ' float-start';
         }
         $argsstr = '';
         foreach ($args as $k => $v) {

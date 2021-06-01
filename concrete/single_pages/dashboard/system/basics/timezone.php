@@ -120,7 +120,7 @@ if (isset($compatibleTimezones) && !empty($compatibleTimezones)) {
             </div>
         </form>
         <div class="dialog-buttons">
-            <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary float-left"><?=t('Cancel'); ?></button>
+            <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary float-start"><?=t('Cancel'); ?></button>
             <button type="button" onclick="$('#user-timezone-autofix-form').submit()" class="btn btn-primary float-end"><?=t('Save'); ?></button>
         </div>
     </div>

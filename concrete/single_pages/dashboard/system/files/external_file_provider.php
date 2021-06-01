@@ -93,7 +93,7 @@ switch ($controller->getAction()) {
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <a href="<?php echo Url::to($c); ?>" class="btn float-left btn-secondary">
+                    <a href="<?php echo Url::to($c); ?>" class="btn float-start btn-secondary">
                         <?php echo t('Back'); ?>
                     </a>
 

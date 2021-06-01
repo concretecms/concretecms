@@ -157,7 +157,7 @@ if (isset($type)) {
         ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= $view->action('') ?>" class="btn float-left btn-secondary"><?= t('Back') ?></a>
+                <a href="<?= $view->action('') ?>" class="btn float-start btn-secondary"><?= t('Back') ?></a>
                 <?php
                 if ($type->getID() !== null) {
                     ?>

@@ -162,7 +162,7 @@ use Concrete\Core\Support\Facade\Url;
         <tr>
             <td colspan="3">
                 <% if (hasPreviousPage == '1') { %>
-                    <a href="#" class="float-left" data-version-navigation="<%=previousPageNum%>">
+                    <a href="#" class="float-start" data-version-navigation="<%=previousPageNum%>">
                         <?php echo t('&larr; Newer Versions') ?>
                     </a>
                 <% } %>
@@ -504,7 +504,7 @@ use Concrete\Core\Support\Facade\Url;
         <hr/>
 
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-left" data-dialog-action="cancel">
+            <button class="btn btn-secondary float-start" data-dialog-action="cancel">
                 <?php echo t('Cancel') ?>
             </button>
 

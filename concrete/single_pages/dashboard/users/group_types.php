@@ -53,7 +53,7 @@ $token = $app->make(Token::class);
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?php echo (string)Url::to('/dashboard/users/group_types') ?>"
-                   class="btn float-left btn-secondary">
+                   class="btn float-start btn-secondary">
                     <?php echo t('Cancel') ?>
                 </a>
 
@@ -110,7 +110,7 @@ $token = $app->make(Token::class);
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?php echo (string)Url::to('/dashboard/users/group_types') ?>"
-                   class="btn float-left btn-secondary">
+                   class="btn float-start btn-secondary">
                     <?php echo t('Cancel') ?>
                 </a>
 

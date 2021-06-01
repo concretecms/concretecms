@@ -45,11 +45,11 @@ $publishDate = $v->getPublishDate();
 <?php if (is_object($page) && $page->isPageDraft()) {
     if ($cp->canDeletePage()) {
         ?>
-        <button type="button" data-page-type-composer-form-btn="discard" class="btn btn-danger float-left"><?=t('Discard Draft')?></button>
+        <button type="button" data-page-type-composer-form-btn="discard" class="btn btn-danger float-start"><?=t('Discard Draft')?></button>
     <?php
     }
     ?>
-    <button type="button" data-page-type-composer-form-btn="exit" class="btn btn-secondary float-left"><?=t('Save and Exit')?></button>
+    <button type="button" data-page-type-composer-form-btn="exit" class="btn btn-secondary float-start"><?=t('Save and Exit')?></button>
 <?php
 } ?>
 

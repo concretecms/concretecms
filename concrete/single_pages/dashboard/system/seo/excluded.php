@@ -18,7 +18,7 @@ if ($excludedWords !== $defaultExcludedWords) {
                 <?php $token->output('reset') ?>
                 <p><?= t('Are you sure you want to reset the reserved word list to the default value?') ?></p>
                 <div class="dialog-buttons">
-                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                     <button class="btn btn-danger float-end" onclick="$('div[data-dialog-wrapper=ccm-seowords-reset] form').submit()"><?= t('Reset') ?></button>
                 </div>
             </form>

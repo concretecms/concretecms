@@ -67,7 +67,7 @@ if ($controller->getAction() == 'add'
                     <p><?= t('Are you sure? This action cannot be undone.') ?></p>
                 </form>
                 <div class="dialog-buttons">
-                    <button class="btn btn-secondary float-left"
+                    <button class="btn btn-secondary float-start"
                             onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
                     <button class="btn btn-danger float-end"
                             onclick="$('#ccm-dialog-delete-feed form').submit()"><?= t('Delete Feed') ?></button>
@@ -208,7 +208,7 @@ if ($controller->getAction() == 'add'
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?= URL::to('/dashboard/pages/feeds') ?>"
-                   class="btn btn-primary float-left"><?= t('Cancel') ?></a>
+                   class="btn btn-primary float-start"><?= t('Cancel') ?></a>
                 <button class="float-end btn btn-success" type="submit"><?= $button ?></button>
             </div>
         </div>

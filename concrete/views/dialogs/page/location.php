@@ -138,7 +138,7 @@ $navHelper = $app->make(Navigation::class);
 </script>
 
 <div class="ccm-panel-detail-form-actions dialog-buttons">
-    <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel"
+    <button class="float-start btn btn-secondary" type="button" data-dialog-action="cancel"
             data-panel-detail-action="cancel">
         <?php echo t('Cancel') ?>
     </button>

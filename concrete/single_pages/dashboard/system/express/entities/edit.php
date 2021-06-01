@@ -202,7 +202,7 @@ $form = $app->make(Form::class);
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <button type="button" data-dialog="delete-entity" class="float-left btn btn-danger">
+                    <button type="button" data-dialog="delete-entity" class="float-start btn btn-danger">
                         <?php echo t('Delete') ?>
                     </button>
 
@@ -226,7 +226,7 @@ $form = $app->make(Form::class);
             </p>
 
             <div class="dialog-buttons">
-                <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()">
+                <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()">
                     <?php echo t('Cancel') ?>
                 </button>
 

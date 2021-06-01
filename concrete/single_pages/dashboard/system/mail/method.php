@@ -83,7 +83,7 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= $this->action('test') ?>" class="btn btn-secondary float-left"><?= t('Test Settings') ?></a>
+            <a href="<?= $this->action('test') ?>" class="btn btn-secondary float-start"><?= t('Test Settings') ?></a>
             <?= $interface->submit(t('Save'), 'mail-settings-form', 'right', 'btn-primary') ?>
         </div>
     </div>

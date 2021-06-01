@@ -23,7 +23,7 @@ use Concrete\Controller\Dialog\File\Bulk\Sets;
     </div>
 
     <div class="dialog-buttons">
-        <button class="btn btn-secondary float-left" data-dialog-action="cancel">
+        <button class="btn btn-secondary float-start" data-dialog-action="cancel">
             <?php echo t('Cancel') ?>
         </button>
 

@@ -112,7 +112,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 
 	<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
-			<a href="<?= URL::to('/dashboard/users/search'); ?>" class="btn btn-secondary float-left"><?=  t('Cancel'); ?></a>
+			<a href="<?= URL::to('/dashboard/users/search'); ?>" class="btn btn-secondary float-start"><?=  t('Cancel'); ?></a>
 			<?= $form->submit('add', t('Add'), ['class' => 'btn btn-primary float-end']); ?>
 		</div>
 	</div>

@@ -8,7 +8,7 @@ $composer = Core::make("helper/concrete/composer");
         <?php $pagetype->renderComposerOutputForm(null, $parent); ?>
         <input type="hidden" name="addPageComposeAction" value="preview" />
         <div class="dialog-buttons">
-            <button type="button" data-dialog-action="cancel" class="btn btn-secondary float-left"><?=t('Cancel')?></button>
+            <button type="button" data-dialog-action="cancel" class="btn btn-secondary float-start"><?=t('Cancel')?></button>
             <div class="btn-group float-end">
                 <button type="button" data-dialog-action="submit" value="preview" data-page-type-composer-form-btn="preview" class="btn btn-success"><?=t('Edit Mode')?></button>
                 <button type="button" data-composer-dialog-action="publish" value="publish" class="pr-3 pl-3 btn btn-primary"><?=t('Publish Page')?></button>

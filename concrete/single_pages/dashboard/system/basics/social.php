@@ -35,7 +35,7 @@
                 <p><?=t('Are you sure? This action cannot be undone.'); ?></p>
             </form>
             <div class="dialog-buttons">
-                <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
+                <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
                 <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-social-link form').submit()"><?=t('Delete Link'); ?></button>
             </div>
         </div>
@@ -77,7 +77,7 @@
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=URL::to('/dashboard/system/basics/social'); ?>" class="btn btn-secondary float-left"><?=t("Cancel"); ?></a>
+                <a href="<?=URL::to('/dashboard/system/basics/social'); ?>" class="btn btn-secondary float-start"><?=t("Cancel"); ?></a>
                 <button class="float-end btn btn-primary" type="submit" ><?=$buttonText; ?></button>
             </div>
         </div>

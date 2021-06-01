@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<form method="post" data-form="delete-block" data-action-delete-all="<?=$deleteAllAction?>" data-action="<?=$deleteAction?>">
 
 		<div class="dialog-buttons">
-		<button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+		<button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
 		<button type="button" data-submit="delete-block-form" class="btn btn-danger float-end"><?=t('Delete')?></button>
 		</div>
 

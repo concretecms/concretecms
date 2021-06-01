@@ -47,7 +47,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <?=t('Remove this element from your library?')?>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger float-left"><?=t('Delete Element')?></button>
+                    <button type="submit" class="btn btn-danger float-start"><?=t('Delete Element')?></button>
                 </div>
             </div>
         </form>

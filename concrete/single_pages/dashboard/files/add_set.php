@@ -24,7 +24,7 @@ $form = $app->make(Form::class);
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?php echo Url::to('/dashboard/files/sets') ?>" class="btn btn-secondary float-left">
+            <a href="<?php echo Url::to('/dashboard/files/sets') ?>" class="btn btn-secondary float-start">
                 <?php echo t('Cancel') ?>
             </a>
 

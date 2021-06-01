@@ -93,7 +93,7 @@ if (!isset($month)) {
             <p><?= t('Are you sure? This action cannot be undone.') ?></p>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
             <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?= t(
                     'Delete Calendar') ?></button>
         </div>

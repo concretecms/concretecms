@@ -275,7 +275,7 @@ if ($install_config) {
             <form method="post" action="<?= $urlResolver->resolve(['install', 'setup']) ?>"
                   id="continue-to-installation" style="visibility: hidden" class="pull-right">
                 <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
-                <a class="float-left btn btn-secondary btn-sm" href="<?=URL::to('/')?>">
+                <a class="float-start btn btn-secondary btn-sm" href="<?=URL::to('/')?>">
                     <?= t('Back') ?>
                 </a>
 

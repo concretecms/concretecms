@@ -49,7 +49,7 @@ if (isset($activate_confirm)) {
                         </div>
                     </td>
                     <td width="100%" style="vertical-align:middle;">
-                        <div class="btn-group float-right"><?php
+                        <div class="btn-group float-end"><?php
                             if ($siteThemeID == $t->getThemeID()) {
                                 echo $ih->buttonJs(t('Activate'), "alert('" . $alreadyActiveMessage . "')", 'left', 'btn-secondary ccm-button-inactive', ['disabled' => 'disabled']);
                             } else {

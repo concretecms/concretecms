@@ -18,7 +18,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
-	<a href="<?=URL::page($c, 'view_detail', $wf->getWorkflowID())?>" class="btn btn-secondary float-left"><?=t("Cancel")?></a>
+	<a href="<?=URL::page($c, 'view_detail', $wf->getWorkflowID())?>" class="btn btn-secondary float-start"><?=t("Cancel")?></a>
 	<input type="submit" name="submit" value="<?=t('Save')?>" class="btn btn-primary float-end" />
 </div>
 </div>
@@ -80,7 +80,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 		
 		<div class="ccm-dashboard-form-actions-wrapper">
 		<div class="ccm-dashboard-form-actions">
-			<a href="<?=URL::page($c)?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
+			<a href="<?=URL::page($c)?>" class="btn btn-secondary float-start"><?=t('Cancel')?></a>
 			<button type="submit" class="btn btn-primary float-end"><?=t('Add')?></button>
 		</div>
 		</div>

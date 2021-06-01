@@ -80,7 +80,7 @@ if (isset($container) && $container) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/pages/containers'); ?>" class="btn btn-secondary float-left"><?=t('Cancel'); ?></a>
+            <a href="<?=URL::to('/dashboard/pages/containers'); ?>" class="btn btn-secondary float-start"><?=t('Cancel'); ?></a>
             <button type="submit" class="btn float-end btn-primary"><?=$buttonText; ?></button>
             <?php if ($container) {
                 ?>

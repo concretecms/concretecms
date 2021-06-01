@@ -6,7 +6,7 @@ if (is_array($image)) {
 
 ?>
 <div class="ccm-gathering-masthead-image-right ccm-gathering-masthead-image ccm-gathering-scaled-image">
-	<div class="ccm-gathering-tile-title-description float-left">
+	<div class="ccm-gathering-tile-title-description float-start">
 		<div class="ccm-gathering-tile-headline">
 			<a href="<?=$link?>"><?=$title?></a><?php echo $ownerName ?>
 		</div>

@@ -230,7 +230,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     </div>
 
                     <div class="block-content">
-                        <div class="block-name float-left">
+                        <div class="block-name float-start">
                                 <span class="handle">
                                     <%=result.name%>
                                 </span>
@@ -380,7 +380,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     </div>
 
                     <div class="block-content">
-                        <div class="block-name float-left">
+                        <div class="block-name float-start">
                             <span class="handle">
                                 <%=result.arHandle%>
                             </span>

@@ -401,7 +401,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
         if ($filePermissions->canEditFilePermissions()) {
             ?>
             <a
-                    class="btn btn-secondary float-right dialog-launch"
+                    class="btn btn-secondary float-end dialog-launch"
                     dialog-title="<?= t('Storage Location') ?>"
                     dialog-width="500" dialog-height="400"
                     href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()])) ?>"
