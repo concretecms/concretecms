@@ -128,7 +128,7 @@ $resolverManager = app(ResolverManagerInterface::class);
 <div class="ccm-dashboard-header-buttons">
     <form class="form-inline" role="form" action="<?=$controller->action('view')?>">
         <input type="text" class="ml-2 form-control-sm form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
-        <select class="ml-2 custom-select custom-select-sm" name="cmpMessageFilter">
+        <select class="ml-2 form-select form-select-sm" name="cmpMessageFilter">
             <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
                 <option value="<?= $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?= $optionText; ?></option>
             <?php } ?>

@@ -36,7 +36,7 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 
                     <?php echo Loader::helper('validation/token')->output('copy_tree') ?>
                     <div class="form-group">
-                        <button class="btn btn-secondary float-left" type="submit" name="copy"><?= t('Copy Tree') ?></button>
+                        <button class="btn btn-secondary float-start" type="submit" name="copy"><?= t('Copy Tree') ?></button>
                     </div>
 
                     <?php
@@ -105,7 +105,7 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
 
                     <?php echo Loader::helper('validation/token')->output('rescan_locale') ?>
                     <div class="form-group">
-                        <button class="btn btn-secondary float-left" type="submit"
+                        <button class="btn btn-secondary float-start" type="submit"
                                 name="rescan_locale"><?= t('Rescan Locale') ?></button>
                     </div>
 

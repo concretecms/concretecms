@@ -80,7 +80,7 @@
                 foreach ($options as $opt) {
                     ?>
                     <div class="survey-block-option">
-                        <a href="javascript:void(0);" class="float-end ccm-icon-wrapper text-danger delete">
+                        <a href="javascript:void(0);" class="float-end ccm-icon-wrapper link-danger delete">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                         <?= h($opt->getOptionName()) ?>
@@ -108,7 +108,7 @@
     </div>
     <script type="text/template" role="option">
         <div class="survey-block-option">
-            <a href="javascript:void(0);" class="float-end ccm-icon-wrapper text-danger delete">
+            <a href="javascript:void(0);" class="float-end ccm-icon-wrapper link-danger delete">
                 <i class="fas fa-trash-alt"></i>
             </a>
             <%- value %>

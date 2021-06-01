@@ -20,7 +20,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <label class="control-label" :for="attribute.controlID">{{attribute.label}}</label>
             <div v-if="isBulkMode && attribute.hasMultipleValues" class="ccm-attribute-key-multiple-values card card-body p-2">
                 <a :href="'#ccm-attribute-key-mv-body-' + attribute.akID" data-toggle="collapse"
-                   class="d-block text-decoration-none text-primary" role="button"
+                   class="d-block text-decoration-none link-primary" role="button"
                    aria-expanded="false"
                    :aria-controls="'ccm-attribute-key-mv-body-' + attribute.akID"
                    @click="attribute.mvBoxExpanded = !attribute.mvBoxExpanded">
@@ -43,7 +43,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <h4><?=t('Add Attribute')?></h4>
     <div class="input-group">
-        <select class="custom-select" v-model="selectedAttributeToAdd">
+        <select class="form-select" v-model="selectedAttributeToAdd">
             <option value=""><?=t('** Choose Attribute')?></option>
             <optgroup v-for="attributeSet in attributes.sets" :label="attributeSet.name">
                 <option :disabled="isSelected(attribute.akID)" v-for="attribute in attributeSet.keys" :value="attribute.akID">{{attribute.akName}}</option>

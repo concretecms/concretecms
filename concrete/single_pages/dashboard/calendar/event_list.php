@@ -16,7 +16,7 @@ $topic_id = Request::getInstance()->get('topic_id');
         <?= $form->text('query', array('placeholder' => t('Keywords'))) ?>
         <?php if (isset($topics) && is_array($topics)) { ?>
 
-            <select name="topic_id" class="custom-select">
+            <select name="topic_id" class="form-select">
                 <option value=""><?= t('All Categories') ?></option>
                 <?php foreach ($topics as $topic_node) { ?>
                     <option <?php if ($topic_id == $topic_node->getTreeNodeID()) { ?>selected<?php } ?>

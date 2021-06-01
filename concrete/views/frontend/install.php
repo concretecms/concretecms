@@ -75,7 +75,7 @@ if ($install_config) {
                     }
                     ?>
                     <?= $form->select('wantedLocale', $selectOptions, Localization::BASE_LOCALE, [
-                        'class' => 'custom-select'
+                        'class' => 'form-select'
                     ]); ?>
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">

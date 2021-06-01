@@ -10,7 +10,7 @@ $config = $app->make('config');
         <div class="input-group-prepend">
           <?=$form->label('group_id', t('Spam Whitelist Group'),['class'=>'input-group-text'])?>
         </div>
-        <?=$form->select('group_id', (array) $groups, $whitelistGroup, ['class'=>'custom-select']);?>
+        <?=$form->select('group_id', (array) $groups, $whitelistGroup, ['class'=>'form-select']);?>
       </div>
     </div>
 
@@ -28,7 +28,7 @@ $config = $app->make('config');
             }
             ?>
 
-    		<?=$form->select('activeLibrary', $libraries, $activeHandle, array('class' => 'custom-select'))?>
+    		<?=$form->select('activeLibrary', $libraries, $activeHandle, array('class' => 'form-select'))?>
       </div>
 		</div>
 

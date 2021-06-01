@@ -52,7 +52,7 @@ $config = $app->make('config');
                 'bottomleft' => t('Bottom Left'),
                 'inline' => t('Inline'),
             ],
-            [ 'class'=>'custom-select' ],
+            [ 'class'=>'form-select' ],
             $config->get('captcha.recaptcha_v3.position')
     ) ?>
     </div>

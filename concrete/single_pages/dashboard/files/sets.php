@@ -301,7 +301,7 @@ $dh = $app->make(Date::class);
                 ],
                 $fsType == Set::TYPE_PRIVATE ? $fsType : Set::TYPE_PUBLIC,
                 [
-                    "class" => "ml-2 custom-select-sm custom-select"
+                    "class" => "ml-2 form-select-sm form-select"
                 ]
             ); ?>
 
