@@ -29,6 +29,11 @@ trait GroupDetailsTrait
      */
     protected $parentGroupID;
 
+    /**
+     * @var int|null
+     */
+    protected $parentNodeID;
+
     public function getName(): string
     {
         return $this->name;
@@ -59,12 +64,17 @@ trait GroupDetailsTrait
         return $this;
     }
 
+    /**
+     * @deprecated
+     * @return bool
+     */
     public function isBadge(): bool
     {
         return $this->isBadge;
     }
 
     /**
+     * @deprecated
      * @return $this
      */
     public function setIsBadge(bool $isBadge): object
@@ -74,12 +84,17 @@ trait GroupDetailsTrait
         return $this;
     }
 
+    /**
+     * @deprecated
+     * @return string
+     */
     public function getBadgeDescription(): string
     {
         return $this->badgeDescription;
     }
 
     /**
+     * @deprecated
      * @return $this
      */
     public function setBadgeDescription(string $badgeDescription): object
@@ -89,12 +104,21 @@ trait GroupDetailsTrait
         return $this;
     }
 
+    /**
+     * @deprecated
+     * Use the parent node instead.
+     *
+     * @return int|null
+     */
     public function getParentGroupID(): ?int
     {
         return $this->parentGroupID;
     }
 
     /**
+     * @deprecated
+     * Use the parent node instead.
+     *
      * @return $this
      */
     public function setParentGroupID(?int $parentGroupID): object
@@ -103,4 +127,23 @@ trait GroupDetailsTrait
 
         return $this;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getParentNodeID(): ?int
+    {
+        return $this->parentNodeID;
+    }
+
+    /**
+     * @param int|null $parentNodeID
+     * @return object
+     */
+    public function setParentNodeID(?int $parentNodeID): object
+    {
+        $this->parentNodeID = $parentNodeID;
+        return $this;
+    }
+
 }

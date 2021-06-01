@@ -82,7 +82,7 @@ trait DashboardExpressEntryDetailsTrait
             $form
         );
         $this->set('renderer', $renderer);
-        $this->set('pageTitle', t('Add %s', $entity->getName()));
+        $this->set('pageTitle', t('Add %s', $entity->getEntityDisplayName()));
         $this->render('/dashboard/express/entries/create', false);
     }
 
@@ -165,7 +165,7 @@ trait DashboardExpressEntryDetailsTrait
         $this->setBreadcrumb($breadcrumb);
 
         $this->set('subEntities', $subEntities);
-        $this->set('pageTitle', t('View %s Entry', $entity->getName()));
+        $this->set('pageTitle', t('View %s Entry', $entity->getEntityDisplayName()));
         $this->render('/dashboard/express/entries/view_entry', false);
     }
 
@@ -202,7 +202,7 @@ trait DashboardExpressEntryDetailsTrait
 
         $this->set('renderer', $renderer);
         $this->set('backURL', $this->getBackURL($entry->getEntity()));
-        $this->set('pageTitle', t('Edit %s Entry', $entity->getName()));
+        $this->set('pageTitle', t('Edit %s Entry', $entity->getEntityDisplayName()));
         $this->render('/dashboard/express/entries/update', false);
     }
 

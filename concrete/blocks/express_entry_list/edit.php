@@ -113,6 +113,10 @@ echo $userInterface->tabs([
 
         <div class="form-group">
             <div class="form-check">
+                <?php echo $form->checkbox('enablePagination', 1, $enablePagination) ?>
+                <?php echo $form->label('enablePagination', t('Display pagination interface in results.'), ["class" => "form-check-label"]) ?>
+            </div>
+            <div class="form-check">
                 <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection) ?>
                 <?php echo $form->label('enableItemsPerPageSelection', t('Allow users to select items per page.'), ["class" => "form-check-label"]) ?>
             </div>

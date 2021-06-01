@@ -236,10 +236,10 @@ class View extends AbstractView
 
     protected function onBeforeGetContents()
     {
+        $this->themeObject->registerAssets();
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('view', $this);
         Events::dispatch('on_before_render', $event);
-        $this->themeObject->registerAssets();
     }
 
     public function renderViewContents($scopeItems)

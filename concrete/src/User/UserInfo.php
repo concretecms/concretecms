@@ -177,6 +177,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
+     * @deprecated
      * @return Group[]
      */
     public function getUserBadges()

@@ -29,7 +29,7 @@ if ($controller->getAction() == 'inspect') {
             if ($numActive > 0) {
                 ?><a href="<?= $view->action('search', $bt->getBlockTypeID()) ?>"><?= $numActive ?></a><?php
             } else {
-                echo $num;
+                echo 0;
             }
             ?>
         </dd>

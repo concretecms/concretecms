@@ -8,10 +8,10 @@ use Concrete\Core\Support\Facade\Url;
 ?>
 
 <div class="form-inline">
-    <?php if (!empty($itemsPerPageOptions)): ?>
-        <div class="btn-group">
-            <select id="favoriteFolderSelector" class="selectpicker mr-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
+    <select id="favoriteFolderSelector" class="selectpicker mr-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
 
+    <?php if (!empty($itemsPerPageOptions)) { ?>
+        <div class="dropdown">
             <button
                 type="button"
                 class="btn btn-secondary p-2 dropdown-toggle"
@@ -29,22 +29,22 @@ use Concrete\Core\Support\Facade\Url;
                     <?php echo t('Items per page') ?>
                 </li>
 
-                <?php foreach ($itemsPerPageOptions as $itemsPerPageOption): ?>
+                <?php foreach ($itemsPerPageOptions as $itemsPerPageOption) { ?>
                     <?php
                         $url = $urlHelper->setVariable([
                             'itemsPerPage' => $itemsPerPageOption
                         ]);
                     ?>
-                
+
                     <li data-items-per-page="<?php echo $itemsPerPageOption; ?>">
                         <a class="dropdown-item <?php echo ($itemsPerPageOption === $itemsPerPage) ? 'active' : ''; ?>" href="<?php echo $url ?>">
                             <?php echo $itemsPerPageOption; ?>
                         </a>
                     </li>
-                <?php endforeach; ?>
+                <?php } ?>
             </ul>
         </div>
-    <?php endif; ?>
+    <?php } ?>
 
     <ul class="ccm-dashboard-header-icons">
         <li>

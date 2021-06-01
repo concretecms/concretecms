@@ -39,7 +39,8 @@ class Install extends DashboardPageController
         if (!is_object($pkg)) {
             $this->redirect('/dashboard/extend/install');
         }
-        $manager = new Manager($this->app);
+        /** @var Manager $manager */
+        $manager = $this->app->make(Manager::class, [$this->app]);
         $this->set('text', Loader::helper('text'));
         $this->set('pkg', $pkg);
         $this->set('categories', $manager->getPackageItemCategories());
@@ -49,14 +50,12 @@ class Install extends DashboardPageController
     {
         $pkgID = $this->post('pkgID');
 
-        $valt = Loader::helper('validation/token');
-
         if ($pkgID > 0) {
             $pkg = Package::getByID($pkgID);
         }
 
-        if (!$valt->validate('uninstall')) {
-            $this->error->add($valt->getErrorMessage());
+        if (!$this->token->validate('uninstall')) {
+            $this->error->add($this->token->getErrorMessage());
         }
 
         $tp = new TaskPermission();
@@ -98,7 +97,8 @@ class Install extends DashboardPageController
         }
 
         if (isset($pkg) && ($pkg instanceof PackageEntity)) {
-            $manager = new Manager($this->app);
+            /** @var Manager $manager */
+            $manager = $this->app->make(Manager::class, [$this->app]);
             $this->set('categories', $manager->getPackageItemCategories());
             $this->set('pkg', $pkg);
         } else {
@@ -137,7 +137,7 @@ class Install extends DashboardPageController
                 $loader->registerPackageCustomAutoloaders($p);
                 if (
                     (!$p->showInstallOptionsScreen()) ||
-                    Loader::helper('validation/token')->validate('install_options_selected')
+                    $this->token->validate('install_options_selected')
                 ) {
                     $tests = $p->testForInstall();
                     if (is_object($tests)) {

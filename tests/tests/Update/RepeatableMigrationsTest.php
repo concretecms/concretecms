@@ -12,6 +12,7 @@ class RepeatableMigrationsTest extends ConcreteDatabaseTestCase
 {
     protected $allowedNotRepeatableMigrations = [
         \Concrete\Core\Updater\Migrations\Migrations\Version20160725000000::class,
+        \Concrete\Core\Updater\Migrations\Migrations\Version20210205193115::class,
     ];
 
     public function testRepeatableMigrations()

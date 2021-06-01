@@ -10,7 +10,7 @@ abstract class UserTestCase extends ConcreteDatabaseTestCase
 {
     protected $fixtures = [];
     protected $tables = [
-        'UserGroups', 'Groups',
+        'UserGroups', 'Groups', 'GroupTypes',
         'TreeTypes', 'TreeNodes', 'TreeNodePermissionAssignments',
         'PermissionKeyCategories', 'PermissionKeys', 'TreeNodeTypes', 'Trees',
         'TreeGroupNodes',

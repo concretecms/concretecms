@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a3',
     'version_installed' => '9.0.0a3',
-    'version_db' => '20201231153200', // the key of the latest database migration
+    'version_db' => '20210428212600', // the key of the latest database migration
 
     /*
      * Installation status
@@ -149,6 +149,8 @@ return [
                 'password' => '',
                 'encryption' => '',
                 'messages_per_connection' => null,
+                // The domain to be used in the HELO/EHLO step (if empty we'll use localhost)
+                'helo_domain' => 'localhost',
             ],
         ],
     ],

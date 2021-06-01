@@ -21,6 +21,7 @@
         <category handle="page_type" package=""/>
         <category handle="gathering" package=""/>
         <category handle="group_tree_node" package=""/>
+        <category handle="group_folder" package="" />
         <category handle="express_tree_node" package=""/>
         <category handle="category_tree_node" package=""/>
         <category handle="topic_tree_node" package=""/>
@@ -351,6 +352,12 @@
         <permissionkey handle="delete_express_entry" name="Delete Entry" package="" category="express_entry">
         </permissionkey>
 
+        <!-- group folders //-->
+        <permissionkey handle="search_group_folder" name="Search Group Folder" description="See this group folder in the group search." package="" category="group_folder"/>
+        <permissionkey handle="edit_group_folder" name="Edit Group Folder" description="Edit a group folder." package="" category="group_folder"/>
+        <permissionkey handle="edit_group_folder_permissions" name="Edit Group Access" description="Can edit access to group folder." package="" category="group_folder"/>
+        <permissionkey handle="delete_group_folder" name="Delete Group Folder" description="Can delete group folder." package="" category="group_folder"/>
+        <permissionkey handle="add_group" name="Add Group" description="Can add groups to folder." package="" category="group_folder"/>
 
         <!-- groups //-->
 
@@ -499,6 +506,7 @@
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="group_tree_node" />
+                <category handle="group_folder" />
                 <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
@@ -530,6 +538,7 @@
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="category_tree_node" />
+                <category handle="group_folder" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
@@ -557,6 +566,7 @@
                 <category handle="page_type" />
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
+                <category handle="group_folder" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="category_tree_node" />
@@ -586,6 +596,7 @@
                 <category handle="page_type" />
                 <category handle="gathering" />
                 <category handle="group_tree_node" />
+                <category handle="group_folder" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="category_tree_node" />

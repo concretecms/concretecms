@@ -149,21 +149,15 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
         $verifyUrl .= (strpos($verifyUrl, '?') === false ? '?' : '&') . $queryString;
 
         $httpClient = $this->app->make(HttpClient::class);
-        $httpClient->setUri($verifyUrl);
 
         try {
-            $response = $httpClient->send();
+            $response = $httpClient->get($verifyUrl);
         } catch (Exception $x) {
             $this->logger->alert(t('Error loading reCAPTCHA: %s', $x->getMessage()));
 
             return false;
         }
         /** @var \Zend\Http\Response $response */
-        if (!$response->isOk()) {
-            $this->logger->alert(t('Error loading reCAPTCHA: %s', sprintf('%s (%s)', $response->getStatusCode(), $response->getReasonPhrase())));
-
-            return false;
-        }
         $data = @json_decode($response->getBody(), true);
         if (!is_array($data)) {
             $this->logger->alert(t('Error loading reCAPTCHA: %s', t('invalid response')));

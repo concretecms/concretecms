@@ -70,6 +70,11 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
         </div>
 
         <div class="form-group">
+            <?= $form->label('MAIL_SEND_METHOD_SMTP_HELO_DOMAIN', t(/*i18n: %1$s is HELO, %2$s is localhost*/'%1$s domain (Leave blank for %2$s)', 'HELO', 'localhost')) ?>
+            <?= $form->text('MAIL_SEND_METHOD_SMTP_HELO_DOMAIN', $config->get('concrete.mail.methods.smtp.helo_domain')) ?>
+        </div>
+
+        <div class="form-group">
             <?= $form->label('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION', t('Messages per connection'), ['class' => 'launch-tooltip', 'title' => t('Sending multiple messages per connection can speed up sending many emails at once, but this feature must be supported by the SMTP server')]) ?>
             <?= $form->number('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION', $config->get('concrete.mail.methods.smtp.messages_per_connection') ?: '', ['min' => 1, 'placeholder' => t('Leave empty for unlimited messages per connection')]) ?>
         </div>
