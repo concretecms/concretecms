@@ -69,7 +69,7 @@ if (isset($breadcrumb) && (!empty($breadcrumb))) {
                 ?><li class="<?=$value['active'] ? 'ccm-undroppable-search-item active' : 'ccm-droppable-search-item'?>" data-collection-id="<?=$value['id']?>"><?php
                 if (isset($value['children'])) {
                     ?><span class="dropdown">
-                    <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
+                    <button type="button" class="btn btn-default btn-xs" data-bs-toggle="dropdown">
                         <?=$value['name']?>
                         <span class="caret"></span>
                     </button>

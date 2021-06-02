@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <?php if (Config::get('concrete.user.registration.validate_email') == true && $canActivateUser) : ?>
         <?php if ($user->isValidated() < 1) : ?>
             <div class="btn-group">
-                <button type="button" class="btn dropdown-toggle btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="bstb-undefined">
+                <button type="button" class="btn dropdown-toggle btn-secondary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="bstb-undefined">
                     <span><?php echo t('Validate') ?></span> <span class="caret"></span>
                 </button>
                 <div class="dropdown-menu">

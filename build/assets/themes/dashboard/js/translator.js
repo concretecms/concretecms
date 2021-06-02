@@ -551,7 +551,7 @@ Translator.prototype = {
                 )
                 .append($('<div class="input-group-btn" />')
                   .append(this.UI.$searchButton = $('<button type="button" class="btn btn-primary"><span class="fa fa-search"></span></button>'))
-                  .append($('<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" />')
+                  .append($('<button type="button" class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" />')
                     .append($('<span class="caret" />'))
                   )
                   .append($('<ul class="dropdown-menu dropdown-menu-right" role="menu" />')

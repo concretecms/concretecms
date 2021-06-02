@@ -59,7 +59,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <h3 class="font-weight-light"><?=t('Add Item')?></h3>
         <div class="dropdown">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
                 <?=t('Choose Type')?>
             </button>
 

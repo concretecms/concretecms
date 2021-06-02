@@ -17,7 +17,7 @@ if (!isset($month)) {
     <div class="btn-group">
         <div class="btn-group">
             <button type="button" id="calendar_button" class="btn btn-secondary dropdown-toggle"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?= h($calendar->getName()) ?>
                 <span class="caret"></span>
             </button>

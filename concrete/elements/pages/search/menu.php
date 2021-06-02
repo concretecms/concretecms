@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <button
                     type="button"
                     class="btn btn-secondary p-2 dropdown-toggle"
-                    data-toggle="dropdown"
+                    data-bs-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false">
 

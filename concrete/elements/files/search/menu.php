@@ -7,7 +7,7 @@ use Concrete\Core\Support\Facade\Url;
 /** @var $urlHelper Url */
 ?>
 
-<div class="form-inline">
+<div class="row row-cols-auto align-items-center">
     <select id="favoriteFolderSelector" class="selectpicker mr-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
 
     <?php if (!empty($itemsPerPageOptions)) { ?>
@@ -15,7 +15,7 @@ use Concrete\Core\Support\Facade\Url;
             <button
                 type="button"
                 class="btn btn-secondary p-2 dropdown-toggle"
-                data-toggle="dropdown"
+                data-bs-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false">
 

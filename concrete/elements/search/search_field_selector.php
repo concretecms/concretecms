@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </div>
 
     <div class="btn-group">
-        <button type="button" class="btn btn-success dropdown-toggle" data-flip="false" data-toggle="dropdown" data-boundary="window">
+        <button type="button" class="btn btn-success dropdown-toggle" data-flip="false" data-bs-toggle="dropdown" data-boundary="window">
             <?=t('Add Field')?>
         </button>
         <div class="dropdown-menu">

@@ -102,7 +102,7 @@ if (isset($neutralStack)) {
                         if ($areaPermissions->canAddBlocks()) {
                             ?>
                             <li class="nav-item dropdown">
-                                <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
+                                <a class="dropdown-toggle nav-link" data-bs-toggle="dropdown" href="#">
                                     <?= t('Add') ?> <span class="caret"></span>
                                 </a>
 
@@ -473,7 +473,7 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
                     <td class="ccm-search-results-menu-launcher">
                         <?php if ($st->getPageTypeHandle() === STACK_CATEGORY_PAGE_TYPE) { ?>
                             <div class="dropdown">
-                                <button class="btn btn-icon" data-boundary="viewport" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-icon" data-boundary="viewport" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <svg width="16" height="4"><use xlink:href="#icon-menu-launcher"/></svg>
                                 </button>
                                 <div class="dropdown-menu">

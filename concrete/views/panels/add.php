@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <header class="pl-0 pr-0">
         <div id="dropdown-menu" class="dropdown" data-panel-menu="dropdown">
             <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
-            <h4 data-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
+            <h4 data-bs-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
                 <?php
                 switch ($tab) {
                     case 'containers':

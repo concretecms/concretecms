@@ -36,7 +36,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             $entitytypes = PermissionAccessEntityType::getList($pkCategory);
             ?>
             <div class="btn-group">
-                <a class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" href="#">
+                <a class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" href="#">
                     <i class="fas fa-plus"></i> <?= t('Select') ?> <span class="caret"></span>
                 </a>
                 <div class="dropdown-menu">

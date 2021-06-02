@@ -68,7 +68,7 @@ $token = $app->make(Token::class);
                     </a>
 
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <?php echo t('Action'); ?>
                     </button>
 

@@ -405,7 +405,7 @@ class UserInterface
                 }
                 $text .= '<div>' . $singleButton . '</div>';
             } else {
-                $text .= '<div class="dropup"><button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . '</button><div class="dropdown-menu">';
+                $text .= '<div class="dropup"><button type="button" class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . '</button><div class="dropdown-menu">';
                 foreach ($arguments['buttons'] as $button) {
                     $button->addClass('dropdown-item');
                     $text .= $button;

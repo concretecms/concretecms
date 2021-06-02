@@ -13,7 +13,7 @@ if (is_object($category) && $category->allowAttributeSets()) {
 <div class="ccm-dashboard-header-buttons">
 	<?php if (count($sets) > 0) {
     ?>
-		<button type="button" class="btn btn-secondary" data-toggle="dropdown">
+		<button type="button" class="btn btn-secondary" data-bs-toggle="dropdown">
 		<?=t('View')?> <span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu" role="menu">

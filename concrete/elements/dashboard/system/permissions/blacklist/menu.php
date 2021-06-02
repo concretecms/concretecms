@@ -12,7 +12,7 @@ $categoryID = $category->getIpAccessControlCategoryID();
 ?>
 <div class="ccm-dashboard-header-buttons">
     <div class="btn-group">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <?= t('View') ?>
             <span class="caret"></span>
         </button>
