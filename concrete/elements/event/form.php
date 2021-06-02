@@ -88,7 +88,7 @@ if ($version) {
 
 
                 <div class="form-group">
-                    <label for="name" class="control-label">
+                    <label for="name" class="control-label form-label">
                         <?= t('Name') ?>
                     </label>
 
@@ -96,7 +96,7 @@ if ($version) {
                     <hr/>
                 </div>
                 <div class="form-group">
-                    <label for="name" class="control-label">
+                    <label for="name" class="control-label form-label">
                         <?= t('Description') ?>
                     </label>
 

@@ -7,7 +7,7 @@ use Concrete\Core\Entity\Attribute\Key\Settings\UserGroupSettings;
 
     <div class="form-group">
 
-        <?php echo $form->label('akDisplayAllGroups', t('Groups to Display'))?>
+        <?php echo $form->label('akDisplayAllGroups', t('Groups to Display'), ['class' => 'form-label'])?>
 
         <div class="form-check">
             <?php echo $form->radio('akDisplayGroupsBeneathSpecificParent', 0, $akDisplayGroupsBeneathSpecificParent)?>
@@ -28,7 +28,7 @@ use Concrete\Core\Entity\Attribute\Key\Settings\UserGroupSettings;
 
     <div class="form-group">
 
-        <?php echo $form->label('akMembersOnly', t('Group Selection'))?>
+        <?php echo $form->label('akMembersOnly', t('Group Selection'), ['class' => 'form-label'])?>
 
         <div class="form-check">
             <?php echo $form->radio('akGroupSelectionMethodType', 'all', $akGroupSelectionMethodType)?>

@@ -2,7 +2,7 @@
 <legend><?php echo t('Text Area Options')?></legend>
 
 <div class="form-group">
-	<?php echo $form->label('akTextareaDisplayMode', t('Input Format'))?>
+	<?php echo $form->label('akTextareaDisplayMode', t('Input Format'), ['class' => 'form-label'])?>
 	<?php
     $akTextareaDisplayModeOptions = array(
         'text' => t('Plain Text'),

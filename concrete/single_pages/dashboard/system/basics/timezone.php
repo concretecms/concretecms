@@ -8,14 +8,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <legend><?=t('Server Configuration'); ?></legend>
 
         <div class="form-group">
-            <label class="control-label">
+            <label class="control-label form-label">
                 <?php echo t('PHP Setting'); ?>
             </label>
 
             <div><?= h($serverTimezonePHP); ?></div>
         </div>
         <div class="form-group">
-            <label class="control-label">
+            <label class="control-label form-label">
                 <?php echo t('Database Setting'); ?>
             </label>
 
@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
 
         <div class="form-group">
-            <label class="control-label launch-tooltip" data-placement="right" title="<?= t(
+            <label class="control-label launch-tooltip form-label" data-placement="right" title="<?= t(
     'These two values must match, otherwise there will be date inconsistencies.'
 ); ?>">
                 <?php echo t('Status'); ?>
@@ -51,7 +51,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend><?=t('Settings'); ?></legend>
         <div class="form-group">
-            <label class="control-label launch-tooltip" for="timezone" data-placement="right" title="<?= t(
+            <label class="control-label launch-tooltip form-label" for="timezone" data-placement="right" title="<?= t(
                     'This will control the default timezone that will be used to display date/times.'
                 ); ?>">
                 <?php echo t('Default Timezone'); ?>
@@ -82,13 +82,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label">
+            <label class="control-label form-label">
                 <?php echo t('User-Specific Timezones'); ?>
             </label>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="user_timezones" value="1"<?= $user_timezones ? ' checked="checked"' : ''; ?> />
                 <label class="form-check-label" for="user_timezones">
-                    <span class="launch-tooltip control-label" data-placement="right" title="<?= t(
+                    <span class="launch-tooltip control-label form-label" data-placement="right" title="<?= t(
                         'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.'
                     ); ?>"><?php echo t('Enable user defined time zones.'); ?></span>
                 </label>

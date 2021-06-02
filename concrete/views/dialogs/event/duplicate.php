@@ -10,7 +10,7 @@
         <hr/>
 
         <div class="form-group">
-            <label class="control-label"><?=t('Duplicate to Calendar')?></label>
+            <label class="control-label form-label"><?=t('Duplicate to Calendar')?></label>
             <?=$form->select('caID', $calendars, $caID)?>
         </div>
 

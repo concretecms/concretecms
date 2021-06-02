@@ -31,17 +31,17 @@ $addressId = uniqid('ccm_attribute_address_', true);
 <div id="<?= $addressId; ?>" class="ccm-attribute-address-composer-wrapper ccm-attribute-address-<?= $key->getAttributeKeyID(); ?>">
 
     <div class="form-group ccm-attribute-address-line">
-        <?= $form->label($this->field('address1'), t('Address 1')); ?>
+        <?= $form->label($this->field('address1'), t('Address 1'), ['class' => 'form-label']); ?>
         <?= $form->text($this->field('address1'), $address1); ?>
     </div>
 
     <div class="form-group ccm-attribute-address-line">
-        <?= $form->label($this->field('address2'), t('Address 2')); ?>
+        <?= $form->label($this->field('address2'), t('Address 2'), ['class' => 'form-label']); ?>
         <?= $form->text($this->field('address2'), $address2); ?>
     </div>
 
     <div class="form-group ccm-attribute-address-line">
-        <?= $form->label($this->field('city'), t('City')); ?>
+        <?= $form->label($this->field('city'), t('City'), ['class' => 'form-label']); ?>
         <?= $form->text($this->field('city'), $city); ?>
     </div>
 
@@ -54,7 +54,7 @@ $addressId = uniqid('ccm_attribute_address_', true);
     ?>
 
     <div class="form-group ccm-attribute-address-line ccm-attribute-address-country">
-        <?= $form->label($this->field('country'), t('Country')); ?>
+        <?= $form->label($this->field('country'), t('Country'), ['class' => 'form-label']); ?>
         <?= $form->selectCountry($this->field('country'), $country, [
             'allowedCountries' => $akHasCustomCountries ? $akCustomCountries : null,
             'linkStateProvinceField' => true,
@@ -64,12 +64,12 @@ $addressId = uniqid('ccm_attribute_address_', true);
     </div>
 
     <div class="form-group ccm-attribute-address-line ccm-attribute-address-state-province" data-countryfield="<?= $this->field('country'); ?>">
-        <?= $form->label($this->field('state_province'), t('State/Province')); ?>
+        <?= $form->label($this->field('state_province'), t('State/Province'), ['class' => 'form-label']); ?>
         <?= $form->text($this->field('state_province'), $state_province); ?>
     </div>
 
     <div class="form-group ccm-attribute-address-line">
-        <?= $form->label($this->field('postal_code'), t('Postal Code')); ?>
+        <?= $form->label($this->field('postal_code'), t('Postal Code'), ['class' => 'form-label']); ?>
         <?= $form->text($this->field('postal_code'), $postal_code); ?>
     </div>
 

@@ -20,7 +20,7 @@ $form = $app->make(Form::class);
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label("unitType", t("Unit Type")); ?>
+        <?php echo $form->label("unitType", t("Unit Type"), ['class' => 'form-label']); ?>
         <?php echo $form->select("unitType", $unitTypes, $unitType); ?>
     </div>
 </fieldset>

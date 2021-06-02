@@ -98,7 +98,7 @@ if (!$dateFormat) {
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label("displayMode", t('Display Mode')); ?>
+        <?php echo $form->label("displayMode", t('Display Mode'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->radio('displayMode', 'threaded', $displayMode, ["name" => "displayMode", "id" => "displayModeThreaded"]) ?>
@@ -112,7 +112,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("orderBy", t('Ordering')); ?>
+        <?php echo $form->label("orderBy", t('Ordering'), ['class' => 'form-label']); ?>
         <?php echo $form->select('orderBy', array('date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')), $orderBy) ?>
 
         <div class="form-check">
@@ -122,7 +122,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("", t('Rating')); ?>
+        <?php echo $form->label("", t('Rating'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('enableCommentRating', 1, $enableCommentRating) ?>
@@ -137,7 +137,7 @@ if (!$dateFormat) {
 
     <?php if (isset($reviewAttributeKeys)) { ?>
         <div class="form-group" data-unhide="[name=enableTopCommentReviews]">
-            <?php echo $form->label("reviewAggregateAttributeKey", t('Aggregate Ratings by Attribute')); ?>
+            <?php echo $form->label("reviewAggregateAttributeKey", t('Aggregate Ratings by Attribute'), ['class' => 'form-label']); ?>
 
             <?php if (count($reviewAttributeKeys) > 0) { ?>
                 <?php echo $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey); ?>
@@ -150,7 +150,7 @@ if (!$dateFormat) {
     <?php } ?>
 
     <div class="form-group">
-        <?php echo $form->label("displaySocialLinks", t('Social Sharing Links')); ?>
+        <?php echo $form->label("displaySocialLinks", t('Social Sharing Links'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('displaySocialLinks', 1, $displaySocialLinks) ?>
@@ -159,7 +159,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("paginate", t('Paginate Message List')); ?>
+        <?php echo $form->label("paginate", t('Paginate Message List'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->radio('paginate', 0, $paginate, ["name" => "paginate", "id" => "paginateNo"]) ?>
@@ -173,7 +173,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group" data-row="itemsPerPage">
-        <?php echo $form->label("itemsPerPage", t('Messages Per Page')); ?>
+        <?php echo $form->label("itemsPerPage", t('Messages Per Page'), ['class' => 'form-label']); ?>
         <?php echo $form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1')) ?>
     </div>
 </fieldset>
@@ -184,12 +184,12 @@ if (!$dateFormat) {
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label('addMessageLabel', t('Add Message Label')) ?>
+        <?php echo $form->label('addMessageLabel', t('Add Message Label'), ['class' => 'form-label']) ?>
         <?php echo $form->text('addMessageLabel', $addMessageLabel) ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("", t('Enable Posting')); ?>
+        <?php echo $form->label("", t('Enable Posting'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->radio('enablePosting', 1, $enablePosting, ["name" => "enablePosting", "id" => "enablePostingYes"]) ?>
@@ -203,7 +203,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("", t('Display Posting Form')); ?>
+        <?php echo $form->label("", t('Display Posting Form'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->radio('displayPostingForm', 'top', $displayPostingForm, ["name" => "displayPostingForm", "id" => "displayPostingFormTop"]) ?>
@@ -219,7 +219,7 @@ if (!$dateFormat) {
 
 <fieldset>
     <div class="form-group">
-        <?php echo $form->label("", t('Date Format')); ?>
+        <?php echo $form->label("", t('Date Format'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->radio('dateFormat', 'default', $dateFormat, ["name" => "dateFormat", "id" => "dateFormatDefault"]) ?>
@@ -271,7 +271,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("maxFileSizeGuest", t('Max Attachment Size for Guest Users. (MB)')); ?>
+        <?php echo $form->label("maxFileSizeGuest", t('Max Attachment Size for Guest Users. (MB)'), ['class' => 'form-label']); ?>
 
         <div class="controls">
             <?php echo $form->text('maxFileSizeGuest', $maxFileSizeGuest > 0 ? $maxFileSizeGuest : '') ?>
@@ -279,7 +279,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("maxFileSizeRegistered", t('Max Attachment Size for Registered Users. (MB)')); ?>
+        <?php echo $form->label("maxFileSizeRegistered", t('Max Attachment Size for Registered Users. (MB)'), ['class' => 'form-label']); ?>
 
         <div class="controls">
             <?php echo $form->text('maxFileSizeRegistered', $maxFileSizeRegistered > 0 ? $maxFileSizeRegistered : '') ?>
@@ -287,7 +287,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("maxFilesGuest", t('Max Attachments Per Message for Guest Users.')); ?>
+        <?php echo $form->label("maxFilesGuest", t('Max Attachments Per Message for Guest Users.'), ['class' => 'form-label']); ?>
 
         <div class="controls">
             <?php echo $form->text('maxFilesGuest', $maxFilesGuest > 0 ? $maxFilesGuest : '') ?>
@@ -295,7 +295,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("maxFilesRegistered", t('Max Attachments Per Message for Registered Users.')); ?>
+        <?php echo $form->label("maxFilesRegistered", t('Max Attachments Per Message for Registered Users.'), ['class' => 'form-label']); ?>
 
         <div class="controls">
             <?php echo $form->text('maxFilesRegistered', $maxFilesRegistered > 0 ? $maxFilesRegistered : '') ?>
@@ -303,7 +303,7 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("fileExtensions", t('Allowed File Extensions (Comma separated, no periods).')); ?>
+        <?php echo $form->label("fileExtensions", t('Allowed File Extensions (Comma separated, no periods).'), ['class' => 'form-label']); ?>
 
         <div class="controls">
             <?php echo $form->textarea('fileExtensions', $fileExtensions) ?>
@@ -332,12 +332,12 @@ if (!$dateFormat) {
     </div>
 
     <div class="form-group notification-overrides">
-        <?php echo $form->label("notificationUsers", t('Users To Receive Conversation Notifications')); ?>
+        <?php echo $form->label("notificationUsers", t('Users To Receive Conversation Notifications'), ['class' => 'form-label']); ?>
         <?php echo $userSelector->selectMultipleUsers('notificationUsers', $notificationUsers) ?>
     </div>
 
     <div class="form-group notification-overrides">
-        <?php echo $form->label("", t('Subscribe Option')); ?>
+        <?php echo $form->label("", t('Subscribe Option'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('subscriptionEnabled', 1, $subscriptionEnabled) ?>

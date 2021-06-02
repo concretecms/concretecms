@@ -366,7 +366,7 @@ if ($install_config) {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="SITE" class="control-label"><?= t('Name') ?></label>
+                                    <label for="SITE" class="control-label form-label"><?= t('Name') ?></label>
                                     <?= $form->text('SITE',
                                         ['autofocus' => 'autofocus', 'required' => 'required']) ?>
                                 </div>
@@ -375,21 +375,21 @@ if ($install_config) {
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="uEmail"
-                                           class="control-label"><?= t('Administrator Email Address') ?></label>
+                                           class="control-label form-label"><?= t('Administrator Email Address') ?></label>
                                     <?= $form->email('uEmail', ['required' => 'required']) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="uPassword"
-                                           class="control-label"><?= t('Administrator Password') ?></label>
+                                           class="control-label form-label"><?= t('Administrator Password') ?></label>
                                     <?= $form->password('uPassword', $passwordAttributes) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="uPassword"
-                                           class="control-label"><?= t('Confirm Password') ?></label>
+                                           class="control-label form-label"><?= t('Confirm Password') ?></label>
                                     <?= $form->password('uPasswordConfirm', $passwordAttributes) ?>
                                 </div>
                             </div>
@@ -431,27 +431,27 @@ if ($install_config) {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label" for="DB_SERVER"><?= t('Server') ?></label>
+                                    <label class="control-label form-label" for="DB_SERVER"><?= t('Server') ?></label>
                                     <?= $form->text('DB_SERVER', ['required' => 'required']) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="DB_USERNAME"><?= t('MySQL Username') ?></label>
                                     <?= $form->text('DB_USERNAME') ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="DB_PASSWORD"><?= t('MySQL Password') ?></label>
                                     <?= $form->password('DB_PASSWORD', ['autocomplete' => 'off']) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="DB_DATABASE"><?= t('Database Name') ?></label>
                                     <?= $form->text('DB_DATABASE', ['required' => 'required']) ?>
                                 </div>

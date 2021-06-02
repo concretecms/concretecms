@@ -34,7 +34,7 @@ if ($akHasCustomCountries) {
 <fieldset class="ccm-attribute ccm-attribute-address">
     <legend><?=t('Address Options')?></legend>
     <div class="form-group">
-        <?= $form->label('', t('Available Countries')) ?>
+        <?= $form->label('', t('Available Countries'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->radio('akHasCustomCountries', 0, $akHasCustomCountries) ?>
             <label class="form-check-label" for="akHasCustomCountries1"><?= t('All Available Countries') ?></label>
@@ -46,11 +46,11 @@ if ($akHasCustomCountries) {
         <?= $form->selectMultiple('akCustomCountries', $countries, $akCustomCountries, ['size' => 7]) ?>
     </div>
     <div class="form-group">
-        <?= $form->label('akDefaultCountry', t('Default Country')) ?>
+        <?= $form->label('akDefaultCountry', t('Default Country'), ['class' => 'form-label']) ?>
         <?= $form->select('akDefaultCountry', array_merge(['' => t('Choose Country')], $countries), $akDefaultCountry) ?>
     </div>
     <div class="form-group">
-        <?= $form->label('', t('Geolocation')) ?>
+        <?= $form->label('', t('Geolocation'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->checkbox('akGeolocateCountry', 1, isset($akGeolocateCountry) ? $akGeolocateCountry : false) ?>
             <label class="form-check-label" for="akGeolocateCountry"><?= t('Suggest the Country from the user IP address') ?></label>

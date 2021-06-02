@@ -28,12 +28,12 @@ $consentType = $client->getConsentType();
     <legend><?=t('Integration Details')?></legend>
 
     <div class="form-group">
-        <label><?=t('Name')?></label>
+        <label class="form-label"><?=t('Name')?></label>
         <div><?=$client->getName()?></div>
     </div>
 
     <div class="form-group">
-        <label><?=t('Redirect URI')?></label>
+        <label class="form-label"><?=t('Redirect URI')?></label>
         <?php
         $redirectUri = $client->getRedirectUri() ?: t('None provided');
         ?>
@@ -43,12 +43,12 @@ $consentType = $client->getConsentType();
     </div>
 
     <div class="form-group">
-        <label><?=t('Client ID')?></label>
+        <label class="form-label"><?=t('Client ID')?></label>
         <input type="text" class="form-control" onclick="this.select()" value="<?=$client->getClientKey()?>">
     </div>
 
     <div class="form-group <?= $clientSecret ? 'has-warning' : '' ?>">
-        <label><?=t('Client Secret')?></label>
+        <label class="form-label"><?=t('Client Secret')?></label>
         <input type="<?= $clientSecret ? 'text' : 'password' ?>" class="form-control" onclick="this.select()" value="<?= $clientSecret ?: str_repeat('*', 96) ?>" <?= $clientSecret ? '' : 'disabled' ?>>
         <div class="help-block">
             <?php
@@ -62,7 +62,7 @@ $consentType = $client->getConsentType();
     </div>
 
     <div class="form-group">
-        <label><?=t('User Consent Level')?></label>
+        <label class="form-label"><?=t('User Consent Level')?></label>
         <div class="form-check">
             <input disabled type="radio" class="form-check-input" name="consentLevel"  value="<?= Client::CONSENT_SIMPLE ?>" <?= $consentType === Client::CONSENT_SIMPLE ? 'checked' : '' ?> >
             <label class="form-check-label">

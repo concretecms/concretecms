@@ -20,7 +20,7 @@ $c = Page::getCurrentPage();
     <form method="get" action="<?=$c->getCollectionLink()?>">
         <div class="form-inline">
             <div class="form-group">
-                <?=$form->label('keywords', t('Keyword Search'))?>
+                <?=$form->label('keywords', t('Keyword Search'), ['class' => 'form-label'])?>
                 <?=$form->text('keywords')?>
             </div>
             <button type="submit" class="btn btn-primary" name="search"><?=t('Search')?></button>

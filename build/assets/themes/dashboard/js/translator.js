@@ -209,7 +209,7 @@ var TranslationView = (function() {
     if (this.translation.translator.approvalSupport) {
       if (this.translation.translator.canModifyApproved) {
         this.UI.$container
-            .append($('<label class="control-label inline" />')
+            .append($('<label class="control-label inline form-label" />')
               .text(i18n.Approved)
               .prepend(this.UI.$approved = $('<input type="checkbox" ' + (this.translation.isApproved ? ' checked="checked"' : '') + ' />'))
             )
@@ -341,7 +341,7 @@ var TranslationView = (function() {
     _buildOriginalUI: function() {
       this.UI.$container
         .append($('<div class="form-group" />')
-          .append($('<label class="control-label" />').text(i18n.Original_String))
+          .append($('<label class="control-label form-label" />').text(i18n.Original_String))
           .append($('<div class="form-control ccm-translator-original" />')
             .html(originalToHtml(this.translation.original))
           )
@@ -351,7 +351,7 @@ var TranslationView = (function() {
     buildTranslationUI: function() {
       this.UI.$container
         .append($('<div class="form-group" />')
-          .append($('<label class="control-label" />').text(i18n.Translation))
+          .append($('<label class="control-label form-label" />').text(i18n.Translation))
           .append(this.UI.$translated = buildTranslatedTextarea(this, this.translation.isTranslated ? this.translation.translations[0] : ''))
         )
       ;
@@ -389,13 +389,13 @@ var TranslationView = (function() {
     _buildOriginalUI: function() {
       this.UI.$container
         .append($('<div class="form-group" />')
-          .append($('<label class="control-label" />').text(i18n.Singular_Original_String))
+          .append($('<label class="control-label form-label" />').text(i18n.Singular_Original_String))
           .append($('<div class="form-control ccm-translator-original" />')
             .html(originalToHtml(this.translation.original))
           )
         )
         .append($('<div class="form-group" />')
-          .append($('<label class="control-label" />').text(i18n.Plural_Original_String))
+          .append($('<label class="control-label form-label" />').text(i18n.Plural_Original_String))
           .append($('<div class="form-control ccm-translator-original" />')
             .html(originalToHtml(this.translation.originalPlural))
           )
@@ -415,7 +415,7 @@ var TranslationView = (function() {
       var my = this;
       this.UI.$container
         .append($('<div class="form-group" />')
-          .append($('<label class="control-label" />').text(i18n.Translation))
+          .append($('<label class="control-label form-label" />').text(i18n.Translation))
           .append(this.UI.$tabHeaders = $('<ul class="nav nav-tabs" />'))
           .append(this.UI.$tabBodies = $('<div class="tab-content" />'))
         )

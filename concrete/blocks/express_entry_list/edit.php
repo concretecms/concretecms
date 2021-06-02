@@ -61,7 +61,7 @@ echo $userInterface->tabs([
 <div class="tab-content">
     <div class="tab-pane show active" id="search" role="tabpanel">
         <div class="form-group">
-            <?php echo $form->label('exEntityID', t('Entity')) ?>
+            <?php echo $form->label('exEntityID', t('Entity'), ['class' => 'form-label']) ?>
             <?php echo $form->select('exEntityID', $entities, $exEntityID, [
                 'data-action' => $view->action('load_entity_data')
             ]); ?>
@@ -82,13 +82,13 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <?php echo $form->label("", t("Enable Searching by Attributes")); ?>
+                <?php echo $form->label("", t("Enable Searching by Attributes"), ['class' => 'form-label']); ?>
 
                 <div data-container="advanced-search"></div>
             </div>
 
             <div class="form-group">
-                <?php echo $form->label("", t("Enable Searching by Associations")); ?>
+                <?php echo $form->label("", t("Enable Searching by Associations"), ['class' => 'form-label']); ?>
 
                 <div data-container="search-associations"></div>
             </div>
@@ -107,7 +107,7 @@ echo $userInterface->tabs([
 
     <div class="tab-pane" id="results" role="tabpanel">
         <div class="form-group">
-            <?php echo $form->label('displayLimit', t('Items Per Page')) ?>
+            <?php echo $form->label('displayLimit', t('Items Per Page'), ['class' => 'form-label']) ?>
             <?php echo $form->text('displayLimit', $displayLimit) ?>
         </div>
 
@@ -123,7 +123,7 @@ echo $userInterface->tabs([
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('detailPage', t('Link to Detail Page')) ?>
+            <?php echo $form->label('detailPage', t('Link to Detail Page'), ['class' => 'form-label']) ?>
             <?php echo $pageSelector->selectPage('detailPage', $detailPage) ?>
 
             <div data-container="linked-attributes"></div>
@@ -141,7 +141,7 @@ echo $userInterface->tabs([
     <div class="tab-pane" id="design" role="tabpanel">
         <div>
             <div class="form-group">
-                <?php echo $form->label('tableName', t('Name')) ?>
+                <?php echo $form->label('tableName', t('Name'), ['class' => 'form-label']) ?>
 			    <div class="input-group">
                 	<?php echo $form->text('tableName', $tableName, array('maxlength' => '128')) ?>
 					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
@@ -149,7 +149,7 @@ echo $userInterface->tabs([
 			</div>
 
             <div class="form-group">
-                <?php echo $form->label('tableDescription', t('Description')) ?>
+                <?php echo $form->label('tableDescription', t('Description'), ['class' => 'form-label']) ?>
                 <?php echo $form->text('tableDescription', $tableDescription, array('maxlength' => '128')) ?>
             </div>
         </div>
@@ -160,7 +160,7 @@ echo $userInterface->tabs([
             </legend>
 
             <div class="form-group">
-                <?php echo $form->label('headerBackgroundColor', t('Header Background')) ?>
+                <?php echo $form->label('headerBackgroundColor', t('Header Background'), ['class' => 'form-label']) ?>
 
                 <div>
                     <?php $color->output('headerBackgroundColor', $headerBackgroundColor) ?>
@@ -168,7 +168,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('headerBackgroundColorActiveSort', t('Header Background (Active Sort)')) ?>
+                <?php echo $form->label('headerBackgroundColorActiveSort', t('Header Background (Active Sort)'), ['class' => 'form-label']) ?>
 
                 <div>
                     <?php $color->output('headerBackgroundColorActiveSort', $headerBackgroundColorActiveSort) ?>
@@ -176,7 +176,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('headerTextColor', t('Header Text Color')) ?>
+                <?php echo $form->label('headerTextColor', t('Header Text Color'), ['class' => 'form-label']) ?>
 
                 <div>
                     <?php $color->output('headerTextColor', $headerTextColor) ?>
@@ -184,7 +184,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('', t('Table Striping')) ?>
+                <?php echo $form->label('', t('Table Striping'), ['class' => 'form-label']) ?>
 
                 <div class="form-check">
                     <?php echo $form->radio('tableStriped', 0, $tableStriped, ["name" => "tableStriped", "id" => "tableStripedOff"]) ?>
@@ -198,7 +198,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group" data-options="table-striped" style="margin-bottom: 150px;">
-                <?php echo $form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color')) ?>
+                <?php echo $form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color'), ['class' => 'form-label']) ?>
 
                 <div>
                     <?php $color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate) ?>
