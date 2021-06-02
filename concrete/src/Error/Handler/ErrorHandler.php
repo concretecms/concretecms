@@ -15,7 +15,7 @@ use Whoops\Handler\PrettyPageHandler;
 class ErrorHandler extends PrettyPageHandler
 {
 
-    private array $hideConfigKeys = [];
+    private $hideConfigKeys = [];
 
     /**
      * {@inheritdoc}
