@@ -100,7 +100,7 @@
   }
 }
 
-@include media-breakpoint-down(xs) {
+@include media-breakpoint-down(sm) {
   
   .ccm-responsive-menu-launch {
     display: block;
@@ -120,7 +120,7 @@
 
 }
 
-@include media-breakpoint-up(xs) {
+@include media-breakpoint-up(sm) {
 
   .ccm-responsive-overlay {
     display: none;
