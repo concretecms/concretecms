@@ -130,7 +130,7 @@ class ErrorHandler extends PrettyPageHandler
         return $flat;
     }
 
-    protected function registerHideList()
+    protected function registerHideList(): void
     {
         foreach (Config::get('concrete.debug.hide_keys', []) as $superGlobal => $keys) {
             if ($superGlobal === 'config') {
@@ -146,7 +146,7 @@ class ErrorHandler extends PrettyPageHandler
         }
     }
 
-    private function isKeyHidden(string $key)
+    private function isKeyHidden(string $key): bool
     {
         // We have to check each node to make sure it's not hidden:
         $key = explode('.', $key);
