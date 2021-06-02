@@ -15,7 +15,7 @@ foreach ($filenames as $ffilename) {
 }
 ?>
 <div class="form-group">
-    <?= $form->label('cstFilename', t('External Form to Include')) ?>
+    <?= $form->label('cstFilename', t('External Form to Include'), ['class' => 'form-label']) ?>
     <?= $form->select('filename', $optionValues, $filename) ?>
 </div>
 <div class="help-block">

@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group">
-            <?= $form->label('title', t('Map Title (optional)')) ?>
+            <?= $form->label('title', t('Map Title (optional)'), ['class' => 'form-label']) ?>
 		    <div class="input-group">
             	<?= $form->text('title', $title) ?>
 				<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
@@ -37,7 +37,7 @@
 		</div>
 
         <div id="ccm-google-map-block-location" class="form-group">
-            <?= $form->label('location', t('Location') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>') ?>
+            <?= $form->label('location', t('Location') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>', ['class' => 'form-label']) ?>
             <?= $form->text('location', $location) ?>
             <?= $form->hidden('latitude', $latitude) ?>
             <?= $form->hidden('longitude', $longitude) ?>
@@ -47,7 +47,7 @@
 
     <div class="col-4">
         <div class="form-group">
-            <?= $form->label('zoom', t('Zoom')) ?>
+            <?= $form->label('zoom', t('Zoom'), ['class' => 'form-label']) ?>
             <?php
                 $zoomLevels = range(0, 21);
                 $zoomArray = array_combine($zoomLevels, $zoomLevels);
@@ -58,7 +58,7 @@
 
     <div class="col-4">
         <div class="form-group">
-            <?= $form->label('width', t('Map Width')) ?>
+            <?= $form->label('width', t('Map Width'), ['class' => 'form-label']) ?>
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-arrows-alt-h"></i></span>
                 <?= $form->text('width', $width) ?>
@@ -68,7 +68,7 @@
 
     <div class="col-4">
         <div class="form-group">
-            <?= $form->label('height', t('Map Height')) ?>
+            <?= $form->label('height', t('Map Height'), ['class' => 'form-label']) ?>
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-arrows-alt-v"></i></span>
                 <?= $form->text('height', $height) ?>

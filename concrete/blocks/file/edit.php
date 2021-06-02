@@ -9,11 +9,11 @@
  */
 ?>
 <div class="form-group">
-    <?= $form->label('fID', t('File')) ?>
+    <?= $form->label('fID', t('File'), ['class' => 'form-label']) ?>
     <?= $al->file('ccm-b-file', 'fID', t('Choose File'), $bf) ?>
 </div>
 <div class="form-group">
-    <?= $form->label('fileLinkText', t('Link Text')) ?>
+    <?= $form->label('fileLinkText', t('Link Text'), ['class' => 'form-label']) ?>
     <?= $form->text('fileLinkText', $fileLinkText) ?>
 </div>
 <div class="form-group">

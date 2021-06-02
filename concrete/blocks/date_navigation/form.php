@@ -31,7 +31,7 @@ foreach ($pagetypes as $ct) {
     </legend>
 
     <div class='form-group'>
-        <?php echo $form->label("title", t('By Parent Page')); ?>
+        <?php echo $form->label("title", t('By Parent Page'), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox("filterByParent", "1", (isset($cParentID) && (int)$cParentID > 0)); ?>
@@ -44,7 +44,7 @@ foreach ($pagetypes as $ct) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("ptID", t('By Page Type')); ?>
+        <?php echo $form->label("ptID", t('By Page Type'), ['class' => 'form-label']); ?>
         <?php echo $form->select('ptID', $pageTypeList, $ptID); ?>
     </div>
 </fieldset>
@@ -72,7 +72,7 @@ foreach ($pagetypes as $ct) {
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label("title", t('Title')); ?>
+        <?php echo $form->label("title", t('Title'), ['class' => 'form-label']); ?>
 	    <div class="input-group">
 		    <?php echo $form->text('title', $title); ?>
 			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>

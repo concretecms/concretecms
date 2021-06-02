@@ -3,7 +3,7 @@
 <fieldset>
     <legend><?=t('Display')?></legend>
     <div class="form-group ccm-block-select-icon">
-        <?php echo $form->label('icon', t('Icon'))?>
+        <?php echo $form->label('icon', t('Icon'), ['class' => 'form-label'])?>
         <div class="input-group">
             <?php echo $form->select('icon', $icons, $icon); ?>
             <div class="input-group-addon">

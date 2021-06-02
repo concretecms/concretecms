@@ -36,11 +36,11 @@
             </div>
 
             <div class="form-group">
-                <?= $form->label('question', t('Question')) ?>
+                <?= $form->label('question', t('Question'), ['class' => 'form-label']) ?>
                 <?= $form->text('question', ['maxlength' => '255']) ?>
             </div>
             <div class="form-group">
-                <?= $form->label('answerType', t('Answer Type')) ?>
+                <?= $form->label('answerType', t('Answer Type'), ['class' => 'form-label']) ?>
                 <select class="form-control" name="answerType" id="answerType">
                     <option value="field"><?= t('Text Field') ?></option>
                     <option value="text"><?= t('Text Area') ?></option>
@@ -58,7 +58,7 @@
 
             <div id="answerOptionsArea">
                 <div class="form-group">
-                    <?= $form->label('answerOptions', t('Answer Options')) ?>
+                    <?= $form->label('answerOptions', t('Answer Options'), ['class' => 'form-label']) ?>
                     <?= $form->textarea('answerOptions', ['rows' => 3]) ?>
                     <span class="help-block"><?= t('Put each answer options on a new line') ?></span>
                 </div>
@@ -66,18 +66,18 @@
 
             <div id="answerSettings">
                 <div class="form-group">
-                    <?= $form->label('width', t('Text Area Width')) ?>
+                    <?= $form->label('width', t('Text Area Width'), ['class' => 'form-label']) ?>
                     <?= $form->text('width', 50) ?>
                 </div>
                 <div class="form-group">
-                    <?= $form->label('height', t('Text Area Height')) ?>
+                    <?= $form->label('height', t('Text Area Height'), ['class' => 'form-label']) ?>
                     <?= $form->text('height', 3) ?>
                 </div>
             </div>
 
             <div id="answerDateDefault">
                 <div class="form-group">
-                    <?= $form->label('defaultDate', t('Default Value')) ?>
+                    <?= $form->label('defaultDate', t('Default Value'), ['class' => 'form-label']) ?>
                     <?= $form->select(
         'defaultDate',
         [
@@ -90,7 +90,7 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label"><?= t('Required') ?></label>
+                <label class="control-label form-label"><?= t('Required') ?></label>
 
                 <div class="form-check">
                     <?= $form->radio('required', 1) ?>
@@ -108,7 +108,7 @@
 
             <div id="emailSettings">
                 <div class="form-group">
-                    <?php echo $form->label('send_notification_from', t('Reply to this email address')); ?>
+                    <?php echo $form->label('send_notification_from', t('Reply to this email address'), ['class' => 'form-label']); ?>
                     <div class="form-check">
                         <?php echo $form->checkbox('send_notification_from', 1); ?>
                         <label class="form-check-label" for="send_notification_from"></label>
@@ -135,11 +135,11 @@
                 <legend id="editQuestionTitle"><?= t('Edit Question') ?></legend>
 
                 <div class="form-group">
-                    <?= $form->label('questionEdit', t('Question')) ?>
+                    <?= $form->label('questionEdit', t('Question'), ['class' => 'form-label']) ?>
                     <?= $form->text('questionEdit') ?>
                 </div>
                 <div class="form-group">
-                    <?= $form->label('answerTypeEdit', t('Answer Type')) ?>
+                    <?= $form->label('answerTypeEdit', t('Answer Type'), ['class' => 'form-label']) ?>
                     <select class="form-control" name="answerTypeEdit" id="answerTypeEdit">
                         <option value="field"><?= t('Text Field') ?></option>
                         <option value="text"><?= t('Text Area') ?></option>
@@ -158,7 +158,7 @@
 
                 <div id="answerOptionsAreaEdit">
                     <div class="form-group">
-                        <?= $form->label('answerOptionsEdit', t('Answer Options')) ?>
+                        <?= $form->label('answerOptionsEdit', t('Answer Options'), ['class' => 'form-label']) ?>
                         <?= $form->textarea('answerOptionsEdit', ['rows' => 3]) ?>
                         <span class="help-block"><?= t('Put each answer options on a new line') ?></span>
                     </div>
@@ -166,18 +166,18 @@
 
                 <div id="answerSettingsEdit">
                     <div class="form-group">
-                        <?= $form->label('widthEdit', t('Text Area Width')) ?>
+                        <?= $form->label('widthEdit', t('Text Area Width'), ['class' => 'form-label']) ?>
                         <?= $form->text('widthEdit', 50) ?>
                     </div>
                     <div class="form-group">
-                        <?= $form->label('heightEdit', t('Text Area Height')) ?>
+                        <?= $form->label('heightEdit', t('Text Area Height'), ['class' => 'form-label']) ?>
                         <?= $form->text('heightEdit', 3) ?>
                     </div>
                 </div>
 
                 <div id="answerDateDefaultEdit">
                     <div class="form-group">
-                        <?= $form->label('defaultDateEdit', t('Default Value')) ?>
+                        <?= $form->label('defaultDateEdit', t('Default Value'), ['class' => 'form-label']) ?>
                         <?= $form->select(
         'defaultDateEdit',
         [
@@ -190,7 +190,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label"><?= t('Required') ?></label>
+                    <label class="control-label form-label"><?= t('Required') ?></label>
                     <div class="form-check">
                         <?= $form->radio('requiredEdit', 1) ?>
                         <label class="form-check-label" for="requiredEdit1">
@@ -207,7 +207,7 @@
 
                 <div class="form-group">
                     <div id="emailSettingsEdit">
-                        <?php echo $form->label('send_notification_from_edit', t('Reply to this email address')); ?>
+                        <?php echo $form->label('send_notification_from_edit', t('Reply to this email address'), ['class' => 'form-label']); ?>
                         <div class="form-check">
                             <?php echo $form->checkbox('send_notification_from_edit', 1); ?>
                             <label class="form-check-label" for="send_notification_from_edit"></label>
@@ -242,15 +242,15 @@
         <fieldset>
             <legend><?= t('Options') ?></legend>
             <div class="form-group">
-                <?= $form->label('surveyName', t('Form Name')) ?>
+                <?= $form->label('surveyName', t('Form Name'), ['class' => 'form-label']) ?>
                 <?= $form->text('surveyName', $miniSurveyInfo['surveyName']) ?>
             </div>
             <div class="form-group">
-                <?= $form->label('submitText', t('Submit Text')) ?>
+                <?= $form->label('submitText', t('Submit Text'), ['class' => 'form-label']) ?>
                 <?= $form->text('submitText', $this->controller->submitText) ?>
             </div>
             <div class="form-group">
-                <?= $form->label('thankyouMsg', t('Message to display when completed')) ?>
+                <?= $form->label('thankyouMsg', t('Message to display when completed'), ['class' => 'form-label']) ?>
                 <?= $form->textarea('thankyouMsg', $this->controller->thankyouMsg, ['rows' => 3]) ?>
             </div>
             <div class="form-group">
@@ -267,7 +267,7 @@
                 <span class="help-block"><?= t('(Separate multiple emails with a comma)') ?></span>
             </div>
             <div class="form-group">
-                <label class="control-label"><?= t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')) ?></label>
+                <label class="control-label form-label"><?= t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')) ?></label>
                 <div class="form-check">
                     <?= $form->radio('displayCaptcha', 1, empty($miniSurveyInfo['displayCaptcha']) ? 0 : (int) $miniSurveyInfo['displayCaptcha']) ?>
                     <label class="form-check-label" for="displayCaptcha1">
@@ -282,7 +282,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label"
+                <label class="control-label form-label"
                        for="ccm-form-redirect"><?= t('Redirect to another page after form submission?') ?></label>
                 <div id="ccm-form-redirect-page">
                     <?php
@@ -295,7 +295,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label" for="ccm-form-fileset"><?= t('Add uploaded files to a set?') ?></label>
+                <label class="control-label form-label" for="ccm-form-fileset"><?= t('Add uploaded files to a set?') ?></label>
                 <div id="ccm-form-fileset">
                     <?php
 
