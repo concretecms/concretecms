@@ -25,7 +25,7 @@ $packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="ccm-package-<?= $handle ?>-header">
                 <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#ccm-packages" href="#ccm-package-<?= $handle ?>-body" aria-expanded="true" aria-controls="ccm-package-<?= $handle ?>-body">
+                    <a role="button" data-bs-toggle="collapse" data-parent="#ccm-packages" href="#ccm-package-<?= $handle ?>-body" aria-expanded="true" aria-controls="ccm-package-<?= $handle ?>-body">
                         <?= $name ?>
                         <?php
                         if (!empty($details->getInstalledOutdated())) {

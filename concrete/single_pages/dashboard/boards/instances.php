@@ -54,7 +54,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <p class="help-block"><?=t("Create a completely new instance of this board, based on the current data sources, templates and rules. ")?></p>
 
-        <button type="button" data-toggle="modal" data-target="#generate-instance" class="btn btn-lg btn-primary"><?=t("Generate")?></button>
+        <button type="button" data-bs-toggle="modal" data-target="#generate-instance" class="btn btn-lg btn-primary"><?=t("Generate")?></button>
 
         <div class="modal fade" id="generate-instance" tabindex="-1">
             <form method="post" action="<?=$view->action('generate_instance', $board->getBoardID())?>">

@@ -51,9 +51,9 @@ class RelationListController extends Controller
         $show_tooltips = (bool) \Config::get('concrete.accessibility.toolbar_tooltips');
         if ($show_tooltips) {
             $link->setAttribute('class', 'launch-tooltip');
-            $link->setAttribute('data-toggle', 'tooltip');
-            $link->setAttribute('data-placement', 'bottom');
-            $link->setAttribute('data-delay', '{ "show": 500, "hide": 0 }');
+            $link->setAttribute('data-bs-toggle', 'tooltip');
+            $link->setAttribute('data-bs-placement', 'bottom');
+            $link->setAttribute('data-bs-delay', '{ "show": 500, "hide": 0 }');
         }
         
         if (is_object($this->multilingualSection)) {

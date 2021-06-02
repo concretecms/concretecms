@@ -75,7 +75,7 @@ $form = $app->make(Form::class);
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="headingThree">
             <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse" href="#advanced">
+                <a class="collapsed" role="button" data-bs-toggle="collapse" href="#advanced">
                     <?php echo t('Advanced Options') ?>
                 </a>
             </h4>

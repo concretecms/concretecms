@@ -100,7 +100,7 @@ $(document).ready (function() {
         }
     }
     setupButtons();
-    $wrapper.find('a[data-toggle="tab"]').on('shown.bs.tab', function() {
+    $wrapper.find('a[data-bs-toggle="tab"]').on('shown.bs.tab', function() {
         setupButtons();
     });
 });

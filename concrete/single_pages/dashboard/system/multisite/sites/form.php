@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?= $form->text('canonical_url', '') ?>
         </div>
         <div class="form-group">
-            <?= $form->label('timezone', t('Default Timezone'), ['class' => 'launch-tooltip', 'data-placement' => 'right', 'title' => t('This will control the default timezone that will be used to display date/times.')]) ?>
+            <?= $form->label('timezone', t('Default Timezone'), ['class' => 'launch-tooltip', 'data-bs-placement' => 'right', 'title' => t('This will control the default timezone that will be used to display date/times.')]) ?>
             <?= $form->select('timezone', $timezones, $timezone) ?>
         </div>
     </fieldset>

@@ -555,7 +555,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             ?>
             <div class="ccm-panel-add-block-set">
                 <header
-                        data-toggle="collapse"
+                        data-bs-toggle="collapse"
                         data-target="#ccm-block-set-<?= $i ?>"
                         aria-expanded="true"
                         aria-controls="ccm-block-set-<?= $i ?>"
@@ -625,7 +625,7 @@ break;
     $(function () {
         // switching the up/down arrows for collapsing block sets
         $('#ccm-panel-add-block').find('div[id^="ccm-block-set-"]').on('hidden.bs.collapse shown.bs.collapse', function () {
-            $(this).prev('header[data-toggle="collapse"]').find('i.fa').toggleClass('fa-chevron-up fa-chevron-down');
+            $(this).prev('header[data-bs-toggle="collapse"]').find('i.fa').toggleClass('fa-chevron-up fa-chevron-down');
         });
 
         // This makes the elements under the dropdown not react to hover.

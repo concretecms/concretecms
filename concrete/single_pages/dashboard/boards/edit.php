@@ -69,7 +69,7 @@ $buttonText = t("Add");
 
                 <div class="ccm-dashboard-form-actions-wrapper">
                     <div class="ccm-dashboard-form-actions ">
-                        <button type="button" class="btn btn-danger float-start" data-toggle="modal" data-target="#delete-board"><?=t("Delete")?></button>
+                        <button type="button" class="btn btn-danger float-start" data-bs-toggle="modal" data-target="#delete-board"><?=t("Delete")?></button>
                         <button type="submit" class="btn btn-primary float-end"><?=t('Save')?></button>
                     </div>
                 </div>

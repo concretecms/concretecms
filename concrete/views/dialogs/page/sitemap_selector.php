@@ -15,13 +15,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <div class="col-3 border-right flex-column">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a data-toggle="tab" id="sitemap-sitemap-tab" href="#sitemap-sitemap" class="nav-link"><?=t('Full Sitemap')?></a>
+                        <a data-bs-toggle="tab" id="sitemap-sitemap-tab" href="#sitemap-sitemap" class="nav-link"><?=t('Full Sitemap')?></a>
                     </li> 
                     <li class="nav-item">
-                        <a data-toggle="tab" id="sitemap-explore-tab" href="#sitemap-explore" class="nav-link"><?=t('Flat Sitemap')?></a>
+                        <a data-bs-toggle="tab" id="sitemap-explore-tab" href="#sitemap-explore" class="nav-link"><?=t('Flat Sitemap')?></a>
                     </li>
                     <li class="nav-item">
-                        <a data-toggle="tab" id="sitemap-search-tab" href="#sitemap-search" class="nav-link"><?=t('Search')?></a>
+                        <a data-bs-toggle="tab" id="sitemap-search-tab" href="#sitemap-search" class="nav-link"><?=t('Search')?></a>
                     </li>
                 </ul>
                 <?php

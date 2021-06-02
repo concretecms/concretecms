@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend><?= t('Settings'); ?></legend>
         <div class="form-group">
-            <label class="launch-tooltip" data-placement="right" title="<?= t('Defines whether the Doctrine proxy classes are created on the fly. On the fly generation is active when development mode is enabled.'); ?>">
+            <label class="launch-tooltip" data-bs-placement="right" title="<?= t('Defines whether the Doctrine proxy classes are created on the fly. On the fly generation is active when development mode is enabled.'); ?>">
                 <?= t('Doctrine Development Mode'); ?>
             </label>
 

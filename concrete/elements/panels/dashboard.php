@@ -36,10 +36,10 @@ if ($section) {
         <menu class="ccm-panel-dashboard-favorites-menu" v-show="currentMode != 'section'">
             <li :class="{active: currentMode === 'dashboard'}"><a @click="currentMode = 'dashboard'" href="#"
                                                                 id="panel-dashboard-dashboard"
-                                                                data-toggle="pill"><?= t('Dashboard') ?></a></li>
+                                                                data-bs-toggle="pill"><?= t('Dashboard') ?></a></li>
             <li :class="{active: currentMode === 'favorites'}"><a @click="currentMode = 'favorites'" href="#"
                                                                 id="panel-dashboard-favorites"
-                                                                data-toggle="pill"><?= t('Favorites') ?></a></li>
+                                                                data-bs-toggle="pill"><?= t('Favorites') ?></a></li>
         </menu>
 
         <div v-show="currentMode === 'dashboard'">

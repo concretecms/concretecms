@@ -610,7 +610,7 @@ Translator.prototype = {
             .append($('<div class="panel-heading" />').text(i18n.Translate))
             .append(this.UI.$translation = $('<div class="panel-body" />'))
             .append($('<div class="panel-footer text-center" />')
-              .append($('<button class="btn btn-primary ccm-translator-savecontinue" data-toggle="tooltip" style="margin: 0 5px" />')
+              .append($('<button class="btn btn-primary ccm-translator-savecontinue" data-bs-toggle="tooltip" style="margin: 0 5px" />')
                 .attr('title', i18n.Keystroke_ctrl_return)
                 .data('text', i18n.Save_and_Continue)
                 .text(i18n.Save_and_Continue)
@@ -618,7 +618,7 @@ Translator.prototype = {
                   my.saveAndContinue();
                 })
               )
-              .append($('<button class="btn btn-success ccm-translator-savecontinue ccm-translator-approvecontinue" data-toggle="tooltip" style="margin: 0 5px" />')
+              .append($('<button class="btn btn-success ccm-translator-savecontinue ccm-translator-approvecontinue" data-bs-toggle="tooltip" style="margin: 0 5px" />')
                 .attr('title', i18n.Keystroke_ctrl_shift_return)
                 .data('text', i18n.Approve_and_Continue)
                 .text(i18n.Approve_and_Continue)
@@ -631,7 +631,7 @@ Translator.prototype = {
         )
       )
     ;
-    this.UI.$container.find('[data-toggle="tooltip"]').tooltip();
+    this.UI.$container.find('[data-bs-toggle="tooltip"]').tooltip();
     if (this.on.uiLaunched) {
       this.on.uiLaunched(this);
     }

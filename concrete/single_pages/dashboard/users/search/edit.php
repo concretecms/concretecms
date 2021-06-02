@@ -63,7 +63,7 @@ if (count($languages) > 0) {
 <section data-section="account">
     <?php if ($canViewAccountModal) { ?>
         <button
-                data-toggle="modal" data-target="#edit-account-modal"
+                data-bs-toggle="modal" data-target="#edit-account-modal"
                 class="btn-section btn btn-secondary"><?= t('Edit') ?></button>
     <?php } ?>
     <h3><?= t('Account') ?></h3>
@@ -237,7 +237,7 @@ if (count($languages) > 0) {
     if ($canAddGroup) {
     ?>
     <button class="btn-section btn btn-secondary"
-            data-toggle="modal" data-target="#edit-groups-modal"
+            data-bs-toggle="modal" data-target="#edit-groups-modal"
     ><?= t('Edit') ?></button>
     <?php } ?>
 

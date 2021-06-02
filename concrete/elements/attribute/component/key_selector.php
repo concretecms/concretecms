@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </a>
             <label class="control-label" :for="attribute.controlID">{{attribute.label}}</label>
             <div v-if="isBulkMode && attribute.hasMultipleValues" class="ccm-attribute-key-multiple-values card card-body p-2">
-                <a :href="'#ccm-attribute-key-mv-body-' + attribute.akID" data-toggle="collapse"
+                <a :href="'#ccm-attribute-key-mv-body-' + attribute.akID" data-bs-toggle="collapse"
                    class="d-block text-decoration-none link-primary" role="button"
                    aria-expanded="false"
                    :aria-controls="'ccm-attribute-key-mv-body-' + attribute.akID"

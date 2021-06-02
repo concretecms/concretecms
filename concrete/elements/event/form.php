@@ -52,7 +52,7 @@ if ($version) {
             <nav class="nav flex-column">
                 <?php foreach($tabs as $tab) { ?>
                     <a class="nav-link <?php if ($tab[2]) { ?>active<?php } ?>" href="#<?=$tab[0]?>"
-                       data-toggle="tab" id="#<?=$tab[0]?>-tab"><?=$tab[1]?></a>
+                       data-bs-toggle="tab" id="#<?=$tab[0]?>-tab"><?=$tab[1]?></a>
                 <?php } ?>
             </nav>
 

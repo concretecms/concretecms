@@ -79,7 +79,7 @@ class SiteLocaleSelector
         </div>
         <script type="text/javascript">
             $(function() {
-                $('[data-toggle=dropdown]').dropdown();
+                $('[data-bs-toggle=dropdown]').dropdown();
                 $('div[data-locale-selector={$identifier}]').on('click', 'a[data-select-locale]', function(e) {
                     e.preventDefault();
                     var localeID = $(this).attr('data-select-locale'),

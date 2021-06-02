@@ -30,12 +30,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <?php if ($canActivateUser) { ?>
         <?php if ($user->isActive()) { ?>
             <?php if (!in_array("deactivate", $workflowRequestActions)) { ?>
-                <button type="button" name="task" data-toggle="modal" data-target="#deactivate-user-modal"
+                <button type="button" name="task" data-bs-toggle="modal" data-bs-target="#deactivate-user-modal"
                         class="btn btn-secondary"><?= t('Deactivate User') ?></button>
             <?php } ?>
         <?php } else { ?>
             <?php if ((!in_array("activate", $workflowRequestActions) && !in_array("register_activate", $workflowRequestActions))) { ?>
-                <button type="button" name="task" data-toggle="modal" data-target="#activate-user-modal"
+                <button type="button" name="task" data-bs-toggle="modal" data-bs-target="#activate-user-modal"
                         class="btn btn-secondary"><?= t('Activate User') ?></button>
             <?php } ?>
         <?php } ?>
@@ -43,15 +43,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <?php if ($canSignInAsUser) {
         ?>
-        <button type="button" data-toggle="modal" data-target="#sudo-user-modal"
+        <button type="button" data-bs-toggle="modal" data-bs-target="#sudo-user-modal"
                 class="btn btn-secondary"><?= t('Sign in As User') ?></button>
         <?php
     }
     ?>
     <?php if ($canDeleteUser) {
         ?>
-        <button type="button" data-toggle="modal"
-                data-target="#delete-user-modal" class="btn btn-danger"><?= t('Delete') ?></button>
+        <button type="button" data-bs-toggle="modal"
+                data-bs-target="#delete-user-modal" class="btn btn-danger"><?= t('Delete') ?></button>
         <?php
     }
     ?>

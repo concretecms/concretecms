@@ -113,7 +113,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <form method="post" action="<?=$view->action('delete_instance', $instance->getBoardInstanceID())?>">
             <?=$token->output('delete_instance')?>
             <button type="button"
-                    data-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>"
+                    data-bs-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>"
                     class="btn btn-block btn-outline-danger"><?=t("Delete Instance")?></button>
         </form>
 

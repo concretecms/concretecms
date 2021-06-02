@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend>
             <?= t('Block Cache') ?>
-            <span class="launch-tooltip" data-placement="right" title="<?= t('Stores the output of blocks which support block caching') ?>"><i class="fas fa-question-circle"></i></span>
+            <span class="launch-tooltip" data-bs-placement="right" title="<?= t('Stores the output of blocks which support block caching') ?>"><i class="fas fa-question-circle"></i></span>
         </legend>
         <div class="form-group">
             <div class="form-check">
@@ -42,7 +42,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend>
             <?= t('Theme CSS Cache') ?>
-            <span class="launch-tooltip" data-placement="right" title="<?= t('Caches the output of customized theme stylesheets for faster loading. Turn off if you are editing LESS files in your theme directly.') ?>"><i class="fas fa-question-circle"></i></span>
+            <span class="launch-tooltip" data-bs-placement="right" title="<?= t('Caches the output of customized theme stylesheets for faster loading. Turn off if you are editing LESS files in your theme directly.') ?>"><i class="fas fa-question-circle"></i></span>
         </legend>
         <div class="form-group">
             <div class="form-check">
@@ -59,7 +59,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend>
             <?= t('Compress LESS Output') ?>
-            <span class="launch-tooltip" data-placement="right" title="<?= t('Determines whether compiled LESS stylesheets should output as compressed CSS. Uncompressed stylesheets are slightly larger but easier to read.') ?>"><i class="fas fa-question-circle"></i></span>
+            <span class="launch-tooltip" data-bs-placement="right" title="<?= t('Determines whether compiled LESS stylesheets should output as compressed CSS. Uncompressed stylesheets are slightly larger but easier to read.') ?>"><i class="fas fa-question-circle"></i></span>
         </legend>
         <div class="form-group">
             <div class="form-check">
@@ -79,7 +79,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <fieldset>
         <legend><?= t('Overrides Cache') ?>
-            <span class="launch-tooltip" data-placement="right" title="<?= t('Stores the location and existence of source code files.') ?>"><i class="fas fa-question-circle"></i></span>
+            <span class="launch-tooltip" data-bs-placement="right" title="<?= t('Stores the location and existence of source code files.') ?>"><i class="fas fa-question-circle"></i></span>
         </legend>
         <div class="form-group">
             <div class="form-check">
@@ -96,7 +96,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend>
             <?= t('Full Page Caching') ?>
-            <span class="launch-tooltip" data-placement="right" title="<?= t('Stores the output of an entire page.') ?>"><i class="fas fa-question-circle"></i></span>
+            <span class="launch-tooltip" data-bs-placement="right" title="<?= t('Stores the output of an entire page.') ?>"><i class="fas fa-question-circle"></i></span>
         </legend>
         <div class="form-group">
             <div class="form-check">
