@@ -317,7 +317,7 @@ class UserInterface
                 $a->setAttribute("href", $tab[0]);
             } else {
                 $a->setAttribute("href", "#" . $tab[0]);
-                $a->setAttribute("data-toggle", "tab");
+                $a->setAttribute("data-bs-toggle", "tab");
             }
 
             $a->setAttribute("id", $tab[0] . "-tab");
