@@ -18,7 +18,7 @@ if (is_object($renderer)) { ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <?php if ($backURL) { ?>
-                    <a class="float-left btn btn-secondary" href="<?php echo h($backURL) ?>">
+                    <a class="float-start btn btn-secondary" href="<?php echo h($backURL) ?>">
                         <?php echo t('Back') ?>
                     </a>
                 <?php } ?>

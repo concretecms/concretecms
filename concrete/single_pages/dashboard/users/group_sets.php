@@ -61,7 +61,7 @@ $form = $app->make(Form::class);
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?php echo (string)Url::to('/dashboard/users/group_sets') ?>"
-                   class="btn float-left btn-secondary">
+                   class="btn float-start btn-secondary">
                     <?php echo t('Cancel') ?>
                 </a>
 
@@ -84,7 +84,7 @@ $form = $app->make(Form::class);
                 </p>
 
                 <div class="dialog-buttons">
-                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()">
+                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()">
                         <?php echo t('Cancel') ?>
                     </button>
 

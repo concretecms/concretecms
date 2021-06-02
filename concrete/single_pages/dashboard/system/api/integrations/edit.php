@@ -49,7 +49,7 @@ $consentType = $client->getConsentType();
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/users/oauth2/view_client', $client->getIdentifier())?>" class="float-left btn btn-secondary"><?=t('Cancel')?></a>
+            <a href="<?=URL::to('/dashboard/users/oauth2/view_client', $client->getIdentifier())?>" class="float-start btn btn-secondary"><?=t('Cancel')?></a>
             <button class="float-end btn btn-primary" type="submit" ><?=t('Update')?></button>
         </div>
     </div>

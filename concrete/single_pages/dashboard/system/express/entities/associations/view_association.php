@@ -51,7 +51,7 @@ $token = $app->make(Token::class);
             </p>
 
             <div class="dialog-buttons">
-                <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()">
+                <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()">
                     <?php echo t('Cancel') ?>
                 </button>
 

@@ -66,7 +66,7 @@ if ($calendar !== null) {
                 <div class="ccm-dashboard-form-actions-wrapper">
                     <div class="ccm-dashboard-form-actions ">
                         <a href="<?= $view->url($preferences->getPreferredViewPath()) ?>"
-                           class="btn btn-secondary float-left"><?= t("Cancel") ?></a>
+                           class="btn btn-secondary float-start"><?= t("Cancel") ?></a>
                         <button type="submit" class="btn btn-primary float-end"><?= $buttonText ?></button>
                     </div>
                 </div>

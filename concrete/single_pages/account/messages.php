@@ -210,7 +210,7 @@ $token = $app->make(Token::class);
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?php echo (string)Url::to('/account'); ?>" class="btn btn-secondary float-left">
+            <a href="<?php echo (string)Url::to('/account'); ?>" class="btn btn-secondary float-start">
                 <?php echo t('Back to Account'); ?>
             </a>
         </div>

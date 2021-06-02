@@ -30,7 +30,7 @@
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/system/api/settings')?>" class="float-left btn btn-secondary"><?=t('Cancel')?></a>
+            <a href="<?=URL::to('/dashboard/system/api/settings')?>" class="float-start btn btn-secondary"><?=t('Cancel')?></a>
             <button class="float-end btn btn-primary" type="submit" ><?=t('Add Integration')?></button>
         </div>
     </div>

@@ -48,8 +48,8 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
         <?=View::element('icons'); ?>
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : ''; ?> <?= $large_font ? 'large-font' : ''; ?>">
             <ul>
-                <li class="ccm-logo float-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC(); ?></span></li>
-                <li class="float-left ccm-toolbar-button-with-text">
+                <li class="ccm-logo float-start"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC(); ?></span></li>
+                <li class="float-start ccm-toolbar-button-with-text">
                     <a href="<?=$backLink; ?>">
                         <svg><use xlink:href="#icon-arrow-left" /></svg>
                         <span><?=t('To My Website'); ?></span>
@@ -67,7 +67,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     $cnt = $ih->getController();
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets(); ?>
-                        <li class="float-left"><?= $cnt->getMenuItemLinkElement(); ?></li>
+                        <li class="float-start"><?= $cnt->getMenuItemLinkElement(); ?></li>
                         <?php
                     }
                 }

@@ -200,7 +200,7 @@ foreach ($locales as $locale) {
                 </div>
             </fieldset>
             <div class="dialog-buttons">
-                <button class="btn btn-secondary float-left" data-dialog-action="cancel"><?= t('Cancel') ?></button>
+                <button class="btn btn-secondary float-start" data-dialog-action="cancel"><?= t('Cancel') ?></button>
                 <button class="btn btn-primary float-end" data-dialog-action="submit"><?= t('Add Locale') ?></button>
             </div>
             <?php $token->output('add_content_section') ?>

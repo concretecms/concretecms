@@ -30,7 +30,7 @@ if ($editingJobSet !== null) {
                     <?php $token->output("delete_set{$editingJobSet->getJobSetID()}") ?>
                     <p><?= t('Warning, this cannot be undone. No jobs will be deleted but they will no longer be grouped together.') ?></p>
                     <div class="dialog-buttons">
-                        <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                        <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                         <button class="btn btn-danger float-end" onclick="$('div[data-dialog-wrapper=delete-job-set] form').submit()"><?=t('Delete Job Set')?></button>
                     </div>
                 </form>
@@ -143,7 +143,7 @@ if ($editingJobSet !== null) {
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <div class="float-left">
+                <div class="float-start">
                     <a class="btn btn-secondary" href="<?= $controller->action('view_sets') ?>" ><?= t('Cancel') ?></a>
                 </div>
                 <div class="float-end">
@@ -320,7 +320,7 @@ if ($editingJobSet !== null) {
                                     ?>
                                 </div>
                                 <div class="dialog-buttons">
-                                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+                                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
                                     <button onclick="$('form[data-schedule-form=<?= $j->getJobID() ?>]').submit()" class="btn btn-primary float-end"><?= t('Save') ?></button>
                                 </div>
                             </form>

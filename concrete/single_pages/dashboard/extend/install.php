@@ -68,7 +68,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=$this->url('/dashboard/extend/install')?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
+                <a href="<?=$this->url('/dashboard/extend/install')?>" class="btn btn-secondary float-start"><?=t('Cancel')?></a>
                 <input type="submit" value="<?=t('Install %s', t($pkg->getPackageName()))?>" class="btn btn-primary float-end" />
             </div>
         </div>

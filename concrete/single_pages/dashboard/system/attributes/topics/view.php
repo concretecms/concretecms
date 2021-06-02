@@ -85,7 +85,7 @@
             </form>
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
+                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
                     <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-topic-tree form').submit()"><?=t('Delete Topic Tree'); ?></button>
                 </div>
             </div>
@@ -106,7 +106,7 @@
             </form>
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions ">
-                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
+                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel'); ?></button>
                     <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-edit-topic-tree form').submit()"><?=t('Update Topic Tree'); ?></button>
                 </div>
             </div>

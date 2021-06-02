@@ -45,7 +45,7 @@ if ($controller->getAction() == 'inspect') {
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <a href="<?= $urlResolver->resolve(['/dashboard/blocks/types']) ?>"
-               class="btn btn-secondary float-left"><?= t('Back to Block Types') ?></a>
+               class="btn btn-secondary float-start"><?= t('Back to Block Types') ?></a>
             <div class="float-end">
                 <a href="<?= $urlResolver->resolve(['/dashboard/blocks/types', 'refresh', $bt->getBlockTypeID(), $token->generate('ccm-refresh-blocktype')]) ?>"
                    class="btn btn-secondary"><?= t('Refresh') ?></a>
