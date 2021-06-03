@@ -23,7 +23,7 @@
 				echo $renderer->render($ak);
 			}
 		} else { ?>
-			<div class="ml-3">
+			<div class="ms-3">
 				<p><?=t('You have not defined any <a href="%s">custom attributes</a> for this site.', URL::to('/dashboard/system/basics/attributes'))?></p>
 			</div>
 		<?php } ?>

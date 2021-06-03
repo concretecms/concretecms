@@ -126,7 +126,7 @@ switch ($controller->getTask()) {
                 <div class="form-group">
                     <label for="atID"><?= t('Choose Type'); ?></label>
                     <div class="form-inline">
-                        <div class="mr-2">
+                        <div class="me-2">
                             <?= $form->select('fslTypeID', $types); ?>
                         </div>
                         <button type="submit" class="btn btn-secondary"><?= t('Go'); ?></button>

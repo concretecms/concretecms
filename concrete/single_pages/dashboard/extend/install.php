@@ -258,7 +258,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             foreach ($pkgArray as $pkg) {
                 ?>
                 <div class="media">
-                    <img style="width: 49px" class="mr-3" src="<?= $ci->getPackageIconURL($pkg); ?>" />
+                    <img style="width: 49px" class="me-3" src="<?= $ci->getPackageIconURL($pkg); ?>" />
                     <div class="media-body">
                         <a href="<?= URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()); ?>" class="btn float-end btn-sm btn-secondary"><?= t('Details'); ?></a>
                         <h4 class="media-heading"><?= t($pkg->getPackageName()) ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
@@ -285,7 +285,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                     if (!empty($file)) {
                         ?>
                         <div class="media">
-                            <img style="width: 49px" class="mr-3" src="<?= $pb->getRemoteIconURL(); ?>" />
+                            <img style="width: 49px" class="me-3" src="<?= $pb->getRemoteIconURL(); ?>" />
                             <div class="media-body">
                                 <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()); ?>" class="btn float-end btn-sm btn-secondary"><?= t('Download'); ?></a>
                                 <h4 class="media-heading"><?= $pb->getName(); ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pb->getVersion()); ?></span></h4>
@@ -298,7 +298,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 foreach ($availableArray as $obj) {
                     ?>
                     <div class="media">
-                        <img style="width: 49px" class="mr-3" src="<?= $ci->getPackageIconURL($obj); ?>" />
+                        <img style="width: 49px" class="me-3" src="<?= $ci->getPackageIconURL($obj); ?>" />
                         <div class="media-body">
                             <?php
                             if ($obj instanceof Concrete\Core\Package\BrokenPackage) {

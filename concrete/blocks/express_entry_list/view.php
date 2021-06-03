@@ -66,7 +66,7 @@ if ($entity) { ?>
             <div class="mt-3 mb-3">
                 <div class="form-inline">
                 <b><?=t('Items Per Page')?></b>
-                <select class="ml-3 form-control" data-express-entry-list-select-items-per-page="<?=$bID?>">
+                <select class="ms-3 form-control" data-express-entry-list-select-items-per-page="<?=$bID?>">
                     <?php foreach($itemsPerPageOptions as $itemsPerPage) {
                         $url = \League\Url\Url::createFromServer($_SERVER);
                         $query = $url->getQuery();

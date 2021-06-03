@@ -66,7 +66,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?= $form->radio('COMPRESS_THEME_PREPROCESSOR_OUTPUT', '0', $compressThemePreprocessorOutput ? '1' : '0', ['id' => 'COMPRESS_THEME_PREPROCESSOR_OUTPUT-0']) ?>
                 <label class="form-check-label" for="COMPRESS_THEME_PREPROCESSOR_OUTPUT-0"><?= t('Off - Good for debugging generated CSS output.') ?></label>
             </div>
-            <div class="form-check ml-4">
+            <div class="form-check ms-4">
                 <?= $form->checkbox('GENERATE_LESS_SOURCEMAP', '1', $generateLessSourcemap) ?>
                 <label class="form-check-label" for="GENERATE_LESS_SOURCEMAP"><?= t('enable source maps in generated CSS files') ?></label>
             </div>

@@ -56,7 +56,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 ); ?>">
                 <?php echo t('Default Timezone'); ?>
             </label>
-            <div class="row pl-3">
+            <div class="row ps-3">
                 <select class="selectpicker" name="timezone" data-live-search="true" data-width="auto">
                     <?php
                     foreach ($timezones as $areaName => $namedTimezones) {

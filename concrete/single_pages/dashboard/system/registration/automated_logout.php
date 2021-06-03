@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <span class="form-inline">
                     <?= t(
     'Automatically log out users who are inactive for %s seconds or more.',
-    $form->number('inactiveTime', $inactiveTime, ['style' => 'width: 5rem', 'min' => '15', 'class' => 'form-control-sm ml-1 mr-1'] + ($invalidateInactiveUsers ? [] : ['disabled' => 'disabled']))
+    $form->number('inactiveTime', $inactiveTime, ['style' => 'width: 5rem', 'min' => '15', 'class' => 'form-control-sm ms-1 me-1'] + ($invalidateInactiveUsers ? [] : ['disabled' => 'disabled']))
 ) ?>
                 </span>
             </label>

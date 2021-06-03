@@ -59,7 +59,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         $packageData = h('getAddonData(' . json_encode($installedPackage->getPackageHandle()) . ')');
                         ?>
                         <div class="media">
-                            <img src="<?= $ci->getPackageIconURL($installedPackage) ?>" class="mr-3" style="width: 49px" />
+                            <img src="<?= $ci->getPackageIconURL($installedPackage) ?>" class="me-3" style="width: 49px" />
                             <div class="media-body">
                                 <i class="float-end" v-bind:class="<?= $packageData?>.iconClass"></i>
                                 <h5 class="my-0">

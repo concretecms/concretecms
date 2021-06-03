@@ -81,7 +81,7 @@ $navHelper = $app->make(Navigation::class);
 
                     <div class="clearfix"></div>
 
-                    <p class="text-right">
+                    <p class="text-end">
                         <small class="text-muted">
                             <?php echo t('Note: Additional page paths are not versioned.<br> They will be available immediately.') ?>
                         </small>

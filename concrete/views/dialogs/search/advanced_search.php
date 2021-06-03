@@ -92,7 +92,7 @@
             </form>
             <div class="dialog-buttons">
                 <button class="btn btn-secondary" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                <button class="btn btn-primary float-end ml-auto" data-button-action="save-search-preset-submit"><?=t('Save Preset')?></button>
+                <button class="btn btn-primary float-end ms-auto" data-button-action="save-search-preset-submit"><?=t('Save Preset')?></button>
             </div>
         </div>
     </div>

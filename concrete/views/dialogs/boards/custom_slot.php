@@ -60,7 +60,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 pl-0">
+                    <div class="col-12 ps-0">
 
                         <span v-html="templateOption.content"></span>
                         <hr>

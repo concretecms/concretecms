@@ -301,17 +301,17 @@ $dh = $app->make(Date::class);
                 ],
                 $fsType == Set::TYPE_PRIVATE ? $fsType : Set::TYPE_PUBLIC,
                 [
-                    "class" => "ml-2 form-select-sm form-select"
+                    "class" => "ms-2 form-select-sm form-select"
                 ]
             ); ?>
 
-            <button type="submit" class="btn btn-secondary ml-2 btn-sm">
+            <button type="submit" class="btn btn-secondary ms-2 btn-sm">
                 <svg width="16" height="16">
                     <use xlink:href="#icon-search"/>
                 </svg>
             </button>
 
-            <a class="btn btn-secondary btn-sm ml-2"
+            <a class="btn btn-secondary btn-sm ms-2"
                href="<?php echo Url::to('/dashboard/files/add_set') ?>"
                title="<?php echo t('Add File Set') ?>">
                 <?php echo t('Add File Set') ?> <i class="fa fa-plus-circle"></i>

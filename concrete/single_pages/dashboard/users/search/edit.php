@@ -266,7 +266,7 @@ if (count($languages) > 0) {
                     <h4><?= t('Selected Groups') ?></h4>
                     <div class="mb-3" v-if="groups.length > 0">
                         <div class="d-flex" v-for="group in groups">
-                            <div class="mr-auto"><span v-html="group.gDisplayName"></span></div>
+                            <div class="me-auto"><span v-html="group.gDisplayName"></span></div>
                             <div><a class="ccm-hover-icon" href="#" @click.prevent="removeGroup(group.gID)"><i
                                             class="fa fa-minus-circle"></i></a></div>
                         </div>

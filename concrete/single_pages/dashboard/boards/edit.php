@@ -94,7 +94,7 @@ $buttonText = t("Add");
                     <?=t('Are you sure you want to remove this board?')?>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal"><?=t('Cancel')?></button>
+                    <button type="button" class="btn btn-secondary me-auto" data-dismiss="modal"><?=t('Cancel')?></button>
                     <button type="submit" class="btn btn-danger float-end"><?=t('Delete Board')?></button>
                 </div>
             </div>

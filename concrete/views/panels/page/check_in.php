@@ -21,10 +21,10 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
     <?php $publishAction = (is_object($publishErrors) && $publishErrors->has()) ? false : true ?>
     <div class="btn-group d-flex" role="group">
         <button id="ccm-check-in-publish" type="submit" name="action" value="publish"
-                class="pr-3 pl-3 btn btn-primary" <?=$publishAction ?: 'disabled' ?>>
+                class="pe-3 ps-3 btn btn-primary" <?=$publishAction ?: 'disabled' ?>>
             <?=$publishTitle?>
         </button>
-        <button id="ccm-check-in-schedule" type="button" class="pr-3 pl-3 btn btn-primary" <?= $publishAction ?: 'disabled' ?>>
+        <button id="ccm-check-in-schedule" type="button" class="pr-3 ps-3 btn btn-primary" <?= $publishAction ?: 'disabled' ?>>
             <i class="far fa-clock"></i>
         </button>
     </div>

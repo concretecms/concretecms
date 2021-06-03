@@ -56,7 +56,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <button class="btn btn-secondary float-end mt-1 mb-2" type="button" data-action="add-url"><?=t('Add URL')?></button>
 
                     <div class="clearfix"></div>
-                    <p class="text-right"><small class="text-muted"><?=t('Note: Additional page paths are not versioned.<br> They will be available immediately.')?></small></p>
+                    <p class="text-end"><small class="text-muted"><?=t('Note: Additional page paths are not versioned.<br> They will be available immediately.')?></small></p>
 
                     <?php
                 }

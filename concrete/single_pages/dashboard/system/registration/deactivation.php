@@ -38,7 +38,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <div class="form-inline">
                     <?= t(
                         'Deactivate users when they have not logged in for %s days',
-                        $form->number('userDeactivationDays', $userDeactivationDays, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ml-1 mr-1'])
+                        $form->number('userDeactivationDays', $userDeactivationDays, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ms-1 me-1'])
                     ) ?>
                 </div>
                 <small class="text-muted">
@@ -56,8 +56,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <div class="form-inline">
                     <?= t(
                         'Deactivate users once they have failed %s login(s) within %s seconds',
-                        $form->number('userLoginAmount', $userLoginAmount, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ml-1 mr-1']),
-                        $form->number('userLoginDuration', $userLoginDuration, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ml-1 mr-1'])
+                        $form->number('userLoginAmount', $userLoginAmount, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ms-1 me-1']),
+                        $form->number('userLoginDuration', $userLoginDuration, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ms-1 me-1'])
                     ) ?>
                 </div>
                 <small class="text-muted">

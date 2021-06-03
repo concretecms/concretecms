@@ -52,7 +52,7 @@ $driver = $dataSource->getDriver();
                 <div class="ccm-dashboard-form-actions ">
                     <a href="<?=$view->url('/dashboard/boards/data_sources', $board->getBoardID())?>" class="btn btn-secondary float-start"><?=t("Cancel")?></a>
                     <button type="submit" class="btn btn-primary float-end"><?=t('Update Data Source')?></button>
-                    <button type="button" class="btn float-end btn-danger mr-1" data-bs-toggle="modal" data-target="#delete-data-source"><?=t('Delete')?></button>
+                    <button type="button" class="btn float-end btn-danger me-1" data-bs-toggle="modal" data-target="#delete-data-source"><?=t('Delete')?></button>
                 </div>
             </div>
         </form>
@@ -75,7 +75,7 @@ $driver = $dataSource->getDriver();
                     <?=t('Are you sure you want to remove this data source from this board?')?>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal"><?=t('Cancel')?></button>
+                    <button type="button" class="btn btn-secondary me-auto" data-dismiss="modal"><?=t('Cancel')?></button>
                     <button type="submit" class="btn btn-danger float-end"><?=t('Delete Data Source')?></button>
                 </div>
             </div>

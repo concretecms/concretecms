@@ -151,7 +151,7 @@ switch ($controller->getAction()) {
                     </label>
 
                     <div class="form-inline">
-                        <div class="mr-2">
+                        <div class="me-2">
                             <?php echo $form->select('efpTypeID', $types); ?>
                         </div>
 

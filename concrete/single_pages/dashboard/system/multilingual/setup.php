@@ -153,7 +153,7 @@ foreach ($locales as $locale) {
     <div class="form-group">
         <label class="control-label"><?= t('Site interface source locale') ?></label>
         <div class="form-inline">
-            <?= $form->select('defaultSourceLanguage', array_merge(['' => t('*** Unknown or mixed language')], $languages), $defaultSourceLanguage, ['class' => 'mr-2']) ?>
+            <?= $form->select('defaultSourceLanguage', array_merge(['' => t('*** Unknown or mixed language')], $languages), $defaultSourceLanguage, ['class' => 'me-2']) ?>
             <?= $form->select('defaultSourceCountry', array_merge(['' => t('*** Undetermined country')], $countries), $defaultSourceCountry) ?>
         </div>
     </div>

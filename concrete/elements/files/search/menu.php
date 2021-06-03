@@ -8,7 +8,7 @@ use Concrete\Core\Support\Facade\Url;
 ?>
 
 <div class="row row-cols-auto align-items-center">
-    <select id="favoriteFolderSelector" class="selectpicker mr-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
+    <select id="favoriteFolderSelector" class="selectpicker me-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
 
     <?php if (!empty($itemsPerPageOptions)) { ?>
         <div class="dropdown">

@@ -16,7 +16,7 @@ $form = $app->make(Form::class);
 ?>
 
 <div class="form-inline float-end">
-    <label for="search" class="mr-2"><?=t('Search')?></label>
+    <label for="search" class="me-2"><?=t('Search')?></label>
     <?php
         echo $form->search("search", "", [
             "class" => "form-control",
@@ -53,7 +53,7 @@ $form = $app->make(Form::class);
         <div class="input-group-text">
             <input type="checkbox" name="fsNewShare[]" value="1" checked/>
         </div>
-        <div class="input-group-text border-left-0 pl-0">
+        <div class="input-group-text border-left-0 ps-0">
                 <span class="small">
                     <?php echo t('Public Set.') ?>
                 </span>

@@ -109,7 +109,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <div id="ccm-page-permissions-confirm-dialog" style="display: none">
     <?=t('Changing this setting will affect this page immediately. Are you sure?')?>
     <div id="dialog-buttons-start">
-        <input type="button" class="btn btn-secondary mr-2" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
+        <input type="button" class="btn btn-secondary me-2" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
         <input type="button" class="btn btn-primary" value="Ok" onclick="ccm_pagePermissionsConfirmInheritanceChange()" />
     </div>
 </div>
@@ -117,7 +117,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <?php if ($editPermissions) {
     ?>
     <div class="ccm-panel-detail-form-actions dialog-buttons d-flex justify-content-end">
-        <button class="btn btn-secondary mr-2" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+        <button class="btn btn-secondary me-2" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
         <button class="btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
     </div>
     <?php

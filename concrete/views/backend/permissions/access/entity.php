@@ -67,7 +67,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         ?>
         <div class="dialog-buttons">
             <input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?= t('Cancel') ?>" class="btn btn-secondary" />
-            <input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?= t('Save') ?>" class="btn btn-primary ml-auto" />
+            <input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?= t('Save') ?>" class="btn btn-primary ms-auto" />
         </div>
     </form>
 </div>

@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="ccm-site-menu">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav me-auto">
             <li class="nav-item<?= $active === 'details' ? ' active' : ''?>">
                 <a class="nav-link"  href="<?= $urlResolver->resolve(['/dashboard/system/multisite/sites', 'view_site', $site->getSiteID()]) ?>"><?= t('Details') ?></a>
             </li>

@@ -73,7 +73,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-danger float-start"><?=t('Delete Draft')?></button>
-                                    <a href="<?=$view->controller->getContinueURL($element)?>" class="btn btn-secondary ml-auto float-end"><?=t('Continue')?></a>
+                                    <a href="<?=$view->controller->getContinueURL($element)?>" class="btn btn-secondary ms-auto float-end"><?=t('Continue')?></a>
                                 </div>
                             </div>
                         </form>
