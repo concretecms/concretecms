@@ -26,7 +26,7 @@ if (!is_array($users) || count($users) == 0) {
 	}
 ?>
 	<form method="post" data-dialog-form="save-file-set" action="<?= $controller->action('submit'); ?>">
-		<?php echo $form->label('groupIDs', $label); ?>
+		<?php echo $form->label('groupIDs', $label, ['class' => 'form-label']); ?>
 		<div class="form-group" data-form-row="user-groups">
 			<div style="width: 100%">
 				<?=$form->selectMultiple('groupIDs', $gArray, 0, ['style' => 'width: 100%']); ?>

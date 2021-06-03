@@ -73,7 +73,7 @@ if (isset($activate_confirm)) {
         <h3><?=t('Mobile Theme'); ?></h3>
         <p><?=t('To use a separate theme for mobile browsers, specify it below.'); ?></p>
         <div class="form-group form-inline">
-            <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'), ['class' => 'me-3']); ?>
+            <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'), ['class' => 'me-3 form-label']); ?>
             <?php
                 $themes[0] = t('** Same as website (default)');
                 foreach ($tArray as $pt) {

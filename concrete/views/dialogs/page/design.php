@@ -22,7 +22,7 @@ if (is_object($selectedType)) {
     
     <?php if ($cp->canEditPageTemplate()) {
     ?>
-        <?=$form->label('pTemplateID', t('Page Template'))?>
+        <?=$form->label('pTemplateID', t('Page Template'), ['class' => 'form-label'])?>
 
         <?php if ($c->isGeneratedCollection()) {
     ?>
@@ -41,7 +41,7 @@ if (is_object($selectedType)) {
 
     <?php if ($cp->canEditPageType()) {
     ?>
-        <?=$form->label('ptID', t('Page Type'))?>
+        <?=$form->label('ptID', t('Page Type'), ['class' => 'form-label'])?>
 
         <?php if ($c->isGeneratedCollection()) {
     ?>
@@ -62,7 +62,7 @@ if (is_object($selectedType)) {
 } ?>
 
     <div class="form-group">
-		<?=$form->label('pThemeID', t('Theme'))?>
+		<?=$form->label('pThemeID', t('Theme'), ['class' => 'form-label'])?>
 		<?=$form->select('pThemeID', $themesSelect, $selectedThemeID)?>
 	</div>
 

@@ -16,7 +16,7 @@ if ($entity) { ?>
             <?php if ($enableKeywordSearch) { ?>
                 <div class="form-inline">
                     <div class="form-group">
-                        <?=$form->label('keywords', t('Keyword Search'))?>
+                        <?=$form->label('keywords', t('Keyword Search'), ['class' => 'form-label'])?>
                         <?=$form->text('keywords')?>
                     </div>
                     <button type="submit" class="btn btn-primary" name="search" value="search"><?=t('Search')?></button>

@@ -33,7 +33,7 @@ $form = $app->make(Form::class);
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label('mode', t('Mode')); ?>
+        <?php echo $form->label('mode', t('Mode'), ['class' => 'form-label']); ?>
         <?php echo $form->select('mode', [
             "S" => t('Specific – Display details about a specific calendar event.'),
             "P" => t('Page – Display details about the event attached to a custom attribute.'),
@@ -43,19 +43,19 @@ $form = $app->make(Form::class);
 
     <div data-group="specific">
         <div class="form-group">
-            <?php echo $form->label('calendarID', t('Calendar')) ?>
+            <?php echo $form->label('calendarID', t('Calendar'), ['class' => 'form-label']) ?>
             <?php echo $form->select('calendarID', $calendars, $calendarID, ['data-select' => 'calendar']) ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('eventID', t('Event')) ?>
+            <?php echo $form->label('eventID', t('Event'), ['class' => 'form-label']) ?>
             <div data-wrapper="calendar-event-selector"><?php echo t('Choose a Calendar') ?></div>
         </div>
     </div>
 
     <div data-group="page">
         <div class="form-group">
-            <?php echo $form->label('calendarEventAttributeKeyHandle', t('Retrieve Event from Attribute')) ?>
+            <?php echo $form->label('calendarEventAttributeKeyHandle', t('Retrieve Event from Attribute'), ['class' => 'form-label']) ?>
             <?php echo $form->select('calendarEventAttributeKeyHandle', $calendarEventPageKeys, $calendarEventAttributeKeyHandle) ?>
         </div>
     </div>
@@ -67,7 +67,7 @@ $form = $app->make(Form::class);
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label('', t('Core Properties')) ?>
+        <?php echo $form->label('', t('Core Properties'), ['class' => 'form-label']) ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('displayEventName', 1, $displayEventName) ?>
@@ -91,7 +91,7 @@ $form = $app->make(Form::class);
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('', t('Custom Attributes')) ?>
+        <?php echo $form->label('', t('Custom Attributes'), ['class' => 'form-label']) ?>
 
         <?php foreach ($eventKeys as $ak) { ?>
             <div class="form-check">
@@ -103,7 +103,7 @@ $form = $app->make(Form::class);
 
     <div data-group="linking">
         <div class="form-group">
-            <?php echo $form->label('', t('Linking')) ?>
+            <?php echo $form->label('', t('Linking'), ['class' => 'form-label']) ?>
 
             <div class="form-check">
                 <?php echo $form->checkbox('enableLinkToPage', 1, $enableLinkToPage) ?>

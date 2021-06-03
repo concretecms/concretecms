@@ -38,7 +38,7 @@ echo $ui->tabs([
 <div class="tab-content">
     <div class="tab-pane show active" id="add" role="tabpanel">
         <div class="form-group">
-            <?php echo $form->label("attributeHandle", t('Property to Display')); ?>
+            <?php echo $form->label("attributeHandle", t('Property to Display'), ['class' => 'form-label']); ?>
             <?php echo $form->select("attributeHandle", [
                 t('Page Values') => $controller->getAvailablePageValues(),
                 t('Page Attributes') => $pageAttributes
@@ -46,14 +46,14 @@ echo $ui->tabs([
         </div>
 
         <div class="form-group">
-            <?php echo $form->label("attributeTitleText", t('Title Text')); ?>
+            <?php echo $form->label("attributeTitleText", t('Title Text'), ['class' => 'form-label']); ?>
             <?php echo $form->text("attributeTitleText", $attributeTitleText); ?>
         </div>
     </div>
 
     <div class="tab-pane" id="options" role="tabpanel">
         <div class="form-group">
-            <?php echo $form->label("displayTag", t('Display Property with Formatting')); ?>
+            <?php echo $form->label("displayTag", t('Display Property with Formatting'), ['class' => 'form-label']); ?>
             <?php echo $form->select("displayTag", [
                 "h1" => t("H1 (Heading 1)"),
                 "h2" => t("H2 (Heading 2)"),
@@ -68,7 +68,7 @@ echo $ui->tabs([
         </div>
 
         <div class="form-group">
-            <?php echo $form->label("dateFormat", t('Format of Date Properties')); ?>
+            <?php echo $form->label("dateFormat", t('Format of Date Properties'), ['class' => 'form-label']); ?>
             <?php echo $form->text("dateFormat", $dateFormat); ?>
 
             <div class="help-block">
@@ -77,7 +77,7 @@ echo $ui->tabs([
         </div>
 
         <div class="form-group">
-            <?php echo $form->label("delimiter", t('Delimiter for Multiple Items')); ?>
+            <?php echo $form->label("delimiter", t('Delimiter for Multiple Items'), ['class' => 'form-label']); ?>
             <?php echo $form->select("delimiter", [
                 "comma" => t('Comma (",")'),
                 "commaSpace" => t('Comma With Space After (", ")'),
@@ -95,7 +95,7 @@ echo $ui->tabs([
             </legend>
 
             <div class="form-group">
-                <?php echo $form->label("thumbnailWidth", t('Max Width')); ?>
+                <?php echo $form->label("thumbnailWidth", t('Max Width'), ['class' => 'form-label']); ?>
 
                 <div class="input-group">
                     <?php echo $form->number('thumbnailWidth', $thumbnailWidth, ["min" => 0, "step" => 1]); ?>
@@ -107,7 +107,7 @@ echo $ui->tabs([
             </div>
 
             <div class="form-group">
-                <?php echo $form->label("thumbnailHeight", t('Max Height')); ?>
+                <?php echo $form->label("thumbnailHeight", t('Max Height'), ['class' => 'form-label']); ?>
 
                 <div class="input-group">
                     <?php echo $form->number('thumbnailHeight', $thumbnailHeight, ["min" => 0, "step" => 1]); ?>

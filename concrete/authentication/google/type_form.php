@@ -19,11 +19,11 @@ defined('C5_EXECUTE') or die('Access denied.');
 </div>
 
 <div class="form-group">
-    <?= $form->label('apikey', t('App ID')) ?>
+    <?= $form->label('apikey', t('App ID'), ['class' => 'form-label']) ?>
     <?= $form->text('apikey', $apikey, ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
 </div>
 <div class="form-group">
-    <?= $form->label('apisecret', t('App Secret')) ?>
+    <?= $form->label('apisecret', t('App Secret'), ['class' => 'form-label']) ?>
     <div class="input-group">
         <?= $form->password('apisecret', $apisecret, ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
         <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="far fa-eye"></i></button>
@@ -31,14 +31,14 @@ defined('C5_EXECUTE') or die('Access denied.');
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Registration')) ?>
+    <?= $form->label('', t('Registration'), ['class' => 'form-label']) ?>
     <div class="form-check">
         <?= $form->checkbox('registration_enabled', '1', $registrationEnabled) ?>
         <label class="form-check-label" for="registration_enabled"><?= t('Allow automatic registration') ?></label>
     </div>
 </div>
 <div class="form-group registration-group">
-    <?= $form->label('registration_group', t('Group to enter on registration')) ?>
+    <?= $form->label('registration_group', t('Group to enter on registration'), ['class' => 'form-label']) ?>
     <?= $groupSelector->selectGroup('registration_group', $registrationGroup, tc('Group', 'None')) ?>
 </div>
 
@@ -46,12 +46,12 @@ defined('C5_EXECUTE') or die('Access denied.');
     <legend><?= t('Domain Filtering') ?></legend>
     <p><?= h(t('Google allows accounts be created against custom domains like "example.com". These lists allow you to use standard PHP regular expressions to filter against the domain name or email address. For example user@example.com would filter against "example.com".')) ?></p>
     <div class="form-group">
-        <?= $form->label('whitelist', t('Domain Whitelist regex')) ?>
+        <?= $form->label('whitelist', t('Domain Whitelist regex'), ['class' => 'form-label']) ?>
         <?= $form->textarea('whitelist', implode("\n", $whitelist), ['class' => 'font-monospace', 'spellcheck' => 'false']) ?>
         <small class="text-muted"><?= t('One per line, to whitelist all %s domains: %s', '<code>concrete5.org</code>', '<code>~^concrete5\\.org$~i</code>') ?></small>
     </div>
     <div class="form-group">
-        <?= $form->label('blacklist', t('Domain Blacklist regex')) ?>
+        <?= $form->label('blacklist', t('Domain Blacklist regex'), ['class' => 'form-label']) ?>
         <?= $form->textarea('blacklist', implode("\n", $blacklist), ['class' => 'font-monospace', 'spellcheck' => 'false']) ?>
         <small class="text-muted">
             <?= t('One per line') ?><br />

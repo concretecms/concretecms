@@ -18,12 +18,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
           action="<?php echo $controller->action('submit') ?>">
 
         <div class="form-group">
-            <?php echo $form->label('name', t('Name')) ?>
+            <?php echo $form->label('name', t('Name'), ['class' => 'form-label']) ?>
             <?php echo $form->text('name', $name, ['autofocus' => 'autofocus']) ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('link', t('URL')) ?>
+            <?php echo $form->label('link', t('URL'), ['class' => 'form-label']) ?>
             <?php echo $form->text('link', $link) ?>
         </div>
 

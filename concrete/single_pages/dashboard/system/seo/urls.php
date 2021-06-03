@@ -36,11 +36,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend><?= t('Canonical URLs') ?></legend>
         <div class="form-group">
-            <?= $form->label('canonical_url', t('Canonical URL')) ?>
+            <?= $form->label('canonical_url', t('Canonical URL'), ['class' => 'form-label']) ?>
             <?= $form->text('canonical_url', $canonicalUrl, ['placeholder' => 'http://domain.com']) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('canonical_url_alternative', t('Alternative canonical URL')) ?>
+            <?= $form->label('canonical_url_alternative', t('Alternative canonical URL'), ['class' => 'form-label']) ?>
             <?= $form->text('canonical_url_alternative', $canonicalUrlAlternative, ['placeholder' => 'https://domain.com']) ?>
         </div>
     </fieldset>

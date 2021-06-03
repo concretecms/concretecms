@@ -33,7 +33,7 @@ if (isset($type)) {
     <form method="POST" action="<?= $view->action('save', $type->getID() ?: 'new') ?>">
         <?php $token->output('thumbnailtype-save-' . ($type->getID() ?: 'new')) ?>
         <div class="form-group">
-            <?= $form->label('ftTypeHandle', t('Handle')) ?>
+            <?= $form->label('ftTypeHandle', t('Handle'), ['class' => 'form-label']) ?>
             <div class="input-group">
                 <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : [])) ?>
                 <span class="input-group-text"><i class="fa fa-asterisk"></i></span>

@@ -42,21 +42,21 @@
                     <legend><?= t('Your Details'); ?></legend>
                     <?php if ($displayUserName) { ?>
                         <div class="form-group">
-                            <?= $form->label('uName', t('Username')); ?>
+                            <?= $form->label('uName', t('Username'), ['class' => 'form-label']); ?>
                             <?= $form->text('uName'); ?>
                         </div>
                     <?php } ?>
                     <div class="form-group">
-                        <?= $form->label('uEmail', t('Email Address')); ?>
+                        <?= $form->label('uEmail', t('Email Address'), ['class' => 'form-label']); ?>
                         <?= $form->text('uEmail'); ?>
                     </div>
                     <div class="form-group">
-                        <?= $form->label('uPassword', t('Password')); ?>
+                        <?= $form->label('uPassword', t('Password'), ['class' => 'form-label']); ?>
                         <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
                     </div>
                     <?php if (Config::get('concrete.user.registration.display_confirm_password_field')) { ?>
                         <div class="form-group">
-                            <?= $form->label('uPasswordConfirm', t('Confirm Password')); ?>
+                            <?= $form->label('uPasswordConfirm', t('Confirm Password'), ['class' => 'form-label']); ?>
                             <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']); ?>
                         </div>
                     <?php } ?>

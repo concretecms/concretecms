@@ -18,12 +18,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('update_tracking_code') ?>
 
     <div class="form-group">
-        <?= $form->label('tracking_code_header', t('Header Tracking Codes')) ?>
+        <?= $form->label('tracking_code_header', t('Header Tracking Codes'), ['class' => 'form-label']) ?>
         <?= $form->textarea('tracking_code_header', $tracking_code_header, ['style' => 'height: 250px;', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
     </div>
 
     <div class="form-group">
-        <?= $form->label('tracking_code_footer', t('Footer Tracking Codes')) ?>
+        <?= $form->label('tracking_code_footer', t('Footer Tracking Codes'), ['class' => 'form-label']) ?>
         <?= $form->textarea('tracking_code_footer', $tracking_code_footer, ['style' => 'height: 250px;', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
     </div>
 

@@ -31,22 +31,22 @@ if (!empty($pages)) {
 <form method="GET" action="<?= $controller->action('') ?>">
     <input type="hidden" name="search" value="1" />
     <div class="form-group">
-        <?= $form->label('keywords', t('Search')) ?>
+        <?= $form->label('keywords', t('Search'), ['class' => 'form-label']) ?>
         <div class="input-group">
             <span class="input-group-text"><i class="fa fa-search"></i></span>
             <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Keywords')]) ?>
         </div>
     </div>
     <div class="form-group">
-        <?= $form->label('numResults', t('Number of Pages to Display')) ?>
+        <?= $form->label('numResults', t('Number of Pages to Display'), ['class' => 'form-label']) ?>
         <?= $form->select('numResults', array_combine($allowedNumResults, $allowedNumResults), $searchRequest['numResults']) ?>
     </div>
     <div class="form-group">
-        <?= $form->label('cParentIDSearchField', t('Parent Page')) ?>
+        <?= $form->label('cParentIDSearchField', t('Parent Page'), ['class' => 'form-label']) ?>
         <?= $pageSelector->selectPage('cParentIDSearchField', $searchRequest['cParentIDSearchField']) ?>
     </div>
     <div class="form-group">
-        <?= $form->label('cParentAll', t('How Many Levels Below Parent?')) ?>
+        <?= $form->label('cParentAll', t('How Many Levels Below Parent?'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->radio('cParentAll', '0', $searchRequest['cParentAll'] ? '1' : '0', ['id' => 'cParentAll0']) ?>
             <label class="form-check-label" for="cParentAll0"><?= t('First Level') ?></label>
@@ -57,7 +57,7 @@ if (!empty($pages)) {
         </div>
     </div>
     <div class="form-group">
-        <?= $form->label('', t('Filter By:')) ?>
+        <?= $form->label('', t('Filter By:'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->checkbox('noDefaultDescription', '1', $searchRequest['noDefaultDescription']) ?>
             <label class="form-check-label" for="noDefaultDescription"><?= t('No Default Description') ?></label>
@@ -107,18 +107,18 @@ if(empty($pages)) {
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <span class="float-end"><?= t('Characters: %s', '{{ page.input.metaTitle.length }}') ?></span>
-                                    <?= $form->label('', t('Meta Title'), ['v-bind:for' => "'meta_title' + pageIndex"]) ?>
+                                    <?= $form->label('', t('Meta Title'), ['v-bind:for' => "'meta_title' + pageIndex", 'class' => 'form-label']) ?>
                                     <?= $form->text('', '', ['v-model.trim' => 'page.input.metaTitle', 'v-bind:placeholder' => 'page.autoTitle', 'v-bind:id' => "'meta_title' + pageIndex"]) ?>
                                     <span v-bind:class="{invisible: page.input.metaTitle !== ''}" class="help-inline"><?= t('Default value. Click to edit.') ?></span>
                                 </div>
                                 <div class="form-group">
                                     <span class="float-end"><?= t('Characters: %s', '{{ page.input.metaDescription.length }}') ?></span>
-                                    <?= $form->label('', t('Meta Description'), ['v-bind:for' => "'meta_description' + pageIndex"]) ?>
+                                    <?= $form->label('', t('Meta Description'), ['v-bind:for' => "'meta_description' + pageIndex", 'class' => 'form-label']) ?>
                                     <?= $form->textarea('meta_description', '', ['v-model.trim' => 'page.input.metaDescription', 'v-bind:placeholder' => 'page.autoDescription', 'v-bind:id' => "'meta_description' + pageIndex"]) ?>
                                     <span v-bind:class="{invisible: page.input.metaDescription !== ''}" class="help-inline"><?= t('Default value. Click to edit.') ?></span>
                                 </div>
                                 <div v-if="!page.isHomePage" class="form-group">
-                                    <?= $form->label('', t('Slug'), ['v-bind:for' => "'collection_handle' + pageIndex"]) ?>
+                                    <?= $form->label('', t('Slug'), ['v-bind:for' => "'collection_handle' + pageIndex", 'class' => 'form-label']) ?>
                                     <?= $form->text('', '', ['v-model.trim' => 'page.input.handle', 'maxlength' => '255', 'v-bind:id' => "'collection_handle' + pageIndex"]) ?>
                                     <a class="help-inline url-path" v-bind:href="page.url" target="_blank" v-html="page.htmlPath"></a>
                                 </div>

@@ -106,7 +106,7 @@ if ($version) {
                 <?php if ($permissions->canEditCalendarEventMoreDetailsLocation()) { ?>
 
                     <div class="form-group">
-                        <label for="page" class="control-label"><?=t('More Details Link Destination')?></label>
+                        <label for="page" class="control-label form-label"><?=t('More Details Link Destination')?></label>
                         <?php
                         $cID = false;
                         if (is_object($version)) {

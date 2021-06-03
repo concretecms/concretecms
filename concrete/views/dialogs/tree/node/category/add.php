@@ -11,7 +11,7 @@ $form = \Core::make('helper/form');
 		<?php } ?>
 		<?=Loader::helper('validation/token')->output('add_category_node')?>
 		<div class="form-group">
-			<?=$form->label('treeNodeCategoryName', t('Name'))?>
+			<?=$form->label('treeNodeCategoryName', t('Name'), ['class' => 'form-label'])?>
 			<?=$form->text('treeNodeCategoryName', '', array('class' => 'span4'))?>
 		</div>
 

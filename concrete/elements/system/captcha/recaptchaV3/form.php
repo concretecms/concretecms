@@ -51,7 +51,7 @@ $config = $app->make('config');
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Options')) ?>
+    <?= $form->label('', t('Options'), ['class' => 'form-label']) ?>
     <div class="form-check">
         <label class="form-check-label">
             <?= $form->checkbox('log_score', '1', $config->get('captcha.recaptcha_v3.log_score')) ?>

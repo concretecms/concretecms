@@ -16,7 +16,7 @@ $form = $app->make(Form::class);
 ?>
 
 <div class="form-inline float-end">
-    <label for="search" class="me-2"><?=t('Search')?></label>
+    <label for="search" class="me-2 form-label"><?=t('Search')?></label>
     <?php
         echo $form->search("search", "", [
             "class" => "form-control",

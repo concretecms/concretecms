@@ -171,7 +171,7 @@ $(function() {
 <?php if (isset($types) && is_array($types) && count($types) > 0) {
     ?>
 <form method="get" action="<?=$view->action('select_type')?>" id="ccm-attribute-type-form">
-	<label for="atID"><?=t('Add Attribute')?></label>
+	<label class=" form-label" for="atID"><?=t('Add Attribute')?></label>
 	<div class="form-inline">
 	<div class="form-group">
 		<?=$form->select('atID', $types)?>

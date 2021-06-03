@@ -65,7 +65,7 @@ echo $userInterface->tabs([
 
     <div class="tab-pane" id="options-<?php echo $id; ?>" role="tabpanel">
         <div class="form-group">
-            <?php echo $form->label("", t("Navigation")); ?>
+            <?php echo $form->label("", t("Navigation"), ['class' => 'form-label']); ?>
             <div class="form-check">
                 <?php echo $form->radio($view->field('navigationType'), 0, $navigationType, ["id" => "navigationTypeArrows", "name" => $view->field('navigationType')]); ?>
                 <?php echo $form->label("navigationTypeArrows", t("Arrows"), ["class" => "form-check-label"]); ?>
@@ -88,7 +88,7 @@ echo $userInterface->tabs([
         </div>
 
         <div class="form-group">
-            <?php echo $form->label($view->field('timeout'), t('Slide Duration')); ?>
+            <?php echo $form->label($view->field('timeout'), t('Slide Duration'), ['class' => 'form-label']); ?>
 
             <div class="input-group" style="width: 150px">
                 <?php echo $form->number($view->field('timeout'), $timeout ? $timeout : 4000, ['min' => '1', 'max' => '99999']); ?>
@@ -100,7 +100,7 @@ echo $userInterface->tabs([
         </div>
 
         <div class="form-group">
-            <?php echo $form->label($view->field('speed'), t('Slide Transition Speed')); ?>
+            <?php echo $form->label($view->field('speed'), t('Slide Transition Speed'), ['class' => 'form-label']); ?>
 
             <div class="input-group" style="width: 150px">
                 <?php echo $form->number($view->field('speed'), $speed ? $speed : 500, ['min' => '1', 'max' => '99999']); ?>
@@ -126,7 +126,7 @@ echo $userInterface->tabs([
         </div>
 
         <div class="form-group">
-            <?php echo $form->label($view->field('maxWidth'), t('Maximum Slide Width (0 means no limit)')); ?>
+            <?php echo $form->label($view->field('maxWidth'), t('Maximum Slide Width (0 means no limit)'), ['class' => 'form-label']); ?>
 
             <div class="input-group" style="width: 150px">
                 <?php echo $form->number($view->field('maxWidth'), $maxWidth ? $maxWidth : 0, ['min' => '0', 'max' => '9999']); ?>

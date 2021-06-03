@@ -19,12 +19,12 @@ $buttonText = t("Add");
             <?=$token->output('submit')?>
             <fieldset>
                 <div class="form-group">
-                    <?=$form->label('boardName', t('Board Name'))?>
+                    <?=$form->label('boardName', t('Board Name'), ['class' => 'form-label'])?>
                     <?=$form->text('boardName', $boardName)?>
                 </div>
 
                 <div class="form-group">
-                    <?=$form->label('templateID', t('Template'))?>
+                    <?=$form->label('templateID', t('Template'), ['class' => 'form-label'])?>
                     <?=$form->select('templateID', $templates, $templateID)?>
                 </div>
 

@@ -16,21 +16,21 @@ defined('C5_EXECUTE') or die('Access denied.');
 </div>
 
 <div class="form-group">
-    <?= $form->label('displayName', t('Authentication Type Display Name')) ?>
+    <?= $form->label('displayName', t('Authentication Type Display Name'), ['class' => 'form-label']) ?>
     <?= $form->text('displayName', $this->getAuthenticationTypeDisplayName()) ?>
 </div>
 
 <div class="form-group">
-    <?= $form->label('url', t('External concrete5 URL')) ?>
+    <?= $form->label('url', t('External concrete5 URL'), ['class' => 'form-label']) ?>
     <?= $form->url('url', $data['url'] ?? '', ['spellcheck' => 'false']) ?>
 </div>
 
 <div class="form-group">
-    <?= $form->label('apikey', t('App ID')) ?>
+    <?= $form->label('apikey', t('App ID'), ['class' => 'form-label']) ?>
     <?= $form->text('apikey', $data['appid'] ?? '', ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
 </div>
 <div class="form-group">
-    <?= $form->label('apisecret', t('App Secret')) ?>
+    <?= $form->label('apisecret', t('App Secret'), ['class' => 'form-label']) ?>
     <div class="input-group">
         <?= $form->password('apisecret', $data['secret'] ?? '', ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
         <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="far fa-eye"></i></button>
@@ -38,14 +38,14 @@ defined('C5_EXECUTE') or die('Access denied.');
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Registration')) ?>
+    <?= $form->label('', t('Registration'), ['class' => 'form-label']) ?>
     <div class="form-check">
         <?= $form->checkbox('registration_enabled', '1', array_get($data, 'registration.enabled', false)) ?>
         <label class="form-check-label" for="registration_enabled"><?= t('Allow automatic registration') ?></label>
     </div>
 </div>
 <div class="form-group registration-group">
-    <?= $form->label('registration_group', t('Group to enter on registration')) ?>
+    <?= $form->label('registration_group', t('Group to enter on registration'), ['class' => 'form-label']) ?>
     <?= $groupSelector->selectGroup('registration_group', array_get($data, 'registration.group'), tc('Group', 'None')) ?>
 </div>
 

@@ -13,11 +13,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <div class="ccm-ui">
     <form class="form-stacked" data-dialog-form="edit-alias" method="post" action="<?= $controller->action('submit') ?>">
         <div class="form-group">
-            <?= $form->label('customAliasName', t('Name')) ?>
+            <?= $form->label('customAliasName', t('Name'), ['class' => 'form-label']) ?>
             <?= $form->text('customAliasName', $customAliasName, ['autofocus' => 'autofocus', 'placeholder' => t('Empty: use name of aliased page')]) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('aliasHandle', t('URL Slug'), ['class' => 'launch-tooltip', 'title' => t('This page must always be available from at least one URL. This is that URL.')]) ?>
+            <?= $form->label('aliasHandle', t('URL Slug'), ['class' => 'launch-tooltip form-label', 'title' => t('This page must always be available from at least one URL. This is that URL.')]) ?>
             <?= $form->text('aliasHandle', $aliasHandle, ['required' => 'required', 'maxlength' => 255]) ?>
         </div>
         <div class="dialog-buttons">

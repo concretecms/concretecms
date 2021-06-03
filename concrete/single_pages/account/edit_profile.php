@@ -36,20 +36,20 @@ $form = $app->make(Form::class);
         </legend>
 
         <div class="form-group">
-            <?php echo $form->label('uEmail', t('Email')); ?>
+            <?php echo $form->label('uEmail', t('Email'), ['class' => 'form-label']); ?>
             <?php echo $form->text('uEmail', $profile->getUserEmail()); ?>
         </div>
 
         <?php if ($config->get('concrete.misc.user_timezones')) { ?>
             <div class="form-group">
-                <?php echo $form->label('uTimezone', t('Time Zone')); ?>
+                <?php echo $form->label('uTimezone', t('Time Zone'), ['class' => 'form-label']); ?>
                 <?php echo $form->select('uTimezone', $date->getTimezones(), ($profile->getUserTimezone() ? $profile->getUserTimezone() : date_default_timezone_get())); ?>
             </div>
         <?php } ?>
 
         <?php if (is_array($locales) && count($locales)) { ?>
             <div class="form-group">
-                <?php echo $form->label('uDefaultLanguage', t('Language')); ?>
+                <?php echo $form->label('uDefaultLanguage', t('Language'), ['class' => 'form-label']); ?>
                 <?php echo $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
             </div>
         <?php } ?>
@@ -118,7 +118,7 @@ $form = $app->make(Form::class);
         </legend>
 
         <div class="form-group">
-            <?php echo $form->label('uPasswordNew', t('New Password')); ?>
+            <?php echo $form->label('uPasswordNew', t('New Password'), ['class' => 'form-label']); ?>
             <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
 
             <a href="javascript:void(0)" title="<?php echo h(t('Leave blank to keep current password.')); ?>">
@@ -127,7 +127,7 @@ $form = $app->make(Form::class);
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
+            <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password'), ['class' => 'form-label']); ?>
 
             <div class="controls">
                 <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>

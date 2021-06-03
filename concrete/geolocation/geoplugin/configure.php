@@ -11,12 +11,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $configuration = $geolocator->getGeolocatorConfiguration();
 ?>
 <div class="form-group">
-    <?= $form->label('url', t('geoPlugin URL')); ?>
+    <?= $form->label('url', t('geoPlugin URL'), ['class' => 'form-label']); ?>
     <?= $form->url('geoplugin-url', $configuration['url'], ['required' => 'required']); ?>
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Fields usage')); ?>
+    <?= $form->label('', t('Fields usage'), ['class' => 'form-label']); ?>
     <div class="form-check">
         <?= $form->checkbox('geoplugin-trust-city', 1, empty($configuration['skipCity'])); ?>
         <?= $form->label('geoplugin-trust-city', t('Use the city'), ['class' => 'form-check-label']); ?>

@@ -9,14 +9,14 @@
         <div class="row">
         <div class="form-group col-sm-6 col-sm-offset-1">
             <div class="form-inline">
-            <?=$form->label('defaultBackgroundColor', t('Background'))?>
+            <?=$form->label('defaultBackgroundColor', t('Background'), ['class' => 'form-label'])?>
             &nbsp;
             <?=$color->output('defaultBackgroundColor', $defaultBackgroundColor)?>
             </div>
         </div>
         <div class="form-group col-sm-5">
             <div class="form-inline">
-            <?=$form->label('defaultTextColor', t('Text'))?>
+            <?=$form->label('defaultTextColor', t('Text'), ['class' => 'form-label'])?>
                 &nbsp;
             <?=$color->output('defaultTextColor', $defaultTextColor)?>
             </div>

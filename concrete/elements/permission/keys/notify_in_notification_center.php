@@ -38,7 +38,7 @@ $resolverManager = app(ResolverManagerInterface::class);
             $entity = $assignment->getAccessEntityObject();
             ?>
             <div class="form-group" data-form-group="notification" data-access-entity="<?= $entity->getAccessEntityID() ?>">
-                <?= $form->label('', $entity->getAccessEntityLabel()) ?>
+                <?= $form->label('', $entity->getAccessEntityLabel(), ['class' => 'form-label']) ?>
                 <div class="input-group">
                     <?= $form->select('subscriptionsIncluded[' . $entity->getAccessEntityID() . ']', ['A' => t('All Subscriptions'), 'C' => t('Custom')], $assignment->getSubscriptionsAllowedPermission()) ?>
                     <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
@@ -92,7 +92,7 @@ $resolverManager = app(ResolverManagerInterface::class);
             $entity = $assignment->getAccessEntityObject();
             ?>
             <div class="form-group" data-form-group="notification">
-                <?= $form->label('', $entity->getAccessEntityLabel()) ?>
+                <?= $form->label('', $entity->getAccessEntityLabel(), ['class' => 'form-label']) ?>
                 <div class="input-group">
                     <?= $form->select('subscriptionsExcluded[' . $entity->getAccessEntityID() . ']', ['N' => t('No Subscriptions'), 'C' => t('Custom')], $assignment->getSubscriptionsAllowedPermission()) ?>
                     <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">

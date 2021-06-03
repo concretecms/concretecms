@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 		<?=Loader::helper('validation/token')->output('update_topic_node')?>
 		<input type="hidden" name="treeNodeID" value="<?=$node->getTreeNodeID()?>" />
 		<div class="form-group">
-			<?=$form->label('treeNodeTopicName', t('Topic'))?>
+			<?=$form->label('treeNodeTopicName', t('Topic'), ['class' => 'form-label'])?>
 			<?=$form->text('treeNodeTopicName', $node->getTreeNodeName(), array('class' => 'span4'))?>
 		</div>
 		<div class="dialog-buttons">

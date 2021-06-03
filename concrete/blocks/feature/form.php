@@ -13,7 +13,7 @@
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("title", t('Title')); ?>
+        <?php echo $form->label("title", t('Title'), ['class' => 'form-label']); ?>
 	    <div class="input-group">
 		    <?php echo $form->text('title', $title); ?>
 			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
@@ -21,7 +21,7 @@
 	</div>
 
     <div class="form-group">
-        <?php echo $form->label('paragraph', t('Paragraph:'));?>
+        <?php echo $form->label('paragraph', t('Paragraph:'), ['class' => 'form-label']);?>
         <?php
             $editor = Core::make('editor');
             echo $editor->outputBlockEditModeEditor('paragraph', $controller->getParagraphEditMode());
@@ -42,12 +42,12 @@
     </div>
 
     <div data-select-contents="feature-link-type-internal" style="display: none;" class="form-group">
-        <?=$form->label('internalLinkCID', t('Choose Page:'))?>
+        <?=$form->label('internalLinkCID', t('Choose Page:'), ['class' => 'form-label'])?>
         <?= Loader::helper('form/page_selector')->selectPage('internalLinkCID', $internalLinkCID); ?>
     </div>
 
     <div data-select-contents="feature-link-type-external" style="display: none;" class="form-group">
-        <?=$form->label('externalLink', t('URL'))?>
+        <?=$form->label('externalLink', t('URL'), ['class' => 'form-label'])?>
         <?= $form->text('externalLink', $externalLink); ?>
     </div>
 

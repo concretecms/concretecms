@@ -30,12 +30,12 @@ $request = $app->make(Request::class);
         <?php echo $form->hidden('arLayoutID', $sanitizeService->sanitizeInt($request->request->get('arLayoutID'))); ?>
 
         <div class="form-group">
-            <?php echo $form->label('arLayoutPresetID', t('Preset')); ?>
+            <?php echo $form->label('arLayoutPresetID', t('Preset'), ['class' => 'form-label']); ?>
             <?php echo $form->select('arLayoutPresetID', $presets, ['class' => 'span3']) ?>
         </div>
 
         <div class="form-group" id="ccm-layout-save-preset-name">
-            <?php echo $form->label('arLayoutPresetName', t('Name')); ?>
+            <?php echo $form->label('arLayoutPresetName', t('Name'), ['class' => 'form-label']); ?>
             <?php echo $form->text('arLayoutPresetName') ?>
         </div>
 

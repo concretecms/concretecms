@@ -15,7 +15,7 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 
     <fieldset>
         <div class="form-group">
-            <?= $form->label('EMAIL_ENABLED', t('Email Sending')) ?>
+            <?= $form->label('EMAIL_ENABLED', t('Email Sending'), ['class' => 'form-label']) ?>
             <div class="form-check">
                 <?= $form->radio('EMAIL_ENABLED', false, $config->get('concrete.email.enabled'), ["class" => "form-check-input", "id" => "EMAIL_ENABLED1"]) ?>
                 <?= $form->label('EMAIL_ENABLED1', t('Disabled'), ["form-check-label"]);?>
@@ -29,7 +29,7 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
 
     <fieldset>
         <div class="form-group">
-            <?= $form->label('MAIL_SEND_METHOD', t('Email Sending Method')) ?>
+            <?= $form->label('MAIL_SEND_METHOD', t('Email Sending Method'), ['class' => 'form-label']) ?>
             <div class="form-check">
                 <?= $form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', strtoupper($config->get('concrete.mail.method')), ["class" => "form-check-input", "id" => "MAIL_SEND_METHOD1"]) ?>
                 <?= $form->label('MAIL_SEND_METHOD1', t('Default PHP Mail Function'), ["form-check-label"]);?>
@@ -45,37 +45,37 @@ $secureVals = ['' => t('None'), 'SSL' => tc('Encryption', 'SSL'), 'TLS' => tc('E
         <legend><?= t('SMTP Settings') ?></legend>
 
         <div class="form-group">
-            <?= $form->label('MAIL_SEND_METHOD_SMTP_SERVER', t('Mail Server')) ?>
+            <?= $form->label('MAIL_SEND_METHOD_SMTP_SERVER', t('Mail Server'), ['class' => 'form-label']) ?>
             <?= $form->text('MAIL_SEND_METHOD_SMTP_SERVER', $config->get('concrete.mail.methods.smtp.server')) ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('MAIL_SEND_METHOD_SMTP_USERNAME', t('Username')) ?>
+            <?= $form->label('MAIL_SEND_METHOD_SMTP_USERNAME', t('Username'), ['class' => 'form-label']) ?>
             <?= $form->text('MAIL_SEND_METHOD_SMTP_USERNAME', $config->get('concrete.mail.methods.smtp.username')) ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('MAIL_SEND_METHOD_SMTP_PASSWORD', t('Password')) ?>
+            <?= $form->label('MAIL_SEND_METHOD_SMTP_PASSWORD', t('Password'), ['class' => 'form-label']) ?>
             <?= $form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', $config->get('concrete.mail.methods.smtp.password'), ['autocomplete' => 'off']) ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION', t('Encryption')) ?>
+            <?= $form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION', t('Encryption'), ['class' => 'form-label']) ?>
             <?= $form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, $config->get('concrete.mail.methods.smtp.encryption')) ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('MAIL_SEND_METHOD_SMTP_PORT', t('Port (Leave blank for default)')) ?>
+            <?= $form->label('MAIL_SEND_METHOD_SMTP_PORT', t('Port (Leave blank for default)'), ['class' => 'form-label']) ?>
             <?= $form->number('MAIL_SEND_METHOD_SMTP_PORT', $config->get('concrete.mail.methods.smtp.port'), ['min' => 1, 'max' => 65535]) ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('MAIL_SEND_METHOD_SMTP_HELO_DOMAIN', t(/*i18n: %1$s is HELO, %2$s is localhost*/'%1$s domain (Leave blank for %2$s)', 'HELO', 'localhost')) ?>
+            <?= $form->label('MAIL_SEND_METHOD_SMTP_HELO_DOMAIN', t(/*i18n: %1$s is HELO, %2$s is localhost*/'%1$s domain (Leave blank for %2$s)', 'HELO', 'localhost'), ['class' => 'form-label']) ?>
             <?= $form->text('MAIL_SEND_METHOD_SMTP_HELO_DOMAIN', $config->get('concrete.mail.methods.smtp.helo_domain')) ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION', t('Messages per connection'), ['class' => 'launch-tooltip', 'title' => t('Sending multiple messages per connection can speed up sending many emails at once, but this feature must be supported by the SMTP server')]) ?>
+            <?= $form->label('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION', t('Messages per connection'), ['class' => 'launch-tooltip form-label', 'title' => t('Sending multiple messages per connection can speed up sending many emails at once, but this feature must be supported by the SMTP server')]) ?>
             <?= $form->number('MAIL_SEND_METHOD_SMTP_MESSAGES_PER_CONNECTION', $config->get('concrete.mail.methods.smtp.messages_per_connection') ?: '', ['min' => 1, 'placeholder' => t('Leave empty for unlimited messages per connection')]) ?>
         </div>
 

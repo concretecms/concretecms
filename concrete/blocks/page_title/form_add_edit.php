@@ -37,12 +37,12 @@ if (!strlen($titleText)) {
 </div>
 
 <div class="form-group">
-    <?php echo $form->label('titleText', t('Custom Title Text')); ?>
+    <?php echo $form->label('titleText', t('Custom Title Text'), ['class' => 'form-label']); ?>
     <?php echo $form->text('titleText', $titleText ? $titleText : $controller->getTitleText()); ?>
 </div>
 
 <div class="form-group">
-    <?php echo $form->label('formatting', t('Formatting Style')); ?>
+    <?php echo $form->label('formatting', t('Formatting Style'), ['class' => 'form-label']); ?>
     <?php echo $form->select('formatting',
         [
             "h1" => t("H1"),
@@ -90,7 +90,7 @@ if (!strlen($titleText)) {
 
         <div class="filterTopicOptions">
             <div class="form-group">
-                <?php echo $form->label('topicTextFormat', t('Topic Text Formatting')); ?>
+                <?php echo $form->label('topicTextFormat', t('Topic Text Formatting'), ['class' => 'form-label']); ?>
                 <?php echo $form->select('topicTextFormat',
                     [
                         0 => t('Default'),
@@ -104,7 +104,7 @@ if (!strlen($titleText)) {
 
         <div class="filterTagOptions">
             <div class="form-group">
-                <?php echo $form->label('tagTextFormat', t('Tag Text Formatting')); ?>
+                <?php echo $form->label('tagTextFormat', t('Tag Text Formatting'), ['class' => 'form-label']); ?>
                 <?php echo $form->select('tagTextFormat',
                     [
                         'upperWord' => t('Capitalize all words'),
@@ -117,7 +117,7 @@ if (!strlen($titleText)) {
 
         <div class="filterDateOptions">
             <div class="form-group">
-                <?php echo $form->label('dateTextFormat', t('Date Text Formatting')); ?>
+                <?php echo $form->label('dateTextFormat', t('Date Text Formatting'), ['class' => 'form-label']); ?>
                 <?php echo $form->select('dateTextFormat',
                     [
                         0 => t('Default'),
@@ -129,7 +129,7 @@ if (!strlen($titleText)) {
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('filterDateFormat', t('Date Year and Month Format')); ?>
+                <?php echo $form->label('filterDateFormat', t('Date Year and Month Format'), ['class' => 'form-label']); ?>
                 <?php echo $form->text('filterDateFormat', $filterDateFormat ? $filterDateFormat : t('F Y')); ?>
             </div>
 

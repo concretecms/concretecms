@@ -18,17 +18,17 @@ $form = $app->make(Form::class);
 
 <fieldset id="ccm_edit_pane_nextPreviousWrap">
     <div class="form-group">
-        <?php echo $form->label('nextLabel', t('Next Label')); ?>
+        <?php echo $form->label('nextLabel', t('Next Label'), ['class' => 'form-label']); ?>
         <?php echo $form->text('nextLabel', h($nextLabel), ['placeholder' => t('leave blank to hide')]); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('previousLabel', t('Previous Label')); ?>
+        <?php echo $form->label('previousLabel', t('Previous Label'), ['class' => 'form-label']); ?>
         <?php echo $form->text('previousLabel', h($previousLabel), ['placeholder' => t('leave blank to hide')]); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('parentLabel', t('Up Label')); ?>
+        <?php echo $form->label('parentLabel', t('Up Label'), ['class' => 'form-label']); ?>
         <?php echo $form->text('parentLabel', h($parentLabel), ['placeholder' => t('leave blank to hide')]); ?>
     </div>
 
@@ -40,7 +40,7 @@ $form = $app->make(Form::class);
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('orderBy', t('Order Pages')); ?>
+        <?php echo $form->label('orderBy', t('Order Pages'), ['class' => 'form-label']); ?>
         <?php echo $form->select('orderBy', [
             'display_asc' => t('Sitemap'),
             'chrono_desc' => t('Chronological'),

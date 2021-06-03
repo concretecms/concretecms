@@ -37,7 +37,7 @@ $form = $app->make(Form::class);
 
             <?php if ($allowEditName) { ?>
                 <div class="form-group">
-                    <?php echo $form->label("cName", t('Name')); ?>
+                    <?php echo $form->label("cName", t('Name'), ['class' => 'form-label']); ?>
                     <?php echo $form->text("cName", $c->getCollectionName()); ?>
                 </div>
             <?php } ?>
@@ -45,7 +45,7 @@ $form = $app->make(Form::class);
             <?php if ($allowEditPaths && !$c->isGeneratedCollection()) { ?>
                 <div class="form-group">
                     <?php echo $form->label("cHandle", t('URL Slug'), [
-                        "class" => "launch-tooltip",
+                        "class" => "launch-tooltip form-label",
                         "title" => t('This page must always be available from at least one URL. This is that URL.')
                     ]); ?>
                     <?php echo $form->text("cHandle", $c->getCollectionHandle()); ?>

@@ -14,7 +14,7 @@ $fieldName = 'ccm-b-image-'.$setcontrol->getPageTypeComposerFormLayoutSetControl
 
 <div class="form-group">
     <?php
-    echo $form->label($fieldName, $label);
+    echo $form->label($fieldName, $label, ['class' => 'form-label']);
 
     if ($description) { ?>
         <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo $description ?>"></i>

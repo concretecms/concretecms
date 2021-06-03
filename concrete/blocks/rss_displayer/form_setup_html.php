@@ -4,18 +4,18 @@
 
 ?>
 <div class="form-group">
-    <?= $form->label('url', t('Feed URL')) ?>
+    <?= $form->label('url', t('Feed URL'), ['class' => 'form-label']) ?>
     <input name="url" class="form-control" placeholder="<?= h(t('Feed URL')) ?>" value="<?= h($rssObj->url) ?>" type="text" required="required" />
 </div>
 <div class="form-group">
-    <?php echo $form->label("title", t('Feed Title')); ?>
+    <?php echo $form->label("title", t('Feed Title'), ['class' => 'form-label']); ?>
     <div class="input-group">
     	<input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($rssObj->title) ?>"/>
 		<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 	</div>
 </div>
 <div class="form-group">
-    <?= $form->label('standardDateFormat', t('Date Format')) ?>
+    <?= $form->label('standardDateFormat', t('Date Format'), ['class' => 'form-label']) ?>
     <?php
     $dateFormats = $rssObj->getDefaultDateTimeFormats();
     $dateFormats[':custom:'] = t('Custom date/time format');
@@ -33,7 +33,7 @@
     ?>
 </div>
 <div class="form-group"<?php echo ($standardDateFormat === ':custom:') ? '' : ' style="display: none"'; ?>>
-    <?php echo $form->label('customDateFormat', t('Custom Date Format')); ?>
+    <?php echo $form->label('customDateFormat', t('Custom Date Format'), ['class' => 'form-label']); ?>
     <?php echo $form->text('customDateFormat', $customDateFormat); ?>
     <div class="help-block"><?php echo sprintf(t('See the formatting options for date at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
 </div>
@@ -46,7 +46,7 @@ $(document).ready(function() {
 });
 </script>
 <div class="form-group">
-    <?= $form->label('itemsToDisplay', t('Items to Show')) ?>
+    <?= $form->label('itemsToDisplay', t('Items to Show'), ['class' => 'form-label']) ?>
     <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>
 </div>
 <div class="form-group">

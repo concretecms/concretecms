@@ -50,7 +50,7 @@ $color = $app->make(Color::class);
 
     <div data-section="customize-results">
         <div class="form-group">
-            <?php echo $form->label("viewTypes", t("View Types")); ?>
+            <?php echo $form->label("viewTypes", t("View Types"), ['class' => 'form-label']); ?>
 
             <?php if ($viewTypes) { ?>
                 <?php foreach ($viewTypes as $key => $name) { ?>
@@ -63,7 +63,7 @@ $color = $app->make(Color::class);
         </div>
 
         <div class="form-group">
-            <?php echo $form->label("", t("View Type Order")); ?>
+            <?php echo $form->label("", t("View Type Order"), ['class' => 'form-label']); ?>
 
             <p class="help-block">
                 <?php echo t('Click and drag to change view type order.'); ?>
@@ -86,12 +86,12 @@ $color = $app->make(Color::class);
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('defaultView', t('Default View')); ?>
+        <?php echo $form->label('defaultView', t('Default View'), ['class' => 'form-label']); ?>
         <?php echo $form->select('defaultView', $viewTypes, isset($defaultView) ? $defaultView : null); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("", t("Day Heading Links")); ?>
+        <?php echo $form->label("", t("Day Heading Links"), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('navLinks', 1, !empty($navLinks)); ?>
@@ -104,7 +104,7 @@ $color = $app->make(Color::class);
     </p>
 
     <div class="form-group">
-        <?php echo $form->label("", t("Event Limit")); ?>
+        <?php echo $form->label("", t("Event Limit"), ['class' => 'form-label']); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('eventLimit', 1, !empty($eventLimit)); ?>
@@ -123,7 +123,7 @@ $color = $app->make(Color::class);
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label("totalToRetrieve", t("Filter by Topic Attribute")); ?>
+        <?php echo $form->label("totalToRetrieve", t("Filter by Topic Attribute"), ['class' => 'form-label']); ?>
 
         <!--suppress HtmlFormInputWithoutLabel -->
         <select class="form-control" name="filterByTopicAttributeKeyID">

@@ -19,7 +19,7 @@ if (is_object($parent) && $parent->isError()) {
 ?>
 
 <div class="form-group">
-    <?= $form->label('', $label) ?>
+    <?= $form->label('', $label, ['class' => 'form-label']) ?>
     <?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) { ?>
         <span class="label label-info"><?= t('Required') ?></span>
     <?php } ?>

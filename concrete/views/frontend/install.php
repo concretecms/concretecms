@@ -491,7 +491,7 @@ if ($install_config) {
                                 <h4><?= t('URLs & Session') ?></h4>
 
                                 <div class="form-group">
-                                    <label class="control-label">
+                                    <label class="control-label form-label">
                                         <div class="form-check">
                                             <?= $form->checkbox('canonicalUrlChecked', '1') ?>
                                             <label class="form-check-label" for="canonicalUrlChecked">
@@ -506,7 +506,7 @@ if ($install_config) {
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label">
+                                    <label class="control-label form-label">
                                         <div class="form-check">
                                             <?= $form->checkbox('canonicalUrlAlternativeChecked', '1') ?>
                                             <label class="form-check-label" for="canonicalUrlAlternativeChecked">
@@ -520,7 +520,7 @@ if ($install_config) {
                                     ]) ?>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="sessionHandler"><?= t('Session Handler') ?></label>
                                     <?= $form->select('sessionHandler', [
                                         '' => t('Default Handler (Recommended)'),
@@ -533,21 +533,21 @@ if ($install_config) {
                                 <h4><?= t('Locale') ?></h4>
 
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="sessionHandler"><?= t('Language') ?></label>
                                     <?= $form->select('siteLocaleLanguage', $languages,
                                         $computedSiteLocaleLanguage) ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="sessionHandler"><?= t('Country') ?></label>
                                     <?= $form->select('siteLocaleCountry', $countries,
                                         $computedSiteLocaleCountry) ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="SERVER_TIMEZONE"><?= t('System Time Zone') ?></label>
                                     <?= $form->select('SERVER_TIMEZONE', $availableTimezones,
                                         $SERVER_TIMEZONE,

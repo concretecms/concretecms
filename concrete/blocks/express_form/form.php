@@ -91,7 +91,7 @@
         <fieldset>
 
             <div class="form-group">
-                <?=$form->label('exEntityID', t('Choose Entity Form')); ?>
+                <?=$form->label('exEntityID', t('Choose Entity Form'), ['class' => 'form-label']); ?>
                 <select name="exFormID" class="form-control">
                     <option value=""><?=t('** Choose Entity Form'); ?></option>
                 <?php foreach ($entities as $entity) {
@@ -155,11 +155,11 @@
         <fieldset>
             <legend><?=t('Basics'); ?></legend>
             <div class="form-group">
-                <?=$form->label('formName', t('Form Name')); ?>
+                <?=$form->label('formName', t('Form Name'), ['class' => 'form-label']); ?>
                 <?=$form->text('formName', $formName); ?>
             </div>
             <div class="form-group">
-                <?=$form->label('submitLabel', t('Submit Button Label')); ?>
+                <?=$form->label('submitLabel', t('Submit Button Label'), ['class' => 'form-label']); ?>
                 <?=$form->text('submitLabel', $submitLabel); ?>
             </div>
             <div class="form-group">
@@ -177,7 +177,7 @@
         <fieldset>
             <legend><?=t('Success'); ?></legend>
             <div class="form-group">
-                <?=$form->label('thankyouMsg', t('Message to display when completed')); ?>
+                <?=$form->label('thankyouMsg', t('Message to display when completed'), ['class' => 'form-label']); ?>
                 <?=$form->textarea('thankyouMsg', $thankyouMsg, ['rows' => 3]); ?>
             </div>
             <div class="form-group">
@@ -197,7 +197,7 @@
         <fieldset>
             <legend><?=t('Email'); ?></legend>
             <div class="form-group">
-                <?=$form->label('recipientEmail', t('Send form submissions to email addresses')); ?>
+                <?=$form->label('recipientEmail', t('Send form submissions to email addresses'), ['class' => 'form-label']); ?>
                 <div class="input-group">
                     <div class="input-group-text">
                         <input type="checkbox" name="notifyMeOnSubmission" value="1" <?php if ($notifyMeOnSubmission == 1) { ?>checked<?php } ?>>
@@ -254,7 +254,7 @@
 
 <script type="text/template" data-template="express-form-reply-to-email">
     <div class="form-group">
-        <?=$form->label('replyToEmailControlID', t('Set value of Reply-To to Email Field')); ?>
+        <?=$form->label('replyToEmailControlID', t('Set value of Reply-To to Email Field'), ['class' => 'form-label']); ?>
         <select name="replyToEmailControlID" class="form-control">
             <option value=""><?=t('** None'); ?></option>
             <% _.each(controls, function(control){ %>
@@ -271,7 +271,7 @@
     <% } %>
 
     <div class="form-group" data-action="<?=$view->action('get_type_form'); ?>" data-group="field-types">
-        <?=$form->label('type', t('Answer Type')); ?>
+        <?=$form->label('type', t('Answer Type'), ['class' => 'form-label']); ?>
 
         <% if (!id) { %>
             &nbsp; <i class="fa fa-refresh fa-spin" style="display: none"></i>
@@ -292,7 +292,7 @@
     </div>
 
     <div class="form-group" data-group="control-name" style="display: none">
-        <?=$form->label('question', t('Question')); ?>
+        <?=$form->label('question', t('Question'), ['class' => 'form-label']); ?>
         <input type="text" name="question" class="form-control" maxlength="255" value="<%=question%>">
     </div>
 

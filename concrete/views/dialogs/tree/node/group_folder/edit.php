@@ -34,18 +34,18 @@ foreach($node->getSelectedGroupTypes() as $selectedGroupType) {
         <?php echo $form->hidden("treeNodeID", $node->getTreeNodeID()); ?>
 
         <div class="form-group">
-            <?php echo $form->label('treeNodeGroupFolderName', t('Name')) ?>
+            <?php echo $form->label('treeNodeGroupFolderName', t('Name'), ['class' => 'form-label']) ?>
             <?php echo $form->text('treeNodeGroupFolderName', $node->getTreeNodeName()) ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('contains', t('Contains')) ?>
+            <?php echo $form->label('contains', t('Contains'), ['class' => 'form-label']) ?>
             <?php echo $form->select('contains', $containsList, $node->getContains()) ?>
         </div>
 
         <div id="ccm-group-types">
             <div class="form-group">
-                <?php echo $form->label('', t('Group Types')) ?>
+                <?php echo $form->label('', t('Group Types'), ['class' => 'form-label']) ?>
 
                 <?php foreach ($allGroupTypes as $groupTypeId => $groupTypeName) { ?>
                     <div class="form-check">

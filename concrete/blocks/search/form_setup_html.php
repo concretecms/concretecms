@@ -66,18 +66,18 @@ if ((string)$controller->baseSearchPath !== '') {
 
 <fieldset>
     <div class="form-group">
-        <?php echo $form->label('title', t('Title')) ?>
+        <?php echo $form->label('title', t('Title'), ['class' => 'form-label']) ?>
         <?php echo $form->text('title', $controller->title, ['maxlength' => 255]) ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('buttonText', t('Button Text')) ?>
+        <?php echo $form->label('buttonText', t('Button Text'), ['class' => 'form-label']) ?>
         <?php echo $form->text('buttonText', $controller->buttonText, ['maxlength' => 255]) ?>
     </div>
 
     <div class="form-group">
         <?php if (count($sites) > 1) { ?>
-            <?php echo $form->label('allowUserOptions', t('User Options')) ?>
+            <?php echo $form->label('allowUserOptions', t('User Options'), ['class' => 'form-label']) ?>
 
             <div class="form-check">
                 <label for="allowUserOptions" class="form-check-label">
@@ -128,7 +128,7 @@ if ((string)$controller->baseSearchPath !== '') {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('resultsPageKind', t('Results Page')) ?>
+        <?php echo $form->label('resultsPageKind', t('Results Page'), ['class' => 'form-label']) ?>
 
         <div class="form-check">
             <label for="resultsPageKindThis" class="form-check-label">

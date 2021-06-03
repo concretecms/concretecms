@@ -35,22 +35,22 @@ if (!isset($width)) {
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label("posterfID", t('Video Placeholder Image (Optional)')); ?>
+        <?php echo $form->label("posterfID", t('Video Placeholder Image (Optional)'), ['class' => 'form-label']); ?>
         <?php echo $fileManager->image('ccm-b-poster-file', 'posterfID', t('Choose Video Placeholder Image'), $poster); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("webmfID", t('WebM')); ?>
+        <?php echo $form->label("webmfID", t('WebM'), ['class' => 'form-label']); ?>
         <?php echo $fileManager->video('ccm-b-webm-file', 'webmfID', t('Choose WebM Video File'), $webm); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("oggfID", t('Ogg')); ?>
+        <?php echo $form->label("oggfID", t('Ogg'), ['class' => 'form-label']); ?>
         <?php echo $fileManager->video('ccm-b-ogg-file', 'oggfID', t('Choose Ogg Video File'), $ogg); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("mp4fID", t('MP4')); ?>
+        <?php echo $form->label("mp4fID", t('MP4'), ['class' => 'form-label']); ?>
         <?php echo $fileManager->video('ccm-b-mp4-file', 'mp4fID', t('Choose MP4 Video File'), $mp4); ?>
     </div>
 </fieldset>
@@ -84,7 +84,7 @@ if (!isset($width)) {
     </div>
 
     <div id="video-width" class="form-group" style="display: none;">
-        <?php echo $form->label('width', t('Max Width')); ?>
+        <?php echo $form->label('width', t('Max Width'), ['class' => 'form-label']); ?>
 
         <div class="input-group">
             <?php echo $form->number('width', $width ?: '', ['min' => 1]); ?>

@@ -18,22 +18,22 @@
 
     <fieldset>
         <div class="form-group">
-            <?= $form->label('http_proxy_host', t('Proxy Host')); ?>
+            <?= $form->label('http_proxy_host', t('Proxy Host'), ['class' => 'form-label']); ?>
             <?= $form->text('http_proxy_host', $http_proxy_host); ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('http_proxy_port', t('Proxy Port')); ?>
+            <?= $form->label('http_proxy_port', t('Proxy Port'), ['class' => 'form-label']); ?>
             <?= $form->text('http_proxy_port', $http_proxy_port); ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('http_proxy_user', t('Proxy User')); ?>
+            <?= $form->label('http_proxy_user', t('Proxy User'), ['class' => 'form-label']); ?>
             <?= $form->text('http_proxy_user', $http_proxy_user); ?>
         </div>
 
         <div class="form-group">
-            <?= $form->label('http_proxy_pwd', t('Proxy Password')); ?>
+            <?= $form->label('http_proxy_pwd', t('Proxy Password'), ['class' => 'form-label']); ?>
             <?= $form->text('http_proxy_pwd', $http_proxy_pwd); ?>
         </div>
     </fieldset>

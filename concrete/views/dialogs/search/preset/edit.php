@@ -5,7 +5,7 @@
         <?= $token->output('edit_search_preset'); ?>
         <?= $form->hidden('presetID', $searchPreset->getId()); ?>
         <div class="form-group">
-            <?= $form->label('presetName', t('Name')); ?>
+            <?= $form->label('presetName', t('Name'), ['class' => 'form-label']); ?>
             <?= $form->text('presetName', $searchPreset->getPresetName()); ?>
         </div>
 

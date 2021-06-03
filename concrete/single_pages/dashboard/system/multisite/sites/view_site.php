@@ -26,23 +26,23 @@ $siteMenu->render();
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Handle')) ?>
+    <?= $form->label('', t('Handle'), ['class' => 'form-label']) ?>
     <div><?= h($site->getSiteHandle()) ?></div>
 </div>
 <div class="form-group">
-    <?= $form->label('', t('Name')) ?>
+    <?= $form->label('', t('Name'), ['class' => 'form-label']) ?>
     <div><?= h($site->getSiteName()) ?></div>
 </div>
 <div class="form-group">
-    <?= $form->label('', t('Canonical URL')) ?>
+    <?= $form->label('', t('Canonical URL'), ['class' => 'form-label']) ?>
     <div><?= h($site->getSiteCanonicalURL()) ?></div>
 </div>
 <div class="form-group">
-    <?= $form->label('', t('Site Type')) ?>
+    <?= $form->label('', t('Site Type'), ['class' => 'form-label']) ?>
     <div><?= h($site->getType()->getSiteTypeName()) ?></div>
 </div>
 <div class="form-group">
-    <?= $form->label('', t('Time Zone')) ?>
+    <?= $form->label('', t('Time Zone'), ['class' => 'form-label']) ?>
     <div><?= h($site->getConfigRepository()->get('timezone')) ?></div>
 </div>
 

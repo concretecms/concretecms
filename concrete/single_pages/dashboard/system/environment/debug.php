@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <fieldset>
         <div class="form-group">
-            <?= $form->label('', t('Display Errors')); ?>
+            <?= $form->label('', t('Display Errors'), ['class' => 'form-label']); ?>
             <div class="form-check">
                 <?= $form->checkbox('debug_enabled', 1, $debug_enabled, ['data-sample' => $view->action('disabled_example')]); ?>
                 <?= $form->label('debug_enabled', t('Output error information to site users'), ['class' => 'form-check-label']); ?>
@@ -30,7 +30,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
 
         <div class="form-group">
-            <?= $form->label('', t('Error Detail')); ?>
+            <?= $form->label('', t('Error Detail'), ['class' => 'form-label']); ?>
             <div class="form-check">
                 <?= $form->radio('debug_detail', 'message', $debug_detail, ['data-sample' => $view->action('message_example')]); ?>
                 <?= $form->label('debug_detail1', t('Show the error message but nothing else'), ['class' => 'form-check-label']); ?>
@@ -48,7 +48,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
 
         <div class="form-group">
-            <?= $form->label('', t('Error Level')); ?>
+            <?= $form->label('', t('Error Level'), ['class' => 'form-label']); ?>
             <div class="form-check">
                 <?= $form->checkbox('warnings_as_errors', 1, $warnings_as_errors, ['data-dont-update' => '1']); ?>
                 <?= $form->label('warnings_as_errors', t('Consider warnings as errors'), ['class' => 'form-check-label']); ?>

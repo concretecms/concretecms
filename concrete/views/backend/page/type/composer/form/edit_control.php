@@ -15,25 +15,25 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <form data-edit-set-form-control="<?= $setControl->getPageTypeComposerFormLayoutSetControlID() ?>" action="#" method="POST">
         <?php $valt->output('update_set_control') ?>
         <div class="form-group">
-            <?= $form->label('ptComposerFormLayoutSetControlCustomLabel', t('Custom Label')) ?>
+            <?= $form->label('ptComposerFormLayoutSetControlCustomLabel', t('Custom Label'), ['class' => 'form-label']) ?>
             <?= $form->text('ptComposerFormLayoutSetControlCustomLabel', $setControl->getPageTypeComposerFormLayoutSetControlCustomLabel()) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('ptComposerFormLayoutSetControlCustomTemplate', t('Custom Template')); ?>
+            <?= $form->label('ptComposerFormLayoutSetControlCustomTemplate', t('Custom Template'), ['class' => 'form-label']); ?>
             <?= $form->select('ptComposerFormLayoutSetControlCustomTemplate', $templates, $setControl->getPageTypeComposerFormLayoutSetControlCustomTemplate()) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('ptComposerFormLayoutSetControlDescription', t('Description')) ?>
+            <?= $form->label('ptComposerFormLayoutSetControlDescription', t('Description'), ['class' => 'form-label']) ?>
             <?= $form->text('ptComposerFormLayoutSetControlDescription', $setControl->getPageTypeComposerFormLayoutSetControlDescription()) ?>
         </div>
         <?php
         if ($control->pageTypeComposerFormControlSupportsValidation()) {
             ?>
             <div class="form-group">
-                <?= $form->label('ptComposerFormLayoutSetControlRequired', t('Required')) ?>
+                <?= $form->label('ptComposerFormLayoutSetControlRequired', t('Required'), ['class' => 'form-label']) ?>
                 <div class="form-check">
                     <?= $form->checkbox('ptComposerFormLayoutSetControlRequired', 1, $setControl->isPageTypeComposerFormLayoutSetControlRequired()) ?>
-                    <?= $form->label('ptComposerFormLayoutSetControlRequired', t('Yes, require this form element')) ?>
+                    <?= $form->label('ptComposerFormLayoutSetControlRequired', t('Yes, require this form element'), ['class' => 'form-label']) ?>
                 </div>
             </div>
             <?php

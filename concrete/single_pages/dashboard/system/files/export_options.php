@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <form method="POST" action="<?= $view->action('submit') ?>">
     <?= $token->output('ccm-export-options') ?>
 
-    <?= $form->label('', t('CSV')) ?>
+    <?= $form->label('', t('CSV'), ['class' => 'form-label']) ?>
     <div class="form-check">
         <?= $form->checkbox('csvAddBom', '1', $csvAddBom) ?>
         <label for="csvAddBom">

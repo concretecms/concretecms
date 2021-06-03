@@ -77,7 +77,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 <div class="col-sm-6 ccm-date-time-date-group">
                     <div class="row">
                         <div class="col-sm-12">
-                            <label class="control-label"><?= tc('Start date', 'From')  ?></label> <i
+                            <label class="control-label form-label"><?= tc('Start date', 'From')  ?></label> <i
                                 class="fa fa-info-circle launch-tooltip"
                                 title="<?php echo t('Choose Repeat Event and choose a frequency to make this event recurring.') ?>"></i>
                         </div>
@@ -99,7 +99,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 <div class="col-sm-6 ccm-date-time-date-group">
                     <div class="row">
                         <div class="col-sm-12">
-                            <label class="control-label"><?= tc('End date', 'To') ?></label>
+                            <label class="control-label form-label"><?= tc('End date', 'To') ?></label>
                         </div>
                     </div>
                     <div class="row">
@@ -150,7 +150,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
             <br/>
 
             <div class="form-group">
-                <label for="pdRepeatPeriod" class="control-label"><?= t('Repeats') ?></label>
+                <label for="pdRepeatPeriod" class="control-label form-label"><?= t('Repeats') ?></label>
                 <div class="">
                     <select class="form-control" name="<%=options.namespace%>_pdRepeatPeriod_<%=repetition.setID%>">
                         <?php foreach ($repeats as $key => $value) { ?>
@@ -163,7 +163,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
             <div data-wrapper="duration-dates-repeat-daily" style="display: none">
 
                 <div class="form-group">
-                    <label for="<%=options.namespace%>_pdRepeatPeriodDaysEvery_<%=repetition.setID%>" class="control-label"><?= t('Repeat every') ?></label>
+                    <label for="<%=options.namespace%>_pdRepeatPeriodDaysEvery_<%=repetition.setID%>" class="control-label form-label"><?= t('Repeat every') ?></label>
                     <div class="">
                         <div class="form-inline">
                             <select class="form-control me-2" style="width: 60px" name="<%=options.namespace%>_pdRepeatPeriodDaysEvery_<%=repetition.setID%>">
@@ -182,7 +182,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
 
 
                 <div class="form-group">
-                    <label for="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" class="control-label"><?= t('Repeat By') ?></label>
+                    <label for="<%=options.namespace%>_pdRepeatPeriodMonthsRepeatBy_<%=repetition.setID%>" class="control-label form-label"><?= t('Repeat By') ?></label>
                     <div class="form-group">
                         <div class="radio">
                             <label>
