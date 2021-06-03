@@ -53,7 +53,8 @@ class RelationListController extends Controller
             $link->setAttribute('class', 'launch-tooltip');
             $link->setAttribute('data-bs-toggle', 'tooltip');
             $link->setAttribute('data-bs-placement', 'bottom');
-            $link->setAttribute('data-bs-delay', '{ "show": 500, "hide": 0 }');
+            // data-bs-delay will throw a TypeError with current BS version
+            //$link->setAttribute('data-bs-delay', '{ "show": 500, "hide": 0 }');
         }
         
         if (is_object($this->multilingualSection)) {

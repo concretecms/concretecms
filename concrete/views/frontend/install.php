@@ -477,7 +477,7 @@ if ($install_config) {
             </div>
             <div class="card card-default">
                 <div class="card-header" role="tab" id="headingThree">
-                    <a class="collapsed" role="button" data-toggle="collapse"
+                    <a class="collapsed" role="button" data-bs-toggle="collapse"
                        href="#advanced"><?= t('Advanced Options') ?>
                     </a>
                 </div>

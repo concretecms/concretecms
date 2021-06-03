@@ -83,7 +83,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     }
                     $dashboardPanelClass = implode(' ', $dashboardPanelClasses);
                     ?>
-                    <a class="<?=$dashboardPanelClass; ?>" data-bs-placement="bottom" data-bs-delay='{ "show": 500, "hide": 0 }' href="<?= URL::to('/dashboard'); ?>" title="<?= t('Dashboard – Change Site-wide Settings'); ?>"
+                    <a class="<?=$dashboardPanelClass; ?>" data-bs-placement="bottom" href="<?= URL::to('/dashboard'); ?>" title="<?= t('Dashboard – Change Site-wide Settings'); ?>"
                         data-launch-panel="dashboard"
                         data-panel-url="<?=URL::to('/system/panels/dashboard'); ?>"
                     >
@@ -94,7 +94,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                 <li class="float-end d-none d-sm-none d-md-block">
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php
-                    } ?>  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-delay='{ "show": 500, "hide": 0 }' href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap'); ?>" title="<?= t('Add Pages and Navigate Your Site'); ?>" data-launch-panel="sitemap">
+                    } ?>  data-bs-toggle="tooltip" data-bs-placement="bottom" href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap'); ?>" title="<?= t('Add Pages and Navigate Your Site'); ?>" data-launch-panel="sitemap">
                         <svg><use xlink:href="#icon-sitemap" /></svg>
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages'); ?></span>
                     </a>
@@ -103,7 +103,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php
                     } ?> data-bs-toggle="tooltip"
-                       data-bs-placement="bottom" data-bs-delay='{ "show": 500, "hide": 0 }' href="#"
+                       data-bs-placement="bottom" href="#"
                        data-panel-url="<?= URL::to('/ccm/system/panels/help'); ?>"
                        title="<?= t('View help about the CMS.'); ?>" data-launch-panel="help">
                         <svg><use xlink:href="#icon-help" /></svg><span
