@@ -32,7 +32,7 @@ if ($excludedWords !== $defaultExcludedWords) {
 
 	<div class="form-group">
         <?= $form->label('SEO_EXCLUDE_WORDS', t('Reserved Words')) ?>
-        <?= $form->textarea('SEO_EXCLUDE_WORDS', implode(', ', $excludedWords), ['class' => 'text-monospace', 'rows' => '5', 'spellcheck' => 'false']) ?>
+        <?= $form->textarea('SEO_EXCLUDE_WORDS', implode(', ', $excludedWords), ['class' => 'font-monospace', 'rows' => '5', 'spellcheck' => 'false']) ?>
         <div class="text-muted">
             <?= t('Separate reserved words with a comma. These words will be automatically removed from URL slugs. To remove no words from URLs, delete all the words above.') ?>
         </div>

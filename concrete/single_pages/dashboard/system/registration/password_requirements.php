@@ -62,7 +62,7 @@ foreach ($customRegex as $regex => $description) {
 
         <div v-for="(regex, regexIndex) in regexes" v-bind:key="regexIndex" class="form-group">
             <div class="input-group">
-                <?= $form->text('regex[]', '', ['autocomplete' => 'off', 'v-model.trim' => 'regex.regex', 'class' => 'text-monospace', 'spellcheck' => 'false', 'placeholder' => t('Regular Expression')]) ?>
+                <?= $form->text('regex[]', '', ['autocomplete' => 'off', 'v-model.trim' => 'regex.regex', 'class' => 'font-monospace', 'spellcheck' => 'false', 'placeholder' => t('Regular Expression')]) ?>
                 <?= $form->text('regex_desc[]', '', ['autocomplete' => 'off', 'v-model.trim' => 'regex.description', 'placeholder' => t('Description (optional)')]) ?>
                 <a href="#" class="btn btn-outline-danger" v-on:click.prevent="removeRegex(regexIndex)"><i class="fas fa-trash"></i></a>
             </div>
