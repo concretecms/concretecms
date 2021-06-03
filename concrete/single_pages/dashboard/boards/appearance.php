@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </label>
             </div>
 
-            <h4 class="font-weight-light"><?=t("Available Slot Templates")?></h4>
+            <h4 class="fw-light"><?=t("Available Slot Templates")?></h4>
 
             <div class="form-group" data-list="slot-templates">
                 <?php foreach($templates as $template) { ?>

@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?php
                 if ($c->isGeneratedCollection() || $c->isPageDraft()) {
                     ?>
-                    <h3 class="font-weight-light"><?=t('Current Canonical URL')?></h3>
+                    <h3 class="fw-light"><?=t('Current Canonical URL')?></h3>
                     <div class="breadcrumb">
                         <?php
                         if ($c->isPageDraft()) {

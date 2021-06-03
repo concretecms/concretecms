@@ -20,7 +20,7 @@ $id = str_replace('.', '_', uniqid('ccm-add-block-lists-', true));
     foreach ($blockTypesForSets as $setName => $blockTypes) {
         ?>
         <section>
-            <h3 class="font-weight-normal"><?= $setName ?></h3>
+            <h3 class="fw-normal"><?= $setName ?></h3>
             <ul class="item-select-list">
                 <?php
                 foreach ($blockTypes as $bt) {

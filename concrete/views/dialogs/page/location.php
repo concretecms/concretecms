@@ -37,7 +37,7 @@ $navHelper = $app->make(Navigation::class);
                 <?php echo $form->hidden("cParentID", $cParentID); ?>
 
                 <?php if ($c->isGeneratedCollection() || $c->isPageDraft()) { ?>
-                    <h3 class="font-weight-light">
+                    <h3 class="fw-light">
                         <?php echo t('Current Canonical URL') ?>
                     </h3>
 

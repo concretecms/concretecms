@@ -16,7 +16,7 @@ $driver = $dataSource->getDriver();
     </div>
     <div class="col-8">
 
-        <h3 class="font-weight-light"><?=t('Add Data Source')?></h3>
+        <h3 class="fw-light"><?=t('Add Data Source')?></h3>
         <form method="post" action="<?=$view->action('add_data_source', $board->getBoardID(), $dataSource->getID())?>">
             <?=$token->output('add_data_source')?>
 
@@ -25,7 +25,7 @@ $driver = $dataSource->getDriver();
                 <?=$form->text('dataSourceName')?>
             </div>
 
-            <h3 class="font-weight-light"><?=t('Population Interval')?></h3>
+            <h3 class="fw-light"><?=t('Population Interval')?></h3>
 
             <div class="help-block"><?=t('Choose how far into the future and how far into the past to populate this board. This is a rolling window as the board is updated in the future.')?></div>
             <div class="row">

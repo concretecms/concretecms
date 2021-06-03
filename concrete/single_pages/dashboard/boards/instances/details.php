@@ -71,7 +71,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?=$token->output('refresh_instance')?>
                 <div class="row mb-3">
                     <div class="ps-0 col-8 col-offset-1">
-                        <h5 class="font-weight-light"><?=t('Refresh')?></h5>
+                        <h5 class="fw-light"><?=t('Refresh')?></h5>
                         <p><?=t('Refresh the dynamic elements within board slots without getting new items or changing any positioning.')?></p>
                     </div>
                     <div class="col-4">
@@ -83,7 +83,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?=$token->output('add_content')?>
                 <div class="row mb-3">
                     <div class="ps-0 col-8 col-offset-1">
-                        <h5 class="font-weight-light"><?=t('Add Content')?></h5>
+                        <h5 class="fw-light"><?=t('Add Content')?></h5>
                         <p><?=t('Refreshes dynamic elements within board slots, and adds new items to the board in applicable spots.')?></p>
                     </div>
                     <div class="col-4">
@@ -95,7 +95,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?=$token->output('regenerate_instance')?>
                 <div class="row mb-3">
                     <div class="ps-0 col-8 col-offset-1">
-                        <h5 class="font-weight-light"><?=t('Regenerate')?></h5>
+                        <h5 class="fw-light"><?=t('Regenerate')?></h5>
                         <p><?=t('Regenerate board instance based on current items. Completely removes and rebuilds any board contents.')?></p>
                     </div>
                     <div class="col-4">
