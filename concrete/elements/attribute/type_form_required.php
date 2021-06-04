@@ -88,7 +88,7 @@ if (is_object($key)) {
 } ?>
 
 <div class="form-group">
-<label class="control-label"><?=t('Searchable')?></label>
+<label class="control-label form-label"><?=t('Searchable')?></label>
 
 <?php
 $keyword_label = t('Content included in search index.');

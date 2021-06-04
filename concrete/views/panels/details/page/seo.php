@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php if ($allowEditName) {
             ?>
             <div class="form-group">
-                <label class="control-label" for="cName"><?=t('Name')?></label>
+                <label class="control-label form-label" for="cName"><?=t('Name')?></label>
                 <div>
                     <input type="text" class="form-control" name="cName" id="cName" value="<?php echo h($c->getCollectionName())?>">
                 </div>

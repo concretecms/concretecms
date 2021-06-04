@@ -23,7 +23,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 		<legend><?= t('Basic Details'); ?></legend>
 		
 		<div class="form-group">
-            <?= $form->label('uName', t('Username')) ?>
+            <?= $form->label('uName', t('Username'), ['class' => 'form-label']) ?>
             <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
@@ -33,7 +33,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 		</div>
 
         <div class="form-group">
-            <?= $form->label('uPassword', t('Password')) ?>
+            <?= $form->label('uPassword', t('Password'), ['class' => 'form-label']) ?>
             <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
@@ -43,7 +43,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 		</div>
 
 		<div class="form-group">
-            <?= $form->label('uEmail', t('Email Address')) ?>
+            <?= $form->label('uEmail', t('Email Address'), ['class' => 'form-label']) ?>
             <div class="float-end">
             <span class="text-muted small">
                 <?php echo t('Required') ?>
@@ -54,7 +54,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 
 		<?php if (count($locales)) { // "> 1" because en_US is always available?>
             <div class="form-group">
-                <?= $form->label('uDefaultLanguage', t('Language')) ?>
+                <?= $form->label('uDefaultLanguage', t('Language'), ['class' => 'form-label']) ?>
                 <div>
                     <?= $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
                 </div>
@@ -62,7 +62,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 		<?php } ?>
 
         <div class="form-group">
-            <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
+            <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder'), ['class' => 'form-label']); ?>
             <?php echo $fileFolderSelector->selectFileFolder('uHomeFileManagerFolderID'); ?>
         </div>
 	</fieldset>
@@ -76,7 +76,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
                 if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
                     ?>
                 <div class="form-group">
-                    <?= $form->label('', $ak->getAttributeKeyDisplayName()) ?>
+                    <?= $form->label('', $ak->getAttributeKeyDisplayName(), ['class' => 'form-label']) ?>
                     <div>
                         <?php $ak->render(new \Concrete\Core\Attribute\Context\DashboardFormContext(), null, false); ?>
                     </div>
@@ -91,7 +91,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 	<fieldset>
 		<legend><?= t('Groups'); ?></legend>
 		<div class="form-group">
-            <?= $form->label('', t('Place this user into groups')) ?>
+            <?= $form->label('', t('Place this user into groups'), ['class' => 'form-label']) ?>
             <?php
                 foreach ($gArray as $g) {
                     $gp = new Permissions($g);

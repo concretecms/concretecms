@@ -113,7 +113,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Expire Pages from the Cache') ?></label>
+            <label class="control-label form-label"><?= t('Expire Pages from the Cache') ?></label>
             <div class="form-check">
                 <?= $form->radio('FULL_PAGE_CACHE_LIFETIME', 'default', $fullPageCacheLifetime, ['id' => 'FULL_PAGE_CACHE_LIFETIME-default']) ?>
                 <label class="form-check-label" for="FULL_PAGE_CACHE_LIFETIME-default"><?= t('Every %s (default setting).', $dateService->describeInterval($defaultCacheLifetime)) ?></label>

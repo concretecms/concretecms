@@ -20,17 +20,17 @@ $token = $app->make(Token::class);
     <?php echo $token->output('send_message') ?>
 
     <div class="form-group">
-        <?php echo $form->label('subject', t('Subject')) ?>
+        <?php echo $form->label('subject', t('Subject'), ['class' => 'form-label']) ?>
         <?php echo $form->text('subject', $subject, ['class' => 'form-control']) ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('group', t('Select a Group')); ?>
+        <?php echo $form->label('group', t('Select a Group'), ['class' => 'form-label']); ?>
         <?php echo $form->select('group', $groups, $group, ['class' => 'form-control']); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('message', t('Message')) ?>
+        <?php echo $form->label('message', t('Message'), ['class' => 'form-label']) ?>
         <?php echo $form->textArea('message', $message, ['class' => 'form-control']) ?>
     </div>
 

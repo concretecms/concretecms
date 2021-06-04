@@ -61,7 +61,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="control-label" for="element"><?=t('Element')?></label>
+                        <label class="control-label form-label" for="element"><?=t('Element')?></label>
                         <select :class='{"form-control": true, "is-invalid": invalidSelectedElement}' id="element" v-model="selectedElement">
                             <option value="0">** Choose Element</option>
                             <option v-for="element in elements" :value="element.id">{{element.name}}</option>
@@ -94,11 +94,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         </div>
                     </div>
                     <div class="form-group">
-                        <?= $form->label('timezone', t('Time Zone')); ?>
+                        <?= $form->label('timezone', t('Time Zone'), ['class' => 'form-label']); ?>
                         <?= $form->select('timezone', $date->getTimezones(), ['v-model' => 'timezone'])?>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="chooseSlot"><?=t('Slot')?></label>
+                        <label class="control-label form-label" for="chooseSlot"><?=t('Slot')?></label>
                         <select class="form-control" id="chooseSlot" v-model="slot">
                             <option v-for="currentSlot in totalSlots" :value="currentSlot">{{currentSlot}}</option>
                         </select>

@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     ?>
 
     <div class="form-group">
-        <?= $form->label('trustedIPs', t('List of IP address/ranges of your proxy')) ?>
+        <?= $form->label('trustedIPs', t('List of IP address/ranges of your proxy'), ['class' => 'form-label']) ?>
         <?= $form->textarea('trustedIPs', implode("\n", $trustedIPs), ['style' => 'resize:vertical', 'rows' => '10']) ?>
         <div class="text-muted">
             <?= t('Separate IP addresses with spaces or new lines.') ?><br />
@@ -44,7 +44,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('trustedHeaders', t('List of headers that should be trusted')) ?>
+        <?= $form->label('trustedHeaders', t('List of headers that should be trusted'), ['class' => 'form-label']) ?>
         <?php
         foreach ($trustableHeaders as $trustableHeader) {
             ?>

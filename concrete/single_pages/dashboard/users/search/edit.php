@@ -166,20 +166,20 @@ if (count($languages) > 0) {
                                 <legend><?= t('Basic Information'); ?></legend>
                                 <?php if ($canEditUserName) { ?>
                                     <div class="form-group">
-                                        <?= $form->label('uName', t('Username')); ?>
+                                        <?= $form->label('uName', t('Username'), ['class' => 'form-label']); ?>
                                         <?= $form->text('uName', $user->getUserName()); ?>
                                     </div>
                                 <?php } ?>
                                 <?php if ($canEditEmail) { ?>
                                     <div class="form-group">
-                                        <?= $form->label('uEmail', t('Email')); ?>
+                                        <?= $form->label('uEmail', t('Email'), ['class' => 'form-label']); ?>
                                         <?= $form->text('uEmail', $user->getUserEmail()); ?>
                                     </div>
                                 <?php } ?>
                                 <?php if ($canEditTimezone) { ?>
                                     <?php if (Config::get('concrete.misc.user_timezones')) { ?>
                                         <div class="form-group">
-                                            <?= $form->label('uTimezone', t('Time Zone')); ?>
+                                            <?= $form->label('uTimezone', t('Time Zone'), ['class' => 'form-label']); ?>
                                             <?= $form->select('uTimezone', $dh->getTimezones(), ($user->getUserTimezone() ? $user->getUserTimezone() : date_default_timezone_get())); ?>
                                         </div>
                                     <?php } ?>
@@ -187,14 +187,14 @@ if (count($languages) > 0) {
                                 <?php if ($canEditLanguage) { ?>
                                     <?php if (is_array($locales) && count($locales)) { ?>
                                         <div class="form-group">
-                                            <?= $form->label('uDefaultLanguage', t('Language')); ?>
+                                            <?= $form->label('uDefaultLanguage', t('Language'), ['class' => 'form-label']); ?>
                                             <?= $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
                                         </div>
                                     <?php } ?>
                                 <?php } ?>
                                 <?php if ($canEditHomeFileManagerFolderID) { ?>
                                     <div class="form-group">
-                                        <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
+                                        <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder'), ['class' => 'form-label']); ?>
                                         <div id="folderSelectorDestinationContainer"></div>
                                     </div>
                                 <?php } ?>
@@ -203,14 +203,14 @@ if (count($languages) > 0) {
                                 <fieldset>
                                     <legend><?= t('Change Password'); ?></legend>
                                     <div class="form-group">
-                                        <?= $form->label('uPassword', t('New Password')); ?>
+                                        <?= $form->label('uPassword', t('New Password'), ['class' => 'form-label']); ?>
                                         <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
                                         <a href="javascript:void(0)" title="<?= t('Leave blank to keep current password.'); ?>"><i
                                                     class="icon-question-sign"></i></a>
                                     </div>
 
                                     <div class="form-group">
-                                        <?= $form->label('uPasswordConfirm', t('Confirm New Password')); ?>
+                                        <?= $form->label('uPasswordConfirm', t('Confirm New Password'), ['class' => 'form-label']); ?>
                                         <div class="controls">
                                             <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']); ?>
                                         </div>

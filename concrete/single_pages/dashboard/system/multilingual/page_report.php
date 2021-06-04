@@ -24,7 +24,7 @@ if (count($sections) > 0) {
         </div>
         <div class="ccm-search-fields-row">
             <div class="form-group">
-                <label class="control-label" for="sectionIDSelect"><?= t('Choose Source') ?></label>
+                <label class="control-label form-label" for="sectionIDSelect"><?= t('Choose Source') ?></label>
                 <div class="ccm-search-field-content">
                     <?= $form->select('sectionIDSelect', $sections, $sectionID) ?>
                 </div>
@@ -32,7 +32,7 @@ if (count($sections) > 0) {
         </div>
         <div class="ccm-search-fields-row" data-list="multilingual-targets">
             <div class="form-group">
-                <label class="control-label"><?= t('Choose Targets') ?></label>
+                <label class="control-label form-label"><?= t('Choose Targets') ?></label>
                 <div class="ccm-search-field-content">
                     <?php
                     foreach ($sectionList as $sc) {

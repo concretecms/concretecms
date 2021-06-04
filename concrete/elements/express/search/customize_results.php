@@ -36,7 +36,7 @@ if (!isset($type)) {
         if (count($coreProperties)) {
             ?>
             <div class="form-group">
-                <label class="control-label"><?= t('Standard Properties') ?></label>
+                <label class="control-label form-label"><?= t('Standard Properties') ?></label>
                 <?php
                 foreach ($coreProperties as $col) {
                     ?>
@@ -62,7 +62,7 @@ if (!isset($type)) {
         if (count($associations)) {
             ?>
             <div class="form-group">
-                <label class="control-label"><?= t('Standard Properties') ?></label>
+                <label class="control-label form-label"><?= t('Standard Properties') ?></label>
                 <?php
                 foreach ($associations as $col) {
                     ?>
@@ -88,7 +88,7 @@ if (!isset($type)) {
         if (count($list)) {
             ?>
             <div class="form-group">
-                <label class="control-label"><?= t('Custom Attributes') ?></label>
+                <label class="control-label form-label"><?= t('Custom Attributes') ?></label>
                 <?php
                 foreach ($list as $ak) {
                     ?>
@@ -138,7 +138,7 @@ if (!isset($type)) {
         <?php $ds = $current->getDefaultSortColumn(); ?>
 
         <div class="form-group">
-            <label class="control-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>
+            <label class="control-label form-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
                     class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
                     name="fSearchDefaultSort">
@@ -154,7 +154,7 @@ if (!isset($type)) {
         </div>
 
         <div class="form-group">
-            <label class="control-label" for="fSearchDefaultSortDirection"><?= t('Direction') ?></label>
+            <label class="control-label form-label" for="fSearchDefaultSortDirection"><?= t('Direction') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
                     class="form-control" data-search-select-default-column-direction="<?= $type ?>"
                     name="fSearchDefaultSortDirection">

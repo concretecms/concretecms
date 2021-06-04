@@ -30,18 +30,18 @@ use Concrete\Core\User\Group\GroupType; ?>
     <fieldset>
         <legend><?=t('Group Details')?></legend>
         <div class="form-group">
-            <?=$form->label('gName', t('Name'))?>
+            <?=$form->label('gName', t('Name'), ['class' => 'form-label'])?>
             <input type="text" class="form-control" name="gName" value="<?=h($request->post('gName'))?>" />
         </div>
         <div class="form-group">
-            <?=$form->label('gDescription', t('Description'))?>
+            <?=$form->label('gDescription', t('Description'), ['class' => 'form-label'])?>
             <div class="controls">
                 <?=$form->textarea('gDescription', ['rows' => 6, 'class' => 'span6'])?>
             </div>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gtID', t('Group Type')); ?>
+            <?php echo $form->label('gtID', t('Group Type'), ['class' => 'form-label']); ?>
             <?php echo $form->select('gtID', GroupType::getSelectList()); ?>
 
             <div class="help-block">
@@ -54,7 +54,7 @@ use Concrete\Core\User\Group\GroupType; ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gOverrideGroupTypeSettings', t('Type Settings')); ?>
+            <?php echo $form->label('gOverrideGroupTypeSettings', t('Type Settings'), ['class' => 'form-label']); ?>
             <?php echo $form->select('gOverrideGroupTypeSettings', [
                 0 => t("Inherit settings from group type"),
                 1 => t("Override settings from group type"),
@@ -69,12 +69,12 @@ use Concrete\Core\User\Group\GroupType; ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gThumbnailFID', t('Thumbnail Image')); ?>
+            <?php echo $form->label('gThumbnailFID', t('Thumbnail Image'), ['class' => 'form-label']); ?>
             <?php echo  $af->image('gThumbnailFID','gThumbnailFID', t("Please select")); ?>
         </div>
 
         <div class="form-group">
-            <label class="control-label"><?=t('Create Group Beneath')?></label>
+            <label class="control-label form-label"><?=t('Create Group Beneath')?></label>
             <div class="controls">
                 <div class="groups-tree" style="width: 460px" data-groups-tree="<?=$tree->getTreeID()?>"></div>
                 <?=$form->hidden('gParentNodeID')?>
@@ -128,7 +128,7 @@ use Concrete\Core\User\Group\GroupType; ?>
     <fieldset>
         <div id="gUserBadgeOptions" style="display: none">
             <div class="form-group">
-                <label class="control-label"><?=t('Image')?></label>
+                <label class="control-label form-label"><?=t('Image')?></label>
                 <div class="controls">
                     <?php
                     $af = $app->make('helper/concrete/asset_library');
@@ -137,13 +137,13 @@ use Concrete\Core\User\Group\GroupType; ?>
                 </div>
             </div>
             <div class="form-group">
-                <?=$form->label('gBadgeDescription', t('Badge Description'))?>
+                <?=$form->label('gBadgeDescription', t('Badge Description'), ['class' => 'form-label'])?>
                 <div class="controls">
                     <?=$form->textarea('gBadgeDescription', ['rows' => 6, 'class' => 'span6'])?>
                 </div>
             </div>
             <div class="form-group">
-                <?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
+                <?=$form->label('gBadgeCommunityPointValue', t('Community Points'), ['class' => 'form-label'])?>
                 <div class="controls">
                     <?=$form->text('gBadgeCommunityPointValue', $app->make('config')->get('concrete.user.group.badge.default_point_value'), ['class' => 'span1'])?>
                 </div>
@@ -165,21 +165,21 @@ use Concrete\Core\User\Group\GroupType; ?>
 
         <div id="gAutomationOptions" style="display: none">
             <div class="form-group">
-                <label><?=t('Check Group')?></label>
+                <label class="form-label"><?=t('Check Group')?></label>
                 <div class="checkbox">
-                    <label>
+                    <label class="form-label">
                         <?=$form->checkbox('gCheckAutomationOnRegister', 1)?>
                         <span><?=t('When a user registers.')?></span>
                     </label>
                 </div>
                 <div class="checkbox">
-                    <label>
+                    <label class="form-label">
                         <?=$form->checkbox('gCheckAutomationOnLogin', 1)?>
                         <span><?=t('When a user signs in.')?></span>
                     </label>
                 </div>
                 <div class="checkbox">
-                    <label>
+                    <label class="form-label">
                         <?=$form->checkbox('gCheckAutomationOnJobRun', 1)?>
                         <span><?=t('When the "Check Automated Groups" Job runs.')?></span>
                     </label>
@@ -194,7 +194,7 @@ use Concrete\Core\User\Group\GroupType; ?>
 
         <div class="form-group">
             <div class="checkbox">
-                <label>
+                <label class="form-label">
                     <?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
                     <?=t('Automatically remove users from this group.')?>
                 </label>
@@ -216,14 +216,14 @@ use Concrete\Core\User\Group\GroupType; ?>
 
         <div id="gUserExpirationSetTimeOptions" style="display: none">
             <div class="form-group">
-                <label for="gUserExpirationSetDateTime"><?=t('Expiration Date')?></label>
+                <label class="form-label" for="gUserExpirationSetDateTime"><?=t('Expiration Date')?></label>
                 <?=$date->datetime('gUserExpirationSetDateTime')?>
             </div>
         </div>
 
         <div id="gUserExpirationIntervalOptions" style="display: none">
             <div class="form-group">
-                <label><?=t('Accounts expire after')?></label>
+                <label class="form-label"><?=t('Accounts expire after')?></label>
                 <div class="controls">
                     <table class="table " style="width: auto">
                         <tr>
@@ -243,7 +243,7 @@ use Concrete\Core\User\Group\GroupType; ?>
 
         <div id="gUserExpirationAction" style="display: none">
             <div class="form-group">
-                <?=$form->label('gUserExpirationAction', t('Expiration Action'))?>
+                <?=$form->label('gUserExpirationAction', t('Expiration Action'), ['class' => 'form-label'])?>
                 <div class="controls">
                     <?=$form->select(
                         "gUserExpirationAction",

@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<div class="alert alert-danger"><?=$defaultsMessage?></div>
 
 			<div class="form-group">
-				<label class="control-label"><?=t('Instances on Child Pages')?></label>
+				<label class="control-label form-label"><?=t('Instances on Child Pages')?></label>
 				<div class="radio"><label><input type="radio" name="deleteAll" value="0" checked> <?=t('Delete only unforked instances on child pages.')?></label></div>
 				<div class="radio"><label><input type="radio" name="deleteAll" value="1"> <?=t('Delete even forked instances on child pages.')?></label></div>
 			</div>

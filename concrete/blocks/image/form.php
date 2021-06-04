@@ -37,7 +37,7 @@ $fileManager = $app->make(FileManager::class);
     </div>
 
     <div class="form-group">
-        <label class="control-label">
+        <label class="control-label form-label">
             <?php echo t('Image Hover') ?>
 
             <small style="color: #999999; font-weight: 200;">

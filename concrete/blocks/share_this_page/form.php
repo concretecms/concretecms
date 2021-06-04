@@ -30,7 +30,7 @@ use Concrete\Core\Sharing\ShareThisPage\Service;
             <i class="fa fa-minus-circle"></i>
         </a>
 
-        <label for="serviceList" class="control-label">
+        <label for="serviceList" class="control-label form-label">
             <?php echo t('Choose Sharing Service'); ?>
         </label>
 

@@ -27,13 +27,13 @@ $readonlyAttr = $disableForm ? ['readonly' => 'readonly'] : [];
     </div>
 
     <div class="form-group">
-        <?= $form->label('resetMessage', t('Edit message')) ?>
+        <?= $form->label('resetMessage', t('Edit message'), ['class' => 'form-label']) ?>
         <?= $form->textarea('resetMessage', $resetMessage, ['rows' => '4', 'required' => 'required'] + $readonlyAttr) ?>
         <small class="text-muted"><?= t('This message will be shown to users the next time they log in.') ?></small>
     </div>
 
     <div class="form-group">
-        <?= $form->label('confirmation', t('Confirmation')) ?>
+        <?= $form->label('confirmation', t('Confirmation'), ['class' => 'form-label']) ?>
         <?= $form->text('confirmation', '', $readonlyAttr) ?>
         <small class="text-muted"><?= t('Type "%s" in the above box to proceed.', '<strong>' . h($resetText) . '</strong>') ?></small>
     </div>

@@ -139,7 +139,7 @@
             </div>
 
             <div class="form-group" data-section="form-results-folder">
-                <label class="control-label"><?=t('Express Folder to Receive Form Results')?></label>
+                <label class="control-label form-label"><?=t('Express Folder to Receive Form Results')?></label>
                 <?php if ($tree) { ?>
                     <div data-root-tree-node-id="<?=$formResultsRootFolderNodeID; ?>" data-tree="<?=$tree->getTreeID(); ?>">
 
@@ -163,7 +163,7 @@
                 <?=$form->text('submitLabel', $submitLabel); ?>
             </div>
             <div class="form-group">
-                <label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')); ?></label>
+                <label class="control-label form-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')); ?></label>
                 <div class="form-check">
                     <?=$form->radio('displayCaptcha', 1, (int) $displayCaptcha); ?>
                     <label class="form-check-label"><?=t('Yes'); ?></label>
@@ -181,7 +181,7 @@
                 <?=$form->textarea('thankyouMsg', $thankyouMsg, ['rows' => 3]); ?>
             </div>
             <div class="form-group">
-                <label class="control-label" for="ccm-form-redirect"><?=t('Redirect to another page after form submission?'); ?></label>
+                <label class="control-label form-label" for="ccm-form-redirect"><?=t('Redirect to another page after form submission?'); ?></label>
                 <div id="ccm-form-redirect-page">
                     <?php
                     $page_selector = Loader::helper('form/page_selector');
@@ -211,7 +211,7 @@
         <fieldset>
             <legend><?=t('Files'); ?></legend>
             <div class="form-group">
-                <label class="control-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?'); ?></label>
+                <label class="control-label form-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?'); ?></label>
                     <?php
 
                     $fileSets = Concrete\Core\File\Set\Set::getMySets();
@@ -223,7 +223,7 @@
                     ?>
             </div>
             <div class="form-group">
-                <label class="control-label"><?=t('Add uploaded files to folder'); ?></label>
+                <label class="control-label form-label"><?=t('Add uploaded files to folder'); ?></label>
                 <?php
                 $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
                 echo $selector->selectFileFolder('addFilesToFolder', $addFilesToFolder);
@@ -303,7 +303,7 @@
     <% } %>
 
     <div class="form-group" data-group="control-required" style="display: none">
-        <label class="control-label"><?=t('Required'); ?></label>
+        <label class="control-label form-label"><?=t('Required'); ?></label>
         <div class="form-check">
             <input class="form-check-input" type="radio" name="required<% if (id) { %>Edit<% } %>" value="1" <% if (isRequired) { %>checked<% } %>>
             <label class="form-check-label"><?=t('Yes'); ?></label>

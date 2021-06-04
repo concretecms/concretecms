@@ -66,17 +66,17 @@ $text = $app->make(Text::class);
         </legend>
 
         <div class="form-group">
-            <?php echo $form->label("gName", t('Name')); ?>
+            <?php echo $form->label("gName", t('Name'), ['class' => 'form-label']); ?>
             <?php echo $form->text("gName", $text->entities($group->getGroupName())); ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label("gDescription", t('Description')); ?>
+            <?php echo $form->label("gDescription", t('Description'), ['class' => 'form-label']); ?>
             <?php echo $form->textarea("gDescription", $text->entities($group->getGroupDescription()), ["rows" => 6]); ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gtID', t('Group Type')); ?>
+            <?php echo $form->label('gtID', t('Group Type'), ['class' => 'form-label']); ?>
             <?php echo $form->select('gtID', GroupType::getSelectList(), $group->getGroupTypeId()); ?>
 
             <div class="help-block">
@@ -89,7 +89,7 @@ $text = $app->make(Text::class);
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gOverrideGroupTypeSettings', t('Group Type Settings')); ?>
+            <?php echo $form->label('gOverrideGroupTypeSettings', t('Group Type Settings'), ['class' => 'form-label']); ?>
             <?php echo $form->select('gOverrideGroupTypeSettings', [
                 0 => t("Inherit settings from group type"),
                 1 => t("Override settings from group type"),
@@ -104,7 +104,7 @@ $text = $app->make(Text::class);
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gThumbnailFID', t('Thumbnail Image')); ?>
+            <?php echo $form->label('gThumbnailFID', t('Thumbnail Image'), ['class' => 'form-label']); ?>
             <?php echo $af->image('gThumbnailFID', 'gThumbnailFID', t("Please select"), $group->getThumbnailImage()); ?>
         </div>
     </fieldset>
@@ -132,7 +132,7 @@ $text = $app->make(Text::class);
 
         <div id="gAutomationOptions" style="display: none">
             <div class="form-group">
-                <?php echo $form->label("", t('Check Group')); ?>
+                <?php echo $form->label("", t('Check Group'), ['class' => 'form-label']); ?>
 
                 <div class="form-check">
                     <?php echo $form->checkbox('gCheckAutomationOnRegister', 1, $group->checkGroupAutomationOnRegister()) ?>
@@ -170,14 +170,14 @@ $text = $app->make(Text::class);
 
         <div id="gUserExpirationSetTimeOptions" style="display: none">
             <div class="form-group">
-                <?php echo $form->label("gUserExpirationSetDateTime", t('Expiration Date')); ?>
+                <?php echo $form->label("gUserExpirationSetDateTime", t('Expiration Date'), ['class' => 'form-label']); ?>
                 <?php echo $date->datetime('gUserExpirationSetDateTime', $group->getGroupExpirationDateTime()) ?>
             </div>
         </div>
 
         <div id="gUserExpirationIntervalOptions" style="display: none">
             <div class="form-group">
-                <?php echo $form->label("", t('Accounts expire after')); ?>
+                <?php echo $form->label("", t('Accounts expire after'), ['class' => 'form-label']); ?>
 
                 <div>
                     <table class="table" style="width: auto">
@@ -222,7 +222,7 @@ $text = $app->make(Text::class);
 
         <div id="gUserExpirationAction" style="display: none">
             <div class="form-group">
-                <?php echo $form->label("gUserExpirationAction", t('Expiration Action')); ?>
+                <?php echo $form->label("gUserExpirationAction", t('Expiration Action'), ['class' => 'form-label']); ?>
                 <?php echo $form->select("gUserExpirationAction", [
                     'REMOVE' => t('Remove the user from this group'),
                     'DEACTIVATE' => t('Deactivate the user account'),

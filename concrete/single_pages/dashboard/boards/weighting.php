@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
                     <div class="form-row">
                         <div class="col-9">
-                            <label class="control-label"><?=$formatter->getListIconElement()?> <?=$configuredSource->getName()?></label>
+                            <label class="control-label form-label"><?=$formatter->getListIconElement()?> <?=$configuredSource->getName()?></label>
                         </div>
                         <div class="col-3">
                             <?=$form->text('weighting[' . $configuredSource->getConfiguredDataSourceID() . ']',

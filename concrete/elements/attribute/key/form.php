@@ -94,7 +94,7 @@ if ($key !== null) {
         ?>
 
         <div class="form-group">
-            <label class="control-label"><?= t('Searchable') ?></label>
+            <label class="control-label form-label"><?= t('Searchable') ?></label>
             <div class="form-check">
                 <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ['class' => 'form-check-input']) ?>
                 <label class="form-check-label" for="akIsSearchableIndexed">

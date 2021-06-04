@@ -11,7 +11,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
     ?>
 
 		<div class="form-group">
-		<?=$form->label('activeCaptcha', t('Active Captcha'))?>
+		<?=$form->label('activeCaptcha', t('Active Captcha'), ['class' => 'form-label'])?>
 		<?php
         $activeHandle = '';
     if (is_object($activeCaptcha)) {

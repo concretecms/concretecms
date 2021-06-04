@@ -228,7 +228,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 </div>
 
                 <div class="form-group">
-                    <label for="<%=options.namespace%>_pdRepeatPeriodMonthsEvery_<%=repetition.setID%>" class="control-label"><?= t('Repeat every') ?></label>
+                    <label for="<%=options.namespace%>_pdRepeatPeriodMonthsEvery_<%=repetition.setID%>" class="control-label form-label"><?= t('Repeat every') ?></label>
                     <div class="">
                         <div class="form-inline">
                             <select class="form-control" style="width: 60px" name="<%=options.namespace%>_pdRepeatPeriodMonthsEvery_<%=repetition.setID%>">
@@ -250,7 +250,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 <div data-wrapper="duration-repeat-weekly-dow" style="display: none">
 
                     <div class="form-group">
-                        <label class="control-label"><?= tc('Date', 'On') ?></label>
+                        <label class="control-label form-label"><?= tc('Date', 'On') ?></label>
                         <div class="">
                             <?php foreach ($weekDays as $weekDay) { ?>
                                 <div class="checkbox">
@@ -265,7 +265,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                 </div>
 
                 <div class="form-group">
-                    <label for="<%=options.namespace%>_pdRepeatPeriodWeeksEvery_<%=repetition.setID%>" class="control-label"><?= t('Repeat every') ?></label>
+                    <label for="<%=options.namespace%>_pdRepeatPeriodWeeksEvery_<%=repetition.setID%>" class="control-label form-label"><?= t('Repeat every') ?></label>
                     <div class="">
                         <div class="form-inline">
                             <select class="form-control" style="width: 60px" name="<%=options.namespace%>_pdRepeatPeriodWeeksEvery_<%=repetition.setID%>">
@@ -283,14 +283,14 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
 
 
                 <div class="form-group">
-                    <label class="control-label"><?= t('Starts On') ?></label>
+                    <label class="control-label form-label"><?= t('Starts On') ?></label>
                     <div class="">
                         <input type="text" class="form-control" disabled="disabled" value="" name="<%=options.namespace%>_pdStartRepeatDate_<%=repetition.setID%>"/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="pdEndRepeatDate" class="control-label"><?= t('Ends') ?></label>
+                    <label for="pdEndRepeatDate" class="control-label form-label"><?= t('Ends') ?></label>
                     <div class="">
                         <div class="radio">
                             <label>

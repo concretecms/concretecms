@@ -193,7 +193,7 @@ echo $userInterface->tabs([
 
         <fieldset>
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Filter by Public Date') ?>
                 </label>
 
@@ -220,7 +220,7 @@ echo $userInterface->tabs([
 
                 <div class="filterDateOptionDetail" data-filterDateOption="past">
                     <div class="form-group">
-                        <label class="control-label">
+                        <label class="control-label form-label">
                             <?php echo t('Days in the Past') ?>
                             <i class="launch-tooltip fa fa-question-circle"
                                title="<?php echo t('Leave 0 to show all past dated pages') ?>"></i>
@@ -232,7 +232,7 @@ echo $userInterface->tabs([
 
                 <div class="filterDateOptionDetail" data-filterDateOption="future">
                     <div class="form-group">
-                        <label class="control-label">
+                        <label class="control-label form-label">
                             <?php echo t('Days in the Future') ?>
                             <i class="launch-tooltip fa fa-question-circle"
                                title="<?php echo t('Leave 0 to show all future dated pages') ?>"></i>
@@ -381,7 +381,7 @@ echo $userInterface->tabs([
             </legend>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Provide RSS Feed') ?>
                 </label>
 
@@ -425,7 +425,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Include Page Name') ?>
                 </label>
 
@@ -441,7 +441,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Include Page Description') ?>
                 </label>
 
@@ -456,7 +456,7 @@ echo $userInterface->tabs([
                 </div>
 
                 <div class="ccm-page-list-truncate-description" <?php echo($includeDescription ? '' : 'style="display:none;"') ?>>
-                    <label class="control-label">
+                    <label class="control-label form-label">
                         <?php echo t('Display Truncated Description') ?>
                     </label>
 
@@ -503,7 +503,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Display Thumbnail Image') ?>
                 </label>
 
@@ -525,7 +525,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Use Different Link than Page Name') ?>
                 </label>
 

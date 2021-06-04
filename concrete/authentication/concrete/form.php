@@ -47,7 +47,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
     <?php if (isset($locales) && is_array($locales) && count($locales) > 0) {
         ?>
         <div class="form-group">
-            <label for="USER_LOCALE" class="control-label"><?= t('Language'); ?></label>
+            <label for="USER_LOCALE" class="control-label form-label"><?= t('Language'); ?></label>
             <?= $form->select('USER_LOCALE', $locales); ?>
         </div>
     <?php

@@ -31,7 +31,7 @@ $consentType = $client->getConsentType();
         </div>
 
         <div class="form-group">
-            <label class="control-label"><?=t('User Consent Level')?></label>
+            <label class="control-label form-label"><?=t('User Consent Level')?></label>
             <div class="form-check">
                 <input id="consent-type-standard" class="form-check-input" type="radio" name="consentType" value="<?= Client::CONSENT_SIMPLE ?>" <?= $consentType === Client::CONSENT_SIMPLE ? 'checked' : '' ?> />
                 <label for="consent-type-standard" class="form-check-label"><?= t('Standard') ?></label>

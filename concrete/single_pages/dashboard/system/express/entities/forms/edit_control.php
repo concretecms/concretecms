@@ -30,13 +30,13 @@ $token = $app->make(Token::class);
     ?>
 
     <div class="form-group">
-        <?php echo $form->label('customLabel', t('Custom Label')) ?>
+        <?php echo $form->label('customLabel', t('Custom Label'), ['class' => 'form-label']) ?>
         <?php echo $form->text('customLabel', $control->getCustomLabel()) ?>
     </div>
 
     <?php if (is_object($type->getValidator())) { ?>
         <div class="form-group">
-            <?php echo $form->label('', t('Required')) ?>
+            <?php echo $form->label('', t('Required'), ['class' => 'form-label']) ?>
 
             <div class="form-check">
                 <?php echo $form->checkbox('isRequired', 1, $control->isRequired()) ?>

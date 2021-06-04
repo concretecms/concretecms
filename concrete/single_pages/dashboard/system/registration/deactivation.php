@@ -21,20 +21,20 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('update') ?>
 
     <div class="form-group">
-        <?= $form->label('inactiveMessage', t('Inactive User Error Message')) ?>
+        <?= $form->label('inactiveMessage', t('Inactive User Error Message'), ['class' => 'form-label']) ?>
         <?= $form->textarea('inactiveMessage', $inactiveMessage, ['rows' => 4, 'cols' => 10]) ?>
         <small class="text-muted"><?= t('This message will be shown to inactive users when they attempt to login.') ?></small>
     </div>
 
     <div class="form-group">
-        <?= $form->label('', t('Automatic User Deactivation')) ?>
+        <?= $form->label('', t('Automatic User Deactivation'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->checkbox('enableAutomaticUserDeactivation', '1', $enableAutomaticUserDeactivation) ?>
             <label class="form-check-label" for="enableAutomaticUserDeactivation"><?= t('Automatically deactivate users when they have not logged in for awhile. Users will need to be manually reactivated.') ?></label>
         </div>
         <div class="card card-body bg-light pb-0" data-group="user-deactivation-days">
             <div class="form-group">
-                <?= $form->label('userDeactivationDays', t('Threshold')) ?>
+                <?= $form->label('userDeactivationDays', t('Threshold'), ['class' => 'form-label']) ?>
                 <div class="form-inline">
                     <?= t(
                         'Deactivate users when they have not logged in for %s days',
@@ -52,7 +52,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
         <div class="card card-body bg-light pb-0" data-group="user-deactivation-logins">
             <div class="form-group">
-                <?= $form->label('userLoginAmount', t('Threshold')) ?>
+                <?= $form->label('userLoginAmount', t('Threshold'), ['class' => 'form-label']) ?>
                 <div class="form-inline">
                     <?= t(
                         'Deactivate users once they have failed %s login(s) within %s seconds',

@@ -19,12 +19,12 @@
 </style>
 <div class="ccm-ui survey-block-edit">
     <div class="form-group">
-        <label for="questionEntry" class="control-label"><?= t('Question') ?></label>
+        <label for="questionEntry" class="control-label form-label"><?= t('Question') ?></label>
         <input type="text" name="question" value="<?= $controller->getQuestion() ?>"
                class="form-control"/>
     </div>
     <div class="form-group">
-        <label for="requiresRegistration" class="control-label"><?= t('Target Audience') ?></label>
+        <label for="requiresRegistration" class="control-label form-label"><?= t('Target Audience') ?></label>
 
         <div class="radio">
             <label>
@@ -49,7 +49,7 @@
     </div>
 
     <div class="form-group">
-        <label for="showResults" class="control-label"><?= t('Survey Results') ?></label>
+        <label for="showResults" class="control-label form-label"><?= t('Survey Results') ?></label>
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="showResults" class="show-custom-message" value="1" <?= $controller->getShowResults() ? 'checked' : null ?> />
@@ -58,13 +58,13 @@
         </div>
     </div>
     <div class="form-group custom-message-container" style="display: none;">
-        <label for="customMessage" class="control-label"><?= t('Custom Message') ?></label>
+        <label for="customMessage" class="control-label form-label"><?= t('Custom Message') ?></label>
         <input type="text" name="customMessage" value="<?= $controller->getCustomMessage() ?>"
                class="form-control" placeholder="Thank you for filling out this form!"/>
     </div>
 
     <div class="form-group">
-        <label class="control-label"><?= t('Survey Options') ?></label>
+        <label class="control-label form-label"><?= t('Survey Options') ?></label>
 
         <div class="poll-options">
             <?php
@@ -95,7 +95,7 @@
     </div>
 
     <div class="form-group">
-        <label for="optionEntry" class="control-label"><?= t('Add Option') ?></label>
+        <label for="optionEntry" class="control-label form-label"><?= t('Add Option') ?></label>
 
         <div class="input-group">
             <input type="text" name="optionValue" class="option-value form-control"/>

@@ -64,7 +64,7 @@
             <?php echo $form->text('validateRegistrationName', $validateRegistrationName); ?>
         </div>
         <div class="form-group">
-            <?php echo $form->label('validateRegistrationAddress', t('Email Address')); ?>
+            <?php echo $form->label('validateRegistrationAddress', t('Email Address'), ['class' => 'form-label']); ?>
             <?php echo $form->email('validateRegistrationAddress', $validateRegistrationAddress); ?>
         </div>
     </fieldset>
@@ -72,11 +72,11 @@
     <fieldset>
         <legend><?php echo t('Workflow Notification'); ?></legend>
         <div class="form-group">
-            <?php echo $form->label('workflowNotificationName', t('Email From Name')); ?>
+            <?php echo $form->label('workflowNotificationName', t('Email From Name'), ['class' => 'form-label']); ?>
             <?php echo $form->text('workflowNotificationName', $workflowNotificationName); ?>
         </div>
         <div class="form-group">
-            <?php echo $form->label('workflowNotificationAddress', t('Email Address')); ?>
+            <?php echo $form->label('workflowNotificationAddress', t('Email Address'), ['class' => 'form-label']); ?>
             <?php echo $form->email('workflowNotificationAddress', $workflowNotificationAddress); ?>
         </div>
     </fieldset>

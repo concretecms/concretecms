@@ -23,19 +23,19 @@ if ($typeMenu !== null) {
     }
     ?>
     <div class="form-group">
-        <?= $form->label('handle', t('Handle')) ?>
+        <?= $form->label('handle', t('Handle'), ['class' => 'form-label']) ?>
         <?= $form->text('handle', $type->getSiteTypeHandle(), ['required' => 'required']) ?>
     </div>
     <div class="form-group">
-        <?= $form->label('name', t('Name')) ?>
+        <?= $form->label('name', t('Name'), ['class' => 'form-label']) ?>
         <?= $form->text('name', $type->getSiteTypeName(), ['required' => 'required']) ?>
     </div>
     <div class="form-group">
-        <?= $form->label('theme', t('Theme')) ?>
+        <?= $form->label('theme', t('Theme'), ['class' => 'form-label']) ?>
         <?= $form->select('theme', $themes, $type->getSiteTypeThemeID() ?: '', ['required' => 'required']) ?>
     </div>
     <div class="form-group">
-        <?= $form->label('template', t('Template for Home Page')) ?>
+        <?= $form->label('template', t('Template for Home Page'), ['class' => 'form-label']) ?>
         <?= $form->select('template', $templates, $type->getSiteTypeHomePageTemplateID() ?: '', ['required' => 'required']) ?>
     </div>
 

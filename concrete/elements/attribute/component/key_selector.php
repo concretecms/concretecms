@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <a class="float-end ccm-hover-icon" href="#" @click.prevent="removeAttribute(attribute.akID)">
                 <i class="fa fa-minus-circle"></i>
             </a>
-            <label class="control-label" :for="attribute.controlID">{{attribute.label}}</label>
+            <label class="control-label form-label" :for="attribute.controlID">{{attribute.label}}</label>
             <div v-if="isBulkMode && attribute.hasMultipleValues" class="ccm-attribute-key-multiple-values card card-body p-2">
                 <a :href="'#ccm-attribute-key-mv-body-' + attribute.akID" data-bs-toggle="collapse"
                    class="d-block text-decoration-none link-primary" role="button"

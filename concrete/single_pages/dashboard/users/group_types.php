@@ -29,7 +29,7 @@ $token = $app->make(Token::class);
             </legend>
 
             <div class="form-group">
-                <?php echo $form->label('gtName', t('Name')); ?>
+                <?php echo $form->label('gtName', t('Name'), ['class' => 'form-label']); ?>
                 <?php echo $form->text('gtName'); ?>
             </div>
 
@@ -86,7 +86,7 @@ $token = $app->make(Token::class);
             </legend>
 
             <div class="form-group">
-                <?php echo $form->label('gtName', t('Name')); ?>
+                <?php echo $form->label('gtName', t('Name'), ['class' => 'form-label']); ?>
                 <?php echo $form->text('gtName', $groupType->getName()); ?>
             </div>
 

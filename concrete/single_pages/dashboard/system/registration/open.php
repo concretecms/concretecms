@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('update_registration_type') ?>
 
     <div class="form-group">
-        <?= $form->label('registration_type', t('Allow visitors to signup as site members?')) ?>
+        <?= $form->label('registration_type', t('Allow visitors to signup as site members?'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->radio('registration_type', 'disabled', $registrationType, ['id' => 'registration_type_disabled']) ?>
             <label class="form-check-label" for="registration_type_disabled"><?= t('Off - only admins can create accounts from Dashboard') ?></label>
@@ -39,7 +39,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('', t('Notification')) ?>
+        <?= $form->label('', t('Notification'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->checkbox('register_notification', '1', $registerNotification, $registrationType === 'disabled' ? ['disabled' => 'disabled'] : []) ?>
             <label class="form-check-label" for="register_notification"><?= t('Send admin an email when new user registers.') ?></label>
@@ -52,7 +52,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('', t('Login form')) ?>
+        <?= $form->label('', t('Login form'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->radio('email_as_username', '0', $emailAsUsername ? '1' : '0', ['id' => 'email_as_username_0']) ?>
             <label class="form-check-label" for="email_as_username_0"><?= t('Ask for username & password') ?></label>
@@ -63,7 +63,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
     </div>
     <div class="form-group">
-        <?= $form->label('display_username_field', t('Registration form')) ?>
+        <?= $form->label('display_username_field', t('Registration form'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->checkbox('display_username_field', '1', $displayUsernameField) ?>
             <label class="form-check-label" for="display_username_field"><?= t('Username required') ?></label>

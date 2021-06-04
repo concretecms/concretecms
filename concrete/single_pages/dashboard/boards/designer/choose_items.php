@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             <div v-if="item.itemType === 'page'">
                 <div class="form-group">
-                    <label class="control-label"><?=t('Page')?></label>
+                    <label class="control-label form-label"><?=t('Page')?></label>
                     <concrete-page-input
                             choose-text="<?=t('Choose Page')?>"
                             input-name="field[page][]"
@@ -36,7 +36,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             <div v-if="item.itemType === 'calendar_event'">
                 <div class="form-group">
-                    <label class="control-label"><?=t('Choose Calendar')?></label>
+                    <label class="control-label form-label"><?=t('Choose Calendar')?></label>
                     <select v-model.number="items[index].data.calendarId" class="form-control">
                         <?php foreach($calendarSelect as $id => $calendar) { ?>
                             <option value="<?=$id?>"><?=$calendar?></option>
@@ -44,7 +44,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     </select>
                 </div>
                 <div class="form-group" v-if="items[index].data.calendarId > 0">
-                    <label class="control-label"><?=t('Event')?></label>
+                    <label class="control-label form-label"><?=t('Event')?></label>
                     <concrete-event-occurrence-input
                             :calendar-id="items[index].data.calendarId"
                             choose-text="<?=t('Choose Event')?>"

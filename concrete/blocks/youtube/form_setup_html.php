@@ -52,7 +52,7 @@ echo $ui->tabs([
         </div>
 
         <div class="form-group">
-            <label class="control-label">
+            <label class="control-label form-label">
                 <?php echo t('Size'); ?>
             </label>
 

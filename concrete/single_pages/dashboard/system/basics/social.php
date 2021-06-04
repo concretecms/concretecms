@@ -62,14 +62,14 @@
         <?=$this->controller->token->output($tokenString); ?>
 
         <div class="form-group">
-            <?=$form->label('ssHandle', t('Service'), ['class' => 'col-md-2']); ?>
+            <?=$form->label('ssHandle', t('Service'), ['class' => 'col-md-2 form-label']); ?>
             <div class="col-md-5">
             <?=$form->select('ssHandle', $services, $ssHandle); ?>
             </div>
         </div>
 
         <div class="form-group">
-            <?=$form->label('url', t('URL'), ['class' => 'col-md-2']); ?>
+            <?=$form->label('url', t('URL'), ['class' => 'col-md-2 form-label']); ?>
             <div class="col-md-5">
                 <?=$form->text('url', $url); ?>
             </div>

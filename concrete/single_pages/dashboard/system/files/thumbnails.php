@@ -40,33 +40,33 @@ if (isset($type)) {
             </div>
         </div>
         <div class="form-group">
-            <?= $form->label('ftTypeName', t('Name')) ?>
+            <?= $form->label('ftTypeName', t('Name'), ['class' => 'form-label']) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeName', $type->getName(), ['required' => 'required', 'maxlength' => '255']) ?>
                 <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
-            <?= $form->label('ftTypeWidth', t('Width')) ?>
+            <?= $form->label('ftTypeWidth', t('Width'), ['class' => 'form-label']) ?>
             <div class="input-group">
                 <?= $form->number('ftTypeWidth', $type->getWidth() ?: '', ['min' => '1']) ?>
                 <span class="input-group-text"><?= t('px') ?></span>
             </div>
         </div>
         <div class="form-group">
-            <?= $form->label('ftTypeHeight', t('Height')) ?>
+            <?= $form->label('ftTypeHeight', t('Height'), ['class' => 'form-label']) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeHeight', $type->getHeight() ?: '', ['min' => '1']) ?>
                 <span class="input-group-text"><?= t('px') ?></span>
             </div>
         </div>
         <div class="form-group">
-            <?= $form->label('ftTypeSizingMode', t('Sizing Mode')) ?>
+            <?= $form->label('ftTypeSizingMode', t('Sizing Mode'), ['class' => 'form-label']) ?>
             <?= $form->select('ftTypeSizingMode', $sizingModes, $type->getSizingMode()) ?>
             <p class="help-block" id="sizingmode-help"><span><?= $sizingModeHelps[$type->getSizingMode()] ?></span></p>
         </div>
         <div class="form-group">
-            <?= $form->label('', t('Options')) ?>
+            <?= $form->label('', t('Options'), ['class' => 'form-label']) ?>
             <div class="form-check">
                 <?= $form->checkbox('ftUpscalingEnabled', '1', $type->isUpscalingEnabled()) ?>
                 <label for="ftUpscalingEnabled" class="form-check-label">
@@ -118,7 +118,7 @@ if (isset($type)) {
         </div>
 
         <div class="form-group">
-            <?= $form->label('ftSaveAreaBackgroundColor', t('Image Editor Background Color')); ?>
+            <?= $form->label('ftSaveAreaBackgroundColor', t('Image Editor Background Color'), ['class' => 'form-label']); ?>
             <div>
                 <?= $form_color->output('ftSaveAreaBackgroundColor', $type->getSaveAreaBackgroundColor(), ['preferredFormat' => 'hex']); ?>
             </div>
@@ -143,11 +143,11 @@ if (isset($type)) {
             }
             ?>
             <div class="form-group">
-                <?= $form->label('fileSetOption', t('Conditional Thumbnails')) ?>
+                <?= $form->label('fileSetOption', t('Conditional Thumbnails'), ['class' => 'form-label']) ?>
                 <?= $form->select('fileSetOption', $fileSetOptions, $fileSetOption, ['required' => 'required']) ?>
             </div>
             <div>
-                <?= $form->label('fileSets', 'File Sets') ?>
+                <?= $form->label('fileSets', 'File Sets', ['class' => 'form-label']) ?>
                 <div class="ccm-search-field-content">
                     <?= $form->selectMultiple('fileSets', $fileSets, $selectedFileSets, $fileSetAttributes) ?>
                 </div>

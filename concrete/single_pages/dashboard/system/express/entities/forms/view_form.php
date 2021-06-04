@@ -76,7 +76,7 @@ $token = $app->make(Token::class);
             <?php echo $token->output('add_set') ?>
 
             <div class="form-group">
-                <?php echo $form->label('name', tc('Name of a set', 'Set Name')) ?>
+                <?php echo $form->label('name', tc('Name of a set', 'Set Name'), ['class' => 'form-label']) ?>
                 <?php echo $form->text('name') ?>
             </div>
         </form>
@@ -129,7 +129,7 @@ $token = $app->make(Token::class);
                     <?php echo $form->hidden("field_set_id", $set->getID()); ?>
 
                     <div class="form-group">
-                        <?php echo $form->label('name', tc('Name of a set', 'Set Name')) ?>
+                        <?php echo $form->label('name', tc('Name of a set', 'Set Name'), ['class' => 'form-label']) ?>
                         <?php echo $form->text('name', $set->getTitle()) ?>
                     </div>
                 </form>

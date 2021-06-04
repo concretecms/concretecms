@@ -50,7 +50,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             }
             ?>
             <div class="form-group">
-                <label class="control-label"><?=t("Swap Site Contents")?></label>
+                <label class="control-label form-label"><?=t("Swap Site Contents")?></label>
                 <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></label></div>
                 <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <?=t('Yes. Reset site content with the content found in this package')?></label></div>
             </div>
@@ -58,7 +58,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <?php echo $form->hidden("contentSwapFile", array_pop(array_keys($pkg->getContentSwapFiles()))) ?>
             <?php } else {?>
                 <div class="form-group">
-                    <?php echo $form->label("contentSwapFile", t("Starting Point")); ?>
+                    <?php echo $form->label("contentSwapFile", t("Starting Point"), ['class' => 'form-label']); ?>
                     <?php echo $form->select("contentSwapFile", $pkg->getContentSwapFiles()); ?>
                 </div>
             <?php } ?>
@@ -97,7 +97,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <?=t('This will remove all elements associated with the %s package. While you can reinstall the package, this may result in data loss.', t($pkg->getPackageName())) ?>
             </div>
             <div class="form-group">
-                <label class="control-label"><?= t('Move package to trash directory on server?'); ?></label>
+                <label class="control-label form-label"><?= t('Move package to trash directory on server?'); ?></label>
                 <div class="checkbox">
                     <label><?= $app->make('helper/form')->checkbox('pkgMoveToTrash', 1); ?>
                     <span><?= t('Yes, remove the package\'s directory from the installation directory.'); ?></span></label>

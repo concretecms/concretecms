@@ -90,7 +90,7 @@ foreach ($locales as $locale) {
                     <?= $form->select('msCountryChange' . $locale->getLocaleID(), array_merge(['' => t('** None Selected')], $countries), $locale->getCountry()) ?>
                 </div>
                 <div class="form-group">
-                    <label class="control-label"><?= t('Icon') ?></label>
+                    <label class="control-label form-label"><?= t('Icon') ?></label>
                     <div id="ccm-multilingual-language-icon-change<?= $locale->getLocaleID() ?>"><?= t('None') ?></div>
                 </div>
                 <div class="dialog-buttons">
@@ -115,7 +115,7 @@ foreach ($locales as $locale) {
 <h3><?= t('Settings') ?></h3>
 <form method="post" action="<?= $this->action('set_default') ?>">
     <div class="form-group">
-        <label class="control-label"><?= t('Default Locale') ?></label>
+        <label class="control-label form-label"><?= t('Default Locale') ?></label>
         <?= $form->select('defaultLocale', $defaultLocales, $defaultLocaleID, ['required' => 'required']) ?>
     </div>
     <div class="form-group">
@@ -151,7 +151,7 @@ foreach ($locales as $locale) {
         });
     </script>
     <div class="form-group">
-        <label class="control-label"><?= t('Site interface source locale') ?></label>
+        <label class="control-label form-label"><?= t('Site interface source locale') ?></label>
         <div class="form-inline">
             <?= $form->select('defaultSourceLanguage', array_merge(['' => t('*** Unknown or mixed language')], $languages), $defaultSourceLanguage, ['class' => 'me-2']) ?>
             <?= $form->select('defaultSourceCountry', array_merge(['' => t('*** Undetermined country')], $countries), $defaultSourceCountry) ?>
@@ -180,7 +180,7 @@ foreach ($locales as $locale) {
                     <?= $form->select('msCountry', array_merge(['' => t('** None Selected')], $countries)) ?>
                 </div>
                 <div class="form-group">
-                    <label class="control-label"><?= t('Icon') ?></label>
+                    <label class="control-label form-label"><?= t('Icon') ?></label>
                     <div id="ccm-multilingual-language-icon"><?= t('None') ?></div>
                 </div>
             </fieldset>

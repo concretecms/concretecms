@@ -21,7 +21,7 @@ $siteMenu->render();
             <?php $token->output('add_domain') ?>
             <input type="hidden" name="id" value="<?= $site->getSiteID() ?>" />
             <div class="form-group">
-                <?= $form->label('domain', t('Domain')) ?>
+                <?= $form->label('domain', t('Domain'), ['class' => 'form-label']) ?>
                 <?= $form->text('domain', '', ['required' => 'required']) ?>
             </div>
             <div class="dialog-buttons">
@@ -33,12 +33,12 @@ $siteMenu->render();
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Canonical Domain'), ['class' => 'launch-tooltip', 'title' => t('This domain is automatically constructred from the site\'s canonical URL.')]) ?>
+    <?= $form->label('', t('Canonical Domain'), ['class' => 'launch-tooltip form-label', 'title' => t('This domain is automatically constructred from the site\'s canonical URL.')]) ?>
     <div><?= h($canonicalDomain) ?></div>
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Additional Domains')) ?>
+    <?= $form->label('', t('Additional Domains'), ['class' => 'form-label']) ?>
     <?php
     if ($domains === []) {
         ?>

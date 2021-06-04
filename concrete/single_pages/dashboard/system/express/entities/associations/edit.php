@@ -27,17 +27,17 @@ $token = $app->make(Token::class);
     <?php echo $token->output() ?>
 
     <div class="form-group">
-        <?php echo $form->label('target_property_name', t('Target Property Name')) ?>
+        <?php echo $form->label('target_property_name', t('Target Property Name'), ['class' => 'form-label']) ?>
         <?php echo $form->text('target_property_name', $association->getTargetPropertyName()) ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('inversed_property_name', t('Inversed Property Name')) ?>
+        <?php echo $form->label('inversed_property_name', t('Inversed Property Name'), ['class' => 'form-label']) ?>
         <?php echo $form->text('inversed_property_name', $association->getInversedByPropertyName()) ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('', t('Owning Association')) ?>
+        <?php echo $form->label('', t('Owning Association'), ['class' => 'form-label']) ?>
 
         <div class="form-check">
             <?php echo $form->radio('is_owning_association', 1, $association->isOwningAssociation(), ["name" => "is_owning_association", "id" => "is_owning_association_yes"]) ?>
@@ -51,7 +51,7 @@ $token = $app->make(Token::class);
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('', t('Owned By Association')) ?>
+        <?php echo $form->label('', t('Owned By Association'), ['class' => 'form-label']) ?>
 
         <div class="form-check">
             <?php echo $form->radio('is_owned_by_association', 1, $association->isOwnedByAssociation(), ["name" => "is_owned_by_association", "id" => "is_owned_by_association_yes"]) ?>

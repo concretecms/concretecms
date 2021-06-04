@@ -29,7 +29,7 @@ $buttonText = t("Add");
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label"><?=t('Sort By')?></label>
+                    <label class="control-label form-label"><?=t('Sort By')?></label>
 
                     <div class="form-check">
                         <?=$form->radio('sortBy', 'relevant_date_asc', $sortBy)?>
@@ -49,7 +49,7 @@ $buttonText = t("Add");
 
                 <?php if ($multisite) { ?>
                     <div class="form-group">
-                        <label class="control-label"><?=t('Site')?></label>
+                        <label class="control-label form-label"><?=t('Site')?></label>
 
                         <div class="form-check">
                             <?=$form->radio('sharedBoard', 0, $isSharedBoard)?>

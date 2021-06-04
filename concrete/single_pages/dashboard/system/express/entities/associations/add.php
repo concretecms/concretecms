@@ -24,19 +24,19 @@ $token = $app->make(Token::class);
 
     <fieldset>
         <div class="form-group">
-            <?php echo $form->label('', t('Source Object')) ?>
+            <?php echo $form->label('', t('Source Object'), ['class' => 'form-label']) ?>
             <p>
                 <?php echo $entity->getEntityDisplayName() ?>
             </p>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('type', t('Type')) ?>
+            <?php echo $form->label('type', t('Type'), ['class' => 'form-label']) ?>
             <?php echo $form->select('type', $types) ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('target_entity', t('Target Object')) ?>
+            <?php echo $form->label('target_entity', t('Target Object'), ['class' => 'form-label']) ?>
 
             <!--suppress HtmlFormInputWithoutLabel -->
             <select name="target_entity" class="form-control">
@@ -51,7 +51,7 @@ $token = $app->make(Token::class);
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('overrideTarget', t('Target Property Name')) ?>
+            <?php echo $form->label('overrideTarget', t('Target Property Name'), ['class' => 'form-label']) ?>
 
             <div class="input-group">
                 <?php echo $form->checkbox('overrideTarget', 1, false, ['data-toggle' => 'association-property']) ?>
@@ -62,7 +62,7 @@ $token = $app->make(Token::class);
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('overrideInverse', t('Inversed Property Name')) ?>
+            <?php echo $form->label('overrideInverse', t('Inversed Property Name'), ['class' => 'form-label']) ?>
 
             <div class="input-group">
                 <?php echo $form->checkbox('overrideInverse', 1, false, ['data-toggle' => 'association-property']) ?>

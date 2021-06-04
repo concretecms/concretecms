@@ -41,7 +41,7 @@ $dh = $app->make(Date::class);
         <?php echo $validation_token->output('file_sets_edit'); ?>
 
         <div class="form-group">
-            <?php echo $form->label('file_set_name', t('Name')) ?>
+            <?php echo $form->label('file_set_name', t('Name'), ['class' => 'form-label']) ?>
             <?php echo $form->text('file_set_name', $fs->fsName, ['class' => 'span5']); ?>
         </div>
 

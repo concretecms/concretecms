@@ -11,7 +11,7 @@ $topic_id = Request::getInstance()->get('topic_id');
 ?>
 
 <form method="get" action="<?= $view->action('search') ?>">
-    <label class="control-label" for="query"><?= t('Search') ?></label>
+    <label class="control-label form-label" for="query"><?= t('Search') ?></label>
     <div class="input-group">
         <?= $form->text('query', array('placeholder' => t('Keywords'))) ?>
         <?php if (isset($topics) && is_array($topics)) { ?>

@@ -42,7 +42,7 @@ $pageSelector = $app->make(PageSelector::class);
 	</div>
 
     <div class="form-group">
-        <label class="control-label">
+        <label class="control-label form-label">
             <?php echo t('Display a List of Tags From') ?>
         </label>
 
@@ -65,7 +65,7 @@ $pageSelector = $app->make(PageSelector::class);
 
     <?php if (!$inStackDashboardPage) { ?>
         <div id="ccm-tags-display-page" class="form-group">
-            <label class="control-label">
+            <label class="control-label form-label">
                 <?php echo $ak->getAttributeKeyDisplayName(); ?>
             </label>
 

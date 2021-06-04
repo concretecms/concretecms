@@ -4,12 +4,12 @@
     <?=$token->output('save')?>
 
     <div class="form-group">
-        <label class="control-label" for="topicAttribute"><?=t('Calendar Topics Attribute')?></label>
+        <label class="control-label form-label" for="topicAttribute"><?=t('Calendar Topics Attribute')?></label>
         <?=$form->select('topicAttribute', $topicAttributes, $topicAttribute)?>
     </div>
 
     <div class="form-group">
-        <label class="control-label" for="topicAttribute"><?=t('Calendar Summary Thumbnail Attribute')?></label>
+        <label class="control-label form-label" for="topicAttribute"><?=t('Calendar Summary Thumbnail Attribute')?></label>
         <?=$form->select('summaryThumbnailAttribute', $summaryThumbnailAttributes, $summaryThumbnailAttribute)?>
     </div>
 

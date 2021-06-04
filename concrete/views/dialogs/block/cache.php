@@ -42,7 +42,7 @@ $responseObject = $permissionChecker->getResponseObject();
                 </legend>
 
                 <div class="form-group">
-                    <label class="control-label" for="bName">
+                    <label class="control-label form-label" for="bName">
                         <?php echo t('Block Name') ?>
 
                         <i class="fa fa-question-circle launch-tooltip"

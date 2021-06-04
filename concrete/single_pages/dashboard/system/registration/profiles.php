@@ -20,7 +20,7 @@
     <?php $token->output('update_profile') ?>
 
     <div class="form-group">
-        <?= $form->label('public_profiles', t('Profile Options')) ?>
+        <?= $form->label('public_profiles', t('Profile Options'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->checkbox('public_profiles', '1', $publicProfiles) ?>
             <label class="form-check-label" for="public_profiles"><?= t('Enable public profiles.') ?></label>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="form-group">
-        <?= $form->label('display_account_menu', t('Account Menu')) ?>
+        <?= $form->label('display_account_menu', t('Account Menu'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->checkbox('display_account_menu', '1', $displayAccountMenu) ?>
             <label class="form-check-label" for="display_account_menu">
@@ -39,7 +39,7 @@
     </div>
 
     <div class="form-group">
-        <?= $form->label('gravatar_fallback', t('Fall Back To Gravatar')) ?>
+        <?= $form->label('gravatar_fallback', t('Fall Back To Gravatar'), ['class' => 'form-label']) ?>
         <div class="form-check">
             <?= $form->checkbox('gravatar_fallback', 1, $gravatarFallback) ?>
             <label class="form-check-label" for="gravatar_fallback"><?= t('Use image from <a href="https://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one.') ?></label>
@@ -47,12 +47,12 @@
     </div>
 
     <div class="form-group gravatar-options">
-        <?= $form->label('gravatar_max_level', t('Maximum Gravatar Rating')) ?>
+        <?= $form->label('gravatar_max_level', t('Maximum Gravatar Rating'), ['class' => 'form-label']) ?>
         <?= $form->select('gravatar_max_level', $gravatarMaxLevels, $gravatarMaxLevel) ?>
     </div>
 
     <div class="form-group gravatar-options">
-    	<?= $form->label('gravatarImageSet', t('Gravatar Image Set')) ?>
+    	<?= $form->label('gravatarImageSet', t('Gravatar Image Set'), ['class' => 'form-label']) ?>
         <?= $form->select('gravatar_image_set', $gravatarImageSets, $gravatarImageSet) ?>
     </div>
 

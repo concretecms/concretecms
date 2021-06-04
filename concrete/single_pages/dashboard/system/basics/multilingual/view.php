@@ -18,13 +18,13 @@ if (empty($interfacelocales)) {
     <form method="post" action="<?= $view->action('save_interface_language') ?>">
         <fieldset>
             <div class="form-group">
-                <?= $form->label('LANGUAGE_CHOOSE_ON_LOGIN', t('Login')) ?>
+                <?= $form->label('LANGUAGE_CHOOSE_ON_LOGIN', t('Login'), ['class' => 'form-label']) ?>
                 <div class="form-check">
                     <label><?= $form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN) ?>&nbsp;<?= t('Offer choice of language on login.') ?></label>
                 </div>
             </div>
             <div class="form-group">
-                <?= $form->label('SITE_LOCALE', t('Default Language')) ?>
+                <?= $form->label('SITE_LOCALE', t('Default Language'), ['class' => 'form-label']) ?>
                 <div class="checkbox">
                     <?= $form->select('SITE_LOCALE', $interfacelocales, $SITE_LOCALE) ?>
                 </div>

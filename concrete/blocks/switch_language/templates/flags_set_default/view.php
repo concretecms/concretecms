@@ -37,7 +37,7 @@ $ih = Core::make('multilingual/interface/flag');
         }
         ?>
         <div class="form-group">
-            <label class="control-label"><?= $label ?></label>
+            <label class="control-label form-label"><?= $label ?></label>
             <?php
             foreach ($languageSections as $ml) {
                 ?>

@@ -11,11 +11,11 @@ $resolverManager = app(ResolverManagerInterface::class);
 		<form method="post" action="<?= $view->action('add_set', $pagetype->getPageTypeID()) ?>">
 			<?php $token->output('add_set') ?>
 			<div class="form-group">
-				<?= $form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name')) ?>
+				<?= $form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'), ['class' => 'form-label']) ?>
 				<?= $form->text('ptComposerFormLayoutSetName') ?>
 			</div>
 			<div class="form-group">
-				<?= $form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description')) ?>
+				<?= $form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description'), ['class' => 'form-label']) ?>
 				<?= $form->textarea('ptComposerFormLayoutSetDescription') ?>
 			</div>
 		</form>
@@ -71,11 +71,11 @@ $resolverManager = app(ResolverManagerInterface::class);
 				<div data-edit-set-dialog="<?= $set->getPageTypeComposerFormLayoutSetID() ?>" class="ccm-ui">
 					<form data-edit-set-form="<?= $set->getPageTypeComposerFormLayoutSetID() ?>" action="<?= $view->action('update_set', $set->getPageTypeComposerFormLayoutSetID()) ?>" method="post">
                         <div class="form-group">
-                            <?= $form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name')) ?>
+                            <?= $form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'), ['class' => 'form-label']) ?>
                             <?= $form->text('ptComposerFormLayoutSetName', $set->getPageTypeComposerFormLayoutSetName()) ?>
                         </div>
                         <div class="form-group">
-                            <?= $form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description')) ?>
+                            <?= $form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description'), ['class' => 'form-label']) ?>
                             <?= $form->textarea('ptComposerFormLayoutSetDescription', $set->getPageTypeComposerFormLayoutSetDescription()) ?>
                         </div>
                         <div class="dialog-buttons">

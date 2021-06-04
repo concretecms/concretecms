@@ -94,33 +94,33 @@ if ($controller->getAction() == 'add'
     <form method="post" class="form-stacked" action="<?= $action ?>">
         <?= $this->controller->token->output($tokenString) ?>
         <div class="form-group">
-            <?= $form->label('pfTitle', t('Title')) ?>
+            <?= $form->label('pfTitle', t('Title'), ['class' => 'form-label']) ?>
             <?= $form->text('pfTitle', $pfTitle) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('pfHandle', t('Handle')) ?>
+            <?= $form->label('pfHandle', t('Handle'), ['class' => 'form-label']) ?>
             <?= $form->text('pfHandle', $pfHandle) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('pfDescription', t('Description')) ?>
+            <?= $form->label('pfDescription', t('Description'), ['class' => 'form-label']) ?>
             <?= $form->textarea('pfDescription', $pfDescription, ['rows' => 5]) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('iconFID', t('Image')) ?>
+            <?= $form->label('iconFID', t('Image'), ['class' => 'form-label']) ?>
             <?= $fmHelper->image('iconFID', 'iconFID', t('Choose Image'), $imageFile);
             ?>
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Filter by Parent Page') ?></label>
+            <label class="control-label form-label"><?= t('Filter by Parent Page') ?></label>
             <?= $psHelper->selectPage('cParentID', $cParentID);
             ?>
         </div>
         <div class="form-group">
-            <?= $form->label('ptID', t('Filter By Page Type')) ?>
+            <?= $form->label('ptID', t('Filter By Page Type'), ['class' => 'form-label']) ?>
             <?= $form->select('ptID', $pageTypes, $ptID) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('customTopicAttributeKeyHandle', t('Filter By Topic')) ?>
+            <?= $form->label('customTopicAttributeKeyHandle', t('Filter By Topic'), ['class' => 'form-label']) ?>
             <select class="form-control" name="customTopicAttributeKeyHandle" id="customTopicAttributeKeyHandle">
                 <option value=""><?= t('** No Filtering') ?></option>
                 <?php foreach ($topicAttributes as $attributeKey) {
@@ -143,7 +143,7 @@ if ($controller->getAction() == 'add'
             <input type="hidden" name="customTopicTreeNodeID" value="<?php echo $customTopicTreeNodeID ?>">
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Include All Sub-Pages of Parent?') ?></label>
+            <label class="control-label form-label"><?= t('Include All Sub-Pages of Parent?') ?></label>
             <div class="form-check">
                 <?= $form->radio('pfIncludeAllDescendents', 1, $pfIncludeAllDescendents) ?>
                 <label class="form-check-label" for="pfIncludeAllDescendents1"><?= t('Yes'); ?></label>
@@ -154,7 +154,7 @@ if ($controller->getAction() == 'add'
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Display Page Aliases?') ?></label>
+            <label class="control-label form-label"><?= t('Display Page Aliases?') ?></label>
 
             <div class="form-check">
                 <?= $form->radio('pfDisplayAliases', 1, $pfDisplayAliases) ?>
@@ -166,7 +166,7 @@ if ($controller->getAction() == 'add'
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Display Featured Only?') ?></label>
+            <label class="control-label form-label"><?= t('Display Featured Only?') ?></label>
             <div class="form-check">
                 <?= $form->radio('pfDisplayFeaturedOnly', 1, $pfDisplayFeaturedOnly) ?>
                 <label class="form-check-label" for="pfDisplayFeaturedOnly5"><?= t('Yes'); ?></label>
@@ -178,7 +178,7 @@ if ($controller->getAction() == 'add'
 
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Get Content From') ?></label>
+            <label class="control-label form-label"><?= t('Get Content From') ?></label>
 
             <div class="form-check">
                 <?= $form->radio('pfContentToDisplay', 'S', $pfContentToDisplay) ?>
@@ -191,11 +191,11 @@ if ($controller->getAction() == 'add'
             </div>
         </div>
         <div class="form-group" data-row="area" style="display: none">
-            <?= $form->label('pfAreaHandleToDisplay', t('Select Area')) ?>
+            <?= $form->label('pfAreaHandleToDisplay', t('Select Area'), ['class' => 'form-label']) ?>
             <?= $form->select('pfAreaHandleToDisplay', $areas, $pfAreaHandleToDisplay) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('ignorePermissions', t('Ignore Page Permissions')) ?>
+            <?= $form->label('ignorePermissions', t('Ignore Page Permissions'), ['class' => 'form-label']) ?>
 
             <div class="form-check">
                 <?= $form->checkbox('ignorePermissions', 1, $ignorePermissions) ?>

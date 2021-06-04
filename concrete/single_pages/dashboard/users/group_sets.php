@@ -36,13 +36,13 @@ $form = $app->make(Form::class);
         <?php echo $form->hidden('gsID', $set->getGroupSetID()); ?>
 
         <div class="form-group">
-            <?php echo $form->label('gsName', t('Name')); ?>
+            <?php echo $form->label('gsName', t('Name'), ['class' => 'form-label']); ?>
             <?php echo $form->text('gsName', $set->getGroupSetName()); ?>
             <br>
         </div>
 
         <div class="form-group">
-            <label class="control-label"><?php echo t('Groups'); ?></label>
+            <label class="control-label form-label"><?php echo t('Groups'); ?></label>
             <?php $list = $set->getGroups(); ?>
             <?php if (count($groups) > 0) { ?>
                 <?php foreach ($groups as $g) { ?>
@@ -130,12 +130,12 @@ $form = $app->make(Form::class);
                         <?php echo $form->hidden('categoryID', $categoryID); ?>
 
                         <div class="form-group">
-                            <?php echo $form->label('gsName', t('Name')); ?>
+                            <?php echo $form->label('gsName', t('Name'), ['class' => 'form-label']); ?>
                             <?php echo $form->text('gsName'); ?>
                         </div>
 
                         <div class="form-group" style="margin-top: 10px;">
-                            <label class="control-label">
+                            <label class="control-label form-label">
                                 <?php echo t('Groups'); ?>
                             </label>
 

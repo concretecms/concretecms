@@ -98,7 +98,7 @@
                 <?=Loader::helper("validation/token")->output('tree_edit'); ?>
                 <input type="hidden" name="treeID" value="<?=$tree->getTreeID(); ?>" />
                 <div class="form-group">
-                    <label for="treeName" class="control-label">Tree Name</label>
+                    <label for="treeName" class="control-label form-label">Tree Name</label>
                     <input type="text" name="treeName" class="form-control ccm-input-text" value="<?=$tree->getTreeDisplayName(); ?>" id="treeName"/>
                 </div>
 

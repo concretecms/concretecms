@@ -36,7 +36,7 @@ if ($group !== null) {
     <form method="post" action="<?= $group->getSiteGroupID() === null ? $controller->action('create_group', $type->getSiteTypeID()) : $controller->action('update_group', $group->getSiteGroupID()) ?>">
         <?php $token->output($group->getSiteGroupID() === null ? 'create_group' : 'update_group') ?>
         <div class="form-group">
-            <?= $form->label('groupName', t('Name')) ?>
+            <?= $form->label('groupName', t('Name'), ['class' => 'form-label']) ?>
             <?= $form->text('groupName', $group->getSiteGroupName(), ['required' => 'required']) ?>
         </div>
         <div class="ccm-dashboard-form-actions-wrapper">

@@ -16,19 +16,19 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend><?= t('Standard Details') ?></legend>
         <div class="form-group">
-            <?= $form->label('handle', t('Handle')) ?>
+            <?= $form->label('handle', t('Handle'), ['class' => 'form-label']) ?>
             <?= $form->text('handle', '', ['required' => 'required']) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('name', t('Name')) ?>
+            <?= $form->label('name', t('Name'), ['class' => 'form-label']) ?>
             <?= $form->text('name', '', ['required' => 'required']) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('canonical_url', t('Canonical URL'), ['class' => 'launch-tooltip', 'title' => t('The full URL at which this site will live. e.g. http://www.my-website.com')]) ?>
+            <?= $form->label('canonical_url', t('Canonical URL'), ['class' => 'launch-tooltip form-label', 'title' => t('The full URL at which this site will live. e.g. http://www.my-website.com')]) ?>
             <?= $form->text('canonical_url', '') ?>
         </div>
         <div class="form-group">
-            <?= $form->label('timezone', t('Default Timezone'), ['class' => 'launch-tooltip', 'data-bs-placement' => 'right', 'title' => t('This will control the default timezone that will be used to display date/times.')]) ?>
+            <?= $form->label('timezone', t('Default Timezone'), ['class' => 'launch-tooltip form-label', 'data-bs-placement' => 'right', 'title' => t('This will control the default timezone that will be used to display date/times.')]) ?>
             <?= $form->select('timezone', $timezones, $timezone) ?>
         </div>
     </fieldset>
