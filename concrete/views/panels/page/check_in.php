@@ -62,16 +62,21 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
 
 <?php
 } ?>
-
-	<button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-block btn-success btn"><?=t('Save Changes')?></button>
+    <div class="d-grid">
+        <button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-success btn"><?=t('Save Changes')?></button>
+    </div>
 
     <?php if ($c->isPageDraft() && $cp->canDeletePage()) {
     ?>
-		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-block btn-danger btn"><?=t('Discard Draft')?></button>
+        <div class="d-grid">
+            <button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Draft')?></button>
+        </div>
 	<?php
 } elseif ($v->canDiscard()) {
     ?>
-		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-block btn-danger btn"><?=t('Discard Changes')?></button>
+        <div class="d-grid">
+            <button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Changes')?></button>
+        </div>
 	<?php
 } ?>
 	<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />

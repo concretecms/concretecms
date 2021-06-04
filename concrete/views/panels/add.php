@@ -428,11 +428,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 </nav>
                 </div>
                 <% } %>
-
-                <a href="javascript:void(0);"
-                   class="btn-info btn-block btn btn-large btn-danger ccm-delete-orphaned-blocks">
-                    <?php echo t('Remove all orphaned blocks') ?>
-                </a>
+                <div class="d-grid">
+                    <a href="javascript:void(0);"
+                       class="btn-info btn btn-large btn-danger ccm-delete-orphaned-blocks">
+                        <?php echo t('Remove all orphaned blocks') ?>
+                    </a>
+                </div>
             </script>
 
             <script>
@@ -604,11 +605,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
         $p = new Permissions();
         if (Config::get('concrete.marketplace.enabled') && $p->canInstallPackages()) {
             ?>
-            <div class="ccm-marketplace-btn-wrapper">
+            <div class="ccm-marketplace-btn-wrapper d-grid">
                 <button
                         type="button"
                         onclick="window.location.href='<?= URL::to('/dashboard/extend/addons') ?>'"
-                        class="btn-info btn-block btn btn-large"
+                        class="btn-info btn btn-large"
                 ><?= t('Get More Blocks') ?></button>
             </div>
             <?php

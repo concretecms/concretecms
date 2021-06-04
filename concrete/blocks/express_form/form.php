@@ -22,10 +22,14 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <button data-action="choose-new-form" type="button" class="btn btn-secondary btn-block"><i class="fa fa-plus-circle" style="opacity: 0.3"></i> &nbsp; <?=t('New Form'); ?></button>
+                <div class="d-grid">
+                    <button data-action="choose-new-form" type="button" class="btn btn-secondary"><i class="fa fa-plus-circle" style="opacity: 0.3"></i> &nbsp; <?=t('New Form'); ?></button>
+                </div>
             </div>
             <div class="col-sm-6">
-                <button data-action="choose-existing-form" type="button" class="btn btn-secondary btn-block"><i class="fa fa-database" style="opacity: 0.3"></i> &nbsp; <?=t('Existing Express Entity Form'); ?></button>
+                <div class="d-grid">
+                    <button data-action="choose-existing-form" type="button" class="btn btn-secondary"><i class="fa fa-database" style="opacity: 0.3"></i> &nbsp; <?=t('Existing Express Entity Form'); ?></button>
+                </div>
             </div>
         </div>
     </fieldset>

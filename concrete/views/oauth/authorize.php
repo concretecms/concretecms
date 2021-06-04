@@ -85,9 +85,11 @@ $image = (date('Ymd') - 7) . '.jpg';
                             ?>
                             <br/>
                             <hr/>
-                            <a href="<?= URL::to('/register') ?>" class="btn btn-block btn-success" target="_blank">
-                                <?= t('Not a member? Register') ?>
-                            </a>
+                            <div class="d-grid">
+                                <a href="<?= URL::to('/register') ?>" class="btn btn-success" target="_blank">
+                                    <?= t('Not a member? Register') ?>
+                                </a>
+                            </div>
                             <?php
                         } ?>
 

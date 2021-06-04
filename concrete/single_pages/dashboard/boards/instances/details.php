@@ -57,8 +57,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <div class="help-block"><?=t('View the generated board for this instance.')?></div>
 
-            <a href="<?=$view->action('view_instance', $instance->getBoardInstanceID())?>"
-               class="btn btn-block btn-secondary"><?=t("View Instance")?></a>
+            <div class="d-grid">
+                <a href="<?=$view->action('view_instance', $instance->getBoardInstanceID())?>"
+                   class="btn btn-block btn-secondary"><?=t("View Instance")?></a>
+            </div>
 
         </div>
 
@@ -112,9 +114,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
         <form method="post" action="<?=$view->action('delete_instance', $instance->getBoardInstanceID())?>">
             <?=$token->output('delete_instance')?>
-            <button type="button"
-                    data-bs-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>"
-                    class="btn btn-block btn-outline-danger"><?=t("Delete Instance")?></button>
+            <div class="d-grid">
+                <button type="button"
+                        data-bs-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>"
+                        class="btn btn-block btn-outline-danger"><?=t("Delete Instance")?></button>
+            </div>
         </form>
 
         <div class="modal fade" id="delete-instance-<?=$instance->getBoardInstanceID()?>" tabindex="-1">

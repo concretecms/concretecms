@@ -625,8 +625,8 @@ $identifier = $app->make(Identifier::class);
                                 <hr/>
                             <?php } ?>
 
-                            <div>
-                                <?php echo $form->button("clearStyles", t('Clear Styles'), ["data-reset-action" => h($resetAction), "data-action" => "reset-design"], "btn-block btn-danger"); ?>
+                            <div class="d-grid">
+                                <?php echo $form->button("clearStyles", t('Clear Styles'), ["data-reset-action" => h($resetAction), "data-action" => "reset-design"], "btn-danger"); ?>
                             </div>
                         </fieldset>
                     </div>
