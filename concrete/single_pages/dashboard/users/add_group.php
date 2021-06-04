@@ -309,7 +309,10 @@ $(function() {
                 $('#gAutomationOptions').hide();
                 }
         }).triggerHandler('click');
-    $('.icon-question-sign').tooltip();
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('.icon-question-sign'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
     ccm_checkGroupExpirationOptions();
 
     $("#gOverrideGroupTypeSettings").change(function() {

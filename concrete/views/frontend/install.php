@@ -225,11 +225,9 @@ if ($install_config) {
                         .addClass(success ? 'fa-check' : 'fa-exclamation-circle');
                     $message.empty();
                     if (message) {
-                        $message.append(
-                            $('<i class="fa fa-question-circle launch-tooltip" />')
-                                .attr('title', message)
-                                .tooltip()
-                        );
+                        const $icon = $('<i class="fa fa-question-circle launch-tooltip" />').attr('title', message)
+                        const tooltip = new bootstrap.Tooltip($icon)
+                        $message.append($icon);
                     }
                     checkDone();
                 };

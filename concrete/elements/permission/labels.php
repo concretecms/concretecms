@@ -60,7 +60,10 @@ if (count($assignments) > 0) {
 
 <script type="text/javascript">
 $(function() {
-	$('.ccm-permission-access-line span[title]').tooltip({'container': '#ccm-tooltip-holder'});
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('.ccm-permission-access-line span[title]'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, { container: '#ccm-tooltip-holder' })
+    })
 	$('.ccm-permission-grid-cell .ccm-permission-access-line').draggable({
 		helper: 'clone'	
 	});

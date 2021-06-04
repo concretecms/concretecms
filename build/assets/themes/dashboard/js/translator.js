@@ -631,7 +631,12 @@ Translator.prototype = {
         )
       )
     ;
-    this.UI.$container.find('[data-bs-toggle="tooltip"]').tooltip();
+
+    const tooltipTriggerList = [].slice.call(this.UI.$container.find('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
     if (this.on.uiLaunched) {
       this.on.uiLaunched(this);
     }
