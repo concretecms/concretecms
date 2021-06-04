@@ -128,8 +128,10 @@ class PasswordValidatorServiceProvider extends Provider
         $minimum->setRequirementString($minimum::E_TOO_SHORT, $requirementHandler);
         $minimum->setErrorString($minimum::E_TOO_SHORT, $errorHandler);
 
-        $maximum->setRequirementString($maximum::E_TOO_LONG, $requirementHandler);
-        $maximum->setErrorString($maximum::E_TOO_LONG, $errorHandler);
+        if (is_object($maximum)) {
+            $maximum->setRequirementString($maximum::E_TOO_LONG, $requirementHandler);
+            $maximum->setErrorString($maximum::E_TOO_LONG, $errorHandler);
+        }
     }
 
     /**
