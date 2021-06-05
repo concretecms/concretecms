@@ -20,7 +20,7 @@ class MailServiceProvider extends ServiceProvider
             $app->bind($key, $value);
         }
 
-        $this->app->singleton(TransportInterface::class, function () use ($app) {
+        $this->app->bind(TransportInterface::class, function () use ($app) {
             $factory = $app->make(TransportFactory::class);
 
             return $factory->createTransportFromConfig($app->make('config'));
