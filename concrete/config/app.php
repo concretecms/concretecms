@@ -419,7 +419,7 @@ return [
         ],
         'dropzone' => [
             ['javascript', 'js/dropzone.js'],
-            ['javascript-localized', '/ccm/assets/localization/dropzone/js'],
+            ['javascript-localized', '/ccm/assets/localization/dropzone/js', ['combine' => false]],
             ['css', 'css/dropzone.css', ['minify' => false]],
         ],
         'jquery/form' => [
