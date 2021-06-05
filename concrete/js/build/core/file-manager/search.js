@@ -398,7 +398,7 @@
             // prepend choose
             holder.prepend('<li><a data-file-manager-action="choose" href="#">'+ccmi18n_filemanager.select+'</a></li>' +
                 '<li class="divider"></li>');
-            holder.on('click.concreteFileManagerChooseFile','a[data-file-manager-action=choose]', function(e) {
+            holder.find('a[data-file-manager-action=choose]').on('click.concreteFileManagerChooseFile', function(e) {
                 var ids = [];
 
                 $.each(my.getSelectedResults(), function(i, result) {
