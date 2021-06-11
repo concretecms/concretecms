@@ -140,7 +140,7 @@ if (!isset($type)) {
         <div class="form-group">
             <label class="control-label form-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
-                    class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
+                    class="form-select" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
                     name="fSearchDefaultSort">
                 <?php
                 foreach ($all->getSortableColumns() as $col) {
@@ -156,7 +156,7 @@ if (!isset($type)) {
         <div class="form-group">
             <label class="control-label form-label" for="fSearchDefaultSortDirection"><?= t('Direction') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
-                    class="form-control" data-search-select-default-column-direction="<?= $type ?>"
+                    class="form-select" data-search-select-default-column-direction="<?= $type ?>"
                     name="fSearchDefaultSortDirection">
                 <option
                         value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="selected"<?php } ?>><?= t('Ascending') ?></option>
@@ -174,7 +174,7 @@ if (!isset($type)) {
             <legend><?= t('Number of Results') ?></legend>
 
             <div class="form-group">
-            <select class="form-control" name="fSearchItemsPerPage">
+            <select class="form-select" name="fSearchItemsPerPage">
                 <?php
                 foreach ($itemsPerPageOptions as $option) {
                     ?>

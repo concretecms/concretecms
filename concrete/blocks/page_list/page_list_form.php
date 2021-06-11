@@ -142,7 +142,7 @@ echo $userInterface->tabs([
 
                 <div data-row="custom-topic">
                     <!--suppress HtmlFormInputWithoutLabel -->
-                    <select class="form-control" name="customTopicAttributeKeyHandle"
+                    <select class="form-select" name="customTopicAttributeKeyHandle"
                             id="customTopicAttributeKeyHandle">
 
                         <option value="">

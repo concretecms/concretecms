@@ -461,7 +461,7 @@ echo $userInterface->tabs([
         <div class="form-group">
             <label class="control-label form-label"><?php echo t('Link'); ?></label>
             <!--suppress HtmlFormInputWithoutLabel -->
-            <select data-field="entry-link-select" name="<?php echo $view->field('linkType'); ?>[]" class="form-control"
+            <select data-field="entry-link-select" name="<?php echo $view->field('linkType'); ?>[]" class="form-select"
                     style="width: 60%;">
                 <option value="0"
                 <% if (!link_type) { %>selected<% } %>><?php echo t('None'); ?></option>

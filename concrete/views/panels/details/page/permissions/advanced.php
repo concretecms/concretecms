@@ -55,7 +55,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div>
         <div class="form-group">
             <label class="col-form-label" for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
-            <select id="ccm-page-permissions-inherit" class="form-control">
+            <select id="ccm-page-permissions-inherit" class="form-select">
                 <?php
                 if ($c->getCollectionID() > 1) {
                     ?>
@@ -76,7 +76,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             ?>
             <div class="form-group">
                 <label class="col-form-label" for="ccm-page-permissions-subpages-override-template-permissions"><?=t('Subpage Permissions')?></label>
-                <select id="ccm-page-permissions-subpages-override-template-permissions" class="form-control">
+                <select id="ccm-page-permissions-subpages-override-template-permissions" class="form-select">
                     <option value="0"<?php if (!$c->overrideTemplatePermissions()) {
                     ?>selected<?php
 

@@ -39,7 +39,7 @@ $token = $app->make(Token::class);
             <?php echo $form->label('target_entity', t('Target Object'), ['class' => 'form-label']) ?>
 
             <!--suppress HtmlFormInputWithoutLabel -->
-            <select name="target_entity" class="form-control">
+            <select name="target_entity" class="form-select">
                 <?php foreach ($entities as $targetEntity) { ?>
                     <option value="<?php echo h($targetEntity->getID()) ?>"
                             data-plural="<?php echo h($targetEntity->getPluralHandle()) ?>"

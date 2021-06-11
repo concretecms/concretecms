@@ -121,7 +121,7 @@ if ($controller->getAction() == 'add'
         </div>
         <div class="form-group">
             <?= $form->label('customTopicAttributeKeyHandle', t('Filter By Topic'), ['class' => 'form-label']) ?>
-            <select class="form-control" name="customTopicAttributeKeyHandle" id="customTopicAttributeKeyHandle">
+            <select class="form-select" name="customTopicAttributeKeyHandle" id="customTopicAttributeKeyHandle">
                 <option value=""><?= t('** No Filtering') ?></option>
                 <?php foreach ($topicAttributes as $attributeKey) {
                     $attributeController = $attributeKey->getController();

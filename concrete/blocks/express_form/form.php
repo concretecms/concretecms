@@ -96,7 +96,7 @@
 
             <div class="form-group">
                 <?=$form->label('exEntityID', t('Choose Entity Form'), ['class' => 'form-label']); ?>
-                <select name="exFormID" class="form-control">
+                <select name="exFormID" class="form-select">
                     <option value=""><?=t('** Choose Entity Form'); ?></option>
                 <?php foreach ($entities as $entity) {
         ?>
@@ -259,7 +259,7 @@
 <script type="text/template" data-template="express-form-reply-to-email">
     <div class="form-group">
         <?=$form->label('replyToEmailControlID', t('Set value of Reply-To to Email Field'), ['class' => 'form-label']); ?>
-        <select name="replyToEmailControlID" class="form-control">
+        <select name="replyToEmailControlID" class="form-select">
             <option value=""><?=t('** None'); ?></option>
             <% _.each(controls, function(control){ %>
             <option value="<%=control.key%>" <% if (selected == control.key) { %>selected<% } %>><%=_.escape(control.value)%></option>
@@ -279,7 +279,7 @@
 
         <% if (!id) { %>
             &nbsp; <i class="fa fa-refresh fa-spin" style="display: none"></i>
-            <select name="type" class="form-control">
+            <select name="type" class="form-select">
                 <option value=""><?=t('** Choose Field'); ?></option>
             <% _.each(types, function(group) { %>
                 <optgroup label="<%=group.label%>">

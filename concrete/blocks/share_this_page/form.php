@@ -34,7 +34,7 @@ use Concrete\Core\Sharing\ShareThisPage\Service;
             <?php echo t('Choose Sharing Service'); ?>
         </label>
 
-        <select id="serviceList" name="service[]" class="form-control">
+        <select id="serviceList" name="service[]" class="form-select">
             <% _.each(availableServices, function(currentService) { %>
                 <% if (selectedService.handle == currentService.handle) { %>
                 <option value="<%=currentService.handle%>" selected>

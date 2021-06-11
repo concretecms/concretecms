@@ -111,7 +111,7 @@ if (isset($compatibleTimezones) && !empty($compatibleTimezones)) {
         <form method="POST" action="<?= $view->action('setSystemTimezone'); ?>" class="ccm-ui" id="user-timezone-autofix-form">
             <?php $token->output('set_system_timezone'); ?>
             <div class="form-group">
-                <select class="form-control" size="15" name="new-timezone">
+                <select class="form-select" size="15" name="new-timezone">
                     <?php
                     foreach ($compatibleTimezones as $timezoneID => $timezoneName) {
                         ?><option value="<?=h($timezoneID); ?>"><?=h($timezoneName); ?></option><?php

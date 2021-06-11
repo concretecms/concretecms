@@ -5,7 +5,7 @@
     <div>
         <?php if($trees){ 
             ?>
-            <select  name="topicTreeIDSelect" id="topicTreeIDSelect" class="form-control input-sm">
+            <select  name="topicTreeIDSelect" id="topicTreeIDSelect" class="form-select input-sm">
                 <?php foreach ($trees as $stree) {
                     ?>
                     <option value="<?=$stree->getTreeID(); ?>" <?php if ($tree->getTreeID() == $stree->getTreeID()) {

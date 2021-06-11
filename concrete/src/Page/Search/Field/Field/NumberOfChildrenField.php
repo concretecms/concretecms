@@ -41,7 +41,7 @@ class NumberOfChildrenField extends AbstractField
 
     public function renderSearchField()
     {
-        $html = '<div class="form-inline"><select name="cChildrenSelect" class="form-control">';
+        $html = '<div class="form-inline"><select name="cChildrenSelect" class="form-select">';
         $html .= '<option value="gt"' . ($this->data['cChildrenSelect'] == 'gt' ? ' selected' : '') . '>' . t('More Than') . '</option>';
         $html .= '<option value="eq"' . ($this->data['cChildrenSelect'] == 'eq' ? ' selected' : '') . '>' . t('Equal To') . '</option>';
         $html .= '<option value="lt"' . ($this->data['cChildrenSelect'] == 'lt' ? ' selected' : '') . '>' . t('Fewer Than') . '</option>';

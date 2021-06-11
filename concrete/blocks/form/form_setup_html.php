@@ -41,7 +41,7 @@
             </div>
             <div class="form-group">
                 <?= $form->label('answerType', t('Answer Type'), ['class' => 'form-label']) ?>
-                <select class="form-control" name="answerType" id="answerType">
+                <select class="form-select" name="answerType" id="answerType">
                     <option value="field"><?= t('Text Field') ?></option>
                     <option value="text"><?= t('Text Area') ?></option>
                     <option value="radios"><?= t('Radio Buttons') ?></option>
@@ -140,7 +140,7 @@
                 </div>
                 <div class="form-group">
                     <?= $form->label('answerTypeEdit', t('Answer Type'), ['class' => 'form-label']) ?>
-                    <select class="form-control" name="answerTypeEdit" id="answerTypeEdit">
+                    <select class="form-select" name="answerTypeEdit" id="answerTypeEdit">
                         <option value="field"><?= t('Text Field') ?></option>
                         <option value="text"><?= t('Text Area') ?></option>
                         <option value="radios"><?= t('Radio Buttons') ?></option>

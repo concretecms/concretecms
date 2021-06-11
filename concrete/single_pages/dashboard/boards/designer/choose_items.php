@@ -37,7 +37,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div v-if="item.itemType === 'calendar_event'">
                 <div class="form-group">
                     <label class="control-label form-label"><?=t('Choose Calendar')?></label>
-                    <select v-model.number="items[index].data.calendarId" class="form-control">
+                    <select v-model.number="items[index].data.calendarId" class="form-select">
                         <?php foreach($calendarSelect as $id => $calendar) { ?>
                             <option value="<?=$id?>"><?=$calendar?></option>
                         <?php } ?>

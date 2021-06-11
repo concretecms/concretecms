@@ -12,7 +12,7 @@
     if (!empty($allEntries)) {
         $selectedEntry = $selectedEntries[0];
         ?>
-        <select class="form-control" id="<?=$view->getControlID()?>" name="express_association_<?=$control->getId()?>">
+        <select class="form-select" id="<?=$view->getControlID()?>" name="express_association_<?=$control->getId()?>">
             <option value=""><?=t('** Choose %s', $control->getControlLabel())?></option>
             <?php
             foreach ($allEntries as $entry) {

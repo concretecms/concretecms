@@ -99,7 +99,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     </div>
                     <div class="form-group">
                         <label class="control-label form-label" for="chooseSlot"><?=t('Slot')?></label>
-                        <select class="form-control" id="chooseSlot" v-model="slot">
+                        <select class="form-select" id="chooseSlot" v-model="slot">
                             <option v-for="currentSlot in totalSlots" :value="currentSlot">{{currentSlot}}</option>
                         </select>
                     </div>

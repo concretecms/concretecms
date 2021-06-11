@@ -88,7 +88,7 @@ if (count($pageAttributeKeys)) {
         <div data-row="specific-topic">
             <div class="form-group">
                 <!--suppress HtmlFormInputWithoutLabel -->
-                <select class="form-control" name="filterByTopicAttributeKeyID">
+                <select class="form-select" name="filterByTopicAttributeKeyID">
                     <option value="">
                         <?php echo t('** Select Topic Attribute') ?>
                     </option>

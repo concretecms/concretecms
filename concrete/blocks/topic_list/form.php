@@ -2,7 +2,7 @@
 <fieldset>
     <div class="form-group">
         <label class="control-label form-label" for="modeSelect"><?=t('Mode')?></label>
-        <select class="form-control" name="mode" id="modeSelect">
+        <select class="form-select" name="mode" id="modeSelect">
             <option value="S" <?php if ($mode == 'S') {
     ?>selected<?php 
 } ?>><?=t('Search – Display a list of all topics for use on a search sidebar.')?></option>
@@ -13,7 +13,7 @@
     </div>
     <div class="form-group" data-row="mode-search">
         <label class="control-label form-label" for="topicTreeIDSelect"><?=t('Topic Tree')?></label>
-        <select class="form-control" name="topicTreeID" id="topicTreeIDSelect">
+        <select class="form-select" name="topicTreeID" id="topicTreeIDSelect">
             <?php foreach ($trees as $stree) {
     ?>
                 <option value="<?=$stree->getTreeID()?>" <?php if ($tree->getTreeID() == $stree->getTreeID()) {
@@ -27,7 +27,7 @@
 
     <div class="form-group" data-row="mode-page">
         <label class="control-label form-label" for="attributeKeySelect"><?=t('Topic Attribute To Display')?></label>
-        <select class="form-control" name="topicAttributeKeyHandle" id="attributeKeySelect">
+        <select class="form-select" name="topicAttributeKeyHandle" id="attributeKeySelect">
             <?php foreach ($attributeKeys as $attributeKey) {
     ?>
                 <option value="<?=$attributeKey->getAttributeKeyHandle()?>" <?php if ($attributeKey->getAttributeKeyHandle() == $topicAttributeKeyHandle) {

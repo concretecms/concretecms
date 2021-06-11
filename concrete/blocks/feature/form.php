@@ -34,7 +34,7 @@
     <legend><?=t('Link')?></legend>
 
     <div class="form-group">
-        <select name="linkType" data-select="feature-link-type" class="form-control">
+        <select name="linkType" data-select="feature-link-type" class="form-select">
             <option value="0" <?=(empty($externalLink) && empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('None')?></option>
             <option value="1" <?=(empty($externalLink) && !empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('Another Page')?></option>
             <option value="2" <?=(!empty($externalLink) ? 'selected="selected"' : '')?>><?=t('External URL')?></option>

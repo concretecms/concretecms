@@ -27,7 +27,7 @@
 
     <div class="form-group" v-show="createNewInstance == 0 && instances.length > 0">
         <label class="control-label form-label"><?=t('Select Instance')?></label>
-        <select class="form-control" name="boardInstanceID">
+        <select class="form-select" name="boardInstanceID">
             <option value=""><?=t('(Choose Instance)')?></option>
             <option v-for="instance in instances" :selected="boardInstanceID == instance.boardInstanceID"
                     :key="instance.boardInstanceID" :value="instance.boardInstanceID">
