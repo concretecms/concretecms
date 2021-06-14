@@ -152,9 +152,13 @@ foreach ($locales as $locale) {
     </script>
     <div class="form-group">
         <label class="control-label form-label"><?= t('Site interface source locale') ?></label>
-        <div class="form-inline">
-            <?= $form->select('defaultSourceLanguage', array_merge(['' => t('*** Unknown or mixed language')], $languages), $defaultSourceLanguage, ['class' => 'me-2']) ?>
-            <?= $form->select('defaultSourceCountry', array_merge(['' => t('*** Undetermined country')], $countries), $defaultSourceCountry) ?>
+        <div class="row row-cols-auto g-0 align-items-center">
+            <div class="col-auto">
+                <?= $form->select('defaultSourceLanguage', array_merge(['' => t('*** Unknown or mixed language')], $languages), $defaultSourceLanguage, ['class' => 'me-2']) ?>
+            </div>
+            <div class="col-auto">
+                <?= $form->select('defaultSourceCountry', array_merge(['' => t('*** Undetermined country')], $countries), $defaultSourceCountry) ?>
+            </div>
         </div>
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">

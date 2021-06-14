@@ -15,16 +15,20 @@ $form = $app->make(Form::class);
 /** @var Closure $getCheckbox */
 ?>
 
-<div class="form-inline float-end">
-    <label for="search" class="me-2 form-label"><?=t('Search')?></label>
-    <?php
+<div class="row row-cols-auto g-0 align-items-center float-end">
+    <div class="col-auto">
+        <label for="search" class="me-2"><?=t('Search')?></label>
+    </div>
+    <div class="col-auto">
+        <?php
         echo $form->search("search", "", [
             "class" => "form-control",
             "data-field" => "file-set-search",
             "autocomplete" => "off",
             "placeholder" => t('Filter Sets')
         ]);
-    ?>
+        ?>
+    </div>
 </div>
 
 <h3><?=t('File Sets')?></h3>

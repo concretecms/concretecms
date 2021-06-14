@@ -285,37 +285,45 @@ $dh = $app->make(Date::class);
     <?php endif; ?>
 
     <div class="ccm-dashboard-header-buttons">
-        <form class="form-inline" method="get" action="#">
+        <form class="row row-cols-auto g-0 align-items-center" method="get" action="#">
 
-            <?php echo $form->search('fsKeywords', [
-                'placeholder' => t('Search'),
-                'class' => 'form-control-sm',
-                'autocomplete' => 'off']);
-            ?>
+            <div class="col-auto">
+                <?php echo $form->search('fsKeywords', [
+                    'placeholder' => t('Search'),
+                    'class' => 'form-control-sm',
+                    'autocomplete' => 'off']);
+                ?>
+            </div>
 
-            <?php echo $form->select(
-                "fsType",
-                [
-                    Set::TYPE_PUBLIC => t("Public Sets"),
-                    Set::TYPE_PRIVATE => t("My Sets")
-                ],
-                $fsType == Set::TYPE_PRIVATE ? $fsType : Set::TYPE_PUBLIC,
-                [
-                    "class" => "ms-2 form-select-sm form-select"
-                ]
-            ); ?>
+            <div class="col-auto">
+                <?php echo $form->select(
+                    "fsType",
+                    [
+                        Set::TYPE_PUBLIC => t("Public Sets"),
+                        Set::TYPE_PRIVATE => t("My Sets")
+                    ],
+                    $fsType == Set::TYPE_PRIVATE ? $fsType : Set::TYPE_PUBLIC,
+                    [
+                        "class" => "ms-2 form-select-sm"
+                    ]
+                ); ?>
+            </div>
 
-            <button type="submit" class="btn btn-secondary ms-2 btn-sm">
-                <svg width="16" height="16">
-                    <use xlink:href="#icon-search"/>
-                </svg>
-            </button>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-secondary ms-2 btn-sm">
+                    <svg width="16" height="16">
+                        <use xlink:href="#icon-search"/>
+                    </svg>
+                </button>
+            </div>
 
-            <a class="btn btn-secondary btn-sm ms-2"
-               href="<?php echo Url::to('/dashboard/files/add_set') ?>"
-               title="<?php echo t('Add File Set') ?>">
-                <?php echo t('Add File Set') ?> <i class="fa fa-plus-circle"></i>
-            </a>
+            <div class="col-auto">
+                <a class="btn btn-secondary btn-sm ms-2"
+                   href="<?php echo Url::to('/dashboard/files/add_set') ?>"
+                   title="<?php echo t('Add File Set') ?>">
+                    <?php echo t('Add File Set') ?> <i class="fa fa-plus-circle"></i>
+                </a>
+            </div>
         </form>
     </div>
 <?php endif; ?>

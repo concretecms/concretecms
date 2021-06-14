@@ -7,20 +7,26 @@
     <fieldset>
         <legend><?=t('Default Colors')?></legend>
         <div class="row">
-        <div class="form-group col-sm-6 col-sm-offset-1">
-            <div class="form-inline">
-            <?=$form->label('defaultBackgroundColor', t('Background'), ['class' => 'form-label'])?>
-            &nbsp;
-            <?=$color->output('defaultBackgroundColor', $defaultBackgroundColor)?>
+            <div class="form-group col-sm-6 col-sm-offset-1">
+                <div class="row row-cols-auto g-0 align-items-center">
+                    <div class="col-auto">
+                        <?=$form->label('defaultBackgroundColor', t('Background'))?>
+                    </div>
+                    <div class="col-auto">
+                        <?=$color->output('defaultBackgroundColor', $defaultBackgroundColor)?>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="form-group col-sm-5">
-            <div class="form-inline">
-            <?=$form->label('defaultTextColor', t('Text'), ['class' => 'form-label'])?>
-                &nbsp;
-            <?=$color->output('defaultTextColor', $defaultTextColor)?>
+            <div class="form-group col-sm-5">
+                <div class="row row-cols-auto g-0 align-items-center">
+                    <div class="col-auto">
+                        <?=$form->label('defaultTextColor', t('Text'))?>
+                    </div>
+                    <div class="col-auto">
+                        <?=$color->output('defaultTextColor', $defaultTextColor)?>
+                    </div>
+                </div>
             </div>
-        </div>
         </div>
     </fieldset>
 
