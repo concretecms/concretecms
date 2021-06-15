@@ -23,7 +23,7 @@ if (isset($message)) {
     ?>
     <div class="ccm-ui" id="ccm-dashboard-result-message">
         <div class="alert alert-info">
-            <button type="button" class="close" data-bs-dismiss="alert">×
+            <button type="button" class="btn-close" data-bs-dismiss="alert">
             </button><?= (isset($messageIsHTML) && $messageIsHTML) ? $message : nl2br(h($message)); ?></div>
     </div>
     <?php
@@ -31,7 +31,7 @@ if (isset($message)) {
     ?>
     <div class="ccm-ui" id="ccm-dashboard-result-message">
         <div class="alert alert-success">
-            <button type="button" class="close" data-bs-dismiss="alert">×
+            <button type="button" class="btn-close" data-bs-dismiss="alert">
             </button><?= (isset($successIsHTML) && $successIsHTML) ? $success : nl2br(h($success)); ?></div>
     </div>
     <?php
