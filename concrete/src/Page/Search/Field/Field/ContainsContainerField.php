@@ -1,10 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Search\Field\Field;
 
-use Concrete\Core\Block\BlockType\BlockType;
-use Concrete\Core\Block\BlockType\BlockTypeList;
 use Concrete\Core\Entity\Page\Container;
-use Concrete\Core\File\FileList;
+use Concrete\Core\Page\PageList;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
 use Doctrine\ORM\EntityManager;
@@ -27,7 +25,7 @@ class ContainsContainerField extends AbstractField
     }
 
     /**
-     * @param FileList $list
+     * @param PageList $list
      * @param $request
      */
     public function filterList(ItemList $list)
