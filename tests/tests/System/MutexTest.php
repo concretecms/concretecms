@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Update;
+namespace Concrete\Tests\System;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Error\UserMessageException;
@@ -10,10 +10,10 @@ use Concrete\Core\System\Mutex\MutexBusyException;
 use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\System\Mutex\SemaphoreMutex;
 use Exception;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Throwable;
 
-class MutexTest extends PHPUnit_Framework_TestCase
+class MutexTest extends TestCase
 {
     public function mutexProvider()
     {

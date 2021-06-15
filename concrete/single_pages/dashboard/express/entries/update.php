@@ -14,9 +14,9 @@ if (is_object($renderer)) {
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <?php if ($backURL) { ?>
-                    <a class="pull-left btn btn-default" href="<?=$backURL?>"><?=t('Back')?></a>
+                    <a class="btn btn-secondary" href="<?=$backURL?>"><?=t('Back')?></a>
                 <?php } ?>
-                <button class="pull-right btn btn-primary" type="submit"><?=t('Save %s', $entity->getEntityDisplayName())?></button>
+                <button class="float-right btn btn-primary" type="submit"><?=t('Save %s', $entity->getEntityDisplayName())?></button>
             </div>
         </div>
 

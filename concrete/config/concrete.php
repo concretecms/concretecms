@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.4',
-    'version_installed' => '8.5.4',
-    'version_db' => '20200609145307', // the key of the latest database migration
+    'version' => '9.0.0a3',
+    'version_installed' => '9.0.0a3',
+    'version_db' => '20210528170900', // the key of the latest database migration
 
     /*
      * Installation status
@@ -149,6 +149,8 @@ return [
                 'password' => '',
                 'encryption' => '',
                 'messages_per_connection' => null,
+                // The domain to be used in the HELO/EHLO step (if empty we'll use localhost)
+                'helo_domain' => 'localhost',
             ],
         ],
     ],
@@ -186,13 +188,6 @@ return [
          * @var bool
          */
         'blocks' => true,
-
-        /*
-         * Cache Assets
-         *
-         * @var bool
-         */
-        'assets' => false,
 
         /*
          * Cache Theme CSS/JS
@@ -340,6 +335,66 @@ return [
 
     /*
      * ------------------------------------------------------------------------
+     * Queue settings
+     * ------------------------------------------------------------------------
+     */
+    'queue' => [
+
+        /*
+         * Driver
+         *
+         * @var string (redis|database)
+         */
+        'driver' => 'database',
+
+
+        /*
+         * Default queue to use
+         *
+         * @var string
+         */
+        'default' => 'default',
+
+        /*
+         * If we're consuming the queue through polling, how many entries do we do at a time
+         *
+         * @var int
+         */
+        'polling_batch' => [
+            'default' => 10,
+            'rescan_file' => 5,
+            'delete_page' => 100,
+            'delete_page_forever' => 100,
+            'copy_page' => 10,
+        ],
+
+
+    ],
+
+    /*
+ * ------------------------------------------------------------------------
+ * Events settings
+ * ------------------------------------------------------------------------
+ */
+    'events' => [
+
+        'broadcast' => [
+
+            /*
+             * Driver
+             *
+             * @var string (redis|none)
+             */
+            'driver' => ''
+
+        ],
+
+
+    ],
+
+
+    /*
+     * ------------------------------------------------------------------------
      * Logging settings
      * ------------------------------------------------------------------------
      */
@@ -448,6 +503,10 @@ return [
             'address' => null,
             'name' => null,
         ],
+        'register_notification' => [
+            'address' => null,
+            'name' => null,
+        ],
         'validate_registration' => [
             'address' => null,
             'name' => null,
@@ -552,13 +611,13 @@ return [
     'misc' => [
         'user_timezones' => false,
         'package_backup_directory' => DIR_FILES_UPLOADED_STANDARD . '/trash',
+        'display_package_delete_button' => true,
         'enable_progressive_page_reindex' => true,
         'mobile_theme_id' => 0,
         'sitemap_approve_immediately' => true,
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime' => 259200,
         'enable_trash_can' => true,
-        'app_version_display_in_header' => true,
         /*
          * The JPEG compression level (in range 0... 100)
          */
@@ -581,7 +640,6 @@ return [
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
-        'help_overlay' => true,
         'require_version_comments' => false,
         /*
          * Control whether a block type can me moved to different block type sets
@@ -589,13 +647,6 @@ return [
          * @var bool
          */
         'enable_move_blocktypes_across_sets' => false,
-        /*
-         * Control whether or not the image editor should add crossOrigin when loading images from external sources (s3, etc)
-         */
-        'image_editor_cors_policy' => [
-            'enable_cross_origin' => false,
-            'anonymous_request' => true,
-        ],
         /*
          * Check whether to add a "generator" tag with the concrete5 version to the site pages
          *
@@ -638,13 +689,13 @@ return [
         ],
         'file_manager_listing' => [
             'handle' => 'file_manager_listing',
-            'width' => 60,
-            'height' => 60,
+            'width' => 120,
+            'height' => 120,
         ],
         'file_manager_detail' => [
             'handle' => 'file_manager_detail',
-            'width' => 400,
-            'height' => 400,
+            'width' => 500,
+            'height' => 500,
         ],
         'user_avatar' => [
             'width' => 80,
@@ -680,13 +731,6 @@ return [
                 // Space-separated list of attributes to be kept
                 'allowed_attributes' => '',
             ],
-            /*
-             * Background color of the Image Editor saveArea
-             * Leave empty to use a transparent background
-             *
-             * @var string
-             */
-            'image_editor_save_area_background_color' => '',
         ],
         /*
          * Options for the results per page dropdown
@@ -731,13 +775,6 @@ return [
          * @var bool
          */
         'toolbar_large_font' => false,
-
-        /*
-         * Show help system
-         *
-         * @var bool
-         */
-        'display_help_system' => true,
 
         /*
          * Show tooltips in the concrete5 toolbars
@@ -829,11 +866,20 @@ return [
         'name' => false,
 
         /*
-         * Background image url
+         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed =
+         * standard behavior, "custom" = custom image.
          *
-         * @var null|string
+         * @var string "none"|"feed"|"custom"
          */
-        'background_image' => null,
+        'background_image' => 'feed',
+
+        /*
+         * If the background image is custom, this is where it loads from.
+         *
+         * @var null|string Custom URL for background image.
+         */
+        'background_url' => null,
+
     ],
     'session' => [
         'name' => 'CONCRETE5',
@@ -1115,8 +1161,6 @@ return [
     ],
     'limits' => [
         'sitemap_pages' => 100,
-        'delete_pages' => 100,
-        'copy_pages' => 10,
         'page_search_index_batch' => 200,
         'job_queue_batch' => 10,
         'style_customizer' => [

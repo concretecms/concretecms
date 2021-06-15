@@ -6,7 +6,7 @@ use Concrete\TestHelpers\Page\PageTestCase;
 
 class SectionTest extends PageTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

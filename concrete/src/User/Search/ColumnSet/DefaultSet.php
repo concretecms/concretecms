@@ -1,6 +1,10 @@
 <?php
+
 namespace Concrete\Core\User\Search\ColumnSet;
 
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\Search\ColumnSet\Column\HomeFolderColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\NumberOfLoginsColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
 use Concrete\Core\User\Search\ColumnSet\Column\DateAddedColumn;
@@ -39,6 +43,14 @@ class DefaultSet extends ColumnSet
         }
     }
 
+    public static function getFolderName($ui)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        return (string)$db->fetchColumn("SELECT treeNodeName FROM TreeNodes WHERE treeNodeId = ? LIMIT 1", [$ui->getUserHomeFolderId()]);
+    }
+
     public function __construct()
     {
         $this->addColumn(new UsernameColumn());
@@ -46,6 +58,7 @@ class DefaultSet extends ColumnSet
         $this->addColumn(new DateAddedColumn());
         $this->addColumn(new Column('uStatus', t('Status'), ['Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserStatus'], false));
         $this->addColumn(new NumberOfLoginsColumn());
+        $this->addColumn(new HomeFolderColumn());
         $date = $this->getColumnByKey('u.uDateAdded');
         $this->setDefaultSortColumn($date, 'desc');
     }

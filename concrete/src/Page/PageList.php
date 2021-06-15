@@ -38,6 +38,16 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
     protected $siteTree = self::SITE_TREE_CURRENT;
 
     /**
+     * Determines whether the list should automatically always sort by a column that's in the automatic sort.
+     * This is the default, but it's better to be able to use the AutoSortColumnRequestModifier on a search
+     * result class instead. In order to do that we disable the auto sort here, while still providing the array
+     * of possible auto sort columns.
+     *
+     * @var bool
+     */
+    protected $enableAutomaticSorting = false;
+
+    /**
      * Columns in this array can be sorted via the request.
      *
      * @var array
@@ -332,7 +342,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function getResult($queryRow)
     {
-        $c = Page::getByID($queryRow['cID'], 'ACTIVE');
+        $c = Page::getByID($queryRow['cID']);
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
@@ -349,12 +359,18 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT_UNAPPROVED');
                 }
+            } else {
+                $c->loadVersionObject('ACTIVE');
             }
+
             if (isset($queryRow['cIndexScore'])) {
                 $c->setPageIndexScore($queryRow['cIndexScore']);
             }
 
-            return $c;
+            $vo = $c->getVersionObject();
+            if ($vo && $vo->getVersionID()) {
+                return $c;
+            }
         }
     }
 

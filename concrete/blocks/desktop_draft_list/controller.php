@@ -57,12 +57,7 @@ class Controller extends BlockController
         }
         parent::save($args);
     }
-
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('core/draft_list');
-    }
-
+    
     public function view()
     {
         $myDrafts = [];

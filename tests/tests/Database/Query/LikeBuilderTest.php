@@ -3,9 +3,9 @@
 namespace Concrete\Tests\Database\Query;
 
 use Concrete\Core\Database\Query\LikeBuilder;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class LikeBuilderTest extends PHPUnit_Framework_TestCase
+class LikeBuilderTest extends TestCase
 {
     /**
      * @var LikeBuilder

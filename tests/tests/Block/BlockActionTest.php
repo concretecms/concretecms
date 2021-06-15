@@ -16,14 +16,14 @@ use Concrete\Core\Routing\RouteActionFactory;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\SystemRouteList;
 use Concrete\Core\Support\Facade\Facade;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Concrete\Core\Http\Request;
 use Symfony\Component\Routing\RouteCollection;
 
-class BlockActionTest extends PHPUnit_Framework_TestCase
+class BlockActionTest extends TestCase
 {
 
     /**

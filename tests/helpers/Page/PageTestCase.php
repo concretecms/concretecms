@@ -23,7 +23,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'PageTypes',
         'Collections',
         'CollectionVersions',
-        'CollectionVersionFeatureAssignments',
         'CollectionVersionBlockStyles',
         'CollectionVersionThemeCustomStyles',
         'CollectionVersionRelatedEdits',
@@ -42,7 +41,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks',
         'PageTypeComposerFormLayoutSets',
-        'BlockFeatureAssignments',
         'BlockPermissionAssignments',
     ]; // so brutal
 
@@ -55,7 +53,9 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Page\Relation\MultilingualRelation',
         'Concrete\Core\Entity\Page\Relation\SiblingRelation',
         'Concrete\Core\Entity\Page\PagePath',
+        'Concrete\Core\Entity\Summary\Category',
         'Concrete\Core\Entity\Page\Template',
+        'Concrete\Core\Entity\Page\Summary\PageTemplate',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Value\Value',
@@ -84,7 +84,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -7,9 +7,9 @@ use Concrete\Core\File\Image\Svg\SanitizerOptions;
 use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class SanitizerTest extends PHPUnit_Framework_TestCase
+class SanitizerTest extends TestCase
 {
     /**
      * @var \Concrete\Core\File\Image\Svg\Sanitizer

@@ -11,7 +11,7 @@ class RouteUrlResolverTest extends ResolverTestCase
      */
     protected $routeList;
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
 

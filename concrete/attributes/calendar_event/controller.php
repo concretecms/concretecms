@@ -97,7 +97,6 @@ class Controller extends \Concrete\Attribute\Number\Controller
             $this->set('event', $event);
         }
 
-        $this->requireAsset('core/calendar/event-selector');
         $calendars = ['' => t('** Choose a Calendar')];
         foreach (Calendar::getList() as $calendar) {
             $calendars[$calendar->getID()] = $calendar->getName();

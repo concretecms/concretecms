@@ -3,9 +3,11 @@
 namespace Concrete\Core\Http;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\Middleware\DispatcherDelegate;
 use Concrete\Core\Http\Middleware\MiddlewareStack;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\User\User;
@@ -26,11 +28,11 @@ class DefaultDispatcher implements DispatcherInterface
     private $app;
 
     /**
-     * @var \Concrete\Core\Routing\RouterInterface
+     * @var \Concrete\Core\Routing\Router
      */
     private $router;
 
-    public function __construct(Application $app, RouterInterface $router)
+    public function __construct(Application $app, Router $router)
     {
         $this->app = $app;
         $this->router = $router;
@@ -47,7 +49,7 @@ class DefaultDispatcher implements DispatcherInterface
 
         if (substr($path, 0, 3) == '../' || substr($path, -3) == '/..' || strpos($path, '/../') ||
             substr($path, 0, 3) == '..\\' || substr($path, -3) == '\\..' || strpos($path, '\\..\\')) {
-            throw new \RuntimeException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
+            throw new UserMessageException(t('Invalid path traversal. Please make this request with a valid HTTP client.'));
         }
 
         $response = null;

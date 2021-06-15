@@ -5,6 +5,7 @@
 $permissions = PermissionKey::getList('sitemap');
 $permissions = array_merge($permissions, PermissionKey::getList('marketplace_newsflow'));
 $permissions = array_merge($permissions, PermissionKey::getList('admin'));
+$permissions = array_merge($permissions, PermissionKey::getList('logs'));
 
 foreach ($permissions as $pk) {
     ?>
@@ -26,7 +27,7 @@ foreach ($permissions as $pk) {
 
 		jQuery.fn.dialog.open({
 			title: $(link).attr('dialog-title'),
-			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/miscellaneous?duplicate=' + dupe + '&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+			href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/miscellaneous?duplicate=' + dupe + '&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
 			modal: true,
 			width: 500,
 			height: 380

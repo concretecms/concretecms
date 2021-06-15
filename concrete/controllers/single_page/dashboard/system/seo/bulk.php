@@ -1,49 +1,102 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Page;
-use Concrete\Core\Page\PageList;
-use Concrete\Core\Multilingual\Page\Section\Section;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Form\Service\Widget\PageSelector;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Url\Resolver\PageUrlResolver;
 
 class Bulk extends DashboardPageController
 {
-    public $helpers = array('form', 'concrete/ui');
+    protected const DEFAULT_NUM_RESULTS = 10;
 
-    /**
-     * Get the localized site name.
-     *
-     * @param string $locale
-     *
-     * @return string
-     */
-    protected function getSiteNameForLocale($locale)
+    protected const ALLOWED_NUM_RESULTS = [10, 25, 50, 100, 500];
+
+    public function view()
     {
-        static $names = array();
-        if (!isset($names[$locale])) {
-            $prevLocale = \Localization::activeLocale();
-            if ($prevLocale !== $locale) {
-                \Localization::changeLocale($locale);
+        if (!$this->app->make('helper/concrete/dashboard/sitemap')->canRead()) {
+            $this->error->add(t("You don't have access to the sitemap"));
+            $this->render('/dashboard/system/seo/bulk/no_access');
+
+            return;
+        }
+        $searchRequest = $this->getSearchRequest();
+        $this->set('pageSelector', $this->app->make(PageSelector::class));
+        $this->set('allowedNumResults', static::ALLOWED_NUM_RESULTS);
+        $this->set('searchRequest', $searchRequest);
+        if (empty($searchRequest['search'])) {
+            $this->set('pages', null);
+            $this->set('pagination', '');
+        } else {
+            $pageList = $this->getRequestedSearchResults($searchRequest);
+            $pagination = $pageList->getPagination();
+            $pages = $this->serializePages($pagination->getCurrentPageResults());
+            $this->set('pages', $pages);
+            $this->set('pagination', $pagination->haveToPaginate() ? $pagination->renderView('dashboard') : '');
+            if ($pages === []) {
+                $this->error->add(t('No pages found.'));
             }
-            $names[$locale] = tc('SiteName', $this->app->make('site')->getSite()->getSiteName());
-            if ($prevLocale !== $locale) {
-                \Localization::changeLocale($prevLocale);
+        }
+    }
+
+    public function saveRecord($cID = null)
+    {
+        $post = $this->request->request;
+        $cID = (int) $cID;
+        if (!$this->token->validate('save_seo_record_' . $cID)) {
+            throw new UserMessageException($this->token->getErrorMessage());
+        }
+        $c = Page::getByID($cID);
+        if (!$c || $c->isError()) {
+            throw new UserMessageException(t('Unable to find the specified page'));
+        }
+        $metaTitle = trim($post->get('metaTitle'));
+        if ($metaTitle !== '') {
+            $titleFormat = $this->app->make('config')->get('concrete.seo.title_format');
+            $siteName = $this->getSiteNameForPage($c);
+            $autoTitle = sprintf($titleFormat, $siteName, $c->getCollectionName());
+            if ($metaTitle === $autoTitle) {
+                $metaTitle = '';
+            }
+        }
+        if ($metaTitle === '') {
+            $c->clearAttribute('meta_title');
+        } else {
+            $c->setAttribute('meta_title', $metaTitle);
+        }
+        $metaDescription = trim($post->get('metaDescription'));
+        if ($metaDescription !== '') {
+            $autoDescription = (string) $c->getCollectionDescription();
+            if ($metaDescription === $autoDescription) {
+                $metaDescription = '';
+            }
+        }
+        if ($metaDescription === '') {
+            $c->clearAttribute('meta_description');
+        } else {
+            $c->setAttribute('meta_description', $metaDescription);
+        }
+        if (!$c->isHomePage()) {
+            $cHandle = trim($post->get('handle'));
+            if ($cHandle !== '' && $cHandle !== $c->getCollectionHandle()) {
+                $c->update(['cHandle' => $cHandle]);
+                $c->rescanCollectionPath();
             }
         }
 
-        return $names[$locale];
+        return $this->app->make(ResponseFactoryInterface::class)->json($this->serializePage($c));
     }
 
     /**
      * Get the site name localized for a specific page.
-     *
-     * @param \Concrete\Core\Page\Page $page
-     *
-     * @return string
      */
-    public function getSiteNameForPage(\Concrete\Core\Page\Page $page)
+    protected function getSiteNameForPage(Page $page): string
     {
         static $multilingual;
         static $defaultLocale;
@@ -69,122 +122,136 @@ class Bulk extends DashboardPageController
         return $siteName;
     }
 
-    public function view()
+    protected function getRequestedSearchResults(array $searchRequest): PageList
     {
-        $html = $this->app->make('helper/html');
-        $this->requireAsset('javascript', 'jquery/textcounter');
-        $pageList = $this->getRequestedSearchResults();
-        if (is_object($pageList)) {
-            $pagination = $pageList->getPagination();
-            $pages = $pagination->getCurrentPageResults();
-            $this->set('pageList', $pageList);
-            $this->set('pages', $pages);
-            $paginationView = false;
-            if ($pagination->haveToPaginate()) {
-                $paginationView = $pagination->renderView('dashboard');
-            }
-            $this->set('pagination', $paginationView);
+        $pageList = new PageList();
+        $pageList->setPageVersionToRetrieve(PageList::PAGE_VERSION_RECENT);
+        $pageList->sortBy('cDateModified', 'desc');
+        $query = $pageList->getQueryObject();
+        if (trim($searchRequest['keywords']) !== '') {
+            $pageList->filterByKeywords($searchRequest['keywords']);
         }
+        $pageList->setItemsPerPage($searchRequest['numResults']);
+        if ($searchRequest['cParentIDSearchField'] !== null) {
+            $pc = Page::getByID($searchRequest['cParentIDSearchField']);
+            if ($pc && !$pc->isError()) {
+                if ($searchRequest['cParentAll']) {
+                    $cPath = $pc->getCollectionPath();
+                    $pageList->filterByPath($cPath);
+                } else {
+                    $pageList->filterByParentID($searchRequest['cParentIDSearchField']);
+                }
+            }
+        }
+        if ($searchRequest['noDefaultDescription']) {
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->isNull('cv.cvDescription'),
+                $query->expr()->eq('cv.cvDescription', $query->createNamedParameter(''))
+            ));
+        }
+        if ($searchRequest['noMetaDescription']) {
+            $query->andWhere($query->expr()->orX(
+                $query->expr()->isNull('csi.ak_meta_description'),
+                $query->expr()->eq('csi.ak_meta_description', $query->createNamedParameter(''))
+            ));
+        }
+
+        return $pageList;
     }
 
-    public function saveRecord()
+    protected function getSearchRequest(): array
     {
-        $cID = $this->post('cID');
-
-        if (!$this->token->validate('save_seo_record_' . $cID)) {
-            $error = t('Invalid CSRF token. Please refresh and try again.');
-            return JsonResponse::create(array('message' => $error));
+        $result = $this->request->request->all();
+        if ($result === []) {
+            $result = $this->request->query->all();
         }
+        $result['keywords'] = (string) ($result['keywords'] ?? '');
+        $numResults = (int) ($result['numResults'] ?? 0);
+        $result['numResults'] = in_array($numResults, static::ALLOWED_NUM_RESULTS, true) ? $numResults : static::DEFAULT_NUM_RESULTS;
+        $result['cParentIDSearchField'] = (int) ($result['cParentIDSearchField'] ?? 0) ?: null;
+        $result['cParentAll'] = !empty($result['cParentAll']);
+        $result['noDefaultDescription'] = !empty($result['noDefaultDescription']);
+        $result['noMetaDescription'] = !empty($result['noMetaDescription']);
 
-        $text = $this->app->make('helper/text');
-        $success = t('success');
-        $c = Page::getByID($cID);
-        if (!$c || $c->isError()) {
-            throw new \RuntimeException(t('Unable to find the specified page'));
-        }
-        $titleFormat = $this->app->make('config')->get('concrete.seo.title_format');
-        $siteName = $this->getSiteNameForPage($c);
-        if (trim(sprintf($titleFormat, $siteName, $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
-            $c->setAttribute('meta_title', trim($this->post('meta_title')));
-        }
-
-        if (trim(htmlspecialchars($c->getCollectionDescription(), ENT_COMPAT, APP_CHARSET)) != trim($this->post('meta_description')) && $this->post('meta_description')) {
-            $c->setAttribute('meta_description', trim($this->post('meta_description')));
-        }
-        $cHandle = $this->post('collection_handle');
-        $c->update(array('cHandle' => $cHandle));
-        $c->rescanCollectionPath();
-        $newPath = Page::getCollectionPathFromID($cID);
-        $newHandle = $text->urlify($cHandle);
-        $result = array('success' => $success, 'cID' => $cID, 'cHandle' => $newHandle, 'newPath' => $newHandle, 'newLink' => $newPath);
-
-        JsonResponse::create($result)->send();
-        exit;
+        return $result;
     }
 
     /**
-     * @return bool|PageList
+     * Get the localized site name.
      */
-    public function getRequestedSearchResults()
+    protected function getSiteNameForLocale(string $locale): string
     {
-        $dh = $this->app->make('helper/concrete/dashboard/sitemap');
-        if (!$dh->canRead()) {
-            return false;
-        }
-
-        $pageList = new PageList();
-
-        if ($this->request('submit_search')) {
-            $pageList->resetSearchRequest();
-        }
-
-        $pageList->displayUnapprovedPages();
-
-        $pageList->sortBy('cDateModified', 'desc');
-
-        $cvName = $this->request('cvName');
-        if ($cvName) {
-            $pageList->filterByName($cvName);
-        }
-
-        $cParentIDSearchField = $this->request('cParentIDSearchField');
-        if ($cParentIDSearchField > 0) {
-            if ($this->request('cParentAll') == 1) {
-                $pc = Page::getByID($cParentIDSearchField);
-                if ($pc && !$pc->isError()) {
-                    $cPath = $pc->getCollectionPath();
-                    $pageList->filterByPath($cPath);
-                }
-            } else {
-                $pageList->filterByParentID($cParentIDSearchField);
+        static $names = [];
+        if (!isset($names[$locale])) {
+            $prevLocale = Localization::activeLocale();
+            if ($prevLocale !== $locale) {
+                Localization::changeLocale($locale);
             }
-            $parentDialogOpen = 1;
+            $names[$locale] = tc('SiteName', $this->app->make('site')->getSite()->getSiteName());
+            if ($prevLocale !== $locale) {
+                Localization::changeLocale($prevLocale);
+            }
         }
 
-        $keywords = $this->request('keywords');
-        $pageList->filterByKeywords($keywords, true);
+        return $names[$locale];
+    }
 
-        $numResults = $this->request('numResults');
-        if ($numResults) {
-            $pageList->setItemsPerPage($numResults);
+    /**
+     * @param \Concrete\Core\Page\Page[] $pages
+     *
+     * @return array
+     */
+    protected function serializePages(array $pages): array
+    {
+        $result = [];
+        foreach ($pages as $page) {
+            $result[] = $this->serializePage($page);
         }
 
-        $ptID = $this->request('ptID');
-        if ($ptID) {
-            $pageList->filterByPageTypeID($ptID);
-        }
+        return $result;
+    }
 
-        if ($this->request('noDescription') == 1) {
-            $pageList->filter(false, "csi.ak_meta_description is null or csi.ak_meta_description = ''");
-            $this->set('descCheck', true);
-            $parentDialogOpen = 1;
+    protected function serializePage(Page $page): array
+    {
+        $isHomePage = $page->isHomePage();
+        if (!$isHomePage) {
+            $page->rescanCollectionPath();
+        }
+        $data = [
+            'isHomePage' => $isHomePage,
+            'cID' => $page->getCollectionID(),
+            'name' => (string) $page->getCollectionName(),
+            'type' => $page->getPageTypeName() ?: t('Single Page'),
+            'handle' => (string) $page->getCollectionHandle(),
+            'autoTitle' => sprintf($this->app->make('config')->get('concrete.seo.title_format'), $this->getSiteNameForPage($page), $page->getCollectionName()),
+            'metaTitle' => (string) $page->getAttribute('meta_title'),
+            'autoDescription' => (string) $page->getCollectionDescription(),
+            'metaDescription' => (string) $page->getAttribute('meta_description'),
+            'modified' => $page->getCollectionDateLastModified() ? $this->app->make('date')->formatDateTime($page->getCollectionDateLastModified()) : '',
+            'url' => (string) $this->app->make(PageUrlResolver::class)->resolve([$page]),
+            'saveAction' => (string) $this->action('saveRecord', $page->getCollectionID()),
+            'savePayload' => [
+                $this->token::DEFAULT_TOKEN_NAME => $this->token->generate('save_seo_record_' . $page->getCollectionID()),
+            ],
+        ];
+        if ($isHomePage) {
+            $data['htmlPath'] = '<strong class="collectionPath">/</strong>';
         } else {
-            $parentDialogOpen = null;
+            $path = $page->getCollectionPath();
+            $tokens = explode('/', $path);
+            $lastToken = array_pop($tokens);
+            $tokens[] = '<strong class="collectionPath">' . $lastToken . '</strong>';
+            $data['htmlPath'] = implode('/', $tokens);
         }
 
-        $this->set('searchRequest', $_REQUEST);
-        $this->set('parentDialogOpen', $parentDialogOpen);
+        $data['input'] = [
+            'metaTitle' => $data['metaTitle'],
+            'metaDescription' => $data['metaDescription'],
+        ];
+        if (!$isHomePage) {
+            $data['input']['handle'] = $data['handle'];
+        }
 
-        return $pageList;
+        return $data;
     }
 }

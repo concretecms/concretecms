@@ -23,7 +23,7 @@ class FormTest extends BlockTypeTestCase
         ],
     ];
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $db = Database::get();

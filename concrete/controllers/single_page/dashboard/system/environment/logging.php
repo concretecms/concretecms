@@ -18,9 +18,9 @@ class Logging extends DashboardPageController
     {
         $config = $this->app->make('config');
         $strStatus = (string) $strStatus;
-        $intLogErrors = $config->get('concrete.log.errors') == 1 ? 1 : 0;
-        $intLogEmails = $config->get('concrete.log.emails') == 1 ? 1 : 0;
-        $intLogApi = $config->get('concrete.log.api') == 1 ? 1 : 0;
+        $intLogErrors = (int) $config->get('concrete.log.errors');
+        $intLogEmails = (int) $config->get('concrete.log.emails');
+        $intLogApi = (int) $config->get('concrete.log.api');
 
         $this->set('fh', Loader::helper('form'));
         $this->set('intLogErrors', $intLogErrors);
@@ -73,9 +73,9 @@ class Logging extends DashboardPageController
         $logFile = $handler === 'file' ? (string) $request->request->get('logFile') : null;
         $enableDashboardReport = $request->request->get('enable_dashboard_report') ? true : false;
         $loggingLevel = strtoupper((string) $request->request->get('logging_level'));
-        $intLogErrorsPost = $request->request->get('ENABLE_LOG_ERRORS') === 1 ? 1 : 0;
-        $intLogEmailsPost = $request->request->get('ENABLE_LOG_EMAILS') === 1 ? 1 : 0;
-        $intLogApiPost = $request->request->get('ENABLE_LOG_API') === 1 ? 1 : 0;
+        $intLogErrorsPost = (int) $request->request->has('ENABLE_LOG_ERRORS');
+        $intLogEmailsPost = (int) $request->request->has('ENABLE_LOG_EMAILS');
+        $intLogApiPost = (int) $request->request->has('ENABLE_LOG_API');
 
 
         // Handle 'file' based logging

@@ -12,11 +12,6 @@ class ManagerServiceProvider extends ServiceProvider
 
             return $manager;
         });
-        $this->app['manager/search_field/file_folder'] = $this->app->share(function ($app) {
-            $manager = $this->app->make('Concrete\Core\File\Search\Field\FileFolderManager');
-
-            return $manager;
-        });
         $this->app['manager/search_field/page'] = $this->app->share(function ($app) {
             $manager = $this->app->make('Concrete\Core\Page\Search\Field\Manager');
 
@@ -29,6 +24,21 @@ class ManagerServiceProvider extends ServiceProvider
         });
         $this->app['manager/search_field/express'] = $this->app->share(function ($app) {
             $manager = $this->app->make('Concrete\Core\Express\Search\Field\Manager');
+            return $manager;
+        });
+        $this->app['manager/search_field/calendar_event'] = $this->app->share(function ($app) {
+            $manager = $this->app->make('Concrete\Core\Calendar\Event\Search\Field\Manager');
+
+            return $manager;
+        });
+        $this->app['manager/search_field/logging'] = $this->app->share(function ($app) {
+            $manager = $this->app->make('Concrete\Core\Logging\Search\Field\Manager');
+
+            return $manager;
+        });
+        $this->app['manager/search_field/group'] = $this->app->share(function ($app) {
+            $manager = $this->app->make('Concrete\Core\User\Group\Search\Field\Manager');
+
             return $manager;
         });
     }

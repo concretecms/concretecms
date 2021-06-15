@@ -1,42 +1,30 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-
 <?php
 
-$type_menu->render();
+defined('C5_EXECUTE') or die('Access Denied.');
 
-if ($skeleton) {
-?>
+/**
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Multisite\Types $controller
+ * @var Concrete\Core\Entity\Site\Skeleton|null $skeleton
+ * @var Concrete\Core\Filesystem\Element $attributesView
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Entity\Site\Type $type
+ * @var Concrete\Core\Filesystem\Element $typeMenu
+ */
 
-<div class="alert alert-info"><?=t('Attributes set here will automatically be applied to new pages of that type.')?></div>
+$typeMenu->render();
 
-<div data-container="editable-fields">
+if ($skeleton !== null) {
+    ?>
+    <div class="alert alert-info">
+        <?= t('Attributes set here will automatically be applied to new pages of that type.') ?>
+    </div>
 
-    <?php Loader::element('attribute/editable_set_list', array(
-        'category' => $category,
-        'object' => $skeleton,
-        'saveAction' => $view->action('update_attribute', $type->getSiteTypeID()),
-        'clearAction' => $view->action('clear_attribute', $type->getSiteTypeID()),
-        'permissionsCallback' => function ($ak) {
-            return true;
-        },
-    ));?>
-
-</div>
-
-
-<script type="text/javascript">
-    $(function() {
-        $('div[data-container=editable-fields]').concreteEditableFieldContainer({
-            url: '<?=$view->action('save', $type->getSiteTypeID())?>',
-            data: {
-                ccm_token: '<?=Loader::helper('validation/token')->generate()?>'
-            }
-        });
-    });
-</script>
-
-<?php } else { ?>
-
-    <div class="alert alert-warning"><?=t('Unable to retrieve skeleton object. You cannot set attributes on the default site type.')?></div>
-
-<?php } ?>
+    <?php
+        $attributesView->render();
+} else {
+    ?>
+    <div class="alert alert-warning">
+        <?= t('Unable to retrieve skeleton object. You cannot set attributes on the default site type.') ?>
+    </div>
+    <?php
+}

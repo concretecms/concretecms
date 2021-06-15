@@ -4,9 +4,9 @@ namespace Concrete\Tests\Page;
 
 use Concrete\TestHelpers\Page\SomethingCoolPageTypeSaver;
 use Core;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class PageTypeSaverTest extends PHPUnit_Framework_TestCase
+class PageTypeSaverTest extends TestCase
 {
     public function testPageTypeSaverManagerLoading()
     {

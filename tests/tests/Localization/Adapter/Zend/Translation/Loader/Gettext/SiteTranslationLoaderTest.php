@@ -28,7 +28,7 @@ class SiteTranslationLoaderTest extends LocalizationTestsBase
         $filesystem->copyDirectory($langDir, $appLangDir);
     }
 
-    protected function setUp()
+    public function setUp()
     {
         $factory = new TranslatorAdapterFactory();
         $this->adapter = $factory->createTranslatorAdapter('fi_FI');

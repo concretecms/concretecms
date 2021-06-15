@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Express;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class FormControlTypeTest extends PHPUnit_Framework_TestCase
+class FormControlTypeTest extends TestCase
 {
     public function testList()
     {

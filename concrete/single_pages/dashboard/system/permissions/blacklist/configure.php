@@ -19,6 +19,9 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
             <?= $form->checkbox('banEnabled', 1, $category->isEnabled()) ?>
             <?php
             list($selectedUnit, $unitValue) = $controller->splitSeconds($category->getTimeWindow());
+            ?>
+            <div class="form-text">
+            <?php
             echo t(
                 /* i18n: %1$s is the number of events, %2$s is the number of seconds/minutes/hours/days, %3$s is "seconds", "minutes", "hours" or "days" */
                 'Lock IP after %1$s events in %2$s %3$s',
@@ -27,14 +30,16 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
                 $form->select('timeWindowUnit', $units, $selectedUnit)
             );
             ?>
+            </div>
         </div>
 
         <div class="form-group form-inline">
-            <?= $form->label('banDurationUnlimited', t('Ban Duration'))?>
+            <?= $form->label('banDurationUnlimited', t('Ban Duration:'), ['class'=>'form-check-label','style'=>'margin-right:9px;'])?>
             <br />
-            <div class="radio">
+            <div class="form-check">
                 <label>
                     <?= $form->radio('banDurationUnlimited', '0', $category->getBanDuration() === null ? '1' : '0') ?>
+                    <div class="form-text">
                     <?php
                     list($selectedUnit, $unitValue) = $controller->splitSeconds($category->getBanDuration() === null ? 300 : $category->getBanDuration());
                     echo t(
@@ -44,10 +49,12 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
                         $form->select('banDurationUnit', $units, $selectedUnit)
                     );
                     ?>
+                    </div>
                 </label>
             </div>
             <br />
-            <div class="radio">
+            <div class="form-text" style="margin: 0 9px;"><?=t('or')?></div>
+            <div class="form-check">
                 <label>
                     <?= $form->radio('banDurationUnlimited', '1', $category->getBanDuration() === null ? '1' : '0') ?>
                     <?= t('Ban Forever') ?>
@@ -58,7 +65,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <input type="submit" class="btn btn-primary pull-right" value="<?= t('Save') ?>" />
+            <input type="submit" class="btn btn-primary float-right" value="<?= t('Save') ?>" />
         </div>
     </div>
 </form>

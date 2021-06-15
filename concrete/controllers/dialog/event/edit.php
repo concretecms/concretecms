@@ -179,8 +179,16 @@ class Edit extends BackendInterfaceController
 
             $r->setEventVersion($eventVersion);
 
-            $year = date('Y', strtotime($repetitions[0]->getStartDate()));
-            $month = date('m', strtotime($repetitions[0]->getStartDate()));
+            // Load the local repetition if available. This is what tells us which repetition was being edited
+            $localRepetition = $this->eventRepetitionService->translateFromRequest('local', $event->getCalendar(), $this->request);
+            if (is_array($localRepetition) && count($localRepetition) > 0) {
+                $repetition = $localRepetition[0];
+            } else {
+                $repetition = $repetitions[0];
+            }
+
+            $year = date('Y', strtotime($repetition->getStartDate()));
+            $month = date('m', strtotime($repetition->getStartDate()));
 
             $this->setResponseRedirectURL($calendar, $month, $year, $r);
         }

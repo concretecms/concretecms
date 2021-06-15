@@ -29,6 +29,9 @@
         </field>
         <field name="displayEventAttributes" type="text">
         </field>
+        <field name="allowExport" type="boolean">
+            <default value="0"/>
+        </field>
         <field name="enableLinkToPage" type="boolean">
             <default value="0"/>
         </field>

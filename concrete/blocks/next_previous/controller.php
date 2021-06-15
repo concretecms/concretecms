@@ -4,10 +4,12 @@ namespace Concrete\Block\NextPrevious;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker as Permissions;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btNextPrevious';
 
@@ -67,6 +69,13 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t('Next & Previous Nav');
+    }
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::NAVIGATION
+        ];
     }
 
     public function view()

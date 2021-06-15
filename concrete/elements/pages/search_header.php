@@ -6,7 +6,7 @@
         </div>
     <?php } ?>
 
-    <form class="form-inline" method="get" action="<?php echo URL::to('/ccm/system/search/pages/basic') ?>">
+    <form class="form-inline" data-search-form="search-pages" method="get" action="<?php echo URL::to('/ccm/system/search/pages/basic') ?>">
 
         <div class="ccm-header-search-form-input">
             <a class="ccm-header-reset-search" href="#" data-button-action-url="<?php echo URL::to('/ccm/system/search/pages/clear')?>" data-button-action="clear-search"><?php echo t('Reset Search')?></a>

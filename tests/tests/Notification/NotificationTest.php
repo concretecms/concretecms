@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Notification;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class NotificationTest extends PHPUnit_Framework_TestCase
+class NotificationTest extends TestCase
 {
     public function testCreateNotification()
     {
@@ -45,7 +45,7 @@ class NotificationTest extends PHPUnit_Framework_TestCase
          * @var \Concrete\Core\Notification\Subscription\Manager
          */
         $subscriptions = $manager->getSubscriptions();
-        $this->assertEquals(7, count($subscriptions));
+        $this->assertEquals(13, count($subscriptions));
     }
 
     protected function getUserSignup()

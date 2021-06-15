@@ -4,34 +4,32 @@ namespace Concrete\Core\Job;
 
 use Config;
 use Job as AbstractJob;
-use Queue;
-use ZendQueue\Message as ZendQueueMessage;
-use ZendQueue\Queue as ZendQueue;
+use Concrete\Core\Foundation\Queue\QueueService;
 
 abstract class QueueableJob extends AbstractJob
 {
     /** @var int The size of the batch */
     protected $jQueueBatchSize;
 
-    /** @var ZendQueue */
+    /**
+     * @var JobQueue
+     */
     protected $jQueueObject;
 
     /**
      * Start processing a queue
      * Typically this is where you would inject new messages into the queue
      *
-     * @param \ZendQueue\Queue $q
      * @return mixed
      */
-    abstract public function start(ZendQueue $q);
+    abstract public function start(JobQueue $q);
 
     /**
      * Finish processing a queue
      *
-     * @param \ZendQueue\Queue $q
      * @return mixed
      */
-    abstract public function finish(ZendQueue $q);
+    abstract public function finish(JobQueue $q);
 
     /**
      * Process a QueueMessage
@@ -39,7 +37,7 @@ abstract class QueueableJob extends AbstractJob
      * @param \ZendQueue\Message $msg
      * @return void
      */
-    abstract public function processQueueItem(ZendQueueMessage $msg);
+    abstract public function processQueueItem(JobQueueMessage $msg);
 
     /**
      * QueueableJob constructor.
@@ -72,12 +70,13 @@ abstract class QueueableJob extends AbstractJob
 
     /**
      * Get the queue object we're going to use to queue
-     * @return \ZendQueue\Queue
+     * @return JobQueue
      */
     public function getQueueObject()
     {
         if ($this->jQueueObject === null) {
-            $this->jQueueObject = Queue::get('job_' . $this->getJobHandle(), array('timeout' => 1));
+            $service = \Core::make(QueueService::class);
+            $this->jQueueObject = $service->getJobQueue($this);
         }
 
         return $this->jQueueObject;
@@ -124,23 +123,13 @@ abstract class QueueableJob extends AbstractJob
      */
     public function executeJob()
     {
-        // If the job's already running, don't try to restart it
-        if ($this->getJobStatus() !== 'RUNNING') {
-            $queue = $this->markStarted();
-
-            // Prepare the queue for processing
-            $this->start($queue);
-        } else {
-            $queue = $this->getQueueObject();
-        }
-
         try {
-            $batchSize = $this->getJobQueueBatchSize() ?: PHP_INT_MAX;
-
-            // Loop over queue batches
-            while (($messages = $queue->receive($batchSize)) && $messages->count() > 0) {
-                // Run the batch
-                $this->executeBatch($messages, $queue);
+            if ($this->getJobStatus() !== 'RUNNING') {
+                $queue = $this->markStarted();
+                $queue->setIsAsynchronous(false);
+                $this->start($queue);
+            } else {
+                $queue = $this->getQueueObject();
             }
 
             // Mark the queue as finished
@@ -154,19 +143,5 @@ abstract class QueueableJob extends AbstractJob
         }
 
         return $result;
-    }
-
-    /**
-     * Process a queue batch
-     *
-     * @param array|iterator $batch
-     * @param \ZendQueue\Queue $queue
-     */
-    public function executeBatch($batch, ZendQueue $queue)
-    {
-        foreach ($batch as $item) {
-            $this->processQueueItem($item);
-            $queue->deleteMessage($item);
-        }
     }
 }

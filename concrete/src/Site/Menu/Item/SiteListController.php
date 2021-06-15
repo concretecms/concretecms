@@ -50,16 +50,19 @@ class SiteListController extends Controller
             $request = \Request::getInstance();
             $token = \Core::make('token')->getParameter($request->getRequestURI());
 
-            $element = new Link('#');
-            $element->setValue('');
+            $element = new Element('div');
             $element->setAttribute('class', 'ccm-menu-item-site-list-container');
-            $element->setAttribute('href', 'javascript:void(0)');
 
             $icon = new Element('i');
             $icon->addClass('fa fa-globe');
             $element->appendChild($icon);
 
-            $select = new Element('select', null, ['style' => 'width: 240px; display: none', 'data-select' => 'ccm-header-site-list']);
+            $select = new Element('select', null, [
+                'class' => 'selectpicker',
+                'data-live-search' => 'true',
+                'data-size' => '5',
+                'data-select' => 'ccm-header-site-list'
+            ]);
             foreach($this->service->getList() as $site) {
                 $permissions = new \Permissions($site);
                 if ($permissions->canViewSiteInSelector()) {
@@ -81,17 +84,15 @@ class SiteListController extends Controller
 
 
         } else {
-            $element = new Link('#');
-            $element->setValue('');
-            $element->setAttribute('class', 'ccm-menu-item-site-list ccm-menu-item-site-list-inactive');
-            $element->setAttribute('href', 'javascript:void(0)');
+            $element = new Element('div');
+            $element->setAttribute('class', 'ccm-menu-item-site-list-container ccm-menu-item-site-list-inactive');
 
             $icon = new Element('i');
             $icon->addClass('fa fa-globe');
             $element->appendChild($icon);
 
             $label = new Element('span');
-            $label->addClass('ccm-toolbar-accessibility-title')->setValue(t('Global'));
+            $label->setValue(t('Global'));
             $element->appendChild($label);
             return $element;
         }

@@ -12,9 +12,9 @@ use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackerManagerInterface;
 use Concrete\TestHelpers\CreateClassMockTrait;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ServiceProviderTest extends PHPUnit_Framework_TestCase
+class ServiceProviderTest extends TestCase
 {
     use CreateClassMockTrait;
 

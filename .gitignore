@@ -52,7 +52,7 @@ error_log
 # ignore JavaScript source maps
 /concrete/js/*.js.map
 /concrete/js/bootstrap/*.js.map
-/concrete/js/mix-manifest.json
+mix-manifest.json
 
 # ignore node modules used for building
 /build/node_modules
@@ -72,3 +72,6 @@ __IDE_SYMBOLS__.php
 
 # ignore Visual Code project files
 .vscode
+
+# Ignore stuff copied in from node dependencies
+concrete/js/ckeditor/package.json

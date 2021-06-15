@@ -3,9 +3,9 @@
 namespace Concrete\TestHelpers\Foundation;
 
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-abstract class ClassLoaderTestCase extends PHPUnit_Framework_TestCase
+abstract class ClassLoaderTestCase extends TestCase
 {
     protected function putFileIntoPlace($file, $destinationDirectory)
     {

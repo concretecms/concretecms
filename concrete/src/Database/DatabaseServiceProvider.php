@@ -5,8 +5,7 @@ namespace Concrete\Core\Database;
 use Concrete\Core\Database\Driver\DriverManager;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\Package\PackageList;
-use Doctrine\ORM\EntityManagerInterface;
+use Predis\Client;
 
 class DatabaseServiceProvider extends ServiceProvider
 {
@@ -30,6 +29,16 @@ class DatabaseServiceProvider extends ServiceProvider
 
             return $manager;
         });
+
+        $this->app->singleton('database/redis',
+            function ($app) {
+                $predis = new Client(
+                    $app->make('config')->get('database.redis.parameters'),
+                    $app->make('config')->get('database.redis.options')
+                );
+                return $predis;
+            }
+        );
 
         // Bind default connection resolver
         $this->app->bind('Concrete\Core\Database\Connection\Connection',
@@ -168,6 +177,7 @@ class DatabaseServiceProvider extends ServiceProvider
         return array(
             'database',
             'database/orm',
+            'redis',
             'orm/cache',
             'orm/cachedAnnotationReader',
             'orm/cachedSimpleAnnotationReader',

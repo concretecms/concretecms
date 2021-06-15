@@ -106,7 +106,7 @@ class PageListTest extends PageTestCase
         }
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->list = new \Concrete\Core\Page\PageList();

@@ -409,7 +409,7 @@ class Type
         }
         if ($fullImageTag == true) {
             return sprintf(
-                '<img src="%s" width="%s" height="%s" class="img-responsive ccm-generic-thumbnail" alt="%s">',
+                '<img src="%s" width="%s" height="%s" class="img-fluid ccm-generic-thumbnail" alt="%s">',
                 $url,
                 $type->getWidth(),
                 $type->getHeight(),

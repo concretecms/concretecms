@@ -106,6 +106,11 @@ const DIRNAME_PAGE_TEMPLATES = 'page_templates';
 const DIRNAME_PAGE_THEME = 'page_theme';
 const DIRNAME_PAGE_THEME_CUSTOM = 'custom';
 const DIRNAME_ELEMENTS = 'elements';
+const DIRNAME_SUMMARY = 'summary';
+const DIRNAME_SUMMARY_TEMPLATES = 'templates';
+const DIRNAME_BOARDS = 'boards';
+const DIRNAME_BOARD_SLOTS = 'slots';
+const DIRNAME_CONTAINERS = 'containers';
 const DIRNAME_LANGUAGES = 'languages';
 const DIRNAME_JOBS = 'jobs';
 const DIRNAME_DASHBOARD = 'dashboard';
@@ -115,8 +120,6 @@ const DIRNAME_MAIL_TEMPLATES = 'mail';
 const DIRNAME_THEMES = 'themes';
 const DIRNAME_THEMES_CORE = 'core';
 const DIRNAME_CONFIG = 'config';
-const DIRNAME_TOOLS = 'tools';
-const DIRNAME_BLOCK_TOOLS = 'tools';
 const DIRNAME_BLOCK_TEMPLATES = 'templates';
 const DIRNAME_BLOCK_TEMPLATES_COMPOSER = 'composer';
 const DIRNAME_CSS = 'css';
@@ -153,6 +156,7 @@ const DIRNAME_STYLE_CUSTOMIZER = 'style_customizer';
 const DIRNAME_STYLE_CUSTOMIZER_TYPES = 'types';
 const DIRNAME_STYLE_CUSTOMIZER_PRESETS = 'presets';
 const DIRNAME_FILE_STORAGE_LOCATION_TYPES = 'storage_location_types';
+const DIRNAME_EXTERNAL_FILE_PROVIDER_TYPES = 'external_file_provider_types';
 const DIRNAME_EXPRESS = 'express';
 const DIRNAME_EXPRESS_VIEW_CONTROLS = 'view';
 const DIRNAME_EXPRESS_CONTROL_OPTIONS = 'control';
@@ -234,8 +238,6 @@ define('DIR_BASE_CORE', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(_
 define('DIR_PACKAGES', DIR_BASE . '/packages');
 define('DIR_FILES_BLOCK_TYPES', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
 define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
-define('DIR_FILES_TOOLS', DIR_APPLICATION . '/tools');
-define('DIR_FILES_TOOLS_REQUIRED', DIR_BASE_CORE . '/tools');
 define('DIR_PACKAGES_CORE', DIR_BASE_CORE . '/packages');
 defined('DIR_STARTING_POINT_PACKAGES') or define('DIR_STARTING_POINT_PACKAGES', DIR_CONFIG_SITE . '/install/packages');
 define('DIR_STARTING_POINT_PACKAGES_CORE', DIR_BASE_CORE . '/config/install/packages');
@@ -271,6 +273,8 @@ define('DIR_CORE_CONFIG', DIR_BASE_CORE . '/config');
  * ----------------------------------------------------------------------------
  */
 const BLOCK_HANDLE_SCRAPBOOK_PROXY = 'core_scrapbook_display';
+const BLOCK_HANDLE_CONTAINER_PROXY = 'core_container';
+const BLOCK_HANDLE_BOARD_SLOT_PROXY = 'core_board_slot';
 const BLOCK_HANDLE_LAYOUT_PROXY = 'core_area_layout';
 const BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY = 'core_page_type_composer_control_output';
 const BLOCK_HANDLE_STACK_PROXY = 'core_stack_display';
@@ -306,6 +310,9 @@ const USER_SUPER_ID = 1;
 const GUEST_GROUP_ID = '1';
 const REGISTERED_GROUP_ID = '2';
 const ADMIN_GROUP_ID = '3';
+const DEFAULT_GROUP_TYPE_ID = '1';
+const DEFAULT_GROUP_ROLE_ID = '1';
+
 /**
  * @deprecated Use Config::get('concrete.session.remember_me.lifetime')
  */

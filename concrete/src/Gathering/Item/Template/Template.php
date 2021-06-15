@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Gathering\Item\Template;
 
-use Concrete\Core\Feature\Assignment\GatheringItemAssignment;
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Gathering\Item\Item;
 use Database;
 use Concrete\Core\Package\PackageList;
@@ -196,7 +194,7 @@ abstract class Template extends ConcreteObject
 
         $w = 0;
         $handles = $this->getGatheringItemTemplateFeatureHandles();
-        $assignments = \Concrete\Core\Feature\Assignment\GatheringItemAssignment::getList($item);
+        $assignments = GatheringItemAssignment::getList($item);
         foreach ($assignments as $as) {
             if (in_array($as->getFeatureDetailHandle(), $handles)) {
                 $fd = $as->getFeatureDetailObject();

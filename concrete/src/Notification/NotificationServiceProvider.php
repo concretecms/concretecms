@@ -16,6 +16,12 @@ class NotificationServiceProvider extends ServiceProvider
             $manager->driver('new_private_message');
             $manager->driver('user_signup');
             $manager->driver('workflow_progress');
+            $manager->driver('group_signup_request');
+            $manager->driver('group_signup');
+            $manager->driver('group_role_change');
+            $manager->driver('group_create');
+            $manager->driver('group_signup_request_accept');
+            $manager->driver('group_signup_request_decline');
             $manager->driver(UserDeactivatedType::IDENTIFIER);
             return $manager;
         });

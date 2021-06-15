@@ -35,6 +35,7 @@ class Controller extends BlockController
         // get the latest data as well
         $slots = $newsflow->getSlotContents();
         $this->set('slot', $slots[$this->slot]);
+        $this->set('key', $this->slot);
 
         // this is kind of a hack
         /*

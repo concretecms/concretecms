@@ -11,7 +11,7 @@ abstract class ItemList
 {
     protected $sortColumnParameter = 'ccm_order_by';
     protected $sortDirectionParameter = 'ccm_order_by_direction';
-    protected $paginationPageParameter = 'ccm_paging_p';
+    protected $paginationPageParameter;
     protected $sortBy;
     protected $sortByDirection;
     protected $sortBySearchColumn;
@@ -34,6 +34,14 @@ abstract class ItemList
     abstract public function getResult($mixed);
     abstract public function debugStart();
     abstract public function debugStop();
+
+    /**
+     * @return array
+     */
+    public function getAutoSortColumns(): array
+    {
+        return $this->autoSortColumns;
+    }
 
     public function debug()
     {
@@ -158,7 +166,18 @@ abstract class ItemList
 
     public function getQueryPaginationPageParameter()
     {
+        if (!isset($this->paginationPageParameter)) {
+            $this->loadQueryStringPagingVariable();
+        }
         return $this->paginationPageParameter;
+    }
+    
+    /**
+    * Get paging parameter from Concrete configuration
+    */
+    protected function loadQueryStringPagingVariable()
+    {
+        $this->paginationPageParameter = \Config::get('concrete.seo.paging_string');
     }
 
     public function getQuerySortDirectionParameter()
@@ -206,7 +225,7 @@ abstract class ItemList
     /**
      * @param StickyRequest $request
      */
-    public function setupAutomaticSorting(StickyRequest $request = null)
+    public function performAutomaticSorting(StickyRequest $request = null)
     {
         if ($this->enableAutomaticSorting) {
             if ($request) {
@@ -227,6 +246,12 @@ abstract class ItemList
         }
     }
 
+    protected function setupAutomaticSorting()
+    {
+        // Empty, meant to be extended. This separates the logic of making columns available for automatic sorting
+        // vs. actually automatically applying it by default within the list.
+    }
+
     /**
      * @deprecated
      */
@@ -237,13 +262,19 @@ abstract class ItemList
 
     /**
      * Allow to modify the auto-pagination parameters and the auto-sorting parameters
-     * 
+     *
      * @param mixed $nameSpace Content that will be added to the parameters
      */
     public function setNameSpace($nameSpace)
     {
-        $this->paginationPageParameter .= '_' . $nameSpace;
-        $this->sortColumnParameter .= '_' . $nameSpace;
-        $this->sortDirectionParameter .= '_' . $nameSpace;
+        if (!isset($this->paginationPageParameter)) {
+            $this->loadQueryStringPagingVariable();
+        }
+        
+        if(!is_null($nameSpace) && $nameSpace!=""){
+            $this->paginationPageParameter .= '_' . $nameSpace;
+            $this->sortColumnParameter .= '_' . $nameSpace;
+            $this->sortDirectionParameter .= '_' . $nameSpace;
+        }
     }
 }

@@ -1,4 +1,4 @@
-[![TravisCI Build Status](https://travis-ci.org/concrete5/concrete5.svg?branch=develop)](https://travis-ci.org/concrete5/concrete5)
+[![Github Actions Build Status](https://github.com/concrete5/concrete5/actions/workflows/phpunit.yml/badge.svg?branch=develop)](https://github.com/concrete5/concrete5/actions/workflows/phpunit.yml)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/concrete5/concrete5?branch=develop&svg=true)](https://ci.appveyor.com/project/concrete5/concrete5)
 [![Join Slack](https://slack.concrete5.org/badge.svg)](https://slack.concrete5.org/)
 

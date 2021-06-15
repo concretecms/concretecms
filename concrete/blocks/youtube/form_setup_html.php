@@ -1,4 +1,25 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
+<?php
+
+defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Application\Service\UserInterface;
+use Concrete\Core\Support\Facade\Application;
+
+/** @var string $title */
+/** @var string $videoURL */
+/** @var string $vHeight */
+/** @var string $vWidth */
+/** @var string $sizing */
+/** @var bool $startTimeEnabled */
+/** @var string $startTime */
+/** @var bool $noCookie */
+/** @var bool $autoplay */
+/** @var string $color */
+/** @var int $iv_load_policy */
+/** @var bool $loopEnd */
+/** @var bool $lazyLoad */
+/** @var bool $rel */
+/** @var bool $showCaptions */
 
 if (empty($vWidth)) {
     $vWidth = 640;
@@ -12,178 +33,201 @@ if (empty($sizing)) {
     $sizing = '16:9';
 }
 
-echo Core::make('helper/concrete/ui')->tabs([
+$app = Application::getFacadeApplication();
+/** @var UserInterface $ui */
+$ui = $app->make(UserInterface::class);
+
+echo $ui->tabs([
     ['video', t('Video'), true],
     ['settings', t('Settings')],
 ]);
+
 ?>
 
-<div class="ccm-tab-content" id="ccm-tab-content-video">
-    <div class="form-group">
-        <label class="control-label"><?php echo t('YouTube URL'); ?></label>
-        <?php echo $form->text('videoURL', isset($videoURL) ? $videoURL : '', ['required' => 'required']); ?>
-    </div>
-    <div class="form-group">
-        <label class="control-label"><?=t('Size'); ?></label>
-        <div class="radio">
-            <label>
-                <?php echo $form->radio('sizing', '16:9', $sizing); ?>
-                <?php echo t('16:9 (widescreen)'); ?>
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <?php echo $form->radio('sizing', '4:3', $sizing); ?>
-                <?php echo t('4:3'); ?>
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <?php echo $form->radio('sizing', 'fixed', $sizing); ?>
-                <?php echo t('Fixed Size (non-responsive)'); ?>
-            </label>
-        </div>
-    </div>
-    <div id="fixedsizes" class="<?php echo $sizing == 'fixed' ? '' : 'hidden'; ?>">
+<div class="tab-content">
+    <div class="tab-pane show active" id="video" role="tabpanel">
         <div class="form-group">
-            <label class="control-label"><?php echo t('Width'); ?></label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="YouTubeVideoWidth" name="vWidth" value="<?php echo $vWidth; ?>" />
-                <div class="input-group-addon"><?php echo t('px'); ?></div>
+            <?php echo $form->label('videoURL', t("YouTube URL")); ?>
+            <?php echo $form->text('videoURL', isset($videoURL) ? $videoURL : '', ['required' => 'required']); ?>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">
+                <?php echo t('Size'); ?>
+            </label>
+
+            <div class="form-check">
+                <?php echo $form->radio('sizing', '16:9', $sizing, ["id" => "sizingWhiteScreen", "name" => "sizing"]); ?>
+                <?php echo $form->label('sizingWhiteScreen', t('16:9 (widescreen)'), ["class" => "form-check-label"]); ?>
+            </div>
+
+            <div class="form-check">
+                <?php echo $form->radio('sizing', '4:3', $sizing, ["id" => "sizingRegular", "name" => "sizing"]); ?>
+                <?php echo $form->label('sizingRegular', t('4:3'), ["class" => "form-check-label"]); ?>
+            </div>
+
+            <div class="form-check">
+                <?php echo $form->radio('sizing', 'fixed', $sizing, ["id" => "sizingFixed", "name" => "sizing"]); ?>
+                <?php echo $form->label('sizingFixed', t('Fixed Size (non-responsive)'), ["class" => "form-check-label"]); ?>
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label"><?php echo t('Height'); ?></label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="YouTubeVideoHeight" name="vHeight" value="<?php echo $vHeight; ?>" />
-                <div class="input-group-addon"><?php echo t('px'); ?></div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="ccm-tab-content" id="ccm-tab-content-settings">
-    <fieldset>
-        <legend><?php echo t('Appearance'); ?></legend>
-        <div class="row">
-            <div class="col-xs-6">
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label>
-                            <?php echo $form->checkbox('controls', 1, (isset($controls) ? $controls : true)); ?>
-                            <?php echo t('Show controls'); ?>
-                        </label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <?php
-                            $disabledattr = [];
-                            if (isset($color) && $color == 'white') {
-                                $disabledattr['disabled'] = 'disabled';
-                            }
-                            echo $form->checkbox('modestbranding', 1, (isset($modestbranding) ? $modestbranding : true), $disabledattr); ?>
-                            <?php echo t('Hide YouTube Logo'); ?>
-                        </label>
+
+        <div id="fixedsizes" class="<?php echo $sizing == 'fixed' ? '' : 'd-none'; ?>">
+            <div class="form-group">
+                <?php echo $form->label('YouTubeVideoWidth', t("Width")); ?>
+
+                <div class="input-group">
+                    <?php echo $form->number('vWidth', $vWidth, ["id" => "YouTubeVideoWidth", "name" => "vWidth", "min" => 0, "step" => "1"]); ?>
+
+                    <div class="input-group-append">
+                    <span class="input-group-text">
+                        <?php echo t('px'); ?>
+                    </span>
                     </div>
                 </div>
             </div>
 
-            <div class="col-xs-6">
-                <div class="form-group controls-only <?php echo isset($controls) && $controls == 0 ? 'hidden' : ''; ?>">
-                    <?php  echo $form->label('color', t('Progress Bar Color')); ?>
-                    <?php  echo $form->select('color', ['red' => t('Red'), 'white' => t('White')], isset($color) ? $color : null); ?>
+            <div class="form-group">
+                <?php echo $form->label('YouTubeVideoHeight', t("Height")); ?>
+
+                <div class="input-group">
+                    <?php echo $form->number('vHeight', $vHeight, ["id" => "YouTubeVideoHeight", "name" => "vHeight", "min" => 0, "step" => "1"]); ?>
+
+                    <div class="input-group-append">
+                    <span class="input-group-text">
+                        <?php echo t('px'); ?>
+                    </span>
+                    </div>
                 </div>
             </div>
         </div>
-    </fieldset>
-    <fieldset>
-        <legend><?php echo t('Playback Options'); ?></legend>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('rel', 1, !empty($rel)); ?>
-                    <?php echo t('Show related videos from different channels when playback ends'); ?>
-                </label>
+    </div>
+
+    <div class="tab-pane" id="settings" role="tabpanel">
+        <fieldset>
+            <legend>
+                <?php echo t('Appearance'); ?>
+            </legend>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <?php echo $form->checkbox('controls', 1, (isset($controls) ? $controls : true)); ?>
+                            <?php echo $form->label("controls", t('Show controls')); ?>
+                        </div>
+
+                        <div class="form-check">
+                            <?php
+                            $additionalAttributes = [];
+
+                            if (isset($color) && $color == 'white') {
+                                $additionalAttributes['disabled'] = 'disabled';
+                            }
+
+                            echo $form->checkbox('modestbranding', 1, (isset($modestbranding) ? $modestbranding : true), $additionalAttributes); ?>
+
+                            <?php echo $form->label("modestbranding", t('Hide YouTube Logo')); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-6">
+                    <div class="form-group controls-only <?php echo isset($controls) && $controls == 0 ? 'd-none' : ''; ?>">
+                        <?php echo $form->label('color', t('Progress Bar Color')); ?>
+                        <?php echo $form->select('color', ['red' => t('Red'), 'white' => t('White')], isset($color) ? $color : null); ?>
+                    </div>
+                </div>
             </div>
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('iv_load_policy', 1, isset($iv_load_polict) && $iv_load_policy == 3); ?>
-                    <?php echo t('Hide annotations by default'); ?>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('autoplay', 1, !empty($autoplay)); ?>
-                    <?php echo t('Automatically play'); ?>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('loopEnd', 1, !empty($loopEnd)); ?>
-                    <?php echo t('Loop video'); ?>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('showCaptions', 1, !empty($showCaptions)); ?>
-                    <?php echo t('Show captions'); ?>
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('startTimeEnabled', 1, !empty($startTimeEnabled)); ?>
-                    <?php echo t('Start video at:'); ?>
-                </label>
-            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>
+                <?php echo t('Playback Options'); ?>
+            </legend>
+
             <div class="form-group">
-                <?php echo $form->text('startTime', isset($startTime) ? $startTime : null); ?>
+                <div class="form-check">
+                    <?php echo $form->checkbox('rel', 1, !empty($rel)); ?>
+                    <?php echo $form->label('rel', t('Show related videos from different channels when playback ends')); ?>
+                </div>
+
+                <div class="form-check">
+                    <?php echo $form->checkbox('iv_load_policy', 1, isset($iv_load_polict) && $iv_load_policy == 3); ?>
+                    <?php echo $form->label("iv_load_policy", t('Hide annotations by default')); ?>
+                </div>
+
+                <div class="form-check">
+                    <?php echo $form->checkbox('autoplay', 1, !empty($autoplay)); ?>
+                    <?php echo $form->label("autoplay", t('Automatically play')); ?>
+                </div>
+
+                <div class="form-check">
+                    <?php echo $form->checkbox('loopEnd', 1, !empty($loopEnd)); ?>
+                    <?php echo $form->label("loopEnd", t('Loop video')); ?>
+                </div>
+
+                <div class="form-check">
+                    <?php echo $form->checkbox('showCaptions', 1, !empty($showCaptions)); ?>
+                    <?php echo $form->label("showCaptions", t('Show captions')); ?>
+                </div>
+
+                <div class="form-check">
+                    <?php echo $form->checkbox('startTimeEnabled', 1, !empty($startTimeEnabled)); ?>
+                    <?php echo $form->label("startTimeEnabled", t('Start video at:')); ?>
+                </div>
+
+                <div class="form-group">
+                    <?php echo $form->text('startTime', isset($startTime) ? $startTime : null); ?>
+                </div>
             </div>
-        </div>
-    </fieldset>
-    <fieldset>
-        <legend><?php echo t('Privacy Options'); ?></legend>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('noCookie', 1, (isset($noCookie) ? $noCookie : false)); ?>
-                    <?php echo t('No cookie') ?>
-                </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>
+                <?php echo t('Privacy Options'); ?>
+            </legend>
+
+            <div class="form-check">
+                <?php echo $form->checkbox('noCookie', 1, (isset($noCookie) ? $noCookie : false)); ?>
+                <?php echo $form->label("noCookie", t('No cookie')); ?>
             </div>
-        </div>
-    </fieldset>
-    <fieldset>
-        <legend><?php echo t('Loading Options'); ?></legend>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?php echo $form->checkbox('lazyLoad', 1, (isset($lazyLoad) ? $lazyLoad : false)); ?>
-                    <?php echo t('Lazy load video')?>
-                </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>
+                <?php echo t('Loading Options'); ?>
+            </legend>
+
+            <div class="form-check">
+                <?php echo $form->checkbox('lazyLoad', 1, (isset($lazyLoad) ? $lazyLoad : false)); ?>
+                <?php echo $form->label("lazyLoad", t('Lazy load video')) ?>
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
+    </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('#sizing1, #sizing2, #sizing3').change(function () {
-            if ($('#sizing3').is(':checked')) {
-                $('#fixedsizes').removeClass('hidden');
+    $(function () {
+        $('input[name=sizing]').change(function () {
+            if ($('#sizingFixed').is(':checked')) {
+                $('#fixedsizes').removeClass('d-none');
             } else {
-                $('#fixedsizes').addClass('hidden');
+                $('#fixedsizes').addClass('d-none');
             }
         });
 
         $('#controls').change(function () {
             if ($('#controls').is(':checked')) {
-                $('.controls-only').removeClass('hidden');
+                $('.controls-only').removeClass('d-none');
             } else {
-                $('.controls-only').addClass('hidden');
+                $('.controls-only').addClass('d-none');
             }
         });
 
         $('#color').change(function () {
-            if ($(this).val() == 'white') {
-                $('#modestbranding').prop('disabled','disabled').prop('checked',false);
+            if ($(this).val() === 'white') {
+                $('#modestbranding').prop('disabled', 'disabled').prop('checked', false);
             } else {
                 $('#modestbranding').removeProp('disabled');
             }
@@ -191,7 +235,7 @@ echo Core::make('helper/concrete/ui')->tabs([
 
         $('#ccm-form-submit-button').click(function () {
             if (!$('#videoURL').val()) {
-                $('[data-tab="video"').click();
+                $('#video').trigger("click");
             }
         });
     });

@@ -31,23 +31,15 @@ class SitemapSelector extends UserInterfaceController
 
     public function view()
     {
-        $this->requireAsset('core/sitemap');
-
         /** @var $sanitizer SanitizeService */
         $sanitizer = $this->app->make(SanitizeService::class);
-        $cID = $this->request->query->get('cID');
-        $cID = (int) $sanitizer->sanitizeInt($cID);
-
-        if (!empty($cID)) {
-            $this->set('cID', $cID);
-        }
-
-        $selectMode = $sanitizer->sanitizeString($this->request->query->get('sitemap_select_mode'));
-        if (!empty($selectMode)) {
-            $this->set('selectMode', $selectMode);
-        } else {
-            $this->set('selectMode', '');
-        }
+        $cID = (int) $sanitizer->sanitizeInt($this->request->query->get('cID'));
+        $this->set('cID', $cID ?: null);
+        $selectMode = (string) $sanitizer->sanitizeString($this->request->query->get('sitemap_select_mode'));
+        $this->set('selectMode', $selectMode);
+        $this->set('uniqid', uniqid());
+        $this->set('includeSystemPages', $this->request->query->get('includeSystemPages') ? true : false);
+        $this->set('askIncludeSystemPages', $this->request->query->get('askIncludeSystemPages') ? true : false);
     }
 
     protected function canAccess()

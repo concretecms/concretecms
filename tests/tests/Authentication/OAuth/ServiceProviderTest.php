@@ -8,9 +8,9 @@ use Concrete\TestHelpers\Authentication\OAuth\Fixture\ExtractorFixture;
 use Concrete\TestHelpers\Authentication\OAuth\Fixture\ServiceFixture;
 use OAuth\UserData\Extractor\ExtractorInterface;
 use OAuth\UserData\ExtractorFactoryInterface;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ServiceProviderTest extends PHPUnit_Framework_TestCase
+class ServiceProviderTest extends TestCase
 {
     public function testBindings()
     {

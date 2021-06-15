@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Calendar;
 
+use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Calendar\Event\Formatter\DateFormatter;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
@@ -12,6 +13,7 @@ class CalendarServiceProvider extends Provider
         $this->app->bind('calendar/event/occurrence/factory', '\\Concrete\\Core\\Calendar\\Event\\EventOccurrenceFactory');
         $this->app->singleton('calendar/event/formatter/link', LinkFormatter::class);
         $this->app->singleton('calendar/event/formatter/date', DateFormatter::class);
+        $this->app->singleton(LinkFormatterInterface::class, LinkFormatter::class);
     }
 
     public function getLinkFormatter()

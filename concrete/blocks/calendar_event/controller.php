@@ -8,16 +8,25 @@ use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventOccurrence;
 use Concrete\Core\Calendar\CalendarServiceProvider;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 550;
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btCalendarEvent';
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::CALENDAR
+        ];
+    }
 
     public function getBlockTypeDescription()
     {
@@ -36,8 +45,6 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->requireAsset('core/calendar/event-selector');
-
         $eventKeys = EventKey::getList();
         $calendars = ['' => t('** Choose a Calendar')];
         $calendarEventPageKeys = ['' => t('** Choose an Event')];
@@ -67,6 +74,7 @@ class Controller extends BlockController
         $data['calendarID'] = isset($data['calendarID']) ? intval($data['calendarID']) : 0;
         $data['eventID'] = isset($data['eventID']) ? intval($data['eventID']) : 0;
 
+        $data['allowExport'] = isset($data['allowExport']) && $data['allowExport'] ? 1 : 0;
         $data['displayEventName'] = isset($data['displayEventName']) && $data['displayEventName'] ? 1 : 0;
         $data['displayEventDate'] = isset($data['displayEventDate']) && $data['displayEventDate'] ? 1 : 0;
         $data['displayEventDescription'] = isset($data['displayEventDescription']) && $data['displayEventDescription'] ? 1 : 0;

@@ -225,6 +225,8 @@ class PhpFixerRunner
             new Signature(
                 PHP_VERSION,
                 $this->getPhpCSFixerVersion(),
+                '    ',
+                "\n",
                 $rules
             ),
             $dryRun,

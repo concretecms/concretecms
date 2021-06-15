@@ -19,7 +19,7 @@ class TextTest extends ConcreteDatabaseTestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    public function setUp(): void
     {
         $this->object = new \Concrete\Core\Utility\Service\Text();
     }
@@ -28,7 +28,7 @@ class TextTest extends ConcreteDatabaseTestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->object);
         parent::tearDown();
@@ -38,12 +38,12 @@ class TextTest extends ConcreteDatabaseTestCase
     {
         return [
             ['Mixed with English and Germaen', 'Mixed with English and Germän', 'de_DE'],
-            ['Mixed with English and ', 'Mixed with English and 日本人', ''],
-            ['Mixed with English and .doc', 'Mixed with English and 日本人.doc', ''],
-            ['Mixed with English and .', 'Mixed with English and 日本人.日本人', ''],
-            ['', '日本人', ''],
-            ['.doc', '日本人.doc', ''],
-            ['.', '日本人.日本人', ''],
+            ['Mixed with English and ', 'Mixed with English and 日本語', ''],
+            ['Mixed with English and .doc', 'Mixed with English and 日本語.doc', ''],
+            ['Mixed with English and .', 'Mixed with English and 日本語.日本語', ''],
+            ['', '日本語', ''],
+            ['.doc', '日本語.doc', ''],
+            ['.', '日本語.日本語', ''],
         ];
     }
 
@@ -100,6 +100,7 @@ class TextTest extends ConcreteDatabaseTestCase
     /**
      * Test for many rounds with a language, that has no map associated
      * This causes a "regular expression is too large" error on old versions.
+     * @doesNotPerformAssertions
      */
     public function testUrlify_regexTooLarge()
     {

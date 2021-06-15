@@ -6,7 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
 use Concrete\Core\Logging\Configuration\ConfigurationInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class LoggerFactory
 {
@@ -30,7 +30,7 @@ class LoggerFactory
      */
     protected $app;
 
-    public function __construct(ConfigurationFactory $configurationFactory, EventDispatcher $dispatcher, Application $app)
+    public function __construct(ConfigurationFactory $configurationFactory, EventDispatcherInterface $dispatcher, Application $app)
     {
         $this->configurationFactory = $configurationFactory;
         $this->dispatcher = $dispatcher;

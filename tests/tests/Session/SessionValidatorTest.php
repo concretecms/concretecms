@@ -6,13 +6,15 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
+use IPLib\Address\AddressInterface;
+use IPLib\Factory;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @runTestsInSeparateProcesses
  */
-class SessionValidatorTest extends PHPUnit_Framework_TestCase
+class SessionValidatorTest extends TestCase
 {
     protected $preserveGlobalState = false;
 
@@ -31,6 +33,9 @@ class SessionValidatorTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->app = clone Application::getFacadeApplication();
+        $this->app->singleton(AddressInterface::class, function () {
+            return Factory::addressFromString($this->request->getClientIp(), true, true, true);
+        });
         $this->app['config'] = clone $this->app['config'];
 
         $this->request = Request::create('http://url.com/');

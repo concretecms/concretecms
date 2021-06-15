@@ -111,4 +111,13 @@ class Column implements ColumnInterface
         $this->callback = $callback;
         $this->sortDirection = $this->sanitizeSortDirection($sort);
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'columnKey' => $this->getColumnKey(),
+            'isSortable' => $this->isColumnSortable(),
+            'sortDirection' => $this->getColumnSortDirection(),
+        ];
+    }
 }

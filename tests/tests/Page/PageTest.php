@@ -15,7 +15,7 @@ use SinglePage;
 
 class PageTest extends PageTestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
     }
@@ -526,7 +526,7 @@ class PageTest extends PageTestCase
     /**
      * @return \Concrete\Core\Page\Page[]
      */
-    protected function setupAliases()
+    public function setUpAliases()
     {
         if (($about = Page::getByPath('/about')) || !$about->getCollectionID()) {
             $about = self::createPage('About');

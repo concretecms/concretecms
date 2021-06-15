@@ -4,19 +4,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="ccm-ui">
     <?php
+    /** @var \Concrete\Core\Tree\Node\Type\ExpressEntryCategory|\Concrete\Core\Tree\Node\Type\ExpressEntryResults $node */
     $node->populateChildren();
-    $count = 0;
-    if ($node instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {
-        $count = $node->getTotalResultsInFolder();
-    }
     $childCount = count($node->getChildNodes());
     if ($childCount > 0) { ?>
         <div class="alert alert-danger">
             <?=t('This results folder contains one or more results folders. You may not remove it until it is empty.')?>
         </div>
-    <?php } else if ($count > 0) {?>
+    <?php } else if ($node instanceof \Concrete\Core\Tree\Node\Type\ExpressEntryResults) {?>
         <div class="alert alert-danger">
-            <?=t2('This results folder currently contains one result. It must be empty before you can remove it.', 'This results folder currently contains %s results. It must be empty before you can remove it.', $count)?>
+            <?=t('This results folder is currently active. You can not remove it.')?>
         </div>
     <?php } else { ?>
 

@@ -28,20 +28,19 @@ foreach ($pkgAvailableArray as $pkg) {
 }
 
 ?>
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Add-Ons'));?>
 
 <?php
 if (!$tp->canInstallPackages()) {
     ?>
 	<p class="block-message alert-message error"><?=t('You do not have access to download themes or add-ons from the marketplace.')?></p>
-<?php 
+<?php
 } else {
     ?>
 
 		<?php if (count($pkgLocal) == 0 && count($pkgRemote) == 0) {
     ?>
 			<p><?=t('No updates for your add-ons are available.')?></p>
-		<?php 
+		<?php
 } else {
     ?>
 
@@ -59,11 +58,11 @@ if (!$tp->canInstallPackages()) {
 					<?php if (!is_object($rpkg)) {
     ?>
 						<td class="ccm-marketplace-list-install-button"><input class="btn" disabled="disabled" type="button" value="<?=t('More Information')?>" /> <input class="btn primary" disabled="disabled" type="button" value="<?=t('Download and Install')?>" />
-					<?php 
+					<?php
 } else {
     ?>
 						<td class="ccm-marketplace-list-install-button"><a class="btn" target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a> <?=$ch->button(t("Download and Install"), View::url('/dashboard/extend/update', 'prepare_remote_upgrade', $rpkg->getMarketplaceItemID()), "", "primary")?></td>
-					<?php 
+					<?php
 }
     ?>
 				</tr>
@@ -79,12 +78,12 @@ if (!$tp->canInstallPackages()) {
 								<h6><?=t('Version History')?></h6>
 								<?=$versionHistory?>
 							</div>
-						<?php 
+						<?php
 }
     ?>
 					</td>
 				</tr>
-				<?php 
+				<?php
 } else {
     ?>
 				<tr>
@@ -92,10 +91,10 @@ if (!$tp->canInstallPackages()) {
 						<div class="block-message alert-message error"><p><?=t('Unable to locate this add-on on concrete5.org')?></p></div>
 					</td>
 				</tr>
-				<?php 
+				<?php
 }
     ?>
-			<?php 
+			<?php
 }
 
     foreach ($pkgLocal as $pkg) {
@@ -119,23 +118,23 @@ if (!$tp->canInstallPackages()) {
 								<h6><?=t('Version History')?></h6>
 								<?=$versionHistory?>
 							</div>
-						<?php 
+						<?php
 }
         ?>
 					</td>
 				</tr>
 
-			<?php 
+			<?php
     }
     ?>
 
 			</table>
 
-		<?php 
+		<?php
 }
     ?>
 
-<?php 
+<?php
 } ?>
 
 		<?php
@@ -146,14 +145,14 @@ if (!$tp->canInstallPackages()) {
 			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
 			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
 
-		<?php 
+		<?php
         } elseif (is_object($mi) && $mi->hasConnectionError()) {
             ?>
 
 			<?=Loader::element('dashboard/marketplace_connect_failed');
             ?>
 
-		<?php 
+		<?php
         } elseif ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) {
             ?>
 
@@ -163,7 +162,6 @@ if (!$tp->canInstallPackages()) {
 				<p><a class="btn btn-primary" href="<?=$view->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
 			</div>
 
-		<?php 
+		<?php
         } ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

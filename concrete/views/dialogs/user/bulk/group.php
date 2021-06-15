@@ -1,8 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $form = Core::make('helper/form');
 
-if ('add' == $function) {
+if ($function == 'add') {
     $button = t('Add');
     $label = t('Add the users below to Group(s)');
 } else {
@@ -10,10 +10,10 @@ if ('add' == $function) {
     $label = t('Remove the users below from Group(s)');
 }
 
-if (! is_array($users) || count($users) ==0) {
+if (!is_array($users) || count($users) == 0) {
 	?>
 	<div class="alert-message info">
-		<?php  echo t("No users are eligible for this operation"); ?>
+		<?php  echo t('No users are eligible for this operation'); ?>
 	</div>
 <?php
 } else {
@@ -54,8 +54,8 @@ if (! is_array($users) || count($users) ==0) {
 
 	<script type="text/javascript">
 		$(function() {
-			$('#groupIDs').removeClass('form-control').selectize({
-				plugins: ['remove_button']
+			$('#groupIDs').removeClass('form-control').selectpicker({
+				width: '100%'
 			});
 		});
 	</script>

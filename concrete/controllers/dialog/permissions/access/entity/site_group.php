@@ -1,14 +1,19 @@
 <?php
+
 namespace Concrete\Controller\Dialog\Permissions\Access\Entity;
 
-use Concrete\Controller\Backend\UserInterface as Controller;
+use Concrete\Controller\Backend\UserInterface;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Access\Entity\Type;
-use Concrete\Core\Site\User\Group\Service as GroupService;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Site\Type\Service as SiteTypeService;
+use Concrete\Core\Site\User\Group\Service as GroupService;
+use Concrete\Core\Validation\CSRF\Token;
 
-class SiteGroup extends Controller
+defined('C5_EXECUTE') or die('Access Denied.');
+
+class SiteGroup extends UserInterface
 {
-
     /**
      * @var \Concrete\Core\Site\User\Group\Service
      */
@@ -19,6 +24,13 @@ class SiteGroup extends Controller
      */
     protected $siteTypeService;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\Controller::$viewPath
+     */
+    protected $viewPath = '/dialogs/permissions/access/entity/site_group';
+
     public function __construct(GroupService $service, SiteTypeService $siteTypeService)
     {
         $this->groupService = $service;
@@ -26,50 +38,31 @@ class SiteGroup extends Controller
         parent::__construct();
     }
 
-    protected $viewPath = '/dialogs/permissions/access/entity/site_group';
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::canAccess()
+     */
     public function canAccess()
     {
-        $page = \Page::getByPath("/dashboard/system/sites/site_types");
-        $p = new \Permissions($page);
+        $page = Page::getByPath('/dashboard/system/sites/site_types');
+        $p = new Checker($page);
+
         return $p->canViewPage();
     }
 
-    public function view($pkCategoryHandle, $permissionObjectId)
+    public function view()
     {
-        $type = false;
-        switch($pkCategoryHandle) {
-            case 'page_type':
-                $pageType = \Concrete\Core\Page\Type\Type::getByID($permissionObjectId);
-                $type = $pageType->getSiteTypeObject();
-                break;
-            case 'page':
-                $page = \Page::getByID($permissionObjectId);
-                if (is_object($page) && !$page->isError()) {
-                    $tree = $page->getSiteTreeObject();
-                    if (is_object($tree)) {
-                        $type = $tree->getSiteType();
-                    }
-                }
-                break;
+        $groups = [];
+        foreach ($this->siteTypeService->getList() as $type) {
+            $siteGroups = $this->groupService->getSiteTypeGroups($type);
+            $groups = array_merge($groups, $siteGroups);
         }
 
-        $groups = array();
-        if (is_object($type)) {
-            $groups = $this->groupService->getSiteTypeGroups($type);
-        } else {
-            // make a list of all of them
-            $groups = array();
-            foreach($this->siteTypeService->getList() as $type) {
-                $siteGroups = $this->groupService->getSiteTypeGroups($type);
-                $groups = array_merge($groups, $siteGroups);
-            }
-        }
         $accessEntityType = Type::getByHandle('site_group');
         $url = $accessEntityType->getControllerUrl();
         $this->set('groups', $groups);
         $this->set('url', $url);
+        $this->set('token', $this->app->make(Token::class));
     }
-
-
 }

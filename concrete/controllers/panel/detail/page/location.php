@@ -37,7 +37,6 @@ class Location extends BackendInterfacePageController
     public function view()
     {
         $c = $this->page;
-        $this->requireAsset('core/sitemap');
         $cParentID = $c->getCollectionParentID();
         if ($c->isPageDraft()) {
             $cParentID = $c->getPageDraftTargetParentPageID();

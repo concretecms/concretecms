@@ -44,12 +44,12 @@ class Sitemap extends BackendInterfaceController
 
     public function view()
     {
-        $this->requireAsset('core/sitemap');
         $drafts = ConcretePage::getDrafts($this->site);
         $mydrafts = array();
         foreach ($drafts as $d) {
-            $dp = new Permissions($d);
-            if ($dp->canEditPageContents()) {
+            $pt = $d->getPagetypeObject();
+            $tp = new Permissions($pt);
+            if ($tp->canEditPageTypeDrafts()) {
                 $mydrafts[] = $d;
             }
         }

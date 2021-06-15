@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Html\Service;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class SeoTest extends PHPUnit_Framework_TestCase
+class SeoTest extends TestCase
 {
     public function testSeoTitle()
     {

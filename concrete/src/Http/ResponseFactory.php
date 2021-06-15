@@ -14,6 +14,7 @@ use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
@@ -340,8 +341,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $dl->setupSiteInterfaceLocalization($collection);
 
         $request->setCurrentPage($collection);
-        $c = $collection; // process.php needs this
-        require DIR_BASE_CORE . '/bootstrap/process.php';
         $u = $this->app->make(User::class);
 
         // On page view event.

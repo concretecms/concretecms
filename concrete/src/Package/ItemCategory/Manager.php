@@ -44,6 +44,16 @@ class Manager extends CoreManager
         return new StorageLocationType();
     }
 
+    public function createExternalFileProviderTypeDriver()
+    {
+        return new ExternalFileProviderType();
+    }
+
+    public function createImageEditorDriver()
+    {
+        return new ImageEditor();
+    }
+
     public function createAntispamLibraryDriver()
     {
         return new AntispamLibrary();
@@ -72,11 +82,6 @@ class Manager extends CoreManager
     public function createGroupDriver()
     {
         return new Group();
-    }
-
-    public function createUserPointActionDriver()
-    {
-        return new UserPointAction();
     }
 
     public function createAttributeKeyCategoryDriver()

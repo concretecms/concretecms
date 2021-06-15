@@ -23,7 +23,7 @@ class CalendarEventVersionRepetition
     protected $version;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CalendarEventRepetition", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="CalendarEventRepetition", cascade={"refresh","persist"})
      * @ORM\JoinColumn(name="repetitionID", referencedColumnName="repetitionID")
      */
     protected $repetition;

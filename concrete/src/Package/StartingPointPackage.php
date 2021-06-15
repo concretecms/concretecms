@@ -8,7 +8,6 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
-use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
 use Concrete\Core\Localization\Localization;
@@ -18,11 +17,10 @@ use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
-use Concrete\Core\Tree\Node\Type\Category;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
-use Concrete\Core\User\Point\Action\Action as UserPointAction;
+use Concrete\Core\User\Group\FolderManager;
 use Config;
 use Core;
 use Database;
@@ -42,7 +40,7 @@ use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
 use Concrete\Core\Application\Application;
 
-class StartingPointPackage extends BasePackage
+class StartingPointPackage extends Package
 {
     protected $DIR_PACKAGES_CORE = DIR_STARTING_POINT_PACKAGES_CORE;
     protected $DIR_PACKAGES = DIR_STARTING_POINT_PACKAGES;
@@ -77,13 +75,12 @@ class StartingPointPackage extends BasePackage
             new StartingPointInstallRoutine('install_blocktypes_multimedia', 57, t('Adding Multimedia block types.')),
             new StartingPointInstallRoutine('install_blocktypes_core_desktop', 61, t('Adding Desktop block types.')),
             new StartingPointInstallRoutine('install_blocktypes_other', 64, t('Adding other block types.')),
-            new StartingPointInstallRoutine('install_gathering', 66, t('Adding gathering data sources.')),
+            new StartingPointInstallRoutine('install_boards', 66, t('Adding boards.')),
             new StartingPointInstallRoutine('install_page_types', 67, t('Page type basic setup.')),
             new StartingPointInstallRoutine('install_themes', 68, t('Adding themes.')),
             new StartingPointInstallRoutine('install_jobs', 69, t('Installing automated jobs.')),
             new StartingPointInstallRoutine('install_dashboard', 78, t('Installing dashboard.')),
             new StartingPointInstallRoutine('install_required_single_pages', 79, t('Installing login and registration pages.')),
-            new StartingPointInstallRoutine('install_image_editor', 80, t('Adding image editor functionality.')),
             new StartingPointInstallRoutine('install_config', 81, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 82, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 83, t('Adding pages and content.')),
@@ -206,6 +203,7 @@ class StartingPointPackage extends BasePackage
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_category');
         \Concrete\Core\Tree\TreeType::add('express_entry_results');
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_results');
+        \Concrete\Core\Tree\Node\NodeType::add('express_entry_site_results');
 
         $tree = ExpressEntryResults::add();
         $node = $tree->getRootTreeNodeObject();
@@ -242,10 +240,10 @@ class StartingPointPackage extends BasePackage
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/dashboard.xml');
     }
 
-    protected function install_gathering()
+    protected function install_boards()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/gathering.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/boards.xml');
     }
 
     protected function install_page_types()
@@ -259,12 +257,6 @@ class StartingPointPackage extends BasePackage
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/global.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/single_pages/root.xml');
-    }
-
-    protected function install_image_editor()
-    {
-        $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/image_editor.xml');
     }
 
     /**
@@ -341,6 +333,8 @@ class StartingPointPackage extends BasePackage
     protected function install_themes()
     {
         $ci = new ContentImporter();
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/summary.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/containers.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
         if (file_exists($this->getPackagePath() . '/themes.xml')) {
             $ci->importContentFile($this->getPackagePath() . '/themes.xml');
@@ -515,12 +509,22 @@ class StartingPointPackage extends BasePackage
         $u = User::getByUserID(USER_SUPER_ID, true, false);
 
         MailImporter::add(['miHandle' => 'private_message']);
-        UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
 
         // Install conversation default email
         \Conversation::setDefaultSubscribedUsers([$superuser]);
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/conversation.xml');
+
+        $folderManager = new FolderManager();
+        $folderManager->create();
+
+        // Add Group Type + Default Role and assign them to the groups
+        $db = Database::get();
+        $db->executeQuery('insert into GroupTypes (gtID, gtName, gtDefaultRoleID) values (?,?, ?)', [DEFAULT_GROUP_TYPE_ID, t("Group"), DEFAULT_GROUP_ROLE_ID]);
+        $db->executeQuery('insert into GroupRoles (grID, grName) values (?,?)', [DEFAULT_GROUP_ROLE_ID, t("Member")]);
+        $db->executeQuery('insert into GroupTypeSelectedRoles (gtID, grID) values (?,?)', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
+        $db->executeQuery('update `Groups` set gtID = ?, gDefaultRoleID = ?', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
+        $db->executeQuery('update UserGroups set grID = ?', [DEFAULT_GROUP_ROLE_ID]);
     }
 
     protected function make_directories()

@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
+use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\Search\Field\ManagerFactory;
@@ -26,14 +27,24 @@ class AdvancedSearch extends AdvancedSearchController
         return $this->app->make('Concrete\Core\File\Search\SearchProvider');
     }
 
-    public function getSavedSearchEntity()
+    public function getSearchPresets()
     {
         $em = $this->app->make(EntityManager::class);
         if (is_object($em)) {
-            return $em->getRepository('Concrete\Core\Entity\Search\SavedFileSearch');
+            return $em->getRepository(SavedFileSearch::class)->findAll();
         }
 
         return null;
+    }
+
+    public function getSubmitMethod()
+    {
+        return 'get';
+    }
+
+    public function getSubmitAction()
+    {
+        return $this->app->make('url')->to('/dashboard/files/search', 'advanced_search');
     }
 
     public function getFieldManager()
@@ -41,36 +52,9 @@ class AdvancedSearch extends AdvancedSearchController
         return ManagerFactory::get('file');
     }
 
-    public function getRequestDefaultSort()
-    {
-        return $this->request->request->get('fSearchDefaultSort');
-    }
-
-    public function getRequestDefaultSortDirection()
-    {
-        return $this->request->request->get('fSearchDefaultSortDirection');
-    }
-
-    public function onAfterSavePreset(SavedSearch $search)
-    {
-        $filesystem = new Filesystem();
-        $folder = $filesystem->getRootFolder();
-        \Concrete\Core\Tree\Node\Type\SearchPreset::addSearchPreset($search, $folder);
-    }
-
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return (string) URL::to('/ccm/system/search/files/preset', $search->getID());
-    }
-
-    public function getCurrentSearchBaseURL()
-    {
-        return (string) URL::to('/ccm/system/search/files/current');
-    }
-
-    public function getBasicSearchBaseURL()
-    {
-        return (string) URL::to('/ccm/system/search/files/basic');
+        return $this->app->make('url')->to('/dashboard/files/search', 'preset', $search->getID());
     }
 
     public function getSavedSearchDeleteURL(SavedSearch $search)

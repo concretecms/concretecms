@@ -1,62 +1,29 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Express;
 
-use Concrete\Controller\Element\Dashboard\Express\Entries\Header;
-use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\EntryList;
-use Concrete\Core\Page\Controller\DashboardExpressEntityPageController;
-use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Search\Result\Result;
-use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Controller\Traits\DashboardExpressEntryDetailsTrait;
+use Concrete\Core\Controller\Traits\DashboardSelectableExpressEntryListTrait;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Permission\Checker;
 
-class Entries extends DashboardExpressEntityPageController
+class Entries extends DashboardSitePageController
 {
 
-    /**
-     * @var $entity Entity
-     */
-    protected $entity;
+    use DashboardSelectableExpressEntryListTrait;
+    use DashboardExpressEntryDetailsTrait;
 
-    public function getEntity(\Concrete\Core\Tree\Node\Type\ExpressEntryResults $parent = null)
-    {
-        if ($this->entity) {
-            return $this->entity;
-        } else {
-            return $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
-                ->findOneByResultsNode($parent);
-        }
-    }
-
-    protected function getBackURL(Entity $entity)
-    {
-        return \URL::to($this->getPageObject()
-            ->getCollectionPath(), 'view', $entity->getID(),
-            $entity->getEntityResultsNodeID());
-    }
-
-
-    public function view($entity = null, $folder = null)
+    public function view()
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
-        if ($entity) {
-            $entity = $r->findOneById($entity);
-        }
-        if (isset($entity) && is_object($entity)) {
-            $this->entity = $entity;
-            $this->set('entity', $entity);
-            $this->renderList($folder);
-            $permissions = new \Permissions($this->getEntity());
-            if ($permissions->canAddExpressEntries()) {
-                $header = new Header($entity, $this->getPageObject());
-                $this->set('headerMenu', $header);
-                $this->set('pageTitle', t('View %s Entries', h($this->getEntity()->getName())));
+        $entities = [];
+        foreach($r->findPublicEntities() as $entity) {
+            $permissions = new Checker($entity);
+            if ($permissions->canViewExpressEntries()) {
+                $entities[] = $entity;
             }
-        } else {
-            $this->set('pageTitle', t('View Express Entities'));
-            $this->set('entities', $r->findPublicEntities());
         }
+        $this->set('pageTitle', t('View Express Entities'));
+        $this->set('entities', $entities);
     }
-
 
 }

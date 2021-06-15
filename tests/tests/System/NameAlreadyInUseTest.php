@@ -1,11 +1,11 @@
 <?php
 
-namespace Concrete\Tests\Update;
+namespace Concrete\Tests\System;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use RuntimeException;
 
-class NameAlreadyInUseTest extends PHPUnit_Framework_TestCase
+class NameAlreadyInUseTest extends TestCase
 {
     /**
      * The root directory of concrete5, with '/' as directory separator, without any leading '/'.
@@ -87,13 +87,12 @@ class NameAlreadyInUseTest extends PHPUnit_Framework_TestCase
             'concrete/mail',
             'concrete/routes',
             'concrete/single_pages',
-            'concrete/tools',
             'concrete/vendor',
             'concrete/views',
         ], true)) {
             return false;
         }
-        if (preg_match('%^concrete/blocks/\w+/(form|templates|src|tools)$%', $directoryRelativePath)) {
+        if (preg_match('%^concrete/blocks/\w+/(form|templates|src)$%', $directoryRelativePath)) {
             // These directories don't contain PHP-only files
             return false;
         }

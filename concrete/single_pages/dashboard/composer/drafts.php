@@ -4,8 +4,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Drafts'))?>
-
 <?php
 if (count($drafts) > 0) {
     ?>
@@ -39,24 +37,22 @@ $num = 0;
 		<td><?=$dr->getPageTypeName()?></td>
 		<td><?=$dh->formatPrettyDateTime($dr->getCollectionDateLastModified());
             ?></td>
-	<?php 
+	<?php
         }
         ?>
 
-<?php 
+<?php
     }
     ?>
 </table>
 
-<?php 
+<?php
 }
 
 if ($num == 0) {
     ?>
-	
+
 	<p><?=t('There are no drafts. <a href="%s">Visit Composer &gt;</a>', $view->url('/dashboard/composer/write'))?></p>
 
-<?php 
+<?php
 } ?>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

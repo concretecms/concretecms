@@ -20,7 +20,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
         <?php if (isset($pageListTitle) && $pageListTitle) {
             ?>
             <div class="ccm-block-page-list-header">
-                <h5><?php echo h($pageListTitle) ?></h5>
+                <<?php echo $titleFormat; ?>><?php echo h($pageListTitle) ?></<?php echo $titleFormat; ?>>
             </div>
             <?php
         } ?>
@@ -106,7 +106,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
                             <?php
                             $img = Core::make('html/image', [$thumbnail]);
                             $tag = $img->getTag();
-                            $tag->addClass('img-responsive');
+                            $tag->addClass('img-fluid');
                             echo $tag; ?>
                         </div>
                         <?php

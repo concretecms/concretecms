@@ -1,12 +1,16 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Core::make("helper/form/user_selector");
-$author = null;
+$authorID = null;
 if ($entry) {
-    $author = $entry->getAuthor()->getUserID();
+    $author = $entry->getAuthor();
+
+    if ($author) {
+        $authorID = $author->getUserID();
+    }
 } else {
     $u = Core::make(Concrete\Core\User\User::class);
-    $author = $u->getUserID();
+    $authorID = $u->getUserID();
 }
 ?>
 
@@ -14,5 +18,5 @@ if ($entry) {
     <?php if ($view->supportsLabel()) { ?>
         <label class="control-label"><?=$label?></label>
     <?php } ?>
-    <?=$form->selectUser('author', $author);?>
+    <?=$form->selectUser('author', $authorID);?>
 </div>

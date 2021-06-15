@@ -6,7 +6,6 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Controller;
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Legacy\BlockRecord;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Type\Type;
@@ -51,11 +50,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btExportPageFeedColumns = [];
     protected $btWrapperClass = '';
     protected $btDefaultSet;
-    protected $btFeatures = [];
-    protected $btFeatureObjects;
     protected $identifier;
     protected $btTable = null;
     protected $btID;
+
+    public static $btTitleFormats = ['h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3', 'h4' => 'H4', 'h5' => 'H5', 'h6' => 'H6', 'p' => 'Normal'];
 
     /**
      * Set this to true if the data sent to the save/performSave methods can contain NULL values that should be persisted.
@@ -333,21 +332,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $this->set($key, $value);
             }
         }
-    }
-
-    public function getBlockTypeFeatureObjects()
-    {
-        if (!isset($this->btFeatureObjects)) {
-            $this->btFeatureObjects = [];
-            foreach ($this->btFeatures as $feHandle) {
-                $fe = Feature::getByHandle($feHandle);
-                if (is_object($fe)) {
-                    $this->btFeatureObjects[] = $fe;
-                }
-            }
-        }
-
-        return $this->btFeatureObjects;
     }
 
     public function export(\SimpleXMLElement $blockNode)

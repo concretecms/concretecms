@@ -1,13 +1,24 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
+ */
+
+/*
  * Base path: /ccm/system/panels
  * Namespace: Concrete\Controller\Panel\
  */
+
 $router->all('/add', 'Add::view');
 $router->all('/add/get_stack_contents', 'Add::getStackContents');
+$router->all('/add/get_stack_folder_contents', 'Add::getStackFolderContents');
+$router->all('/add/remove_orphaned_blocks', 'Add::removeOrphanedBlocks');
+$router->all('/add/remove_orphaned_block', 'Add::removeOrphanedBlock');
+$router->all('/add/get_orphaned_block_contents', 'Add::getOrphanedBlockContents');
+$router->all('/add/get_clipboard_contents', 'Add::getClipboardContents');
 $router->all('/dashboard', 'Dashboard::view');
 $router->all('/dashboard/add_favorite', 'Dashboard::addFavorite');
 $router->all('/dashboard/remove_favorite', 'Dashboard::removeFavorite');
@@ -37,4 +48,5 @@ $router->all('/page/versions/approve', 'Page\Versions::approve');
 $router->all('/page/versions/unapprove', 'Page\Versions::unapprove');
 $router->all('/page/devices', 'Page\Devices::view');
 $router->all('/page/devices/preview', 'Page\Devices::preview');
-$router->get('/sitemap', 'Sitemap::view');
+$router->all('/sitemap', 'Sitemap::view');
+$router->all('/help', 'Help::view');

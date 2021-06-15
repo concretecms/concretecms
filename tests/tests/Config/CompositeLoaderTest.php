@@ -6,8 +6,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Config\CompositeLoader;
 use Concrete\Core\Config\LoaderInterface;
 use \Mockery as M;
+use Concrete\Tests\TestCase;
 
-class CompositeLoaderTest extends \PHPUnit_Framework_TestCase
+class CompositeLoaderTest extends TestCase
 {
 
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -103,10 +104,4 @@ class CompositeLoaderTest extends \PHPUnit_Framework_TestCase
 
         $loader->exists('foo');
     }
-
-    public function testLoad()
-    {
-
-    }
-
 }
