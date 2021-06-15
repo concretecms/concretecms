@@ -261,7 +261,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                     <img style="width: 49px" class="me-3" src="<?= $ci->getPackageIconURL($pkg); ?>" />
                     <div class="media-body">
                         <a href="<?= URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()); ?>" class="btn float-end btn-sm btn-secondary"><?= t('Details'); ?></a>
-                        <h4 class="media-heading"><?= t($pkg->getPackageName()) ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
+                        <h4 class="media-heading"><?= t($pkg->getPackageName()) ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
                         <p><?= t($pkg->getPackageDescription()) ?></p>
                     </div>
                 </div>
@@ -288,7 +288,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                             <img style="width: 49px" class="me-3" src="<?= $pb->getRemoteIconURL(); ?>" />
                             <div class="media-body">
                                 <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()); ?>" class="btn float-end btn-sm btn-secondary"><?= t('Download'); ?></a>
-                                <h4 class="media-heading"><?= $pb->getName(); ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pb->getVersion()); ?></span></h4>
+                                <h4 class="media-heading"><?= $pb->getName(); ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pb->getVersion()); ?></span></h4>
                                 <p><?= $pb->getDescription(); ?></p>
                             </div>
                         </div>
@@ -318,7 +318,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                                 }
                             }
                             ?>
-                            <h4 class="media-heading"><?= t($obj->getPackageName()) ?> <span class="badge badge-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
+                            <h4 class="media-heading"><?= t($obj->getPackageName()) ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
                             <p><?= t($obj->getPackageDescription()) ?></p>
                         </div>
                     </div>

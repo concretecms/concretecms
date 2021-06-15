@@ -43,7 +43,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <tr>
                     <td><?=$formatter->getListIconElement()?></td>
                     <td><?=$configuredSource->getName()?></td>
-                    <td class="text-center"><span class="badge badge-info"><?=$itemCount?></span></td>
+                    <td class="text-center"><span class="badge bg-info"><?=$itemCount?></span></td>
                 </tr>
             <?php } ?>
             </tbody>

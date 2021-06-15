@@ -25,20 +25,20 @@ if (count($assignments) > 0) {
 
         if ($as->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
             if (is_object($pd)) {
-                $class = 'badge-warning';
+                $class = 'bg-warning';
                 $pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
             } else {
-                $class = 'badge-danger';
+                $class = 'bg-danger';
             }
         } else {
             if (is_object($pd)) {
-                $class = 'badge-info';
+                $class = 'bg-info';
                 $pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
             }
         }
 
         if (!$class) {
-            $class = 'badge-secondary';
+            $class = 'bg-secondary';
         }
         $str .= '<span class="badge ' . $class . '" ' . $pdTitle . '>' . $entity->getAccessEntityLabel() . '</span> ';
     }

@@ -22,7 +22,7 @@ if (!empty($_error)) {
 if (isset($message)) {
     ?>
     <div class="ccm-ui" id="ccm-dashboard-result-message">
-        <div class="alert alert-info">
+        <div class="alert alert-info alert-dismissible">
             <button type="button" class="btn-close" data-bs-dismiss="alert">
             </button><?= (isset($messageIsHTML) && $messageIsHTML) ? $message : nl2br(h($message)); ?></div>
     </div>
@@ -30,7 +30,7 @@ if (isset($message)) {
 } elseif (isset($success)) {
     ?>
     <div class="ccm-ui" id="ccm-dashboard-result-message">
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible">
             <button type="button" class="btn-close" data-bs-dismiss="alert">
             </button><?= (isset($successIsHTML) && $successIsHTML) ? $success : nl2br(h($success)); ?></div>
     </div>

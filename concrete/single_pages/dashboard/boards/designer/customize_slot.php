@@ -29,10 +29,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <div class="form-check">
                         <input type="radio" class="form-check-input" :value="index" name="selectedTemplateOption"
                                v-model="selectedTemplateOption">
-                        <span class="badge badge-dark me-3">{{templateOption.template.name}}</span>
+                        <span class="badge bg-dark me-3">{{templateOption.template.name}}</span>
 
                         <span v-for="contentObject in templateOption.collection.objects">
-                            <span class="badge badge-light me-3" v-if="contentObject.title">{{contentObject.title}}</span>
+                            <span class="badge bg-light me-3" v-if="contentObject.title">{{contentObject.title}}</span>
                         </span>
 
                         <i class="ms-2 fa fa-spinner fa-spin" v-if="!loadedTemplateOptions.includes(index)"></i>

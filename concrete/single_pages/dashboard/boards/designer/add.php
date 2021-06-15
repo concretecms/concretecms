@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </div>
         <div class="form-check">
             <input class="form-check-input" disabled type="radio" name="creationMethod" id="creationMethod2" value="C">
-            <span class="badge badge-secondary float-end"><?=t('Coming Soon.')?></span>
+            <span class="badge bg-secondary float-end"><?=t('Coming Soon.')?></span>
             <label class="form-check-label" for="creationMethod2">
                 <?=t('Create a completely custom slot element.')?>
             </label>

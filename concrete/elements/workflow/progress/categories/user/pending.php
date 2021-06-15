@@ -26,7 +26,7 @@ if (count($items) > 0): ?>
 
                         if (statusBar.length == 0) {
                             $('.ccm-dashboard-page-header').after("<div class='ccm-ui' id='ccm-dashboard-result-message' style='display:block'>"
-                                + "<div class='row'><div class='span12'><div class='alert alert-info'>"
+                                + "<div class='row'><div class='span12'><div class='alert alert-info alert-dismissible'>"
                                 + alertInnerContent + "</div></div></div></div>");
                         } else {
                             $('.alert', statusBar).html(alertInnerContent);

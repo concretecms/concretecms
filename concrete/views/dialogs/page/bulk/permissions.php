@@ -91,7 +91,7 @@ $form = $app->make(Form::class);
                 <tr>
                     <td class="ccm-permission-grid-name">
                         <div class="ccm-permission-access-line">
-                            <span class="badge badge-secondary">
+                            <span class="badge bg-secondary">
                                 <%=accessEntityItem.label%>
                             </span>
                         </div>

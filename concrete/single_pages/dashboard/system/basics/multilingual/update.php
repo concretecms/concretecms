@@ -29,7 +29,7 @@ $packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url
                         <?= $name ?>
                         <?php
                         if (!empty($details->getInstalledOutdated())) {
-                            ?><span class="badge badge-light badge-pill border"><?= count($details->getInstalledOutdated()) ?></span><?php
+                            ?><span class="badge bg-light rounded-pill border"><?= count($details->getInstalledOutdated()) ?></span><?php
                         }
                         ?>
                     </a>

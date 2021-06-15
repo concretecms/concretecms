@@ -50,7 +50,7 @@ use Concrete\Core\Support\Facade\Url;
             <div class="ccm-panel-page-versions-status">
                 <% if (cvIsApproved) { %>
                     <p>
-                        <span class="badge badge-dark">
+                        <span class="badge bg-dark">
                             <?php echo t('Live') ?>
                         </span>
                     </p>

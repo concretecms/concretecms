@@ -251,7 +251,7 @@
         <a href="javascript:void(0)" class="icon-link" data-action="delete-control"><i class="fa fa-trash"></i></a>
         </span>
     <% if (control.isRequired) { %>
-    <span style="margin-right: 20px" class="float-end badge badge-info"><?=t('Required'); ?></span>
+    <span style="margin-right: 20px" class="float-end badge bg-info"><?=t('Required'); ?></span>
     <% } %>
 </li>
 </script>

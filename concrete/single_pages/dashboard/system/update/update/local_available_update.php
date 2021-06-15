@@ -64,7 +64,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 <i class="float-end" v-bind:class="<?= $packageData?>.iconClass"></i>
                                 <h5 class="my-0">
                                     <?= h($installedPackage->getPackageName()) ?>
-                                    <span class="badge badge-pill badge-secondary"><?= tc('AddonVersion', 'v.%s', $installedPackage->getPackageVersion()) ?></span>
+                                    <span class="badge rounded-pill bg-secondary"><?= tc('AddonVersion', 'v.%s', $installedPackage->getPackageVersion()) ?></span>
                                 </h5>
                                 <div v-bind:class="<?= $packageData . '.stateClass' ?>" v-html="<?= $packageData ?>.stateHtml"></div>
                             </div>

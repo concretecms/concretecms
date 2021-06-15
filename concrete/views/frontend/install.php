@@ -33,7 +33,7 @@ if ($install_config) {
 
 <div id="ccm-page-install">
     <div class="ccm-install-version">
-        <span class="badge badge-info"><?= t('Version %s', $concreteVersion) ?></span>
+        <span class="badge bg-info"><?= t('Version %s', $concreteVersion) ?></span>
     </div>
     <div class="ccm-install-title">
         <ul class="breadcrumb">
