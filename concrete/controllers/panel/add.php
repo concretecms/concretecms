@@ -341,7 +341,7 @@ class Add extends BackendInterfacePageController
                 $containers = [];
                 if ($theme) {
                     $containers = $this->app->make(EntityManager::class)
-                        ->getRepository(Container::class)->findAll();
+                        ->getRepository(Container::class)->findBy([], ['containerName' => 'asc']);
                 }
                 $this->set('containers', $containers);
             case 'stacks':
