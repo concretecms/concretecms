@@ -90,7 +90,14 @@ switch (Config::get('concrete.cache.full_page_lifetime')) {
                     </label>
                 </div>
 
-                <div class="form-inline"><?= $form->number('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 110px', 'min' => 1)) ?> <span class="ms-1"><?= t('minutes') ?></span></div>
+                <div class="row row-cols-auto g-0 align-items-center">
+                    <div class="col-auto">
+                        <?= $form->number('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 110px', 'min' => 1)) ?>
+                    </div>
+                    <div class="col-auto">
+                        <span class="ms-1"><?= t('minutes') ?></span>
+                    </div>
+                </div>
 
             </div>
         </div>

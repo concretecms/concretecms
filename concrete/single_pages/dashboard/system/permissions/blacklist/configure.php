@@ -15,7 +15,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
 <form method="post" id="ipblacklist-form" action="<?= $view->action('update_ipblacklist', $category->getIpAccessControlCategoryID()) ?>">
     <?php $token->output('update_ipblacklist-' . $category->getIpAccessControlCategoryID()) ?>
     <div class="ccm-pane-body">
-        <div class="form-group row row-cols-auto g-1 align-items-center">
+        <div class="form-group row row-cols-auto gx-3 align-items-center">
             <div class="col-auto">
                 <?= $form->checkbox('banEnabled', 1, $category->isEnabled()) ?>
             </div>
@@ -33,9 +33,9 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
             ?>
         </div>
 
-        <div class="form-group row row-cols-auto g-1 align-items-center">
+        <div class="form-group row row-cols-auto gx-3 align-items-center">
             <?= $form->label('banDurationUnlimited', t('Ban Duration:'), ['class'=>'form-check-label','style'=>'margin-right:9px;'])?>
-            <div class="form-check">
+            <div class="col-auto form-check">
                 <label>
                     <?= $form->radio('banDurationUnlimited', '0', $category->getBanDuration() === null ? '1' : '0') ?>
                 </label>
@@ -50,7 +50,7 @@ $view->element('dashboard/system/permissions/blacklist/menu', ['category' => $ca
             );
             ?>
             <div class="col-auto" style="margin: 0 9px;"><?=t('or')?></div>
-            <div class="form-check">
+            <div class="col-auto form-check">
                 <label>
                     <?= $form->radio('banDurationUnlimited', '1', $category->getBanDuration() === null ? '1' : '0') ?>
                     <?= t('Ban Forever') ?>

@@ -26,25 +26,25 @@ foreach ($customRegex as $regex => $description) {
     <fieldset>
         <legend><?= t('User Password Requirements') ?></legend>
         <div class="form-group">
-            <div class="form-group form-inline">
+            <div class="form-group row row-cols-auto g-0 align-items-center">
                 <?= t('Require at least %s minimum characters', $form->number('min', $min, ['style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1', 'required' => 'required'])) ?>
             </div>
-            <div class="form-group form-inline">
+            <div class="form-group row row-cols-auto g-0 align-items-center">
                 <?= t('Require at least %s maximum characters', $form->number('max', $max ?: '', ['style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1', 'min' => '1'])) ?>
             </div>
-            <div class="form-group form-inline">
+            <div class="form-group row row-cols-auto g-0 align-items-center">
                 <?= t('Require at least %s special characters', $form->number('specialCharacters', $specialCharacters, ['style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1', 'required' => 'required'])) ?>
             </div>
-            <div class="form-group form-inline">
+            <div class="form-group row row-cols-auto g-0 align-items-center">
                 <?= t('Require at least %s lowercase characters', $form->number('lowerCase', $lowerCase, ['style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1', 'required' => 'required'])) ?>
             </div>
-            <div class="form-group form-inline">
+            <div class="form-group row row-cols-auto g-0 align-items-center">
                 <?= t('Require at least %s uppercase characters', $form->number('upperCase', $upperCase, ['style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1', 'required' => 'required'])) ?>
             </div>
             <div class="form-check">
                 <?= $form->checkbox('isPasswordReuse', '1', false, ['v-model' => 'isPasswordReuse']) ?>
                 <label class="form-check-label" for="isPasswordReuse"><?= t('Prevent password reuse') ?></label>
-                <div class="form-group form-inline" v-if="isPasswordReuse">
+                <div class="form-group row row-cols-auto g-0 align-items-center" v-if="isPasswordReuse">
                     <?= t('Track previous %s passwords', $form->number('passwordReuse', ['v-model.trim' => 'passwordReuse', 'v-bind:required' => 'isPasswordReuse', 'style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1'])) ?>
                 </div>
             </div>

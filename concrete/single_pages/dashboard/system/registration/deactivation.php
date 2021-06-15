@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="card card-body bg-light pb-0" data-group="user-deactivation-days">
             <div class="form-group">
                 <?= $form->label('userDeactivationDays', t('Threshold'), ['class' => 'form-label']) ?>
-                <div class="form-inline">
+                <div class="row row-cols-auto g-0 align-items-center">
                     <?= t(
                         'Deactivate users when they have not logged in for %s days',
                         $form->number('userDeactivationDays', $userDeactivationDays, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ms-1 me-1'])
@@ -53,7 +53,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="card card-body bg-light pb-0" data-group="user-deactivation-logins">
             <div class="form-group">
                 <?= $form->label('userLoginAmount', t('Threshold'), ['class' => 'form-label']) ?>
-                <div class="form-inline">
+                <div class="row row-cols-auto g-0 align-items-center">
                     <?= t(
                         'Deactivate users once they have failed %s login(s) within %s seconds',
                         $form->number('userLoginAmount', $userLoginAmount, ['style' => 'width: 5rem', 'min' => '1', 'class' => 'form-control-sm ms-1 me-1']),
