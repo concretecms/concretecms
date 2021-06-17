@@ -7,12 +7,5 @@ $light-green: #0c6;
 $secondary: $blue;
 $primary: $green;
 
-// ---- Map those to theme conventions
-$theme-colors: (
-  'primary': $green,
-  'secondary': $blue,
-  'light-green': $light-green,
-);
-
 $link-color: $secondary;
 $link-decoration: none;

@@ -15,7 +15,6 @@ $font-family-header-navigation: 'Titillium Web';
 
 // hr
 $hr-margin-y: $primary-margin-y;
-$hr-color: $gray-300;
 
 // buttons
 $btn-border-radius: 20px;
@@ -39,3 +38,7 @@ $blockquote-border-color: $gray-300;
 // blocks
 // image slider
 $image-slider-bg: '/concrete/themes/elemental/images/background-slider-default.png';
+
+// Add light-green too default bs5 $theme-colors
+$custom-theme-colors: ('light-green': $light-green);
+$theme-colors: map-merge($theme-colors, $custom-theme-colors);
