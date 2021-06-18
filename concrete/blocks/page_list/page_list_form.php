@@ -29,6 +29,7 @@ use Concrete\Core\Form\Service\Widget\DateTime;
 /** @var string $pageListTitle */
 /** @var bool $filterByRelated */
 /** @var bool $filterByCustomTopic */
+/** @var string $topicFilter */
 /** @var string $filterDateOption */
 /** @var int $filterDateDays */
 /** @var string $filterDateStart */
@@ -126,17 +127,17 @@ echo $userInterface->tabs([
                 <?php echo $form->label('', t('Topics')); ?>
 
                 <div class="form-check">
-                    <?php echo $form->radio("topicFilter", "", (!$filterByRelated && !$filterByCustomTopic), ["id" => "topicFilter", "name" => "topicFilter"]); ?>
+                    <?php echo $form->radio("topicFilter", "", $topicFilter, ["id" => "topicFilter", "name" => "topicFilter"]); ?>
                     <?php echo $form->label("topicFilter", t("No topic filtering"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("topicFilter", "custom", $filterByCustomTopic, ["id" => "topicFilterCustom", "name" => "topicFilter"]); ?>
+                    <?php echo $form->radio("topicFilter", "custom", $topicFilter, ["id" => "topicFilterCustom", "name" => "topicFilter"]); ?>
                     <?php echo $form->label("topicFilterCustom", t("Custom Topic"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("topicFilter", "related", $filterByRelated, ["id" => "topicFilterRelated", "name" => "topicFilter"]); ?>
+                    <?php echo $form->radio("topicFilter", "related", $topicFilter, ["id" => "topicFilterRelated", "name" => "topicFilter"]); ?>
                     <?php echo $form->label("topicFilterRelated", t("Related Topic"), ["class" => "form-check-label"]); ?>
                 </div>
 
@@ -172,9 +173,9 @@ echo $userInterface->tabs([
                 </div>
 
                 <div data-row="related-topic">
-                    <span class="help-block">
+                    <div class="help-block">
                         <?php echo t('Allows other blocks like the topic list block to pass search criteria to this page list block.') ?>
-                    </span>
+                    </div>
 
                     <?php
                     $relatedTopicAttributeKeyHandles = [
@@ -209,11 +210,10 @@ echo $userInterface->tabs([
                 ?>
 
                 <?php foreach ($filterDateOptions as $filterDateOptionHandle => $filterDateOptionLabel) { ?>
-                    <?php $isChecked = ($filterDateOption == $filterDateOptionHandle) ? 'checked' : ''; ?>
 
                     <div class="form-check">
                         <?php $id = "filterDateOption" . $i++; ?>
-                        <?php echo $form->radio("filterDateOption", $filterDateOptionHandle, $isChecked, ["id" => $id, "name" => "filterDateOption", "class" => "filterDateOption"]); ?>
+                        <?php echo $form->radio("filterDateOption", $filterDateOptionHandle, $filterDateOption, ["id" => $id, "name" => "filterDateOption", "class" => "filterDateOption"]); ?>
                         <?php echo $form->label($id, $filterDateOptionLabel, ["class" => "form-check-label"]); ?>
                     </div>
                 <?php } ?>
@@ -276,11 +276,11 @@ echo $userInterface->tabs([
                     ?>
 
                     <?php if (!is_object($featuredAttribute)) { ?>
-                        <span class="help-block">
+                        <div class="help-block">
                             <?php echo t(
                                 '(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');
                             ?>
-                        </span>
+                        </div>
                     <?php } ?>
                 </div>
 
@@ -386,12 +386,12 @@ echo $userInterface->tabs([
                 </label>
 
                 <div class="form-check">
-                    <?php echo $form->radio("rss", "0", !is_object($rssFeed), ["id" => "disableRssFeed", "name" => "rss", "class" => "rssSelector"]); ?>
+                    <?php echo $form->radio("rss", "0", is_object($rssFeed) ? '1' : '0', ["id" => "disableRssFeed", "name" => "rss", "class" => "rssSelector"]); ?>
                     <?php echo $form->label("disableRssFeed", t("No"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("rss", "1", is_object($rssFeed), ["id" => "enableRssFeed", "name" => "rss", "class" => "rssSelector"]); ?>
+                    <?php echo $form->radio("rss", "1", is_object($rssFeed) ? '1' : '0', ["id" => "enableRssFeed", "name" => "rss", "class" => "rssSelector"]); ?>
                     <?php echo $form->label("enableRssFeed", t("Yes"), ["class" => "form-check-label"]); ?>
                 </div>
 
@@ -432,12 +432,12 @@ echo $userInterface->tabs([
                 </label>
 
                 <div class="form-check">
-                    <?php echo $form->radio("disableIncludeName", "0", !$includeName, ["id" => "disableIncludeName", "name" => "includeName"]); ?>
+                    <?php echo $form->radio("disableIncludeName", "0", $includeName ? '1' : '0', ["id" => "disableIncludeName", "name" => "includeName"]); ?>
                     <?php echo $form->label("disableIncludeName", t("No"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("enableIncludeName", "1", $includeName, ["id" => "enableIncludeName", "name" => "includeName"]); ?>
+                    <?php echo $form->radio("enableIncludeName", "1", $includeName ? '1' : '0', ["id" => "enableIncludeName", "name" => "includeName"]); ?>
                     <?php echo $form->label("enableIncludeName", t("Yes"), ["class" => "form-check-label"]); ?>
                 </div>
             </div>
@@ -448,12 +448,12 @@ echo $userInterface->tabs([
                 </label>
 
                 <div class="form-check">
-                    <?php echo $form->radio("includeDescription", "0", !$includeDescription, ["id" => "disableIncludeDescription", "name" => "includeDescription"]); ?>
+                    <?php echo $form->radio("includeDescription", "0", $includeDescription ? '1' : '0', ["id" => "disableIncludeDescription", "name" => "includeDescription"]); ?>
                     <?php echo $form->label("disableIncludeDescription", t("No"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("includeDescription", "1", $includeDescription, ["id" => "enableIncludeDescription", "name" => "includeDescription"]); ?>
+                    <?php echo $form->radio("includeDescription", "1", $includeDescription ? '1' : '0', ["id" => "enableIncludeDescription", "name" => "includeDescription"]); ?>
                     <?php echo $form->label("enableIncludeDescription", t("Yes"), ["class" => "form-check-label"]); ?>
                 </div>
 
@@ -494,18 +494,18 @@ echo $userInterface->tabs([
                 <?php echo $form->label('', t('Include Public Page Date')); ?>
 
                 <div class="form-check">
-                    <?php echo $form->radio("includeDate", "0", !$includeDate, ["id" => "disableIncludeDate", "name" => "includeDate"]); ?>
+                    <?php echo $form->radio("includeDate", "0", $includeDate ? '1' : '0', ["id" => "disableIncludeDate", "name" => "includeDate"]); ?>
                     <?php echo $form->label("disableIncludeDate", t("No"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("includeDate", "1", $includeDate, ["id" => "enableIncludeDate", "name" => "includeDate"]); ?>
+                    <?php echo $form->radio("includeDate", "1", $includeDate ? '1' : '0', ["id" => "enableIncludeDate", "name" => "includeDate"]); ?>
                     <?php echo $form->label("enableIncludeDate", t("Yes"), ["class" => "form-check-label"]); ?>
                 </div>
 
-                <span class="help-block">
+                <div class="help-block">
                     <?php echo t('This is usually the date the page is created. It can be changed from the page attributes panel.') ?>
-                </span>
+                </div>
             </div>
 
             <div class="form-group">
@@ -514,12 +514,12 @@ echo $userInterface->tabs([
                 </label>
 
                 <div class="form-check">
-                    <?php echo $form->radio("displayThumbnail", "0", !$displayThumbnail, ["id" => "disableIncludeThumbnail", "name" => "displayThumbnail"]); ?>
+                    <?php echo $form->radio("displayThumbnail", "0", $displayThumbnail ? '1' : '0', ["id" => "disableIncludeThumbnail", "name" => "displayThumbnail"]); ?>
                     <?php echo $form->label("disableIncludeThumbnail", t("No"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("displayThumbnail", "1", $displayThumbnail, ["id" => "enableIncludeThumbnail", "name" => "displayThumbnail"]); ?>
+                    <?php echo $form->radio("displayThumbnail", "1", $displayThumbnail ? '1' : '0', ["id" => "enableIncludeThumbnail", "name" => "displayThumbnail"]); ?>
                     <?php echo $form->label("enableIncludeThumbnail", t("Yes"), ["class" => "form-check-label"]); ?>
                 </div>
 
@@ -536,12 +536,12 @@ echo $userInterface->tabs([
                 </label>
 
                 <div class="form-check">
-                    <?php echo $form->radio("useButtonForLink", "0", !$useButtonForLink, ["id" => "disableUseButtonForLink", "name" => "useButtonForLink"]); ?>
+                    <?php echo $form->radio("useButtonForLink", "0", $useButtonForLink ? '1' : '0', ["id" => "disableUseButtonForLink", "name" => "useButtonForLink"]); ?>
                     <?php echo $form->label("disableUseButtonForLink", t("No"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("useButtonForLink", "1", $useButtonForLink, ["id" => "enableUseButtonForLink", "name" => "useButtonForLink"]); ?>
+                    <?php echo $form->radio("useButtonForLink", "1", $useButtonForLink ? '1' : '0', ["id" => "enableUseButtonForLink", "name" => "useButtonForLink"]); ?>
                     <?php echo $form->label("enableUseButtonForLink", t("Yes"), ["class" => "form-check-label"]); ?>
                 </div>
 
