@@ -44,7 +44,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <button :disabled="selectedInstances.length === 0"
         type="button"
         class="btn btn-secondary"
-        data-bs-toggle="modal" data-target="#schedule-modal"><?=t('Add Scheduled Stripe')?></button>
+        data-bs-toggle="modal" data-bs-target="#schedule-modal"><?=t('Add Scheduled Stripe')?></button>
             </div>
 
         </div>

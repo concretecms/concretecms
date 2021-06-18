@@ -557,7 +557,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <div class="ccm-panel-add-block-set">
                 <header
                         data-bs-toggle="collapse"
-                        data-target="#ccm-block-set-<?= $i ?>"
+                        data-bs-target="#ccm-block-set-<?= $i ?>"
                         aria-expanded="true"
                         aria-controls="ccm-block-set-<?= $i ?>"
                 >

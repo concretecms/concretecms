@@ -116,7 +116,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?=$token->output('delete_instance')?>
             <div class="d-grid">
                 <button type="button"
-                        data-bs-toggle="modal" data-target="#delete-instance-<?=$instance->getBoardInstanceID()?>"
+                        data-bs-toggle="modal" data-bs-target="#delete-instance-<?=$instance->getBoardInstanceID()?>"
                         class="btn btn-block btn-outline-danger"><?=t("Delete Instance")?></button>
             </div>
         </form>

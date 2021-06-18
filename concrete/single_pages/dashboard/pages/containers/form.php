@@ -84,7 +84,7 @@ if (isset($container) && $container) {
             <button type="submit" class="btn float-end btn-primary"><?=$buttonText; ?></button>
             <?php if ($container) {
                 ?>
-                <button type="button" class="btn float-end btn-danger me-1" data-bs-toggle="modal" data-target="#delete-container"><?=t('Delete Container'); ?></button>
+                <button type="button" class="btn float-end btn-danger me-1" data-bs-toggle="modal" data-bs-target="#delete-container"><?=t('Delete Container'); ?></button>
             <?php
             } ?>
         </div>

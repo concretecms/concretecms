@@ -26,7 +26,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div class="ccm-dashboard-form-actions">
         <a href="#"
            class="btn btn-danger"
-           data-bs-toggle="modal" data-target="#delete-element"><?=t('Delete')?></a>
+           data-bs-toggle="modal" data-bs-target="#delete-element"><?=t('Delete')?></a>
         <a href="<?=URL::to('/dashboard/boards/scheduler', 'view', $element->getID())?>"
            class="btn btn-secondary float-end "><?=t('Schedule')?></a>
     </div>
