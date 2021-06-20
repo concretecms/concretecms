@@ -104,7 +104,7 @@ class Entities extends DashboardPageController
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $entities = [];
-        foreach($r->findAll(array(), array('name' => 'asc')) as $entity) {
+        foreach($r->findBy(array(), array('name' => 'asc')) as $entity) {
             $permissions = new Checker($entity);
             if ($permissions->canViewExpressEntries()) {
                 $entities[] = $entity;
