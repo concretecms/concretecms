@@ -16,7 +16,7 @@ class ViewUserAttributesUserListItem extends UserListItem
     }
     public function setAttributesAllowedArray($akIDs)
     {
-        $this->customAttributeArray = $akIDs;
+        $this->customAttributeArray = (array) $akIDs;
     }
     public function getAttributesAllowedArray()
     {
