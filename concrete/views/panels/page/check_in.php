@@ -24,7 +24,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
                 class="pe-3 ps-3 btn btn-primary" <?=$publishAction ?: 'disabled' ?>>
             <?=$publishTitle?>
         </button>
-        <button id="ccm-check-in-schedule" type="button" class="pr-3 ps-3 btn btn-primary" <?= $publishAction ?: 'disabled' ?>>
+        <button id="ccm-check-in-schedule" type="button" class="pe-3 ps-3 btn btn-primary" <?= $publishAction ?: 'disabled' ?>>
             <i class="far fa-clock"></i>
         </button>
     </div>
@@ -68,13 +68,13 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
 
     <?php if ($c->isPageDraft() && $cp->canDeletePage()) {
     ?>
-        <div class="d-grid">
+        <div class="d-grid mt-2">
             <button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Draft')?></button>
         </div>
 	<?php
 } elseif ($v->canDiscard()) {
     ?>
-        <div class="d-grid">
+        <div class="d-grid mt-2">
             <button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Changes')?></button>
         </div>
 	<?php
