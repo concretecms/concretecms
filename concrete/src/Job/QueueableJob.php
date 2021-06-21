@@ -2,9 +2,7 @@
 
 namespace Concrete\Core\Job;
 
-use Concrete\Core\Support\Facade\Facade;
 use Config;
-use Doctrine\ORM\EntityManagerInterface;
 use Job as AbstractJob;
 use Queue;
 use ZendQueue\Message as ZendQueueMessage;
@@ -170,9 +168,5 @@ abstract class QueueableJob extends AbstractJob
             $this->processQueueItem($item);
             $queue->deleteMessage($item);
         }
-
-        // Clear out the memory
-        $em = Facade::getFacadeApplication()->make(EntityManagerInterface::class);
-        $em->clear();
     }
 }
