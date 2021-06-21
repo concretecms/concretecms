@@ -98,7 +98,11 @@ $(function() {
         loadSitemapOverlay('explore', CCM_DISPATCHER_FILENAME + '/ccm/system/page/sitemap_overlay?&display=flat&cParentID=' + cParentID + '&includeSystemPages=' + (includeSystemPages ? 1 : 0));
     });
 
-    $('#ccm-sitemap-search-selector ul li.active a').click();
+
+    const $firstTab = $('#ccm-sitemap-search-selector ul li.active a')
+    $firstTab.click();
+    const bsFirstTab = new bootstrap.Tab($firstTab)
+    bsFirstTab.show()
 
     $('#ccm-tab-content-sitemap').on('click', '.ccm-sitemap-open-flat-view', function(event) {
         var node = $.ui.fancytree.getNode(event);
