@@ -5,17 +5,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Form\Service\Validation;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class SessionOptions extends DashboardSitePageController
 {
-    public function test()
-    {
-        /** @var Session $session */
-        $session = $this->app->make('session');
-        //$session->migrate();
-    }
-
     public function view()
     {
         /** @var Repository $config */
