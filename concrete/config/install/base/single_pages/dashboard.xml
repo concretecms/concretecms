@@ -967,6 +967,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Session Options" path="/dashboard/system/registration/session_options"
+              filename="/dashboard/system/registration/session_options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>session, options</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype=""
               description="Control how your site send and processes mail." package="">

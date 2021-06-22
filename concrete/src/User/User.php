@@ -1,6 +1,8 @@
 <?php
+
 namespace Concrete\Core\User;
 
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Http\Request;
@@ -165,6 +167,7 @@ class User extends ConcreteObject
             $password = $args[1];
             $disableLogin = isset($args[2]) ? (bool) $args[2] : false;
             if (!$disableLogin) {
+                $session->migrate();
                 $session->remove('uGroups');
                 $session->remove('accessEntities');
             }
@@ -989,6 +992,9 @@ class User extends ConcreteObject
 
         $app = Application::getFacadeApplication();
 
+        /** @var Repository $config */
+        $config = $app->make(Repository::class);
+
         /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
         $session = $app['session'];
         $session->set('uID', $this->getUserID());
@@ -1000,8 +1006,23 @@ class User extends ConcreteObject
         $session->set('uDefaultLanguage', $this->getUserDefaultLanguage());
         $session->set('uLastPasswordChange', $this->getLastPasswordChange());
 
+        /** @var \Concrete\Core\Cookie\CookieJar $cookie */
         $cookie = $app['cookie'];
-        $cookie->set(sprintf('%s_LOGIN', $app['config']->get('concrete.session.name')), 1);
+
+        $cookie->set(
+            sprintf('%s_LOGIN', $app['config']->get('concrete.session.name')),
+            1,
+            // $expire
+            time() + (int)$config->get('concrete.session.remember_me.lifetime'),
+            // $path
+            DIR_REL . '/',
+            // $domain
+            $config->get('concrete.session.cookie.cookie_domain'),
+            // $secure
+            $config->get('concrete.session.cookie.cookie_secure'),
+            // $httpOnly
+            $config->get('concrete.session.cookie.cookie_httponly')
+        );
 
         if ($cache_interface) {
             $app->make('helper/concrete/ui')->cacheInterfaceItems();
