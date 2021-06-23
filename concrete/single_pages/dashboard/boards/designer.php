@@ -64,9 +64,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title"><?=t('Continue')?></h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <svg><use xlink:href="#icon-dialog-close" /></svg>
-                                    </button>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <?=t('Continue with this custom element or click below to remove.')?>

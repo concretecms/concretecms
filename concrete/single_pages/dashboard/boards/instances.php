@@ -63,9 +63,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title"><?=t('Generate Instance')?></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <svg><use xlink:href="#icon-dialog-close" /></svg>
-                            </button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -92,7 +90,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             <?php } ?>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=t('Cancel')?></button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=t('Cancel')?></button>
                             <button type="submit" class="btn btn-primary float-end"><?=t('Create Instance')?></button>
                         </div>
                     </div>

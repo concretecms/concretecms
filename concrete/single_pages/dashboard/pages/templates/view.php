@@ -102,15 +102,13 @@ if ($template) {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title"><?=t('Delete Template'); ?></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="<?= t('Close') ?>">
-                            <svg><use xlink:href="#icon-dialog-close" /></svg>
-                        </button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                     </div>
                     <div class="modal-body">
                         <?=t('Are you sure?'); ?>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary me-auto" data-dismiss="modal"><?=t('Cancel'); ?></button>
+                        <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal"><?=t('Cancel'); ?></button>
                         <button type="submit" class="btn btn-danger float-end"><?=t('Delete Template'); ?></button>
                     </div>
                 </div>

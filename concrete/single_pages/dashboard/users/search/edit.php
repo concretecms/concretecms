@@ -155,11 +155,7 @@ if (count($languages) > 0) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title"><?= t('Edit Account') ?></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <svg>
-                                    <use xlink:href="#icon-dialog-close"/>
-                                </svg>
-                            </button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <fieldset>
@@ -219,7 +215,7 @@ if (count($languages) > 0) {
                             <?php } ?>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= t('Close') ?></button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= t('Close') ?></button>
                             <button type="submit" class="btn btn-primary"><?= t('Save') ?></button>
                         </div>
                     </div>
@@ -256,11 +252,7 @@ if (count($languages) > 0) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><?= t('Edit Groups') ?></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg>
-                            <use xlink:href="#icon-dialog-close"/>
-                        </svg>
-                    </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <h4><?= t('Selected Groups') ?></h4>
@@ -278,7 +270,7 @@ if (count($languages) > 0) {
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= t('Close') ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= t('Close') ?></button>
                 </div>
             </div>
         </div>

@@ -128,15 +128,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title"><?=t('Delete Instance')?></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <svg><use xlink:href="#icon-dialog-close" /></svg>
-                            </button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <?=t('Are you sure you want to remove this board instance? If it is referenced on the front-end anywhere that block will be removed.')?>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary me-auto" data-dismiss="modal"><?=t('Cancel')?></button>
+                            <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal"><?=t('Cancel')?></button>
                             <button type="submit" class="btn btn-danger float-end"><?=t('Delete Instance')?></button>
                         </div>
                     </div>
