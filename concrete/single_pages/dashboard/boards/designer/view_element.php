@@ -39,7 +39,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><?=t('Delete Element')?></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                 </div>
                 <div class="modal-body">
                     <?=t('Remove this element from your library?')?>

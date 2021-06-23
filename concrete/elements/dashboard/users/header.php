@@ -63,7 +63,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <form method="post" action="<?=$view->action('update_status', 'deactivate', $user->getUserID())?>">
             <div class="modal-header">
                 <h5 class="modal-title"><?=t('Deactivate User')?></h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
             </div>
             <div class="modal-body">
                 <?=$token_validator->output()?>
@@ -84,7 +84,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <form method="post" action="<?=$view->action('update_status', 'activate', $user->getUserID())?>">
                 <div class="modal-header">
                     <h5 class="modal-title"><?=t('Deactivate User')?></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                 </div>
                 <div class="modal-body">
                     <?=$token_validator->output()?>
@@ -107,7 +107,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <form method="post" action="<?=$view->action('update_status', 'sudo', $user->getUserID())?>">
                 <div class="modal-header">
                     <h5 class="modal-title"><?=t('Sign In As User')?></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                 </div>
                 <div class="modal-body">
                     <?=$token_validator->output()?>
@@ -129,7 +129,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <form method="post" action="<?=$view->action('update_status', 'delete', $user->getUserID())?>">
                 <div class="modal-header">
                     <h5 class="modal-title"><?=t('Delete User')?></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                 </div>
                 <div class="modal-body">
                     <?=$token_validator->output()?>
