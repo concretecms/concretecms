@@ -90,7 +90,8 @@ if (isset($pagetype) && is_object($pagetype)) {
                 }
         ?>
 			<div class="form-check">
-				<?= $form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected) ?><?= $t->getPageTypePublishTargetTypeDisplayName() ?>
+				<?= $form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected) ?>
+                <?=$form->label('ptPublishTargetTypeID' . ($i + 1), $t->getPageTypePublishTargetTypeDisplayName())?>
 			</div>
         <?php
             }

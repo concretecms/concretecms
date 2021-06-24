@@ -274,7 +274,7 @@ class MiniSurvey
                         continue;
                     }
                     $checked = (Request::request('Question' . $msqID . '_' . $i) == trim($options[$i])) ? 'checked' : '';
-                    $html .= '  <div class="checkbox"><label><input name="Question' . $msqID . '_' . $i . '" type="checkbox" value="' . trim($options[$i]) . '" ' . $checked . ' /> <span>' . $options[$i] . '</span></label></div>' . "\r\n";
+                    $html .= '  <div class="form-check"><input id="question_'. $msqID . '_'.$i.($showEdit ? '_preview' : '').'" name="Question' . $msqID . '_' . $i . '" class="form-check-input" type="checkbox" value="' . trim($options[$i]) . '" ' . $checked . ' /><label class="form-check-label" for="question_'. $msqID . '_'.$i. ($showEdit ? '_preview' : '').'"> <span>' . $options[$i] . '</span></label></div>' . "\r\n";
                 }
                 $html .= '</div>';
                 //}
@@ -291,12 +291,14 @@ class MiniSurvey
 
                 return '<select class="form-control" name="Question' . $msqID . '" id="Question' . $msqID . '" >' . $html . '</select>';
             case 'radios':
+                $index = 1;
                 foreach ($options as $option) {
                     if (strlen(trim($option)) == 0) {
                         continue;
                     }
                     $checked = (Request::request('Question' . $msqID) == trim($option)) ? 'checked' : '';
-                    $html .= '<div class="radio"><label><input name="Question' . $msqID . '" type="radio" value="' . trim($option) . '" ' . $checked . ' /> <span>' . $option . '</span></label></div>';
+                    $html .= '<div class="form-check"><input class="form-check-input" id="Question' . $msqID . '_'.$index.'" name="Question' . $msqID . '" type="radio" value="' . trim($option) . '" ' . $checked . ' /><label for="Question' . $msqID . '_'.$index.'" class="form-check-label"> <span>' . $option . '</span></label></div>';
+                    $index++;
                 }
 
                 return $html;

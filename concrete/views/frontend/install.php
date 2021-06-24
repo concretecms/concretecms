@@ -348,11 +348,9 @@ if ($install_config) {
                                 <?php
                             }
                             ?>
-                            <div class="checkbox">
-                                <label>
-                                    <?= $form->checkbox('ignore-warnings', '1') ?>
-                                    <?= t('Ignore warnings') ?>
-                                </label>
+                            <div class="form-check">
+                                <?= $form->checkbox('ignore-warnings', '1') ?>
+                                <?=$form->label('ignore-warnings', t('Ignore warnings')) ?>
                             </div>
                         </div>
                     </div>
@@ -405,20 +403,21 @@ if ($install_config) {
                     <div class="card-body row">
                         <?php
                         $availableSampleContent = StartingPointPackage::getAvailableList();
+                        $i = 1;
                         foreach ($availableSampleContent as $spl) {
                             $pkgHandle = $spl->getPackageHandle();
                             ?>
                             <div class="col-md-6">
-                                <div class="radio">
-                                    <label>
+                                <div class="form-check">
+
                                         <?= $form->radio('SAMPLE_CONTENT', $pkgHandle,
                                             ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1)) ?>
-                                        <strong><?= $spl->getPackageName() ?></strong><br/>
-                                        <?= $spl->getPackageDescription() ?>
-                                    </label>
+                                    <?=$form->label('SAMPLE_CONTENT' . $i,"<strong>".$spl->getPackageName()."</strong><br/>". $spl->getPackageDescription()) ?>
+
                                 </div>
                             </div>
                             <?php
+                            $i++;
                         }
                         ?>
                     </div>

@@ -44,27 +44,29 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && !$akDisplayMu
 
 // Radio list.
 if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMultipleValuesOnSelect) {
+    $index = 1;
     if (!$akHideNoneOption) {
         ?>
-        <div class="radio"><label>
+        <div class="form-check">
                 <?= $form->radio($view->field('atSelectOptionValue'), '', empty($selectedOptionIDs) ? '' : $selectedOptionIDs[0]) ?>
-                <?= t('None') ?>
-            </label>
+                <?= $form->label($view->field('atSelectOptionValue').$index,  t('None') )?>
+
         </div>
 
         <?php
+        $index++;
     }
 
     foreach ($controller->getOptions() as $opt) { ?>
 
-        <div class="radio"><label>
+        <div class="form-check">
                 <?=$form->radio($view->field('atSelectOptionValue'), $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
                 ?>
-                <?=$opt->getSelectAttributeOptionDisplayValue()?>
-            </label>
+                <?= $form->label($view->field('atSelectOptionValue').$index,  $opt->getSelectAttributeOptionDisplayValue() )?>
         </div>
 
-    <?php }
+    <?php
+    $index++;}
 }
 
 // Select2

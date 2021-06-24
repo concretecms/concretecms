@@ -34,14 +34,17 @@ $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 ?>style="display: none"<?php
 }
 ?>>
-<?php foreach ($extensions as $ext) {
+<?php
+$index=1;
+foreach ($extensions as $ext) {
 $checked = ($assignment->getFileTypesAllowedPermission() == 1 || ($assignment->getFileTypesAllowedPermission() == 'C' && in_array($ext, $assignment->getFileTypesAllowedArray())));
 ?>
-		<div class="checkbox"><label><input type="checkbox" name="extensionInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ext?>" <?php if ($checked) {
+		<div class="form-check"><input type="checkbox" class="form-check-input" id="extensionInclude[<?=$entity->getAccessEntityID()?>][]_<?=$index?>" name="extensionInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ext?>" <?php if ($checked) {
 ?> checked="checked" <?php
 }
-?> /> <?=$ext?></label></div>
+?> /> <label for="extensionInclude[<?=$entity->getAccessEntityID()?>][]_<?=$index?>" class="form-check-label"> <?=$ext?></label></div>
 	<?php
+    $index++;
 }
 ?>
 </div>
@@ -77,14 +80,17 @@ $checked = ($assignment->getFileTypesAllowedPermission() == 1 || ($assignment->g
 ?>style="display: none"<?php
 }
 ?>>
-<?php foreach ($extensions as $ext) {
+<?php
+$index =1;
+foreach ($extensions as $ext) {
 $checked = in_array($ext, $assignment->getFileTypesAllowedArray());
 ?>
-		<div class="checkbox"><label><input type="checkbox" name="extensionExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ext?>" <?php if ($checked) {
+		<div class="form-check"><input class="form-check-input" type="checkbox" id="extensionExclude[<?=$entity->getAccessEntityID()?>][]_<?=$index?>" name="extensionExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ext?>" <?php if ($checked) {
 ?> checked="checked" <?php
 }
-?> /> <?=$ext?></label></div>
+?> /> <label for="extensionExclude[<?=$entity->getAccessEntityID()?>][]_<?=$index?>" class="form-check-input"> <?=$ext?></label></div>
 	<?php
+    $index++;
 }
 ?>
 </div>
