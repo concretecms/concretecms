@@ -489,7 +489,15 @@ class Access extends ConcreteObject
             $filter .= $pae->getAccessEntityID() . ':';
         }
         $filter = trim($filter, ':');
-        $paID = $this->getPermissionAccessID();
+        if ($this->listItems !== null) {
+            $aeIDs = [];
+            foreach ($this->listItems as $listItem) {
+                $aeIDs[] = $listItem->getPermissionAccessID();
+            }
+            $paID = implode(':', $aeIDs);
+        } else {
+            $paID = $this->getPermissionAccessID();
+        }
         $class = strtolower(get_class($this->pk));
 
         return sprintf('permission/access/list_items/%s/%s/%s', $paID, $filter, $class);
