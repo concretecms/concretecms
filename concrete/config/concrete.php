@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a3',
     'version_installed' => '9.0.0a3',
-    'version_db' => '20210331213100', // the key of the latest database migration
+    'version_db' => '20210616131513', // the key of the latest database migration
 
     /*
      * Installation status
@@ -63,6 +63,49 @@ return [
          * @var int|null
          */
         'error_reporting' => null,
+
+        /**
+         * Hide specified superglobal keys and config items from whoops error output.
+         * If you wanted to hide an environment variable named "DB_PASSWORD", you'd specify it like this:
+         * ```
+         * '_ENV' => ['DB_PASSWORD'],
+         * ```
+         *
+         * The same applies for all superglobals.
+         *
+         * @var array<string, string[]>
+         */
+        'hide_keys' => [
+            /** @var string[] */
+            '_ENV' => [],
+
+            /** @var string[] */
+            '_SERVER' => [],
+
+            /** @var string[] */
+            '_GET' => [],
+
+            /** @var string[] */
+            '_POST' => [],
+
+            /** @var string[] */
+            '_FILES' => [],
+
+            /** @var string[] */
+            '_COOKIE' => [],
+
+            /** @var string[] */
+            '_SESSION' => [],
+
+            /**
+             * Hide specified config keys from whoops error output
+             * `concrete.debug.display_errors` will hide that specific config item while `concrete.debug` will hide
+             * all items in the `concrete.debug` array.
+             *
+             * @var string[]
+             */
+            'config' => [],
+        ]
     ],
 
     /*

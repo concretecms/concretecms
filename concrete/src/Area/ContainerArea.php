@@ -12,6 +12,16 @@ class ContainerArea
 {
 
     /**
+     * @var bool
+     */
+    protected $gridContainerEnabled = false;
+
+    /**
+     * @var int|null
+     */
+    protected $gridMaximumColumns;
+
+    /**
      * @var ContainerBlockInstance
      */
     protected $instance;
@@ -34,6 +44,22 @@ class ContainerArea
             return $subArea->getAreaBlocksArray($page);
         }
         return [];
+    }
+
+    /**
+     * Enable Grid containers.
+     */
+    final public function enableGridContainer()
+    {
+        $this->gridContainerEnabled = true;
+    }
+
+    /**
+     * @param int $columns
+     */
+    final public function setAreaGridMaximumColumns(int $columns)
+    {
+        $this->gridMaximumColumns = $columns;
     }
 
     protected function getSubAreaObject(Page $page): ?SubArea
@@ -67,6 +93,12 @@ class ContainerArea
     {
         $subArea = $this->getSubAreaObject($page);
         if ($subArea) {
+            if ($this->gridContainerEnabled) {
+                $subArea->enableGridContainer();
+            }
+            if (isset($this->gridMaximumColumns)) {
+                $subArea->setAreaGridMaximumColumns($this->gridMaximumColumns);
+            }
             $subArea->display($page);
             if (!$this->instance->getInstance()->areaAreasComputed()) {
 

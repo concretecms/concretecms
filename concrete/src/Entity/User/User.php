@@ -79,6 +79,11 @@ class User implements UserEntityInterface, \JsonSerializable
     protected $uLastPasswordChange = null;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $uDateLastUpdated = null;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $uHasAvatar = false;
@@ -137,6 +142,7 @@ class User implements UserEntityInterface, \JsonSerializable
     public function __construct()
     {
         $this->uLastPasswordChange = new \DateTime();
+        $this->uDateLastUpdated = new \DateTime();
         $this->uDateAdded = new \DateTime();
     }
 
@@ -214,6 +220,14 @@ class User implements UserEntityInterface, \JsonSerializable
     public function getUserLastPasswordChange()
     {
         return $this->uLastPasswordChange;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUserDateLastUpdated()
+    {
+        return $this->uDateLastUpdated;
     }
 
     /**
@@ -366,6 +380,14 @@ class User implements UserEntityInterface, \JsonSerializable
     public function setUserLastPasswordChange($uLastPasswordChange)
     {
         $this->uLastPasswordChange = $uLastPasswordChange;
+    }
+
+    /**
+     * @param \DateTime $uDateLastUpdated
+     */
+    public function setUserDateLastUpdated($uDateLastUpdated)
+    {
+        $this->uDateLastUpdated = $uDateLastUpdated;
     }
 
     /**

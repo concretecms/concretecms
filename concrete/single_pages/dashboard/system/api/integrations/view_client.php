@@ -34,7 +34,12 @@ $consentType = $client->getConsentType();
 
     <div class="form-group">
         <label><?=t('Redirect URI')?></label>
-        <div><?=$client->getRedirectUri() ?: t('None provided') ?></div>
+        <?php
+        $redirectUri = $client->getRedirectUri() ?: t('None provided');
+        ?>
+        <ul>
+            <li><?= implode('</li><li>', (array) $redirectUri) ?></li>
+        </ul>
     </div>
 
     <div class="form-group">

@@ -71,6 +71,24 @@ class Factory
             ->findAll();
         foreach($keys as $key) {
             $translations->insert('AttributeKeyName', $key->getAttributeKeyName());
+
+            $type = $key->getAttributeKeySettings();
+
+            // text attribute placeholder
+            if ($type instanceof \Concrete\Core\Entity\Attribute\Key\Settings\TextSettings) {
+                $placeholder = $type->getPlaceholder();
+                if ($placeholder !== '') {
+                    $translations->insert('AttributeKeyPlaceholder', $placeholder);
+                }
+            }
+
+            // checkbox attribute: label
+            if ($type instanceof \Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings) {
+                $label = $type->getCheckboxLabel();
+                if ($label !== '') {
+                    $translations->insert('AttributeKeyLabel', $label);
+                }
+            }
         }
         return $translations;
     }
