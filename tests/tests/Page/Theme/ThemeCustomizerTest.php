@@ -1,13 +1,74 @@
 <?php
 
-namespace Concrete\Tests\Style;
+namespace Concrete\Tests\Page\Theme;
 
-use Environment;
-use PageTheme;
+use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\StyleCustomizer\Parser\ParserFactory;
+use Concrete\Core\StyleCustomizer\Parser\ScssParser;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Style\ValueList\ValueListFactory;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\Tests\TestCase;
+use Concrete\Theme\Elemental\PageTheme;
+use Illuminate\Filesystem\Filesystem;
 
-class StyleTest extends TestCase
+class ThemeCustomizerTest extends TestCase
 {
+
+    public function testIsThemeCustomizable()
+    {
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $customizable = $theme->isThemeCustomizable();
+        $this->assertTrue($customizable);
+    }
+
+    public function testGetThemeSkins()
+    {
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $skins = $theme->getSkins();
+        $this->assertCount(2, $skins);
+    }
+
+    public function testGetThemeDefaultSkin()
+    {
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $defaultSkin = $theme->getThemeDefaultSkin();
+        $this->assertInstanceOf(SkinInterface::class, $defaultSkin);
+        $this->assertEquals('Default', $defaultSkin->getName());
+        $this->assertEquals('default', $defaultSkin->getIdentifier());
+    }
+
+    public function testParserDetector()
+    {
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
+        $parserFactory = new ParserFactory($fileLocator);
+        $parser = $parserFactory->createParserFromTheme($theme);
+        $this->assertInstanceof(ScssParser::class, $parser);
+
+        $defaultSkin = $theme->getThemeDefaultSkin();
+        $parser = $parserFactory->createParserFromSkin($defaultSkin);
+        $this->assertInstanceof(ScssParser::class, $parser);
+    }
+
+    /*
+    public function testValueListFromSkin()
+    {
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
+        $defaultSkin = $theme->getThemeDefaultSkin();
+        $parserFactory = new ParserFactory($fileLocator);
+        $parser = $parserFactory->createParserFromSkin($defaultSkin);
+    }
+    */
+
+
     /*
     public static function tearDownAfterClass() {
         @unlink(dirname(__FILE__) . '/fixtures/testing.css');
@@ -23,6 +84,7 @@ class StyleTest extends TestCase
     }
     */
 
+    /*
     public function testStyles()
     {
         $definition = DIR_TESTS . '/assets/Style/styles.xml';
@@ -141,6 +203,7 @@ class StyleTest extends TestCase
         $value = $ts->getValueFromList($list);
         $this->assertTrue($value->getUrl() == 'images/logo.png');
     }
+    */
 
     /*
     public function testCustomizableStyleSheetObjects()

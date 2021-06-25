@@ -32,7 +32,6 @@ class Theme extends ConcreteObject
 {
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = '.php';
-    const THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION = '.less';
     const FILENAME_TYPOGRAPHY_CSS = 'typography.css';
 
     protected $pThemeName;
@@ -299,9 +298,21 @@ class Theme extends ConcreteObject
         return $this->styleList;
     }
 
-
-
-
+    /**
+     * Gets the default skin for this theme
+     *
+     * @return SkinInterface|null
+     */
+    public function getThemeDefaultSkin(): ?SkinInterface
+    {
+        $skins = $this->getSkins();
+        foreach ($skins as $skin) {
+            if ($skin->getIdentifier() == SkinInterface::SKIN_DEFAULT) {
+                return $skin;
+            }
+        }
+        return null;
+    }
 
 
 

@@ -123,6 +123,7 @@ const DIRNAME_CONFIG = 'config';
 const DIRNAME_BLOCK_TEMPLATES = 'templates';
 const DIRNAME_BLOCK_TEMPLATES_COMPOSER = 'composer';
 const DIRNAME_CSS = 'css';
+const DIRNAME_SCSS = 'scss';
 const DIRNAME_CLASSES = 'src';
 const DIRNAME_ENTITIES = 'Entity';
 const DIRNAME_PREVIEW = 'preview';
