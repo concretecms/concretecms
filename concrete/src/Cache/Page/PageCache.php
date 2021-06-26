@@ -269,7 +269,7 @@ abstract class PageCache implements FlushableInterface
                 $host = $site->getSiteCanonicalURL();
                 if (!empty($host)) {
                     $host = preg_replace('#^https?://#', '', $host);
-
+                    $host = trim($host, '/'); // Do not want trailing slashes in the host.
                     return $host;
                 }
             }
