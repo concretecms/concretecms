@@ -247,6 +247,7 @@ class Controller extends AbstractController implements AttributeInterface
                 $item  = $cache->getItem('get_attribute_value_object/' . $class . $this->attributeValue->getAttributeValueID() . $this->attributeKey->getAttributeKeyHandle());
 
                 if ($item->isMiss() === false) {
+                    $item->lock();
                     $result = $this->entityManager->find($class, $this->attributeValue->getGenericValue());
                     $item->set($result);
                     $cache->save($item);
