@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Attribute\Form\Control\View\View as ControlView;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
 use Concrete\Core\Attribute\View as AttributeTypeView;
