@@ -35,7 +35,7 @@ class Section extends Page
     {
         if ($cID) {
             $cache = Application::getFacadeApplication()->make(RequestCache::class);
-            $item = $cache->getItem('section_local_from_homepage_id/' .  $cID);
+            $item = $cache->getItem('section_locale_from_homepage_id/' .  $cID);
             
             if ($item->isMiss() === true) {
                 $item->lock();
