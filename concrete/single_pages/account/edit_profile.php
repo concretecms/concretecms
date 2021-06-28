@@ -6,6 +6,12 @@
 	<?php $valt->output('profile_edit'); ?>
 	<fieldset>
         <legend><?= t('Basic Information'); ?></legend>
+	
+        <div class="form-group">
+            <?= $form->label('uName', t('Username')); ?>
+            <?= $form->text('uName', $profile->getUserName()); ?>
+        </div>
+
         <div class="form-group">
             <?= $form->label('uEmail', t('Email')); ?>
             <?= $form->text('uEmail', $profile->getUserEmail()); ?>
