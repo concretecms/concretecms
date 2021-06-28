@@ -19,7 +19,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
             <?=t('Password'); ?>
         </label>
         <div class="col-sm-9">
-            <input name="uPassword" id="uPassword" class="form-control" type="password" />
+            <input name="uPassword" id="uPassword" class="form-control" type="password" autocomplete="off" />
         </div>
     </div>
     <div class="form-group row">

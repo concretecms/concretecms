@@ -677,7 +677,7 @@ class Form
      */
     public function password($key, $valueOrMiscFields = '', $miscFields = [])
     {
-        return $this->inputType($key, 'password', $valueOrMiscFields, $miscFields);
+        return $this->inputType($key, 'password', $valueOrMiscFields, array_merge(["autocomplete" => "off"], $miscFields));
     }
 
     /**
@@ -691,7 +691,7 @@ class Form
         $result = <<<EOT
 <div id="{$id}" style="position: absolute; top: -1000px; opacity: 0">
     <input type="text" id="{$id}_username" tabindex="-1" />
-    <input type="password" id="{$id}_password" tabindex="-1" />
+    <input type="password" id="{$id}_password" autocomplete="off" tabindex="-1" />
     <script>
     (function() {
         function removeFake() {
