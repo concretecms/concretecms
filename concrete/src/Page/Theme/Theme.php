@@ -589,6 +589,7 @@ class Theme extends ConcreteObject
             $env = Environment::get();
 
             if (!empty($row)) {
+                $item->lock();
                 $standardClass = '\\Concrete\Core\\Page\\Theme\\Theme';
                 if ($row['pThemeHasCustomClass']) {
                     $pkgHandle = PackageList::getHandle($row['pkgID']);
