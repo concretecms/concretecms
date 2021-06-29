@@ -1,47 +1,45 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
 
+use Concrete\Core\Marketplace\Marketplace;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use TaskPermission;
-use View;
+use Concrete\Core\Permission\Checker;
 
 class Connect extends DashboardPageController
 {
-    public $helpers = array('form');
 
-    public function view($startStep = 'view')
+    public function view()
     {
-        $this->set('startStep', $startStep);
+        $config = $this->app->make('config');
+        $this->set('permissions', new Checker());
+        $this->set('marketplace', Marketplace::getInstance());
+        $this->set('dbConfig', $this->app->make('config/database'));
+        $this->set('config', $config);
+        $this->set('projectPageURL', $config->get('concrete.urls.concrete5') . $config->get('concrete.urls.paths.marketplace.projects'));
     }
 
-    public function connect_complete()
+    public function do_connect()
     {
-        $token = $_GET['ccm_token'];
-
-        if (!\Core::make('token')->validate('marketplace/connect', $token)) {
-            $this->set('error', array(t('Invalid token, please try again.')));
-        } else {
-            $tp = new TaskPermission();
-            if ($tp->canInstallPackages()) {
-                if (!$_POST['csToken']) {
-                    $this->set('error',
-                        array(t('An unexpected error occurred when connecting your site to the marketplace.')));
-                } else {
-                    $config = \Core::make('config/database');
-                    $config->save('concrete.marketplace.token', $_POST['csToken']);
-                    $config->save('concrete.marketplace.url_token', $_POST['csURLToken']);
-                    echo '<script type="text/javascript">parent.window.location.href=\'' . View::url('/dashboard/extend/connect',
-                            'community_connect_success') . '\';</script>';
-                    exit;
-                }
+        if (!$this->token->validate('do_connect')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        $checker = new Checker();
+        if (!$checker->canInstallPackages()) {
+            $this->error->add(t('You do not have access to set community configuration values.'));
+        }
+        if (!$this->error->has()) {
+            $config = $this->app->make('config/database');
+            if ($this->request->request->has('disconnect')) {
+                $config->save('concrete.marketplace.token', null);
+                $config->save('concrete.marketplace.url_token', null);
+                $this->flash('success', t('The site has been disconnected from the marketplace.'));
             } else {
-                $this->set('error', array(t('You do not have permission to connect this site to the marketplace.')));
+                $config->save('concrete.marketplace.token', $this->request->request->get('csToken'));
+                $config->save('concrete.marketplace.url_token', $this->request->request->get('csURLToken'));
+                $this->flash('success', t('Marketplace configuration saved successfully.'));
             }
+            $this->redirect('/dashboard/extend/connect');
         }
     }
 
-    public function community_connect_success()
-    {
-        $this->set('message', t('Your site is now connected to the concrete5 community.'));
-    }
 }
