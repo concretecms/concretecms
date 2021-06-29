@@ -308,11 +308,11 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                     <?php
                 }
             }
-            if ($mi !== null && $mi->isConnected()) {
+            if ($mi !== null && $mi->isConnected()) { ?>
+                    <hr>
+                <?php
+                View::element('dashboard/marketplace_project_page');
                 ?>
-                <hr/>
-                <h4><?= t("Project Page"); ?></h4>
-                <p><?= t('Your site is currently connected to the concrete5 community. Your project page URL is:'); ?><br/><a href="<?= $mi->getSitePageURL(); ?>"><?= $mi->getSitePageURL(); ?></a></p>
                 <?php
             } elseif ($mi !== null && $mi->hasConnectionError()) {
                 echo View::element('dashboard/marketplace_connect_failed');
@@ -322,7 +322,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <div class="well clearfix" style="padding:10px 20px;">
                     <h4><?= t('Connect to Community'); ?></h4>
                     <p><?= t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.'); ?></p>
-                    <p><a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect', 'register_step1'); ?>"><?= t("Connect to Community"); ?></a></p>
+                    <p><a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect'); ?>"><?= t("Connect to Community"); ?></a></p>
                 </div>
                 <?php
             }

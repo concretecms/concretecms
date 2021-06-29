@@ -450,9 +450,6 @@
                 <attributekey handle="meta_keywords">
                     <value>concrete5.org, my account, marketplace</value>
                 </attributekey>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype=""
