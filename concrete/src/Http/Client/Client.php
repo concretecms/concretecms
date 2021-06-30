@@ -57,10 +57,11 @@ class Client extends ZendClient implements LoggerAwareInterface
         $maxRedirects = $this->config['maxredirects'];
         $this->config['maxredirects'] = 0;
 
-        $result = $this->send($request);
-
-        $this->config['maxredirects'] = $maxRedirects;
-        return $result;
+        try {
+            return $this->send($request);
+        } finally {
+            $this->config['maxredirects'] = $maxRedirects;
+        }
     }
 
     /**
