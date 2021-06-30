@@ -13,7 +13,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 
 	<div class="form-group">
 		<label class="control-label" for="uPassword"><?=t('Password')?></label>
-		<input name="uPassword" id="uPassword" class="form-control" type="password" />
+		<input name="uPassword" id="uPassword" class="form-control" autocomplete="off" type="password" />
 	</div>
 
     <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) { ?>

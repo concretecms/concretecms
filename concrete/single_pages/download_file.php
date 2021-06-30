@@ -27,7 +27,7 @@ if (!isset($filename)) {
         }
         ?>
 		<input type="hidden" value="<?= $rcID ?>" name="rcID" />
-		<label for="password"><?=t('Password')?>: <input type="password" name="password" /></label>
+		<label for="password"><?=t('Password')?>: <input type="password" autocomplete="off" name="password" /></label>
 		<br /><br />
 		<button type="submit"><?=t('Download')?></button>
 	</form>
