@@ -67,7 +67,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         yield ['http://' . $simpleIp]; // This is allowed because it's an external IP
         yield ['http://' . $hex, UserMessageException::class, '/The URL ".+?" is not valid./'];
         yield ['http://' . $octal]; // This form is allowed because it at least converts properly in ip-lib
-        yield ['http://' . $octal2, UserMessageException::class, '/The URL ".+?" is not valid./'];
+        yield ['http://' . $octal2]; // Same as the first octal
         yield ['http://' . $octal3, UserMessageException::class, '/The URL ".+?" is not valid./'];
         yield ['http://' . $integer, UserMessageException::class, '/The URL ".+?" is not valid./'];
     }
