@@ -681,6 +681,18 @@ class File extends Controller
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
+
+            $ipFormatBlocks = [
+                '/^\d+$/', // No fully integer / octal hostnames http://2130706433 http://017700000001
+                '/^0x[0-9a-f]+$/i', // No Hexadecimal hostnames http://0x07f000001
+            ];
+
+            foreach ($ipFormatBlocks as $block) {
+                if (preg_match($block, $host) !== 0) {
+                    throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                }
+            }
+
             $ip = IPFactory::addressFromString($host, true, true, true);
             if ($ip === null) {
                 $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
