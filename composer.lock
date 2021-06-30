@@ -167,9 +167,9 @@
             "authors": [
                 {
                     "name": "Michele Locati",
-                    "role": "author",
                     "email": "michele@locati.it",
-                    "homepage": "https://mlocati.github.io"
+                    "homepage": "https://mlocati.github.io",
+                    "role": "author"
                 }
             ],
             "description": "Patches required for concrete5 dependencies",
@@ -2820,16 +2820,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.10.0",
+            "version": "1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "65a3396d064267f2fef1fd0b8ded712dbe0946b2"
+                "reference": "f3db91bff131b8c6a83d27a9f4dbbe768397ce47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/65a3396d064267f2fef1fd0b8ded712dbe0946b2",
-                "reference": "65a3396d064267f2fef1fd0b8ded712dbe0946b2",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/f3db91bff131b8c6a83d27a9f4dbbe768397ce47",
+                "reference": "f3db91bff131b8c6a83d27a9f4dbbe768397ce47",
                 "shasum": ""
             },
             "require": {
@@ -2837,8 +2837,7 @@
             },
             "require-dev": {
                 "ext-pdo_sqlite": "*",
-                "phpunit/dbunit": "^1.4 || ^2 || ^3 || ^4",
-                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5"
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.5 || ^9.5"
             },
             "type": "library",
             "autoload": {
@@ -2866,6 +2865,8 @@
                 "addresses",
                 "ipv4",
                 "ipv6",
+                "manage",
+                "managing",
                 "matching",
                 "network",
                 "networking",
@@ -2882,7 +2883,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2020-07-09T15:15:38+00:00"
+            "time": "2021-05-31T20:43:23+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -3252,6 +3253,12 @@
                 "paginator",
                 "paging"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/mbabker",
+                    "type": "github"
+                }
+            ],
             "time": "2017-03-20T13:46:15+00:00"
         },
         {
@@ -3360,6 +3367,7 @@
                 "utf-8",
                 "utf8"
             ],
+            "abandoned": "symfony/polyfill-mbstring or symfony/string",
             "time": "2016-05-18T13:57:10+00:00"
         },
         {
