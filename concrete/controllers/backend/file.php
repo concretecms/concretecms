@@ -708,8 +708,10 @@ class File extends Controller
     protected function downloadRemoteURL($url, $temporaryDirectory)
     {
         $client = $this->app->make('http/client');
+
         $request = $client->getRequest()->setUri($url);
-        $response = $client->send();
+        $response = $client->sendWithoutRedirects();
+
         if (!$response->isSuccess()) {
             throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
         }
