@@ -84,7 +84,7 @@ class Marketplace implements ApplicationAwareInterface
             $vn = $this->app->make('helper/validation/numbers');
             $r = $this->get($url);
 
-            if ($r === null) {
+            if ($r === null && !$this->connectionError) {
                 $this->isConnected = true;
             } else {
                 if ($vn->integer($r)) {
@@ -125,6 +125,10 @@ class Marketplace implements ApplicationAwareInterface
             $this->connectionError = self::E_GENERAL_CONNECTION_ERROR;
 
             return null;
+        }
+
+        if ($result === false) {
+            $this->connectionError = self::E_GENERAL_CONNECTION_ERROR;
         }
 
         return $result ?: null;
