@@ -25,36 +25,21 @@
     </div>
     <div class="form-group">
         <label for="requiresRegistration" class="control-label"><?= t('Target Audience') ?></label>
-
-        <div class="radio">
-            <label>
-                <input id="requiresRegistration" type="radio" value="0" name="requiresRegistration"
-                       style="vertical-align: middle" <?php if (!$controller->requiresRegistration()) {
-        ?> checked <?php
-    } ?> />&nbsp;<?= t(
-            'Public'
-        ) ?>
-            </label>
+        <div class="form-check">
+            <?=$form->radio('requiresRegistration', '0', $controller->requiresRegistration())?>
+            <?=$form->label('requiresRegistration1',t('Public'), ['class'=>'form-check-label'])?>
         </div>
-        <div class="radio">
-            <label>
-                <input type="radio" value="1" name="requiresRegistration"
-                       style="vertical-align: middle" <?php if ($controller->requiresRegistration()) {
-        ?> checked <?php
-    } ?> />&nbsp;<?= t(
-            'Only Registered Users'
-        ) ?>
-            </label>
+        <div class="form-check">
+            <?=$form->radio('requiresRegistration', '1', $controller->requiresRegistration())?>
+            <?=$form->label('requiresRegistration2',t('Only Registered Users'), ['class'=>'form-check-label'])?>
         </div>
     </div>
 
     <div class="form-group">
         <label for="showResults" class="control-label"><?= t('Survey Results') ?></label>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="showResults" class="show-custom-message" value="1" <?= $controller->getShowResults() ? 'checked' : null ?> />
-                <span><?= t('Hide Survey Results and Show Custom Message') ?></span>
-            </label>
+        <div class="form-check">
+            <?=$form->checkbox('showResults', 1, ($controller->getShowResults() ? '1':'0'), ['class'=>'show-custom-message form-check-input'])?>
+            <?=$form->label('showResults', t('Hide Survey Results and Show Custom Message'), ['class'=>'form-check-label']) ?>
         </div>
     </div>
     <div class="form-group custom-message-container" style="display: none;">

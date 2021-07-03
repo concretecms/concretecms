@@ -121,16 +121,16 @@
             <legend><?php echo t('Results'); ?></legend>
 
             <div class="form-group">
-                <div class="checkbox"><label>
-                        <?php
-                        $storeFormSubmissionFormFields = [];
-                        if ($formSubmissionConfig === true || $formSubmissionConfig === false) {
-                            $storeFormSubmissionFormFields['disabled'] = 'disabled';
-                        }
-                        ?>
-                        <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission, $storeFormSubmissionFormFields); ?>
-                        <?=t('Store submitted results of form.'); ?>
-                    </label></div>
+                <div class="form-check">
+                    <?php
+                    $storeFormSubmissionFormFields = [];
+                    if ($formSubmissionConfig === true || $formSubmissionConfig === false) {
+                        $storeFormSubmissionFormFields['disabled'] = 'disabled';
+                    }
+                    ?>
+                    <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission, $storeFormSubmissionFormFields); ?>
+                    <?=$form->label('storeFormSubmission', t('Store submitted results of form.'), ['class'=>'form-check-label']); ?>
+                </div>
                 <?php if ($formSubmissionConfig === false) { ?>
                     <div class="alert alert-warning"><?=t('<strong>Warning!</strong> Form submissions are not allowed to be stored in the database. You must set a valid email in the Options tab.'); ?>                </div>
                 <?php } else { ?>

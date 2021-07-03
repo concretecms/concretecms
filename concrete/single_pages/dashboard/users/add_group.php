@@ -155,34 +155,27 @@ use Concrete\Core\User\Group\GroupType; ?>
     <fieldset>
         <legend><?=t('Automation')?></legend>
         <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?=$form->checkbox('gIsAutomated', 1, false)?>
-                    <span><?=t('This group is automatically entered.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
-                </label>
+            <div class="form-check">
+                <?=$form->checkbox('gIsAutomated', 1, false)?>
+                <?=$form->label('gIsAutomated',t('This group is automatically entered.') . '<i class="fa fa-question-circle launch-tooltip" title="'.t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.").'"></i>', ['class'=>'form-check-label'])?>
             </div>
         </div>
 
         <div id="gAutomationOptions" style="display: none">
             <div class="form-group">
                 <label><?=t('Check Group')?></label>
-                <div class="checkbox">
-                    <label>
-                        <?=$form->checkbox('gCheckAutomationOnRegister', 1)?>
-                        <span><?=t('When a user registers.')?></span>
-                    </label>
+                <div class="form-check">
+                    <?=$form->checkbox('gCheckAutomationOnRegister', 1)?>
+                    <?=$form->label('gCheckAutomationOnRegister',t('When a user registers.'), ['class'=>'form-check-label'])?>
                 </div>
-                <div class="checkbox">
-                    <label>
-                        <?=$form->checkbox('gCheckAutomationOnLogin', 1)?>
-                        <span><?=t('When a user signs in.')?></span>
-                    </label>
+                <div class="form-check">
+                    <?=$form->checkbox('gCheckAutomationOnLogin', 1)?>
+                    <?=$form->label('gCheckAutomationOnLogin', t('When a user signs in.'), ['class'=>'form-check-label'])?>
                 </div>
-                <div class="checkbox">
-                    <label>
-                        <?=$form->checkbox('gCheckAutomationOnJobRun', 1)?>
-                        <span><?=t('When the "Check Automated Groups" Job runs.')?></span>
-                    </label>
+                <div class="form-check">
+                    <?=$form->checkbox('gCheckAutomationOnJobRun', 1)?>
+                    <?=$form->label('gCheckAutomationOnJobRun',t('When the "Check Automated Groups" Job runs.'), ['class'=>'form-check-label'])?>
+
                 </div>
                 <div class="alert alert-info">
                     <?php
@@ -193,13 +186,11 @@ use Concrete\Core\User\Group\GroupType; ?>
         </div>
 
         <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
-                    <?=t('Automatically remove users from this group.')?>
-                </label>
+            <div class="form-check">
+                <?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
+                <?=$form->label('gUserExpirationIsEnabled',t('Automatically remove users from this group.'), ['class'=>'form-check-label'])?>
             </div>
-            <div class="controls">
+            <div class="controls mt-2">
                 <?=$form->select(
                     "gUserExpirationMethod",
                     [
