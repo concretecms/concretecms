@@ -21,7 +21,7 @@ class EditPagePropertiesPageListItem extends PageListItem
     }
     public function setAttributesAllowedArray($akIDs)
     {
-        $this->customAttributeKeyArray = $akIDs;
+        $this->customAttributeKeyArray = (array) $akIDs;
     }
     public function getAttributesAllowedArray()
     {
