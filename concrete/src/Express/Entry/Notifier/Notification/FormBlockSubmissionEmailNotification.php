@@ -16,7 +16,7 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
     {
         if (!isset($this->from)) {
             $config = $this->app->make('config');
-            if ($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address') && strstr($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address'), '@')) {
+            if ($entry && $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address') && strstr($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address'), '@')) {
                 $this->from = $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address');
             }
             else{
