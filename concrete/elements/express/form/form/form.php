@@ -21,7 +21,7 @@ if (!$page || $page->isError() || !$page->isEditMode()) {
 
         <fieldset>
             <?php if ($fieldSet->getTitle()) { ?>
-                <legend><?= h($fieldSet->getTitle()) ?></legend>
+                <legend><?= h(t($fieldSet->getTitle())) ?></legend>
             <?php } ?>
 
             <?php
