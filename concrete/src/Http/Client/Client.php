@@ -46,6 +46,25 @@ class Client extends ZendClient implements LoggerAwareInterface
     }
 
     /**
+     * Send a request without following any redirects
+     *
+     * @see ZendClient::send()
+     * @param ZendRequest|null $request
+     * @return \Zend\Http\Response
+     */
+    public function sendWithoutRedirects(ZendRequest $request = null)
+    {
+        $maxRedirects = $this->config['maxredirects'];
+        $this->config['maxredirects'] = 0;
+
+        try {
+            return $this->send($request);
+        } finally {
+            $this->config['maxredirects'] = $maxRedirects;
+        }
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see ZendClient::send()
