@@ -109,6 +109,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Group Types" path="/dashboard/users/group_types" filename="/dashboard/users/group_types.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>group types, group type</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Send Message to Group" path="/dashboard/users/groups/message" filename="/dashboard/users/groups/message.php" pagetype=""
               description="" package="">
             <attributes>
@@ -158,25 +166,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>group set</value>
-                </attributekey>
-            </attributes>
-        </page>
-        <page name="Community Points" path="/dashboard/users/points" filename="/dashboard/users/points/view.php"
-              pagetype="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>community, points, karma</value>
-                </attributekey>
-            </attributes>
-        </page>
-        <page name="Assign Points" path="/dashboard/users/points/assign" filename="/dashboard/users/points/assign.php"
-              pagetype="" package="">
-        </page>
-        <page name="Actions" path="/dashboard/users/points/actions" filename="/dashboard/users/points/actions.php"
-              pagetype="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>action, community actions</value>
                 </attributekey>
             </attributes>
         </page>
@@ -626,9 +615,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>concrete5.org, my account, marketplace</value>
-                </attributekey>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
                 </attributekey>
             </attributes>
         </page>
@@ -1147,6 +1133,14 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>password, requirements, code, key, login, registration, security, nist</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Session Options" path="/dashboard/system/registration/session_options"
+              filename="/dashboard/system/registration/session_options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>session, options</value>
                 </attributekey>
             </attributes>
         </page>

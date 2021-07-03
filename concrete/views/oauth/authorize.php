@@ -63,7 +63,7 @@ $image = (date('Ymd') - 7) . '.jpg';
 
                         <div class="form-group">
                             <label class="control-label" for="uPassword"><?= t('Password') ?></label>
-                            <input name="uPassword" id="uPassword" class="form-control" type="password"/>
+                            <input name="uPassword" id="uPassword" class="form-control" type="password" autocomplete="off"/>
                         </div>
 
                         <?php if (isset($locales) && is_array($locales) && count($locales) > 0) {

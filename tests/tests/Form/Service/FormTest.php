@@ -597,7 +597,7 @@ class FormTest extends TestCase
             [
                 'password',
                 ['Key'],
-                '<input type="password" id="Key" name="Key" value="" class="form-control ccm-input-password" />',
+                '<input type="password" id="Key" name="Key" value="" autocomplete="off" class="form-control ccm-input-password" />',
             ],
             [
                 'text',

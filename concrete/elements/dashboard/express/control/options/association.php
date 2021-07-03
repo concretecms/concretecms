@@ -11,11 +11,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </div>
 
 <div class="form-group">
-    <?=$form->label('enable_entry_reordering', t('Custom Ordering'))?>
-    <div class="checkbox"><label>
+    <label><?= t('Custom Ordering')?></label>
+    <div class="form-check">
         <?=$form->checkbox('enable_entry_reordering', 1, $control->enableEntryReordering())?>
-        <?=t('Enable custom reordering of association entries.')?>
-    </label></div>
+        <?=$form->label('enable_entry_reordering',t('Enable custom reordering of association entries.'), ['class'=>'form-check-label'])?>
+    </div>
 </div>
 
 <div class="form-group">

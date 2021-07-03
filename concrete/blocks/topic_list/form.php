@@ -41,11 +41,11 @@
 
     <div class='form-group'>
         <label for='title' class="control-label"><?=t('Results Page')?>:</label>
-        <div class="checkbox">
-            <label for="ccm-search-block-external-target">
-                <input id="ccm-search-block-external-target" <?php if (intval($cParentID) > 0) {
+        <div class="form-check">
+            <input class="form-check-input" id="ccm-search-block-external-target" <?php if (intval($cParentID) > 0) {
     ?>checked<?php 
 } ?> name="externalTarget" type="checkbox" value="1" />
+            <label for="ccm-search-block-external-target" class="form-check-label">
                 <?=t('Post Results to a Different Page')?>
             </label>
         </div>

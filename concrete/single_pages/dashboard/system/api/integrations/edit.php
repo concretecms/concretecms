@@ -26,11 +26,12 @@ $consentType = $client->getConsentType();
         <div class="form-group">
             <label for="redirect"><?php echo t('Redirect'); ?></label>
             <div class="input-group">
-                <?php echo $form->url('redirect', $client->getRedirectUri(), array('autocomplete' => 'off')); ?>
+                <?php echo $form->url('redirect', implode('|', (array) $client->getRedirectUri()), array('autocomplete' => 'off')); ?>
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
                 </div>
             </div>
+            <span class="help-block"><?= t('Separate multiple redirect urls using %s (pipe) characters', '<code>|</code>') ?></span>
         </div>
 
         <div class="form-group">

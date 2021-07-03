@@ -39,18 +39,19 @@ $request = $controller->getRequest();
     <div class="row">
         <div class="col-md-6">
             <label class="control-label"><?=t('Choose Groups to Move')?></label>
-            <div class="checkbox">
-                <label style="user-select: none; -moz-user-select: none; -webkit-user-select: none">
-                    <input data-toggle="checkbox" type="checkbox" /> <strong><?=t('Select All')?></strong>
+            <div class="form-check ml-2">
+                <input class="form-check-input" data-toggle="checkbox" type="checkbox" id="select_all" />
+                <label class="form-check-label" for="select_all" style="user-select: none; -moz-user-select: none; -webkit-user-select: none">
+                    <strong><?=t('Select All')?></strong>
                 </label>
             </div>
 
             <?php foreach ($groups as $g) { ?>
-            <div class="checkbox" data-checkbox="group-list">
-                <label>
-                    <input name="gID[]" type="checkbox" <?php
+            <div class="form-check ml-2" data-checkbox="group-list">
+                <input class="form-check-input" name="gID[]" id="gID_<?=$g->getGroupID()?>" type="checkbox" <?php
                     if (is_array($request->request->get('gID')) && in_array($g->getGroupID(), $request->request->get('gID'))) {
                     ?>checked<?php } ?> value="<?=$g->getGroupID()?>" />
+                <label class="form-check-label" for="gID_<?=$g->getGroupID()?>">
                     <?=$g->getGroupDisplayName()?>
                 </label>
             </div>

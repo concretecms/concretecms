@@ -54,8 +54,8 @@ class SystemRouteList implements RouteListInterface
             ->routes('dialogs/users.php')
         ;
 
-        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Group')
-            ->setPrefix('/ccm/system/dialogs/group')
+        $router->buildGroup()->setNamespace('Concrete\Controller\Dialog\Groups')
+            ->setPrefix('/ccm/system/dialogs/groups')
             ->routes('dialogs/groups.php')
         ;
 

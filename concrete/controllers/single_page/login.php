@@ -236,7 +236,11 @@ class Login extends PageController implements LoggerAwareInterface
             // origins by default and you may see an error in the browser
             // console. To get it to work, see the following e.g. in Chrome:
             // chrome://flags/#unsafely-treat-insecure-origin-as-secure
-            $response->headers->set('Clear-Site-Data', '"cache"');
+            // ----
+            // Update (from andrew): This slows down sites significantly on login. Sometimes it takes 20-30 seconds
+            // to login, which is unacceptable. If browsers figure out how to do this asynchronously at some point
+            // we can look to re-enable this.
+            // $response->headers->set('Clear-Site-Data', '"cache"');
 
             return $response;
         } else {

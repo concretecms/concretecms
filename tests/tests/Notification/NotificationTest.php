@@ -45,7 +45,7 @@ class NotificationTest extends TestCase
          * @var \Concrete\Core\Notification\Subscription\Manager
          */
         $subscriptions = $manager->getSubscriptions();
-        $this->assertEquals(7, count($subscriptions));
+        $this->assertEquals(13, count($subscriptions));
     }
 
     protected function getUserSignup()

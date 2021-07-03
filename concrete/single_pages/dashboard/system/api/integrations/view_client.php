@@ -34,7 +34,12 @@ $consentType = $client->getConsentType();
 
     <div class="form-group">
         <label><?=t('Redirect URI')?></label>
-        <div><?=$client->getRedirectUri() ?: t('None provided') ?></div>
+        <?php
+        $redirectUri = $client->getRedirectUri() ?: t('None provided');
+        ?>
+        <ul>
+            <li><?= implode('</li><li>', (array) $redirectUri) ?></li>
+        </ul>
     </div>
 
     <div class="form-group">
@@ -44,7 +49,7 @@ $consentType = $client->getConsentType();
 
     <div class="form-group <?= $clientSecret ? 'has-warning' : '' ?>">
         <label><?=t('Client Secret')?></label>
-        <input type="<?= $clientSecret ? 'text' : 'password' ?>" class="form-control" onclick="this.select()" value="<?= $clientSecret ?: str_repeat('*', 96) ?>" <?= $clientSecret ? '' : 'disabled' ?>>
+        <input type="<?= $clientSecret ? 'text' : 'password' ?>" autocomplete="off" class="form-control" onclick="this.select()" value="<?= $clientSecret ?: str_repeat('*', 96) ?>" <?= $clientSecret ? '' : 'disabled' ?>>
         <div class="help-block">
             <?php
             if ($clientSecret) {

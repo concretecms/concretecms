@@ -68,14 +68,18 @@ if ($version) {
                 if ($occurrence->getRepetition()->repeats()) {
                     ?>
                     <div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="edit_type" value="local"/> <?= t('Just this occurrence') ?>
+                        <div class="form-check">
+
+                                <input type="radio" class="form-check-input" name="edit_type" id="edit_type1" value="local"/>
+                                <label class="form-check-label" for="edit_type1">
+                                    <?= t('Just this occurrence') ?>
                             </label>
                         </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="edit_type" value="all" checked/> <?= t('All occurrences') ?>
+                        <div class="form-check">
+
+                                <input type="radio" class="form-check-input" name="edit_type" id="edit_type2" value="all" checked/>
+                            <label class="form-check-label" for="edit_type2">
+                                <?= t('All occurrences') ?>
                             </label>
                         </div>
                     </div>
