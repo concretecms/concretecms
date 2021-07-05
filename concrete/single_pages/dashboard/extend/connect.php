@@ -95,7 +95,7 @@ if ($permissions->canInstallPackages()) { ?>
                     <?=$form->text('csURLToken', $dbConfig->get('concrete.marketplace.url_token'))?>
                 </div>
                 <div class="form-group">
-                    <label for="csURLToken" class="launch-tooltip control-label" data-placement="right" title="<?=t('This can be found in your project page on marketplace.concretecms.com the Secret field.')?>"><?=t('Secret')?></label>
+                    <label for="csURLToken" class="launch-tooltip control-label" data-placement="right" title="<?=t('This can be found in your project page on marketplace.concretecms.com the Secret Key field.')?>"><?=t('Secret Key')?></label>
                     <?=$form->text('csToken', $dbConfig->get('concrete.marketplace.token'))?>
                 </div>
             </fieldset>
