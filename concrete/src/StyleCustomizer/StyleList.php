@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\StyleCustomizer;
 
+use Concrete\Core\StyleCustomizer\Style\Style;
+
 class StyleList implements \JsonSerializable
 {
     /**
@@ -34,9 +36,8 @@ class StyleList implements \JsonSerializable
      */
     public static function loadFromXMLElement(\SimpleXMLElement $sx)
     {
-        $parser = new StyleListParser($sx);
-
-        return $parser->parse();
+        $parser = app(StyleListParser::class);
+        return $parser->parse($sx);
     }
 
     /**
@@ -70,5 +71,20 @@ class StyleList implements \JsonSerializable
         return [
             'sets' => $this->getSets(),
         ];
+    }
+
+    /**
+     * Traverses all sets and retrieves all styles. Basically a shortcut to allow developers not to have to traverse
+     * the sets themselves when working with the basic values in a style list.
+     *
+     * @return Style[]
+     */
+    public function getAllStyles(): iterable
+    {
+        foreach ($this->getSets() as $set) {
+            foreach ($set->getStyles() as $style) {
+                yield $style;
+            }
+        }
     }
 }

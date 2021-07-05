@@ -88,10 +88,10 @@ mix
 
 // Elemental Theme
 mix
-    .sass('../concrete/themes/elemental/scss/skins/default/main.scss', 'themes/elemental/skins/default/')
+    .sass('../concrete/themes/elemental/skins/default/scss/main.scss', 'themes/elemental/skins/default/')
     .js('assets/themes/elemental/js/main.js', 'themes/elemental');
 mix
-    .sass('../concrete/themes/elemental/scss/skins/night-road/main.scss', 'themes/elemental/skins/night-road/')
+    .sass('../concrete/themes/elemental/skins/night-road/scss/main.scss', 'themes/elemental/skins/night-road/')
 
 
 // Dashboard Theme

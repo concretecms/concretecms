@@ -57,7 +57,9 @@ if (isset($activate_confirm)) {
                             <a href="<?=$view->action('activate', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Activate')?></a>
                         <?php } ?>
                         <?php if ($t->isThemeCustomizable()) { ?>
-                            <a href="<?=$view->action('customize', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Customize')?></a>
+                            <a href="<?=$view->action('preview', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Preview &amp; Customize')?></a>
+                        <?php } else { ?>
+                            <a href="<?=$view->action('preview', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Preview')?></a>
                        <?php } ?>
                         <a href="<?=$view->action('inspect', $t->getThemeID())?>" class="btn btn-sm btn-secondary"><?=t('Page Templates')?></a>
                         <?php

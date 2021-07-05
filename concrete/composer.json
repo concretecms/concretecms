@@ -44,6 +44,7 @@
     "symfony/http-foundation": "^3.4.17",
     "symfony/routing": "3.*",
     "symfony/http-kernel": "3.4.*",
+    "scssphp/scssphp": "^1.4",
     "doctrine/orm": "^2.6.3",
     "doctrine/common": "^2",
     "doctrine/migrations": "1.* <1.8",

@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="<?=$view->getThemePath()?>/main.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
     View::element('header_required', array('pageTitle' => isset($pageTitle) ? $pageTitle : ''));

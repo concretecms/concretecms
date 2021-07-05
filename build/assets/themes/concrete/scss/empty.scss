@@ -1,0 +1,18 @@
+@import "node_modules/@concretecms/bedrock/assets/bedrock/scss/frontend";
+
+// Import the basics from the CMS foundation because the toolbar sits atop our theme.
+@import "node_modules/@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
+@import "node_modules/@concretecms/bedrock/assets/cms/scss/variables";
+@import "node_modules/@concretecms/bedrock/assets/cms/scss/toolbar";
+@import "node_modules/@concretecms/bedrock/assets/cms/scss/nprogress";
+@import "node_modules/@concretecms/bedrock/assets/cms/scss/buttons";
+@import "node_modules/@concretecms/bedrock/assets/cms/scss/forms";
+@import "node_modules/@concretecms/bedrock/assets/cms/scss/login-page";
+
+@import "./features/desktop/desktop";
+
+@import "container";
+@import "install";
+@import "background-image";
+@import "account";
+

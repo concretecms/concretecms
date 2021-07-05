@@ -2,14 +2,10 @@
 
 namespace Concrete\Core\StyleCustomizer\Style;
 
-use Concrete\Core\Filesystem\FileLocator;
-use Concrete\Core\Support\Facade\Application;
-use Symfony\Component\HttpFoundation\ParameterBag;
-
 /**
  * @method static \Concrete\Core\StyleCustomizer\Style\Value\Value[] getValuesFromVariables($rules = [])
  */
-abstract class Style implements \JsonSerializable
+abstract class Style implements StyleInterface
 {
     /**
      * The name of this style.
@@ -24,45 +20,6 @@ abstract class Style implements \JsonSerializable
      * @var string
      */
     protected $variable = '';
-
-    /**
-     * Render the control of this style.
-     *
-     * @param \Concrete\Core\StyleCustomizer\Style\Value\Value|null|false $value the current style value
-     */
-    abstract public function render($value = false);
-
-    /*
-     * This is commented out only because PHP raises a "strict standards" warning for PHP prior to version 7.0,
-     * but child classes MUST implement it (see also https://bugs.php.net/bug.php?id=72993 )
-     */
-    // abstract public static function getValuesFromVariables($rules = []);
-
-    /**
-     * Get the value of this style as received from a request.
-     *
-     * @param \Symfony\Component\HttpFoundation\ParameterBag $request the received data
-     *
-     * @return \Concrete\Core\StyleCustomizer\Style\Value\Value|null
-     */
-    abstract public function getValueFromRequest(ParameterBag $request);
-
-    /**
-     * Get the value of this style extracted from a list of values.
-     *
-     * @param \Concrete\Core\StyleCustomizer\Style\ValueList $list
-     *
-     * @return \Concrete\Core\StyleCustomizer\Style\Value\Value|null
-     */
-    public function getValueFromList(ValueList $list)
-    {
-        $type = static::getTypeFromClass($this);
-        foreach ($list->getValues() as $value) {
-            if ($value->getVariable() == $this->getVariable() && $type == static::getTypeFromClass($value, 'Value')) {
-                return $value;
-            }
-        }
-    }
 
     /**
      * Get the type handle of a given Style instance.
@@ -150,27 +107,11 @@ abstract class Style implements \JsonSerializable
         return $this->variable;
     }
 
-    /**
-     * Get a path to an elements directory for this Style. Might not be used by all styles.
-     *
-     * @return string
-     */
-    public function getFormElementPath()
-    {
-        $app = Application::getFacadeApplication();
-        $className = implode('', array_slice(explode('\\', get_called_class()), -1));
-        $segment = substr($className, 0, strpos($className, 'Style'));
-        $element = uncamelcase($segment);
-        $locator = $app->make(FileLocator::class);
-        $record = $locator->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_STYLE_CUSTOMIZER . '/' . DIRNAME_STYLE_CUSTOMIZER_TYPES . '/' . $element . '.php');
-
-        return $record->getFile();
-    }
-
     public function jsonSerialize()
     {
         return [
             'name' => $this->getDisplayName('text'),
+            'type' => self::getTypeFromClass($this)
         ];
     }
 }

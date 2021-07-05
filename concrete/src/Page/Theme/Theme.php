@@ -305,9 +305,20 @@ class Theme extends ConcreteObject
      */
     public function getThemeDefaultSkin(): ?SkinInterface
     {
+        return $this->getSkinByIdentifier(SkinInterface::SKIN_DEFAULT);
+    }
+
+    /**
+     * Returns a skin object when passed a string identifier
+     *
+     * @param string $skinIdentifier
+     * @return SkinInterface|null
+     */
+    public function getSkinByIdentifier(string $skinIdentifier): ?SkinInterface
+    {
         $skins = $this->getSkins();
         foreach ($skins as $skin) {
-            if ($skin->getIdentifier() == SkinInterface::SKIN_DEFAULT) {
+            if ($skin->getIdentifier() == $skinIdentifier) {
                 return $skin;
             }
         }

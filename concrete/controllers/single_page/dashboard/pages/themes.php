@@ -52,7 +52,7 @@ class Themes extends DashboardSitePageController
         return $this->buildRedirect($this->action());
     }
 
-    public function customize($pThemeID = null)
+    public function preview($pThemeID = null)
     {
         $theme = Theme::getByID($pThemeID);
         if ($theme) {
@@ -64,7 +64,7 @@ class Themes extends DashboardSitePageController
             $this->set('styles', $styles);
             $this->setTheme('concrete');
             $this->setThemeViewTemplate('empty.php');
-            $this->render('/dashboard/pages/themes/customize');
+            $this->render('/dashboard/pages/themes/preview');
         } else {
             return $this->buildRedirect($this->action());
         }

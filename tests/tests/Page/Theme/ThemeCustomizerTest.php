@@ -3,11 +3,14 @@
 namespace Concrete\Tests\Page\Theme;
 
 use Concrete\Core\Filesystem\FileLocator;
-use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\StyleCustomizer\Parser\BedrockParser;
 use Concrete\Core\StyleCustomizer\Parser\ParserFactory;
-use Concrete\Core\StyleCustomizer\Parser\ScssParser;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
-use Concrete\Core\StyleCustomizer\Style\ValueList\ValueListFactory;
+use Concrete\Core\StyleCustomizer\Style\FontFamilyStyle;
+use Concrete\Core\StyleCustomizer\Style\StyleValueList;
+use Concrete\Core\StyleCustomizer\Style\TypeStyle;
+use Concrete\Core\StyleCustomizer\Style\ValueList\ValueList;
+use Concrete\Core\StyleCustomizer\StyleList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Tests\TestCase;
 use Concrete\Theme\Elemental\PageTheme;
@@ -44,30 +47,61 @@ class ThemeCustomizerTest extends TestCase
 
     public function testParserDetector()
     {
+        $app = app();
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
         $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
-        $parserFactory = new ParserFactory($fileLocator);
+        $parserFactory = new ParserFactory($app, $fileLocator);
         $parser = $parserFactory->createParserFromTheme($theme);
-        $this->assertInstanceof(ScssParser::class, $parser);
+        $this->assertInstanceof(BedrockParser::class, $parser);
 
         $defaultSkin = $theme->getThemeDefaultSkin();
         $parser = $parserFactory->createParserFromSkin($defaultSkin);
-        $this->assertInstanceof(ScssParser::class, $parser);
+        $this->assertInstanceof(BedrockParser::class, $parser);
     }
 
-    /*
-    public function testValueListFromSkin()
+    public function testStyleListFromSkin()
     {
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
-        $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
-        $defaultSkin = $theme->getThemeDefaultSkin();
-        $parserFactory = new ParserFactory($fileLocator);
-        $parser = $parserFactory->createParserFromSkin($defaultSkin);
-    }
-    */
+        $styleList = $theme->getThemeCustomizableStyleList();
+        $this->assertInstanceOf(StyleList::class, $styleList);
+        $this->assertCount(2, $styleList->getSets());
 
+        $allStyles = $styleList->getAllStyles();
+        $this->assertIsIterable($allStyles);
+        $style = $allStyles->current();
+        $this->assertEquals('Primary Color', $style->getName());
+        $this->assertCount(4, iterator_to_array($allStyles));
+    }
+
+    public function testStyleListTypeOptions()
+    {
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $styleList = $theme->getThemeCustomizableStyleList();
+        $sets = $styleList->getSets();
+        $set = $sets[1];
+        $this->assertEquals('Typography', $set->getName());
+        $style = $set->getStyles()[0];
+        $this->assertInstanceOf(FontFamilyStyle::class, $style);
+    }
+
+
+    public function testValueListFromSkin()
+    {
+        $app = app();
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $styleList = $theme->getThemeCustomizableStyleList();
+        $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
+        $parserFactory = new ParserFactory($app, $fileLocator);
+        $defaultSkin = $theme->getThemeDefaultSkin();
+        $parser = $parserFactory->createParserFromSkin($defaultSkin);
+        $valueList = $parser->createStyleValueListFromSkin($styleList, $defaultSkin);
+        $this->assertInstanceOf(StyleValueList::class, $valueList);
+        $this->assertCount(4, $valueList->getValues());
+    }
 
     /*
     public static function tearDownAfterClass() {
