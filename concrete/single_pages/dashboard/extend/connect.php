@@ -40,7 +40,7 @@ if ($permissions->canInstallPackages()) { ?>
                 <div class="alert alert-danger">
                     <h5><?=t('Error: Unrecognized Site Token')?></h5>
 
-                    <p style="font-size: 1.2rem"><?=t("This site contains a marketplace token and client ID, but it does not match one stored on marketplace.concretecms.com. Please re-enter proper credentials below.")?></p>
+                    <p style="font-size: 1.2rem"><?=t("This site contains a marketplace token and client ID, but they don't match the ones stored on marketplace.concretecms.com. Please re-enter proper credentials below.")?></p>
 
                 </div>
             </fieldset>
