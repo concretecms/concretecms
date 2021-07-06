@@ -104,7 +104,7 @@ echo $userInterface->tabs([
         <fieldset>
             <div class="form-group">
                 <?php echo $form->label('num', t('Number of Pages to Display')); ?>
-                <?php echo $form->text("num", $num); ?>
+                <?php echo $form->number("num", $num); ?>
             </div>
 
             <div class="form-group">
@@ -316,26 +316,23 @@ echo $userInterface->tabs([
             <div class="form-group">
                 <?php echo $form->label('', t('Location')); ?>
 
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="cParentID" id="cEverywhereField"
-                               value="0" <?php if ($cParentID == 0) { ?> checked<?php } ?> />
-                        <?php echo t('Everywhere') ?>
-                    </label>
+                <div class="form-check">
+                    <?php echo $form->radio("cParentID", 0, $cParentID, ["id" => "cEverywhereField"]); ?>
+                    <?php echo $form->label("cEverywhereField", t('Everywhere'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("cParentID", $c->getCollectionID(), $cThis, ["id" => "cThisPageField", "name" => "cParentID"]); ?>
+                    <?php echo $form->radio("cParentID", $c->getCollectionID(), $cThis ? $c->getCollectionID() : null, ["id" => "cThisPageField"]); ?>
                     <?php echo $form->label("cThisPageField", t('Beneath this page'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("cThisParentField", $c->getCollectionParentID(), $cThisParent, ["id" => "cThisParentField", "name" => "cParentID"]); ?>
+                    <?php echo $form->radio("cParentID", $c->getCollectionParentID(), $cThisParent ? $c->getCollectionParentID() : null, ["id" => "cThisParentField"]); ?>
                     <?php echo $form->label("cThisParentField", t('At the current level'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("cOtherField", 'OTHER', $isOtherPage, ["id" => "cOtherField", "name" => "cParentID"]); ?>
+                    <?php echo $form->radio("cParentID", 'OTHER', $isOtherPage ? 'OTHER' : false, ["id" => "cOtherField"]); ?>
                     <?php echo $form->label("cOtherField", t('Beneath another page'), ["class" => "form-check-label"]); ?>
                 </div>
 
@@ -350,7 +347,7 @@ echo $userInterface->tabs([
                      style="<?php echo ($cParentID === 0) ? ' display: none;' : ''; ?>">
 
                     <div class="form-check">
-                        <?php echo $form->checkbox("includeAllDescendents", '1', $$includeAllDescendents, ["id" => "includeAllDescendents", "name" => "includeAllDescendents"]); ?>
+                        <?php echo $form->checkbox("includeAllDescendents", '1', $includeAllDescendents, ["id" => "includeAllDescendents"]); ?>
                         <?php echo $form->label("includeAllDescendents", t('Include all child pages'), ["class" => "form-check-label"]); ?>
                     </div>
                 </div>
