@@ -48,7 +48,7 @@ $router->all('/page/versions/approve', 'Page\Versions::approve');
 $router->all('/page/versions/unapprove', 'Page\Versions::unapprove');
 $router->all('/page/devices', 'Page\Devices::view');
 $router->all('/page/devices/preview', 'Page\Devices::preview');
-$router->all('/theme/customize/{pThemeID}', 'Theme\Customize::view');
+$router->all('/theme/customize/{pThemeID}/{previewPageID}', 'Theme\Customize::view');
 $router->all('/theme/customize/skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizeSkin::view');
 $router->all('/sitemap', 'Sitemap::view');
 $router->all('/help', 'Help::view');

@@ -111,7 +111,8 @@ abstract class Style implements StyleInterface
     {
         return [
             'name' => $this->getDisplayName('text'),
-            'type' => self::getTypeFromClass($this)
+            'type' => self::getTypeFromClass($this),
+            'variable' => $this->getVariable(),
         ];
     }
 }

@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <section data-vue="theme-customizer">
 
-    <theme-customizer :style-list='<?=json_encode($styles)?>'></theme-customizer>
+    <theme-customizer preview-action="<?=$controller->action('preview_skin')?>" :style-list='<?=json_encode($styles)?>'></theme-customizer>
 
 </section>
 

@@ -32,3 +32,5 @@ $router->all('/ccm/system/panels/details/page/seo', '\Concrete\Controller\Panel\
 $router->all('/ccm/system/panels/details/page/seo/submit', '\Concrete\Controller\Panel\Detail\Page\Seo::submit');
 $router->all('/ccm/system/panels/details/page/versions', '\Concrete\Controller\Panel\Detail\Page\Versions::view');
 $router->all('/ccm/system/panels/details/page/devices', '\Concrete\Controller\Panel\Page\Devices::detail');
+$router->all('/ccm/system/panels/details/theme/preview/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\Preview::view');
+$router->get('/ccm/system/panels/details/theme/do_preview/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\Preview::doPreview');

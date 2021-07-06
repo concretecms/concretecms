@@ -14,7 +14,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
         foreach ($skins as $skin) { ?>
             <li>
                 <a href="#" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/theme/customize/skin', $theme->getThemeID(), $skin->getIdentifier()) ?>"
-                   data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>"
+                   <?php if ($previewPage) {?>
+                        data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/theme/preview', $theme->getThemeID(), $skin->getIdentifier(), $previewPage->getCollectionID())?>"
+                   <?php } ?>
                    data-launch-panel-detail="customize-skin-<?=$skin->getIdentifier()?>"
                    data-panel-transition="fade">
                     <?=$skin->getName()?>

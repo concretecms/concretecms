@@ -7,7 +7,7 @@ $config = Core::make('config');
 $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
 $show_tooltips = (bool) $config->get('concrete.accessibility.toolbar_tooltips');
 $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
-$panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeTheme->getThemeID());
+$panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeTheme->getThemeID(), $previewPage->getCollectionID());
 ?>
 
 <?= View::element('icons') ?>
@@ -46,7 +46,7 @@ $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeT
 
     <div class="ccm-page h-100">
     <iframe id="ccm-page-preview-frame" class="w-100 h-100" style="border: 0" name="ccm-page-preview-frame"
-            src="http://concrete5.test/index.php/ccm/system/panels/page/design/preview_contents?ccm_token=1614603462:2e8f040bb871f0935fcea7b38962d44c&amp;cID=219&amp;pThemeID=1&amp;pTemplateID=2"></iframe>
+            src="<?=URL::to('/ccm/system/panels/page/design/preview_contents')?>?cID=<?=$previewPage->getCollectionID()?>"></iframe>
     </div>
 
 </div>

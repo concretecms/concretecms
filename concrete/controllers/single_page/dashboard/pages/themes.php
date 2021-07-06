@@ -6,6 +6,7 @@ use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Config;
@@ -64,6 +65,9 @@ class Themes extends DashboardSitePageController
             $this->set('styles', $styles);
             $this->setTheme('concrete');
             $this->setThemeViewTemplate('empty.php');
+
+            $previewPage = $this->app->make('site')->getSite()->getSiteHomePageObject();
+            $this->set('previewPage', $previewPage);
             $this->render('/dashboard/pages/themes/preview');
         } else {
             return $this->buildRedirect($this->action());

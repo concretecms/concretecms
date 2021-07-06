@@ -9,6 +9,7 @@ use Concrete\Core\Permission\Checker;
 class Customize extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/theme/skins';
+    protected $controllerActionPath = '/ccm/panels/theme';
 
     public function canAccess()
     {
@@ -17,12 +18,18 @@ class Customize extends BackendInterfacePageController
         return $checker->canViewPage();
     }
 
-    public function view($pThemeID)
+    public function view($pThemeID, $previewPageID)
     {
         $theme = Theme::getByID($pThemeID);
         if ($theme) {
             $this->set('theme', $theme);
             $this->set('skins', $theme->getSkins());
+            $previewPage = Page::getByID($previewPageID);
+            $checker = new Checker($previewPage);
+            if ($checker->canViewPage()) {
+                $previewPage = Page::getByID($previewPageID);
+                $this->set('previewPage', $previewPage);
+            }
         }
     }
 

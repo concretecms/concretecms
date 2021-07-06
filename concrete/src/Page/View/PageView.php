@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\View;
 
+use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Theme\Theme;
@@ -22,7 +23,7 @@ class PageView extends View
     protected $c; // page
     protected $cp;
     protected $pTemplateID;
-    protected $customStyleMap;
+    protected $customPreviewRequest;
 
     public function getScopeItems()
     {
@@ -236,8 +237,24 @@ class PageView extends View
         }
     }
 
+    /**
+     * @param mixed $customPreviewRequest
+     */
+    public function setCustomPreviewRequest($customPreviewRequest): void
+    {
+        $this->customPreviewRequest = $customPreviewRequest;
+    }
+
     public function getSelectedSkinStylesheet()
     {
+        $skin = null;
+        if (isset($this->customPreviewRequest) && $this->customPreviewRequest instanceof SkinPreviewRequest) {
+            $request = $this->customPreviewRequest;
+            $theme = $request->getTheme();
+            $skin = $request->getSkin()->getIdentifier();
+            $path = $theme->getSkinDirectoryRecord()->getUrl();
+            return $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
+        }
         $site = $this->c->getSite();
         $path = $this->themeObject->getSkinDirectoryRecord()->getUrl();
         $skin = SkinInterface::SKIN_DEFAULT;
