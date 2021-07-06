@@ -2,17 +2,17 @@
 $form = Core::make('helper/form');
 $token = Core::make('token');
 ?>
+<div class="ccm-dashboard-header-buttons">
+    <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
+</div>
 <form action="<?=$view->action('save')?>" method='POST'>
 	<?php
     $token->output('update_banned_words');
     ?>
-    <div class="ccm-dashboard-header-buttons">
-        <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
-    </div>
-
-    <div class="checkbox">
-        <label>
-		    <input value=1 name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'> <?=t('Disallow posts that include banned words?')?>
+    <div class="form-check">
+        <input class="form-check-input" value="1" id="banned_list_enabled" name='banned_list_enabled' <?=$bannedListEnabled ? 'checked ' : ''?>type='checkbox'>
+        <label class="form-check-label" for="banned_list_enabled">
+            <?=t('Disallow posts that include banned words?')?>
         </label>
     </div>
 

@@ -46,10 +46,10 @@ class VersionStatusField extends AbstractField
         }
 
         $form = $app->make('helper/form');
-        $html = '<div class="radio"><label>' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_RECENT, $versionToRetrieve) . t('All') . '</label></div>';
-        $html .= '<div class="radio"><label>' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_ACTIVE, $versionToRetrieve) . t('Approved') . '</label></div>';
-        $html .= '<div class="radio"><label>' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_SCHEDULED, $versionToRetrieve) . t('Scheduled') . '</label></div>';
-        $html .= '<div class="radio"><label>' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_RECENT_UNAPPROVED, $versionToRetrieve) . t('Unapproved') . '</label></div>';
+        $html = '<div class="form-check">' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_RECENT, $versionToRetrieve) . $form->label('versionToRetrieve' . '1',t('All'), ['class'=>'form-check-label']) . '</div>';
+        $html .= '<div class="form-check">' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_ACTIVE, $versionToRetrieve) . $form->label('versionToRetrieve' . '2',t('Approved'), ['class'=>'form-check-label']) . '</div>';
+        $html .= '<div class="form-check">' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_SCHEDULED, $versionToRetrieve) . $form->label('versionToRetrieve' . '3',t('Scheduled'), ['class'=>'form-check-label']) . '</div>';
+        $html .= '<div class="form-check">' . $form->radio('versionToRetrieve', PageList::PAGE_VERSION_RECENT_UNAPPROVED, $versionToRetrieve) . $form->label('versionToRetrieve' . '4',t('Unapproved'), ['class'=>'form-check-label']) . '</div>';
 
         return $html;
     }

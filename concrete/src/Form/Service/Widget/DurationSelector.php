@@ -80,7 +80,7 @@ class DurationSelector
 EOL;
 
         if ($allowMultiple) {
-            $html .= '<button data-action="add-duration" type="button" class="pull-right btn btn-xs btn-default">' . $add . '</button>';
+            $html .= '<button data-action="add-duration" type="button" class="pull-right btn btn-xs btn-secondary">' . $add . '</button>';
         }
 
         $html .= <<<EOL

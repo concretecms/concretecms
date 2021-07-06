@@ -17,11 +17,9 @@ $token = \Core::make('token');
         <p class="help-block"><?php echo t('Note: These settings can be overridden in the block edit form for individual conversations.'); ?></p>
         <div class="form-group">
             <label class="control-label"><?= t('Attachments') ?></label>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled) ?>
-                    <?= t('Enable File Attachments') ?>
-                </label>
+            <div class="form-check">
+                <?= $form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled) ?>
+                <?= $form->label('attachmentsEnabled', t('Enable File Attachments'), ['class'=>'form-check-label']) ?>
             </div>
         </div>
         <div class="form-group">
@@ -59,7 +57,7 @@ $token = \Core::make('token');
         <legend><?= t('Editor') ?></legend>
         <div class="form-group">
             <?= $form->label('activeEditor', t('Active Conversation Editor')) ?>
-            <?= Loader::helper('form')->select('activeEditor', $editors, $active); ?>
+            <?= $form->select('activeEditor', $editors, $active); ?>
         </div>
     </fieldset>
     <fieldset>
@@ -71,10 +69,9 @@ $token = \Core::make('token');
         <div class="form-group">
             <label class="control-label"><?= t('Subscribe Option') ?></label>
 
-            <div class="checkbox">
-                <label><?= $form->checkbox('subscriptionEnabled', 1, $subscriptionEnabled) ?>
-                    <?= t('Yes, allow registered users to choose to subscribe to conversations.') ?>
-                </label>
+            <div class="form-check">
+                <?= $form->checkbox('subscriptionEnabled', 1, $subscriptionEnabled) ?>
+                <?= $form->label('subscriptionEnabled',t('Yes, allow registered users to choose to subscribe to conversations.'), ['class'=>'form-check-label']) ?>
             </div>
         </div>
     </fieldset>

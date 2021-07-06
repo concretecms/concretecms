@@ -119,25 +119,23 @@ if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
     <div style="display: none" data-dialog="ccm-blacklist-clear-data-dialog" class="ccm-ui">
         <form data-dialog-form="ccm-blacklist-clear-data-form" method="POST" action="<?= $view->action('clear_data', $service->getCategory()->getIpAccessControlCategoryID()) ?>">
             <?php $token->output('blacklist-clear-data/' . $service->getCategory()->getIpAccessControlCategoryID()) ?>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('delete-failed-login-attempts', 'yes', false) ?>
-                    <?= t('Delete failed login attempts older than %s days', $form->number('delete-failed-login-attempts-min-age', 1, ['style' => 'width: 90px; display: inline-block', 'min' => '0'])) ?>
-                </label>
+            <div class="form-check-inline">
+
+                    <?= $form->checkbox('delete-failed-login-attempts', 'yes', false, ['class'=>'mb-sm-2']) ?>
+                    <?= $form->label('delete-failed-login-attempts',t('Delete failed login attempts older than %s days', $form->number('delete-failed-login-attempts-min-age', 1, ['style' => 'width: 90px; display: inline-block', 'min' => '0']))) ?>
+
             </div>
-            <div class="radio">
-                <label>
-                    <?= $form->radio('delete-automatic-blacklist', 'yes-keep-current', true) ?>
-                    <?= t('Delete expired automatic bans') ?>
-                </label>
-                <label>
-                    <?= $form->radio('delete-automatic-blacklist', 'yes-all', false) ?>
-                    <?= t('Delete every automatic ban (including the current ones)') ?>
-                </label>
-                <label>
-                    <?= $form->radio('delete-automatic-blacklist', 'nope', false) ?>
-                    <?= t("Don't delete any automatic ban") ?>
-                </label>
+            <div class="form-check">
+                <?= $form->radio('delete-automatic-blacklist', 'yes-keep-current', true) ?>
+                <?= $form->label('delete-automatic-blacklist1', t('Delete expired automatic bans')) ?>
+            </div>
+            <div class="form-check">
+                <?= $form->radio('delete-automatic-blacklist', 'yes-all', false) ?>
+                <?= $form->label('delete-automatic-blacklist2', t('Delete every automatic ban (including the current ones)')) ?>
+            </div>
+            <div class="form-check">
+                <?= $form->radio('delete-automatic-blacklist', 'nope', false) ?>
+                <?= $form->label('delete-automatic-blacklist3', t("Don't delete any automatic ban")) ?>
             </div>
         </form>
         <div class="dialog-buttons">

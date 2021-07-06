@@ -2,6 +2,7 @@
 namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
@@ -326,8 +327,16 @@ class Controller extends AuthenticationTypeController
         $post = $this->post();
 
         if (empty($post['uName']) || empty($post['uPassword'])) {
-            throw new Exception(t('Please provide both username and password.'));
+            /** @var Repository $config */
+            $config = $this->app->make(Repository::class);
+
+            if ($config->get('concrete.user.registration.email_registration')) {
+                throw new Exception(t('Please provide both email address and password.'));
+            } else {
+                throw new Exception(t('Please provide both username and password.'));
+            }
         }
+        
         $uName = $post['uName'];
         $uPassword = $post['uPassword'];
 

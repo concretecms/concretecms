@@ -15,10 +15,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div class="form-group">
         <?= $form->label('', t('General options'))?>
         <div class="form-check">
-            <div class="checkbox">
-                <?= $form->checkbox('authentication_type_enabled', '1', $authenticationType->isEnabled()) ?>
-                <label class="form-check-label" for="authentication_type_enabled"><?= t('Enable authentication type') ?></label>
-            </div>
+            <?= $form->checkbox('authentication_type_enabled', '1', $authenticationType->isEnabled()) ?>
+            <label class="form-check-label" for="authentication_type_enabled"><?= t('Enable authentication type') ?></label>
         </div>
     </div>
     <div id="authentication_type_form" class="mt-3<?= $authenticationType->isEnabled() ? '' : ' d-none' ?>">

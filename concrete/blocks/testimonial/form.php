@@ -8,6 +8,13 @@ if ($fID > 0) {
         unset($fo);
     }
 }
+
+if ($awardImageID) {
+    $awardImage = File::getByID($awardImageID);
+    if (!$awardImage) {
+        unset($awardImage);
+    }
+}
 ?>
 
 <div class="form-group">
@@ -41,4 +48,10 @@ if ($fID > 0) {
 <div class="form-group">
     <?php echo $form->label('paragraph', t('Bio/Quote')) ?>
     <?php echo $form->textarea('paragraph', $paragraph, array('rows' => 5))?>
+</div>
+
+<div class="form-group">
+    <?php echo $form->label('awardImageID', t('Award Image')) ?>
+    <?= $al->image('awardImageID', 'awardImageID', t('Choose File'), $awardImage); ?>
+
 </div>

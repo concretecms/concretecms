@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Multilingual\Page\Section;
 
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\SiteTree;
@@ -31,12 +33,29 @@ class Section extends Page
 
     protected static function getLocaleFromHomePageID($cID)
     {
-        $em = Database::get()->getEntityManager();
-        $tree = $em->getRepository('Concrete\Core\Entity\Site\SiteTree')
-            ->findOneBySiteHomePageID($cID);
-        if (is_object($tree)) {
-            return $em->getRepository('Concrete\Core\Entity\Site\Locale')
-                ->findOneByTree($tree);
+        if ($cID) {
+            $cache = Application::getFacadeApplication()->make(RequestCache::class);
+            $item = $cache->getItem('section_locale_from_homepage_id/' .  $cID);
+            
+            if ($item->isMiss() === true) {
+                $item->lock();
+                
+                $em = Database::get()->getEntityManager();
+                $tree = $em->getRepository('Concrete\Core\Entity\Site\SiteTree')
+                    ->findOneBySiteHomePageID($cID);
+                
+                if (is_object($tree)) {
+                    $locale = $em->getRepository('Concrete\Core\Entity\Site\Locale')
+                        ->findOneByTree($tree);
+
+                    $item->set($locale);
+                    $cache->save($item);
+
+                    return $locale;
+                }
+            } else {
+                return $item->get();
+            }
         }
     }
 
