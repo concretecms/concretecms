@@ -19,8 +19,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			<div class="form-group">
 				<label class="control-label"><?=t('Instances on Child Pages')?></label>
-				<div class="radio"><label><input type="radio" name="deleteAll" value="0" checked> <?=t('Delete only unforked instances on child pages.')?></label></div>
-				<div class="radio"><label><input type="radio" name="deleteAll" value="1"> <?=t('Delete even forked instances on child pages.')?></label></div>
+				<div class="form-check">
+                    <input type="radio" class="form-check-input" id="deleteAll1" name="deleteAll" value="0" checked>
+                    <label class="form-check-label" for="deleteAll1"><?=t('Delete only unforked instances on child pages.')?></label>
+                </div>
+				<div class="form-check">
+                    <input type="radio" class="form-check-input" id="deleteAll2" name="deleteAll" value="1">
+                    <label class="form-check-label" for="deleteAll2"><?=t('Delete even forked instances on child pages.')?></label>
+                </div>
 			</div>
 
 		<?php

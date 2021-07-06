@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a3',
     'version_installed' => '9.0.0a3',
-    'version_db' => '20210528170900', // the key of the latest database migration
+    'version_db' => '20210622145600', // the key of the latest database migration
 
     /*
      * Installation status
@@ -77,10 +77,34 @@ return [
          */
         'hide_keys' => [
             /** @var string[] */
-            '_ENV' => [],
+            '_ENV' => [
+                // Likely database environment variables
+                'DB_PASSWORD',
+                'DB_USERNAME',
+                'DB_HOSTNAME',
+                'DB_HOST',
+                'DB_SERVER',
+                'DATABASE_PASSWORD',
+                'DATABASE_USERNAME',
+                'DATABASE_HOSTNAME',
+                'DATABASE_HOST',
+                'DATABASE_SERVER',
+            ],
 
             /** @var string[] */
-            '_SERVER' => [],
+            '_SERVER' => [
+                // Likely database environment variables
+                'DB_PASSWORD',
+                'DB_USERNAME',
+                'DB_HOSTNAME',
+                'DB_HOST',
+                'DB_SERVER',
+                'DATABASE_PASSWORD',
+                'DATABASE_USERNAME',
+                'DATABASE_HOSTNAME',
+                'DATABASE_HOST',
+                'DATABASE_SERVER',
+            ],
 
             /** @var string[] */
             '_GET' => [],
@@ -92,7 +116,9 @@ return [
             '_FILES' => [],
 
             /** @var string[] */
-            '_COOKIE' => [],
+            '_COOKIE' => [
+                'CONCRETE5',
+            ],
 
             /** @var string[] */
             '_SESSION' => [],
@@ -104,7 +130,16 @@ return [
              *
              * @var string[]
              */
-            'config' => [],
+            'config' => [
+                'concrete.proxy.password',
+                'concrete.mail.methods.smtp.password',
+                'concrete.email.default.address',
+                'concrete.email.form_block.address',
+                'concrete.email.forgot_password.address',
+                'concrete.email.validate_registration.address',
+                'concrete.email.workflow_notification.address',
+                'concrete.debug.hide_keys',
+            ],
         ]
     ],
 
@@ -875,6 +910,7 @@ return [
             'site_page' => '/private/sites',
             'newsflow_slot_content' => '/tools/slot_content/',
             'marketplace' => [
+                'projects' => '/profile/projects/',
                 'connect' => '/marketplace/connect',
                 'connect_success' => '/marketplace/connect/-/connected',
                 'connect_validate' => '/marketplace/connect/-/validate',

@@ -156,16 +156,15 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
 
         }
         $options = $controller->getPollOptions();
+        $index = 1;
         foreach ($options as $opt) {
             ?>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionID" value="<?= $opt->getOptionID() ?>"/>
-                    <?= h($opt->getOptionName()) ?>
-                </label>
+            <div class="form-check">
+                <?=$form->radio('optionID',$opt->getOptionID())?>
+                <?=$form->label('optionID'.$index, h($opt->getOptionName()), ['class'=>'form-check-label'])?>
             </div>
         <?php
-
+        $index++;
         }
         if (!$controller->requiresRegistration() || (int) $uID > 0) {
             ?>

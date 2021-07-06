@@ -43,6 +43,7 @@ use Exception;
 use FileSet;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\RequestOptions;
 use IPLib\Factory as IPFactory;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
@@ -776,6 +777,18 @@ class File extends Controller
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
+
+            $ipFormatBlocks = [
+                '/^\d+$/', // No fully integer / octal hostnames http://2130706433 http://017700000001
+                '/^0x[0-9a-f]+$/i', // No Hexadecimal hostnames http://0x07f000001
+            ];
+
+            foreach ($ipFormatBlocks as $block) {
+                if (preg_match($block, $host) !== 0) {
+                    throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                }
+            }
+
             $ip = IPFactory::addressFromString($host, true, true, true);
             if ($ip === null) {
                 $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
@@ -805,7 +818,9 @@ class File extends Controller
         /** @var Client $client */
         $client = $this->app->make(Client::class);
         $request = new Request('GET', $url);
-        $response = $client->send($request);
+        $response = $client->send($request, [
+            RequestOptions::ALLOW_REDIRECTS => false
+        ]);
 
         if ($response->getStatusCode() !== 200) {
             throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
@@ -819,7 +834,7 @@ class File extends Controller
         } else {
             foreach ($response->getHeader('Content-Type') as $contentType) {
                 if (!empty($contentType)) {
-                    list($mimeType) = explode(';', $contentType, 2);
+                    [$mimeType] = explode(';', $contentType, 2);
                     $mimeType = trim($mimeType);
                     // use mimetype from http response
                     $extension = $this->app->make('helper/mime')->mimeToExtension($mimeType);

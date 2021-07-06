@@ -107,7 +107,8 @@ class FormatterTest extends TestCase
         $this->assertEquals(
             'Baldoyle Ind Est, 13' . "\n" .
             'Dublin' . "\n" .
-            'County Dublin WN7 4TN' . "\n" .
+            'County Dublin'. "\n" .
+            'WN7 4TN' . "\n" .
             'Ireland',
             $this->formatTextAddressFor($address)
         );

@@ -85,7 +85,7 @@
                     <label class="control-label"><?php echo t('Description'); ?></label>
                     <textarea class='editor-content' name="description[]"><?php echo $row['description']; ?></textarea>
                 </div>
-                <button type="button" class="btn btn-sm btn-default ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
+                <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
                 <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>
                 <i class="fa fa-arrows"></i>
 
@@ -93,14 +93,6 @@
             </div>
         <?php
         }
-    } else {
-    ?>
-        <script>
-        _.defer(function() {
-            $('.ccm-add-faq-entry').click();
-        });
-        </script>
-    <?php
     }
     ?>
 
@@ -119,7 +111,7 @@
             <label class="control-label"><?php echo t('Description'); ?></label>
             <textarea class='editor-content' name="description[]"></textarea>
         </div>
-        <button type="button" class="btn btn-sm btn-default ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
+        <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
         <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>
         <i class="fa fa-arrows"></i>
 
@@ -225,5 +217,13 @@ $(document).ready(function() {
             doSortCount();
         }
     });
+
+    <?php
+    if ($controller->getAction() == 'add') { ?>
+        $(function() {
+            $('.ccm-add-faq-entry').trigger('click');
+        });
+    <?php }
+    ?>
 });
 </script>

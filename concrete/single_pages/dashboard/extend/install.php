@@ -38,12 +38,12 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             <?php
             $u = $app->make(Concrete\Core\User\User::class);
             if ($u->isSuperUser()) {
-                $disabled = '';
+                $disabled = [];
                 ?>
                 <div class="alert-message warning"><p><?=t('This will clear your home page, uploaded files and any content pages out of your site completely. It will completely reset your site and any content you have added will be lost.')?></p></div>
                 <?php
             } else {
-                $disabled = 'disabled';
+                $disabled = ['disabled'=>true];
                 ?>
                 <div class="alert-message info"><p><?=t('Only the %s user may reset the site\'s content.', USER_SUPER)?></p></div>
                 <?php
@@ -51,8 +51,15 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             ?>
             <div class="form-group">
                 <label class="control-label"><?=t("Swap Site Contents")?></label>
-                <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></label></div>
-                <div class="radio"><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <?=t('Yes. Reset site content with the content found in this package')?></label></div>
+                <div class="form-check">
+                    <?=$form->radio('pkgDoFullContentSwap',0, true, $disabled)?>
+                    <?=$form->label('pkgDoFullContentSwap1',t('No. Do <strong>not</strong> remove any content or files from this website.'))?>
+                </div>
+                <div class="form-check">
+                    <?=$form->radio('pkgDoFullContentSwap',1, false, $disabled)?>
+                    <?=$form->label('pkgDoFullContentSwap2',t('Yes. Reset site content with the content found in this package'))?>
+                </div>
+
             </div>
             <?php if (count($pkg->getContentSwapFiles()) === 1) {?>
                 <?php echo $form->hidden("contentSwapFile", array_pop(array_keys($pkg->getContentSwapFiles()))) ?>
@@ -98,9 +105,9 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             </div>
             <div class="form-group">
                 <label class="control-label"><?= t('Move package to trash directory on server?'); ?></label>
-                <div class="checkbox">
-                    <label><?= $app->make('helper/form')->checkbox('pkgMoveToTrash', 1); ?>
-                    <span><?= t('Yes, remove the package\'s directory from the installation directory.'); ?></span></label>
+                <div class="form-check">
+                    <?= $app->make('helper/form')->checkbox('pkgMoveToTrash', 1); ?>
+                    <label for="pkgMoveToTrash" class="form-check-label"><?= t('Yes, remove the package\'s directory from the installation directory.'); ?></label>
                 </div>
             </div>
         </fieldset>
@@ -325,11 +332,11 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                     <?php
                 }
             }
-            if ($mi !== null && $mi->isConnected()) {
+            if ($mi !== null && $mi->isConnected()) { ?>
+                    <hr>
+                <?php
+                View::element('dashboard/marketplace_project_page');
                 ?>
-                <hr/>
-                <h4><?= t("Project Page"); ?></h4>
-                <p><?= t('Your site is currently connected to the concrete5 community. Your project page URL is:'); ?><br/><a href="<?= $mi->getSitePageURL(); ?>"><?= $mi->getSitePageURL(); ?></a></p>
                 <?php
             } elseif ($mi !== null && $mi->hasConnectionError()) {
                 echo View::element('dashboard/marketplace_connect_failed');
@@ -339,7 +346,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <div class="well clearfix" style="padding:10px 20px;">
                     <h4><?= t('Connect to Community'); ?></h4>
                     <p><?= t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.'); ?></p>
-                    <p><a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect', 'register_step1'); ?>"><?= t("Connect to Community"); ?></a></p>
+                    <p><a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect'); ?>"><?= t("Connect to Community"); ?></a></p>
                 </div>
                 <?php
             }

@@ -39,24 +39,28 @@ $ih = Core::make('multilingual/interface/flag');
         <div class="form-group">
             <label class="control-label"><?= $label ?></label>
             <?php
+            $i = 1;
             foreach ($languageSections as $ml) {
                 ?>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="language" value="<?= $ml->getCollectionID() ?>" <?php if (is_object($defaultLocale) && $defaultLocale->getCollectionID() == $ml->getCollectionID()) { ?> checked="checked" <?php } ?> />
-                        <?= $ih->getSectionFlagIcon($ml) ?>
-                        <?= $languages[$ml->getCollectionID()] ?>
-                    </label>
+                <div class="form-check">
+                        <input type="radio" name="language" class="form-check-input" id="language<?=$i?>" value="<?= $ml->getCollectionID() ?>" <?php if (is_object($defaultLocale) && $defaultLocale->getCollectionID() == $ml->getCollectionID()) { ?> checked="checked" <?php } ?> />
+                        <label class="form-check-label" for="language<?=$i?>">
+                            <?= $ih->getSectionFlagIcon($ml) ?>
+                            <?= $languages[$ml->getCollectionID()] ?>
+                        </label>
                 </div>
                 <?php
+                $i++;
             }
             ?>
         </div>
         <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('remember', 1, 1) ?> <?= t('Remember my choice on this computer.') ?>
-                </label>
+            <div class="form-check">
+
+                    <?= $form->checkbox('remember', 1, 1) ?>
+
+                    <?=$form->label('remember', t('Remember my choice on this computer.')) ?>
+
             </div>
         </div>
         <button class="btn btn-primary" type="submit"><?= t('Save') ?></button>

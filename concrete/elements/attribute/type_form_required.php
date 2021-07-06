@@ -114,8 +114,8 @@ if (is_object($category)) {
     }
 }
     ?>
-	<div class="checkbox"><label><?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <?=$keyword_label?></label></div>
-	<div class="checkbox"><label><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=$advanced_label?></label></div>
+	<div class="form-check"><?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <?=$form->label('akIsSearchableIndexed',$keyword_label, ['class'=>'form-check-label'])?></div>
+	<div class="form-check"><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=$form->label('akIsSearchable',$advanced_label, ['class'=>'form-check-label'])?></div>
 </div>
 
 </fieldset>

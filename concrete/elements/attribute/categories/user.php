@@ -13,32 +13,38 @@ if (is_object($key)) {
     <legend><?=t('User Attribute Options')?></legend>
     <div class="form-group">
     <label class="control-label"><?=t('Public Display')?></label>
-        <div class="checkbox">
-            <label class="checkbox"><?=$form->checkbox('uakProfileDisplay', 1, !empty($uakProfileDisplay))?> <?=t('Displayed in Public Profile.');?></label>
+        <div class="form-check">
+            <?=$form->checkbox('uakProfileDisplay', 1, !empty($uakProfileDisplay))?>
+            <?=$form->label('uakProfileDisplay',t('Displayed in Public Profile.'), ['class'=>'form-check-label']);?>
         </div>
-        <div class="checkbox">
-            <label class="checkbox"><?=$form->checkbox('uakMemberListDisplay', 1, !empty($uakMemberListDisplay))?> <?=t('Displayed on Member List.');?></label>
+        <div class="form-check">
+            <?=$form->checkbox('uakMemberListDisplay', 1, !empty($uakMemberListDisplay))?>
+            <?=$form->label('uakMemberListDisplay',t('Displayed on Member List.'), ['class'=>'form-check-label']);?>
         </div>
     </div>
 
     <div class="form-group">
         <label class="control-label"><?=t('Edit Mode')?></label>
-        <div class="checkbox">
-            <label class="checkbox"><?=$form->checkbox('uakProfileEdit', 1, !empty($uakProfileEdit))?> <?=t('Editable in Profile.');?></label>
+        <div class="form-check">
+            <?=$form->checkbox('uakProfileEdit', 1, !empty($uakProfileEdit))?>
+            <?=$form->label('uakProfileEdit',t('Editable in Profile.'), ['class'=>'form-check-label']);?>
         </div>
-        <div class="checkbox">
-            <label class="checkbox"><?=$form->checkbox('uakProfileEditRequired', 1, !empty($uakProfileEditRequired))?> <?=t('Editable and Required in Profile.');?></label>
+        <div class="form-check">
+            <?=$form->checkbox('uakProfileEditRequired', 1, !empty($uakProfileEditRequired))?>
+            <?=$form->label('uakProfileEditRequired',t('Editable and Required in Profile.'), ['class'=>'form-check-label']);?>
         </div>
     </div>
 
 
     <div class="form-group">
         <label class="control-label"><?=t('Registration')?></label>
-        <div class="checkbox">
-            <label class="checkbox"><?=$form->checkbox('uakRegisterEdit', 1, !empty($uakRegisterEdit))?> <?=t('Show on Registration Form.');?></label>
+        <div class="form-check">
+            <?=$form->checkbox('uakRegisterEdit', 1, !empty($uakRegisterEdit))?>
+            <?=$form->label('uakRegisterEdit',t('Show on Registration Form.'), ['class'=>'form-check-label']);?>
         </div>
-        <div class="checkbox">
-            <label class="checkbox"><?=$form->checkbox('uakRegisterEditRequired', 1, !empty($uakRegisterEditRequired))?> <?=t('Require on Registration Form.');?></label>
+        <div class="form-check">
+            <?=$form->checkbox('uakRegisterEditRequired', 1, !empty($uakRegisterEditRequired))?>
+            <?=$form->label('uakRegisterEditRequired', t('Require on Registration Form.'), ['class'=>'form-check-label']);?>
         </div>
     </div>
 </fieldset>
