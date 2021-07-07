@@ -21,25 +21,31 @@
 <div class="form-group">
 	<label class="col-form-label"><?=$entity->getAccessEntityLabel()?></label>
 	<?=$form->select('pageTypesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All Page Types'), 'C' => t('Custom')), $assignment->getPageTypesAllowedPermission())?>
-	<div class="page-type-list inputs-list" <?php if ($assignment->getPageTypesAllowedPermission() != 'C') {
+	<div class="page-type-list inputs-list m-sm-2" <?php if ($assignment->getPageTypesAllowedPermission() != 'C') {
     ?>style="display: none"<?php 
 }
     ?>>
-		<?php foreach ($pageTypes as $ct) {
+		<?php
+        $index = 1;
+        foreach ($pageTypes as $ct) {
     ?>
-			<div class="checkbox"><label><input type="checkbox" name="ptIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getPageTypeID()?>" <?php if (in_array($ct->getPageTypeID(), $assignment->getPageTypesAllowedArray())) {
+			<div class="form-check"><input class="form-check-input" type="checkbox" id="ptIDInclude[<?=$entity->getAccessEntityID()?>][]_<?=$index?>" name="ptIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getPageTypeID()?>" <?php if (in_array($ct->getPageTypeID(), $assignment->getPageTypesAllowedArray())) {
     ?> checked="checked" <?php 
 }
-    ?> /> <?=$ct->getPageTypeDisplayName()?></label></div>
-		<?php 
+    ?> /> <label for="ptIDInclude[<?=$entity->getAccessEntityID()?>][]_<?=$index?>" class="form-check-label"><?=$ct->getPageTypeDisplayName()?></label></div>
+		<?php
+           $index++;
 		}
     ?>
 	</div>
-	<div class="inputs-list">
-		<div class="checkbox"><label><input type="checkbox" name="allowExternalLinksIncluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowExternalLinks()) {
+	<div class="inputs-list mt-sm-4">
+		<div class="form-check"><input type="checkbox"  class="form-check-input" id="allowExternalLinksIncluded[<?=$entity->getAccessEntityID()?>]" name="allowExternalLinksIncluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowExternalLinks()) {
     ?>checked="checked" <?php 
 }
-    ?> /> <?=t('Allow External Links')?></label></div>
+    ?> /> <label class="form-check-label" for="allowExternalLinksIncluded[<?=$entity->getAccessEntityID()?>]">
+            <?=t('Allow External Links')?>
+            </label>
+        </div>
 	</div>
 
 </div>
@@ -64,25 +70,33 @@
 <div class="form-group">
 	<label class="col-form-label"><?=$entity->getAccessEntityLabel()?></label>
 	<?=$form->select('pageTypesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Page Types'), 'C' => t('Custom')), $assignment->getPageTypesAllowedPermission())?>
-	<div class="page-type-list inputs-list" <?php if ($assignment->getPageTypesAllowedPermission() != 'C') {
+	<div class="page-type-list inputs-list m-sm-2" <?php if ($assignment->getPageTypesAllowedPermission() != 'C') {
     ?>style="display: none"<?php 
 }
     ?>>
-		<?php foreach ($pageTypes as $ct) {
+		<?php
+        $index = 1;
+        foreach ($pageTypes as $ct) {
     ?>
-			<div class="checkbox"><label><input type="checkbox" name="ptIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getPageTypeID()?>" <?php if (in_array($ct->getPageTypeID(), $assignment->getPageTypesAllowedArray())) {
+			<div class="form-check">
+                <input class="form-check-input" id="ptIDExclude[<?=$entity->getAccessEntityID()?>][]_<?=$index?>" type="checkbox" name="ptIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getPageTypeID()?>" <?php if (in_array($ct->getPageTypeID(), $assignment->getPageTypesAllowedArray())) {
     ?> checked="checked" <?php 
 }
-    ?> /> <?=$ct->getPageTypeDisplayName()?></label></div>
+    ?> />       <label class="form-check-label" for="ptIDExclude[<?=$entity->getAccessEntityID()?>][]_<?=$index?>"><?=$ct->getPageTypeDisplayName()?></label>
+            </div>
 		<?php 
-}
+            $index++;
+        }
     ?>
 	</div>
-	<div class="inputs-list">
-		<div class="checkbox"><label><input type="checkbox" name="allowExternalLinksExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowExternalLinks()) {
+	<div class="inputs-list mt-sm-4">
+		<div class="form-check">
+            <input class="form-check-input" type="checkbox" id="allowExternalLinksExcluded[<?=$entity->getAccessEntityID()?>]" name="allowExternalLinksExcluded[<?=$entity->getAccessEntityID()?>]" value="1" <?php if ($assignment->allowExternalLinks()) {
     ?>checked="checked" <?php 
 }
-    ?> /> <?=t('Allow External Links')?></label></div>
+    ?> />
+            <label for="allowExternalLinksExcluded[<?=$entity->getAccessEntityID()?>]" class="form-check-label"> <?=t('Allow External Links')?></label>
+        </div>
 	</div>
 </div>
 

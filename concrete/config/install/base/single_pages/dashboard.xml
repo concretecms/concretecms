@@ -616,9 +616,6 @@
                 <attributekey handle="meta_keywords">
                     <value>concrete5.org, my account, marketplace</value>
                 </attributekey>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype=""
@@ -1136,6 +1133,14 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>password, requirements, code, key, login, registration, security, nist</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Session Options" path="/dashboard/system/registration/session_options"
+              filename="/dashboard/system/registration/session_options.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>session, options</value>
                 </attributekey>
             </attributes>
         </page>

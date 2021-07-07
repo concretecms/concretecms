@@ -316,12 +316,10 @@ echo $userInterface->tabs([
             <div class="form-group">
                 <?php echo $form->label('', t('Location')); ?>
 
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="cParentID" id="cEverywhereField"
+                <div class="form-check">
+                    <input type="radio" name="cParentID" id="cEverywhereField" class="form-check-input"
                                value="0" <?php if ($cParentID == 0) { ?> checked<?php } ?> />
-                        <?php echo t('Everywhere') ?>
-                    </label>
+                    <?=$form->label("cEveryWhereField", t('Everywhere'), ["class" => "form-check-label"])?>
                 </div>
 
                 <div class="form-check">

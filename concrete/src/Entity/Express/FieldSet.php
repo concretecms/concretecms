@@ -1,8 +1,11 @@
 <?php
+
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gettext\Translations;
 
 /**
  * @ORM\Entity
@@ -141,5 +144,27 @@ class FieldSet
     public function setPosition($position)
     {
         $this->position = $position;
+    }
+
+    /**
+     * Export all the translations associates to every fielset.
+     *
+     * @return Translations
+     */
+    public static function exportTranslations()
+    {
+        $translations = new Translations();
+        $app = Application::getFacadeApplication();
+        $db = $app->make('database')->connection();
+
+        $r = $db->executeQuery('SELECT title FROM ExpressFormFieldSets');
+        while ($row = $r->fetch()) {
+            $fieldSetTitle = $row['title'];
+            if (is_string($fieldSetTitle) && ($fieldSetTitle !== '')) {
+                $translations->insert('FieldSetTitle', $fieldSetTitle);
+            }
+        }
+
+        return $translations;
     }
 }

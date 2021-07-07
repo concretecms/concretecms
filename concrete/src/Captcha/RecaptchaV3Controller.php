@@ -10,6 +10,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Permission\IPService;
+use Concrete\Core\View\View;
 use Exception;
 use Psr\Log\LogLevel;
 
@@ -104,20 +105,68 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
         $assetUrl = $config->get('captcha.recaptcha_v3.url.javascript_asset');
 
         $assetList->register('javascript', 'recaptcha_api', $assetUrl, ['local' => false]);
-        $assetList->register('javascript', 'recaptcha_render', 'js/captcha/recaptchav3.js', [], 'recaptcha_v3');
 
         $assetList->registerGroup(
             'recaptcha_v3',
             [
-                ['javascript', 'recaptcha_render'],
                 ['javascript', 'recaptcha_api'],
             ]
         );
 
         $responseAssets = ResponseAssetGroup::get();
+
+        $isInlineCodeAlreadyInjected = false;
+
+        foreach ($responseAssets->getRequiredAssetsToOutput() as $asset) {
+            if ($asset->getAssetHandle() === "recaptcha_api") {
+                $isInlineCodeAlreadyInjected = true;
+                break;
+            }
+        }
+
         $responseAssets->requireAsset('recaptcha_v3');
 
-        echo '<div id="' . uniqid('hwh') . '" class="grecaptcha-box recaptcha-v3" data-sitekey="' . h($config->get('captcha.recaptcha_v3.site_key')) . '" data-badge="' . h($config->get('captcha.recaptcha_v3.position')) . '"></div>';
+        if (!$isInlineCodeAlreadyInjected) {
+            $js = <<<EOL
+<script type="text/javascript">
+if (typeof window.RecaptchaV3 === "undefined") {
+    window.RecaptchaV3 = function () {
+        $('.recaptcha-v3').each(function () {
+            $(this).data("clientId", grecaptcha.render(
+                $(this).attr('id'),
+                {
+                    sitekey: $(this).data('sitekey'),
+                    badge: $(this).data('badge'),
+                    size: 'invisible'
+                }
+            ));
+        });
+
+        grecaptcha.ready(function () {
+            $('.recaptcha-v3').each(function () {
+                grecaptcha.execute(
+                    $(this).data("clientId"),
+                    {
+                        action: 'submit'
+                    }
+                );
+            });
+        });
+    };
+}
+</script>
+EOL;
+
+            // add inline script with recaptcha code to the footer
+            View::getInstance()->addFooterItem($js);
+        }
+
+        echo sprintf(
+            "<div id=\"%s\" class=\"grecaptcha-box recaptcha-v3\" data-sitekey=\"%s\" data-badge=\"%s\"></div>",
+            uniqid('hwh'),
+            h($config->get('captcha.recaptcha_v3.site_key')),
+            h($config->get('captcha.recaptcha_v3.position'))
+        );
     }
 
     /**
@@ -141,7 +190,7 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
         $queryString = http_build_query(
             [
                 'secret' => $config->get('captcha.recaptcha_v3.secret_key'),
-                'remoteip' => $config->get('captcha.recaptcha_v3.send_ip') ? (string) $this->app->make(IPService::class)->getRequestIPAddress() : '',
+                'remoteip' => $config->get('captcha.recaptcha_v3.send_ip') ? (string)$this->app->make(IPService::class)->getRequestIPAddress() : '',
                 'response' => $this->request->request->get('g-recaptcha-response'),
             ]
         );
@@ -184,7 +233,7 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
             // This should happen only when 'error-codes' is not empty, so we already logged the error(s).
             return false;
         }
-        $score = (float) $score;
+        $score = (float)$score;
         $minimumScore = $config->get('captcha.recaptcha_v3.score');
         if (array_get($data, 'action') === 'submit' && array_get($data, 'success') === true && $score >= $minimumScore) {
             return true;
@@ -200,19 +249,19 @@ class RecaptchaV3Controller extends AbstractController implements CaptchaInterfa
     public function saveOptions($data)
     {
         $data = (is_array($data) ? $data : []) + [
-            'site_key' => '',
-            'secret_key' => '',
-            'score' => 0.5,
-            'position' => 'bottomright',
-            'log_score' => false,
-            'send_ip' => false,
-        ];
+                'site_key' => '',
+                'secret_key' => '',
+                'score' => 0.5,
+                'position' => 'bottomright',
+                'log_score' => false,
+                'send_ip' => false,
+            ];
         $config = $this->app->make('config');
-        $config->save('captcha.recaptcha_v3.site_key', (string) $data['site_key']);
-        $config->save('captcha.recaptcha_v3.secret_key', (string) $data['secret_key']);
-        $config->save('captcha.recaptcha_v3.score', (float) $data['score']);
-        $config->save('captcha.recaptcha_v3.position', (string) $data['position']);
-        $config->save('captcha.recaptcha_v3.log_score', (bool) $data['log_score']);
-        $config->save('captcha.recaptcha_v3.send_ip', (bool) $data['send_ip']);
+        $config->save('captcha.recaptcha_v3.site_key', (string)$data['site_key']);
+        $config->save('captcha.recaptcha_v3.secret_key', (string)$data['secret_key']);
+        $config->save('captcha.recaptcha_v3.score', (float)$data['score']);
+        $config->save('captcha.recaptcha_v3.position', (string)$data['position']);
+        $config->save('captcha.recaptcha_v3.log_score', (bool)$data['log_score']);
+        $config->save('captcha.recaptcha_v3.send_ip', (bool)$data['send_ip']);
     }
 }

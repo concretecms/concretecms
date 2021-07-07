@@ -36,6 +36,11 @@ $form = $app->make(Form::class);
         </legend>
 
         <div class="form-group">
+            <?php echo $form->label('uName', t('Username')); ?>
+            <?php echo $form->text('uName', $profile->getUserName()); ?>
+        </div>
+
+        <div class="form-group">
             <?php echo $form->label('uEmail', t('Email')); ?>
             <?php echo $form->text('uEmail', $profile->getUserEmail()); ?>
         </div>

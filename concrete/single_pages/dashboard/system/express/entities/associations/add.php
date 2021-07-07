@@ -54,8 +54,11 @@ $token = $app->make(Token::class);
             <?php echo $form->label('overrideTarget', t('Target Property Name')) ?>
 
             <div class="input-group">
-                <?php echo $form->checkbox('overrideTarget', 1, false, ['data-toggle' => 'association-property']) ?>
-
+                
+                <div class="input-group-text">
+                    <input type="checkbox" name="overrideTarget" value="1" data-toggle="association-property">
+                </div>
+                
                 <?php echo $form->hidden('target_property_name', '') ?>
                 <?php echo $form->text('target_property_name', '', ['disabled' => 'disabled']) ?>
             </div>
@@ -65,7 +68,9 @@ $token = $app->make(Token::class);
             <?php echo $form->label('overrideInverse', t('Inversed Property Name')) ?>
 
             <div class="input-group">
-                <?php echo $form->checkbox('overrideInverse', 1, false, ['data-toggle' => 'association-property']) ?>
+                <div class="input-group-text">
+                    <input type="checkbox" name="overrideInverse" value="1" data-toggle="association-property">
+                </div>
 
                 <?php echo $form->hidden('inversed_property_name', $entity->getHandle()) ?>
                 <?php echo $form->text('inversed_property_name', $entity->getHandle(), ['disabled' => 'disabled']) ?>
