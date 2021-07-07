@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Controller\Panel\Theme;
 
-use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 
-class Customize extends BackendInterfacePageController
+class Customize extends BackendInterfaceController
 {
     protected $viewPath = '/panels/theme/skins';
     protected $controllerActionPath = '/ccm/panels/theme';
