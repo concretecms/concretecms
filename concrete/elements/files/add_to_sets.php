@@ -15,7 +15,7 @@ $form = $app->make(Form::class);
 /** @var Closure $getCheckbox */
 ?>
 
-<div class="row row-cols-auto g-0 align-items-center float-end">
+<div class="row row-cols-auto g-0 align-items-center float-end mb-3">
     <div class="col-auto">
         <label for="search" class="me-2"><?=t('Search')?></label>
     </div>

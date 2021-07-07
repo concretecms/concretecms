@@ -36,7 +36,7 @@ $form = $app->make(Form::class);
         <?php echo $form->hidden('gsID', $set->getGroupSetID()); ?>
 
         <div class="form-group">
-            <?php echo $form->label('gsName', t('Name'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('gsName', t('Name')); ?>
             <?php echo $form->text('gsName', $set->getGroupSetName()); ?>
             <br>
         </div>
@@ -130,7 +130,7 @@ $form = $app->make(Form::class);
                         <?php echo $form->hidden('categoryID', $categoryID); ?>
 
                         <div class="form-group">
-                            <?php echo $form->label('gsName', t('Name'), ['class' => 'form-label']); ?>
+                            <?php echo $form->label('gsName', t('Name')); ?>
                             <?php echo $form->text('gsName'); ?>
                         </div>
 

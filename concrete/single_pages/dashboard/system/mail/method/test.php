@@ -35,11 +35,11 @@ if (!isset($numEmails)) {
         ?>
         <?php $token->output('test') ?>
         <div class="form-group">
-            <?= $form->label('mailRecipient', t('Recipient email address'), ['class' => 'form-label']) ?>
+            <?= $form->label('mailRecipient', t('Recipient email address')) ?>
             <?= $form->email('mailRecipient', $mailRecipient, ['required' => 'required']) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('numEmails', t('Number of messages to send'), ['class' => 'form-label']) ?>
+            <?= $form->label('numEmails', t('Number of messages to send')) ?>
             <?= $form->number('numEmails', $numEmails, ['required' => 'required', 'min' => 1]) ?>
         </div>
         <?php

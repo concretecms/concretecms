@@ -36,7 +36,7 @@ if (is_object($entity)) {
 
 <div id="ccm-block-express-entry-detail-edit">
     <div class="form-group">
-        <?php echo $form->label('entryMode', t('Entry'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('entryMode', t('Entry')) ?>
         <?php echo $form->select('entryMode', [
             'E' => t('Get entry from list block on another page'),
             'S' => t('Display specific entry'),
@@ -46,7 +46,7 @@ if (is_object($entity)) {
     </div>
 
     <div class="form-group" data-container="express-entity">
-        <?php echo $form->label('exEntityID', t('Entity'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('exEntityID', t('Entity')) ?>
         <?php echo $form->select('exEntityID', $entities, $exEntityID, [
             'data-action' => $view->action('load_entity_data')
         ]); ?>
@@ -63,7 +63,7 @@ if (is_object($entity)) {
     </div>
 
     <div class="form-group" data-container="express-entry-custom-attribute">
-        <?php echo $form->label('akID', t('Express Entry Attribute'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('akID', t('Express Entry Attribute')) ?>
 
         <?php if (count($expressAttributes)) { ?>
             <!--suppress HtmlFormInputWithoutLabel -->
@@ -88,7 +88,7 @@ if (is_object($entity)) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('exFormID', t('Display Data in Entity Form'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('exFormID', t('Display Data in Entity Form')) ?>
 
         <div data-container="express-entry-detail-form">
             <?php if (is_object($entity)) { ?>

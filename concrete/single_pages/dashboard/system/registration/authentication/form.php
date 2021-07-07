@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output("auth_type_save.{$authenticationType->getAuthenticationTypeID()}") ?>
     <?= $form->getAutocompletionDisabler() ?>
     <div class="form-group">
-        <?= $form->label('', t('General options'), ['class' => 'form-label'])?>
+        <?= $form->label('', t('General options'))?>
         <div class="form-check">
             <div class="checkbox">
                 <?= $form->checkbox('authentication_type_enabled', '1', $authenticationType->isEnabled()) ?>

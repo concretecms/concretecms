@@ -119,7 +119,7 @@ for ($i = 0; $i < 7; ++$i) {
 
 <div id="ccm-permissions-access-entity-dates">
     <div class="form-group">
-        <?php echo $form->label('pdStartDate_activate', tc('Start date', 'From'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('pdStartDate_activate', tc('Start date', 'From')); ?>
 
         <div>
             <?php echo $dt->datetime('pdStartDate', $pdStartDate, true) ?>
@@ -132,7 +132,7 @@ for ($i = 0; $i < 7; ++$i) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('pdEndDate_activate', tc('End date', 'To'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('pdEndDate_activate', tc('End date', 'To')); ?>
 
         <div>
             <?php echo $dt->datetime('pdEndDate', $pdEndDate, true) ?>
@@ -156,7 +156,7 @@ for ($i = 0; $i < 7; ++$i) {
 
 <div id="ccm-permissions-access-entity-repeat-selector" style="display: none">
     <div class="form-group">
-        <?php echo $form->label('pdRepeatPeriod', t('Repeats'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('pdRepeatPeriod', t('Repeats')); ?>
 
         <div>
             <?php echo $form->select(
@@ -174,7 +174,7 @@ for ($i = 0; $i < 7; ++$i) {
 
     <div id="ccm-permissions-access-entity-dates-repeat-daily" style="display: none">
         <div class="form-group">
-            <?php echo $form->label('pdRepeatPeriodDaysEvery', t('Repeat every'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('pdRepeatPeriodDaysEvery', t('Repeat every')); ?>
 
             <div class="input-group">
                 <?php
@@ -195,7 +195,7 @@ for ($i = 0; $i < 7; ++$i) {
 
     <div id="ccm-permissions-access-entity-dates-repeat-monthly" style="display: none">
         <div class="form-group">
-            <?php echo $form->label('pdRepeatPeriodMonthsRepeatBy', t('Repeat By'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('pdRepeatPeriodMonthsRepeatBy', t('Repeat By')); ?>
 
             <div>
                 <div class="form-check">
@@ -217,7 +217,7 @@ for ($i = 0; $i < 7; ++$i) {
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('pdRepeatPeriodMonthsEvery', t('Repeat every'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('pdRepeatPeriodMonthsEvery', t('Repeat every')); ?>
 
             <div class="input-group">
                 <?php
@@ -240,7 +240,7 @@ for ($i = 0; $i < 7; ++$i) {
     <div id="ccm-permissions-access-entity-dates-repeat-weekly" style="display: none">
         <div id="ccm-permissions-access-entity-dates-repeat-weekly-dow" style="display: none">
             <div class="form-group">
-                <?php echo $form->label('', t('On'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('', t('On')); ?>
 
                 <div>
                     <?php foreach ($weekdays as $key => $value) { ?>
@@ -254,7 +254,7 @@ for ($i = 0; $i < 7; ++$i) {
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('pdRepeatPeriodWeeksEvery', t('Repeat every'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('pdRepeatPeriodWeeksEvery', t('Repeat every')); ?>
 
             <div class="input-group">
                 <?php
@@ -276,7 +276,7 @@ for ($i = 0; $i < 7; ++$i) {
 
     <div id="ccm-permissions-access-entity-dates-repeat-dates" style="display: none">
         <div class="form-group">
-            <?php echo $form->label('pdStartRepeatDate', t('Starts On'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('pdStartRepeatDate', t('Starts On')); ?>
 
             <div>
                 <?php echo $form->text("pdStartRepeatDate", null, ["disabled" => "disabled"]); ?>
@@ -284,7 +284,7 @@ for ($i = 0; $i < 7; ++$i) {
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('pdEndRepeatDate', t('Ends'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('pdEndRepeatDate', t('Ends')); ?>
 
             <div class="form-check">
                 <?php echo $form->radio('pdEndRepeatDate', '', $pdEndRepeatDate, ["name" => "pdEndRepeatDate", "id" => "pdEndRepeatDateNever"]) ?>

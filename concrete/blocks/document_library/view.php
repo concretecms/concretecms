@@ -20,7 +20,7 @@ $c = Page::getCurrentPage();
     <form method="get" action="<?=$c->getCollectionLink()?>">
         <div class="row row-cols-auto align-items-center">
             <div class="form-group col-auto">
-                <?=$form->label('keywords', t('Keyword Search'), ['class' => 'form-label'])?>
+                <?=$form->label('keywords', t('Keyword Search'))?>
                 <?=$form->text('keywords')?>
             </div>
             <div class="col-auto">

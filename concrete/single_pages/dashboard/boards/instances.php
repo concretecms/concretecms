@@ -67,7 +67,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <?=$form->label('boardInstanceName', t('Name'), ['class' => 'form-label'])?>
+                                <?=$form->label('boardInstanceName', t('Name'))?>
                                 <?=$form->text('boardInstanceName')?>
                             </div>
                             <?php
@@ -76,7 +76,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                 // they want the instance to go in. Instances HAVE to live in a site.
                             ?>
                             <div class="form-group">
-                                <?=$form->label('siteID', t('Name'), ['class' => 'form-label'])?>
+                                <?=$form->label('siteID', t('Name'))?>
                                 <?php
                                 $siteService = app()->make('site');
                                 $sites = array('' => t('** Select Site'));

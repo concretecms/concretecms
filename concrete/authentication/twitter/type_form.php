@@ -22,11 +22,11 @@ defined('C5_EXECUTE') or die('Access denied.');
 </div>
 
 <div class="form-group">
-    <?= $form->label('apikey', t('Consumer Key (API Key)'), ['class' => 'form-label']) ?>
+    <?= $form->label('apikey', t('Consumer Key (API Key)')) ?>
     <?= $form->text('apikey', $apikey, ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
 </div>
 <div class="form-group">
-    <?= $form->label('apisecret', t('Consumer Secret (API Secret)'), ['class' => 'form-label']) ?>
+    <?= $form->label('apisecret', t('Consumer Secret (API Secret)')) ?>
     <div class="input-group">
         <?= $form->password('apisecret', $apisecret, ['autocomplete' => 'off', 'class' => 'font-monospace']) ?>
         <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="far fa-eye"></i></button>
@@ -34,14 +34,14 @@ defined('C5_EXECUTE') or die('Access denied.');
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Registration'), ['class' => 'form-label']) ?>
+    <?= $form->label('', t('Registration')) ?>
     <div class="form-check">
         <?= $form->checkbox('registration_enabled', '1', $registrationEnabled) ?>
         <label class="form-check-label" for="registration_enabled"><?= t('Allow automatic registration') ?></label>
     </div>
 </div>
 <div class="form-group registration-group">
-    <?= $form->label('registration_group', t('Group to enter on registration'), ['class' => 'form-label']) ?>
+    <?= $form->label('registration_group', t('Group to enter on registration')) ?>
     <?= $groupSelector->selectGroup('registration_group', $registrationGroup, tc('Group', 'None')) ?>
 </div>
 

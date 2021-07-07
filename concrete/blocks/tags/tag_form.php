@@ -34,7 +34,7 @@ $pageSelector = $app->make(PageSelector::class);
     <?php echo $form->hidden("attributeHandle", $controller->attributeHandle); ?>
 
     <div class="form-group">
-        <?php echo $form->label("title", t('Title'), ['class' => 'form-label']); ?>
+        <?php echo $form->label("title", t('Title')); ?>
 	    <div class="input-group">
 		    <?php echo $form->text('title', $title); ?>
 			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
@@ -78,12 +78,12 @@ $pageSelector = $app->make(PageSelector::class);
     <?php } ?>
 
     <div id="ccm-tags-display-cloud" class="form-group">
-        <?php echo $form->label('cloudCount', t('Number to Display'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('cloudCount', t('Number to Display')) ?>
         <?php echo $form->text('cloudCount', $cloudCount, ['size' => 4]) ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("targetCID", t('Link Tags to Filtered Page List'), ['class' => 'form-label']); ?>
+        <?php echo $form->label("targetCID", t('Link Tags to Filtered Page List')); ?>
         <?php echo $pageSelector->selectPage('targetCID', $targetCID); ?>
     </div>
 

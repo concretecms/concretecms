@@ -31,7 +31,7 @@ $fileManager = $app->make(FileManager::class);
 
     <div class="form-group">
         <?php
-        echo $form->label('ccm-b-image', t('Image'), ['class' => 'form-label']);
+        echo $form->label('ccm-b-image', t('Image'));
         echo $fileManager->image('ccm-b-image', 'fID', t('Choose Image'), $bf);
         ?>
     </div>
@@ -58,7 +58,7 @@ $fileManager = $app->make(FileManager::class);
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label('imageLink', t('Image Link'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('imageLink', t('Image Link')) ?>
         <?php echo $destinationPicker->generate(
             'imageLink',
             $imageLinkPickers,
@@ -79,14 +79,14 @@ $fileManager = $app->make(FileManager::class);
 
     <div class="form-group">
         <?php
-        echo $form->label('altText', t('Alt Text'), ['class' => 'form-label']);
+        echo $form->label('altText', t('Alt Text'));
         echo $form->text('altText', isset($altText) ? $altText : '', ['maxlength' => 255]);
         ?>
     </div>
 
     <div class="form-group">
         <?php
-        echo $form->label('title', t('Title'), ['class' => 'form-label']);
+        echo $form->label('title', t('Title'));
         echo $form->text('title', isset($title) ? $title : '', ['maxlength' => 255]);
         ?>
     </div>
@@ -116,7 +116,7 @@ $fileManager = $app->make(FileManager::class);
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('maxWidth', t('Max Width'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('maxWidth', t('Max Width')); ?>
 
                 <div class="input-group">
                     <?php echo $form->number('maxWidth', isset($maxWidth) ? $maxWidth : '', ['min' => 0]); ?>
@@ -128,7 +128,7 @@ $fileManager = $app->make(FileManager::class);
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('maxHeight', t('Max Height'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('maxHeight', t('Max Height')); ?>
 
                 <div class="input-group">
                     <?php echo $form->number('maxHeight', isset($maxHeight) ? $maxHeight : '', ['min' => 0]); ?>

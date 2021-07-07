@@ -12,7 +12,7 @@
     </div>
 
     <div class="form-group">
-        <?=$form->label('akDateDisplayMode', t('Ask User For'), ['class' => 'form-label'])?>
+        <?=$form->label('akDateDisplayMode', t('Ask User For'))?>
         <?php
         $akDateDisplayModeOptions = [
             'date_time' => t('Both Date and Time'),
@@ -33,7 +33,7 @@
     </div>
 
     <div class="form-group">
-        <?=$form->label('akTimeResolution', t('Time Resolution'), ['class' => 'form-label'])?>
+        <?=$form->label('akTimeResolution', t('Time Resolution'))?>
         <?php
         $akTimeResolutionOptions = [];
         foreach ([

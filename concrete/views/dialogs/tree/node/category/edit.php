@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 			<?=Loader::helper('validation/token')->output('update_category_node')?>
 			<input type="hidden" name="treeNodeID" value="<?=$node->getTreeNodeID()?>" />
 			<div class="form-group">
-				<?=$form->label('treeNodeCategoryName', t('Name'), ['class' => 'form-label'])?>
+				<?=$form->label('treeNodeCategoryName', t('Name'))?>
 				<?=$form->text('treeNodeCategoryName', $node->getTreeNodeName(), array('class' => 'span4'))?>
 			</div>
 			<div class="dialog-buttons">

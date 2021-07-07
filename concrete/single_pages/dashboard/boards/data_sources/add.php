@@ -21,7 +21,7 @@ $driver = $dataSource->getDriver();
             <?=$token->output('add_data_source')?>
 
             <div class="form-group">
-                <?=$form->label('dataSourceName', t('Data Source Name'), ['class' => 'form-label'])?>
+                <?=$form->label('dataSourceName', t('Data Source Name'))?>
                 <?=$form->text('dataSourceName')?>
             </div>
 
@@ -30,12 +30,12 @@ $driver = $dataSource->getDriver();
             <div class="help-block"><?=t('Choose how far into the future and how far into the past to populate this board. This is a rolling window as the board is updated in the future.')?></div>
             <div class="row">
                 <div class="form-group col-6">
-                    <?=$form->label('populationDayIntervalFuture', t('Days into Future'), ['class' => 'form-label'])?>
+                    <?=$form->label('populationDayIntervalFuture', t('Days into Future'))?>
                     <?=$form->number('populationDayIntervalFuture', 60)?>
                 </div>
 
                 <div class="form-group col-6">
-                    <?=$form->label('populationDayIntervalPast', t('Days into Past'), ['class' => 'form-label'])?>
+                    <?=$form->label('populationDayIntervalPast', t('Days into Past'))?>
                     <?=$form->number('populationDayIntervalPast', 356)?>
                 </div>
             </div>

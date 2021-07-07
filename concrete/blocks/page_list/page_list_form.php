@@ -102,7 +102,7 @@ echo $userInterface->tabs([
 
         <fieldset>
             <div class="form-group">
-                <?php echo $form->label('num', t('Number of Pages to Display'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('num', t('Number of Pages to Display')); ?>
                 <?php echo $form->text("num", $num); ?>
             </div>
 
@@ -115,7 +115,7 @@ echo $userInterface->tabs([
                     $pageTypes[$pageType->getPageTypeID()] = $pageType->getPageTypeDisplayName();
                 }
 
-                echo $form->label('ptID', t('Page Type'), ['class' => 'form-label']);
+                echo $form->label('ptID', t('Page Type'));
                 echo $form->select("ptID", $pageTypes, $ptID);
                 ?>
             </div>
@@ -123,7 +123,7 @@ echo $userInterface->tabs([
 
         <fieldset>
             <div class="form-group">
-                <?php echo $form->label('', t('Topics'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('', t('Topics')); ?>
 
                 <div class="form-check">
                     <?php echo $form->radio("topicFilter", "", (!$filterByRelated && !$filterByCustomTopic), ["id" => "topicFilter", "name" => "topicFilter"]); ?>
@@ -256,7 +256,7 @@ echo $userInterface->tabs([
 
         <fieldset>
             <div class="form-group">
-                <?php echo $form->label('', t('Other Filters'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('', t('Other Filters')); ?>
 
                 <div class="form-check">
 
@@ -303,7 +303,7 @@ echo $userInterface->tabs([
 
         <fieldset>
             <div class="form-group">
-                <?php echo $form->label('', t('Pagination'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('', t('Pagination')); ?>
 
                 <div class="form-check">
                     <?php echo $form->checkbox("paginate", "1", $paginate); ?>
@@ -314,7 +314,7 @@ echo $userInterface->tabs([
 
         <fieldset>
             <div class="form-group">
-                <?php echo $form->label('', t('Location'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('', t('Location')); ?>
 
                 <div class="radio">
                     <label>
@@ -360,7 +360,7 @@ echo $userInterface->tabs([
         <fieldset>
             <div class="form-group">
                 <?php
-                echo $form->label("orderBy", t('Sort'), ['class' => 'form-label']);
+                echo $form->label("orderBy", t('Sort'));
                 echo $form->select("orderBy", [
                     "display_asc" => t('Sitemap order'),
                     "display_desc" => t('Reverse sitemap order'),
@@ -400,17 +400,17 @@ echo $userInterface->tabs([
                         <?php echo t('RSS Feed can be found here: %s', '<a href="' . h($rssFeed->getFeedURL()) . '" target="_blank">' . $rssFeed->getFeedURL() . '</a>') ?>
                     <?php } else { ?>
                         <div class="form-group">
-                            <?php echo $form->label('num', t('RSS Feed Title'), ['class' => 'form-label']); ?>
+                            <?php echo $form->label('num', t('RSS Feed Title')); ?>
                             <?php echo $form->text("rssTitle", $num, ["id" => "ccm-pagelist-rssTitle", "name" => "rssTitle"]); ?>
                         </div>
 
                         <div class="form-group">
-                            <?php echo $form->label("rssDescription", ('RSS Feed Description'), ['class' => 'form-label']); ?>
+                            <?php echo $form->label("rssDescription", ('RSS Feed Description')); ?>
                             <?php echo $form->textarea("rssDescription"); ?>
                         </div>
 
                         <div class="form-group">
-                            <?php echo $form->label('', t('RSS Feed Location'), ['class' => 'form-label']); ?>
+                            <?php echo $form->label('', t('RSS Feed Location')); ?>
 
                             <div class="input-group">
                                 <span class="input-group-text">
@@ -485,7 +485,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('', t('Include Public Page Date'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('', t('Include Public Page Date')); ?>
 
                 <div class="form-check">
                     <?php echo $form->radio("includeDate", "0", !$includeDate, ["id" => "disableIncludeDate", "name" => "includeDate"]); ?>
@@ -541,14 +541,14 @@ echo $userInterface->tabs([
 
                 <div class="ccm-page-list-button-text" <?php echo($useButtonForLink ? '' : 'style="display:none;"') ?>>
                     <div class="form-group">
-                        <?php echo $form->label('buttonLinkText', t('Link Text'), ['class' => 'form-label']); ?>
+                        <?php echo $form->label('buttonLinkText', t('Link Text')); ?>
                         <?php echo $form->text("buttonLinkText", $buttonLinkText); ?>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('pageListTitle', t('Title of Page List'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('pageListTitle', t('Title of Page List')); ?>
 			    <div class="input-group">
                 	<?php echo $form->text("pageListTitle", $pageListTitle); ?>
 					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
@@ -556,7 +556,7 @@ echo $userInterface->tabs([
 			</div>
 
             <div class="form-group">
-                <?php echo $form->label("noResultsMessage", ('Message to Display When No Pages Listed.'), ['class' => 'form-label']); ?>
+                <?php echo $form->label("noResultsMessage", ('Message to Display When No Pages Listed.')); ?>
                 <?php echo $form->textarea("noResultsMessage", $noResultsMessage); ?>
             </div>
 

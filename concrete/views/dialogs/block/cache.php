@@ -68,7 +68,7 @@ $responseObject = $permissionChecker->getResponseObject();
                 <?php } ?>
 
                 <div class="form-group">
-                    <?php echo $form->label('cbOverrideBlockTypeCacheSettings', t('Override Block Type'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label('cbOverrideBlockTypeCacheSettings', t('Override Block Type')); ?>
 
                     <div class="form-check">
                         <?php echo $form->checkbox('cbOverrideBlockTypeCacheSettings', 1, $cbOverrideBlockTypeCacheSettings) ?>
@@ -77,7 +77,7 @@ $responseObject = $permissionChecker->getResponseObject();
                 </div>
 
                 <div class="form-group" data-settings="block-cache">
-                    <?php echo $form->label('btCacheBlockOutput', t('Settings'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label('btCacheBlockOutput', t('Settings')); ?>
 
                     <div class="form-check">
                         <?php echo $form->checkbox('btCacheBlockOutput', 1, $btCacheBlockOutput) ?>
@@ -96,7 +96,7 @@ $responseObject = $permissionChecker->getResponseObject();
                 </div>
 
                 <div class="form-group" data-settings="block-cache">
-                    <?php echo $form->label('btCacheBlockOutputLifetime', t('Cache for how long (in seconds)?'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label('btCacheBlockOutputLifetime', t('Cache for how long (in seconds)?')); ?>
                     <?php echo $form->text('btCacheBlockOutputLifetime', $btCacheBlockOutputLifetime); ?>
                 </div>
             </fieldset>

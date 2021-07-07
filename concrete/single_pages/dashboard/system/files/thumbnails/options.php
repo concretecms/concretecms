@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('thumbnails-options') ?>
 
     <div class="form-group">
-        <?= $form->label('thumbnail_generation_strategy', t('Thumbnail Generation Strategy'), ['class' => 'form-label']) ?>
+        <?= $form->label('thumbnail_generation_strategy', t('Thumbnail Generation Strategy')) ?>
         <?php
         foreach ($thumbnail_generation_strategies as $id => $name) {
             ?>
@@ -31,7 +31,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('thumbnail_format', t('Thumbnails Format'), ['class' => 'form-label']) ?>
+        <?= $form->label('thumbnail_format', t('Thumbnails Format')) ?>
         <?php
         foreach ($thumbnail_formats as $id => $name) {
             ?>
@@ -45,7 +45,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('create_high_dpi_thumbnails', t('Create high DPI thumbnails'), ['class' => 'form-label']) ?>
+        <?= $form->label('create_high_dpi_thumbnails', t('Create high DPI thumbnails')) ?>
         <div class="form-check">
             <?= $form->checkbox('create_high_dpi_thumbnails', 1, $create_high_dpi_thumbnails) ?>
             <label><?= t('Create high DPI thumbnails') ?></label>

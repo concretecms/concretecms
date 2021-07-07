@@ -82,11 +82,11 @@ foreach ($locales as $locale) {
                 <?php $token->output('change_locale_section') ?>
                 <input type="hidden" name="siteLocaleID" value="<?= $locale->getLocaleID() ?>">
                 <div class="form-group">
-                    <?= $form->label('msLanguageChange' . $locale->getLocaleID(), t('Choose Language'), ['class' => 'form-label']) ?>
+                    <?= $form->label('msLanguageChange' . $locale->getLocaleID(), t('Choose Language')) ?>
                     <?= $form->select('msLanguageChange' . $locale->getLocaleID(), $languages, $locale->getLanguage()) ?>
                 </div>
                 <div class="form-group">
-                    <?= $form->label('msCountryChange' . $locale->getLocaleID(), t('Choose Country'), ['class' => 'form-label']) ?>
+                    <?= $form->label('msCountryChange' . $locale->getLocaleID(), t('Choose Country')) ?>
                     <?= $form->select('msCountryChange' . $locale->getLocaleID(), array_merge(['' => t('** None Selected')], $countries), $locale->getCountry()) ?>
                 </div>
                 <div class="form-group">
@@ -176,11 +176,11 @@ foreach ($locales as $locale) {
             <fieldset>
                 <legend><?= t('Locale') ?></legend>
                 <div class="form-group">
-                    <?= $form->label('msLanguage', t('Choose Language'), ['class' => 'form-label']) ?>
+                    <?= $form->label('msLanguage', t('Choose Language')) ?>
                     <?= $form->select('msLanguage', $languages) ?>
                 </div>
                 <div class="form-group">
-                    <?= $form->label('msCountry', t('Choose Country'), ['class' => 'form-label']) ?>
+                    <?= $form->label('msCountry', t('Choose Country')) ?>
                     <?= $form->select('msCountry', array_merge(['' => t('** None Selected')], $countries)) ?>
                 </div>
                 <div class="form-group">
@@ -191,15 +191,15 @@ foreach ($locales as $locale) {
             <fieldset>
                 <legend><?= t('Home Page') ?></legend>
                 <div class="form-group">
-                    <?= $form->label('template', t('Template'), ['class' => 'form-label']) ?>
+                    <?= $form->label('template', t('Template')) ?>
                     <?= $form->select('template', $templates) ?>
                 </div>
                 <div class="form-group">
-                    <?= $form->label('homePageName', t('Page Name'), ['class' => 'form-label']) ?>
+                    <?= $form->label('homePageName', t('Page Name')) ?>
                     <?= $form->text('homePageName') ?>
                 </div>
                 <div class="form-group">
-                    <?= $form->label('URL Slug', t('URL Slug'), ['class' => 'form-label']) ?>
+                    <?= $form->label('URL Slug', t('URL Slug')) ?>
                     <?= $form->text('urlSlug') ?>
                 </div>
             </fieldset>

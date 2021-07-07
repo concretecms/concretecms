@@ -36,17 +36,17 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
             <div v-show="loggingMode == 'simple'" v-cloak>
                 <div class="form-group">
-                    <?= $form->label('logging_level', t('Core Logging Level'), ['class' => 'form-label']); ?>
+                    <?= $form->label('logging_level', t('Core Logging Level')); ?>
                     <?= $form->select('logging_level', $levels, $coreLoggingLevel); ?>
                 </div>
 
                 <div class="form-group">
-                    <?= $form->label('handler', t('Handler'), ['class' => 'form-label']); ?>
+                    <?= $form->label('handler', t('Handler')); ?>
                     <?= $form->select('handler', $handlers, $handler, ['v-model' => 'handler']); ?>
                 </div>
 
                 <div class="form-group" v-show="handler == 'file'">
-                    <?= $form->label('logFile', t('File'), ['class' => 'form-label']); ?>
+                    <?= $form->label('logFile', t('File')); ?>
                     <?= $form->text('logFile', $logFile); ?>
                 </div>
             </div>

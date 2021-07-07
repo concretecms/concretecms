@@ -49,7 +49,7 @@ $form = $app->make(Form::class);
                 </legend>
 
                 <div class="form-group">
-                    <?php echo $form->label("name", t('Name'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("name", t('Name')); ?>
 
                     <div class="float-end">
                         <span class="text-muted small">
@@ -61,7 +61,7 @@ $form = $app->make(Form::class);
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->label("handle", t('Handle'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("handle", t('Handle')); ?>
 
                     <div class="float-end">
                         <span class="text-muted small">
@@ -73,7 +73,7 @@ $form = $app->make(Form::class);
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->label("plural_handle", t('Plural Handle'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("plural_handle", t('Plural Handle')); ?>
 
                     <div class="float-end">
                         <span class="text-muted small">
@@ -85,7 +85,7 @@ $form = $app->make(Form::class);
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->label("label_mask", t('Name Mask'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("label_mask", t('Name Mask')); ?>
                     <?php echo $form->text('label_mask', $entity->getLabelMask()) ?>
 
                     <p class="help-block">
@@ -94,7 +94,7 @@ $form = $app->make(Form::class);
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->label("description", t('Description'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("description", t('Description')); ?>
                     <?php echo $form->textarea('description', $entity->getEntityDisplayDescription(), ['rows' => 5]) ?>
                 </div>
             </fieldset>
@@ -105,7 +105,7 @@ $form = $app->make(Form::class);
                 </legend>
 
                 <div class="form-group">
-                    <?php echo $form->label("supports_custom_display_order", t('Custom Display Order'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("supports_custom_display_order", t('Custom Display Order')); ?>
 
                     <div class="form-check">
                         <?php echo $form->checkbox('supports_custom_display_order', 1, $entity->supportsCustomDisplayOrder()) ?>
@@ -120,12 +120,12 @@ $form = $app->make(Form::class);
                 </legend>
 
                 <div class="form-group">
-                    <?php echo $form->label("default_edit_form_id", t('Default Edit Form'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("default_edit_form_id", t('Default Edit Form')); ?>
                     <?php echo $form->select('default_edit_form_id', $forms, $defaultEditFormID) ?>
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->label("default_view_form_id", t('Default View Form'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("default_view_form_id", t('Default View Form')); ?>
                     <?php echo $form->select('default_view_form_id', $forms, $defaultViewFormID) ?>
                 </div>
             </fieldset>
@@ -139,7 +139,7 @@ $form = $app->make(Form::class);
 
                 <?php if ($isMultisiteEnabled) { ?>
                     <div class="form-group">
-                        <?php echo $form->label("use_separate_site_result_buckets", t('Share results across all sites'), ['class' => 'form-label']); ?>
+                        <?php echo $form->label("use_separate_site_result_buckets", t('Share results across all sites')); ?>
 
                         <div class="form-check">
                             <?php echo $form->radio('use_separate_site_result_buckets', false, $entity->usesSeparateSiteResultsBuckets(), ["class" => "form-check-input", "id" => "use_separate_site_result_buckets1"]) ?>
@@ -154,7 +154,7 @@ $form = $app->make(Form::class);
                 <?php } ?>
 
                 <div class="form-group">
-                    <?php echo $form->label("", t('Folder Location'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("", t('Folder Location')); ?>
 
                     <div data-tree="<?php echo $tree->getTreeID() ?>"></div>
 

@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('save_automated_logout') ?>
 
     <div class="form-group">
-        <?= $form->label('', t('Session Security'), ['class' => 'form-label']) ?>
+        <?= $form->label('', t('Session Security')) ?>
         <div class="alert alert-info">
             <?= t('These settings help prevent a user from stealing other logged in user sessions. You may want to configure %s"Trusted Proxies"%s instead', '<a href="' . $trustedProxyUrl . '">', '</a>') ?>
         </div>
@@ -56,7 +56,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('invalidate_sessions') ?>
 
     <div class="form-group">
-        <?= $form->label('', t('Invalidate Active Sessions'), ['class' => 'form-label']) ?>
+        <?= $form->label('', t('Invalidate Active Sessions')) ?>
         <?= $form->text('confirmation', '', ['autocomplete' => 'off']) ?>
         <small class="text-muted">
             <?= t('Type %s in the above box to proceed.', "<code>{$confirmInvalidateString}</code>") ?>

@@ -92,7 +92,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         </div>
                     </div>
                     <div class="form-group">
-                        <?= $form->label('timezone', t('Time Zone'), ['class' => 'form-label']); ?>
+                        <?= $form->label('timezone', t('Time Zone')); ?>
                         <?= $form->select('timezone', $date->getTimezones(), ['v-model' => 'timezone'])?>
                     </div>
                     <div class="form-group">

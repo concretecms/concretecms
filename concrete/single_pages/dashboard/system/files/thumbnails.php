@@ -33,40 +33,40 @@ if (isset($type)) {
     <form method="POST" action="<?= $view->action('save', $type->getID() ?: 'new') ?>">
         <?php $token->output('thumbnailtype-save-' . ($type->getID() ?: 'new')) ?>
         <div class="form-group">
-            <?= $form->label('ftTypeHandle', t('Handle'), ['class' => 'form-label']) ?>
+            <?= $form->label('ftTypeHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : [])) ?>
                 <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
-            <?= $form->label('ftTypeName', t('Name'), ['class' => 'form-label']) ?>
+            <?= $form->label('ftTypeName', t('Name')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeName', $type->getName(), ['required' => 'required', 'maxlength' => '255']) ?>
                 <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
-            <?= $form->label('ftTypeWidth', t('Width'), ['class' => 'form-label']) ?>
+            <?= $form->label('ftTypeWidth', t('Width')) ?>
             <div class="input-group">
                 <?= $form->number('ftTypeWidth', $type->getWidth() ?: '', ['min' => '1']) ?>
                 <span class="input-group-text"><?= t('px') ?></span>
             </div>
         </div>
         <div class="form-group">
-            <?= $form->label('ftTypeHeight', t('Height'), ['class' => 'form-label']) ?>
+            <?= $form->label('ftTypeHeight', t('Height')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeHeight', $type->getHeight() ?: '', ['min' => '1']) ?>
                 <span class="input-group-text"><?= t('px') ?></span>
             </div>
         </div>
         <div class="form-group">
-            <?= $form->label('ftTypeSizingMode', t('Sizing Mode'), ['class' => 'form-label']) ?>
+            <?= $form->label('ftTypeSizingMode', t('Sizing Mode')) ?>
             <?= $form->select('ftTypeSizingMode', $sizingModes, $type->getSizingMode()) ?>
             <p class="help-block" id="sizingmode-help"><span><?= $sizingModeHelps[$type->getSizingMode()] ?></span></p>
         </div>
         <div class="form-group">
-            <?= $form->label('', t('Options'), ['class' => 'form-label']) ?>
+            <?= $form->label('', t('Options')) ?>
             <div class="form-check">
                 <?= $form->checkbox('ftUpscalingEnabled', '1', $type->isUpscalingEnabled()) ?>
                 <label for="ftUpscalingEnabled" class="form-check-label">
@@ -118,7 +118,7 @@ if (isset($type)) {
         </div>
 
         <div class="form-group">
-            <?= $form->label('ftSaveAreaBackgroundColor', t('Image Editor Background Color'), ['class' => 'form-label']); ?>
+            <?= $form->label('ftSaveAreaBackgroundColor', t('Image Editor Background Color')); ?>
             <div>
                 <?= $form_color->output('ftSaveAreaBackgroundColor', $type->getSaveAreaBackgroundColor(), ['preferredFormat' => 'hex']); ?>
             </div>
@@ -143,11 +143,11 @@ if (isset($type)) {
             }
             ?>
             <div class="form-group">
-                <?= $form->label('fileSetOption', t('Conditional Thumbnails'), ['class' => 'form-label']) ?>
+                <?= $form->label('fileSetOption', t('Conditional Thumbnails')) ?>
                 <?= $form->select('fileSetOption', $fileSetOptions, $fileSetOption, ['required' => 'required']) ?>
             </div>
             <div>
-                <?= $form->label('fileSets', 'File Sets', ['class' => 'form-label']) ?>
+                <?= $form->label('fileSets', 'File Sets') ?>
                 <div class="ccm-search-field-content">
                     <?= $form->selectMultiple('fileSets', $fileSets, $selectedFileSets, $fileSetAttributes) ?>
                 </div>

@@ -37,7 +37,7 @@ $form = $app->make(Form::class);
 
             <?php if ($allowEditName) { ?>
                 <div class="form-group">
-                    <?php echo $form->label("cName", t('Name'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("cName", t('Name')); ?>
                     <?php echo $form->text("cName", $c->getCollectionName()); ?>
                 </div>
             <?php } ?>

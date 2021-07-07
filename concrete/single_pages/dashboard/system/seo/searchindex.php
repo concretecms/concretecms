@@ -30,12 +30,12 @@ defined('C5_EXECUTE') or die('Access Denied');
     <?php $token->output('update_search_index') ?>
 
     <div class="form-group">
-        <?= $form->label('areaIndexMethod', t('Indexing Method'), ['class' => 'form-label']) ?>
+        <?= $form->label('areaIndexMethod', t('Indexing Method')) ?>
         <?= $form->select('areaIndexMethod', $availableAreaIndexMethods, $areaIndexMethod, ['required' => 'required']) ?>
 	</div>
 
     <div class="form-group">
-        <?= $form->label('', t('Areas'), ['class' => 'form-label']) ?>
+        <?= $form->label('', t('Areas')) ?>
         <?php
         foreach ($availableAreas as $arHandle) {
             $elementID = preg_replace('/\W/', '-', "ccm-index-area{$arHandle}");

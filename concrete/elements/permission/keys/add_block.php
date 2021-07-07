@@ -32,7 +32,7 @@ if (count($included) > 0) {
         ?>
 
         <div class="form-group">
-            <?= $form->label("blockTypesIncluded[{$entity->getAccessEntityID()}]", $entity->getAccessEntityLabel(), ['class' => 'form-label']) ?>
+            <?= $form->label("blockTypesIncluded[{$entity->getAccessEntityID()}]", $entity->getAccessEntityLabel()) ?>
             <?= $form->select("blockTypesIncluded[{$entity->getAccessEntityID()}]", ['A' => t('All Block Types'), 'C' => t('Custom')], $assignment->getBlockTypesAllowedPermission()) ?>
             <div class="inputs-list mt-4" <?php if ($assignment->getBlockTypesAllowedPermission() != 'C') { ?>style="display: none"<?php } ?>>
                 <?php foreach ($blockTypes as $index => $bt) { ?>
@@ -56,7 +56,7 @@ if (count($excluded) > 0) {
         ?>
 
         <div class="form-group">
-            <?= $form->label("blockTypesExcluded[{$entity->getAccessEntityID()}]", $entity->getAccessEntityLabel(), ['class' => 'form-label']) ?>
+            <?= $form->label("blockTypesExcluded[{$entity->getAccessEntityID()}]", $entity->getAccessEntityLabel()) ?>
             <?= $form->select("blockTypesExcluded[{$entity->getAccessEntityID()}]", ['N' => t('No Block Types'), 'C' => t('Custom')], $assignment->getBlockTypesAllowedPermission()) ?>
             <div class="inputs-list mt-4" <?php if ($assignment->getBlockTypesAllowedPermission() != 'C') { ?>style="display: none"<?php } ?>>
                 <?php foreach ($blockTypes as $index => $bt) { ?>

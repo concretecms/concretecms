@@ -30,18 +30,18 @@ use Concrete\Core\User\Group\GroupType; ?>
     <fieldset>
         <legend><?=t('Group Details')?></legend>
         <div class="form-group">
-            <?=$form->label('gName', t('Name'), ['class' => 'form-label'])?>
+            <?=$form->label('gName', t('Name'))?>
             <input type="text" class="form-control" name="gName" value="<?=h($request->post('gName'))?>" />
         </div>
         <div class="form-group">
-            <?=$form->label('gDescription', t('Description'), ['class' => 'form-label'])?>
+            <?=$form->label('gDescription', t('Description'))?>
             <div class="controls">
                 <?=$form->textarea('gDescription', ['rows' => 6, 'class' => 'span6'])?>
             </div>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gtID', t('Group Type'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('gtID', t('Group Type')); ?>
             <?php echo $form->select('gtID', GroupType::getSelectList()); ?>
 
             <div class="help-block">
@@ -54,7 +54,7 @@ use Concrete\Core\User\Group\GroupType; ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gOverrideGroupTypeSettings', t('Type Settings'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('gOverrideGroupTypeSettings', t('Type Settings')); ?>
             <?php echo $form->select('gOverrideGroupTypeSettings', [
                 0 => t("Inherit settings from group type"),
                 1 => t("Override settings from group type"),
@@ -69,7 +69,7 @@ use Concrete\Core\User\Group\GroupType; ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('gThumbnailFID', t('Thumbnail Image'), ['class' => 'form-label']); ?>
+            <?php echo $form->label('gThumbnailFID', t('Thumbnail Image')); ?>
             <?php echo  $af->image('gThumbnailFID','gThumbnailFID', t("Please select")); ?>
         </div>
 
@@ -137,13 +137,13 @@ use Concrete\Core\User\Group\GroupType; ?>
                 </div>
             </div>
             <div class="form-group">
-                <?=$form->label('gBadgeDescription', t('Badge Description'), ['class' => 'form-label'])?>
+                <?=$form->label('gBadgeDescription', t('Badge Description'))?>
                 <div class="controls">
                     <?=$form->textarea('gBadgeDescription', ['rows' => 6, 'class' => 'span6'])?>
                 </div>
             </div>
             <div class="form-group">
-                <?=$form->label('gBadgeCommunityPointValue', t('Community Points'), ['class' => 'form-label'])?>
+                <?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
                 <div class="controls">
                     <?=$form->text('gBadgeCommunityPointValue', $app->make('config')->get('concrete.user.group.badge.default_point_value'), ['class' => 'span1'])?>
                 </div>
@@ -243,7 +243,7 @@ use Concrete\Core\User\Group\GroupType; ?>
 
         <div id="gUserExpirationAction" style="display: none">
             <div class="form-group">
-                <?=$form->label('gUserExpirationAction', t('Expiration Action'), ['class' => 'form-label'])?>
+                <?=$form->label('gUserExpirationAction', t('Expiration Action'))?>
                 <div class="controls">
                     <?=$form->select(
                         "gUserExpirationAction",

@@ -21,7 +21,7 @@ $siteMenu->render();
             <?php $token->output('add_domain') ?>
             <input type="hidden" name="id" value="<?= $site->getSiteID() ?>" />
             <div class="form-group">
-                <?= $form->label('domain', t('Domain'), ['class' => 'form-label']) ?>
+                <?= $form->label('domain', t('Domain')) ?>
                 <?= $form->text('domain', '', ['required' => 'required']) ?>
             </div>
             <div class="dialog-buttons">
@@ -38,7 +38,7 @@ $siteMenu->render();
 </div>
 
 <div class="form-group">
-    <?= $form->label('', t('Additional Domains'), ['class' => 'form-label']) ?>
+    <?= $form->label('', t('Additional Domains')) ?>
     <?php
     if ($domains === []) {
         ?>

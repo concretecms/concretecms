@@ -159,7 +159,7 @@ class Form
             $result .= ' for="' . $forFieldID . '"';
         }
 
-        return $result . $this->serializeMiscFields('', $miscFields, []) . '>' . $innerHTML . '</label>';
+        return $result . $this->serializeMiscFields('form-label', $miscFields, []) . '>' . $innerHTML . '</label>';
     }
 
     /**

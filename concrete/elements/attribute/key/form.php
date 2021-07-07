@@ -58,7 +58,7 @@ if ($key !== null) {
         <legend><?= t('%s: Basic Details', $type->getAttributeTypeDisplayName()) ?></legend>
 
         <div class="form-group">
-            <?= $form->label('akHandle', t('Handle'), ['class' => 'form-label']) ?>
+            <?= $form->label('akHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('akHandle', $akHandle, ['autofocus' => 'autofocus']) ?>
                 <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
@@ -66,7 +66,7 @@ if ($key !== null) {
         </div>
 
         <div class="form-group">
-            <?= $form->label('akName', t('Name'), ['class' => 'form-label']) ?>
+            <?= $form->label('akName', t('Name')) ?>
             <div class="input-group">
                 <?= $form->text('akName', $key === null ? '' : $key->getAttributeKeyName()) ?>
                 <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
@@ -77,7 +77,7 @@ if ($key !== null) {
         if ($category !== null && $category->getSetManager()->allowAttributeSets() == StandardSetManager::ASET_ALLOW_SINGLE) {
             ?>
             <div class="form-group">
-                <?= $form->label('asID', t('Set'), ['class' => 'form-label']) ?>
+                <?= $form->label('asID', t('Set')) ?>
                 <div class="controls">
                     <?php
                         $sel = ['0' => t('** None')];

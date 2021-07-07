@@ -86,7 +86,7 @@
             <form data-form="save-preset" action="<?=$controller->getSavePresetAction()?>" method="post">
                 <?= $form->hidden('presetID'); ?>
                 <div class="form-group">
-                    <?=$form->label('presetName', t('Name'), ['class' => 'form-label'])?>
+                    <?=$form->label('presetName', t('Name'))?>
                     <?=$form->text('presetName')?>
                 </div>
             </form>

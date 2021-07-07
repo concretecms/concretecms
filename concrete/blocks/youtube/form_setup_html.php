@@ -47,7 +47,7 @@ echo $ui->tabs([
 <div class="tab-content">
     <div class="tab-pane show active" id="video" role="tabpanel">
         <div class="form-group">
-            <?php echo $form->label('videoURL', t("YouTube URL"), ['class' => 'form-label']); ?>
+            <?php echo $form->label('videoURL', t("YouTube URL")); ?>
             <?php echo $form->text('videoURL', isset($videoURL) ? $videoURL : '', ['required' => 'required']); ?>
         </div>
 
@@ -74,7 +74,7 @@ echo $ui->tabs([
 
         <div id="fixedsizes" class="<?php echo $sizing == 'fixed' ? '' : 'd-none'; ?>">
             <div class="form-group">
-                <?php echo $form->label('YouTubeVideoWidth', t("Width"), ['class' => 'form-label']); ?>
+                <?php echo $form->label('YouTubeVideoWidth', t("Width")); ?>
 
                 <div class="input-group">
                     <?php echo $form->number('vWidth', $vWidth, ["id" => "YouTubeVideoWidth", "name" => "vWidth", "min" => 0, "step" => "1"]); ?>
@@ -86,7 +86,7 @@ echo $ui->tabs([
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('YouTubeVideoHeight', t("Height"), ['class' => 'form-label']); ?>
+                <?php echo $form->label('YouTubeVideoHeight', t("Height")); ?>
 
                 <div class="input-group">
                     <?php echo $form->number('vHeight', $vHeight, ["id" => "YouTubeVideoHeight", "name" => "vHeight", "min" => 0, "step" => "1"]); ?>
@@ -110,7 +110,7 @@ echo $ui->tabs([
                     <div class="form-group">
                         <div class="form-check">
                             <?php echo $form->checkbox('controls', 1, (isset($controls) ? $controls : true)); ?>
-                            <?php echo $form->label("controls", t('Show controls'), ['class' => 'form-label']); ?>
+                            <?php echo $form->label("controls", t('Show controls')); ?>
                         </div>
 
                         <div class="form-check">
@@ -130,7 +130,7 @@ echo $ui->tabs([
 
                 <div class="col-xs-6">
                     <div class="form-group controls-only <?php echo isset($controls) && $controls == 0 ? 'd-none' : ''; ?>">
-                        <?php echo $form->label('color', t('Progress Bar Color'), ['class' => 'form-label']); ?>
+                        <?php echo $form->label('color', t('Progress Bar Color')); ?>
                         <?php echo $form->select('color', ['red' => t('Red'), 'white' => t('White')], isset($color) ? $color : null); ?>
                     </div>
                 </div>

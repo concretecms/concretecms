@@ -32,7 +32,7 @@ $form = $app->make(Form::class);
         <?php if ($isPermissionsInheritOverride) { ?>
 
         <div class="form-group">
-            <?php echo $form->label("ccm-permission-key-selector", t("Permission Key"), ['class' => 'form-label']); ?>
+            <?php echo $form->label("ccm-permission-key-selector", t("Permission Key")); ?>
 
             <div class="input-group">
                 <?php echo $form->select("ccm-permission-key-selector", $permissionKeyList); ?>
@@ -67,12 +67,12 @@ $form = $app->make(Form::class);
     <?php } else if ($task === 'remove_access') { ?>
     <?php if ($isPermissionsInheritOverride) { ?>
         <div class="form-group">
-            <?php echo $form->label("ccm-permission-key-selector", t("Permission Key"), ['class' => 'form-label']); ?>
+            <?php echo $form->label("ccm-permission-key-selector", t("Permission Key")); ?>
             <?php echo $form->select("ccm-permission-key-selector", $permissionKeyList); ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label("", t("Access Entities"), ['class' => 'form-label']); ?>
+            <?php echo $form->label("", t("Access Entities")); ?>
 
             <div id="ccm-selected-access-entities">
                 <?php echo t("Loading..."); ?>
@@ -118,7 +118,7 @@ $form = $app->make(Form::class);
     <?php } else { ?>
         <div class="ccm-pane-options">
             <div class="form-group">
-                <?php echo $form->label('ccm-page-permissions-inherit', t('Assign Permissions'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('ccm-page-permissions-inherit', t('Assign Permissions')); ?>
 
                 <?php echo $form->select("ccm-page-permissions-inherit", [
                     "" => t("*** Please Select"),
@@ -130,7 +130,7 @@ $form = $app->make(Form::class);
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('ccm-subpage-defaults-inheritance', t('Subpage Permissions'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('ccm-subpage-defaults-inheritance', t('Subpage Permissions')); ?>
 
                 <?php echo $form->select('ccm-subpage-defaults-inheritance', [
                     "" => t("*** Please Select"),
@@ -141,7 +141,7 @@ $form = $app->make(Form::class);
         </div>
 
         <div class="form-group">
-            <?php echo $form->label("", t("Current Permission Set"), ['class' => 'form-label']); ?>
+            <?php echo $form->label("", t("Current Permission Set")); ?>
 
             <?php /** @noinspection PhpUnhandledExceptionInspection */
             View::element('permission/lists/page', [

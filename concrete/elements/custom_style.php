@@ -127,7 +127,7 @@ $identifier = $app->make(Identifier::class);
         <?php if ($style instanceof CustomStyle && $canEditCustomTemplate) { ?>
             <li class="ccm-inline-toolbar-select">
                 <div class="form-group">
-                    <?php echo $form->label("bFilename", t('Block Template'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("bFilename", t('Block Template')); ?>
                     <?php echo $form->select("bFilename", $customTemplateOptions, $bFilename, ["class" => "selectpicker form-control"]); ?>
                 </div>
             </li>
@@ -144,14 +144,14 @@ $identifier = $app->make(Identifier::class);
                     <div class="col-sm-12">
                         <fieldset>
                             <div class="form-group">
-                                <?php echo $form->label("textColor", t('Text Color'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("textColor", t('Text Color')) ?>
                                 <?php $color->output('textColor', $textColor); ?>
                             </div>
 
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("linkColor", t('Link Color'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("linkColor", t('Link Color')) ?>
                                 <?php $color->output('linkColor', $linkColor); ?>
                             </div>
 
@@ -170,7 +170,7 @@ $identifier = $app->make(Identifier::class);
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("alignment", t('Alignment'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("alignment", t('Alignment')) ?>
                                 <?php echo $form->select('alignment', [
                                     '' => t('None'),
                                     'left' => t('Left'),
@@ -200,21 +200,21 @@ $identifier = $app->make(Identifier::class);
                             </legend>
 
                             <div class="form-group">
-                                <?php echo $form->label("backgroundColor", t('Color'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("backgroundColor", t('Color')) ?>
                                 <?php $color->output('backgroundColor', $backgroundColor); ?>
                             </div>
 
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("backgroundImageFileID", t('Image'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("backgroundImageFileID", t('Image')) ?>
                                 <?php echo $al->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $image); ?>
                             </div>
 
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("backgroundRepeat", t('Repeats'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("backgroundRepeat", t('Repeats')) ?>
                                 <?php echo $form->select('backgroundRepeat', [
                                     'no-repeat' => t('No Repeat'),
                                     'repeat-x' => t('Horizontally'),
@@ -226,7 +226,7 @@ $identifier = $app->make(Identifier::class);
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("backgroundSize", t('Size'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("backgroundSize", t('Size')) ?>
                                 <?php echo $form->select('backgroundSize', [
                                     'auto' => t('Auto'),
                                     'contain' => t('Contain'),
@@ -242,7 +242,7 @@ $identifier = $app->make(Identifier::class);
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("backgroundPosition", t('Position'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("backgroundPosition", t('Position')) ?>
                                 <?php echo $form->select('backgroundPosition', [
                                     'left top' => t('Left Top'),
                                     'left center' => t('Left Center'),
@@ -276,14 +276,14 @@ $identifier = $app->make(Identifier::class);
                             </legend>
 
                             <div class="form-group">
-                                <?php echo $form->label("borderColor", t('Color'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("borderColor", t('Color')) ?>
                                 <?php $color->output('borderColor', $borderColor); ?>
                             </div>
 
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("borderStyle", t('Style'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("borderStyle", t('Style')) ?>
                                 <?php echo $form->select('borderStyle', [
                                     '' => t('None'),
                                     'solid' => t('Solid'),
@@ -492,7 +492,7 @@ $identifier = $app->make(Identifier::class);
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <?php echo $form->label("boxShadowColor", t('Color'), ['class' => 'form-label']) ?>
+                                        <?php echo $form->label("boxShadowColor", t('Color')) ?>
                                         <?php $color->output('boxShadowColor', $boxShadowColor, ['showAlpha' => true]); ?>
                                     </div>
                                 </div>
@@ -575,7 +575,7 @@ $identifier = $app->make(Identifier::class);
                             </legend>
 
                             <div class="form-group">
-                                <?php echo $form->label("customClass", t('Custom Class'), ['class' => 'form-label']) ?>
+                                <?php echo $form->label("customClass", t('Custom Class')) ?>
                                 <?php
                                 $customClassesSelect = [];
                                 $customClassesSelected = [];
@@ -603,14 +603,14 @@ $identifier = $app->make(Identifier::class);
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("customID", t('Custom ID'), ['class' => 'form-label']); ?>
+                                <?php echo $form->label("customID", t('Custom ID')); ?>
                                 <?php echo $form->text('customID', $customID); ?>
                             </div>
 
                             <hr/>
 
                             <div class="form-group">
-                                <?php echo $form->label("customElementAttribute", t('Custom Element Attribute'), ['class' => 'form-label']); ?>
+                                <?php echo $form->label("customElementAttribute", t('Custom Element Attribute')); ?>
                                 <?php echo $form->textarea('customElementAttribute', $customElementAttribute); ?>
                             </div>
 
@@ -618,7 +618,7 @@ $identifier = $app->make(Identifier::class);
 
                             <?php if ($displayBlockContainerSettings) { ?>
                                 <div class="form-group">
-                                    <?php echo $form->label("enableBlockContainer", t('Block Container Class'), ['class' => 'form-label']) ?>
+                                    <?php echo $form->label("enableBlockContainer", t('Block Container Class')) ?>
                                     <?php echo $form->select("enableBlockContainer", $enableBlockContainerOptions, $enableBlockContainer, ["class" => "selectpicker form-control"]); ?>
                                 </div>
 

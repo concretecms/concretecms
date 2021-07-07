@@ -53,7 +53,7 @@ if (is_object($key)) {
 <legend><?=t('%s: Basic Details', $type->getAttributeTypeDisplayName())?></legend>
 
 <div class="form-group">
-	<?=$form->label('akHandle', t('Handle'), ['class' => 'form-label'])?>
+	<?=$form->label('akHandle', t('Handle'))?>
 	<div class="input-group">
 	<?=$form->text('akHandle', $akHandle)?>
 	<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
@@ -62,7 +62,7 @@ if (is_object($key)) {
 
 
 <div class="form-group">
-	<?=$form->label('akName', t('Name'), ['class' => 'form-label'])?>
+	<?=$form->label('akName', t('Name'))?>
 	<div class="input-group">
 		<?=$form->text('akName', $akName)?>
 		<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
@@ -72,7 +72,7 @@ if (is_object($key)) {
 <?php if ($category && $category->getController()->getSetManager()->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) {
     ?>
 <div class="form-group">
-<?=$form->label('asID', t('Set'), ['class' => 'form-label'])?>
+<?=$form->label('asID', t('Set'))?>
 <div class="controls">
 	<?php
         $sel = array('0' => t('** None'));

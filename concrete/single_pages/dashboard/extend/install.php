@@ -58,7 +58,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <?php echo $form->hidden("contentSwapFile", array_pop(array_keys($pkg->getContentSwapFiles()))) ?>
             <?php } else {?>
                 <div class="form-group">
-                    <?php echo $form->label("contentSwapFile", t("Starting Point"), ['class' => 'form-label']); ?>
+                    <?php echo $form->label("contentSwapFile", t("Starting Point")); ?>
                     <?php echo $form->select("contentSwapFile", $pkg->getContentSwapFiles()); ?>
                 </div>
             <?php } ?>

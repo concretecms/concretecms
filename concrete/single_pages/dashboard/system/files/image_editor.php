@@ -21,7 +21,7 @@ $form = $app->make(Form::class);
     <?php echo $token->output("save_editor_settings"); ?>
 
     <div class="form-group">
-        <?php echo $form->label('activeEditor', t('Active Editor'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('activeEditor', t('Active Editor')) ?>
         <?php echo $form->select('activeEditor', $editorList, $activeEditor->getHandle()) ?>
     </div>
 

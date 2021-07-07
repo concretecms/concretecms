@@ -16,7 +16,7 @@ $resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <div class="form-group ccm-composer-url-slug" data-composer-field="url_slug" style="position: relative">
-    <?= $form->label('', $label, ['class' => 'form-label']) ?>
+    <?= $form->label('', $label) ?>
     <?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) { ?>
         <span class="label label-info"><?= t('Required') ?></span>
     <?php } ?>

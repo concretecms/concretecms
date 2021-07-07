@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php $token->output('update_login_redirect') ?>
 
     <div class="form-group">
-        <?= $form->label('', t('After login'), ['class' => 'form-label']) ?>
+        <?= $form->label('', t('After login')) ?>
         <div class="form-check">
             <?= $form->radio('login_redirect', 'HOMEPAGE', $loginRedirect, ['id' => 'login_redirect_HOMEPAGE']) ?>
             <label class="form-check-label" for="login_redirect_HOMEPAGE"><?= t('Redirect to Home') ?></label>

@@ -14,6 +14,6 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type
 
 ?>
 <div class="form-group">
-    <?=$form->label('cParentID', t('Publish Beneath Page'), ['class' => 'form-label']) ?>
+    <?=$form->label('cParentID', t('Publish Beneath Page')) ?>
     <?= $pageSelector->selectPage('cParentID', $cID) ?>
 </div>

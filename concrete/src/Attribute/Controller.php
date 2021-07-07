@@ -477,7 +477,7 @@ class Controller extends AbstractController implements AttributeInterface
             $text = $customText;
         }
         $form = $this->app->make('helper/form');
-        echo $form->label($this->getControlID(), $text, ['class' => 'form-label']);
+        echo $form->label($this->getControlID(), $text);
     }
 
     /**

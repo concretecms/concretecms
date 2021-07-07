@@ -23,7 +23,7 @@ $form = $app->make(Form::class);
     <?php echo $token->output('add_entity') ?>
 
     <div class="form-group <?php if ($error->containsField('name')) { ?>has-error<?php } ?>">
-        <?php echo $form->label('name', t('Name'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('name', t('Name')); ?>
 
         <div class="float-end">
             <span class="text-muted small">
@@ -39,7 +39,7 @@ $form = $app->make(Form::class);
     </div>
 
     <div class="form-group <?php if ($error->containsField('handle')) { ?>has-error<?php } ?>">
-        <?php echo $form->label('handle', t('Handle'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('handle', t('Handle')); ?>
 
         <div class="float-end">
             <span class="text-muted small">
@@ -55,7 +55,7 @@ $form = $app->make(Form::class);
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('plural_handle', t('Plural Handle'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('plural_handle', t('Plural Handle')); ?>
         <?php echo $form->text('plural_handle') ?>
 
         <p class="help-block">
@@ -64,7 +64,7 @@ $form = $app->make(Form::class);
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('label_mask', t('Name Mask'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('label_mask', t('Name Mask')); ?>
         <?php echo $form->text('label_mask') ?>
 
         <p class="help-block">
@@ -85,7 +85,7 @@ $form = $app->make(Form::class);
              class="panel-collapse collapse <?php if ($controller->getRequest()->request->get('description') || $controller->getRequest()->request('supports_custom_display_order') || $controller->getRequest()->request->get('owned_by')) { ?>in <?php } ?>">
             <div class="panel-body">
                 <div class="form-group">
-                    <?php echo $form->label('description', t('Description'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label('description', t('Description')); ?>
 
                     <?php echo $form->textarea('description', ['rows' => 5]) ?>
 
@@ -95,7 +95,7 @@ $form = $app->make(Form::class);
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->label('supports_custom_display_order', t('Custom Display Order'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label('supports_custom_display_order', t('Custom Display Order')); ?>
                     <div class="form-check">
                         <?php echo $form->checkbox('supports_custom_display_order', 1) ?>
                         <?php echo $form->label("supports_custom_display_order", t('This entity supports custom display ordering via Dashboard interfaces.'), ["class" => "form-check-label"]) ?>
@@ -103,12 +103,12 @@ $form = $app->make(Form::class);
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->label('owned_by', t('Owned By'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label('owned_by', t('Owned By')); ?>
                     <?php echo $form->select('owned_by', $entities) ?>
                 </div>
 
                 <div class="form-group" style="display: none" data-group="owned_by_type">
-                    <?php echo $form->label('owning_type', t('Owning Type'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label('owning_type', t('Owning Type')); ?>
                     <?php echo $form->select('owning_type', [
                         'many' => t('Many'),
                         'one' => t('One')

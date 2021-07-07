@@ -57,7 +57,7 @@
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("title", t('Title'), ['class' => 'form-label']); ?>
+        <?php echo $form->label("title", t('Title')); ?>
 	    <div class="input-group">
 		    <?php echo $form->text('title', $title); ?>
 			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>

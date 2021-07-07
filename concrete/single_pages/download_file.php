@@ -57,7 +57,7 @@ if ($file instanceof FileEntity && $file->hasFileUUID()) {
         <?php echo $form->hidden("rcID", $rcID); ?>
 
         <div class="form-group">
-            <?php echo $form->label("password", t("Password"), ['class' => 'form-label']); ?>
+            <?php echo $form->label("password", t("Password")); ?>
             <?php echo $form->password("password", ["class" => "form-control"]); ?>
         </div>
 

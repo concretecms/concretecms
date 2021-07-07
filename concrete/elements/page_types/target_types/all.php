@@ -19,12 +19,12 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type
 ?>
 
 <div class="form-group">
-	<?= $form->label('selectorFormFactorAll', t('Selector Form Factor'), ['class' => 'form-label']) ?>
+	<?= $form->label('selectorFormFactorAll', t('Selector Form Factor')) ?>
 	<?= $form->select('selectorFormFactorAll', $factors, $selectorFormFactor) ?>
 </div>
 
 <div class="form-group" data-all-form-factor-display="sitemap_in_page">
-	<?= $form->label('startingPointPageIDAll', t('Display Pages Beneath Page'), ['class' => 'form-label']) ?>
+	<?= $form->label('startingPointPageIDAll', t('Display Pages Beneath Page')) ?>
 	<?= $pageSelector->selectPage('startingPointPageIDAll', $startingPointPageID) ?>
 </div>
 

@@ -7,12 +7,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="form-group">
-    <?=$form->label('calendarID', t('Calendar'), ['class' => 'form-label'])?>
+    <?=$form->label('calendarID', t('Calendar'))?>
     <?=$form->select('calendarID', $calendars, $calendarID);?>
 </div>
 
 <div class="form-group">
-    <?=$form->label('maxOccurrencesOfSameEvent', t('Maximum Occurrences of Same Event'), ['class' => 'form-label'])?>
+    <?=$form->label('maxOccurrencesOfSameEvent', t('Maximum Occurrences of Same Event'))?>
     <?=$form->number('maxOccurrencesOfSameEvent', (int) $maxOccurrencesOfSameEvent);?>
 </div>
 

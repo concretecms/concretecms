@@ -52,7 +52,7 @@ switch ($controller->getTask()) {
             <fieldset>
                 <legend><?= t('Basics'); ?></legend>
                 <div class="form-group">
-                    <?= $form->label('fslName', t('Name'), ['class' => 'form-label']); ?>
+                    <?= $form->label('fslName', t('Name')); ?>
                     <div class="input-group">
                         <?= $form->text('fslName', $fslName); ?>
                         <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
@@ -66,7 +66,7 @@ switch ($controller->getTask()) {
                 }
                 ?>
                 <div class="form-group">
-                    <?= $form->label('fslIsDefault', t('Default Location'), ['class' => 'form-label']); ?>
+                    <?= $form->label('fslIsDefault', t('Default Location')); ?>
                     <div class="form-check">
                         <?= $form->radio('fslIsDefault', 1, $fslIsDefault, $args); ?>
                         <label>

@@ -281,17 +281,17 @@ $token = $app->make(Token::class);
             </h4>
 
             <div class="form-group">
-                <?php echo $form->label("", t("To"), ['class' => 'form-label']); ?>
+                <?php echo $form->label("", t("To")); ?>
                 <?php echo $form->text("", $recipient->getUserName(), ["disabled" => "disabled", "class" => "span5"]); ?>
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('subject', t('Subject'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('subject', t('Subject')); ?>
                 <?php echo $form->text('msgSubject', $subject, ['class' => 'span5']); ?>
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('body', t('Message'), ['class' => 'form-label']); ?>
+                <?php echo $form->label('body', t('Message')); ?>
                 <?php echo $form->textarea('msgBody', $msgBody, ['rows' => 8, 'class' => 'span5']); ?>
             </div>
 

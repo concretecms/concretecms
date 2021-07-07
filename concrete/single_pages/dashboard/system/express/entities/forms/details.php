@@ -33,7 +33,7 @@ $token = $app->make(Token::class);
 
     <fieldset>
         <div class="form-group">
-            <?php echo $form->label('name', t('Name'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('name', t('Name')) ?>
             <?php echo $form->text('name', $name) ?>
         </div>
     </fieldset>

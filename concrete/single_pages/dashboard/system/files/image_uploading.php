@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?= $token->output('image-options') ?>
 
     <div class="form-group">
-        <?= $form->label('manipulation_library', t('Image Manipulation Library'), ['class' => 'form-label']) ?>
+        <?= $form->label('manipulation_library', t('Image Manipulation Library')) ?>
         <?php
         foreach ($manipulation_libraries as $id => $name) {
             ?>
@@ -72,7 +72,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('', t('Other Options'), ['class' => 'form-label']) ?>
+        <?= $form->label('', t('Other Options')) ?>
         <div class="form-check">
             <?= $form->checkbox('use_exif_data_to_rotate_images', 1, $use_exif_data_to_rotate_images) ?>
             <label for="use_exif_data_to_rotate_images" class="form-check-label">

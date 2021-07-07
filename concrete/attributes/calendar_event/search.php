@@ -1,10 +1,10 @@
 <div class="form-group">
-    <?=$form->label('calendarID', t('Calendar'), ['class' => 'form-label'])?>
+    <?=$form->label('calendarID', t('Calendar'))?>
     <?=$form->select('calendarID', $calendars, $calendarID, array('data-select' => 'calendar'));?>
 </div>
 
 <div class="form-group">
-    <?=$form->label('eventID', t('Event'), ['class' => 'form-label'])?>
+    <?=$form->label('eventID', t('Event'))?>
     <div data-wrapper="calendar-event-selector"><?=t('Choose a Calendar')?></div>
 </div>
 

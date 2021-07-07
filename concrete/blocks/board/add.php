@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div data-view="edit-board-block">
     <div class="form-group">
-        <?php echo $form->label('boardID', t('Board'), ['class' => 'form-label'])?>
+        <?php echo $form->label('boardID', t('Board'))?>
         <?php echo $form->select('boardID', $boardSelect, $boardID, [
             'v-model' => 'boardID'
         ])?>

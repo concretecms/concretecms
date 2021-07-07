@@ -21,7 +21,7 @@ $token = $app->make(Token::class);
     <?php echo $token->output("bulk_user_assignment"); ?>
 
     <div class="form-group">
-        <?php echo $form->label('csvFile', t('Source CSV File'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('csvFile', t('Source CSV File')) ?>
         <?php echo $form->file('csvFile') ?>
     </div>
 
@@ -30,12 +30,12 @@ $token = $app->make(Token::class);
     </p>
 
     <div class="form-group">
-        <?php echo $form->label('targetGroup', t('Target Group'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('targetGroup', t('Target Group')) ?>
         <?php $groupSelector->selectGroup('targetGroup') ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('', t('Options'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('', t('Options')) ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('removeUnlistedUsers', 1, false, ["class" => "form-check-input"]) ?>

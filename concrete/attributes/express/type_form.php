@@ -2,7 +2,7 @@
 <legend><?=t('Express Options')?></legend>
 
 <div class="form-group">
-<?=$form->label('exEntityID', t('Entity'), ['class' => 'form-label'])?>
+<?=$form->label('exEntityID', t('Entity'))?>
 <?=$form->select('exEntityID', $entities, $entityID)?>
 </div>
 

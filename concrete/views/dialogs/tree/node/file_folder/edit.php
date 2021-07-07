@@ -5,11 +5,11 @@
         <?= $validation_token->output('update_file_folder_node'); ?>
         <input type="hidden" name="treeNodeID" value="<?= $node->getTreeNodeID(); ?>" />
         <div class="form-group">
-            <?= $form->label('fileFolderName', t('Name'), ['class' => 'form-label']); ?>
+            <?= $form->label('fileFolderName', t('Name')); ?>
             <?= $form->text('fileFolderName', $node->getTreeNodeName()); ?>
         </div>
         <div class="form-group">
-            <?= $form->label('fileFolderFileStorageLocation', t('Storage Location'), ['class' => 'form-label']); ?>
+            <?= $form->label('fileFolderFileStorageLocation', t('Storage Location')); ?>
             <?= $form->select('fileFolderFileStorageLocation', $locations, $node->getTreeNodeStorageLocationID()); ?>
         </div>
         <div class="dialog-buttons">

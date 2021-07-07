@@ -60,7 +60,7 @@ if (count($pageAttributeKeys)) {
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label('filterByTopic', t('Filter By Topic'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('filterByTopic', t('Filter By Topic')); ?>
 
         <div class="form-check">
             <?php echo $form->radio('filterByTopic', 'none', $filterByTopic, ["id" => 'filterByTopicNone', 'name' => 'filterByTopic']); ?>
@@ -112,7 +112,7 @@ if (count($pageAttributeKeys)) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('filterByFeatured', t('Featured Events'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('filterByFeatured', t('Featured Events')); ?>
 
         <div class="form-check">
             <?php
@@ -143,7 +143,7 @@ if (count($pageAttributeKeys)) {
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label('eventListTitle', t('Title'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('eventListTitle', t('Title')); ?>
 	    <div class="input-group">
         	<?php echo $form->text('eventListTitle', $eventListTitle) ?>
 			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
@@ -151,17 +151,17 @@ if (count($pageAttributeKeys)) {
 	</div>
 
     <div class="form-group">
-        <?php echo $form->label('totalToRetrieve', t('Total Number of Events to Retrieve'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('totalToRetrieve', t('Total Number of Events to Retrieve')); ?>
         <?php echo $form->text('totalToRetrieve', $totalToRetrieve); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('totalPerPage', t('Events to Display Per Page'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('totalPerPage', t('Events to Display Per Page')); ?>
         <?php echo $form->text('totalPerPage', $totalPerPage); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('linkToPage', t('Link To More Events Calendar/Page'), ['class' => 'form-label']); ?>
+        <?php echo $form->label('linkToPage', t('Link To More Events Calendar/Page')); ?>
         <?php echo $pageSelector->selectPage('linkToPage', $linkToPage) ?>
     </div>
 </fieldset>

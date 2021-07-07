@@ -2,7 +2,7 @@
 <legend><?php echo t('Image/File Options')?></legend>
 
 <div class="form-group">
-	<?php echo $form->label('mode', t('Input Format'), ['class' => 'form-label'])?>
+	<?php echo $form->label('mode', t('Input Format'))?>
 	<?php
     $options = array(
         \Concrete\Core\Entity\Attribute\Key\Settings\ImageFileSettings::TYPE_FILE_MANAGER => t('File Manager Selector'),

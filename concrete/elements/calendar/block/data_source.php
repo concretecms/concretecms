@@ -66,7 +66,7 @@ if ($calendarAttributeKeyHandle) {
 ?>
 
 <div class="form-group">
-    <?php echo $form->label('chooseCalendar', t('Calendar'), ['class' => 'form-label']); ?>
+    <?php echo $form->label('chooseCalendar', t('Calendar')); ?>
 
     <div class="form-check">
         <?php echo $form->radio('chooseCalendar', 'specific', $chooseCalendar, ['id' => 'chooseCalendarSpecific', 'name' => 'chooseCalendar']) ?>
@@ -81,7 +81,7 @@ if ($calendarAttributeKeyHandle) {
 
         <div data-row="calendar-attribute">
             <div class="form-group">
-                <?php echo $form->label('calendarAttributeKeyHandle', t('Calendar Site Attribute'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('calendarAttributeKeyHandle', t('Calendar Site Attribute')) ?>
                 <?php echo $form->select('calendarAttributeKeyHandle', $calendarAttributeKeySelect, $calendarAttributeKeyHandle) ?>
             </div>
         </div>
@@ -90,7 +90,7 @@ if ($calendarAttributeKeyHandle) {
     <div data-row="specific-calendar">
         <div class="form-group">
             <?php
-            echo $form->label('calendarSelect', t('Calendar'), ['class' => 'form-label']);
+            echo $form->label('calendarSelect', t('Calendar'));
 
             if (isset($multiple) && $multiple) {
                 echo $form->selectMultiple('caID[]', $calendarSelect, $caID, ['id' => 'calendarSelect', 'name' => 'caID[]']);

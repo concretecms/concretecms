@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <div class="ccm-ui">
     <form class="form-stacked" data-dialog-form="edit-alias" method="post" action="<?= $controller->action('submit') ?>">
         <div class="form-group">
-            <?= $form->label('customAliasName', t('Name'), ['class' => 'form-label']) ?>
+            <?= $form->label('customAliasName', t('Name')) ?>
             <?= $form->text('customAliasName', $customAliasName, ['autofocus' => 'autofocus', 'placeholder' => t('Empty: use name of aliased page')]) ?>
         </div>
         <div class="form-group">

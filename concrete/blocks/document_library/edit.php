@@ -88,13 +88,13 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
 <div class="tab-content">
     <div class="tab-pane show active" id="sources" role="tabpanel">
         <div class="form-group">
-            <?php echo $form->label('folderID', t('File Folder'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('folderID', t('File Folder')) ?>
             <?php echo $form->select('folderID', $folders, empty($folderID) ? 0 : $folderID); ?>
         </div>
 
         <?php if (count($fileSets)) { ?>
             <div class="form-group">
-                <?php echo $form->label('fileset', t('File Set'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('fileset', t('File Set')) ?>
 
                 <?php foreach ($fileSets as $set) { ?>
                     <div class="form-check">
@@ -105,7 +105,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </div>
 
             <div class="form-group">
-                <?= $form->label('showFolders', t('Show Folders'), ['class' => 'form-label']) ?>
+                <?= $form->label('showFolders', t('Show Folders')) ?>
 
                 <div class="form-check">
                     <label>
@@ -116,7 +116,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('setMode', t('Files must be'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('setMode', t('Files must be')) ?>
 
                 <div class="form-check">
                     <?php echo $form->radio('setMode', 'all', $setMode, ["name" => "setMode", "id" => "setModeAll"]) ?>
@@ -129,7 +129,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
                 </div>
             </div>
         <?php } else { ?>
-            <?php echo $form->label('fileset', t('File Set'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('fileset', t('File Set')) ?>
 
             <p class="text-muted">
                 <?php echo t('No file sets have been created.') ?>
@@ -139,12 +139,12 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
         <?php } ?>
 
         <div class="form-group">
-            <?php echo $form->label('tags', t('Filter By Tag (optional)'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('tags', t('Filter By Tag (optional)')) ?>
             <?php echo $form->text('tags', isset($tags) ? $tags : '') ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('audience', t('Audience Contribution'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('audience', t('Audience Contribution')) ?>
 
             <div class="form-check">
                 <?php echo $form->checkbox('allowFileUploading', 1, !empty($allowFileUploading), ['data-options-toggle' => 'enable-uploads']) ?>
@@ -167,7 +167,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
         </div>
 
         <div class="form-group" data-options="enable-uploads">
-            <?php echo $form->label('addFilesToSetID', t("Add Uploaded Files to Set"), ['class' => 'form-label']); ?>
+            <?php echo $form->label('addFilesToSetID', t("Add Uploaded Files to Set")); ?>
             <?php echo $form->select('addFilesToSetID', $fileSetList, isset($addFilesToSetID) ? $addFilesToSetID : null); ?>
         </div>
     </div>
@@ -192,7 +192,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
         </fieldset>
 
         <div class="form-group">
-            <?php echo $form->label('orderBy', t('Sort By'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('orderBy', t('Sort By')) ?>
 
             <div class="row row-cols-lg-auto align-items-center">
                 <div class="col-auto">
@@ -213,7 +213,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </legend>
 
             <div class="form-group">
-                <?php echo $form->label('headerBackgroundColor', t('Header Background'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('headerBackgroundColor', t('Header Background')) ?>
 
                 <div>
                     <?php $color->output('headerBackgroundColor', isset($headerBackgroundColor) ? $headerBackgroundColor : null) ?>
@@ -221,7 +221,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('headerBackgroundColorActiveSort', t('Header Background (Active Sort)'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('headerBackgroundColorActiveSort', t('Header Background (Active Sort)')) ?>
 
                 <div>
                     <?php $color->output('headerBackgroundColorActiveSort', isset($headerBackgroundColorActiveSort) ? $headerBackgroundColorActiveSort : null) ?>
@@ -229,7 +229,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('headerTextColor', t('Header Text Color'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('headerTextColor', t('Header Text Color')) ?>
 
                 <div>
                     <?php $color->output('headerTextColor', isset($headerTextColor) ? $headerTextColor : null) ?>
@@ -240,22 +240,22 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
 
     <div class="tab-pane" id="results" role="tabpanel">
         <div class="form-group">
-            <?php echo $form->label('tableName', t('Table Name'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('tableName', t('Table Name')) ?>
             <?php echo $form->text('tableName', isset($tableName) ? $tableName : '', array('maxlength' => '128')) ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('tableDescription', t('Table Description'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('tableDescription', t('Table Description')) ?>
             <?php echo $form->text('tableDescription', isset($tableDescription) ? $tableDescription : '', array('maxlength' => '128')) ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('displayLimit', t('Items Per Page'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('displayLimit', t('Items Per Page')) ?>
             <?php echo $form->text('displayLimit', $displayLimit) ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('', t('Download File Method'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('', t('Download File Method')) ?>
 
             <div class="form-check">
                 <?php echo $form->radio('downloadFileMethod', 'browser', $downloadFileMethod, ["name" => "downloadFileMethod", "id" => "downloadFileMethodBrowser"]) ?>
@@ -269,7 +269,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('', t('Height Mode'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('', t('Height Mode')) ?>
 
             <div class="form-check">
                 <?php echo $form->radio('heightMode', 'auto', $heightMode, ["name" => "heightMode", "id" => "heightModeAuto"]) ?>
@@ -283,7 +283,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
         </div>
 
         <div class="form-group" data-options="height-mode">
-            <?php echo $form->label('fixedHeightSize', t('Fixed Height Size'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('fixedHeightSize', t('Fixed Height Size')) ?>
             <?php echo $form->text('fixedHeightSize', isset($fixedHeightSize) ? $fixedHeightSize : '') ?>
         </div>
 
@@ -345,12 +345,12 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </legend>
 
             <div class="form-group">
-                <?php echo $form->label('maxThumbWidth', t('Width'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('maxThumbWidth', t('Width')) ?>
                 <?php echo $form->text('maxThumbWidth', isset($maxThumbWidth) ? $maxThumbWidth : '') ?>
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('maxThumbHeight', t('Height'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('maxThumbHeight', t('Height')) ?>
                 <?php echo $form->text('maxThumbHeight', isset($maxThumbHeight) ? $maxThumbHeight : '') ?>
             </div>
         </fieldset>
@@ -374,7 +374,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </legend>
 
             <div class="form-group">
-                <?php echo $form->label('', t('Table Striping'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('', t('Table Striping')) ?>
 
                 <div class="form-check">
                     <?php echo $form->radio('tableStriped', 0, isset($tableStriped) ? $tableStriped : null, ["name" => "tableStriped", "id" => "tableStripedOff"]) ?>
@@ -388,7 +388,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </div>
 
             <div class="form-group" data-options="table-striped">
-                <?php echo $form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color')) ?>
 
                 <div>
                     <?php $color->output('rowBackgroundColorAlternate', isset($rowBackgroundColorAlternate) ? $rowBackgroundColorAlternate : null) ?>

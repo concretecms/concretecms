@@ -71,7 +71,7 @@ $id = "ccm-role-list-" . $idHelper->getString();
     <div class="clearfix"></div>
 
     <div class="form-group ccm-default-role-selector d-none">
-        <?php echo $form->label("defaultRole", t("Default Role"), ['class' => 'form-label']); ?>
+        <?php echo $form->label("defaultRole", t("Default Role")); ?>
         <?php echo $form->select("defaultRole", ['' => t("*** Please select")]); ?>
     </div>
 </div>

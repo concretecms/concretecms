@@ -20,7 +20,7 @@ $token = $app->make(Token::class);
     <?php echo $token->output("change_mail_logging"); ?>
 
     <div class="form-group">
-        <?php echo $form->label("logMode", t("Log Mode"), ['class' => 'form-label']); ?>
+        <?php echo $form->label("logMode", t("Log Mode")); ?>
         <?php echo $form->select("logMode", $logModes, $logMode); ?>
     </div>
 

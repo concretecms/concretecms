@@ -377,7 +377,7 @@ if (isset($neutralStack)) {
                 <?= $token->output('duplicate_stack') ?>
                 <legend><?= t('Duplicate Stack') ?></legend>
                 <div class="form-group">
-                    <?= $form->label('stackName', t('Name'), ['class' => 'form-label']) ?>
+                    <?= $form->label('stackName', t('Name')) ?>
                     <?= $form->text('stackName', $duplicateStack->getStackName()) ?>
                 </div>
             </fieldset>
@@ -407,7 +407,7 @@ if (isset($neutralStack)) {
                 <legend><?= $isFolder ? t('Rename Stack Folder') : t('Rename Stack') ?></legend>
                 <?= $token->output('rename_stack') ?>
                 <div class="form-group">
-                    <?= $form->label('newName', t('Name'), ['class' => 'form-label']) ?>
+                    <?= $form->label('newName', t('Name')) ?>
                     <?= $form->text('newName', $oldName) ?>
                 </div>
             </fieldset>
@@ -638,7 +638,7 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
                 <?= $token->output('add_stack') ?>
                 <?= $form->hidden('stackFolderID', $currentStackFolderID ?? ''); ?>
                 <div class="form-group">
-                    <?= $form->label('stackName', t('Stack Name'), ['class' => 'form-label']) ?>
+                    <?= $form->label('stackName', t('Stack Name')) ?>
                     <?= $form->text('stackName') ?>
                 </div>
             </form>
@@ -655,7 +655,7 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
                 <?= $token->output('add_folder') ?>
                 <?= $form->hidden('stackFolderID', $currentStackFolderID ?? ''); ?>
                 <div class="form-group">
-                    <?= $form->label('folderName', t('Folder Name'), ['class' => 'form-label']) ?>
+                    <?= $form->label('folderName', t('Folder Name')) ?>
                     <?= $form->text('folderName') ?>
                 </div>
             </form>

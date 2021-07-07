@@ -46,7 +46,7 @@ if ($editingJobSet !== null) {
                 <fieldset>
                     <legend><?= t('Details') ?></legend>
                     <div class="form-group">
-                        <?= $form->label('jsName', t('Name'), ['class' => 'form-label']) ?>
+                        <?= $form->label('jsName', t('Name')) ?>
                         <?= $form->text('jsName', $editingJobSet === true ? '' : $editingJobSet->getJobSetName(), ['required' => 'required', 'maxlength' => '128']) ?>
                     </div>
                 </fieldset>
@@ -99,7 +99,7 @@ if ($editingJobSet !== null) {
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <?= $form->label('value', t('Run this Job Set Every'), ['class' => 'form-label']) ?>
+                            <?= $form->label('value', t('Run this Job Set Every')) ?>
                             <div class="input-group">
                                 <?= $form->number('value', $editingJobSet === true ? 0 : $editingJobSet->scheduledValue, ['min' => '0']) ?>
                                 <?= $form->select(
@@ -245,7 +245,7 @@ if ($editingJobSet !== null) {
                         ) ?>
                                 <div class="mt-3 ccm-jobs-automation-schedule-auto<?= $j->isScheduled ? '' : ' d-none' ?>">
                                     <div class="form-group">
-                                        <?= $form->label("value{$j->getJobID()}", t('Run this Job Every'), ['class' => 'form-label']) ?>
+                                        <?= $form->label("value{$j->getJobID()}", t('Run this Job Every')) ?>
                                         <div class="input-group">
                                             <?= $form->number("value{$j->getJobID()}", $j->scheduledValue, ['min' => '0']) ?>
                                             <?= $form->select(

@@ -16,11 +16,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend><?= t('Standard Details') ?></legend>
         <div class="form-group">
-            <?= $form->label('handle', t('Handle'), ['class' => 'form-label']) ?>
+            <?= $form->label('handle', t('Handle')) ?>
             <?= $form->text('handle', '', ['required' => 'required']) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('name', t('Name'), ['class' => 'form-label']) ?>
+            <?= $form->label('name', t('Name')) ?>
             <?= $form->text('name', '', ['required' => 'required']) ?>
         </div>
         <div class="form-group">

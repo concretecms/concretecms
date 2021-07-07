@@ -18,7 +18,7 @@ $form = $app->make(Form::class);
     <?php echo $validation_token->output('file_sets_add'); ?>
 
     <div class="form-group">
-        <?php echo $form->label('file_set_name', t('Name'), ['class' => 'form-label']) ?>
+        <?php echo $form->label('file_set_name', t('Name')) ?>
         <?php echo $form->text('file_set_name', '', ['autofocus' => 'autofocus']) ?>
     </div>
 

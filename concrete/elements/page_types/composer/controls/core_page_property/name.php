@@ -13,7 +13,7 @@ $resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <div class="form-group">
-    <?= $form->label('', $label, ['class' => 'form-label']) ?>
+    <?= $form->label('', $label) ?>
     <?php if ($control->isPageTypeComposerFormControlRequiredOnThisRequest()) { ?>
         <span class="label label-info"><?= t('Required') ?></span>
     <?php } ?>

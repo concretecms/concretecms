@@ -42,7 +42,7 @@ if (isset($set_connection_collation_warnings)) {
     <?php $token->output('set_connection_collation'); ?>
 
     <div class="form-group">
-        <?= $form->label('collation', t('Collation'), ['class' => 'form-label']); ?>
+        <?= $form->label('collation', t('Collation')); ?>
         <div class="ccm-search-field-content">
             <?= $form->select('collation', $charsetsAndCollations, $collation, ['required' => 'required']); ?>
         </div>

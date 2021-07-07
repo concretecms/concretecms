@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 
 <div class="form-group">
-    <?= $form->label('', $label, ['class' => 'form-label']) ?>
+    <?= $form->label('', $label) ?>
 	<?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) { ?>
         <span class="label label-info"><?= t('Required') ?></span>
     <?php } ?>

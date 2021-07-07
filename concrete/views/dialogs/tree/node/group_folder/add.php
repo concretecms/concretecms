@@ -28,18 +28,18 @@ $token = $app->make(Token::class);
         <?php echo $form->hidden("treeNodeID", $node->getTreeNodeID()); ?>
 
         <div class="form-group">
-            <?php echo $form->label('treeNodeGroupFolderName', t('Name'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('treeNodeGroupFolderName', t('Name')) ?>
             <?php echo $form->text('treeNodeGroupFolderName') ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label('contains', t('Contains'), ['class' => 'form-label']) ?>
+            <?php echo $form->label('contains', t('Contains')) ?>
             <?php echo $form->select('contains', $containsList, \Concrete\Core\Tree\Node\Type\GroupFolder::CONTAINS_GROUP_FOLDERS_AND_GROUPS) ?>
         </div>
 
         <div id="ccm-group-types">
             <div class="form-group">
-                <?php echo $form->label('', t('Group Types'), ['class' => 'form-label']) ?>
+                <?php echo $form->label('', t('Group Types')) ?>
 
                 <?php foreach ($allGroupTypes as $groupTypeId => $groupTypeName) { ?>
                     <div class="form-check">

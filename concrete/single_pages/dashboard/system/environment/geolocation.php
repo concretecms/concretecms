@@ -41,7 +41,7 @@ if (isset($geolocator)) {
                 ?>
 
             <div class="form-group">
-                <?= $form->label('geolocator-enable', t('Usage'), ['class' => 'form-label']); ?>
+                <?= $form->label('geolocator-enable', t('Usage')); ?>
                 <div class="form-check">
                     <?= $form->checkbox('geolocator-active', 1, $geolocator->isActive()); ?>
                     <?= $form->label('geolocator-active', t('Use this geolocator library.'), ['class' => 'form-check-label']); ?>
@@ -100,7 +100,7 @@ if (isset($geolocator)) {
     </fieldset>
     <div id="ccm-geolocation-test-dialog" class="ccm-ui" style="display: none">
         <div class="form-group">
-            <?= $form->label('geolocation-test-ip', t('Test this IP address'), ['class' => 'form-label']); ?>
+            <?= $form->label('geolocation-test-ip', t('Test this IP address')); ?>
             <?= $form->text('geolocation-test-ip', (string) $ip); ?>
         </div>
 

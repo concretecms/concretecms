@@ -68,7 +68,7 @@ switch ($controller->getAction()) {
                 </legend>
 
                 <div class="form-group">
-                    <?php echo $form->label('efpName', t('Name'), ['class' => 'form-label']); ?>
+                    <?php echo $form->label('efpName', t('Name')); ?>
 
                     <div class="input-group">
                         <?php echo $form->text('efpName', $efpName); ?>

@@ -10,7 +10,7 @@ if (count($sections) > 0) {
         <input type="hidden" name="sectionID" value="<?= $sectionID ?>" />
         <div class="ccm-search-fields-row">
             <div class="form-group">
-                <?= $form->label('keywords', t('Search'), ['class' => 'form-label']) ?>
+                <?= $form->label('keywords', t('Search')) ?>
                 <div class="ccm-search-field-content row">
                     <div class="input-group col-md-11">
                         <?= $form->search('keywords', array('placeholder' => t('Keywords'))) ?>

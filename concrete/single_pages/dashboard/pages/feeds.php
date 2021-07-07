@@ -94,19 +94,19 @@ if ($controller->getAction() == 'add'
     <form method="post" class="form-stacked" action="<?= $action ?>">
         <?= $this->controller->token->output($tokenString) ?>
         <div class="form-group">
-            <?= $form->label('pfTitle', t('Title'), ['class' => 'form-label']) ?>
+            <?= $form->label('pfTitle', t('Title')) ?>
             <?= $form->text('pfTitle', $pfTitle) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('pfHandle', t('Handle'), ['class' => 'form-label']) ?>
+            <?= $form->label('pfHandle', t('Handle')) ?>
             <?= $form->text('pfHandle', $pfHandle) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('pfDescription', t('Description'), ['class' => 'form-label']) ?>
+            <?= $form->label('pfDescription', t('Description')) ?>
             <?= $form->textarea('pfDescription', $pfDescription, ['rows' => 5]) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('iconFID', t('Image'), ['class' => 'form-label']) ?>
+            <?= $form->label('iconFID', t('Image')) ?>
             <?= $fmHelper->image('iconFID', 'iconFID', t('Choose Image'), $imageFile);
             ?>
         </div>
@@ -116,11 +116,11 @@ if ($controller->getAction() == 'add'
             ?>
         </div>
         <div class="form-group">
-            <?= $form->label('ptID', t('Filter By Page Type'), ['class' => 'form-label']) ?>
+            <?= $form->label('ptID', t('Filter By Page Type')) ?>
             <?= $form->select('ptID', $pageTypes, $ptID) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('customTopicAttributeKeyHandle', t('Filter By Topic'), ['class' => 'form-label']) ?>
+            <?= $form->label('customTopicAttributeKeyHandle', t('Filter By Topic')) ?>
             <select class="form-select" name="customTopicAttributeKeyHandle" id="customTopicAttributeKeyHandle">
                 <option value=""><?= t('** No Filtering') ?></option>
                 <?php foreach ($topicAttributes as $attributeKey) {
@@ -191,11 +191,11 @@ if ($controller->getAction() == 'add'
             </div>
         </div>
         <div class="form-group" data-row="area" style="display: none">
-            <?= $form->label('pfAreaHandleToDisplay', t('Select Area'), ['class' => 'form-label']) ?>
+            <?= $form->label('pfAreaHandleToDisplay', t('Select Area')) ?>
             <?= $form->select('pfAreaHandleToDisplay', $areas, $pfAreaHandleToDisplay) ?>
         </div>
         <div class="form-group">
-            <?= $form->label('ignorePermissions', t('Ignore Page Permissions'), ['class' => 'form-label']) ?>
+            <?= $form->label('ignorePermissions', t('Ignore Page Permissions')) ?>
 
             <div class="form-check">
                 <?= $form->checkbox('ignorePermissions', 1, $ignorePermissions) ?>

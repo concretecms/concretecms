@@ -8,7 +8,7 @@ $form = Core::make("helper/form");
 			<input type="hidden" name="treeNodeID" value="<?=$node->getTreeNodeID()?>">
 				<?=Loader::helper('validation/token')->output('add_topic_node')?>
 			<div class="form-group">
-				<?=$form->label('treeNodeTopicName', t('Topic'), ['class' => 'form-label'])?>
+				<?=$form->label('treeNodeTopicName', t('Topic'))?>
 				<?=$form->text('treeNodeTopicName', '', array('class' => 'span4'))?>
 			</div>
 
