@@ -45,7 +45,7 @@ $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeT
 <div data-vue="theme-customizer" class="h-100">
 
     <div class="ccm-page h-100">
-    <iframe id="ccm-page-preview-frame" class="w-100 h-100" style="border: 0" name="ccm-page-preview-frame"
+    <iframe class="ccm-page-preview-frame" style="margin-top: 48px" class="w-100 h-100" style="border: 0"
             src="<?=URL::to('/ccm/system/panels/page/design/preview_contents')?>?cID=<?=$previewPage->getCollectionID()?>"></iframe>
     </div>
 

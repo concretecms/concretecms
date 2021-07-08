@@ -7,6 +7,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class Preview extends BackendInterfaceController
@@ -44,6 +45,15 @@ class Preview extends BackendInterfaceController
             $previewRequest = new SkinPreviewRequest();
             $previewRequest->setTheme($theme);
             $previewRequest->setSkin($skin);
+
+            if ($this->request->request->has('styles')) {
+                // This is a preview request with custom, changed style data. Let's parse
+                // that data.
+                $styles = json_decode($this->request->request->get('styles'), true);
+                $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
+                $styleValueList = $styleValueListFactory->createFromNormalizedJsonData($theme->getThemeCustomizableStyleList(), $styles);
+            }
+
             $view->setCustomPreviewRequest($previewRequest);
 
             $req->setCustomRequestUser(-1);

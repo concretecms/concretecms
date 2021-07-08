@@ -175,7 +175,7 @@ $(function() {
         var pThemeID = $('#ccm-panel-page-design input[name=pThemeID]').val();
         var pTemplateID = $('#ccm-panel-page-design input[name=pTemplateID]:checked').val();
         var src = '<?= $controller->action("preview_contents") ?>&pThemeID=' + pThemeID + '&pTemplateID=' + pTemplateID;
-        $('#ccm-page-preview-frame').get(0).src = src;
+        $('iframe[name=ccm-page-preview-frame]').get(0).src = src;
     });
 
 });

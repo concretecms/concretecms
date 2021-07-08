@@ -17,4 +17,6 @@ interface StyleInterface extends \JsonSerializable
 
     public function createValueFromVariableCollection(NormalizedVariableCollection $collection) :?ValueInterface;
 
+    public function createValueFromRequestDataCollection(array $styles) :?ValueInterface;
+
 }

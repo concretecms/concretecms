@@ -3,6 +3,7 @@
 namespace Concrete\Core\StyleCustomizer\Style;
 
 use Concrete\Core\StyleCustomizer\Parser\Normalizer\NormalizedVariableCollection;
+use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\FontFamilyValue;
 use Concrete\Core\StyleCustomizer\Style\Value\ValueInterface;
 
@@ -19,4 +20,14 @@ class FontFamilyStyle extends Style
         return null;
     }
 
+    public function createValueFromRequestDataCollection(array $styles): ?ValueInterface
+    {
+        foreach ($styles as $style) {
+            if (isset($style['variable']) && $style['variable'] == $this->getVariable()) {
+                $value = new FontFamilyValue($style['value']['fontFamily']);
+                return $value;
+            }
+        }
+        return null;
+    }
 }

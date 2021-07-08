@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\StyleCustomizer\Parser;
 
+use Concrete\Core\StyleCustomizer\Parser\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Parser\Normalizer\ScssNormalizer;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\StyleCustomizer\Style\StyleValueList;
@@ -13,7 +14,7 @@ use Concrete\Core\StyleCustomizer\StyleList;
  * Class BedrockParser
  * @package Concrete\Core\StyleCustomizer\Parser
  */
-class BedrockParser implements ParserInterface
+class BedrockParser implements ThemeParserInterface
 {
     const FILE_CUSTOMIZABLE_VARIABLES = '_customizable-variables.scss';
 
@@ -27,7 +28,11 @@ class BedrockParser implements ParserInterface
         $this->normalizer = $normalizer;
     }
 
-    public function createStyleValueListFromSkin(StyleList $styleList, SkinInterface $skin): StyleValueList
+    /**
+     * @param SkinInterface $skin
+     * @return NormalizedVariableCollection
+     */
+    public function createVariableCollectionFromSkin(SkinInterface $skin): NormalizedVariableCollection
     {
         $variablesFile = $skin->getDirectory() .
             DIRECTORY_SEPARATOR .
@@ -36,16 +41,7 @@ class BedrockParser implements ParserInterface
             self::FILE_CUSTOMIZABLE_VARIABLES;
 
         $variableCollection = $this->normalizer->createVariableCollectionFromFile($variablesFile);
-        $valueList = new StyleValueList();
-
-        foreach ($styleList->getAllStyles() as $style) {
-            $value = $style->createValueFromVariableCollection($variableCollection);
-            if ($value) {
-                $valueList->addValue($style, $value);
-            }
-        }
-
-        return $valueList;
+        return $variableCollection;
     }
 
 

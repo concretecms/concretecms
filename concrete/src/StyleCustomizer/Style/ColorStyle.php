@@ -7,6 +7,7 @@ use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\Value;
 use Concrete\Core\StyleCustomizer\Style\Value\ValueInterface;
 use Primal\Color\Parser;
+
 class ColorStyle extends Style
 {
 
@@ -21,7 +22,7 @@ class ColorStyle extends Style
                 if (is_numeric($result->alpha) && $result->alpha >= 0 && $result->alpha < 1) {
                     $alpha = $result->alpha;
                 }
-                $colorValue = new ColorValue($this->getVariable());
+                $colorValue = new ColorValue();
                 $colorValue
                     ->setRed($result->red)
                     ->setGreen($result->green)
@@ -29,6 +30,21 @@ class ColorStyle extends Style
                     ->setAlpha($alpha)
                 ;
                 return $colorValue;
+            }
+        }
+        return null;
+    }
+
+    public function createValueFromRequestDataCollection(array $styles): ?ValueInterface
+    {
+        foreach ($styles as $style) {
+            if (isset($style['variable']) && $style['variable'] == $this->getVariable()) {
+                $value = new ColorValue();
+                $value->setRed($style['value']['r']);
+                $value->setGreen($style['value']['g']);
+                $value->setBlue($style['value']['b']);
+                $value->setAlpha($style['value']['a']);
+                return $value;
             }
         }
         return null;

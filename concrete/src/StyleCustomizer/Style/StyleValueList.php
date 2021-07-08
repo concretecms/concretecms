@@ -19,7 +19,7 @@ class StyleValueList
     /**
      * @var StyleValue[]
      */
-    protected $values;
+    protected $values = [];
 
     public function addValue(StyleInterface $style, ValueInterface $value)
     {
