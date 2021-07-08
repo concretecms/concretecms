@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\StyleCustomizer\Style;
 
-use Concrete\Core\StyleCustomizer\Parser\Normalizer\NormalizedVariableCollection;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
+use Concrete\Core\StyleCustomizer\Normalizer\Variable;
+use Concrete\Core\StyleCustomizer\Normalizer\VariableInterface;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\Value;
 use Concrete\Core\StyleCustomizer\Style\Value\ValueInterface;
@@ -48,6 +50,23 @@ class ColorStyle extends Style
             }
         }
         return null;
+    }
+
+    /**
+     * @param ColorValue $value
+     * @return VariableInterface|null
+     */
+    public function createVariableFromValue(ValueInterface $value): ?VariableInterface
+    {
+        $variableValue = sprintf(
+            'rgba(%s, %s, %s, %s)',
+            $value->getRed(),
+            $value->getGreen(),
+            $value->getBlue(),
+            $value->getAlpha()
+        );
+        $variable = new Variable($this->getVariable(), $variableValue);
+        return $variable;
     }
 
 }

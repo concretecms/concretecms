@@ -7,6 +7,9 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
+use Concrete\Core\StyleCustomizer\Compiler\PreviewRequestCompiler;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,10 +51,17 @@ class Preview extends BackendInterfaceController
 
             if ($this->request->request->has('styles')) {
                 // This is a preview request with custom, changed style data. Let's parse
-                // that data.
+                // that data and compile it into a temporary CSS file.
                 $styles = json_decode($this->request->request->get('styles'), true);
                 $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
-                $styleValueList = $styleValueListFactory->createFromNormalizedJsonData($theme->getThemeCustomizableStyleList(), $styles);
+                $adapterFactory = $this->app->make(AdapterFactory::class);
+                $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
+                $adapter = $adapterFactory->createFromTheme($theme);
+                $styleValueList = $styleValueListFactory->createFromRequestArray($theme->getThemeCustomizableStyleList(), $styles);
+                $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
+                $compiler = $this->app->make(PreviewRequestCompiler::class);
+                $result = $compiler->compile($adapter, $skin, $collection);
+                exit;
             }
 
             $view->setCustomPreviewRequest($previewRequest);

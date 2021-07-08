@@ -1,13 +1,13 @@
 <?php
 
-namespace Concrete\Core\StyleCustomizer\Parser;
+namespace Concrete\Core\StyleCustomizer\Adapter;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 
-class ParserFactory
+class AdapterFactory
 {
 
     /**
@@ -27,11 +27,11 @@ class ParserFactory
     }
 
     /**
-     * When given a particular theme, returns the parser that ought to be used with it.
+     * When given a particular theme, returns the adapter that ought to be used with it.
      *
      * @param Theme $theme
      */
-    public function createParserFromTheme(Theme $theme)
+    public function createFromTheme(Theme $theme)
     {
         $record = $this->fileLocator->getRecord(
             DIRNAME_THEMES .'/' .
@@ -39,23 +39,12 @@ class ParserFactory
             DIRNAME_SCSS,
             $theme->getPackageHandle(),
         );
+
         if ($record->exists()) {
-            return $this->app->make(BedrockParser::class);
+            return $this->app->make(ScssAdapter::class);
         }
 
-        return $this->app->make(LegacyLessParser::class);
-    }
-
-    /**
-     * When given a particular theme's skin, returns the parser that ought to be used with it.
-     *
-     * Note: Currently only SCSS is supported for skins, so this only returns SCSS.
-     *
-     * @param SkinInterface $skin
-     */
-    public function createParserFromSkin(SkinInterface $skin)
-    {
-        return $this->app->make(BedrockParser::class);
+        return $this->app->make(LessAdapter::class);
     }
 
 

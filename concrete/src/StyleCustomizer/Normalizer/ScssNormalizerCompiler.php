@@ -1,11 +1,14 @@
 <?php
 
-namespace Concrete\Core\StyleCustomizer\Parser\Scss;
+namespace Concrete\Core\StyleCustomizer\Normalizer;
 
 use ScssPhp\ScssPhp\Compiler as ScssCompiler;
 use ScssPhp\ScssPhp\Compiler\Environment;
 
-class Compiler extends ScssCompiler
+/**
+ * @internal
+ */
+class ScssNormalizerCompiler extends ScssCompiler
 {
     /**
      * @return Environment

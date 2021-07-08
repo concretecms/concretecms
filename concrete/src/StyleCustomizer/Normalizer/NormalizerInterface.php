@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\StyleCustomizer\Parser\Normalizer;
+namespace Concrete\Core\StyleCustomizer\Normalizer;
 
 interface NormalizerInterface
 {

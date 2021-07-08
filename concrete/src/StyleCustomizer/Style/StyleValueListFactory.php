@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\StyleCustomizer\Style;
 
-use Concrete\Core\StyleCustomizer\Parser\Normalizer\NormalizedVariableCollection;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\StyleList;
 
 /**

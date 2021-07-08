@@ -3,29 +3,28 @@
 namespace Concrete\Tests\Page\Theme;
 
 use Concrete\Core\Filesystem\FileLocator;
-use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\StyleCustomizer\Parser\ArrayParser;
-use Concrete\Core\StyleCustomizer\Parser\BedrockParser;
-use Concrete\Core\StyleCustomizer\Parser\Normalizer\NormalizedVariableCollection;
-use Concrete\Core\StyleCustomizer\Parser\Normalizer\ScssNormalizer;
-use Concrete\Core\StyleCustomizer\Parser\Normalizer\Variable;
-use Concrete\Core\StyleCustomizer\Parser\ParserFactory;
-use Concrete\Core\StyleCustomizer\Parser\Scss\Compiler;
+use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
+use Concrete\Core\StyleCustomizer\Adapter\ScssAdapter;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
+use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizer;
+use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizerCompiler;
+use Concrete\Core\StyleCustomizer\Normalizer\Variable;
+use Concrete\Core\StyleCustomizer\Processor\ScssProcessor;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\StyleCustomizer\Style\ColorStyle;
 use Concrete\Core\StyleCustomizer\Style\FontFamilyStyle;
 use Concrete\Core\StyleCustomizer\Style\StyleValue;
 use Concrete\Core\StyleCustomizer\Style\StyleValueList;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
-use Concrete\Core\StyleCustomizer\Style\TypeStyle;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\FontFamilyValue;
-use Concrete\Core\StyleCustomizer\Style\ValueList\ValueList;
 use Concrete\Core\StyleCustomizer\StyleList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Tests\TestCase;
 use Concrete\Theme\Elemental\PageTheme;
 use Illuminate\Filesystem\Filesystem;
+use ScssPhp\ScssPhp\Compiler;
 
 class ThemeCustomizerTest extends TestCase
 {
@@ -62,13 +61,9 @@ class ThemeCustomizerTest extends TestCase
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
         $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
-        $parserFactory = new ParserFactory($app, $fileLocator);
-        $parser = $parserFactory->createParserFromTheme($theme);
-        $this->assertInstanceof(BedrockParser::class, $parser);
-
-        $defaultSkin = $theme->getThemeDefaultSkin();
-        $parser = $parserFactory->createParserFromSkin($defaultSkin);
-        $this->assertInstanceof(BedrockParser::class, $parser);
+        $parserFactory = new AdapterFactory($app, $fileLocator);
+        $parser = $parserFactory->createFromTheme($theme);
+        $this->assertInstanceof(ScssAdapter::class, $parser);
     }
 
     public function testStyleListFromSkin()
@@ -103,7 +98,7 @@ class ThemeCustomizerTest extends TestCase
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
         $styleList = $theme->getThemeCustomizableStyleList();
-        $scssNormalizer = new ScssNormalizer(new Compiler(), new Filesystem());
+        $scssNormalizer = new ScssNormalizer(new ScssNormalizerCompiler(), new Filesystem());
         $variablesFile = DIR_BASE_CORE .
             DIRECTORY_SEPARATOR .
             DIRNAME_THEMES .
@@ -116,7 +111,7 @@ class ThemeCustomizerTest extends TestCase
             DIRECTORY_SEPARATOR .
             DIRNAME_SCSS .
             DIRECTORY_SEPARATOR .
-            BedrockParser::FILE_CUSTOMIZABLE_VARIABLES;
+            '_customizable-variables.scss';
         $variableCollection = $scssNormalizer->createVariableCollectionFromFile($variablesFile);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
         $this->assertCount(4, $variableCollection);
@@ -137,11 +132,12 @@ class ThemeCustomizerTest extends TestCase
         $theme->setThemeHandle('elemental');
         $styleList = $theme->getThemeCustomizableStyleList();
         $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
-        $parserFactory = new ParserFactory($app, $fileLocator);
+        $adapterFactory = new AdapterFactory($app, $fileLocator);
         $styleValueListFactory = new StyleValueListFactory();
         $defaultSkin = $theme->getThemeDefaultSkin();
-        $parser = $parserFactory->createParserFromSkin($defaultSkin);
-        $variableCollection = $parser->createVariableCollectionFromSkin($defaultSkin);
+        $adapter = $adapterFactory->createFromTheme($theme);
+        $variableCollectionFactory = new NormalizedVariableCollectionFactory();
+        $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $defaultSkin);
         $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
         $this->assertInstanceOf(StyleValueList::class, $valueList);
         $this->assertCount(4, $valueList->getValues());
@@ -180,6 +176,65 @@ class ThemeCustomizerTest extends TestCase
         $this->assertEquals('Logo Font Family', $style->getName());
         $this->assertEquals('logo-font-family', $style->getVariable());
         $this->assertEquals('Helvetica', $value->getFontFamily());
+    }
+
+    public function testStyleListToVariableCollection()
+    {
+        $app = Facade::getFacadeApplication();
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $styleList = $theme->getThemeCustomizableStyleList();
+        $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
+        $adapterFactory = new AdapterFactory($app, $fileLocator);
+        $styleValueListFactory = new StyleValueListFactory();
+        $defaultSkin = $theme->getThemeDefaultSkin();
+        $adapter = $adapterFactory->createFromTheme($theme);
+        $variableCollectionFactory = new NormalizedVariableCollectionFactory();
+        $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $defaultSkin);
+
+        $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
+
+        // Now that we have the style value list, let's go BACK to the variable collection
+        // Why do we need this? Well, when we receive values from our form post in the customizer, we
+        // transform that PHP array data into stylelist data using the previous test's methods. So now
+        // we need to go from that styleList back to a variable collection, which we will then pass
+        // to our scss compiler.
+        $variableCollectionFactory = new NormalizedVariableCollectionFactory();
+        $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
+        $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
+        $this->assertCount(4, $variableCollection);
+        $variable = $variableCollection->getValues()[0];
+        $this->assertInstanceOf(Variable::class, $variable);
+
+        $variable = $variableCollection->get(1);
+        $this->assertInstanceOf(Variable::class, $variable);
+        $this->assertEquals('color-secondary', $variable->getName());
+        $this->assertEquals('rgba(0, 153, 255, 1)', $variable->getValue());
+    }
+
+    public function testScssProcessor()
+    {
+        $processor = new ScssProcessor(new Filesystem(), new Compiler());
+        $variableCollection = new NormalizedVariableCollection();
+        $file = dirname(__FILE__) . '/fixtures/test.scss';
+        $css = $processor->compileFileToString($file, $variableCollection);
+        $expected = <<<EOL
+body {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+EOL;
+        $this->assertEquals($expected, $css);
+        $variableCollection->add(new Variable('background-color', 'rgba(255, 255, 0, 0.7)'));
+        $css = $processor->compileFileToString($file, $variableCollection);
+        $expected = <<<EOL
+body {
+  background-color: rgba(255, 255, 0, 0.7);
+}
+
+EOL;
+        $this->assertEquals($expected, $css);
+
     }
 
     /*

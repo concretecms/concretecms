@@ -5,7 +5,8 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContro
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\StyleCustomizer\Parser\ParserFactory;
+use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
 
 class CustomizeSkin extends BackendInterfacePageController
@@ -30,10 +31,11 @@ class CustomizeSkin extends BackendInterfacePageController
                 $skin = $theme->getSkinByIdentifier($skinIdentifier);
                 if ($skin) {
                     $styleList = $theme->getThemeCustomizableStyleList();
-                    $parserFactory = $this->app->make(ParserFactory::class);
+                    $adapterFactory = $this->app->make(AdapterFactory::class);
                     $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
-                    $parser = $parserFactory->createParserFromSkin($skin);
-                    $variableCollection = $parser->createVariableCollectionFromSkin($skin);
+                    $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
+                    $adapter = $adapterFactory->createFromTheme($theme);
+                    $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $skin);
                     $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
                     $groupedStyleValueList = $valueList->createGroupedStyleValueList($styleList);
                     $this->set('styles', $groupedStyleValueList);

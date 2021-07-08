@@ -1,15 +1,14 @@
 <?php
 
-namespace Concrete\Core\StyleCustomizer\Parser\Normalizer;
+namespace Concrete\Core\StyleCustomizer\Normalizer;
 
-use Concrete\Core\StyleCustomizer\Parser\Scss\Compiler;
 use Illuminate\Filesystem\Filesystem;
 
 class ScssNormalizer implements NormalizerInterface
 {
 
     /**
-     * @var Compiler
+     * @var ScssNormalizerCompiler
      */
     protected $compiler;
 
@@ -20,10 +19,10 @@ class ScssNormalizer implements NormalizerInterface
 
     /**
      * ScssNormalizer constructor.
-     * @param Compiler $compiler
+     * @param ScssNormalizerCompiler $compiler
      * @param Filesystem $fileSystem
      */
-    public function __construct(Compiler $compiler, Filesystem $fileSystem)
+    public function __construct(ScssNormalizerCompiler $compiler, Filesystem $fileSystem)
     {
         $this->compiler = $compiler;
         $this->fileSystem = $fileSystem;
@@ -44,7 +43,7 @@ class ScssNormalizer implements NormalizerInterface
     public function createVariableCollectionFromFile(string $variablesFilePath): NormalizedVariableCollection
     {
         $contents = $this->fileSystem->get($variablesFilePath);
-        $compiler = new Compiler();
+        $compiler = new ScssNormalizerCompiler();
         $compiler->compileString($contents);
         $environment = $compiler->getRootEnvironment();
 
