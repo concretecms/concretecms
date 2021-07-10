@@ -7,6 +7,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\Theme\Theme;
 use Environment;
 use Events;
+use HtmlObject\Element;
 use Loader;
 use PageCache;
 use Concrete\Core\Entity\Page\Template;
@@ -245,25 +246,38 @@ class PageView extends View
         $this->customPreviewRequest = $customPreviewRequest;
     }
 
-    public function getSelectedSkinStylesheet()
+    public function getThemeStyles()
     {
         $skin = null;
+        $customStyles = null;
         if (isset($this->customPreviewRequest) && $this->customPreviewRequest instanceof SkinPreviewRequest) {
             $request = $this->customPreviewRequest;
             $theme = $request->getTheme();
             $skin = $request->getSkin()->getIdentifier();
             $path = $theme->getSkinDirectoryRecord()->getUrl();
-            return $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
-        }
-        $site = $this->c->getSite();
-        $path = $this->themeObject->getSkinDirectoryRecord()->getUrl();
-        $skin = SkinInterface::SKIN_DEFAULT;
-        if ($site) {
-            if ($site->getThemeSkinIdentifier()) {
-                $skin = $site->getThemeSkinIdentifier();
+            $stylesheet = $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
+            if ($this->customPreviewRequest->getCustomCss() !== null) {
+                $customStyles = $this->customPreviewRequest->getCustomCss();
             }
+        } else {
+            $site = $this->c->getSite();
+            $path = $this->themeObject->getSkinDirectoryRecord()->getUrl();
+            $skin = SkinInterface::SKIN_DEFAULT;
+            if ($site) {
+                if ($site->getThemeSkinIdentifier()) {
+                    $skin = $site->getThemeSkinIdentifier();
+                }
+            }
+            $stylesheet = $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
         }
-        return $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
+        if ($customStyles) {
+            $styles = new Element('style', $customStyles);
+            $styles->type('text/css')->href($stylesheet);
+        } else {
+            $styles = new Element('link', null);
+            $styles->rel('stylesheet')->type('text/css')->href($stylesheet);
+        }
+        return $styles;
     }
 
     /**

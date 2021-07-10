@@ -1,5 +1,5 @@
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
+@import "../../../bedrock/bootstrap/scss/functions";
+@import "../../../bedrock/bootstrap/scss/variables";
 
 // ---- Map our theme customizer variables to the bootstrap variables
 $theme-colors: (

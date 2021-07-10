@@ -38,8 +38,7 @@ class FontFamilyStyle extends Style
      */
     public function createVariableFromValue(ValueInterface $value): ?VariableInterface
     {
-        $variableValue = sprintf('font-family: %s', $value->getFontFamily());
-        $variable = new Variable($this->getVariable(), $variableValue);
+        $variable = new Variable($this->getVariable(), $value->getFontFamily());
         return $variable;
     }
 

@@ -61,7 +61,7 @@ class Preview extends BackendInterfaceController
                 $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
                 $compiler = $this->app->make(PreviewRequestCompiler::class);
                 $result = $compiler->compile($adapter, $skin, $collection);
-                exit;
+                $previewRequest->setCustomCss($result);
             }
 
             $view->setCustomPreviewRequest($previewRequest);

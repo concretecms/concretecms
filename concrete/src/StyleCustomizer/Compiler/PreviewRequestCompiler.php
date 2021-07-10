@@ -18,13 +18,12 @@ class PreviewRequestCompiler
      */
     protected $filesystem;
 
-    public function compile(AdapterInterface $adapter, SkinInterface $skin, NormalizedVariableCollection $collection)
+    public function compile(AdapterInterface $adapter, SkinInterface $skin, NormalizedVariableCollection $collection): string
     {
         $processor = $adapter->getProcessor();
         $file = $adapter->getEntrypointFile($skin);
         $css = $processor->compileFileToString($file, $collection);
-        print $css;
-
+        return $css;
     }
 
 

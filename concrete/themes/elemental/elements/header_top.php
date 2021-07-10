@@ -3,7 +3,7 @@
 <html lang="<?php echo Localization::activeLanguage() ?>">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" type="text/css" href="<?=$view->getSelectedSkinStylesheet()?>" />
+    <?=$view->getThemeStyles()?>
     <?php
     View::element('header_required', [
         'pageTitle' => isset($pageTitle) ? $pageTitle : '',
