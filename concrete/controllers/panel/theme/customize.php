@@ -23,7 +23,8 @@ class Customize extends BackendInterfaceController
         $theme = Theme::getByID($pThemeID);
         if ($theme) {
             $this->set('theme', $theme);
-            $this->set('skins', $theme->getSkins());
+            $this->set('presetSkins', $theme->getPresetSkins());
+            $this->set('customSkins', $theme->getCustomSkins());
             $previewPage = Page::getByID($previewPageID);
             $checker = new Checker($previewPage);
             if ($checker->canViewPage()) {

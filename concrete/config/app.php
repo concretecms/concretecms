@@ -853,5 +853,8 @@ return [
 
         ['Concrete\Core\Attribute\Command\SaveAttributesCommand', 'Concrete\Core\Attribute\Command\SaveAttributesCommandHandler'],
         ['Concrete\Core\Attribute\Command\ClearAttributesCommand', 'Concrete\Core\Attribute\Command\ClearAttributesCommandHandler'],
+
+        ['Concrete\Core\Page\Theme\Command\CreateCustomSkinCommand', 'Concrete\Core\Page\Theme\Command\CreateCustomSkinCommandHandler'],
+        ['Concrete\Core\Page\Theme\Command\GenerateCustomSkinStylesheetCommand', 'Concrete\Core\Page\Theme\Command\GenerateCustomSkinStylesheetCommandHandler'],
     ],
 ];

@@ -11,5 +11,4 @@ interface SkinInterface extends \JsonSerializable
 
     public function getIdentifier(): string;
 
-    public function getDirectory(): string;
 }

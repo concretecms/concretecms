@@ -8,7 +8,7 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
-use Concrete\Core\StyleCustomizer\Compiler\PreviewRequestCompiler;
+use Concrete\Core\StyleCustomizer\Compiler\Compiler;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,8 +59,8 @@ class Preview extends BackendInterfaceController
                 $adapter = $adapterFactory->createFromTheme($theme);
                 $styleValueList = $styleValueListFactory->createFromRequestArray($theme->getThemeCustomizableStyleList(), $styles);
                 $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
-                $compiler = $this->app->make(PreviewRequestCompiler::class);
-                $result = $compiler->compile($adapter, $skin, $collection);
+                $compiler = $this->app->make(Compiler::class);
+                $result = $compiler->compileFromPreset($adapter, $skin, $collection);
                 $previewRequest->setCustomCss($result);
             }
 

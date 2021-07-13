@@ -4,7 +4,7 @@ namespace Concrete\Core\StyleCustomizer\Normalizer;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-class Variable implements VariableInterface
+class Variable implements VariableInterface, \JsonSerializable
 {
 
     /**
@@ -44,7 +44,10 @@ class Variable implements VariableInterface
         return $this->value;
     }
 
-
+    public function jsonSerialize()
+    {
+        return ['name' => $this->getName(), 'value' => $this->getValue()];
+    }
 
 
 }

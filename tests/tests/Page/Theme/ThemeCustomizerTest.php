@@ -21,13 +21,18 @@ use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\FontFamilyValue;
 use Concrete\Core\StyleCustomizer\StyleList;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Concrete\Tests\TestCase;
 use Concrete\Theme\Elemental\PageTheme;
 use Illuminate\Filesystem\Filesystem;
 use ScssPhp\ScssPhp\Compiler;
 
-class ThemeCustomizerTest extends TestCase
+class ThemeCustomizerTest extends ConcreteDatabaseTestCase
 {
+
+    protected $metadatas = [
+        'Concrete\Core\Entity\Page\Theme\CustomSkin',
+    ];
 
     public function testIsThemeCustomizable()
     {
@@ -41,7 +46,7 @@ class ThemeCustomizerTest extends TestCase
     {
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
-        $skins = $theme->getSkins();
+        $skins = $theme->getPresetSkins();
         $this->assertCount(2, $skins);
     }
 

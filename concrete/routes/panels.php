@@ -50,5 +50,6 @@ $router->all('/page/devices', 'Page\Devices::view');
 $router->all('/page/devices/preview', 'Page\Devices::preview');
 $router->all('/theme/customize/{pThemeID}/{previewPageID}', 'Theme\Customize::view');
 $router->all('/theme/customize/skin/{pThemeID}/{skinIdentifier}/{previewPageID}', 'Theme\CustomizeSkin::view');
+$router->post('/theme/customize/create_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizeSkin::create');
 $router->all('/sitemap', 'Sitemap::view');
 $router->all('/help', 'Help::view');

@@ -9,6 +9,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </div>
 
 <div class="ccm-panel-detail-form-actions">
-    <button class="float-right btn btn-success" type="button" data-panel-detail-action="submit"><?= t('Save Changes') ?></button>
+    <button class="float-right btn btn-success" type="button" onclick="ConcreteEvent.publish('SaveThemeCustomizerChanges')"><?= t('Create Skin') ?></button>
 </div>
 

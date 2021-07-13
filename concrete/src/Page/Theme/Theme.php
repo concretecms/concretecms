@@ -2,6 +2,8 @@
 namespace Concrete\Core\Page\Theme;
 
 use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
+use Concrete\Core\Entity\Permission\IpAccessControlCategory;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Filesystem\FileLocator\Record;
 use Concrete\Core\Http\ResponseAssetGroup;
@@ -9,6 +11,7 @@ use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
+use Doctrine\ORM\EntityManager;
 use Illuminate\Filesystem\Filesystem;
 use Loader;
 use Page;
@@ -23,6 +26,7 @@ use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\StyleCustomizer\Preset;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Localization;
+use Punic\Comparer;
 
 /**
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
@@ -256,12 +260,38 @@ class Theme extends ConcreteObject
      *
      * @return SkinInterface[]
      */
-    public function getSkins(): array
+    public function getPresetSkins(): array
     {
         $factory = app(SkinFactory::class);
         $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile());
         return $skins;
     }
+
+    /**
+     *
+     * @return SkinInterface[]
+     */
+    public function getCustomSkins(): array
+    {
+        $entityManager = app(EntityManager::class);
+        $skins = $entityManager->getRepository(CustomSkin::class)->findBy(['pThemeID' => $this->getThemeID()]);
+        return $skins;
+    }
+
+    /**
+     *
+     * @return SkinInterface[]
+     */
+    public function getSkins(): array
+    {
+        $allSkins = array_merge($this->getPresetSkins(), $this->getCustomSkins());
+        $cmp = new Comparer();
+        usort($allSkins, function (SkinInterface $a, SkinInterface $b) use ($cmp) {
+            $cmp->compare($a->getName(), $b->getName());
+        });
+        return $allSkins;
+    }
+
 
     /**
      * Checks the theme for a styles.xml file (which is how customizations happen).

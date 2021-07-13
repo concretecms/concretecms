@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Adapter;
 
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizerInterface;
 use Concrete\Core\StyleCustomizer\Processor\ProcessorInterface;
+use Concrete\Core\StyleCustomizer\Skin\PresetSkin;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 
 interface AdapterInterface
@@ -14,15 +16,14 @@ interface AdapterInterface
      * @param SkinInterface $skin
      * @return string
      */
-    public function getVariablesFile(SkinInterface $skin): string;
+    public function getVariablesFile(PresetSkin $skin): string;
 
     /**
-     * Returns the file in the theme to build the theme CSS from
-     *
+     * Returns the file in the theme to build the theme CSS from.
      * @param SkinInterface $skin
      * @return string
      */
-    public function getEntrypointFile(SkinInterface $skin): string;
+    public function getPresetEntryPointFile(PresetSkin $skin): string;
 
     /**
      * Returns the object to use when converting the stylesheet's variables into our own internal unified representation.

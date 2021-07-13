@@ -3,8 +3,10 @@
 namespace Concrete\Core\StyleCustomizer\Normalizer;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class NormalizedVariableCollection extends ArrayCollection
+class NormalizedVariableCollection extends ArrayCollection implements \JsonSerializable, DenormalizableInterface
 {
 
     /**
@@ -26,5 +28,16 @@ class NormalizedVariableCollection extends ArrayCollection
         return null;
     }
 
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
+    {
+        foreach ($data as $value) {
+            $this->add(new Variable($value['name'], $value['value']));
+        }
+    }
 
 }

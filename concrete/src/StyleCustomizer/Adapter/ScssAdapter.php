@@ -3,10 +3,12 @@ namespace Concrete\Core\StyleCustomizer\Adapter;
 
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizerInterface;
 use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizer;
 use Concrete\Core\StyleCustomizer\Processor\ProcessorInterface;
 use Concrete\Core\StyleCustomizer\Processor\ScssProcessor;
+use Concrete\Core\StyleCustomizer\Skin\PresetSkin;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 
 class ScssAdapter implements AdapterInterface, ApplicationAwareInterface
@@ -17,24 +19,22 @@ class ScssAdapter implements AdapterInterface, ApplicationAwareInterface
     const FILE_CUSTOMIZABLE_VARIABLES = '_customizable-variables.scss';
     const FILE_ENTRYPOINT = 'main.scss';
 
-    public function getVariablesFile(SkinInterface $skin): string
+    public function getVariablesFile(PresetSkin $skin): string
     {
-        $variablesFile = $skin->getDirectory() .
+        return $skin->getDirectory() .
             DIRECTORY_SEPARATOR .
             DIRNAME_SCSS .
             DIRECTORY_SEPARATOR .
             self::FILE_CUSTOMIZABLE_VARIABLES;
-        return $variablesFile;
     }
 
-    public function getEntrypointFile(SkinInterface $skin): string
+    public function getPresetEntryPointFile(PresetSkin $skin): string
     {
-        $variablesFile = $skin->getDirectory() .
+        return $skin->getDirectory() .
             DIRECTORY_SEPARATOR .
             DIRNAME_SCSS .
             DIRECTORY_SEPARATOR .
             self::FILE_ENTRYPOINT;
-        return $variablesFile;
     }
 
     public function getVariableNormalizer(): NormalizerInterface

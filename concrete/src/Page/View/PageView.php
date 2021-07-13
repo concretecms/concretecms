@@ -261,13 +261,13 @@ class PageView extends View
             }
         } else {
             $site = $this->c->getSite();
-            $path = $this->themeObject->getSkinDirectoryRecord()->getUrl();
             $skin = SkinInterface::SKIN_DEFAULT;
             if ($site) {
                 if ($site->getThemeSkinIdentifier()) {
                     $skin = $site->getThemeSkinIdentifier();
                 }
             }
+            $path = $this->themeObject->getSkinDirectoryRecord()->getUrl();
             $stylesheet = $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
         }
         if ($customStyles) {
