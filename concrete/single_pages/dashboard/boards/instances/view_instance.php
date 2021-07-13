@@ -14,7 +14,9 @@ $renderer->render($instance);
             <li class="ccm-logo float-left"><span><?= $ui->getToolbarLogoSRC() ?></span></li>
             <li class="float-left">
                 <a href="<?=URL::to('/dashboard/boards/instances', 'view', $instance->getBoard()->getBoardID())?>">
-                    <i class="fa fa-arrow-left"></i></span>
+                    <svg>
+                        <use xlink:href="#icon-arrow-left"/>
+                    </svg>
                 </a>
             </li>
         </ul>

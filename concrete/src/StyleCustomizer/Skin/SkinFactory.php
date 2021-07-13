@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\StyleCustomizer\Skin;
 
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Utility\Service\Text;
 use Illuminate\Filesystem\Filesystem;
 
@@ -24,10 +25,10 @@ class SkinFactory
         $this->textService = $textService;
     }
 
-    public function createFromDirectory(string $path): ?SkinInterface
+    public function createFromDirectory(string $path, Theme $theme): ?SkinInterface
     {
         $directoryName = basename($path);
-        $skin = new PresetSkin($path, $directoryName, $this->textService->unhandle($directoryName));
+        $skin = new PresetSkin($path, $directoryName, $this->textService->unhandle($directoryName), $theme);
         return $skin;
     }
 
@@ -36,11 +37,11 @@ class SkinFactory
      *
      * @param string $path
      */
-    public function createMultipleFromDirectory(string $path): array
+    public function createMultipleFromDirectory(string $path, Theme $theme): array
     {
         $skins = [];
         foreach($this->filesystem->directories($path) as $skin) {
-            $skin = $this->createFromDirectory($skin);
+            $skin = $this->createFromDirectory($skin, $theme);
             if ($skin) {
                 $skins[] = $skin;
             }

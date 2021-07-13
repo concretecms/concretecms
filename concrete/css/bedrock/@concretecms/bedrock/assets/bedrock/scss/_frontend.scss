@@ -1,0 +1,9 @@
+// Import Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Import Font Awesome
+@import '@fortawesome/fontawesome-free/scss/variables';
+
+// Import Theme Foundation  items
+@import 'utilities';
+@import 'theme-grid';

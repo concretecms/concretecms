@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php
         foreach ($presetSkins as $skin) { ?>
             <li>
-                <a href="#" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/theme/customize/skin', $theme->getThemeID(), $skin->getIdentifier(), $previewPage->getCollectionID()) ?>"
+                <a href="#" <?php if ($activeSkin == $skin->getIdentifier()) { ?>class="ccm-panel-menu-parent-item-active"<?php } ?> data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/theme/customize/skin', $theme->getThemeID(), $skin->getIdentifier(), $previewPage->getCollectionID()) ?>"
                    <?php if ($previewPage) {?>
                         data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/theme/preview', $theme->getThemeID(), $skin->getIdentifier(), $previewPage->getCollectionID())?>"
                    <?php } ?>
@@ -31,7 +31,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?php
             foreach ($customSkins as $skin) { ?>
                 <li>
-                    <a href="#" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/theme/customize/skin', $theme->getThemeID(), $skin->getIdentifier(), $previewPage->getCollectionID()) ?>"
+                    <a href="#" <?php if ($activeSkin == $skin->getIdentifier()) { ?>class="ccm-panel-menu-parent-item-active"<?php } ?> data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/theme/customize/skin', $theme->getThemeID(), $skin->getIdentifier(), $previewPage->getCollectionID()) ?>"
                         <?php if ($previewPage) {?>
                             data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/theme/preview', $theme->getThemeID(), $skin->getIdentifier(), $previewPage->getCollectionID())?>"
                         <?php } ?>

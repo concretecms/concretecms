@@ -1,0 +1,10 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import '../../cms/scss/variables';
+@import 'plugins/inline';
+
+// Core CKEditor overrides
+/* stylelint-disable */
+.cke_panel {
+  z-index: $index-level-editor-toolbar-dropdown !important;
+}

@@ -1,0 +1,17 @@
+.ccm-page-panel-locations {
+  form {
+    margin-left: 20px !important;
+  }
+
+  table {
+    td,
+    th {
+      padding: 10px;
+
+      &:first-child {
+        padding-left: 0;
+      }
+    }
+  }
+
+}

@@ -2,6 +2,9 @@
 
 namespace Concrete\Core\StyleCustomizer\Skin;
 
+use Concrete\Core\Page\Theme\Theme;
+use HtmlObject\Element;
+
 interface SkinInterface extends \JsonSerializable
 {
 
@@ -11,4 +14,7 @@ interface SkinInterface extends \JsonSerializable
 
     public function getIdentifier(): string;
 
+    public function getTheme(): Theme;
+
+    public function getStylesheet(): Element;
 }

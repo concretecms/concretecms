@@ -17,7 +17,9 @@ $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeT
             <li class="ccm-logo float-left"><span><?= $ui->getToolbarLogoSRC() ?></span></li>
             <li class="float-left">
                 <a href="<?= URL::to('/dashboard/pages/themes', 'view') ?>">
-                    <i class="fa fa-arrow-left"></i></span>
+                    <svg>
+                        <use xlink:href="#icon-arrow-left"/>
+                    </svg>
                 </a>
             </li>
             <li class="float-left d-none d-md-block">

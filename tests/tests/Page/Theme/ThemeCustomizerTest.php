@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Page\Theme;
 
 use Concrete\Core\Filesystem\FileLocator;
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Adapter\ScssAdapter;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
@@ -141,7 +142,8 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $styleValueListFactory = new StyleValueListFactory();
         $defaultSkin = $theme->getThemeDefaultSkin();
         $adapter = $adapterFactory->createFromTheme($theme);
-        $variableCollectionFactory = new NormalizedVariableCollectionFactory();
+        $serializer = app(JsonSerializer::class);
+        $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
         $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $defaultSkin);
         $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
         $this->assertInstanceOf(StyleValueList::class, $valueList);
@@ -194,7 +196,8 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $styleValueListFactory = new StyleValueListFactory();
         $defaultSkin = $theme->getThemeDefaultSkin();
         $adapter = $adapterFactory->createFromTheme($theme);
-        $variableCollectionFactory = new NormalizedVariableCollectionFactory();
+        $serializer = app(JsonSerializer::class);
+        $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
         $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $defaultSkin);
 
         $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
@@ -204,7 +207,8 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         // transform that PHP array data into stylelist data using the previous test's methods. So now
         // we need to go from that styleList back to a variable collection, which we will then pass
         // to our scss compiler.
-        $variableCollectionFactory = new NormalizedVariableCollectionFactory();
+        $serializer = app(JsonSerializer::class);
+        $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
         $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
         $this->assertCount(4, $variableCollection);

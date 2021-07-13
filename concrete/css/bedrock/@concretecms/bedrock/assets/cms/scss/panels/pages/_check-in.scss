@@ -1,0 +1,69 @@
+/**
+ * Check-in Side Panel
+ */
+div#ccm-panel-check-in {
+  h5 {
+    margin-bottom: 0;
+  }
+
+  .ccm-panel-content-inner {
+    padding-left: 20px;
+    padding-right: 20px; /* this panel needs a little more content area because if its big buttons */
+  }
+
+  .ccm-panel-check-in-comments {
+    padding: 10px 0 25px;
+  }
+
+  textarea {
+    height: 66px;
+    width: 100%;
+  }
+
+  .ccm-panel-check-in-publish {
+    margin-bottom: 30px;
+  }
+}
+
+#ccm-check-in-schedule-wrapper {
+  .form-group {
+    margin-top: 0.75rem;
+    padding-left: 0;
+  }
+
+  span.ccm-input-date-wrapper {
+    display: block;
+    margin-bottom: 8px;
+    width: 100%;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  span.ccm-input-time-wrapper select {
+    width: 66px;
+  }
+
+  span.ccm-input-date-wrapper input,
+  span.ccm-input-time-wrapper select {
+    border-radius: 2px;
+    font-size: 0.875rem;
+    /**
+    * this is the same styling as .form-control-sm
+    * but there was no way to add that class to the date time inputs
+    * without modifying the function generating them
+    */
+    height: calc(1.5em + 0.5rem + 4px);
+    line-height: 1.5;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .help-block {
+    font-size: 0.75rem;
+  }
+}
+
+div.light-panel-calendar {
+  width: 13.4rem;
+}

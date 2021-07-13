@@ -39,6 +39,9 @@ class ScssProcessor implements ProcessorInterface
             $variables[$variable->getName()] = ValueConverter::parseValue($variable->getValue());
         }
         $this->compiler->replaceVariables($variables);
+        $this->compiler->addImportPath(
+            DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_CSS . DIRECTORY_SEPARATOR . 'bedrock'
+        );
         $css = $this->compiler->compileString($scss)->getCss();
         return $css;
     }

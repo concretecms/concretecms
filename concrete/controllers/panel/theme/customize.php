@@ -5,6 +5,7 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 
 class Customize extends BackendInterfaceController
 {
@@ -30,6 +31,14 @@ class Customize extends BackendInterfaceController
             if ($checker->canViewPage()) {
                 $previewPage = Page::getByID($previewPageID);
                 $this->set('previewPage', $previewPage);
+                $activeSkin = SkinInterface::SKIN_DEFAULT;
+                $site = $previewPage->getSite();
+                if ($site) {
+                    if ($site->getThemeSkinIdentifier()) {
+                        $activeSkin = $site->getThemeSkinIdentifier();
+                    }
+                }
+                $this->set('activeSkin', $activeSkin);
             }
         }
     }

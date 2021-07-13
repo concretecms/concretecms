@@ -1,8 +1,10 @@
 <?php
 namespace Concrete\Core\Entity\Page\Theme;
 
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Doctrine\ORM\Mapping as ORM;
+use HtmlObject\Element;
 
 /**
  * @ORM\Entity
@@ -224,5 +226,17 @@ class CustomSkin implements \JsonSerializable, SkinInterface
         $this->presetSkinStartingPoint = $presetSkinStartingPoint;
     }
 
+    public function getTheme(): Theme
+    {
+        return Theme::getByID($this->getThemeID());
+    }
+
+    public function getStylesheet(): Element
+    {
+        $stylesheet = REL_DIR_FILES_UPLOADED_STANDARD . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS . '/' . $this->getIdentifier() . '.css';
+        $element = new Element('link', null);
+        $element->rel('stylesheet')->type('text/css')->href($stylesheet);
+        return $element;
+    }
 
 }

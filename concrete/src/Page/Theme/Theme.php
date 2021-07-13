@@ -263,7 +263,7 @@ class Theme extends ConcreteObject
     public function getPresetSkins(): array
     {
         $factory = app(SkinFactory::class);
-        $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile());
+        $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile(), $this);
         return $skins;
     }
 

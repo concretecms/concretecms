@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Compiler;
 
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterInterface;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
@@ -16,9 +17,18 @@ class Compiler
      * @param NormalizedVariableCollection $collection
      * @return string
      */
-    public function compileFromPreset(AdapterInterface $adapter, PresetSkin $presetSkin, NormalizedVariableCollection $collection): string
+    public function compileFromSkin(AdapterInterface $adapter, SkinInterface $skin, NormalizedVariableCollection $collection): string
     {
         $processor = $adapter->getProcessor();
+        if ($skin instanceof PresetSkin) {
+            $presetSkin = $skin;
+        } else {
+            /**
+             * @var $skin CustomSkin
+             */
+            $theme = $skin->getTheme();
+            $presetSkin = $theme->getSkinByIdentifier($skin->getPresetSkinStartingPoint());
+        }
         $file = $adapter->getPresetEntryPointFile($presetSkin);
         $css = $processor->compileFileToString($file, $collection);
         return $css;

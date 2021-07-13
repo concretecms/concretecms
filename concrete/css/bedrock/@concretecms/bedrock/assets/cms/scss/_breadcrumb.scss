@@ -1,0 +1,13 @@
+div.ccm-ui {
+  .breadcrumb {
+    .breadcrumb-item {
+      &::before {
+        font-weight: normal;
+      }
+
+      &.active {
+        font-weight: 600;
+      }
+    }
+  }
+}

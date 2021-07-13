@@ -22,6 +22,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <theme-customizer
             preview-action="<?=URL::to('/ccm/system/panels/details/theme/do_preview', $pThemeID, $skinIdentifier, $previewPage->getCollectionID())?>"
             create-new-action="<?=URL::to('/ccm/system/panels/theme/customize/create_skin', $pThemeID, $skinIdentifier)?>"
+            save-action="<?=URL::to('/ccm/system/panels/theme/customize/save_skin', $pThemeID, $skinIdentifier)?>"
+            delete-action="<?=URL::to('/ccm/system/panels/theme/customize/delete_skin', $pThemeID, $skinIdentifier)?>"
             :style-list='<?=json_encode($styles)?>'>
 
     </theme-customizer>

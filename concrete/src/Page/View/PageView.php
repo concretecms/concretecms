@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\View;
 
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Support\Facade\Application;
@@ -253,31 +254,30 @@ class PageView extends View
         if (isset($this->customPreviewRequest) && $this->customPreviewRequest instanceof SkinPreviewRequest) {
             $request = $this->customPreviewRequest;
             $theme = $request->getTheme();
-            $skin = $request->getSkin()->getIdentifier();
-            $path = $theme->getSkinDirectoryRecord()->getUrl();
-            $stylesheet = $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
+            $skinIdentifier = $request->getSkin()->getIdentifier();
+            $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+            $stylesheet = $skin->getStylesheet();
             if ($this->customPreviewRequest->getCustomCss() !== null) {
                 $customStyles = $this->customPreviewRequest->getCustomCss();
             }
         } else {
             $site = $this->c->getSite();
-            $skin = SkinInterface::SKIN_DEFAULT;
+            $skinIdentifier = SkinInterface::SKIN_DEFAULT;
             if ($site) {
                 if ($site->getThemeSkinIdentifier()) {
-                    $skin = $site->getThemeSkinIdentifier();
+                    $skinIdentifier = $site->getThemeSkinIdentifier();
                 }
             }
-            $path = $this->themeObject->getSkinDirectoryRecord()->getUrl();
-            $stylesheet = $path . '/' . $skin . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
+            $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+            $stylesheet = $skin->getStylesheet();
         }
         if ($customStyles) {
             $styles = new Element('style', $customStyles);
             $styles->type('text/css')->href($stylesheet);
+            return $styles;
         } else {
-            $styles = new Element('link', null);
-            $styles->rel('stylesheet')->type('text/css')->href($stylesheet);
+            return $stylesheet;
         }
-        return $styles;
     }
 
     /**

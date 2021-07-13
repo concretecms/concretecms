@@ -68,7 +68,7 @@ class GenerateCustomSkinStylesheetCommandHandler
             $skin->getVariableCollection()
         );
         $collection = $this->variableCollectionFactory->createFromStyleValueList($styleValueList);
-        $result = $this->compiler->compileFromPreset($adapter, $presetSkin, $collection);
+        $result = $this->compiler->compileFromSkin($adapter, $presetSkin, $collection);
         $this->writer->writeStyles($skin, $result);
     }
 

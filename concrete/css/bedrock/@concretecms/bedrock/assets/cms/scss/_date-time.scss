@@ -1,0 +1,45 @@
+
+/* date controls */
+.ccm-input-time-wrapper {
+  select {
+    margin-right: 4px !important;
+    width: auto;
+
+    &:last-child {
+      margin-right: 0 !important;
+    }
+  }
+
+  .separator {
+    margin-right: 4px;
+  }
+}
+
+.ccm-input-date { margin-right: 4px !important;
+  width: auto;}
+
+div.popover {
+  .ccm-input-date-wrapper {
+    margin-bottom: 10px;
+  }
+
+  .ccm-input-time-wrapper,
+  .ccm-input-date-wrapper {
+    display: block;
+  }
+}
+
+input.ccm-activate-date-time {
+  margin-right: 8px !important;
+}
+
+div.ccm-date-time-duration-wrapper {
+  position: relative;
+
+  a.ccm-date-time-duration-delete {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2000;
+  }
+}

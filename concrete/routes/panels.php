@@ -51,5 +51,7 @@ $router->all('/page/devices/preview', 'Page\Devices::preview');
 $router->all('/theme/customize/{pThemeID}/{previewPageID}', 'Theme\Customize::view');
 $router->all('/theme/customize/skin/{pThemeID}/{skinIdentifier}/{previewPageID}', 'Theme\CustomizeSkin::view');
 $router->post('/theme/customize/create_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizeSkin::create');
+$router->post('/theme/customize/save_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizeSkin::save');
+$router->post('/theme/customize/delete_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizeSkin::delete');
 $router->all('/sitemap', 'Sitemap::view');
 $router->all('/help', 'Help::view');

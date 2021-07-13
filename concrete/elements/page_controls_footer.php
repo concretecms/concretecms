@@ -52,7 +52,10 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                     ?>
                     <li class="float-left">
                         <a href="<?php echo URL::to('/dashboard/pages/types/output', $c->getPageTypeID()); ?>">
-                            <i class="fa fa-arrow-left"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?php echo tc('toolbar', 'Exit Edit Defaults'); ?></span>
+                            <svg>
+                                <use xlink:href="#icon-arrow-left"/>
+                            </svg>
+                            <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-edit-mode"><?php echo tc('toolbar', 'Exit Edit Defaults'); ?></span>
                          </a>
                      </li>
                      <?php

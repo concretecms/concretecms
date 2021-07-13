@@ -36,4 +36,13 @@ class Writer
         $this->filesystem->put($file, $styles);
     }
 
+    public function clearStyles(CustomSkin $skin)
+    {
+        $directory = DIR_FILES_UPLOADED_STANDARD . DIRECTORY_SEPARATOR . DIRNAME_STYLE_CUSTOMIZER_SKINS;
+        $file = $directory . DIRECTORY_SEPARATOR . $skin->getIdentifier() . '.css';
+        if ($this->filesystem->isFile($file)) {
+            $this->filesystem->delete($file);
+        }
+    }
+
 }
