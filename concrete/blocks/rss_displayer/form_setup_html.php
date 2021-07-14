@@ -11,7 +11,7 @@
     <?php echo $form->label("title", t('Feed Title')); ?>
     <div class="input-group">
     	<input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($rssObj->title) ?>"/>
-		<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+		<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 	</div>
 </div>
 <div class="form-group">
@@ -50,18 +50,17 @@ $(document).ready(function() {
     <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>
 </div>
 <div class="form-group">
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" value="1" name="showSummary"<?= ((bool) $rssObj->showSummary ? ' checked' : '') ?> />
+    <div class="form-check">
+        <input type="checkbox" value="1" id="showSummary" class="form-check-input" name="showSummary"<?= ((bool) $rssObj->showSummary ? ' checked' : '') ?> />
+        <label for="showSummary" class="form-check-label">
             <?= t('Include Summary') ?>
         </label>
     </div>
 </div>
 <div class="form-group">
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" value="1"
-               name="launchInNewWindow"<?= ((bool) $rssObj->launchInNewWindow ? ' checked' : '') ?> />
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" value="1" name="launchInNewWindow"<?= ((bool) $rssObj->launchInNewWindow ? ' checked' : '') ?> />
+        <label for="launchInNewWindow" class="form-check-label">
             <?= t('Open links in a new window') ?>
         </label>
     </div>

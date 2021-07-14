@@ -15,10 +15,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div class="form-group">
         <?= $form->label('', t('General options'))?>
         <div class="form-check">
-            <div class="checkbox">
-                <?= $form->checkbox('authentication_type_enabled', '1', $authenticationType->isEnabled()) ?>
-                <label class="form-check-label" for="authentication_type_enabled"><?= t('Enable authentication type') ?></label>
-            </div>
+            <?= $form->checkbox('authentication_type_enabled', '1', $authenticationType->isEnabled()) ?>
+            <label class="form-check-label" for="authentication_type_enabled"><?= t('Enable authentication type') ?></label>
         </div>
     </div>
     <div id="authentication_type_form" class="mt-3<?= $authenticationType->isEnabled() ? '' : ' d-none' ?>">
@@ -26,7 +24,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-right">
+            <div class="float-end">
                 <a class="btn btn-secondary pull-left" href="<?= $controller->action('') ?>"><?= t('Cancel') ?></a>
                 <button type="submit" class="btn btn-primary"><?= t('Save') ?></button>
             </div>

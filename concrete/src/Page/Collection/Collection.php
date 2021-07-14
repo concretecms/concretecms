@@ -863,8 +863,8 @@ class Collection extends ConcreteObject implements TrackableInterface
                     $qb4 = $db->createQueryBuilder();
                     $rs1 = $qb4->select('bID', 'issID', 'arHandle')
                         ->from('CollectionVersionBlockStyles')
-                        ->where('cID', ':cID')
-                        ->andWhere('cvID', ':cvID')
+                        ->where('cID = :cID')
+                        ->andWhere('cvID = :cvID')
                         ->andWhere('issID > 0')
                         ->setParameter('cID', $s->getCollectionID())
                         ->setParameter('cvID', $s->getVersionID())

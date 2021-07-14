@@ -1,5 +1,3 @@
-import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
-
 
 ;(function(global, $) {
     'use strict'
