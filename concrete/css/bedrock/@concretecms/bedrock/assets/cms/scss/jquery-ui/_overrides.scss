@@ -94,7 +94,8 @@ html.ccm-toolbar-visible {
         width: auto;
 
         &:not(:disabled):not(.disabled) {
-          @include hover-focus() {
+          &:hover,
+          &:focus {
             color: $gray-600;
             opacity: 1;
 

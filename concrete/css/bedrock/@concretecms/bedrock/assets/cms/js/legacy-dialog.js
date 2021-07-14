@@ -1,5 +1,5 @@
 /* eslint-disable no-new, no-unused-vars, camelcase, no-eval, eqeqeq */
-/* global NProgress, ccmi18n, ConcreteMenuManager, ConcreteAjaxRequest, ConcreteAlert */
+/* global NProgress, ccmi18n, ConcreteMenuManager, ConcreteAjaxRequest, ConcreteAlert, bootstrap */
 
 ;(function(global, $) {
     'use strict'
@@ -65,7 +65,7 @@
         /*
          * This keeps our buttons left and right, but we're not sure we want that, so let's not do that yet.
          */
-        // $ccmButtons.find('[data-dialog-action=cancel]').addClass('mr-auto')
+        // $ccmButtons.find('[data-dialog-action=cancel]').addClass('me-auto')
         $ccmButtons
             .children()
             .appendTo($dialogParent.find('.ui-dialog-buttonpane').empty())
@@ -326,7 +326,10 @@
             $dialog.dialog('close')
         })
 
-        $dialog.find('.launch-tooltip').tooltip({ container: '#ccm-tooltip-holder' })
+        const tooltipTriggerList = [].slice.call($dialog.find('.launch-tooltip'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, { container: '#ccm-tooltip-holder' })
+        })
 
         // help handling
         if ($dialog.find('.dialog-help').length > 0) {

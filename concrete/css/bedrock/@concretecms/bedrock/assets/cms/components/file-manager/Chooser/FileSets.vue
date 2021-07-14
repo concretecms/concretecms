@@ -2,10 +2,12 @@
     <div>
         <chooser-header :resultsFormFactor.sync="formFactor" :title="title"/>
 
-        <div class="form-inline">
-            <div class="form-group ml-auto">
-                <label for="fileSetSelector" class="mr-2">File Set</label>
-                <select id="fileSetSelector" class="form-control file-set-menu" v-model="activeSet">
+        <div class="form-group row row-cols-auto g-0 align-items-center justify-content-end">
+            <div class="col-auto">
+                <label for="fileSetSelector" class="me-2">File Set</label>
+            </div>
+            <div class="col-auto">
+                <select id="fileSetSelector" class="form-select file-set-menu" v-model="activeSet">
                     <option value="" selected>Select a Set</option>
                     <option v-for="set in sets" :key="set.id" :value="set.id">
                         {{set.name}}

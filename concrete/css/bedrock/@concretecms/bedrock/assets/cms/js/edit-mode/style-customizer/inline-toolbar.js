@@ -1,5 +1,5 @@
 /* eslint-disable no-new, no-unused-vars, camelcase, no-irregular-whitespace, new-cap */
-
+/* global bootstrap */
 function ConcreteInlineStyleCustomizer($element, options) {
     var my = this
     options = $.extend({
@@ -30,7 +30,10 @@ ConcreteInlineStyleCustomizer.prototype = {
 
     setupForm: function() {
         var my = this
-        my.$element.find('.launch-tooltip').tooltip()
+        const tooltipTriggerList = [].slice.call(my.$element.find('.launch-tooltip'))
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
         my.$element.concreteAjaxForm({
             success: function(resp) {
                 my.handleResponse(resp)

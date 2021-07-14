@@ -96,7 +96,7 @@ header {
           li {
             &:hover {
               a {
-                color: theme-color('secondary');
+                color: $secondary;
               }
             }
             a {

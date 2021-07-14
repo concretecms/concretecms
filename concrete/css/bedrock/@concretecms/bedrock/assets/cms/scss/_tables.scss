@@ -58,7 +58,7 @@ div.ccm-ui {
     th,
     td {
       border-top: $table-border-width solid $table-border-color;
-      padding: $table-cell-padding;
+      padding: $table-cell-padding-y $table-cell-padding-x;
     }
 
     thead th {

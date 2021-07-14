@@ -3,17 +3,15 @@
         <chooser-header :resultsFormFactor.sync="formFactor" :title="title"/>
 
         <div class="row mb-3">
-            <div class="col-md-4 ml-auto">
+            <div class="col-md-4 ms-auto">
                 <form @submit.prevent="search">
                     <div class="ccm-header-search-form-input input-group">
-                        <input type="text" class="form-control border-right-0" placeholder="Search" autocomplete="false" v-model="searchText">
-                        <div class="input-group-append">
-                            <button type="submit" class="input-group-icon">
-                                <svg width="16" height="16">
-                                    <use xlink:href="#icon-search"/>
-                                </svg>
-                            </button>
-                        </div>
+                        <input type="text" class="form-control border-end-0" placeholder="Search" autocomplete="false" v-model="searchText">
+                        <button type="submit" class="input-group-icon">
+                            <svg width="16" height="16">
+                                <use xlink:href="#icon-search"/>
+                            </svg>
+                        </button>
                     </div>
                 </form>
             </div>

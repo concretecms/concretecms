@@ -2,12 +2,12 @@
     <div>
         <svg v-if="isLoading" class="ccm-loader-dots"><use xlink:href="#icon-loader-circles" /></svg>
         <div v-if="!isLoading">
-            <div class="ccm-image-cell-grid container-fluid pl-0" v-if="resultsFormFactor === 'grid'">
+            <div class="ccm-image-cell-grid container-fluid ps-0" v-if="resultsFormFactor === 'grid'">
                 <div v-for="row in rows" class="row text-center" :key="row.index">
                     <div class="col-md-3" v-for="file in row" :key="(file.fID || file.treeNodeID) + 'grid'">
                         <div class="ccm-image-cell" @click="onItemClick(file)">
-                            <label :for="'file-' + (file.fID || file.treeNodeID)"><span v-html="file.resultsThumbnailImg"></span></label>
-                            <div class="ccm-image-cell-title">
+                            <label class="form-label" :for="'file-' + (file.fID || file.treeNodeID)"><span v-html="file.resultsThumbnailImg"></span></label>
+                            <div class="ccm-image-cell-title pt-1">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" v-if="multipleSelection && !file.isFolder" v-model="selectedFiles" :id="'file-' + file.fID" :value="file.fID">
                                     <input class="form-check-input" type="radio" v-if="!multipleSelection && !file.isFolder" v-model="selectedFiles" :id="'file-' + file.fID" :value="file.fID">

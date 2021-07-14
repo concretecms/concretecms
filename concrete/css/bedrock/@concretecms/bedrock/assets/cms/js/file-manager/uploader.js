@@ -107,6 +107,7 @@
                                     .append($checkbox)
 
                                 let $label = $('<label/>')
+                                    .addClass('form-label')
                                     .attr('for', checkboxId)
                                     .html(file.thumbnail)
 
@@ -115,6 +116,7 @@
                                     .append($label)
 
                                 $label = $('<label/>')
+                                    .addClass('form-label')
                                     .attr('for', checkboxId)
                                     .html(file.basename)
 
@@ -217,7 +219,7 @@
                                 .addClass('nav-item')
 
                             const $a = $('<a/>')
-                                .attr('data-toggle', 'tab')
+                                .attr('data-bs-toggle', 'tab')
                                 .attr('href', '#' + tab.id)
                                 .attr('aria-controls', tab.id)
                                 .attr('aria-selected', false)
@@ -396,6 +398,7 @@
 
                         // noinspection JSUnresolvedVariable
                         const $selectDirectoryLabel = $('<label/>')
+                            .addClass('form-label')
                             .attr('for', selectDirectoryId)
                             .html(ccmi18n_fileuploader.uploadFilesTo)
 
@@ -408,18 +411,14 @@
                             .attr('data-live-search', 'true')
                             .attr('id', selectDirectoryId)
 
-                        const $selectDirectoryInputGroupPrepend = $('<div/>')
-                            .addClass('input-group-prepend')
-
                         // noinspection JSUnresolvedVariable
                         const $a = $('<a/>')
                             .attr('href', 'javascript:void(0);')
                             .addClass('btn btn-outline-secondary ccm-file-uploader-create-new-directory-button')
                             .html(ccmi18n_fileuploader.createNewDirectoryButton)
 
-                        $selectDirectoryInputGroupPrepend.append($a)
                         $selectDirectoryInputGroup.append($select)
-                        $selectDirectoryInputGroup.append($selectDirectoryInputGroupPrepend)
+                        $selectDirectoryInputGroup.append($a)
                         $selectDirectoryFormGroup.append($selectDirectoryLabel)
                         $selectDirectoryFormGroup.append($selectDirectoryInputGroup)
 
@@ -436,6 +435,7 @@
                         const inputId = 'input-' + fileUploader.getUniqueId()
 
                         const $label = $('<label/>')
+                            .addClass('form-label')
                             .attr('for', inputId)
                             .html(ccmi18n_fileuploader.directoryName)
 
@@ -1274,7 +1274,7 @@
                                 .find('.ui-dialog-buttonset button')
                                 .eq(0)
                                 .attr('class', '')
-                                .addClass('btn btn-secondary float-left')
+                                .addClass('btn btn-secondary float-start')
 
                             $(this)
                                 .closest('.ui-dialog')

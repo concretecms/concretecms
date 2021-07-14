@@ -49,7 +49,7 @@ if (isset($activate_confirm)) {
                         </div>
                     </td>
                     <td width="100%" style="vertical-align:middle;">
-                        <div class="btn-group float-right">
+                        <div class="btn-group float-end">
                         <?php
                         if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>
                             <button disabled class="btn btn-secondary btn-sm"><?=t('Activate')?></button>

@@ -1,5 +1,5 @@
 /* eslint-disable no-new, no-unused-vars, camelcase, eqeqeq */
-/* global _, ccmi18n, Concrete, ConcreteEvent, CCM_CID */
+/* global _, ccmi18n, Concrete, ConcreteEvent, CCM_CID, bootstrap */
 
 var html = $('html')
 var baseClasses = $('div.ccm-page').attr('class')
@@ -303,14 +303,20 @@ function ConcretePanel(options) {
             }
             $content.load(url, data, function () {
                 $.fn.dialog.hideLoader()
-                $content.find('.launch-tooltip').tooltip({ container: '#ccm-tooltip-holder' })
+                const tooltipTriggerList = [].slice.call($content.find('.launch-tooltip'))
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl, { container: '#ccm-tooltip-holder' })
+                })
                 obj.loadPanelDetailActions($content)
 
                 _.defer(complete_function)
             })
         } else {
             $.fn.dialog.hideLoader()
-            $content.find('.launch-tooltip').tooltip({ container: '#ccm-tooltip-holder' })
+            const tooltipTriggerList = [].slice.call($content.find('.launch-tooltip'))
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, { container: '#ccm-tooltip-holder' })
+            })
             obj.loadPanelDetailActions($content)
 
             _.defer(complete_function)
@@ -351,7 +357,10 @@ function ConcretePanel(options) {
     this.setupPanelDetails = function () {
         var $panel = $('#' + this.getDOMID())
         var obj = this
-        $panel.find('.launch-tooltip').tooltip({ container: '#ccm-tooltip-holder' })
+        const tooltipTriggerList = [].slice.call($panel.find('.launch-tooltip'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, { container: '#ccm-tooltip-holder' })
+        })
         $panel.find('[data-panel-menu=accordion]').each(function () {
             var $accordion = $(this)
             var $title = $(this).find('>nav>span')

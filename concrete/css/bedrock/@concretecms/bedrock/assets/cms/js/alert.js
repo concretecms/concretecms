@@ -62,7 +62,7 @@ class ConcreteAlert {
                 $btnPane.addClass('ccm-ui').html('')
                 $btnPane.append(`
                     <button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary">${ccmi18n.cancel}</button>
-                    <button data-dialog-action="submit-confirmation-dialog" class="btn ${btnClass} float-right">${btnText}</button></div>
+                    <button data-dialog-action="submit-confirmation-dialog" class="btn ${btnClass} float-end">${btnText}</button></div>
                 `)
             }
         })

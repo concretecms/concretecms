@@ -72,10 +72,15 @@
 // Forms
 @import './forms';
 
-// Selectize
-@import 'selectize-bootstrap4-theme/scss/selectize.bootstrap4';
 
-@import './selectize';
+// Bs5 box-shadow mixin needs to be imported again
+// Otherwise we will get a SassError due a mixin names conflict
+// Previously wasn't throwing the error because Selectize includes the BS mixins
+@import '~bootstrap/scss/mixins';
+
+//TODO: Check Selectize replacement
+//@import '~selectize-bootstrap4-theme/scss/selectize.bootstrap4';
+//@import './selectize';
 
 // Miscellaneous components
 @import './vue';

@@ -31,7 +31,7 @@ section#ccm-panel-page-versions {
     th,
     td {
       background-color: $panel-background-color-accent;
-      padding: $table-cell-padding;
+      padding: $table-cell-padding-y $table-cell-padding-x;
       vertical-align: top;
     }
 
@@ -44,11 +44,11 @@ section#ccm-panel-page-versions {
 
       div.ccm-panel-page-versions-actions {
         position: absolute;
-        right: $table-cell-padding;
-        top: $table-cell-padding / 2;
+        right: $table-cell-padding-x;
+        top: $table-cell-padding-y / 2;
 
         a {
-          margin-left: $table-cell-padding;
+          margin-left: $table-cell-padding-x;
         }
       }
     }

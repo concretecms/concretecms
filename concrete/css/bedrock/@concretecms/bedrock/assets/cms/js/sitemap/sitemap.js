@@ -43,7 +43,7 @@
     ConcreteSitemap.prototype = {
 
         sitemapTemplate: '<div class="ccm-sitemap-wrapper"><div class="ccm-sitemap-tree-selector-wrapper"></div><div class="ccm-sitemap-tree"></div></div>',
-        localesWrapperTemplate: '<select class="form-control" data-select="site-trees"></select>',
+        localesWrapperTemplate: '<select class="form-select form-control" data-select="site-trees"></select>',
 
         getTree: function() {
             var my = this

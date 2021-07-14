@@ -17,7 +17,8 @@ div.ccm-ui {
       transition: color 0.1s ease-in-out;
 
       &:not(:disabled):not(.disabled) {
-        @include hover-focus() {
+        &:hover,
+        &:focus {
           color: $gray-600;
           opacity: 1;
 

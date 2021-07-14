@@ -17,6 +17,8 @@
   }
 
   .form-group {
+    margin-bottom: $form-group-margin-bottom;
+
     > label {
       color: $gray-700;
       font-weight: 600;
@@ -30,6 +32,9 @@
 
   }
 
+  .form-check-label {
+    margin-bottom: 0;
+  }
 
 }
 
@@ -40,7 +45,7 @@
   }
 }
 
-.input-group-append > .input-group-icon {
+.input-group > .input-group-icon {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }

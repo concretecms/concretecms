@@ -5,10 +5,12 @@
                         @breadcrumbItemClick="activeFolder = $event.folderId"
                         :title="title"/>
 
-        <div class="form-inline">
-            <div class="form-group ml-auto">
-                <label for="searchPresets" class="mr-2">Search Presets</label>
-                <select id="searchPresets" class="form-control search-presets-menu" v-model="activeSearchPreset">
+        <div class="form-group row row-cols-auto g-0 align-items-center justify-content-end">
+            <div class="col-auto">
+                <label for="searchPresets" class="me-2">Search Presets</label>
+            </div>
+            <div class="col-auto">
+                <select id="searchPresets" class="form-select search-presets-menu" v-model="activeSearchPreset">
                     <option value="" selected>Select a Preset</option>
                     <option v-for="searchPreset in searchPresets" :key="searchPreset.id" :value="searchPreset.id">
                         {{searchPreset.presetName}}

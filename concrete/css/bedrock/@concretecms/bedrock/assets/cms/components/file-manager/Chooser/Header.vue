@@ -3,7 +3,7 @@
         <div class="mb-3 col-sm-12">
             <header>
                 <button type="button" @click="toggleFormFactor" v-if="showFormFactorSelector"
-                        class="btn btn-sm float-right btn-secondary">
+                        class="btn btn-sm float-end btn-secondary">
                     <i v-if="resultsFormFactor === 'grid'" class="fas fa-th"></i>
                     <i v-if="resultsFormFactor === 'list'" class="fas fa-list"></i>
                 </button>

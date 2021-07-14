@@ -20,7 +20,7 @@
 
         <div class="tab-content" id="galleryBlockContent">
             <div v-show="activeTab === 'image'"  id="galleryImages">
-                <div class="text-right mt-4">
+                <div class="text-end mt-4">
                     <icon-button icon="plus" icon-type="fas" type="outline" class="btn btn-secondary" @click="addImage()">
                         Add Images
                     </icon-button>

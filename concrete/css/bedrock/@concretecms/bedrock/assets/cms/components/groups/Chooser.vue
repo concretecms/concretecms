@@ -3,14 +3,12 @@
         <div class="mb-3 ccm-header-search-form">
             <form method="get" @submit="performSearch">
                 <div class="input-group">
-                    <input type="search" v-model="searchKeywords" placeholder="Search" class="form-control border-right-0" autocomplete="off">
-                    <div class="input-group-append">
-                        <button type="submit" class="input-group-icon">
-                            <svg width="16" height="16">
-                                <use xlink:href="#icon-search"/>
-                            </svg>
-                        </button>
-                    </div>
+                    <input type="search" v-model="searchKeywords" placeholder="Search" class="form-control border-end-0" autocomplete="off">
+                    <button type="submit" class="input-group-icon">
+                        <svg width="16" height="16">
+                            <use xlink:href="#icon-search"/>
+                        </svg>
+                    </button>
                 </div>
             </form>
         </div>

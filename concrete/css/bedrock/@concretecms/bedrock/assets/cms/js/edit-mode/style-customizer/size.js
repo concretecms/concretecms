@@ -38,7 +38,7 @@ ConcreteSizeSelector.prototype.chooseTemplate = '<span data-launch="style-custom
     '<span><%=options.value + options.unit%></span></span>'
 
 ConcreteSizeSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette ccm-style-customizer-palette-large">' +
-    '<div><label><%=i18n.size%></label><div data-style-customizer-field="size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><%=options.value%><%=options.unit%></span></div></div>' +
+    '<div><label class="form-label"><%=i18n.size%></label><div data-style-customizer-field="size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><%=options.value%><%=options.unit%></span></div></div>' +
     '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary"><%=i18n.save%></button></div>' +
     '</div>'
 

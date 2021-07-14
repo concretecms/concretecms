@@ -9,19 +9,19 @@ div.ccm-ui {
   }*/
 
   .btn-secondary {
-    @include button-variant(#fff, $gray-200, $secondary, $secondary, $gray-700, $gray-700);
+    @include button-variant(#fff, $gray-200, $hover-background: $secondary, $hover-border: $secondary, $hover-color: #fff, $active-background: $gray-700, $active-border: $gray-700);
   }
 
   .btn-primary {
-    @include button-variant($blue, $blue, #2276D7, #2276D7);
+    @include button-variant($blue, $blue, #fff, #2276D7, #2276D7, $disabled-color: #fff);
   }
 
   .btn-success {
-    @include button-variant($green, $green, #1F8035, #1F8035);
+    @include button-variant($green, $green, #fff, #1F8035, #1F8035);
   }
 
   .btn-danger {
-    @include button-variant($red, $red, #972121, #972121);
+    @include button-variant($red, $red, #fff, #972121, #972121);
   }
 
   .btn-icon {

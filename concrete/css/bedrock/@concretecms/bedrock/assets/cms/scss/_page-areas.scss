@@ -339,7 +339,7 @@ ul.ccm-edit-mode-inline-commands {
       text-align: center;
       width: 20px !important;
 
-      @include hover {
+      &:hover {
         color: #000 !important;
       }
 
@@ -490,7 +490,7 @@ div.ccm-block-edit {
  * without showing them on hover.
  */
 div.ccm-block-edit[data-block-type-handle=core_container] {
-  @include hover {
+  &:hover {
     > ul.ccm-edit-mode-inline-commands {
       opacity: 1;
     }

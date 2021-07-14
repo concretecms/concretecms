@@ -2,13 +2,13 @@
 @import 'node_modules/@pnotify/mobile/dist/PNotifyMobile';
 
 $notification-info-bg-color: darken($blue, 12.5%) !default;
-$notification-info-color: color-yiq($notification-info-bg-color) !default;
+$notification-info-color: color-contrast($notification-info-bg-color) !default;
 
 $notification-success-bg-color: darken($green, 12.5%) !default;
-$notification-success-color: color-yiq($notification-success-bg-color) !default;
+$notification-success-color: color-contrast($notification-success-bg-color) !default;
 
 $notification-error-bg-color: darken($red, 12.5%) !default;
-$notification-error-color: color-yiq($notification-error-bg-color) !default;
+$notification-error-color: color-contrast($notification-error-bg-color) !default;
 
 .ccm-notification {
   border-radius: 3px;
@@ -139,7 +139,7 @@ div#ccm-popup-alert-message {
   position: relative;
   text-transform: uppercase;
 
-  > div[data-toggle] {
+  > div[data-bs-toggle] {
     cursor: pointer;
   }
 }

@@ -417,7 +417,8 @@
     }
 
     select {
-      &.form-control {
+      &.form-control,
+      &.form-select {
         background: #aaa;
         color: #4c4c4d;
         margin-bottom: 15px;
