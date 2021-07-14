@@ -23,4 +23,10 @@ class ParserManager extends Manager
         return new FontFamilyParser();
     }
 
+    public function createSizeDriver()
+    {
+        return new SizeParser();
+    }
+
+
 }

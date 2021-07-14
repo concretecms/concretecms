@@ -1,7 +1,7 @@
 <template>
     <div>
-        <label class="control-label">{{ styleValue.style.name }}</label>
-        <select @change="componentUpdated" class="form-select form-control" v-model="selectedFont"
+        <label class="form-label">{{ styleValue.style.name }}</label>
+        <select @change="componentUpdated" class="form-select" v-model="selectedFont"
                 :style="{'font-family': selectedFont}">
             <option v-for="font in fonts" :value="font">{{ font }}</option>
         </select>

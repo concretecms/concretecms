@@ -16,13 +16,13 @@
             <div data-dialog="save-theme-customizer-changes">
 
                 <div class="form-group">
-                    <label for="newSkinName">Skin Name</label>
+                    <label class="form-label" for="newSkinName">Skin Name</label>
                     <input type="text" :class='{"form-control": true, "is-invalid": invalidSkinName}' name="newSkinName"
                            id="newSkinName" v-model="newSkinName">
                 </div>
 
                 <div class="dialog-buttons">
-                    <button class="btn btn-primary float-right" @click="createNewSkin" type="button">Create</button>
+                    <button class="btn btn-primary float-end" @click="createNewSkin" type="button">Create</button>
                 </div>
 
             </div>
@@ -34,7 +34,7 @@
                 <p>Are you sure you want to delete this custom skin? This cannot be undone.</p>
 
                 <div class="dialog-buttons">
-                    <button class="btn btn-primary float-right" @click="deleteSkin" type="button">Create</button>
+                    <button class="btn btn-primary float-end" @click="deleteSkin" type="button">Create</button>
                 </div>
 
             </div>
@@ -48,11 +48,13 @@
 /* global ConcreteEvent ConcretePanelManager */
 import ColorPageCustomizerWidget from './ColorPageCustomizerWidget'
 import FontFamilyPageCustomizerWidget from './FontFamilyPageCustomizerWidget'
+import SizePageCustomizerWidget from './SizePageCustomizerWidget'
 
 export default {
     components: {
         ColorPageCustomizerWidget,
-        FontFamilyPageCustomizerWidget
+        FontFamilyPageCustomizerWidget,
+        SizePageCustomizerWidget
     },
     methods: {
         goBack() {

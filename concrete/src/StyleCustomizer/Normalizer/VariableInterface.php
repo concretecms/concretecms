@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\StyleCustomizer\Normalizer;
 
-interface VariableInterface
+interface VariableInterface extends \JsonSerializable
 {
 
 

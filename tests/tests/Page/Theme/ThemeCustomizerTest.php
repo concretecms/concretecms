@@ -8,6 +8,7 @@ use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Adapter\ScssAdapter;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
+use Concrete\Core\StyleCustomizer\Normalizer\NumberVariable;
 use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizer;
 use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizerCompiler;
 use Concrete\Core\StyleCustomizer\Normalizer\Variable;
@@ -15,11 +16,13 @@ use Concrete\Core\StyleCustomizer\Processor\ScssProcessor;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\StyleCustomizer\Style\ColorStyle;
 use Concrete\Core\StyleCustomizer\Style\FontFamilyStyle;
+use Concrete\Core\StyleCustomizer\Style\SizeStyle;
 use Concrete\Core\StyleCustomizer\Style\StyleValue;
 use Concrete\Core\StyleCustomizer\Style\StyleValueList;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\FontFamilyValue;
+use Concrete\Core\StyleCustomizer\Style\Value\SizeValue;
 use Concrete\Core\StyleCustomizer\StyleList;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
@@ -84,7 +87,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $this->assertIsIterable($allStyles);
         $style = $allStyles->current();
         $this->assertEquals('Primary Color', $style->getName());
-        $this->assertCount(4, iterator_to_array($allStyles));
+        $this->assertCount(5, iterator_to_array($allStyles));
     }
 
     public function testStyleListTypeOptions()
@@ -120,15 +123,31 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
             '_customizable-variables.scss';
         $variableCollection = $scssNormalizer->createVariableCollectionFromFile($variablesFile);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(4, $variableCollection);
+        $this->assertCount(5, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 
-        /**
-         * @var $variable Variable
-         */
-        $name = $variable->getName();
-        $this->assertEquals('logo-bar-logo-color', $name);
+        $variables = [
+            ['logo-bar-logo-color', '#75ca2a'],
+            ['color-primary', '#75ca2a'],
+            ['color-secondary', '#0099ff'],
+            ['logo-font-family', 'Titillium Web']
+        ];
+        $numberVariables = [
+            ['logo-font-size', '2.2', 'em'],
+        ];
+
+        foreach ($variables as $row) {
+            $variable = $variableCollection->getVariable($row[0]);
+            $this->assertInstanceOf(Variable::class, $variable);
+            $this->assertEquals($row[1], $variable->getValue());
+        }
+        foreach ($numberVariables as $row) {
+            $variable = $variableCollection->getVariable($row[0]);
+            $this->assertInstanceOf(NumberVariable::class, $variable);
+            $this->assertEquals($row[1], $variable->getNumber());
+            $this->assertEquals($row[2], $variable->getUnit());
+        }
     }
 
     public function testValueListFromSkin()
@@ -147,7 +166,19 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $defaultSkin);
         $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
         $this->assertInstanceOf(StyleValueList::class, $valueList);
-        $this->assertCount(4, $valueList->getValues());
+        $this->assertCount(5, $valueList->getValues());
+
+        $styleValue = $valueList->getValues()[4];
+        $this->assertInstanceOf(StyleValue::class, $styleValue);
+        $value = $styleValue->getValue();
+        $style = $styleValue->getStyle();
+        $this->assertInstanceOf(SizeStyle::class, $style);
+        $this->assertInstanceOf(SizeValue::class, $value);
+        $this->assertEquals('Logo Font Size', $style->getName());
+        $this->assertEquals('logo-font-size', $style->getVariable());
+        $this->assertEquals('2.2', $value->getSize());
+        $this->assertEquals('em', $value->getUnit());
+
     }
 
     public function testValueListFromRequestData()
@@ -211,7 +242,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
         $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(4, $variableCollection);
+        $this->assertCount(5, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 

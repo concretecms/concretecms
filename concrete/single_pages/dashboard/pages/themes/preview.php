@@ -14,15 +14,15 @@ $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeT
 <div id="ccm-page-controls-wrapper" class="ccm-ui">
     <div id="ccm-toolbar">
         <ul>
-            <li class="ccm-logo float-left"><span><?= $ui->getToolbarLogoSRC() ?></span></li>
-            <li class="float-left">
+            <li class="ccm-logo float-start"><span><?= $ui->getToolbarLogoSRC() ?></span></li>
+            <li class="float-start">
                 <a href="<?= URL::to('/dashboard/pages/themes', 'view') ?>">
                     <svg>
                         <use xlink:href="#icon-arrow-left"/>
                     </svg>
                 </a>
             </li>
-            <li class="float-left d-none d-md-block">
+            <li class="float-start d-none d-md-block">
                 <a href="#" <?php
                    if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?>
                    data-toggle="tooltip"

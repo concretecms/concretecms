@@ -10,7 +10,7 @@ class NormalizedVariableCollection extends ArrayCollection implements \JsonSeria
 {
 
     /**
-     * @param Variable $element
+     * @param VariableInterface $element
      * @return bool|true
      */
     public function add($element)
@@ -36,7 +36,11 @@ class NormalizedVariableCollection extends ArrayCollection implements \JsonSeria
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
         foreach ($data as $value) {
-            $this->add(new Variable($value['name'], $value['value']));
+            if (isset($value['type']) && $value['type'] == 'number') {
+                $this->add(new NumberVariable($value['name'], $value['number'], $value['unit']));
+            } else {
+                $this->add(new Variable($value['name'], $value['value']));
+            }
         }
     }
 

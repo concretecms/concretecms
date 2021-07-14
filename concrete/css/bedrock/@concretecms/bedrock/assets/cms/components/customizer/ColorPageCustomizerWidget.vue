@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex">
         <label class="control-label align-self-center">{{ styleValue.style.name }}</label>
-        <div class="ml-auto d-flex">
+        <div class="ms-auto d-flex">
             <input :id="'color-picker-' + styleValue.style.variable"/>
         </div>
     </div>

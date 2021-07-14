@@ -3,6 +3,7 @@
 namespace Concrete\Core\StyleCustomizer\Normalizer;
 
 use Illuminate\Filesystem\Filesystem;
+use ScssPhp\ScssPhp\Node\Number;
 
 class ScssNormalizer implements NormalizerInterface
 {
@@ -49,17 +50,27 @@ class ScssNormalizer implements NormalizerInterface
 
         $collection = new NormalizedVariableCollection();
 
-        foreach($environment->store as $variable => $value) {
+        foreach ($environment->store as $variable => $value) {
             if ($value[0] == 'keyword') {
                 $collection->add(new Variable($this->fixVariable($variable), $value[1]));
             }
             if ($value[0] == 'string') {
-                $collection->add(new Variable($this->fixVariable($variable), $value[2][0])); // not sure why it's this way
+                $collection->add(
+                    new Variable($this->fixVariable($variable), $value[2][0])
+                ); // not sure why it's this way
+            }
+            if ($value instanceof Number) {
+                $collection->add(
+                    new NumberVariable(
+                        $this->fixVariable($variable),
+                        $value->getDimension(),
+                        $value->getNumeratorUnits()[0]
+                    )
+                );
             }
         }
 
         return $collection;
-
     }
 
 

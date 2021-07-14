@@ -11,5 +11,10 @@
 			variable="logo-font-family"
 			type="font-family"
 		/>
+		<style
+				name="Logo Font Size"
+				variable="logo-font-size"
+				type="size"
+		/>
 	</set>
 </styles>
