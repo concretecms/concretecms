@@ -69,7 +69,7 @@ echo $ui->tabs([
 
         <div class="form-group">
             <?php echo $form->label("dateFormat", t('Format of Date Properties')); ?>
-            <?php echo $form->text("dateFormat", $dateFormat); ?>
+            <?php echo $form->text("dateFormat", $controller->dateFormat); ?>
 
             <div class="help-block">
                 <?php echo sprintf(t('See the formatting options for date at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?>
@@ -98,7 +98,7 @@ echo $ui->tabs([
                 <?php echo $form->label("thumbnailWidth", t('Max Width')); ?>
 
                 <div class="input-group">
-                    <?php echo $form->number('thumbnailWidth', $thumbnailWidth, ["min" => 0, "step" => 1]); ?>
+                    <?php echo $form->number('thumbnailWidth', $controller->thumbnailWidth, ["min" => 0, "step" => 1]); ?>
 
                     <div class="input-group-append">
                         <span class="input-group-text">
@@ -112,7 +112,7 @@ echo $ui->tabs([
                 <?php echo $form->label("thumbnailHeight", t('Max Height')); ?>
 
                 <div class="input-group">
-                    <?php echo $form->number('thumbnailHeight', $thumbnailHeight, ["min" => 0, "step" => 1]); ?>
+                    <?php echo $form->number('thumbnailHeight', $controller->thumbnailHeight, ["min" => 0, "step" => 1]); ?>
 
                     <div class="input-group-append">
                         <span class="input-group-text">
