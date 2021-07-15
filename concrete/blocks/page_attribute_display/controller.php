@@ -46,11 +46,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         return t("Page Attribute Display");
     }
 
-    public function add()
-    {
-        $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
-    }
-
     public function getRequiredFeatures(): array
     {
         return [
