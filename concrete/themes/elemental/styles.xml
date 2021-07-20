@@ -1,20 +1,21 @@
 <?xml version="1.0"?>
 <styles version="1.0">
-	<set name="Colors">
-		<style name="Primary Color" variable="color-primary" type="color" />
-		<style name="Secondary Color" variable="color-secondary" type="color" />
-		<style name="Logo Color" variable="logo-bar-logo-color" type="color" />
-	</set>
-	<set name="Typography">
-		<style
-			name="Logo Font Family"
-			variable="logo-font-family"
-			type="font-family"
-		/>
-		<style
-				name="Logo Font Size"
-				variable="logo-font-size"
-				type="size"
-		/>
-	</set>
+    <set name="Colors">
+        <style name="Primary Color" variable="primary" type="color"/>
+        <style name="Secondary Color" variable="secondary" type="color"/>
+    </set>
+    <set name="Header">
+        <style
+                name="Logo"
+                variable="logo"
+                type="type"
+        />
+    </set>
+    <set name="Image Slider">
+        <style
+                name="Background Image"
+                variable="image-slider-background-image"
+                type="image"
+        />
+    </set>
 </styles>

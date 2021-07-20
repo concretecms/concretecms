@@ -6,7 +6,6 @@ use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Normalizer\Variable;
 use Concrete\Core\StyleCustomizer\Normalizer\VariableInterface;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
-use Concrete\Core\StyleCustomizer\Style\Value\Value;
 use Concrete\Core\StyleCustomizer\Style\Value\ValueInterface;
 use Primal\Color\Parser;
 

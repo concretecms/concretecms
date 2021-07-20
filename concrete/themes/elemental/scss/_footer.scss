@@ -33,10 +33,10 @@ footer#footer-theme {
     transition: color 0.2s linear;
     font-size: $font-size-base;
     font-family: $logo-font-family;
-    color: $logo-bar-logo-color;
+    color: $logo-color;
 
     &:hover {
-      color: darken($logo-bar-logo-color, 10%);
+      color: darken($logo-color, 10%);
       text-decoration: none !important;
     }
   }

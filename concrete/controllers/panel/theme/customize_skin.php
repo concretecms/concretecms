@@ -14,6 +14,7 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
+use Concrete\Core\StyleCustomizer\Style\CustomizerVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +33,7 @@ class CustomizeSkin extends BackendInterfaceController
 
     public function view($pThemeID, $skinIdentifier, $previewPageID)
     {
+        $this->requireAsset('ace');
         $previewPage = Page::getByID($previewPageID);
         $checker = new Checker($previewPage);
         if ($checker->canViewPage()) {
@@ -43,12 +45,14 @@ class CustomizeSkin extends BackendInterfaceController
                     $adapterFactory = $this->app->make(AdapterFactory::class);
                     $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
                     $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
+                    $customizerVariableCollectionFactory = $this->app->make(CustomizerVariableCollectionFactory::class);
                     $adapter = $adapterFactory->createFromTheme($theme);
                     $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $skin);
                     $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
                     $groupedStyleValueList = $valueList->createGroupedStyleValueList($styleList);
-                    $this->set('styles', $groupedStyleValueList);
-                    $this->set('skins', $skin);
+                    $this->set('styleList', $groupedStyleValueList);
+                    $this->set('styles', $customizerVariableCollectionFactory->createFromStyleValueList($valueList));
+                    $this->set('skin', $skin);
                     $this->set('pThemeID', $pThemeID);
                     $this->set('skinIdentifier', $skinIdentifier);
                     $this->set('previewPage', $previewPage);
@@ -96,6 +100,7 @@ class CustomizeSkin extends BackendInterfaceController
                         $command->setThemeID($theme->getThemeID());
                         $command->setPresetSkinStartingPoint($skinIdentifier);
                         $command->setSkinName($this->request->request->get('skinName'));
+                        $command->setCustomCss($this->request->request->get('customCss'));
                         $command->setVariableCollection($collection);
 
                         $skin = $this->app->executeCommand($command);
@@ -143,6 +148,7 @@ class CustomizeSkin extends BackendInterfaceController
                     $command = new UpdateCustomSkinCommand();
                     $command->setCustomSkin($skin);
                     $command->setVariableCollection($collection);
+                    $command->setCustomCss($this->request->request->get('customCss'));
 
                     $skin = $this->app->executeCommand($command);
 

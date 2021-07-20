@@ -24,6 +24,11 @@ class CreateCustomSkinCommand implements CommandInterface
     protected $presetSkinStartingPoint;
 
     /**
+     * @var string
+     */
+    protected $customCss;
+
+    /**
      * @var int
      */
     protected $authorID;
@@ -47,6 +52,22 @@ class CreateCustomSkinCommand implements CommandInterface
     public function setSkinName(string $skinName): void
     {
         $this->skinName = $skinName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomCss(): string
+    {
+        return $this->customCss;
+    }
+
+    /**
+     * @param string $customCss
+     */
+    public function setCustomCss(string $customCss): void
+    {
+        $this->customCss = $customCss;
     }
 
     /**

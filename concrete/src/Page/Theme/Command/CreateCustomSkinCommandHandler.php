@@ -51,6 +51,7 @@ class CreateCustomSkinCommandHandler
         $skin->setDateCreated($date);
         $skin->setDateUpdated($date);
         $skin->setPresetSkinStartingPoint($command->getPresetSkinStartingPoint());
+        $skin->setCustomCss($command->getCustomCss());
 
         $this->entityManager->persist($skin);
         $this->entityManager->flush();

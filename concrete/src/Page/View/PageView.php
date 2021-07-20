@@ -273,7 +273,7 @@ class PageView extends View
         }
         if ($customStyles) {
             $styles = new Element('style', $customStyles);
-            $styles->type('text/css')->href($stylesheet);
+            $styles->type('text/css');
             return $styles;
         } else {
             return $stylesheet;

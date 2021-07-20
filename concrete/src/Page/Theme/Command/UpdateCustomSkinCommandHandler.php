@@ -33,6 +33,7 @@ class UpdateCustomSkinCommandHandler
         $skin = $command->getCustomSkin();
         $skin->setDateUpdated($date);
         $skin->setVariableCollection($command->getVariableCollection());
+        $skin->setCustomCss($command->getCustomCss());
 
         $this->entityManager->persist($skin);
         $this->entityManager->flush();

@@ -37,6 +37,7 @@ export default {
     data() {
         return {
             isLoading: false,
+            isFirstRun: true, // need to differentiate in order to only run change within the selectedFileID watcher not on first run. Probably better to just refactor this component.
             selectedFile: null /* json object */,
             selectedFileID: 0 /* integer */
         }
@@ -59,9 +60,16 @@ export default {
             handler(value) {
                 if (value > 0) {
                     this.loadFile(value)
+                    if (!this.isFirstRun) {
+                        this.$emit('change', value)
+                    }
                 } else {
                     this.selectedFile = null
+                    if (!this.isFirstRun) {
+                        this.$emit('change', null)
+                    }
                 }
+                this.isFirstRun = false
             }
         }
     },

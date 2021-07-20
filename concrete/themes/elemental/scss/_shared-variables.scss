@@ -6,10 +6,6 @@ $green: #75ca2a;
 $blue: #0099ff;
 $light-green: #0c6;
 
-// scss-docs-start theme-color-variables
-$secondary: $blue;
-$primary: $green;
-
 $link-color: $secondary;
 $link-decoration: none;
 
@@ -40,10 +36,6 @@ $caption-color: $gray-300;
 $blockquote-border-width: 4px;
 $blockquote-border-style: solid;
 $blockquote-border-color: $gray-300;
-
-// blocks
-// image slider
-$image-slider-bg: '/concrete/themes/elemental/images/background-slider-default.png';
 
 // Add light-green too default bs5 $theme-colors
 $custom-theme-colors: ('light-green': $light-green);

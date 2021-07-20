@@ -75,6 +75,13 @@ class Preview extends BackendInterfaceController
                     $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
                     $compiler = $this->app->make(Compiler::class);
                     $result = $compiler->compileFromSkin($adapter, $skin, $collection);
+
+                    if ($this->request->request->has('customCss')) {
+                        // This is custom CSS from the "Custom CSS" button at the bottom of the customizer. This just gets
+                        // appended to the SCSS generated from the theme.
+                        $result .= $this->request->request->get('customCss');
+                    }
+
                     $previewRequest->setCustomCss($result);
                 }
 

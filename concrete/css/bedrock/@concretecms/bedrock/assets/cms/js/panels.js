@@ -113,12 +113,12 @@ function ConcretePanel(options) {
         var $panel = $('#' + this.getDOMID())
         var obj = this
         $panel.find('[data-launch-sub-panel-url]').unbind('.sub').on('click.sub', function () {
-            var cover = $('<div />').addClass('ccm-panel-cover').appendTo($(this).closest('.ccm-panel'))
+            $panel.addClass('ccm-panel-transitioning')
             obj.closePanelDetailImmediately()
             var url = $(this).attr('data-launch-sub-panel-url')
             $('<div />', { class: 'ccm-panel-content ccm-panel-content-appearing' }).appendTo($panel.find('.ccm-panel-content-wrapper')).load(url + '?cID=' + CCM_CID, function () {
                 _.delay(function () {
-                    cover.remove()
+                    $panel.removeClass('ccm-panel-transitioning')
                 }, 250)
                 $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-left')
                 $(this).removeClass('ccm-panel-content-appearing').addClass('ccm-panel-content-visible')
@@ -141,6 +141,7 @@ function ConcretePanel(options) {
         var my = this
         $panel
             .queue(function () {
+                $panel.addClass('ccm-panel-transitioning')
                 var $prev = $panel.find('.ccm-panel-content-visible').prev()
                 $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-right')
                 $prev.removeClass('ccm-panel-slide-left').addClass('ccm-panel-content-visible')
@@ -148,6 +149,7 @@ function ConcretePanel(options) {
             })
             .delay(500)
             .queue(function () {
+                $panel.removeClass('ccm-panel-transitioning')
                 $panel.find('.ccm-panel-slide-right').remove()
                 $panel.dequeue()
                 if (reload) {

@@ -1,14 +1,11 @@
 <template>
-    <div>
-        <label class="form-label">{{ styleValue.style.name }}</label>
-        <div class="input-group">
-            <input type="number" class="form-control" v-model="size" @change="componentUpdated">
-            <select class="form-select" v-model="unit" @change="componentUpdated">
-                <option value="rem">rem</option>
-                <option value="em">em</option>
-                <option value="px">px</option>
-            </select>
-        </div>
+    <div class="d-flex">
+        <input type="number" class="form-control form-control-sm" v-model="size" @change="componentUpdated">
+        <select class="form-select form-select-sm ms-1" style="width: 80px" v-model="unit" @change="componentUpdated">
+            <option value="rem">rem</option>
+            <option value="em">em</option>
+            <option value="px">px</option>
+        </select>
     </div>
 </template>
 

@@ -24,7 +24,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
             create-new-action="<?=URL::to('/ccm/system/panels/theme/customize/create_skin', $pThemeID, $skinIdentifier)?>"
             save-action="<?=URL::to('/ccm/system/panels/theme/customize/save_skin', $pThemeID, $skinIdentifier)?>"
             delete-action="<?=URL::to('/ccm/system/panels/theme/customize/delete_skin', $pThemeID, $skinIdentifier)?>"
-            :style-list='<?=json_encode($styles)?>'>
+            :styles='<?=json_encode($styles)?>'
+            :style-list='<?=json_encode($styleList)?>'
+
+            <?php if ($skin instanceof \Concrete\Core\Entity\Page\Theme\CustomSkin) { ?>
+                :custom-css='<?=json_encode($skin->getCustomCss())?>'
+            <?php } ?>
+    >
 
     </theme-customizer>
 

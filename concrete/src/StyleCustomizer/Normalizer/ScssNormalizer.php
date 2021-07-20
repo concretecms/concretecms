@@ -68,8 +68,13 @@ class ScssNormalizer implements NormalizerInterface
                     )
                 );
             }
+            if ($value[0] == 'function' && $value[1] == 'url') {
+                $url = $value[2][2][0][2][0]; // lol, there HAS to be a more reliable way of doing this.
+                if ($url) {
+                    $collection->add(new ImageVariable($this->fixVariable($variable), $url));
+                }
+            }
         }
-
         return $collection;
     }
 

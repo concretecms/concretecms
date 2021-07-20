@@ -20,6 +20,11 @@ class UpdateCustomSkinCommand implements CommandInterface
     protected $variableCollection;
 
     /**
+     * @var string
+     */
+    protected $customCss;
+
+    /**
      * @return CustomSkin
      */
     public function getCustomSkin(): CustomSkin
@@ -33,6 +38,22 @@ class UpdateCustomSkinCommand implements CommandInterface
     public function setCustomSkin(CustomSkin $customSkin): void
     {
         $this->customSkin = $customSkin;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomCss(): string
+    {
+        return $this->customCss;
+    }
+
+    /**
+     * @param string $customCss
+     */
+    public function setCustomCss(string $customCss): void
+    {
+        $this->customCss = $customCss;
     }
 
     /**

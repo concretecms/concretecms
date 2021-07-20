@@ -8,6 +8,7 @@ use Concrete\Core\StyleCustomizer\Adapter\AdapterInterface;
 use Concrete\Core\StyleCustomizer\Skin\PresetSkin;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\StyleCustomizer\Style\StyleValueList;
+use Concrete\Core\StyleCustomizer\Style\Value\ValueContainerInterface;
 
 /**
  * Responsible for creating a normalized collection of LESS/SCSS variables from a variety of input sources
@@ -28,9 +29,20 @@ class NormalizedVariableCollectionFactory
         foreach ($valueList->getValues() as $styleValue) {
             $style = $styleValue->getStyle();
             $value = $styleValue->getValue();
-            $variable = $style->createVariableFromValue($value);
-            if ($variable) {
-                $collection->add($variable);
+            if ($value instanceof ValueContainerInterface) {
+                foreach ($value->getSubStyleValues() as $subStyleValue) {
+                    $subStyle = $subStyleValue->getStyle();
+                    $subValue = $subStyleValue->getValue();
+                    $variable = $subStyle->createVariableFromValue($subValue);
+                    if ($variable) {
+                        $collection->add($variable);
+                    }
+                }
+            } else {
+                $variable = $style->createVariableFromValue($value);
+                if ($variable) {
+                    $collection->add($variable);
+                }
             }
         }
 
@@ -48,7 +60,6 @@ class NormalizedVariableCollectionFactory
             $collection = $skin->getVariableCollection();
             if ($collection) {
                 return $this->serializer->denormalize($collection, NormalizedVariableCollection::class);
-
             }
         }
         throw new \Exception(t('Unable to create variable collection from skin: %s', $skin->getName()));

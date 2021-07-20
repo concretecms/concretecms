@@ -28,5 +28,36 @@ class ParserManager extends Manager
         return new SizeParser();
     }
 
+    public function createFontStyleDriver()
+    {
+        return new FontStyleParser();
+    }
+
+    public function createFontWeightDriver()
+    {
+        return new FontWeightParser();
+    }
+
+    public function createTextDecorationDriver()
+    {
+        return new TextDecorationParser();
+    }
+
+    public function createTextTransformDriver()
+    {
+        return new TextTransformParser();
+    }
+
+    public function createImageDriver()
+    {
+        return new ImageParser();
+    }
+
+    public function createTypeDriver()
+    {
+        return new TypeParser();
+    }
+
+
 
 }

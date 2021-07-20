@@ -6,11 +6,13 @@ use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Adapter\ScssAdapter;
+use Concrete\Core\StyleCustomizer\Style\CustomizerVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Normalizer\NumberVariable;
 use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizer;
 use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizerCompiler;
+use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
 use Concrete\Core\StyleCustomizer\Normalizer\Variable;
 use Concrete\Core\StyleCustomizer\Processor\ScssProcessor;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
@@ -20,6 +22,7 @@ use Concrete\Core\StyleCustomizer\Style\SizeStyle;
 use Concrete\Core\StyleCustomizer\Style\StyleValue;
 use Concrete\Core\StyleCustomizer\Style\StyleValueList;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
+use Concrete\Core\StyleCustomizer\Style\TypeStyle;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\FontFamilyValue;
 use Concrete\Core\StyleCustomizer\Style\Value\SizeValue;
@@ -81,13 +84,13 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $theme->setThemeHandle('elemental');
         $styleList = $theme->getThemeCustomizableStyleList();
         $this->assertInstanceOf(StyleList::class, $styleList);
-        $this->assertCount(2, $styleList->getSets());
+        $this->assertCount(3, $styleList->getSets());
 
         $allStyles = $styleList->getAllStyles();
         $this->assertIsIterable($allStyles);
         $style = $allStyles->current();
         $this->assertEquals('Primary Color', $style->getName());
-        $this->assertCount(5, iterator_to_array($allStyles));
+        $this->assertCount(4, iterator_to_array($allStyles));
     }
 
     public function testStyleListTypeOptions()
@@ -97,9 +100,9 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $styleList = $theme->getThemeCustomizableStyleList();
         $sets = $styleList->getSets();
         $set = $sets[1];
-        $this->assertEquals('Typography', $set->getName());
-        $style = $set->getStyles()[0];
-        $this->assertInstanceOf(FontFamilyStyle::class, $style);
+        $this->assertEquals('Header', $set->getName());
+        $style = $set->getStyles()[0]; // should be logo font family
+        $this->assertInstanceOf(TypeStyle::class, $style);
     }
 
     public function testVariableCollectionFromScss()
@@ -123,14 +126,14 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
             '_customizable-variables.scss';
         $variableCollection = $scssNormalizer->createVariableCollectionFromFile($variablesFile);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(5, $variableCollection);
+        $this->assertCount(10, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 
         $variables = [
-            ['logo-bar-logo-color', '#75ca2a'],
-            ['color-primary', '#75ca2a'],
-            ['color-secondary', '#0099ff'],
+            ['logo-color', '#75ca2a'],
+            ['primary', '#75ca2a'],
+            ['secondary', '#0099ff'],
             ['logo-font-family', 'Titillium Web']
         ];
         $numberVariables = [
@@ -150,71 +153,6 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         }
     }
 
-    public function testValueListFromSkin()
-    {
-        $app = app();
-        $theme = new PageTheme();
-        $theme->setThemeHandle('elemental');
-        $styleList = $theme->getThemeCustomizableStyleList();
-        $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
-        $adapterFactory = new AdapterFactory($app, $fileLocator);
-        $styleValueListFactory = new StyleValueListFactory();
-        $defaultSkin = $theme->getThemeDefaultSkin();
-        $adapter = $adapterFactory->createFromTheme($theme);
-        $serializer = app(JsonSerializer::class);
-        $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
-        $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $defaultSkin);
-        $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
-        $this->assertInstanceOf(StyleValueList::class, $valueList);
-        $this->assertCount(5, $valueList->getValues());
-
-        $styleValue = $valueList->getValues()[4];
-        $this->assertInstanceOf(StyleValue::class, $styleValue);
-        $value = $styleValue->getValue();
-        $style = $styleValue->getStyle();
-        $this->assertInstanceOf(SizeStyle::class, $style);
-        $this->assertInstanceOf(SizeValue::class, $value);
-        $this->assertEquals('Logo Font Size', $style->getName());
-        $this->assertEquals('logo-font-size', $style->getVariable());
-        $this->assertEquals('2.2', $value->getSize());
-        $this->assertEquals('em', $value->getUnit());
-
-    }
-
-    public function testValueListFromRequestData()
-    {
-        $json = '[{"variable":"color-primary","value":{"r":117,"g":202,"b":42,"a":1}},{"variable":"color-secondary","value":{"r":0,"g":153,"b":255,"a":1}},{"variable":"logo-bar-logo-color","value":{"r":205,"g":107,"b":94,"a":1}},{"variable":"logo-font-family","value":{"fontFamily":"Helvetica"}}]';
-        $styles = json_decode($json, true);
-        $theme = new PageTheme();
-        $theme->setThemeHandle('elemental');
-        $styleList = $theme->getThemeCustomizableStyleList();
-        $styleValueListFactory = new StyleValueListFactory();
-        $valueList = $styleValueListFactory->createFromRequestArray($styleList, $styles);
-        $this->assertInstanceOf(StyleValueList::class, $valueList);
-        $this->assertCount(4, $valueList->getValues());
-        $styleValue = $valueList->getValues()[1];
-        $this->assertInstanceOf(StyleValue::class, $styleValue);
-        $value = $styleValue->getValue();
-        $style = $styleValue->getStyle();
-        $this->assertInstanceOf(ColorStyle::class, $style);
-        $this->assertInstanceOf(ColorValue::class, $value);
-        $this->assertEquals('Secondary Color', $style->getName());
-        $this->assertEquals('color-secondary', $style->getVariable());
-        $this->assertEquals('0', $value->getRed());
-        $this->assertEquals('153', $value->getGreen());
-        $this->assertEquals('255', $value->getBlue());
-        $this->assertEquals('1', $value->getAlpha());
-
-        $styleValue = $valueList->getValues()[3];
-        $this->assertInstanceOf(StyleValue::class, $styleValue);
-        $value = $styleValue->getValue();
-        $style = $styleValue->getStyle();
-        $this->assertInstanceOf(FontFamilyStyle::class, $style);
-        $this->assertInstanceOf(FontFamilyValue::class, $value);
-        $this->assertEquals('Logo Font Family', $style->getName());
-        $this->assertEquals('logo-font-family', $style->getVariable());
-        $this->assertEquals('Helvetica', $value->getFontFamily());
-    }
 
     public function testStyleListToVariableCollection()
     {
@@ -242,13 +180,13 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
         $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(5, $variableCollection);
+        $this->assertCount(10, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 
         $variable = $variableCollection->get(1);
         $this->assertInstanceOf(Variable::class, $variable);
-        $this->assertEquals('color-secondary', $variable->getName());
+        $this->assertEquals('secondary', $variable->getName());
         $this->assertEquals('rgba(0, 153, 255, 1)', $variable->getValue());
     }
 
@@ -274,7 +212,65 @@ body {
 
 EOL;
         $this->assertEquals($expected, $css);
+    }
 
+    public function testCustomizerVariableCollection()
+    {
+        $app = app();
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $styleList = $theme->getThemeCustomizableStyleList();
+        $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
+        $adapterFactory = new AdapterFactory($app, $fileLocator);
+        $styleValueListFactory = new StyleValueListFactory();
+        $defaultSkin = $theme->getThemeDefaultSkin();
+        $adapter = $adapterFactory->createFromTheme($theme);
+        $serializer = app(JsonSerializer::class);
+        $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
+        $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $defaultSkin);
+        $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
+        $this->assertInstanceOf(StyleValueList::class, $valueList);
+        $this->assertCount(4, $valueList->getValues());
+
+        $styleValue = $valueList->getValues()[2];
+        $this->assertInstanceOf(StyleValue::class, $styleValue);
+        $value = $styleValue->getValue();
+        $style = $styleValue->getStyle();
+        $this->assertInstanceOf(TypeStyle::class, $style);
+        $this->assertInstanceOf(TypeValue::class, $value);
+        $this->assertEquals('Logo', $style->getName());
+        $this->assertEquals('logo', $style->getVariable());
+
+        $variableCollectionFactory = new CustomizerVariableCollectionFactory();
+        $customizerVariableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
+        $this->assertCount(10, $customizerVariableCollection->getValues());
+    }
+
+
+
+    public function testValueListFromRequestData()
+    {
+        $json = '[{"variable":"primary","value":{"r":117,"g":202,"b":42,"a":1}},{"variable":"secondary","value":{"r":0,"g":153,"b":255,"a":1}},{"variable":"logo-color","value":{"r":205,"g":107,"b":94,"a":1}},{"variable":"logo-font-family","value":{"fontFamily":"Helvetica"}}]';
+        $styles = json_decode($json, true);
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $styleList = $theme->getThemeCustomizableStyleList();
+        $styleValueListFactory = new StyleValueListFactory();
+        $valueList = $styleValueListFactory->createFromRequestArray($styleList, $styles);
+        $this->assertInstanceOf(StyleValueList::class, $valueList);
+        $this->assertCount(3, $valueList->getValues());
+        $styleValue = $valueList->getValues()[1];
+        $this->assertInstanceOf(StyleValue::class, $styleValue);
+        $value = $styleValue->getValue();
+        $style = $styleValue->getStyle();
+        $this->assertInstanceOf(ColorStyle::class, $style);
+        $this->assertInstanceOf(ColorValue::class, $value);
+        $this->assertEquals('Secondary Color', $style->getName());
+        $this->assertEquals('secondary', $style->getVariable());
+        $this->assertEquals('0', $value->getRed());
+        $this->assertEquals('153', $value->getGreen());
+        $this->assertEquals('255', $value->getBlue());
+        $this->assertEquals('1', $value->getAlpha());
     }
 
     /*

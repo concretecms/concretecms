@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\StyleCustomizer\Normalizer;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 class Variable implements VariableInterface
 {
 

@@ -6,8 +6,8 @@
 
   background-color: transparent;
   background-repeat: repeat;
-  background-image: url($image-slider-bg);
-  
+  background-image: $image-slider-background-image;
+
   /* background-image is moved to main.less because it needs to be in the theme root */
 
   .ccm-image-slider {

@@ -64,6 +64,11 @@ class CustomSkin implements \JsonSerializable, SkinInterface
     protected $variableCollection;
 
     /**
+     * @ORM\Column(type="text")
+     */
+    protected $customCss;
+
+    /**
      * @return mixed
      */
     public function getSkinID()
@@ -189,6 +194,22 @@ class CustomSkin implements \JsonSerializable, SkinInterface
     public function setThemeID($pThemeID): void
     {
         $this->pThemeID = $pThemeID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomCss()
+    {
+        return $this->customCss;
+    }
+
+    /**
+     * @param mixed $customCss
+     */
+    public function setCustomCss($customCss): void
+    {
+        $this->customCss = $customCss;
     }
 
     public function jsonSerialize()

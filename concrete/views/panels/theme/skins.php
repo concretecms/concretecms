@@ -26,7 +26,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php } ?>
     </menu>
     <?php if (count($customSkins)) { ?>
-        <header><h5><?= t('Preset Skins') ?></h5></header>
+        <header><h5><?= t('Custom Skins') ?></h5></header>
         <menu>
             <?php
             foreach ($customSkins as $skin) { ?>

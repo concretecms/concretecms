@@ -10,10 +10,14 @@ header {
     transition: color 0.2s linear;
     font-size: $logo-font-size;
     font-family: $logo-font-family;
-    color: $logo-bar-logo-color;
+    color: $logo-color;
+    font-weight: $logo-font-weight;
+    font-style: $logo-font-style;
+    text-decoration: $logo-text-decoration;
+    text-transform: $logo-text-transform;
 
     &:hover {
-      color: darken($logo-bar-logo-color, 10%);
+      color: darken($logo-color, 10%);
       text-decoration: none !important;
     }
   }
