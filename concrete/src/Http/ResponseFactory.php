@@ -94,6 +94,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
         if (is_object($c) && !$c->isError()) {
             // Display not found
+            $dl = $this->app->make('multilingual/detector');
+            $dl->setupSiteInterfaceLocalization($c);
             $this->request->setCurrentPage($c);
 
             return $this->controller($c->getPageController(), $code, $headers);
@@ -123,6 +125,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $item = '/page_forbidden';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
+            $dl = $this->app->make('multilingual/detector');
+            $dl->setupSiteInterfaceLocalization($c);
             $this->request->setCurrentPage($c);
 
             return $this->controller($c->getPageController(), $code, $headers);
@@ -230,8 +234,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         }
 
         $dl = $this->app->make('multilingual/detector');
-        $dl->setupSiteInterfaceLocalization($collection);
-
         $request = $this->request;
 
         if ($collection->isError() && $collection->getError() == COLLECTION_NOT_FOUND) {
@@ -260,6 +262,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->app->make('token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
                 $v->addScopeItems(['c' => $collection]);
+                $dl->setupSiteInterfaceLocalization($collection);
                 $request->setCurrentPage($collection);
 
                 return $this->view($v, $code, $headers);
@@ -340,6 +343,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             }
         }
 
+        $dl->setupSiteInterfaceLocalization($collection);
         $request->setCurrentPage($collection);
         $u = $this->app->make(User::class);
 
