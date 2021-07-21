@@ -1,5 +1,15 @@
 <?xml version="1.0"?>
 <styles version="1.0">
+    <webfonts>
+        <skin identifier="night-road">
+            <font type="google" name="Abril Fatface" />
+            <font type="google" name="Oxygen" />
+            <font type="google" name="Oswald" />
+        </skin>
+        <skin identifier="default">
+            <font type="google" name="Titillium Web" />
+        </skin>
+    </webfonts>
     <set name="Colors">
         <style name="Primary Color" variable="primary" type="color"/>
         <style name="Secondary Color" variable="secondary" type="color"/>

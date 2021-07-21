@@ -4,6 +4,7 @@ namespace Concrete\Tests\Page\Theme;
 
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Adapter\ScssAdapter;
 use Concrete\Core\StyleCustomizer\Style\CustomizerVariableCollectionFactory;
@@ -27,6 +28,8 @@ use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\FontFamilyValue;
 use Concrete\Core\StyleCustomizer\Style\Value\SizeValue;
 use Concrete\Core\StyleCustomizer\StyleList;
+use Concrete\Core\StyleCustomizer\WebFont\WebFontCollection;
+use Concrete\Core\StyleCustomizer\WebFont\WebFontCollectionFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Concrete\Tests\TestCase;
@@ -271,6 +274,17 @@ EOL;
         $this->assertEquals('153', $value->getGreen());
         $this->assertEquals('255', $value->getBlue());
         $this->assertEquals('1', $value->getAlpha());
+    }
+
+    public function testWebFontCollection()
+    {
+        $webFontCollectionFactory = app(WebFontCollectionFactory::class);
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $skin = $theme->getSkinByIdentifier('night-road');
+        $collection = $webFontCollectionFactory->createFromSkin($skin);
+        $this->assertInstanceOf(WebFontCollection::class, $collection);
+        $this->assertCount(3, $collection);
     }
 
     /*

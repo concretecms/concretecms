@@ -293,6 +293,14 @@ class Theme extends ConcreteObject
     }
 
 
+    public function getStyleConfigurationFileRecord(): Record
+    {
+        $env = Environment::get();
+        return $env->getRecord(
+            DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
+            $this->getPackageHandle()
+        );
+    }
     /**
      * Checks the theme for a styles.xml file (which is how customizations happen).
      *
@@ -300,13 +308,7 @@ class Theme extends ConcreteObject
      */
     public function isThemeCustomizable()
     {
-        $env = Environment::get();
-        $r = $env->getRecord(
-            DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
-            $this->getPackageHandle()
-        );
-
-        return $r->exists();
+        return $this->getStyleConfigurationFileRecord()->exists();
     }
 
     /**
@@ -317,13 +319,8 @@ class Theme extends ConcreteObject
     public function getThemeCustomizableStyleList()
     {
         if (!isset($this->styleList)) {
-            $env = Environment::get();
-            $r = $env->getRecord(
-                DIRNAME_THEMES.'/'.$this->getThemeHandle(
-                ).'/'.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
-                $this->getPackageHandle()
-            );
-            $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
+            $record = $this->getStyleConfigurationFileRecord();
+            $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($record->file);
         }
         return $this->styleList;
     }

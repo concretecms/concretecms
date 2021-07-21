@@ -16,6 +16,7 @@ use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\CustomizerVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
+use Concrete\Core\StyleCustomizer\WebFont\WebFontCollectionFactory;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

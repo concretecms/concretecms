@@ -52,6 +52,7 @@ $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeT
     </div>
 
 </div>
+<script src="//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
 <script type="text/javascript">
 
     $(function () {
