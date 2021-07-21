@@ -5,8 +5,13 @@
             <div class="card mb-4">
                 <ul class="list-group list-group-flush">
                     <li v-for="style in set.styles" class="list-group-item">
-                        <div class="d-flex">
-                            <label class="control-label align-self-center me-auto">{{ style.style.name }}</label>
+                        <div class="d-flex" v-if="style.style.type == 'color' || style.style.type == 'type' || style.style.type == 'image'">
+                            <label class="my-0 form-label align-self-center me-auto">{{ style.style.name }}</label>
+                            <component @update="updateStyles" :style-value="style"
+                                       :is="style.style.type.replace('_','-') + '-page-customizer-widget'"></component>
+                        </div>
+                        <div v-else>
+                            <label class="form-label">{{ style.style.name }}</label>
                             <component @update="updateStyles" :style-value="style"
                                        :is="style.style.type.replace('_','-') + '-page-customizer-widget'"></component>
                         </div>

@@ -151,18 +151,18 @@
     width: 45%;
 
     h2 {
-      color: $primary;
-      font-family: $font-family-headings;
-      font-size: $font-size-base * 3;
-      font-weight: 200;
+      color: $image-slider-title-color;
+      font-family: $image-slider-title-font-family;
+      font-size: $image-slider-title-font-size;
+      font-weight: $image-slider-title-font-weight;
       margin-bottom: 5%;
     }
 
     p {
-      //color: @image-slider-paragraph-type-color;
-      //font-family: @image-slider-paragraph-type-font-family;
-      //font-size: @image-slider-paragraph-type-font-size;
-      //font-weight: @image-slider-paragraph-type-font-weight;
+      color: $image-slider-paragraph-color;
+      font-family: $font-family-base;
+      font-size: $image-slider-paragraph-font-size;
+      font-weight: $image-slider-paragraph-font-weight;
       width: 80%;
     }
 

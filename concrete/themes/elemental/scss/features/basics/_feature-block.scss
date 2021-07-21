@@ -18,7 +18,7 @@ div.ccm-block-feature-item {
 // Custom home page class for feature
 div.feature-home-page {
   div.ccm-block-feature-item h4, div.ccm-block-feature-item i {
-    color: $primary;
+    color: $home-feature-title-color;
   }
 
   div.ccm-block-feature-item h4 {
@@ -26,9 +26,14 @@ div.feature-home-page {
   }
 
   div.ccm-block-feature-item i {
-    color: $primary;
+    color: $home-feature-icon-color;
     font-size: 1.3em;
     top: 1px;
   }
+
+  div.ccm-block-feature-item {
+    padding-left: 45px;
+  }
+
 
 }

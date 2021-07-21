@@ -2,6 +2,8 @@
 
 @import "@concretecms/bedrock/assets/bedrock/scss/frontend";
 
+@import "mixins";
+
 // Feature support - comes outside div.ccm-page
 @import "features/basics/basics";
 @import "features/calendar/calendar";

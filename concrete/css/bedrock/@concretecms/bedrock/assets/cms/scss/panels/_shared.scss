@@ -153,7 +153,7 @@ div.ccm-panel-content {
   bottom: 0;
   left: 0;
   margin-top: 48px;
-  /* overflow: auto; */ /* This causes problems with floating palettes inside the panels. So let's only apply this during transitions */
+  overflow: auto;
   padding: 0;
   position: absolute;
   top: 0;

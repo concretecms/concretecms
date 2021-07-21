@@ -36,7 +36,7 @@ div.ccm-block-page-list-thumbnail-grid-wrapper {
 
   // hover effects
   div.ccm-block-page-list-page-entry-grid-thumbnail-hover {
-    background-color: rgba(red($link-color), green($link-color), blue($link-color), 0.7);
+    background-color: rgba(red($thumbnail-hover), green($thumbnail-hover), blue($thumbnail-hover), 0.7);
   }
 
   // icon
@@ -53,11 +53,8 @@ div.ccm-block-page-list-thumbnail-grid-wrapper {
 
   // home page version with page title.
   div.ccm-block-page-list-title {
-    margin-top: $grid-gutter-width;
-    @include font-size($h4-font-size);
-    font-family: $font-family-base;
-    font-weight: normal;
-    color: $headings-color;
+    margin-top: 1em;
+    @extend h4;
   }
 }
 

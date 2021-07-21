@@ -40,10 +40,17 @@ export default {
         // I had to use this weird approach otherwise after my dropdown was manually hidden in the save()
         // method below it would never come back if you clicked the button. So you have to use JS to manage
         // the instantiation if you're going to use JS to manage the hiding.
-        //this.dropdown = new bootstrap.Dropdown(this.$el.querySelector('[data-bs-toggle=dropdown]'))
-        // We don't actually need this right now, because I'm not using the Save buttons. I like the idea of the save buttons
-        // but everything is already working with the direct reload of the frame by changing the form controls
-        // so making Save work for the Type component would actually be more work.
+        // this.dropdown = new bootstrap.Dropdown(this.$el.querySelector('[data-bs-toggle=dropdown]'))
+        // We don't need to instantiate it because the attribute on the dom node handles showing and hiding
+
+        this.$el.querySelector('[data-bs-toggle=dropdown]').addEventListener('show.bs.dropdown', function() {
+            $(this).closest('.ccm-panel-content').css('overflow', 'visible')
+        })
+        this.$el.querySelector('[data-bs-toggle=dropdown]').addEventListener('hide.bs.dropdown', function() {
+            $(this).closest('.ccm-panel-content').css('overflow', 'auto')
+        })
+        // Without the above lines, our flyout menus are hidden inside the panels. We can't remove the auto overflow
+        // From panel content because without that our panels aren't scrollable!
     },
     methods: {
         /*

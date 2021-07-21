@@ -9,7 +9,7 @@ if ($linkURL) {
     <?php if ($title) {
     ?>
         
-        <<?php echo $titleFormat; ?>><i class="<?=$icon?>"></i> <?=$title?></<?php echo $titleFormat; ?>>
+        <<?php echo $titleFormat; ?>><i class="fas fa-<?=$icon?>"></i> <?=$title?></<?php echo $titleFormat; ?>>
         
     <?php 
 } ?>
