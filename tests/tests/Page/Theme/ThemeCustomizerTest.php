@@ -85,7 +85,8 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
     {
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
-        $styleList = $theme->getThemeCustomizableStyleList();
+        $skin = $theme->getSkinByIdentifier('default');
+        $styleList = $theme->getThemeCustomizableStyleList($skin);
         $this->assertInstanceOf(StyleList::class, $styleList);
         $this->assertCount(3, $styleList->getSets());
 
@@ -100,7 +101,8 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
     {
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
-        $styleList = $theme->getThemeCustomizableStyleList();
+        $skin = $theme->getSkinByIdentifier('default');
+        $styleList = $theme->getThemeCustomizableStyleList($skin);
         $sets = $styleList->getSets();
         $set = $sets[1];
         $this->assertEquals('Header', $set->getName());
@@ -112,7 +114,8 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
     {
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
-        $styleList = $theme->getThemeCustomizableStyleList();
+        $skin = $theme->getSkinByIdentifier('default');
+        $styleList = $theme->getThemeCustomizableStyleList($skin);
         $scssNormalizer = new ScssNormalizer(new ScssNormalizerCompiler(), new Filesystem());
         $variablesFile = DIR_BASE_CORE .
             DIRECTORY_SEPARATOR .
@@ -162,11 +165,11 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $app = Facade::getFacadeApplication();
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
-        $styleList = $theme->getThemeCustomizableStyleList();
+        $defaultSkin = $theme->getThemeDefaultSkin();
+        $styleList = $theme->getThemeCustomizableStyleList($defaultSkin);
         $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
         $adapterFactory = new AdapterFactory($app, $fileLocator);
         $styleValueListFactory = new StyleValueListFactory();
-        $defaultSkin = $theme->getThemeDefaultSkin();
         $adapter = $adapterFactory->createFromTheme($theme);
         $serializer = app(JsonSerializer::class);
         $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
@@ -222,11 +225,11 @@ EOL;
         $app = app();
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
-        $styleList = $theme->getThemeCustomizableStyleList();
+        $defaultSkin = $theme->getThemeDefaultSkin();
+        $styleList = $theme->getThemeCustomizableStyleList($defaultSkin);
         $fileLocator = new FileLocator(new Filesystem(), Facade::getFacadeApplication());
         $adapterFactory = new AdapterFactory($app, $fileLocator);
         $styleValueListFactory = new StyleValueListFactory();
-        $defaultSkin = $theme->getThemeDefaultSkin();
         $adapter = $adapterFactory->createFromTheme($theme);
         $serializer = app(JsonSerializer::class);
         $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
@@ -257,7 +260,8 @@ EOL;
         $styles = json_decode($json, true);
         $theme = new PageTheme();
         $theme->setThemeHandle('elemental');
-        $styleList = $theme->getThemeCustomizableStyleList();
+        $skin = $theme->getSkinByIdentifier('default');
+        $styleList = $theme->getThemeCustomizableStyleList($skin);
         $styleValueListFactory = new StyleValueListFactory();
         $valueList = $styleValueListFactory->createFromRequestArray($styleList, $styles);
         $this->assertInstanceOf(StyleValueList::class, $valueList);

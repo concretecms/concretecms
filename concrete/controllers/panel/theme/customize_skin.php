@@ -42,7 +42,7 @@ class CustomizeSkin extends BackendInterfaceController
             if ($theme) {
                 $skin = $theme->getSkinByIdentifier($skinIdentifier);
                 if ($skin) {
-                    $styleList = $theme->getThemeCustomizableStyleList();
+                    $styleList = $theme->getThemeCustomizableStyleList($skin);
                     $adapterFactory = $this->app->make(AdapterFactory::class);
                     $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
                     $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
@@ -83,7 +83,7 @@ class CustomizeSkin extends BackendInterfaceController
                     $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
                     $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
                     $styleValueList = $styleValueListFactory->createFromRequestArray(
-                        $theme->getThemeCustomizableStyleList(),
+                        $theme->getThemeCustomizableStyleList($skin),
                         $styles
                     );
                     $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
@@ -139,7 +139,7 @@ class CustomizeSkin extends BackendInterfaceController
                     $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
                     $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
                     $styleValueList = $styleValueListFactory->createFromRequestArray(
-                        $theme->getThemeCustomizableStyleList(),
+                        $theme->getThemeCustomizableStyleList($skin),
                         $styles
                     );
                     $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);

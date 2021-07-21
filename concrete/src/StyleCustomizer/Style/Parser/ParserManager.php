@@ -20,7 +20,7 @@ class ParserManager extends Manager
 
     public function createFontFamilyDriver()
     {
-        return new FontFamilyParser();
+        return $this->app->make(FontFamilyParser::class);
     }
 
     public function createSizeDriver()
@@ -55,7 +55,7 @@ class ParserManager extends Manager
 
     public function createTypeDriver()
     {
-        return new TypeParser();
+        return $this->app->make(TypeParser::class);
     }
 
 

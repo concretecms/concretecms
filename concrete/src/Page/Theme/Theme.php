@@ -9,6 +9,7 @@ use Concrete\Core\Filesystem\FileLocator\Record;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\StyleListParser;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Doctrine\ORM\EntityManager;
@@ -316,11 +317,13 @@ class Theme extends ConcreteObject
      *
      * @return \Concrete\Core\StyleCustomizer\StyleList
      */
-    public function getThemeCustomizableStyleList()
+    public function getThemeCustomizableStyleList(SkinInterface $skin)
     {
         if (!isset($this->styleList)) {
             $record = $this->getStyleConfigurationFileRecord();
-            $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($record->file);
+            $xml = simplexml_load_file($record->file);
+            $parser = app(StyleListParser::class);
+            return $parser->parse($xml, $skin);
         }
         return $this->styleList;
     }

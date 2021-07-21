@@ -58,11 +58,9 @@ class Themes extends DashboardSitePageController
         $theme = Theme::getByID($pThemeID);
         if ($theme) {
             $skins = $theme->getSkins();
-            $styles = $theme->getThemeCustomizableStyleList();
             $this->set('customizeTheme', $theme);
             $this->set('skins', $skins);
             $this->set('selectedSkin', $theme->getThemeDefaultSkin());
-            $this->set('styles', $styles);
             $this->setTheme('concrete');
             $this->setThemeViewTemplate('empty.php');
 

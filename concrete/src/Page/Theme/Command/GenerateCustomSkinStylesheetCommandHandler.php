@@ -64,7 +64,7 @@ class GenerateCustomSkinStylesheetCommandHandler
         $presetSkin = $theme->getSkinByIdentifier($skin->getPresetSkinStartingPoint());
         $adapter = $this->adapterFactory->createFromTheme($theme);
         $styleValueList = $this->styleValueListFactory->createFromVariableCollection(
-            $theme->getThemeCustomizableStyleList(),
+            $theme->getThemeCustomizableStyleList($skin),
             $skin->getVariableCollection()
         );
         $collection = $this->variableCollectionFactory->createFromStyleValueList($styleValueList);

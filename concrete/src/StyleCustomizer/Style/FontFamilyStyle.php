@@ -11,6 +11,8 @@ use Concrete\Core\StyleCustomizer\Style\Value\ValueInterface;
 class FontFamilyStyle extends Style
 {
 
+    use WebFontCollectionStyleTrait;
+
     public function createValueFromVariableCollection(NormalizedVariableCollection $collection): ?ValueInterface
     {
         $variable = $collection->getVariable($this->getVariable());
@@ -41,5 +43,13 @@ class FontFamilyStyle extends Style
         $variable = new Variable($this->getVariable(), $value->getFontFamily());
         return $variable;
     }
+
+    public function jsonSerialize()
+    {
+        $data = parent::jsonSerialize();
+        $data['fonts'] = $this->getWebFonts();
+        return $data;
+    }
+
 
 }

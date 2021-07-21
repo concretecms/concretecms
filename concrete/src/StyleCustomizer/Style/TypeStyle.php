@@ -6,9 +6,12 @@ use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Normalizer\VariableInterface;
 use Concrete\Core\StyleCustomizer\Style\Value\TypeValue;
 use Concrete\Core\StyleCustomizer\Style\Value\ValueInterface;
+use Concrete\Core\StyleCustomizer\WebFont\WebFontCollection;
 
 class TypeStyle extends Style
 {
+
+    use WebFontCollectionStyleTrait;
 
     private function getStyleTypes(): array
     {
@@ -31,6 +34,9 @@ class TypeStyle extends Style
             $style = app($styleType[0]);
             $style->setVariable($this->getVariable() . '-' . $styleType[1]);
             $style->setName($this->getName() . ' ' . $styleType[2]);
+            if ($style instanceof FontFamilyStyle) {
+                $style->setWebFonts($this->getWebFonts());
+            }
             $value = $style->createValueFromVariableCollection($collection);
             if ($value) {
                 $styleValue = new StyleValue($style, $value);
@@ -68,6 +74,13 @@ class TypeStyle extends Style
     public function createVariableFromValue(ValueInterface $value): ?VariableInterface
     {
         throw new \RuntimeException(t('The TypeStyle class is a container style – it cannot convert to variables.'));
+    }
+
+    public function jsonSerialize()
+    {
+        $data = parent::jsonSerialize();
+        $data['fonts'] = $this->getWebFonts();
+        return $data;
     }
 
 }

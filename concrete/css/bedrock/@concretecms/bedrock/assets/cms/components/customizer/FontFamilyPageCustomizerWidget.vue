@@ -16,9 +16,15 @@ export default {
     },
     mounted() {
         $('select.selectpicker').selectpicker()
+        var googleFontFamilies = []
+        this.styleValue.style.fonts.forEach(function(font) {
+            if (font.type === 'google') {
+                googleFontFamilies.push(font.name)
+            }
+        })
         WebFont.load({
             google: {
-                families: ['Abril Fatface', 'Oswald', 'Oxygen']
+                families: googleFontFamilies
             }
         });
     },
@@ -34,15 +40,14 @@ export default {
     },
     computed: {
         webFonts: function() {
-            return [
-                'Abril Fatface',
-                'Oxygen',
-                'Oswald',
-            ]
+            var fonts = []
+            this.styleValue.style.fonts.forEach(function(font) {
+                fonts.push(font.name)
+            })
+            return fonts
         },
         standardFonts: function () {
             return [
-/*                this.styleValue.value.fontFamily, */
                 'Helvetica',
                 'Arial',
                 'Arial Black',

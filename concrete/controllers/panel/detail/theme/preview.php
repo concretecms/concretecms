@@ -71,7 +71,7 @@ class Preview extends BackendInterfaceController
                     $adapterFactory = $this->app->make(AdapterFactory::class);
                     $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
                     $adapter = $adapterFactory->createFromTheme($theme);
-                    $styleValueList = $styleValueListFactory->createFromRequestArray($theme->getThemeCustomizableStyleList(), $styles);
+                    $styleValueList = $styleValueListFactory->createFromRequestArray($theme->getThemeCustomizableStyleList($skin), $styles);
                     $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
                     $compiler = $this->app->make(Compiler::class);
                     $result = $compiler->compileFromSkin($adapter, $skin, $collection);
