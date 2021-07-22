@@ -6,13 +6,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /** @var \Concrete\Core\View\View $view */
 $bannedListEnabled = $bannedListEnabled ?? false;
 ?>
+<div class="ccm-dashboard-header-buttons">
+    <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
+</div>
 <form action="<?=$view->action('save')?>" method='POST'>
 	<?php
     $token->output('update_banned_words');
     ?>
-    <div class="ccm-dashboard-header-buttons">
-        <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
-    </div>
 
     <div class="checkbox">
         <label>
@@ -49,7 +49,7 @@ $bannedListEnabled = $bannedListEnabled ?? false;
 						<td class='word'><span><?=h($word->getWord())?></span><input style='display:none' name='banned_word[]' value='<?=h($word->getWord())?>'></td>
 						<td style='text-align:right'>
                             <div class="btn-group">
-                                <a href='#' class='edit_word btn btn-default'><?=t('Edit')?></a>
+                                <a href='#' class='edit_word btn btn-secondary'><?=t('Edit')?></a>
                                 <a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a>
                             </div>
 						 </td>
@@ -71,13 +71,15 @@ $bannedListEnabled = $bannedListEnabled ?? false;
 <script>
 var ctx = $('table.banned_word_list'), template = $('script.word_template'),
 	getTemplate = function(){return $(template.text());},
+    add = $(".add_word"),
 	save = $("<a href='#' class='save_word btn btn-primary'><?=t('Save')?></a>"),
-	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-default'><?=t('Edit')?></a><a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a></div>"),
+	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-secondary'><?=t('Edit')?></a><a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a></div>"),
 	totalheight = ctx.parent().height();
 
 if (!$('input[name=banned_list_enabled]').get(0).checked) {
 	ctx.hide();
 	ctx.parent().height(0);
+    add.hide();
 }
 $('input[name=banned_list_enabled]').click(function(){
 	if (this.checked) {
@@ -85,13 +87,15 @@ $('input[name=banned_list_enabled]').click(function(){
 		ctx.parent().animate({height:totalheight},200,function(){
 			$(this).height('auto');
 		});
+        add.fadeIn(200);
 	} else {
 		totalheight = ctx.parent().height();
 		ctx.fadeOut(200);
 		ctx.parent().animate({height:0},200);
+        add.fadeOut(200);
 	}
 });
-$(".add_word").on('click', function(e) {
+add.on('click', function(e) {
     ctx.find('tr.editing').find('a.save_word').click();
 	var newWord = getTemplate();
 	newWord.find('th.id').text(' ');
