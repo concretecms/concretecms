@@ -21,7 +21,6 @@ $c = Page::getCurrentPage();
 $cp = false;
 $isEditMode = false;
 $isArrangeMode = false;
-$scc = false;
 if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
     $pageTitle = null;
 }
@@ -42,7 +41,6 @@ if (is_object($c)) {
     $cID = $c->getCollectionID();
     $isEditMode = $c->isEditMode();
     $isArrangeMode = $c->isArrangeMode();
-    $styleObject = false;
 
     /*
      * Handle page title
@@ -82,14 +80,6 @@ if (is_object($c)) {
     }
     if (!$pageMetaKeywords) {
         $pageMetaKeywords = trim($c->getAttribute('meta_keywords'));
-    }
-    if ($c->hasPageThemeCustomizations()) {
-        $styleObject = $c->getCustomStyleObject();
-    } elseif (($pt = $c->getCollectionThemeObject()) && is_object($pt)) {
-        $styleObject = $pt->getThemeCustomStyleObject();
-    }
-    if (isset($styleObject) && is_object($styleObject)) {
-        $scc = $styleObject->getCustomCssRecord();
     }
 } else {
     $cID = 1;
@@ -203,11 +193,6 @@ if ($cp) {
 $v->markHeaderAssetPosition();
 if (empty($disableTrackingCode)) {
     echo $config->get('seo.tracking.code.header');
-}
-if ($scc) {
-    ?>
-    <style type="text/css"><?php echo $scc->getValue(); ?></style>
-    <?php
 }
 if ($c !== null) {
     echo $c->getAttribute('header_extra_content');
