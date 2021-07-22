@@ -33,11 +33,13 @@ class AdapterFactory
      */
     public function createFromTheme(Theme $theme)
     {
+        if ($theme->getPackageHandle()) {
+            $this->fileLocator->addPackageLocation($theme->getPackageHandle());
+        }
         $record = $this->fileLocator->getRecord(
             DIRNAME_THEMES .'/' .
             $theme->getThemeHandle() . '/' .
-            DIRNAME_SCSS,
-            $theme->getPackageHandle(),
+            DIRNAME_SCSS
         );
 
         if ($record->exists()) {
