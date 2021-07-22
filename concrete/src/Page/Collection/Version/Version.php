@@ -786,7 +786,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $app->make('director')->dispatch('on_page_version_approve', $ev);
 
         $c->reindex(false, $doReindexImmediately);
-        $c->writePageThemeCustomizations();
         $this->refreshCache();
     }
 

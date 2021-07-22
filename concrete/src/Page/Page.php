@@ -2216,16 +2216,6 @@ EOT
     }
 
     /**
-     * Clears the custom theme styles for this page.
-     */
-    public function resetCustomThemeStyles()
-    {
-        $db = Database::connection();
-        $db->executeQuery('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', [$this->getCollectionID(), $this->getVersionID()]);
-        $this->writePageThemeCustomizations();
-    }
-
-    /**
      * Get the CSS class to be used to wrap the whole page contents.
      *
      * @return string
