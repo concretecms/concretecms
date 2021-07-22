@@ -33,7 +33,8 @@ export default {
     components: {},
     data() {
         return {
-            dropdown: null
+            dropdown: null,
+            dropdownMenu: null
         }
     },
     mounted() {
@@ -41,16 +42,23 @@ export default {
         // method below it would never come back if you clicked the button. So you have to use JS to manage
         // the instantiation if you're going to use JS to manage the hiding.
         // this.dropdown = new bootstrap.Dropdown(this.$el.querySelector('[data-bs-toggle=dropdown]'))
-        // We don't need to instantiate it because the attribute on the dom node handles showing and hiding
+        // We don't need to instantiate it because the attribute on the dom node handles showing and hiding, but I'm
+        // going to keep the appear new bootstrap.Dropdown code in here in case some day we do.
 
+        // This code is stupid. The bootstrap dropdown is clipped by the overflow. We could change overflow when the
+        // dropdown is shown but that results in jittery jumping all over the place. Instead let's just append it to
+        // a root div we know will be there.
+        var my = this
         this.$el.querySelector('[data-bs-toggle=dropdown]').addEventListener('show.bs.dropdown', function() {
-            $(this).closest('.ccm-panel-content').css('overflow', 'visible')
+            my.dropdownMenu = $(my.$el.querySelector('.dropdown-menu'))
+            my.dropdownMenu.appendTo('#ccm-tooltip-holder')
         })
         this.$el.querySelector('[data-bs-toggle=dropdown]').addEventListener('hide.bs.dropdown', function() {
-            $(this).closest('.ccm-panel-content').css('overflow', 'auto')
+            if (my.dropdownMenu) {
+                my.dropdownMenu.appendTo($(my.$el))
+                my.dropdownMenu = null
+            }
         })
-        // Without the above lines, our flyout menus are hidden inside the panels. We can't remove the auto overflow
-        // From panel content because without that our panels aren't scrollable!
     },
     methods: {
         /*
