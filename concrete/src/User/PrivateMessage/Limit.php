@@ -1,16 +1,17 @@
 <?php
+
 namespace Concrete\Core\User\PrivateMessage;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\Event\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
 use DateTime;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Limit
 {
-
     /**
      * @var bool Tracks whether limiting is enabled
      */
@@ -36,9 +37,9 @@ class Limit
 
         $db = $app->make(Connection::class);
         $dt = new DateTime();
-        $dt->modify('-'.$app['config']->get('concrete.user.private_messages.throttle_max_timespan').' minutes');
-        $v = array($uID, $dt->format('Y-m-d H:i:s'));
-        $q = "SELECT COUNT(msgID) as sent_count FROM UserPrivateMessages WHERE uAuthorID = ? AND msgDateCreated >= ?";
+        $dt->modify('-' . $app['config']->get('concrete.user.private_messages.throttle_max_timespan') . ' minutes');
+        $v = [$uID, $dt->format('Y-m-d H:i:s')];
+        $q = 'SELECT COUNT(msgID) as sent_count FROM UserPrivateMessages WHERE uAuthorID = ? AND msgDateCreated >= ?';
         $count = $db->fetchColumn($q, $v);
 
         if ($count > $app['config']->get('concrete.user.private_messages.throttle_max')) {
@@ -59,6 +60,16 @@ class Limit
         return $ve;
     }
 
+    /**
+     * Enable or disable Limits.
+     *
+     * @param bool $enabled
+     */
+    public static function setEnabled($enabled = true)
+    {
+        static::$enabled = (bool) $enabled;
+    }
+
     protected static function notifyAdmin($offenderID)
     {
         $app = Application::getFacadeApplication();
@@ -66,16 +77,18 @@ class Limit
         $repository = $app->make(UserInfoRepository::class);
         $offender = $repository->getByID($offenderID);
         if ($offender) {
-            $ue = new \Concrete\Core\User\Event\UserInfo($offender);
+            $ue = new UserInfo($offender);
             $app->make(EventDispatcherInterface::class)->dispatch('on_private_message_over_limit', $ue);
 
             $admin = $repository->getByID(USER_SUPER_ID);
 
             $logger = $app->make('log/factory')->createLogger(Channels::CHANNEL_SPAM);
-            $logger->warning(t("User: %s has tried to send more than %s private messages within %s minutes",
+            $logger->warning(t(
+                'User: %s has tried to send more than %s private messages within %s minutes',
                 $offender->getUserName(),
                 $app['config']->get('concrete.user.private_messages.throttle_max'),
-                $app['config']->get('concrete.user.private_messages.throttle_max_timespan')));
+                $app['config']->get('concrete.user.private_messages.throttle_max_timespan')
+            ));
 
             $mh = $app->make('mail');
 
@@ -88,15 +101,5 @@ class Limit
             $mh->load('private_message_admin_warning');
             $mh->sendMail();
         }
-    }
-
-    /**
-     * Enable or disable Limits
-     *
-     * @param bool $enabled
-     */
-    public static function setEnabled($enabled = true)
-    {
-        static::$enabled = (bool) $enabled;
     }
 }
