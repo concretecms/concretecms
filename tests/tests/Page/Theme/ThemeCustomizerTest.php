@@ -88,13 +88,13 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $skin = $theme->getSkinByIdentifier('default');
         $styleList = $theme->getThemeCustomizableStyleList($skin);
         $this->assertInstanceOf(StyleList::class, $styleList);
-        $this->assertCount(3, $styleList->getSets());
+        $this->assertCount(5, $styleList->getSets());
 
         $allStyles = $styleList->getAllStyles();
         $this->assertIsIterable($allStyles);
         $style = $allStyles->current();
         $this->assertEquals('Primary Color', $style->getName());
-        $this->assertCount(4, iterator_to_array($allStyles));
+        $this->assertCount(14, iterator_to_array($allStyles));
     }
 
     public function testStyleListTypeOptions()
@@ -105,7 +105,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $styleList = $theme->getThemeCustomizableStyleList($skin);
         $sets = $styleList->getSets();
         $set = $sets[1];
-        $this->assertEquals('Header', $set->getName());
+        $this->assertEquals('Typography', $set->getName());
         $style = $set->getStyles()[0]; // should be logo font family
         $this->assertInstanceOf(TypeStyle::class, $style);
     }
@@ -132,7 +132,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
             '_customizable-variables.scss';
         $variableCollection = $scssNormalizer->createVariableCollectionFromFile($variablesFile);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(10, $variableCollection);
+        $this->assertCount(46, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 
@@ -186,7 +186,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
         $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(10, $variableCollection);
+        $this->assertCount(41, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 
@@ -236,7 +236,7 @@ EOL;
         $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $defaultSkin);
         $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
         $this->assertInstanceOf(StyleValueList::class, $valueList);
-        $this->assertCount(4, $valueList->getValues());
+        $this->assertCount(12, $valueList->getValues());
 
         $styleValue = $valueList->getValues()[2];
         $this->assertInstanceOf(StyleValue::class, $styleValue);
@@ -244,12 +244,12 @@ EOL;
         $style = $styleValue->getStyle();
         $this->assertInstanceOf(TypeStyle::class, $style);
         $this->assertInstanceOf(TypeValue::class, $value);
-        $this->assertEquals('Logo', $style->getName());
-        $this->assertEquals('logo', $style->getVariable());
+        $this->assertEquals('Heading 1', $style->getName());
+        $this->assertEquals('h1', $style->getVariable());
 
         $variableCollectionFactory = new CustomizerVariableCollectionFactory();
         $customizerVariableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
-        $this->assertCount(10, $customizerVariableCollection->getValues());
+        $this->assertCount(41, $customizerVariableCollection->getValues());
     }
 
 

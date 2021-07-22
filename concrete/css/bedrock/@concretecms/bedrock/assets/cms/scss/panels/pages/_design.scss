@@ -47,5 +47,11 @@
       height: auto;
       width: 225px;
     }
+
+    &.ccm-page-design-theme-thumbnail-selected {
+      img {
+        border: 1px solid $primary;
+      }
+    }
   }
 }

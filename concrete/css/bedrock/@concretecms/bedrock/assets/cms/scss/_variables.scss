@@ -1,6 +1,3 @@
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-
 /* colors */
 $gray-300: #d8d8d8;
 $gray-400: #9b9b9b;
@@ -32,7 +29,7 @@ $btn-font-weight: 600;
 $btn-padding-y: 9px;
 $btn-padding-x: 30px;
 $btn-font-size: 0.9rem;
-$btn-box-shadow: none;
+$btn-box-shadow: inset 0 0;
 
 /* forms */
 $input-placeholder-color: #b2b3b4;
@@ -41,10 +38,9 @@ $input-border-radius: 4px;
 $input-border-width: 2px;
 $input-color: $dark-blue;
 $input-padding-y: 0.5rem;
-$form-group-margin-bottom: 1.5rem;
 $label-margin-bottom: 0.4rem;
-$input-box-shadow: none;
-$custom-select-box-shadow: none;
+$input-box-shadow: inset 0 0;
+$custom-select-box-shadow: inset 0 0;
 
 /* gradients and shadows */
 $enable-gradients: false;
@@ -113,7 +109,8 @@ $popover-border-color: $gray-300;
 $popover-border-radius: 2px;
 $popover-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.1);
 
-/** Override bootstrap headings */
+/* Links */
+$link-decoration: none;
 
 /* panels */
 $panel-background-color: #fafbfc;

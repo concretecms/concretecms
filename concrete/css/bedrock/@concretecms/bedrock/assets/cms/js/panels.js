@@ -413,28 +413,6 @@ function ConcretePanel(options) {
         })
 
         $panel.find('.dialog-launch').dialog()
-        $panel.find('[data-panel-menu=collapsible-list-group]').each(function () {
-            var $clg = $(this)
-            var $inner = $clg.find('.list-group-item-collapse-wrapper')
-            var menuID = $clg.attr('data-panel-menu-id')
-            var $title = $clg.find('.list-group-item-collapse span')
-            var height
-
-            $clg.find('.list-group-item-collapse').unbind('.clg').on('click.clg', function () {
-                if ($clg.hasClass('ccm-panel-list-group-item-expanded')) {
-                    $title.text(ccmi18n.expand)
-                    Concrete.event.publish('PanelCollapsibleListGroupCollapse', menuID)
-                    $inner.height(0)
-                } else {
-                    height = $inner.show().height('').outerHeight()
-                    $inner.height(0)
-                    Concrete.event.publish('PanelCollapsibleListGroupExpand', menuID)
-                    $title.text(ccmi18n.collapse)
-                    $inner.height(height)
-                }
-                $clg.toggleClass('ccm-panel-list-group-item-expanded')
-            })
-        })
         $panel.find('[data-launch-panel-detail]').unbind('.detail').on('click.detail', function () {
             $.fn.dialog.showLoader()
             $('.ccm-panel-menu-item-active').removeClass('ccm-panel-menu-item-active')

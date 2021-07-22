@@ -60,11 +60,15 @@ class ScssNormalizer implements NormalizerInterface
                 ); // not sure why it's this way
             }
             if ($value instanceof Number) {
+                $unit = null;
+                if (!empty($value->getNumeratorUnits()[0])) {
+                    $unit = $value->getNumeratorUnits()[0];
+                }
                 $collection->add(
                     new NumberVariable(
                         $this->fixVariable($variable),
                         $value->getDimension(),
-                        $value->getNumeratorUnits()[0]
+                        $unit
                     )
                 );
             }
