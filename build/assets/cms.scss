@@ -1,67 +1,63 @@
-// 01. Bootstrap Functions go first.
-@import "~bootstrap/scss/functions";
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
 
-// 02. Bootstrap overrides, have to be done BEFORE bootstrap.
-@import "~@concretecms/bedrock/assets/cms/scss/bootstrap-overrides";
-
-// 03. Bootstrap Variables
-@import "~bootstrap/scss/variables";
-
-// 04. Theme variables, some of which can now be based on bootstrap variable/constants/
-@import "~@concretecms/bedrock/assets/cms/scss/variables";
-
-// Import the bootstrap mixins, variables and functions
-@import "~bootstrap/scss/mixins";
-
-// Import the base classes like core utilities and variables
-@import "~@fortawesome/fontawesome-free/scss/variables";
+@import "@concretecms/bedrock/assets/cms/scss/variables";
+@import "@fortawesome/fontawesome-free/scss/variables";
 
 // Import the subset of Bootstrap that is required in the CMS entry point.
 // Make sure to namespace it to .ccm-ui
 // Reboot HTML body and reboot tags are basically the bootstrap reboot.scss file split into two parts.
-// The html and body tags are combined into the reboot_html_body.scss file, and the rest of the tags are
-// just copied into reboot_tags.scs
-@import "~@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
+// The html and body tags are combined into the bootstrap/reboot.scss file, and the rest of the tags are
+// just copied into reboot_tags.scss
+@import "@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
 .ccm-ui {
-  //@import "~@concretecms/bedrock/assets/cms/scss/bootstrap/reboot-tags";
+  @import "@concretecms/bedrock/assets/cms/scss/bootstrap/reboot-tags";
 
-  // Import the bootstrap components we want. Note: I'm including everything in the list, and commenting out
-  // things that are either a) already included, b) not applicable, c) not used in our in-page CMS sub-set.
+  // Configuration
   //@import "functions";
   //@import "variables";
   //@import "mixins";
-  //@import "root";
-  @import "~bootstrap/scss/reboot";
-  @import "~bootstrap/scss/type";
-  //@import "images";
-  @import "~bootstrap/scss/grid";
-  @import "~bootstrap/scss/tables";
-  @import "~bootstrap/scss/forms";
-  @import "~bootstrap/scss/buttons";
-  @import "~bootstrap/scss/transitions";
-  @import "~bootstrap/scss/dropdown";
-  @import "~bootstrap/scss/button-group";
-  @import "~bootstrap/scss/forms/input-group";
-  @import "~bootstrap/scss/nav";
-  //@import "navbar";
-  @import "~bootstrap/scss/card";
-  @import "~bootstrap/scss/breadcrumb";
-  @import "~bootstrap/scss/pagination";
-  @import "~bootstrap/scss/badge";
-  //@import "jumbotron";
-  @import "~bootstrap/scss/alert";
-  @import "~bootstrap/scss/progress";
-  @import "~bootstrap/scss/list-group";
-  @import "~bootstrap/scss/close";
-  @import "~bootstrap/scss/toasts";
-  //@import "modal";
-  @import "~bootstrap/scss/tooltip";
-  @import "~bootstrap/scss/popover";
+  @import "bootstrap/scss/utilities";
+
+  // Layout & components
+  @import "bootstrap/scss/root";
+  //@import "bootstrap/scss/reboot";
+  @import "bootstrap/scss/type";
+  @import "bootstrap/scss/images";
+  @import "bootstrap/scss/containers";
+  @import "bootstrap/scss/grid";
+  @import "bootstrap/scss/tables";
+  @import "bootstrap/scss/forms";
+  @import "bootstrap/scss/buttons";
+  @import "bootstrap/scss/transitions";
+  @import "bootstrap/scss/dropdown";
+  @import "bootstrap/scss/button-group";
+  @import "bootstrap/scss/nav";
+  @import "bootstrap/scss/navbar";
+  @import "bootstrap/scss/card";
+  @import "bootstrap/scss/accordion";
+  @import "bootstrap/scss/breadcrumb";
+  @import "bootstrap/scss/pagination";
+  @import "bootstrap/scss/badge";
+  @import "bootstrap/scss/alert";
+  @import "bootstrap/scss/progress";
+  @import "bootstrap/scss/list-group";
+  @import "bootstrap/scss/close";
+  @import "bootstrap/scss/toasts";
+  //@import "bootstrap/scss/modal";
+  @import "bootstrap/scss/tooltip";
+  @import "bootstrap/scss/popover";
   //@import "carousel";
-  //@import "spinners";
-  @import "~bootstrap/scss/utilities";
-  //@import "print";
+  @import "bootstrap/scss/spinners";
+  @import "bootstrap/scss/offcanvas";
+
+  // Helpers
+  @import "bootstrap/scss/helpers";
+
+  // Utilities
+  @import "bootstrap/scss/utilities/api";
 }
 
 // This is the actual public entry point to the cms.css on the front-end
-@import "~@concretecms/bedrock/assets/cms/scss/base";
+@import "@concretecms/bedrock/assets/cms/scss/base";

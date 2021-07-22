@@ -55,6 +55,14 @@ mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/
 mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', '../concrete/js/bootstrap.js');
 mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
 mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
+
+// Copy Bedrock assets so that themes can include them for style customization, etc...
+mix.copy('node_modules/@concretecms/bedrock/assets/', '../concrete/css/bedrock/@concretecms/bedrock/assets');
+mix.copy('node_modules/bootstrap/scss', '../concrete/css/bedrock/bootstrap/scss');
+mix.copy('node_modules/@fortawesome/fontawesome-free/', '../concrete/css/bedrock/@fortawesome/fontawesome-free');
+mix.copy('node_modules/fullcalendar/dist', '../concrete/css/bedrock/fullcalendar/dist');
+
+
 /**
  * Build shared assets
  */
@@ -65,37 +73,27 @@ mix
 
 // CKEditor
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/ckeditor/scss/concrete.scss', 'css/ckeditor/concrete.css')
+    .sass('node_modules/@concretecms/bedrock/assets/ckeditor/scss/concrete.scss', 'css/ckeditor/concrete.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('node_modules/@concretecms/bedrock/assets/ckeditor/js/concrete.js', 'js/ckeditor/concrete.js');
 
 // TUI Image Editor
 mix
     .js('assets/tui-image-editor/tui-image-editor.js', 'js/tui-image-editor.js')
-    .sass('assets/tui-image-editor/tui-image-editor.scss', 'css/tui-image-editor.css');
-
-// The CMS entry point
-mix
-    .sass('assets/cms.scss', 'css/cms.css')
-    .js('assets/cms.js', 'js/cms.js');
-
-/**
- * Build core themes
- */
-// Concrete Theme
-mix
-    .sass('assets/themes/concrete/scss/main.scss', 'themes/concrete')
-    .js('assets/themes/concrete/js/main.js', 'themes/concrete');
-
-// Elemental Theme
-mix
-    .sass('assets/themes/elemental/scss/main.scss', 'themes/elemental')
-    .js('assets/themes/elemental/js/main.js', 'themes/elemental');
+    .sass('assets/tui-image-editor/tui-image-editor.scss', 'css/tui-image-editor.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    });
 
 
-// Dashboard Theme
-mix
-    .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard')
-    .js('assets/themes/dashboard/js/main.js', 'themes/dashboard');
 
 /**
  * Build Block Components
@@ -107,64 +105,220 @@ mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js')
  * Build accessory Features
  */
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/boards/scss/frontend.scss', 'css/features/boards/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/boards/scss/frontend.scss', 'css/features/boards/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('node_modules/@concretecms/bedrock/assets/boards/js/frontend.js', 'js/features/boards/frontend.js');
 
 mix
     .js('node_modules/@concretecms/bedrock/assets/navigation/js/frontend.js', 'js/features/navigation/frontend.js')
-    .sass('node_modules/@concretecms/bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css');
+    .sass('node_modules/@concretecms/bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    });
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/search/scss/frontend.scss', 'css/features/search/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/search/scss/frontend.scss', 'css/features/search/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/faq/scss/frontend.scss', 'css/features/faq/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/faq/scss/frontend.scss', 'css/features/faq/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/imagery/scss/frontend.scss', 'css/features/imagery/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/imagery/scss/frontend.scss', 'css/features/imagery/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('node_modules/@concretecms/bedrock/assets/imagery/js/frontend.js', 'js/features/imagery/frontend.js');
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/calendar/scss/frontend.scss', 'css/features/calendar/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/calendar/scss/frontend.scss', 'css/features/calendar/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('node_modules/@concretecms/bedrock/assets/calendar/js/frontend.js', 'js/features/calendar/frontend.js');
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/conversations/scss/frontend.scss', 'css/features/conversations/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/conversations/scss/frontend.scss', 'css/features/conversations/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js', 'js/features/conversations/frontend.js');
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/documents/scss/frontend.scss', 'css/features/documents/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/documents/scss/frontend.scss', 'css/features/documents/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('node_modules/@concretecms/bedrock/assets/documents/js/frontend.js', 'js/features/documents/frontend.js');
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/basics/scss/frontend.scss', 'css/features/basics/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/basics/scss/frontend.scss', 'css/features/basics/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/video/scss/frontend.scss', 'css/features/video/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/video/scss/frontend.scss', 'css/features/video/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/taxonomy/scss/frontend.scss', 'css/features/taxonomy/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/taxonomy/scss/frontend.scss', 'css/features/taxonomy/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/express/scss/frontend.scss', 'css/features/express/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/express/scss/frontend.scss', 'css/features/express/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('node_modules/@concretecms/bedrock/assets/express/js/frontend.js', 'js/features/express/frontend.js');
 
 mix
     .js('node_modules/@concretecms/bedrock/assets/multilingual/js/frontend.js', 'js/features/multilingual/frontend.js')
-    .sass('node_modules/@concretecms/bedrock/assets/multilingual/scss/frontend.scss', 'css/features/multilingual/frontend.css');
+    .sass('node_modules/@concretecms/bedrock/assets/multilingual/scss/frontend.scss', 'css/features/multilingual/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    });
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/maps/scss/frontend.scss', 'css/features/maps/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/maps/scss/frontend.scss', 'css/features/maps/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('node_modules/@concretecms/bedrock/assets/maps/js/frontend.js', 'js/features/maps/frontend.js');
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/testimonials/scss/frontend.scss', 'css/features/testimonials/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/testimonials/scss/frontend.scss', 'css/features/testimonials/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/social/scss/frontend.scss', 'css/features/social/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/social/scss/frontend.scss', 'css/features/social/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
 
 mix
-    .sass('node_modules/@concretecms/bedrock/assets/polls/scss/frontend.scss', 'css/features/polls/frontend.css')
+    .sass('node_modules/@concretecms/bedrock/assets/polls/scss/frontend.scss', 'css/features/polls/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+
+// The CMS entry point
+mix
+    .sass('assets/cms.scss', 'css/cms.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('assets/cms.js', 'js/cms.js');
+
+// Elemental Theme
+mix
+    .sass('../concrete/themes/elemental/skins/default/scss/main.scss', 'themes/elemental/skins/default/',  {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('assets/themes/elemental/js/main.js', 'themes/elemental');
+mix
+    .sass('../concrete/themes/elemental/skins/night-road/scss/main.scss', 'themes/elemental/skins/night-road/',  {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+// Dashboard Theme
+mix
+    .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard',  {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('assets/themes/dashboard/js/main.js', 'themes/dashboard');
+
+/**
+ * Build core themes
+ */
+// Concrete Theme
+mix
+    .sass('assets/themes/concrete/scss/main.scss', 'themes/concrete', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('assets/themes/concrete/js/main.js', 'themes/concrete');
 
 /**
  * Copy bedrock SVGs into our repository

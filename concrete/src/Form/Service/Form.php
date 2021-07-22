@@ -639,7 +639,7 @@ class Form
             $optionValues = [];
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 if (count($text) > 0) {

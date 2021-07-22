@@ -3,100 +3,81 @@
 namespace Concrete\Core\StyleCustomizer\Style;
 
 use Concrete\Core\File\File;
-use Concrete\Core\Http\ResponseAssetGroup;
-use Concrete\Core\Permission\Checker;
+use Concrete\Core\StyleCustomizer\Normalizer\ImageVariable;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
+use Concrete\Core\StyleCustomizer\Normalizer\VariableInterface;
 use Concrete\Core\StyleCustomizer\Style\Value\ImageValue;
-use Concrete\Core\Support\Facade\Application;
-use Less_Environment;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Concrete\Core\StyleCustomizer\Style\Value\ValueInterface;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 
 class ImageStyle extends Style
 {
-    /**
-     * @param \Concrete\Core\StyleCustomizer\Style\Value\ImageValue|null|false $value
-     *
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Style::render()
-     */
-    public function render($value = false)
-    {
-        $options = [
-            'inputName' => $this->getVariable(),
-        ];
-        if ($value) {
-            $options['value'] = $value->getUrl();
-        }
-        $strOptions = json_encode($options);
 
-        echo <<<EOT
-<span class="ccm-style-customizer-display-swatch-wrapper" data-image-selector="{$this->getVariable()}"></span>
-<script>
-$(function() {
-    $('span[data-image-selector={$this->getVariable()}]').concreteStyleCustomizerImageSelector({$strOptions});
-});
-</script>
-EOT
-        ;
-    }
-
-    /**
-     * @return \Concrete\Core\StyleCustomizer\Style\Value\ImageValue|null
-     *
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Style::getValueFromRequest()
-     */
-    public function getValueFromRequest(ParameterBag $request)
+    public function createValueFromVariableCollection(NormalizedVariableCollection $collection): ?ValueInterface
     {
-        $iv = null;
-        $image = $request->get($this->getVariable());
-        $image = isset($image['image']) ? $image['image'] : null;
-        if ($image) {
-            $app = Application::getFacadeApplication();
-            $nvh = $app->make('helper/validation/numbers');
-            $iv = new ImageValue($this->getVariable());
-            if ($nvh->integer($image)) {
-                // it's a file ID.
-                $f = File::getByID($image);
-                if ($f) {
-                    $fp = new Checker($f);
-                    if ($fp->canViewFile()) {
-                        $iv->setFileID($image);
-                        $iv->setUrl($f->getRelativePath());
-                    }
-                }
+        $variable = $collection->getVariable($this->getVariable());
+        $value = new ImageValue();
+        if ($variable instanceof ImageVariable) {
+            /**
+             * @var $variable ImageVariable
+             */
+            $numbers = new Numbers();
+            if ($numbers->integer($variable->getFileID())) {
+                // This is  file ID.
+                $value->setImageFileID($variable->getFileID());
             } else {
-                $iv->setUrl($image);
+                // is it a URL?
+                if ($variable->getUrl()) {
+                    $value->setImageURL($variable->getUrl());
+                }
+            }
+            return $value;
+        }
+        return $value;
+    }
+
+    public function createValueFromRequestDataCollection(array $styles): ?ValueInterface
+    {
+        foreach ($styles as $style) {
+            if (isset($style['variable']) && $style['variable'] == $this->getVariable()) {
+                $value = new ImageValue();
+                if (!empty($style['value']['imageURL'])) {
+                    $value->setImageURL($style['value']['imageURL']);
+                }
+                if (!empty($style['value']['imageFileID'])) {
+                    $value->setImageFileID($style['value']['imageFileID']);
+                }
+                return $value;
             }
         }
-
-        return $iv;
+        return null;
     }
 
     /**
-     * @return \Concrete\Core\StyleCustomizer\Style\Value\ImageValue[]
-     *
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Style::getValuesFromVariables()
+     * @param ImageValue $value
+     * @return VariableInterface|null
      */
-    public static function getValuesFromVariables($rules = [])
+    public function createVariableFromValue(ValueInterface $value): ?VariableInterface
     {
-        $values = [];
-        foreach ($rules as $rule) {
-            if (preg_match('/@(.+)\-image/i', isset($rule->name) ? $rule->name : '', $matches)) {
-                $entryURI = $rule->value->value[0]->value[0]->currentFileInfo['entryUri'];
-                $value = $rule->value->value[0]->value[0]->value;
-                if ($entryURI) {
-                    $value = Less_Environment::normalizePath($entryURI . $value);
-                }
-                $iv = new ImageValue($matches[1]);
-                $iv->setUrl($value);
-                $values[] = $iv;
+        $url = null;
+        $fID = null;
+        if ($value->getImageFileID()) {
+            // An editor/admin has set the background image using the customizer, so it takes precedence
+            $file = File::getByID($value->getImageFileID());
+            if ($file) {
+                $fID = $file->getFileID();
             }
         }
-
-        return $values;
+        if (!$fID) {
+            if ($value->getImageURL()) {
+                $url = $value->getImageURL();
+            }
+        }
+        $variable = new ImageVariable($this->getVariable(), $url);
+        if ($fID) {
+            $variable->setFileID($fID);
+        }
+        return $variable;
     }
+
 }
