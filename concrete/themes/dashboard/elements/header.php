@@ -105,7 +105,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     $cnt = $ih->getController();
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets(); ?>
-                        <li class="float-right"><?= $cnt->getMenuItemLinkElement(); ?></li>
+                        <li class="float-end"><?= $cnt->getMenuItemLinkElement(); ?></li>
                         <?php
                     }
                 }

@@ -104,7 +104,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button @click="runTask" type="button" class="btn btn-primary float-right"
+                <button @click="runTask" type="button" class="btn btn-primary float-end"
                         v-if="selectedTask !== null"><?= t('Run Task') ?></button>
             </div>
         </div>

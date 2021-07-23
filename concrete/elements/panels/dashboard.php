@@ -108,8 +108,10 @@ if ($section) {
                         var my = this
                         const $sectionNav = $(this.$el).closest('.ccm-panel-content-visible')
                         const $topNav = $sectionNav.prev()
+                        const $panel = $(this.$el).closest('.ccm-panel')
                         $sectionNav
                             .queue(function() {
+                                $panel.addClass('ccm-panel-transitioning')
                                 $(this).removeClass('ccm-panel-content-visible')
                                     .addClass('ccm-panel-slide-right')
                                 my.currentMode = 'dashboard'
@@ -119,6 +121,10 @@ if ($section) {
                             .queue(function() {
                                 $topNav.removeClass('ccm-panel-slide-left').addClass('ccm-panel-content-visible')
                                 $sectionNav.dequeue()
+                            })
+                            .delay(500)
+                            .queue(function() {
+                                $panel.removeClass('ccm-panel-transitioning')
                             })
                     }
                 },

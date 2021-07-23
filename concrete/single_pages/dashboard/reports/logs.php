@@ -43,9 +43,7 @@ use Concrete\Core\Logging\Search\Result\Result;
                             </span>
                     </button>
 
-                    <div data-search-menu="dropdown">
-                        <?php echo $resultsBulkMenu->getMenuElement(); ?>
-                    </div>
+                    <?php echo $resultsBulkMenu->getMenuElement(); ?>
                 </div>
             </th>
 

@@ -45,9 +45,7 @@ use Concrete\Core\User\Group\Menu;
                             </span>
                     </button>
 
-                    <div data-search-menu="dropdown">
-                        <?php echo $resultsBulkMenu->getMenuElement(); ?>
-                    </div>
+                    <?php echo $resultsBulkMenu->getMenuElement(); ?>
                 </div>
             </th>
 
