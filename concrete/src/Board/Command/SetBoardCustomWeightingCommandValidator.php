@@ -23,7 +23,7 @@ class SetBoardCustomWeightingCommandValidator implements ValidatorInterface
      * @param SetBoardCustomWeightingCommand $command
      * @return ErrorList
      */
-    public function validate(CommandInterface $command)
+    public function validate($command)
     {
         $total = 0;
         foreach($command->getWeightings() as $weighting) {

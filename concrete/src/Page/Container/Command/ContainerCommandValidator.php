@@ -29,7 +29,7 @@ class ContainerCommandValidator implements ValidatorInterface
      * @param ContainerCommand $command
      * @return ErrorList
      */
-    public function validate(CommandInterface $command)
+    public function validate($command)
     {
         if (empty($command->getContainer()->getContainerName())) {
             $this->errorList->add(t('You must give your container a valid name.'));
