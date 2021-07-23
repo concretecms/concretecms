@@ -16,7 +16,7 @@ class Controller extends \Concrete\Attribute\Number\Controller
 
     public function getIconFormatter()
     {
-        return new FontAwesomeIconFormatter('calendar-check-o');
+        return new FontAwesomeIconFormatter('calendar-check');
     }
 
     /**
