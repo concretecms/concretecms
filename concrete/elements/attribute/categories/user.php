@@ -13,6 +13,9 @@ if (is_object($key)) {
     <legend><?=t('User Attribute Options')?></legend>
     <div class="form-group">
     <label class="control-label"><?=t('Public Display')?></label>
+        <div id="publicDisclosureAlert" class="alert alert-warning" role="alert" style="display: none">
+            <?= t('Make a user attribute public means its content will be publicly accessible and indexed by a search engine.') ?>
+        </div>
         <div class="form-check">
             <?=$form->checkbox('uakProfileDisplay', 1, !empty($uakProfileDisplay))?>
             <?=$form->label('uakProfileDisplay',t('Displayed in Public Profile.'), ['class'=>'form-check-label']);?>
@@ -84,5 +87,10 @@ $(function() {
 		$('input[name=uakRegisterEditRequired]').attr('disabled', true);		
 	}	
 
+	$('[name=uakProfileDisplay], [name=uakRegisterEditRequired]').on('change', function () {
+	    if ($(this).val()) {
+	        $('#publicDisclosureAlert').show();
+        }
+    })
 });
 </script>
