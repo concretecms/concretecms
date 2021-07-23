@@ -6,7 +6,7 @@
 </template>
 
 <script>
-
+/* globals WebFont */
 export default {
     components: {},
     data() {
@@ -26,7 +26,7 @@ export default {
             google: {
                 families: googleFontFamilies
             }
-        });
+        })
     },
     methods: {
         componentUpdated: function () {
@@ -64,7 +64,7 @@ export default {
                 'Courier New',
                 'Lucida Console',
                 'Monaco',
-                'Brush Script MT',
+                'Brush Script MT'
             ]
         }
     },

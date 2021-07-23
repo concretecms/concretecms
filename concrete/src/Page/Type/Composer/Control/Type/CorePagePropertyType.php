@@ -14,6 +14,7 @@ class CorePagePropertyType extends Type
         'user',
         'page_template',
         'publish_target',
+        'version_comment',
     );
 
     public function getPageTypeComposerControlObjects()

@@ -11,7 +11,7 @@ export default {
     components: {},
     data() {
         return {
-          textTransform: this.styleValue.value.textTransform
+            textTransform: this.styleValue.value.textTransform
         }
     },
     methods: {
@@ -32,7 +32,7 @@ export default {
                 'lowercase',
                 'capitalize',
                 'full-width',
-                'full-width-kana',
+                'full-width-kana'
             ]
         }
     },

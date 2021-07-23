@@ -14,7 +14,7 @@ class NameCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('name');
-        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-text'));
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-alt'));
     }
 
     public function getPageTypeComposerControlName()
