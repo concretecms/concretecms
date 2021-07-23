@@ -96,8 +96,28 @@ class ObjectBuilder
     }
 
 
-    public function addAttribute($type_handle, $name, $handle = null, Settings $settings = null)
+    /**
+     * Add an attribute to the object.
+     *
+     * @param string $type_handle Attribute Type Handle
+     * @param string $name Attribute Key Name
+     * @param string|null $handle Attribute Key Handle. If not specified, a new handle will created.
+     *                            If attribute key with given handle already exists, just skip to add it.
+     * @param Settings|null $settings Attribute Key Settings object, optional.
+     * @param bool $akIsSearchable Make this attribute searchable or not in advanced search.
+     *                             If not specified, searchable (default).
+     * @param bool $akIsSearchableIndexed Include content of this attribute in search index.
+     *                                    If not specified, do not included (default).
+     * @return $this
+     */
+    public function addAttribute($type_handle, $name, $handle = null, Settings $settings = null, $akIsSearchable = true, $akIsSearchableIndexed = false)
     {
+        if ($handle) {
+            $existing = $this->entity->getAttributeKeyCategory()->getAttributeKeyByHandle($handle);
+            if ($existing) {
+                return $this;
+            }
+        }
         $key = new ExpressKey();
         $key->setEntity($this->entity);
         $type = $this->attributeTypeFactory->getByHandle($type_handle);
@@ -112,6 +132,8 @@ class ObjectBuilder
             $handle = $this->generator->generate($key);
         }
         $key->setAttributeKeyHandle($handle);
+        $key->setIsAttributeKeySearchable($akIsSearchable);
+        $key->setIsAttributeKeyContentIndexed($akIsSearchableIndexed);
         $this->entity->getAttributes()->add($key);
         return $this;
     }

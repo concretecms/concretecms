@@ -1,3 +1,4 @@
+/* stylelint-disable */
 // Content grouping
 //
 // 1. Reset Firefox's gray color
@@ -333,7 +334,6 @@ label {
 // See https://github.com/twbs/bootstrap/issues/24093
 
 button {
-  // stylelint-disable-next-line property-disallowed-list
   border-radius: 0;
 }
 

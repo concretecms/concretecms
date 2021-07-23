@@ -12,7 +12,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('url_slug');
-        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-text'));
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-alt'));
     }
 
     public function getPageTypeComposerControlName()

@@ -1,6 +1,7 @@
 <template>
     <div class="ms-auto d-flex dropend">
-        <a href="javascript:void(0)" data-bs-auto-close="false" data-bs-toggle="dropdown" class="btn btn-sm btn-secondary">
+        <a href="javascript:void(0)" data-bs-auto-close="false" data-bs-toggle="dropdown"
+           class="btn btn-sm btn-secondary">
             <slot name="icon"></slot>
         </a>
         <div class="dropdown-menu">
@@ -18,13 +19,15 @@
 
 <style lang="scss">
 form.flyout-menu-form {
-    min-width: 350px;
-    div.ccm-item-selector-group {
-        display: grid;
-    }
-    div.ccm-item-selector-choose {
-        display: grid;
-    }
+  min-width: 350px;
+
+  div.ccm-item-selector-group {
+    display: grid;
+  }
+
+  div.ccm-item-selector-choose {
+    display: grid;
+  }
 }
 </style>
 
@@ -49,11 +52,11 @@ export default {
         // dropdown is shown but that results in jittery jumping all over the place. Instead let's just append it to
         // a root div we know will be there.
         var my = this
-        this.$el.querySelector('[data-bs-toggle=dropdown]').addEventListener('show.bs.dropdown', function() {
+        this.$el.querySelector('[data-bs-toggle=dropdown]').addEventListener('show.bs.dropdown', function () {
             my.dropdownMenu = $(my.$el.querySelector('.dropdown-menu'))
             my.dropdownMenu.appendTo('#ccm-tooltip-holder')
         })
-        this.$el.querySelector('[data-bs-toggle=dropdown]').addEventListener('hide.bs.dropdown', function() {
+        this.$el.querySelector('[data-bs-toggle=dropdown]').addEventListener('hide.bs.dropdown', function () {
             if (my.dropdownMenu) {
                 my.dropdownMenu.appendTo($(my.$el))
                 my.dropdownMenu = null
@@ -69,9 +72,7 @@ export default {
         }
          */
     },
-    computed: {
-
-    },
+    computed: {},
     props: {
         label: {
             type: String

@@ -223,7 +223,14 @@ class PageController extends Controller
         if ($requestPath === null) {
             $requestPath = $request->getPath();
         }
-        $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
+
+        if (!empty($this->c->getCollectionPath()) && strpos($requestPath, $this->c->getCollectionPath()) !== false) {
+            // If the request path starts with the collection path, remove it
+            $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
+        } else {
+            // Otherwise, just remove leading slash
+            $task = ltrim($requestPath, '/');
+        }
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
         if (isset($taskparts[0]) && $taskparts[0] !== '') {
@@ -352,17 +359,6 @@ class PageController extends Controller
                         return Redirect::page($this->getPageObject(), 301);
                     }
                 }
-            }
-        }
-
-        // If a request path is shorter than the collection path, the request is not valid
-        // Example: If a request is made to "domain.com/d" but the shortest path is "domain.com/de"
-        // a 404 response should be returned.
-        $requestPath = $this->request->getPath();
-        if ($requestPath !== '') {
-            $collectionPath = $this->getPageObject()->getCollectionPath();
-            if (strlen($requestPath) < strlen($collectionPath)) {
-                $valid = false;
             }
         }
 

@@ -68,18 +68,17 @@
         <div class="d-none">
             <div data-dialog="theme-customizer-custom-css">
 
-                <div id="theme-customizer-custom-css-editor" style="height: 420px; border: 1px solid #ddd"></div>
+                <div id="theme-customizer-custom-css-editor"></div>
 
             </div>
         </div>
-
 
     </div>
 </template>
 
 <script>
 /* eslint-disable no-new */
-/* global ConcreteEvent ConcretePanelManager */
+/* global ConcreteEvent ConcretePanelManager ace */
 import ColorPageCustomizerWidget from './ColorPageCustomizerWidget'
 import FontFamilyPageCustomizerWidget from './FontFamilyPageCustomizerWidget'
 import SizePageCustomizerWidget from './SizePageCustomizerWidget'
@@ -153,14 +152,13 @@ export default {
                 height: 'auto',
                 title: 'Custom CSS',
                 onOpen: function() {
-
-                    var editor = ace.edit("theme-customizer-custom-css-editor");
-                    editor.setTheme("ace/theme/eclipse");
-                    editor.getSession().setMode("ace/mode/css");
+                    var editor = ace.edit('theme-customizer-custom-css-editor')
+                    editor.setTheme('ace/theme/eclipse')
+                    editor.getSession().setMode('ace/mode/css')
                     editor.setValue(my.customizerCustomCss)
                     editor.getSession().on('change', function() {
                         my.customizerCustomCss = editor.getValue()
-                    });
+                    })
                 },
 
                 onClose: function() {
@@ -218,7 +216,6 @@ export default {
         }
     },
     mounted() {
-
         if (this.customCss) {
             this.addCustomCss = true
             this.customizerCustomCss = this.customCss

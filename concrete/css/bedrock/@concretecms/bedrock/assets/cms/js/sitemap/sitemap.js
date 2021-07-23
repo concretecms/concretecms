@@ -612,7 +612,6 @@
                 CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/submit',
                 params,
                 function(resp) {
-                    resp = JSON.parse(resp)
                     jQuery.fn.dialog.closeAll()
                     jQuery.fn.dialog.hideLoader()
                     ConcreteAlert.notify({ message: resp.message })
@@ -620,7 +619,7 @@
                     jQuery.fn.dialog.closeTop()
                     jQuery.fn.dialog.closeTop()
                 }
-            ).error(function(xhr, status, error) {
+            ).fail(function(xhr, status, error) {
                 jQuery.fn.dialog.hideLoader()
                 var msg = error; var json = xhr ? xhr.responseJSON : null
                 if (json && json.error) {
