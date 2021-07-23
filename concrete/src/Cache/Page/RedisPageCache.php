@@ -37,9 +37,13 @@ class RedisPageCache extends PageCache
     public function getRecord($mixed)
     {
         $item = $this->getCacheItem($mixed);
-        $record = $item->get();
-        if ($record instanceof PageCacheRecord) {
-            return $record;
+        
+        if ($item !== null) {
+            $record = $item->get();
+
+            if ($record instanceof PageCacheRecord) {
+                return $record;
+            }
         }
     }
 
@@ -52,13 +56,15 @@ class RedisPageCache extends PageCache
         if ($content) {
             $item = $this->getCacheItem($c);
 
-            // Let other processes know that this one is rebuilding the data.
-            $item->lock();
+            if ($item !== null) {
+                // Let other processes know that this one is rebuilding the data.
+                $item->lock();
 
-            $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
-            $response = new PageCacheRecord($c, $content, $lifetime);
-            $item->set($response);
-            self::$pool->save($item);
+                $lifetime = $c->getCollectionFullPageCachingLifetimeValue();
+                $response = new PageCacheRecord($c, $content, $lifetime);
+                $item->set($response);
+                self::$pool->save($item);
+            }
         }
     }
 

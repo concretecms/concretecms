@@ -47,6 +47,7 @@
     "symfony/messenger": "^5.2",
     "symfony/serializer": "^5.2",
     "symfony/yaml":"^4",
+    "scssphp/scssphp": "^1.4",
     "doctrine/dbal": "~2.5",
     "doctrine/orm": "^2.6.3",
     "doctrine/common": "^2",
@@ -61,7 +62,7 @@
     "imagine/imagine": "^1.1.0",
     "michelf/php-markdown": "1.*",
     "filp/whoops": "2.*",
-    "pagerfanta/pagerfanta": "~1.0.1 ~1.0",
+    "pagerfanta/pagerfanta": "2.7.*",
     "htmlawed/htmlawed": "1.*",
     "mobiledetect/mobiledetectlib": "2.*",
     "monolog/monolog": "^1.5.0",
@@ -102,7 +103,7 @@
     "league/pipeline": "^1.0",
     "symfony/property-access": "^5.2",
     "theorchard/monolog-cascade": "0.5.x-dev",
-    "commerceguys/addressing": "^1.0",
+    "commerceguys/addressing": "^1.2.0",
     "sabre/vobject": "^4.3",
     "symfony/mercure": "^0.4.1",
     "dragonmantank/cron-expression": "^3.1",
@@ -113,5 +114,8 @@
     "branch-alias": {
       "dev-develop": "8.x-dev"
     }
+  },
+  "conflict": {
+    "doctrine/dbal": ">=2.12"
   }
 }

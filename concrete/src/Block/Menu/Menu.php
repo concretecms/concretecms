@@ -138,7 +138,7 @@ class Menu extends PopoverMenu
                         'data-area-grid-maximum-columns' => $a->getAreaGridMaximumColumns()
                     ]));
                 }
-            } else {
+            } elseif (is_null($_bo) || $_bo && $_bo->isEditable() == true) {
                 $this->addItem(new LinkItem('javascript:void(0)', t('Edit Block'), [
                     'data-menu-action' => 'block_dialog',
                     'data-menu-href' => \URL::to('/ccm/system/dialogs/block/edit'),

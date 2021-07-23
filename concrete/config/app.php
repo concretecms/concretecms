@@ -212,7 +212,6 @@ return [
         'single_page',
         'storage_location_type',
         'theme',
-        'user_point_action',
         'workflow',
         'workflow_progress_category',
         'workflow_type',
@@ -407,7 +406,7 @@ return [
                 'js/bootstrap.js',
                 [
                     'position' => Asset::ASSET_POSITION_FOOTER,
-                    'version' => '4.0.0'
+                    'version' => '5.0.0'
                 ]
             ]
         ],

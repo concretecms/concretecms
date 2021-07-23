@@ -1,27 +1,29 @@
 <?php
 namespace Concrete\Core\StyleCustomizer;
 
-use Core;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Style\Parser\ParserManager;
 
 class StyleListParser
 {
-    protected $root;
+    /**
+     * @var ParserManager
+     */
+    protected $manager;
 
-    public function __construct(\SimpleXMLElement $root)
+    public function __construct(ParserManager $manager)
     {
-        $this->root = $root;
+        $this->manager = $manager;
     }
 
-    public function parse()
+    public function parse(\SimpleXMLElement $root, SkinInterface $skin)
     {
         $sl = new StyleList();
-        foreach ($this->root->set as $xset) {
-            $set = $sl->addSet((string) $xset['name']);
-            foreach ($xset->style as $xstyle) {
-                $type = camelcase((string) $xstyle['type']);
-                $style = Core::make('\\Concrete\\Core\\StyleCustomizer\\Style\\' . $type . 'Style');
-                $style->setName((string) $xstyle['name']);
-                $style->setVariable((string) $xstyle['variable']);
+        foreach ($root->set as $setNode) {
+            $set = $sl->addSet((string) $setNode['name']);
+            foreach ($setNode->style as $styleNode) {
+                $parser = $this->manager->driver((string) $styleNode['type']);
+                $style = $parser->parseNode($styleNode, $skin);
                 $set->addStyle($style);
             }
         }

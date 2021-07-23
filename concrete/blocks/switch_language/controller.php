@@ -95,7 +95,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
 
-        $this->action_switch_language($this->post('rcID'), $this->post('language'));
+        return $this->action_switch_language($this->post('rcID'), $this->post('language'));
     }
 
     public function add()

@@ -2217,60 +2217,6 @@ EOT
     }
 
     /**
-     * Clears the custom theme styles for this page.
-     */
-    public function resetCustomThemeStyles()
-    {
-        $db = Database::connection();
-        $db->executeQuery('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', [$this->getCollectionID(), $this->getVersionID()]);
-        $this->writePageThemeCustomizations();
-    }
-
-    /**
-     * Set the custom style for this page for a specific theme.
-     *
-     * @param \Concrete\Core\Page\Theme\Theme $theme
-     * @param \Concrete\Core\StyleCustomizer\Style\ValueList $valueList
-     * @param \Concrete\Core\StyleCustomizer\Preset|null|false $selectedPreset
-     * @param \Concrete\Core\Entity\StyleCustomizer\CustomCssRecord $customCssRecord
-     * @param \Concrete\Core\Page\Theme\Theme $pt
-     *
-     * @return \Concrete\Core\Page\CustomStyle
-     */
-    public function setCustomStyleObject(\Concrete\Core\Page\Theme\Theme $pt, \Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
-    {
-        $db = Database::connection();
-        $db->delete('CollectionVersionThemeCustomStyles', ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()]);
-        $preset = false;
-        if ($selectedPreset) {
-            $preset = $selectedPreset->getPresetHandle();
-        }
-        $sccRecordID = 0;
-        if ($customCssRecord !== null) {
-            $sccRecordID = $customCssRecord->getRecordID();
-        }
-        $db->insert(
-            'CollectionVersionThemeCustomStyles',
-            [
-                'cID' => $this->getCollectionID(),
-                'cvID' => $this->getVersionID(),
-                'pThemeID' => $pt->getThemeID(),
-                'sccRecordID' => $sccRecordID,
-                'preset' => $preset,
-                'scvlID' => $valueList->getValueListID(),
-            ]
-        );
-
-        $scc = new \Concrete\Core\Page\CustomStyle();
-        $scc->setThemeID($pt->getThemeID());
-        $scc->setValueListID($valueList->getValueListID());
-        $scc->setPresetHandle($preset);
-        $scc->setCustomCssRecordID($sccRecordID);
-
-        return $scc;
-    }
-
-    /**
      * Get the CSS class to be used to wrap the whole page contents.
      *
      * @return string
@@ -2295,40 +2241,6 @@ EOT
         }
 
         return implode(' ', $classes);
-    }
-
-    /**
-     * Write the page theme customization CSS files to the cache directory.
-     */
-    public function writePageThemeCustomizations()
-    {
-        $theme = $this->getCollectionThemeObject();
-        if (is_object($theme) && $theme->isThemeCustomizable()) {
-            $style = $this->getCustomStyleObject();
-            $scl = is_object($style) ? $style->getValueList() : null;
-
-            $theme->setStylesheetCachePath(Config::get('concrete.cache.directory') . '/pages/' . $this->getCollectionID());
-            $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
-            $sheets = $theme->getThemeCustomizableStyleSheets();
-            foreach ($sheets as $sheet) {
-                if (is_object($scl)) {
-                    $sheet->setValueList($scl);
-                    $sheet->output();
-                } else {
-                    $sheet->clearOutputFile();
-                }
-            }
-        }
-    }
-
-    /**
-     * Clears the custom theme styles for every page.
-     */
-    public static function resetAllCustomStyles()
-    {
-        $db = Database::connection();
-        $db->delete('CollectionVersionThemeCustomStyles', ['1' => 1]);
-        Core::make('app')->clearCaches();
     }
 
     /**

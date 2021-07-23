@@ -15,7 +15,7 @@ class Containers extends DashboardPageController
         $this->set(
             'containers',
             $this->entityManager->getRepository(Container::class)
-                ->findAll()
+                ->findBy([], ['containerName' => 'asc'])
         );
     }
 

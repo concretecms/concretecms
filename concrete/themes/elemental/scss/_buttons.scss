@@ -1,0 +1,3 @@
+.btn-success {
+  @include button-variant($btn-success-background-color, $btn-success-border-color, #fff);
+}

@@ -13,24 +13,20 @@ foreach ($pagetypes as $pt) {
 
 <div class="form-horizontal">
 	<div class="control-group">
-		<label class="control-label"><?=t('Enable New Topics')?></label>
+		<label class="control-label form-label"><?=t('Enable New Topics')?></label>
 		<div class="controls">
-			<div class="radio">
-                <label>
-				<?=$form->radio('enablePostingFromGathering', 0, $enablePostingFromGathering)?>
-				<span><?=t('No, posting is disabled.')?></span>
-                </label>
+			<div class="form-check">
+                <?=$form->radio('enablePostingFromGathering', 0, $enablePostingFromGathering)?>
+                <?=$form->label('enablePostingFromGathering1', ('No, posting is disabled.'))?>
 			</div>
-			<div class="radio">
-                <label>
-				<?=$form->radio('enablePostingFromGathering', 1, $enablePostingFromGathering)?>
-				<span><?=t('Yes, this gathering can be posted to the front-end.')?></span>
-                    </label>
+			<div class="form-check">
+                <?=$form->radio('enablePostingFromGathering', 1, $enablePostingFromGathering)?>
+                <?=$form->label('enablePostingFromGathering2', ('Yes, this gathering can be posted to the front-end.'))?>
 			</div>
 		</div>
 	</div>
 	<div class="control-group" data-row="enablePostingFromGathering">
-		<label class="control-label"><?=t('Create pages using')?></label>
+		<label class="control-label form-label"><?=t('Create pages using')?></label>
 		<div class="controls" data-select="page">
 			<?=$form->select('ptID', $types, $ptID)?>
 		</div>

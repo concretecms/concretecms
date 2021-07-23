@@ -52,7 +52,7 @@ if ($version) {
             <nav class="nav flex-column">
                 <?php foreach($tabs as $tab) { ?>
                     <a class="nav-link <?php if ($tab[2]) { ?>active<?php } ?>" href="#<?=$tab[0]?>"
-                       data-toggle="tab" id="#<?=$tab[0]?>-tab"><?=$tab[1]?></a>
+                       data-bs-toggle="tab" id="#<?=$tab[0]?>-tab"><?=$tab[1]?></a>
                 <?php } ?>
             </nav>
 
@@ -68,14 +68,18 @@ if ($version) {
                 if ($occurrence->getRepetition()->repeats()) {
                     ?>
                     <div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="edit_type" value="local"/> <?= t('Just this occurrence') ?>
+                        <div class="form-check">
+
+                                <input type="radio" class="form-check-input" name="edit_type" id="edit_type1" value="local"/>
+                                <label class="form-check-label" for="edit_type1">
+                                    <?= t('Just this occurrence') ?>
                             </label>
                         </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="edit_type" value="all" checked/> <?= t('All occurrences') ?>
+                        <div class="form-check">
+
+                                <input type="radio" class="form-check-input" name="edit_type" id="edit_type2" value="all" checked/>
+                            <label class="form-check-label" for="edit_type2">
+                                <?= t('All occurrences') ?>
                             </label>
                         </div>
                     </div>
@@ -88,7 +92,7 @@ if ($version) {
 
 
                 <div class="form-group">
-                    <label for="name" class="control-label">
+                    <label for="name" class="control-label form-label">
                         <?= t('Name') ?>
                     </label>
 
@@ -96,7 +100,7 @@ if ($version) {
                     <hr/>
                 </div>
                 <div class="form-group">
-                    <label for="name" class="control-label">
+                    <label for="name" class="control-label form-label">
                         <?= t('Description') ?>
                     </label>
 
@@ -106,7 +110,7 @@ if ($version) {
                 <?php if ($permissions->canEditCalendarEventMoreDetailsLocation()) { ?>
 
                     <div class="form-group">
-                        <label for="page" class="control-label"><?=t('More Details Link Destination')?></label>
+                        <label for="page" class="control-label form-label"><?=t('More Details Link Destination')?></label>
                         <?php
                         $cID = false;
                         if (is_object($version)) {

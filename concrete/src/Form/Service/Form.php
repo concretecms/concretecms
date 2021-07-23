@@ -159,7 +159,7 @@ class Form
             $result .= ' for="' . $forFieldID . '"';
         }
 
-        return $result . $this->serializeMiscFields('', $miscFields, []) . '>' . $innerHTML . '</label>';
+        return $result . $this->serializeMiscFields('form-label', $miscFields, []) . '>' . $innerHTML . '</label>';
     }
 
     /**
@@ -478,7 +478,7 @@ class Form
             $this->selectIndex++;
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 $str .= '<optgroup label="' . h($k) . '">';
@@ -495,7 +495,7 @@ class Form
                 if ((string) $k === (string) $selectedValue) {
                     $str .= ' selected="selected"';
                 }
-                $str .= '>' . $text . '</option>';
+                $str .= '>' . h($text) . '</option>';
             }
         }
         $str .= '</select>';
@@ -639,7 +639,7 @@ class Form
             $optionValues = [];
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 if (count($text) > 0) {
@@ -677,7 +677,7 @@ class Form
      */
     public function password($key, $valueOrMiscFields = '', $miscFields = [])
     {
-        return $this->inputType($key, 'password', $valueOrMiscFields, $miscFields);
+        return $this->inputType($key, 'password', $valueOrMiscFields, array_merge(["autocomplete" => "off"], $miscFields));
     }
 
     /**
@@ -691,7 +691,7 @@ class Form
         $result = <<<EOT
 <div id="{$id}" style="position: absolute; top: -1000px; opacity: 0">
     <input type="text" id="{$id}_username" tabindex="-1" />
-    <input type="password" id="{$id}_password" tabindex="-1" />
+    <input type="password" id="{$id}_password" autocomplete="off" tabindex="-1" />
     <script>
     (function() {
         function removeFake() {

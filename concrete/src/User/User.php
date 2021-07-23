@@ -1,7 +1,9 @@
 <?php
+
 namespace Concrete\Core\User;
 
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Entity\Notification\GroupSignupNotification;
 use Concrete\Core\Entity\User\GroupSignup;
@@ -20,7 +22,6 @@ use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\Group\GroupRole;
 use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Concrete\Core\Encryption\PasswordHasher;
 
 class User extends ConcreteObject
@@ -174,6 +175,7 @@ class User extends ConcreteObject
             $password = $args[1];
             $disableLogin = isset($args[2]) ? (bool) $args[2] : false;
             if (!$disableLogin) {
+                $session->migrate();
                 $session->remove('uGroups');
                 $session->remove('accessEntities');
             }
@@ -400,7 +402,7 @@ class User extends ConcreteObject
         $app = Application::getFacadeApplication();
         $at = AuthenticationType::getByHandle($authType);
         $token = $at->getController()->buildHash($this);
-        $value = new PersistentAuthentication\CookieValue((int) $this->getUserID(), $authType, $token);
+        $value = new PersistentAuthentication\CookieValue((int)$this->getUserID(), $authType, $token);
         $app->make(PersistentAuthentication\CookieService::class)->setCookie($value);
     }
 
@@ -452,7 +454,7 @@ class User extends ConcreteObject
         $this->unloadAuthenticationTypes();
 
         $this->invalidateSession($hard);
-        $app->singleton(User::class, function() {
+        $app->singleton(User::class, function () {
             return new User();
         });
         $events->dispatch('on_user_logout');
@@ -630,7 +632,7 @@ class User extends ConcreteObject
             }
         } else {
 
-            if ((int) $this->getUserID() > 0) {
+            if ((int)$this->getUserID() > 0) {
                 $entities = PermissionAccessEntity::getForUser($this);
             } else {
                 $group = Group::getByID(GUEST_GROUP_ID);
@@ -737,7 +739,7 @@ class User extends ConcreteObject
                     'ugEntered' => $dt->getOverridableNow(),
                     'grID' => $grID
                 ],
-                ['uID', 'gID'], true);
+                    ['uID', 'gID'], true);
 
                 $ue = new \Concrete\Core\User\Event\UserGroup($this);
                 $ue->setGroupObject($g);
@@ -809,7 +811,7 @@ class User extends ConcreteObject
             ->setMaxResults(1);
         $results = $query->execute()->fetchColumn();
 
-        return (bool) $results;
+        return (bool)$results;
     }
 
     /**
@@ -834,7 +836,7 @@ class User extends ConcreteObject
             ->setMaxResults(1);
         $results = $query->execute()->fetchColumn();
 
-        return (bool) $results;
+        return (bool)$results;
     }
 
     /**
@@ -959,7 +961,7 @@ class User extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
 
-        return (int) $app['session']->get('frontendPreviousPageID');
+        return (int)$app['session']->get('frontendPreviousPageID');
     }
 
     /**
@@ -1008,9 +1010,9 @@ class User extends ConcreteObject
     }
 
     /**
+     * @return \Hautelook\Phpass\PasswordHash
      * @deprecated Use $app->make(\Concrete\Core\Encryption\PasswordHasher::class)
      *
-     * @return \Hautelook\Phpass\PasswordHash
      */
     public function getUserPasswordHasher()
     {
@@ -1037,6 +1039,10 @@ class User extends ConcreteObject
 
         $app = Application::getFacadeApplication();
 
+
+        /** @var Repository $config */
+        $config = $app->make(Repository::class);
+
         /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
         $session = $app['session'];
         $session->set('uID', $this->getUserID());
@@ -1048,8 +1054,23 @@ class User extends ConcreteObject
         $session->set('uDefaultLanguage', $this->getUserDefaultLanguage());
         $session->set('uLastPasswordChange', $this->getLastPasswordChange());
 
+        /** @var \Concrete\Core\Cookie\CookieJar $cookie */
         $cookie = $app['cookie'];
-        $cookie->set(sprintf('%s_LOGIN', $app['config']->get('concrete.session.name')), 1);
+
+        $cookie->set(
+            sprintf('%s_LOGIN', $app['config']->get('concrete.session.name')),
+            1,
+            // $expire
+            time() + (int)$config->get('concrete.session.remember_me.lifetime'),
+            // $path
+            DIR_REL . '/',
+            // $domain
+            $config->get('concrete.session.cookie.cookie_domain'),
+            // $secure
+            $config->get('concrete.session.cookie.cookie_secure'),
+            // $httpOnly
+            $config->get('concrete.session.cookie.cookie_httponly')
+        );
 
         if ($cache_interface) {
             $app->make('helper/concrete/ui')->cacheInterfaceItems();

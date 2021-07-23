@@ -18,16 +18,16 @@ if (empty($interfacelocales)) {
     <form method="post" action="<?= $view->action('save_interface_language') ?>">
         <fieldset>
             <div class="form-group">
-                <?= $form->label('LANGUAGE_CHOOSE_ON_LOGIN', t('Login')) ?>
+                <?= $form->label('', t('Login')) ?>
                 <div class="form-check">
-                    <label><?= $form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN) ?>&nbsp;<?= t('Offer choice of language on login.') ?></label>
+                    <?= $form->checkbox('LANGUAGE_CHOOSE_ON_LOGIN', 1, $LANGUAGE_CHOOSE_ON_LOGIN) ?>&nbsp;
+                    <?= $form->label('LANGUAGE_CHOOSE_ON_LOGIN',t('Offer choice of language on login.'), ['class'=>'form-check-label']) ?>
                 </div>
             </div>
             <div class="form-group">
                 <?= $form->label('SITE_LOCALE', t('Default Language')) ?>
-                <div class="checkbox">
+
                     <?= $form->select('SITE_LOCALE', $interfacelocales, $SITE_LOCALE) ?>
-                </div>
             </div>
             <?php $token->output('save_interface_language') ?>
         </fieldset>
@@ -42,7 +42,7 @@ if (empty($interfacelocales)) {
 
 if (isset($mlLink)) {
     ?>
-    <div class="ml-3 alert alert-info small">
+    <div class="ms-3 alert alert-info small">
         <?= t(
             'You can configure the site languages in the %s dashboard page.',
             sprintf('<a href="%s">%s</a>', h($mlLink[1]), h($mlLink[0]))

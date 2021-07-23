@@ -61,7 +61,6 @@
       <col>ptID</col>
     </index>
   </table>
-
   <table name="PageTypePageTemplates">
     <field name="ptID" type="integer" size="10">
       <unsigned/>
@@ -1575,27 +1574,6 @@
     </index>
   </table>
 
-  <table name="CollectionVersionFeatureAssignments">
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="cvID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="1"/>
-    </field>
-    <field name="faID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <index name="faID">
-      <col>faID</col>
-    </index>
-  </table>
-
   <table name="CollectionVersionThemeCustomStyles">
     <field name="cID" type="integer" size="10">
       <unsigned/>
@@ -1629,37 +1607,6 @@
     </index>
     <index name="sccRecordID">
       <col>sccRecordID</col>
-    </index>
-  </table>
-
-  <table name="BlockFeatureAssignments">
-    <field name="cID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="cvID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="bID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <field name="faID" type="integer" size="10">
-      <unsigned/>
-      <key/>
-      <default value="0"/>
-    </field>
-    <index name="faID">
-      <col>faID</col>
-      <col>cID</col>
-      <col>cvID</col>
-    </index>
-    <index name="bID">
-      <col>bID</col>
     </index>
   </table>
 
@@ -3023,74 +2970,6 @@
     </index>
     <index name="jsName">
       <col>jsName</col>
-    </index>
-  </table>
-
-  <table name="UserPointHistory">
-    <field name="upID" type="integer" size="11">
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="upuID" type="integer" size="11">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="upaID" type="integer" size="11">
-      <default value="0"/>
-    </field>
-    <field name="upPoints" type="integer" size="11">
-      <default value="0"/>
-    </field>
-    <field name="object" type="text"/>
-    <field name="timestamp" type="timestamp">
-      <deftimestamp/>
-      <notnull/>
-    </field>
-    <index name="upuID">
-      <col>upuID</col>
-    </index>
-    <index name="upaID">
-      <col>upaID</col>
-    </index>
-  </table>
-
-  <table name="UserPointActions">
-    <field name="upaID" type="integer" size="11">
-      <autoincrement/>
-      <key/>
-    </field>
-    <field name="upaHandle" type="string" size="255"/>
-    <field name="upaName" type="string" size="255"/>
-    <field name="upaDefaultPoints" type="integer" size="11">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="pkgID" type="integer" size="10">
-      <unsigned/>
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="upaHasCustomClass" type="boolean">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <field name="upaIsActive" type="boolean">
-      <default value="1"/>
-      <notnull/>
-    </field>
-    <field name="gBadgeID" type="integer" size="11">
-      <default value="0"/>
-      <notnull/>
-    </field>
-    <index name="upaHandle">
-      <unique/>
-      <col>upaHandle</col>
-    </index>
-    <index name="pkgID">
-      <col>pkgID</col>
-    </index>
-    <index name="gBBadgeID">
-      <col>gBadgeID</col>
     </index>
   </table>
 

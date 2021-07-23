@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Search\Field;
 
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Page\Search\Field\Field\ContainsBlockTypeField;
+use Concrete\Core\Page\Search\Field\Field\ContainsContainerField;
 use Concrete\Core\Page\Search\Field\Field\DateAddedField;
 use Concrete\Core\Page\Search\Field\Field\DateLastModifiedField;
 use Concrete\Core\Page\Search\Field\Field\DatePublicField;
@@ -22,6 +23,7 @@ use Concrete\Core\Page\Search\Field\Field\PageOwnerField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
 use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Support\Facade\Facade;
+use Doctrine\ORM\EntityManager;
 
 class Manager extends FieldManager
 {
@@ -45,7 +47,8 @@ class Manager extends FieldManager
             new PermissionsInheritanceField(),
             new DateLastModifiedField(),
             new DatePublicField(),
-            new ContainsBlockTypeField()
+            new ContainsBlockTypeField(),
+            new ContainsContainerField()
         ];
         $app = Facade::getFacadeApplication();
         $siteService = $app->make('site');

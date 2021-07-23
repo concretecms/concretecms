@@ -1,0 +1,15 @@
+// jQuery UI
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+@import '../../../cms/scss/variables';
+
+@import 'jquery-ui/themes/base/core';
+@import 'jquery-ui/themes/base/dialog';
+@import '../../../cms/scss/jquery-ui/theme';
+@import '../../../cms/scss/jquery-ui/overrides';
+
+@import '../../../cms/scss/dialog';
+@import '../../../cms/scss/nprogress';
+
+@import 'document-library';

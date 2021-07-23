@@ -5,11 +5,14 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Config;
 use Exception;
 
-class Themes extends DashboardPageController
+class Themes extends DashboardSitePageController
 {
     public function view()
     {
@@ -18,39 +21,55 @@ class Themes extends DashboardPageController
 
         $this->set('tArray', $tArray);
         $this->set('tArray2', $tArray2);
-        $siteThemeID = 0;
-        $obj = Theme::getSiteTheme();
-        if (is_object($obj)) {
-            $siteThemeID = $obj->getThemeID();
+
+        $activeTheme = Theme::getSiteTheme();
+        $this->set('activeTheme', $activeTheme);
+
+        if ($activeTheme->hasSkins()) {
+            $themeSkinIdentifier = $this->site->getThemeSkinIdentifier();
+            if (!$themeSkinIdentifier) {
+                $themeSkinIdentifier = SkinInterface::SKIN_DEFAULT;
+            }
+            $this->set('themeSkinIdentifier', $themeSkinIdentifier);
         }
 
-        $this->set('siteThemeID', $siteThemeID);
         $this->set('activate', $this->action('activate'));
         $this->set('install', $this->action('install'));
     }
 
-    public function save_mobile_theme()
+    public function save_selected_skin()
     {
-        if (!$this->token->validate('save_mobile_theme')) {
-            $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
-
-            return $this->view();
+        $activeTheme = Theme::getSiteTheme();
+        if (!$this->token->validate('save_selected_skin')) {
+            $this->error->add($this->token->getErrorMessage());
         }
 
-        $pt = Theme::getByID($this->post('MOBILE_THEME_ID'));
-        if (is_object($pt)) {
-            Config::save('concrete.misc.mobile_theme_id', $pt->getThemeID());
-        } else {
-            Config::save('concrete.misc.mobile_theme_id', 0);
+        if (!$this->error->has()) {
+            $this->site->setThemeSkinIdentifier($this->request->request->get('themeSkinIdentifier'));
+            $this->entityManager->persist($this->site);
+            $this->entityManager->flush();
+            $this->flash('success', t('Theme skin updated.'));
         }
-
-        return $this->buildRedirect($this->action('mobile_theme_saved'));
+        return $this->buildRedirect($this->action());
     }
 
-    public function mobile_theme_saved()
+    public function preview($pThemeID = null)
     {
-        $this->set('success', t('Mobile theme saved.'));
-        $this->view();
+        $theme = Theme::getByID($pThemeID);
+        if ($theme) {
+            $skins = $theme->getSkins();
+            $this->set('customizeTheme', $theme);
+            $this->set('skins', $skins);
+            $this->set('selectedSkin', $theme->getThemeDefaultSkin());
+            $this->setTheme('concrete');
+            $this->setThemeViewTemplate('empty.php');
+
+            $previewPage = $this->app->make('site')->getSite()->getSiteHomePageObject();
+            $this->set('previewPage', $previewPage);
+            $this->render('/dashboard/pages/themes/preview');
+        } else {
+            return $this->buildRedirect($this->action());
+        }
     }
 
     public function remove($pThemeID, $token = '')
@@ -82,7 +101,8 @@ class Themes extends DashboardPageController
             if ($pl->getPackageID() > 0) {
                 $pkg = $this->app->make(PackageService::class)->getByID($pl->getPackageID());
                 // then we check to see if this is the only theme in that package. If so, we uninstall the package too
-                $manager = new Manager($this->app);
+                /** @var Manager $manager */
+                $manager = $this->app->make(Manager::class, [$this->app]);
                 $categories = $manager->getPackageItemCategories();
                 $items = [];
                 foreach ($categories as $category) {

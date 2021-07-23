@@ -1,0 +1,38 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+// ---- Set up our theme colors
+$green: #75ca2a;
+$blue: #0099ff;
+$light-green: #0c6;
+
+$link-color: $secondary;
+$link-decoration: none;
+
+// ---- Theme variables
+$primary-margin-y: 100px;
+$header-footer-padding: 30px;
+
+// hr
+$hr-margin-y: $primary-margin-y;
+
+// buttons
+$btn-border-radius: 20px;
+$btn-padding-x: 30px;
+$btn-padding-y: 10px;
+$btn-success-background-color: #0c6;
+$btn-success-border-color: #4cae4c;
+
+// colors
+$border-color: $gray-300;
+$bullet-color: $gray-300;
+$caption-color: $gray-300;
+
+// block quote
+$blockquote-border-width: 4px;
+$blockquote-border-style: solid;
+$blockquote-border-color: $gray-300;
+
+// Add light-green too default bs5 $theme-colors
+$custom-theme-colors: ('light-green': $light-green);
+$theme-colors: map-merge($theme-colors, $custom-theme-colors);

@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0a3',
     'version_installed' => '9.0.0a3',
-    'version_db' => '20210419000000', // the key of the latest database migration
+    'version_db' => '20210722225853', // the key of the latest database migration
 
     /*
      * Installation status
@@ -63,6 +63,84 @@ return [
          * @var int|null
          */
         'error_reporting' => null,
+
+        /**
+         * Hide specified superglobal keys and config items from whoops error output.
+         * If you wanted to hide an environment variable named "DB_PASSWORD", you'd specify it like this:
+         * ```
+         * '_ENV' => ['DB_PASSWORD'],
+         * ```
+         *
+         * The same applies for all superglobals.
+         *
+         * @var array<string, string[]>
+         */
+        'hide_keys' => [
+            /** @var string[] */
+            '_ENV' => [
+                // Likely database environment variables
+                'DB_PASSWORD',
+                'DB_USERNAME',
+                'DB_HOSTNAME',
+                'DB_HOST',
+                'DB_SERVER',
+                'DATABASE_PASSWORD',
+                'DATABASE_USERNAME',
+                'DATABASE_HOSTNAME',
+                'DATABASE_HOST',
+                'DATABASE_SERVER',
+            ],
+
+            /** @var string[] */
+            '_SERVER' => [
+                // Likely database environment variables
+                'DB_PASSWORD',
+                'DB_USERNAME',
+                'DB_HOSTNAME',
+                'DB_HOST',
+                'DB_SERVER',
+                'DATABASE_PASSWORD',
+                'DATABASE_USERNAME',
+                'DATABASE_HOSTNAME',
+                'DATABASE_HOST',
+                'DATABASE_SERVER',
+            ],
+
+            /** @var string[] */
+            '_GET' => [],
+
+            /** @var string[] */
+            '_POST' => [],
+
+            /** @var string[] */
+            '_FILES' => [],
+
+            /** @var string[] */
+            '_COOKIE' => [
+                'CONCRETE5',
+            ],
+
+            /** @var string[] */
+            '_SESSION' => [],
+
+            /**
+             * Hide specified config keys from whoops error output
+             * `concrete.debug.display_errors` will hide that specific config item while `concrete.debug` will hide
+             * all items in the `concrete.debug` array.
+             *
+             * @var string[]
+             */
+            'config' => [
+                'concrete.proxy.password',
+                'concrete.mail.methods.smtp.password',
+                'concrete.email.default.address',
+                'concrete.email.form_block.address',
+                'concrete.email.forgot_password.address',
+                'concrete.email.validate_registration.address',
+                'concrete.email.workflow_notification.address',
+                'concrete.debug.hide_keys',
+            ],
+        ]
     ],
 
     /*
@@ -891,6 +969,7 @@ return [
             'site_page' => '/private/sites',
             'newsflow_slot_content' => '/tools/slot_content/',
             'marketplace' => [
+                'projects' => '/profile/projects/',
                 'connect' => '/marketplace/connect',
                 'connect_success' => '/marketplace/connect/-/connected',
                 'connect_validate' => '/marketplace/connect/-/validate',

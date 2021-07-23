@@ -17,6 +17,10 @@
     <field name="company" type="string" size="255"/>
     <field name="companyURL" type="string" size="255"/>
     <field name="paragraph" type="text" size="65535"/>
+    <field name="awardImageID" type="integer">
+      <unsigned/>
+      <default value="0"/>
+    </field>
   </table>
 
 </schema>

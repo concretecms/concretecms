@@ -95,6 +95,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
         if (is_object($c) && !$c->isError()) {
             // Display not found
+            $dl = $this->app->make('multilingual/detector');
+            $dl->setupSiteInterfaceLocalization($c);
             $this->request->setCurrentPage($c);
 
             return $this->controller($c->getPageController(), $code, $headers);
@@ -124,6 +126,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $item = '/page_forbidden';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
+            $dl = $this->app->make('multilingual/detector');
+            $dl->setupSiteInterfaceLocalization($c);
             $this->request->setCurrentPage($c);
 
             return $this->controller($c->getPageController(), $code, $headers);
@@ -230,6 +234,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             throw new \RuntimeException('Cannot resolve collections without a reference to the application');
         }
 
+        $dl = $this->app->make('multilingual/detector');
         $request = $this->request;
 
         if ($collection->isError() && $collection->getError() == COLLECTION_NOT_FOUND) {
@@ -258,6 +263,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->app->make('token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
                 $v->addScopeItems(['c' => $collection]);
+                $dl->setupSiteInterfaceLocalization($collection);
                 $request->setCurrentPage($collection);
 
                 return $this->view($v, $code, $headers);
@@ -312,8 +318,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $response;
         }
 
-        $dl = $cms->make('multilingual/detector');
-
         if (!$request->getPath()
             && $request->isMethod('GET')
             && !$request->query->has('cID')
@@ -339,8 +343,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
-        $dl->setupSiteInterfaceLocalization($collection);
 
+        $dl->setupSiteInterfaceLocalization($collection);
         $request->setCurrentPage($collection);
         $u = $this->app->make(User::class);
 

@@ -80,8 +80,8 @@ class Controller extends GenericOauth1aTypeController
     public function saveAuthenticationType($args)
     {
         $config = $this->app->make('config');
-        $config->save('auth.twitter.appid', (string) ($args['apikey'] ?? ''));
-        $config->save('auth.twitter.secret', (string) ($args['apisecret'] ?? ''));
+        $config->save('auth.twitter.appid', trim((string) ($args['apikey'] ?? '')));
+        $config->save('auth.twitter.secret', trim((string) ($args['apisecret'] ?? '')));
         $config->save('auth.twitter.registration.enabled', !empty($args['registration_enabled']));
         $config->save('auth.twitter.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
     }

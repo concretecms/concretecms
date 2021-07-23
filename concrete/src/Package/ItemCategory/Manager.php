@@ -84,11 +84,6 @@ class Manager extends CoreManager
         return new Group();
     }
 
-    public function createUserPointActionDriver()
-    {
-        return new UserPointAction();
-    }
-
     public function createAttributeKeyCategoryDriver()
     {
         return new AttributeKeyCategory();

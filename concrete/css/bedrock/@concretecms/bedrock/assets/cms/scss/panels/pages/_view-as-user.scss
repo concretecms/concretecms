@@ -1,0 +1,42 @@
+div.preview-frame-container {
+  background: white;
+  box-shadow: $box-shadow;
+  min-height: 600px;
+  position: relative;
+
+  iframe {
+    background: white;
+    border: 0;
+  }
+
+}
+
+div#ccm-view-as-user-wrapper {
+  span.ccm-input-date-wrapper {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  input.ccm-input-date {
+    width: 100%;
+  }
+
+  .ccm-input-time-wrapper {
+    flex-flow: nowrap;
+    width: 100%;
+
+    select {
+      flex-grow: 1;
+      padding: 0.5rem;
+      width: auto;
+    }
+
+  }
+
+  .separator {
+    margin-right: 0;
+    padding-left: 1px;
+    padding-right: 5px;
+  }
+
+}

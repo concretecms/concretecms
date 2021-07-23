@@ -1,0 +1,71 @@
+.ccm-ui {
+  fieldset {
+    margin: 35px 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    legend {
+      color: $gray-500;
+      margin: 0 0 35px;
+    }
+
+    .form-group {
+      padding-left: 20px;
+    }
+  }
+
+  .form-group {
+    margin-bottom: $form-group-margin-bottom;
+
+    > label {
+      color: $gray-700;
+      font-weight: 600;
+    }
+
+    > .col-form-label {
+      color: $gray-700;
+      font-weight: 600;
+      text-align: right;
+    }
+
+  }
+
+  .form-check-label {
+    margin-bottom: 0;
+  }
+
+}
+
+
+.form-control {
+  &::placeholder {
+    font-style: italic;
+  }
+}
+
+.input-group > .input-group-icon {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.input-group-icon {
+  align-items: center;
+  background-color: white;
+  border: 2px solid #ebebeb;
+  border-radius: 4px;
+  color: $gray-500;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 0;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  white-space: nowrap;
+
+  &.disabled {
+    background-color: $gray-200;
+  }
+}

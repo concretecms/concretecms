@@ -123,6 +123,7 @@ const DIRNAME_CONFIG = 'config';
 const DIRNAME_BLOCK_TEMPLATES = 'templates';
 const DIRNAME_BLOCK_TEMPLATES_COMPOSER = 'composer';
 const DIRNAME_CSS = 'css';
+const DIRNAME_SCSS = 'scss';
 const DIRNAME_CLASSES = 'src';
 const DIRNAME_ENTITIES = 'Entity';
 const DIRNAME_PREVIEW = 'preview';
@@ -163,6 +164,7 @@ const DIRNAME_EXPRESS_CONTROL_OPTIONS = 'control';
 const DIRNAME_FORM_CONTROL_WRAPPER_TEMPLATES = 'form';
 const DIRNAME_EXPRESS_FORM_CONTROLS = 'form';
 const DIRNAME_EXPRESS_FORM_CONTROLS_ASSOCIATION = 'association';
+const DIRNAME_STYLE_CUSTOMIZER_SKINS = 'skins';
 const DIRNAME_METADATA_XML = 'xml';
 const DIRNAME_METADATA_YAML = 'yaml';
 const DIRNAME_GEOLOCATION = 'geolocation';
@@ -228,6 +230,7 @@ const FILENAME_GATHERING_ITEM_TEMPLATE_ICON = 'icon.png';
 const FILENAME_CONVERSATION_EDITOR_OPTIONS = 'options.php';
 const FILENAME_STYLE_CUSTOMIZER_STYLES = 'styles.xml';
 const FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME = 'defaults.less';
+const FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT = 'main.css';
 
 /*
  * ----------------------------------------------------------------------------

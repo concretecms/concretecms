@@ -149,6 +149,9 @@ class PagePathTest extends PageTestCase
 
     public function testPagePathUpdate()
     {
+        $cache = Core::make('cache/request');
+        $cache->disable();
+
         $home = Page::getByID(Page::getHomePageID());
         $pt = Type::getByID(1);
         $template = Template::getByID(1);

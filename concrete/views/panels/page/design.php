@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         if ($cp->canEditPageTemplate() && !$c->isGeneratedCollection()) {
             ?>
             <div class="ccm-panel-page-design-page-group" id="ccm-panel-page-design-page-templates"
-                 class="ccm-panel-page-design-page-group" data-panel-menu-id="page-templates" data-panel-menu="collapsible-list-group">
+                 class="ccm-panel-page-design-page-group" data-panel-menu-id="page-templates">
                 <div class="ccm-panel-page-design-title">
                     <?= t('Page Template') ?>
                 </div>
@@ -69,7 +69,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         if ($cp->canEditPageTheme()) {
             ?>
             <hr>
-            <div id="ccm-panel-page-design-themes" class="" data-panel-menu-id="themes" data-panel-menu="collapsible-list-group">
+            <div id="ccm-panel-page-design-themes" class="" data-panel-menu-id="themes">
                 <input type="hidden" name="pThemeID" value="<?= $selectedTheme->getThemeID() ?>" />
 
                 <div class="ccm-panel-page-design-title">
@@ -86,18 +86,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <span>
                             <i>
                                 <?= $th->getThemeThumbnail() ?>
-                                <?php
-                                if ($th->isThemeCustomizable()) {
-                                    ?>
-                                    <span class="ccm-page-design-theme-customize">
-                                        <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/preview') ?>" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID()) ?>">
-                                            <?= t('Customize') ?>
-                                            <i class="fa fa-share"></i>
-                                        </a>
-                                    </span>
-                                    <?php
-                                }
-                                ?>
                             </i>
                             <div class="ccm-panel-page-design-theme-description">
                                 <h5><?= $th->getThemeName() ?></h5>
@@ -113,8 +101,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php
             if (Config::get('concrete.marketplace.enabled')) {
                 ?>
-                <div class="ccm-marketplace-btn-wrapper">
-                <button type="button" onclick="window.location.href='<?= URL::to('/dashboard/extend/themes') ?>'" class="btn-info btn-block btn btn-large"><?= t("Get More Themes") ?></button>
+                <div class="ccm-marketplace-btn-wrapper d-grid">
+                <button type="button" onclick="window.location.href='<?= URL::to('/dashboard/extend/themes') ?>'" class="btn-info btn btn-large"><?= t("Get More Themes") ?></button>
                 </div>
                 <?php
             }
@@ -145,37 +133,18 @@ $(function() {
         parent2.insertBefore(elm1, next2);
     }
 
-    $('.list-group-item[data-theme-id]').on('click', function() {
+    $('[data-theme-id]').on('click', function() {
         $('#ccm-panel-page-design-themes input[name=pThemeID]').val($(this).attr('data-theme-id')).trigger('change');
         $('.ccm-page-design-theme-thumbnail-selected').removeClass('ccm-page-design-theme-thumbnail-selected');
         $(this).addClass('ccm-page-design-theme-thumbnail-selected');
     });
 
 
-    ConcreteEvent.subscribe('PanelCollapsibleListGroupCollapse', function(e, menuID) {
-        switch(menuID) {
-            case 'page-templates':
-                var $topitem = $('#ccm-panel-page-design-page-templates > label.list-group-item input[type=radio]');
-                var $checkeditem = $('#ccm-panel-page-design-page-templates input[type=radio]:checked');
-                if (!$topitem.is(':checked')) {
-                    swapElements($checkeditem.parent()[0], $topitem.parent()[0]);
-                }
-                break;
-            case 'themes':
-                var $topitem = $('#ccm-panel-page-design-themes > div.list-group-item[data-theme-id]');
-                var $checkeditem = $('#ccm-panel-page-design-themes .ccm-page-design-theme-thumbnail-selected');
-                if ($topitem.attr('data-theme-id') !== $checkeditem.attr('data-theme-id')) {
-                    swapElements($checkeditem[0], $topitem[0]);
-                }
-                break;
-        }
-    });
-
     $('#ccm-panel-page-design input[name=pThemeID], #ccm-panel-page-design input[name=pTemplateID]').on('change', function() {
         var pThemeID = $('#ccm-panel-page-design input[name=pThemeID]').val();
         var pTemplateID = $('#ccm-panel-page-design input[name=pTemplateID]:checked').val();
         var src = '<?= $controller->action("preview_contents") ?>&pThemeID=' + pThemeID + '&pTemplateID=' + pTemplateID;
-        $('#ccm-page-preview-frame').get(0).src = src;
+        $('iframe[name=ccm-page-preview-frame]').get(0).src = src;
     });
 
 });

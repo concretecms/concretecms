@@ -67,9 +67,6 @@ class PreviewVersion extends AbstractController
     {
         $this->request->setCustomRequestUser(-1);
         $this->request->setCurrentPage($page);
-        $this->app->singleton(User::class, function() {
-            return new User(); // Not super thrilled about this. We need to clean up all setCustomRequest user code including this.
-        });
     }
 
     protected function preparePage(Page $page): ?Response

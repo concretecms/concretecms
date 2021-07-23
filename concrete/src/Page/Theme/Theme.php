@@ -2,10 +2,18 @@
 namespace Concrete\Core\Page\Theme;
 
 use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
+use Concrete\Core\Entity\Permission\IpAccessControlCategory;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Filesystem\FileLocator\Record;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\StyleListParser;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
+use Doctrine\ORM\EntityManager;
+use Illuminate\Filesystem\Filesystem;
 use Loader;
 use Page;
 use Environment;
@@ -19,6 +27,7 @@ use Concrete\Core\Page\Single as SinglePage;
 use Concrete\Core\StyleCustomizer\Preset;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Localization;
+use Punic\Comparer;
 
 /**
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
@@ -28,7 +37,6 @@ class Theme extends ConcreteObject
 {
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = '.php';
-    const THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION = '.less';
     const FILENAME_TYPOGRAPHY_CSS = 'typography.css';
 
     protected $pThemeName;
@@ -215,168 +223,144 @@ class Theme extends ConcreteObject
     }
 
     /**
+     * Returns true if theme or user preset skins are available
+     *
+     * @return bool
+     */
+    public function hasSkins(): bool
+    {
+        return $this->hasPresetSkins();
+    }
+
+
+    /**
+     * Checks the filesystem and returns true if custom skins are available for the theme.
+     *
+     * @return bool
+     */
+    public function hasPresetSkins(): bool
+    {
+        $env = Environment::get();
+        $r = $env->getRecord(
+            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
+            $this->getPackageHandle()
+        );
+        return $r->exists();
+    }
+
+    public function getSkinDirectoryRecord(): Record
+    {
+        $env = Environment::get();
+        return $env->getRecord(
+            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
+            $this->getPackageHandle()
+        );
+    }
+
+    /**
+     *
+     * @return SkinInterface[]
+     */
+    public function getPresetSkins(): array
+    {
+        $factory = app(SkinFactory::class);
+        $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile(), $this);
+        return $skins;
+    }
+
+    /**
+     *
+     * @return SkinInterface[]
+     */
+    public function getCustomSkins(): array
+    {
+        $entityManager = app(EntityManager::class);
+        $skins = $entityManager->getRepository(CustomSkin::class)->findBy(['pThemeID' => $this->getThemeID()]);
+        return $skins;
+    }
+
+    /**
+     *
+     * @return SkinInterface[]
+     */
+    public function getSkins(): array
+    {
+        $allSkins = array_merge($this->getPresetSkins(), $this->getCustomSkins());
+        $cmp = new Comparer();
+        usort($allSkins, function (SkinInterface $a, SkinInterface $b) use ($cmp) {
+            $cmp->compare($a->getName(), $b->getName());
+        });
+        return $allSkins;
+    }
+
+
+    public function getStyleConfigurationFileRecord(): Record
+    {
+        $env = Environment::get();
+        return $env->getRecord(
+            DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
+            $this->getPackageHandle()
+        );
+    }
+    /**
      * Checks the theme for a styles.xml file (which is how customizations happen).
      *
      * @return bool
      */
     public function isThemeCustomizable()
     {
-        $env = Environment::get();
-        $r = $env->getRecord(
-            DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.DIRNAME_CSS.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
-            $this->getPackageHandle()
-        );
-
-        return $r->exists();
+        return $this->getStyleConfigurationFileRecord()->exists();
     }
 
     /**
-     * Gets the style list object for this theme.
+     * Retrieves the list of customizable styles for this theme..
      *
      * @return \Concrete\Core\StyleCustomizer\StyleList
      */
-    public function getThemeCustomizableStyleList()
+    public function getThemeCustomizableStyleList(SkinInterface $skin)
     {
         if (!isset($this->styleList)) {
-            $env = Environment::get();
-            $r = $env->getRecord(
-                DIRNAME_THEMES.'/'.$this->getThemeHandle(
-                ).'/'.DIRNAME_CSS.'/'.FILENAME_STYLE_CUSTOMIZER_STYLES,
-                $this->getPackageHandle()
-            );
-            $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
+            $record = $this->getStyleConfigurationFileRecord();
+            $xml = simplexml_load_file($record->file);
+            $parser = app(StyleListParser::class);
+            return $parser->parse($xml, $skin);
         }
-
         return $this->styleList;
     }
 
     /**
-     * Get a preset for this theme by handle.
+     * Gets the default skin for this theme
      *
-     * @return \Concrete\Core\StyleCustomizer\Preset|null
+     * @return SkinInterface|null
      */
-    public function getThemeCustomizablePreset($handle)
+    public function getThemeDefaultSkin(): ?SkinInterface
     {
-        $env = Environment::get();
-        if ($this->isThemeCustomizable()) {
-            $file = $env->getRecord(
-                DIRNAME_THEMES.'/'.$this->getThemeHandle(
-                ).'/'.DIRNAME_CSS.'/'.DIRNAME_STYLE_CUSTOMIZER_PRESETS.'/'.$handle.static::THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION,
-                $this->getPackageHandle()
-            );
-            if ($file->exists()) {
-                $urlroot = $env->getURL(
-                    DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.DIRNAME_CSS,
-                    $this->getPackageHandle()
-                );
-                $preset = Preset::getFromFile($file->file, $urlroot);
+        return $this->getSkinByIdentifier(SkinInterface::SKIN_DEFAULT);
+    }
 
-                return $preset;
+    /**
+     * Returns a skin object when passed a string identifier
+     *
+     * @param string $skinIdentifier
+     * @return SkinInterface|null
+     */
+    public function getSkinByIdentifier(string $skinIdentifier): ?SkinInterface
+    {
+        $skins = $this->getSkins();
+        foreach ($skins as $skin) {
+            if ($skin->getIdentifier() == $skinIdentifier) {
+                return $skin;
             }
         }
+        return null;
     }
 
+
+
+
     /**
-     * Get all presets available to this theme.
+     * @deprecated
      *
-     * @return \Concrete\Core\StyleCustomizer\Preset[]
-     */
-    public function getThemeCustomizableStylePresets()
-    {
-        $presets = [];
-        $env = Environment::get();
-        if ($this->isThemeCustomizable()) {
-            $directory = $env->getPath(
-                DIRNAME_THEMES.'/'.$this->getThemeHandle(
-                ).'/'.DIRNAME_CSS.'/'.DIRNAME_STYLE_CUSTOMIZER_PRESETS,
-                $this->getPackageHandle()
-            );
-            $urlroot = $env->getURL(
-                DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.DIRNAME_CSS,
-                $this->getPackageHandle()
-            );
-            $dh = Loader::helper('file');
-            $files = $dh->getDirectoryContents($directory);
-            foreach ($files as $f) {
-                if (strrchr($f, '.') == static::THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION) {
-                    $preset = Preset::getFromFile($directory.'/'.$f, $urlroot);
-                    if (is_object($preset)) {
-                        $presets[] = $preset;
-                    }
-                }
-            }
-        }
-        usort(
-            $presets,
-            function ($a, $b) {
-                if ($a->isDefaultPreset()) {
-                    return -1;
-                } else {
-                    return strcasecmp($a->getPresetDisplayName('text'), $b->getPresetDisplayName('text'));
-                }
-            }
-        );
-
-        return $presets;
-    }
-
-    /**
-     * Set this instance to be a preview for the current request.
-     */
-    public function enablePreviewRequest()
-    {
-        $this->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE.'/preview');
-        $this->setStylesheetCachePath(Config::get('concrete.cache.directory').'/preview');
-        $this->pThemeIsPreview = true;
-    }
-
-    public function resetThemeCustomStyles()
-    {
-        $db = Loader::db();
-        $db->delete('PageThemeCustomStyles', ['pThemeID' => $this->getThemeID()]);
-        $sheets = $this->getThemeCustomizableStyleSheets();
-        foreach ($sheets as $sheet) {
-            $sheet->clearOutputFile();
-        }
-    }
-
-    /**
-     * Is this instance a preview for the current request?
-     *
-     * @return bool
-     */
-    public function isThemePreviewRequest()
-    {
-        return $this->pThemeIsPreview;
-    }
-
-    /**
-     * Get all the customizable LESS stylesheets.
-     *
-     * @return \Concrete\Core\StyleCustomizer\Stylesheet[]
-     */
-    public function getThemeCustomizableStyleSheets()
-    {
-        $sheets = [];
-        $env = Environment::get();
-        if ($this->isThemeCustomizable()) {
-            $directory = $env->getPath(
-                DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.DIRNAME_CSS,
-                $this->getPackageHandle()
-            );
-            $dh = Loader::helper('file');
-            $files = $dh->getDirectoryContents($directory);
-            foreach ($files as $f) {
-                if (strrchr($f, '.') == static::THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION) {
-                    $sheets[] = $this->getStylesheetObject($f);
-                }
-            }
-        }
-
-        return $sheets;
-    }
-
-    /**
      * Get a customizable LESS stylesheet given the stylesheed base file name.
      *
      * @param string $stylesheet
@@ -399,6 +383,8 @@ class Theme extends ConcreteObject
     }
 
     /**
+     * @deprecated
+
      * Look into the current CSS directory and return a fully compiled stylesheet when passed a LESS stylesheet.
      * Also serves up custom value list values for the stylesheet if they exist.
      *
@@ -413,22 +399,18 @@ class Theme extends ConcreteObject
         if (!is_null($styleValues)) {
             $stylesheet->setValueList($styleValues);
         }
-        if (!$this->isThemePreviewRequest()) {
-            if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
-                $stylesheet->output();
-            }
+        if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
+            $stylesheet->output();
         }
         $path = $stylesheet->getOutputRelativePath();
-        if ($this->isThemePreviewRequest()) {
-            $path .= '?ts='.time();
-        } else {
-            $path .= '?ts='.filemtime($stylesheet->getOutputPath());
-        }
+        $path .= '?ts='.filemtime($stylesheet->getOutputPath());
 
         return $path;
     }
 
     /**
+     * @deprecated
+     *
      * Get a CustomStyle object for the theme if one exists.
      *
      * @return \Concrete\Core\Page\CustomStyle|null
@@ -449,6 +431,8 @@ class Theme extends ConcreteObject
     }
 
     /**
+     * @deprecated
+     *
      * Get the value list of the custom style object if one exists.
      *
      * @return \Concrete\Core\StyleCustomizer\Style\ValueList|null
@@ -461,50 +445,6 @@ class Theme extends ConcreteObject
         }
 
         return null;
-    }
-
-    /**
-     * Create a CustomStyle (and optionally a preset and the custom CSS) for this theme.
-     *
-     * @param \Concrete\Core\StyleCustomizer\Preset|null|false $selectedPreset
-     *
-     * @return \Concrete\Core\Page\CustomStyle
-     */
-    public function setCustomStyleObject(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
-    {
-        $db = Loader::db();
-        $db->delete('PageThemeCustomStyles', ['pThemeID' => $this->getThemeID()]);
-        $preset = false;
-        if ($selectedPreset) {
-            $preset = $selectedPreset->getPresetHandle();
-        }
-        $sccRecordID = 0;
-        if ($customCssRecord !== null) {
-            $sccRecordID = $customCssRecord->getRecordID();
-        }
-        $db->insert(
-            'PageThemeCustomStyles',
-            [
-                'pThemeID' => $this->getThemeID(),
-                'sccRecordID' => $sccRecordID,
-                'preset' => $preset,
-                'scvlID' => $valueList->getValueListID(),
-            ]
-        );
-
-        // now we reset all cached css files in this theme
-        $sheets = $this->getThemeCustomizableStyleSheets();
-        foreach ($sheets as $s) {
-            $s->clearOutputFile();
-        }
-
-        $scc = new \Concrete\Core\Page\CustomStyle();
-        $scc->setThemeID($this->getThemeID());
-        $scc->setValueListID($valueList->getValueListID());
-        $scc->setPresetHandle($preset);
-        $scc->setCustomCssRecordID($sccRecordID);
-
-        return $scc;
     }
 
     /**
