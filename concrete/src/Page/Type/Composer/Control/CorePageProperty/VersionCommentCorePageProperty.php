@@ -32,15 +32,13 @@ class VersionCommentCorePageProperty extends CorePageProperty
         $app = Application::getFacadeApplication();
         $e = $app->make('helper/validation/error');
         $val = $this->getRequestValue();
-        if ($val['version_comment']) {
-            $version_comment = $val['version_comment'];
-        }
+        $version_comment = $val['version_comment'] ?? '';
 
         /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
-        $stringValidator = Core::make('helper/validation/strings');
+        $stringValidator = $app->make('helper/validation/strings');
         if (!$stringValidator->notempty($version_comment)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
-            $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
+            $e->add(t('Please specify the version comments'));
 
             return $e;
         }
@@ -48,8 +46,9 @@ class VersionCommentCorePageProperty extends CorePageProperty
 
     public function getRequestValue($args = false)
     {
+        $app = Application::getFacadeApplication();
         $data = parent::getRequestValue($args);
-        $data['version_comment'] = Core::make('helper/security')->sanitizeString($data['version_comment']);
+        $data['version_comment'] = $app->make('helper/security')->sanitizeString($data['version_comment']);
 
         return $data;
     }
