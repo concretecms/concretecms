@@ -3,10 +3,10 @@
 namespace Concrete\Core\Page\Theme\Command;
 
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 
-class UpdateCustomSkinCommand implements CommandInterface
+class UpdateCustomSkinCommand extends Command
 {
 
     /**
