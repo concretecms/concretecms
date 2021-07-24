@@ -21,7 +21,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btPageAttributeDisplay';
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "365";
-    public $dateFormat = "m/d/y h:ia";
+    public $dateFormat;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
@@ -48,10 +48,27 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function add()
     {
-        //$this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
+        $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
         $this->set('dateFormat', $this->dateFormat);
         $this->set('thumbnailWidth', $this->thumbnailWidth);
         $this->set('thumbnailHeight', $this->thumbnailHeight);
+    }
+    
+    public function validate($args)
+    {
+        $error = $this->app->make('helper/validation/error');
+
+        if (empty($args['thumbnailHeight'])) {
+            $error->add(t('Thumbnail Height must be a number.'));
+        }
+        
+        if (empty($args['thumbnailWidth'])) {
+            $error->add(t('Thumbnail Width must be a number.'));
+        }
+
+        if ($error->has()) {
+            return $error;
+        }
     }
 
     public function getRequiredFeatures(): array
