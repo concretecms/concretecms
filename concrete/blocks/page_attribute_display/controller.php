@@ -58,11 +58,11 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $error = $this->app->make('helper/validation/error');
 
-        if (empty($args['thumbnailHeight'])) {
+        if (!is_numeric($args['thumbnailHeight'])) {
             $error->add(t('Thumbnail Height must be a number.'));
         }
         
-        if (empty($args['thumbnailWidth'])) {
+        if (!is_numeric($args['thumbnailWidth'])) {
             $error->add(t('Thumbnail Width must be a number.'));
         }
 
