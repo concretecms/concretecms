@@ -47,7 +47,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             <?php echo $form->label("thumbnailWidth", t('Max Width')); ?>
 
             <div class="input-group">
-                <?php echo $form->number('thumbnailWidth', $thumbnailWidth, ["min" => 0, "step" => 1]); //////////////////////////////////////////////////?>
+                <?php echo $form->number('thumbnailWidth', $thumbnailWidth, ["min" => 0, "step" => 1]); ?>
 
                 <span class="input-group-addon">
                     <?php echo t('px'); ?>
@@ -59,7 +59,7 @@ echo Core::make('helper/concrete/ui')->tabs(array(
             <?php echo $form->label("thumbnailHeight", t('Max Height')); ?>
 
             <div class="input-group">
-                <?php echo $form->number('thumbnailHeight', $thumbnailHeight, ["min" => 0, "step" => 1]); //////////////////////////////////////////?>
+                <?php echo $form->number('thumbnailHeight', $thumbnailHeight, ["min" => 0, "step" => 1]); ?>
 
                 <span class="input-group-addon">
                     <?php echo t('px'); ?>
