@@ -476,6 +476,7 @@ return [
 
         'transports' => [
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncTransport',
+            'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultSyncTransport', // used for tests and advanced configuration
         ],
 
         'consume' => [

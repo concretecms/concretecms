@@ -33,7 +33,7 @@ class ReindexPageCommandHandler
         $this->indexManager = $indexManager;
     }
 
-    public function __invoke(ReindexPageCommand $command)
+    public function __invoke($command)
     {
         $c = Page::getByID($command->getPageID());
         if ($c && !$c->isError()) {
