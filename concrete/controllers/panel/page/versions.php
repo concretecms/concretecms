@@ -284,16 +284,36 @@ class Versions extends BackendInterfacePageController
 
             return $factory->json($formatter->asArray());
         } else {
-            // Change the current page to draft
+            // create a new page from the current page
+            $page->loadVersionObject('RECENT');
+            $page = $page->cloneVersion(t('New Reverted Page'));
             $drafts = Page::getDraftsParentPage();
-            $page->deactivate();
-            $page->setPageToDraft();
-            $page->move($drafts);
+            $newPage = $page->duplicate($drafts);
+            $newPage->deactivate();
+            $newPage->setPageToDraft();
+            $newPage->move($drafts);
 
+            // now we delete all but the new version
+            $versionList = new VersionList($newPage);
+            $versionList->setItems(-1);
+            $versions = $versionList->getPage();
+            for ($i = 1; $i < count($versions); ++$i) {
+                $cv = $versions[$i];
+                $cv->delete();
+            }
+
+            // now we delete the current page
+            $page->moveToTrash();
+
+            // finally, we redirect the user to the new drafts page in composer mode.
             $response = new EditResponse();
             $response->setError($this->error);
-            $response->setPage($page);
-            $response->setRedirectURL($page->getCollectionLink());
+            $response->setPage($newPage);
+            $response->setRedirectURL(
+                $this->app->make(ResolverManagerInterface::class)->resolve([
+                    '/ccm/system/page/checkout', $newPage->getCollectionID(), 'first', $this->app->make('token')->generate()
+                ])
+            );
 
             return $factory->json($response->getJSONObject());
         }
