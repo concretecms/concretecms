@@ -13,7 +13,7 @@ class ReindexPageTaskCommandHandler extends ReindexPageCommandHandler implements
     /**
      * @param ReindexPageTaskCommand $command
      */
-    public function __invoke(ReindexPageCommand $command)
+    public function __invoke($command)
     {
         $this->output->write(t('Reindexing page ID: %s', $command->getPageID()));
         parent::__invoke($command);
