@@ -3,10 +3,15 @@ namespace Concrete\Controller\Panel\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Formatter\JsonFormatter;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Page\EditResponse;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Workflow\Request\UnapprovePageRequest;
 use Permissions;
-use Page;
 use Loader;
 use Core;
 use Config;
@@ -249,6 +254,48 @@ class Versions extends BackendInterfacePageController
             }
 
             $r->outputJSON();
+        }
+    }
+
+    public function revert()
+    {
+        /** @var Page $page */
+        $page = $this->page;
+        $this->validationToken = 'revert_page';
+        if ($this->validateAction()) {
+            /** @var Checker $cp */
+            $cp = $this->permissions;
+            if (!$cp->canDeletePage()) {
+                $this->error->add(t('You do not have permission to delete this page.'));
+            }
+            $type = $page->getPageTypeObject();
+            $tp = new Checker($type);
+            if (!$tp->canAddPageType()) {
+                $this->error->add(t('You do not have permission to add a page of this type.'));
+            }
+        } else {
+            $this->error->add(t('Access Denied.'));
+        }
+
+        /** @var ResponseFactoryInterface $factory */
+        $factory = $this->app->make(ResponseFactoryInterface::class);
+        if ($this->error->has()) {
+            $formatter = new JsonFormatter($this->error);
+
+            return $factory->json($formatter->asArray());
+        } else {
+            // Change the current page to draft
+            $drafts = Page::getDraftsParentPage();
+            $page->deactivate();
+            $page->setPageToDraft();
+            $page->move($drafts);
+
+            $response = new EditResponse();
+            $response->setError($this->error);
+            $response->setPage($page);
+            $response->setRedirectURL($page->getCollectionLink());
+
+            return $factory->json($response->getJSONObject());
         }
     }
 }

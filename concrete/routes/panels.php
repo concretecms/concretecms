@@ -46,6 +46,7 @@ $router->all('/page/versions/new_page', 'Page\Versions::new_page');
 $router->all('/page/versions/delete', 'Page\Versions::delete');
 $router->all('/page/versions/approve', 'Page\Versions::approve');
 $router->all('/page/versions/unapprove', 'Page\Versions::unapprove');
+$router->all('/page/versions/revert', 'Page\Versions::revert');
 $router->all('/page/devices', 'Page\Devices::view');
 $router->all('/page/devices/preview', 'Page\Devices::preview');
 $router->all('/sitemap', 'Sitemap::view');
