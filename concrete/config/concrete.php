@@ -951,8 +951,8 @@ return [
         ],
     ],
     'urls' => [
-        'concrete5' => 'http://www.concrete5.org',
-        'concrete5_secure' => 'https://www.concrete5.org',
+        'concrete5' => 'http://127.0.0.1:9050',
+        'concrete5_secure' => 'https://127.0.0.1:9050',
         'newsflow' => 'http://newsflow.concrete5.org',
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
         'privacy_policy' => '//www.concrete5.org/legal/privacy-policy',

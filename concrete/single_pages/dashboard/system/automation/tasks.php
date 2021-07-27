@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
     <form>
 
-        <table class="table table-striped" id="ccm-jobs-list">
+        <table class="table">
             <thead>
             <tr>
                 <th></th>
@@ -19,8 +19,8 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             </thead>
             <tbody v-for="taskSet in taskSets">
             <tr>
-                <th class="table-secondary"></th>
-                <th colspan="5" class="table-secondary text-muted">{{taskSet.name}}</th>
+                <th class="table-light"></th>
+                <th colspan="5" class="table-light text-muted">{{taskSet.name}}</th>
             </tr>
             <tr :key="'task-' + task.id" v-for="task in taskSet.tasks">
                 <td><input type="radio" :id="task.id" v-model="selectedTask" :value="task"></td>
