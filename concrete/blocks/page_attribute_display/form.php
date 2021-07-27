@@ -42,19 +42,28 @@ echo Core::make('helper/concrete/ui')->tabs(array(
         </select>
     </div>
     <fieldset>
-        <legend><?=t('Thumbnail')?></legend>
+        <legend><?php echo t('Thumbnail') ?></legend>
         <div class="form-group">
-            <label class="control-label" for="thumbnail_width"><?php echo t('Max Width'); ?></label>
+            <?php echo $form->label("thumbnailWidth", t('Max Width')); ?>
+
             <div class="input-group">
-                <input id="thumbnail_width" class="form-control" type="text" name="thumbnailWidth" value="<?php echo $this->controller->thumbnailWidth; ?>"/>
-                <span class="input-group-addon"><?php echo t('px'); ?></span>
+                <?php echo $form->number('thumbnailWidth', $thumbnailWidth, ["min" => 0, "step" => 1]); ?>
+
+                <span class="input-group-addon">
+                    <?php echo t('px'); ?>
+                </span>
             </div>
         </div>
+
         <div class="form-group">
-            <label class="control-label" for="thumbnail_height"><?php echo t('Max Height'); ?></label>
+            <?php echo $form->label("thumbnailHeight", t('Max Height')); ?>
+
             <div class="input-group">
-                <input id="thumbnail_height" class="form-control" type="text" name="thumbnailHeight" value="<?php echo $this->controller->thumbnailHeight; ?>"/>
-                <span class="input-group-addon"><?php echo t('px'); ?></span>
+                <?php echo $form->number('thumbnailHeight', $thumbnailHeight, ["min" => 0, "step" => 1]); ?>
+
+                <span class="input-group-addon">
+                    <?php echo t('px'); ?>
+                </span>
             </div>
         </div>
     </fieldset>
