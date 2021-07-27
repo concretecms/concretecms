@@ -120,6 +120,7 @@ EOL;
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
+
         $importer = Core::make(FileImporter::class);
         $prefix = $importer->generatePrefix();
         \Concrete\Core\File\File::add('test.jpg', $prefix);

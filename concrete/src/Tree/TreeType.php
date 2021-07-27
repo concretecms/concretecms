@@ -88,11 +88,11 @@ class TreeType extends ConcreteObject
         $db = Database::connection();
         $list = array();
         $r = $db->Execute('select treeTypeID from TreeTypes where pkgID = ? order by treeTypeID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = self::getByID($row['treeTypeID']);
         }
 
-        $r->Close();
+        $r->free();
 
         return $list;
     }

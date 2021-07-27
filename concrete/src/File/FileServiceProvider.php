@@ -15,6 +15,7 @@ use Concrete\Core\File\Component\Chooser\Option\RecentUploadsOption;
 use Concrete\Core\File\Import\ProcessorManager;
 use Concrete\Core\File\Search\SearchProvider;
 use Concrete\Core\File\Set\Set;
+use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
@@ -61,11 +62,9 @@ class FileServiceProvider extends ServiceProvider
         });
 
         $this->app->bindIf(Service\VolatileDirectory::class, function (Application $app) {
-            return $app->build(
-                Service\VolatileDirectory::class,
-                [
-                    'parentDirectory' => $app->make('helper/file')->getTemporaryDirectory(),
-                ]
+            return new VolatileDirectory(
+                $app->make(\Illuminate\Filesystem\Filesystem::class),
+                $app->make('helper/file')->getTemporaryDirectory()
             );
         });
 

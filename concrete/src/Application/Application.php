@@ -2,15 +2,13 @@
 
 namespace Concrete\Core\Application;
 
-use Concrete\Core\Cache\CacheClearer;
+use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\ClassLoader;
-use Concrete\Core\Foundation\Command\Dispatcher;
-use Concrete\Core\Foundation\Command\DispatcherFactory;
+use Concrete\Core\Messenger\MessageBusManager;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
@@ -21,7 +19,6 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
@@ -37,7 +34,7 @@ use Page;
 use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
 use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 use View;
 
 class Application extends Container
@@ -47,24 +44,21 @@ class Application extends Container
     protected $packages = [];
 
     /**
-     * @var Dispatcher
+     * Dispatches a command/message on the message bus. If the command is executed immediately, the result is returned.
+     * This is a convenience method for mostly synchronous commands, and it uses the command bus.
+     *
+     * @param object $command
+     * @param string $onBus
+     * @return mixed
      */
-    protected $commandDispatcher;
-
-    public function getCommandDispatcher()
+    public function executeCommand($command, $onBus = 'default')
     {
-        if (!isset($this->commandDispatcher)) {
-            $this->commandDispatcher = $this->make(DispatcherFactory::class)->getDispatcher();
+        $messageBus = $this->make(MessageBusManager::class)->getBus($onBus);
+        $envelope = $messageBus->dispatch($command);
+        $handled = $envelope->last(HandledStamp::class);
+        if ($handled instanceof HandledStamp) {
+            return $handled->getResult();
         }
-        return $this->commandDispatcher;
-    }
-
-    /**
-     * @param mixed $command
-     */
-    public function executeCommand($command)
-    {
-        return $this->getCommandDispatcher()->dispatch($command);
     }
 
     /**
@@ -108,7 +102,8 @@ class Application extends Container
      */
     public function clearCaches()
     {
-        $this->make(CacheClearer::class)->flush();
+        $command = new ClearCacheCommand();
+        $this->executeCommand($command);
     }
 
     /**
@@ -445,9 +440,9 @@ class Application extends Container
      *
      * @return mixed
      */
-    public function build($concrete, array $parameters = [])
+    public function build($concrete)
     {
-        $object = parent::build($concrete, $parameters);
+        $object = parent::build($concrete);
         if (is_object($object)) {
             if ($object instanceof ApplicationAwareInterface) {
                 $object->setApplication($this);

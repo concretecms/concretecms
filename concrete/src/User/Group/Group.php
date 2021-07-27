@@ -29,12 +29,16 @@ use Gettext\Translations;
 use GroupTree;
 use GroupTreeNode;
 use Concrete\Core\User\UserList;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, \JsonSerializable
 {
-    public $ctID;
-    public $permissionSet;
-    private $permissions = []; // more advanced version of permissions
+
+    public $gID = 0;
+
+    public $gIsBadge = false;
+
+    public $gName;
 
     public function getPermissionObjectIdentifier()
     {
@@ -711,9 +715,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     {
         $class = $this->getGroupAutomationControllerClass();
         try {
-            $c = \Core::make($class, [$this]);
+            $c = \Core::make($class, ['g' => $this]);
         } catch (\ReflectionException $e) {
-            $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), [$this]);
+            $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), ['g' => $this]);
         }
 
         return $c;

@@ -21,4 +21,10 @@ return [
         // Let's lower the PNG compression, so that tests run faster
         'default_png_image_compression' => 5,
     ],
+    'messenger' => [
+
+        'routing' => [
+            'Concrete\Core\Foundation\Command\AsyncCommandInterface' => ['sync'],
+        ],
+    ],
 ];

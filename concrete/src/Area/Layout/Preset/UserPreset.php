@@ -51,7 +51,7 @@ class UserPreset extends ConcreteObject
         $db = Loader::db();
         $r = $db->Execute('select arLayoutPresetID from AreaLayoutPresets order by arLayoutPresetName asc');
         $presets = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $preset = static::getByID($row['arLayoutPresetID']);
             if (is_object($preset)) {
                 $presets[] = $preset;

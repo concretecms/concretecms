@@ -4,8 +4,7 @@ namespace Concrete\Core\Updater\Migrations;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Application;
-use Doctrine\DBAL\Migrations\Configuration\Configuration as DoctrineMigrationConfiguration;
-use Doctrine\DBAL\Migrations\Version;
+use Doctrine\Migrations\Configuration\Configuration as DoctrineMigrationConfiguration;
 use Exception;
 
 class Configuration extends DoctrineMigrationConfiguration
@@ -58,7 +57,7 @@ class Configuration extends DoctrineMigrationConfiguration
     {
         $forcedInitialMigration = null;
         foreach (array_reverse($this->getMigrations()) as $migration) {
-            /* @var \Doctrine\DBAL\Migrations\Version $migration */
+            /* @var \Doctrine\Migrations\Version $migration */
             if ($migration->isMigrated() && !$migration->getMigration() instanceof RepeatableMigrationInterface) {
                 break;
             }
@@ -148,13 +147,13 @@ class Configuration extends DoctrineMigrationConfiguration
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\Configuration\Configuration::getMigrationsToExecute()
+     * @see \Doctrine\Migrations\Configuration\Configuration::getMigrationsToExecute()
      */
-    public function getMigrationsToExecute($direction, $to)
+    public function getMigrationsToExecute(string $direction, string $to): array
     {
         $result = parent::getMigrationsToExecute($direction, $to);
         $forcedInitialMigration = $this->getForcedInitialMigration();
-        if ($forcedInitialMigration !== null && $direction === Version::DIRECTION_UP) {
+        if ($forcedInitialMigration !== null && $direction === 'up') {
             $allMigrations = $this->getMigrations();
             $allMigrationKeys = array_keys($allMigrations);
             $forcedInitialMigrationIndex = array_search($forcedInitialMigration->getVersion(), $allMigrationKeys, false);

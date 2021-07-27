@@ -13,6 +13,9 @@ import 'ajax-bootstrap-select'
 import './modifiable-ajax-bootstrap-select'
 import 'dropzone/dist/dropzone'
 
+// Server events
+import './server-events'
+
 // jQuery UI components
 import 'jquery-ui/ui/widgets/button'
 import 'jquery-ui/ui/widgets/dialog'
@@ -44,7 +47,9 @@ import './ajax-request/form'
 import './ajax-request/block'
 
 // Progressive operations
-import './progressive-operations'
+import './processes'
+import './queue-consumer'
+import './progressive-operations' // legacy handler
 
 // Search
 import './search/base'

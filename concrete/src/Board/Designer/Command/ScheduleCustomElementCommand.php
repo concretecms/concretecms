@@ -5,8 +5,9 @@ namespace Concrete\Core\Board\Designer\Command;
 use Concrete\Core\Entity\Board\Designer\CustomElement;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\Item;
+use Concrete\Core\Foundation\Command\Command;
 
-class ScheduleCustomElementCommand
+class ScheduleCustomElementCommand extends Command
 {
 
     const LOCK_TYPE_LOCKED = 'L';

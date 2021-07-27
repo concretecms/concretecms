@@ -44,14 +44,14 @@ class Type extends ConcreteObject
         $list = array();
         $r = $db->Execute('select gatTypeID from GatheringItemTemplateTypes order by gatTypeID asc');
 
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $type = static::getByID($row['gatTypeID']);
             if (is_object($type)) {
                 $list[] = $type;
             }
         }
 
-        $r->Close();
+        $r->free();
         CacheLocal::set('gaItemTemplateTypeList', false, $list);
 
         return $list;
@@ -80,13 +80,13 @@ class Type extends ConcreteObject
         $db = Loader::db();
         $list = array();
         $r = $db->Execute('select gatTypeID from GatheringItemTemplateTypes where pkgID = ? order by gatTypeID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $type = static::getByID($row['gatTypeID']);
             if (is_object($type)) {
                 $list[] = $type;
             }
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }

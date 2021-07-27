@@ -11,7 +11,6 @@ use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
@@ -180,7 +179,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             }
 
             $app = Facade::getFacadeApplication();
-            $b->instance = $app->build($class, [$b]);
+            $b->instance = $app->make($class, ['obj' => $b]);
 
             if ($c != null || $a != null) {
                 CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
@@ -495,7 +494,7 @@ EOT
             $q = 'select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?';
             $r = $db->query($q, [$bID]);
             if ($r) {
-                while ($row = $r->fetchRow()) {
+                while ($row = $r->fetch()) {
                     $cArray[] = Page::getByID($row['cID'], 'RECENT');
                 }
             }
@@ -773,7 +772,7 @@ EOT
             $q = 'select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?';
             $r = $db->query($q, [$this->getBlockID(), $cID, $cvID]);
             if ($r) {
-                return $r->numRows() > 0;
+                return $r->rowCount() > 0;
             }
         } else {
             return isset($this->isOriginal) ? (!$this->isOriginal) : false;
@@ -1439,7 +1438,7 @@ EOT
             $bt = $this->getBlockTypeObject();
             $class = $bt->getBlockTypeClass();
             $app = Facade::getFacadeApplication();
-            $this->instance = $app->build($class, [$this]);
+            $this->instance = $app->make($class, ['obj' => $this]);
         }
         $this->instance->setBlockObject($this);
         $this->instance->setAreaObject($this->getBlockAreaObject());
@@ -1499,7 +1498,7 @@ EOT
         $bt = BlockType::getByID($btID);
         $class = $bt->getBlockTypeClass();
         $app = Facade::getFacadeApplication();
-        $bc = $app->build($class, [$this]);
+        $bc = $app->make($class, ['obj' => $this]);
         $bc->save($data);
     }
 
@@ -1588,7 +1587,7 @@ EOT
             return false;
         }
         $app = Facade::getFacadeApplication();
-        $bc = $app->build($blockTypeClass, [$this]);
+        $bc = $app->make($blockTypeClass, ['obj' => $this]);
 
         $bDate = $dh->getOverridableNow();
         $v = [$this->getBlockName(), $bDate, $bDate, $this->getBlockFilename(), $this->getBlockTypeID(), $this->getBlockUserID()];
@@ -1627,7 +1626,7 @@ EOT
         $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
         $r = $db->query($q, [$this->getBlockID(), $ovID]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $db->Replace(
                     'BlockPermissionAssignments',
                     [
@@ -1768,7 +1767,7 @@ EOT
             if ($bt && method_exists($bt, 'getBlockTypeClass')) {
                 $class = $bt->getBlockTypeClass();
                 $app = Facade::getFacadeApplication();
-                $bc = $app->build($class, [$this]);
+                $bc = $app->make($class, ['obj' => $this]);
                 $bc->delete();
             }
 
@@ -1781,7 +1780,7 @@ EOT
                 'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
                 [$bID]
                 );
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $c = Page::getByID($row['cID'], $row['cvID']);
                 $b = self::getByID($row['bID'], $c, $row['arHandle']);
                 $b->delete();
@@ -1843,7 +1842,7 @@ EOT
      * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
      * @param bool $updateForkedBlocks
      *
-     * @return \ZendQueue\Queue
+     * @return array
      */
     public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks)
     {

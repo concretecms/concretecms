@@ -222,7 +222,7 @@ class FileImporterTest extends FileStorageTestCase
                         $this->assertSame($expectedFileType, $type, "Check thumbnail type with: format={$thumbnailFormat}, strategy={$strategy}");
                     }
                 }
-                $basicThumbnailer = static::$app->build(BasicThumbnailer::class, ['storageLocation' => $storageLocation]);
+                $basicThumbnailer = static::$app->make(BasicThumbnailer::class, ['storageLocation' => $storageLocation]);
                 /* @var BasicThumbnailer $basicThumbnailer */
                 $thumbnail = $basicThumbnailer->getThumbnail($fo->getFile(), 100, 100);
                 $this->assertSame('.' . $expectedExtension, substr($thumbnail->src, -4));

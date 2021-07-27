@@ -145,7 +145,7 @@ abstract class Job extends ConcreteObject
         }
         $r = $db->Execute($q);
         $jobs = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $j = static::getByID($row['jID']);
             if (is_object($j)) {
                 $jobs[] = $j;
@@ -380,10 +380,10 @@ abstract class Job extends ConcreteObject
         $db = Loader::db();
         $list = array();
         $r = $db->Execute('select jHandle from Jobs where pkgID = ? order by jHandle asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getJobObjByHandle($row['jHandle']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }

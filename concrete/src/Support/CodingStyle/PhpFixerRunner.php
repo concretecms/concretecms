@@ -12,7 +12,7 @@ use PhpCsFixer\Error\ErrorsManager;
 use PhpCsFixer\Linter\Linter;
 use PhpCsFixer\Runner\Runner;
 use PhpCsFixer\ToolInfo;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 use Symfony\Component\Finder\Finder;
 use Traversable;
 
@@ -27,7 +27,7 @@ class PhpFixerRunner
     protected $ruleResolver;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var EventDispatcher
      */
     protected $eventDispatcher;
 
@@ -48,9 +48,9 @@ class PhpFixerRunner
 
     /**
      * @param \Concrete\Core\Support\CodingStyle\PhpFixerRuleResolver $ruleResolver
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(PhpFixerRuleResolver $ruleResolver, EventDispatcherInterface $eventDispatcher)
+    public function __construct(PhpFixerRuleResolver $ruleResolver, EventDispatcher $eventDispatcher)
     {
         $this->ruleResolver = $ruleResolver;
         $this->eventDispatcher = $eventDispatcher;
@@ -59,7 +59,7 @@ class PhpFixerRunner
     }
 
     /**
-     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @return EventDispatcher
      */
     public function getEventDispatcher()
     {

@@ -1,13 +1,9 @@
 <?php
 namespace Concrete\Controller\Backend\Page;
 
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
-use Concrete\Core\Page\Command\CopyPageCommand;
-use Concrete\Core\Page\Command\DeletePageForeverBatchProcessFactory;
 use Concrete\Core\Page\Command\DeletePageForeverCommand;
 use Concrete\Core\Page\Page;
 
@@ -37,21 +33,18 @@ class SitemapDeleteForever extends AbstractController
                     // business if the queue dies.
                     usort($pages, ['\Concrete\Core\Page\Page', 'queueForDeletionSort']);
 
-                    $ids = [];
-
                     foreach ($pages as $page) {
                         $ids[] = $page['cID'];
                     }
 
-                    $factory = new DeletePageForeverBatchProcessFactory();
-                    $processor = $this->app->make(Processor::class);
-                    return $processor->process($factory, $ids);
-
+                    $batch = Batch::create(t('Delete Pages'), function() use ($pages) {
+                        foreach ($pages as $page) {
+                            yield new DeletePageForeverCommand($page['cID']);
+                        }
+                    });
+                    return $this->dispatchBatch($batch);
                 }
             }
-
-            $q = $this->app->make(QueueService::class)->get('delete_page_forever');
-            return new EnqueueItemsResponse($q);
         } else {
             throw new UserMessageException(t('Access Denied.'));
         }

@@ -144,7 +144,7 @@ abstract class Layout extends ConcreteObject
         $r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', [$this->arLayoutID]);
         $columns = [];
         $class = '\\Concrete\\Core\\Area\\Layout\\' . Core::make('helper/text')->camelcase($this->arLayoutType) . 'Column';
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $column = call_user_func_array([$class, 'getByID'], [$row['arLayoutColumnID']]);
             if (is_object($column)) {
                 $column->setAreaLayoutObject($this);

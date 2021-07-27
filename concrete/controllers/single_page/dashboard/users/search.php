@@ -555,7 +555,7 @@ class Search extends DashboardPageController
 
         return StreamedResponse::create(
             function () use ($app, $result, $bom) {
-                $writer = $app->build(
+                $writer = $app->make(
                     UserExporter::class,
                     [
                         'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),

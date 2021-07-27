@@ -34,11 +34,11 @@ class AvatarService implements AvatarServiceInterface
     {
         $config = $this->siteService->getSite()->getConfigRepository();
         if ($this->userHasAvatar($ui)) {
-            return $this->application->make('Concrete\Core\User\Avatar\StandardAvatar', array($ui));
+            return $this->application->make('Concrete\Core\User\Avatar\StandardAvatar', ['userInfo' => $ui]);
         } elseif ($config->get('user.gravatar.enabled')) {
-            return $this->application->make('Concrete\Core\User\Avatar\Gravatar', array($ui));
+            return $this->application->make('Concrete\Core\User\Avatar\Gravatar', ['userInfo' => $ui]);
         } else {
-            return $this->application->make('Concrete\Core\User\Avatar\EmptyAvatar', array($ui));
+            return $this->application->make('Concrete\Core\User\Avatar\EmptyAvatar', ['userInfo' => $ui]);
         }
     }
 }

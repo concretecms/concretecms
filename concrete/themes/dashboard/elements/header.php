@@ -99,6 +99,17 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages'); ?></span>
                     </a>
                 </li>
+                <?php
+                $items = $ihm->getPageHeaderMenuItems('right');
+                foreach ($items as $ih) {
+                    $cnt = $ih->getController();
+                    if ($cnt->displayItem()) {
+                        $cnt->registerViewAssets(); ?>
+                        <li class="float-end"><?= $cnt->getMenuItemLinkElement(); ?></li>
+                        <?php
+                    }
+                }
+                ?>
                 <li data-guide-toolbar-action="help" class="float-end d-none d-sm-block">
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php

@@ -31,66 +31,6 @@ class LoginServiceTest extends TestCase
 
     protected $config;
 
-    public function testLoggingLoginAttempt()
-    {
-        // Setup mocks
-        $app = M::mock(Application::class);
-        $config = M::mock(Repository::class);
-        $attemptService = M::mock(LoginAttemptService::class);
-        $ipService = M::mock(IPService::class);
-        $mockIpObject = M::mock(IPv4::class);
-        $entityManager = M::mock(EntityManagerInterface::class);
-        $entityManager->shouldIgnoreMissing($entityManager);
-
-        $request = M::mock(Request::class);
-        $request->shouldReceive('getPath')->andReturn('/foo/bar');
-
-        $logger = M::mock(LoggerInterface::class);
-
-        $attempt = M::mock(LoginAttempt::class);
-
-        $mockIpObject->shouldReceive('__toString')->andReturn('127.0.0.1');
-
-        $ipService->shouldReceive('getRequestIPAddress')->andReturn($mockIpObject);
-        $service = new LoginService($config, $attemptService, $ipService, $entityManager, $request);
-        $service->setLogger($logger);
-        $service->setApplication($app);
-
-        // Fake mocked methods
-        $app->shouldReceive('make')
-            ->withArgs([
-                LoginAttempt::class,
-                [
-                    'foo',
-                    '/foo/bar',
-                    ['baz'],
-                    ['Something went wrong']
-                ]
-            ])
-            ->andReturn($attempt);
-
-        $entityManager->shouldReceive('execute')->andReturn([['gName' => 'baz', 'uID' => 5]]);
-
-        $attempt->shouldReceive('getMessage')->andReturn('Foo did login!');
-        $attempt->shouldReceive('getContext')->andReturn([1,2,3]);
-
-        $mockContext = [
-            1,
-            2,
-            3,
-            'ip_address' => '127.0.0.1'
-        ];
-
-        // Set the real expectation we care about
-        $logger->shouldReceive('info')->once()->withArgs([
-            'Foo did login!',
-            $mockContext,
-        ]);
-
-        // Run the test
-        $service->logLoginAttempt('foo', ['Something went wrong']);
-    }
-
     public function testLogin()
     {
         $config = M::mock(Repository::class);

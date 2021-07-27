@@ -30,7 +30,7 @@ class Version20180910000000 extends AbstractMigration implements RepeatableMigra
         if ($this->connection->tableExists('ExpressEntityAssociationSelectedEntries')) {
             $this->connection->transactional(function ($db) {
                 $r = $db->query('select * from ExpressEntityAssociationSelectedEntries');
-                while ($row = $r->fetchRow()) {
+                while ($row = $r->fetch()) {
                     $db->insert('ExpressEntityAssociationEntries', [
                         'association_id' => $row['id'], 'exEntryID' => $row['exSelectedEntryID']
                     ]);

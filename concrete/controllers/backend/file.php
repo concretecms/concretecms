@@ -3,15 +3,15 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Command\Batch\Batch as BatchBuilder;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Folder\FavoriteFolder;
-use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\File\Command\RescanFileBatchProcessFactory;
+use Concrete\Core\File\Command\RescanFileAsyncCommand;
 use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;
@@ -21,24 +21,17 @@ use Concrete\Core\File\Rescanner;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\File\ValidationService;
-use Concrete\Core\Foundation\Queue\Batch\BatchDispatcher;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Url;
-use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Utility\Service\Number;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\CSRF\Token;
-use Concrete\Core\View\View;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use FileSet;
 use GuzzleHttp\Client;
@@ -48,9 +41,7 @@ use IPLib\Factory as IPFactory;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
 use RuntimeException;
-use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use ZipArchive;
 
 class File extends Controller
@@ -116,9 +107,12 @@ class File extends Controller
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('edit_file_contents');
-        $factory = new RescanFileBatchProcessFactory();
-        $processor = $this->app->make(Processor::class);
-        return $processor->process($factory, $files);
+        $batch = BatchBuilder::create(t('Rescan Files'), function() use ($files) {
+            foreach ($files as $file) {
+                yield new RescanFileCommand($file->getFileID());
+            }
+        });
+        return $this->dispatchBatch($batch);
     }
 
     public function approveVersion()

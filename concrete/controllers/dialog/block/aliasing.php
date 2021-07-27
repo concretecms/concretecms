@@ -3,12 +3,8 @@ namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand;
-use Concrete\Core\Block\Command\DefaultsBlockBatchProcessFactory;
-use Concrete\Core\Block\Command\UpdateDefaultsBlockCommand;
 use Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Template;
@@ -41,16 +37,30 @@ class Aliasing extends BackendInterfaceBlockController
                 $b = \Block::getByID($_GET['bID'], $c, $a);
                 $p = new \Permissions($b);
                 if ($p->canAdminBlock() && $c->isMasterCollection()) {
+                    $blocks = $this->block->queueForDefaultsAliasing($_POST['addBlock'], $_POST['updateForkedBlocks']);
+                    $processor = $this->app->make(BatchProcessor::class);
+                    $batch = Batch::create(t('Update Defaults'), function() use ($blocks) {
+                        foreach ($blocks as $b) {
+                            if ($b['action'] == 'update_forked_alias') {
+                                $commandClass = UpdateForkedAliasDefaultsBlockCommand::class;
+                            } else {
+                                $commandClass = AddAliasDefaultsBlockCommand::class;
+                            }
 
-                    $queue = $this->app->make(QueueService::class);
-                    $q = $queue->get('update_defaults');
-                    $blocks = $this->block->queueForDefaultsAliasing($_POST);
-                    $factory = new DefaultsBlockBatchProcessFactory($b, $c, $this->request->query->get('arHandle'));
-                    /**
-                     * @var $processor Processor
-                     */
-                    $processor = $this->app->make(Processor::class);
-                    return $processor->process($factory, $blocks);
+                            $command = new $commandClass(
+                                $this->block->getBlockID(),
+                                $this->page->getCollectionID(),
+                                $this->page->getVersionID(),
+                                $this->area->getAreaHandle(),
+                                $b['bID'],
+                                $b['cID'],
+                                $b['cvID'],
+                                $b['arHandle']
+                            );
+                            yield $command;
+                        }
+                    });
+                    return $this->dispatchBatch($batch);
                 }
             }
         }

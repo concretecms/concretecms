@@ -10,7 +10,7 @@ function ConcreteProgressiveOperation(options) {
         response: null, // If we have already performed the queueing action, as in a form, we will have a response, and no URL/data
         onComplete: null,
         onError: null,
-        pollRetryTimeout: 1000,
+        pollRetryTimeout: 2000,
         element: null
     }, options)
     my.options = options
@@ -20,6 +20,7 @@ function ConcreteProgressiveOperation(options) {
     my.execute()
 }
 
+/*
 ConcreteProgressiveOperation.prototype.setProgressBarStatus = function(completion, remaining) {
     var my = this
     var $remainingElement = my.options.element.find('div[data-progress-bar=remaining]')
@@ -39,10 +40,8 @@ ConcreteProgressiveOperation.prototype.setProgressBarStatus = function(completio
     }
 }
 
-ConcreteProgressiveOperation.prototype.poll = function(batch, token, remaining) {
+ConcreteProgressiveOperation.prototype.updateTotals = function(processId, token, remaining) {
     var my = this
-    var url = CCM_DISPATCHER_FILENAME + '/ccm/system/batch/monitor/' + batch + '/' + token
-
     if (my.total == -1) {
         // We haven't set the total yet.
         my.total = remaining
@@ -57,6 +56,27 @@ ConcreteProgressiveOperation.prototype.poll = function(batch, token, remaining) 
         var completion = ((my.total - remaining) / my.total) * 100
         my.setProgressBarStatus(completion, remaining)
     }
+}
+
+ConcreteProgressiveOperation.prototype.completeOperation = function(r) {
+    var my = this
+    if (my.options.element) {
+        my.setProgressBarStatus(100, 0)
+    } else {
+        NProgress.done()
+        my.pnotify.close()
+    }
+    if (typeof (my.options.onComplete) === 'function') {
+        my.options.onComplete(r)
+    }
+}
+
+ConcreteProgressiveOperation.prototype.poll = function(processId, token, remaining) {
+    var my = this
+
+    my.updateTotals(processId, token, remaining)
+
+    var url = CCM_DISPATCHER_FILENAME + '/ccm/system/process/monitor/' + processId + '/' + token
 
     $.concreteAjax({
         loader: false,
@@ -64,29 +84,21 @@ ConcreteProgressiveOperation.prototype.poll = function(batch, token, remaining) 
         type: 'POST',
         dataType: 'json',
         success: function(r) {
-            var remaining = r.total - r.completed
+            var remaining = r.process.batch.pendingJobs
             if (remaining > 0) {
                 setTimeout(function() {
-                    my.poll(batch, token, remaining)
+                    my.poll(processId, token, remaining)
                 }, my.options.pollRetryTimeout)
             } else {
                 setTimeout(function() {
-                    if (my.options.element) {
-                        my.setProgressBarStatus(100, 0)
-                    } else {
-                        NProgress.done()
-                        my.pnotify.close()
-                    }
-                    if (typeof (my.options.onComplete) === 'function') {
-                        my.options.onComplete(r)
-                    }
-                }, 1000)
+                    my.completeOperation(r)
+                }, my.options.pollRetryTimeout)
             }
         }
     })
 }
 
-ConcreteProgressiveOperation.prototype.startPolling = function(batch, token, remaining) {
+ConcreteProgressiveOperation.prototype.showStatus = function() {
     var my = this
     if (!my.options.element) {
         my.pnotify = ConcreteAlert.notify({
@@ -98,8 +110,6 @@ ConcreteProgressiveOperation.prototype.startPolling = function(batch, token, rem
             icon: 'sync-alt fa-spin'
         })
     }
-
-    my.poll(batch, token, remaining)
 }
 
 ConcreteProgressiveOperation.prototype.initProgressBar = function() {
@@ -114,34 +124,33 @@ ConcreteProgressiveOperation.prototype.initProgressBar = function() {
         $wrapper.append(html)
     }
 }
+*/
 
 ConcreteProgressiveOperation.prototype.execute = function() {
     var my = this
-    if (my.options.element && my.options.element.length) {
-        my.initProgressBar()
-        my.setProgressBarStatus(0, -1)
-    } else {
-        NProgress.set(0)
-    }
 
     if (my.options.response) {
-        // We have already performed the submit as part of another operation,
-        // like a concrete5 ajax form submission
-        var remaining = my.options.response.total - my.options.response.completed
-        my.startPolling(my.options.response.batch, my.options.response.token, remaining)
+        ConcreteEvent.publish('TaskActivityWindowShow', {'token': my.options.response.viewToken})
+        my.consumeIfNecessary(my.options.response)
     } else {
         $.concreteAjax({
-            loader: false,
             url: my.options.url,
             type: 'POST',
             data: my.options.data,
             dataType: 'json',
             success: function(r) {
-                var remaining = r.total - r.completed
-                my.startPolling(r.batch, r.token, remaining)
+                ConcreteEvent.publish('TaskActivityWindowShow', {'token': r.viewToken})
+                my.consumeIfNecessary(r)
             }
         })
     }
 }
+
+ConcreteProgressiveOperation.prototype.consumeIfNecessary = function(response) {
+    if (response.consumeToken) {
+        ConcreteQueueConsumer.consume(response.consumeToken)
+    }
+}
+
 
 global.ConcreteProgressiveOperation = ConcreteProgressiveOperation

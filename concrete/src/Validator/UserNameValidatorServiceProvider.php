@@ -46,14 +46,14 @@ class UserNameValidatorServiceProvider extends Provider
             };
             $minimumLength = $config->get('concrete.user.username.minimum', 1);
             if ($minimumLength) {
-                $minimumLengthValidator = $app->make(MinimumLengthValidator::class, [$minimumLength]);
+                $minimumLengthValidator = $app->make(MinimumLengthValidator::class, ['minimum_length' => $minimumLength]);
                 $minimumLengthValidator->setRequirementString($minimumLengthValidator::E_TOO_SHORT, $lengthRequirements);
                 $minimumLengthValidator->setErrorString($minimumLengthValidator::E_TOO_SHORT, $lengthError);
                 $manager->setValidator('minimum_length', $minimumLengthValidator);
             }
             $maximumLength = $config->get('concrete.user.username.maximum');
             if ($maximumLength) {
-                $maximumLengthValidator = $app->make(MaximumLengthValidator::class, [$maximumLength]);
+                $maximumLengthValidator = $app->make(MaximumLengthValidator::class, ['maximum_length' => $maximumLength]);
                 $maximumLengthValidator->setRequirementString($maximumLengthValidator::E_TOO_LONG, $lengthRequirements);
                 $maximumLengthValidator->setErrorString($maximumLengthValidator::E_TOO_LONG, $lengthError);
                 $manager->setValidator('maximum_length', $maximumLengthValidator);
@@ -62,7 +62,7 @@ class UserNameValidatorServiceProvider extends Provider
             $rxBoundary = '[' . $config->get('concrete.user.username.allowed_characters.boundary') . ']';
             $rxMiddle = '[' . $config->get('concrete.user.username.allowed_characters.middle') . ']';
             $rx = "/^({$rxBoundary}({$rxMiddle}*{$rxBoundary})?)?$/";
-            $rxValidator = $app->make(RegexValidator::class, [$rx]);
+            $rxValidator = $app->make(RegexValidator::class, ['pattern' => $rx]);
             $rxValidator->setRequirementString($rxValidator::E_DOES_NOT_MATCH, function($validator, $code) use ($config) {
                 return t($config->get('concrete.user.username.allowed_characters.requirement_string'));
             });

@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class PopulateBoardInstanceDataPoolCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class PopulateBoardInstanceDataPoolCommand extends Command
 {
 
     use BoardInstanceTrait;

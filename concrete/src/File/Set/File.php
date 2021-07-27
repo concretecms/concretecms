@@ -12,7 +12,7 @@ class File
         $db = Loader::db();
         $r = $db->query('SELECT fsfID FROM FileSetFiles WHERE fsID = ? ORDER BY fsDisplayOrder ASC', array($fs->getFileSetID()));
         $files = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $fsf = static::getByID($row['fsfID']);
             if (is_object($fsf)) {
                 $files[] = $fsf;

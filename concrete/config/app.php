@@ -66,8 +66,6 @@ return [
         'PermissionKey' => '\Concrete\Core\Permission\Key\Key',
         'PermissionKeyCategory' => '\Concrete\Core\Permission\Category',
         'Permissions' => '\Concrete\Core\Permission\Checker',
-        'Queue' => '\Concrete\Core\Foundation\Queue\Queue',
-        'QueueableJob' => '\Concrete\Core\Job\QueueableJob',
         'Redirect' => '\Concrete\Core\Routing\Redirect',
         'RedirectResponse' => '\Concrete\Core\Routing\RedirectResponse',
         'Response' => '\Concrete\Core\Http\Response',
@@ -94,8 +92,7 @@ return [
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
-        'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
-        'core_bus' => '\Concrete\Core\Foundation\Command\DispatcherServiceProvider',
+        'core_messenger' => '\Concrete\Core\Messenger\MessengerServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
@@ -116,6 +113,7 @@ return [
         'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
         'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
+        'core_automation' => '\Concrete\Core\Command\Task\ServiceProvider',
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
@@ -137,9 +135,6 @@ return [
         'core_summary' => '\Concrete\Core\Summary\ServiceProvider',
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
         'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
-
-        // Console CLI commands
-        'core_console' => \Concrete\Core\Console\ServiceProvider::class,
 
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
@@ -263,6 +258,8 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionKeyCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionAccessEntityTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTasksRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTaskSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTemplatesRoutine',
@@ -800,63 +797,8 @@ return [
         'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
     ],
 
-    'commands' => [
-        ['Concrete\Core\User\Command\UpdateUserAvatarCommand', 'Concrete\Core\User\Command\UpdateUserAvatarCommandHandler'],
+    'command_handlers' => [
 
-        ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
-        ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
-        ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
-        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler'],
-        ['Concrete\Core\Page\Command\CopyPageCommand', 'Concrete\Core\Page\Command\CopyPageCommandHandler'],
-        ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler'],
-        ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler'],
-        ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler'],
-        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler'],
-        ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
-        ['Concrete\Core\User\Group\Command\AddGroupCommand', 'Concrete\Core\User\Group\Command\AddGroupCommandHandler'],
-        ['Concrete\Core\User\Group\Command\DeleteGroupCommand', 'Concrete\Core\User\Group\Command\DeleteGroupCommandHandler'],
-        ['Concrete\Core\Page\Container\Command\AddContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
-        ['Concrete\Core\Page\Container\Command\UpdateContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
-        ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
-        ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
-        ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
-        ['Concrete\Core\Calendar\Event\Summary\Template\Command\EnableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
-        ['Concrete\Core\Calendar\Event\Summary\Template\Command\DisableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
-
-        ['Concrete\Core\Board\Command\CreateBoardCommand', 'Concrete\Core\Board\Command\CreateBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\UpdateBoardCommand', 'Concrete\Core\Board\Command\UpdateBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\DeleteBoardCommand', 'Concrete\Core\Board\Command\DeleteBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\SetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\SetBoardCustomWeightingCommandHandler'],
-        ['Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\ResetBoardCustomWeightingCommandHandler'],
-        ['Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommandHandler'],
-        ['Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommandHandler'],
-        ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommandHandler'],
-        ['Concrete\Core\Board\Command\EnableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
-        ['Concrete\Core\Board\Command\DisableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
-        ['Concrete\Core\Board\Command\RefreshBoardInstanceCommand', 'Concrete\Core\Board\Command\RefreshBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\ClearBoardInstanceCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\GenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\GenerateBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\RegenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\RegenerateBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\AddContentToBoardInstanceCommand', 'Concrete\Core\Board\Command\AddContentToBoardInstanceCommandHandler'],
-
-        ['Concrete\Core\Board\Command\PinSlotToBoardCommand', 'Concrete\Core\Board\Command\PinSlotToBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\ClearSlotFromBoardCommand', 'Concrete\Core\Board\Command\ClearSlotFromBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\AddCustomSlotToBoardCommand', 'Concrete\Core\Board\Command\AddCustomSlotToBoardCommandHandler'],
-        ['Concrete\Core\Express\Command\RescanEntityCommand', 'Concrete\Core\Express\Command\RescanEntityCommandHandler'],
-
-        ['Concrete\Core\Board\Designer\Command\CreateItemSelectorCustomElementCommand', 'Concrete\Core\Board\Designer\Command\CreateItemSelectorCustomElementCommandHandler'],
-        ['Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommand', 'Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommandHandler'],
-        ['Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand', 'Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommandHandler'],
-        ['Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommand', 'Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommandHandler'],
-
-        ['Concrete\Core\Attribute\Command\SaveAttributesCommand', 'Concrete\Core\Attribute\Command\SaveAttributesCommandHandler'],
-        ['Concrete\Core\Attribute\Command\ClearAttributesCommand', 'Concrete\Core\Attribute\Command\ClearAttributesCommandHandler'],
-
-        ['Concrete\Core\Page\Theme\Command\CreateCustomSkinCommand', 'Concrete\Core\Page\Theme\Command\CreateCustomSkinCommandHandler'],
-        ['Concrete\Core\Page\Theme\Command\UpdateCustomSkinCommand', 'Concrete\Core\Page\Theme\Command\UpdateCustomSkinCommandHandler'],
-        ['Concrete\Core\Page\Theme\Command\DeleteCustomSkinCommand', 'Concrete\Core\Page\Theme\Command\DeleteCustomSkinCommandHandler'],
-        ['Concrete\Core\Page\Theme\Command\GenerateCustomSkinStylesheetCommand', 'Concrete\Core\Page\Theme\Command\GenerateCustomSkinStylesheetCommandHandler'],
     ],
+
 ];

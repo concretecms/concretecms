@@ -130,11 +130,11 @@ class ApiServiceProvider extends ServiceProvider
         // The ResourceServer deals with authenticating requests, in other words validating tokens
         $this->app->bind(ResourceServer::class, function() {
             $cryptKey = new CryptKey($this->getKey(self::KEY_PUBLIC), null, DIRECTORY_SEPARATOR !== '\\');
-            return $this->app->build(ResourceServer::class, [
+            return new ResourceServer(
                 $this->app->make(AccessTokenRepositoryInterface::class),
                 $cryptKey,
                 $this->app->make(DefaultValidator::class)
-            ]);
+            );
         });
 
         // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret

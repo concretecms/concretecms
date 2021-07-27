@@ -37,7 +37,7 @@ abstract class BoardSlotCommandHandler
         $this->loggerFactory = $loggerFactory;
     }
 
-    public function handle(BoardSlotCommand $command)
+    public function __invoke(BoardSlotCommand $command)
     {
         $dateService = new Date();
         $timezone = $dateService->getUserTimeZoneID();

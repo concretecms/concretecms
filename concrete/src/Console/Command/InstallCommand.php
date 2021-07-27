@@ -182,6 +182,8 @@ EOT
             $output->writeln('done.');
         }
         $output->writeln('<info>Installation Complete!</info>');
+
+        return Command::RETURN_CODE_ON_SUCCESS;
     }
 
     /**

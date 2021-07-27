@@ -21,7 +21,7 @@ class RegenerateBoardInstanceCommandHandler
      * Clears out the board data pool, repopulates it, clears the instance of the board and regenerates it.
      * @param RegenerateBoardInstanceCommand $command
      */
-    public function handle(RegenerateBoardInstanceCommand $command)
+    public function __invoke(RegenerateBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
         $command = new ClearBoardInstanceDataPoolCommand();

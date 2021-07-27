@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.0.0a3',
-    'version_installed' => '9.0.0a3',
-    'version_db' => '20210722225853', // the key of the latest database migration
+    'version' => '9.0.0b1',
+    'version_installed' => '9.0.0b1',
+    'version_db' => '20210725000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -413,25 +413,85 @@ return [
 
     /*
      * ------------------------------------------------------------------------
-     * Queue settings
+     * Queue/Command/Messenger settings
      * ------------------------------------------------------------------------
      */
-    'queue' => [
+    'processes' => [
 
-        /*
-         * Driver
-         *
-         * @var string (redis|database)
+        'logging' => [
+
+            /*
+             * Do we log task process output (triggered in the dashboard or in the CLI) to a file somewhere?
+             *
+             * @var string (none|file)
+             */
+            'method' => 'none',
+
+            'file' => [
+
+                /*
+                 * The directory that holds process logs
+                 *
+                 * @var string
+                 */
+                'directory' => '',
+
+            ],
+
+        ],
+
+        'scheduler' => [
+
+            /*
+             * Are scheduled tasks available? Scheduled tasks require running a console command every minute.
+             *
+             * @var bool
+             */
+            'enable' => false,
+
+        ],
+
+
+        /**
+         * The point after which old completed are automatically removed from the system.
          */
-        'driver' => 'database',
+        'delete_threshold' => 7 // days
 
+    ],
 
-        /*
-         * Default queue to use
-         *
-         * @var string
-         */
-        'default' => 'default',
+    'messenger' => [
+
+        'default_bus' => 'default',
+
+        'buses' => [
+            'default' => [
+                'default_middleware' => true,
+                'middleware' => [],
+            ]
+        ],
+
+        'routing' => [
+            'Concrete\Core\Foundation\Command\AsyncCommandInterface' => ['async'],
+        ],
+
+        'transports' => [
+            'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncTransport',
+            'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultSyncTransport', // used for tests and advanced configuration
+        ],
+
+        'consume' => [
+
+            /**
+             * Listener. If set to app, then queueable operations like rescanning files and deleting bulk pages
+             * will be polled and executed through browser XHR processes. If set to worker you must run
+             * `concrete/bin/messenger:consume` from the command line. This command can be run multiple times to
+             * add additional queue workers for command processing.
+             *
+             * @var string (app|worker)
+             */
+            'method' => 'app',
+
+        ],
 
         /*
          * If we're consuming the queue through polling, how many entries do we do at a time
@@ -891,8 +951,8 @@ return [
         ],
     ],
     'urls' => [
-        'concrete5' => 'http://www.concrete5.org',
-        'concrete5_secure' => 'https://www.concrete5.org',
+        'concrete5' => 'http://127.0.0.1:9050',
+        'concrete5_secure' => 'https://127.0.0.1:9050',
         'newsflow' => 'http://newsflow.concrete5.org',
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
         'privacy_policy' => '//www.concrete5.org/legal/privacy-policy',
@@ -1290,6 +1350,21 @@ return [
             'password_credentials' => false,
             'refresh_token' => true,
         ],
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Notification settings
+     * ------------------------------------------------------------------------
+     */
+    'notification' => [
+        /*
+         * Enable Server-Sent Events?
+         *
+         * @var bool
+         */
+        'server_sent_events' => false,
+
     ],
 
     'mutex' => [

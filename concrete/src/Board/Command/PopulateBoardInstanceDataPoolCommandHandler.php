@@ -30,7 +30,7 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
         $this->entityManager = $entityManager;
     }
 
-    public function handle(PopulateBoardInstanceDataPoolCommand $command)
+    public function __invoke(PopulateBoardInstanceDataPoolCommand $command)
     {
         $instance = $command->getInstance();
         $board = $instance->getBoard();

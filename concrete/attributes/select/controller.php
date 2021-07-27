@@ -581,7 +581,7 @@ EOT
         $q .= ' group by avSelectOptionID order by total desc limit ' . $limit;
         $r = $db->Execute($q, $v);
         $options = new ArrayCollection();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $opt = new SelectValueUsedOption();
             $opt->setSelectAttributeOptionValue($row['value']);
             $opt->setSelectAttributeOptionID($row['avSelectOptionID']);

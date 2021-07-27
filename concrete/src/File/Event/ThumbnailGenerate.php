@@ -2,9 +2,7 @@
 
 namespace Concrete\Core\File\Event;
 
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
-
-class ThumbnailGenerate extends AbstractEvent
+class ThumbnailGenerate
 {
     /**
      * E.g. /thumbnails/medium_2x/9915/2801/7337/png-24.jpg

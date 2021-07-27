@@ -3,9 +3,9 @@
 namespace Concrete\Core\Page\Theme\Command;
 
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 
-class DeleteCustomSkinCommand implements CommandInterface
+class DeleteCustomSkinCommand extends Command
 {
 
     /**

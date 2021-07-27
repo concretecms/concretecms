@@ -27,7 +27,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
 
                 $loaderRepository = new TranslationLoaderRepository();
                 foreach ($loaders as $key => $class) {
-                    $loader = $app->build($class, [$app]);
+                    $loader = $app->make($class);
                     $loaderRepository->registerTranslationLoader($key, $loader);
                 }
 
@@ -37,7 +37,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
                     [
                         'factories' => [
                             GettextLoader::class => function($creationContext, $resolvedName, $options) {
-                                return $this->app->build(GettextLoader::class, ['webrootDirectory' => DIR_BASE]);
+                                return $this->app->make(GettextLoader::class, ['webrootDirectory' => DIR_BASE]);
                             }
                         ],
                         'aliases' => [

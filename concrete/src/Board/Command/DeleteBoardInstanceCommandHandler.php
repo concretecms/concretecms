@@ -25,7 +25,7 @@ class DeleteBoardInstanceCommandHandler
     }
     
     
-    public function handle(DeleteBoardInstanceCommand $command)
+    public function __invoke(DeleteBoardInstanceCommand $command)
     {
         $this->entityManager->remove($command->getInstance());
         $this->entityManager->flush();

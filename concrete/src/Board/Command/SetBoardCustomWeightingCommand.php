@@ -3,9 +3,9 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 
-class SetBoardCustomWeightingCommand implements CommandInterface
+class SetBoardCustomWeightingCommand extends Command
 {
     use BoardTrait;
 

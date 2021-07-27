@@ -6,6 +6,7 @@ use Concrete\Core\Page\Command\PageCommand;
 
 class EnableCustomPageSummaryTemplatesCommand extends PageCommand
 {
+
     /**
      * @var int[]
      */

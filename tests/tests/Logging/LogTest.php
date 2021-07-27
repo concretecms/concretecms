@@ -127,7 +127,7 @@ class LogTest extends ConcreteDatabaseTestCase
             ->method('createConfiguration')
             ->willReturn($configuration);
 
-        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
+        $factory = $this->app->make(LoggerFactory::class, ['configurationFactory' => $factory]);
         $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
 
         $logger->debug('This is a debug line.');
@@ -155,7 +155,7 @@ class LogTest extends ConcreteDatabaseTestCase
             ->method('createConfiguration')
             ->willReturn($configuration);
 
-        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
+        $factory = $this->app->make(LoggerFactory::class, ['configurationFactory' => $factory]);
         $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
 
         $logger->debug('This is a debug line.');
@@ -291,7 +291,7 @@ class LogTest extends ConcreteDatabaseTestCase
             ->method('createConfiguration')
             ->willReturn($configuration);
 
-        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
+        $factory = $this->app->make(LoggerFactory::class, ['configurationFactory' => $factory]);
         $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
         $this->assertInstanceOf(Logger::class, $logger);
         $this->assertCount(0, $logger->getHandlers());
@@ -335,7 +335,7 @@ class LogTest extends ConcreteDatabaseTestCase
             ->method('createConfiguration')
             ->willReturn($configuration);
 
-        $factory = $this->app->build(LoggerFactory::class, ['configurationFactory' => $factory]);
+        $factory = $this->app->make(LoggerFactory::class, ['configurationFactory' => $factory]);
         $logger = $factory->createLogger(Channels::CHANNEL_SECURITY);
         $this->assertInstanceOf(Logger::class, $logger);
         $this->assertCount(1, $logger->getHandlers());

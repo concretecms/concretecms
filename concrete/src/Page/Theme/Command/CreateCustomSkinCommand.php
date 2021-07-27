@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Page\Theme\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 
-class CreateCustomSkinCommand implements CommandInterface
+class CreateCustomSkinCommand extends Command
 {
 
     /**

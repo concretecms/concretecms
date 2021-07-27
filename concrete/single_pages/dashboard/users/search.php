@@ -46,9 +46,7 @@ use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
                             </span>
                     </button>
 
-                    <div data-search-menu="dropdown">
-                        <?php echo $resultsBulkMenu->getMenuElement(); ?>
-                    </div>
+                    <?php echo $resultsBulkMenu->getMenuElement(); ?>
                 </div>
             </th>
 

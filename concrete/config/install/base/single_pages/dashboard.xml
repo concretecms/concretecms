@@ -959,6 +959,55 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Automation" path="/dashboard/system/automation"
+              filename="/dashboard/system/automation/view.php" pagetype="" description="Run and automate commands."
+              package=""/>
+        <page name="Tasks" path="/dashboard/system/automation/tasks"
+              filename="/dashboard/system/automation/tasks.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>automated jobs, commands, tasks, console, cli</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Activity" path="/dashboard/system/automation/activity"
+              filename="/dashboard/system/automation/activity.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>processes, queues, jobs, running</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Schedule" path="/dashboard/system/automation/schedule"
+              filename="/dashboard/system/automation/schedule.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>cron, scheduling, jobs</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Automation Settings" path="/dashboard/system/automation/settings"
+              filename="/dashboard/system/automation/settings.php" pagetype="" description="" package="">
+        </page>
+        <page name="Notification" path="/dashboard/system/notification"
+              filename="/dashboard/system/notification/view.php" pagetype="" description="Notification settings."
+              package=""/>
+        <page name="Server-Sent Events" path="/dashboard/system/notification/events"
+              filename="/dashboard/system/notification/events.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>websocket, socket, socket.io, push, push notifications, mercure</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Waiting for Me" path="/dashboard/system/notification/alerts"
+              filename="/dashboard/system/notification/alerts.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>waiting for me, inbox, notifications</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Optimization" path="/dashboard/system/optimization"
               filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well."
               package=""/>
@@ -1114,9 +1163,6 @@
                     <value>global, password, reset, change password, force, sign out</value>
                 </attributekey>
             </attributes>
-        </page>
-        <page name="Notification Settings" path="/dashboard/system/registration/notification"
-              filename="/dashboard/system/registration/notification.php" pagetype="" description="" package="">
         </page>
 
         <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"

@@ -108,10 +108,10 @@ class NodeType extends ConcreteObject
         $db = Database::connection();
         $list = array();
         $r = $db->Execute('select treeNodeTypeID from TreeNodeTypes where pkgID = ? order by treeNodeTypeID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = TreeNodeType::getByID($row['treeNodeTypeID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }

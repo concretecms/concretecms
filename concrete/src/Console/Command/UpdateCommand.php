@@ -7,7 +7,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Updater\Update;
-use Doctrine\DBAL\Migrations\OutputWriter;
+use Doctrine\Migrations\OutputWriter;
 use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -91,5 +91,7 @@ EOT
         $app->make(MutexInterface::class)->execute(Update::MUTEX_KEY, function () use ($configuration) {
             Update::updateToCurrentVersion($configuration);
         });
+
+        return static::SUCCESS;
     }
 }

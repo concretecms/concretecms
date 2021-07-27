@@ -47,7 +47,7 @@ class ScheduleCustomElementCommandHandler
         $this->loggerFactory = $loggerFactory;
     }
 
-    public function handle(ScheduleCustomElementCommand $command)
+    public function __invoke(ScheduleCustomElementCommand $command)
     {
         $element = $command->getElement();
         $batchIdentifier = $this->uuidGenerator->generate($this->entityManager, $element);

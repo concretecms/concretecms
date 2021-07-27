@@ -54,7 +54,7 @@ class Gathering extends ConcreteObject implements \Concrete\Core\Permission\Obje
         $db = Loader::db();
         $r = $db->Execute('select gaID from Gatherings order by gaDateLastUpdated asc');
         $gatherings = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $ag = self::getByID($row['gaID']);
             if (is_object($ag)) {
                 $gatherings[] = $ag;
@@ -78,7 +78,7 @@ class Gathering extends ConcreteObject implements \Concrete\Core\Permission\Obje
         $db = Loader::db();
         $r = $db->Execute('select gaiID from GatheringItems where gaID = ?', array($this->gaID));
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $item = GatheringItem::getByID($row['gaiID']);
             if (is_object($item)) {
                 $list[] = $item;
@@ -93,7 +93,7 @@ class Gathering extends ConcreteObject implements \Concrete\Core\Permission\Obje
         $db = Loader::db();
         $r = $db->Execute('select gcsID from GatheringConfiguredDataSources where gaID = ?', array($this->gaID));
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $source = GatheringDataSourceConfiguration::getByID($row['gcsID']);
             if (is_object($source)) {
                 $list[] = $source;
@@ -152,7 +152,7 @@ class Gathering extends ConcreteObject implements \Concrete\Core\Permission\Obje
         // now, we find all the items with that timestamp, and we update their display order.
         $agiBatchDisplayOrder = 0;
         $r = $db->Execute('select gaiID from GatheringItems where gaID = ? and gaiBatchTimestamp = ? order by gaiPublicDateTime desc', array($this->getGatheringID(), $agiBatchTimestamp));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $db->Execute('update GatheringItems set gaiBatchDisplayOrder = ? where gaiID = ?', array($agiBatchDisplayOrder, $row['gaiID']));
             ++$agiBatchDisplayOrder;
         }

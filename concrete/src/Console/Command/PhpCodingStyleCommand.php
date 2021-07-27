@@ -12,7 +12,7 @@ use RuntimeException;
 use SplFileInfo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 class PhpCodingStyleCommand extends Command
 {
@@ -33,7 +33,7 @@ EOT
         parent::__construct($name);
     }
 
-    public function handle(PhpFixer $fixer, EventDispatcherInterface $eventDispatcher)
+    public function handle(PhpFixer $fixer, EventDispatcher $eventDispatcher)
     {
         class_alias('Symfony\Component\EventDispatcher\Event', 'PhpCsFixer\Event\Event');
         $action = $this->input->getArgument('action');
