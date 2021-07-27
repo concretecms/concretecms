@@ -7,20 +7,15 @@ use Concrete\Core\Utility\Service\Validation\Strings;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Middleware for applying frame options
- * @package Concrete\Core\Http\Middleware
- */
-class FrameOptionsMiddleware implements MiddlewareInterface
+class StrictTransportSecurityMiddleware implements MiddlewareInterface
 {
-
     /**
-     * @var \Concrete\Core\Config\Repository\Repository
+     * @var Repository
      */
     private $config;
 
     /**
-     * @var \Concrete\Core\Utility\Service\Validation\Strings
+     * @var Strings
      */
     private $stringValidator;
 
@@ -31,21 +26,22 @@ class FrameOptionsMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param \Concrete\Core\Http\Middleware\DelegateInterface $frame
+     * @param Request $request
+     * @param DelegateInterface $frame
+     *
      * @return Response
      */
     public function process(Request $request, DelegateInterface $frame)
     {
         $response = $frame->next($request);
 
-        if ($response->headers->has('X-Frame-Options') === false) {
-            $x_frame_options = $this->config->get('concrete.security.misc.x_frame_options');
+        if ($response->headers->has('Strict-Transport-Security') === false) {
+            $x_frame_options = $this->config->get('concrete.security.misc.strict_transport_security');
             if ($this->stringValidator->notempty($x_frame_options)) {
-                $response->headers->set('X-Frame-Options', $x_frame_options);
+                $response->headers->set('Strict-Transport-Security', $x_frame_options);
             }
         }
 
         return $response;
     }
-
 }

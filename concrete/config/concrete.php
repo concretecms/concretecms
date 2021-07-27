@@ -1132,17 +1132,6 @@ return [
              * @var bool|string DENY, SAMEORIGIN, ALLOW-FROM uri
              */
             'x_frame_options' => 'SAMEORIGIN',
-
-            /**
-             * X-XSS-Protection HTTP response header
-             * An old way to protect from cross-site scripting attacks.
-             * Please use CSP instead if you don't want to support legacy browsers.
-             *
-             * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
-             *
-             * @var bool|string XSS filtering policy
-             */
-            'x_xss_protection' => false,
         ],
     ],
 
