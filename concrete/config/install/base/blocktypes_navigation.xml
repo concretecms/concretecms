@@ -14,6 +14,7 @@
         <blocktype handle="topic_list" package=""/>
         <blocktype handle="rss_displayer" package=""/>
         <blocktype handle="switch_language" package=""/>
+        <blocktype handle="breadcrumbs" package=""/>
     </blocktypes>
 
     <blocktypesets>
@@ -30,6 +31,7 @@
             <blocktype handle="topic_list"/>
             <blocktype handle="rss_displayer"/>
             <blocktype handle="switch_language"/>
+            <blocktype handle="breadcrumbs"/>
         </blocktypeset>
     </blocktypesets>
 

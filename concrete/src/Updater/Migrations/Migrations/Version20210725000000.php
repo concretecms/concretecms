@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Concrete\Core\Entity\Automation\TaskSetTask;
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Entity\Automation\TaskSet;
@@ -85,6 +87,18 @@ final class Version20210725000000 extends AbstractMigration implements Repeatabl
             $job = Job::getByHandle($jHandle);
             if ($job) {
                 $job->uninstall();
+            }
+        }
+
+        // add breadcrumbs block type
+        $bt = BlockType::getByHandle('breadcrumbs');
+        if (!is_object($bt)) {
+            $bt = BlockType::installBlockType('breadcrumbs');
+
+            // add breadcrumbs block to navigation set
+            $set = BlockTypeSet::getByHandle('navigation');
+            if (is_object($set)) {
+                $set->addBlockType($bt);
             }
         }
     }
