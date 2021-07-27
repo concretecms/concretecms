@@ -50,7 +50,7 @@ class FileFolder extends TreeNode
 
     public function getTreeNodeDisplayName($format = 'html')
     {
-        if ($this->getTreeNodeName()) {
+        if ($this->getTreeNodeName() !== null) {
             $name = tc($this->getTreeNodeTranslationContext(), $this->getTreeNodeName());
             switch ($format) {
                 case 'html':
@@ -263,7 +263,9 @@ class FileFolder extends TreeNode
             $childNodes = $this->childNodes;
         } else {
             $childNodesData = $this->getHierarchicalNodesOfType($typeHandle, 1, true, false, 1);
-            $childNodes = array_map(function ($item) { return $item['treeNodeObject']; }, $childNodesData);
+            $childNodes = array_map(function ($item) {
+                return $item['treeNodeObject'];
+            }, $childNodesData);
         }
         $result = null;
         foreach ($childNodes as $childNode) {
