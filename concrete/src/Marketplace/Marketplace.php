@@ -5,6 +5,7 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Package;
 
@@ -24,6 +25,7 @@ class Marketplace implements ApplicationAwareInterface
     const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
     const E_UNRECOGNIZED_SITE_TOKEN = 22;
     const E_DELETED_SITE_TOKEN = 31;
+    const E_SITE_TYPE_MISMATCH_MULTISITE = 34;
     const E_CONNECTION_TIMEOUT = 41;
     const E_GENERAL_CONNECTION_ERROR = 99;
 
@@ -79,8 +81,12 @@ class Marketplace implements ApplicationAwareInterface
 
         if ($csToken != '') {
             $fh = $this->app->make('helper/file');
+            $installationService = $this->app->make(InstallationService::class);
+            if ($installationService->isMultisiteEnabled()) {
+                $ms = '&ms=1';
+            }
             $csiURL = urlencode($this->getSiteURL());
-            $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+            $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION . $ms;
             $vn = $this->app->make('helper/validation/numbers');
             $r = $this->get($url);
 
@@ -115,7 +121,7 @@ class Marketplace implements ApplicationAwareInterface
         try {
             $result = $this->fileHelper->getContents(
                 $url,
-                $this->config->get('concrete.marektplace.request_timeout'));
+                $this->config->get('concrete.marketplace.request_timeout'));
         } catch (TimeoutException $e) {
             // Catch a timeout
             $this->connectionError = self::E_CONNECTION_TIMEOUT;
