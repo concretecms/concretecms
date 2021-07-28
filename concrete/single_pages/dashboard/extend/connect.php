@@ -57,10 +57,24 @@ if ($permissions->canInstallPackages()) { ?>
 
                 </div>
 
-                <button type="submit" value="disconnect" class="btn btn-default" name="disconnect"><?=t("Disconnect")?></button>
+                <button type="submit" value="disconnect" class="btn btn-secondary" name="disconnect"><?=t("Disconnect")?></button>
 
             </fieldset>
 
+            <?php
+        } else if ($marketplace->getConnectionError() ==  Marketplace::E_SITE_TYPE_MISMATCH_MULTISITE) { ?>
+
+            <fieldset>
+                <div class="alert alert-danger">
+                    <h5><?=t('Error: Site Type Mismatch – Multi-Site')?></h5>
+
+                    <p style="font-size: 1.2rem"><?=t("This site is connected to a marketplace page of the wrong type. Since this site uses multi-site functionality, the project page it is connected to must be of the Multi-Site Project page type. Please reconnect it to another project page.")?></p>
+
+                </div>
+
+                <button type="submit" value="disconnect" class="btn btn-secondary" name="disconnect"><?=t("Disconnect")?></button>
+
+            </fieldset>
         <?php } else { ?>
 
             <fieldset>
@@ -84,7 +98,7 @@ if ($permissions->canInstallPackages()) { ?>
                     <?php View::element('dashboard/marketplace_project_page');?>
                 <?php } else { ?>
                     <p style="font-size: 1.2rem"><?=t("Downloading add-ons and themes for your site starts with connecting your site to the Concrete Marketplace. If you haven't already, create a project page for your site by clicking the button below. Once your page is created, come back here and paste your connection information into the form below.")?></p>
-                    <a href="<?=$projectPageURL?>" target="_blank" class="btn btn-default"><?=t('Create Project Page')?></a>
+                    <a href="<?=$projectPageURL?>" target="_blank" class="btn btn-secondary"><?=t('Create Project Page')?></a>
                 <?php } ?>
             </fieldset>
 
@@ -102,7 +116,7 @@ if ($permissions->canInstallPackages()) { ?>
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+                    <button class="float-end btn btn-primary" type="submit" ><?=t('Save')?></button>
                 </div>
             </div>
 
