@@ -11,6 +11,15 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
     die("Access Denied.");
 }
 
+/**
+ * ----------------------------------------------------------------------------
+ * Disable phar stream wrapper.
+ * ----------------------------------------------------------------------------
+ */
+if (in_array('phar', stream_get_wrappers(), true)) {
+    stream_wrapper_unregister('phar');
+}
+
 /*
  * ----------------------------------------------------------------------------
  * Handle text encoding.
