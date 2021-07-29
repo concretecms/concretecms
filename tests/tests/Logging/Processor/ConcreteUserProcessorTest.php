@@ -2,12 +2,12 @@
 namespace Concrete\Tests\Logging\Processor;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
+use Concrete\Core\Logging\Processor\ConcreteUserProcessor;
 use Concrete\Core\User\User;
 use Mockery as M;
 use Concrete\Tests\TestCase;
 
-class Concrete5UserProcessorTest extends TestCase
+class ConcreteUserProcessorTest extends TestCase
 {
 
     public function testProcessorAddsUserDetails()
@@ -21,7 +21,7 @@ class Concrete5UserProcessorTest extends TestCase
         $app->shouldReceive('make')->withArgs([User::class])->andReturn($user);
 
         // Set up the processor
-        $processor = new Concrete5UserProcessor($app);
+        $processor = new ConcreteUserProcessor($app);
 
         // Set up our input
         $given = [];
@@ -50,7 +50,7 @@ class Concrete5UserProcessorTest extends TestCase
         $app->shouldReceive('make')->withArgs([User::class])->andReturn($user);
 
         // Set up the processor
-        $processor = new Concrete5UserProcessor($app);
+        $processor = new ConcreteUserProcessor($app);
 
         // Set up our input
         $given = [];
@@ -73,7 +73,7 @@ class Concrete5UserProcessorTest extends TestCase
         $app->shouldReceive('make')->once()->withArgs([User::class])->andReturn($user);
 
         // Set up the processor
-        $processor = new Concrete5UserProcessor($app);
+        $processor = new ConcreteUserProcessor($app);
 
         // Run the processor twice
         $processor([]);

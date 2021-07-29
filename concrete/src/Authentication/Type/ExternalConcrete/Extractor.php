@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Authentication\Type\ExternalConcrete5;
+namespace Concrete\Core\Authentication\Type\ExternalConcrete;
 
 use Lcobucci\JWT\Claim;
 use Lcobucci\JWT\Parser;
@@ -12,7 +12,6 @@ class Extractor extends LazyExtractor
 {
     const USER_PATH = '/ccm/api/v1/account/info';
 
-    /** @var \Concrete\Core\Authentication\Type\ExternalConcrete5\ExternalConcrete5Service */
     protected $service;
 
     public function __construct()

@@ -177,7 +177,7 @@
         <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
 
-        <permissionkey handle="upgrade" name="Upgrade concrete5" package="" category="admin">
+        <permissionkey handle="upgrade" name="Upgrade Concrete" package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>
             </access>
@@ -429,7 +429,7 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="view_in_maintenance_mode" name="View Site in Maintenance Mode" description="Ability to see and use the website when concrete5 is in maintenance mode." package="" category="admin">
+        <permissionkey handle="view_in_maintenance_mode" name="View Site in Maintenance Mode" description="Ability to see and use the website when Concrete is in maintenance mode." package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>
             </access>

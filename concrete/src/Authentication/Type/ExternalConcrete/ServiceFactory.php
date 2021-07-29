@@ -1,8 +1,8 @@
 <?php
 
-namespace Concrete\Core\Authentication\Type\ExternalConcrete5;
+namespace Concrete\Core\Authentication\Type\ExternalConcrete;
 
-use Concrete\Core\Api\OAuth\Service\ExternalConcrete5;
+use Concrete\Core\Api\OAuth\Service\ExternalConcrete;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -60,7 +60,7 @@ class ServiceFactory
      */
     public function createService(OAuthServiceFactory $factory)
     {
-        $config = $this->config->get('auth.external_concrete5');
+        $config = $this->config->get('auth.external_concrete');
 
         $appId = array_get($config, 'appid');
         $appSecret = array_get($config, 'secret');
@@ -68,7 +68,7 @@ class ServiceFactory
 
         // Get the callback url
         /** @var Url $callbackUrl */
-        $callbackUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/callback/']);
+        $callbackUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete/callback/']);
         if ($callbackUrl->getHost() == '') {
             $callbackUrl = $callbackUrl->setHost($this->request->getHost());
             $callbackUrl = $callbackUrl->setScheme($this->request->getScheme());
@@ -83,8 +83,8 @@ class ServiceFactory
         $baseApiUrl = new Uri($baseUrl);
 
         // Create the service using the oauth service factory
-        return $factory->createService('external_concrete5', $credentials, $storage, [
-            ExternalConcrete5Service::SCOPE_OPENID,
+        return $factory->createService('external_concrete', $credentials, $storage, [
+            ExternalConcreteService::SCOPE_OPENID,
         ], $baseApiUrl);
     }
 

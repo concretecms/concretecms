@@ -117,7 +117,7 @@ return [
 
             /** @var string[] */
             '_COOKIE' => [
-                'CONCRETE5',
+                'CONCRETE',
             ],
 
             /** @var string[] */
@@ -352,7 +352,7 @@ return [
                                     'ttl' => 10
                                 ],
                             ],*/
-                            'prefix' => 'c5_overrides',
+                            'prefix' => 'concrete_overrides',
                             'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
@@ -376,7 +376,7 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix' => 'c5_expensive',
+                            'prefix' => 'concrete_expensive',
                             'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
@@ -392,7 +392,7 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix' => 'c5_object',
+                            'prefix' => 'concrete_object',
                             'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
@@ -631,7 +631,7 @@ return [
          */
         'enabled' => true,
         'default' => [
-            'address' => 'concrete5-noreply@concrete5',
+            'address' => 'concrete-cms-noreply@concretecms',
             'name' => '',
         ],
         'form_block' => [
@@ -722,7 +722,7 @@ return [
 
     /*
      * ------------------------------------------------------------------------
-     * Getting external news and help from concrete5.org
+     * Getting external news and help from concretecms.com
      * ------------------------------------------------------------------------
      */
     'external' => [
@@ -734,7 +734,7 @@ return [
         'intelligent_search_help' => true,
 
         /*
-         * Enable concrete5 news within your site
+         * Enable Concrete news within your site
          *
          * @var bool concrete.external.news
          */
@@ -786,7 +786,7 @@ return [
          */
         'enable_move_blocktypes_across_sets' => false,
         /*
-         * Check whether to add a "generator" tag with the concrete5 version to the site pages
+         * Check whether to add a "generator" tag with the Concrete version to the site pages
          *
          * @var bool
          */
@@ -803,8 +803,8 @@ return [
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,
         'services' => [
-            'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
-            'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
+            'get_available_updates' => 'http://marketplace.concretecms.com/tools/update_core',
+            'inspect_update' => 'http://marketplace.concretecms.com/tools/inspect_update',
         ],
         // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
@@ -901,21 +901,21 @@ return [
      */
     'accessibility' => [
         /*
-         * Show titles in the concrete5 toolbars
+         * Show titles in the toolbars
          *
          * @var bool
          */
         'toolbar_titles' => false,
 
         /*
-         * Increase the font size in the concrete5 toolbars
+         * Increase the font size in the toolbars
          *
          * @var bool
          */
         'toolbar_large_font' => false,
 
         /*
-         * Show tooltips in the concrete5 toolbars
+         * Show tooltips in the toolbars
          *
          * @var bool
          */
@@ -936,10 +936,10 @@ return [
         'choose_language_login' => false,
         // Fetch language files when installing a package connected to the marketplace [boolean]
         'auto_install_package_languages' => true,
-        // Community Translation instance offering concrete5 translations
+        // Community Translation instance offering translations
         'community_translation' => [
             // API entry point of the Community Translation instance
-            'entry_point' => 'http://translate.concrete5.org/api',
+            'entry_point' => 'http://translate.concretecms.org/api',
             // API Token to be used for the Community Translation instance
             'api_token' => '',
             // Languages below this translation progress won't be considered
@@ -947,12 +947,12 @@ return [
             // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
             // Base URI for package details
-            'package_url' => 'https://translate.concrete5.org/translate/package',
+            'package_url' => 'https://translate.concretecms.org/translate/package',
         ],
     ],
     'urls' => [
-        'concrete5' => 'http://marketplace.concretecms.com',
-        'concrete5_secure' => 'https://marketplace.concretecms.com',
+        'concrete' => 'http://marketplace.concretecms.com',
+        'concrete_secure' => 'https://marketplace.concretecms.com',
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper', // staying at concrete5.org for the momen
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
@@ -1019,7 +1019,7 @@ return [
 
     ],
     'session' => [
-        'name' => 'CONCRETE5',
+        'name' => 'CONCRETE',
         'handler' => 'file',
         'redis' => [
             'database' => 1, // Use different Redis Databases - optional

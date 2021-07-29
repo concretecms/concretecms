@@ -29,11 +29,11 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-env');
 
-    grunt.registerTask('build-release-download', 'Build process: download the latest concrete5 release from GitHub.', function() {
+    grunt.registerTask('build-release-download', 'Build process: download the latest Concrete release from GitHub.', function() {
         require('./tasks/build-release/download.js')(grunt, config, parameters, this.async());
     });
 
-    grunt.registerTask('build-release-build', 'Build process: compile the required files of a clean concrete5 installation.', function() {
+    grunt.registerTask('build-release-build', 'Build process: compile the required files of a clean Concrete installation.', function() {
         require('./tasks/build-release/build.js')(grunt, config, parameters, this.async());
     });
 

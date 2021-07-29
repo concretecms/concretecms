@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die('Access denied.');
 </div>
 
 <div class="form-group">
-    <?= $form->label('url', t('External concrete5 URL')) ?>
+    <?= $form->label('url', t('External Concrete URL')) ?>
     <?= $form->url('url', $data['url'] ?? '', ['spellcheck' => 'false']) ?>
 </div>
 

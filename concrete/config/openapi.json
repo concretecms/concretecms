@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "version": "0.5",
-    "title": "concrete5 API",
+    "title": "Concrete API",
     "license": {
       "name": "MIT"
     }

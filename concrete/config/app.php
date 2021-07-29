@@ -140,7 +140,7 @@ return [
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',
         'core_auth_google' => '\Concrete\Core\Authentication\Type\Google\ServiceProvider',
-        'core_auth_external_concrete5' => '\Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceProvider',
+        'core_auth_external_concrete' => '\Concrete\Core\Authentication\Type\ExternalConcrete\ServiceProvider',
 
         // Validator
         'core_validator' => '\Concrete\Core\Validator\ValidatorServiceProvider',
@@ -382,7 +382,7 @@ return [
      * Assets
      */
     'assets' => [
-        // External vendor libraries required to run concrete5 or our themes at a fundamental level that can't
+        // External vendor libraries required to run concrete or our themes at a fundamental level that can't
         // or shouldn't be bundled with our own SCSS/JS files.
 
         'jquery' => [
@@ -766,12 +766,12 @@ return [
         'sslpassphrase' => null,
         // Whether to store last response for later retrieval with getLastResponse(). If set to FALSE, getLastResponse() will return NULL.
         'storeresponse' => true,
-        // Directory where to store temporary streams by default (if empty, we'll use the default concrete5 temporry directory).
+        // Directory where to store temporary streams by default (if empty, we'll use the default concrete temporry directory).
         'streamtmpdir' => null,
         // Whether to strictly follow the RFC when redirecting (see https://framework.zend.com/manual/2.4/en/modules/zend.http.client.advanced.html#http-redirections )
         'strictredirects' => false,
         // User agent identifier string.
-        'useragent' => 'concrete5 CMS',
+        'useragent' => 'Concrete CMS',
         // Whether to pass the cookie value through urlencode/urldecode. Enabling this breaks support with some web servers. Disabling this limits the range of values the cookies can contain.
         'encodecookies' => true,
         // HTTP protocol version (usually '1.1' or '1.0').

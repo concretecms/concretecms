@@ -92,7 +92,7 @@ class Install extends Controller
         $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
 
         $config = $this->app->make('config');
-        $this->set('pageTitle', t('Install concrete5'));
+        $this->set('pageTitle', t('Install Concrete CMS'));
         $image = date('Ymd') . '.jpg';
         $this->set('concreteVersion', $config->get('concrete.version'));
 
@@ -104,7 +104,7 @@ class Install extends Controller
         Cache::disableAll();
 
         if ($this->app->isInstalled()) {
-            throw new UserMessageException(t('concrete5 is already installed.'));
+            throw new UserMessageException(t('Concrete is already installed.'));
         }
     }
 
@@ -303,7 +303,7 @@ class Install extends Controller
                     'default-connection' => 'concrete',
                     'connections' => [
                         'concrete' => [
-                            'driver' => 'c5_pdo_mysql',
+                            'driver' => 'concrete_pdo_mysql',
                             'server' => $post->get('DB_SERVER'),
                             'database' => $post->get('DB_DATABASE'),
                             'username' => $post->get('DB_USERNAME'),
@@ -499,7 +499,7 @@ class Install extends Controller
             $this->set(
                 'successMessage',
                 t(
-                    'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
+                    'Concrete has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
                     USER_SUPER
                 )
             );

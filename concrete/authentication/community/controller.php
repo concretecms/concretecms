@@ -67,7 +67,7 @@ class Controller extends GenericOauth2TypeController
         $config = $this->app->make('config');
         $this->set('groupSelector', $this->app->make(GroupSelector::class));
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('concrete5SecurePrefix', (string) $config->get('concrete.urls.concrete5_secure'));
+        $this->set('concreteSecurePrefix', (string) $config->get('concrete.urls.concrete_secure'));
         $this->set('callbackURI', $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/authentication/oauth2/community/callback']));
         $this->set('apikey', (string) $config->get('auth.community.appid', ''));
         $this->set('apisecret', (string) $config->get('auth.community.secret', ''));
@@ -95,20 +95,20 @@ class Controller extends GenericOauth2TypeController
     }
 
     /**
-     * Get the URL of the concrete5 account associated to a user.
+     * Get the URL of the Concrete account associated to a user.
      *
      * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo|\Concrete\Core\Entity\User\User|int $user
      *
-     * @return string|null returns null if the user is not bound to a concrete5 account
+     * @return string|null returns null if the user is not bound to a Concrete account
      */
-    public function getConcrete5ProfileURL($user)
+    public function getConcreteProfileURL($user)
     {
         $result = null;
         $binding = $this->getBindingForUser($user);
         if ($binding !== null) {
-            $concrete5UserID = (int) $binding;
-            if ($concrete5UserID !== 0) {
-                $result = "https://www.concrete5.org/profile/-/view/{$concrete5UserID}/";
+            $concreteUserID = (int) $binding;
+            if ($concreteUserID !== 0) {
+                $result = "https://community.concretecms.com/profile/-/view/{$concreteUserID}/";
             }
         }
 

@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Database\Driver\PDOMySqlConcrete5;
+namespace Concrete\Core\Database\Driver\PDOMySqlConcrete;
 
 use Concrete\Core\Database\Connection\PDOConnection;
 use Concrete\Core\Database\Platforms\MySQL80Platform;

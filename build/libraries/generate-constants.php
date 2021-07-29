@@ -20,6 +20,6 @@ $constants = $generator->render();
 
 $js = "// GENERATED FILE DO NOT MODIFY (see grunt generate-constants target), DO NOT EDIT THIS FILE, MODIFICATIONS WILL BE LOST!!\n$(function(){\n\nConcrete.const = $constants;\n\n})\n";
 
-file_put_contents(DIR_BASE . '/concrete/js/build/core/app/concrete5-const.js', $js);
+file_put_contents(DIR_BASE . '/concrete/js/build/core/app/concrete-const.js', $js);
 
 die("JS Generation Complete.\n");

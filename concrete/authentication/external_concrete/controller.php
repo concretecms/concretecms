@@ -1,8 +1,8 @@
 <?php
 
-namespace Concrete\Authentication\ExternalConcrete5;
+namespace Concrete\Authentication\ExternalConcrete;
 
-use Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceFactory;
+use Concrete\Core\Authentication\Type\ExternalConcrete\ServiceFactory;
 use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Form\Service\Widget\GroupSelector;
@@ -15,7 +15,7 @@ use League\Url\Url;
 class Controller extends GenericOauth2TypeController
 {
     /**
-     * @var \Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceFactory
+     * @var \Concrete\Core\Authentication\Type\ExternalConcrete\ServiceFactory
      */
     protected $factory;
 
@@ -49,7 +49,7 @@ class Controller extends GenericOauth2TypeController
      */
     public function registrationGroupID()
     {
-        return (int) $this->config->get('auth.external_concrete5.registration.group');
+        return (int) $this->config->get('auth.external_concrete.registration.group');
     }
 
     /**
@@ -60,7 +60,7 @@ class Controller extends GenericOauth2TypeController
      */
     public function supportsRegistration()
     {
-        return (bool) $this->config->get('auth.external_concrete5.registration.enabled', false);
+        return (bool) $this->config->get('auth.external_concrete.registration.enabled', false);
     }
 
     /**
@@ -78,14 +78,14 @@ class Controller extends GenericOauth2TypeController
 
     public function getHandle()
     {
-        return 'external_concrete5';
+        return 'external_concrete';
     }
 
     /**
      * Get the service object associated with this authentication type
      * This method uses the oauth/factory/service object to create our service if one is not set.
      *
-     * @return \Concrete\Core\Authentication\Type\ExternalConcrete5\ExternalConcrete5Service
+     * @return \Concrete\Core\Authentication\Type\ExternalConcrete\ExternalConcreteService
      */
     public function getService()
     {
@@ -125,11 +125,11 @@ class Controller extends GenericOauth2TypeController
         }
         $this->authenticationType->setAuthenticationTypeName($passedName);
 
-        $this->config->save('auth.external_concrete5.url', $passedUrl);
-        $this->config->save('auth.external_concrete5.appid', (string) ($args['apikey'] ?? ''));
-        $this->config->save('auth.external_concrete5.secret', (string) ($args['apisecret'] ?? ''));
-        $this->config->save('auth.external_concrete5.registration.enabled', !empty($args['registration_enabled']));
-        $this->config->save('auth.external_concrete5.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
+        $this->config->save('auth.external_concrete.url', $passedUrl);
+        $this->config->save('auth.external_concrete.appid', (string) ($args['apikey'] ?? ''));
+        $this->config->save('auth.external_concrete.secret', (string) ($args['apisecret'] ?? ''));
+        $this->config->save('auth.external_concrete.registration.enabled', !empty($args['registration_enabled']));
+        $this->config->save('auth.external_concrete.registration.group', ((int) ($args['registration_group'] ?? 0)) ?: null);
     }
 
     /**
@@ -140,8 +140,8 @@ class Controller extends GenericOauth2TypeController
     {
         $this->set('groupSelector', $this->app->make(GroupSelector::class));
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('data', (array) $this->config->get('auth.external_concrete5', []));
-        $this->set('redirectUri', $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/callback']));
+        $this->set('data', (array) $this->config->get('auth.external_concrete', []));
+        $this->set('redirectUri', $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete/callback']));
 
         $list = $this->app->make(GroupList::class);
         $this->set('groups', $list->getResults());
@@ -179,13 +179,13 @@ class Controller extends GenericOauth2TypeController
      */
     private function setData()
     {
-        $data = $this->config->get('auth.external_concrete5', '');
-        $authUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/attempt_auth']);
-        $attachUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete5/attempt_attach']);
+        $data = $this->config->get('auth.external_concrete', '');
+        $authUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete/attempt_auth']);
+        $attachUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete/attempt_attach']);
         $baseUrl = $this->urlResolver->resolve(['/']);
         $path = $baseUrl->getPath();
         $path->remove('index.php');
-        $name = trim((string) array_get($data, 'name', t('External concrete5')));
+        $name = trim((string) array_get($data, 'name', t('External concrete')));
 
         $this->set('data', $data);
         $this->set('authUrl', $authUrl);

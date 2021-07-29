@@ -723,7 +723,7 @@ EOT
                     'default-connection' => 'concrete',
                     'connections' => [
                         'concrete' => [
-                            'driver' => 'c5_pdo_mysql',
+                            'driver' => 'concrete_pdo_mysql',
                             'server' => $options['db-server'],
                             'database' => $options['db-database'],
                             'username' => $options['db-username'],

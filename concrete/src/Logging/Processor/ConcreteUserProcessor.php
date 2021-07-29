@@ -6,9 +6,9 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\User\User;
 
 /**
- * A processor for adding the concrete5 user into the extra log info
+ * A processor for adding the Concrete user into the extra log info
  */
-class Concrete5UserProcessor
+class ConcreteUserProcessor
 {
 
     /**

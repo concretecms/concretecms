@@ -584,7 +584,7 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype=""
+        <page name="Extend Concrete" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype=""
               description=""
               package="">
             <attributes>
@@ -611,7 +611,7 @@
         </page>
 
         <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php"
-              pagetype="" description="Connect to the concrete5 community." package="">
+              pagetype="" description="Connect to the Concrete community." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>concrete5.org, my account, marketplace</value>
@@ -619,7 +619,7 @@
             </attributes>
         </page>
         <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype=""
-              description="Download themes from concrete5.org." package="">
+              description="Download themes from the marketplace." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>buy theme, new theme, marketplace, template</value>
@@ -627,7 +627,7 @@
             </attributes>
         </page>
         <page name="Get More Add-Ons" path="/dashboard/extend/addons" filename="/dashboard/extend/addons.php"
-              pagetype="" description="Download add-ons from concrete5.org." package="">
+              pagetype="" description="Download add-ons from the marketplace." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace</value>
@@ -1402,7 +1402,7 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Update concrete5" path="/dashboard/system/update" filename="/dashboard/system/update/view.php"
+        <page name="Update Concrete" path="/dashboard/system/update" filename="/dashboard/system/update/view.php"
               pagetype="" description="" package="">
         </page>
         <page name="Apply Update" path="/dashboard/system/update/update"
@@ -1486,7 +1486,7 @@
                                         <data table="btRssDisplay">
                                             <record>
                                                 <title>Tutorials</title>
-                                                <url>http://documentation.concrete5.org/rss/tutorials</url>
+                                                <url>http://documentation.concretecms.org/rss/tutorials</url>
                                                 <dateFormat>longDate</dateFormat>
                                                 <itemsToDisplay>1</itemsToDisplay>
                                                 <showSummary>1</showSummary>
@@ -1536,12 +1536,12 @@
                     </block>
                     <block type="rss_displayer" name="">
                         <style>
-                            <customClass>concrete5-org-stories</customClass>
+                            <customClass>concrete-blog-stories</customClass>
                         </style>
                         <data table="btRssDisplay">
                             <record>
-                                <title>News from concrete5.org</title>
-                                <url>http://www.concrete5.org/rss/blog</url>
+                                <title>News from concretecms.com</title>
+                                <url>http://www.concretecms.com/rss/blog</url>
                                 <dateFormat>longDate</dateFormat>
                                 <itemsToDisplay>3</itemsToDisplay>
                                 <showSummary>1</showSummary>

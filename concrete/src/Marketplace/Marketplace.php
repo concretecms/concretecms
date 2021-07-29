@@ -86,7 +86,7 @@ class Marketplace implements ApplicationAwareInterface
                 $ms = '&ms=1';
             }
             $csiURL = urlencode($this->getSiteURL());
-            $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION . $ms;
+            $url = $this->config->get('concrete.urls.concrete') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION . $ms;
             $vn = $this->app->make('helper/validation/numbers');
             $r = $this->get($url);
 
@@ -171,7 +171,7 @@ class Marketplace implements ApplicationAwareInterface
             $error->add(t('An error occurred while downloading the package.'));
         }
         if ($pkg == \Package::E_PACKAGE_INVALID_APP_VERSION) {
-            $error->add(t('This package isn\'t currently available for this version of concrete5 . Please contact the maintainer of this package for assistance.'));
+            $error->add(t('This package isn\'t currently available for this version of Concrete . Please contact the maintainer of this package for assistance.'));
         }
 
         $file = time();
@@ -182,7 +182,7 @@ class Marketplace implements ApplicationAwareInterface
             fwrite($fp, $pkg);
             fclose($fp);
         } else {
-            $error->add(t('concrete5 was not able to save the package after download.'));
+            $error->add(t('Concrete was not able to save the package after download.'));
         }
 
         if ($error->has()) {
@@ -239,7 +239,7 @@ class Marketplace implements ApplicationAwareInterface
         // Retrieve the URL contents
         $csToken = $marketplace->databaseConfig->get('concrete.marketplace.token');
         $csiURL = urlencode($marketplace->getSiteURL());
-        $url = $marketplace->config->get('concrete.urls.concrete5') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
+        $url = $marketplace->config->get('concrete.urls.concrete') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $json = $marketplace->get($url);
 
@@ -284,7 +284,7 @@ class Marketplace implements ApplicationAwareInterface
     public function getSitePageURL()
     {
         $token = $this->databaseConfig->get('concrete.marketplace.url_token');
-        $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.site_page');
+        $url = $this->config->get('concrete.urls.concrete') . $this->config->get('concrete.urls.paths.site_page');
 
         return $url . '/' . $token;
     }
@@ -296,9 +296,9 @@ class Marketplace implements ApplicationAwareInterface
         // b. pass you through to the page AFTER connecting.
         $tp = new TaskPermission();
         if ($this->request->getScheme() === 'https') {
-            $frameURL = $this->config->get('concrete.urls.concrete5_secure');
+            $frameURL = $this->config->get('concrete.urls.concrete_secure');
         } else {
-            $frameURL = $this->config->get('concrete.urls.concrete5');
+            $frameURL = $this->config->get('concrete.urls.concrete');
         }
         if ($tp->canInstallPackages()) {
             $csToken = null;
@@ -352,7 +352,7 @@ class Marketplace implements ApplicationAwareInterface
 
             if (!$csToken && !$this->isConnected()) {
                 return '<div class="ccm-error">' . t(
-                    'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
+                    'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concretecms.com">help@concretecms.com</a>.') . '</div>';
             } else {
                 $time = time();
                 $ifr = '<script type="text/javascript">
@@ -390,7 +390,7 @@ class Marketplace implements ApplicationAwareInterface
     public function generateSiteToken()
     {
         return $this->get(
-            $this->config->get('concrete.urls.concrete5') .
+            $this->config->get('concrete.urls.concrete') .
             $this->config->get('concrete.urls.paths.marketplace.connect_new_token'));
     }
 
@@ -420,7 +420,7 @@ class Marketplace implements ApplicationAwareInterface
                     'Unable to get information about this product.') . '</div>';
             }
             if ($this->isConnected()) {
-                $url = $this->config->get('concrete.urls.concrete5_secure') . $this->config->get('concrete.urls.paths.marketplace.checkout');
+                $url = $this->config->get('concrete.urls.concrete_secure') . $this->config->get('concrete.urls.paths.marketplace.checkout');
                 $csiURL = urlencode($this->getSiteURL());
                 $csiBaseURL = $csiURL;
                 $csToken = $this->getSiteToken();

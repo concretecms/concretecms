@@ -51,10 +51,6 @@ class Login extends PageController implements LoggerAwareInterface
     }
 
     /**
-     * Concrete5_Controller_Login::callback
-     * Call an AuthenticationTypeController method throw a uri.
-     * Use: /login/TYPE/METHOD/PARAM1/.../PARAM10.
-     *
      * @param string $type
      * @param string $method
      * @param null $a

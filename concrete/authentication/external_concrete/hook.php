@@ -7,8 +7,8 @@
     <hr>
 </div>
 <div class="form-group">
-    <a href="<?= $attachUrl ?>" class="btn btn-primary btn-success btn-external-concrete5">
-        <img src="<?= $assetUrl ?>/concrete/images/logo.svg" class="concrete5-icon" />
+    <a href="<?= $attachUrl ?>" class="btn btn-primary btn-success btn-external-concrete">
+        <img src="<?= $assetUrl ?>/concrete/images/logo.svg" class="concrete-icon" />
         <?= t('Attach your %s account', h($name)) ?>
     </a>
 </div>
@@ -26,7 +26,7 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fbae8', endColorstr='#129bd3',GradientType=0 );
     }
 
-    img.concrete5-icon {
+    img.concrete-icon {
         width: 20px;
         margin-right:5px;
     }

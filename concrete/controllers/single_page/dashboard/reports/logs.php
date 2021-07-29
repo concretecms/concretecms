@@ -170,7 +170,7 @@ class Logs extends DashboardPageController
             if (is_object($taskPermission)) {
                 $allowExport = $taskPermission->validate();
             } else {
-                // This is a previous concrete5 versions that don't have the new task permission installed
+                // This is a previous Concrete versions that don't have the new task permission installed
                 $allowExport = true;
             }
 

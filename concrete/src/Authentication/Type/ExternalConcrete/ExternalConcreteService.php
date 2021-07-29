@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Authentication\Type\ExternalConcrete5;
+namespace Concrete\Core\Authentication\Type\ExternalConcrete;
 
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\Common\Http\Uri\UriInterface;
@@ -8,7 +8,7 @@ use OAuth\OAuth2\Service\AbstractService;
 use OAuth\OAuth2\Token\StdOAuth2Token;
 use OAuth\OAuth2\Token\TokenInterface;
 
-class ExternalConcrete5Service extends AbstractService
+class ExternalConcreteService extends AbstractService
 {
 
     /** @var string Scope for forcing OIDC */
