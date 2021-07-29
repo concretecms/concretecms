@@ -22,7 +22,7 @@ class Manager extends \Illuminate\Support\Manager
     protected function createDriver($driver)
     {
 
-        // Note –this overrides the laravel createDriver because we do concrete5
+        // Note –this overrides the laravel createDriver because we do Concrete
         // camelcasing magic.
 
         $method = 'create'.camelcase($driver).'Driver';

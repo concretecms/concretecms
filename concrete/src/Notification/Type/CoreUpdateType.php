@@ -15,7 +15,7 @@ class CoreUpdateType extends Type
 
     protected function createSubscription()
     {
-        $subscription = new StandardSubscription('core_update', t('concrete5 updates'));
+        $subscription = new StandardSubscription('core_update', t('Concrete updates'));
         return $subscription;
     }
 
@@ -31,7 +31,7 @@ class CoreUpdateType extends Type
 
     protected function createFilter()
     {
-        return new StandardFilter($this, 'core_update', t('concrete5 Updates'), 'coreupdatenotification');
+        return new StandardFilter($this, 'core_update', t('Concrete Updates'), 'coreupdatenotification');
     }
 
     public function getAvailableFilters()

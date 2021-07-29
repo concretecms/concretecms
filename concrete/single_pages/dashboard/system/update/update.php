@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <fieldset>
     <legend><?= t('Current Version') ?></legend>
-    <?= t('You are currently running concrete5 version %s', '<strong>' . h($currentVersion) . '</strong>') ?>
+    <?= t('You are currently running Concrete version %s', '<strong>' . h($currentVersion) . '</strong>') ?>
 </fieldset>
 
 <?php

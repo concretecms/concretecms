@@ -43,7 +43,7 @@ EOT
             }
             $output->write('Generating fake PHP classes to help IDE... ');
             if (!Core::make('app')->isInstalled()) {
-                $output->writeln('<error>failed: concrete5 is not installed.</error>');
+                $output->writeln('<error>failed: Concrete is not installed.</error>');
                 $rc = static::RETURN_CODE_ON_FAILURE;
             } else {
                 $this->generateIDEClasses();

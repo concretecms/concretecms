@@ -4,7 +4,7 @@
 ;(function(global, $) {
     'use strict'
 
-    /* concrete5 wrapper for jQuery UI */
+    /* Concrete wrapper for jQuery UI */
     $.widget('concrete.dialog', $.ui.dialog, {
         _allowInteraction: function(event) {
             return !!$(event.target).closest('.ccm-interaction-dialog').length ||

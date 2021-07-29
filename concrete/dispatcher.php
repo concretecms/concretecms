@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 70209) {
-    die("concrete5 requires PHP 7.2.9 to run.\nYou are running PHP " . PHP_VERSION . "\n");
+    die("Concrete requires PHP 7.2.9 to run.\nYou are running PHP " . PHP_VERSION . "\n");
 }
 
 /*
@@ -30,7 +30,7 @@ require __DIR__ . '/bootstrap/autoload.php';
 
 /*
  * ----------------------------------------------------------------------------
- * Begin concrete5 startup.
+ * Begin Concrete startup.
  * ----------------------------------------------------------------------------
  */
 $app = require __DIR__ . '/bootstrap/start.php';

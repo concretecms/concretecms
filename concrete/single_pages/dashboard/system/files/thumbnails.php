@@ -96,7 +96,7 @@ if (isset($type)) {
                                 }
                             }
                             ?>
-                            <?= t('This requires that concrete5 is configured to use the ImageMagick manipulation library.') ?>
+                            <?= t('This requires that Concrete is configured to use the ImageMagick manipulation library.') ?>
                             <br />
                             <?= t(/*i18n: %s is the name of a page*/ 'You can configure it in the %s page.', $optionsPageName) ?>
                             <?php

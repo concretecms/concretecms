@@ -1,7 +1,7 @@
 /* eslint-disable no-new, no-unused-vars, camelcase, eqeqeq */
 /* global CCM_DISPATCHER_FILENAME, ConcreteEvent, ConcreteHelpGuideManager, ConcretePanelManager, bootstrap */
 
-/* Basic concrete5 toolbar class */
+/* Basic toolbar class */
 ;(function(global, $) {
     'use strict'
 

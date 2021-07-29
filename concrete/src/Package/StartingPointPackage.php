@@ -424,7 +424,7 @@ class StartingPointPackage extends Package
         if (count($num) > 0) {
             throw new \Exception(
                 t(
-                    'There are already %s tables in this database. concrete5 must be installed in an empty database.',
+                    'There are already %s tables in this database. Concrete must be installed in an empty database.',
                     count($num)));
         }
         $installDirectory = DIR_BASE_CORE . '/config';
@@ -471,11 +471,11 @@ class StartingPointPackage extends Package
     {
         // Firstly, install the core authentication types
         $cba = AuthenticationType::add('concrete', 'Standard');
-        $coa = AuthenticationType::add('community', 'concrete5.org');
+        $coa = AuthenticationType::add('community', 'community.concretecms.com');
         $fba = AuthenticationType::add('facebook', 'Facebook');
         $twa = AuthenticationType::add('twitter', 'Twitter');
         $gat = AuthenticationType::add('google', 'Google');
-        $ext = AuthenticationType::add('external_concrete5', 'External concrete5');
+        $ext = AuthenticationType::add('external_concrete', 'External Concrete Site');
 
         $fba->disable();
         $twa->disable();
@@ -801,7 +801,7 @@ class StartingPointPackage extends Package
         $pt->assignPermissionAccess($pa);
 
         try {
-            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
+            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete', 'all');
         } catch (\Exception $x) {
         }
     }

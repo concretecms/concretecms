@@ -415,7 +415,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
         <dt><?= t('Tracked URL') ?></dt>
         <dd>
             <?= h($fileVersion->getDownloadURL()) ?>
-            <div class="text-muted"><?= t("If you're going to hard code a link to this file, use this URL. By using this URL concrete5 will still be able to manage permissions and track statistics on its use.") ?></div>
+            <div class="text-muted"><?= t("If you're going to hard code a link to this file, use this URL. By using this URL Concrete will still be able to manage permissions and track statistics on its use.") ?></div>
         </dd>
         <dt><?= t('File in OS') ?></dt>
         <dd>

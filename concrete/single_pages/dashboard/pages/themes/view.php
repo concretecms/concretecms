@@ -135,7 +135,7 @@ if (isset($activate_confirm)) {
 
             <div class="mt-5">
                 <h3 class="mt-2"><?=t('Want more themes?'); ?></h3>
-                <p><?=t('You can download themes and add-ons from the concrete5 marketplace.'); ?></p>
+                <p><?=t('You can download themes and add-ons from the marketplace.'); ?></p>
                 <p><a class="btn btn-success" href="<?=URL::to('/dashboard/extend/themes'); ?>"><?=t('Get More Themes'); ?></a></p>
             </div>
         <?php

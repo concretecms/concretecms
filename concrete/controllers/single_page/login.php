@@ -104,7 +104,6 @@ class Login extends PageController implements LoggerAwareInterface
     }
 
     /**
-     * Concrete5_Controller_Login::authenticate
      * Authenticate the user using a specific authentication type.
      *
      * @param $type    AuthenticationType handle

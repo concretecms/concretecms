@@ -17,14 +17,14 @@ class IsInstalledCommand extends Command
 
         $this
             ->setName('c5:is-installed')
-            ->setDescription('Check if concrete5 is already installed')
+            ->setDescription('Check if Concrete is already installed')
             ->addEnvOption()
             ->setHelp(<<<EOT
-This command will print out if concrete5 is already installed (unless the --quiet option is specified),
+This command will print out if Concrete CMS is already installed (unless the --quiet option is specified),
 and set the following return codes
 
-  0 concrete5 is installed
-  1 concrete5 is not installed
+  0 Concrete is installed
+  1 Concrete is not installed
   $errExitCode errors occurred
 EOT
             )
@@ -36,7 +36,7 @@ EOT
         $app = Application::getFacadeApplication();
         $isInstalled = $app->isInstalled();
         if ($output->getVerbosity() >= OutputInterface::OUTPUT_NORMAL) {
-            $output->writeln($isInstalled ? 'concrete5 is installed' : 'concrete5 is not installed');
+            $output->writeln($isInstalled ? 'Concrete is installed' : 'Concrete is not installed');
         }
 
         return $isInstalled ? 0 : 1;

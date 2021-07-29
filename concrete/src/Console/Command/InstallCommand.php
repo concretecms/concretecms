@@ -59,7 +59,7 @@ class InstallCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:install')
-            ->setDescription('Install concrete5')
+            ->setDescription('Install Concrete')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addOption('db-server', null, InputOption::VALUE_REQUIRED, 'Location of database server')
@@ -67,7 +67,7 @@ class InstallCommand extends Command
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')
             ->addOption('db-database', null, InputOption::VALUE_REQUIRED, 'Database name')
             ->addOption('timezone', null, InputOption::VALUE_REQUIRED, 'The system time zone, compatible with the database one', @date_default_timezone_get() ?: 'UTC')
-            ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'concrete5 Site')
+            ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'Concrete Site')
             ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
             ->addOption('canonical-url-alternative', null, InputOption::VALUE_REQUIRED, 'Alternative canonical URL', '')
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
@@ -76,10 +76,10 @@ class InstallCommand extends Command
             ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username')
             ->addOption('demo-password', null, InputOption::VALUE_REQUIRED, 'Additional user password')
             ->addOption('demo-email', null, InputOption::VALUE_REQUIRED, 'Additional user email', 'demo@example.com')
-            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The default concrete5 interface language (eg en_US)')
+            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The default interface language (eg en_US)')
             ->addOption('site-locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use configuration file for installation')
-            ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
+            ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
             ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
@@ -97,7 +97,7 @@ EOT
     {
         $app = Application::getFacadeApplication();
         if ($app->isInstalled()) {
-            throw new Exception('concrete5 is already installed.');
+            throw new Exception('Concrete is already installed.');
         }
         if ($this->getPreconditionsPassed($app, $output) !== true) {
             throw new Exception('One or more precondition failed!');
@@ -509,7 +509,7 @@ EOT
 
                 return true;
             },
-            ['site', 'concrete5'],
+            ['site', 'Concrete'],
             'canonical-url',
             'canonical-url-alternative',
             [

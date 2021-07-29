@@ -267,7 +267,7 @@ class RemoteItem extends ConcreteObject
         $dbConfig = \Core::make('config/database');
         $csToken = $dbConfig->get('concrete.marketplace.token');
         $csiURL = urlencode(\Core::getApplicationURL());
-        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.item_free_license');
+        $url = Config::get('concrete.urls.concrete') . Config::get('concrete.urls.paths.marketplace.item_free_license');
         $url .= "?mpID=" . $this->mpID . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $fh->getContents($url);
     }
@@ -281,7 +281,7 @@ class RemoteItem extends ConcreteObject
         $csToken = $dbConfig->get('concrete.marketplace.token');
         $csiURL = urlencode(\Core::getApplicationURL());
 
-        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.item_information');
+        $url = Config::get('concrete.urls.concrete') . Config::get('concrete.urls.paths.marketplace.item_information');
         $url .= "?" . $method . "=" . $identifier . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $json = $fh->getContents($url);
 

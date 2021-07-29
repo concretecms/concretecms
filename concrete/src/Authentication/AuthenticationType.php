@@ -313,7 +313,7 @@ class AuthenticationType extends ConcreteObject
     public function disable()
     {
         if ($this->getAuthenticationTypeID() == 1) {
-            throw new Exception(t('The core concrete5 authentication cannot be disabled.'));
+            throw new Exception(t('The core authentication cannot be disabled.'));
         }
         $db = Loader::db();
         $db->Execute(

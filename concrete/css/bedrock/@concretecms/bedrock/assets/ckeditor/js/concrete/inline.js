@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-CKEDITOR.plugins.add('concrete5inline', {
+CKEDITOR.plugins.add('concreteinline', {
 
     init: function (editor) {
         // Save plugin is for replace mode only.

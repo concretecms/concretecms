@@ -1,7 +1,6 @@
 /* eslint-disable no-new, no-unused-vars, camelcase, eqeqeq */
 
 class ConcreteServerEvents {
-
     static listen(url, topicUrl) {
         const eventSourceUrl = new URL(url)
         eventSourceUrl.searchParams.append('topic', topicUrl + '/{+anything}')
@@ -13,7 +12,6 @@ class ConcreteServerEvents {
             ConcreteEvent.publish(eventName, data.data)
         }
     }
-
 }
 
 global.ConcreteServerEvents = ConcreteServerEvents

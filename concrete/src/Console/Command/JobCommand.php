@@ -19,7 +19,7 @@ class JobCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:job')
-            ->setDescription(t('Run a concrete5 job'))
+            ->setDescription(t('Run a Concrete job'))
             ->addEnvOption()
             ->addOption('set', null, InputOption::VALUE_NONE, t('Find jobs by set instead of job handle'))
             ->addOption('list', null, InputOption::VALUE_NONE, t('List available jobs'))

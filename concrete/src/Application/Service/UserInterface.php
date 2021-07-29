@@ -181,7 +181,7 @@ class UserInterface
             $alt = Config::get('concrete.white_label.name');
         }
         if (!$alt) {
-            $alt = 'concrete5';
+            $alt = 'Concrete';
         }
         if (Config::get('concrete.white_label.logo')) {
             $src = Config::get('concrete.white_label.logo');

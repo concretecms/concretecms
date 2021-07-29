@@ -25,11 +25,11 @@ import 'jquery-ui/ui/widgets/droppable'
 import 'jquery-ui/ui/widgets/sortable'
 import 'jquery-ui/ui/widgets/slider'
 
-// Core concrete5 backend
+// Core backend
 import './events'
 import './asset-loader'
 import './page-indexer'
-import './concrete5'
+import './concrete'
 
 // CMS UI Components
 import './panels'

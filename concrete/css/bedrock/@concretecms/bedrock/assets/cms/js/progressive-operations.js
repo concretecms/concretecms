@@ -1,4 +1,4 @@
-/* global NProgress, ConcreteAlert */
+/* global ConcreteQueueConsumer */
 /* eslint-disable eqeqeq */
 
 function ConcreteProgressiveOperation(options) {
@@ -130,7 +130,7 @@ ConcreteProgressiveOperation.prototype.execute = function() {
     var my = this
 
     if (my.options.response) {
-        ConcreteEvent.publish('TaskActivityWindowShow', {'token': my.options.response.viewToken})
+        ConcreteEvent.publish('TaskActivityWindowShow', { token: my.options.response.viewToken })
         my.consumeIfNecessary(my.options.response)
     } else {
         $.concreteAjax({
@@ -139,7 +139,7 @@ ConcreteProgressiveOperation.prototype.execute = function() {
             data: my.options.data,
             dataType: 'json',
             success: function(r) {
-                ConcreteEvent.publish('TaskActivityWindowShow', {'token': r.viewToken})
+                ConcreteEvent.publish('TaskActivityWindowShow', { token: r.viewToken })
                 my.consumeIfNecessary(r)
             }
         })
@@ -151,6 +151,5 @@ ConcreteProgressiveOperation.prototype.consumeIfNecessary = function(response) {
         ConcreteQueueConsumer.consume(response.consumeToken)
     }
 }
-
 
 global.ConcreteProgressiveOperation = ConcreteProgressiveOperation

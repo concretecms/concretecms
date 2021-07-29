@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 if (empty($interfacelocales)) {
     ?>
     <fieldset>
-	   <?= t("You don't have any interface languages installed. You must run concrete5 in English.") ?>
+	   <?= t("You don't have any interface languages installed. You must run Concrete in English.") ?>
     </fieldset>
     <?php
 } else {

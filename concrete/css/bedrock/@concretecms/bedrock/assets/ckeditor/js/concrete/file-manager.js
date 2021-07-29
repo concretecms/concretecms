@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
 (function () {
-    CKEDITOR.plugins.add('concrete5filemanager', {
+    CKEDITOR.plugins.add('concretefilemanager', {
         requires: 'filebrowser',
         init: function () {
             CKEDITOR.on('dialogDefinition', function (event) {

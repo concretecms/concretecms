@@ -49,7 +49,7 @@ class CommandRegistry implements ApplicationAwareInterface
     ];
 
     /**
-     * Commands that only get added when concrete5 is installed.
+     * Commands that only get added when Concrete is installed.
      *
      * @var string[]
      */

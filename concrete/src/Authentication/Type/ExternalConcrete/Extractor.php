@@ -104,7 +104,7 @@ class Extractor extends LazyExtractor
     }
 
     /**
-     * Load the external concrete5 profile, either from id_token or through the API
+     * Load the external Concrete profile, either from id_token or through the API
      *
      * @return array
      *

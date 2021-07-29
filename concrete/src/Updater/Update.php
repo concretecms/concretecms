@@ -240,6 +240,7 @@ class Update
         }
         try {
             $app->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
+            $app->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete', 'all');
         } catch (Exception $x) {
         }
         $config->save('concrete.version_installed', $config->get('concrete.version'));

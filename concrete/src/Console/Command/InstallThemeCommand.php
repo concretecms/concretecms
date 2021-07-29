@@ -17,7 +17,7 @@ class InstallThemeCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this->setName('c5:theme:install')
         ->addOption('activate', 'a', InputOption::VALUE_NONE, 'Activate this theme after install', null)
-        ->setDescription('Install a Concrete5 Theme')
+        ->setDescription('Install a Concrete Theme')
         ->setCanRunAsRoot(false)
         ->addArgument('theme-handle', null, InputOption::VALUE_REQUIRED, 'The handle name of the theme');
     }

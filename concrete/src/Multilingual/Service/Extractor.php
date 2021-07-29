@@ -93,7 +93,7 @@ class Extractor
         C5TLOptions::setTemporaryDirectory($fh->getTemporaryDirectory());
         $parser = new C5TLParserDynamic();
 
-        return $parser->parseRunningConcrete5();
+        return $parser->parseRunningConcrete();
     }
 
     public function clearTranslationsFromDatabase()

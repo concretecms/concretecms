@@ -72,7 +72,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $(function () {
     var steps = [{
         element: 'input[name=url_rewriting]',
-        content: <?= json_encode('<h3>' . t('Pretty URLs') . '</h3>' . t('Check this checkbox to remove index.php from your URLs.<br/>You will be given code to place in a file named .htaccess in your web root. concrete5 will try and place this code in the file for you.')) ?>,
+        content: <?= json_encode('<h3>' . t('Pretty URLs') . '</h3>' . t('Check this checkbox to remove index.php from your URLs.<br/>You will be given code to place in a file named .htaccess in your web root. Concrete will try and place this code in the file for you.')) ?>,
         placement: 'bottom',
     },{
         element: 'input[name=canonical_url]',

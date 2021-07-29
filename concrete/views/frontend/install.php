@@ -37,7 +37,7 @@ if ($install_config) {
     </div>
     <div class="ccm-install-title">
         <ul class="breadcrumb">
-            <li class="breadcrumb-item"><?= t('Install concrete5') ?></li>
+            <li class="breadcrumb-item"><?= t('Install Concrete CMS') ?></li>
             <?php switch ($installStep) {
                 case $controller::STEP_CHOOSELOCALE: ?>
                     <li class="breadcrumb-item active"><?= t('Choose Language') ?></li>
@@ -259,7 +259,7 @@ if ($install_config) {
         <div class="alert alert-danger" id="install-errors">
             <?= t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.') ?>
             <?= t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.',
-                'http://www.concrete5.org/community/forums', 'http://www.concrete5.org/services/hosting') ?>
+                'https://forums.concretecms.org', 'https://www.concretecms.com/') ?>
         </div>
         <div class="ccm-install-actions">
             <form method="post" action="<?= $urlResolver->resolve(['install']) ?>" id="rerun-tests"
@@ -462,7 +462,7 @@ if ($install_config) {
                     <?= t('Privacy Policy') ?>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted"><?= t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
+                    <p class="text-muted"><?= t('Concrete CMS collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
                     <div class="form-check">
                         <?= $form->checkbox('privacy', 1, false, ['required' => 'required']) ?>
                         <label class="form-check-label" for="privacy">
@@ -576,7 +576,7 @@ if ($install_config) {
             <div class="ccm-install-actions">
                 <div class="w-100">
                     <button type="submit" class="btn btn-primary btn-sm float-end">
-                        <?= t('Install concrete5') ?>
+                        <?= t('Install Concrete CMS') ?>
                     </button>
                 </div>
             </div>
@@ -604,7 +604,7 @@ if ($install_config) {
 
             window.onbeforeunload = function () {
                 if (inviteToStayHere) {
-                    return <?=json_encode(t("concrete5 installation is still in progress: you shouldn't close this page at the moment"))?>;
+                    return <?=json_encode(t("Concrete installation is still in progress: you shouldn't close this page at the moment"))?>;
                 }
             };
             NProgress.configure({showSpinner: false});
@@ -676,25 +676,25 @@ if ($install_config) {
             <div class="card-body">
                 <h4 class=""><?= t('Forums') ?></h4>
                 <p>
-                <?= t('<a href="%s" target="_blank">The forum</a> on concrete5.org is full of helpful community members that make concrete5 so great.',
+                <?= t('<a href="%s" target="_blank">The forums</a> on concretecms.org are full of helpful community members that make Concrete so great.',
                     Config::get('concrete.urls.help.forum')) ?>
                 </p>
 
                 <h4 class=""><?= t('User Documentation') ?></h4>
                 <p>
-                <?= t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with concrete5.',
+                <?= t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with Concrete CMS.',
                     Config::get('concrete.urls.help.user')) ?>
                 </p>
 
                 <h4 class=""><?= t('Screencasts') ?></h4>
                 <p>
-                <?= t('The concrete5 <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use concrete5.',
+                <?= t('The Concrete <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use Concrete CMS.',
                     Config::get('concrete.urls.videos')) ?>
                 </p>
 
                 <h4 class=""><?= t('Developer Documentation') ?></h4>
                 <p>
-                <?= t('The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom concrete5 development.',
+                <?= t('The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom Concrete development.',
                     Config::get('concrete.urls.help.developer')) ?>
                 </p>
 

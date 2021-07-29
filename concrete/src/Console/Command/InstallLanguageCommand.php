@@ -47,33 +47,33 @@ class InstallLanguageCommand extends Command
         $this
         ->setName('c5:language-install')
         ->setAliases(['c5:install-language'])
-        ->setDescription('Install or update concrete5 languages')
+        ->setDescription('Install or update Concrete languages')
         ->addEnvOption()
         ->setCanRunAsRoot(false)
         ->addOption('--update', 'u', InputOption::VALUE_NONE, 'Update any outdated language files')
         ->addOption('--add', 'a', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Add new language files')
-        ->addOption('--core', 'c', InputOption::VALUE_NONE, 'Process only a the concrete5 core')
+        ->addOption('--core', 'c', InputOption::VALUE_NONE, 'Process only a the core')
         ->addOption('--packages', 'p', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Process only packages (you can specify one or more package handle too)')
         ->setHelp(<<<EOT
 Examples:
             
-# to update all the outdated language files (for the concrete5 core and for all the packages)
-$ concrete/bin/concrete5 c5:language-install --update
+# to update all the outdated language files (for the core and for all the packages)
+$ concrete/bin/concrete c5:language-install --update
             
-# to update all the outdated language files (for the concrete5 core only)
-$ concrete/bin/concrete5 c5:language-install --update --core
+# to update all the outdated language files (for the Concrete core only)
+$ concrete/bin/concrete c5:language-install --update --core
             
 # to update all the outdated language files (for any package)
-$ concrete/bin/concrete5 c5:language-install --update --packages
+$ concrete/bin/concrete c5:language-install --update --packages
             
 # to update all the outdated language files (for specific packages only)
-$ concrete/bin/concrete5 c5:language-install --update --packages=handyman --packages=lets_encrypt
+$ concrete/bin/concrete c5:language-install --update --packages=handyman --packages=lets_encrypt
             
-# to add new languages (for the concrete5 core and for all the packages)
-$ concrete/bin/concrete5 c5:language-install --add it_IT --add de_DE
+# to add new languages (for the concrete core and for all the packages)
+$ concrete/bin/concrete c5:language-install --add it_IT --add de_DE
             
-# to add new languages (for the concrete5 core only)
-$ concrete/bin/concrete5 c5:language-install --add it_IT --add de_DE --core
+# to add new languages (for the concrete core only)
+$ concrete/bin/concrete c5:language-install --add it_IT --add de_DE --core
             
 Returns codes:
   0 operation completed successfully
@@ -132,7 +132,7 @@ EOT
         $result = [];
         if (count($input->getOption('packages')) > 0) {
             if (!$this->app->isInstalled()) {
-                throw new Exception('concrete5 is not installed: you can only work with core language files.');
+                throw new Exception('Concrete is not installed: you can only work with core language files.');
             }
             $proceed = true;
         } elseif (!$input->getOption('core')) {
@@ -226,7 +226,7 @@ EOT
         if (empty($installedOutdated)) {
             if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                 if ($package === null) {
-                    $this->output->writeln('  > no updates for concrete5 core');
+                    $this->output->writeln('  > no updates for the core');
                 } else {
                     $this->output->writeln(sprintf('  > no updates for package %s', $package->getPackageHandle()));
                 }
@@ -234,7 +234,7 @@ EOT
         } else {
             if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                 if ($package === null) {
-                    $this->output->writeln('  > updating concrete5 core');
+                    $this->output->writeln('  > updating Concrete core');
                 } else {
                     $this->output->writeln(sprintf('> updating package %s', $package->getPackageHandle()));
                 }
@@ -302,7 +302,7 @@ EOT
         if (isset($availableRemoteStats[$localeID])) {
             if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                 if ($package === null) {
-                    $this->output->write(sprintf('  > installing language %s for concrete5 core... ', $localeID));
+                    $this->output->write(sprintf('  > installing language %s for the core... ', $localeID));
                 } else {
                     $this->output->write(sprintf('  > installing %s for package %s... ', $localeID, $package->getPackageHandle()));
                 }
@@ -320,7 +320,7 @@ EOT
         } else {
             if ($this->output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                 if ($package === null) {
-                    $this->output->writeln(sprintf('  > language %s is not available (or it\'s already installed) for concrete5 core', $localeID));
+                    $this->output->writeln(sprintf('  > language %s is not available (or it\'s already installed) for the core', $localeID));
                 } else {
                     $this->output->writeln(sprintf('  > language %s is not available (or it\'s already installed) for package %s', $localeID, $package->getPackageHandle()));
                 }

@@ -16,7 +16,7 @@ class ClearCacheCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:clear-cache')
-            ->setDescription('Clear the concrete5 cache')
+            ->setDescription('Clear the cache')
             ->addOption('thumbnails', 't', InputOption::VALUE_REQUIRED, "Should the thumbnails be removed from the cache? [Y/N]")
             ->addEnvOption()
             ->setCanRunAsRoot(false)
@@ -51,7 +51,7 @@ EOT
             $config = $cms->app->make(Repository::class);
             $config->set('concrete.cache.clear.thumbnails', $clearThumbnails);
         }
-        $output->write('Clearing the concrete5 cache... ');
+        $output->write('Clearing the cache... ');
         $cms->clearCaches();
         $output->writeln('<info>done.</info>');
 

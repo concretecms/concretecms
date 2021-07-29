@@ -38,7 +38,7 @@ final class PackPackageCommand extends Command
     const SHORTTAGS_KEEPECHO = 'keep-echo';
 
     /**
-     * Use SHORTTAGS_ALL for concrete5 5.x packages, SHORTTAGS_KEEPECHO for concrete5 8+ packages.
+     * Use SHORTTAGS_ALL for Concrete 5.x packages, SHORTTAGS_KEEPECHO for Concrete 8+ packages.
      *
      * @var string
      */
@@ -144,7 +144,7 @@ final class PackPackageCommand extends Command
                 'c5:pack-package',
             ])
             ->setDescription('Process a package (expand PHP short tags, compile icons and translations, create zip archive)')
-            ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a concrete5 package)')
+            ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a Concrete package)')
             ->addEnvOption()
             ->addOption('short-tags', 's', InputOption::VALUE_REQUIRED, 'Expand PHP short tags [' . self::SHORTTAGS_ALL . '|' . self::SHORTTAGS_KEEPECHO . '|' . self::SHORTTAGS_NO . '|' . self::SHORTTAGS_AUTO . ']', self::SHORTTAGS_AUTO)
             ->addOption('compile-icons', 'i', InputOption::VALUE_REQUIRED, 'Compile SVG icons to PNG icons [' . self::YNA_YES . '|' . self::YNA_NO . '|' . self::YNA_AUTO . ']?', self::YNA_AUTO)

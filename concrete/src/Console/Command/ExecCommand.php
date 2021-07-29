@@ -14,7 +14,7 @@ class ExecCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:exec')
-            ->setDescription('Execute a PHP script within the concrete5 environment')
+            ->setDescription('Execute a PHP script within the Concrete environment')
             ->addEnvOption()
             ->addArgument('script', InputArgument::REQUIRED, 'The path of the script to be executed')
             ->addArgument('arguments', InputArgument::IS_ARRAY, 'The arguments to pass to the script')
