@@ -19,7 +19,7 @@ class ScopeRegistryTest extends TestCase
         $this->assertCount(5, $scopes);
         $this->assertInstanceOf(Scope::class, $scopes[0]);
         $this->assertEquals('openid', $scopes[0]->getIdentifier());
-        $this->assertEquals('Remotely authenticate into concrete5.', $scopes[0]->getDescription());
+        $this->assertEquals('Remotely authenticate into Concrete.', $scopes[0]->getDescription());
     }
     
 
