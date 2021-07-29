@@ -953,20 +953,19 @@ return [
     'urls' => [
         'concrete5' => 'http://marketplace.concretecms.com',
         'concrete5_secure' => 'https://marketplace.concretecms.com',
-        'newsflow' => 'http://newsflow.concrete5.org',
-        'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
-        'privacy_policy' => '//www.concrete5.org/legal/privacy-policy',
+        'newsflow' => 'http://newsflow.concrete5.org', // staying at concrete5.org because we need to sunset this
+        'background_feed' => '//backgroundimages.concrete5.org/wallpaper', // staying at concrete5.org for the momen
+        'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'help' => [
-            'developer' => 'http://documentation.concrete5.org/developers',
-            'user' => 'http://documentation.concrete5.org/editors',
-            'forum' => 'http://www.concrete5.org/community/forums',
-            'slack' => 'https://www.concrete5.org/slack',
+            'developer' => 'https://documentation.concretecms.org/developers',
+            'user' => 'https://documentation.concretecms.org/user-guide',
+            'forum' => 'https://forums.concretecms.org',
+            'remote_search' => 'https://documentation.concretecms.org/ccm/documentation/remote_search',
         ],
         'paths' => [
-            'menu_help_service' => '/tools/get_remote_help_list/',
             'site_page' => '/private/sites',
             'newsflow_slot_content' => '/tools/slot_content/',
             'marketplace' => [

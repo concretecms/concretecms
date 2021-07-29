@@ -16,7 +16,7 @@ class GetRemoteHelp extends UserInterface
         $r = json_encode(array());
         if ($config->get('concrete.external.intelligent_search_help')) {
             if ($_REQUEST['q']) {
-                $url = \Config::get('concrete.urls.concrete5') . \Config::get('concrete.urls.paths.menu_help_service');
+                $url = \Config::get('concrete.urls.help.remote_search');
                 $r = \Core::make("helper/file")->getContents($url . '?q=' . $_REQUEST['q']);
                 if (!$r) {
                     $r = json_encode(array());

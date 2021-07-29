@@ -680,12 +680,6 @@ if ($install_config) {
                     Config::get('concrete.urls.help.forum')) ?>
                 </p>
 
-                <h4 class=""><?= t('Slack') ?></h4>
-                <p>
-                <?= t('In the <a href="%s" target="_blank">concrete5 Slack channels</a> you can get in touch with a lot of concrete5 lovers and developers.',
-                    Config::get('concrete.urls.help.slack')) ?>
-                </p>
-
                 <h4 class=""><?= t('User Documentation') ?></h4>
                 <p>
                 <?= t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with concrete5.',
