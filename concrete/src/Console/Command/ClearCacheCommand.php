@@ -54,5 +54,7 @@ EOT
         $output->write('Clearing the concrete5 cache... ');
         $cms->clearCaches();
         $output->writeln('<info>done.</info>');
+
+        return self::SUCCESS;
     }
 }

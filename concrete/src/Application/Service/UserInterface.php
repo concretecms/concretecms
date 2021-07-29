@@ -201,16 +201,6 @@ class UserInterface
     }
 
     /**
-     * @return bool
-     * @deprecated The Newsflow Overlay feature has been removed
-     *
-     */
-    public function showNewsflowOverlay()
-    {
-        return false;
-    }
-
-    /**
      * @deprecated There's no more an "Introduction" dialog: we now have a Help panel.
      *
      * @return false

@@ -1,10 +1,10 @@
 div#ccm-dashboard-content {
-  div.ccm-block-dashboard-newsflow-latest-wrapper {
+  div.ccm-block-dashboard-concrete-latest-wrapper {
     background: $gray-100;
     border-radius: .25rem;
     box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
 
-    div.ccm-block-dashboard-newsflow-latest {
+    div.ccm-block-dashboard-concrete-latest {
       padding: 20px;
 
       h3, h4 {
@@ -23,7 +23,7 @@ div#ccm-dashboard-content {
       }
     }
 
-    &.ccm-block-dashboard-newsflow-slot-c {
+    &.ccm-block-dashboard-concrete-slot-c {
       background: #313237;
       color: #fff;
 

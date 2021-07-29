@@ -8,7 +8,7 @@ use Concrete\Core\Permission\Checker;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class MarketplaceNewsflow extends GenericTaskHandler
+class Marketplace extends GenericTaskHandler
 {
     /**
      * {@inheritdoc}

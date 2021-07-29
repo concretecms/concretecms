@@ -1503,10 +1503,10 @@
                     </block>
                     <block type="core_area_layout" name="">
                         <arealayout type="theme-grid" columns="12">
-                            <columns>desktop_newsflow_latest
+                            <columns>
                                 <column span="4" offset="0">
-                                    <block type="desktop_newsflow_latest" name="">
-                                        <data table="btDesktopNewsflowLatest">
+                                    <block type="desktop_concrete_latest" name="">
+                                        <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>A</slot>
                                             </record>
@@ -1514,8 +1514,8 @@
                                     </block>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_newsflow_latest" name="">
-                                        <data table="btDesktopNewsflowLatest">
+                                    <block type="desktop_concrete_latest" name="">
+                                        <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>B</slot>
                                             </record>
@@ -1523,8 +1523,8 @@
                                     </block>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_newsflow_latest" name="">
-                                        <data table="btDesktopNewsflowLatest">
+                                    <block type="desktop_concrete_latest" name="">
+                                        <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>C</slot>
                                             </record>
@@ -1559,13 +1559,11 @@
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>
         <pagetype handle="core_stack_category" name="Stack Category" internal="1" package=""/>
         <pagetype handle="core_desktop" name="Desktop" internal="1" package=""/>
-        <pagetype handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetypes>
 
     <pagetemplates>
         <pagetemplate handle="core_stack" name="Stack" internal="1" package=""/>
         <pagetemplate handle="desktop" name="Desktop" internal="1" package=""/>
-        <pagetemplate handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetemplates>
 
     <pages>

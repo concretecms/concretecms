@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0b1',
     'version_installed' => '9.0.0b1',
-    'version_db' => '20210725000000', // the key of the latest database migration
+    'version_db' => '20210729191135', // the key of the latest database migration
 
     /*
      * Installation status
@@ -953,12 +953,12 @@ return [
     'urls' => [
         'concrete5' => 'http://marketplace.concretecms.com',
         'concrete5_secure' => 'https://marketplace.concretecms.com',
-        'newsflow' => 'http://newsflow.concrete5.org', // staying at concrete5.org because we need to sunset this
         'background_feed' => '//backgroundimages.concrete5.org/wallpaper', // staying at concrete5.org for the momen
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
+        'activity_slots' => 'https://marketing.concretecms.com/ccm/marketing/activity_slots',
         'help' => [
             'developer' => 'https://documentation.concretecms.org/developers',
             'user' => 'https://documentation.concretecms.org/user-guide',
@@ -967,7 +967,6 @@ return [
         ],
         'paths' => [
             'site_page' => '/private/sites',
-            'newsflow_slot_content' => '/tools/slot_content/',
             'marketplace' => [
                 'projects' => '/profile/projects/',
                 'connect' => '/marketplace/connect',

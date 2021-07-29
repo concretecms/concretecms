@@ -16,7 +16,7 @@
         <category handle="admin" package=""/>
         <category handle="notification" package=""/>
         <category handle="sitemap" package=""/>
-        <category handle="marketplace_newsflow" package=""/>
+        <category handle="marketplace" package=""/>
         <category handle="basic_workflow" package=""/>
         <category handle="page_type" package=""/>
         <category handle="gathering" package=""/>
@@ -435,19 +435,13 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
+        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace">
             <access>
                 <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
-        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace_newsflow">
-            <access>
-                <group name="Administrators" description=""/>
-            </access>
-        </permissionkey>
-
-        <permissionkey handle="view_newsflow" name="View Newsflow" package="" category="marketplace_newsflow">
+        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace">
             <access>
                 <group name="Administrators" description=""/>
             </access>
@@ -499,7 +493,7 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
                 <category handle="gathering" />
@@ -530,7 +524,7 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
                 <category handle="gathering" />
@@ -561,7 +555,7 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
                 <category handle="gathering" />
@@ -591,7 +585,7 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
                 <category handle="gathering" />

@@ -37,6 +37,7 @@ class ApplicationServiceProvider extends ServiceProvider
             'help/panel' => '\Concrete\Core\Application\Service\UserInterface\Help\PanelManager',
         );
 
+        $this->app->singleton('Concrete\Core\ConcreteCms\ActivityService');
         $this->app->singleton('Concrete\Core\Block\Menu\Manager');
 
         foreach ($singletons as $key => $value) {

@@ -16,7 +16,7 @@ class Tasks extends DashboardPageController
             $tp = new TaskPermission();
             if ($tp->canAccessTaskPermissions()) {
                 $permissions = PermissionKey::getList('sitemap');
-                $permissions = array_merge($permissions, PermissionKey::getList('marketplace_newsflow'));
+                $permissions = array_merge($permissions, PermissionKey::getList('marketplace'));
                 $permissions = array_merge($permissions, PermissionKey::getList('admin'));
                 $permissions = array_merge($permissions, PermissionKey::getList('logs'));
                 foreach ($permissions as $pk) {

@@ -1,14 +1,9 @@
 <?php
-namespace Concrete\Core\Activity;
+namespace Concrete\Core\ConcreteCms;
 
 use Concrete\Core\Http\Service\Json;
 
-/**
- * Class NewsflowSlotItem.
- *
- * \@package Concrete\Core\Activity
- */
-class NewsflowSlotItem
+class ActivitySlotItem
 {
     protected $content;
 
@@ -40,7 +35,7 @@ class NewsflowSlotItem
      * }
      * </code>
      *
-     * @return NewsflowSlotItem[] Returns an associative array of NewsflowSlotItems
+     * @return ActivitySlotItem[] Returns an associative array of ActivitySlotItem
      */
     public function parseResponse($response)
     {
