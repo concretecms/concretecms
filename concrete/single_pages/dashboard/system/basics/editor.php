@@ -23,7 +23,7 @@
     <div class="row">
         <div class="col-md-6">
             <fieldset>
-                <legend><?= t('concrete5 Extensions') ?></legend>
+                <legend><?= t('Concrete Extensions') ?></legend>
                 <div class="form-group">
                     <div class="form-check">
                         <?= $form->checkbox('enable_filemanager', 1, $filemanager, ['class' => 'form-check-input']) ?>

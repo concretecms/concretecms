@@ -2,7 +2,6 @@
 
 ;(function(global, $) {
     'use strict'
-
     $(function() {
         ConcreteEvent.subscribe('TaskActivityWindowShow', function (e, data) {
             jQuery.fn.dialog.open({
@@ -12,9 +11,6 @@
                 title: ccmi18n.siteActivity,
                 href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialog/process/activity/' + data.token
             })
-
         })
     })
-
-
 })(window, jQuery); // eslint-disable-line semi

@@ -181,7 +181,7 @@ class UserInterface
             $alt = Config::get('concrete.white_label.name');
         }
         if (!$alt) {
-            $alt = 'concrete5';
+            $alt = 'Concrete';
         }
         if (Config::get('concrete.white_label.logo')) {
             $src = Config::get('concrete.white_label.logo');
@@ -198,16 +198,6 @@ class UserInterface
         }
 
         return '<img id="ccm-logo" src="' . $src . '" alt="' . $alt . '" title="' . $alt . '">';
-    }
-
-    /**
-     * @return bool
-     * @deprecated The Newsflow Overlay feature has been removed
-     *
-     */
-    public function showNewsflowOverlay()
-    {
-        return false;
     }
 
     /**

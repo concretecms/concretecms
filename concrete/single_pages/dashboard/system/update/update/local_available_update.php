@@ -78,7 +78,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
                 <h3 id="notices"><?= t('Upgrade Notices') ?></h3>
                 <div>
-                    <i v-if="state === STATE.FAILED"><?= t('Unable to retrieve upgrade notices from concrete5.org.') ?></i>
+                    <i v-if="state === STATE.FAILED"><?= t('Unable to retrieve upgrade notices.') ?></i>
                     <i v-else-if="!details.notices || !details.notices.length"><?= t('No upgrade notices found.') ?></i>
                     <ul v-else class="fa-ul">
                         <li v-for="(notice, noticeIndex) in details.notices" v-bind:key="noticeIndex" class="my-3">
@@ -133,7 +133,7 @@ $(document).ready(function() {
                             return {
                                 iconClass: 'fas fa-exclamation-triangle text-info',
                                 textClass: 'text-info',
-                                text: <?= json_encode(t('Unable to retrieve information about this update from concrete5.org. You may upgrade but do so with caution.')) ?>,
+                                text: <?= json_encode(t('Unable to retrieve information about this update from the Concrete community. You may upgrade but do so with caution.')) ?>,
                             };
                         case this.STATE.SUCCESS:
                             var data = {
@@ -163,7 +163,7 @@ $(document).ready(function() {
                 },
                 releaseNotes: function() {
                     if (this.state === this.STATE.FAILED) {
-                        return <?= json_encode('<i>' . t('Unable to retrieve release notes from concrete5.org.') . '</i>') ?>;
+                        return <?= json_encode('<i>' . t('Unable to retrieve release notes.') . '</i>') ?>;
                     }
                     return this.details && this.details.releaseNotes ? this.details.releaseNotes : <?= json_encode('<i>' . t('Release notes not available.') . '</i>') ?>;
                 },

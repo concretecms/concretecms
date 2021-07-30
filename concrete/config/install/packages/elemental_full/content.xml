@@ -1312,7 +1312,7 @@
                                             <fID>{ccm:export:file:391572475596:avatar_none.png}</fID>
                                             <name><![CDATA[Franz Maruna]]></name>
                                             <position><![CDATA[CEO & Founder]]></position>
-                                            <company><![CDATA[concrete5]]></company>
+                                            <company><![CDATA[PortlandLabs]]></company>
                                             <companyURL><![CDATA[http://concrete5.org]]></companyURL>
                                             <paragraph><![CDATA[
                                                     Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
@@ -1340,7 +1340,7 @@
                                             <fID>{ccm:export:file:391572475596:avatar_none.png}</fID>
                                             <name><![CDATA[Andrew Embler]]></name>
                                             <position><![CDATA[CTO & Founder]]></position>
-                                            <company><![CDATA[concrete5]]></company>
+                                            <company><![CDATA[PortlandLabs]]></company>
                                             <companyURL><![CDATA[http://concrete5.org]]></companyURL>
                                             <paragraph><![CDATA[
                                                     Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
@@ -3030,9 +3030,9 @@
         </page>
     </pages>
     <sociallinks>
-        <link service="facebook" url="https://facebook.com/concrete5"/>
+        <link service="facebook" url="https://facebook.com/concretecms"/>
         <link service="github" url="https://github.com/concrete5"/>
-        <link service="twitter" url="https://twitter.com/concrete5"/>
+        <link service="twitter" url="https://twitter.com/concrete_cms"/>
     </sociallinks>
     <trees>
         <tree type="topic" name="Blog Entries">
@@ -3063,7 +3063,7 @@
         <feed>
             <parent>{ccm:export:page:/blog}</parent>
             <title>Blog</title>
-            <description>concrete5 Blog</description>
+            <description>Concrete Blog</description>
             <handle>blog</handle>
             <pagetype>{ccm:export:pagetype:blog_entry}</pagetype>
             <contenttype type="description"/>

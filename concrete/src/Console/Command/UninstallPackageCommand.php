@@ -26,7 +26,7 @@ class UninstallPackageCommand extends Command
             ->setCanRunAsRoot(false)
             ->addOption('trash', null, InputOption::VALUE_NONE, 'If this option is specified the package directory will be moved to the trash directory')
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be uninstalled')
-            ->setDescription('Uninstall a concrete5 package')
+            ->setDescription('Uninstall a Concrete package')
             ->setHelp(<<<EOT
 Returns codes:
   0 operation completed successfully

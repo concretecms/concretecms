@@ -69,7 +69,7 @@ class XmlSupport implements PreconditionInterface
         )) {
             $result
                 ->setState(PreconditionResult::STATE_FAILED)
-                ->setMessage(t('concrete5 requires PHP XML Parser and SimpleXML extensions'))
+                ->setMessage(t('Concrete requires PHP XML Parser and SimpleXML extensions'))
             ;
         }
 

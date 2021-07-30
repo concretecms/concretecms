@@ -547,7 +547,7 @@ class Search extends DashboardPageController
 
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=concrete5_users.csv',
+            'Content-Disposition' => 'attachment; filename=concrete_users.csv',
         ];
         $app = $this->app;
         $config = $this->app->make('config');

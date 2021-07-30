@@ -20,7 +20,7 @@ class UpdateCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:update')
-            ->setDescription('Runs all database migrations to bring the concrete5 installation up to date.')
+            ->setDescription('Runs all database migrations to bring the Concrete installation up to date.')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addOption('rerun', null, InputOption::VALUE_NONE, '(Re)apply already executed migrations')
@@ -29,22 +29,22 @@ class UpdateCommand extends Command
             ->setHelp(<<<EOT
 Examples:
 
-  ./concrete/bin/concrete5 c5:update
+  ./concrete/bin/concrete c5:update
     Execute the migrations that haven't yet been executed
 
-  ./concrete/bin/concrete5 c5:update --rerun
+  ./concrete/bin/concrete c5:update --rerun
     (Re)Execute all the migrations, including the ones that have already been executed (if possible).
 
-  ./concrete/bin/concrete5 c5:update --rerun --after=8.3.1
+  ./concrete/bin/concrete c5:update --rerun --after=8.3.1
     Execute the migrations after the 8.3.1 release (even if they have already been marked as executed)
 
-  ./concrete/bin/concrete5 c5:update --rerun --after=20171218000000
+  ./concrete/bin/concrete c5:update --rerun --after=20171218000000
     Execute the migrations after the 20171218000000 migration (even if they have already been marked as executed)
 
-  ./concrete/bin/concrete5 c5:update --rerun --since=8.3.1
+  ./concrete/bin/concrete c5:update --rerun --since=8.3.1
     Execute the migrations starting from the 8.3.1 release (even if they have already been marked as executed)
 
-  ./concrete/bin/concrete5 c5:update --rerun --since=20171218000000
+  ./concrete/bin/concrete c5:update --rerun --since=20171218000000
     Execute the migrations starting from the 20171218000000 migration (even if they have already been marked as executed)
 
 Returns codes:

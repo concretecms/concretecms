@@ -33,7 +33,7 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
                 print t('This site is connected to a project page that has been removed. Please reconnect in order to continue using the marketplace.');
                 break;
             default:
-                print t('Error establishing connection to the concrete5 community. Please check that curl and other required libraries are enabled.');
+                print t('Error establishing connection to the Concrete community. Please check that curl and other required libraries are enabled.');
                 break;
     }
         ?>

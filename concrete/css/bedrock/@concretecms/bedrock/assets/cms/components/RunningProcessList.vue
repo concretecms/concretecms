@@ -31,6 +31,8 @@
 </template>
 
 <script>
+/* eslint-disable no-new */
+/* eslint eqeqeq: 0 */
 import Icon from './Icon'
 export default {
     components: {
@@ -43,12 +45,12 @@ export default {
         }
     },
     data: () => ({
-        'pollToken': null,
-        'eventSource': null,
-        'configurationLoaded': false,
-        'requiresPolling': true,
-        'subscribedProcesses': [],
-        'completedProcesses': [],
+        pollToken: null,
+        eventSource: null,
+        configurationLoaded: false,
+        requiresPolling: true,
+        subscribedProcesses: [],
+        completedProcesses: []
     }),
     methods: {
         completeProcess(process) {
@@ -57,7 +59,7 @@ export default {
         runPoll() {
             var my = this
             // we must poll for the activity.
-            var watchedProcessIds = [];
+            var watchedProcessIds = []
             my.processes.forEach(function(process) {
                 watchedProcessIds.push(process.id)
             })
@@ -65,8 +67,8 @@ export default {
                 loader: false,
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/processes/poll/',
                 data: {
-                    'token': my.pollToken,
-                    'watchedProcessIds': watchedProcessIds
+                    token: my.pollToken,
+                    watchedProcessIds: watchedProcessIds
                 },
                 success: r => {
                     var pollAgain = false

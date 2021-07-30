@@ -1,6 +1,6 @@
 /* eslint-disable no-new, no-unused-vars, camelcase, no-useless-call, eqeqeq */
 (function() {
-    CKEDITOR.plugins.add('concrete5link', {
+    CKEDITOR.plugins.add('concretelink', {
         requires: 'link',
         init: function(editor) {
             CKEDITOR.on('dialogDefinition', function(ev) {
@@ -92,7 +92,7 @@
                                             setup: function(data) {
                                                 var link = getSelectedLink()
                                                 if (link !== null && typeof data.target !== 'undefined') {
-                                                    if (data.target.name == 'lightbox' && link.data('concrete5-link-lightbox') == 'image') {
+                                                    if (data.target.name == 'lightbox' && link.data('concrete-link-lightbox') == 'image') {
                                                         this.setValue(1)
                                                     } else {
                                                         this.setValue(0)
@@ -121,8 +121,8 @@
                                             setup: function(data) {
                                                 var link = getSelectedLink()
                                                 if (link !== null && typeof data.target !== 'undefined') {
-                                                    if (data.target.name == 'lightbox' && link.hasAttribute('data-concrete5-link-lightbox-width')) {
-                                                        this.setValue(link.data('concrete5-link-lightbox-width'))
+                                                    if (data.target.name == 'lightbox' && link.hasAttribute('data-concrete-link-lightbox-width')) {
+                                                        this.setValue(link.data('concrete-link-lightbox-width'))
                                                     } else {
                                                         this.setValue(null)
                                                     }
@@ -139,8 +139,8 @@
                                             setup: function(data) {
                                                 var link = getSelectedLink()
                                                 if (link !== null && typeof data.target !== 'undefined') {
-                                                    if (data.target.name == 'lightbox' && link.hasAttribute('data-concrete5-link-lightbox-height')) {
-                                                        this.setValue(link.data('concrete5-link-lightbox-height'))
+                                                    if (data.target.name == 'lightbox' && link.hasAttribute('data-concrete-link-lightbox-height')) {
+                                                        this.setValue(link.data('concrete-link-lightbox-height'))
                                                     } else {
                                                         this.setValue(null)
                                                     }
@@ -223,28 +223,28 @@
                                 if (link !== null) {
                                     if (data.target.type == 'lightbox') {
                                         if (data.target.imageLightbox) {
-                                            link.data('concrete5-link-lightbox', 'image')
+                                            link.data('concrete-link-lightbox', 'image')
                                             removed = {
-                                                'data-concrete5-link-lightbox-width': 1,
-                                                'data-concrete5-link-lightbox-height': 1
+                                                'data-concrete-link-lightbox-width': 1,
+                                                'data-concrete-link-lightbox-height': 1
                                             }
                                         } else {
-                                            link.data('concrete5-link-lightbox', 'iframe')
+                                            link.data('concrete-link-lightbox', 'iframe')
                                             if (data.target.lightboxWidth && data.target.lightboxHeight) {
-                                                link.data('concrete5-link-lightbox-width', data.target.lightboxWidth)
-                                                link.data('concrete5-link-lightbox-height', data.target.lightboxHeight)
+                                                link.data('concrete-link-lightbox-width', data.target.lightboxWidth)
+                                                link.data('concrete-link-lightbox-height', data.target.lightboxHeight)
                                             } else {
                                                 removed = {
-                                                    'data-concrete5-link-lightbox-width': 1,
-                                                    'data-concrete5-link-lightbox-height': 1
+                                                    'data-concrete-link-lightbox-width': 1,
+                                                    'data-concrete-link-lightbox-height': 1
                                                 }
                                             }
                                         }
                                     } else {
                                         removed = {
-                                            'data-concrete5-link-lightbox': 1,
-                                            'data-concrete5-link-lightbox-width': 1,
-                                            'data-concrete5-link-lightbox-height': 1
+                                            'data-concrete-link-lightbox': 1,
+                                            'data-concrete-link-lightbox-width': 1,
+                                            'data-concrete-link-lightbox-height': 1
                                         }
                                     }
                                     link.removeAttributes(removed)

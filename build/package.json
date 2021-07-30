@@ -1,5 +1,5 @@
 {
-  "name": "concrete5",
+  "name": "concreteCMS",
   "scripts": {
     "git-skip": "node ./libraries/built-assets skip",
     "git-unskip": "node ./libraries/built-assets unskip",

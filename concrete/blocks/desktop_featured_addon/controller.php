@@ -27,7 +27,7 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
         public function getBlockTypeDescription()
         {
-            return t("Features an add-on from concrete5.org.");
+            return t("Features an add-on from marketplace.concretecms.com.");
         }
 
         public function getBlockTypeName()

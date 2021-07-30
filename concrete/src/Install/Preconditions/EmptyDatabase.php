@@ -88,8 +88,8 @@ class EmptyDatabase implements ConnectionOptionsPreconditionInterface
                     $result = new PreconditionResult(
                         PreconditionResult::STATE_FAILED,
                         t2(
-                            'There is already %s table in this database. concrete5 must be installed in an empty database.',
-                            'There are already %s tables in this database. concrete5 must be installed in an empty database.',
+                            'There is already %s table in this database. Concrete must be installed in an empty database.',
+                            'There are already %s tables in this database. Concrete must be installed in an empty database.',
                             $numExistingTables
                         )
                     );

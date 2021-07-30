@@ -1,7 +1,7 @@
 /* eslint-disable no-new, no-unused-vars, camelcase, new-cap, eqeqeq */
 
 (function() {
-    CKEDITOR.plugins.add('concrete5styles', {
+    CKEDITOR.plugins.add('concretestyles', {
 
         requires: ['widget', 'stylescombo', 'menubutton'],
 

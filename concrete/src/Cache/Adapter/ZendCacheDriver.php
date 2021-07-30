@@ -10,10 +10,10 @@ use Zend\Cache\Storage\FlushableInterface;
 
 /**
  * Class ZendCacheDriver
- * Adapter class to hook Zend's cache into Concrete5's cache.
+ * Adapter class to hook Zend's cache into Concrete's cache.
  *
  * By passing this class into various Zend classes, it tells Zend use it for storing and retrieving
- * cache values. Values are passed through here and onto Concrete5's caching layer which uses the
+ * cache values. Values are passed through here and onto Concrete's caching layer which uses the
  * Stash library. Allows us to use many of the helpful Zend classes without having to maintain
  * a separate cache configuration.
  *

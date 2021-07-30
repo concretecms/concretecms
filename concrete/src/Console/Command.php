@@ -16,7 +16,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Throwable;
 
 /**
- * Concrete5 base command class
+ * base command class
  * Large swaths of this class have been copied from illuminate/config 5.2 and 5.5
  * so you may refer to their documentation for some things.
  */
@@ -555,6 +555,6 @@ abstract class Command extends SymfonyCommand
             throw new LogicException('You must define the public handle() method in the command implementation.');
         }
 
-        return $this->getApplication()->getConcrete5()->call([$this, 'handle']);
+        return $this->getApplication()->getConcrete()->call([$this, 'handle']);
     }
 }

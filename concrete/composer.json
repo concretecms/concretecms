@@ -1,17 +1,14 @@
 {
   "name": "concrete5/core",
   "license": "MIT",
-  "description": "concrete5 core subtree split",
+  "description": "Concrete core subtree split",
   "type": "concrete5-core",
-  "keywords": [ "concrete5", "CMS", "concreteCMS" ],
-  "homepage": "https://www.concrete5.org/",
+  "keywords": [ "concrete5", "CMS", "concreteCMS", "concrete" ],
+  "homepage": "https://opensource.concretecms.org/",
   "support": {
-    "issues": "https://www.concrete5.org/developers/bugs/",
-    "docs": "https://documentation.concrete5.org/",
-    "irc": "irc://irc.freenode.org/concrete5",
-    "source": "http://documentation.concrete5.org/api/",
-    "forum": "https://www.concrete5.org/community/forums/",
-    "slack": "https://www.concrete5.org/slack"
+    "docs": "https://documentation.concretecms.org/",
+    "source": "http://documentation.concretecms.org/api/",
+    "forum": "https://forums.concretecms.org/"
   },
   "minimum-stability": "stable",
   "prefer-stable": true,

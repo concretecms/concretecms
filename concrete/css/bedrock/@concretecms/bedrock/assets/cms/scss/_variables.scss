@@ -191,7 +191,7 @@ $index-level-editable-field-commands: 650;
 $index-level-in-context-menu: 700;
 $index-level-inline-dropdowns: 700;
 
-/* Status Bar (below concrete5 toolbar and panels) */
+/* Status Bar (below toolbar and panels) */
 $index-level-status-bar: 800;
 
 /* Page alert (blue boxes) –similar to dashboard help but at the page level. Should come below the dialog overlay and the intelligent search */
@@ -210,7 +210,7 @@ $index-level-panel-alert: 980;
 /* Draggables */
 $index-level-draggable-content-item: 1000;
 
-/* Main concrete5 toolbar */
+/* Main toolbar */
 $index-level-main-bar: 1000;
 
 /* Disable Toolbar (over toolbar) */
@@ -222,7 +222,7 @@ $index-level-dashboard-privacy-policy-bar: 910;
 /* Inline Editing Toolbar - has to come above disabled toolbar */
 $index-level-inline-toolbar: 1150;
 
-/* Main concrete5 toolbar - has to come above dashboard help notifications because of stupid webkit compositing */
+/* Main toolbar - has to come above dashboard help notifications because of stupid webkit compositing */
 $index-level-main-bar-loading: 1160;
 
 /* Intelligent Search */

@@ -29,7 +29,7 @@ if (in_array('phar', stream_get_wrappers(), true)) {
 
 /*
  * ----------------------------------------------------------------------------
- * Instantiate concrete5.
+ * Instantiate Concrete
  * ----------------------------------------------------------------------------
  */
 /** @var \Concrete\Core\Application\Application $app */

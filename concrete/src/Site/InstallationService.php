@@ -14,7 +14,7 @@ use Concrete\Core\User\Group\Group;
 use Doctrine\ORM\EntityManager;
 
 /**
- * A class that enables multisite support on a single concrete5 installation. Responsible for detecting whether
+ * A class that enables multisite support on a single Concrete installation. Responsible for detecting whether
  * multisite is enabled, and responsible for enabling multisite, creating shared folders, etc...
  * @package Concrete\Core\Site
  */

@@ -17,7 +17,7 @@ class ResetCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:reset')
-            ->setDescription('Reset the concrete5 installation, deleting files and emptying the database')
+            ->setDescription('Reset the Concrete installation, deleting files and emptying the database')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the reset')
@@ -39,7 +39,7 @@ EOT
                 throw new Exception("You have to specify the --force option in order to run this command");
             }
             $confirmQuestion = new ConfirmationQuestion(
-                'Are you sure you want to reset this concrete5 installation? ' .
+                'Are you sure you want to reset this Concrete installation? ' .
                 'This will delete files and empty the database! (y/n)',
                 false
             );

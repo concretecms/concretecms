@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: concrete5 tests\n"
+"Project-Id-Version: concrete tests\n"
 "POT-Creation-Date: 2016-03-15 14:48+0200\n"
 "PO-Revision-Date: 2016-03-15 14:51+0200\n"
 "Last-Translator: \n"

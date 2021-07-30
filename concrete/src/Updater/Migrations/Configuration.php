@@ -41,7 +41,7 @@ class Configuration extends DoctrineMigrationConfiguration
         $db = $app->make(Connection::class);
         parent::__construct($db);
         $directory = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Updater/Migrations/Migrations';
-        $this->setName(t('concrete5 Migrations'));
+        $this->setName(t('Concrete Migrations'));
         $this->setMigrationsNamespace('Concrete\Core\Updater\Migrations\Migrations');
         $this->setMigrationsDirectory($directory);
         if ($registerMigrations) {
@@ -69,7 +69,7 @@ class Configuration extends DoctrineMigrationConfiguration
     /**
      * Force the initial migration, using a specific point.
      *
-     * @param string $reference A concrete5 version (eg. '8.3.1') or a migration identifier (eg '20171218000000')
+     * @param string $reference A Concrete version (eg. '8.3.1') or a migration identifier (eg '20171218000000')
      * @param string $criteria One of the FORCEDMIGRATION_... constants
      */
     public function forceInitialMigration($reference, $criteria = self::FORCEDMIGRATION_INCLUSIVE)
@@ -131,7 +131,7 @@ class Configuration extends DoctrineMigrationConfiguration
         $keys = array_keys($migrations);
 
         if ($keys[0] == $minimum) {
-            // This is the first migration in concrete5. That means we have already populated this table.
+            // This is the first migration in Concrete. That means we have already populated this table.
             return;
         } else {
             // We have to populate this table with all the migrations from the very first migration up to

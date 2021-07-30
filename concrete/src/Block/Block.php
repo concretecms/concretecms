@@ -1013,7 +1013,7 @@ EOT
     }
 
     /**
-     * Reset the cache settings, so that concrete5 will use the values of the block type controller.
+     * Reset the cache settings, so that Concrete will use the values of the block type controller.
      */
     public function resetCustomCacheSettings()
     {

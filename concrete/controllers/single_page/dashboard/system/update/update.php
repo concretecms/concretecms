@@ -70,7 +70,7 @@ class Update extends DashboardPageController
     public function get_update_diagnostic_information()
     {
         if (!$this->userHasUpgradePermission()) {
-            throw new UserMessageException(t('You do not have permission to upgrade this installation of concrete5.'));
+            throw new UserMessageException(t('You do not have permission to upgrade this installation of Concrete.'));
         }
         $updateVersion = trim($this->request->request->get('version', ''));
         if ($updateVersion === '') {

@@ -17,7 +17,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     /**
      * @var string
      */
-    const CORE_PACKAGE_HANDLE = 'concrete5';
+    const CORE_PACKAGE_HANDLE = 'concrete';
 
     /**
      * The configuration repository containind the default values.

@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div>
-                            <span v-if="detailsAction != '' && process.hasDetails" class="d-inline-block" style="width: 20px">
+                            <span v-if="detailsAction != '' && process.hasDetails" class="d-inline-block" style="width: 20px;">
                                 <icon :icon="openProcesses.includes(process.id) ? 'chevron-down' : 'chevron-right'"></icon>
                             </span>
                             {{process.name}}
@@ -76,13 +76,12 @@
                 </div>
             </div>
         </div>
-
-
     </div>
-
 </template>
 
 <script>
+/* eslint-disable no-new */
+/* eslint eqeqeq: 0 */
 import Icon from './Icon'
 export default {
     components: {
@@ -92,12 +91,12 @@ export default {
         deleteAction: {
             type: String,
             required: false,
-            default: ""
+            default: ''
         },
         detailsAction: {
             type: String,
             required: false,
-            default: ""
+            default: ''
         },
         processes: {
             type: Array,
@@ -105,7 +104,7 @@ export default {
         }
     },
     data: () => ({
-        'openProcesses': []
+        openProcesses: []
     }),
     methods: {
         deleteProcess(process) {
@@ -117,13 +116,12 @@ export default {
             new ConcreteAjaxRequest({
                 url: this.detailsAction,
                 data: {
-                    processId: process.id,
+                    processId: process.id
                 },
                 success: function (r) {
                     process.details = r
                 }
             })
-
         },
         closeProcess(process) {
             this.openProcesses.splice(this.openProcesses.indexOf(process.id), 1)
@@ -140,7 +138,7 @@ export default {
             new ConcreteAjaxRequest({
                 url: this.deleteAction,
                 data: {
-                    processId: processId,
+                    processId: processId
                 },
                 success: function (r) {
                     var modalTarget = '#delete-process-' + processId

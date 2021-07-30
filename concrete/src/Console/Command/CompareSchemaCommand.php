@@ -19,7 +19,7 @@ class CompareSchemaCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:compare-schema')
-            ->setDescription('Compares db.xml in concrete5 XML schema, concrete5 entities, and all installed package schemas and entities with the contents of the database and prints the difference.')
+            ->setDescription('Compares db.xml in Concrete XML schema, Concrete entities, and all installed package schemas and entities with the contents of the database and prints the difference.')
             ->addEnvOption()
             ->setHelp(<<<EOT
 Returns codes:

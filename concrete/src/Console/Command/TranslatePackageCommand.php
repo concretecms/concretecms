@@ -24,7 +24,7 @@ class TranslatePackageCommand extends Command
                 'c5:package-translate',
                 'c5:translate-package',
             ])
-        ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be translated (or the path to a directory containing a concrete5 package)')
+        ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be translated (or the path to a directory containing a Concrete package)')
         ->addEnvOption()
         ->setCanRunAsRoot(false)
         ->addOption('locale', 'l', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'List of locale codes to handle')
@@ -32,17 +32,17 @@ class TranslatePackageCommand extends Command
         ->addOption('translator', 't', InputOption::VALUE_REQUIRED, 'Translator to be put in the language files (eg the "Last-Translator" gettext header)', '')
         ->addOption('exclude-3rdparty', 'x', InputOption::VALUE_NONE, 'Specify this option to avoid parsing 3rd party folders')
         ->addOption('fill', 'f', InputOption::VALUE_NONE, 'Fill-in already known translations using an online service')
-        ->setDescription('Creates or updates translations of a concrete5 package')
+        ->setDescription('Creates or updates translations of a Concrete package')
         ->setHelp(<<<EOT
 If the locale option(s) is not specified, we'll generate/update translations for the currently defined locales for the package.
-If currently no locale is defined, we'll generate/update translations for all the currently installed locales of the core of concrete5.
+If currently no locale is defined, we'll generate/update translations for all the currently installed locales of the core of Concrete.
 In order to don't generate the locale files but only the master translations file (.pot), specify "--locale=-" (or "-l-")
 Examples:
-    concrete5 c5:package-translate package_handle
-    concrete5 c5:package-translate package_handle --locale=it_IT --locale=de_DE --fill
-    concrete5 c5:package-translate package_handle -l it_IT -l de_DE
-    concrete5 c5:package-translate package_handle --locale=-
-    concrete5 c5:package-translate path/to/a/package/directory -l-
+    concrete c5:package-translate package_handle
+    concrete c5:package-translate package_handle --locale=it_IT --locale=de_DE --fill
+    concrete c5:package-translate package_handle -l it_IT -l de_DE
+    concrete c5:package-translate package_handle --locale=-
+    concrete c5:package-translate path/to/a/package/directory -l-
             
 Please remark that this command can also parse legacy (pre-5.7) packages.
             
@@ -225,7 +225,7 @@ EOT
         $packageVersion = null;
         $controllerFile = $packageDirectory . '/' . FILENAME_CONTROLLER;
         if (!is_file($controllerFile)) {
-            throw new Exception("The directory '$packageDirectory' does not seems to contain a valid concrete5 package");
+            throw new Exception("The directory '$packageDirectory' does not seems to contain a valid Concrete package");
         }
         $fh = $this->app->make('helper/file');
         /* @var \Concrete\Core\File\Service\File $fh */

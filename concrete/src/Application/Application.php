@@ -160,7 +160,7 @@ class Application extends Container
     }
 
     /**
-     * Returns true if concrete5 is installed, false if it has not yet been.
+     * Returns true if Concrete is installed, false if it has not yet been.
      */
     public function isInstalled()
     {
@@ -176,7 +176,7 @@ class Application extends Container
     }
 
     /**
-     * Checks to see whether we should deliver a concrete5 response from the page cache.
+     * Checks to see whether we should deliver a Concrete response from the page cache.
      *
      * @param \Concrete\Core\Http\Request $request
      */

@@ -197,26 +197,26 @@ class EditorServiceProvider extends ServiceProvider
     private function registerCorePlugins(PluginManager $pluginManager)
     {
         $plugin = new Plugin();
-        $plugin->setKey('concrete5inline');
-        $plugin->setName(t('concrete5 Inline'));
+        $plugin->setKey('concreteinline');
+        $plugin->setName(t('Concrete Inline'));
         $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
-        $plugin->setKey('concrete5filemanager');
-        $plugin->setName(t('concrete5 File Browser'));
+        $plugin->setKey('concretefilemanager');
+        $plugin->setName(t('Concrete File Browser'));
         $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
-        $plugin->setKey('concrete5uploadimage');
-        $plugin->setName(t('concrete5 Upload Image'));
+        $plugin->setKey('concreteuploadimage');
+        $plugin->setName(t('Concrete Upload Image'));
         $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
-        $plugin->setKey('concrete5link');
-        $plugin->setName(t('concrete5 Link'));
+        $plugin->setKey('concretelink');
+        $plugin->setName(t('Concrete Link'));
         $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
 
@@ -227,8 +227,8 @@ class EditorServiceProvider extends ServiceProvider
         $pluginManager->register($plugin);
 
         $plugin = new Plugin();
-        $plugin->setKey('concrete5styles');
-        $plugin->setName(t('concrete5 Styles'));
+        $plugin->setKey('concretestyles');
+        $plugin->setName(t('Concrete Styles'));
         $plugin->requireAsset('ckeditor');
         $pluginManager->register($plugin);
     }

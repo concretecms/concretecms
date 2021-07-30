@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die('Access denied.');
 /**
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Form\Service\Widget\GroupSelector $groupSelector
- * @var string $concrete5SecurePrefix
+ * @var string $concreteSecurePrefix
  * @var Concrete\Core\Url\UrlImmutable $callbackURI
  * @var string $apikey
  * @var string $apisecret
@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die('Access denied.');
 ?>
 
 <div class="alert alert-info">
-    <div><?= t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', $concrete5SecurePrefix . '/profile/apps/') ?></div>
+    <div><?= t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', $concreteSecurePrefix . '/profile/apps/') ?></div>
     <div><?= t('Set the "Callback URI" to: %s', '<code>' . $callbackURI . '</code>') ?></div>
 </div>
 

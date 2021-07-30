@@ -1,9 +1,9 @@
 {
   "name": "concrete5/concrete5",
   "license": "MIT",
-  "description": "concrete5 open source CMS",
+  "description": "Concrete – an open source content management system.",
   "type": "project",
-  "keywords": [ "concrete5", "CMS", "concreteCMS" ],
+  "keywords": [ "concrete5", "CMS", "concreteCMS", "concrete" ],
   "minimum-stability": "stable",
   "prefer-stable": true,
   "archive": {

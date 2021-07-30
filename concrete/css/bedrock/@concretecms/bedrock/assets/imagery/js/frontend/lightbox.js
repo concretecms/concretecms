@@ -1,4 +1,4 @@
-$('a[data-concrete5-link-lightbox=image]').each(function() {
+$('a[data-concrete-link-lightbox=image]').each(function() {
     var me = $(this)
     me.magnificPopup({
         type: 'image',
@@ -14,14 +14,14 @@ $('a[data-concrete5-link-lightbox=image]').each(function() {
         midClick: true // allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source.
     })
 })
-$('a[data-concrete5-link-lightbox=iframe]').each(function() {
+$('a[data-concrete-link-lightbox=iframe]').each(function() {
     var me = $(this)
     var width = 500
     var height = 400
 
-    if ($(this).attr('data-concrete5-link-lightbox-width') && $(this).attr('data-concrete5-link-lightbox-height')) {
-        width = $(this).attr('data-concrete5-link-lightbox-width')
-        height = $(this).attr('data-concrete5-link-lightbox-height')
+    if ($(this).attr('data-concrete-link-lightbox-width') && $(this).attr('data-concrete-link-lightbox-height')) {
+        width = $(this).attr('data-concrete-link-lightbox-width')
+        height = $(this).attr('data-concrete-link-lightbox-height')
     }
 
     me.magnificPopup({

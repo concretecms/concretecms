@@ -1,5 +1,4 @@
 div.ccm-ui {
-
   div.process-progress {
     height: 2px;
   }
@@ -19,8 +18,8 @@ div.ccm-ui {
   }
 
   div.process-card-expandable {
-    transition: $transition-base;
     cursor: pointer;
+    transition: $transition-base;
 
     &:hover {
       border: 1px solid $blue;

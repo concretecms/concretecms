@@ -22,7 +22,7 @@ class ErrorHandler extends PrettyPageHandler
      */
     public function handle()
     {
-        $this->setPageTitle('concrete5 has encountered an issue.');
+        $this->setPageTitle('Concrete CMS has encountered an issue.');
 
         $result = self::QUIT;
 
@@ -90,7 +90,7 @@ class ErrorHandler extends PrettyPageHandler
          * General
          */
         $this->addDataTable(
-            'Concrete5',
+            'Concrete CMS',
             [
                 'Version' => Config::get('concrete.version'),
                 'Installed Version' => Config::get('concrete.version_installed'),

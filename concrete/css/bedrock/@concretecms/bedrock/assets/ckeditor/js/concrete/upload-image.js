@@ -1,7 +1,7 @@
 /* eslint-disable eqeqeq */
 
 (function () {
-    CKEDITOR.plugins.add('concrete5uploadimage', {
+    CKEDITOR.plugins.add('concreteuploadimage', {
         requires: 'uploadimage',
         init: function (editor) {
             editor.on('fileUploadRequest', function (evt) {
@@ -26,8 +26,8 @@
                 if (xhr.status == 200) {
                     var respObj = jQuery.parseJSON(xhr.responseText)
                     if (respObj.error) {
-                        data.message = respObj.errors.join();
-                        evt.cancel();
+                        data.message = respObj.errors.join()
+                        evt.cancel()
                     } else if (respObj.files.length > 0) {
                         data.url = respObj.files[0].urlInline
                     }

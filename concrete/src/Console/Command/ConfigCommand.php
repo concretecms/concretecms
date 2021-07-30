@@ -51,9 +51,9 @@ class ConfigCommand extends Command
                 <<<'EOT'
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
 For instance, with
-concrete5 %command.name% set concrete.test_item 1
+concrete %command.name% set concrete.test_item 1
 The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
-concrete5 %command.name% set concrete.test_item '1'
+concrete %command.name% set concrete.test_item '1'
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
 EOT

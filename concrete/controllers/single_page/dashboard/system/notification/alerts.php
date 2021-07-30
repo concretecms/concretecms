@@ -39,7 +39,7 @@ class Alerts extends DashboardPageController
         }
         $permissions = PermissionKey::getList('sitemap');
         $permissions = array_merge($permissions, PermissionKey::getList('notification'));
-        $permissions = array_merge($permissions, PermissionKey::getList('marketplace_newsflow'));
+        $permissions = array_merge($permissions, PermissionKey::getList('marketplace'));
         $permissions = array_merge($permissions, PermissionKey::getList('admin'));
         foreach ($permissions as $pk) {
             $paID = (int) ($permissionKeyIDs[$pk->getPermissionKeyID()] ?? 0);

@@ -16,7 +16,7 @@ use Concrete\Core\Logging\Configuration\SimpleFileConfiguration;
 use Concrete\Core\Logging\GroupLogger;
 use Concrete\Core\Logging\Handler\DatabaseHandler;
 use Concrete\Core\Logging\LoggerFactory;
-use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
+use Concrete\Core\Logging\Processor\ConcreteUserProcessor;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Support\Facade\Log;
@@ -170,7 +170,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $filesystem->delete($file);
 
         $this->assertCount(1, $logger->getHandlers());
-        $this->assertCount(2, $logger->getProcessors()); // needs to have psr processor and the concrete5 processor.
+        $this->assertCount(2, $logger->getProcessors()); // needs to have psr processor and the Concrete processor.
     }
 
     public function testLoggingFacade()
@@ -381,7 +381,7 @@ class LogTest extends ConcreteDatabaseTestCase
         $noop = function($data) { return $data; };
 
         $app = M::mock(Application::class);
-        $app->shouldReceive('make')->withArgs([Concrete5UserProcessor::class])->andReturn($noop);
+        $app->shouldReceive('make')->withArgs([ConcreteUserProcessor::class])->andReturn($noop);
         $app->shouldReceive('make')->withArgs([PsrLogMessageProcessor::class])->andReturn($noop);
 
         return $app;

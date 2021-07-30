@@ -18,8 +18,8 @@ $packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url
             $handle = $details->getPackage()->getPackageHandle();
             $name = $details->getPackage()->getPackageName();
         } else {
-            $handle = 'concrete5';
-            $name = t('concrete5');
+            $handle = 'concrete';
+            $name = t('Concrete');
         }
         ?>
         <div class="panel panel-default">

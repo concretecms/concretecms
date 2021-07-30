@@ -310,7 +310,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                             <?php
                             if ($obj instanceof Concrete\Core\Package\BrokenPackage) {
                                 ?>
-                                <div style="display: inline-block" class="launch-tooltip float-end" title="<?=t('This package is corrupted. Make sure it has a valid controller.php file and that it has been updated for concrete5.7 and later.')?>">
+                                <div style="display: inline-block" class="launch-tooltip float-end" title="<?=t('This package is corrupted. Make sure it has a valid controller.php file and that it has been updated for Concrete 5.7.0 and later.')?>">
                                     <button type="button" disabled="disabled" class="btn btn-sm btn-secondary"><i class="fa fa-exclamation-circle"></i> <?= t('Can\'t Install!'); ?></button>
                                 </div>
                                 <?php
@@ -345,7 +345,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 <hr/>
                 <div class="well clearfix" style="padding:10px 20px;">
                     <h4><?= t('Connect to Community'); ?></h4>
-                    <p><?= t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.'); ?></p>
+                    <p><?= t('Your site is not connected to the Concrete community. Connecting lets you easily extend a site with themes and add-ons.'); ?></p>
                     <p><a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect'); ?>"><?= t("Connect to Community"); ?></a></p>
                 </div>
                 <?php

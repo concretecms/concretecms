@@ -66,7 +66,7 @@ $txt = $app->make('helper/text');
                                     print t('Default template.');
                                     break;
                                 case PageThemeFile::TFTYPE_SINGLE_PAGE:
-                                    print t('Template for internal concrete5 page.');
+                                    print t('Template for internal page.');
                                     break;
                                 case PageThemeFile::TFTYPE_PAGE_TEMPLATE_NEW:
                                     print t('New template.');

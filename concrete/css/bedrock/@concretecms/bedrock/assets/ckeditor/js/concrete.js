@@ -1,7 +1,7 @@
 // Import the jQuery adapter
 import 'ckeditor4/adapters/jquery'
 
-// Import the concrete5 CKEditor plugins
+// Import the CKEditor plugins
 import './concrete/normalizeonchange'
 import './concrete/inline'
 import './concrete/link'

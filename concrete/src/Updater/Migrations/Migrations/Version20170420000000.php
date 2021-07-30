@@ -19,7 +19,7 @@ class Version20170420000000 extends AbstractMigration implements RepeatableMigra
         Page::getByPath('/dashboard/system/backup/backup')->delete();
         Page::getByPath('/dashboard/system/backup/update')->delete();
 
-        $this->createSinglePage('/dashboard/system/update', 'Update concrete5');
+        $this->createSinglePage('/dashboard/system/update', 'Update Concrete');
 
         $this->createSinglePage('/dashboard/system/update/update', 'Apply Update', ['meta_keywords' => 'upgrade, new version, update']);
     }

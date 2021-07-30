@@ -76,7 +76,7 @@ class Version20141017000000 extends AbstractMigration implements RepeatableMigra
         try {
             $community = AuthenticationType::getByHandle('community');
         } catch (Exception $e) {
-            $community = AuthenticationType::add('community', 'concrete5.org');
+            $community = AuthenticationType::add('community', 'community.concretecms.com');
             if (is_object($community)) {
                 $community->disable();
             }
