@@ -252,6 +252,16 @@ EOL;
     }
 
     /**
+     * Outputs a simple, sanitized editor.
+     */
+    public function outputSimpleEditor($key, $content = null)
+    {
+        return $this->outputEditorWithOptions($key, [
+            'plugins' => 'basicstyles,dialogadvtab,divarea,image,tab,toolbar,undo,wysiwygarea,concrete5filemanager,concrete5inline,concrete5uploadimage,normalizeonchange',
+        ], $content);
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Editor\EditorInterface::outputStandardEditor()
