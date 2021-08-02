@@ -1,6 +1,7 @@
 import jQuery from 'jquery'
 import 'bootstrap'
-import './frontend/async-thumbnail-builder'
+//We will be refactoring this, also it causes problems with installation.
+//import './frontend/async-thumbnail-builder'
 import './frontend/locations/country-data-link'
 import './frontend/locations/country-stateprovince-link'
 
