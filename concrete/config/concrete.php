@@ -615,8 +615,8 @@ return [
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,
         'services' => [
-            'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
-            'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
+            'get_available_updates' => 'https://marketplace.concretecms.com/tools/update_core',
+            'inspect_update' => 'https://marketplace.concretecms.com/tools/inspect_update',
         ],
         // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
