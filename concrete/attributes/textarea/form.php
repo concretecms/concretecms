@@ -17,7 +17,7 @@ if ($akTextareaDisplayMode == 'text' || $akTextareaDisplayMode == '') { ?>
         $value = $requestValue;
     }
     
-    echo Core::make('editor')->outputStandardEditor(
+    echo Core::make('editor')->outputSimpleEditor(
         $view->controller->field('value'),
         h($value)
     );
