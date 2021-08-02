@@ -27,6 +27,7 @@ class RichTextEditor extends Editor
 
     public function formatConversationMessageBody($cnv, $cnvMessageBody, $config = array())
     {
+        $config = array_merge(['htmlawed' => true], $config);
         return parent::formatConversationMessageBody($cnv, $cnvMessageBody, $config);
     }
 }
