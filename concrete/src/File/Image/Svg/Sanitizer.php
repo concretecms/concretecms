@@ -7,6 +7,7 @@ use DOMElement;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 use Throwable;
+use enshrined\svgSanitize\Sanitizer as EnshrinedSvgSanitizer;
 
 class Sanitizer
 {
@@ -18,13 +19,21 @@ class Sanitizer
     protected $filesystem;
 
     /**
+     * 3rd party SVG Sanitizer for additional checkups.
+     *
+     * @var EnshrinedSvgSanitizer
+     */
+    protected $enshrinedSvgSanitizer;
+
+    /**
      * Initialize the instance.
      *
      * @param \Illuminate\Filesystem\Filesystem $filesystem the Filesystem instance to be used for file operations
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem, EnshrinedSvgSanitizer $enshrinedSvgSanitizer)
     {
         $this->filesystem = $filesystem;
+        $this->enshrinedSvgSanitizer = $enshrinedSvgSanitizer;
     }
 
     /**
@@ -136,10 +145,8 @@ class Sanitizer
         if ((string) $outputFilename === '') {
             $outputFilename = $inputFilename;
         }
-        if ($outputFilename !== $inputFilename || !empty($removedNodes)) {
-            if ($this->filesystem->put($outputFilename, $sanitizedData) === false) {
-                throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_WRITE_FILE);
-            }
+        if ($this->filesystem->put($outputFilename, $sanitizedData) === false) {
+            throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_WRITE_FILE);
         }
     }
 
@@ -156,6 +163,7 @@ class Sanitizer
      */
     public function sanitizeData($data, SanitizerOptions $options = null, array &$removedNodes = [])
     {
+        $data = $this->enshrinedSvgSanitizer->sanitize($data);
         $xml = $this->dataToXml($data);
         $removedNodes = [];
         $this->sanitizeXml($xml, $removedNodes, $options);
