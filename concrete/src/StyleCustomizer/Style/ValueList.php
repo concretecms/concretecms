@@ -79,11 +79,8 @@ class ValueList
 
     private static function isValidFontPresetsFile($path)
     {
-        if (substr($path, -5) === '.less') {
-            $path = substr($path, 0, -5);
-            if (preg_match('/[A-Za-z0-9_-]/i', $path)) {
-                return true;
-            }
+        if (preg_match('#^[/\w-]+\.less$#', $path)) {
+            return true;
         }
         return false;
     }
