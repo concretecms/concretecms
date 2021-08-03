@@ -167,9 +167,9 @@
             "authors": [
                 {
                     "name": "Michele Locati",
+                    "role": "author",
                     "email": "michele@locati.it",
-                    "homepage": "https://mlocati.github.io",
-                    "role": "author"
+                    "homepage": "https://mlocati.github.io"
                 }
             ],
             "description": "Patches required for concrete5 dependencies",
@@ -2820,16 +2820,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.16.0",
+            "version": "1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "f3db91bff131b8c6a83d27a9f4dbbe768397ce47"
+                "reference": "db9552c3460d5fa19a4c8183767fe89da7752a4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/f3db91bff131b8c6a83d27a9f4dbbe768397ce47",
-                "reference": "f3db91bff131b8c6a83d27a9f4dbbe768397ce47",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/db9552c3460d5fa19a4c8183767fe89da7752a4e",
+                "reference": "db9552c3460d5fa19a4c8183767fe89da7752a4e",
                 "shasum": ""
             },
             "require": {
@@ -2883,7 +2883,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2021-05-31T20:43:23+00:00"
+            "time": "2021-08-03T15:42:09+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -3252,12 +3252,6 @@
                 "pagination",
                 "paginator",
                 "paging"
-            ],
-            "funding": [
-                {
-                    "url": "https://github.com/mbabker",
-                    "type": "github"
-                }
             ],
             "time": "2017-03-20T13:46:15+00:00"
         },
@@ -7252,6 +7246,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2017-12-04T08:55:13+00:00"
         },
         {
@@ -8037,12 +8032,12 @@
             "version": "1.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "88e6d84706d09a236046d686bbea96f07b3a34f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/88e6d84706d09a236046d686bbea96f07b3a34f4",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/88e6d84706d09a236046d686bbea96f07b3a34f4",
                 "reference": "88e6d84706d09a236046d686bbea96f07b3a34f4",
                 "shasum": ""
             },
