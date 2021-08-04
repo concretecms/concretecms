@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5a3496aac57417e7a333a4dfb9f1070a",
+    "content-hash": "1a674d2ca5516f4f63079d93fb81a20a",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -488,6 +488,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.3.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "82e8d7bd5d0530366e7da28f81a2cef0f28bab55",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "path": "doctrine/annotations/access-array-offset-on-null.patch",
+                            "description": "Fix access array offset on value of type null"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -1104,6 +1114,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.6.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "f03553f596500df8083abdd1cd87cd1916d1a3f4",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "path": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
+                            "description": "Fix UnitOfWork::createEntity()"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -1192,47 +1212,6 @@
                 "validator"
             ],
             "time": "2018-09-25T20:59:41+00:00"
-        },
-        {
-            "name": "enshrined/svg-sanitize",
-            "version": "0.14.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/darylldoyle/svg-sanitizer.git",
-                "reference": "beff89576a72540ee99476aeb9cfe98222e76fb8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/darylldoyle/svg-sanitizer/zipball/beff89576a72540ee99476aeb9cfe98222e76fb8",
-                "reference": "beff89576a72540ee99476aeb9cfe98222e76fb8",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-libxml": "*"
-            },
-            "require-dev": {
-                "codeclimate/php-test-reporter": "^0.1.2",
-                "phpunit/phpunit": "^6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "enshrined\\svgSanitize\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Daryll Doyle",
-                    "email": "daryll@enshrined.co.uk"
-                }
-            ],
-            "description": "An SVG sanitizer for PHP",
-            "time": "2021-01-21T10:13:20+00:00"
         },
         {
             "name": "filp/whoops",
@@ -5055,6 +5034,23 @@
                 "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "c8ec7f9d85bbbe7d89dd1fe73ea17f64a508e3f9",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "path": "tedivm/jshrink/fix-minifier-loop.patch",
+                            "description": "Fix continue switch in Minifier"
+                        },
+                        {
+                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "path": "tedivm/jshrink/update-upstream-1.3.2.patch",
+                            "description": "Update to upstream version 1.3.2"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "JShrink": "src/"
@@ -5812,6 +5808,16 @@
                 "branch-alias": {
                     "dev-master": "2.6-dev",
                     "dev-develop": "2.7-dev"
+                },
+                "patches_applied": {
+                    "hash": "b1172d4359d8b116dcf51b148427b53e41d1ae2a",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "path": "zendframework/zend-http/no-x-original-url-x-rewrite.patch",
+                            "description": "Remove support for the X-Original-Url and X-Rewrite-Url headers"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6045,6 +6051,16 @@
                 "zf": {
                     "component": "Zend\\Mail",
                     "config-provider": "Zend\\Mail\\ConfigProvider"
+                },
+                "patches_applied": {
+                    "hash": "2eef0fc6a76db7a14e55b9d0717ffd9092bce7ce",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "path": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch",
+                            "description": "Fix idn_to_ascii deprecation warning"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6341,6 +6357,16 @@
                 "zf": {
                     "component": "Zend\\Validator",
                     "config-provider": "Zend\\Validator\\ConfigProvider"
+                },
+                "patches_applied": {
+                    "hash": "37d53a3bf7979793505330148334c2e97b2f7a0a",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "path": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch",
+                            "description": "Fix idn_to_ascii/idn_to_utf8 deprecation warning"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -7268,6 +7294,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "4.8.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "b230cedd50b7175de81a87b2ec86ad380ee748f9",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.5.0",
+                            "path": "phpunit/phpunit/Getopt-each.patch",
+                            "description": "Avoid each() in Getopt"
+                        }
+                    ]
                 }
             },
             "autoload": {
