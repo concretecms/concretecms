@@ -9,6 +9,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
 use IPLib\Address\AddressInterface;
 use IPLib\Factory;
+use IPLib\ParseStringFlag;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -34,7 +35,7 @@ class SessionValidatorTest extends TestCase
     {
         $this->app = clone Application::getFacadeApplication();
         $this->app->singleton(AddressInterface::class, function () {
-            return Factory::addressFromString($this->request->getClientIp(), true, true, true);
+            return Factory::parseAddressString($this->request->getClientIp(), ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::MAY_INCLUDE_ZONEID);
         });
         $this->app['config'] = clone $this->app['config'];
 

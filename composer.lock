@@ -3551,16 +3551,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.13.0",
+            "version": "1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "334de586c7894afd838be44d73e72d8e97e5b0ff"
+                "reference": "db9552c3460d5fa19a4c8183767fe89da7752a4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/334de586c7894afd838be44d73e72d8e97e5b0ff",
-                "reference": "334de586c7894afd838be44d73e72d8e97e5b0ff",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/db9552c3460d5fa19a4c8183767fe89da7752a4e",
+                "reference": "db9552c3460d5fa19a4c8183767fe89da7752a4e",
                 "shasum": ""
             },
             "require": {
@@ -3568,8 +3568,7 @@
             },
             "require-dev": {
                 "ext-pdo_sqlite": "*",
-                "phpunit/dbunit": "^1.4 || ^2 || ^3 || ^4",
-                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5"
+                "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.5 || ^9.5"
             },
             "type": "library",
             "autoload": {
@@ -3615,7 +3614,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2020-10-04T12:22:58+00:00"
+            "time": "2021-08-03T15:42:09+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",

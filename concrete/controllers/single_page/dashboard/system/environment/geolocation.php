@@ -87,7 +87,7 @@ EOT
         }
 
         $post = $this->request->request;
-        $ip = IPFactory::addressFromString($post->get('ip'));
+        $ip = IPFactory::parseAddressString($post->get('ip'));
         if ($ip === null) {
             throw new UserMessageException(t('The specified IP address is not valid.'));
         }

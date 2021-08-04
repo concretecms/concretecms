@@ -45,6 +45,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
 use IPLib\Factory as IPFactory;
+use IPLib\ParseStringFlag as IPParseStringFlag;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
 use RuntimeException;
@@ -789,12 +790,13 @@ class File extends Controller
                 }
             }
 
-            $ip = IPFactory::addressFromString($host, true, true, true);
+            $ipFlags = IPParseStringFlag::IPV4_MAYBE_NON_DECIMAL | IPParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | IPParseStringFlag::MAY_INCLUDE_PORT | IPParseStringFlag::MAY_INCLUDE_ZONEID;
+            $ip = IPFactory::parseAddressString($host, $ipFlags);
             if ($ip === null) {
                 $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
                 while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
                     $dns = array_shift($dnsList);
-                    $ip = IPFactory::addressFromString($dns['ip'], true, true, true);
+                    $ip = IPFactory::parseAddressString($dns['ip']);
                 }
             }
             if ($ip !== null && !in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {
