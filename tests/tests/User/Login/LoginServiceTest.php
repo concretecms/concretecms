@@ -17,7 +17,6 @@ use Concrete\Core\User\Login\LoginAttemptService;
 use Concrete\Core\User\Login\LoginService;
 use Concrete\Tests\User\Login\MockUser;
 use Doctrine\ORM\EntityManagerInterface;
-use IPLib\Address\AddressInterface;
 use IPLib\Address\IPv4;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

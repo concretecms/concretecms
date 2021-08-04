@@ -3889,16 +3889,16 @@
         },
         {
             "name": "mlocati/ip-lib",
-            "version": "1.16.0",
+            "version": "1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/ip-lib.git",
-                "reference": "f3db91bff131b8c6a83d27a9f4dbbe768397ce47"
+                "reference": "db9552c3460d5fa19a4c8183767fe89da7752a4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/f3db91bff131b8c6a83d27a9f4dbbe768397ce47",
-                "reference": "f3db91bff131b8c6a83d27a9f4dbbe768397ce47",
+                "url": "https://api.github.com/repos/mlocati/ip-lib/zipball/db9552c3460d5fa19a4c8183767fe89da7752a4e",
+                "reference": "db9552c3460d5fa19a4c8183767fe89da7752a4e",
                 "shasum": ""
             },
             "require": {
@@ -3952,7 +3952,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2021-05-31T20:43:23+00:00"
+            "time": "2021-08-03T15:42:09+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
