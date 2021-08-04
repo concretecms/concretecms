@@ -280,7 +280,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      */
     public function getRequestIP()
     {
-        $ip = $this->app->make(\IPLib\Address\AddressInterface::class);
+        $ip = $this->app->make(AddressInterface::class);
 
         return new IPAddress((string) $ip);
     }
@@ -294,7 +294,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     {
         $ipAddress = null;
         if ($ip instanceof IPAddress) {
-            $ipAddress = IPFactory::addressFromString($ip->getIp(IPAddress::FORMAT_IP_STRING));
+            $ipAddress = IPFactory::parseAddressString($ip->getIp(IPAddress::FORMAT_IP_STRING));
         }
 
         return $this->getFailedLoginService()->isBlacklisted($ipAddress);
@@ -310,7 +310,7 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     {
         $ipAddress = null;
         if ($ip instanceof IPAddress) {
-            $ipAddress = IPFactory::addressFromString($ip->getIp(IPAddress::FORMAT_IP_STRING));
+            $ipAddress = IPFactory::parseAddressString($ip->getIp(IPAddress::FORMAT_IP_STRING));
         }
         $this->getFailedLoginService()->addToBlacklistForThresholdReached($ipAddress, $ignoreConfig);
     }
