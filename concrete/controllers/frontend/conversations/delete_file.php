@@ -8,6 +8,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Utility\Service\Validation\Numbers;
+use Concrete\Core\Validation\CSRF\Token;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -21,10 +22,18 @@ class DeleteFile extends FrontendController
         if ($message === null) {
             throw new UserMessageException(t('Invalid Attachment.'));
         }
+        // delete_conversation_message
         $mp = new Checker($message);
         if (!$mp->canEditConversationMessage()) {
             throw new UserMessageException(t('Access Denied.'));
         }
+
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        if ($token->validate("delete_conversation_message",$this->request->request->get('token'))) {
+            throw new UserMessageException($token->getErrorMessage());
+        }
+
         $message->removeFile($attachmentID);
 
         return $this->app->make(ResponseFactoryInterface::class)->json([
