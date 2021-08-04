@@ -10,6 +10,7 @@ use Concrete\Core\Http\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use IPLib\Address\AddressInterface;
 use IPLib\Factory as IPFactory;
+use IPLib\ParseStringFlag as IPParseStringFlag;
 
 class PermissionServiceProvider extends ServiceProvider
 {
@@ -34,7 +35,7 @@ class PermissionServiceProvider extends ServiceProvider
                 $ip = $request->getClientIp();
             }
 
-            return IPFactory::addressFromString($ip, true, true, true);
+            return IPFactory::parseAddressString($ip, IPParseStringFlag::IPV4_MAYBE_NON_DECIMAL | IPParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | IPParseStringFlag::MAY_INCLUDE_PORT | IPParseStringFlag::MAY_INCLUDE_ZONEID);
         });
 
         $this->app->bind('failed_login', function (Application $app) {

@@ -245,7 +245,7 @@ class IpAccessControlService implements LoggerAwareInterface
         }
 
         $range = $this->createRange(
-            IPFactory::rangeFromBoundaries($ipAddress, $ipAddress),
+            IPFactory::getRangeFromBoundaries($ipAddress, $ipAddress),
             static::IPRANGETYPE_BLACKLIST_AUTOMATIC,
             $banExpiration
         );

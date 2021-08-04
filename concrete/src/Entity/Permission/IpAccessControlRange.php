@@ -166,7 +166,7 @@ class IpAccessControlRange
             if ($ipFrom !== '') {
                 $ipTo = (string) $this->getIpTo();
                 if ($ipTo !== '') {
-                    $this->ipRange = Factory::rangeFromBoundaries($ipFrom, $ipTo);
+                    $this->ipRange = Factory::getRangeFromBoundaries($ipFrom, $ipTo);
                 }
             }
         }
