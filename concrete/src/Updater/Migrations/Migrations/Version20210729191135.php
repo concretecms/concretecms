@@ -17,6 +17,6 @@ final class Version20210729191135 extends AbstractMigration implements Repeatabl
             $this->connection->execute(sprintf('alter table %s rename %s', 'btDesktopNewsflowLatest', 'btDesktopConcreteLatest'));
         }
         $this->connection->executeStatement("update PermissionKeyCategories set pkCategoryHandle = 'marketplace' where pkCategoryHandle = 'marketplace_newsflow'");
-        $db->executeStatement('update AuthenticationTypes set authTypeHandle = "external_concrete", authTypeName = "External Concrete" where btHandle = "external_concrete5"');
+        $db->executeStatement('update AuthenticationTypes set authTypeHandle = "external_concrete", authTypeName = "External Concrete" where authTypeHandle = "external_concrete5"');
     }
 }
