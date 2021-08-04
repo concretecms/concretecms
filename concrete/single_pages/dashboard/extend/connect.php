@@ -40,7 +40,7 @@ if ($permissions->canInstallPackages()) { ?>
                 <div class="alert alert-danger">
                     <h5><?=t('Error: Unrecognized Site Token')?></h5>
 
-                    <p style="font-size: 1.2rem"><?=t("This site contains a marketplace token and client ID, but it does not match one stored on marketplace.concretecms.com. Please re-enter proper credentials below.")?></p>
+                    <p style="font-size: 1.2rem"><?=t("This site contains a marketplace token and client ID, but they don't match the ones stored on marketplace.concretecms.com. Please re-enter proper credentials below.")?></p>
 
                 </div>
             </fieldset>
@@ -95,7 +95,7 @@ if ($permissions->canInstallPackages()) { ?>
                     <?=$form->text('csURLToken', $dbConfig->get('concrete.marketplace.url_token'))?>
                 </div>
                 <div class="form-group">
-                    <label for="csURLToken" class="launch-tooltip control-label" data-placement="right" title="<?=t('This can be found in your project page on marketplace.concretecms.com the Secret field.')?>"><?=t('Secret')?></label>
+                    <label for="csURLToken" class="launch-tooltip control-label" data-placement="right" title="<?=t('This can be found in your project page on marketplace.concretecms.com the Secret field.')?>"><?=t('Secret Key')?></label>
                     <?=$form->text('csToken', $dbConfig->get('concrete.marketplace.token'))?>
                 </div>
             </fieldset>
