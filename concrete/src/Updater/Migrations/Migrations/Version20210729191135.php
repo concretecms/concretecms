@@ -13,7 +13,7 @@ final class Version20210729191135 extends AbstractMigration implements Repeatabl
     {
         $db = $this->connection;
         $db->executeStatement('update BlockTypes set btHandle = "desktop_concrete_latest", btName = "Desktop Concrete Latest" where btHandle = "desktop_newsflow_latest"');
-        if ($db->tableExists('btDesktopNewsflowLatest')) {
+        if ($db->tableExists('btDesktopNewsflowLatest') && !$db->tableExists('btDesktopConcreteLatest')) {
             $this->connection->execute(sprintf('alter table %s rename %s', 'btDesktopNewsflowLatest', 'btDesktopConcreteLatest'));
         }
         $this->connection->executeStatement("update PermissionKeyCategories set pkCategoryHandle = 'marketplace' where pkCategoryHandle = 'marketplace_newsflow'");
