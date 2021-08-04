@@ -86,7 +86,7 @@ class IPRange
     {
         $result = new static();
         $result->id = empty($row['lcirID']) ? null : (int) $row['lcirID'];
-        $result->ipRange = IPFactory::rangeFromBoundaries($row['lcirIpFrom'], $row['lcirIpTo']);
+        $result->ipRange = IPFactory::getRangeFromBoundaries($row['lcirIpFrom'], $row['lcirIpTo']);
         $result->type = (int) $row['lcirType'];
         $result->expires = empty($row['lcirExpires']) ? null : DateTime::createFromFormat($dateTimeFormat, $row['lcirExpires']);
 

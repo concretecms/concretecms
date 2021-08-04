@@ -145,7 +145,7 @@ class IpAccessControlEvent
         if ($this->ipAddress === null) {
             $ip = (string) $this->getIp();
             if ($ip !== '') {
-                $this->ipAddress = Factory::addressFromString($ip);
+                $this->ipAddress = Factory::parseAddressString($ip);
             }
         }
 
