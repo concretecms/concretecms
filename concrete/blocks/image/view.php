@@ -45,7 +45,7 @@ if (is_object($f) && $f->getFileID()) {
         switch ($sizingOption) {
             case "thumbnails_default":
                 /** @var Image $image */
-                $image = $app->make('html/image', [$f]);
+                $image = $app->make('html/image', ['f' => $f]);
                 $imageTag = $image->getTag();
                 break;
 
