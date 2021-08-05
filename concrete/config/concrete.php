@@ -939,7 +939,7 @@ return [
         // Community Translation instance offering translations
         'community_translation' => [
             // API entry point of the Community Translation instance
-            'entry_point' => 'http://translate.concretecms.org/api',
+            'entry_point' => 'https://translate.concretecms.org/api',
             // API Token to be used for the Community Translation instance
             'api_token' => '',
             // Languages below this translation progress won't be considered

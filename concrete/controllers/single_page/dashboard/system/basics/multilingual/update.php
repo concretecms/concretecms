@@ -28,7 +28,6 @@ class Update extends DashboardPageController
         $data = array_filter($data, function (LocaleStatus $status) {
             return !empty($status->getInstalledUpdated()) || !empty($status->getInstalledOutdated()) || !empty($status->getOnlyRemote());
         });
-
         return $data;
     }
 
