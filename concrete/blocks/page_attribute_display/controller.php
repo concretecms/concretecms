@@ -286,7 +286,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->render('templates/' . $templateHandle);
         } else {
             // check if there is a template that matches the selected attribute
-            $template = \Core::make(BlockViewTemplate::class, [$this->getBlockObject()]);
+            $template = \Core::make(BlockViewTemplate::class, ['obj' => $this->getBlockObject()]);
             $template->setBlockCustomTemplate("templates/" . $this->attributeHandle . '.php');
             $info = pathinfo($template->getTemplate());
 
