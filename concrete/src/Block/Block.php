@@ -1526,7 +1526,24 @@ EOT
             $bName = $data['bName'];
         }
         if (isset($data['bFilename'])) {
+            // Check bFilename for valid Block filename. Must contain only alpha numeric and slashes/dashes, but it MAY
+            // end in ".php"
             $bFilename = $data['bFilename'];
+            if (!empty($bFilename)) {
+                if (substr($bFilename, -4) === '.php') {
+                    // Let's run our regular expression check on everything BEFORE ".php"
+                    $bFilenameToCheck = substr($bFilename, 0, -4);
+                } else {
+                    $bFilenameToCheck = $bFilename; // We just check the entirety of what's passed in.
+                }
+
+                if (!preg_match('/^[A-Za-z0-9_-]+$/i', $bFilenameToCheck)) {
+                    $bFilename = null;
+                    throw new \RuntimeException(
+                        t('Custom templates may only contain letters, numbers, dashes and underscores.')
+                    );
+                }
+            }
         }
 
         $v = [$bName, $bFilename, $dt, $this->getBlockID()];
