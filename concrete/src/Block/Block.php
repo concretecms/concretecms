@@ -1533,7 +1533,7 @@ EOT
                     $bFilenameToCheck = $bFilename; // We just check the entirety of what's passed in.
                 }
 
-                if (preg_match('/[^A-Za-z0-9_-]/i', $bFilenameToCheck)) {
+                if (!preg_match('/^[A-Za-z0-9_-]+$/i', $bFilenameToCheck)) {
                     $bFilename = null;
                     throw new \RuntimeException(
                         t('Custom templates may only contain letters, numbers, dashes and underscores.')

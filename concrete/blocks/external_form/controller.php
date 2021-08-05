@@ -78,7 +78,7 @@ class Controller extends BlockController
                 $filenameToCheck = $filename; // We just check the entirety of what's passed in.
             }
 
-            if (preg_match('/[^A-Za-z0-9_-]/i', $filenameToCheck)) {
+            if (!preg_match('/^[A-Za-z0-9_-]+$/i', $filenameToCheck)) {
                 $e->add(
                     t('External forms may only contain letters, numbers, dashes and underscores.')
                 );
