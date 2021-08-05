@@ -319,7 +319,8 @@
 				'dataType': 'json',
 				'type': 'post',
 				'data': {
-					'treeNodeID': treeNodeID
+					'treeNodeID': treeNodeID,
+					'token': CCM_SECURITY_TOKEN
 				},
 				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/duplicate',
 				success: function(r) {

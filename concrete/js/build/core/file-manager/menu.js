@@ -57,7 +57,7 @@
 		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
 			$.concreteAjax({
 				url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
-				data: {fID: fID},
+				data: {fID: fID, token: CCM_SECURITY_TOKEN },
 				success: function(r) {
 					if (typeof(container.refreshResults) != 'undefined') {
 						container.refreshResults();
