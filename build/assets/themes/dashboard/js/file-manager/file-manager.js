@@ -170,7 +170,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
             var fID = $(this).data('file-id');
             $.concreteAjax({
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
-                data: { fID: fID },
+                data: { fID: fID, token: CCM_SECURITY_TOKEN },
                 success: function(r) {
                     window.location.reload();
                 }
