@@ -2,6 +2,7 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Database\Connection\Connection;
@@ -599,6 +600,9 @@ abstract class Package implements LocalizablePackageInterface
 
         Localization::clearCache();
 
+        $navigationCache = $this->app->make(NavigationCache::class);
+        $navigationCache->clear();
+
         return $package;
     }
 
@@ -633,6 +637,10 @@ abstract class Package implements LocalizablePackageInterface
         $em->flush();
 
         Localization::clearCache();
+
+        $navigationCache = $this->app->make(NavigationCache::class);
+        $navigationCache->clear();
+
     }
 
     /**
@@ -1023,6 +1031,10 @@ abstract class Package implements LocalizablePackageInterface
         }
 
         Localization::clearCache();
+
+        $navigationCache = $this->app->make(NavigationCache::class);
+        $navigationCache->clear();
+
     }
 
     /**
