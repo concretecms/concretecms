@@ -5,6 +5,7 @@ use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetGroup;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Asset\AssetPointer;
+use Monolog\Logger;
 
 class ResponseAssetGroup
 {
@@ -211,7 +212,10 @@ class ResponseAssetGroup
             if (isset($r)) {
                 $this->requiredAssetGroup->addGroup($r);
             } else {
-                throw new \Exception(t('"%s" is not a valid asset group handle', $assetType));
+                core_log(
+                    t('ResponseAssetGroup::requireAsset required "%s" but "%s" is not a valid asset group handle', $assetType, $assetType),
+                    Logger::NOTICE
+                );
             }
         }
     }
