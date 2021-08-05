@@ -67,12 +67,27 @@ class ValueList
         }
 
         if ($request->has('preset-fonts-file')) {
-            $bv = new BasicValue('preset-fonts-file');
-            $bv->setValue($request->get('preset-fonts-file'));
-            $vl->addValue($bv);
+            if (self::isValidFontPresetsFile($request->get('preset-fonts-file'))) {
+                $bv = new BasicValue('preset-fonts-file');
+                $bv->setValue($request->get('preset-fonts-file'));
+                $vl->addValue($bv);
+            }
         }
 
         return $vl;
+    }
+
+    private static function isValidFontPresetsFile($path)
+    {
+        // need to be able to match things like
+        // build/my-file.less
+        // build/something/my_file.less
+        // but not:
+        // ../../something/nefarious.less
+        if (preg_match('/^[A-Za-z0-9\/_-]+\.less$/i', $path)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -94,9 +109,11 @@ class ValueList
         foreach ($rules as $rule) {
             if (preg_match('/@preset-fonts-file/i', isset($rule->name) ? $rule->name : '', $matches)) {
                 $value = $rule->value->value[0]->value[0]->value;
-                $bv = new BasicValue('preset-fonts-file');
-                $bv->setValue($value);
-                $vl->addValue($bv);
+                if (self::isValidFontPresetsFile($value)) {
+                    $bv = new BasicValue('preset-fonts-file');
+                    $bv->setValue($value);
+                    $vl->addValue($bv);
+                }
             }
         }
 
