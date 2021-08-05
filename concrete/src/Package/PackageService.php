@@ -279,7 +279,7 @@ class PackageService
             try {
                 $cl = $this->application->make($class);
             } catch (\Exception $ex) {
-                $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', [$pkgHandle]);
+                $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', ['pkgHandle' => $pkgHandle]);
             }
             $cache->save($item->set($cl));
         }

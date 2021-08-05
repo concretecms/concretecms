@@ -264,12 +264,14 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
         if (count($pkgArray) > 0) {
             foreach ($pkgArray as $pkg) {
                 ?>
-                <div class="media">
-                    <img style="width: 49px" class="me-3" src="<?= $ci->getPackageIconURL($pkg); ?>" />
-                    <div class="media-body">
-                        <a href="<?= URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()); ?>" class="btn float-end btn-sm btn-secondary"><?= t('Details'); ?></a>
-                        <h4 class="media-heading"><?= t($pkg->getPackageName()) ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
+                <div class="d-flex border p-3">
+                    <img style="height: 50px" class="me-3" src="<?= $ci->getPackageIconURL($pkg); ?>" />
+                    <div>
+                        <h4><?= t($pkg->getPackageName()) ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pkg->getPackageVersion()); ?></span></h4>
                         <p><?= t($pkg->getPackageDescription()) ?></p>
+                    </div>
+                    <div class="d-block ms-auto">
+                        <a href="<?= URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()); ?>" class="btn btn-sm btn-secondary"><?= t('Details'); ?></a>
                     </div>
                 </div>
                 <?php
@@ -291,12 +293,14 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                     $file = $pb->getRemoteFileURL();
                     if (!empty($file)) {
                         ?>
-                        <div class="media">
-                            <img style="width: 49px" class="me-3" src="<?= $pb->getRemoteIconURL(); ?>" />
-                            <div class="media-body">
-                                <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()); ?>" class="btn float-end btn-sm btn-secondary"><?= t('Download'); ?></a>
-                                <h4 class="media-heading"><?= $pb->getName(); ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pb->getVersion()); ?></span></h4>
+                        <div class="d-flex border p-3">
+                            <img style="height: 50px" class="me-3" src="<?= $pb->getRemoteIconURL(); ?>" />
+                            <div>
+                                <h4><?= $pb->getName(); ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $pb->getVersion()); ?></span></h4>
                                 <p><?= $pb->getDescription(); ?></p>
+                            </div>
+                            <div class="d-block ms-auto">
+                                <a href="<?= URL::to('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()); ?>" class="btn btn-sm btn-secondary"><?= t('Download'); ?></a>
                             </div>
                         </div>
                         <?php
@@ -304,30 +308,30 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 }
                 foreach ($availableArray as $obj) {
                     ?>
-                    <div class="media">
-                        <img style="width: 49px" class="me-3" src="<?= $ci->getPackageIconURL($obj); ?>" />
-                        <div class="media-body">
-                            <?php
-                            if ($obj instanceof Concrete\Core\Package\BrokenPackage) {
-                                ?>
-                                <div style="display: inline-block" class="launch-tooltip float-end" title="<?=t('This package is corrupted. Make sure it has a valid controller.php file and that it has been updated for Concrete 5.7.0 and later.')?>">
-                                    <button type="button" disabled="disabled" class="btn btn-sm btn-secondary"><i class="fa fa-exclamation-circle"></i> <?= t('Can\'t Install!'); ?></button>
-                                </div>
-                                <?php
-                            } else {
-                                ?>
-                                <a href="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn float-end btn-sm btn-secondary"><?= t('Install'); ?></a>
-                                <?php
-                                if ($displayDeleteBtn) {
-                                    ?>
-                                    <a href="javascript:void(0)" class="btn float-end btn-sm btn-danger" onclick="deletePackage('<?= $obj->getPackageHandle() ?>', '<?= $obj->getPackageName() ?>')"><?= t('Delete') ?></a>
-                                    <?php
-                                }
-                            }
-                            ?>
-                            <h4 class="media-heading"><?= t($obj->getPackageName()) ?> <span class="badge bg-info" style="margin-right: 10px"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
-                            <p><?= t($obj->getPackageDescription()) ?></p>
+                    <div class="d-flex border p-3">
+                        <img style="height: 50px" class="me-3" src="<?= $ci->getPackageIconURL($obj); ?>" />
+                        <div>
+                            <h4><?= t($obj->getPackageName()) ?> <span class="badge bg-info"><?= tc('AddonVersion', 'v.%s', $obj->getPackageVersion()); ?></span></h4>
+                            <div><?= t($obj->getPackageDescription()) ?></div>
                         </div>
+                        <?php
+                        if ($obj instanceof Concrete\Core\Package\BrokenPackage) {
+                            ?>
+                            <div class="ms-auto launch-tooltip float-end" title="<?=t('This package is corrupted. Make sure it has a valid controller.php file and that it has been updated for Concrete 5.7.0 and later.')?>">
+                                <button type="button" disabled="disabled" class="btn btn-sm btn-secondary"><i class="fa fa-exclamation-circle"></i> <?= t('Can\'t Install!'); ?></button>
+                            </div>
+                            <?php
+                        } else {
+                            ?>
+                            <div class="btn-group ms-auto d-block">
+                                <a href="<?= URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle()); ?>" class="btn btn-sm btn-secondary"><?= t('Install'); ?></a><?php
+                                if ($displayDeleteBtn) {
+                                    ?><a href="javascript:void(0)" class="btn btn-sm btn-danger" onclick="deletePackage('<?= $obj->getPackageHandle() ?>', '<?= $obj->getPackageName() ?>')"><?= t('Delete') ?></a>
+                                    <?php
+                                } ?>
+                            </div>
+                        <?php }
+                        ?>
                     </div>
                     <?php
                 }
