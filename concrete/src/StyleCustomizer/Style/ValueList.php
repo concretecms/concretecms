@@ -79,7 +79,12 @@ class ValueList
 
     private static function isValidFontPresetsFile($path)
     {
-        if (preg_match('#^[/\w-]+\.less$#', $path)) {
+        // need to be able to match things like
+        // build/my-file.less
+        // build/something/my_file.less
+        // but not:
+        // ../../something/nefarious.less
+        if (preg_match('/^[A-Za-z0-9\/_-]+\.less$/i', $path)) {
             return true;
         }
         return false;
