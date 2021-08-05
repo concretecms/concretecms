@@ -7,7 +7,7 @@ use Concrete\Core\Entity\Board\SlotTemplate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
-class CustomSlotTemplatesCommandHandler
+class EnableCustomSlotTemplatesCommandHandler
 {
 
     /**
