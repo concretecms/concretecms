@@ -109,7 +109,7 @@ echo $userInterface->tabs([
 
             <div class="form-group">
                 <?php
-                $pageTypes = [];
+                $pageTypes = ['0' => t('** All')];
                 /** @noinspection PhpUndefinedClassInspection */
                 foreach (PageType::getList(false, $siteType) as $pageType) {
                     /** @var Type $pageType */
