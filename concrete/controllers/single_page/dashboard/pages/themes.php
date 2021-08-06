@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 
+use Concrete\Core\Block\BlockType\Set;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -61,6 +62,7 @@ class Themes extends DashboardSitePageController
             $this->set('customizeTheme', $theme);
             $this->set('skins', $skins);
             $this->set('selectedSkin', $theme->getThemeDefaultSkin());
+            $this->set('blockTypeSets', Set::getList());
             $this->setTheme('concrete');
             $this->setThemeViewTemplate('empty.php');
 

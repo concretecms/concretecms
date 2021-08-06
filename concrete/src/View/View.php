@@ -6,9 +6,13 @@ use Concrete\Core\Asset\Output\StandardFormatter;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
+use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
+use Concrete\Core\Site\Service;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Environment;
 use Events;
 use Concrete\Core\Support\Facade\Facade;
+use HtmlObject\Element;
 use PageTheme;
 use Page;
 use Config;
@@ -382,6 +386,21 @@ class View extends AbstractView
             return $item . "\n";
         }
     }
+
+    public function getThemeStyles()
+    {
+        $site = app(Service::class)->getSite();
+        $skinIdentifier = SkinInterface::SKIN_DEFAULT;
+        if ($site) {
+            if ($site->getThemeSkinIdentifier()) {
+                $skinIdentifier = $site->getThemeSkinIdentifier();
+            }
+        }
+        $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+        $stylesheet = $skin->getStylesheet();
+        return $stylesheet;
+    }
+
 
     public static function element($_file, $args = null, $_pkgHandle = null)
     {

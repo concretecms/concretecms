@@ -39,6 +39,22 @@ $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeT
                         ) ?></span>
                 </a>
             </li>
+            <li class="ccm-toolbar-button-with-text float-end me-4">
+                <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><?=$customizeTheme->getThemeName()?></a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Welcome</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" target="ccm-page-preview-frame" href="<?=URL::to('/ccm/system/theme/preview_component', $customizeTheme->getThemeID(), 'colors')?>"><?=t('Colors')?></a></li>
+                    <li><a class="dropdown-item" target="ccm-page-preview-frame" href="<?=URL::to('/ccm/system/theme/preview_component', $customizeTheme->getThemeID(), 'typography')?>"><?=t('Typography')?></a></li>
+                    <li><a class="dropdown-item" href="#">Core Components</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-header"><?=t('Block Types')?></li>
+                    <?php
+                        foreach ($blockTypeSets as $set) { ?>
+                            <li><a class="dropdown-item" href="#"><?=$set->getBlockTypeSetDisplayName()?></a></li>
+                    <?php } ?>
+                </ul>
+            </li>
 
         </ul>
     </div>
@@ -47,7 +63,7 @@ $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeT
 <div data-vue="theme-customizer" class="h-100">
 
     <div class="ccm-page h-100">
-    <iframe class="ccm-page-preview-frame" style="margin-top: 48px" class="w-100 h-100" style="border: 0"
+    <iframe name="ccm-page-preview-frame" class="ccm-page-preview-frame" style="margin-top: 48px" class="w-100 h-100" style="border: 0"
             src="<?=URL::to('/ccm/system/panels/page/design/preview_contents')?>?cID=<?=$previewPage->getCollectionID()?>"></iframe>
     </div>
 

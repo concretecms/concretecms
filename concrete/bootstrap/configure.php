@@ -156,6 +156,7 @@ const DIRNAME_LANGUAGES_SITE_INTERFACE = 'site';
 const DIRNAME_STYLE_CUSTOMIZER = 'style_customizer';
 const DIRNAME_STYLE_CUSTOMIZER_TYPES = 'types';
 const DIRNAME_STYLE_CUSTOMIZER_PRESETS = 'presets';
+const DIRNAME_BEDROCK = 'bedrock';
 const DIRNAME_FILE_STORAGE_LOCATION_TYPES = 'storage_location_types';
 const DIRNAME_EXTERNAL_FILE_PROVIDER_TYPES = 'external_file_provider_types';
 const DIRNAME_EXPRESS = 'express';
