@@ -308,7 +308,7 @@ class BlockView extends AbstractView
                             if ($assetList->getAssetGroup($assetHandle)) {
                                 $this->requireAsset($assetHandle);
                             } else {
-                                $logger->notice(
+                                $logger->info(
                                     t("Block type requested required feature '%s' but it was not registered.",
                                         $assetHandle)
                                 );
