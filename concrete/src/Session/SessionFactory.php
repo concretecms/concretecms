@@ -35,7 +35,7 @@ class SessionFactory implements SessionFactoryInterface
      * This makes testing a little harder, but ensures we apply the session object to the most accurate request instance.
      * Ideally neither would be required, as the operation creating the session would manage associating the two.
      *
-     * @var \Concrete\Core\Session\Request
+     * @var \Concrete\Core\Http\Request
      *
      * @deprecated
      */
@@ -87,7 +87,7 @@ class SessionFactory implements SessionFactoryInterface
     protected function getFileHandler(array $config)
     {
         return $this->app->make(NativeFileSessionHandler::class, [
-            array_get($config, 'save_path'),
+            'savePath' => array_get($config, 'save_path'),
         ]);
     }
 
@@ -124,8 +124,7 @@ class SessionFactory implements SessionFactoryInterface
     {
         // Create new memcached instance
         $memcached = $this->app->make(Memcached::class, [
-            'CCM_SESSION',
-            null,
+            'persistent_id' => 'CCM_SESSION',
         ]);
 
         $servers = array_get($config, 'servers', []);
@@ -141,8 +140,8 @@ class SessionFactory implements SessionFactoryInterface
 
         // Return a newly built handler
         return $this->app->make(MemcachedSessionHandler::class, [
-            $memcached,
-            ['prefix' => array_get($config, 'name') ?: 'CCM_SESSION'],
+            'memcached' => $memcached,
+            'options' => ['prefix' => array_get($config, 'name') ?: 'CCM_SESSION'],
         ]);
     }
 
@@ -176,7 +175,7 @@ class SessionFactory implements SessionFactoryInterface
 
         // Resolve the handler based on config
         $handler = $this->getSessionHandler($config);
-        $storage = $app->make(NativeSessionStorage::class, [[], $handler]);
+        $storage = $app->make(NativeSessionStorage::class, ['options' => [], 'handler' => $handler]);
 
         // Initialize the storage with some options
         $options = array_get($config, 'cookie', []) + [
@@ -277,7 +276,7 @@ class SessionFactory implements SessionFactoryInterface
         $prefix = rtrim($prefix, ':') . ':';
 
         // We pass the prefix to the Redis Handler when we build it
-        return $this->app->make(RedisSessionHandler::class, [$redis, ['prefix' => $prefix]]);
+        return $this->app->make(RedisSessionHandler::class, ['redis' => $redis, 'options' => ['prefix' => $prefix]]);
     }
 
     /**
