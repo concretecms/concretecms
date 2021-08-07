@@ -44,9 +44,10 @@ $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeT
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Welcome</a></li>
                     <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-header"><?=t('Bedrock')?></li>
                     <li><a class="dropdown-item" target="ccm-page-preview-frame" href="<?=URL::to('/ccm/system/theme/preview_component', $customizeTheme->getThemeID(), 'colors')?>"><?=t('Colors')?></a></li>
                     <li><a class="dropdown-item" target="ccm-page-preview-frame" href="<?=URL::to('/ccm/system/theme/preview_component', $customizeTheme->getThemeID(), 'typography')?>"><?=t('Typography')?></a></li>
-                    <li><a class="dropdown-item" href="#">Core Components</a></li>
+                    <li><a class="dropdown-item" target="ccm-page-preview-frame" href="<?=URL::to('/ccm/system/theme/preview_component', $customizeTheme->getThemeID(), 'core')?>"><?=t('Core Components')?></a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li class="dropdown-header"><?=t('Block Types')?></li>
                     <?php
