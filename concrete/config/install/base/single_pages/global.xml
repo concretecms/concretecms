@@ -2,6 +2,14 @@
 <concrete5-cif version="1.0">
 
     <singlepages>
+        <page name="Theme Documentation" path="/!themes" filename="/!themes/view.php" pagetype="" description="" package="" global="true">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>fas fa-palette</value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Stacks" path="/!stacks" filename="/!stacks/view.php" pagetype="" description="" package="" global="true">
             <attributes>
                 <attributekey handle="icon_dashboard">

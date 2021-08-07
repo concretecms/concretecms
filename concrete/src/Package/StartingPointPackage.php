@@ -83,7 +83,7 @@ class StartingPointPackage extends Package
             new StartingPointInstallRoutine('install_required_single_pages', 79, t('Installing login and registration pages.')),
             new StartingPointInstallRoutine('install_config', 81, t('Configuring site.')),
             new StartingPointInstallRoutine('import_files', 82, t('Importing files.')),
-            new StartingPointInstallRoutine('install_content', 83, t('Adding pages and content.')),
+            new StartingPointInstallRoutine('install_content', 86, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 92, t('Adding desktops.')),
             new StartingPointInstallRoutine('install_api', 93, t('Installing API.')),
             new StartingPointInstallRoutine('install_site_permissions', 94, t('Setting site permissions.')),

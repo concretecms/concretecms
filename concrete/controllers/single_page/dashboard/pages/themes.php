@@ -8,6 +8,8 @@ use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Theme\Documentation\Installer;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Config;
@@ -54,6 +56,25 @@ class Themes extends DashboardSitePageController
         return $this->buildRedirect($this->action());
     }
 
+    public function reset_documentation($pThemeID = null)
+    {
+        $theme = Theme::getByID($pThemeID);
+        if ($theme) {
+            if (!$this->token->validate('reset_documentation')) {
+                $this->error->add($this->token->getErrorMessage());
+            }
+
+            if (!$this->error->has()) {
+                $installer = $this->app->make(Installer::class);
+                $installer->clearDocumentation($theme);
+                $installer->install($theme, $theme->getDocumentationProvider());
+                $this->flash('success', t('Theme documentation reset.'));
+            }
+        }
+        return $this->buildRedirect($this->action());
+    }
+
+
     public function preview($pThemeID = null)
     {
         $theme = Theme::getByID($pThemeID);
@@ -67,6 +88,12 @@ class Themes extends DashboardSitePageController
             $this->setThemeViewTemplate('empty.php');
 
             $previewPage = $this->app->make('site')->getSite()->getSiteHomePageObject();
+            $themeDocumentationPages = $theme->getThemeDocumentationPages();
+            if (isset($themeDocumentationPages[0]) && $themeDocumentationPages[0] instanceof Page) {
+                $previewPage = $themeDocumentationPages[0];
+            }
+
+            $this->set('documentationPages', $themeDocumentationPages);
             $this->set('previewPage', $previewPage);
             $this->render('/dashboard/pages/themes/preview');
         } else {

@@ -119,6 +119,7 @@ const DIRNAME_DASHBOARD_MODULES = 'modules';
 const DIRNAME_MAIL_TEMPLATES = 'mail';
 const DIRNAME_THEMES = 'themes';
 const DIRNAME_THEMES_CORE = 'core';
+const DIRNAME_THEME_DOCUMENTATION = 'documentation';
 const DIRNAME_CONFIG = 'config';
 const DIRNAME_BLOCK_TEMPLATES = 'templates';
 const DIRNAME_BLOCK_TEMPLATES_COMPOSER = 'composer';
@@ -157,6 +158,7 @@ const DIRNAME_STYLE_CUSTOMIZER = 'style_customizer';
 const DIRNAME_STYLE_CUSTOMIZER_TYPES = 'types';
 const DIRNAME_STYLE_CUSTOMIZER_PRESETS = 'presets';
 const DIRNAME_BEDROCK = 'bedrock';
+const DIRNAME_BEDROCK_ASSETS = 'assets';
 const DIRNAME_FILE_STORAGE_LOCATION_TYPES = 'storage_location_types';
 const DIRNAME_EXTERNAL_FILE_PROVIDER_TYPES = 'external_file_provider_types';
 const DIRNAME_EXPRESS = 'express';
@@ -298,6 +300,15 @@ const STACKS_PAGE_PATH = '/!stacks';
 const STACKS_AREA_NAME = 'Main';
 const STACKS_PAGE_TYPE = 'core_stack';
 const STACK_CATEGORY_PAGE_TYPE = 'core_stack_category';
+
+/*
+ * ----------------------------------------------------------------------------
+ * Theme documentation
+ * ----------------------------------------------------------------------------
+ */
+const THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE = 'core_theme_documentation_category';
+const THEME_DOCUMENTATION_PAGE_TYPE = 'core_theme_documentation';
+const THEME_DOCUMENTATION_PAGE_PATH = '/!themes';
 
 /*
  * ----------------------------------------------------------------------------

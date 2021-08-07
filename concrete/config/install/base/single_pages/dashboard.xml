@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <singlepages>
-        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" global="true">
+        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package=""
+              global="true">
             <attributes>
                 <attributekey handle="icon_dashboard">
                     <value>fas fa-th-large</value>
@@ -47,13 +48,15 @@
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
+                    <value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute
+                    </value>
                 </attributekey>
             </attributes>
         </page>
-        <page name="File Details" path="/dashboard/files/details" filename="/dashboard/files/details.php" pagetype="" description="" package="">
+        <page name="File Details" path="/dashboard/files/details" filename="/dashboard/files/details.php" pagetype=""
+              description="" package="">
             <attributes>
-            	<attributekey handle="exclude_nav">
+                <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
                 </attributekey>
             </attributes>
@@ -109,7 +112,8 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Group Types" path="/dashboard/users/group_types" filename="/dashboard/users/group_types.php" pagetype=""
+        <page name="Group Types" path="/dashboard/users/group_types" filename="/dashboard/users/group_types.php"
+              pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -117,7 +121,8 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Send Message to Group" path="/dashboard/users/groups/message" filename="/dashboard/users/groups/message.php" pagetype=""
+        <page name="Send Message to Group" path="/dashboard/users/groups/message"
+              filename="/dashboard/users/groups/message.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -173,7 +178,8 @@
         <page name="Express" path="/dashboard/express" filename="/dashboard/express/view.php" pagetype=""
               description="Express Data Objects" package=""/>
 
-        <page name="View Entries" path="/dashboard/express/entries" filename="/dashboard/express/entries.php" pagetype=""
+        <page name="View Entries" path="/dashboard/express/entries" filename="/dashboard/express/entries.php"
+              pagetype=""
               description="" package="">
 
         </page>
@@ -191,7 +197,8 @@
 
         </page>
 
-        <page name="Board Details" path="/dashboard/boards/details" filename="/dashboard/boards/view_board.php" pagetype=""
+        <page name="Board Details" path="/dashboard/boards/details" filename="/dashboard/boards/view_board.php"
+              pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -216,7 +223,8 @@
             </attributes>
         </page>
 
-        <page name="Data Sources" path="/dashboard/boards/data_sources" filename="/dashboard/boards/data_sources.php" pagetype=""
+        <page name="Data Sources" path="/dashboard/boards/data_sources" filename="/dashboard/boards/data_sources.php"
+              pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -228,7 +236,8 @@
             </attributes>
         </page>
 
-        <page name="Board Appearance" path="/dashboard/boards/appearance" filename="/dashboard/boards/appearance.php" pagetype=""
+        <page name="Board Appearance" path="/dashboard/boards/appearance" filename="/dashboard/boards/appearance.php"
+              pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -252,7 +261,8 @@
             </attributes>
         </page>
 
-        <page name="Board Permissions" path="/dashboard/boards/permissions" filename="/dashboard/boards/permissions.php" pagetype=""
+        <page name="Board Permissions" path="/dashboard/boards/permissions" filename="/dashboard/boards/permissions.php"
+              pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -276,7 +286,8 @@
             </attributes>
         </page>
 
-        <page name="Instance Details" path="/dashboard/boards/instances/details" filename="/dashboard/boards/instances/details.php" pagetype=""
+        <page name="Instance Details" path="/dashboard/boards/instances/details"
+              filename="/dashboard/boards/instances/details.php" pagetype=""
               description="View details of your board instance." package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -288,7 +299,8 @@
             </attributes>
         </page>
 
-        <page name="Rules" path="/dashboard/boards/instances/rules" filename="/dashboard/boards/instances/rules.php" pagetype=""
+        <page name="Rules" path="/dashboard/boards/instances/rules" filename="/dashboard/boards/instances/rules.php"
+              pagetype=""
               description="View override rules for your instance." package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -304,7 +316,8 @@
               description="" package="">
         </page>
 
-        <page name="Choose Items" path="/dashboard/boards/designer/choose_items" filename="/dashboard/boards/designer/choose_items.php" pagetype=""
+        <page name="Choose Items" path="/dashboard/boards/designer/choose_items"
+              filename="/dashboard/boards/designer/choose_items.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -316,7 +329,8 @@
             </attributes>
         </page>
 
-        <page name="Customize Slot" path="/dashboard/boards/designer/customize_slot" filename="/dashboard/boards/designer/customize_slot.php" pagetype=""
+        <page name="Customize Slot" path="/dashboard/boards/designer/customize_slot"
+              filename="/dashboard/boards/designer/customize_slot.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -331,7 +345,6 @@
         <page name="Scheduler" path="/dashboard/boards/scheduler" filename="/dashboard/boards/scheduler.php" pagetype=""
               description="" package="">
         </page>
-
 
 
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype=""
@@ -350,7 +363,8 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Form Results" path="/dashboard/reports/forms/legacy" filename="/dashboard/reports/legacy.php" pagetype=""
+        <page name="Form Results" path="/dashboard/reports/forms/legacy" filename="/dashboard/reports/legacy.php"
+              pagetype=""
               description="Get submission data." package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -377,7 +391,8 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Page Changes" path="/dashboard/reports/page_changes" filename="/dashboard/reports/page_changes.php" pagetype=""
+        <page name="Page Changes" path="/dashboard/reports/page_changes" filename="/dashboard/reports/page_changes.php"
+              pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -386,7 +401,8 @@
             </attributes>
         </page>
 
-        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="" />
+        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype=""
+              description="Reskin your site." package=""/>
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype=""
               description="Reskin your site." package="">
             <attributes>
@@ -406,12 +422,12 @@
                 </attributekey>
             </attributes>
         </page>
-
         <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype=""
               description="" package="">
         </page>
 
-        <page name="Organize Page Type Order" path="/dashboard/pages/types/organize" filename="/dashboard/pages/types/organize.php" pagetype=""
+        <page name="Organize Page Type Order" path="/dashboard/pages/types/organize"
+              filename="/dashboard/pages/types/organize.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -467,7 +483,7 @@
         </page>
 
         <page name="Page Templates" path="/dashboard/pages/templates" filename="/dashboard/pages/templates/view.php"
-              pagetype="" description="Form factors for pages in your site." package="" />
+              pagetype="" description="Form factors for pages in your site." package=""/>
         <page name="Add Page Template" path="/dashboard/pages/templates/add"
               filename="/dashboard/pages/templates/add.php" pagetype="" description="Add page templates to your site."
               package="">
@@ -478,7 +494,7 @@
             </attributes>
         </page>
         <page name="Containers" path="/dashboard/pages/containers" filename="/dashboard/pages/containers/view.php"
-              pagetype="" description="Container Templates for Areas." package="" />
+              pagetype="" description="Container Templates for Areas." package=""/>
         <page name="Add Container" path="/dashboard/pages/containers/add"
               filename="/dashboard/pages/containers/add.php" pagetype="" description="Add page containers."
               package="">
@@ -514,9 +530,12 @@
             </attributes>
         </page>
 
-        <page name="Calendar &amp; Events" path="/dashboard/calendar" filename="/dashboard/calendar/view.php" pagetype="" description="" package="" />
-        <page name="View Calendar" path="/dashboard/calendar/events" filename="/dashboard/calendar/events.php" pagetype="" description="" package="" />
-        <page name="Event List" path="/dashboard/calendar/event_list" filename="/dashboard/calendar/event_list.php" pagetype="" description="" package="">
+        <page name="Calendar &amp; Events" path="/dashboard/calendar" filename="/dashboard/calendar/view.php"
+              pagetype="" description="" package=""/>
+        <page name="View Calendar" path="/dashboard/calendar/events" filename="/dashboard/calendar/events.php"
+              pagetype="" description="" package=""/>
+        <page name="Event List" path="/dashboard/calendar/event_list" filename="/dashboard/calendar/event_list.php"
+              pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
@@ -526,8 +545,10 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype="" description="" package="" />
-        <page name="Calendar Permissions" path="/dashboard/calendar/permissions" filename="/dashboard/calendar/permissions.php" pagetype="" description="" package="">
+        <page name="Add Calendar" path="/dashboard/calendar/add" filename="/dashboard/calendar/add.php" pagetype=""
+              description="" package=""/>
+        <page name="Calendar Permissions" path="/dashboard/calendar/permissions"
+              filename="/dashboard/calendar/permissions.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
@@ -537,31 +558,37 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Attributes" path="/dashboard/calendar/attributes" filename="/dashboard/calendar/attributes.php" pagetype="" description="" package="">
+        <page name="Attributes" path="/dashboard/calendar/attributes" filename="/dashboard/calendar/attributes.php"
+              pagetype="" description="" package="">
         </page>
-        <page name="Conversations" path="/dashboard/conversations" filename="/dashboard/conversations/view.php" pagetype="" description="" package="" />
-        <page name="Messages" path="/dashboard/conversations/messages" filename="/dashboard/conversations/messages.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="icon_dashboard">
-					<value>icon-bullhorn</value>
-				</attributekey>
-			</attributes>
+        <page name="Conversations" path="/dashboard/conversations" filename="/dashboard/conversations/view.php"
+              pagetype="" description="" package=""/>
+        <page name="Messages" path="/dashboard/conversations/messages" filename="/dashboard/conversations/messages.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>icon-bullhorn</value>
+                </attributekey>
+            </attributes>
         </page>
 
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype=""
               description="Manage sitewide content and administer block types." package=""/>
-        <page name="Stacks &amp; Global Areas" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
+        <page name="Stacks &amp; Global Areas" path="/dashboard/blocks/stacks"
+              filename="/dashboard/blocks/stacks/view.php" pagetype=""
               description="Share content across your site." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>stacks, global areas, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
+                    <value>stacks, global areas, reusable content, scrapbook, copy, paste, paste block, copy block, site
+                        name, logo
+                    </value>
                 </attributekey>
             </attributes>
 
         </page>
         <page name="Block &amp; Stack Permissions" path="/dashboard/blocks/permissions"
               filename="/dashboard/blocks/permissions.php" pagetype=""
-              description="Control who can add blocks and stacks on your site." package="" />
+              description="Control who can add blocks and stacks on your site." package=""/>
         <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php"
               pagetype="" description="" package="">
             <attributes>
@@ -589,7 +616,9 @@
               package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>add-on, addon, add on, package, app, ecommerce, discussions, forums, themes, templates, blocks</value>
+                    <value>add-on, addon, add on, package, app, ecommerce, discussions, forums, themes, templates,
+                        blocks
+                    </value>
                 </attributekey>
             </attributes>
         </page>
@@ -630,7 +659,9 @@
               pagetype="" description="Download add-ons from the marketplace." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace</value>
+                    <value>buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find
+                        addon, new addon, marketplace
+                    </value>
                 </attributekey>
             </attributes>
         </page>
@@ -645,7 +676,8 @@
         </page>
         <page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype=""
               description="Basic information about your website." package=""/>
-        <page name="Name &amp; Attributes" path="/dashboard/system/basics/name" filename="/dashboard/system/basics/name.php"
+        <page name="Name &amp; Attributes" path="/dashboard/system/basics/name"
+              filename="/dashboard/system/basics/name.php"
               pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -694,7 +726,8 @@
             </attributes>
         </page>
         <page name="Update Languages" path="/dashboard/system/basics/multilingual/update"
-              filename="/dashboard/system/basics/multilingual/update/multilingual/update.php" pagetype="" description="" package="">
+              filename="/dashboard/system/basics/multilingual/update/multilingual/update.php" pagetype="" description=""
+              package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>languages, update, gettext, translation, translate</value>
@@ -713,7 +746,8 @@
             </attributes>
         </page>
 
-        <page name="Custom Attributes" path="/dashboard/system/basics/attributes" filename="/dashboard/system/basics/attributes.php"
+        <page name="Custom Attributes" path="/dashboard/system/basics/attributes"
+              filename="/dashboard/system/basics/attributes.php"
               pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -728,7 +762,8 @@
             </attributes>
         </page>
 
-        <page name="Reset Clipboard and Edit Mode" path="/dashboard/system/basics/reset_edit_mode" filename="/dashboard/system/basics/reset_edit_mode.php"
+        <page name="Reset Clipboard and Edit Mode" path="/dashboard/system/basics/reset_edit_mode"
+              filename="/dashboard/system/basics/reset_edit_mode.php"
               pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -741,7 +776,8 @@
         <page name="Express" path="/dashboard/system/express" filename="/dashboard/system/express/view.php" pagetype=""
               description="Express" package=""/>
 
-        <page name="Data Objects" path="/dashboard/system/express/entities" filename="/dashboard/system/express/entities.php" pagetype=""
+        <page name="Data Objects" path="/dashboard/system/express/entities"
+              filename="/dashboard/system/express/entities.php" pagetype=""
               description="" package="">
         </page>
 
@@ -809,26 +845,36 @@
               filename="/dashboard/system/express/entries.php" pagetype="" description="" package="">
         </page>
 
-        <page name="Multiple Site Hosting" path="/dashboard/system/multisite" filename="/dashboard/system/sites/view.php" pagetype="" user="admin" description="" package=""/>
-        <page name="Sites &amp; Domains" path="/dashboard/system/multisite/sites" filename="/dashboard/system/multisite/sites/view.php" pagetype="" user="admin" description="" package=""/>
-        <page name="Site Types" path="/dashboard/system/multisite/types" filename="/dashboard/system/multisite/types/view.php" pagetype="" user="admin" description="" package=""/>
-        <page name="Multisite Settings" path="/dashboard/system/multisite/settings" filename="/dashboard/system/multisite/types/view.php" pagetype="" user="admin" description="" package=""/>
+        <page name="Multiple Site Hosting" path="/dashboard/system/multisite"
+              filename="/dashboard/system/sites/view.php" pagetype="" user="admin" description="" package=""/>
+        <page name="Sites &amp; Domains" path="/dashboard/system/multisite/sites"
+              filename="/dashboard/system/multisite/sites/view.php" pagetype="" user="admin" description="" package=""/>
+        <page name="Site Types" path="/dashboard/system/multisite/types"
+              filename="/dashboard/system/multisite/types/view.php" pagetype="" user="admin" description="" package=""/>
+        <page name="Multisite Settings" path="/dashboard/system/multisite/settings"
+              filename="/dashboard/system/multisite/types/view.php" pagetype="" user="admin" description="" package=""/>
 
-        <page name="Multilingual" path="/dashboard/system/multilingual" filename="/dashboard/system/multilingual/view.php" pagetype="" description="Run your site in multiple languages." package="">
+        <page name="Multilingual" path="/dashboard/system/multilingual"
+              filename="/dashboard/system/multilingual/view.php" pagetype=""
+              description="Run your site in multiple languages." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>multilingual, localization, internationalization, i18n</value>
                 </attributekey>
             </attributes>
         </page>
-        <page name="Multilingual Setup" path="/dashboard/system/multilingual/setup" filename="/dashboard/system/multilingual/setup.php" pagetype=""
-              description="" package="" />
-        <page name="Copy Languages" path="/dashboard/system/multilingual/copy" filename="/dashboard/system/multilingual/copy.php" pagetype=""
-              description="" package="" />
-        <page name="Page Report" path="/dashboard/system/multilingual/page_report" filename="/dashboard/system/multilingual/page_report.php" pagetype=""
-              description="" package="" />
-        <page name="Translate Site Interface" path="/dashboard/system/multilingual/translate_interface" filename="/dashboard/system/multilingual/translate_interface.php" pagetype=""
-              description="" package="" />
+        <page name="Multilingual Setup" path="/dashboard/system/multilingual/setup"
+              filename="/dashboard/system/multilingual/setup.php" pagetype=""
+              description="" package=""/>
+        <page name="Copy Languages" path="/dashboard/system/multilingual/copy"
+              filename="/dashboard/system/multilingual/copy.php" pagetype=""
+              description="" package=""/>
+        <page name="Page Report" path="/dashboard/system/multilingual/page_report"
+              filename="/dashboard/system/multilingual/page_report.php" pagetype=""
+              description="" package=""/>
+        <page name="Translate Site Interface" path="/dashboard/system/multilingual/translate_interface"
+              filename="/dashboard/system/multilingual/translate_interface.php" pagetype=""
+              description="" package=""/>
 
         <!--
         <page name="Interface Preferences" path="/dashboard/system/basics/images"
@@ -843,7 +889,8 @@
 
         <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php"
               pagetype="" description="Enable pretty URLs and tracking codes." package=""/>
-        <page name="URLs and Redirection" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype=""
+        <page name="URLs and Redirection" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php"
+              pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -916,7 +963,9 @@
                     <value>1</value>
                 </attributekey>
                 <attributekey handle="meta_keywords">
-                    <value>thumbnail, format, png, jpg, jpeg, quality, compression, gd, imagick, imagemagick, transparency</value>
+                    <value>thumbnail, format, png, jpg, jpeg, quality, compression, gd, imagick, imagemagick,
+                        transparency
+                    </value>
                 </attributekey>
             </attributes>
         </page>
@@ -924,7 +973,9 @@
               filename="/dashboard/system/files/image_uploading.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>uploading, upload, images, image, resizing, manager, exif, rotation, rotate, quality, compression, png, jpg, jpeg</value>
+                    <value>uploading, upload, images, image, resizing, manager, exif, rotation, rotate, quality,
+                        compression, png, jpg, jpeg
+                    </value>
                 </attributekey>
             </attributes>
         </page>
@@ -952,7 +1003,8 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Export Options" path="/dashboard/system/files/export_options" filename="/dashboard/system/files/export_options.php" pagetype="" description="" package="">
+        <page name="Export Options" path="/dashboard/system/files/export_options"
+              filename="/dashboard/system/files/export_options.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>files, export, csv, bom, encoding</value>
@@ -1015,7 +1067,9 @@
               filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching</value>
+                    <value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache,
+                        caching
+                    </value>
                 </attributekey>
             </attributes>
         </page>
@@ -1031,7 +1085,9 @@
               filename="/dashboard/system/optimization/jobs.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>index search, reindex search, build sitemap, sitemap.xml, clear old versions, page versions, remove old</value>
+                    <value>index search, reindex search, build sitemap, sitemap.xml, clear old versions, page versions,
+                        remove old
+                    </value>
                 </attributekey>
             </attributes>
         </page>
@@ -1062,8 +1118,9 @@
         <page name="Advanced Permissions" path="/dashboard/system/permissions/advanced"
               filename="/dashboard/system/permissions/advanced.php" pagetype="" description="" package="">
         </page>
-        <page name="Workflows" path="/dashboard/system/permissions/workflows" filename="/dashboard/system/permissions/workflows.php"
-              pagetype="" description="" package="" />
+        <page name="Workflows" path="/dashboard/system/permissions/workflows"
+              filename="/dashboard/system/permissions/workflows.php"
+              pagetype="" description="" package=""/>
         <page name="IP Blacklist" path="/dashboard/system/permissions/blacklist"
               filename="/dashboard/system/permissions/blacklist.php" pagetype="" description="" package="">
             <attributes>
@@ -1083,7 +1140,7 @@
         <page name="IP Range" path="/dashboard/system/permissions/blacklist/range"
               filename="/dashboard/system/permissions/blacklist/range.php" pagetype="" description="" package="">
             <attributes>
-				<attributekey handle="exclude_nav">
+                <attributekey handle="exclude_nav">
                     <value>1</value>
                 </attributekey>
             </attributes>
@@ -1157,7 +1214,8 @@
             </attributes>
         </page>
         <page name="Global Password Reset" path="/dashboard/system/registration/global_password_reset"
-              filename="/dashboard/system/registration/global_password_reset.php" pagetype="" description="Signs out all users, resets all passwords and forces users to choose a new one" package="">
+              filename="/dashboard/system/registration/global_password_reset.php" pagetype=""
+              description="Signs out all users, resets all passwords and forces users to choose a new one" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>global, password, reset, change password, force, sign out</value>
@@ -1168,14 +1226,18 @@
         <page name="User Deactivation Settings" path="/dashboard/system/registration/deactivation"
               filename="/dashboard/system/registration/deactivation.php" pagetype="" description="" package="">
         </page>
-        <page name="Automated Logout" path="/dashboard/system/registration/automated_logout" filename="/dashboard/system/registration/automated_logout.php" pagetype="" description="Automate when users are logged out, or do it manually" package="">
+        <page name="Automated Logout" path="/dashboard/system/registration/automated_logout"
+              filename="/dashboard/system/registration/automated_logout.php" pagetype=""
+              description="Automate when users are logged out, or do it manually" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>login, logout, user, agent, ip, change, security, session, invalidation, invalid</value>
                 </attributekey>
             </attributes>
         </page>
-        <page name="Password Requirements" path="/dashboard/system/registration/password_requirements" filename="/dashboard/system/registration/password_requirements.php" pagetype="" description="Set password rule and regulations." package="">
+        <page name="Password Requirements" path="/dashboard/system/registration/password_requirements"
+              filename="/dashboard/system/registration/password_requirements.php" pagetype=""
+              description="Set password rule and regulations." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>password, requirements, code, key, login, registration, security, nist</value>
@@ -1219,7 +1281,9 @@
               filename="/dashboard/system/mail/importers.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>email server, mail settings, mail configuration, private message, message system, import, email, message</value>
+                    <value>email server, mail settings, mail configuration, private message, message system, import,
+                        email, message
+                    </value>
                 </attributekey>
             </attributes>
         </page>
@@ -1231,7 +1295,8 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Email Logging" path="/dashboard/system/mail/logging" filename="/dashboard/system/mail/logging.php" pagetype=""
+        <page name="Email Logging" path="/dashboard/system/mail/logging" filename="/dashboard/system/mail/logging.php"
+              pagetype=""
               description="Control how emails get logged." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -1242,29 +1307,29 @@
 
         <page name="Calendar" path="/dashboard/system/calendar"
               filename="/dashboard/system/calendar/view.php" pagetype=""
-              description="Manage your calendar settings" package="" />
+              description="Manage your calendar settings" package=""/>
         <page name="General Settings" path="/dashboard/system/calendar/settings"
               filename="/dashboard/system/calendar/settings.php" pagetype=""
-              description="" package="" />
+              description="" package=""/>
         <page name="Color Settings" path="/dashboard/system/calendar/colors"
               filename="/dashboard/system/calendar/colors.php" pagetype=""
-              description="" package="" />
+              description="" package=""/>
         <page name="Calendar Permissions" path="/dashboard/system/calendar/permissions"
               filename="/dashboard/system/calendar/permissions.php" pagetype=""
-              description="" package="" />
+              description="" package=""/>
         <page name="Import Calendar Data" path="/dashboard/system/calendar/import"
               filename="/dashboard/system/calendar/import.php" pagetype=""
-              description="" package="" />
+              description="" package=""/>
 
         <page name="Boards" path="/dashboard/system/boards"
               filename="/dashboard/system/boards/view.php" pagetype=""
-              description="Manage global board settings" package="" />
+              description="Manage global board settings" package=""/>
         <page name="Board Settings" path="/dashboard/system/boards/settings"
               filename="/dashboard/system/boards/settings.php" pagetype=""
-              description="" package="" />
+              description="" package=""/>
         <page name="Permissions" path="/dashboard/system/boards/permissions"
               filename="/dashboard/system/boards/permissions.php" pagetype=""
-              description="" package="" />
+              description="" package=""/>
 
         <page name="Conversations" path="/dashboard/system/conversations"
               filename="/dashboard/system/conversations/view.php" pagetype=""
@@ -1388,14 +1453,16 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Database Character Set" path="/dashboard/system/environment/database_charset" filename="/dashboard/system/environment/database_charset.php" pagetype="" description="" package="">
+        <page name="Database Character Set" path="/dashboard/system/environment/database_charset"
+              filename="/dashboard/system/environment/database_charset.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>database, character set, charset, collation, utf8</value>
                 </attributekey>
             </attributes>
         </page>
-        <page name="Geolocation" path="/dashboard/system/environment/geolocation" filename="/dashboard/system/environment/geolocation.php" pagetype="" description="" package="">
+        <page name="Geolocation" path="/dashboard/system/environment/geolocation"
+              filename="/dashboard/system/environment/geolocation.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>geolocation, ip, address, country, nation, place, locate</value>
@@ -1426,7 +1493,8 @@
             </attributes>
         </page>
 
-        <page name="API Integrations" path="/dashboard/system/api/integrations" filename="/dashboard/system/api/integrations.php" pagetype=""
+        <page name="API Integrations" path="/dashboard/system/api/integrations"
+              filename="/dashboard/system/api/integrations.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -1559,6 +1627,9 @@
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>
         <pagetype handle="core_stack_category" name="Stack Category" internal="1" package=""/>
         <pagetype handle="core_desktop" name="Desktop" internal="1" package=""/>
+        <pagetype handle="core_theme_documentation_category" name="Theme Documentation Category" internal="1"
+                  package=""/>
+        <pagetype handle="core_theme_documentation" name="Theme Documentation" internal="1" package=""/>
     </pagetypes>
 
     <pagetemplates>
@@ -1567,30 +1638,32 @@
     </pagetemplates>
 
     <pages>
-    <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop" description="" package="">
-        <area name="Main">
-            <blocks>
-                <block type="core_area_layout" name="">
-                    <arealayout type="theme-grid" columns="12">
-                        <columns>
-                            <column span="12" offset="0">
-                                <block type="desktop_waiting_for_me" />
-                            </column>
-                        </columns>
-                    </arealayout>
-                </block>
-                <block type="core_area_layout" name="">
-                    <arealayout type="theme-grid" columns="12">
-                        <columns>
-                            <column span="12" offset="0">
-                                <block type="desktop_draft_list" />
-                            </column>
-                        </columns>
-                    </arealayout>
-                </block>
-            </blocks>
-        </area>
-    </page>
+        <page name="Waiting for Me" path="/dashboard/welcome/me" filename="" pagetype="" template="desktop"
+              description="" package="">
+            <area name="Main">
+                <blocks>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="12" offset="0">
+                                    <block type="desktop_waiting_for_me"/>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="12" offset="0">
+                                    <block type="desktop_draft_list"/>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                </blocks>
+            </area>
+        </page>
+
     </pages>
 
 </concrete5-cif>
