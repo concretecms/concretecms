@@ -57,10 +57,10 @@ mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
 mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
 
 // Copy Bedrock assets so that themes can include them for style customization, etc...
-mix.copy('node_modules/@concretecms/bedrock/assets/', '../concrete/css/bedrock/@concretecms/bedrock/assets');
-mix.copy('node_modules/bootstrap/scss', '../concrete/css/bedrock/bootstrap/scss');
-mix.copy('node_modules/@fortawesome/fontawesome-free/', '../concrete/css/bedrock/@fortawesome/fontawesome-free');
-mix.copy('node_modules/fullcalendar/dist', '../concrete/css/bedrock/fullcalendar/dist');
+mix.copy('node_modules/@concretecms/bedrock/assets/', '../concrete/bedrock/assets/@concretecms/bedrock/assets');
+mix.copy('node_modules/bootstrap/scss', '../concrete/bedrock/assets/bootstrap/scss');
+mix.copy('node_modules/@fortawesome/fontawesome-free/', '../concrete/bedrock/assets/@fortawesome/fontawesome-free');
+mix.copy('node_modules/fullcalendar/dist', '../concrete/bedrock/assets/fullcalendar/dist');
 
 
 /**
