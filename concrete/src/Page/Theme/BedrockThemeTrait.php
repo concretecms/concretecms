@@ -36,6 +36,7 @@ trait BedrockThemeTrait
                 new ThemeDocumentationPage($this, 'Overview', 'overview.xml'),
                 new BedrockDocumentationPage( 'Colors', 'colors.xml'),
                 new BedrockDocumentationPage( 'Typography', 'typography.xml'),
+                new BedrockDocumentationPage( 'Components', 'components.xml'),
             ]
         );
     }

@@ -45,7 +45,7 @@ $previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents')
                     <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><?=$customizeTheme->getThemeName()?></a>
                     <ul class="dropdown-menu">
                         <?php foreach($documentationPages as $page) { ?>
-                            <li><a class="dropdown-item" target="ccm-page-preview-frame" href="<?=URL::to('/ccm/system/panels/page/design/preview_contents')?>?cID=<?=$page->getCollectionID()?>"><?=t($page->getCollectionName())?></a></li>
+                            <li><a class="dropdown-item" href="<?=$view->action('preview', $customizeTheme->getThemeID(), $page->getCollectionID())?>"><?=t($page->getCollectionName())?></a></li>
                         <?php } ?>
                     </ul>
                 </li>

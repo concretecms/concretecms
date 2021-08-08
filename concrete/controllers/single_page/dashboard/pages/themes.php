@@ -75,7 +75,7 @@ class Themes extends DashboardSitePageController
     }
 
 
-    public function preview($pThemeID = null)
+    public function preview($pThemeID = null, $previewPageID = null)
     {
         $theme = Theme::getByID($pThemeID);
         if ($theme) {
@@ -89,10 +89,17 @@ class Themes extends DashboardSitePageController
 
             $previewPage = $this->app->make('site')->getSite()->getSiteHomePageObject();
             $themeDocumentationPages = $theme->getThemeDocumentationPages();
-            if (isset($themeDocumentationPages[0]) && $themeDocumentationPages[0] instanceof Page) {
-                $previewPage = $themeDocumentationPages[0];
+            if (count($themeDocumentationPages)) {
+                if ($previewPageID) {
+                    foreach ($themeDocumentationPages as $themeDocumentationPage) {
+                        if ($themeDocumentationPage->getCollectionID() == $previewPageID) {
+                            $previewPage = $themeDocumentationPage;
+                        }
+                    }
+                } else {
+                    $previewPage = $themeDocumentationPages[0];
+                }
             }
-
             $this->set('documentationPages', $themeDocumentationPages);
             $this->set('previewPage', $previewPage);
             $this->render('/dashboard/pages/themes/preview');

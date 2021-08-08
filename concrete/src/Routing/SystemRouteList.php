@@ -116,8 +116,6 @@ class SystemRouteList implements RouteListInterface
 
         $router->buildGroup()->routes('calendar.php');
 
-        $router->buildGroup()->routes('theme.php');
-
         $router->buildGroup()->routes('misc.php');
 
         $router->buildGroup()

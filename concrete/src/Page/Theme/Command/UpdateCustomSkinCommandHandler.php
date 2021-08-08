@@ -27,7 +27,7 @@ class UpdateCustomSkinCommandHandler
         $this->app = $app;
     }
 
-    public function handle(UpdateCustomSkinCommand $command)
+    public function __invoke(UpdateCustomSkinCommand $command)
     {
         $date = time();
         $skin = $command->getCustomSkin();
