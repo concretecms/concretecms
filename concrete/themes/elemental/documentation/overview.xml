@@ -5,12 +5,17 @@
                 <data table="btContentLocal">
                     <record>
                         <content><![CDATA[
-                        <div class="mt-5 mb-5">
+                        <div class="mt-5">
                             <h1>Overview</h1>
-                            Welcome to the Elemental theme.
+                            <p>Welcome to the Elemental theme.</p>
                         </div>]]></content>
                     </record>
                 </data>
+            </block>
+            <block type="core_theme_documentation_toc" name="">
+                <style>
+                    <customClass>mb-5</customClass>
+                </style>
             </block>
         </blocks>
     </area>

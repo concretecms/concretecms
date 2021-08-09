@@ -86,6 +86,10 @@
       <default value="1"/>
       <notnull/>
     </field>
+    <field name="displaySystemPages" type="boolean">
+      <default value="0"/>
+      <notnull/>
+    </field>
     <field name="ignorePermissions" type="boolean">
       <default value="0"/>
       <notnull/>

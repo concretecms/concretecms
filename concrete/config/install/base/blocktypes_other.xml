@@ -8,6 +8,8 @@
         <blocktype handle="core_page_type_composer_control_output" package=""/>
         <blocktype handle="core_scrapbook_display" package=""/>
         <blocktype handle="core_stack_display" package=""/>
+        <blocktype handle="core_theme_documentation_breadcrumb" package=""/>
+        <blocktype handle="core_theme_documentation_toc" package=""/>
         <blocktype handle="form" package=""/>
     </blocktypes>
 

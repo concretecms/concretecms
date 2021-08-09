@@ -90,6 +90,23 @@ class Feed
     }
 
     /**
+     * @return bool
+     */
+    public function getDisplaySystemPages()
+    {
+        return $this->pfDisplaySystemPages;
+    }
+
+    /**
+     * @param bool $pfDisplaySystemPages
+     */
+    public function setDisplaySystemPages(bool $pfDisplaySystemPages): void
+    {
+        $this->pfDisplaySystemPages = $pfDisplaySystemPages;
+    }
+
+
+    /**
      * @param mixed $pfDisplayAliases
      */
     public function setDisplayAliases($pfDisplayAliases)
@@ -284,6 +301,11 @@ class Feed
     protected $pfDisplayAliases = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $pfDisplaySystemPages = false;
+
+    /**
      * @ORM\Column(type="string")
      */
     protected $pfContentToDisplay = 'S'; // short description
@@ -409,6 +431,9 @@ class Feed
         }
         if ($this->pfDisplayAliases) {
             $pl->includeAliases();
+        }
+        if ($this->pfDisplaySystemPages) {
+            $pl->includeSystemPages();
         }
         if ($this->ptID) {
             $pl->filterByPageTypeID($this->ptID);

@@ -42,6 +42,7 @@ use Concrete\Core\Form\Service\Widget\DateTime;
 /** @var bool $includeDescription */
 /** @var bool $includeAllDescendents */
 /** @var bool $paginate */
+/** @var bool $displaySystemPages */
 /** @var bool $displayAliases */
 /** @var bool $ignorePermissions */
 /** @var bool $enableExternalFiltering */
@@ -290,6 +291,11 @@ echo $userInterface->tabs([
                 </div>
 
                 <div class="form-check">
+                    <?php echo $form->checkbox("displaySystemPages", "1", $displaySystemPages); ?>
+                    <?php echo $form->label("displaySystemPages", t("Display system pages."), ["class" => "form-check-label"]); ?>
+                </div>
+
+                <div class="form-check">
                     <?php echo $form->checkbox("ignorePermissions", "1", $ignorePermissions); ?>
                     <?php echo $form->label("ignorePermissions", t("Ignore page permissions."), ["class" => "form-check-label"]); ?>
                 </div>
@@ -340,7 +346,7 @@ echo $userInterface->tabs([
                     ?> style="display: none" <?php
                 } ?>>
 
-                    <?php echo $pageSelector->selectPage('cParentIDValue', $isOtherPage ? $cParentID : false); ?>
+                    <?php echo $pageSelector->selectPage('cParentIDValue', $isOtherPage ? $cParentID : false, ['askIncludeSystemPages' => true]); ?>
                 </div>
 
                 <div class="ccm-page-list-all-descendents"

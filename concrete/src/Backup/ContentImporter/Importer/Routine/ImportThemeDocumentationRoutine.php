@@ -3,7 +3,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
 use Concrete\Core\Page\Theme\Theme;
 
-class ImportThemesRoutine extends AbstractRoutine
+class ImportThemeDocumentationRoutine extends AbstractRoutine
 {
     public function getHandle()
     {
@@ -14,15 +14,10 @@ class ImportThemesRoutine extends AbstractRoutine
     {
         if (isset($sx->themes)) {
             foreach ($sx->themes->theme as $th) {
-                $pkg = static::getPackageObject($th['package']);
                 $pThemeHandle = (string) $th['handle'];
+
                 $pt = Theme::getByHandle($pThemeHandle);
-                if (!is_object($pt)) {
-                    $pt = Theme::add($pThemeHandle, $pkg);
-                }
-                if ($th['activated'] == '1') {
-                    $pt->applyToSite();
-                }
+                $pt->installThemeDocumentation();
             }
         }
     }

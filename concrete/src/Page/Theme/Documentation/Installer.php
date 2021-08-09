@@ -34,15 +34,11 @@ class Installer
             $type = Type::getByHandle(THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE);
             $documentation = Page::getByPath(THEME_DOCUMENTATION_PAGE_PATH);
             $parent = $documentation->add($type, ['name' => $theme->getThemeName(), 'handle' => $theme->getThemeHandle()]);
-            $parent->setAttribute('exclude_nav', true);
-            $parent->setAttribute('exclude_search_index', true);
         }
 
         $type = Type::getByHandle(THEME_DOCUMENTATION_PAGE_TYPE);
         foreach ($provider->getPages() as $documentationPage) {
             $page = $parent->add($type, ['name' => $documentationPage->getName()]);
-            $parent->setAttribute('exclude_nav', true);
-            $parent->setAttribute('exclude_search_index', true);
 
             $routine = new ImportPageContentRoutine();
             $routine->importPageAreas($page, $documentationPage->getContentXmlElement());

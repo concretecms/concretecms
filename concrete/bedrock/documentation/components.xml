@@ -1,11 +1,16 @@
 <concrete5-cif version="1.0">
     <area name="Main">
         <blocks>
+            <block type="core_theme_documentation_breadcrumb" name="">
+                <style>
+                    <customClass>mt-5</customClass>
+                </style>
+            </block>
             <block type="html" name="" custom-container-settings="1">
                 <data table="btContentLocal">
                     <record>
                         <content><![CDATA[
-                                <div class="mt-5">
+                                <div>
                                     <h1>Components</h1>
                                 </div>]]>
                             </content>

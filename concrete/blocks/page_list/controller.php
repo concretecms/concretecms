@@ -152,6 +152,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         if ($this->displayAliases) {
             $this->list->includeAliases();
         }
+        if ($this->displaySystemPages) {
+            $this->list->includeSystemPages();
+        }
         if (isset($this->ignorePermissions) && $this->ignorePermissions) {
             $this->list->ignorePermissions();
         }
@@ -440,6 +443,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'topicFilter' => '',
             'displayThumbnail' => 0,
             'displayAliases' => 0,
+            'displaySystemPages' => 0,
             'truncateChars' => 0,
             'paginate' => 0,
             'rss' => 0,
@@ -468,6 +472,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['filterByCustomTopic'] = ($args['topicFilter'] == 'custom') ? '1' : '0';
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
+        $args['displaySystemPages'] = ($args['displaySystemPages']) ? '1' : '0';
         $args['truncateChars'] = (int) ($args['truncateChars']);
         $args['paginate'] = (int) ($args['paginate']);
         $args['rss'] = (int) ($args['rss']);
@@ -499,7 +504,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $pf->setIncludeAllDescendents($args['includeAllDescendents']);
             $pf->setDisplayAliases($args['displayAliases']);
             $pf->setDisplayFeaturedOnly($args['displayFeaturedOnly']);
-            $pf->setDisplayAliases($args['displayAliases']);
+            $pf->setDisplaySystemPages($args['displaySystemPages']);
             $pf->displayShortDescriptionContent();
             $pf->save();
             $args['pfID'] = $pf->getID();

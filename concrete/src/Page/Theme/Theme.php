@@ -798,9 +798,6 @@ class Theme extends ConcreteObject
                 $pt = static::getByID($db->Insert_ID());
                 $pt->updateThemeCustomClass();
 
-                $pt = static::getByID($pt->getThemeID()); // I know, this is terrible; some refactoring here would be good. But we need the new PageTheme class for documentation.
-                $pt->installThemeDocumentation();
-
                 $result = $pt;
             }
         }
