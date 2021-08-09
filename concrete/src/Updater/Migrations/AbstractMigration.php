@@ -210,12 +210,17 @@ abstract class AbstractMigration extends DoctrineAbstractMigration
      *
      * @return \Concrete\Core\Page\Page
      */
-    protected function createSinglePage($path, $name = '', array $attributes = [])
+    protected function createSinglePage($path, $name = '', array $attributes = [], $global = false)
     {
         $sp = Page::getByPath($path);
         if (!is_object($sp) || $sp->isError()) {
-            $this->output(t('Creating single page at %s...', $path));
-            $sp = SinglePage::add($path);
+            if ($global ) {
+                $this->output(t('Creating global single page at %s...', $path));
+                $sp = SinglePage::addGlobal($path);
+            } else {
+                $this->output(t('Creating single page at %s...', $path));
+                $sp = SinglePage::add($path);
+            }
             $update = [];
             $name = (string) $name;
             if ($name !== '') {
