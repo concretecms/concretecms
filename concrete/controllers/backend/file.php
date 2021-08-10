@@ -450,12 +450,24 @@ class File extends Controller
 
     public function duplicate()
     {
-        $files = $this->getRequestFiles('copy_file');
         $r = new FileEditResponse();
-        $newFiles = [];
-        foreach ($files as $f) {
-            $nf = $f->duplicate();
-            $newFiles[] = $nf;
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var \Concrete\Core\Http\Request $request */
+        $request = $this->app->make(\Concrete\Core\Http\Request::class);
+
+        if ($token->validate("", $request->request->get("token"))) {
+            $files = $this->getRequestFiles('copy_file');
+            $newFiles = [];
+            foreach ($files as $f) {
+                $nf = $f->duplicate();
+                $newFiles[] = $nf;
+            }
+            $r->setFiles($newFiles);
+        } else {
+            $errorList = new ErrorList();
+            $errorList->add($token->getErrorMessage());
+            $r->setError($errorList);
         }
         $r->setFiles($newFiles);
         $r->outputJSON();
