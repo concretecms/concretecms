@@ -1,43 +1,16 @@
 .ccm-ui {
   fieldset {
-    margin: 35px 0;
-
-    &:first-child {
-      margin-top: 0;
-    }
-
     legend {
       color: $gray-500;
-      margin: 0 0 35px;
-    }
-
-    .form-group {
-      padding-left: 20px;
     }
   }
 
   .form-group {
+    // bootstrap 5 doesn't have .form-group classes anymore. But we need some kind of nice default sizing.
     margin-bottom: $form-group-margin-bottom;
-
-    > label {
-      color: $gray-700;
-      font-weight: 600;
-    }
-
-    > .col-form-label {
-      color: $gray-700;
-      font-weight: 600;
-      text-align: right;
-    }
-
-  }
-
-  .form-check-label {
-    margin-bottom: 0;
   }
 
 }
-
 
 .form-control {
   &::placeholder {
