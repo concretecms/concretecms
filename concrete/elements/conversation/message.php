@@ -102,8 +102,12 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                                 <a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
                                 <?php if (!$message->isConversationMessageDeleted() && $canEditMessage) { ?>
                                     <a rel="<?php echo $attachment['cnvMessageAttachmentID']; ?>"
-                                    class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
+                                       class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-alt"></i></a>
                                 <?php } ?>
+                            </p>
+                            </div>
+
+                        <?php } ?>
                             </p>
 						</div>
     					<?php }
