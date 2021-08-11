@@ -40,7 +40,7 @@ class Install extends DashboardPageController
             $this->redirect('/dashboard/extend/install');
         }
         /** @var Manager $manager */
-        $manager = $this->app->make(Manager::class, [$this->app]);
+        $manager = $this->app->make(Manager::class, ['application' => $this->app]);
         $this->set('text', Loader::helper('text'));
         $this->set('pkg', $pkg);
         $this->set('categories', $manager->getPackageItemCategories());
@@ -98,7 +98,7 @@ class Install extends DashboardPageController
 
         if (isset($pkg) && ($pkg instanceof PackageEntity)) {
             /** @var Manager $manager */
-            $manager = $this->app->make(Manager::class, [$this->app]);
+            $manager = $this->app->make(Manager::class, ['application' => $this->app]);
             $this->set('categories', $manager->getPackageItemCategories());
             $this->set('pkg', $pkg);
         } else {

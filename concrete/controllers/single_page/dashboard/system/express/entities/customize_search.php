@@ -59,7 +59,7 @@ class CustomizeSearch extends DashboardPageController
             /**
              * @var $provider SearchProvider
              */
-            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
+            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array('entity' => $entity, 'category' => $entity->getAttributeKeyCategory()));
             $element = new CustomizeResults($provider);
             $this->set('customizeElement', $element);
         } else {

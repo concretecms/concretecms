@@ -261,9 +261,9 @@ trait DashboardExpressEntryListTrait
 
         return StreamedResponse::create(function () use ($entity, $entryList, $bom, $datetime_format) {
             $writer = $this->app->make(CsvWriter::class, [
-                $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
-                new Date(),
-                $datetime_format
+                'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                'dateFormatter' => new Date(),
+                'datetime_format' => $datetime_format
             ]);
             echo $bom;
             $writer->insertHeaders($entity);

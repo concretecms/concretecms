@@ -129,7 +129,7 @@ class Entry extends AbstractController
     protected function buildExpressListFractalArray(EntryList $list)
     {
         $adapter = $list->getPaginationAdapter();
-        $paginationFactory = $this->app->make(PaginationFactory::class, [$this->request]);
+        $paginationFactory = $this->app->make(PaginationFactory::class, ['request' => $this->request]);
         $pagination = $paginationFactory->deliverPaginationObject($list, new Pagination($list, $adapter));
         $collection = new Collection($pagination->getCurrentPageResults(), new ExpressTransformer());
         $collection->setPaginator(new PagerfantaPaginatorAdapter($pagination, function ($page) {

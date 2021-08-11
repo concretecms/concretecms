@@ -66,8 +66,8 @@ class ApiServiceProvider extends ServiceProvider
             $metadata = $em->getClassMetadata($entityClass);
 
             return $this->app->make($factoryClass, [
-                $em,
-                $metadata
+                'em' => $em,
+                'class' => $metadata,
             ]);
         };
     }

@@ -24,7 +24,7 @@ class ConfigServiceProvider extends Provider
     private function registerFileConfig()
     {
         $this->app->bindIf(LoaderInterface::class, static function($app) {
-            return $app->make(CompositeLoader::class, [$app, 'loaders' => [
+            return $app->make(CompositeLoader::class, ['app' >= $app, 'loaders' => [
                 CoreFileLoader::class,
                 FileLoader::class,
             ]]);

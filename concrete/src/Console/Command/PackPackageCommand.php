@@ -221,10 +221,10 @@ EOT
         $filters = [];
         switch ($this->input->getOption('compile-icons')) {
             case self::YNA_YES:
-                $filters[] = $app->make(SvgIconRasterizer::class, [$packageInfo->getMayorMinimumCoreVersion(), false, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(SvgIconRasterizer::class, ['coreVersion' => $packageInfo->getMayorMinimumCoreVersion(), 'checkEditDate' => false, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::YNA_AUTO:
-                $filters[] = $app->make(SvgIconRasterizer::class, [$packageInfo->getMayorMinimumCoreVersion(), true, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(SvgIconRasterizer::class, ['coreVersion' => $packageInfo->getMayorMinimumCoreVersion(), 'checkEditDate' => true, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::YNA_NO:
                 break;
@@ -233,10 +233,10 @@ EOT
         }
         switch ($this->input->getOption('compile-translations')) {
             case self::YNA_YES:
-                $filters[] = $app->make(TranslationCompiler::class, [false, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(TranslationCompiler::class, ['checkEditDate' => false, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::YNA_AUTO:
-                $filters[] = $app->make(TranslationCompiler::class, [true, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(TranslationCompiler::class, ['checkEditDate' => true, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::YNA_NO:
                 break;
@@ -249,10 +249,10 @@ EOT
         }
         switch ($shortTags) {
             case self::SHORTTAGS_ALL:
-                $filters[] = $app->make(ShortTagExpander::class, [true, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(ShortTagExpander::class, ['expandEcho' => true, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::SHORTTAGS_KEEPECHO:
-                $filters[] = $app->make(ShortTagExpander::class, [false, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(ShortTagExpander::class, ['expandEcho' => false, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::SHORTTAGS_NO:
                 break;
@@ -276,7 +276,7 @@ EOT
                 $excludeFlags |= $keepOptionFlags;
             }
         }
-        $filters[] = $app->make(FileExcluder::class, [$excludeFlags, $this->output]);
+        $filters[] = $app->make(FileExcluder::class, ['excludeFiles' => $excludeFlags, 'output' => $this->output]);
 
         return $filters;
     }
@@ -296,7 +296,7 @@ EOT
     {
         $writers = [];
         if ($this->input->getOption('update-source-directory')) {
-            $writers[] = $app->make(SourceUpdater::class, [$packageInfo->getPackageDirectory(), $this->output]);
+            $writers[] = $app->make(SourceUpdater::class, ['basePath' => $packageInfo->getPackageDirectory(), 'output' => $this->output]);
         }
         if ($this->input->getParameterOption(['--zip', '-z']) !== false) {
             $zipOption = (string) $this->input->getOption('zip');
@@ -305,10 +305,10 @@ EOT
             } else {
                 $zipFilename = $zipOption;
             }
-            $writers[] = $app->make(Zipper::class, [$zipFilename, $packageInfo->getHandle(), $this->output]);
+            $writers[] = $app->make(Zipper::class, ['zipFilename' => $zipFilename, 'rootDirectory' => $packageInfo->getHandle(), 'output' => $this->output]);
         }
         if ($this->input->getOption('copy') !== null) {
-            $writers[] = $app->make(Cloner::class, [$this->input->getOption('copy'), $this->input->getOption('overwrite'), $this->output]);
+            $writers[] = $app->make(Cloner::class, ['destinationDirectory' => $this->input->getOption('copy'), 'overwrite' => $this->input->getOption('overwrite'), 'output' => $this->output]);
         }
         if (empty($writers)) {
             throw new Exception('No operation will be performed');

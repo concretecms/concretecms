@@ -615,7 +615,7 @@ abstract class Package implements LocalizablePackageInterface
     public function uninstall()
     {
         /** @var Manager $manager */
-        $manager = $this->app->make(Manager::class, [$this->app]);
+        $manager = $this->app->make(Manager::class, ['application' => $this->app]);
         $categories = $manager->getPackageItemCategories();
         $package = $this->getPackageEntity();
         foreach ($categories as $category) {
@@ -837,7 +837,7 @@ abstract class Package implements LocalizablePackageInterface
         $errors = $this->app->make('error');
 
         /** @var Manager $manager */
-        $manager = $this->app->make(Manager::class, [$this->app]);
+        $manager = $this->app->make(Manager::class, ['application' => $this->app]);
 
         $driver = $manager->driver('theme');
         $themes = $driver->getItems($this->getPackageEntity());
@@ -1024,7 +1024,7 @@ abstract class Package implements LocalizablePackageInterface
         // now we refresh all blocks
 
         /** @var Manager $manager */
-        $manager = $this->app->make(Manager::class, [$this->app]);
+        $manager = $this->app->make(Manager::class, ['application' => $this->app]);
         $items = $manager->driver('block_type')->getItems($this->getPackageEntity());
         foreach ($items as $item) {
             $item->refresh();

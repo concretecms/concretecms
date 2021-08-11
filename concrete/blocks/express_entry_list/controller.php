@@ -362,7 +362,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
         if (is_object($entity) && is_array($this->request->request->get('column'))) {
-            $provider = $this->app->make(SearchProvider::class, [$entity, $entity->getAttributeKeyCategory()]);
+            $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
             $set = $this->app->make('Concrete\Core\Express\Search\ColumnSet\ColumnSet');
             $available = $provider->getAvailableColumnSet();
             foreach ($this->request->request->get('column') as $key) {
