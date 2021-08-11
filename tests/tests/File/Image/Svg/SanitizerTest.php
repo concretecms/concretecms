@@ -78,11 +78,6 @@ class SanitizerTest extends TestCase
         $this->assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
         $xml = trim(implode('', $lines));
 
-        if ($expectedOutput != $xml) {
-            var_dump($expectedOutput);
-            var_dump($xml);
-        }
-
         $this->assertSame($expectedOutput, $xml);
     }
 
