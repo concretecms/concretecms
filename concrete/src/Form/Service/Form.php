@@ -801,7 +801,13 @@ EOT;
         $attributes = (array) $attributes;
         $defaultClass = trim((string) $defaultClass);
         if ($defaultClass !== '') {
-            $attributes['class'] = trim(($attributes['class'] ?? '') . ' ' . $defaultClass);
+            // Previous behavior had any 'class' that was passed being appended to defaultClass. This is WRONG.
+            // Any class that is passed here should completely override the class. If you want to append, just
+            // Add in the class you want to append to. So if you want to turn "form-label" into "form-label my-label"
+            // You will NO LONGER be able to just pass in ['class' => 'my-label']. Instead, pass in ['class => 'my-label form-label']
+            if (!isset($attributes['class'])) {
+                $attributes['class'] = $defaultClass;
+            }
         }
         $attr = '';
         foreach ($attributes as $k => $v) {
