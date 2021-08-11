@@ -39,7 +39,7 @@ use Concrete\Core\Support\Facade\Url;
             <?php
                 echo $form->search('keywords', [
                     'placeholder' => t('Search'),
-                    'class' => 'border-right-0',
+                    'class' => 'form-control border-right-0',
                     'autocomplete' => 'off'
                 ]);
             ?>

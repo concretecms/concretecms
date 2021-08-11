@@ -26,7 +26,7 @@ class DeleteCustomSkinCommandHandler
         $this->writer = $writer;
     }
 
-    public function handle(DeleteCustomSkinCommand $command)
+    public function __invoke(DeleteCustomSkinCommand $command)
     {
         $skin = $command->getCustomSkin();
 

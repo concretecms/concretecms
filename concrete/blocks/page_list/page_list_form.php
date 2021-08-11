@@ -213,7 +213,7 @@ echo $userInterface->tabs([
 
                     <div class="form-check">
                         <?php $id = "filterDateOption" . $i++; ?>
-                        <?php echo $form->radio("filterDateOption", $filterDateOptionHandle, $filterDateOption, ["id" => $id, "name" => "filterDateOption", "class" => "filterDateOption"]); ?>
+                        <?php echo $form->radio("filterDateOption", $filterDateOptionHandle, $filterDateOption, ["id" => $id, "name" => "filterDateOption", "class" => "form-check-input filterDateOption"]); ?>
                         <?php echo $form->label($id, $filterDateOptionLabel, ["class" => "form-check-label"]); ?>
                     </div>
                 <?php } ?>
@@ -383,12 +383,12 @@ echo $userInterface->tabs([
                 </label>
 
                 <div class="form-check">
-                    <?php echo $form->radio("rss", "0", is_object($rssFeed) ? '1' : '0', ["id" => "disableRssFeed", "name" => "rss", "class" => "rssSelector"]); ?>
+                    <?php echo $form->radio("rss", "0", is_object($rssFeed) ? '1' : '0', ["id" => "disableRssFeed", "name" => "rss", "class" => "form-check-input rssSelector"]); ?>
                     <?php echo $form->label("disableRssFeed", t("No"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("rss", "1", is_object($rssFeed) ? '1' : '0', ["id" => "enableRssFeed", "name" => "rss", "class" => "rssSelector"]); ?>
+                    <?php echo $form->radio("rss", "1", is_object($rssFeed) ? '1' : '0', ["id" => "enableRssFeed", "name" => "rss", "class" => "form-check-input rssSelector"]); ?>
                     <?php echo $form->label("enableRssFeed", t("Yes"), ["class" => "form-check-label"]); ?>
                 </div>
 

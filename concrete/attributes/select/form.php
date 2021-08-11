@@ -49,7 +49,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMul
         ?>
         <div class="form-check">
                 <?= $form->radio($view->field('atSelectOptionValue'), '', empty($selectedOptionIDs) ? '' : $selectedOptionIDs[0]) ?>
-                <?= $form->label($view->field('atSelectOptionValue').$index,  t('None') )?>
+                <?= $form->label($view->field('atSelectOptionValue').$index,  t('None'), ['class' => 'form-check-label'] )?>
 
         </div>
 
@@ -62,7 +62,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMul
         <div class="form-check">
                 <?=$form->radio($view->field('atSelectOptionValue'), $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
                 ?>
-                <?= $form->label($view->field('atSelectOptionValue').$index,  $opt->getSelectAttributeOptionDisplayValue() )?>
+                <?= $form->label($view->field('atSelectOptionValue').$index,  $opt->getSelectAttributeOptionDisplayValue(), ['class' => 'form-check-label'])?>
         </div>
 
     <?php
