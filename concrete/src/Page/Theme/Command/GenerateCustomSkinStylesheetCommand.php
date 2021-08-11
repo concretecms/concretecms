@@ -3,8 +3,9 @@
 namespace Concrete\Core\Page\Theme\Command;
 
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
+use Concrete\Core\Foundation\Command\Command;
 
-class GenerateCustomSkinStylesheetCommand
+class GenerateCustomSkinStylesheetCommand extends Command
 {
 
     /**

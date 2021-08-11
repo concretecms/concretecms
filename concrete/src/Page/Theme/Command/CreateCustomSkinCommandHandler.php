@@ -33,7 +33,7 @@ class CreateCustomSkinCommandHandler
         $this->app = $app;
     }
 
-    public function handle(CreateCustomSkinCommand $command)
+    public function __invoke(CreateCustomSkinCommand $command)
     {
         $author = null;
         if ($this->user->isRegistered()) {

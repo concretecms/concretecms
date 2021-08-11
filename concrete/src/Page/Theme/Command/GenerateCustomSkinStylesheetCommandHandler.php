@@ -57,7 +57,7 @@ class GenerateCustomSkinStylesheetCommandHandler
         $this->writer = $writer;
     }
 
-    public function handle(GenerateCustomSkinStylesheetCommand $command)
+    public function __invoke(GenerateCustomSkinStylesheetCommand $command)
     {
         $skin = $command->getCustomSkin();
         $theme = Theme::getByID($command->getThemeID());
