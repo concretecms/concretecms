@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, CCM_DISPATCHER_FILENAME, ConcreteMenu, ConcreteMenuManager */
+/* global _, CCM_DISPATCHER_FILENAME, CCM_SECURITY_TOKEN, ConcreteMenu, ConcreteMenuManager */
 
 ;(function(global, $) {
     'use strict';
