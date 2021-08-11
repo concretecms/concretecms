@@ -9,6 +9,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Utility\Service\Validation\Numbers;
 use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Validation\CSRF\Token;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -25,6 +26,13 @@ class DeleteFile extends FrontendController
         if (!$mp->canEditConversationMessage()) {
             throw new UserMessageException(t('Access Denied.'));
         }
+
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        if ($token->validate("delete_conversation_message",$this->request->request->get('token'))) {
+            throw new UserMessageException($token->getErrorMessage());
+        }
+
         $message->removeFile($attachmentID);
 
         return $this->app->make(ResponseFactoryInterface::class)->json([
