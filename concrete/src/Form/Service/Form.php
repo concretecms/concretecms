@@ -805,6 +805,11 @@ EOT;
             // Any class that is passed here should completely override the class. If you want to append, just
             // Add in the class you want to append to. So if you want to turn "form-label" into "form-label my-label"
             // You will NO LONGER be able to just pass in ['class' => 'my-label']. Instead, pass in ['class => 'my-label form-label']
+            // Why exactly was this changed, you ask? Because the previous implementation would result in classes like
+            // `form-label form-check-label` being applied to <label> tags, which would cause BS5 to add strangely. We could
+            // potentially solve this by making form-check-label take precedence over form-label with some hacky custom CSS
+            // but that seems like a bad rabbit hole to go down. Better to make the classes explicit. If you want to override
+            // the default class with your own but you still want the original class? Be explicit and pass both classes.
             if (!isset($attributes['class'])) {
                 $attributes['class'] = $defaultClass;
             }
