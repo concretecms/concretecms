@@ -166,12 +166,11 @@ class Sanitizer
      */
     public function sanitizeData($data, SanitizerOptions $options = null, array &$removedNodes = [])
     {
-        $data = $this->enshrinedSvgSanitizer->sanitize($data);
         $xml = $this->dataToXml($data);
         $removedNodes = [];
         $this->sanitizeXml($xml, $removedNodes, $options);
 
-        return $this->xmlToData($xml);
+        return $this->enshrinedSvgSanitizer->sanitize($this->xmlToData($xml));
     }
 
     /**
