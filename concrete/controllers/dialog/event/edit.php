@@ -211,33 +211,40 @@ class Edit extends BackendInterfaceController
 
     public function addEvent()
     {
-        $calendar = Calendar::getByID($this->request->request->get('caID'));
-        $repetitions = $this->eventRepetitionService->translateFromRequest('event', $calendar, $this->request);
-        $r = $this->addCalendarEventVersionFromRequest(new CalendarEvent($calendar), $repetitions);
-        if (!$r->hasError()) {
-            $version = $r->getEventVersion();
-            $this->eventService->generateDefaultOccurrences($version);
-            if ($this->request->request->get('publishAction') == 'approve') {
-                $u = $this->app->make(User::class);
-                $pkr = new ApproveCalendarEventRequest();
-                $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
-                $pkr->setRequesterUserID($u->getUserID());
-                $response = $pkr->trigger();
-                if ($response instanceof Response) {
-                    $this->flash('success', t('Event added successfully. It is published and live.'));
+        if ($this->validateAction()) {
+            $calendar = Calendar::getByID($this->request->request->get('caID'));
+            $repetitions = $this->eventRepetitionService->translateFromRequest('event', $calendar, $this->request);
+            $r = $this->addCalendarEventVersionFromRequest(new CalendarEvent($calendar), $repetitions);
+            if (!$r->hasError()) {
+                $version = $r->getEventVersion();
+                $this->eventService->generateDefaultOccurrences($version);
+                if ($this->request->request->get('publishAction') == 'approve') {
+                    $u = $this->app->make(User::class);
+                    $pkr = new ApproveCalendarEventRequest();
+                    $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
+                    $pkr->setRequesterUserID($u->getUserID());
+                    $response = $pkr->trigger();
+                    if ($response instanceof Response) {
+                        $this->flash('success', t('Event added successfully. It is published and live.'));
+                    } else {
+                        $this->flash(
+                            'success',
+                            t(
+                                'Event added successfully. This event must be approved before it will be posted.'
+                            )
+                        );
+                    }
                 } else {
-                    $this->flash('success', t('Event added successfully. This event must be approved before it will be posted.'));
+                    $this->flash('success', t('Event added successfully. The event is not yet published.'));
                 }
-            } else {
-                $this->flash('success', t('Event added successfully. The event is not yet published.'));
             }
+            $r->outputJSON();
         }
-        $r->outputJSON();
     }
 
     public function updateEvent()
     {
-        if ($this->canAccess()) {
+        if ($this->validateAction()) {
             $occurrence = $this->eventOccurrenceService->getByID($this->request->request->get('versionOccurrenceID'));
             if (!$occurrence) {
                 throw new \Exception(t('Invalid occurrence.'));
