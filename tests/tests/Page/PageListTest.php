@@ -336,7 +336,7 @@ class PageListTest extends PageTestCase
         $ids = array_map(function ($c) { return $c->getCollectionID(); }, $results);
         $this->assertContains($c->getCollectionID(), $ids);
 
-        $this->assertEquals(8, $results[0]->getCollectionID());
+        $this->assertEquals(2, $results[0]->getCollectionID());
         $this->assertGreaterThan(0, $results[0]->getPageIndexScore());
         $this->assertGreaterThan(0, $results[1]->getPageIndexScore());
         $this->assertEquals($results[1]->getPageIndexScore(), $results[2]->getPageIndexScore());
