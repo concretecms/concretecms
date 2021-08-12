@@ -34,8 +34,6 @@ class Sanitizer
     {
         $this->filesystem = $filesystem;
         $this->enshrinedSvgSanitizer = new EnshrinedSvgSanitizer();
-        $this->enshrinedSvgSanitizer->minify(true);
-
     }
 
     /**

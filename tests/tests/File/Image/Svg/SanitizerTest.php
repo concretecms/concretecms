@@ -55,14 +55,14 @@ class SanitizerTest extends TestCase
     public function provideSanitizeWithDefaultSettings()
     {
         return [
-            ['<svg/>', '<svg/>'],
-            ['<svg good="1" />', '<svg/>'],
-            ['<svg><script>alert(1);</script></svg>', '<svg/>'],
-            ['<svg><script2>alert(1);</script2></svg>', '<svg/>'],
-            ['<svg onload="alert(1)" />', '<svg/>'],
-            ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg/>'],
-            ['<svg foo="1" OnLoad="alert(1)" OnLoad2="alert(1)" bar="2" />', '<svg/>'],
-            ['<svg><script></script><g onLoad="alert(1)"><rect /></g></svg>', '<svg><g><rect/></g></svg>'],
+            ['<svg/>', '<svg></svg>'],
+            ['<svg good="1" />', '<svg></svg>'],
+            ['<svg><script>alert(1);</script></svg>', '<svg></svg>'],
+            ['<svg><script2>alert(1);</script2></svg>', '<svg></svg>'],
+            ['<svg onload="alert(1)" />', '<svg></svg>'],
+            ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg></svg>'],
+            ['<svg foo="1" OnLoad="alert(1)" OnLoad2="alert(1)" bar="2" />', '<svg></svg>'],
+            ['<svg><script></script><g onLoad="alert(1)"><rect /></g></svg>', '<svg>  <g>    <rect></rect>  </g></svg>'],
         ];
     }
 
@@ -131,7 +131,7 @@ class SanitizerTest extends TestCase
         $fs = Mockery::mock(Filesystem::class);
         $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
         $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
-        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg/>\n");
+        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg></svg>\n");
         $sanitizer = new Sanitizer($fs);
         $sanitizer->sanitizeFile($filename, self::$sanitizerOptions, $filename2);
     }
