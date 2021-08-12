@@ -202,8 +202,8 @@ if (count($languages) > 0) {
                                     </legend>
 
                                     <div class="form-group">
-                                        <?php echo $form->label('uPasswordCurrent', t('Current Password')); ?>
-                                        <?php echo $form->password('uPasswordCurrent', ['autocomplete' => 'off']); ?>
+                                        <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
+                                        <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
                                     </div>
 
                                     <div class="form-group">
@@ -215,7 +215,7 @@ if (count($languages) > 0) {
                                         <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
                                         <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
                                     </div>
-                                    <div class="help-block"><?php echo h(t('Leave blank to keep current password.')); ?></div>
+                                    <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
                                 </fieldset>
                             <?php } ?>
                         </div>

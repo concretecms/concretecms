@@ -335,7 +335,7 @@ class Search extends DashboardPageController
             }
 
             if ($this->canEditPassword && !empty($this->request->request->get('uPasswordNew'))) {
-                $passwordCurrent = (string) $this->request->request->get('uPasswordCurrent');
+                $passwordMine = (string) $this->request->request->get('uPasswordMine');
                 $passwordNew = $this->request->request->get('uPasswordNew');
                 $passwordNewConfirm = $this->request->request->get('uPasswordNewConfirm');
 
@@ -343,8 +343,9 @@ class Search extends DashboardPageController
 
                 if ($passwordNew) {
 
-                    if (!$this->user->passwordMatches($passwordCurrent)) {
-                        $error->add(t('Invalid existing password provided.'));
+                    $me = $this->app->make(User::class)->getUserInfoObject();
+                    if (!$me->passwordMatches($passwordMine)) {
+                        $error->add(t('Your password is invalid.'));
                     }
                     if ($passwordNew != $passwordNewConfirm) {
                         $error->add(t('The two passwords provided do not match.'));
