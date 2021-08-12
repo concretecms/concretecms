@@ -30,10 +30,12 @@ class Sanitizer
      *
      * @param \Illuminate\Filesystem\Filesystem $filesystem the Filesystem instance to be used for file operations
      */
-    public function __construct(Filesystem $filesystem, EnshrinedSvgSanitizer $enshrinedSvgSanitizer)
+    public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->enshrinedSvgSanitizer = $enshrinedSvgSanitizer;
+        $this->enshrinedSvgSanitizer = new EnshrinedSvgSanitizer();
+        $this->enshrinedSvgSanitizer->minify(true);
+
     }
 
     /**

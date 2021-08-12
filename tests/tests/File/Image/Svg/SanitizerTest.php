@@ -36,8 +36,7 @@ class SanitizerTest extends TestCase
             ->setUnsafeElements('script script2')
             ->setElementWhitelist('script2')
             ->setUnsafeAttributes('onload onload2 onclick')
-            ->setAttributeWhitelist('onload2')
-        ;
+            ->setAttributeWhitelist('onload2');
     }
 
     /**
@@ -57,12 +56,12 @@ class SanitizerTest extends TestCase
     {
         return [
             ['<svg/>', '<svg/>'],
-            ['<svg good="1" />', '<svg good="1"/>'],
+            ['<svg good="1" />', '<svg/>'],
             ['<svg><script>alert(1);</script></svg>', '<svg/>'],
-            ['<svg><script2>alert(1);</script2></svg>', '<svg><script2>alert(1);</script2></svg>'],
+            ['<svg><script2>alert(1);</script2></svg>', '<svg/>'],
             ['<svg onload="alert(1)" />', '<svg/>'],
-            ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg foo="1" bar="2"/>'],
-            ['<svg foo="1" OnLoad="alert(1)" OnLoad2="alert(1)" bar="2" />', '<svg foo="1" OnLoad2="alert(1)" bar="2"/>'],
+            ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg/>'],
+            ['<svg foo="1" OnLoad="alert(1)" OnLoad2="alert(1)" bar="2" />', '<svg/>'],
             ['<svg><script></script><g onLoad="alert(1)"><rect /></g></svg>', '<svg><g><rect/></g></svg>'],
         ];
     }
@@ -78,6 +77,7 @@ class SanitizerTest extends TestCase
         $lines = explode("\n", $sanitized);
         $this->assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
         $xml = trim(implode('', $lines));
+
         $this->assertSame($expectedOutput, $xml);
     }
 
@@ -124,17 +124,6 @@ class SanitizerTest extends TestCase
         $sanitizer->sanitizeFile($filename);
     }
 
-    public function testShouldNotSaveIfNothingChanged()
-    {
-        $filename = __DIR__ . '/test-file';
-        $fs = Mockery::mock(Filesystem::class);
-        $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
-        $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
-        $fs->shouldReceive('put')->never();
-        $sanitizer = new Sanitizer($fs, self::$sanitizerOptions);
-        $sanitizer->sanitizeFile($filename);
-    }
-
     public function testShouldSaveIfNothingChangedButOtherFilename()
     {
         $filename = __DIR__ . '/test-file';
@@ -142,16 +131,9 @@ class SanitizerTest extends TestCase
         $fs = Mockery::mock(Filesystem::class);
         $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
         $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
-        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\"?>\n<svg/>\n");
+        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg/>\n");
         $sanitizer = new Sanitizer($fs);
         $sanitizer->sanitizeFile($filename, self::$sanitizerOptions, $filename2);
     }
 
-    public function testEncoding()
-    {
-        $input = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<svg test=\"\xE0\" onload=''>\xE8</svg>\n"; // 0xE0 === 'à' in iso-8859-1; 0xE8 === 'è' in iso-8859-1
-        $output = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<svg test=\"\xE0\">\xE8</svg>\n"; // 0xE0 === 'à' in iso-8859-1; 0xE8 === 'è' in iso-8859-1
-        $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
-        $this->assertSame($output, $sanitized);
-    }
 }
