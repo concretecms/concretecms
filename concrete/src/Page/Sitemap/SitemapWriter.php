@@ -250,7 +250,7 @@ class SitemapWriter
     {
         $outputFilename = $this->getOutputFilename();
         if (strpos($outputFilename, DIR_BASE . '/') === 0) {
-            $result = (string) $this->getSitemapGenerator()->resolveUrl([substr($outputFilename, strlen(DIR_BASE))]);
+            $result = (string) $this->getSitemapGenerator()->resolveUrl(substr($outputFilename, strlen(DIR_BASE)));
         } else {
             $result = '';
         }

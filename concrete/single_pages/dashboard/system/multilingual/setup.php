@@ -154,9 +154,9 @@ foreach ($locales as $locale) {
         <label class="control-label form-label"><?= t('Site interface source locale') ?></label>
         <div class="row row-cols-auto g-0 align-items-center">
             <div class="col-auto">
-                <?= $form->select('defaultSourceLanguage', array_merge(['' => t('*** Unknown or mixed language')], $languages), $defaultSourceLanguage, ['class' => 'me-2']) ?>
+                <?= $form->select('defaultSourceLanguage', array_merge(['' => t('*** Unknown or mixed language')], $languages), $defaultSourceLanguage, ['class' => 'form-select']) ?>
             </div>
-            <div class="col-auto">
+            <div class="col-auto ms-2">
                 <?= $form->select('defaultSourceCountry', array_merge(['' => t('*** Undetermined country')], $countries), $defaultSourceCountry) ?>
             </div>
         </div>
