@@ -123,21 +123,20 @@ $form = $app->make(Form::class);
         </legend>
 
         <div class="form-group">
+            <?php echo $form->label('uPasswordCurrent', t('Current Password')); ?>
+            <?php echo $form->password('uPasswordCurrent', ['autocomplete' => 'off']); ?>
+        </div>
+
+        <div class="form-group">
             <?php echo $form->label('uPasswordNew', t('New Password')); ?>
             <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
-
-            <a href="javascript:void(0)" title="<?php echo h(t('Leave blank to keep current password.')); ?>">
-                <i class="icon-question-sign"></i>
-            </a>
         </div>
 
         <div class="form-group">
             <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
-
-            <div class="controls">
-                <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
-            </div>
+            <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
         </div>
+        <div class="help-block"><?php echo h(t('Leave blank to keep current password.')); ?></div>
     </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">

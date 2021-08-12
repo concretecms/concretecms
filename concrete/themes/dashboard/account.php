@@ -26,7 +26,9 @@ $view->inc('elements/header.php', ['bodyClass' => 'ccm-dashboard-account']);
                 <span class="navbar-toggler-icon"></span>
             </button>
         </nav>
-
+        <?php
+        $view->inc('elements/result_messages.php');
+        ?>
         <?php print $innerContent; ?>
     </div>
 </div>
