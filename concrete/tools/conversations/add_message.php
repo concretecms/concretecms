@@ -47,7 +47,11 @@ if (!is_object($cn)) {
             } else {
                 $author->setEmail($_POST['cnvMessageAuthorEmail']);
             }
-            $author->setWebsite($_POST['cnvMessageAuthorWebsite']);
+
+            if (filter_var($_POST['cnvMessageAuthorWebsite'], FILTER_VALIDATE_URL) &&
+                in_array(parse_url($_POST['cnvMessageAuthorWebsite'], PHP_URL_SCHEME), ["http", "https"])) {
+                $author->setWebsite($_POST['cnvMessageAuthorWebsite']);
+            }
 
             $captcha = Core::make('captcha');
             if (!$captcha->check()) {
