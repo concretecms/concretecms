@@ -164,7 +164,10 @@ class AddMessage extends FrontendController
                 $errors[] = t('You must enter a valid email address to post this message.');
             }
             $website = $this->request->request->get('cnvMessageAuthorWebsite', '');
-            if ($vs->notempty($website) !== false) {
+
+            if ($vs->notempty($website) !== false &&
+                filter_var($website, FILTER_VALIDATE_URL) &&
+                in_array(parse_url($website, PHP_URL_SCHEME), ["http", "https"])) {
                 $author->setWebsite(trim($website));
             }
         }
