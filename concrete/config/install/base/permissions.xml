@@ -357,7 +357,9 @@
         <permissionkey handle="edit_group_folder" name="Edit Group Folder" description="Edit a group folder." package="" category="group_folder"/>
         <permissionkey handle="edit_group_folder_permissions" name="Edit Group Access" description="Can edit access to group folder." package="" category="group_folder"/>
         <permissionkey handle="delete_group_folder" name="Delete Group Folder" description="Can delete group folder." package="" category="group_folder"/>
+        <permissionkey handle="add_group_folder" name="Add Group Folder" description="Can add folders." package="" category="group_folder"/>
         <permissionkey handle="add_group" name="Add Group" description="Can add groups to folder." package="" category="group_folder"/>
+        <permissionkey handle="assign_groups" name="Assign Groups" description="Can assign the groups within this folder." package="" category="group_folder"/>
 
         <!-- groups //-->
 

@@ -208,24 +208,15 @@ class AddGroup extends DashboardPageController
             $this->error->add($valt->getErrorMessage());
         }
 
-        if ($this->request->post('gIsBadge')) {
-            if (!$this->post('gBadgeDescription')) {
-                $this->error->add(t('You must specify a description for this badge. It will be displayed publicly.'));
-            }
-        }
-
-        $parentFolder = null;
+        $parentNode = null;
         if ($this->request->post('gParentNodeID')) {
-            $parentGroupNode = TreeNode::getByID($this->request->post('gParentNodeID'));
-            if ($parentGroupNode instanceof GroupFolderTreeNode) {
-                $parentFolder = $parentGroupNode;
-            }
+            $parentNode = TreeNode::getByID($this->request->post('gParentNodeID'));
         }
 
-        if (is_object($parentFolder)) {
-            $pp = new \Permissions($parentFolder);
-            if (!$pp->canAddSubGroup()) {
-                $this->error->add(t('You do not have permission to add a group beneath %s', $parentFolder->getGroupDisplayName()));
+        if (is_object($parentNode)) {
+            $pp = new \Permissions($parentNode);
+            if (!$pp->canAddTreeSubNode()) {
+                $this->error->add(t('You do not have permission to add a group beneath %s', $parentNode->getTreeNodeDisplayName()));
             }
         }
 
@@ -233,31 +224,35 @@ class AddGroup extends DashboardPageController
             $this->error->add($error);
         }
 
-        switch($parentFolder->getContains()) {
-            case GroupFolder::CONTAINS_GROUP_FOLDERS:
-                $this->error->add(t("You can't create a group beneath the selected parent folder."));
-                break;
+        if ($parentNode instanceof GroupFolder) {
+            switch ($parentNode->getContains()) {
+                case GroupFolder::CONTAINS_GROUP_FOLDERS:
+                    $this->error->add(t("You can't create a group beneath the selected parent folder."));
+                    break;
 
-            case GroupFolder::CONTAINS_SPECIFIC_GROUPS:
-                $isGroupTypeAllowed = false;
+                case GroupFolder::CONTAINS_SPECIFIC_GROUPS:
+                    $isGroupTypeAllowed = false;
 
-                if ($this->request->post('gtID')) {
-                    $groupType = GroupType::getByID($this->request->post('gtID'));
-                    if (is_object($groupType)) {
-                        foreach($parentFolder->getSelectedGroupTypes() as $allowedGroupType) {
-                            if ($groupType->getId() == $allowedGroupType->getId()) {
-                                $isGroupTypeAllowed = true;
-                                break;
+                    if ($this->request->post('gtID')) {
+                        $groupType = GroupType::getByID($this->request->post('gtID'));
+                        if (is_object($groupType)) {
+                            foreach ($parentNode->getSelectedGroupTypes() as $allowedGroupType) {
+                                if ($groupType->getId() == $allowedGroupType->getId()) {
+                                    $isGroupTypeAllowed = true;
+                                    break;
+                                }
                             }
                         }
                     }
-                }
 
-                if (!$isGroupTypeAllowed) {
-                    $this->error->add(t("You can't create a group of this group type beneath the selected parent folder."));
-                }
+                    if (!$isGroupTypeAllowed) {
+                        $this->error->add(
+                            t("You can't create a group of this group type beneath the selected parent folder.")
+                        );
+                    }
 
-                break;
+                    break;
+            }
         }
 
         if (!$this->error->has()) {
