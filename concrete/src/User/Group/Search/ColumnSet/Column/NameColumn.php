@@ -5,6 +5,7 @@ use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
+use Concrete\Core\User\Group\Group;
 
 class NameColumn extends Column implements PagerColumnInterface
 {
@@ -30,9 +31,13 @@ class NameColumn extends Column implements PagerColumnInterface
     {
         $query = $itemList->getQueryObject();
         $sort = $this->getColumnSortDirection() == 'desc' ? '<' : '>';
-        $where = sprintf('(name) %s (:sortName, :sortID)', $sort);
-        $query->setParameter('sortName', $mixed->getGroupName());
-        $query->setParameter('sortID', $mixed->getGroupID());
+        $where = sprintf('(if(nt.treeNodeTypeHandle=\'group\', g.gName, n.treeNodeName), n.treeNodeID) %s (:sortName, :sortID)', $sort);
+        $name = '';
+        if ($mixed->getTreeNodeDisplayName()) {
+            $name = $mixed->getTreeNodeDisplayName();
+        }
+        $query->setParameter('sortName', $name);
+        $query->setParameter('sortID', $mixed->getTreeNodeID());
         $this->andWhereNotExists($query, $where);
     }
 

@@ -149,7 +149,7 @@ class DestinationPicker
             if ($pickerHtml !== '') {
                 $style = $selectedPicker === $handle ? '' : ' style="display: none"';
                 $pickersHtml .= <<<EOT
-    <div class="{$uniqueID}" id="{$uniqueID}_{$handle}"{$style}>
+    <div class="pt-2 {$uniqueID}" id="{$uniqueID}_{$handle}"{$style}>
         {$pickerHtml}
     </div>
 EOT
@@ -158,7 +158,7 @@ EOT
         }
         if ($pickersHtml !== '') {
             $html .= <<<EOT
-<div id="" style="min-height:{$pickersHeight}px">
+<div>
     {$pickersHtml}
 </div>
 <script>

@@ -476,7 +476,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         }
 
         // @TODO - this is not working on install. fix it.
-        // list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+        list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
 
         $args['internalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['fileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;

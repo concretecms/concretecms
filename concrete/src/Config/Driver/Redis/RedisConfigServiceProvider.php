@@ -77,7 +77,7 @@ class RedisConfigServiceProvider extends Provider
 
         // Bind a composite loader that includes redis
         $app->bind(LoaderInterface::class, static function($app) {
-            return $app->make(CompositeLoader::class, [$app, [
+            return $app->make(CompositeLoader::class, ['app' => $app, 'loaders' => [
                 CoreFileLoader::class,
                 RedisLoader::class,
                 FileLoader::class,

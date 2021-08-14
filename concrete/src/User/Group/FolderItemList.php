@@ -226,24 +226,6 @@ class FolderItemList extends DatabaseItemList implements PagerProviderInterface,
         return parent::deliverQueryObject();
     }
 
-    public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
-    {
-        $u = Application::getFacadeApplication()->make(User::class);
-
-        if (!$u->isSuperUser()) {
-            /** @var \Concrete\Core\Permission\Key\GroupFolderKey $pk */
-            $pk = \Concrete\Core\Permission\Key\GroupFolderKey::getByHandle('search_group_folder');
-            if (is_object($pk)) {
-                $pk->setPermissionObject($this->parent);
-                /** @var \Concrete\Core\Permission\Access\Access $pa */
-                $pa = $pk->getPermissionAccessObject();
-                return (is_object($pa) && $pa->validate());
-            }
-        }
-
-        return $query;
-    }
-
     public function sortByNodeName()
     {
         $this->sortBy('folderItemName', 'asc');

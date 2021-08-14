@@ -33,7 +33,12 @@ class ClientFactoryTest extends TestCase
 
         // Handle "build"
         $this->app->shouldReceive('build')->andReturnUsing(function($abstract, $data=[]) {
-            return M::mock($abstract, $data)->makePartial();
+            switch ($abstract) {
+                case 'Concrete\Core\Api\OAuth\Client\Credentials':
+                    return app($abstract, $data);
+                default:
+                    return M::mock($abstract, $data)->makePartial();
+            }
         });
 
         // Handle "make"

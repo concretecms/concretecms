@@ -11,7 +11,7 @@
 		<legend><?= t('Core Properties') ?></legend>
 		<div class="form-group">
 			<label for="SITE" class="launch-tooltip control-label form-label" data-bs-placement="right" title="<?=t('By default, site name is displayed in the browser title bar. It is also the default name for your project on marketplace.concretecms.com')?>"><?=t('Site Name')?></label>
-			<?=$form->text('SITE', $site->getSiteName(), array('class' => 'span4'))?>
+			<?=$form->text('SITE', $site->getSiteName())?>
 		</div>
 	</fieldset>
 

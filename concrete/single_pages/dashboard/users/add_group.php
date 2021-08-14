@@ -35,9 +35,7 @@ use Concrete\Core\User\Group\GroupType; ?>
         </div>
         <div class="form-group">
             <?=$form->label('gDescription', t('Description'))?>
-            <div class="controls">
-                <?=$form->textarea('gDescription', ['rows' => 6, 'class' => 'span6'])?>
-            </div>
+            <?=$form->textarea('gDescription', ['rows' => 6])?>
         </div>
 
         <div class="form-group">
@@ -84,9 +82,6 @@ use Concrete\Core\User\Group\GroupType; ?>
                             'treeID': '<?=$tree->getTreeID()?>',
                             'chooseNodeInForm': 'single',
                             'enableDragAndDrop': false,
-                            ajaxData: {
-                                displayOnly: 'group_folder'
-                            },
                             <?php
                             if ($this->controller->isPost()) {
                                 ?>
@@ -123,33 +118,6 @@ use Concrete\Core\User\Group\GroupType; ?>
 
         <?php /** @noinspection PhpUnhandledExceptionInspection */
         echo View::element("groups/roles_list", ["roles" => [], "defaultRole" => null]); ?>
-    </fieldset>
-
-    <fieldset>
-        <div id="gUserBadgeOptions" style="display: none">
-            <div class="form-group">
-                <label class="control-label form-label"><?=t('Image')?></label>
-                <div class="controls">
-                    <?php
-                    $af = $app->make('helper/concrete/asset_library');
-                    echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), isset($badgeImage) ? $badgeImage : null);
-                    ?>
-                </div>
-            </div>
-            <div class="form-group">
-                <?=$form->label('gBadgeDescription', t('Badge Description'))?>
-                <div class="controls">
-                    <?=$form->textarea('gBadgeDescription', ['rows' => 6, 'class' => 'span6'])?>
-                </div>
-            </div>
-            <div class="form-group">
-                <?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
-                <div class="controls">
-                    <?=$form->text('gBadgeCommunityPointValue', $app->make('config')->get('concrete.user.group.badge.default_point_value'), ['class' => 'span1'])?>
-                </div>
-            </div>
-        </div>
-
     </fieldset>
 
     <fieldset>

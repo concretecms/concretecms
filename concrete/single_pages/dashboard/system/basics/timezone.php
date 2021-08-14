@@ -88,11 +88,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="user_timezones" value="1"<?= $user_timezones ? ' checked="checked"' : ''; ?> />
                 <label class="form-check-label" for="user_timezones">
-                    <span class="launch-tooltip control-label form-label" data-bs-placement="right" title="<?= t(
-                        'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.'
-                    ); ?>"><?php echo t('Enable user defined time zones.'); ?></span>
+                    <?php echo t('Enable user defined time zones.'); ?>
                 </label>
             </div>
+            <div class="help-block"><?= t(
+                    'With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.'
+                )?></div>
         </div>
     </fieldset>
 

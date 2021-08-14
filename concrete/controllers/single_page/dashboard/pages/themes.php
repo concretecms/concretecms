@@ -138,7 +138,7 @@ class Themes extends DashboardSitePageController
                 $pkg = $this->app->make(PackageService::class)->getByID($pl->getPackageID());
                 // then we check to see if this is the only theme in that package. If so, we uninstall the package too
                 /** @var Manager $manager */
-                $manager = $this->app->make(Manager::class, [$this->app]);
+                $manager = $this->app->make(Manager::class, ['application' => $this->app]);
                 $categories = $manager->getPackageItemCategories();
                 $items = [];
                 foreach ($categories as $category) {

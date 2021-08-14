@@ -181,6 +181,33 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->validateDisplayChoices($entry, $file, $errors);
     }
 
+    public function duplicate($newBID)
+    {
+        $db = $this->app->make(Connection::class);
+        $data = $db->fetchAssociative('select * from btGallery where bID = ?', [$this->bID]);
+        $data['bID'] = $newBID;
+        $db->insert('btGallery', $data);
+
+        $r = $db->executeQuery('select * from btGalleryEntries where bID = ?', [$this->bID]);
+        while ($row = $r->fetchAssociative()) {
+            $lastEID = $row['eID'];
+            $row['bID'] = $newBID;
+            unset($row['eID']);
+            $db->insert('btGalleryEntries', $row);
+            $newEID = $db->lastInsertID();
+
+            $choiceR = $db->executeQuery('select * from btGalleryEntryDisplayChoices where entryID = ? and bID = ?', [$lastEID, $this->bID]);
+            while ($choiceRow = $choiceR->fetchAssociative()) {
+                unset($choiceRow['dcID']);
+                $choiceRow['bID'] = $newBID;
+                $choiceRow['entryID'] = $newEID;
+                $db->insert('btGalleryEntryDisplayChoices', $choiceRow);
+            }
+
+        }
+
+    }
+
     /**
      * Handle saving entries and display choices
      *

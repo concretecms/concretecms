@@ -102,8 +102,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function delete()
     {
         $app = Facade::getFacadeApplication();
-        $command = new DeleteGroupCommand();
-        $command->setGroupID($this->getGroupID());
+        $command = new DeleteGroupCommand($this->getGroupID());
         return $app->executeCommand($command);
     }
 
@@ -301,7 +300,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gOverrideGroupTypeSettings = $gOverrideGroupTypeSettings;
 
         try {
-            $db->executeQuery("update Groups set gOverrideGroupTypeSettings = ? where gID = ?", [(int)$gOverrideGroupTypeSettings, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gOverrideGroupTypeSettings = ? where gID = ?", [(int)$gOverrideGroupTypeSettings, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -341,7 +340,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gtID = $groupType->getId();
 
         try {
-            $db->executeQuery("update Groups set gtID = ? where gID = ?", [$this->gtID, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gtID = ? where gID = ?", [$this->gtID, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -386,7 +385,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gDefaultRoleID = $role->getId();
 
         try {
-            $db->executeQuery("update Groups set gDefaultRoleID = ? where gID = ?", [(int)$this->gDefaultRoleID, (int)$this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gDefaultRoleID = ? where gID = ?", [(int)$this->gDefaultRoleID, (int)$this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -418,7 +417,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery("update Groups set gThumbnailFID = ? where gID = ?", [0, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gThumbnailFID = ? where gID = ?", [0, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -439,7 +438,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gThumbnailFID = $file->getFileID();
 
         try {
-            $db->executeQuery("update Groups set gThumbnailFID = ? where gID = ?", [$this->gThumbnailFID, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gThumbnailFID = ? where gID = ?", [$this->gThumbnailFID, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -465,7 +464,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gPetitionForPublicEntry = $gPetitionForPublicEntry;
 
         try {
-            $db->executeQuery("update Groups set gPetitionForPublicEntry = ? where gID = ?", [(int)$gPetitionForPublicEntry, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gPetitionForPublicEntry = ? where gID = ?", [(int)$gPetitionForPublicEntry, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
