@@ -5,6 +5,8 @@ use Concrete\Core\Utility\Service\Url;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+$checker = new Permissions($currentFolder);
+
 /** @var $urlHelper Url */
 ?>
 
@@ -55,11 +57,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 </a>
             </li>
 
+            <?php if ($checker->canAddGroupFolder()) { ?>
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('New Folder')) ?>" href="javascript:void(0);" data-launch-dialog="add-group-manager-folder">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                 </a>
             </li>
+            <?php } ?>
+            <?php if ($checker->canAddGroup()) { ?>
 
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('Add Group')) ?>"
@@ -67,6 +72,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <i class="fa fa-users" aria-hidden="true"></i>
                 </a>
             </li>
+
+            <?php } ?>
         </ul>
     </div>
 </div>

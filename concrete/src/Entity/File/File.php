@@ -28,7 +28,7 @@ use FileSet;
 use Loader;
 use Page;
 use PermissionKey;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Concrete\Core\Events\EventDispatcher;
 
 /**
  * @ORM\Entity

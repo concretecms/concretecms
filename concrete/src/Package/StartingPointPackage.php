@@ -724,11 +724,13 @@ class StartingPointPackage extends Package
         $tree = GroupTree::get();
         $node = $tree->getRootTreeNodeObject();
         $permissions = [
-            'search_users_in_group',
-            'edit_group',
-            'assign_group',
-            'add_sub_group',
-            'edit_group_permissions',
+            'search_group_folder',
+            'edit_group_folder',
+            'edit_group_folder_permissions',
+            'delete_group_folder',
+            'add_group',
+            'assign_groups',
+            'add_group_folder',
         ];
         $adminGroupEntity = GroupPermissionAccessEntity::getOrCreate($g3);
         foreach ($permissions as $pkHandle) {

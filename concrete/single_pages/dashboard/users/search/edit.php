@@ -197,20 +197,25 @@ if (count($languages) > 0) {
                             </fieldset>
                             <?php if ($canEditPassword) { ?>
                                 <fieldset>
-                                    <legend><?= t('Change Password'); ?></legend>
+                                    <legend>
+                                        <?php echo t('Change Password'); ?>
+                                    </legend>
+
                                     <div class="form-group">
-                                        <?= $form->label('uPassword', t('New Password')); ?>
-                                        <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
-                                        <a href="javascript:void(0)" title="<?= t('Leave blank to keep current password.'); ?>"><i
-                                                    class="icon-question-sign"></i></a>
+                                        <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
+                                        <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
                                     </div>
 
                                     <div class="form-group">
-                                        <?= $form->label('uPasswordConfirm', t('Confirm New Password')); ?>
-                                        <div class="controls">
-                                            <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']); ?>
-                                        </div>
+                                        <?php echo $form->label('uPasswordNew', t('New Password')); ?>
+                                        <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
                                     </div>
+
+                                    <div class="form-group">
+                                        <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
+                                        <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
+                                    </div>
+                                    <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
                                 </fieldset>
                             <?php } ?>
                         </div>

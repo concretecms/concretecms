@@ -333,15 +333,26 @@ class Search extends DashboardPageController
 
                 $data['uHomeFileManagerFolderID'] = $uHomeFileManagerFolderID;
             }
-            if ($this->canEditPassword && !empty($this->request->request->get('uPassword'))) {
-                $password = $this->request->request->get('uPassword');
-                $passwordConfirm = $this->request->request->get('uPasswordConfirm');
-                $this->app->make('validator/password')->isValidFor($password, $this->user, $error);
-                if ($password != $passwordConfirm) {
-                    $error->add(t('The two passwords provided do not match.'));
+
+            if ($this->canEditPassword && !empty($this->request->request->get('uPasswordNew'))) {
+                $passwordMine = (string) $this->request->request->get('uPasswordMine');
+                $passwordNew = $this->request->request->get('uPasswordNew');
+                $passwordNewConfirm = $this->request->request->get('uPasswordNewConfirm');
+
+                $this->app->make('validator/password')->isValidFor($passwordNew, $this->user, $error);
+
+                if ($passwordNew) {
+
+                    $me = $this->app->make(User::class)->getUserInfoObject();
+                    if (!$me->passwordMatches($passwordMine)) {
+                        $error->add(t('Your password is invalid.'));
+                    }
+                    if ($passwordNew != $passwordNewConfirm) {
+                        $error->add(t('The two passwords provided do not match.'));
+                    }
                 }
-                $data['uPassword'] = $password;
-                $data['uPasswordConfirm'] = $passwordConfirm;
+                $data['uPasswordConfirm'] = $passwordNew;
+                $data['uPassword'] = $passwordNew;
             }
 
             $userMessage->setError($error);
