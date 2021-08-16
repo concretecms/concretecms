@@ -30,10 +30,10 @@ class Sanitizer
      *
      * @param \Illuminate\Filesystem\Filesystem $filesystem the Filesystem instance to be used for file operations
      */
-    public function __construct(Filesystem $filesystem, EnshrinedSvgSanitizer $enshrinedSvgSanitizer)
+    public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->enshrinedSvgSanitizer = $enshrinedSvgSanitizer;
+        $this->enshrinedSvgSanitizer = new EnshrinedSvgSanitizer();
     }
 
     /**
@@ -163,12 +163,11 @@ class Sanitizer
      */
     public function sanitizeData($data, SanitizerOptions $options = null, array &$removedNodes = [])
     {
-        $data = $this->enshrinedSvgSanitizer->sanitize($data);
         $xml = $this->dataToXml($data);
         $removedNodes = [];
         $this->sanitizeXml($xml, $removedNodes, $options);
 
-        return $this->xmlToData($xml);
+        return $this->enshrinedSvgSanitizer->sanitize($this->xmlToData($xml));
     }
 
     /**
