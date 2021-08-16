@@ -11,7 +11,7 @@ class controller extends StartingPointPackage
 
     public function getPackageName()
     {
-        return t('Full Site');
+        return t('Elemental (Full)');
     }
 
     public function getPackageDescription()

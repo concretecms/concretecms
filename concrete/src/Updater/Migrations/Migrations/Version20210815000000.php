@@ -11,7 +11,7 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-final class Version20210808024835 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20210815000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
@@ -30,6 +30,10 @@ final class Version20210808024835 extends AbstractMigration implements Repeatabl
         if (!is_object($bt)) {
             BlockType::installBlockType('core_theme_documentation_breadcrumb');
         }
+        $bt = BlockType::getByHandle('top_navigation_bar');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('top_navigation_bar');
+        }
 
         $this->createSinglePage(
             THEME_DOCUMENTATION_PAGE_PATH,
@@ -39,6 +43,10 @@ final class Version20210808024835 extends AbstractMigration implements Repeatabl
             ]
         );
 
+        $atomik = Theme::getByHandle('atomik');
+        if (!$atomik) {
+            $atomik = Theme::add('atomik');
+        }
         $elemental = Theme::getByHandle('elemental');
         $installer = $this->app->make(Installer::class);
 
@@ -47,6 +55,11 @@ final class Version20210808024835 extends AbstractMigration implements Repeatabl
          */
         $installer->clearDocumentation($elemental);
         $installer->install($elemental, $elemental->getDocumentationProvider());
+
+        $installer->clearDocumentation($atomik);
+        $installer->install($elemental, $atomik->getDocumentationProvider());
+
+
     }
 
 }

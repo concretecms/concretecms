@@ -4,8 +4,7 @@
     <blocktypes>
         <blocktype handle="autonav" package=""/>
         <blocktype handle="page_title" package=""/>
-        <!-- <blocktype handle="core_gathering" package=""/> -->
-        <!-- <blocktype handle="core_gathering_display" package=""/> -->
+        <blocktype handle="top_navigation_bar" package=""/>
         <blocktype handle="faq" package=""/>
         <blocktype handle="page_list" package=""/>
         <blocktype handle="next_previous" package=""/>
@@ -21,8 +20,7 @@
         <blocktypeset handle="navigation" name="Navigation" package="">
             <blocktype handle="autonav"/>
             <blocktype handle="page_title"/>
-            <!-- <blocktype handle="core_gathering"/> -->
-            <!-- <blocktype handle="core_gathering_display"/> -->
+            <blocktype handle="top_navigation_bar"/>
             <blocktype handle="faq"/>
             <blocktype handle="page_list"/>
             <blocktype handle="next_previous"/>

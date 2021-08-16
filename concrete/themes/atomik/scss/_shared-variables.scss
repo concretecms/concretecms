@@ -1,0 +1,6 @@
+// The dashboard bootstrap variables are actually the same as the CMSs, so let's use those.
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+
+@import "@concretecms/bedrock/assets/cms/scss/variables";

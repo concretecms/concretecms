@@ -1,0 +1,18 @@
+div.ccm-page {
+
+  footer {
+    background-color: $theme-footer-bg;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    color: $theme-footer-color;
+
+    a {
+      color: $theme-footer-link-color;
+
+      &:hover {
+        color: $primary;
+      }
+    }
+  }
+
+}

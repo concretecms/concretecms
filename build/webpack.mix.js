@@ -295,6 +295,16 @@ mix
             ]
         }
     })
+// Atomik Theme
+mix
+    .sass('../concrete/themes/atomik/skins/default/scss/main.scss', 'themes/atomik/skins/default/',  {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('assets/themes/atomik/js/main.js', 'themes/atomik');
 // Dashboard Theme
 mix
     .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard',  {
