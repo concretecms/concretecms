@@ -29,7 +29,7 @@ $c = Page::getCurrentPage();
             <div class="ccm-header-search-form-input input-group">
                 <?=$form->search('keywords', [
                     'placeholder' => t('Search'),
-                    'class' => 'border-end-0',
+                    'class' => 'form-control border-end-0',
                     'autocomplete' => 'off']);
                 ?>
                 <button type="submit" class="input-group-icon">

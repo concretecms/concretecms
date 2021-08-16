@@ -62,7 +62,7 @@ if (!isset($type)) {
         if (count($associations)) {
             ?>
             <div class="form-group">
-                <label class="control-label form-label"><?= t('Standard Properties') ?></label>
+                <label class="control-label form-label"><?= t('Associations') ?></label>
                 <?php
                 foreach ($associations as $col) {
                     ?>
