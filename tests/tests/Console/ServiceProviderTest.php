@@ -99,6 +99,7 @@ class ServiceProviderTest extends TestCase
         $subset = [
             ConcreteCommand\InfoCommand::class,
             ConcreteCommand\InstallCommand::class,
+            ConcreteCommand\IsInstalledCommand::class,
             ConcreteCommand\InstallLanguageCommand::class,
             ConcreteCommand\TranslatePackageCommand::class,
             ConcreteCommand\GenerateIDESymbolsCommand::class,
@@ -135,6 +136,7 @@ class ServiceProviderTest extends TestCase
         $subset = [
             ConcreteCommand\InfoCommand::class,
             ConcreteCommand\InstallCommand::class,
+            ConcreteCommand\IsInstalledCommand::class,
             ConcreteCommand\InstallLanguageCommand::class,
             ConcreteCommand\TranslatePackageCommand::class,
             ConcreteCommand\GenerateIDESymbolsCommand::class,
