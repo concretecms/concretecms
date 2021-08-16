@@ -101,5 +101,7 @@ class RescanFilesCommand extends Command
             $output->writeln(t('Unable to rescan file "%s" (ID: %s): %s', $currentFilename, $currentID, $e->getMessage()));
         }
         $output->writeln("{$count} files rescanned.");
+
+        return static::SUCCESS;
     }
 }

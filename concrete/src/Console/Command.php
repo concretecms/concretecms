@@ -23,18 +23,25 @@ use Throwable;
 abstract class Command extends SymfonyCommand
 {
     /**
-     * The return code we should return when running the command is successful.
+     * @deprecated Use SUCCESS
      *
      * @var int
      */
-    public const RETURN_CODE_ON_SUCCESS = 0;
+    public const RETURN_CODE_ON_SUCCESS = self::SUCCESS;
 
     /**
-     * The return code we should return when an exception is thrown while running the command.
+     * @deprecated Use FAILURE
      *
      * @var int
      */
-    public const RETURN_CODE_ON_FAILURE = 1;
+    public const RETURN_CODE_ON_FAILURE = self::FAILURE;
+
+    /**
+     * Concrete requires symfony/console ^5.2, and the INVALID constant has been introduced in symfony/console 5.3.0
+     *
+     * @var int
+     */
+    public const INVALID = 2;
 
     /**
      * The name of the CLI option that allows running CLI commands as root without confirmation.

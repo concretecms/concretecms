@@ -15,7 +15,8 @@ class RefreshEntitiesCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::FAILURE;
+        $errExitCode = static::FAILURE;
 
         $this
             ->setName('c5:entities:refresh')
@@ -25,7 +26,7 @@ class RefreshEntitiesCommand extends Command
             ->setHelp(<<<EOT
 This command will refresh the Doctrine database entities and set the following return codes
 
-  0 operation completed successfully
+  {$okExitCode} operation completed successfully
   {$errExitCode} errors occurred
 EOT
             )
@@ -48,6 +49,6 @@ EOT
             $output->writeln('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.');
         }
 
-        return 0;
+        return static::SUCCESS;
     }
 }

@@ -40,23 +40,23 @@ EOT
             } catch (UnsupportedCollationException $x) {
                 $this->output->error(sprintf('"%s" is neither a valid character set nor a valid collation.', $this->argument('charset')));
 
-                return 2;
+                return static::INVALID;
             } catch (Exception $x) {
                 $this->output->error($x->getMessage());
 
-                return 1;
+                return static::FAILURE;
             }
         } catch (Exception $x) {
             $this->output->error($x->getMessage());
 
-            return 1;
+            return static::FAILURE;
         }
         $params = $connection->getParams();
         if (isset($params['character_set']) && $params['character_set'] === $characterSet && isset($params['collation']) && $params['collation'] === $collation) {
             if (!$this->option('force')) {
                 $this->output->writeln(sprintf('Skipping since the connection "%s" is already using character set "%s" and collation "%s"', $connectionName, $characterSet, $collation));
 
-                return 0;
+                return static::SUCCESS;
             }
         }
         $manager->apply(
@@ -69,6 +69,6 @@ EOT
             }
         );
 
-        return 0;
+        return static::SUCCESS;
     }
 }

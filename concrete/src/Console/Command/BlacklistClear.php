@@ -33,7 +33,8 @@ class BlacklistClear extends Command
 
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $automaticBansAll = static::DELETE_AUTOMATIC_BANS_ALL;
         $automaticBansExpired = static::DELETE_AUTOMATIC_BANS_EXPIRED;
         $this
@@ -52,7 +53,7 @@ To clear the events data, use the --min-age option.
 To clear the automatic bans, use the --automatic-bans option.
 
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-blacklist-clear
@@ -66,7 +67,7 @@ EOT
         if ($input->getOption('list')) {
             $this->listCategories($output);
 
-            return 0;
+            return static::SUCCESS;
         }
         $app = Application::getFacadeApplication();
         $minAge = $input->getOption('min-age');
@@ -149,7 +150,7 @@ EOT
             }
         }
 
-        return 0;
+        return static::SUCCESS;
     }
 
     protected function listCategories(OutputInterface $output)
