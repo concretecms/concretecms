@@ -17,7 +17,8 @@ class UpdateCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:update')
             ->setDescription('Runs all database migrations to bring the Concrete installation up to date.')
@@ -48,7 +49,7 @@ Examples:
     Execute the migrations starting from the 20171218000000 migration (even if they have already been marked as executed)
 
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 EOT
             )

@@ -11,14 +11,15 @@ class InfoCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:info')
             ->setDescription('Get detailed information about this installation.')
             ->addEnvOption()
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-info
@@ -76,6 +77,6 @@ EOT
         $output->writeln('<info># PHP Settings</info>');
         $output->writeln($info->getPhpSettings());
 
-        return Command::RETURN_CODE_ON_SUCCESS;
+        return static::SUCCESS;
     }
 }

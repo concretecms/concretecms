@@ -52,6 +52,6 @@ class TaskCommand extends SymfonyCommand
         $command = new ExecuteConsoleTaskCommand($this->task, $taskInput, $output);
         $app->executeCommand($command);
 
-        return self::SUCCESS;
+        return static::SUCCESS;
     }
 }

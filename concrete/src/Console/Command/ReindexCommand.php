@@ -24,7 +24,6 @@ class ReindexCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:reindex')
             ->setDescription('Reindex pages, files, users and express entities')
@@ -104,7 +103,7 @@ class ReindexCommand extends Command
                 }
             }
 
-            return 0;
+            return static::SUCCESS;
         } else {
             throw new \Exception(t('You must include at least one type to reindex. Valid types are --pages/-p, --express/-e'));
         }

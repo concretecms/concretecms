@@ -16,14 +16,15 @@ class CompareSchemaCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:compare-schema')
             ->setDescription('Compares db.xml in Concrete XML schema, Concrete entities, and all installed package schemas and entities with the contents of the database and prints the difference.')
             ->addEnvOption()
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 EOT
             )
@@ -93,6 +94,8 @@ EOT
         } else {
             $output->writeln(t('No differences found between schema and database.'));
         }
+
+        return static::SUCCESS;
     }
 
     /**

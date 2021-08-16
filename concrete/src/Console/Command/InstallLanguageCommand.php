@@ -43,7 +43,8 @@ class InstallLanguageCommand extends Command
 
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
         ->setName('c5:language-install')
         ->setAliases(['c5:install-language'])
@@ -76,7 +77,7 @@ $ concrete/bin/concrete c5:language-install --add it_IT --add de_DE
 $ concrete/bin/concrete c5:language-install --add it_IT --add de_DE --core
             
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
             
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-language-install
@@ -110,6 +111,8 @@ EOT
         if ($this->shouldClearLocalizationCache) {
             Localization::clearCache();
         }
+
+        return static::SUCCESS;
     }
 
     /**

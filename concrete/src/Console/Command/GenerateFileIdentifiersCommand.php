@@ -52,5 +52,7 @@ EOT
         $entityManager->flush();
 
         $output->writeln(sprintf("Unique identifier has been successfully changed for %s files.", $fileList->getTotalResults()));
+
+        return static::SUCCESS;
     }
 }

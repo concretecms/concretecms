@@ -14,7 +14,8 @@ class UpdatePackageCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:package:update')
             ->setAliases([
@@ -29,7 +30,7 @@ class UpdatePackageCommand extends Command
             ->setDescription('Update a Concrete package')
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-update
@@ -40,7 +41,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
+        $rc = static::SUCCESS;
         $updatableHandles = [];
         $force = $input->getOption('force');
         if ($input->getOption('all')) {
@@ -73,7 +74,7 @@ EOT
                 $this->updatePackage($updatableHandle, $output, $input, $force);
             } catch (Exception $x) {
                 $this->writeError($output, $x);
-                $rc = 1;
+                $rc = static::FAILURE;
             }
         }
 
