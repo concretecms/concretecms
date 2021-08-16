@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Block\ExpressEntryList;
 
-use Concrete\Controller\Element\Search\CustomizeResults;
+use Concrete\Controller\Element\Search\Express\CustomizeResults;
 use Concrete\Controller\Element\Search\SearchFieldSelector;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Express\Association;
@@ -139,24 +139,25 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                 $searchProperties = $this->getSearchPropertiesJsonArray($entity);
                 $searchAssociations = $this->getSearchAssociationsJsonArray($entity);
-                $columns = unserialize($this->columns);
-                $provider = \Core::make(SearchProvider::class, [$entity, $entity->getAttributeKeyCategory()]);
-                if ($columns) {
-                    $provider->setColumnSet($columns);
-                }
-
-                $element = new CustomizeResults($provider);
-                $element->setIncludeNumberOfResults(false);
+                $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
 
                 $fieldManager = $this->getSearchFieldManager($entity);
                 $fieldSelectorElement = new SearchFieldSelector($fieldManager, $this->getActionURL('add_search_field'));
 
+                $query = new Query();
                 if ($this->filterFields) {
                     $filterFields = unserialize($this->filterFields);
-                    $query = new Query();
                     $query->setFields($filterFields);
-                    $fieldSelectorElement->setQuery($query);
                 }
+
+                $columns = unserialize($this->columns);
+                if ($columns) {
+                    $query->setColumns($columns);
+                }
+
+                $fieldSelectorElement->setQuery($query);
+                $element = new CustomizeResults($provider, $query);
+                $element->setIncludeNumberOfResults(false);
 
                 $this->set('customizeElement', $element);
                 $this->set('searchFieldSelectorElement', $fieldSelectorElement);
@@ -271,7 +272,15 @@ class Controller extends BlockController implements UsesFeatureInterface
                     }
                 }
             }
+
+            // Use the columns saved in the instance
+            $columnSet = unserialize($this->columns);
+            if (!$columnSet) {
+                $columnSet = new DefaultSet($category);
+            }
+
             $query = $queryModifier->process($query);
+            $query->setColumns($columnSet);
 
             $result = $resultFactory->createFromQuery($searchProvider, $query);
             $list = $result->getItemListObject();
@@ -280,7 +289,8 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $list->setItemsPerPage(intval($this->displayLimit));
                 }
             }
-            $result = new Result($result->getListColumns(), $list, $result->getBaseURL());
+
+            $result = new Result($columnSet, $list, $result->getBaseURL());
             $pagination = $result->getPagination();
             if ($pagination->haveToPaginate()) {
                 $pagination = $pagination->renderDefaultView();
@@ -391,7 +401,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         if ($exEntityID) {
             $entity = $this->entityManager->find(Entity::class, $exEntityID);
             if (is_object($entity)) {
-                $provider = \Core::make(SearchProvider::class, [$entity, $entity->getAttributeKeyCategory()]);
+                $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
                 $element = new CustomizeResults($provider);
                 $element->setIncludeNumberOfResults(false);
                 $r = new \stdClass();
@@ -415,7 +425,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
 
-        \Core::make('app')->shutdown();
+        $this->app->shutdown();
     }
 
     public function loadData()

@@ -35,7 +35,10 @@ abstract class AbstractSearchProvider implements ProviderInterface, SessionQuery
             $columnSet->addColumn($column);
         }
         foreach ($this->getCustomAttributeKeys() as $ak) {
-            $columnSet->addColumn(new AttributeKeyColumn($ak));
+            $column = new AttributeKeyColumn($ak);
+            if (!$columnSet->contains($column)) {
+                $columnSet->addColumn($column);
+            }
         }
 
         return $columnSet;
