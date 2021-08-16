@@ -28,7 +28,7 @@ class Attributes extends DashboardPageController
         $this->set('pagetype', $this->pageType);
 
         $category = $this->getCategoryObject();
-        $attributesView = $this->elementManager->get('attribute/editable_set_list', [$category, $this->defaultPage]);
+        $attributesView = $this->elementManager->get('attribute/editable_set_list', ['categoryEntity' => $category, 'attributedObject' => $this->defaultPage]);
         /** @var \Concrete\Controller\Element\Attribute\EditableSetList $controller */
         $controller = $attributesView->getElementController();
         $controller->setEditDialogURL(Url::to('/ccm/system/dialogs/type/attributes', $this->pageType->getPageTypeID()));

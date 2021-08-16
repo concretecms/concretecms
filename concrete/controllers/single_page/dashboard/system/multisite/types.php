@@ -308,7 +308,7 @@ class Types extends DashboardPageController
         $skeleton = $this->get('skeleton');
 
         if ($skeleton !== null) {
-            $attributesView = $this->elementManager->get('attribute/editable_set_list', [$category, $skeleton]);
+            $attributesView = $this->elementManager->get('attribute/editable_set_list', ['categoryEntity' => $category, 'attributedObject' => $skeleton]);
             /** @var \Concrete\Controller\Element\Attribute\EditableSetList $controller */
             $controller = $attributesView->getElementController();
             $controller->setEditDialogURL(Url::to('/ccm/system/dialogs/site_type/attributes', $type->getSiteTypeID()));
