@@ -74,6 +74,15 @@ class DefaultSet extends ColumnSet
             $column = $this->getColumnByKey('e.exEntryDateCreated');
             $this->setDefaultSortColumn($column, 'desc');
         }
+
+        $i = 0;
+        foreach($category->getSearchableList() as $ak) {
+            $this->addColumn(new ExpressAttributeKeyColumn($ak));
+            $i++;
+            if ($i == 2) {
+                break;
+            }
+        }
     }
 
 

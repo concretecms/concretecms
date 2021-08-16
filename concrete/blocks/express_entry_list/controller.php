@@ -272,7 +272,15 @@ class Controller extends BlockController implements UsesFeatureInterface
                     }
                 }
             }
+
+            // Use the columns saved in the instance
+            $columnSet = unserialize($this->columns);
+            if (!$columnSet) {
+                $columnSet = new DefaultSet($category);
+            }
+
             $query = $queryModifier->process($query);
+            $query->setColumns($columnSet);
 
             $result = $resultFactory->createFromQuery($searchProvider, $query);
             $list = $result->getItemListObject();
@@ -280,12 +288,6 @@ class Controller extends BlockController implements UsesFeatureInterface
                 if ($this->displayLimit > 0) {
                     $list->setItemsPerPage(intval($this->displayLimit));
                 }
-            }
-
-            // Use the columns saved in the instance
-            $columnSet = unserialize($this->columns);
-            if (!$columnSet) {
-                $columnSet = new DefaultSet($category);
             }
 
             $result = new Result($columnSet, $list, $result->getBaseURL());
