@@ -231,6 +231,8 @@
                         // I have a special on click handler, so we run that. It CAN return
                         // false to disable the on click, but it probably won't.
                         if (my.options.onClickNode) {
+                            event.preventDefault()
+                            event.stopPropagation()
                             return my.options.onClickNode.call(my, node)
                         }
 
