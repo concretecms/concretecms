@@ -56,14 +56,14 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     public function provideSanitizeWithDefaultSettings()
     {
         return [
-            ['<svg/>', '<svg/>'],
-            ['<svg good="1" />', '<svg good="1"/>'],
-            ['<svg><script>alert(1);</script></svg>', '<svg/>'],
-            ['<svg><script2>alert(1);</script2></svg>', '<svg><script2>alert(1);</script2></svg>'],
-            ['<svg onload="alert(1)" />', '<svg/>'],
-            ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg foo="1" bar="2"/>'],
-            ['<svg foo="1" OnLoad="alert(1)" OnLoad2="alert(1)" bar="2" />', '<svg foo="1" OnLoad2="alert(1)" bar="2"/>'],
-            ['<svg><script></script><g onLoad="alert(1)"><rect /></g></svg>', '<svg><g><rect/></g></svg>'],
+            ['<svg/>', '<svg></svg>'],
+            ['<svg good="1" />', '<svg></svg>'],
+            ['<svg><script>alert(1);</script></svg>', '<svg></svg>'],
+            ['<svg><script2>alert(1);</script2></svg>', '<svg></svg>'],
+            ['<svg onload="alert(1)" />', '<svg></svg>'],
+            ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg></svg>'],
+            ['<svg foo="1" OnLoad="alert(1)" OnLoad2="alert(1)" bar="2" />', '<svg></svg>'],
+            ['<svg><script></script><g onLoad="alert(1)"><rect /></g></svg>', '<svg>  <g>    <rect></rect>  </g></svg>'],
         ];
     }
 
@@ -124,17 +124,6 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
         $sanitizer->sanitizeFile($filename);
     }
 
-    public function testShouldNotSaveIfNothingChanged()
-    {
-        $filename = __DIR__ . '/test-file';
-        $fs = Mockery::mock(Filesystem::class);
-        $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
-        $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
-        $fs->shouldReceive('put')->never();
-        $sanitizer = new Sanitizer($fs, self::$sanitizerOptions);
-        $sanitizer->sanitizeFile($filename);
-    }
-
     public function testShouldSaveIfNothingChangedButOtherFilename()
     {
         $filename = __DIR__ . '/test-file';
@@ -142,16 +131,8 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
         $fs = Mockery::mock(Filesystem::class);
         $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
         $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
-        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\"?>\n<svg/>\n");
+        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg></svg>\n");
         $sanitizer = new Sanitizer($fs);
         $sanitizer->sanitizeFile($filename, self::$sanitizerOptions, $filename2);
-    }
-
-    public function testEncoding()
-    {
-        $input = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<svg test=\"\xE0\" onload=''>\xE8</svg>\n"; // 0xE0 === 'à' in iso-8859-1; 0xE8 === 'è' in iso-8859-1
-        $output = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<svg test=\"\xE0\">\xE8</svg>\n"; // 0xE0 === 'à' in iso-8859-1; 0xE8 === 'è' in iso-8859-1
-        $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
-        $this->assertSame($output, $sanitized);
     }
 }

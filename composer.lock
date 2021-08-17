@@ -3016,7 +3016,7 @@
             "time": "2019-09-06T13:49:17+00:00"
         },
         {
-            "name": "natxet/CssMin",
+            "name": "natxet/cssmin",
             "version": "v3.0.6",
             "source": {
                 "type": "git",
