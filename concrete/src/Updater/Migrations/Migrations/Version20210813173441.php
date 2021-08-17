@@ -19,7 +19,7 @@ final class Version20210813173441 extends AbstractMigration implements Repeatabl
         }
         $key = Key::getByHandle('assign_groups');
         if (!$key) {
-            $key = Key::add('group_folder', 'add_group_folder', t("Assign Groups"), t("Can assign the groups within this folder."), false, false);
+            $key = Key::add('group_folder', 'assign_groups', t("Assign Groups"), t("Can assign the groups within this folder."), false, false);
         }
 
     }
