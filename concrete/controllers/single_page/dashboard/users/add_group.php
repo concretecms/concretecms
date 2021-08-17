@@ -256,7 +256,7 @@ class AddGroup extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            $g = Group::addBeneathFolder($gName, $this->request->post('gDescription'), $parentFolder);
+            $g = Group::addBeneathFolder($gName, $this->request->post('gDescription'), $parentNode);
 
             $this->checkExpirationOptions($g);
             $this->checkBadgeOptions($g);

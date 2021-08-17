@@ -876,7 +876,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $command = new AddGroupCommand();
         $command->setName($gName);
         $command->setDescription($gDescription);
-        if ($parentFolder instanceof GroupFolder) {
+        if ($parentFolder) {
             $command->setParentNodeID($parentFolder->getTreeNodeID());
         }
 

@@ -104,7 +104,7 @@ class FolderItemList extends DatabaseItemList implements PagerProviderInterface,
             ->from('TreeNodes', 'n')
             ->innerJoin('n', 'TreeNodeTypes', 'nt', 'nt.treeNodeTypeID = n.treeNodeTypeID')
             ->leftJoin('n', 'TreeGroupNodes', 'tf', 'tf.treeNodeID = n.treeNodeID')
-            ->leftJoin('n', 'Groups', 'g', 'tf.gID = g.gID')
+            ->leftJoin('n', $this->query->getConnection()->getDatabasePlatform()->quoteSingleIdentifier('Groups'), 'g', 'tf.gID = g.gID')
             ->leftJoin('n', 'GroupTypes', 'gt', 'g.gtID = gt.gtID')
             ->andWhere("nt.treeNodeTypeHandle='group_folder' OR nt.treeNodeTypeHandle='group' AND g.gID")
         ;
