@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global ccmi18n, ccmi18n_tree, CCM_DISPATCHER_FILENAME, ConcreteAlert, ConcreteEvent, ConcreteMenu */
+/* global ccmi18n, ccmi18n_tree, CCM_DISPATCHER_FILENAME, CCM_SECURITY_TOKEN, ConcreteAlert, ConcreteEvent, ConcreteMenu */
 
 ;(function(global, $) {
 	'use strict';
@@ -319,7 +319,8 @@
 				'dataType': 'json',
 				'type': 'post',
 				'data': {
-					'treeNodeID': treeNodeID
+					'treeNodeID': treeNodeID,
+					'token': CCM_SECURITY_TOKEN
 				},
 				url: CCM_DISPATCHER_FILENAME + '/ccm/system/tree/node/duplicate',
 				success: function(r) {

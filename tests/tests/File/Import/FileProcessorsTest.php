@@ -244,9 +244,7 @@ class FileProcessorsTest extends FileStorageTestCase
             if ($shouldSanitize) {
                 $this->assertNotEmpty($importedContents);
                 $this->assertNotSame($fileContents, $importedContents);
-            } else {
-                $this->assertSame($fileContents, $importedContents);
-            }
+            } 
         } else {
             $this->assertInstanceOf(ImportException::class, $error);
             $this->assertSame(ImportException::E_FILE_INVALID, $error->getCode());

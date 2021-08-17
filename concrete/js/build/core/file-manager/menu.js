@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global _, CCM_DISPATCHER_FILENAME, ConcreteMenu, ConcreteMenuManager */
+/* global _, CCM_DISPATCHER_FILENAME, CCM_SECURITY_TOKEN, ConcreteMenu, ConcreteMenuManager */
 
 ;(function(global, $) {
     'use strict';
@@ -57,7 +57,7 @@
 		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
 			$.concreteAjax({
 				url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
-				data: {fID: fID},
+				data: {fID: fID, token: CCM_SECURITY_TOKEN },
 				success: function(r) {
 					if (typeof(container.refreshResults) != 'undefined') {
 						container.refreshResults();
