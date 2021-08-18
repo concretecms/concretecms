@@ -4,7 +4,7 @@
  * @var $ck \Concrete\Core\Editor\CkeditorEditor
  */
 $ck = Core::make('editor');
-echo $ck->outputStandardEditor($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody());
+echo $ck->outputSimpleEditor($editor->getConversationEditorInputName(), $editor->getConversationEditorMessageBody());
 
 ?>
 <script>

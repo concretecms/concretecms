@@ -87,7 +87,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
             ->setTimeWindow(300)
             ->setBanDuration(600)
         ;
-        $ip = IPFactory::addressFromString('1.2.3.4');
+        $ip = IPFactory::parseAddressString('1.2.3.4');
         for ($attempt = 1; $attempt <= $allowedAttempts; ++$attempt) {
             $this->assertFalse($this->ipService->isWhitelisted($ip));
             $this->assertFalse($this->ipService->isBlacklisted($ip));
@@ -104,7 +104,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         $this->ipService->addToBlacklistForThresholdReached($ip);
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertTrue($this->ipService->isBlacklisted($ip));
-        $ip2 = IPFactory::addressFromString('::');
+        $ip2 = IPFactory::parseAddressString('::');
         $this->assertFalse($this->ipService->isWhitelisted($ip2));
         $this->assertFalse($this->ipService->isBlacklisted($ip2));
     }
@@ -117,7 +117,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
             ->setTimeWindow(300)
             ->setBanDuration(600)
         ;
-        $ip = IPFactory::addressFromString('1.2.3.4');
+        $ip = IPFactory::parseAddressString('1.2.3.4');
         for ($attempt = 1; $attempt <= 10; ++$attempt) {
             $this->ipService->logFailedLogin($ip);
         }
@@ -133,10 +133,10 @@ class IPServiceTest extends ConcreteDatabaseTestCase
             ->setTimeWindow(300)
             ->setBanDuration(600)
         ;
-        $ip = IPFactory::addressFromString('1.2.3.4');
+        $ip = IPFactory::parseAddressString('1.2.3.4');
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
-        $this->ipService->createRange(IPFactory::rangeFromString('1.2.3.*'), IPService::IPRANGETYPE_WHITELIST_MANUAL);
+        $this->ipService->createRange(IPFactory::parseRangeString('1.2.3.*'), IPService::IPRANGETYPE_WHITELIST_MANUAL);
         $this->assertTrue($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
         for ($attempt = 1; $attempt <= 10; ++$attempt) {
@@ -155,10 +155,10 @@ class IPServiceTest extends ConcreteDatabaseTestCase
             ->setTimeWindow(300)
             ->setBanDuration(600)
         ;
-        $ip = IPFactory::addressFromString('1.2.3.4');
+        $ip = IPFactory::parseAddressString('1.2.3.4');
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
-        $this->ipService->createRange(IPFactory::rangeFromString('1.*.*.*'), IPService::IPRANGETYPE_BLACKLIST_MANUAL);
+        $this->ipService->createRange(IPFactory::parseRangeString('1.*.*.*'), IPService::IPRANGETYPE_BLACKLIST_MANUAL);
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertTrue($this->ipService->isBlacklisted($ip));
     }
@@ -171,13 +171,13 @@ class IPServiceTest extends ConcreteDatabaseTestCase
             ->setTimeWindow(300)
             ->setBanDuration(600)
         ;
-        $ip = IPFactory::addressFromString('1.2.3.4');
+        $ip = IPFactory::parseAddressString('1.2.3.4');
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
-        $this->ipService->createRange(IPFactory::rangeFromString('1.*.*.*'), IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC, new DateTime('-1 seconds'));
+        $this->ipService->createRange(IPFactory::parseRangeString('1.*.*.*'), IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC, new DateTime('-1 seconds'));
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
-        $this->ipService->createRange(IPFactory::rangeFromString('1.*.*.*'), IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC, new DateTime('+10 seconds'));
+        $this->ipService->createRange(IPFactory::parseRangeString('1.*.*.*'), IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC, new DateTime('+10 seconds'));
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertTrue($this->ipService->isBlacklisted($ip));
     }
@@ -190,13 +190,13 @@ class IPServiceTest extends ConcreteDatabaseTestCase
             ->setTimeWindow(300)
             ->setBanDuration(600)
         ;
-        $ip = IPFactory::addressFromString('1.2.3.4');
+        $ip = IPFactory::parseAddressString('1.2.3.4');
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
-        $this->ipService->createRange(IPFactory::rangeFromString('1.*.*.*'), IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC, new DateTime('+10 hours'));
+        $this->ipService->createRange(IPFactory::parseRangeString('1.*.*.*'), IPService::IPRANGETYPE_BLACKLIST_AUTOMATIC, new DateTime('+10 hours'));
         $this->assertFalse($this->ipService->isWhitelisted($ip));
         $this->assertTrue($this->ipService->isBlacklisted($ip));
-        $this->ipService->createRange(IPFactory::rangeFromString('1.2.3.*'), IPService::IPRANGETYPE_WHITELIST_MANUAL, new DateTime('+10 hours'));
+        $this->ipService->createRange(IPFactory::parseRangeString('1.2.3.*'), IPService::IPRANGETYPE_WHITELIST_MANUAL, new DateTime('+10 hours'));
         $this->assertTrue($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
     }

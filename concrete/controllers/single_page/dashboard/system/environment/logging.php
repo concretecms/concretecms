@@ -87,6 +87,10 @@ class Logging extends DashboardPageController
                 return $this->showError(t('The filename provided must be a valid filename and end with .log'));
             }
 
+            if (strpos($logFile, 'phar:') !== false) {
+                return $this->showError(t('The filename provided must be a valid filename.'));
+            }
+
             // Validate the file path, create the log file if needed
             if (!file_exists($logFile)) {
                 // If the file doesn't exist, make sure we can create one

@@ -90,6 +90,8 @@ class LocalConfiguration extends Configuration implements ConfigurationInterface
         $this->path = $data['path'];
         if (!$this->path) {
             $e->add(t("You must include a root path for this storage location."));
+        } elseif (strpos($this->path,'phar:') !== false) {
+            $e->add(t("Invalid path to file storage location."));
         } elseif (!is_dir($this->path)) {
             $e->add(t("The specified root path does not exist."));
         } elseif ($this->path == '/') {

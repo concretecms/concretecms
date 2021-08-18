@@ -70,7 +70,7 @@ class Range extends Blacklist
         if (!$this->token->validate('add_range/' . $type . '/' . $id)) {
             throw new UserMessageException($this->token->getErrorMessage());
         }
-        $range = IPFactory::rangeFromString($this->request->request->get('range'));
+        $range = IPFactory::parseRangeString($this->request->request->get('range'));
         if ($range === null) {
             throw new UserMessageException(t('The specified IP range is invalid'));
         }

@@ -65,8 +65,8 @@ $displayFirstSection = $footerSiteTitleBlocks > 0 || $footerSocialBlocks > 0 || 
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <span><?php echo t('Built with <a href="http://www.concrete5.org" class="concrete5" rel="nofollow">concrete5</a> CMS.') ?></span>
-                <span class="pull-right">
+                <span><?php echo t('Built with <a href="https://www.concretecms.org" class="concrete5" rel="nofollow">ConcreteCMS</a>.') ?></span>
+                <span class="float-end">
                     <?php echo Core::make('helper/navigation')->getLogInOutLink() ?>
                 </span>
                 <span id="ccm-account-menu-container"></span>
