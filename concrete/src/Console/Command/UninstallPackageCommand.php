@@ -15,7 +15,8 @@ class UninstallPackageCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:package:uninstall')
             ->setAliases([
@@ -29,7 +30,7 @@ class UninstallPackageCommand extends Command
             ->setDescription('Uninstall a Concrete package')
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-uninstall
@@ -83,5 +84,7 @@ EOT
             }
             $output->writeln('<info>done.</info>');
         }
+
+        return static::SUCCESS;
     }
 }

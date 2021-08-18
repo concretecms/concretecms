@@ -14,7 +14,8 @@ class ResetCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:reset')
             ->setDescription('Reset the Concrete installation, deleting files and emptying the database')
@@ -23,7 +24,7 @@ class ResetCommand extends Command
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the reset')
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-reset
@@ -127,5 +128,7 @@ EOT
                 $output->writeln('<info>done.</info>');
             }
         }
+
+        return static::SUCCESS;
     }
 }

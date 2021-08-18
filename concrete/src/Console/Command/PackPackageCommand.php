@@ -122,6 +122,8 @@ final class PackPackageCommand extends Command
         $filters = $this->createFilters($app, $packageInfo);
         $writers = $this->createWriters($app, $packageInfo);
         $packer->process($packageInfo, $filters, $writers);
+
+        return static::SUCCESS;
     }
 
     /**
@@ -136,7 +138,8 @@ final class PackPackageCommand extends Command
         $keepSources = self::KEEP_SOURCES;
         $keepComposerJson = self::KEEP_COMPOSER_JSON;
         $keepComposerLock = self::KEEP_COMPOSER_LOCK;
-        $errExitCode = self::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:package:pack')
             ->setAliases([
@@ -170,7 +173,7 @@ To include in the zip archive the composer.json file but not the composer.lock f
 Please remark that this command can also parse legacy (pre-5.7) packages.
 
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-pack

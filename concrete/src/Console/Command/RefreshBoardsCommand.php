@@ -21,7 +21,8 @@ class RefreshBoardsCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
 
         $this
             ->setName('c5:boards:refresh')
@@ -34,7 +35,7 @@ class RefreshBoardsCommand extends Command
             ->setHelp(<<<EOT
 This command will add content to specified boards or board instances.
 
-  0 operation completed successfully
+  {$okExitCode} operation completed successfully
   {$errExitCode} errors occurred
 EOT
             )
@@ -92,6 +93,6 @@ EOT
                 throw new \Exception(t('You must specify a board ID or use the --all option.'));
             }
         }
-        return 0;
+        return static::SUCCESS;
     }
 }

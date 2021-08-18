@@ -32,7 +32,7 @@ class BulkUserAssignCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return mixed|void
+     * @return int
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -134,6 +134,8 @@ class BulkUserAssignCommand extends Command
             $totalUsersAddedToTargetGroup,
             $totalUsersRemovedFromTargetGroup
         ));
+
+        return static::SUCCESS;
     }
 
 }

@@ -57,7 +57,7 @@ class ExportCommand extends Command
         // Make sure we found a proper entity
         if (!$entity) {
             $this->output->error('Invalid entity handle.');
-            return 2;
+            return static::INVALID;
         }
 
         return $this->outputFormatCsv($entity, $app, $config, $factory);
@@ -98,7 +98,7 @@ class ExportCommand extends Command
         $writer->insertEntryList($entryList);
 
         // Success
-        return 0;
+        return static::SUCCESS;
     }
 
 }

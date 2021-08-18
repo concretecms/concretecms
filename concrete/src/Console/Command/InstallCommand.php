@@ -56,7 +56,8 @@ class InstallCommand extends Command
 
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:install')
             ->setDescription('Install Concrete')
@@ -85,7 +86,7 @@ class InstallCommand extends Command
             ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-install
@@ -110,12 +111,12 @@ EOT
             switch ($this->checkOptionPreconditions($app, $installer, $input, $output)) {
                 case self::OPTIONPRECONDITIONS_ERROR:
                     $output->writeln('One or more precondition failed!');
-                    exit(1);
+                    exit(static::FAILURE);
                 case self::OPTIONPRECONDITIONS_WARNINGS:
                     if (!$input->getOption('ignore-warnings')) {
                         if (!$input->isInteractive()) {
                             $output->writeln('One or more precondition failed!');
-                            exit(1);
+                            exit(static::FAILURE);
                         }
                         $confirm = new Question('Configuration warnings detected. Would you like to install anyway? [Y]es / [N]o: ', false);
                         $confirm->setValidator(function ($given) {
@@ -130,7 +131,7 @@ EOT
                         // Cancel if they said no
                         if (stripos('n', $answer) === 0) {
                             $output->writeln('Installation cancelled.');
-                            exit(1);
+                            exit(static::FAILURE);
                         }
                     }
                     break;
@@ -183,7 +184,7 @@ EOT
         }
         $output->writeln('<info>Installation Complete!</info>');
 
-        return Command::RETURN_CODE_ON_SUCCESS;
+        return static::SUCCESS;
     }
 
     /**
@@ -238,7 +239,7 @@ EOT
                         // Cancel if they said no
                         if (stripos('n', $answer) === 0) {
                             $output->writeln('Installation cancelled.');
-                            exit(1);
+                            exit(static::FAILURE);
                         }
                         continue 2;
                     case self::OPTIONPRECONDITIONS_WARNINGS:
@@ -254,7 +255,7 @@ EOT
                         // Cancel if they said no
                         if (stripos('a', $answer) === 0) {
                             $output->writeln('Installation cancelled.');
-                            exit(1);
+                            exit(static::FAILURE);
                         }
                         if (stripos('y', $answer) === 0) {
                             continue 2;
@@ -295,7 +296,7 @@ EOT
                 // Cancel if they said no
                 if (stripos('n', $answer) === 0) {
                     $output->writeln('Installation cancelled.');
-                    exit(1);
+                    exit(static::FAILURE);
                 }
 
                 // Retry if they ask so

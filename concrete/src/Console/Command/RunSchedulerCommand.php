@@ -13,8 +13,6 @@ class RunSchedulerCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
-
         $this
             ->setName('concrete:scheduler:run')
             ->setDescription('Runs the task scheduler, dispatching any tasks whose time has come.');
@@ -37,6 +35,6 @@ class RunSchedulerCommand extends Command
                $app->executeCommand($command);
            }
         }
-        return self::SUCCESS;
+        return static::SUCCESS;
     }
 }

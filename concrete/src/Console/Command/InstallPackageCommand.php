@@ -22,7 +22,8 @@ class InstallPackageCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:package:install')
             ->setAliases([
@@ -38,7 +39,7 @@ class InstallPackageCommand extends Command
             ->addArgument('package-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the package install routine (example: foo=bar baz=foo)')
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-install
@@ -181,5 +182,7 @@ EOT
             }
             $output->writeln('<info>done.</info>');
         }
+
+        return static::SUCCESS;
     }
 }

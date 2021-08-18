@@ -17,7 +17,8 @@ class GenerateSitemapCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:sitemap:generate')
             ->setDescription('Generate the sitemap in XML format.')
@@ -29,7 +30,7 @@ class GenerateSitemapCommand extends Command
         ;
         $this->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  {$okExitCode} operation completed successfully
   {$errExitCode} errors occurred
 EOT
             );
@@ -84,5 +85,7 @@ EOT
             $output->writeln(sprintf('Sitemap visible at: %s', $sitemapUrl));
         }
         $output->writeln(sprintf('Number of pages included in sitemap: %s', $numPages));
+
+        return static::SUCCESS;
     }
 }
