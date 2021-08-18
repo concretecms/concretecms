@@ -182,4 +182,14 @@ class ApprovePageRequest extends PageRequest
         return $v->getVersionComments();
     }
 
+    public function getPublishDate()
+    {
+        return $this->cvPublishDate;
+    }
+
+    public function getPublishEndDate()
+    {
+        return $this->cvPublishEndDate;
+    } 
+
 }
