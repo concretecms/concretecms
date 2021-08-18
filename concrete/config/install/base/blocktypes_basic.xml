@@ -4,6 +4,7 @@
     <blocktypes>
         <blocktype handle="content" package=""/>
         <blocktype handle="html" package=""/>
+        <blocktype handle="hero_image" package=""/>
         <blocktype handle="image" package=""/>
         <blocktype handle="file" package=""/>
         <blocktype handle="horizontal_rule" package=""/>
@@ -14,6 +15,7 @@
         <blocktypeset handle="basic" name="Basic" package="">
             <blocktype handle="content"/>
             <blocktype handle="html"/>
+            <blocktype handle="hero_image"/>
             <blocktype handle="image"/>
             <blocktype handle="file"/>
             <blocktype handle="horizontal_rule"/>

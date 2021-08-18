@@ -2,25 +2,20 @@
 <schema xmlns="http://www.concrete5.org/doctrine-xml/0.5"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 http://concrete5.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
-    <table name="btBreadcrumbs">
+    <table name="btTopNavigationBar">
         <field name="bID" type="integer">
             <unsigned/>
             <key/>
         </field>
-        <field name="includeCurrent" type="integer">
-            <unsigned/>
-            <default value="1"/>
-            <notnull/>
-        </field>
-        <field name="ignoreExcludeNav" type="integer">
-            <unsigned/>
-            <default value="1"/>
-            <notnull/>
-        </field>
-        <field name="ignorePermission" type="integer">
-            <unsigned/>
-            <default value="0"/>
-            <notnull/>
-        </field>
+        <field name="brandingText" type="string" />
+        <field name="brandingLogo" type="integer" />
+        <field name="brandingTransparentLogo" type="integer" />
+        <field name="includeBrandText" type="boolean" />
+        <field name="includeBrandLogo" type="boolean" />
+        <field name="includeTransparency" type="boolean" />
+        <field name="includeNavigation" type="boolean" />
+        <field name="includeNavigationDropdowns" type="boolean" />
+        <field name="includeSearchInput" type="boolean" />
+        <field name="searchInputFormActionPageID" type="integer" />
     </table>
 </schema>

@@ -34,6 +34,11 @@ final class Version20210815000000 extends AbstractMigration implements Repeatabl
         if (!is_object($bt)) {
             BlockType::installBlockType('top_navigation_bar');
         }
+        $bt = BlockType::getByHandle('hero_image');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('hero_image');
+        }
+
 
         $this->createSinglePage(
             THEME_DOCUMENTATION_PAGE_PATH,

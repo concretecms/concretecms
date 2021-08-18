@@ -1,0 +1,41 @@
+div.ccm-page {
+
+  div.ccm-block-top-navigation-bar {
+
+    .navbar {
+      background-color: $top-navbar-bg;
+    }
+
+    .navbar-brand {
+      img {
+        max-height: 38px;
+      }
+
+      font-family: $display-font-family;
+      font-weight: $display-font-weight;
+      font-size: 32px;
+      text-transform: uppercase;
+      margin-right: 1rem;
+
+      &:hover {
+        color: $primary;
+      }
+
+    }
+
+    .dropdown-menu {
+      display: block;
+      clip: rect(auto, auto, 0, auto);
+      -webkit-transition-property: clip;
+      -webkit-transition-duration: 0.2s;
+    }
+
+    .dropdown-toggle.show {
+
+      ~ .dropdown-menu {
+        clip: rect(auto, auto, 10rem, auto);
+      }
+    }
+
+  }
+}

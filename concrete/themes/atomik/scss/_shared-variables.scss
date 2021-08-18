@@ -1,6 +1,9 @@
-// The dashboard bootstrap variables are actually the same as the CMSs, so let's use those.
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins';
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 
-@import "@concretecms/bedrock/assets/cms/scss/variables";
+// Top Navigation Bar
+$navbar-nav-link-padding-x: 1.25rem;
+$dropdown-padding-y: 0;
+$dropdown-border-radius: 0;
+$dropdown-inner-border-radius: 0;
+$dropdown-item-padding-y: 0.5rem;
