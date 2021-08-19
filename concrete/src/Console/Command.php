@@ -554,14 +554,27 @@ abstract class Command extends SymfonyCommand
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      *
-     * @return mixed
+     * @return int
+     *
+     * @see \Symfony\Component\Console\Command\Command::execute()
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (!method_exists($this, 'handle')) {
             throw new LogicException('You must define the public handle() method in the command implementation.');
         }
-
-        return $this->getApplication()->getConcrete()->call([$this, 'handle']);
+        $result = $this->getApplication()->getConcrete()->call([$this, 'handle']);
+        switch (gettype($result)) {
+            case 'integer':
+                return $result;
+            case 'boolean':
+                return $result ? static::SUCCESS : static::FAILURE;
+            case 'double':
+                return (int) $result;
+            case 'string':
+                return is_numeric($result) ? (int) $result : static::SUCCESS;
+            default:
+                return static::SUCCESS;
+        }
     }
 }
