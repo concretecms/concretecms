@@ -1,3 +1,5 @@
+/* global ConcreteEvent */
+
 ;(function(global, $) {
     'use strict'
 
@@ -85,7 +87,10 @@
                 height: $option.attr('data-bulk-action-dialog-height'),
                 modal: true,
                 href: $option.attr('data-bulk-action-url') + '?' + $.param(itemIDs),
-                title: $option.attr('data-bulk-action-title')
+                title: $option.attr('data-bulk-action-title'),
+                onClose: function() {
+                    ConcreteEvent.fire('RefreshResultsTable');
+                }
             })
         }
 
@@ -97,7 +102,10 @@
                     if (r.message) {
                         ConcreteAlert.notify({
                             message: r.message,
-                            title: r.title
+                            title: r.title,
+                            callback: function () {
+                                ConcreteEvent.fire('RefreshResultsTable');
+                            }
                         })
                     }
                 }
@@ -110,7 +118,7 @@
                 data: itemIDs,
                 title: $option.attr('data-bulk-action-title'),
                 onComplete: function() {
-
+                    ConcreteEvent.fire('RefreshResultsTable');
                 }
             })
         }

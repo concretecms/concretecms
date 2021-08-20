@@ -121,6 +121,10 @@ use Concrete\Core\Logging\Search\Result\Result;
         $(function () {
             let searchResultsTable = new window.ConcreteSearchResultsTable($("#ccm-search-results-table"));
             searchResultsTable.setupBulkActions();
+
+            ConcreteEvent.subscribe("RefreshResultsTable", function () {
+                document.location.reload();
+            });
         });
     })(jQuery);
 </script>
