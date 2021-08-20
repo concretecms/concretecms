@@ -35,6 +35,7 @@ $router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
 $router->all('/bulk/permissions/get_all_access_entities', 'Bulk\Permissions::getAllAccessEntities');
 $router->all('/bulk/permissions', 'Bulk\Permissions::view');
 $router->all('/bulk/permissions/{task}', 'Bulk\Permissions::view');
+$router->all('/bulk/move_copy', 'Bulk\MoveCopy::view');
 $router->all('/clipboard', 'Clipboard::view');
 $router->all('/delete', 'Delete::view');
 $router->all('/delete/submit', 'Delete::submit');

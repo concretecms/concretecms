@@ -42,6 +42,20 @@ class MenuFactory
         $menu->addItem(
             new LinkItem(
                 "#",
+                t('Move/Copy'),
+                [
+                    'data-bulk-action-type' => 'dialog',
+                    'data-bulk-action-title' => t('Move/Copy'),
+                    'data-bulk-action-url' => Url::to('/ccm/system/dialogs/page/bulk/move_copy'),
+                    'data-bulk-action-dialog-width' => '630',
+                    'data-bulk-action-dialog-height' => '450'
+                ]
+            )
+        );
+
+        $menu->addItem(
+            new LinkItem(
+                "#",
                 t('Properties'),
                 [
                     'data-bulk-action-type' => 'dialog',

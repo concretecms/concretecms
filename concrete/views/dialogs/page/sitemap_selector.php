@@ -2,12 +2,24 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
+ * @var array[] $pages
  * @var int|null $cID
  * @var string $selectMode
  * @var string $uniqid
  * @var bool $includeSystemPages
  * @var bool $askIncludeSystemPages
  */
+
+
+if (is_array($pages) && count($pages) > 0) {
+    $pageIds = [];
+    
+    foreach($pages as $page) {
+        $pageIds[] = $page->getCollectionID();
+    }
+
+    $cID = implode(",", $pageIds);
+}
 ?>
 <div class="ccm-ui h-100" id="ccm-sitemap-search-selector">
     <div class="container-fluid h-100">
