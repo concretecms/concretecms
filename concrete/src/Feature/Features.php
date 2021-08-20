@@ -53,6 +53,11 @@ class Features
     const BASICS = 'basics';
 
     /**
+     * Bedrock typography support: titles, display titles, buttons, colors, etc...
+     */
+    const TYPOGRAPHY = 'typography';
+
+    /**
      * Accessory feature: support for calendars
      */
     const CALENDAR = 'calendar';

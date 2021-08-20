@@ -70,9 +70,13 @@ if (is_object($f) && $f->getFileID()) {
                         }
                     }
 
-                    if ($type instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type && $width > 0) {
+                    if ($type instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type) {
                         $src = $f->getThumbnailURL($type->getBaseVersion());
 
+                        // Note, the above if statement used to also include $width > 0, but this
+                        // was making it so that you couldn't use a thumbnail on the extra small screen size.
+                        // I removed this part of the conditional and things seem ok ?! even though I would
+                        // have thought this could result in double images. Let's keep an eye on this.
                         $sources[] = ['src' => $src, 'width' => $width];
                     }
                 }

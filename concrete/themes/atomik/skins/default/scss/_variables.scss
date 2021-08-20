@@ -2,7 +2,7 @@
 @import url(//fonts.googleapis.com/css?family=Bebas+Neue:500);
 @import url(//fonts.googleapis.com/css?family=Raleway:800);
 
-// Colors
+// Colors - Base Bootstrap
 $primary: #2D7AC0;
 $secondary: #676D6F;
 $success: #04AF7A;
@@ -15,3 +15,14 @@ $dark: #373A3B;
 // Headings
 $display-font-family: "Bebas Neue";
 $display-font-weight: 500;
+$headings-font-family: "Raleway";
+$headings-font-size: 800;
+$display-line-height: 1em;
+
+// Modify theme colors sass map
+$custom-colors: (
+  "light-accent": $light-accent,
+  "accent": $accent,
+  "dark-accent": $dark-accent
+);
+

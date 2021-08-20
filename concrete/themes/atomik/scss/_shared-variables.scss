@@ -1,6 +1,50 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 
+// Font sizes
+$display-font-sizes: (
+    1: 4rem,
+    2: 3.5rem,
+    3: 3rem,
+    4: 2rem
+);
+
+// Spacers - we need to make 5 less huge, and add some additional
+$spacers: (
+    0: 0,
+    1: $spacer * .25,
+    2: $spacer * .5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 2,
+    6: $spacer * 2.5,
+    7: $spacer * 3,
+);
+
+// Gutters - I don't know why I have to do this
+$gutters: (
+    0: 0,
+    1: $spacer * .25,
+    2: $spacer * .5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 2,
+    6: $spacer * 2.5,
+    7: $spacer * 3,
+    8: $spacer * 4,
+    9: $spacer * 5,
+    10: $spacer * 7,
+);
+
+
+
+// Buttons
+$btn-padding-x: 1.25rem;
+$btn-padding-x-lg: 1.75rem;
+
+// Merge our bootstrap threme colors and our custom colors
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
 // Top Navigation Bar
 $navbar-nav-link-padding-x: 1.25rem;
 $dropdown-padding-y: 0;

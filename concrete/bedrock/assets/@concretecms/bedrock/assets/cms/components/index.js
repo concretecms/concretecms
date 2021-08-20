@@ -14,6 +14,7 @@ import ConcreteExpressEntryInput from './form/ConcreteExpressEntryInput'
 import ConcretePageChooserSearch from './page/Chooser/ChooserSearch'
 import ConcretePageInput from './form/ConcretePageInput'
 import ConcreteUserInput from './form/ConcreteUserInput'
+import ConcreteThemeColorInput from './form/ConcreteThemeColorInput'
 import ConcreteEventOccurrenceInput from './form/ConcreteEventOccurrenceInput'
 import ConcreteFileChooser from './file-manager/Chooser'
 import ConcreteExpressEntrySelector from './express/Selector'
@@ -41,6 +42,7 @@ export default {
     ConcreteUserChooser,
     ConcreteFileChooser,
     ConcreteFileInput,
+    ConcreteThemeColorInput,
     ConcreteExpressEntryInput,
     ConcreteExpressEntrySelector,
     ConcreteFileUploader,

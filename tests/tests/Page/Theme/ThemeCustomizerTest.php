@@ -4,6 +4,7 @@ namespace Concrete\Tests\Page\Theme;
 
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Page\Theme\Color\ColorCollection;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Adapter\ScssAdapter;
@@ -290,5 +291,15 @@ EOL;
         $this->assertInstanceOf(WebFontCollection::class, $collection);
         $this->assertCount(3, $collection);
     }
+
+    public function testColorCollection()
+    {
+        $theme = new PageTheme();
+        $theme->setThemeHandle('elemental');
+        $collection = $theme->getColorCollection();
+        $this->assertInstanceOf(ColorCollection::class, $collection);
+        $this->assertCount(4, $collection);
+    }
+
 
 }

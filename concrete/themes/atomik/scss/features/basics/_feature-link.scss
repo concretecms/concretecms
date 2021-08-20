@@ -1,0 +1,23 @@
+div.theme-atomik {
+  div.ccm-block-feature-link {
+
+    margin-bottom: 3em;
+    
+    div.ccm-block-feature-link-text {
+      font-size: 1.25rem;
+
+      p {
+        color: $secondary;
+      }
+    }
+
+
+    h2 {
+      font-family: $display-font-family;
+      @extend .display-3;
+    }
+
+  }
+
+}
+

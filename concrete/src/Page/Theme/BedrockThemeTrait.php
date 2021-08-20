@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Page\Theme;
 
+use Concrete\Core\Page\Theme\Color\ColorCollection;
+use Concrete\Core\Page\Theme\Color\ColorCollectionFactory;
 use Concrete\Core\Page\Theme\Documentation\BedrockDocumentationPage;
 
 /**
@@ -35,4 +37,14 @@ trait BedrockThemeTrait
         ];
     }
 
+    public function getColorCollection(): ?ColorCollection
+    {
+        $factory = new ColorCollectionFactory();
+        return $factory->createFromArray([
+            'primary' => t('Primary'),
+            'secondary' => t('Secondary'),
+            'light' => t('Light'),
+            'dark' => t('Dark'),
+        ]);
+    }
 }

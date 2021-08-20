@@ -38,6 +38,10 @@ final class Version20210815000000 extends AbstractMigration implements Repeatabl
         if (!is_object($bt)) {
             BlockType::installBlockType('hero_image');
         }
+        $bt = BlockType::getByHandle('feature_link');
+        if (!is_object($bt)) {
+            BlockType::installBlockType('feature_link');
+        }
 
 
         $this->createSinglePage(

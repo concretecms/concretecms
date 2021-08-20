@@ -8,7 +8,10 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
+use HtmlObject\Link;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -19,10 +22,14 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $buttonInternalLinkCID;
     public $buttonExternalLink;
     public $buttonFileLinkID;
+    public $buttonText;
+    public $buttonSize;
+    public $buttonStyle;
 
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 500;
     protected $btTable = 'btHeroImage';
+    protected $btDefaultSet = 'basic';
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
@@ -71,15 +78,18 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function add()
     {
+        $this->set('height', '60');
         $this->edit();
     }
 
     public function edit()
     {
+        $theme = Theme::getSiteTheme();
         $this->set('fileManager', new FileManager());
         $this->set('editor', $this->app->make('editor'));
         $this->set('destinationPicker', $this->app->make(DestinationPicker::class));
         $this->set('imageLinkPickers', $this->getImageLinkPickers());
+        $this->set('themeColorCollection', $theme->getColorCollection());
         if ($this->buttonInternalLinkCID) {
             $this->set('imageLinkHandle', 'page');
             $this->set('imageLinkValue', $this->buttonInternalLinkCID);
@@ -95,11 +105,57 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
     }
 
-    public function view()
+    /**
+     * @TODO - move all this logic into the DestinationPicker somehow. Make the destination picker save
+     * its object into some kind of special destination object. Refactor destinationpicker into
+     * vue component.
+     *
+     * @return string
+     */
+    public function getLinkURL()
     {
+        $linkUrl = '';
+        if (!empty($this->externalLink)) {
+            $sec = $this->app->make('helper/security');
+            $linkUrl = $sec->sanitizeURL($this->externalLink);
+        } elseif (!empty($this->internalLinkCID)) {
+            $linkToC = Page::getByID($this->internalLinkCID);
+            if (is_object($linkToC) && !$linkToC->isError()) {
+                $linkUrl = $linkToC->getCollectionLink();
+            }
+        } elseif (!empty($this->fileLinkID)) {
+            $fileLinkObject = File::getByID($this->fileLinkID);
+            if (is_object($fileLinkObject)) {
+                $linkUrl = $fileLinkObject->getRelativePath();
+            }
+        }
+
+        return $linkUrl;
     }
 
+    public function view()
+    {
+        $this->set('image', File::getByID($this->image));
 
+        if ($this->buttonText) {
+            $button = new Link($this->getLinkURL(), $this->buttonText);
+
+            $theme = Theme::getSiteTheme();
+            if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
+                $button->addClass('btn');
+                $styleClass = '';
+                if ($this->buttonStyle == 'outline') {
+                    $styleClass = 'outline-';
+                }
+                $colorClass = 'btn-' . $styleClass . $this->buttonColor;
+                $button->addClass($colorClass);
+                if ($this->buttonSize) {
+                    $button->addClass('btn-' . $this->buttonSize);
+                }
+            }
+            $this->set('button', $button);
+        }
+    }
 
     public function validate($args)
     {

@@ -20,5 +20,9 @@
             <unsigned/>
             <default value="0" />
         </field>
+        <field name="height" type="string" />
+        <field name="buttonColor" type="string" />
+        <field name="buttonStyle" type="string" />
+        <field name="buttonSize" type="string" />
     </table>
 </schema>

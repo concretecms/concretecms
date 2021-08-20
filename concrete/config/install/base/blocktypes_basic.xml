@@ -9,6 +9,7 @@
         <blocktype handle="file" package=""/>
         <blocktype handle="horizontal_rule" package=""/>
         <blocktype handle="feature" package=""/>
+        <blocktype handle="feature_link" package=""/>
     </blocktypes>
 
     <blocktypesets>
@@ -20,6 +21,7 @@
             <blocktype handle="file"/>
             <blocktype handle="horizontal_rule"/>
             <blocktype handle="feature"/>
+            <blocktype handle="feature_link"/>
         </blocktypeset>
     </blocktypesets>
 

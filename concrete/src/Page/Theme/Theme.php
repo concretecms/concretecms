@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Filesystem\FileLocator\Record;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Theme\Color\ColorCollection;
 use Concrete\Core\Page\Theme\Documentation\DocumentationProviderInterface;
 use Concrete\Core\Page\Theme\Documentation\Installer;
 use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
@@ -810,6 +811,16 @@ class Theme extends ConcreteObject
         return null;
     }
 
+    public function getColorCollection(): ?ColorCollection
+    {
+        return null;
+    }
+
+    public function hasColorCollection()
+    {
+        return $this->getColorCollection() instanceof ColorCollection;
+    }
+
     public function hasThemeDocumentation(): bool
     {
         $provider = $this->getDocumentationProvider();
@@ -1201,6 +1212,12 @@ class Theme extends ConcreteObject
     {
         $handle = $this->getThemeGridFrameworkHandle();
         return $handle != false;
+    }
+
+    public function supportsFeature(string $feature)
+    {
+        $features = $this->getThemeSupportedFeatures();
+        return in_array($feature, $features);
     }
 
     /**

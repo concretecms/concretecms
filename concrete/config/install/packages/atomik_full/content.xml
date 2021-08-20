@@ -45,4 +45,8 @@
         <page name="Home" path="" filename="" template="full" pagetype="page" description="" package="">
         </page>
     </pages>
+    <containers>
+        <container handle="two_column_light" name="Two Column Light"
+                   icon="two_column.png" package=""/>
+    </containers>
 </concrete5-cif>

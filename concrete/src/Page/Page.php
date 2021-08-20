@@ -2224,6 +2224,7 @@ EOT
     public function getPageWrapperClass()
     {
         $pt = $this->getPageTypeObject();
+        $theme = $this->getCollectionThemeObject();
 
         $view = $this->getPageController()->getViewObject();
         if ($view) {
@@ -2233,6 +2234,9 @@ EOT
         }
 
         $classes = ['ccm-page', 'ccm-page-id-' . $this->getCollectionID()];
+        if ($theme) {
+            $classes[] = 'theme-' . $theme->getThemeHandle();
+        }
         if (is_object($pt)) {
             $classes[] = 'page-type-' . str_replace('_', '-', $pt->getPageTypeHandle());
         }
