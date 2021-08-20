@@ -16,6 +16,7 @@ class Search extends BackendInterfaceController
 
     public function view()
     {
-        $this->set('multipleSelection', (bool)$this->request->request->get('multipleSelection', false));
+        $this->set('multipleSelection', (bool)$this->request->request->get('multipleSelection', false) ||
+            (bool)$this->request->query->get('multipleSelection', false));
     }
 }

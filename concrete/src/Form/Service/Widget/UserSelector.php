@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Utility\Service\Identifier;
@@ -229,7 +230,10 @@ EOL;
             'chooseUser' => t('Choose User'),
             'noUsers' => t('No users selected.'),
         ];
-        $searchLink = $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/dialogs/user/search']);
+        $searchLink = Url::to('/ccm/system/dialogs/user/search')->setQuery([
+            "multipleSelection" => true
+        ]);
+
         $valn = $this->app->make(Numbers::class);
         $userInfoRepository = $this->app->make(UserInfoRepository::class);
         $preselectedUsers = '';
@@ -277,7 +281,7 @@ $(function() {
         userSelectCallback = function(e, data) {
             e.stopPropagation();
             var uID = data.uID,
-                uName = data.uName,
+                uName = data.displayName,
                 uEmail = data.uEmail;
             if (container.find('tr[data-ccm-user-id=' + uID + ']').length > 0) {
                 return;
@@ -302,13 +306,16 @@ $(function() {
     container.find('.ccm-user-select-item')
         .dialog()
         .on('click', function(e) {
-            ConcreteEvent.subscribe('UserSearchDialogSelectUser', userSelectCallback)
-        })
-    ;
-    ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser', function(e) {
-        ConcreteEvent.unsubscribe('UserSearchDialogSelectUser');
-        jQuery.fn.dialog.closeTop();
-    });
+            ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(e, data) {    
+                window.ConcreteUserManager.getUserDetails(data.uID, function(r) {
+                    for (var user of r.users) {
+                        userSelectCallback(e, user);
+                    }
+                })
+                
+                jQuery.fn.dialog.closeTop();
+            })
+        });
 });
 </script>
 EOT
