@@ -22,6 +22,7 @@ class CalendarEvent extends DataSourceElementController
         $manager = $this->app->make(SearchFieldManager::class);
         $resolver = $this->app->make(ResolverManagerInterface::class);
         $addFieldAction = "#";
+        $maxOccurences = 0;
         $fieldSelector = new SearchFieldSelector($manager, $addFieldAction);
         $fieldSelector->setIncludeJavaScript(true);
         $fieldSelector->setAddFieldAction(
@@ -47,9 +48,10 @@ class CalendarEvent extends DataSourceElementController
                 if ($query) {
                     $fieldSelector->setQuery($query);
                 }
+                $maxOccurences = $configuration->getMaxOccurrencesOfSameEvent();
             }
         }
-        $this->set('maxOccurrencesOfSameEvent', $configuration->getMaxOccurrencesOfSameEvent());
+        $this->set('maxOccurrencesOfSameEvent', $maxOccurences);
         $this->set('fieldSelector', $fieldSelector);
     }
 
