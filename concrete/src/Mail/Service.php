@@ -736,6 +736,10 @@ class Service
                 }
 
                 $mailDetails = $mailWithoutAttachments->toString();
+                $encoding = $mailWithoutAttachments->getHeaders()->get('Content-Transfer-Encoding');
+                if (is_object($encoding) && $encoding->getFieldValue() === 'quoted-printable') {
+                    $mailDetails = quoted_printable_decode($mailDetails);
+                }
 
                 // append the attached file names to the mail log
                 foreach($attachedFiles as $attachedFile) {
