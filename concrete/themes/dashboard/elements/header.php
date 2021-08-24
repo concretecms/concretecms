@@ -55,11 +55,10 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span><?=t('To My Website'); ?></span>
                     </a>
                 </li>
-								<?php
-								$mobileMenu = Element::get('dashboard/navigation/mobile');
-								$mobileMenu->render();
-								?>
                 <?php
+                $mobileMenu = Element::get('dashboard/navigation/mobile');
+                $mobileMenu->render();
+                
                 $ihm = $app->make('helper/concrete/ui/menu');
                 $cih = $app->make('helper/concrete/ui');
                 $items = $ihm->getPageHeaderMenuItems('left');
@@ -71,6 +70,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <?php
                     }
                 }
+		    
                 ?>
                 <li class="float-end d-none d-sm-none d-md-block">
                     <?php
@@ -127,17 +127,6 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     $menu->render();
                     ?>
                 </li>
-                <?php
-                $items = $ihm->getPageHeaderMenuItems('right');
-                foreach ($items as $ih) {
-                    $cnt = $ih->getController();
-                    if ($cnt->displayItem()) {
-                        $cnt->registerViewAssets(); ?>
-                        <li class="float-end"><?= $cnt->getMenuItemLinkElement(); ?></li>
-                        <?php
-                    }
-                }
-                ?>
             </ul>
         </div>
         <?php
