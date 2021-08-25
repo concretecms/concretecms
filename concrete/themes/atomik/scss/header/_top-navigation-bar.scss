@@ -1,6 +1,43 @@
 div.ccm-page {
-
   div.ccm-block-top-navigation-bar {
+    &.transparency-enabled {
+      .navbar {
+        background-color: transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 5; // to put it over any other elements
+
+        &.fixed-top {
+          position: fixed; // need to declare this because otherwise our customizations override this
+        }
+        .navbar-brand {
+          color: $white;
+          &:hover {
+            color: $gray-500;
+          }
+
+          .logo {
+            display: none;
+          }
+
+          .logo-transparent {
+            display: inline-block;
+          }
+
+        }
+
+        .nav-item {
+          a.nav-link {
+            color: $white;
+            &:hover {
+              color: $gray-500;
+            }
+          }
+        }
+      }
+    }
 
     .navbar {
       background-color: $top-navbar-bg;
@@ -19,6 +56,14 @@ div.ccm-page {
 
       &:hover {
         color: $primary;
+      }
+
+      .logo {
+        display: inline-block;
+      }
+
+      .logo-transparent {
+        display: none;
       }
 
     }

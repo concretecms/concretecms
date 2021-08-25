@@ -12,8 +12,11 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 <fieldset class="mb-3">
     <legend><?=t('Text')?></legend>
     <div class="mb-3">
-        <label class="form-label" for="title"><?=t('Title')?></label>
-        <input type="text" name="title" class="form-control" value="<?=$title?>">
+        <?php echo $form->label("title", t('Title')); ?>
+        <div class="input-group">
+            <?php echo $form->text('title', $title); ?>
+            <?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+        </div>
     </div>
     <div class="mb-3">
         <label class="form-label" for="body"><?=t('Body')?></label>

@@ -99,6 +99,43 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('c', Page::getCurrentPage());
     }
 
+    public function importAdditionalData($b, $blockNode)
+    {
+        parent::importAdditionalData($b, $blockNode);
+        if (isset($blockNode->thumbnails)) {
+            $db = $this->app->make(Connection::class);
+            foreach ($blockNode->thumbnails->thumbnail as $thumbnailNode) {
+                $ftTypeHandle = (string) $thumbnailNode['handle'];
+                $breakpointHandle = (string) $thumbnailNode['breakpointHandle'];
+                if ($ftTypeHandle && $breakpointHandle) {
+                    $type = Type::getByHandle($ftTypeHandle);
+                    if ($type) {
+                        $db->insert('btContentImageBreakpoints', ['bID' => $b->getBlockID(), 'breakpointHandle' => $breakpointHandle, 'ftTypeID' => $type->getID()]);
+                    }
+                }
+            }
+        }
+    }
+
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+
+        $thumbnailTypes = $this->getSelectedThumbnailTypes();
+        if (count($thumbnailTypes)) {
+            $thumbnails = $blockNode->addChild('thumbnails');
+            foreach ($thumbnailTypes as $breakpointHandle => $thumbnailTypeID) {
+                $thumbnailType = Type::getByID($thumbnailTypeID);
+                if ($thumbnailType) {
+                    $thumbnail = $thumbnails->addChild('thumbnail');
+                    $thumbnail['breakpointHandle'] = $breakpointHandle;
+                    $thumbnail['handle'] = $thumbnailType->getHandle();
+                }
+            }
+        }
+    }
+
+
     /**
      * @return array
      */

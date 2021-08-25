@@ -128,7 +128,7 @@ $identifier = $app->make(Identifier::class);
             <li class="ccm-inline-toolbar-select">
                 <div class="form-group">
                     <?php echo $form->label("bFilename", t('Block Template')); ?>
-                    <?php echo $form->select("bFilename", $customTemplateOptions, $bFilename, ["class" => "selectpicker form-control"]); ?>
+                    <?php echo $form->select("bFilename", $customTemplateOptions, $bFilename, ['class' => '']); ?>
                 </div>
             </li>
         <?php } ?>
@@ -619,7 +619,7 @@ $identifier = $app->make(Identifier::class);
                             <?php if ($displayBlockContainerSettings) { ?>
                                 <div class="form-group">
                                     <?php echo $form->label("enableBlockContainer", t('Block Container Class')) ?>
-                                    <?php echo $form->select("enableBlockContainer", $enableBlockContainerOptions, $enableBlockContainer, ["class" => "selectpicker form-control"]); ?>
+                                    <?php echo $form->select("enableBlockContainer", $enableBlockContainerOptions, $enableBlockContainer); ?>
                                 </div>
 
                                 <hr/>

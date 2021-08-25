@@ -1,9 +1,9 @@
 (function(global, $) {
-    // Turns the Top Navigation Bar – which is based on the Bootstrap Navbar
 
     document.addEventListener("DOMContentLoaded", function(){
 
-        // make it as accordion for smaller screens
+        // Enable dropdown menu in navbar
+
         if (window.innerWidth > 992) {
 
             document.querySelectorAll('.navbar .nav-item').forEach(function(everyitem){
@@ -33,7 +33,35 @@
             });
 
         }
-        // end if innerWidth
+
+        // Enable transparency
+        const $transparentNavbar = $('div[data-transparency=navbar]')
+        const $toolbar = $('#ccm-toolbar')
+        if ($transparentNavbar.length) {
+            const $navbar = $transparentNavbar.find('.navbar')
+            // Check the next item to see if it supports transparency
+
+            if ($navbar.hasClass('fixed-top') && $toolbar.length > 0) {
+                $navbar.removeClass('fixed-top')
+            }
+
+            const $nextElement = $transparentNavbar.next()
+            if ($nextElement.length && $nextElement.is('[data-transparency=element]') && $toolbar.length === 0) {
+                $transparentNavbar.addClass('transparency-enabled')
+
+                if ($navbar.hasClass('fixed-top')) {
+                    $(window).scroll(function() {
+                        var isScrolled = $(document).scrollTop() > 5;
+                        if (isScrolled) {
+                            $transparentNavbar.removeClass('transparency-enabled')
+                        } else {
+                            $transparentNavbar.addClass('transparency-enabled')
+                        }
+                    })
+                }
+            }
+            $transparentNavbar.show()
+        }
     });
 
 })(window, $)

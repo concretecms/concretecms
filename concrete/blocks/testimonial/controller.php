@@ -14,7 +14,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btInterfaceHeight = 560;
-    protected $btExportFileColumns = array('fID');
+    protected $btExportFileColumns = array('fID', 'awardImageID');
     protected $btTable = 'btTestimonial';
 
     public function getBlockTypeDescription()
@@ -47,7 +47,7 @@ class Controller extends BlockController
         if ($this->awardImageID) {
             $f = \File::getByID($this->awardImageID);
             if (is_object($f)) {
-                $awardImage = Core::make('html/image', array($f, false))->getTag();
+                $awardImage = Core::make('html/image', array('f' => $f))->getTag();
                 $this->set('awardImage', $awardImage);
             }
         }

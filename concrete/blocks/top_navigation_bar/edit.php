@@ -31,6 +31,10 @@ if ($includeBrandText && $includeBrandLogo) {
                 <label class="form-check-label" for="includeTransparency"><?=t('Enable transparent functionality if the theme supports it.')?></label>
             </div>
             <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="includeStickyNav" name="includeStickyNav" value="1" v-model="includeStickyNav">
+                <label class="form-check-label" for="includeStickyNav"><?=t('Enable sticky navigation bar on scroll if theme supports it.')?></label>
+            </div>
+            <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input" id="includeSearchInput" name="includeSearchInput" value="1" v-model="includeSearchInput">
                 <label class="form-check-label" for="includeSearchInput"><?=t('Display search input within navigation bar.')?></label>
             </div>

@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$this->inc('elements/header.php');
+$view->inc('elements/header.php');
 
 ?>
 
@@ -16,4 +16,4 @@ $this->inc('elements/header.php');
     ?>
 
 <?php
-$this->inc('elements/footer.php');
+$view->inc('elements/footer.php');

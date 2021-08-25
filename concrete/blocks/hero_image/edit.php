@@ -13,7 +13,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 <fieldset class="mb-3">
     <legend><?=t('Basics')?></legend>
     <div class="mb-3">
-        <label class="form-label" for="image"><?=t('Background Image')?></label>
+        <label class="form-label" for="image"><?=t('Image')?></label>
         <?php echo $fileManager->image('image', 'image', t('Choose Image'), $image); ?>
     </div>
     <div class="mb-3">

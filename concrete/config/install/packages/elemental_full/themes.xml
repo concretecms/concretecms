@@ -5,4 +5,20 @@
         <thumbnailtype name="Medium Image" handle="medium" sizingMode="proportional" width="940"/>
         <thumbnailtype name="Large Image" handle="large" sizingMode="proportional" width="1140"/>
     </thumbnailtypes>
+    <summarytemplates>
+        <template handle="thumbnail_title_description" name="Thumbnail Title Description"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+                <category handle="calendar_event"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field required="1">thumbnail</field>
+                <field>description</field>
+                <field>date</field>
+            </fields>
+        </template>
+    </summarytemplates>
 </concrete5-cif>

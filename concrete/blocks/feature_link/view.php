@@ -6,7 +6,7 @@
     <div class="ccm-block-feature-link-text <?php if ($buttonColor) { ?>border-top pt-5 border-5 border-<?=$buttonColor?>"<?php } ?>>
 
         <?php if ($title) { ?>
-            <h2><?=$title?></h2>
+            <<?=$titleFormat?>><?=$title?></<?=$titleFormat?>>
         <?php } ?>
 
         <?php if ($body) { ?>

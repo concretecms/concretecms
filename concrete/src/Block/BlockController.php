@@ -54,6 +54,10 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btTable = null;
     protected $btID;
 
+    /**
+     * @internal
+     * Note: do not rely on these being here. These are going to be moved.
+     */
     public static $btTitleFormats = ['h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3', 'h4' => 'H4', 'h5' => 'H5', 'h6' => 'H6', 'p' => 'Normal'];
 
     /**

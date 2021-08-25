@@ -5,6 +5,7 @@ use Concrete\Core\Area\ContainerArea;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
@@ -62,17 +63,14 @@ class Controller extends BlockController
     public function save($data)
     {
         $entityManager = $this->app->make(EntityManager::class);
-        if (isset($data['constainerInstanceID'])) {
-            
-        } else {
-            $container = $entityManager->find(Container::class, $data['containerID']);
-            if ($container) {
-                $instance = new Container\Instance();
-                $instance->setContainer($container);
-                $entityManager->persist($instance);
-                $entityManager->flush();
-                $data['containerInstanceID'] = $instance->getContainerInstanceID();
-            }
+        $container = $entityManager->find(Container::class, $data['containerID']);
+        if ($container) {
+            $instance = new Container\Instance();
+            $instance->setContainer($container);
+            $entityManager->persist($instance);
+            $entityManager->flush();
+            $data['containerInstanceID'] = $instance->getContainerInstanceID();
+            $this->containerInstanceID = $data['containerInstanceID'];
         }
         parent::save($data);
     }
@@ -129,18 +127,27 @@ class Controller extends BlockController
 
     protected function importAdditionalData($b, $blockNode)
     {
+        $db = $this->app->make(Connection::class);
+        // such a pain
+        $this->containerInstanceID = $db->fetchColumn('select containerInstanceID from btCoreContainer where bID = ?', [$b->getBlockID()]);
+
+        
         $parentArea = $b->getBlockAreaObject();
         $page = $b->getBlockCollectionObject();
 
+        $instance = $this->getContainerInstanceObject();
         // go through all areas found under this node, and create the corresponding sub area.
         foreach ($blockNode->container->containerarea as $containerAreaNode) {
-            $areaHandle = (string)$containerAreaNode['name'];
+
+            $areaDisplayName = (string)$containerAreaNode['name'];
+            $arHandle = $instance->getContainerInstanceID() . SubArea::AREA_SUB_DELIMITER . $areaDisplayName;
             $subArea = new SubArea(
-                $areaHandle,
+                $arHandle,
                 $parentArea->getAreaHandle(),
                 $parentArea->getAreaID()
             );
-            $subArea->setAreaDisplayName($areaHandle);
+
+            $subArea->setAreaDisplayName($areaDisplayName);
             $subArea->load($page);
 
             if ($containerAreaNode->style) {

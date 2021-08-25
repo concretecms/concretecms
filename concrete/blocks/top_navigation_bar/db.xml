@@ -13,6 +13,7 @@
         <field name="includeBrandText" type="boolean" />
         <field name="includeBrandLogo" type="boolean" />
         <field name="includeTransparency" type="boolean" />
+        <field name="includeStickyNav" type="boolean" />
         <field name="includeNavigation" type="boolean" />
         <field name="includeNavigationDropdowns" type="boolean" />
         <field name="includeSearchInput" type="boolean" />

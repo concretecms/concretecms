@@ -23,8 +23,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $helpers = ['form'];
 
     public $brandingLogo = 0;
+    public $brandingTransparentLogo = 0;
     public $includeBrandLogo = false;
     public $includeBrandText = false;
+    public $includeStickyNav = false;
     public $includeNavigationDropdowns = false;
     public $includeSearchInput;
 
@@ -36,6 +38,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 300;
+    protected $btExportFileColumns = ['brandingLogo', 'brandingTransparentLogo'];
 
     /**
      * {@inheritdoc}
@@ -69,6 +72,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $brandingText = $site->getSiteName();
 
         $this->set('includeTransparency', false);
+        $this->set('includeStickyNav', false);
         $this->set('includeNavigation', true);
         $this->set('includeNavigationDropdowns', false);
         $this->set('includeSearchInput', false);
@@ -96,6 +100,19 @@ class Controller extends BlockController implements UsesFeatureInterface
         return false;
     }
 
+    protected function includeSubPagesInNavigation(Page $page)
+    {
+        if ($this->includeNavigationDropdowns) {
+            $excludeSubPages = $page->getAttribute('exclude_subpages_from_nav');
+            if ($excludeSubPages) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected function getNavigation(): Navigation
     {
         $site = $this->app->make('site')->getSite();
@@ -105,7 +122,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         foreach ($children as $child) {
             if ($this->includePageInNavigation($child)) {
                 $item = new PageItem($child);
-                if ($this->includeNavigationDropdowns) {
+                if ($this->includeSubPagesInNavigation($child)) {
                     $dropdownChildren = $child->getCollectionChildren();
                     foreach ($dropdownChildren as $dropdownChild) {
                         if ($this->includePageInNavigation($dropdownChild)) {
@@ -131,6 +148,12 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $this->set('logo', $logo);
             }
         }
+        if ($this->brandingTransparentLogo) {
+            $transparentLogo = File::getByID($this->brandingTransparentLogo);
+            if ($transparentLogo) {
+                $this->set('transparentLogo', $transparentLogo);
+            }
+        }
         $this->set('navigation', $this->getNavigation());
         $this->set('home', $home);
         if ($this->includeSearchInput) {
@@ -151,22 +174,28 @@ class Controller extends BlockController implements UsesFeatureInterface
         $data['includeNavigationDropdowns'] = $args['includeNavigationDropdowns'] ? 1 : 0;
         $data['includeTransparency'] = $args['includeTransparency'] ? 1 : 0;
         $data['includeSearchInput'] = $args['includeSearchInput'] ? 1 : 0;
+        $data['includeStickyNav'] = $args['includeStickyNav'] ? 1 : 0;
 
         $data['includeBrandLogo'] = 0;
         $data['includeBrandText'] = 0;
-        switch ($args['brandingMode']) {
-            case 'logoText':
-                $data['includeBrandLogo'] = 1;
-                $data['includeBrandText'] = 1;
-                $data['brandingText'] = $args['brandingText'];
-                break;
-            case 'logo':
-                $data['includeBrandLogo'] = 1;
-                break;
-            case 'text':
-                $data['includeBrandText'] = 1;
-                $data['brandingText'] = $args['brandingText'];
-                break;
+
+        // This line is for import purposes – in import this is already set this way
+        if (isset($args['includeBrandText']) || isset($args['includeBrandLogo'])) {
+            $data['includeBrandLogo'] = $args['includeBrandLogo'];
+            $data['includeBrandText'] = $args['includeBrandText'];
+        } else {
+            switch ($args['brandingMode']) {
+                case 'logoText':
+                    $data['includeBrandLogo'] = 1;
+                    $data['includeBrandText'] = 1;
+                    break;
+                case 'logo':
+                    $data['includeBrandLogo'] = 1;
+                    break;
+                case 'text':
+                    $data['includeBrandText'] = 1;
+                    break;
+            }
         }
 
         $brandingLogo = 0;
@@ -200,6 +229,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
 
+        if ($data['includeBrandText']) {
+            $data['brandingText'] = $args['brandingText'];
+        }
         if ($data['includeBrandLogo']) {
             $data['brandingLogo'] = $brandingLogo;
             $data['brandingTransparentLogo'] = $brandingTransparentLogo;

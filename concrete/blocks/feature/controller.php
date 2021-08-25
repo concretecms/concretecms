@@ -194,6 +194,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             "fas fa-book",
             "fas fa-bookmark", "far fa-bookmark",
             "fas fa-braille",
+            "fas fa-brain",
             "fas fa-briefcase",
             "fab fa-btc",
             "fas fa-bug",

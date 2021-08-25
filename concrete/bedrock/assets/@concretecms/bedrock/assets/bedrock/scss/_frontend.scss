@@ -4,6 +4,7 @@
 // Import Font Awesome
 @import '@fortawesome/fontawesome-free/scss/variables';
 
-// Import Theme Foundation  items
+// Import Theme Foundation items
+@import 'mixins';
 @import 'utilities';
 @import 'theme-grid';

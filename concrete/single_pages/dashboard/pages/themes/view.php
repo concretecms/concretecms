@@ -57,7 +57,7 @@ if (isset($activate_confirm)) {
                             <a href="<?=$view->action('activate', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Activate')?></a>
                         <?php } ?>
                         <?php if ($t->hasThemeDocumentation()) { ?>
-                            <a href="javascript:void(0)" class="btn btn-secondary btn-sm" data-dialog="reset-documentation"><?=t('Reset Documentation')?></a>
+                            <a href="javascript:void(0)" class="btn btn-secondary btn-sm" data-dialog="reset-documentation-<?=$t->getThemeID()?>"><?=t('Reset Documentation')?></a>
                         <?php } ?>
                         <?php if ($t->isThemeCustomizable()) { ?>
                             <a href="<?=$view->action('preview', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Preview &amp; Customize')?></a>
@@ -77,7 +77,7 @@ if (isset($activate_confirm)) {
 
                         <?php if ($t->hasThemeDocumentation()) { ?>
                         <div class="d-none">
-                            <div data-dialog-wrapper="reset-documentation">
+                            <div data-dialog-wrapper="reset-documentation-<?=$t->getThemeID()?>">
                                 <form method="post" data-form-reset-documentation="<?=$t->getThemeID()?>" action="<?= $view->action('reset_documentation', $t->getThemeID()) ?>">
                                     <?php $token->output("reset_documentation") ?>
                                     <p><?= t('This will reset the theme documentation to the content that ships with the theme.') ?></p>

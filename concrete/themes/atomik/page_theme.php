@@ -63,6 +63,7 @@ class PageTheme extends Theme
     public function getDocumentationProvider(): ?DocumentationProviderInterface
     {
         $pages = [
+            new ThemeDocumentationPage($this, 'Overview', 'overview.xml'),
         ];
         $pages = array_merge($pages, $this->getDocumentationPages());
         return DocumentationProvider::createFromArray($pages);

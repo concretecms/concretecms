@@ -22,5 +22,9 @@
         <field name="buttonColor" type="string" />
         <field name="buttonStyle" type="string" />
         <field name="buttonSize" type="string" />
+        <field name="titleFormat" type="string" size="20">
+            <default value="h2" />
+            <notnull/>
+        </field>
     </table>
 </schema>

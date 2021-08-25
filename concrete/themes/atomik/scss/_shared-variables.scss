@@ -9,6 +9,30 @@ $display-font-sizes: (
     4: 2rem
 );
 
+// Grid Gutters
+$grid-gutter-width: 1.875rem;
+
+// Grids - remove xxl breakpoint
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+);
+
+$container-max-widths: (
+    sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 1140px
+);
+
+
+// Typography
+$lead-font-weight: 400;
+$lead-line-height: 2em;
+
 // Spacers - we need to make 5 less huge, and add some additional
 $spacers: (
     0: 0,
