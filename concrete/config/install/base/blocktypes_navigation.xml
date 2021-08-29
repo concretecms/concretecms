@@ -6,6 +6,7 @@
         <blocktype handle="page_title" package=""/>
         <blocktype handle="top_navigation_bar" package=""/>
         <blocktype handle="faq" package=""/>
+        <blocktype handle="accordion" package=""/>
         <blocktype handle="page_list" package=""/>
         <blocktype handle="next_previous" package=""/>
         <blocktype handle="date_navigation" package=""/>
@@ -21,6 +22,7 @@
             <blocktype handle="autonav"/>
             <blocktype handle="page_title"/>
             <blocktype handle="top_navigation_bar"/>
+            <blocktype handle="accordion"/>
             <blocktype handle="faq"/>
             <blocktype handle="page_list"/>
             <blocktype handle="next_previous"/>

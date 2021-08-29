@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <thumbnailtypes>
+        <thumbnailtype name="Document Library Icon Grid" handle="document_library_icon_grid" sizingMode="proportional" width="510" height="510" />
+        <thumbnailtype name="Testimonial Circle" handle="testimonial_circle" sizingMode="exact" width="180" height="180" />
         <thumbnailtype name="Stripe Column Image" handle="stripe_column" sizingMode="exact" width="850" height="650" />
         <thumbnailtype name="Gallery" handle="atomik_gallery" sizingMode="exact" width="860" height="614" />
         <thumbnailtype name="Blog Entry Thumbnail" handle="blog_entry_thumbnail" sizingMode="exact" width="660" height="428" />

@@ -77,11 +77,7 @@ import '../../../cms/js/file-manager/file-manager'
                                 })
                                 window.alert(str)
                             } else {
-                                ConcreteEvent.unsubscribe('FileManagerUploadCompleteDialogClose.documentLibrary')
-                                ConcreteEvent.subscribe('FileManagerUploadCompleteDialogClose.documentLibrary', function(e, data) {
-                                    window.location.reload()
-                                })
-                                ConcreteFileManager.launchUploadCompleteDialog(files)
+                                window.location.reload()
                                 files = []
                             }
                         } else {

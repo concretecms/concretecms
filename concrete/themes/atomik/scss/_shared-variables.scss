@@ -60,7 +60,11 @@ $gutters: (
     10: $spacer * 7,
 );
 
-
+// Modals
+$modal-content-border-radius: $border-radius;
+$modal-content-border-width: 0;
+$modal-header-border-width: 0;
+$modal-footer-border-width: 0;
 
 // Buttons
 $btn-padding-x: 1.25rem;

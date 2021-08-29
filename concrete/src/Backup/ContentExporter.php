@@ -4,6 +4,7 @@ namespace Concrete\Core\Backup;
 use Block;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use File;
 use FileList;
 use Job;
@@ -104,6 +105,16 @@ class ContentExporter
             return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
         }
     }
+
+    public static function replaceFileFolderWithPlaceHolder($treeNodeID)
+    {
+        if ($treeNodeID > 0) {
+            $folder = FileFolder::getByID($treeNodeID);
+
+            return '{ccm:export:filefolder:' . $folder->getTreeNodeDisplayPath() . '}';
+        }
+    }
+
 
     public static function replacePageFeedWithPlaceholder($pfID)
     {

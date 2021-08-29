@@ -4,6 +4,7 @@
 @import "containers";
 @import "summary-templates";
 @import "header";
+@import "breadcrumbs";
 @import "footer";
 
 @import "@concretecms/bedrock/assets/bedrock/scss/frontend";
@@ -11,4 +12,5 @@
 @import "features/imagery";
 @import "features/basics";
 @import "features/testimonials";
+@import "features/documents";
 

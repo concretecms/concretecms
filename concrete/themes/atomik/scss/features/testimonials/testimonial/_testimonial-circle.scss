@@ -1,0 +1,21 @@
+div.theme-atomik {
+  .ccm-block-testimonial-circle {
+
+    text-align: center;
+
+    .ccm-block-testimonial-circle-avatar {
+      img {
+        max-width: 90px;
+        max-height: 90px;
+        border-radius: 45px;
+      }
+      margin-bottom: 1rem;
+    }
+
+    .ccm-block-testimonial-position {
+      font-style: normal;
+      color: $primary;
+      @extend .h6;
+    }
+  }
+}

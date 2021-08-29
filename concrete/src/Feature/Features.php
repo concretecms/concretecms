@@ -143,5 +143,10 @@ class Features
      */
     const POLLS = 'polls';
 
-    
+    /**
+     * Accessory feature: support for accordions
+     */
+    const ACCORDIONS = 'accordions';
+
+
 }

@@ -99,6 +99,7 @@ mix
  * Build Block Components
  */
 mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js');
+mix.js('assets/blocks/accordion/accordion.js', '../concrete/blocks/accordion/auto.js');
 
 
 /**

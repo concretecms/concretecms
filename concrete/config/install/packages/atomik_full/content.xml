@@ -6,6 +6,7 @@
     <pagetemplates>
         <pagetemplate handle="full" name="Full" icon="full.png" package=""/>
         <pagetemplate icon="right_sidebar.png" name="Right Sidebar" handle="right_sidebar" package="" internal=""/>
+        <pagetemplate icon="two_column.png" name="Two Column" handle="two_column" package="" internal=""/>
     </pagetemplates>
     <pagetypes>
         <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0">
@@ -110,7 +111,7 @@
                                             <title>Topics</title>
                                             <topicAttributeKeyHandle>blog_entry_topics</topicAttributeKeyHandle>
                                             <tree>Blog Entries</tree>
-                                            <cParentID>{ccm:export:page:/blog}</cParentID>
+                                            <cParentID>{ccm:export:page:/about/blog}</cParentID>
                                         </data>
                                     </block>
                                     <block type="page_list" name="" mc-block-id="KffPWR4h">
@@ -118,7 +119,7 @@
                                             <record>
                                                 <num><![CDATA[3]]></num>
                                                 <orderBy><![CDATA[random]]></orderBy>
-                                                <cParentID>{ccm:export:page:/blog}</cParentID>
+                                                <cParentID>{ccm:export:page:/about/blog}</cParentID>
                                                 <filterByRelated>1</filterByRelated>
                                                 <cThis><![CDATA[1]]></cThis>
                                                 <includeName><![CDATA[1]]></includeName>
@@ -217,7 +218,7 @@
                                                                 <title><![CDATA[Archives]]></title>
                                                                 <redirectToResults>0</redirectToResults>
                                                                 <filterByParent>1</filterByParent>
-                                                                <cParentID>{ccm:export:page:/blog}</cParentID>
+                                                                <cParentID>{ccm:export:page:/about/blog}</cParentID>
                                                                 <cTargetID/>
                                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                             </record>
@@ -231,6 +232,89 @@
                             </area>
                             <area name="Page Footer">
                                 <blocks/>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                </output>
+            </composer>
+        </pagetype>
+        <pagetype name="Resource" handle="resource" package="" launch-in-composer="1" is-frequently-added="1">
+            <pagetemplates type="custom" default="two_column">
+                <pagetemplate handle="two_column"/>
+            </pagetemplates>
+            <target handle="parent_page" package="" path="/resources"/>
+            <composer>
+                <formlayout>
+                    <set name="" description="">
+                        <control custom-template="" required="1" custom-label="" description=""
+                                 type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="Date Posted" description="" type="core_page_property"
+                                 handle="date_time"/>
+                        <control custom-template="" custom-label="" description="" type="collection_attribute"
+                                 handle="tags"/>
+                        <control custom-template="" custom-label="" description="" type="collection_attribute"
+                                 handle="thumbnail"/>
+                        <control custom-template="" custom-label="" description="" output-control-id="c11e38a0"
+                                 type="block" handle="content"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="two_column">
+                        <page name="" path="" public-date="2021-08-28 07:31:35" filename="" pagetype="resource"
+                              template="two_column" user="admin" description="" package="" root="true">
+                            <area name="Header">
+                                <blocks>
+                                    <block type="breadcrumbs" name="" mc-block-id="bf3d4ccc">
+                                        <data table="btBreadcrumbs">
+                                            <record>
+                                                <includeCurrent><![CDATA[1]]></includeCurrent>
+                                                <ignoreExcludeNav><![CDATA[1]]></ignoreExcludeNav>
+                                                <ignorePermission><![CDATA[0]]></ignorePermission>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Main Left">
+                                <blocks>
+                                    <block type="page_attribute_display" name="" mc-block-id="11402c4b">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[thumbnail]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[]]></attributeTitleText>
+                                                <displayTag><![CDATA[h1]]></displayTag>
+                                                <dateFormat><![CDATA[n/j/y, g:i A]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[1000]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[1000]]></thumbnailWidth>
+                                                <delimiter><![CDATA[comma]]></delimiter>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Main Right">
+                                <blocks>
+                                    <block type="page_title" name="" mc-block-id="9986ce43">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <useFilterTitle><![CDATA[0]]></useFilterTitle>
+                                                <useFilterTopic><![CDATA[0]]></useFilterTopic>
+                                                <useFilterTag><![CDATA[0]]></useFilterTag>
+                                                <useFilterDate><![CDATA[0]]></useFilterDate>
+                                                <topicTextFormat><![CDATA[0]]></topicTextFormat>
+                                                <tagTextFormat><![CDATA[upperWord]]></tagTextFormat>
+                                                <dateTextFormat><![CDATA[0]]></dateTextFormat>
+                                                <filterDateFormat><![CDATA[F Y]]></filterDateFormat>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                                <formatting><![CDATA[h4]]></formatting>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="eb8c83d5">
+                                        <control output-control-id="c11e38a0"/>
+                                    </block>
+                                </blocks>
                             </area>
                         </page>
                     </pagetemplate>
@@ -262,6 +346,74 @@
                                 <control id="f6a4c382-0517-11ec-bb64-2d8e40952e25" type="attribute_key" required="1"
                                          custom-label="">
                                     <attributekey handle="email_address"/>
+                                </control>
+                            </controls>
+                        </fieldset>
+                    </fieldsets>
+                </form>
+            </forms>
+        </entity>
+        <entity id="83ae65b1-79e8-4ded-bbca-e419bfd19bb6" handle="express_form_170" plural_handle="" name="Contact"
+                include_in_public_list="" description="" default_view_form="881b6bde-220f-4482-b8f9-ace40b5d169b"
+                default_edit_form="881b6bde-220f-4482-b8f9-ace40b5d169b" results-folder="/Forms">
+            <attributekeys>
+                <attributekey handle="contact_question_first_name" name="First Name" package="" searchable="1"
+                              indexed="1" type="text" category="">
+                    <type placeholder=""/>
+                </attributekey>
+                <attributekey handle="contact_question_last_name" name="Last Name" package="" searchable="1" indexed="1"
+                              type="text" category="">
+                    <type placeholder=""/>
+                </attributekey>
+                <attributekey handle="contact_question_email_address" name="Email Address" package="" searchable="1"
+                              indexed="1" type="email" category=""/>
+                <attributekey handle="contact_question_subject" name="Subject" package="" searchable="1" indexed="1"
+                              type="select" category="">
+                    <type allow-multiple-values="" display-order="display_asc" display-multiple-values="1"
+                          allow-other-values="" hide-none-option="">
+                        <options>
+                            <option value="I love your work" is-end-user-added="1"/>
+                            <option value="Great website" is-end-user-added="1"/>
+                            <option value="Check out this cool thing I found" is-end-user-added="1"/>
+                            <option value="Other" is-end-user-added="1"/>
+                        </options>
+                    </type>
+                </attributekey>
+                <attributekey handle="contact_question_message" name="Message" package="" searchable="1" indexed="1"
+                              type="textarea" category="">
+                    <type mode="text"/>
+                </attributekey>
+            </attributekeys>
+            <forms>
+                <form id="881b6bde-220f-4482-b8f9-ace40b5d169b" name="Form">
+                    <fieldsets>
+                        <fieldset title="" description="">
+                            <controls>
+                                <control id="f68175ca-634c-11e6-a245-62e65b165d8e" type="attribute_key" required="1"
+                                         custom-label="">
+                                    <attributekey handle="contact_question_first_name"/>
+                                </control>
+                                <control id="fbc62d32-634c-11e6-a245-62e65b165d8e" type="attribute_key" required="1"
+                                         custom-label="">
+                                    <attributekey handle="contact_question_last_name"/>
+                                </control>
+                                <control id="02181ae2-634d-11e6-a245-62e65b165d8e" type="attribute_key" required="1"
+                                         custom-label="">
+                                    <attributekey handle="contact_question_email_address"/>
+                                </control>
+                                <control id="32a6369e-65a0-11e6-9add-e0995e0a1653" type="entity_property" required=""
+                                         custom-label="" type-id="text">
+                                    <headline><![CDATA[]]></headline>
+                                    <body><![CDATA[<div class="alert alert-info">Don&#39;t worry &ndash;&nbsp;we won&#39;t add you to any email list. This is just so we can contact you in case you have questions.</div>
+]]></body>
+                                </control>
+                                <control id="b3c4ee52-6350-11e6-a245-62e65b165d8e" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="contact_question_subject"/>
+                                </control>
+                                <control id="bf4cdc08-6350-11e6-a245-62e65b165d8e" type="attribute_key" required="1"
+                                         custom-label="">
+                                    <attributekey handle="contact_question_message"/>
                                 </control>
                             </controls>
                         </fieldset>
@@ -374,41 +526,6 @@
                         </container>
                     </block>
                     <block type="content" name="">
-                        <style>
-                            <backgroundColor/>
-                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                            <backgroundSize>auto</backgroundSize>
-                            <backgroundPosition>0% 0%</backgroundPosition>
-                            <borderWidth/>
-                            <borderColor/>
-                            <borderStyle/>
-                            <borderRadius/>
-                            <baseFontSize/>
-                            <alignment/>
-                            <textColor/>
-                            <linkColor/>
-                            <paddingTop/>
-                            <paddingBottom/>
-                            <paddingLeft/>
-                            <paddingRight/>
-                            <marginTop>60px</marginTop>
-                            <marginBottom/>
-                            <marginLeft/>
-                            <marginRight/>
-                            <rotate/>
-                            <boxShadowHorizontal/>
-                            <boxShadowVertical/>
-                            <boxShadowBlur/>
-                            <boxShadowSpread/>
-                            <boxShadowColor/>
-                            <customClass/>
-                            <customID/>
-                            <customElementAttribute/>
-                            <hideOnExtraSmallDevice/>
-                            <hideOnSmallDevice/>
-                            <hideOnMediumDevice/>
-                            <hideOnLargeDevice/>
-                        </style>
                         <data table="btContentLocal">
                             <record>
                                 <content><![CDATA[<h2 class="display-2" style="text-align: center;">What We Do</h2>
@@ -420,41 +537,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         </data>
                     </block>
                     <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <style>
-                            <backgroundColor/>
-                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                            <backgroundSize>auto</backgroundSize>
-                            <backgroundPosition>0% 0%</backgroundPosition>
-                            <borderWidth/>
-                            <borderColor/>
-                            <borderStyle/>
-                            <borderRadius/>
-                            <baseFontSize/>
-                            <alignment/>
-                            <textColor/>
-                            <linkColor/>
-                            <paddingTop/>
-                            <paddingBottom/>
-                            <paddingLeft/>
-                            <paddingRight/>
-                            <marginTop>50px</marginTop>
-                            <marginBottom>50px</marginBottom>
-                            <marginLeft/>
-                            <marginRight/>
-                            <rotate/>
-                            <boxShadowHorizontal/>
-                            <boxShadowVertical/>
-                            <boxShadowBlur/>
-                            <boxShadowSpread/>
-                            <boxShadowColor/>
-                            <customClass/>
-                            <customID/>
-                            <customElementAttribute/>
-                            <hideOnExtraSmallDevice/>
-                            <hideOnSmallDevice/>
-                            <hideOnMediumDevice/>
-                            <hideOnLargeDevice/>
-                        </style>
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="4" offset="0">
@@ -979,41 +1061,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         </container>
                     </block>
                     <block type="content" name="">
-                        <style>
-                            <backgroundColor/>
-                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                            <backgroundSize>auto</backgroundSize>
-                            <backgroundPosition>0% 0%</backgroundPosition>
-                            <borderWidth/>
-                            <borderColor/>
-                            <borderStyle/>
-                            <borderRadius/>
-                            <baseFontSize/>
-                            <alignment/>
-                            <textColor/>
-                            <linkColor/>
-                            <paddingTop/>
-                            <paddingBottom/>
-                            <paddingLeft/>
-                            <paddingRight/>
-                            <marginTop>50px</marginTop>
-                            <marginBottom>50px</marginBottom>
-                            <marginLeft/>
-                            <marginRight/>
-                            <rotate/>
-                            <boxShadowHorizontal/>
-                            <boxShadowVertical/>
-                            <boxShadowBlur/>
-                            <boxShadowSpread/>
-                            <boxShadowColor/>
-                            <customClass/>
-                            <customID/>
-                            <customElementAttribute/>
-                            <hideOnExtraSmallDevice/>
-                            <hideOnSmallDevice/>
-                            <hideOnMediumDevice/>
-                            <hideOnLargeDevice/>
-                        </style>
                         <data table="btContentLocal">
                             <record>
                                 <content><![CDATA[<h2 class="display-2" style="text-align: center;">What We Do</h2>
@@ -1025,41 +1072,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         </data>
                     </block>
                     <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <style>
-                            <backgroundColor/>
-                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                            <backgroundSize>auto</backgroundSize>
-                            <backgroundPosition>0% 0%</backgroundPosition>
-                            <borderWidth/>
-                            <borderColor/>
-                            <borderStyle/>
-                            <borderRadius/>
-                            <baseFontSize/>
-                            <alignment/>
-                            <textColor/>
-                            <linkColor/>
-                            <paddingTop/>
-                            <paddingBottom/>
-                            <paddingLeft/>
-                            <paddingRight/>
-                            <marginTop>50px</marginTop>
-                            <marginBottom>50px</marginBottom>
-                            <marginLeft/>
-                            <marginRight/>
-                            <rotate/>
-                            <boxShadowHorizontal/>
-                            <boxShadowVertical/>
-                            <boxShadowBlur/>
-                            <boxShadowSpread/>
-                            <boxShadowColor/>
-                            <customClass/>
-                            <customID/>
-                            <customElementAttribute/>
-                            <hideOnExtraSmallDevice/>
-                            <hideOnSmallDevice/>
-                            <hideOnMediumDevice/>
-                            <hideOnLargeDevice/>
-                        </style>
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="4" offset="0">
@@ -1108,41 +1120,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         </arealayout>
                     </block>
                     <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <style>
-                            <backgroundColor/>
-                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                            <backgroundSize>auto</backgroundSize>
-                            <backgroundPosition>0% 0%</backgroundPosition>
-                            <borderWidth/>
-                            <borderColor/>
-                            <borderStyle/>
-                            <borderRadius/>
-                            <baseFontSize/>
-                            <alignment/>
-                            <textColor/>
-                            <linkColor/>
-                            <paddingTop/>
-                            <paddingBottom/>
-                            <paddingLeft/>
-                            <paddingRight/>
-                            <marginTop>50px</marginTop>
-                            <marginBottom>50px</marginBottom>
-                            <marginLeft/>
-                            <marginRight/>
-                            <rotate/>
-                            <boxShadowHorizontal/>
-                            <boxShadowVertical/>
-                            <boxShadowBlur/>
-                            <boxShadowSpread/>
-                            <boxShadowColor/>
-                            <customClass/>
-                            <customID/>
-                            <customElementAttribute/>
-                            <hideOnExtraSmallDevice/>
-                            <hideOnSmallDevice/>
-                            <hideOnMediumDevice/>
-                            <hideOnLargeDevice/>
-                        </style>
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="4" offset="0">
@@ -1335,41 +1312,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         </container>
                     </block>
                     <block type="content" name="">
-                        <style>
-                            <backgroundColor/>
-                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                            <backgroundSize>auto</backgroundSize>
-                            <backgroundPosition>0% 0%</backgroundPosition>
-                            <borderWidth/>
-                            <borderColor/>
-                            <borderStyle/>
-                            <borderRadius/>
-                            <baseFontSize/>
-                            <alignment/>
-                            <textColor/>
-                            <linkColor/>
-                            <paddingTop/>
-                            <paddingBottom/>
-                            <paddingLeft/>
-                            <paddingRight/>
-                            <marginTop>50px</marginTop>
-                            <marginBottom>50px</marginBottom>
-                            <marginLeft/>
-                            <marginRight/>
-                            <rotate/>
-                            <boxShadowHorizontal/>
-                            <boxShadowVertical/>
-                            <boxShadowBlur/>
-                            <boxShadowSpread/>
-                            <boxShadowColor/>
-                            <customClass/>
-                            <customID/>
-                            <customElementAttribute/>
-                            <hideOnExtraSmallDevice/>
-                            <hideOnSmallDevice/>
-                            <hideOnMediumDevice/>
-                            <hideOnLargeDevice/>
-                        </style>
                         <data table="btContentLocal">
                             <record>
                                 <content><![CDATA[<h4 class="display-4" style="text-align: center;">Meet the Team</h2>
@@ -1380,41 +1322,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         </data>
                     </block>
                     <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <style>
-                            <backgroundColor/>
-                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                            <backgroundSize>auto</backgroundSize>
-                            <backgroundPosition>0% 0%</backgroundPosition>
-                            <borderWidth/>
-                            <borderColor/>
-                            <borderStyle/>
-                            <borderRadius/>
-                            <baseFontSize/>
-                            <alignment/>
-                            <textColor/>
-                            <linkColor/>
-                            <paddingTop/>
-                            <paddingBottom/>
-                            <paddingLeft/>
-                            <paddingRight/>
-                            <marginTop/>
-                            <marginBottom>50px</marginBottom>
-                            <marginLeft/>
-                            <marginRight/>
-                            <rotate/>
-                            <boxShadowHorizontal/>
-                            <boxShadowVertical/>
-                            <boxShadowBlur/>
-                            <boxShadowSpread/>
-                            <boxShadowColor/>
-                            <customClass/>
-                            <customID/>
-                            <customElementAttribute/>
-                            <hideOnExtraSmallDevice/>
-                            <hideOnSmallDevice/>
-                            <hideOnMediumDevice/>
-                            <hideOnLargeDevice/>
-                        </style>
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="4" offset="0">
@@ -1466,41 +1373,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         </arealayout>
                     </block>
                     <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <style>
-                            <backgroundColor/>
-                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                            <backgroundSize>auto</backgroundSize>
-                            <backgroundPosition>0% 0%</backgroundPosition>
-                            <borderWidth/>
-                            <borderColor/>
-                            <borderStyle/>
-                            <borderRadius/>
-                            <baseFontSize/>
-                            <alignment/>
-                            <textColor/>
-                            <linkColor/>
-                            <paddingTop/>
-                            <paddingBottom/>
-                            <paddingLeft/>
-                            <paddingRight/>
-                            <marginTop/>
-                            <marginBottom>50px</marginBottom>
-                            <marginLeft/>
-                            <marginRight/>
-                            <rotate/>
-                            <boxShadowHorizontal/>
-                            <boxShadowVertical/>
-                            <boxShadowBlur/>
-                            <boxShadowSpread/>
-                            <boxShadowColor/>
-                            <customClass/>
-                            <customID/>
-                            <customElementAttribute/>
-                            <hideOnExtraSmallDevice/>
-                            <hideOnSmallDevice/>
-                            <hideOnMediumDevice/>
-                            <hideOnLargeDevice/>
-                        </style>
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="4" offset="0">
@@ -1554,25 +1426,6 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="Blog" path="/blog" public-date="2021-07-31 16:20:28" filename="" pagetype="page"
-              template="full" user="admin" description="" package="">
-            <attributes>
-                <attributekey handle="exclude_subpages_from_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-            <area name="Main">
-                <blocks>
-                    <block type="content" name="">
-                        <data table="btContentLocal">
-                            <record>
-                                <content><![CDATA[]]></content>
-                            </record>
-                        </data>
-                    </block>
-                </blocks>
-            </area>
-        </page>
         <page name="Services" path="/about/services" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <area name="Header">
@@ -1613,45 +1466,10 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                             </containerarea>
                             <containerarea name="Body">
                                 <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                                    <style>
-                                        <backgroundColor/>
-                                        <backgroundRepeat>no-repeat</backgroundRepeat>
-                                        <backgroundSize>auto</backgroundSize>
-                                        <backgroundPosition>0% 0%</backgroundPosition>
-                                        <borderWidth/>
-                                        <borderColor/>
-                                        <borderStyle/>
-                                        <borderRadius/>
-                                        <baseFontSize/>
-                                        <alignment/>
-                                        <textColor/>
-                                        <linkColor/>
-                                        <paddingTop/>
-                                        <paddingBottom/>
-                                        <paddingLeft/>
-                                        <paddingRight/>
-                                        <marginTop>50px</marginTop>
-                                        <marginBottom></marginBottom>
-                                        <marginLeft/>
-                                        <marginRight/>
-                                        <rotate/>
-                                        <boxShadowHorizontal/>
-                                        <boxShadowVertical/>
-                                        <boxShadowBlur/>
-                                        <boxShadowSpread/>
-                                        <boxShadowColor/>
-                                        <customClass/>
-                                        <customID/>
-                                        <customElementAttribute/>
-                                        <hideOnExtraSmallDevice/>
-                                        <hideOnSmallDevice/>
-                                        <hideOnMediumDevice/>
-                                        <hideOnLargeDevice/>
-                                    </style>
                                     <arealayout type="theme-grid" columns="12">
                                         <columns>
                                             <column span="3" offset="0">
-                                                <block type="feature" name="" custom-template="stacked_primary.php">
+                                                <block type="feature" name="" custom-template="stacked.php">
                                                     <data table="btFeature">
                                                         <record>
                                                             <icon><![CDATA[fas fa-award]]></icon>
@@ -1665,7 +1483,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                                 </block>
                                             </column>
                                             <column span="3" offset="0">
-                                                <block type="feature" name="" custom-template="stacked_primary.php">
+                                                <block type="feature" name="" custom-template="stacked.php">
                                                     <data table="btFeature">
                                                         <record>
                                                             <icon><![CDATA[fas fa-palette]]></icon>
@@ -1679,7 +1497,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                                 </block>
                                             </column>
                                             <column span="3" offset="0">
-                                                <block type="feature" name="" custom-template="stacked_primary.php">
+                                                <block type="feature" name="" custom-template="stacked.php">
                                                     <data table="btFeature">
                                                         <record>
                                                             <icon><![CDATA[fas fa-code]]></icon>
@@ -1693,7 +1511,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                                 </block>
                                             </column>
                                             <column span="3" offset="0">
-                                                <block type="feature" name="" custom-template="stacked_primary.php">
+                                                <block type="feature" name="" custom-template="stacked.php">
                                                     <data table="btFeature">
                                                         <record>
                                                             <icon><![CDATA[fas fa-shield-alt]]></icon>
@@ -1758,11 +1576,287 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                             </columns>
                         </arealayout>
                     </block>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<h3 class="display-3" style="text-align: center;">What Our Clients are Saying</h3>
+
+<p class="lead text-secondary" style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="core_area_layout" name="" custom-template="wide_gutters.php">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="4" offset="0">
+                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:team-02.jpg}</fID>
+                                                <name><![CDATA[Amanda Johnson]]></name>
+                                                <position><![CDATA[CFO]]></position>
+                                                <company><![CDATA[Bass Designs]]></company>
+                                                <companyURL><![CDATA[]]></companyURL>
+                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <awardImageID/>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:team-06.jpg}</fID>
+                                                <name><![CDATA[Sam Heinz]]></name>
+                                                <position><![CDATA[Lead Developer]]></position>
+                                                <company><![CDATA[TaftCo Enterprises]]></company>
+                                                <companyURL><![CDATA[]]></companyURL>
+                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <awardImageID/>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:team-04.jpg}</fID>
+                                                <name><![CDATA[VP Engineering]]></name>
+                                                <position><![CDATA[VitalTech Incorporated]]></position>
+                                                <company><![CDATA[]]></company>
+                                                <companyURL><![CDATA[]]></companyURL>
+                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <awardImageID/>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="" custom-template="wide_gutters.php">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="4" offset="0">
+                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:team-01.jpg}</fID>
+                                                <name><![CDATA[David Briscoe]]></name>
+                                                <position><![CDATA[CTO]]></position>
+                                                <company><![CDATA[AmuseCorp]]></company>
+                                                <companyURL><![CDATA[]]></companyURL>
+                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <awardImageID/>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:team-05.jpg}</fID>
+                                                <name><![CDATA[Christina Backman]]></name>
+                                                <position><![CDATA[Co-Founder]]></position>
+                                                <company><![CDATA[Backman Design]]></company>
+                                                <companyURL><![CDATA[]]></companyURL>
+                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <awardImageID/>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:team-03.jpg}</fID>
+                                                <name><![CDATA[Robert Cook]]></name>
+                                                <position><![CDATA[Founder]]></position>
+                                                <company><![CDATA[Foo Energy Bars]]></company>
+                                                <companyURL><![CDATA[]]></companyURL>
+                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <awardImageID/>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                </blocks>
+            </area>
+        </page>
+        <page name="Blog" path="/about/blog" public-date="2021-07-31 16:20:28" filename="" pagetype="page"
+              template="full" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_subpages_from_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+        </page>
+        <page name="FAQ" path="/about/faq" filename="" pagetype="page" template="full"
+              user="admin" description="" package="">
+            <area name="Main">
+                <blocks>
+                    <block type="page_title" name="">
+                        <data table="btPageTitle">
+                            <record>
+                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                <titleText><![CDATA[Frequently Asked Questions]]></titleText>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="faq" name="">
+                        <data table="btFaq">
+                            <record>
+                                <blockTitle><![CDATA[]]></blockTitle>
+                            </record>
+                        </data>
+                        <data table="btFaqEntries">
+                            <record>
+                                <id><![CDATA[4]]></id>
+                                <linkTitle><![CDATA[What are page versions?]]></linkTitle>
+                                <title><![CDATA[What are page versions?]]></title>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                                <description>
+                                    <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></description>
+                            </record>
+                            <record>
+                                <id><![CDATA[5]]></id>
+                                <linkTitle><![CDATA[How do I add more people as editors in my website?]]></linkTitle>
+                                <title><![CDATA[How do I add more people as editors in my website?]]></title>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                                <description>
+                                    <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></description>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+        </page>
+        <page name="Contact Us" path="/about/contact" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
+              template="full" user="admin" description="" package="">
+            <area name="Header">
+                <blocks>
+                    <block type="hero_image" name="">
+                        <data table="btHeroImage">
+                            <record>
+                                <image>{ccm:export:file:hero-01.jpg}</image>
+                                <title><![CDATA[Contact Us]]></title>
+                                <body><![CDATA[<h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h4>
+]]></body>
+                                <buttonText></buttonText>
+                                <buttonExternalLink><![CDATA[]]></buttonExternalLink>
+                                <buttonInternalLinkCID><![CDATA[0]]></buttonInternalLinkCID>
+                                <buttonFileLinkID><![CDATA[0]]></buttonFileLinkID>
+                                <height><![CDATA[80]]></height>
+                                <buttonColor><![CDATA[primary]]></buttonColor>
+                                <buttonStyle><![CDATA[]]></buttonStyle>
+                                <buttonSize><![CDATA[lg]]></buttonSize>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="7" offset="0">
+                                    <block type="google_map" name="">
+                                        <data table="btGoogleMap">
+                                            <record>
+                                                <title><![CDATA[]]></title>
+                                                <location>
+                                                    <![CDATA[701 Southwest 6th Avenue, Portland, OR, USA]]></location>
+                                                <latitude><![CDATA[45.5191045]]></latitude>
+                                                <longitude><![CDATA[-122.6795024]]></longitude>
+                                                <zoom><![CDATA[14]]></zoom>
+                                                <width><![CDATA[100%]]></width>
+                                                <height><![CDATA[400px]]></height>
+                                                <scrollwheel><![CDATA[0]]></scrollwheel>
+                                                <titleFormat><![CDATA[h3]]></titleFormat>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="1">
+                                    <block type="content" name="" custom-template="primary_border_top.php">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h5>Headquarters</h5>
+
+<p>123 SW Concrete Pl.<br />
+Portland, OR 97210</p>
+
+<h5>Hours</h5>
+
+<p><b>M-F:</b> 10am - 7pm<br />
+<b>Sat:</b> 12pm - 7pm<br />
+<b>Sunday:</b> Closed</p>
+]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<h3 class="display-3" style="text-align: center;">Choosing Us</h3>
+
+<p class="lead" style="text-align: center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et.<br />
+Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="express_form" name="" custom-template="padded_form.php">
+                        <data table="btExpressForm">
+                            <record>
+                                <exFormID>881b6bde-220f-4482-b8f9-ace40b5d169b</exFormID>
+                                <submitLabel>Submit</submitLabel>
+                                <thankyouMsg>Thanks for your feedback!</thankyouMsg>
+                                <notifyMeOnSubmission>0</notifyMeOnSubmission>
+                                <recipientEmail></recipientEmail>
+                                <displayCaptcha>0</displayCaptcha>
+                                <redirectCID>0</redirectCID>
+                                <replyToEmailControlID>02181ae2-634d-11e6-a245-62e65b165d8e
+                                </replyToEmailControlID>
+                                <addFilesToSet>0</addFilesToSet>
+                                <storeFormSubmission>1</storeFormSubmission>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
             </area>
         </page>
         <page name="Resources" path="/resources" public-date="2021-08-18 16:20:40" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_subpages_from_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
             <area name="Main">
                 <blocks>
                     <block type="content" name="">
@@ -1776,7 +1870,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
             </area>
         </page>
         <page name="Tips to Build a Beautiful Blog" public-date="2021-08-01 12:00:00"
-              path="/blog/tips-build-beautiful-blog" filename=""
+              path="/about/blog/tips-build-beautiful-blog" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
               package="">
@@ -1825,7 +1919,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 <blocks/>
             </area>
         </page>
-        <page name="New Product Launch" public-date="2021-08-04 12:00:00" path="/blog/new-product-launch" filename=""
+        <page name="New Product Launch" public-date="2021-08-04 12:00:00" path="/about/blog/new-product-launch" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
               package="">
@@ -1874,7 +1968,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 <blocks/>
             </area>
         </page>
-        <page name="More Fine Posts Here" public-date="2021-08-07 12:00:00" path="/blog/more-fine-posts-here"
+        <page name="More Fine Posts Here" public-date="2021-08-07 12:00:00" path="/about/blog/more-fine-posts-here"
               filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -1925,7 +2019,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
             </area>
         </page>
         <page name="Here's a Tip You Might Not Know" public-date="2021-08-11 12:00:00"
-              path="/blog/heres-tip-you-might-not-know" filename=""
+              path="/about/blog/heres-tip-you-might-not-know" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
               package="">
@@ -1975,7 +2069,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
             </area>
         </page>
         <page name="Time to Freshen Up Your Website" public-date="2021-08-17 12:00:00"
-              path="/blog/freshen-up-your-website" filename=""
+              path="/about/blog/freshen-up-your-website" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
               package="">
@@ -2024,7 +2118,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 <blocks/>
             </area>
         </page>
-        <page name="Meet Our New Hires!" public-date="2021-08-21 12:00:00" path="/blog/meet-our-new-hires" filename=""
+        <page name="Meet Our New Hires!" public-date="2021-08-21 12:00:00" path="/about/blog/meet-our-new-hires" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
               package="">
@@ -2071,6 +2165,70 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
             </area>
             <area name="Sidebar Footer">
                 <blocks/>
+            </area>
+        </page>
+        <page name="Documents" path="/documents" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
+              template="full" user="admin" description="" package="">
+            <area name="Header">
+                <blocks>
+                    <block type="hero_image" name="">
+                        <data table="btHeroImage">
+                            <record>
+                                <image>{ccm:export:file:hero-01.jpg}</image>
+                                <title><![CDATA[Documents]]></title>
+                                <body><![CDATA[<h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </h4>
+]]></body>
+                                <buttonText></buttonText>
+                                <buttonExternalLink><![CDATA[]]></buttonExternalLink>
+                                <buttonInternalLinkCID><![CDATA[0]]></buttonInternalLinkCID>
+                                <buttonFileLinkID><![CDATA[0]]></buttonFileLinkID>
+                                <height><![CDATA[80]]></height>
+                                <buttonColor><![CDATA[primary]]></buttonColor>
+                                <buttonStyle><![CDATA[]]></buttonStyle>
+                                <buttonSize><![CDATA[lg]]></buttonSize>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="document_library" name="" custom-template="icon_grid.php">
+                        <data table="btDocumentLibrary">
+                            <record>
+                                <setIds><![CDATA[[]]]></setIds>
+                                <folderID>{ccm:export:filefolder:/Documents}</folderID>
+                                <setMode><![CDATA[any]]></setMode>
+                                <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
+                                <tags><![CDATA[]]></tags>
+                                <viewProperties>
+                                    <![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
+                                <expandableProperties><![CDATA[[]]]></expandableProperties>
+                                <searchProperties></searchProperties>
+                                <orderBy><![CDATA[title]]></orderBy>
+                                <displayLimit><![CDATA[20]]></displayLimit>
+                                <displayOrderDesc><![CDATA[0]]></displayOrderDesc>
+                                <addFilesToSetID><![CDATA[0]]></addFilesToSetID>
+                                <maxThumbWidth><![CDATA[0]]></maxThumbWidth>
+                                <maxThumbHeight><![CDATA[0]]></maxThumbHeight>
+                                <enableSearch><![CDATA[1]]></enableSearch>
+                                <heightMode><![CDATA[auto]]></heightMode>
+                                <downloadFileMethod><![CDATA[browser]]></downloadFileMethod>
+                                <fixedHeightSize><![CDATA[0]]></fixedHeightSize>
+                                <headerBackgroundColor><![CDATA[]]></headerBackgroundColor>
+                                <headerBackgroundColorActiveSort><![CDATA[]]></headerBackgroundColorActiveSort>
+                                <headerTextColor><![CDATA[]]></headerTextColor>
+                                <allowFileUploading><![CDATA[0]]></allowFileUploading>
+                                <allowInPageFileManagement><![CDATA[0]]></allowInPageFileManagement>
+                                <tableName><![CDATA[]]></tableName>
+                                <tableDescription><![CDATA[]]></tableDescription>
+                                <tableStriped><![CDATA[0]]></tableStriped>
+                                <rowBackgroundColorAlternate><![CDATA[]]></rowBackgroundColorAlternate>
+                                <hideFolders><![CDATA[0]]></hideFolders>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
             </area>
         </page>
 
@@ -2126,6 +2284,259 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 <blocks/>
             </area>
         </page>
+        <page name="Resource One" path="/resources/resource-one" public-date="2021-08-28 07:49:00" filename=""
+              pagetype="resource" template="two_column" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="tags">
+                    <value>
+                        <option>resource</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:hands-01.jpg}</fID>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Main Right">
+                <blocks>
+                    <block mc-block-id="9986ce43"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dictum luctus nulla ut volutpat. Curabitur id aliquet sem. Vivamus scelerisque congue quam eu sollicitudin. Quisque ut urna luctus, luctus orci ac, mattis diam. Duis eget cursus nulla. Nam commodo nunc tortor, ut elementum eros bibendum eu. Quisque elementum sagittis tortor vitae porta. Integer sed lectus blandit, scelerisque diam non, dictum est. Pellentesque pretium risus a odio blandit vehicula.</p>
+
+<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque sit amet turpis ut justo congue pharetra quis ut elit. Sed commodo in nunc faucibus ullamcorper. Aenean efficitur ex ut neque vulputate fermentum. Nunc commodo enim id enim tincidunt commodo. Nullam vel eleifend leo. Mauris vel aliquam felis. Pellentesque accumsan tellus nisl, ultrices viverra lectus rutrum tempor. Mauris at consectetur turpis.</p>
+
+<p><a href="https://portlandlabs.com">Read More</a></p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Header">
+                <blocks>
+                    <block mc-block-id="bf3d4ccc"/>
+                </blocks>
+            </area>
+            <area name="Main Left">
+                <blocks>
+                    <block mc-block-id="11402c4b"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Resource Two" path="/resources/resource-two" public-date="2021-08-27 07:49:00" filename=""
+              pagetype="resource" template="two_column" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="tags">
+                    <value>
+                        <option>resource</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:laptops-01.jpg}</fID>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Main Right">
+                <blocks>
+                    <block mc-block-id="9986ce43"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dictum luctus nulla ut volutpat. Curabitur id aliquet sem. Vivamus scelerisque congue quam eu sollicitudin. Quisque ut urna luctus, luctus orci ac, mattis diam. Duis eget cursus nulla. Nam commodo nunc tortor, ut elementum eros bibendum eu. Quisque elementum sagittis tortor vitae porta. Integer sed lectus blandit, scelerisque diam non, dictum est. Pellentesque pretium risus a odio blandit vehicula.</p>
+
+<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque sit amet turpis ut justo congue pharetra quis ut elit. Sed commodo in nunc faucibus ullamcorper. Aenean efficitur ex ut neque vulputate fermentum. Nunc commodo enim id enim tincidunt commodo. Nullam vel eleifend leo. Mauris vel aliquam felis. Pellentesque accumsan tellus nisl, ultrices viverra lectus rutrum tempor. Mauris at consectetur turpis.</p>
+
+<p><a href="https://portlandlabs.com">Read More</a></p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Header">
+                <blocks>
+                    <block mc-block-id="bf3d4ccc"/>
+                </blocks>
+            </area>
+            <area name="Main Left">
+                <blocks>
+                    <block mc-block-id="11402c4b"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Resource Three" path="/resources/resource-three" public-date="2021-08-26 07:49:00" filename=""
+              pagetype="resource" template="two_column" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="tags">
+                    <value>
+                        <option>resource</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:laptops-02.jpg}</fID>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Main Right">
+                <blocks>
+                    <block mc-block-id="9986ce43"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dictum luctus nulla ut volutpat. Curabitur id aliquet sem. Vivamus scelerisque congue quam eu sollicitudin. Quisque ut urna luctus, luctus orci ac, mattis diam. Duis eget cursus nulla. Nam commodo nunc tortor, ut elementum eros bibendum eu. Quisque elementum sagittis tortor vitae porta. Integer sed lectus blandit, scelerisque diam non, dictum est. Pellentesque pretium risus a odio blandit vehicula.</p>
+
+<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque sit amet turpis ut justo congue pharetra quis ut elit. Sed commodo in nunc faucibus ullamcorper. Aenean efficitur ex ut neque vulputate fermentum. Nunc commodo enim id enim tincidunt commodo. Nullam vel eleifend leo. Mauris vel aliquam felis. Pellentesque accumsan tellus nisl, ultrices viverra lectus rutrum tempor. Mauris at consectetur turpis.</p>
+
+<p><a href="https://portlandlabs.com">Read More</a></p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Header">
+                <blocks>
+                    <block mc-block-id="bf3d4ccc"/>
+                </blocks>
+            </area>
+            <area name="Main Left">
+                <blocks>
+                    <block mc-block-id="11402c4b"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Resource Four" path="/resources/resource-four" public-date="2021-08-25 07:49:00" filename=""
+              pagetype="resource" template="two_column" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="tags">
+                    <value>
+                        <option>resource</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:team-02.jpg}</fID>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Main Right">
+                <blocks>
+                    <block mc-block-id="9986ce43"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dictum luctus nulla ut volutpat. Curabitur id aliquet sem. Vivamus scelerisque congue quam eu sollicitudin. Quisque ut urna luctus, luctus orci ac, mattis diam. Duis eget cursus nulla. Nam commodo nunc tortor, ut elementum eros bibendum eu. Quisque elementum sagittis tortor vitae porta. Integer sed lectus blandit, scelerisque diam non, dictum est. Pellentesque pretium risus a odio blandit vehicula.</p>
+
+<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque sit amet turpis ut justo congue pharetra quis ut elit. Sed commodo in nunc faucibus ullamcorper. Aenean efficitur ex ut neque vulputate fermentum. Nunc commodo enim id enim tincidunt commodo. Nullam vel eleifend leo. Mauris vel aliquam felis. Pellentesque accumsan tellus nisl, ultrices viverra lectus rutrum tempor. Mauris at consectetur turpis.</p>
+
+<p><a href="https://portlandlabs.com">Read More</a></p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Header">
+                <blocks>
+                    <block mc-block-id="bf3d4ccc"/>
+                </blocks>
+            </area>
+            <area name="Main Left">
+                <blocks>
+                    <block mc-block-id="11402c4b"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Resource Five" path="/resources/resource-five" public-date="2021-08-24 07:49:00" filename=""
+              pagetype="resource" template="two_column" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="tags">
+                    <value>
+                        <option>resource</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:blog-05.jpg}</fID>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Main Right">
+                <blocks>
+                    <block mc-block-id="9986ce43"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dictum luctus nulla ut volutpat. Curabitur id aliquet sem. Vivamus scelerisque congue quam eu sollicitudin. Quisque ut urna luctus, luctus orci ac, mattis diam. Duis eget cursus nulla. Nam commodo nunc tortor, ut elementum eros bibendum eu. Quisque elementum sagittis tortor vitae porta. Integer sed lectus blandit, scelerisque diam non, dictum est. Pellentesque pretium risus a odio blandit vehicula.</p>
+
+<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque sit amet turpis ut justo congue pharetra quis ut elit. Sed commodo in nunc faucibus ullamcorper. Aenean efficitur ex ut neque vulputate fermentum. Nunc commodo enim id enim tincidunt commodo. Nullam vel eleifend leo. Mauris vel aliquam felis. Pellentesque accumsan tellus nisl, ultrices viverra lectus rutrum tempor. Mauris at consectetur turpis.</p>
+
+<p><a href="https://portlandlabs.com">Read More</a></p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Header">
+                <blocks>
+                    <block mc-block-id="bf3d4ccc"/>
+                </blocks>
+            </area>
+            <area name="Main Left">
+                <blocks>
+                    <block mc-block-id="11402c4b"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Resource Six" path="/resources/resource-six" public-date="2021-08-23 07:49:00" filename=""
+              pagetype="resource" template="two_column" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="tags">
+                    <value>
+                        <option>resource</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:blog-06.jpg}</fID>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Main Right">
+                <blocks>
+                    <block mc-block-id="9986ce43"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dictum luctus nulla ut volutpat. Curabitur id aliquet sem. Vivamus scelerisque congue quam eu sollicitudin. Quisque ut urna luctus, luctus orci ac, mattis diam. Duis eget cursus nulla. Nam commodo nunc tortor, ut elementum eros bibendum eu. Quisque elementum sagittis tortor vitae porta. Integer sed lectus blandit, scelerisque diam non, dictum est. Pellentesque pretium risus a odio blandit vehicula.</p>
+
+<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque sit amet turpis ut justo congue pharetra quis ut elit. Sed commodo in nunc faucibus ullamcorper. Aenean efficitur ex ut neque vulputate fermentum. Nunc commodo enim id enim tincidunt commodo. Nullam vel eleifend leo. Mauris vel aliquam felis. Pellentesque accumsan tellus nisl, ultrices viverra lectus rutrum tempor. Mauris at consectetur turpis.</p>
+
+<p><a href="https://portlandlabs.com">Read More</a></p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Header">
+                <blocks>
+                    <block mc-block-id="bf3d4ccc"/>
+                </blocks>
+            </area>
+            <area name="Main Left">
+                <blocks>
+                    <block mc-block-id="11402c4b"/>
+                </blocks>
+            </area>
+        </page>
+
     </pages>
     <stacks>
         <stack name="Navigation" type="global_area" path="/navigation">
@@ -2195,7 +2606,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[ <p><a href="{ccm:export:page:/blog}">Blog</a></p> <p><a href="{ccm:export:page:/about/contact-us}">Contact Us</a></p> <p>Privacy Policy</p> <p><a href="{ccm:export:page:/about/careers}">Careers</a></p> ]]>
+                                    <![CDATA[ <p><a href="{ccm:export:page:/about/blog}">Blog</a></p> <p><a href="{ccm:export:page:/about/contact}">Contact Us</a></p> <p>Privacy Policy</p> <p><a href="{ccm:export:page:/about/careers}">Careers</a></p> ]]>
                                 </content>
                             </record>
                         </data>
@@ -2239,7 +2650,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
 
     <pagefeeds>
         <feed>
-            <parent>{ccm:export:page:/blog}</parent>
+            <parent>{ccm:export:page:/about/blog}</parent>
             <title>Blog</title>
             <description>Site Blog</description>
             <handle>blog</handle>

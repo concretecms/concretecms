@@ -82,6 +82,7 @@ class StartingPointPackage extends Package
             new StartingPointInstallRoutine('install_required_single_pages', 75, t('Installing login and registration pages.')),
             new StartingPointInstallRoutine('install_config', 78, t('Configuring site.')),
             new StartingPointInstallRoutine('install_themes', 79, t('Adding themes.')),
+            new StartingPointInstallRoutine('install_file_manager', 80, t('Installing file manager.')),
             new StartingPointInstallRoutine('import_files', 82, t('Importing files.')),
             new StartingPointInstallRoutine('install_content', 86, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 92, t('Adding desktops.')),
@@ -352,7 +353,7 @@ class StartingPointPackage extends Package
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/config.xml');
     }
 
-    protected function import_files()
+    protected function install_file_manager()
     {
         $type = \Concrete\Core\File\StorageLocation\Type\Type::add('default', t('Default'));
         \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
@@ -382,7 +383,10 @@ class StartingPointPackage extends Package
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_detail.height'));
         $thumbnailType->save();
+    }
 
+    protected function import_files()
+    {
         if (is_dir($this->getPackagePath() . '/files')) {
             $ch = new ContentImporter();
             $computeThumbnails = true;

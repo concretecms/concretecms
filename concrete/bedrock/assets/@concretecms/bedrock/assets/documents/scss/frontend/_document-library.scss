@@ -64,9 +64,9 @@ a.ccm-block-document-library-add-files {
 
 a.ccm-block-document-library-advanced-search::after,
 a.ccm-block-document-library-add-files::after {
-  border-color: transparent transparent #000;
+  border-color: #000 transparent transparent;
   border-style: solid;
-  border-width: 0 4px 4px;
+  border-width: 4px 4px 0;
   content: '';
   display: inline-block;
   height: 0;
@@ -77,9 +77,9 @@ a.ccm-block-document-library-add-files::after {
 
 a.ccm-block-document-library-advanced-search-open::after,
 a.ccm-block-document-library-add-files-open::after {
-  border-color: #000 transparent transparent;
+  border-color: transparent transparent #000;
   border-style: solid;
-  border-width: 4px 4px 0;
+  border-width: 0 4px 4px;
   content: '';
   display: inline-block;
   height: 0;
