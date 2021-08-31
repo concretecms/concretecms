@@ -1866,15 +1866,69 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
               template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_subpages_from_nav">
-                    <value><![CDATA[1]]></value>
+                    <value>1</value>
                 </attributekey>
             </attributes>
             <area name="Main">
                 <blocks>
-                    <block type="content" name="">
-                        <data table="btContentLocal">
+                    <block type="page_list" name="" custom-template="resource_list.php" custom-container-settings="0">
+                        <data table="btPageList">
                             <record>
-                                <content><![CDATA[]]></content>
+                                <num><![CDATA[8]]></num>
+                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                <cParentID/>
+                                <cThis><![CDATA[0]]></cThis>
+                                <cThisParent><![CDATA[0]]></cThisParent>
+                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                <pageListTitle><![CDATA[]]></pageListTitle>
+                                <filterByRelated><![CDATA[0]]></filterByRelated>
+                                <filterByCustomTopic><![CDATA[0]]></filterByCustomTopic>
+                                <filterDateOption><![CDATA[all]]></filterDateOption>
+                                <filterDateDays><![CDATA[0]]></filterDateDays>
+                                <filterDateStart><![CDATA[]]></filterDateStart>
+                                <filterDateEnd><![CDATA[]]></filterDateEnd>
+                                <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
+                                <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
+                                <includeName><![CDATA[1]]></includeName>
+                                <includeDescription><![CDATA[1]]></includeDescription>
+                                <includeDate><![CDATA[0]]></includeDate>
+                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                <paginate><![CDATA[0]]></paginate>
+                                <displayAliases><![CDATA[0]]></displayAliases>
+                                <displaySystemPages><![CDATA[0]]></displaySystemPages>
+                                <ignorePermissions><![CDATA[0]]></ignorePermissions>
+                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
+                                <ptID>{ccm:export:pagetype:resource}</ptID>
+                                <pfID/>
+                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                                <truncateChars><![CDATA[0]]></truncateChars>
+                                <titleFormat><![CDATA[h5]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Header">
+                <blocks>
+                    <block type="hero_image" name="">
+                        <data table="btHeroImage">
+                            <record>
+                                <image>{ccm:export:file:hero-resources.jpg}</image>
+                                <title><![CDATA[Resources]]></title>
+                                <body><![CDATA[]]></body>
+                                <buttonText><![CDATA[]]></buttonText>
+                                <buttonExternalLink><![CDATA[]]></buttonExternalLink>
+                                <buttonInternalLinkCID><![CDATA[0]]></buttonInternalLinkCID>
+                                <buttonFileLinkID><![CDATA[0]]></buttonFileLinkID>
+                                <height><![CDATA[60]]></height>
+                                <buttonColor><![CDATA[primary]]></buttonColor>
+                                <buttonStyle><![CDATA[]]></buttonStyle>
+                                <buttonSize><![CDATA[]]></buttonSize>
                             </record>
                         </data>
                     </block>
@@ -2299,7 +2353,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
             </area>
         </page>
         <page name="Resource One" path="/resources/resource-one" public-date="2021-08-28 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="" package="">
+              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2366,7 +2420,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
             </area>
         </page>
         <page name="Resource Two" path="/resources/resource-two" public-date="2021-08-27 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="" package="">
+              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2408,7 +2462,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
             </area>
         </page>
         <page name="Resource Three" path="/resources/resource-three" public-date="2021-08-26 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="" package="">
+              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2450,7 +2504,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
             </area>
         </page>
         <page name="Resource Four" path="/resources/resource-four" public-date="2021-08-25 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="" package="">
+              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2492,7 +2546,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
             </area>
         </page>
         <page name="Resource Five" path="/resources/resource-five" public-date="2021-08-24 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="" package="">
+              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2534,7 +2588,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
             </area>
         </page>
         <page name="Resource Six" path="/resources/resource-six" public-date="2021-08-23 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="" package="">
+              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>

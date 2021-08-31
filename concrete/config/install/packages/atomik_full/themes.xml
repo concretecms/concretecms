@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <thumbnailtypes>
-        <thumbnailtype name="Document Library Icon Grid" handle="document_library_icon_grid" sizingMode="proportional" width="510" height="510" />
+        <thumbnailtype name="Resource List Entry" handle="resource_list_entry" sizingMode="proportional" width="510" height="510" />
         <thumbnailtype name="Testimonial Circle" handle="testimonial_circle" sizingMode="exact" width="180" height="180" />
         <thumbnailtype name="Stripe Column Image" handle="stripe_column" sizingMode="exact" width="850" height="650" />
         <thumbnailtype name="Gallery" handle="atomik_gallery" sizingMode="exact" width="860" height="614" />
@@ -18,6 +18,18 @@
                 <field required="1">link</field>
                 <field required="1">thumbnail</field>
                 <field required="1">date</field>
+            </fields>
+        </template>
+        <template handle="resource_page" name="Resource Page Entry"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field required="1">thumbnail</field>
+                <field>description</field>
             </fields>
         </template>
     </summarytemplates>

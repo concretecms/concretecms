@@ -25,7 +25,7 @@ $view->inc('view_header.php');
                     $type = $file->getTypeObject();
                     if ($type->supportsThumbnails()) {
                         $thumbnail = new \HtmlObject\Image(
-                            $file->getThumbnailURL('document_library_icon_grid'),
+                            $file->getThumbnailURL('resource_list_entry'),
                             '', ['class' => 'ccm-image-thumbnail']
                         );
                     } else {
