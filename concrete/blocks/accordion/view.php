@@ -1,36 +1,23 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$linkCount = 1;
-$faqEntryCount = 1;
+/**
+* @var $entries \Concrete\Block\Accordion\AccordionEntry[]
+ */
 ?>
 
-<div class="ccm-faq-container">
-    <?php if (count($rows) > 0) { ?>
-        <div class="ccm-faq-block-links">
-            <?php foreach ($rows as $row) { ?>
-                <a href="#<?php echo $bID . $linkCount; ?>"><?php echo $row['linkTitle']; ?></a>
-                <?php
-                ++$linkCount;
-            } ?>
-        </div>
-        <div class="ccm-faq-block-entries">
-            <?php foreach ($rows as $row) { ?>
-                <div class="ccm-faq-entry-content">
-                    <a name="<?php echo $bID . $faqEntryCount; ?>"></a>
-                    <h3><?php echo $row['title']; ?></h3>
-                    <?php echo $row['description']; ?>
+<div class="accordion ccm-block-accordion" id="accordion<?=$bID?>">
+    <?php foreach ($entries as $entry) { ?>
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getID()?>">
+                    <?=$entry->getTitle()?>
+                </button>
+            </h2>
+            <div id="collapse<?=$entry->getID()?>" class="accordion-collapse collapse" <?php /* data-bs-parent="#accordion<?=$bID?>" */ ?>>
+                <div class="accordion-body">
+                    <?=$entry->getDescription()?>
                 </div>
-                <?php
-                ++$faqEntryCount;
-            } ?>
+            </div>
         </div>
-    <?php
-    } else {
-    ?>
-        <div class="ccm-faq-block-links">
-            <p><?php echo t('No Faq Entries Entered.'); ?></p>
-        </div>
-    <?php
-    }
-    ?>
+    <?php } ?>
 </div>

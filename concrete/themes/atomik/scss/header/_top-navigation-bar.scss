@@ -69,18 +69,31 @@ div.ccm-page {
     }
 
     .dropdown-menu {
-      display: block;
-      clip: rect(auto, auto, 0, auto);
-      -webkit-transition-property: clip;
-      -webkit-transition-duration: 0.2s;
+      perspective: 1000px;
+      display: none;
+      animation: dropdownMenuGrowDrown 300ms ease-in-out forwards;
+      transform-origin: top center;
     }
 
     .dropdown-toggle.show {
 
       ~ .dropdown-menu {
-        clip: rect(auto, auto, 10rem, auto);
+          display: block;
       }
+
     }
 
+  }
+}
+
+@keyframes dropdownMenuGrowDrown {
+  0% {
+    transform: scaleY(0)
+  }
+  80% {
+    transform: scaleY(1.1)
+  }
+  100% {
+    transform: scaleY(1)
   }
 }

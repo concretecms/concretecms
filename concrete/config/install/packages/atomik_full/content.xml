@@ -1079,7 +1079,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[fas fa-window-maximize]]></icon>
-                                                <title><![CDATA[Show off some features with this flexible layout!]]></title>
+                                                <title>
+                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
                                                 <paragraph></paragraph>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID/>
@@ -1093,7 +1094,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[fas fa-search-dollar]]></icon>
-                                                <title><![CDATA[Show off some features with this flexible layout!]]></title>
+                                                <title>
+                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
                                                 <paragraph></paragraph>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID/>
@@ -1107,7 +1109,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[fas fa-mobile-alt]]></icon>
-                                                <title><![CDATA[Show off some features with this flexible layout!]]></title>
+                                                <title>
+                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
                                                 <paragraph></paragraph>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID/>
@@ -1127,7 +1130,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[far fa-user]]></icon>
-                                                <title><![CDATA[Show off some features with this flexible layout!]]></title>
+                                                <title>
+                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
                                                 <paragraph></paragraph>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID/>
@@ -1141,7 +1145,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[fas fa-download]]></icon>
-                                                <title><![CDATA[Show off some features with this flexible layout!]]></title>
+                                                <title>
+                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
                                                 <paragraph></paragraph>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID/>
@@ -1155,7 +1160,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[fas fa-image]]></icon>
-                                                <title><![CDATA[Show off some features with this flexible layout!]]></title>
+                                                <title>
+                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
                                                 <paragraph></paragraph>
                                                 <externalLink><![CDATA[]]></externalLink>
                                                 <internalLinkCID/>
@@ -1598,7 +1604,8 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                                 <position><![CDATA[CFO]]></position>
                                                 <company><![CDATA[Bass Designs]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
                                                 <awardImageID/>
                                             </record>
                                         </data>
@@ -1613,7 +1620,8 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                                 <position><![CDATA[Lead Developer]]></position>
                                                 <company><![CDATA[TaftCo Enterprises]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
                                                 <awardImageID/>
                                             </record>
                                         </data>
@@ -1628,7 +1636,8 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                                 <position><![CDATA[VitalTech Incorporated]]></position>
                                                 <company><![CDATA[]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
                                                 <awardImageID/>
                                             </record>
                                         </data>
@@ -1649,7 +1658,8 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                                 <position><![CDATA[CTO]]></position>
                                                 <company><![CDATA[AmuseCorp]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
                                                 <awardImageID/>
                                             </record>
                                         </data>
@@ -1664,7 +1674,8 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                                 <position><![CDATA[Co-Founder]]></position>
                                                 <company><![CDATA[Backman Design]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
                                                 <awardImageID/>
                                             </record>
                                         </data>
@@ -1679,7 +1690,8 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                                                 <position><![CDATA[Founder]]></position>
                                                 <company><![CDATA[Foo Energy Bars]]></company>
                                                 <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                                <paragraph>
+                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
                                                 <awardImageID/>
                                             </record>
                                         </data>
@@ -1919,7 +1931,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 <blocks/>
             </area>
         </page>
-        <page name="New Product Launch" public-date="2021-08-04 12:00:00" path="/about/blog/new-product-launch" filename=""
+        <page name="New Product Launch" public-date="2021-08-04 12:00:00" path="/about/blog/new-product-launch"
+              filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
               package="">
@@ -2118,7 +2131,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 <blocks/>
             </area>
         </page>
-        <page name="Meet Our New Hires!" public-date="2021-08-21 12:00:00" path="/about/blog/meet-our-new-hires" filename=""
+        <page name="Meet Our New Hires!" public-date="2021-08-21 12:00:00" path="/about/blog/meet-our-new-hires"
+              filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
               package="">
@@ -2323,6 +2337,31 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
             <area name="Main Left">
                 <blocks>
                     <block mc-block-id="11402c4b"/>
+                    <block type="accordion" name="">
+                        <data table="btAccordion">
+                            <record/>
+                        </data>
+                        <data table="btAccordionEntries">
+                            <record>
+                                <title><![CDATA[Accordion Item 1]]></title>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed consequat lectus eget arcu faucibus consectetur. Sed vel ligula nec dui tempor vestibulum rutrum efficitur magna. Praesent ut diam ut erat vehicula suscipit. Donec quis consequat erat. Etiam lacinia dapibus elit, vel eleifend nisl tempor ac</p>
+]]></description>
+                            </record>
+                            <record>
+                                <title><![CDATA[Accordion Item 2]]></title>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed consequat lectus eget arcu faucibus consectetur. Sed vel ligula nec dui tempor vestibulum rutrum efficitur magna. Praesent ut diam ut erat vehicula suscipit. Donec quis consequat erat. Etiam lacinia dapibus elit, vel eleifend nisl tempor ac</p>
+]]></description>
+                            </record>
+                            <record>
+                                <title><![CDATA[Accordion Item 3]]></title>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed consequat lectus eget arcu faucibus consectetur. Sed vel ligula nec dui tempor vestibulum rutrum efficitur magna. Praesent ut diam ut erat vehicula suscipit. Donec quis consequat erat. Etiam lacinia dapibus elit, vel eleifend nisl tempor ac</p>
+]]></description>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
             </area>
         </page>
@@ -2547,7 +2586,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                             <record>
                                 <brandingText><![CDATA[Concrete Site]]></brandingText>
                                 <brandingLogo>{ccm:export:file:atomik-logo.png}</brandingLogo>
-                                <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}</brandingTransparentLogo>
+                                <brandingTransparentLogo>{ccm:export:file:atomik-logo-transparent.png}
+                                </brandingTransparentLogo>
                                 <includeBrandText><![CDATA[1]]></includeBrandText>
                                 <includeBrandLogo><![CDATA[1]]></includeBrandLogo>
                                 <includeTransparency>1</includeTransparency>
