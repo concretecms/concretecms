@@ -11,7 +11,6 @@ use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\File\Command\RescanFileAsyncCommand;
 use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;

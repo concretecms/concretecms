@@ -24,18 +24,41 @@
             </a>
 
             <?php if ($includeNavigation) { ?>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#top-navigation-bar-<?=$bID?>" aria-controls="#top-navigation-bar-<?=$bID?>" aria-expanded="false" aria-label="<?=t('Toggle Navigation')?>">
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#top-navigation-bar-<?=$bID?>" aria-controls="#top-navigation-bar-<?=$bID?>" aria-expanded="false" aria-label="<?=t('Toggle Navigation')?>">
+                    <?php /* Custom animated Toggler */ ?>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <?php /* End animated toggler */?>
+
+                    <?php
+                    /* Standard bootstrap toggler. Uncomment to use */
+                    /*
+                    ?>
                     <span class="navbar-toggler-icon"></span>
+                    <?php */ ?>
                 </button>
                 <div class="collapse navbar-collapse" id="top-navigation-bar-<?=$bID?>">
-                    <ul class="navbar-nav">
+                    <?php if ($includeSearchInput) { ?>
+                        <form class="ms-auto d-flex order-1" method="get" action="<?=$searchAction?>">
+                            <div class="input-group">
+                                <input class="form-control border-end-0 border" type="search" name="query" placeholder="<?=t('Search')?>" aria-label="<?=t('Search')?>">
+                                <span class="input-group-append">
+                                    <button class="btn bg-white border-start-0 border" type="button">
+                                        <i class="fas fa-search text-secondary"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                    <?php } ?>
+                    <ul class="navbar-nav order-0">
                         <?php foreach ($navigation->getItems() as $item) {
                             /**
                              * @var $item \Concrete\Core\Navigation\Item\PageItem
                              */
                             if (count($item->getChildren()) > 0) { ?>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-concrete-toggle="dropdown" href="<?=$item->getUrl()?>">
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="<?=$item->getUrl()?>">
                                         <?=$item->getName()?>
                                     </a>
                                     <ul class="dropdown-menu">
@@ -49,19 +72,8 @@
                             <?php } ?>
                         <?php } ?>
                     </ul>
+
                 </div>
-            <?php } ?>
-            <?php if ($includeSearchInput) { ?>
-                <form class="d-flex" method="get" action="<?=$searchAction?>">
-                    <div class="input-group">
-                        <input class="form-control border-end-0 border" type="search" name="query" placeholder="<?=t('Search')?>" aria-label="<?=t('Search')?>">
-                        <span class="input-group-append">
-                            <button class="btn bg-white border-start-0 border" type="button">
-                                <i class="fas fa-search text-secondary"></i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
             <?php } ?>
         </div>
     </nav>

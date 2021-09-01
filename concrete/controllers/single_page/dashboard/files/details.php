@@ -89,7 +89,7 @@ class Details extends DashboardPageController
      *
      * @return \Concrete\Core\Entity\File\Version
      */
-    protected function getFileVersion(?int $fID, ?int $fvID): Version
+    protected function getFileVersion(int $fID = null, int $fvID = null): Version
     {
         $file = $fID === null ? null : $this->app->make(EntityManagerInterface::class)->find(File::class, $fID);
         if ($file === null) {

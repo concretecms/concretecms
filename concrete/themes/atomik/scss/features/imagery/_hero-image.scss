@@ -14,9 +14,14 @@ div.theme-atomik {
 
       h1 {
         font-family: $display-font-family;
-        font-size: $hero-image-title-font-size;
+        @include font-size($hero-image-title-font-size);
         margin-bottom: 0;
       }
+
+      h1, h2, h3, h4, h5, h6 {
+        text-align: center;
+      }
+
     }
 
   }

@@ -13,23 +13,25 @@ use Concrete\Core\Area\GlobalArea;
                     $area->display();
                     ?>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <?php
                     $area = new GlobalArea('Footer Column 2');
                     $area->display();
                     ?>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <?php
                     $area = new GlobalArea('Footer Column 3');
                     $area->display();
                     ?>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-5 col-12">
+                    <hr class="d-md-none">
                     <?php
                     $area = new GlobalArea('Footer Column 4');
                     $area->display();
                     ?>
+
                 </div>
             </div>
         </div>

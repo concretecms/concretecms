@@ -1,7 +1,6 @@
 div.theme-atomik {
   .ccm-block-gallery-logos {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: -2rem;
 
     display: flex;
     flex-wrap: wrap;
@@ -9,8 +8,10 @@ div.theme-atomik {
     justify-content: center;
 
     .logo {
-      margin-left: 3rem;
-      margin-right: 3rem;
+      margin-left: 2rem;
+      margin-right: 2rem;
+      margin-top: 2rem;
+
 
       &:first-child {
         margin-left: 0;

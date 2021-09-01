@@ -18,7 +18,7 @@ use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
-use Concrete\Core\Page\Command\ReindexPageAsyncCommand;
+use Concrete\Core\Page\Command\ReindexPageCommand;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -430,7 +430,7 @@ class Collection extends ConcreteObject implements TrackableInterface
             return false;
         }
 
-        $command = new ReindexPageAsyncCommand($this->getCollectionID());
+        $command = new ReindexPageCommand($this->getCollectionID());
         $app = Facade::getFacadeApplication();
         $app->executeCommand($command);
     }

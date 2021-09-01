@@ -43,6 +43,9 @@ $spacers: (
     5: $spacer * 2,
     6: $spacer * 2.5,
     7: $spacer * 3,
+    8: $spacer * 4,
+    9: $spacer * 6,
+    10: $spacer * 7,
 );
 
 // Gutters - I don't know why I have to do this
@@ -79,3 +82,8 @@ $dropdown-padding-y: 0;
 $dropdown-border-radius: 0;
 $dropdown-inner-border-radius: 0;
 $dropdown-item-padding-y: 0.5rem;
+$navbar-dark-toggler-icon-bg:       url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#000' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-light-toggler-border-color: transparent;
+$navbar-dark-toggler-border-color: transparent;
+$navbar-toggler-focus-width: 0;

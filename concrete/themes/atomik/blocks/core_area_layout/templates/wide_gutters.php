@@ -13,7 +13,7 @@ if (!empty($rootContainer)) {
 foreach ($columns as $column) {
     $html = $column->getColumnHtmlObject();
     if (!empty($container)) {
-        $container->addClass('gx-10');
+        $container->addClass('gx-xl-10');
         $container->appendChild($html);
     } else {
         echo $html;

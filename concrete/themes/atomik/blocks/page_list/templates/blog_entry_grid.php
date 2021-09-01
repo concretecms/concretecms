@@ -18,7 +18,7 @@ if (isset($pageListTitle) && $pageListTitle) {
     <div class="row gx-7">
     <?php foreach ($pages as $page) { ?>
 
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6 mb-5">
             <?php
             $renderer->renderSummaryForObject($page, 'blog_entry_thumbnail');
             ?>

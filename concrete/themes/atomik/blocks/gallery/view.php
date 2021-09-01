@@ -40,7 +40,7 @@ if (!$images && $page && $page->isEditMode()) { ?>
                     $downloadLink = $fileVersion->getForceDownloadURL();
                 }
                 ?>
-                <a class="col-md-<?php echo $size === 'wide' ? '8' : '4' ?>"
+                <a class="col-md-<?php echo $size === 'wide' ? '8' : '4' ?> col-<?php echo $size === 'wide' ? '12' : '6' ?>"
                    href="<?php echo h($image['file']->getThumbnailUrl(null)) ?>" data-gallery-lightbox="true"
                    data-caption="<?=h($caption)?>"
                    data-download-link="<?php echo h($downloadLink); ?>">

@@ -590,7 +590,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     <block type="gallery" name="" custom-container-settings="0">
                         <entries>
                             <entry>
-                                <fID>{ccm:export:file:gallery_shoes.jpg}</fID>
+                                <fID>{ccm:export:file:gallery-shoes.jpg}</fID>
                                 <displaychoices>
                                     <choice>
                                         <dckey>caption</dckey>
@@ -607,7 +607,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 </displaychoices>
                             </entry>
                             <entry>
-                                <fID>{ccm:export:file:gallery_skincare.jpg}</fID>
+                                <fID>{ccm:export:file:gallery-skincare.jpg}</fID>
                                 <displaychoices>
                                     <choice>
                                         <dckey>caption</dckey>
@@ -624,7 +624,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 </displaychoices>
                             </entry>
                             <entry>
-                                <fID>{ccm:export:file:gallery_shoes2.jpg}</fID>
+                                <fID>{ccm:export:file:gallery-shoes2.jpg}</fID>
                                 <displaychoices>
                                     <choice>
                                         <dckey>caption</dckey>
@@ -641,7 +641,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 </displaychoices>
                             </entry>
                             <entry>
-                                <fID>{ccm:export:file:gallery_watch2.jpg}</fID>
+                                <fID>{ccm:export:file:gallery-watch2.jpg}</fID>
                                 <displaychoices>
                                     <choice>
                                         <dckey>caption</dckey>
@@ -658,7 +658,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 </displaychoices>
                             </entry>
                             <entry>
-                                <fID>{ccm:export:file:gallery_watch.jpg}</fID>
+                                <fID>{ccm:export:file:gallery-watch.jpg}</fID>
                                 <displaychoices>
                                     <choice>
                                         <dckey>caption</dckey>
@@ -675,7 +675,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 </displaychoices>
                             </entry>
                             <entry>
-                                <fID>{ccm:export:file:gallery_headphones.jpg}</fID>
+                                <fID>{ccm:export:file:gallery-headphones.jpg}</fID>
                                 <displaychoices>
                                     <choice>
                                         <dckey>caption</dckey>
@@ -1729,8 +1729,9 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                     <block type="page_title" name="">
                         <data table="btPageTitle">
                             <record>
-                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                <useCustomTitle><![CDATA[1]]></useCustomTitle>
                                 <titleText><![CDATA[Frequently Asked Questions]]></titleText>
+                                <formatting>h3</formatting>
                             </record>
                         </data>
                     </block>
@@ -2663,7 +2664,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[ <div class="atomik-logo"><concrete-picture fid="ee01b320-f208-48be-9dbd-b94651f76510" alt="atomik-logo.png" /><span>Atomik</span></div> ]]>
+                                    <![CDATA[ <div class="atomik-logo"><concrete-picture fid="atomik-logo.png" alt="atomik-logo.png" /><span>Atomik</span></div> ]]>
                                 </content>
                             </record>
                         </data>

@@ -6,7 +6,7 @@ use Concrete\Core\Area\ContainerArea;
 ?>
 <div class="stripe two-column-stripe">
     <div class="container">
-        <div class="row gx-10">
+        <div class="row gx-xl-10">
             <div class="col-md-6">
                 <div class="pe-md-5 ps-md-5">
                     <?php

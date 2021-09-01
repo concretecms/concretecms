@@ -319,6 +319,15 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->view();
     }
 
+    public function action_search_keywords($bID)
+    {
+        if ($bID == $this->bID) {
+            $keywords = h($this->request->query->get('keywords'));
+            $this->list->filterByKeywords($keywords);
+            $this->view();
+        }
+    }
+
     public function action_filter_by_date($year = false, $month = false, $timezone = 'user')
     {
         if (is_numeric($year)) {
@@ -387,10 +396,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         } elseif (Core::make('helper/validation/numbers')->integer($parameters[0])) {
             // then we're going to treat this as a year.
             $method = 'action_filter_by_date';
-            $parameters[0] = (int) ($parameters[0]);
+            $parameters[0] = (int)($parameters[0]);
             if (isset($parameters[1])) {
-                $parameters[1] = (int) ($parameters[1]);
+                $parameters[1] = (int)($parameters[1]);
             }
+        } else if ($parameters[0] == 'search_keywords') {
+            return parent::getPassThruActionAndParameters($parameters);
         } else {
             $parameters = $method = null;
         }

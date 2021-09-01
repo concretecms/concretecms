@@ -25,6 +25,9 @@ div.theme-atomik {
     // Social Links
     .ccm-block-social-links {
       margin-bottom: 2rem;
+      a {
+        color: $dark;
+      }
       i {
         font-size: 27px;
       }

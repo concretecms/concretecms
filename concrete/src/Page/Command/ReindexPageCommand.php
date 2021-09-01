@@ -2,7 +2,10 @@
 
 namespace Concrete\Core\Page\Command;
 
-class ReindexPageCommand extends PageCommand
+use Concrete\Core\Foundation\Command\AsyncCommandInterface;
+
+class ReindexPageCommand extends PageCommand implements AsyncCommandInterface
 {
+
 
 }

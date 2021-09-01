@@ -16,7 +16,7 @@ if (isset($pageListTitle) && $pageListTitle) {
 
 <div class="container">
 
-    <form method="get" action="<?=$c->getCollectionLink()?>" class="mb-5">
+    <form method="get" action="<?=$view->action('search_keywords')?>" class="mb-5">
         <div class="row">
             <div class="col-md-6">
                 <div class="hstack gap-2">
@@ -31,7 +31,7 @@ if (isset($pageListTitle) && $pageListTitle) {
     <div class="row">
     <?php foreach ($pages as $page) { ?>
 
-        <div class="col-md-6">
+        <div class="col-lg-6 d-flex mb-4">
             <?php
             $renderer->renderSummaryForObject($page, 'resource_page');
             ?>

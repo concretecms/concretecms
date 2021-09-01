@@ -1,14 +1,33 @@
 div.theme-atomik {
   div.ccm-block-hero-image-offset-title {
 
-    margin-top: 2rem;
-    margin-bottom: 4rem;
+    @include media-breakpoint-up(lg) {
+      margin-top: 2rem;
+      margin-bottom: 4rem;
+
+    }
+
+    img {
+      // Standard responsive behaviors by default.
+      max-width: 100%;
+      height: auto;
+
+      @include media-breakpoint-down(lg) {
+        // Once the screen gets smaller let's change how this works.
+        height: 400px;
+        object-fit: cover;
+      }
+    }
+
 
     div.ccm-block-hero-image-text {
 
-      margin-left: 6rem;
-      margin-right: 6rem;
       text-align: center;
+
+      @include media-breakpoint-up(lg) {
+        margin-left: 6rem;
+        margin-right: 6rem;
+      }
 
       @include media-breakpoint-up(xl) {
         position: relative;

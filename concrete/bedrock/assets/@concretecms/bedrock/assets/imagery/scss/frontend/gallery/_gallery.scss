@@ -32,7 +32,7 @@
   }
 
   .ccm-block-gallery-image {
-    padding-top: 320px;
+    @include rfs(320px, 'padding-top');
     overflow: hidden;
     width: 100%;
     position: relative;

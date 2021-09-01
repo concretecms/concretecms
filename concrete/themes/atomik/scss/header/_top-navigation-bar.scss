@@ -1,48 +1,12 @@
 div.ccm-page {
   div.ccm-block-top-navigation-bar {
-    &.transparency-enabled {
-      .navbar {
-        background-color: transparent;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 5; // to put it over any other elements
 
-        &.fixed-top {
-          position: fixed; // need to declare this because otherwise our customizations override this
-        }
-        .navbar-brand {
-          color: $white;
-          &:hover {
-            color: $gray-500;
-          }
-
-          .logo {
-            display: none;
-          }
-
-          .logo-transparent {
-            display: inline-block;
-          }
-
-        }
-
-        .nav-item {
-          a.nav-link {
-            color: $white;
-            &:hover {
-              color: $gray-500;
-            }
-          }
-        }
-      }
-    }
-
+    // Navigation bar styling
     .navbar {
       background-color: $top-navbar-bg;
     }
 
+    // Logo/brand
     .navbar-brand {
       img {
         max-height: 38px;
@@ -68,21 +32,94 @@ div.ccm-page {
 
     }
 
+    // Desktop specific functionality:
+    @include media-breakpoint-up(lg) {
+
+      // only include transparency on desktop because the toggler is just hard with it.
+      &.transparency-enabled {
+        .navbar {
+          background-color: transparent;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 5; // to put it over any other elements
+
+          &.fixed-top {
+            position: fixed; // need to declare this because otherwise our customizations override this
+          }
+
+          .navbar-brand {
+            color: $white;
+
+            &:hover {
+              color: $gray-500;
+            }
+
+            .logo {
+              display: none;
+            }
+
+            .logo-transparent {
+              display: inline-block;
+            }
+          }
+
+          .nav-item {
+            a.nav-link {
+              color: $white;
+
+              &:hover {
+                color: $gray-500;
+              }
+            }
+          }
+        }
+      }
+
+      // Animated dropdown menu
+      .dropdown-menu {
+        perspective: 1000px;
+        animation: dropdownMenuGrowDrown 300ms ease-in-out forwards;
+        transform-origin: top center;
+      }
+    }
+
+    // Mobile specific functionality
+    @include media-breakpoint-down(lg) {
+
+      // Navigation styling.
+      .nav-link {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        text-align: center;
+      }
+
+      // Navigation dropdown styling
+      .dropdown-menu {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+        border: 0;
+
+        .dropdown-item {
+          &:hover {
+            background-color: transparent;
+            color: $navbar-light-hover-color;
+          }
+        }
+      }
+    }
+
+    // Dropdown menu behaviors
     .dropdown-menu {
-      perspective: 1000px;
       display: none;
-      animation: dropdownMenuGrowDrown 300ms ease-in-out forwards;
-      transform-origin: top center;
     }
 
     .dropdown-toggle.show {
-
       ~ .dropdown-menu {
           display: block;
       }
-
     }
-
   }
 }
 
@@ -96,4 +133,59 @@ div.ccm-page {
   100% {
     transform: scaleY(1)
   }
+}
+
+// navbar animated toggler
+div.theme-atomik {
+
+  .navbar-toggler {
+    .icon-bar {
+      display: block;
+      width: 25px;
+      height: 2px;
+      transition: all 0.2s;
+      background-color: $black;
+
+      &:nth-of-type(1) {
+        transform: rotate(45deg);
+        transform-origin: 10% 10%;
+      }
+
+      &:nth-of-type(2) {
+        opacity: 0;
+      }
+
+      &:nth-of-type(3) {
+        transform: rotate(-45deg);
+        transform-origin: 10% 90%;
+      }
+
+      + .icon-bar {
+        margin-top: 5px;
+      }
+    }
+
+    &.collapsed {
+      .icon-bar {
+        &:nth-of-type(1) {
+          transform: rotate(0);
+        }
+
+        &:nth-of-type(2) {
+          opacity: 1;
+        }
+
+        &:nth-of-type(3) {
+          transform: rotate(0);
+        }
+      }
+    }
+
+    &:hover {
+      .icon-bar {
+        background-color: $primary;
+      }
+    }
+  }
+
 }

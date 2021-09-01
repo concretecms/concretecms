@@ -46,6 +46,10 @@ div.theme-atomik {
           }
         }
       }
+
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
     }
 
     .rslides_tabs {
