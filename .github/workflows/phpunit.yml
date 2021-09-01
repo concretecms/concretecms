@@ -27,7 +27,7 @@ jobs:
         php-version:
           # disabling for now
           # - "7.2"
-          # - "7.3"
+          - "7.3"
           - "7.4"
           - "8.0"
         dependencies:
@@ -88,12 +88,6 @@ jobs:
           composer install --no-interaction --no-progress --no-suggest
           composer update --no-interaction --no-progress --no-suggest
 
-      # PCOV is a fast code coverage driver
-      - name: Setup PCOV
-        if: env.CODE_COVERAGE == 'y'
-        run: |
-          composer require pcov/clobber
-          cd concrete && vendor/bin/pcov clobber
 
       - name: "Tests"
         if: env.CODE_COVERAGE == 'n'
