@@ -27,7 +27,7 @@ jobs:
         php-version:
           # disabling for now
           # - "7.2"
-          - "7.3"
+          # - "7.3"
           - "7.4"
           - "8.0"
         dependencies:
