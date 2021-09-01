@@ -11,16 +11,13 @@ use Concrete\Tests\TestCase;
 class CompositeLoaderTest extends TestCase
 {
 
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     protected $app;
     protected $composite;
     protected $loader1;
     protected $loader2;
     protected $loader3;
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $this->loader1 = M::mock(LoaderInterface::class);
         $this->loader2 = M::mock(LoaderInterface::class);
         $this->loader3 = M::mock(LoaderInterface::class);
@@ -33,7 +30,7 @@ class CompositeLoaderTest extends TestCase
         ]);
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->loader1 = null;
         $this->loader2 = null;

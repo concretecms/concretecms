@@ -12,21 +12,20 @@
     ]
   },
   "require": {
-    "wikimedia/composer-merge-plugin": "~1.3",
+    "wikimedia/composer-merge-plugin": "~2.0.1",
     "concrete5/dependency-patches": "^1.5.0"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "2.16.4",
-    "phpunit/phpunit": "^7.5.9",
-    "phpunit/dbunit": "^4.0",
-    "mockery/mockery": "^0.9.9",
+    "friendsofphp/php-cs-fixer": "2.19.2",
+    "phpunit/phpunit": "^9.5.8",
+    "mockery/mockery": "^1.3.4",
     "mlocati/ci-info": "^1"
   },
   "config": {
     "process-timeout": 0,
     "vendor-dir": "./concrete/vendor",
     "platform": {
-      "php": "7.3"
+      "php": "7.4"
     }
   },
   "replace": {

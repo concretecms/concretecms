@@ -18,7 +18,7 @@ class FormTest extends TestCase
      */
     protected static $request;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         self::$request = new Request();
         self::$formHelper = Core::make('helper/form', ['request' => self::$request]);

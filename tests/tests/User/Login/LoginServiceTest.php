@@ -2,10 +2,7 @@
 
 namespace User\Login;
 
-use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Http\Request;
-use Concrete\Core\Logging\Entry\User\LoginAttempt;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
@@ -16,17 +13,12 @@ use Concrete\Core\User\Exception\UserDeactivatedException;
 use Concrete\Core\User\Login\LoginAttemptService;
 use Concrete\Core\User\Login\LoginService;
 use Concrete\Tests\User\Login\MockUser;
-use Doctrine\ORM\EntityManagerInterface;
-use IPLib\Address\IPv4;
 use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Concrete\Tests\TestCase;
-use Psr\Log\LoggerInterface;
 
 class LoginServiceTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
     protected $config;
 

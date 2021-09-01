@@ -17,7 +17,7 @@ use Illuminate\Filesystem\Filesystem;
  */
 class SiteTranslationLoaderTest extends LocalizationTestsBase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
 
@@ -28,7 +28,7 @@ class SiteTranslationLoaderTest extends LocalizationTestsBase
         $filesystem->copyDirectory($langDir, $appLangDir);
     }
 
-    public function setUp()
+    public function setUp():void
     {
         $factory = new TranslatorAdapterFactory();
         $this->adapter = $factory->createTranslatorAdapter('fi_FI');
@@ -43,7 +43,7 @@ class SiteTranslationLoaderTest extends LocalizationTestsBase
         });
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         $app = Facade::getFacadeApplication();
         $msp = $app->make('Concrete\Core\Multilingual\MultilingualServiceProvider');

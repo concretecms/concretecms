@@ -16,7 +16,7 @@ class TranslatorAdapterTest extends TestCase
 {
     protected $adapter;
 
-    public function setUp()
+    public function setUp():void
     {
         $translationsFile = DIR_TESTS . '/assets/Localization/Adapter/Zend/translations.php';
 

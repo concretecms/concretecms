@@ -7,21 +7,21 @@ use Concrete\TestHelpers\Foundation\ClassLoaderTestCase;
 
 class ClassloaderTest extends ClassLoaderTestCase
 {
-    public static function tearDownAfterClass()
+    public static function TearDownAfterClass():void
     {
         parent::tearDownAfterClass();
         $coreAutoloader = ClassLoader::getInstance();
         $coreAutoloader->reset();
     }
 
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $coreAutoloader = ClassLoader::getInstance();
         $coreAutoloader->disable();
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         parent::tearDown();
         $coreAutoloader = ClassLoader::getInstance();

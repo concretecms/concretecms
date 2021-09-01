@@ -29,7 +29,7 @@ class Localization2Test extends LocalizationTestsBase
 {
     protected $loc;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         // Move language directories to the application
@@ -39,7 +39,7 @@ class Localization2Test extends LocalizationTestsBase
         $filesystem->copyDirectory($source, $target);
     }
 
-    public function setUp()
+    public function setUp():void
     {
         $this->loc = new Localization();
 
@@ -48,7 +48,7 @@ class Localization2Test extends LocalizationTestsBase
         $this->loc->setTranslatorAdapterRepository($repository);
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         // Some of the tests might be rewriting some core components through
         // the IoC container which we revert back here. Also, the localization
@@ -66,11 +66,9 @@ class Localization2Test extends LocalizationTestsBase
         $loc->setActiveContext(Localization::CONTEXT_SYSTEM);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testTranslatorAdapterRepositoryRequired()
     {
+        $this->expectException(\Exception::class);
         $loc = new Localization();
         $loc->getTranslatorAdapterRepository();
     }
@@ -129,11 +127,9 @@ class Localization2Test extends LocalizationTestsBase
         $this->assertInstanceOf('Concrete\Core\Localization\Translator\TranslatorAdapterInterface', $this->loc->getTranslatorAdapter('test'));
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testGetUnexistingContextTranslatorAdapter()
     {
+        $this->expectException(\Exception::class);
         $this->loc->getTranslatorAdapter('test');
     }
 
@@ -143,11 +139,9 @@ class Localization2Test extends LocalizationTestsBase
         $this->assertInstanceOf('Concrete\Core\Localization\Translator\TranslatorAdapterInterface', $this->loc->getActiveTranslatorAdapter());
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testGetUnexistingActiveTranslatorAdapter()
     {
+        $this->expectException(\Exception::class);
         $this->loc->getActiveTranslatorAdapter();
     }
 

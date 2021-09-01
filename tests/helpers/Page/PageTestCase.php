@@ -2,6 +2,7 @@
 
 namespace Concrete\TestHelpers\Page;
 
+use Concrete\Core\Cache\Cache;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
@@ -62,7 +63,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Key',
     ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
 
@@ -82,6 +83,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
             'handle' => 'basic',
             'name' => 'Basic',
         ]);
+
     }
 
     public function setUp(): void

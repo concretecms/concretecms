@@ -21,7 +21,7 @@ class EntityManagerConfigFactoryTest extends TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = Application::getFacadeApplication();

@@ -12,6 +12,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputLifetime = 7200;
     protected $btTable = 'btDesktopConcreteLatest';
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $slot;
 
     public function getBlockTypeDescription()
     {
@@ -27,7 +28,7 @@ class Controller extends BlockController
     {
         $service = $this->app->make(ActivityService::class);
         $slots = $service->getSlotContents();
-        $this->set('slot', $slots[$this->slot]);
+        $this->set('slot', isset($slots[$this->slot]) ? $slots[$this->slot] : null);
         $this->set('key', $this->slot);
     }
 }

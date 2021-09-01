@@ -13,7 +13,7 @@ class FunctionInspectorTest extends TestCase
      */
     private static $functionInspector;
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         self::$functionInspector = Application::getFacadeApplication()->make(FunctionInspector::class);
     }

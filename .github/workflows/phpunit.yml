@@ -28,7 +28,7 @@ jobs:
           - "7.2"
           - "7.3"
           - "7.4"
-#          - "8.0"
+          - "8.0"
         dependencies:
           - "locked"
         operating-system:
@@ -56,7 +56,7 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
           coverage: pcov
           ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
-          tools: composer:v1, prestissimo
+          tools: composer:v2, prestissimo
 
       - name: "Prepare mysql user"
         run: |
@@ -70,20 +70,22 @@ jobs:
       - name: "Install lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}
         run: |
-          composer update --prefer-lowest --no-interaction --no-progress --no-suggest
+          composer install --prefer-lowest --no-interaction --no-progress --no-suggest
           # Run twice for mediawiki merge
           composer update --prefer-lowest --no-interaction --no-progress --no-suggest
 
       - name: "Install highest dependencies"
         if: ${{ matrix.dependencies == 'highest' }}
         run: |
-          composer update --no-interaction --no-progress --no-suggest
+          composer install --no-interaction --no-progress --no-suggest
           # Run twice for mediawiki merge
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Install locked dependencies"
         if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress --no-suggest"
+        run: |
+        composer install --no-interaction --no-progress --no-suggest
+        composer update --no-interaction --no-progress --no-suggest
 
       # PCOV is a fast code coverage driver
       - name: Setup PCOV

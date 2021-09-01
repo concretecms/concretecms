@@ -23,8 +23,6 @@ use Symfony\Component\Serializer\Serializer;
 class PageDriverTest extends TestCase
 {
     
-    use MockeryPHPUnitIntegration;
-    
     public function testIsValidForObject()
     {
         $installationService = M::mock(InstallationService::class);

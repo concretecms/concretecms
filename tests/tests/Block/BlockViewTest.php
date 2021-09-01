@@ -13,8 +13,7 @@ class BlockViewTest extends TestCase
     /** @var \Concrete\Core\Application\Application */
     protected $app;
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $this->app = Facade::getFacadeApplication();
     }
 

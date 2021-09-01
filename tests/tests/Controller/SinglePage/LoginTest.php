@@ -70,7 +70,7 @@ class LoginTest extends PageTestCase
         $this->metadatas[] = 'Concrete\Core\Entity\Block\BlockType\BlockType';
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         Category::add('user');

@@ -14,7 +14,7 @@ class DatabaseServiceProviderTest extends TestCase
 {
     protected $app;
 
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();

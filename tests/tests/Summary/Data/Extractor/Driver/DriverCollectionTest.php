@@ -21,12 +21,10 @@ use Concrete\Core\Summary\Data\Extractor\Driver\DriverCollection;
 use Concrete\Core\Summary\Data\Field\ImageDataFieldData;
 use Concrete\Tests\TestCase;
 use Doctrine\ORM\EntityManager;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 class DriverCollectionTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
     public function testExtractData()
     {

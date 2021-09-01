@@ -14,7 +14,7 @@ use Concrete\Tests\TestCase;
  */
 class DriverTest extends TestCase
 {
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $driver = new YamlDriver('config/yaml');

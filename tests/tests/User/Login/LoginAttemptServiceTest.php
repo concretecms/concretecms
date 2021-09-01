@@ -7,7 +7,6 @@ use Concrete\Core\Entity\User\LoginAttempt;
 use Concrete\Core\Entity\User\LoginAttemptRepository;
 use Concrete\Core\User\Login\LoginAttemptService;
 use Doctrine\ORM\EntityManager;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Concrete\Tests\TestCase;
 use Mockery as M;
 use Concrete\Core\Events\EventDispatcher;
@@ -15,7 +14,6 @@ use Concrete\Core\Events\EventDispatcher;
 class LoginAttemptServiceTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
     public function testPruneAttemptsFromConfig()
     {

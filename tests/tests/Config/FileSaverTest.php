@@ -14,8 +14,7 @@ class FileSaverTest extends TestCase
     /** @var FileSystem */
     protected $files;
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $this->saver = new FileSaver($this->files = new Filesystem());
     }
 

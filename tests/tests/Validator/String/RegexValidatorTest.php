@@ -27,22 +27,18 @@ class RegexValidatorTest extends TestCase
         $this->assertNotEmpty($error);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidInput()
     {
+        $this->expectException(InvalidArgumentException::class);
         $validator = new \Concrete\Core\Validator\String\RegexValidator('');
 
         $validator->isValid($validator);
         $validator->isValid('');
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testInvalidRegularExpression()
     {
+        $this->expectException(RuntimeException::class);
         $validator = new \Concrete\Core\Validator\String\RegexValidator('Invalid regex');
         $validator->isValid('test');
     }

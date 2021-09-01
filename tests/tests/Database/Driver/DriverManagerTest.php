@@ -10,7 +10,7 @@ class DriverManagerTest extends TestCase
     /** @var DriverManager */
     protected $driverManager;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->driverManager = new DriverManager(\Core::getFacadeRoot());
     }

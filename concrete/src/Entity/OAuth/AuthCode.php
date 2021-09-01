@@ -102,7 +102,7 @@ class AuthCode implements AuthCodeEntityInterface
      *
      * @see \League\OAuth2\Server\Entities\TokenInterface::setExpiryDateTime()
      */
-    public function setExpiryDateTime(\DateTime $dateTime)
+    public function setExpiryDateTime(\DateTimeImmutable $dateTime)
     {
         $this->expiryDateTime = $dateTime;
     }

@@ -38,9 +38,9 @@ class TextTest extends ConcreteDatabaseTestCase
     {
         return [
             ['Mixed with English and Germaen', 'Mixed with English and Germän', 'de_DE'],
-            ['Mixed with English and ', 'Mixed with English and 日本語', ''],
-            ['Mixed with English and .doc', 'Mixed with English and 日本語.doc', ''],
-            ['Mixed with English and .', 'Mixed with English and 日本語.日本語', ''],
+            ['Mixed with English and ', 'Mixed with English and 日本語', 'ja_JP'],
+            ['Mixed with English and .doc', 'Mixed with English and 日本語.doc', 'ja_JP'],
+            ['Mixed with English and .', 'Mixed with English and 日本語.日本語', 'ja_JP'],
             ['', '日本語', ''],
             ['.doc', '日本語.doc', ''],
             ['.', '日本語.日本語', ''],
@@ -52,7 +52,7 @@ class TextTest extends ConcreteDatabaseTestCase
         return [
             ['jetudie-le-francais', " J'étudie le français "],
             ['lo-siento-no-hablo-espanol', 'Lo siento, no hablo español.'],
-            ['f3pws', 'ΦΞΠΏΣ'],
+            ['fkspws', 'ΦΞΠΏΣ'],
             ['yo-hablo-espanol', '¿Yo hablo español?'],
         ];
     }

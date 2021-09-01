@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Database;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Database;
 use PDOException;
@@ -15,20 +16,17 @@ class DatabaseTest extends ConcreteDatabaseTestCase
     public function setUp(): void
     {
         $conn = $this->getConnection();
-        $pdo = $conn->getConnection();
 
-        $pdo->exec('DROP TABLE IF EXISTS Users');
-        $pdo->exec(
+        $conn->exec('DROP TABLE IF EXISTS Users');
+        $conn->exec(
             'CREATE TABLE Users (uID INT UNSIGNED NOT NULL AUTO_INCREMENT, uName VARCHAR(128) NULL, uFirstName VARCHAR(128) NULL, uEmail VARCHAR(128) NULL, PRIMARY KEY (uID));');
         parent::setUp();
     }
 
-    /**
-     * @expectedException \Doctrine\DBAL\Driver\PDOException
-     * @expectedExceptionMessage getaddrinfo failed
-     */
     public function testInvalidConnection()
     {
+        $this->expectException(\Doctrine\DBAL\Driver\PDOException::class);
+        $this->expectExceptionMessage("getaddrinfo failed");
         $connection = Database::getFactory()->createConnection(
             [
                 'database' => md5(mt_rand()),
@@ -97,14 +95,16 @@ class DatabaseTest extends ConcreteDatabaseTestCase
         $this->assertFalse($db->tableExists('DummyTable'));
     }
 
+
     public function testLegacyConcreteApi()
     {
+        /** @var Connection $db */
         $db = Database::connection();
 
         $q = 'SELECT * FROM Users';
         $r = $db->Execute($q);
         $results = [];
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetchAssociative()) {
             $results[] = $row['uName'];
         }
 

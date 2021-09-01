@@ -93,6 +93,13 @@ class Page extends Collection implements CategoryMemberInterface,
     protected $blocksAliasedFromMasterCollection = null;
 
     /**
+     * The user id of the user that has checked out the page.
+     *
+     * @var int|null
+     */
+    public $cCheckedOutUID = null;
+
+    /**
      * The original cID of a page (if it's a page alias).
      *
      * @var int|null
@@ -604,23 +611,23 @@ class Page extends Collection implements CategoryMemberInterface,
     public function isCheckedOut()
     {
         // function to inform us as to whether the current collection is checked out
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = Database::connection();
         if (isset($this->isCheckedOutCache)) {
             return $this->isCheckedOutCache;
         }
-
         $q = "select cIsCheckedOut, cCheckedOutDatetimeLastEdit from Pages where cID = '{$this->cID}'";
         $r = $db->executeQuery($q);
 
         if ($r) {
-            $row = $r->fetch();
+            $row = $r->fetchAssociative();
             // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
             if (!empty($row['cCheckedOutDatetimeLastEdit'])) {
                 $dh = Core::make('helper/date');
                 $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
             }
 
-            if ($row['cIsCheckedOut'] == 0) {
+            if (isset($row['cIsCheckedOut']) && $row['cIsCheckedOut'] == 0) {
                 return false;
             }
             if (isset($timeSinceCheckout) && $timeSinceCheckout > CHECKOUT_TIMEOUT) {

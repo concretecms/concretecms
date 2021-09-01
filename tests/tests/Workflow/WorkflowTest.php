@@ -7,12 +7,10 @@ use Concrete\Core\Workflow\Request\Request;
 use Concrete\Core\Workflow\Type;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 
 class WorkflowTest extends ConcreteDatabaseTestCase
 {
-    use MockeryPHPUnitIntegration;
 
     protected $tables = [
         'WorkflowTypes',
@@ -20,7 +18,7 @@ class WorkflowTest extends ConcreteDatabaseTestCase
         'WorkflowProgress',
     ];
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->connection()->exec('delete from Workflows');

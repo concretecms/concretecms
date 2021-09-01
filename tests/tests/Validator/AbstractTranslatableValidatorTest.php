@@ -68,20 +68,16 @@ class AbstractTranslatableValidatorTest extends TestCase
         $this->assertEquals([5 => 'REQUIREMENT'], $mock->getRequirementStrings());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidErrorStringExpression()
     {
+        $this->expectException(InvalidArgumentException::class);
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
         $mock->setErrorString(5, $mock);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidRequirementStringExpression()
     {
+        $this->expectException(InvalidArgumentException::class);
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
         $mock->setRequirementString(5, $mock);
     }

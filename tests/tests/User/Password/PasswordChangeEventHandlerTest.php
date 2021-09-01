@@ -9,14 +9,11 @@ use Concrete\Core\User\Password\PasswordChangeEventHandler;
 use Concrete\Core\User\Password\PasswordUsageTracker;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Concrete\Tests\TestCase;
 use Mockery as M;
 
 class PasswordChangeEventHandlerTest extends TestCase
 {
-
-    use MockeryPHPUnitIntegration;
 
     public function testHandlingSimpleEvent()
     {
@@ -39,12 +36,10 @@ class PasswordChangeEventHandlerTest extends TestCase
         $handler->handleEvent($event);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid event type provided. Event type must be "UserInfoWithPassword".
-     */
     public function testInvalidEventType()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid event type provided. Event type must be \"UserInfoWithPassword\".");
         $tracker = M::mock(PasswordUsageTracker::class);
         $event = M::mock(FileVersion::class);
 

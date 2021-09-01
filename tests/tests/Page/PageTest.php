@@ -191,7 +191,7 @@ class PageTest extends PageTestCase
             ['normal page', false],
             ["awesome page's #spring_break98 !!1! SO COOL", false],
             ['niño borracho', false],
-            ['雷鶏', true],
+            ['雷鶏', false],
         ];
     }
 

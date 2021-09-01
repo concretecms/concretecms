@@ -60,7 +60,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     public function setUp(): void
     {

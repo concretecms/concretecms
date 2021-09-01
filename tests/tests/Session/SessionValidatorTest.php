@@ -31,7 +31,7 @@ class SessionValidatorTest extends TestCase
     /** @var Session */
     protected $session;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->app = clone Application::getFacadeApplication();
         $this->app->singleton(AddressInterface::class, function () {
@@ -71,7 +71,7 @@ class SessionValidatorTest extends TestCase
         $this->session = $mock;
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->session = $this->app = $this->validator = $this->request = null;
     }

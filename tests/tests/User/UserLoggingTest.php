@@ -14,8 +14,6 @@ use Psr\Log\LoggerInterface;
 class UserLoggingTest extends TestCase
 {
 
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function getUserInfoWithPasswordEvent()
     {
         $user = M::mock(User::class);

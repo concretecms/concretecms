@@ -102,7 +102,7 @@ class AccessToken implements AccessTokenEntityInterface
      *
      * @see \League\OAuth2\Server\Entities\TokenInterface::setExpiryDateTime()
      */
-    public function setExpiryDateTime(\DateTime $dateTime)
+    public function setExpiryDateTime(\DateTimeImmutable $dateTime)
     {
         $this->expiryDateTime = $dateTime;
     }
