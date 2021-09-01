@@ -84,8 +84,8 @@ jobs:
       - name: "Install locked dependencies"
         if: ${{ matrix.dependencies == 'locked' }}
         run: |
-        composer install --no-interaction --no-progress --no-suggest
-        composer update --no-interaction --no-progress --no-suggest
+          composer install --no-interaction --no-progress --no-suggest
+          composer update --no-interaction --no-progress --no-suggest
 
       # PCOV is a fast code coverage driver
       - name: Setup PCOV
