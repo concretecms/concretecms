@@ -1,6 +1,6 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-block-topic-list-wrapper">
+<div class="ccm-block-topic-list">
 
     <div class="ccm-block-topic-list-header">
 		<<?php echo $titleFormat; ?>><?php echo h($title); ?></<?php echo $titleFormat; ?>>

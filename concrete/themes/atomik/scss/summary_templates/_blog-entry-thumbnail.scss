@@ -9,8 +9,8 @@
       height: 100%;
       z-index: 2;
       opacity: 0;
-      transition: opacity 0.4s ease-in-out;
-      background-color: rgba($primary, 0.8);
+      transition: opacity 0.1s linear;
+      background-color: rgba($primary, 0.7);
     }
 
     height: 100%;

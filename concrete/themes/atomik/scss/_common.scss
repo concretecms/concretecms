@@ -8,6 +8,7 @@
 @import "type";
 @import "containers";
 @import "summary-templates";
+@import "page-types";
 @import "header";
 @import "breadcrumbs";
 @import "footer";
@@ -15,6 +16,8 @@
 @import "features/basics";
 @import "features/imagery";
 @import "features/faq";
+@import "features/navigation";
 @import "features/testimonials";
 @import "features/documents";
-
+@import "features/social";
+@import "features/taxonomy";

@@ -234,13 +234,6 @@ $index-level-intelligent-search: 1200;
 $index-level-modal-overlay: 1500;
 $index-level-dialog: 2000;
 
-/* Magnific Popup –has to come above dialogs because it might get called from a dialog*/
-$lightbox-overlay: 2100;
-$lightbox-overlay-wrap: 2200;
-$lightbox-loader: 2300;
-$lightbox-content: 2400;
-$lightbox-arrows: 2400;
-
 /* Editor dropdown –can be either inline OR in a dialog box so we have to come above dialog. Hopefully this doesn't
 cause other problems */
 $index-level-editor-toolbar-dropdown: 2500;

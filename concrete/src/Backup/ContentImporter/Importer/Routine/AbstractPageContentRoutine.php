@@ -1,11 +1,15 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
+use Concrete\Block\CoreContainer\Controller as ContainerBlockController;
+use Concrete\Core\Area\ContainerArea;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Page;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Doctrine\ORM\EntityManager;
 
 abstract class AbstractPageContentRoutine extends AbstractRoutine
 {
@@ -45,6 +49,29 @@ abstract class AbstractPageContentRoutine extends AbstractRoutine
                                         }
                                     }
                                 }
+
+                                if ($block->getBlockTypeHandle() == BLOCK_HANDLE_CONTAINER_PROXY) {
+                                    // we have to go get the blocks on that page in this layout.
+                                    $btc = $block->getController();
+                                    /**
+                                     * @var $btc ContainerBlockController
+                                     */
+                                    $instance = $btc->getContainerInstanceObject();
+                                    $instanceAreas = $instance->getInstanceAreas();
+                                    foreach ($instanceAreas as $instanceArea) {
+                                        $containerBlockInstance = new ContainerBlockInstance(
+                                            $block,
+                                            $instance,
+                                            app(EntityManager::class)
+                                        );
+                                        $containerArea = new ContainerArea($containerBlockInstance, $instanceArea->getContainerAreaName());
+                                        $blocks = $containerArea->getAreaBlocksArray($mc);
+                                        foreach ($blocks as $_b) {
+                                            $_b->alias($page);
+                                        }
+                                    }
+                                }
+
                             }
                         }
                     }

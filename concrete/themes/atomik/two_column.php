@@ -5,7 +5,7 @@ $view->inc('elements/header.php');
 ?>
 
 <?php
-$a = new Area('Header');
+$a = new Area('Page Header');
 $a->enableGridContainer();
 $a->display($c);
 ?>

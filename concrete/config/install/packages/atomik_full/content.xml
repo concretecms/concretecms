@@ -68,8 +68,17 @@
                     <pagetemplate handle="right_sidebar">
                         <page name="" path="" filename="" pagetype="blog_entry" template="right_sidebar" user="admin"
                               description="" package="">
-                            <area name="Main">
+                            <area name="Page Header">
                                 <blocks>
+                                    <block type="breadcrumbs" name="" mc-block-id="auf8nvkdiz">
+                                        <data table="btBreadcrumbs">
+                                            <record>
+                                                <includeCurrent><![CDATA[0]]></includeCurrent>
+                                                <ignoreExcludeNav><![CDATA[1]]></ignoreExcludeNav>
+                                                <ignorePermission><![CDATA[0]]></ignorePermission>
+                                            </record>
+                                        </data>
+                                    </block>
                                     <block type="page_title" name="" custom-template="byline.php"
                                            mc-block-id="3zXqs3ea">
                                         <data table="btPageTitle">
@@ -79,6 +88,10 @@
                                             </record>
                                         </data>
                                     </block>
+                                </blocks>
+                            </area>
+                            <area name="Main">
+                                <blocks>
                                     <block type="core_page_type_composer_control_output" name="" mc-block-id="YVfXXxWY">
                                         <control output-control-id="6y4mB58T"/>
                                     </block>
@@ -86,23 +99,23 @@
                             </area>
                             <area name="Sidebar">
                                 <blocks>
-                                    <block type="next_previous" name="" mc-block-id="71azOVYD">
-                                        <data table="btNextPrevious">
-                                            <record>
-                                                <nextLabel><![CDATA[Next Post]]></nextLabel>
-                                                <previousLabel><![CDATA[Last Post]]></previousLabel>
-                                                <parentLabel><![CDATA[]]></parentLabel>
-                                                <loopSequence><![CDATA[0]]></loopSequence>
-                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                            </record>
-                                        </data>
-                                    </block>
                                     <block type="share_this_page" name="" mc-block-id="PXLhJkwz">
                                         <data>
                                             <service>facebook</service>
                                             <service>twitter</service>
                                             <service>linkedin</service>
                                             <service>email</service>
+                                        </data>
+                                    </block>
+                                    <block type="next_previous" name="" mc-block-id="71azOVYD">
+                                        <data table="btNextPrevious">
+                                            <record>
+                                                <nextLabel><![CDATA[Next Article]]></nextLabel>
+                                                <previousLabel><![CDATA[Previous Article]]></previousLabel>
+                                                <parentLabel><![CDATA[]]></parentLabel>
+                                                <loopSequence><![CDATA[0]]></loopSequence>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                            </record>
                                         </data>
                                     </block>
                                     <block type="topic_list" name="" mc-block-id="gZQmjnx8">
@@ -112,29 +125,73 @@
                                             <topicAttributeKeyHandle>blog_entry_topics</topicAttributeKeyHandle>
                                             <tree>Blog Entries</tree>
                                             <cParentID>{ccm:export:page:/about/blog}</cParentID>
-                                        </data>
-                                    </block>
-                                    <block type="page_list" name="" mc-block-id="KffPWR4h">
-                                        <data table="btPageList">
-                                            <record>
-                                                <num><![CDATA[3]]></num>
-                                                <orderBy><![CDATA[random]]></orderBy>
-                                                <cParentID>{ccm:export:page:/about/blog}</cParentID>
-                                                <filterByRelated>1</filterByRelated>
-                                                <cThis><![CDATA[1]]></cThis>
-                                                <includeName><![CDATA[1]]></includeName>
-                                                <includeDescription><![CDATA[0]]></includeDescription>
-                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                <pageListTitle>Related Posts</pageListTitle>
-                                                <relatedTopicAttributeKeyHandle>blog_entry_topics
-                                                </relatedTopicAttributeKeyHandle>
-                                            </record>
+                                            <titleFormat><![CDATA[h4]]></titleFormat>
                                         </data>
                                     </block>
                                 </blocks>
                             </area>
                             <area name="Page Footer">
                                 <blocks>
+                                    <block type="core_container" name="" mc-block-id="02c9a7b0">
+                                        <container handle="light_stripe">
+                                            <containerarea name="Title">
+                                                <block type="content" name="" mc-block-id="bb944c4d">
+                                                    <data table="btContentLocal">
+                                                        <record>
+                                                            <content><![CDATA[<h4 class="text-center display-4">From Our Blog</h4>
+]]></content>
+                                                        </record>
+                                                    </data>
+                                                </block>
+                                            </containerarea>
+                                            <containerarea name="Body">
+                                                <block type="page_list" name="" custom-template="blog_entry_grid.php"
+                                                       mc-block-id="6ee7c7f2">
+                                                    <data table="btPageList">
+                                                        <record>
+                                                            <num><![CDATA[6]]></num>
+                                                            <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                            <cParentID/>
+                                                            <cThis><![CDATA[0]]></cThis>
+                                                            <cThisParent><![CDATA[1]]></cThisParent>
+                                                            <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                            <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                            <pageListTitle><![CDATA[]]></pageListTitle>
+                                                            <filterByRelated><![CDATA[0]]></filterByRelated>
+                                                            <filterByCustomTopic><![CDATA[0]]></filterByCustomTopic>
+                                                            <filterDateOption><![CDATA[all]]></filterDateOption>
+                                                            <filterDateDays><![CDATA[0]]></filterDateDays>
+                                                            <filterDateStart><![CDATA[]]></filterDateStart>
+                                                            <filterDateEnd><![CDATA[]]></filterDateEnd>
+                                                            <relatedTopicAttributeKeyHandle>
+                                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                                            <customTopicAttributeKeyHandle>
+                                                                <![CDATA[]]></customTopicAttributeKeyHandle>
+                                                            <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
+                                                            <includeName><![CDATA[1]]></includeName>
+                                                            <includeDescription><![CDATA[1]]></includeDescription>
+                                                            <includeDate><![CDATA[0]]></includeDate>
+                                                            <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                            <paginate><![CDATA[0]]></paginate>
+                                                            <displayAliases><![CDATA[0]]></displayAliases>
+                                                            <displaySystemPages><![CDATA[0]]></displaySystemPages>
+                                                            <ignorePermissions><![CDATA[0]]></ignorePermissions>
+                                                            <enableExternalFiltering>
+                                                                <![CDATA[0]]></enableExternalFiltering>
+                                                            <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                            <pfID/>
+                                                            <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                            <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                            <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                                            <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                                                            <truncateChars><![CDATA[0]]></truncateChars>
+                                                            <titleFormat><![CDATA[h5]]></titleFormat>
+                                                        </record>
+                                                    </data>
+                                                </block>
+                                            </containerarea>
+                                        </container>
+                                    </block>
                                 </blocks>
                             </area>
                         </page>
@@ -262,7 +319,7 @@
                     <pagetemplate handle="two_column">
                         <page name="" path="" public-date="2021-08-28 07:31:35" filename="" pagetype="resource"
                               template="two_column" user="admin" description="" package="" root="true">
-                            <area name="Header">
+                            <area name="Page Header">
                                 <blocks>
                                     <block type="breadcrumbs" name="" mc-block-id="bf3d4ccc">
                                         <data table="btBreadcrumbs">
@@ -451,7 +508,7 @@
     <pages>
         <page name="Home" path="" public-date="2021-08-20 15:36:55" filename="" pagetype="page" template="full"
               user="admin" description="" package="" root="true">
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block type="hero_image" name="">
                         <data table="btHeroImage">
@@ -1434,7 +1491,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
         </page>
         <page name="Services" path="/about/services" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block type="hero_image" name="">
                         <data table="btHeroImage">
@@ -1765,7 +1822,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
         </page>
         <page name="Contact Us" path="/about/contact" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block type="hero_image" name="">
                         <data table="btHeroImage">
@@ -1914,7 +1971,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     </block>
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block type="hero_image" name="">
                         <data table="btHeroImage">
@@ -1936,7 +1993,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="Tips to Build a Beautiful Blog" public-date="2021-08-01 12:00:00"
+        <page name="Tips to Build a Beautiful Blog" public-date="2021-08-01 07:43:00"
               path="/about/blog/tips-build-beautiful-blog" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -1954,11 +2011,12 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </attributekey>
             </attributes>
             <area name="Page Footer">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="02c9a7b0"/>
+                </blocks>
             </area>
             <area name="Main">
                 <blocks>
-                    <block mc-block-id="3zXqs3ea"/>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -1972,14 +2030,16 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
             <area name="Page Header">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="auf8nvkdiz"/>
+                    <block mc-block-id="3zXqs3ea"/>
+                </blocks>
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="gZQmjnx8"/>
-                    <block mc-block-id="KffPWR4h"/>
                 </blocks>
             </area>
             <area name="Sidebar Footer">
@@ -2004,11 +2064,12 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </attributekey>
             </attributes>
             <area name="Page Footer">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="02c9a7b0"/>
+                </blocks>
             </area>
             <area name="Main">
                 <blocks>
-                    <block mc-block-id="3zXqs3ea"/>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2022,14 +2083,16 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
             <area name="Page Header">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="auf8nvkdiz"/>
+                    <block mc-block-id="3zXqs3ea"/>
+                </blocks>
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="gZQmjnx8"/>
-                    <block mc-block-id="KffPWR4h"/>
                 </blocks>
             </area>
             <area name="Sidebar Footer">
@@ -2054,11 +2117,12 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </attributekey>
             </attributes>
             <area name="Page Footer">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="02c9a7b0"/>
+                </blocks>
             </area>
             <area name="Main">
                 <blocks>
-                    <block mc-block-id="3zXqs3ea"/>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2072,14 +2136,16 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
             <area name="Page Header">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="auf8nvkdiz"/>
+                    <block mc-block-id="3zXqs3ea"/>
+                </blocks>
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="gZQmjnx8"/>
-                    <block mc-block-id="KffPWR4h"/>
                 </blocks>
             </area>
             <area name="Sidebar Footer">
@@ -2104,11 +2170,12 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </attributekey>
             </attributes>
             <area name="Page Footer">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="02c9a7b0"/>
+                </blocks>
             </area>
             <area name="Main">
                 <blocks>
-                    <block mc-block-id="3zXqs3ea"/>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2122,14 +2189,16 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
             <area name="Page Header">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="auf8nvkdiz"/>
+                    <block mc-block-id="3zXqs3ea"/>
+                </blocks>
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="gZQmjnx8"/>
-                    <block mc-block-id="KffPWR4h"/>
                 </blocks>
             </area>
             <area name="Sidebar Footer">
@@ -2154,11 +2223,12 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </attributekey>
             </attributes>
             <area name="Page Footer">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="02c9a7b0"/>
+                </blocks>
             </area>
             <area name="Main">
                 <blocks>
-                    <block mc-block-id="3zXqs3ea"/>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2172,14 +2242,16 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
             <area name="Page Header">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="auf8nvkdiz"/>
+                    <block mc-block-id="3zXqs3ea"/>
+                </blocks>
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="gZQmjnx8"/>
-                    <block mc-block-id="KffPWR4h"/>
                 </blocks>
             </area>
             <area name="Sidebar Footer">
@@ -2204,11 +2276,12 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </attributekey>
             </attributes>
             <area name="Page Footer">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="02c9a7b0"/>
+                </blocks>
             </area>
             <area name="Main">
                 <blocks>
-                    <block mc-block-id="3zXqs3ea"/>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2222,14 +2295,16 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
             <area name="Page Header">
-                <blocks/>
+                <blocks>
+                    <block mc-block-id="auf8nvkdiz"/>
+                    <block mc-block-id="3zXqs3ea"/>
+                </blocks>
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="71azOVYD"/>
                     <block mc-block-id="gZQmjnx8"/>
-                    <block mc-block-id="KffPWR4h"/>
                 </blocks>
             </area>
             <area name="Sidebar Footer">
@@ -2238,7 +2313,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
         </page>
         <page name="Documents" path="/documents" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block type="hero_image" name="">
                         <data table="btHeroImage">
@@ -2327,7 +2402,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     </block>
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks/>
             </area>
         </page>
@@ -2349,7 +2424,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
 
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks/>
             </area>
         </page>
@@ -2384,7 +2459,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     </block>
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
@@ -2451,7 +2526,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     </block>
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
@@ -2493,7 +2568,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     </block>
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
@@ -2535,7 +2610,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     </block>
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
@@ -2577,7 +2652,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     </block>
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
@@ -2619,7 +2694,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                     </block>
                 </blocks>
             </area>
-            <area name="Header">
+            <area name="Page Header">
                 <blocks>
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
@@ -2664,7 +2739,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[ <div class="atomik-logo"><concrete-picture fid="atomik-logo.png" alt="atomik-logo.png" /><span>Atomik</span></div> ]]>
+                                    <![CDATA[ <div class="atomik-logo"><concrete-picture file="atomik-logo.png" alt="atomik-logo.png" /><span>Atomik</span></div> ]]>
                                 </content>
                             </record>
                         </data>

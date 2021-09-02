@@ -1,0 +1,37 @@
+div.theme-atomik {
+  div.ccm-block-next-previous {
+    h4 {
+      font-family: $display-font-family;
+      @extend .display-4;
+    }
+
+    .ccm-block-next-previous-thumbnail {
+      margin-bottom: 1rem;
+    }
+
+    .ccm-block-next-previous-date {
+      font-size: $font-size-sm;
+      color: $secondary;
+      margin-bottom: 1rem;
+    }
+
+    .ccm-block-next-previous-previous-link,
+    .ccm-block-next-previous-next-link {
+      @extend .h6;
+
+      a {
+        color: $body-color;
+
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    .ccm-block-next-previous-previous-link +
+    .ccm-block-next-previous-header {
+      margin-top: 2rem;
+    }
+
+  }
+}

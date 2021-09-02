@@ -32,7 +32,7 @@ class Controller extends BlockController
         return t("Container");
     }
     
-    protected function getContainerInstanceObject() :? Container\Instance
+    public function getContainerInstanceObject() :? Container\Instance
     {
         $entityManager = $this->app->make(EntityManager::class);
         if ($this->containerInstanceID) {

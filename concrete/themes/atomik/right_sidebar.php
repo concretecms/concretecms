@@ -5,7 +5,7 @@ $view->inc('elements/header.php');
 ?>
 
 <?php
-$a = new Area('Header');
+$a = new Area('Page Header');
 $a->enableGridContainer();
 $a->display($c);
 ?>
@@ -26,6 +26,12 @@ $a->display($c);
         </div>
     </div>
 </div>
+
+<?php
+$a = new Area('Page Footer');
+$a->enableGridContainer();
+$a->display($c);
+?>
 
 <?php
 $view->inc('elements/footer.php');

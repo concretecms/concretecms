@@ -62,6 +62,14 @@
             }
             $transparentNavbar.show()
         }
+
+        // Add padding to ccm-page if we're using the fixed bar.
+        const $navbar = $('.ccm-block-top-navigation-bar .navbar')
+        if ($navbar.hasClass('fixed-top')) {
+            if ($transparentNavbar.length == 0 || !$transparentNavbar.hasClass('transparency-enabled')) {
+                $('.ccm-page').css('padding-top', $navbar.outerHeight())
+            }
+        }
     });
 
 })(window, $)

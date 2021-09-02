@@ -1,0 +1,47 @@
+div.theme-atomik {
+  .ccm-block-topic-list {
+
+    h1 {
+      font-family: $display-font-family;
+      @extend .display-1;
+    }
+
+    h2 {
+      font-family: $display-font-family;
+      @extend .display-2;
+    }
+
+    h3 {
+      font-family: $display-font-family;
+      @extend .display-3;
+    }
+
+    h4 {
+      font-family: $display-font-family;
+      @extend .display-4;
+    }
+
+    h5 {
+      font-family: $display-font-family;
+      @extend .display-5;
+    }
+
+    h6 {
+      font-family: $display-font-family;
+      @extend .display-6;
+    }
+
+    ul.ccm-block-topic-list-page-topics {
+      @extend .list-group;
+
+      li {
+        @extend .list-group-item;
+
+        a {
+          display: block;
+        }
+      }
+    }
+  }
+
+}
