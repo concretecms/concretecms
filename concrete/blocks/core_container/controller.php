@@ -131,25 +131,24 @@ class Controller extends BlockController
         // such a pain
         $this->containerInstanceID = $db->fetchColumn('select containerInstanceID from btCoreContainer where bID = ?', [$b->getBlockID()]);
 
-        
+
         $parentArea = $b->getBlockAreaObject();
         $page = $b->getBlockCollectionObject();
 
         $instance = $this->getContainerInstanceObject();
+
+        $containerBlockInstance = $this->app->make(ContainerBlockInstance::class,
+           ['block' => $b, 'instance' => $instance]
+        );
+
         // go through all areas found under this node, and create the corresponding sub area.
         foreach ($blockNode->container->containerarea as $containerAreaNode) {
 
             $areaDisplayName = (string)$containerAreaNode['name'];
-            $arHandle = $instance->getContainerInstanceID() . SubArea::AREA_SUB_DELIMITER . $areaDisplayName;
-            $subArea = new SubArea(
-                $arHandle,
-                $parentArea->getAreaHandle(),
-                $parentArea->getAreaID()
-            );
+            $containerArea = new ContainerArea($containerBlockInstance, $areaDisplayName);
 
-            $subArea->setAreaDisplayName($areaDisplayName);
-            $subArea->load($page);
-
+            $subArea = $containerArea->getSubAreaObject($page);
+            
             if ($containerAreaNode->style) {
                 $set = StyleSet::import($containerAreaNode->style);
                 $page->setCustomStyleSet($subArea, $set);

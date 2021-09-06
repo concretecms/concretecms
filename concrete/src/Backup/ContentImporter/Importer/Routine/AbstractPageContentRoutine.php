@@ -57,12 +57,15 @@ abstract class AbstractPageContentRoutine extends AbstractRoutine
                                      * @var $btc ContainerBlockController
                                      */
                                     $instance = $btc->getContainerInstanceObject();
+                                    $em = app(EntityManager::class);
+                                    $em->refresh($instance);
+
                                     $instanceAreas = $instance->getInstanceAreas();
                                     foreach ($instanceAreas as $instanceArea) {
                                         $containerBlockInstance = new ContainerBlockInstance(
                                             $block,
                                             $instance,
-                                            app(EntityManager::class)
+                                            $em
                                         );
                                         $containerArea = new ContainerArea($containerBlockInstance, $instanceArea->getContainerAreaName());
                                         $blocks = $containerArea->getAreaBlocksArray($mc);

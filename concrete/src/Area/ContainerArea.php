@@ -62,7 +62,7 @@ class ContainerArea
         $this->gridMaximumColumns = $columns;
     }
 
-    protected function getSubAreaObject(Page $page): ?SubArea
+    public function getSubAreaObject(Page $page): ?SubArea
     {
         $block = $this->instance->getBlock();
         $area = $block->getBlockAreaObject();
@@ -78,9 +78,36 @@ class ContainerArea
             $page = $area->getAreaCollectionObject();
             $subArea->load($page);
             $subArea->setSubAreaBlockObject($block);
+
+            $instanceAreas = $this->instance->getInstance()->getInstanceAreas();
+            if (!count($instanceAreas)) {
+                $this->refreshInstanceAreas($subArea);
+            }
+
             return $subArea;
         }
         return null;
+    }
+
+    protected function refreshInstanceAreas(SubArea $subArea)
+    {
+        $app = Facade::getFacadeApplication();
+        $entityManager = $app->make(EntityManager::class);
+
+        $query = $entityManager->createQueryBuilder()
+            ->delete(InstanceArea::class, 'i')
+            ->where('i.instance = :instanceID')
+            ->andWhere('i.containerAreaName = :areaHandle');
+        $query->setParameter('instanceID', $this->instance->getInstance()->getContainerInstanceID());
+        $query->setParameter('areaHandle', $this->areaDisplayName);
+        $query->getQuery()->execute();
+
+        $instanceArea = new InstanceArea();
+        $instanceArea->setContainerAreaName($this->areaDisplayName);
+        $instanceArea->setAreaID($subArea->getAreaID());
+        $instanceArea->setInstance($this->instance->getInstance());
+        $entityManager->persist($instanceArea);
+        $entityManager->flush();
     }
 
     public function getTotalBlocksInArea(Page $page): int
@@ -99,27 +126,8 @@ class ContainerArea
             if (isset($this->gridMaximumColumns)) {
                 $subArea->setAreaGridMaximumColumns($this->gridMaximumColumns);
             }
+
             $subArea->display($page);
-            if (!$this->instance->getInstance()->areaAreasComputed()) {
-
-                $app = Facade::getFacadeApplication();
-                $entityManager = $app->make(EntityManager::class);
-
-                $query = $entityManager->createQueryBuilder()
-                    ->delete(InstanceArea::class, 'i')
-                    ->where('i.instance = :instanceID')
-                    ->andWhere('i.containerAreaName = :areaHandle');
-                $query->setParameter('instanceID', $this->instance->getInstance()->getContainerInstanceID());
-                $query->setParameter('areaHandle', $this->areaDisplayName);
-                $query->getQuery()->execute();
-
-                $instanceArea = new InstanceArea();
-                $instanceArea->setContainerAreaName($this->areaDisplayName);
-                $instanceArea->setAreaID($subArea->getAreaID());
-                $instanceArea->setInstance($this->instance->getInstance());
-                $entityManager->persist($instanceArea);
-                $entityManager->flush();
-            }
         }
     }
 
