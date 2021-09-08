@@ -60,6 +60,36 @@ class Controller extends BlockController
         $this->set('boards', $boards);
     }
 
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        $data = $blockNode->addChild('data');
+        if ($this->boardInstanceID) {
+            $instance = $this->app->make(EntityManager::class)->find(Instance::class, $this->boardInstanceID);
+            if ($instance) {
+                $data->addChild('board', $instance->getBoard()->getBoardName());
+            }
+        }
+    }
+
+    public function getImportData($blockNode, $page)
+    {
+        $args = [];
+        $boardName = (string) $blockNode->data->board;
+        if ($boardName) {
+            $board = $this->app->make(EntityManager::class)->getRepository(Board::class)
+                ->findOneByBoardName($boardName);
+            if ($board) {
+                $command = new CreateBoardInstanceCommand();
+                $command->setBoard($board);
+                $command->setSite($this->app->make('site')->getSite());
+                $instance = $this->app->executeCommand($command);
+                $args['boardInstanceID'] = $instance->getBoardInstanceID();
+            }
+        }
+        return $args;
+    }
+
+
     public function action_get_instances()
     {
         $boardID = (int) $this->request->request->get('boardID');

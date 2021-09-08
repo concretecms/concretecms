@@ -31,7 +31,8 @@ div.theme-atomik {
       @extend .display-6;
     }
 
-    ul.ccm-block-topic-list-page-topics {
+    ul.ccm-block-topic-list-page-topics,
+    ul.ccm-block-topic-list-list {
       @extend .list-group;
 
       li {

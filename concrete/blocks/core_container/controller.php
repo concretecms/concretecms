@@ -148,7 +148,7 @@ class Controller extends BlockController
             $containerArea = new ContainerArea($containerBlockInstance, $areaDisplayName);
 
             $subArea = $containerArea->getSubAreaObject($page);
-            
+
             if ($containerAreaNode->style) {
                 $set = StyleSet::import($containerAreaNode->style);
                 $page->setCustomStyleSet($subArea, $set);

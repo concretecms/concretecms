@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\Board\DataSource\Configuration;
 
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,8 +31,18 @@ class PageConfiguration extends Configuration
         $this->query = $query;
     }
     
-    
-
+    public function export(\SimpleXMLElement $element)
+    {
+        if ($this->query) {
+            $fields = $this->query->getFields();
+            if (count($fields)) {
+                $fieldsNode = $element->addChild('fields');
+                foreach ($fields as $field) {
+                    $field->export($fieldsNode);
+                }
+            }
+        }
+    }
 
 
 }

@@ -20,7 +20,7 @@ if (isset($pageListTitle) && $pageListTitle) {
 
         <div class="col-lg-4 col-md-6 mb-5">
             <?php
-            $renderer->renderSummaryForObject($page, 'blog_entry_thumbnail');
+            $renderer->renderSummaryForObject($page, 'blog_entry_card');
             ?>
         </div>
 

@@ -16,8 +16,10 @@ class ImportThemeDocumentationRoutine extends AbstractRoutine
             foreach ($sx->themes->theme as $th) {
                 $pThemeHandle = (string) $th['handle'];
 
-                $pt = Theme::getByHandle($pThemeHandle);
-                $pt->installThemeDocumentation();
+                if (((string) $th['activated']) == '1') {
+                    $pt = Theme::getByHandle($pThemeHandle);
+                    $pt->installThemeDocumentation();
+                }
             }
         }
     }

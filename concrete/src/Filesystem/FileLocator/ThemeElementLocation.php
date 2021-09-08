@@ -19,19 +19,15 @@ class ThemeElementLocation extends ThemeLocation
                 . '/'
                 . $this->themeHandle
                 . '/'
-                . DIRNAME_ELEMENTS
-                . '/'
-                . 'concrete';
-        } else if ($this->themeHandle === 'elemental') {
+                . DIRNAME_ELEMENTS;
+        } else if ($this->themeHandle === 'elemental' || $this->themeHandle === 'atomik') {
             return DIR_BASE_CORE
                 . '/'
                 . DIRNAME_THEMES
                 . '/'
                 . $this->themeHandle
                 . '/'
-                . DIRNAME_ELEMENTS
-                . '/'
-                . 'concrete';
+                . DIRNAME_ELEMENTS;
         } else {
             return DIR_APPLICATION
                 . '/'
@@ -39,9 +35,7 @@ class ThemeElementLocation extends ThemeLocation
                 . '/'
                 . $this->themeHandle
                 . '/'
-                . DIRNAME_ELEMENTS
-                . '/'
-                . 'concrete';
+                . DIRNAME_ELEMENTS;
         }
     }
 
@@ -64,19 +58,15 @@ class ThemeElementLocation extends ThemeLocation
             . '/'
             . $this->themeHandle
             . '/'
-            . DIRNAME_ELEMENTS
-            . '/'
-            . 'concrete';
-        } else if ($this->themeHandle === 'elemental') {
+            . DIRNAME_ELEMENTS;
+        } else if ($this->themeHandle === 'elemental' || $this->themeHandle === 'atomik') {
             return ASSETS_URL
                 . '/'
                 . DIRNAME_THEMES
                 . '/'
                 . $this->themeHandle
                 . '/'
-                . DIRNAME_ELEMENTS
-                . '/'
-                . 'concrete';
+                . DIRNAME_ELEMENTS;
         } else {
             return REL_DIR_APPLICATION
             . '/'
@@ -84,9 +74,7 @@ class ThemeElementLocation extends ThemeLocation
             . '/'
             . $this->themeHandle
             . '/'
-            . DIRNAME_ELEMENTS
-            . '/'
-            . 'concrete';
+            . DIRNAME_ELEMENTS;
         }
     }
 }

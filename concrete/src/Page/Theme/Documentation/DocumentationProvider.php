@@ -4,6 +4,14 @@ namespace Concrete\Core\Page\Theme\Documentation;
 class DocumentationProvider implements DocumentationProviderInterface
 {
 
+    public function clearSupportingElements(): void
+    {
+    }
+
+    public function installSupportingElements(): void
+    {
+    }
+
     public static function createFromArray($pages): DocumentationProvider
     {
         $provider = new self();

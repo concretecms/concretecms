@@ -5,6 +5,7 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Page\Theme\BedrockThemeTrait;
 use Concrete\Core\Page\Theme\Color\Color;
 use Concrete\Core\Page\Theme\Color\ColorCollection;
+use Concrete\Core\Page\Theme\Documentation\AtomikDocumentationProvider;
 use Concrete\Core\Page\Theme\Documentation\DocumentationProvider;
 use Concrete\Core\Page\Theme\Documentation\DocumentationProviderInterface;
 use Concrete\Core\Page\Theme\Documentation\ThemeDocumentationPage;
@@ -63,11 +64,7 @@ class PageTheme extends Theme
 
     public function getDocumentationProvider(): ?DocumentationProviderInterface
     {
-        $pages = [
-            new ThemeDocumentationPage($this, 'Overview', 'overview.xml'),
-        ];
-        $pages = array_merge($pages, $this->getDocumentationPages());
-        return DocumentationProvider::createFromArray($pages);
+        return new AtomikDocumentationProvider($this);
     }
 
     public function getColorCollection(): ?ColorCollection

@@ -73,5 +73,23 @@ class CalendarEventConfiguration extends Configuration
         $this->maxOccurrencesOfSameEvent = $maxOccurrencesOfSameEvent;
     }
 
+    public function export(\SimpleXMLElement $element)
+    {
+        $element->addAttribute('max-occurrences-of-event', $this->getMaxOccurrencesOfSameEvent());
+        $element->addAttribute('calendar', $this->getCalendar()->getName());
+
+        if ($this->query) {
+            $fields = $this->query->getFields();
+            if (count($fields)) {
+                $fieldsNode = $element->addChild('fields');
+                foreach ($fields as $field) {
+                    $field->export($fieldsNode);
+                }
+            }
+        }
+
+    }
+
+
 
 }

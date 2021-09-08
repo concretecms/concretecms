@@ -2,6 +2,8 @@
 namespace Concrete\Core\Board\DataSource\Saver;
 
 use Concrete\Core\Entity\Board\DataSource\Configuration\CalendarEventConfiguration;
+use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
+use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Calendar\Event\Search\Field\Manager;
@@ -39,6 +41,31 @@ class CalendarEventSaver extends AbstractSaver
         }
         $calendarEventConfiguration->setQuery($query);
         $calendarEventConfiguration->setMaxOccurrencesOfSameEvent((int) $request->request->get('maxOccurrencesOfSameEvent'));
+        return $calendarEventConfiguration;
+    }
+
+    public function createConfigurationFromImport(\SimpleXMLElement $element): Configuration
+    {
+        $manager = app('manager/search_field/calendar_event');
+
+        $calendarEventConfiguration = new CalendarEventConfiguration();
+        $calendarEventConfiguration->setMaxOccurrencesOfSameEvent((int) $element['max-occurrences-of-event']);
+        $calendar = $this->entityManager->getRepository(Calendar::class)->findOneByName((string) $element['calendar']);
+        if ($calendar) {
+            $calendarEventConfiguration->setCalendar($calendar);
+        }
+        $fields = [];
+        if (!empty($element->fields)) {
+            foreach ($element->fields->field as $fieldNode) {
+                $field = $manager->getFieldByKey((string) $fieldNode['key']);
+                $field->loadDataFromImport($fieldNode);
+                $fields[] = $field;
+            }
+        }
+        $query = new Query();
+        $query->setFields($fields);
+        $query->setItemsPerPage(0); // has to be here but not used.
+        $calendarEventConfiguration->setQuery($query);
         return $calendarEventConfiguration;
     }
 

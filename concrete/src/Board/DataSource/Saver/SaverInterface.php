@@ -4,6 +4,7 @@ namespace Concrete\Core\Board\DataSource\Saver;
 
 use Concrete\Core\Application\UserInterface\Icon\IconFormatterInterface;
 use Concrete\Core\Entity\Board\Board;
+use Concrete\Core\Entity\Board\DataSource\Configuration\Configuration;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\Board\DataSource\DataSource;
 use Concrete\Core\Filesystem\Element;
@@ -26,5 +27,7 @@ interface SaverInterface
         ConfiguredDataSource $configuredDataSource,
         Request $request
     ): ConfiguredDataSource;
+
+    public function createConfigurationFromImport(\SimpleXMLElement $element): Configuration;
 
 }

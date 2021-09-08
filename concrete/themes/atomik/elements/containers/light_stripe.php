@@ -22,15 +22,11 @@ use Concrete\Core\Area\ContainerArea;
     <?php
     }
     ?>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <?php
-                $area = new ContainerArea($container, 'Body');
-                $area->setAreaGridMaximumColumns(12);
-                $area->display($c);
-                ?>
-            </div>
-        </div>
-    </div>
+    <?php
+    $area = new ContainerArea($container, 'Body');
+    $area->setAreaGridMaximumColumns(12);
+    $area->enableGridContainer();;
+    $area->display($c);
+    ?>
+
 </div>

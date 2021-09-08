@@ -269,6 +269,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypesBaseRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageStructureRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeTargetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeDefaultsRoutine',
@@ -283,6 +284,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\PopulateBoardInstancesRoutine',
     ],
 
     /*

@@ -12,7 +12,7 @@ $publicProfilesEnabled = $config->get('user.profiles_enabled');
 <div class="ccm-block-page-title-byline">
     <h1 class="page-title"><?=h($title)?></h1>
 
-    <div class="ccm-block-page-title-byline-byline">
+    <div class="blog-author-byline">
 
         <?php if ($user) { ?>
 
@@ -20,10 +20,10 @@ $publicProfilesEnabled = $config->get('user.profiles_enabled');
             $avatar = $avatarService->getAvatar($user);
             if ($avatar) {
             ?>
-                <div class="ccm-block-page-title-byline-byline-avatar"><?=$avatar->output()?></div>
+                <div class="blog-author-byline-avatar"><?=$avatar->output()?></div>
             <?php } ?>
 
-            <div class="ccm-block-page-title-byline-byline-author">
+            <div class="blog-author-byline-author">
                 <?php if ($publicProfilesEnabled) { ?>
                     <a href="<?=$user->getUserPublicProfileURL()?>"><?php echo $user->getUserDisplayName(); ?></a>
                 <?php } else { ?>
@@ -33,7 +33,7 @@ $publicProfilesEnabled = $config->get('user.profiles_enabled');
 
         <?php } ?>
 
-        <div class="ccm-block-page-title-byline-byline-date">
+        <div class="blog-author-byline-date">
             <?php echo $page->getCollectionDatePublicObject()->format('F j, Y • g:iA'); ?>
         </div>
 

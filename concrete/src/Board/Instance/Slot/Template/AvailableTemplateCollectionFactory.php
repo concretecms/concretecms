@@ -54,13 +54,25 @@ class AvailableTemplateCollectionFactory
         }
 
         $driver = $instance->getBoard()->getTemplate()->getDriver();
-        $formFactor = $driver->getFormFactor();
-        if (is_array($formFactor)) {
-            $formFactor = $formFactor[$slot];
+        $formFactors = $driver->getFormFactor();
+        if (is_array($formFactors)) {
+            $formFactor = $formFactors[$slot];
+
+            if (!$formFactor && $slot > $driver->getTotalSlots()) {
+                // We're at the point of the loop where we're retrieving additional potential objects
+                // for slots that we aren't specifically defining in our board. So let's do that by
+                // re-looping through the slots we DO have as many times as we need to do.
+                // $totalPagesOfSlots = if we're retrieving slot "22" of a board that only has three real
+                // slots on it, that means we have to loop through our actual form factor loop 7 times.
+                $totalPagesOfSlots = floor($slot / $driver->getTotalSlots());
+                $totalToDiscard = $totalPagesOfSlots * $driver->getTotalSlots();
+                $slotToCheck = $slot - $totalToDiscard;
+                $formFactor = $formFactors[$slotToCheck];
+            }
         } else {
-            $formFactor = $driver->getFormFactor();
+            $formFactor = $formFactors;
         }
-        $filteredTemplates = $availableTemplatesByFormFactor[$formFactor];
+        $filteredTemplates = (array) $availableTemplatesByFormFactor[$formFactor];
         return $filteredTemplates;
     }
 

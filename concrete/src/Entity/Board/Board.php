@@ -6,6 +6,7 @@ use Concrete\Core\Board\Permissions\PermissionsManager;
 use Concrete\Core\Entity\Board\DataSource\ConfiguredDataSource;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Assignment\BoardAssignment;
@@ -14,12 +15,12 @@ use Concrete\Core\Permission\Response\BoardResponse;
 use Concrete\Core\Support\Facade\Facade;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Concrete\Core\Export\Item\Board as BoardExporter;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Boards")
  */
-class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializable
+class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializable, ExportableInterface
 {
 
     use AssignableObjectTrait;
@@ -321,6 +322,11 @@ class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializ
             'template' => $this->getTemplate(),
             'slotTemplates' => app(AvailableTemplateCollectionFactory::class)->getBoardSlotTemplates($this),
         ];
+    }
+
+    public function getExporter()
+    {
+        return app(BoardExporter::class);
     }
 
 

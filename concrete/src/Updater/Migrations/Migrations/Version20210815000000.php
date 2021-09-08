@@ -66,10 +66,10 @@ final class Version20210815000000 extends AbstractMigration implements Repeatabl
         /**
          * @var Installer $installer
          */
-        $installer->clearDocumentation($elemental);
+        $installer->clearDocumentation($elemental, $elemental->getDocumentationProvider());
         $installer->install($elemental, $elemental->getDocumentationProvider());
 
-        $installer->clearDocumentation($atomik);
+        $installer->clearDocumentation($atomik, $atomik->getDocumentationProvider());
         $installer->install($elemental, $atomik->getDocumentationProvider());
 
 

@@ -840,7 +840,7 @@ class Theme extends ConcreteObject
 
             // Let's clear the documentation
             $installer = app(Installer::class);
-            $installer->clearDocumentation($this);
+            $installer->clearDocumentation($this, $provider);
             $installer->install($this, $provider);
         }
     }

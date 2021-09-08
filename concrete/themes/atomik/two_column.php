@@ -28,4 +28,10 @@ $a->display($c);
 </div>
 
 <?php
+$a = new Area('Page Footer');
+$a->enableGridContainer();
+$a->display($c);
+?>
+
+<?php
 $view->inc('elements/footer.php');

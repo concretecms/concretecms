@@ -163,6 +163,7 @@ class Channels
             self::CHANNEL_OPERATIONS,
             self::CHANNEL_API,
             self::CHANNEL_FILES,
+            self::CHANNEL_CONTENT,
             self::CHANNEL_MESSENGER,
             self::CHANNEL_BOARD,
         ];

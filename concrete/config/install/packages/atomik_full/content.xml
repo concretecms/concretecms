@@ -3,11 +3,44 @@
     <themes>
         <theme handle="atomik" package="" activated="1"/>
     </themes>
+    <boards>
+        <board name="Blog" template="blog" package="" uses-custom-template-subset="1"
+               sort="relevant_date_desc">
+            <datasources>
+                <datasource source="page" weight="0" name="Blog" day-interval-future="60" day-interval-past="356">
+                    <configuration>
+                        <fields>
+                            <field key="page_type">
+                                <pagetype>{ccm:export:pagetype:blog_entry}</pagetype>
+                            </field>
+                        </fields>
+                    </configuration>
+                </datasource>
+            </datasources>
+            <templates>
+                <template handle="blog_stripe"/>
+                <template handle="blog_card"/>
+            </templates>
+        </board>
+    </boards>
     <pagetemplates>
         <pagetemplate handle="full" name="Full" icon="full.png" package=""/>
         <pagetemplate icon="right_sidebar.png" name="Right Sidebar" handle="right_sidebar" package="" internal=""/>
         <pagetemplate icon="two_column.png" name="Two Column" handle="two_column" package="" internal=""/>
     </pagetemplates>
+    <boardtemplates>
+        <template handle="blog" name="Blog"
+                  icon="blank.png" package="">
+        </template>
+    </boardtemplates>
+    <boardslottemplates>
+        <template handle="blog_stripe" form-factor="stripe" name="Blog Stripe"
+                  icon="blank.png" package="">
+        </template>
+        <template handle="blog_card" form-factor="card" name="Blog Card"
+                  icon="blank.png" package="">
+        </template>
+    </boardslottemplates>
     <pagetypes>
         <pagetype name="Page" handle="page" is-frequently-added="1" launch-in-composer="0">
             <pagetemplates type="all" default="full"/>
@@ -146,6 +179,7 @@
                                             </containerarea>
                                             <containerarea name="Body">
                                                 <block type="page_list" name="" custom-template="blog_entry_grid.php"
+                                                       custom-container-settings="0"
                                                        mc-block-id="6ee7c7f2">
                                                     <data table="btPageList">
                                                         <record>
@@ -211,88 +245,6 @@
                         <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
                     </set>
                 </formlayout>
-                <output>
-                    <pagetemplate handle="full">
-                        <page name="" path="" filename="" pagetype="" template="full" user="admin" description=""
-                              package="">
-                            <area name="Main">
-                                <blocks>
-                                    <block type="page_title" name="" custom-template="archive.php"
-                                           mc-block-id="1SrIYV5J">
-                                        <data table="btPageTitle">
-                                            <record>
-                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
-                                                <titleText><![CDATA[[Page Title]]]></titleText>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="core_area_layout" name="" mc-block-id="XIyJqyJD">
-                                        <arealayout type="theme-grid" columns="12">
-                                            <columns>
-                                                <column span="8" offset="0">
-                                                    <block type="page_list" name="" mc-block-id="o2okE5W6">
-                                                        <data table="btPageList">
-                                                            <record>
-                                                                <num><![CDATA[10]]></num>
-                                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                                                <cParentID>0</cParentID>
-                                                                <cThis><![CDATA[1]]></cThis>
-                                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
-                                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
-                                                                <includeName><![CDATA[1]]></includeName>
-                                                                <includeDescription><![CDATA[1]]></includeDescription>
-                                                                <includeAllDescendents>
-                                                                    <![CDATA[0]]></includeAllDescendents>
-                                                                <paginate><![CDATA[1]]></paginate>
-                                                                <displayAliases><![CDATA[0]]></displayAliases>
-                                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                                <pfID>{ccm:export:pagefeed:blog}</pfID>
-                                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
-                                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
-                                                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
-                                                                <truncateChars><![CDATA[0]]></truncateChars>
-                                                                <enableExternalFiltering>
-                                                                    <![CDATA[1]]></enableExternalFiltering>
-                                                                <noResultsMessage>
-                                                                    <![CDATA[No posts to this blog.]]></noResultsMessage>
-                                                                <includeDate><![CDATA[1]]></includeDate>
-                                                            </record>
-                                                        </data>
-                                                    </block>
-                                                </column>
-                                                <column span="3" offset="1">
-                                                    <block type="topic_list" name="" mc-block-id="D9wxkl0c">
-                                                        <data>
-                                                            <mode>S</mode>
-                                                            <tree>Blog Entries</tree>
-                                                            <title>Topics</title>
-                                                            <cParentID/>
-                                                        </data>
-                                                    </block>
-                                                    <block type="date_navigation" name="">
-                                                        <data table="btDateNavigation">
-                                                            <record>
-                                                                <title><![CDATA[Archives]]></title>
-                                                                <redirectToResults>0</redirectToResults>
-                                                                <filterByParent>1</filterByParent>
-                                                                <cParentID>{ccm:export:page:/about/blog}</cParentID>
-                                                                <cTargetID/>
-                                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                            </record>
-                                                        </data>
-                                                    </block>
-                                                </column>
-                                            </columns>
-                                        </arealayout>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Page Footer">
-                                <blocks/>
-                            </area>
-                        </page>
-                    </pagetemplate>
-                </output>
             </composer>
         </pagetype>
         <pagetype name="Resource" handle="resource" package="" launch-in-composer="1" is-frequently-added="1">
@@ -876,7 +828,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 </block>
                             </containerarea>
                             <containerarea name="Body">
-                                <block type="page_list" name="" custom-template="blog_entry_grid.php">
+                                <block type="page_list" name="" custom-container-settings="0" custom-template="blog_entry_grid.php">
                                     <data table="btPageList">
                                         <record>
                                             <num><![CDATA[6]]></num>
@@ -1769,12 +1721,93 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
             </attributes>
             <area name="Main">
                 <blocks>
-                    <block type="content" name="">
-                        <data table="btContentLocal">
+                    <block type="board" name="">
+                        <data>
+                            <board>Blog</board>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Header">
+                <blocks>
+                    <block type="page_title" name="">
+                        <data table="btPageTitle">
                             <record>
-                                <content><![CDATA[]]></content>
+                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                <useFilterTitle><![CDATA[0]]></useFilterTitle>
+                                <useFilterTopic><![CDATA[0]]></useFilterTopic>
+                                <useFilterTag><![CDATA[0]]></useFilterTag>
+                                <useFilterDate><![CDATA[0]]></useFilterDate>
+                                <topicTextFormat><![CDATA[0]]></topicTextFormat>
+                                <tagTextFormat><![CDATA[upperWord]]></tagTextFormat>
+                                <dateTextFormat><![CDATA[0]]></dateTextFormat>
+                                <filterDateFormat><![CDATA[F Y]]></filterDateFormat>
+                                <titleText><![CDATA[Blog]]></titleText>
+                                <formatting><![CDATA[h3]]></formatting>
                             </record>
                         </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks>
+                    <block type="core_container" name="">
+                        <container handle="light_stripe">
+                            <containerarea name="Title">
+                                <block type="content" name="">
+                                    <data table="btContentLocal">
+                                        <record>
+                                            <content><![CDATA[<h4 class="text-center display-4">Latest Resources</h4>
+]]></content>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Body">
+                                <block type="page_list" name="" custom-template="blog_entry_grid.php"
+                                       custom-container-settings="0">
+                                    <data table="btPageList">
+                                        <record>
+                                            <num><![CDATA[3]]></num>
+                                            <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                            <cParentID/>
+                                            <cThis><![CDATA[0]]></cThis>
+                                            <cThisParent><![CDATA[0]]></cThisParent>
+                                            <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                            <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                            <pageListTitle><![CDATA[]]></pageListTitle>
+                                            <filterByRelated><![CDATA[0]]></filterByRelated>
+                                            <filterByCustomTopic><![CDATA[0]]></filterByCustomTopic>
+                                            <filterDateOption><![CDATA[all]]></filterDateOption>
+                                            <filterDateDays><![CDATA[0]]></filterDateDays>
+                                            <filterDateStart><![CDATA[]]></filterDateStart>
+                                            <filterDateEnd><![CDATA[]]></filterDateEnd>
+                                            <relatedTopicAttributeKeyHandle>
+                                                <![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                            <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
+                                            <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
+                                            <includeName><![CDATA[1]]></includeName>
+                                            <includeDescription><![CDATA[1]]></includeDescription>
+                                            <includeDate><![CDATA[0]]></includeDate>
+                                            <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                            <paginate><![CDATA[0]]></paginate>
+                                            <displayAliases><![CDATA[0]]></displayAliases>
+                                            <displaySystemPages><![CDATA[0]]></displaySystemPages>
+                                            <ignorePermissions><![CDATA[0]]></ignorePermissions>
+                                            <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                            <ptID>{ccm:export:pagetype:resource}</ptID>
+                                            <pfID/>
+                                            <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                            <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                            <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                            <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                                            <truncateChars><![CDATA[0]]></truncateChars>
+                                            <titleFormat><![CDATA[h5]]></titleFormat>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                        </container>
                     </block>
                 </blocks>
             </area>
@@ -2484,8 +2517,63 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Search" path="/search" public-date="2021-08-24 13:16:00" filename=""
-              pagetype="page" template="full" user="admin" description="" package="">
+        <page name="Search" path="/search" public-date="2021-08-24 13:16:00" filename="" pagetype="page" template="full"
+              user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_page_list">
+                    <value>1</value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+            <area name="Page Header">
+                <blocks>
+                    <block type="page_title" name="">
+                        <data table="btPageTitle">
+                            <record>
+                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                <useFilterTitle><![CDATA[0]]></useFilterTitle>
+                                <useFilterTopic><![CDATA[0]]></useFilterTopic>
+                                <useFilterTag><![CDATA[0]]></useFilterTag>
+                                <useFilterDate><![CDATA[0]]></useFilterDate>
+                                <topicTextFormat><![CDATA[0]]></topicTextFormat>
+                                <tagTextFormat><![CDATA[upperWord]]></tagTextFormat>
+                                <dateTextFormat><![CDATA[0]]></dateTextFormat>
+                                <filterDateFormat><![CDATA[F Y]]></filterDateFormat>
+                                <titleText><![CDATA[Search]]></titleText>
+                                <formatting><![CDATA[h3]]></formatting>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="search" name="">
+                        <data table="btSearch">
+                            <record>
+                                <title><![CDATA[]]></title>
+                                <buttonText><![CDATA[Search]]></buttonText>
+                                <baseSearchPath><![CDATA[]]></baseSearchPath>
+                                <search_all><![CDATA[0]]></search_all>
+                                <allow_user_options><![CDATA[0]]></allow_user_options>
+                                <postTo_cID/>
+                                <resultsURL><![CDATA[]]></resultsURL>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks/>
+            </area>
+        </page>
+        <page name="Blog Search" path="/blog-search" public-date="2021-09-06 15:02:43" filename="" pagetype="page"
+              template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value>1</value>
@@ -2499,10 +2587,70 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
             </attributes>
             <area name="Main">
                 <blocks>
-
+                    <block type="page_list" name="" custom-template="blog_entry_grid.php" custom-container-settings="0">
+                        <data table="btPageList">
+                            <record>
+                                <num><![CDATA[12]]></num>
+                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                <cParentID/>
+                                <cThis><![CDATA[0]]></cThis>
+                                <cThisParent><![CDATA[0]]></cThisParent>
+                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                <pageListTitle><![CDATA[]]></pageListTitle>
+                                <filterByRelated><![CDATA[0]]></filterByRelated>
+                                <filterByCustomTopic><![CDATA[0]]></filterByCustomTopic>
+                                <filterDateOption><![CDATA[all]]></filterDateOption>
+                                <filterDateDays><![CDATA[0]]></filterDateDays>
+                                <filterDateStart><![CDATA[]]></filterDateStart>
+                                <filterDateEnd><![CDATA[]]></filterDateEnd>
+                                <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
+                                <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
+                                <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
+                                <includeName><![CDATA[1]]></includeName>
+                                <includeDescription><![CDATA[1]]></includeDescription>
+                                <includeDate><![CDATA[0]]></includeDate>
+                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                <paginate><![CDATA[1]]></paginate>
+                                <displayAliases><![CDATA[0]]></displayAliases>
+                                <displaySystemPages><![CDATA[0]]></displaySystemPages>
+                                <ignorePermissions><![CDATA[0]]></ignorePermissions>
+                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
+                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                <pfID/>
+                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                                <truncateChars><![CDATA[0]]></truncateChars>
+                                <titleFormat><![CDATA[h5]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
             </area>
             <area name="Page Header">
+                <blocks>
+                    <block type="page_title" name="">
+                        <data table="btPageTitle">
+                            <record>
+                                <useCustomTitle><![CDATA[1]]></useCustomTitle>
+                                <useFilterTitle><![CDATA[0]]></useFilterTitle>
+                                <useFilterTopic><![CDATA[0]]></useFilterTopic>
+                                <useFilterTag><![CDATA[0]]></useFilterTag>
+                                <useFilterDate><![CDATA[0]]></useFilterDate>
+                                <topicTextFormat><![CDATA[0]]></topicTextFormat>
+                                <tagTextFormat><![CDATA[upperWord]]></tagTextFormat>
+                                <dateTextFormat><![CDATA[0]]></dateTextFormat>
+                                <filterDateFormat><![CDATA[F Y]]></filterDateFormat>
+                                <titleText><![CDATA[Search Blog]]></titleText>
+                                <formatting><![CDATA[h3]]></formatting>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
                 <blocks/>
             </area>
         </page>
@@ -2888,6 +3036,35 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                                 <replyToEmailControlID>0</replyToEmailControlID>
                                 <addFilesToSet>0</addFilesToSet>
                                 <addFilesToFolder>0</addFilesToFolder>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+        </stack>
+        <stack name="Blog Sidebar" path="/blog-sidebar">
+            <area name="Main">
+                <blocks>
+                    <block type="topic_list" name="">
+                        <data>
+                            <mode>S</mode>
+                            <title>Topics</title>
+                            <topicAttributeKeyHandle>blog_entry_topics</topicAttributeKeyHandle>
+                            <tree>Blog Entries</tree>
+                            <cParentID>{ccm:export:page:/blog-search}</cParentID>
+                            <titleFormat><![CDATA[h4]]></titleFormat>
+                        </data>
+                    </block>
+                    <block type="date_navigation" name="">
+                        <data table="btDateNavigation">
+                            <record>
+                                <title><![CDATA[Archives]]></title>
+                                <filterByParent><![CDATA[0]]></filterByParent>
+                                <redirectToResults><![CDATA[1]]></redirectToResults>
+                                <cParentID/>
+                                <cTargetID>{ccm:export:page:/blog-search}</cTargetID>
+                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                <titleFormat><![CDATA[h4]]></titleFormat>
                             </record>
                         </data>
                     </block>

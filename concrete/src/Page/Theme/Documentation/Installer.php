@@ -14,8 +14,9 @@ class Installer
      *
      * @param Theme $theme
      */
-    public function clearDocumentation(Theme $theme)
+    public function clearDocumentation(Theme $theme, DocumentationProviderInterface $provider)
     {
+        $provider->clearSupportingElements();
         $pages = $theme->getThemeDocumentationPages();
         foreach ($pages as $page) {
             $page->delete();
@@ -29,6 +30,7 @@ class Installer
      */
     public function install(Theme $theme, DocumentationProviderInterface $provider)
     {
+        $provider->installSupportingElements();
         $parent = Page::getByPath(THEME_DOCUMENTATION_PAGE_PATH . '/' . $theme->getThemeHandle());
         if (!$parent || ($parent && $parent->isError())) {
             $type = Type::getByHandle(THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE);

@@ -66,7 +66,7 @@ class Themes extends DashboardSitePageController
 
             if (!$this->error->has()) {
                 $installer = $this->app->make(Installer::class);
-                $installer->clearDocumentation($theme);
+                $installer->clearDocumentation($theme, $theme->getDocumentationProvider());
                 $installer->install($theme, $theme->getDocumentationProvider());
                 $this->flash('success', t('Theme documentation reset.'));
             }

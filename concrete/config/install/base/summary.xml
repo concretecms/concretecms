@@ -13,6 +13,7 @@
         <field handle="description" name="Description" package=""/>
         <field handle="thumbnail" name="Thumbnail" package=""/>
         <field handle="categories" name="Categories" package=""/>
+        <field handle="author" name="Author" package=""/>
     </summaryfields>
     <summarytemplates>
         <template handle="default" name="Default Summary Template"

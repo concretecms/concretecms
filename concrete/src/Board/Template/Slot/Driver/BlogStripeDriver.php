@@ -2,20 +2,26 @@
 namespace Concrete\Core\Board\Template\Slot\Driver;
 
 use Concrete\Core\Board\Instance\Slot\Content\Filterer\FiltererInterface;
+use Concrete\Core\Board\Instance\Slot\Content\Filterer\SummaryObjectFilterer;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class CardDriver implements DriverInterface
+class BlogStripeDriver implements DriverInterface
 {
 
     public function getTotalContentSlots(): int
     {
         return 1;
     }
-    
+
     public function getSlotFilterer(): ?FiltererInterface
     {
-        return null;
+        $filterer = new SummaryObjectFilterer();
+        $filterer->registerSlot(1, [
+            'blog_image_left',
+            'blog_image_right',
+        ]);
+        return $filterer;
     }
 
 }

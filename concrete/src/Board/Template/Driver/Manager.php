@@ -18,6 +18,12 @@ class Manager extends CoreManager
     {
         return $this->app->make(ThreeByThreeDriver::class);
     }
-    
+
+    public function createBlogDriver()
+    {
+        return $this->app->make(BlogDriver::class);
+    }
+
+
 
 }
