@@ -14,15 +14,31 @@ class Manager extends CoreManager
         parent::__construct($app);
     }
 
-    public function createBlogStripeDriver()
+    public function createBlogImageLeftDriver()
     {
-        return $this->app->make(BlogStripeDriver::class);
+        return $this->app->make(BlogImageLeftDriver::class);
+    }
+
+    public function createBlogImageRightDriver()
+    {
+        return $this->app->make(BlogImageRightDriver::class);
     }
 
     public function createBlogCardDriver()
     {
         return $this->app->make(BlogCardDriver::class);
     }
+
+    public function createBlogTwoUpDriver()
+    {
+        return $this->app->make(BlogTwoUpDriver::class);
+    }
+
+    public function createBlogThreeUpDriver()
+    {
+        return $this->app->make(BlogThreeUpDriver::class);
+    }
+
 
 
 }

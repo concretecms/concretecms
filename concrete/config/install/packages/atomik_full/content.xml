@@ -18,8 +18,10 @@
                 </datasource>
             </datasources>
             <templates>
-                <template handle="blog_stripe"/>
-                <template handle="blog_card"/>
+                <template handle="blog_image_left"/>
+                <template handle="blog_image_right"/>
+                <template handle="blog_two_up"/>
+                <template handle="blog_three_up"/>
             </templates>
         </board>
     </boards>
@@ -34,10 +36,16 @@
         </template>
     </boardtemplates>
     <boardslottemplates>
-        <template handle="blog_stripe" form-factor="stripe" name="Blog Stripe"
+        <template handle="blog_image_left" name="Blog Image Left"
                   icon="blank.png" package="">
         </template>
-        <template handle="blog_card" form-factor="card" name="Blog Card"
+        <template handle="blog_image_right" name="Blog Image Right"
+                  icon="blank.png" package="">
+        </template>
+        <template handle="blog_two_up" name="Blog Two Up"
+                  icon="blank.png" package="">
+        </template>
+        <template handle="blog_three_up" name="Blog Three Up"
                   icon="blank.png" package="">
         </template>
     </boardslottemplates>

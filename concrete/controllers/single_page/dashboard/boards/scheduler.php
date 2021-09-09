@@ -19,17 +19,6 @@ class Scheduler extends DashboardSitePageController
     {
         $element = $this->getCustomElement($id);
         if (is_object($element)) {
-            /*
-            $template = $element->getSlotTemplate();
-            $instances = [];
-            $r = $this->entityManager->getRepository(Instance::class);
-            foreach($r->findByBoardsUsingSlotTemplate($template) as $instance) {
-                $permissions = new Checker($instance->getBoard());
-                if ($permissions->canEditBoardContents()) { // @TODO - make this is a separate permission?
-                    $instances[] = $instance;
-                }
-            }
-            $this->set('instances', $instances);*/
             $this->set('selectedElementID', $element->getID());
         } else {
             $this->set('selectedElementID', 0);

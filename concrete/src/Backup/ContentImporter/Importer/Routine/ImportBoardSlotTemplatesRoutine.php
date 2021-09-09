@@ -21,12 +21,10 @@ class ImportBoardSlotTemplatesRoutine extends AbstractRoutine
                 $pkg = static::getPackageObject($bt['package']);
                 $name = (string) $bt['name'];
                 $icon = (string) $bt['icon'];
-                $formFactor = (string) $bt['form-factor'];
                 $handle = (string) $bt['handle'];
                 $template = $em->getRepository(SlotTemplate::class)->findOneByHandle($handle);
                 if (!$template) {
                     $template = new SlotTemplate();
-                    $template->setFormFactor($formFactor);
                     $template->setIcon($icon);
                     $template->setHandle($handle);
                     $template->setName($name);

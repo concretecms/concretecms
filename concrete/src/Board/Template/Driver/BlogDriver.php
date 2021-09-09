@@ -2,33 +2,23 @@
 namespace Concrete\Core\Board\Template\Driver;
 
 use Concrete\Core\Board\Layout\PlannerInterface;
+use Concrete\Core\Board\Layout\SlotLayoutPlanner;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class BlogDriver implements DriverInterface
 {
-    
-    public function getFormFactor()
-    {
-        return [
-            1 => 'stripe',
-            2 => 'card',
-            3 => 'card',
-            4 => 'stripe',
-            5 => 'stripe',
-            6 => 'card',
-            7 => 'card',
-        ];
-    }
 
     public function getTotalSlots(): int
     {
-        return 7;
+        return 5;
     }
 
     public function getLayoutPlanner(): ?PlannerInterface
     {
-        return null;
+        return new SlotLayoutPlanner([
+            '1' => ['blog_image_left']
+        ]);
     }
 
 

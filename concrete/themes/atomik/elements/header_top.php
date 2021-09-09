@@ -15,4 +15,4 @@
 </head>
 <body>
 
-<div class="<?php echo $c->getPageWrapperClass()?>">
+<div class="theme-atomik <?php echo $c->getPageWrapperClass()?>">

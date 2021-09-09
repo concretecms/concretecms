@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
-$page = Page::getCurrentPage();
+$view = new \Concrete\Core\View\View();
+$view->setViewTheme('atomik');
 ?>
 <div class="ccm-summary-template-blog-image-left">
     <div class="row">
@@ -10,8 +11,7 @@ $page = Page::getCurrentPage();
         <div class="col-md-6">
             <h5 class=""><a href="<?=$link?>"><?=$title?></a></h5>
             <?php
-            $element = Element::get('byline', $page, ['author' => $author, 'date' => $date]);
-            $element->render();
+            $view->inc('elements/byline.php', ['author' => $author, 'date' => $date]);
             ?>
             <?php if ($description) { ?>
                 <p><?=$description?></p>

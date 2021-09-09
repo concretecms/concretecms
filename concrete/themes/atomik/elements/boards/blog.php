@@ -16,49 +16,53 @@
     </div>
     <div class="row gx-8">
         <div class="col-md-8">
-            <div class="row gx-8">
-                <div class="col-md-6">
+            <?php
+            if ($slot->hasContents(2)) {
+            ?>
+            <div class="row">
+                <div class="col-md-12">
                     <?php
                     $slot->display(2);
                     ?>
                 </div>
-                <div class="col-md-6">
+            </div>
+            <?php } ?>
+            <?php
+            if ($slot->hasContents(3)) {
+            ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <hr>
                     <?php
                     $slot->display(3);
                     ?>
                 </div>
-                <div class="col-md-12">
-                    <hr>
-                </div>
             </div>
+            <?php } ?>
+            <?php
+            if ($slot->hasContents(4)) {
+            ?>
             <div class="row">
                 <div class="col-md-12">
+                    <hr>
                     <?php
                     $slot->display(4);
                     ?>
-                    <hr>
                 </div>
             </div>
+            <?php } ?>
+            <?php
+            if ($slot->hasContents(5)) {
+            ?>
             <div class="row">
                 <div class="col-md-12">
+                    <hr>
                     <?php
                     $slot->display(5);
                     ?>
-                    <hr>
                 </div>
             </div>
-            <div class="row gx-8">
-                <div class="col-md-6">
-                    <?php
-                    $slot->display(6);
-                    ?>
-                </div>
-                <div class="col-md-6">
-                    <?php
-                    $slot->display(7);
-                    ?>
-                </div>
-            </div>
+            <?php } ?>
         </div>
         <div class="col-md-4 col-blog-sidebar">
             <?php

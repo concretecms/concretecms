@@ -134,7 +134,6 @@ class Template implements \JsonSerializable
             'id' => $this->getId(),
             'icon' => $this->getIcon(),
             'slots' => $this->getDriver()->getTotalSlots(),
-            'formFactor' => $this->getDriver()->getFormFactor()
         ];
     }
 }
