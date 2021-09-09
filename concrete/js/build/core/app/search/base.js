@@ -587,10 +587,13 @@
 
 	ConcreteAjaxSearch.prototype.setupPagination = function() {
 		var cs = this;
-		this.$element.on('click', 'div.ccm-search-results-pagination a:not([disabled])', function() {
-			cs.ajaxUpdate($(this).attr('href'));
-			return false;
-		});
+		if (this.$resultsPagination) {
+			this.$resultsPagination.on('click', 'a:not([disabled])', function() {
+				cs.ajaxUpdate($(this).attr('href'));
+				return false;
+			});
+		}
+
 	};
 
 	ConcreteAjaxSearch.prototype.getResultMenu = function(results) {
@@ -619,7 +622,7 @@
 
 	ConcreteAjaxSearch.prototype.setupCheckboxes = function() {
 		var cs = this;
-		cs.$element.on('click', 'input[data-search-checkbox=select-all]', function() {
+		cs.$resultsTableHead.on('click', 'input[data-search-checkbox=select-all]', function() {
 			cs.$element.find('input[data-search-checkbox=individual]').prop('checked', $(this).is(':checked')).trigger('change');
 		});
 		cs.$element.on('change', 'input[data-search-checkbox=individual]', function() {
