@@ -4,6 +4,17 @@
 ;(function(global, $) {
 'use strict';
 
+function ready(clientId) {
+    grecaptcha.ready(function () {
+        grecaptcha.execute(
+            clientId,
+            {
+                action: 'submit'
+            }
+        );
+    });
+}
+
 function render(element) {
     var $element = $(element),
         clientId = grecaptcha.render(
@@ -15,14 +26,8 @@ function render(element) {
                 size: 'invisible'
             }
         );
-    grecaptcha.ready(function () {
-        grecaptcha.execute(
-            clientId,
-            {
-                action: 'submit'
-            }
-        );
-    });
+    ready(clientId);
+    setInterval(function(){ready(clientId)}, 110000);
 }
 
 global.RecaptchaV3 = function() {
