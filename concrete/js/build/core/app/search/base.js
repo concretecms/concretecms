@@ -417,7 +417,7 @@
 
 	ConcreteAjaxSearch.prototype.setupSort = function() {
 		var cs = this;
-		this.$element.on('click', 'thead th > a', function() {
+		this.$resultsTableHead.on('click', 'th > a', function() {
 			cs.ajaxUpdate($(this).attr('href'));
 			return false;
 		});
