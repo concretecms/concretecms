@@ -2,6 +2,7 @@ div.theme-atomik {
   .ccm-block-testimonial-circle {
 
     text-align: center;
+    margin-bottom: 3rem;
 
     .ccm-block-testimonial-circle-avatar {
       img {
@@ -9,7 +10,10 @@ div.theme-atomik {
         max-height: 90px;
         border-radius: 45px;
       }
-      margin-bottom: 1rem;
+    }
+
+    .ccm-block-testimonial-circle-text {
+      padding: 1rem;
     }
 
     .ccm-block-testimonial-position {

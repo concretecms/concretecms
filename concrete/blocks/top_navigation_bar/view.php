@@ -58,7 +58,7 @@
                              */
                             if (count($item->getChildren()) > 0) { ?>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="<?=$item->getUrl()?>">
+                                    <a class="nav-link dropdown-toggle" data-concrete-toggle="dropdown" href="<?=$item->getUrl()?>">
                                         <?=$item->getName()?>
                                     </a>
                                     <ul class="dropdown-menu">

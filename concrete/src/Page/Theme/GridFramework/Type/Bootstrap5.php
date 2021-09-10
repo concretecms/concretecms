@@ -58,18 +58,18 @@ class Bootstrap5 extends GridFramework
     public function getPageThemeGridFrameworkColumnOffsetClasses()
     {
         $offsets = array(
-            'offset-1',
-            'offset-2',
-            'offset-3',
-            'offset-4',
-            'offset-5',
-            'offset-6',
-            'offset-7',
-            'offset-8',
-            'offset-9',
-            'offset-10',
-            'offset-11',
-            'offset-12',
+            'offset-md-1',
+            'offset-md-2',
+            'offset-md-3',
+            'offset-md-4',
+            'offset-md-5',
+            'offset-md-6',
+            'offset-md-7',
+            'offset-md-8',
+            'offset-md-9',
+            'offset-md-10',
+            'offset-md-11',
+            'offset-md-12',
         );
 
         return $offsets;

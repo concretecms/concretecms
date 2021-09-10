@@ -15,7 +15,7 @@ $view->inc('view_header.php');
 <?php if (count($results)) {?>
 
     <div class="container">
-        <div class="row gx-8 row-cols-4">
+        <div class="row gx-md-8">
             <?php foreach($results as $result) {
                 if (isset($file)) {
                     unset($file);
@@ -44,7 +44,7 @@ $view->inc('view_header.php');
                     $tagURL = $controller->getActionURL('navigate', $result->getTreeNodeID());
                 }
                 ?>
-                <div class="col">
+                <div class="col-md-3">
                     <a href="<?=$tagURL?>">
                         <div class="ccm-block-document-library-icon-grid-image">
                             <?=$thumbnail?>

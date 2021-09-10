@@ -12,7 +12,7 @@ if ($c->isEditMode()) {
 } else {
     ?>
 
-<div data-transparency="element" class="ccm-image-slider-container ccm-block-image-slider-<?=$navigationTypeText; ?>" >
+<div data-transparency="element" class="ccm-image-slider-container ccm-image-slider-hero-image ccm-block-image-slider-<?=$navigationTypeText; ?>" >
     <div class="ccm-image-slider">
         <div class="ccm-image-slider-inner">
 

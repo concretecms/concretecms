@@ -4,6 +4,16 @@ div.ccm-page {
     // Navigation bar styling
     .navbar {
       background-color: $top-navbar-bg;
+
+      .nav-link {
+        transition: all 0.2s;
+
+        &:hover {
+          color: $primary;
+        }
+
+      }
+
     }
 
     // Logo/brand
@@ -32,50 +42,52 @@ div.ccm-page {
 
     }
 
-    // Desktop specific functionality:
-    @include media-breakpoint-up(lg) {
+    &.transparency-enabled:not(.transparency-temporarily-disabled) {
+      .navbar {
+        background-color: transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 5; // to put it over any other elements
+        transition: all 0.2s;
 
-      // only include transparency on desktop because the toggler is just hard with it.
-      &.transparency-enabled {
-        .navbar {
-          background-color: transparent;
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          z-index: 5; // to put it over any other elements
+        &.fixed-top {
+          position: fixed; // need to declare this because otherwise our customizations override this
+        }
 
-          &.fixed-top {
-            position: fixed; // need to declare this because otherwise our customizations override this
+        .navbar-brand {
+          color: $white;
+          transition: all 0.2s;
+
+          &:hover {
+            color: $gray-500;
           }
 
-          .navbar-brand {
+          .logo {
+            display: none;
+          }
+
+          .logo-transparent {
+            display: inline-block;
+          }
+        }
+
+        .nav-item {
+          a.nav-link {
             color: $white;
 
             &:hover {
               color: $gray-500;
             }
-
-            .logo {
-              display: none;
-            }
-
-            .logo-transparent {
-              display: inline-block;
-            }
-          }
-
-          .nav-item {
-            a.nav-link {
-              color: $white;
-
-              &:hover {
-                color: $gray-500;
-              }
-            }
           }
         }
       }
+    }
+
+    // Desktop specific functionality:
+    @include media-breakpoint-up(lg) {
+
 
       // Animated dropdown menu
       .dropdown-menu {
@@ -184,6 +196,14 @@ div.theme-atomik {
     &:hover {
       .icon-bar {
         background-color: $primary;
+      }
+    }
+  }
+
+  .transparency-enabled:not(.transparency-temporarily-disabled) {
+    .navbar-toggler {
+      .icon-bar {
+        background-color: $white;
       }
     }
   }

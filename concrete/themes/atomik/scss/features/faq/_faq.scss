@@ -3,7 +3,14 @@
 }
 .ccm-faq-block-links {
   @include make-col-ready();
-  @include make-col(3);
+
+  margin-bottom: 2rem;
+
+  @include media-breakpoint-up(md) {
+    margin-bottom: 0;
+    @include make-col(3);
+  }
+
 
   a {
     display: block;
@@ -21,6 +28,10 @@
   }
 
   @include make-col-ready();
-  @include make-col(8);
-  @include make-col-offset(1);
+
+  @include media-breakpoint-up(md) {
+    @include make-col(8);
+    @include make-col-offset(1);
+  }
+
 }

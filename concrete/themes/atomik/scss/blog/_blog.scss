@@ -4,7 +4,7 @@ div.theme-atomik {
 
     .blog-featured-post {
       h5 {
-        font-size: 50px;
+        @include font-size(50px);
       }
 
       p {
@@ -31,6 +31,11 @@ div.theme-atomik {
     .blog-author-byline {
       margin-top: 1rem;
       margin-bottom: 1rem;
+
+      @include media-breakpoint-down(md) {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
 
       div.blog-author-byline-avatar {
         img {

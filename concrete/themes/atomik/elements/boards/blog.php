@@ -12,6 +12,7 @@
             <?php
             $slot->display(1);
             ?>
+            <hr class="d-md-none d-block mb-0">
         </div>
     </div>
     <div class="row gx-8">
@@ -32,7 +33,7 @@
             ?>
             <div class="row">
                 <div class="col-md-12">
-                    <hr>
+                    <hr class="d-none d-md-block">
                     <?php
                     $slot->display(3);
                     ?>
@@ -44,7 +45,7 @@
             ?>
             <div class="row">
                 <div class="col-md-12">
-                    <hr>
+                    <hr class="d-none d-md-block">
                     <?php
                     $slot->display(4);
                     ?>
@@ -56,7 +57,7 @@
             ?>
             <div class="row">
                 <div class="col-md-12">
-                    <hr>
+                    <hr class="d-none d-md-block">
                     <?php
                     $slot->display(5);
                     ?>
@@ -64,7 +65,7 @@
             </div>
             <?php } ?>
         </div>
-        <div class="col-md-4 col-blog-sidebar">
+        <div class="col-md-4 col-blog-sidebar mt-3 mt-md-0">
             <?php
             $stack = Stack::getByName('Blog Sidebar');
             if ($stack) {

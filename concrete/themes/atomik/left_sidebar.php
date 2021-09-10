@@ -12,17 +12,17 @@ $a->display($c);
 
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
-        <?php
-            $a = new Area('Main Left');
-            $a->display($c);
-        ?>
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-4 col-sidebar">
             <?php
-            $a = new Area('Main Right');
+            $a = new Area('Sidebar');
             $a->display($c);
             ?>
+        </div>
+        <div class="col-md-8">
+        <?php
+            $a = new Area('Main');
+            $a->display($c);
+        ?>
         </div>
     </div>
 </div>

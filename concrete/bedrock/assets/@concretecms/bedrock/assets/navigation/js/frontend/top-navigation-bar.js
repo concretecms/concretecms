@@ -10,7 +10,7 @@
 
                 everyitem.addEventListener('mouseover', function(e){
 
-                    let el_link = this.querySelector('a[data-bs-toggle]');
+                    let el_link = this.querySelector('a[data-concrete-toggle]');
 
                     if(el_link != null){
                         let nextEl = el_link.nextElementSibling;
@@ -20,7 +20,7 @@
 
                 });
                 everyitem.addEventListener('mouseleave', function(e){
-                    let el_link = this.querySelector('a[data-bs-toggle]');
+                    let el_link = this.querySelector('a[data-concrete-toggle]');
 
                     if(el_link != null){
                         let nextEl = el_link.nextElementSibling;
@@ -31,6 +31,17 @@
 
                 })
             });
+
+        } else {
+
+            $('a[data-concrete-toggle]').on('click', function(e) {
+                if (!$(this).hasClass('show')) {
+                    e.preventDefault()
+                    let $nextEl = $(this).next();
+                    $nextEl.addClass('show')
+                    $(this).addClass('show')
+                }
+            })
 
         }
 
@@ -61,6 +72,19 @@
                 }
             }
             $transparentNavbar.show()
+
+            // In phone mode, we need to hook into the expand/collapse event to remove transparency, because
+            // we don't want to have transparency when the menu is expanded in phone mode.
+            let $toggler = $transparentNavbar.find('[data-bs-toggle]')
+            if ($toggler.length) {
+                let $target = $($toggler.attr('data-bs-target'))
+                $target.on('show.bs.collapse', function() {
+                    $transparentNavbar.addClass('transparency-temporarily-disabled')
+                })
+                $target.on('hidden.bs.collapse', function() {
+                    $transparentNavbar.removeClass('transparency-temporarily-disabled')
+                })
+            }
         }
 
         // Add padding to ccm-page if we're using the fixed bar.

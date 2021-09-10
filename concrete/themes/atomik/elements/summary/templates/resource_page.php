@@ -3,7 +3,7 @@
 <div class="ccm-summary-template-resource-page">
     <div class="row">
         <div class="col-md-4">
-            <a href="<?=$link?>"><img class="img-fluid" src="<?=$thumbnail->getThumbnailURL('resource_list_entry')?>"></a>
+            <a href="<?=$link?>"><img class="img-fluid mb-md-0 mb-3" src="<?=$thumbnail->getThumbnailURL('resource_list_entry')?>"></a>
         </div>
         <div class="col-md-8">
             <div>

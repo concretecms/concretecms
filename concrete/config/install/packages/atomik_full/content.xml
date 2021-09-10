@@ -27,8 +27,9 @@
     </boards>
     <pagetemplates>
         <pagetemplate handle="full" name="Full" icon="full.png" package=""/>
+        <pagetemplate icon="left_sidebar.png" name="Left Sidebar" handle="left_sidebar" package="" internal=""/>
         <pagetemplate icon="right_sidebar.png" name="Right Sidebar" handle="right_sidebar" package="" internal=""/>
-        <pagetemplate icon="two_column.png" name="Two Column" handle="two_column" package="" internal=""/>
+        <pagetemplate icon="two_column.png" name="Resource Detail" handle="resource_detail" package="" internal=""/>
     </pagetemplates>
     <boardtemplates>
         <template handle="blog" name="Blog"
@@ -256,8 +257,8 @@
             </composer>
         </pagetype>
         <pagetype name="Resource" handle="resource" package="" launch-in-composer="1" is-frequently-added="1">
-            <pagetemplates type="custom" default="two_column">
-                <pagetemplate handle="two_column"/>
+            <pagetemplates type="custom" default="resource_detail">
+                <pagetemplate handle="resource_detail"/>
             </pagetemplates>
             <target handle="parent_page" package="" path="/resources"/>
             <composer>
@@ -276,9 +277,9 @@
                     </set>
                 </formlayout>
                 <output>
-                    <pagetemplate handle="two_column">
+                    <pagetemplate handle="resource_detail">
                         <page name="" path="" public-date="2021-08-28 07:31:35" filename="" pagetype="resource"
-                              template="two_column" user="admin" description="" package="" root="true">
+                              template="resource_detail" user="admin" description="" package="" root="true">
                             <area name="Page Header">
                                 <blocks>
                                     <block type="breadcrumbs" name="" mc-block-id="bf3d4ccc">
@@ -292,7 +293,7 @@
                                     </block>
                                 </blocks>
                             </area>
-                            <area name="Main Left">
+                            <area name="Resource Thumbnail">
                                 <blocks>
                                     <block type="page_attribute_display" name="" mc-block-id="11402c4b">
                                         <data table="btPageAttributeDisplay">
@@ -309,7 +310,7 @@
                                     </block>
                                 </blocks>
                             </area>
-                            <area name="Main Right">
+                            <area name="Resource Title">
                                 <blocks>
                                     <block type="page_title" name="" mc-block-id="9986ce43">
                                         <data table="btPageTitle">
@@ -328,6 +329,10 @@
                                             </record>
                                         </data>
                                     </block>
+                                </blocks>
+                            </area>
+                            <area name="Resource Content">
+                                <blocks>
                                     <block type="core_page_type_composer_control_output" name="" mc-block-id="eb8c83d5">
                                         <control output-control-id="c11e38a0"/>
                                     </block>
@@ -446,6 +451,10 @@
                    icon="two_column.png" package=""/>
         <container handle="two_column_condensed" name="Two Column Condensed"
                    icon="two_column.png" package=""/>
+        <container handle="grid_four" name="Responsive Grid of Four"
+                   icon="blank.png" package=""/>
+        <container handle="grid_six" name="Responsive Grid of Six"
+                   icon="blank.png" package=""/>
     </containers>
     <attributekeys>
         <attributekey handle="blog_entry_topics" name="Blog Entry Topics" package="" searchable="1" indexed="1"
@@ -836,7 +845,8 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 </block>
                             </containerarea>
                             <containerarea name="Body">
-                                <block type="page_list" name="" custom-container-settings="0" custom-template="blog_entry_grid.php">
+                                <block type="page_list" name="" custom-container-settings="0"
+                                       custom-template="blog_entry_grid.php">
                                     <data table="btPageList">
                                         <record>
                                             <num><![CDATA[6]]></num>
@@ -1001,7 +1011,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                 <title><![CDATA[Collaboratively administrate complex websites with ease.]]></title>
-                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 ]]></description>
                                 <sortOrder><![CDATA[0]]></sortOrder>
                             </record>
@@ -1011,7 +1021,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                 <title><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit.]]></title>
-                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 ]]></description>
                                 <sortOrder><![CDATA[1]]></sortOrder>
                             </record>
@@ -1021,7 +1031,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                 <title><![CDATA[Vestibulum ante ipsum primis.]]></title>
-                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+                                <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 ]]></description>
                                 <sortOrder><![CDATA[2]]></sortOrder>
                             </record>
@@ -1088,107 +1098,99 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                             </record>
                         </data>
                     </block>
-                    <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-                                <column span="4" offset="0">
-                                    <block type="feature" name="" custom-template="stacked.php">
-                                        <data table="btFeature">
-                                            <record>
-                                                <icon><![CDATA[fas fa-window-maximize]]></icon>
-                                                <title>
-                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
-                                                <paragraph></paragraph>
-                                                <externalLink><![CDATA[]]></externalLink>
-                                                <internalLinkCID/>
-                                                <titleFormat><![CDATA[h6]]></titleFormat>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="feature" name="" custom-template="stacked.php">
-                                        <data table="btFeature">
-                                            <record>
-                                                <icon><![CDATA[fas fa-search-dollar]]></icon>
-                                                <title>
-                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
-                                                <paragraph></paragraph>
-                                                <externalLink><![CDATA[]]></externalLink>
-                                                <internalLinkCID/>
-                                                <titleFormat><![CDATA[h6]]></titleFormat>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="feature" name="" custom-template="stacked.php">
-                                        <data table="btFeature">
-                                            <record>
-                                                <icon><![CDATA[fas fa-mobile-alt]]></icon>
-                                                <title>
-                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
-                                                <paragraph></paragraph>
-                                                <externalLink><![CDATA[]]></externalLink>
-                                                <internalLinkCID/>
-                                                <titleFormat><![CDATA[h6]]></titleFormat>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                            </columns>
-                        </arealayout>
-                    </block>
-                    <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-                                <column span="4" offset="0">
-                                    <block type="feature" name="" custom-template="stacked.php">
-                                        <data table="btFeature">
-                                            <record>
-                                                <icon><![CDATA[far fa-user]]></icon>
-                                                <title>
-                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
-                                                <paragraph></paragraph>
-                                                <externalLink><![CDATA[]]></externalLink>
-                                                <internalLinkCID/>
-                                                <titleFormat><![CDATA[h6]]></titleFormat>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="feature" name="" custom-template="stacked.php">
-                                        <data table="btFeature">
-                                            <record>
-                                                <icon><![CDATA[fas fa-download]]></icon>
-                                                <title>
-                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
-                                                <paragraph></paragraph>
-                                                <externalLink><![CDATA[]]></externalLink>
-                                                <internalLinkCID/>
-                                                <titleFormat><![CDATA[h6]]></titleFormat>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="feature" name="" custom-template="stacked.php">
-                                        <data table="btFeature">
-                                            <record>
-                                                <icon><![CDATA[fas fa-image]]></icon>
-                                                <title>
-                                                    <![CDATA[Show off some features with this flexible layout!]]></title>
-                                                <paragraph></paragraph>
-                                                <externalLink><![CDATA[]]></externalLink>
-                                                <internalLinkCID/>
-                                                <titleFormat><![CDATA[h6]]></titleFormat>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                            </columns>
-                        </arealayout>
+                    <block type="core_container" name="">
+                        <container handle="grid_six">
+                            <containerarea name="Item 1">
+                                <block type="feature" name="" custom-template="stacked.php">
+                                    <data table="btFeature">
+                                        <record>
+                                            <icon><![CDATA[fas fa-window-maximize]]></icon>
+                                            <title>
+                                                <![CDATA[Show off some features with this flexible layout!]]></title>
+                                            <paragraph></paragraph>
+                                            <externalLink><![CDATA[]]></externalLink>
+                                            <internalLinkCID/>
+                                            <titleFormat><![CDATA[h6]]></titleFormat>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 2">
+                                <block type="feature" name="" custom-template="stacked.php">
+                                    <data table="btFeature">
+                                        <record>
+                                            <icon><![CDATA[fas fa-search-dollar]]></icon>
+                                            <title>
+                                                <![CDATA[Show off some features with this flexible layout!]]></title>
+                                            <paragraph></paragraph>
+                                            <externalLink><![CDATA[]]></externalLink>
+                                            <internalLinkCID/>
+                                            <titleFormat><![CDATA[h6]]></titleFormat>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 3">
+                                <block type="feature" name="" custom-template="stacked.php">
+                                    <data table="btFeature">
+                                        <record>
+                                            <icon><![CDATA[fas fa-mobile-alt]]></icon>
+                                            <title>
+                                                <![CDATA[Show off some features with this flexible layout!]]></title>
+                                            <paragraph></paragraph>
+                                            <externalLink><![CDATA[]]></externalLink>
+                                            <internalLinkCID/>
+                                            <titleFormat><![CDATA[h6]]></titleFormat>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 4">
+                                <block type="feature" name="" custom-template="stacked.php">
+                                    <data table="btFeature">
+                                        <record>
+                                            <icon><![CDATA[far fa-user]]></icon>
+                                            <title>
+                                                <![CDATA[Show off some features with this flexible layout!]]></title>
+                                            <paragraph></paragraph>
+                                            <externalLink><![CDATA[]]></externalLink>
+                                            <internalLinkCID/>
+                                            <titleFormat><![CDATA[h6]]></titleFormat>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 5">
+                                <block type="feature" name="" custom-template="stacked.php">
+                                    <data table="btFeature">
+                                        <record>
+                                            <icon><![CDATA[fas fa-download]]></icon>
+                                            <title>
+                                                <![CDATA[Show off some features with this flexible layout!]]></title>
+                                            <paragraph></paragraph>
+                                            <externalLink><![CDATA[]]></externalLink>
+                                            <internalLinkCID/>
+                                            <titleFormat><![CDATA[h6]]></titleFormat>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 6">
+                                <block type="feature" name="" custom-template="stacked.php">
+                                    <data table="btFeature">
+                                        <record>
+                                            <icon><![CDATA[fas fa-image]]></icon>
+                                            <title>
+                                                <![CDATA[Show off some features with this flexible layout!]]></title>
+                                            <paragraph></paragraph>
+                                            <externalLink><![CDATA[]]></externalLink>
+                                            <internalLinkCID/>
+                                            <titleFormat><![CDATA[h6]]></titleFormat>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                        </container>
                     </block>
                     <block type="core_container" name="">
                         <container handle="two_column_light">
@@ -1344,107 +1346,99 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                             </record>
                         </data>
                     </block>
-                    <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-06.jpg}</fID>
-                                                <name><![CDATA[Sam Heinz]]></name>
-                                                <position><![CDATA[Concrete Fan]]></position>
-                                                <company><![CDATA[]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-04.jpg}</fID>
-                                                <name><![CDATA[Ruthie Rich]]></name>
-                                                <position><![CDATA[Concrete Fan]]></position>
-                                                <company><![CDATA[]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-02.jpg}</fID>
-                                                <name><![CDATA[Amanda Johnson]]></name>
-                                                <position><![CDATA[Concrete Fan]]></position>
-                                                <company><![CDATA[]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                            </columns>
-                        </arealayout>
-                    </block>
-                    <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-05.jpg}</fID>
-                                                <name><![CDATA[Christina Backman]]></name>
-                                                <position><![CDATA[Concrete Fan]]></position>
-                                                <company><![CDATA[]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-03.jpg}</fID>
-                                                <name><![CDATA[Robert Cook]]></name>
-                                                <position><![CDATA[Concrete Fan]]></position>
-                                                <company><![CDATA[]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-01.jpg}</fID>
-                                                <name><![CDATA[David Briscoe]]></name>
-                                                <position><![CDATA[Concrete Fan]]></position>
-                                                <company><![CDATA[]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph><![CDATA[]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                            </columns>
-                        </arealayout>
+                    <block type="core_container" name="">
+                        <container handle="grid_six">
+                            <containerarea name="Item 1">
+                                <block type="testimonial" name="">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-06.jpg}</fID>
+                                            <name><![CDATA[Sam Heinz]]></name>
+                                            <position><![CDATA[Concrete Fan]]></position>
+                                            <company><![CDATA[]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph><![CDATA[]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 2">
+                                <block type="testimonial" name="">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-04.jpg}</fID>
+                                            <name><![CDATA[Ruthie Rich]]></name>
+                                            <position><![CDATA[Concrete Fan]]></position>
+                                            <company><![CDATA[]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph><![CDATA[]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 3">
+                                <block type="testimonial" name="">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-02.jpg}</fID>
+                                            <name><![CDATA[Amanda Johnson]]></name>
+                                            <position><![CDATA[Concrete Fan]]></position>
+                                            <company><![CDATA[]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph><![CDATA[]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 4">
+                                <block type="testimonial" name="">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-05.jpg}</fID>
+                                            <name><![CDATA[Christina Backman]]></name>
+                                            <position><![CDATA[Concrete Fan]]></position>
+                                            <company><![CDATA[]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph><![CDATA[]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 5">
+                                <block type="testimonial" name="">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-03.jpg}</fID>
+                                            <name><![CDATA[Robert Cook]]></name>
+                                            <position><![CDATA[Concrete Fan]]></position>
+                                            <company><![CDATA[]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph><![CDATA[]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 6">
+                                <block type="testimonial" name="">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-01.jpg}</fID>
+                                            <name><![CDATA[David Briscoe]]></name>
+                                            <position><![CDATA[Concrete Fan]]></position>
+                                            <company><![CDATA[]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph><![CDATA[]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                        </container>
                     </block>
                 </blocks>
             </area>
@@ -1488,67 +1482,65 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 </block>
                             </containerarea>
                             <containerarea name="Body">
-                                <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                                    <arealayout type="theme-grid" columns="12">
-                                        <columns>
-                                            <column span="3" offset="0">
-                                                <block type="feature" name="" custom-template="stacked.php">
-                                                    <data table="btFeature">
-                                                        <record>
-                                                            <icon><![CDATA[fas fa-award]]></icon>
-                                                            <title><![CDATA[Quality]]></title>
-                                                            <paragraph></paragraph>
-                                                            <externalLink><![CDATA[]]></externalLink>
-                                                            <internalLinkCID/>
-                                                            <titleFormat><![CDATA[h6]]></titleFormat>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </column>
-                                            <column span="3" offset="0">
-                                                <block type="feature" name="" custom-template="stacked.php">
-                                                    <data table="btFeature">
-                                                        <record>
-                                                            <icon><![CDATA[fas fa-palette]]></icon>
-                                                            <title><![CDATA[Design]]></title>
-                                                            <paragraph></paragraph>
-                                                            <externalLink><![CDATA[]]></externalLink>
-                                                            <internalLinkCID/>
-                                                            <titleFormat><![CDATA[h6]]></titleFormat>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </column>
-                                            <column span="3" offset="0">
-                                                <block type="feature" name="" custom-template="stacked.php">
-                                                    <data table="btFeature">
-                                                        <record>
-                                                            <icon><![CDATA[fas fa-code]]></icon>
-                                                            <title><![CDATA[Development]]></title>
-                                                            <paragraph></paragraph>
-                                                            <externalLink><![CDATA[]]></externalLink>
-                                                            <internalLinkCID/>
-                                                            <titleFormat><![CDATA[h6]]></titleFormat>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </column>
-                                            <column span="3" offset="0">
-                                                <block type="feature" name="" custom-template="stacked.php">
-                                                    <data table="btFeature">
-                                                        <record>
-                                                            <icon><![CDATA[fas fa-shield-alt]]></icon>
-                                                            <title><![CDATA[Security]]></title>
-                                                            <paragraph></paragraph>
-                                                            <externalLink><![CDATA[]]></externalLink>
-                                                            <internalLinkCID/>
-                                                            <titleFormat><![CDATA[h6]]></titleFormat>
-                                                        </record>
-                                                    </data>
-                                                </block>
-                                            </column>
-                                        </columns>
-                                    </arealayout>
+                                <block type="core_container" name="">
+                                    <container handle="grid_four">
+                                        <containerarea name="Item 1">
+                                            <block type="feature" name="" custom-template="stacked.php">
+                                                <data table="btFeature">
+                                                    <record>
+                                                        <icon><![CDATA[fas fa-award]]></icon>
+                                                        <title><![CDATA[Quality]]></title>
+                                                        <paragraph></paragraph>
+                                                        <externalLink><![CDATA[]]></externalLink>
+                                                        <internalLinkCID/>
+                                                        <titleFormat><![CDATA[h6]]></titleFormat>
+                                                    </record>
+                                                </data>
+                                            </block>
+                                        </containerarea>
+                                        <containerarea name="Item 2">
+                                            <block type="feature" name="" custom-template="stacked.php">
+                                                <data table="btFeature">
+                                                    <record>
+                                                        <icon><![CDATA[fas fa-palette]]></icon>
+                                                        <title><![CDATA[Design]]></title>
+                                                        <paragraph></paragraph>
+                                                        <externalLink><![CDATA[]]></externalLink>
+                                                        <internalLinkCID/>
+                                                        <titleFormat><![CDATA[h6]]></titleFormat>
+                                                    </record>
+                                                </data>
+                                            </block>
+                                        </containerarea>
+                                        <containerarea name="Item 3">
+                                            <block type="feature" name="" custom-template="stacked.php">
+                                                <data table="btFeature">
+                                                    <record>
+                                                        <icon><![CDATA[fas fa-code]]></icon>
+                                                        <title><![CDATA[Development]]></title>
+                                                        <paragraph></paragraph>
+                                                        <externalLink><![CDATA[]]></externalLink>
+                                                        <internalLinkCID/>
+                                                        <titleFormat><![CDATA[h6]]></titleFormat>
+                                                    </record>
+                                                </data>
+                                            </block>
+                                        </containerarea>
+                                        <containerarea name="Item 4">
+                                            <block type="feature" name="" custom-template="stacked.php">
+                                                <data table="btFeature">
+                                                    <record>
+                                                        <icon><![CDATA[fas fa-shield-alt]]></icon>
+                                                        <title><![CDATA[Security]]></title>
+                                                        <paragraph></paragraph>
+                                                        <externalLink><![CDATA[]]></externalLink>
+                                                        <internalLinkCID/>
+                                                        <titleFormat><![CDATA[h6]]></titleFormat>
+                                                    </record>
+                                                </data>
+                                            </block>
+                                        </containerarea>
+                                    </container>
                                 </block>
                             </containerarea>
                         </container>
@@ -1609,113 +1601,105 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                             </record>
                         </data>
                     </block>
-                    <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-02.jpg}</fID>
-                                                <name><![CDATA[Amanda Johnson]]></name>
-                                                <position><![CDATA[CFO]]></position>
-                                                <company><![CDATA[Bass Designs]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph>
-                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-06.jpg}</fID>
-                                                <name><![CDATA[Sam Heinz]]></name>
-                                                <position><![CDATA[Lead Developer]]></position>
-                                                <company><![CDATA[TaftCo Enterprises]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph>
-                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-04.jpg}</fID>
-                                                <name><![CDATA[VP Engineering]]></name>
-                                                <position><![CDATA[VitalTech Incorporated]]></position>
-                                                <company><![CDATA[]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph>
-                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                            </columns>
-                        </arealayout>
-                    </block>
-                    <block type="core_area_layout" name="" custom-template="wide_gutters.php">
-                        <arealayout type="theme-grid" columns="12">
-                            <columns>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-01.jpg}</fID>
-                                                <name><![CDATA[David Briscoe]]></name>
-                                                <position><![CDATA[CTO]]></position>
-                                                <company><![CDATA[AmuseCorp]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph>
-                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-05.jpg}</fID>
-                                                <name><![CDATA[Christina Backman]]></name>
-                                                <position><![CDATA[Co-Founder]]></position>
-                                                <company><![CDATA[Backman Design]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph>
-                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                                <column span="4" offset="0">
-                                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
-                                        <data table="btTestimonial">
-                                            <record>
-                                                <fID>{ccm:export:file:team-03.jpg}</fID>
-                                                <name><![CDATA[Robert Cook]]></name>
-                                                <position><![CDATA[Founder]]></position>
-                                                <company><![CDATA[Foo Energy Bars]]></company>
-                                                <companyURL><![CDATA[]]></companyURL>
-                                                <paragraph>
-                                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
-                                                <awardImageID/>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </column>
-                            </columns>
-                        </arealayout>
+                    <block type="core_container" name="">
+                        <container handle="grid_six">
+                            <containerarea name="Item 1">
+                                <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-02.jpg}</fID>
+                                            <name><![CDATA[Amanda Johnson]]></name>
+                                            <position><![CDATA[CFO]]></position>
+                                            <company><![CDATA[Bass Designs]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph>
+                                                <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 2">
+                                <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-06.jpg}</fID>
+                                            <name><![CDATA[Sam Heinz]]></name>
+                                            <position><![CDATA[Lead Developer]]></position>
+                                            <company><![CDATA[TaftCo Enterprises]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph>
+                                                <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 3">
+                                <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-04.jpg}</fID>
+                                            <name><![CDATA[VP Engineering]]></name>
+                                            <position><![CDATA[VitalTech Incorporated]]></position>
+                                            <company><![CDATA[]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph>
+                                                <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 4">
+                                <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-01.jpg}</fID>
+                                            <name><![CDATA[David Briscoe]]></name>
+                                            <position><![CDATA[CTO]]></position>
+                                            <company><![CDATA[AmuseCorp]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph>
+                                                <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 5">
+                                <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-05.jpg}</fID>
+                                            <name><![CDATA[Christina Backman]]></name>
+                                            <position><![CDATA[Co-Founder]]></position>
+                                            <company><![CDATA[Backman Design]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph>
+                                                <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                            <containerarea name="Item 6">
+                                <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                                    <data table="btTestimonial">
+                                        <record>
+                                            <fID>{ccm:export:file:team-03.jpg}</fID>
+                                            <name><![CDATA[Robert Cook]]></name>
+                                            <position><![CDATA[Founder]]></position>
+                                            <company><![CDATA[Foo Energy Bars]]></company>
+                                            <companyURL><![CDATA[]]></companyURL>
+                                            <paragraph>
+                                                <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                            <awardImageID/>
+                                        </record>
+                                    </data>
+                                </block>
+                            </containerarea>
+                        </container>
                     </block>
                 </blocks>
             </area>
@@ -2663,7 +2647,9 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
             </area>
         </page>
         <page name="Resource One" path="/resources/resource-one" public-date="2021-08-28 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
+              pagetype="resource" template="resource_detail" user="admin"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
+              package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2676,9 +2662,13 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     </value>
                 </attributekey>
             </attributes>
-            <area name="Main Right">
+            <area name="Resource Title">
                 <blocks>
                     <block mc-block-id="9986ce43"/>
+                </blocks>
+            </area>
+            <area name="Resource Content">
+                <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2698,9 +2688,13 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
             </area>
-            <area name="Main Left">
+            <area name="Resource Thumbnail">
                 <blocks>
                     <block mc-block-id="11402c4b"/>
+                </blocks>
+            </area>
+            <area name="Resource Data">
+                <blocks>
                     <block type="accordion" name="">
                         <data table="btAccordion">
                             <record/>
@@ -2730,7 +2724,9 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
             </area>
         </page>
         <page name="Resource Two" path="/resources/resource-two" public-date="2021-08-27 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
+              pagetype="resource" template="resource_detail" user="admin"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
+              package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2743,9 +2739,13 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     </value>
                 </attributekey>
             </attributes>
-            <area name="Main Right">
+            <area name="Resource Title">
                 <blocks>
                     <block mc-block-id="9986ce43"/>
+                </blocks>
+            </area>
+            <area name="Resource Content">
+                <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2765,14 +2765,16 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
             </area>
-            <area name="Main Left">
+            <area name="Resource Thumbnail">
                 <blocks>
                     <block mc-block-id="11402c4b"/>
                 </blocks>
             </area>
         </page>
         <page name="Resource Three" path="/resources/resource-three" public-date="2021-08-26 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
+              pagetype="resource" template="resource_detail" user="admin"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
+              package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2785,9 +2787,13 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     </value>
                 </attributekey>
             </attributes>
-            <area name="Main Right">
+            <area name="Resource Title">
                 <blocks>
                     <block mc-block-id="9986ce43"/>
+                </blocks>
+            </area>
+            <area name="Resource Content">
+                <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2807,14 +2813,16 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
             </area>
-            <area name="Main Left">
+            <area name="Resource Thumbnail">
                 <blocks>
                     <block mc-block-id="11402c4b"/>
                 </blocks>
             </area>
         </page>
         <page name="Resource Four" path="/resources/resource-four" public-date="2021-08-25 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
+              pagetype="resource" template="resource_detail" user="admin"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
+              package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2827,9 +2835,13 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     </value>
                 </attributekey>
             </attributes>
-            <area name="Main Right">
+            <area name="Resource Title">
                 <blocks>
                     <block mc-block-id="9986ce43"/>
+                </blocks>
+            </area>
+            <area name="Resource Content">
+                <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2849,14 +2861,16 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
             </area>
-            <area name="Main Left">
+            <area name="Resource Thumbnail">
                 <blocks>
                     <block mc-block-id="11402c4b"/>
                 </blocks>
             </area>
         </page>
         <page name="Resource Five" path="/resources/resource-five" public-date="2021-08-24 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
+              pagetype="resource" template="resource_detail" user="admin"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
+              package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2869,9 +2883,13 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     </value>
                 </attributekey>
             </attributes>
-            <area name="Main Right">
+            <area name="Resource Title">
                 <blocks>
                     <block mc-block-id="9986ce43"/>
+                </blocks>
+            </area>
+            <area name="Resource Content">
+                <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2891,14 +2909,16 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
             </area>
-            <area name="Main Left">
+            <area name="Resource Thumbnail">
                 <blocks>
                     <block mc-block-id="11402c4b"/>
                 </blocks>
             </area>
         </page>
         <page name="Resource Six" path="/resources/resource-six" public-date="2021-08-23 07:49:00" filename=""
-              pagetype="resource" template="two_column" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. " package="">
+              pagetype="resource" template="resource_detail" user="admin"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
+              package="">
             <attributes>
                 <attributekey handle="tags">
                     <value>
@@ -2911,9 +2931,13 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     </value>
                 </attributekey>
             </attributes>
-            <area name="Main Right">
+            <area name="Resource Title">
                 <blocks>
                     <block mc-block-id="9986ce43"/>
+                </blocks>
+            </area>
+            <area name="Resource Content">
+                <blocks>
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
@@ -2933,13 +2957,82 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                     <block mc-block-id="bf3d4ccc"/>
                 </blocks>
             </area>
-            <area name="Main Left">
+            <area name="Resource Thumbnail">
                 <blocks>
                     <block mc-block-id="11402c4b"/>
                 </blocks>
             </area>
         </page>
+        <page name="Privacy Policy" path="/privacy-policy" public-date="2021-09-09 15:00:00" filename="" pagetype="page"
+              template="left_sidebar" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+            <area name="Page Header">
+                <blocks>
+                    <block type="page_title" name="">
+                        <data table="btPageTitle">
+                            <record>
+                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                <useFilterTitle><![CDATA[0]]></useFilterTitle>
+                                <useFilterTopic><![CDATA[0]]></useFilterTopic>
+                                <useFilterTag><![CDATA[0]]></useFilterTag>
+                                <useFilterDate><![CDATA[0]]></useFilterDate>
+                                <topicTextFormat><![CDATA[0]]></topicTextFormat>
+                                <tagTextFormat><![CDATA[upperWord]]></tagTextFormat>
+                                <dateTextFormat><![CDATA[0]]></dateTextFormat>
+                                <filterDateFormat><![CDATA[F Y]]></filterDateFormat>
+                                <titleText><![CDATA[Privacy Policy]]></titleText>
+                                <formatting><![CDATA[h3]]></formatting>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus auctor convallis ipsum, sed dapibus ante fermentum at. Praesent tempor sagittis hendrerit. Morbi ac lacus vitae ex rhoncus faucibus. Nunc pretium luctus aliquam. Nunc pellentesque bibendum diam, eget tristique ipsum mollis vitae. Mauris ac sem eu lacus hendrerit blandit at in leo. Vestibulum mi turpis, sollicitudin vel aliquet sed, euismod in tellus. Fusce nisi risus, facilisis eu fermentum vitae, iaculis at lectus. Aliquam id eleifend felis.</p>
 
+<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi sollicitudin, turpis eu cursus molestie, nisi ante convallis mauris, vitae finibus ligula urna id dolor. Duis laoreet iaculis libero, eu bibendum augue dapibus sed. Nullam tellus lorem, tincidunt quis tristique vulputate, pretium ut ex. Mauris euismod tortor id consectetur feugiat. Nulla suscipit ex tellus, placerat scelerisque dolor sodales eu. Integer quis euismod urna, id mollis ante. Etiam in viverra est. Nam pulvinar at urna in rhoncus.</p>
+
+<p>Sed suscipit tempus luctus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Praesent ut placerat elit, sit amet scelerisque nisi. Suspendisse est nisi, viverra et orci sed, varius mattis lorem. Sed ultricies nunc ac ante interdum, quis commodo metus condimentum. Phasellus cursus vel tellus ut volutpat. Nullam urna urna, efficitur in ipsum ac, facilisis viverra nulla. Cras tellus quam, fermentum et sagittis eu, aliquet a ligula. Aliquam erat volutpat. Cras tincidunt odio eu sem pharetra elementum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+
+<p>Vivamus et ornare lorem. Sed ut augue nibh. Nulla convallis tempus diam, quis varius nulla pulvinar id. Nullam maximus finibus urna, at molestie magna dapibus a. Etiam lobortis augue ac metus faucibus tincidunt. Proin ac ante odio. Donec aliquam ornare finibus.</p>
+
+<p>Nullam pulvinar varius sodales. Nunc et fermentum massa, vel tempor metus. Aliquam erat volutpat. Donec pellentesque sem eget varius hendrerit. Nam nunc sem, posuere vitae hendrerit nec, congue non felis. Etiam sed ipsum eget ante rutrum placerat. Sed id elementum neque. Maecenas malesuada nunc ipsum, non posuere erat aliquam eget. Aenean suscipit ipsum tellus, at venenatis turpis semper eu. Sed sem lorem, bibendum vel dapibus a, euismod in tellus. Nunc in sem at quam tempor condimentum. Quisque aliquam eu diam vel volutpat.</p>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks/>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block type="autonav" name="">
+                        <data table="btNavigation">
+                            <record>
+                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                <displayPages><![CDATA[top]]></displayPages>
+                                <displayPagesCID/>
+                                <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                                <displaySubPages><![CDATA[none]]></displaySubPages>
+                                <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                                <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                                <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+        </page>
     </pages>
     <stacks>
         <stack name="Navigation" type="global_area" path="/navigation">
@@ -3010,7 +3103,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[ <p><a href="{ccm:export:page:/about/blog}">Blog</a></p> <p><a href="{ccm:export:page:/about/contact}">Contact Us</a></p> <p>Privacy Policy</p> <p><a href="{ccm:export:page:/about/careers}">Careers</a></p> ]]>
+                                    <![CDATA[ <p><a href="{ccm:export:page:/about/blog}">Blog</a></p> <p><a href="{ccm:export:page:/about/contact}">Contact Us</a></p> <p><a href="{ccm:export:page:/privacy-policy}">Privacy Policy</a></p> <p><a href="{ccm:export:page:/about/careers}">Careers</a></p> ]]>
                                 </content>
                             </record>
                         </data>
