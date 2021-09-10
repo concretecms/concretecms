@@ -15,7 +15,6 @@ use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;

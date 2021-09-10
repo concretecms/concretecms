@@ -1,0 +1,31 @@
+div.theme-atomik {
+
+  .ccm-page-account {
+
+    h1 {
+      font-family: $display-font-family;
+      @extend .display-1;
+    }
+
+
+    .ccm-page-account-navigation {
+
+      h3 {
+        font-family: $display-font-family;
+        @extend .display-4;
+      }
+
+      ul {
+        background-color: $light;
+        padding: 1rem;
+
+        a.active {
+          font-weight: bold;
+        }
+      }
+    }
+
+  }
+
+}
+

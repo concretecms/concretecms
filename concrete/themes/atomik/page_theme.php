@@ -33,12 +33,14 @@ class PageTheme extends Theme
     public function getThemeSupportedFeatures()
     {
         return [
+            Features::ACCOUNT,
             Features::BASICS,
             Features::TYPOGRAPHY,
             Features::CALENDAR,
             Features::DOCUMENTS,
             Features::CONVERSATIONS,
             Features::FAQ,
+            Features::PROFILE,
             Features::NAVIGATION,
             Features::IMAGERY,
             Features::FORMS,

@@ -33,6 +33,12 @@ $container-max-widths: (
 $lead-font-weight: 400;
 $lead-line-height: 2em;
 
+// Cards
+$enable-shadows: true;
+$card-box-shadow: 0 2px 3px rgba(0, 0, 0, .12);
+$card-border-width: 0;
+
+
 // Spacers - we need to make 5 less huge, and add some additional
 $spacers: (
     0: 0,
@@ -80,6 +86,7 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 $navbar-nav-link-padding-x: 1.25rem;
 $dropdown-padding-y: 0;
 $dropdown-border-radius: 0;
+$dropdown-border-width: 0;
 $dropdown-inner-border-radius: 0;
 $dropdown-item-padding-y: 0.5rem;
 $navbar-dark-toggler-icon-bg:       url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#000' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");

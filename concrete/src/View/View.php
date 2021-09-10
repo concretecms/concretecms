@@ -3,6 +3,7 @@ namespace Concrete\Core\View;
 
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\Output\StandardFormatter;
+use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
@@ -29,6 +30,8 @@ class View extends AbstractView
     protected $viewPkgHandle;
     protected $themePkgHandle;
     protected $viewRootDirectoryName = DIRNAME_VIEWS;
+
+    use HandleRequiredFeaturesTrait;
 
     protected function constructView($path = false)
     {
@@ -199,6 +202,11 @@ class View extends AbstractView
             }
             $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
             $this->themeRelativePath = $env->getURL(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
+
+            if ($this->themeObject) {
+                $this->handleRequiredFeatures($this->controller, $this->themeObject);
+            }
+
         }
     }
 
@@ -228,6 +236,7 @@ class View extends AbstractView
             }
             $this->setViewTemplate($env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$templateFile, $this->themePkgHandle));
         }
+
     }
 
     public function startRender()

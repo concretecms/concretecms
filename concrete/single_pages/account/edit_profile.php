@@ -35,25 +35,25 @@ $form = $app->make(Form::class);
             <?php echo t('Basic Information'); ?>
         </legend>
 
-        <div class="form-group">
+        <div class="mb-3">
             <?php echo $form->label('uName', t('Username')); ?>
             <?php echo $form->text('uName', $profile->getUserName()); ?>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
             <?php echo $form->label('uEmail', t('Email')); ?>
             <?php echo $form->text('uEmail', $profile->getUserEmail()); ?>
         </div>
 
         <?php if ($config->get('concrete.misc.user_timezones')) { ?>
-            <div class="form-group">
+            <div class="mb-3">
                 <?php echo $form->label('uTimezone', t('Time Zone')); ?>
                 <?php echo $form->select('uTimezone', $date->getTimezones(), ($profile->getUserTimezone() ? $profile->getUserTimezone() : date_default_timezone_get())); ?>
             </div>
         <?php } ?>
 
         <?php if (is_array($locales) && count($locales)) { ?>
-            <div class="form-group">
+            <div class="mb-3">
                 <?php echo $form->label('uDefaultLanguage', t('Language')); ?>
                 <?php echo $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
             </div>
@@ -122,17 +122,17 @@ $form = $app->make(Form::class);
             <?php echo t('Change Password'); ?>
         </legend>
 
-        <div class="form-group">
+        <div class="mb-3">
             <?php echo $form->label('uPasswordCurrent', t('Current Password')); ?>
             <?php echo $form->password('uPasswordCurrent', ['autocomplete' => 'off']); ?>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
             <?php echo $form->label('uPasswordNew', t('New Password')); ?>
             <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
         </div>
 
-        <div class="form-group">
+        <div class="mb-3">
             <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
             <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
         </div>

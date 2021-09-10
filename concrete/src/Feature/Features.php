@@ -148,5 +148,15 @@ class Features
      */
     const ACCORDIONS = 'accordions';
 
+    /**
+     * Accessory feature: support for My Account/Edit Profile
+     */
+    const ACCOUNT = 'account';
+
+    /**
+     * Accessory feature: support for frontend user profiles
+     */
+    const PROFILE = 'profile';
+
 
 }

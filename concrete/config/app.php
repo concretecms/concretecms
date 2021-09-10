@@ -466,6 +466,10 @@ return [
             ['css', 'css/features/account/frontend.css'],
         ],
 
+        'feature/profile/frontend' => [
+            ['css', 'css/features/profile/frontend.css'],
+        ],
+
         'feature/desktop/frontend' => [
             ['javascript', 'js/features/desktop/frontend.js'],
             ['css', 'css/features/desktop/frontend.css'],
@@ -641,6 +645,12 @@ return [
             [
                 ['javascript', 'feature/account/frontend'],
                 ['css', 'feature/account/frontend'],
+            ],
+        ],
+
+        'feature/profile/frontend' => [
+            [
+                ['css', 'feature/profile/frontend'],
             ],
         ],
 

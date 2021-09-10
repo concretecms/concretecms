@@ -8,7 +8,7 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\Package\StartingPointPackage;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 
-class controller extends StartingPointPackage
+class Controller extends StartingPointPackage
 {
     protected $pkgHandle = 'atomik_full';
 
@@ -57,6 +57,17 @@ class controller extends StartingPointPackage
         $logoSlider = $filesystem->addFolder($root, 'Logo Slider');
         $stripes = $filesystem->addFolder($root, 'Stripes');
         $team = $filesystem->addFolder($root, 'Team');
+    }
+
+    public function install_config()
+    {
+        parent::install_config();
+        $themePaths = [
+            '/account' => 'atomik',
+            '/members/profile' => ['atomik', 'profile.php'],
+        ];
+        $config = $this->app->make('config');
+        $config->save('app.theme_paths', $themePaths);
     }
 
     public function import_files()
