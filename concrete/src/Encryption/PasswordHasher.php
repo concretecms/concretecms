@@ -10,6 +10,8 @@ class PasswordHasher
     /** @var int|null */
     private $cost = null;
 
+    private const ALGORITHM = PASSWORD_BCRYPT;
+
     /**
      * @param \Concrete\Core\Config\Repository\Repository $config
      */
@@ -30,7 +32,7 @@ class PasswordHasher
      */
     public function hashPassword($password)
     {
-        return password_hash($password, PASSWORD_BCRYPT, [
+        return password_hash($password, self::ALGORITHM, [
             'cost' => $this->cost ?: PASSWORD_BCRYPT_DEFAULT_COST
         ]);
     }
@@ -44,5 +46,10 @@ class PasswordHasher
     public function checkPassword($password, $storedHash)
     {
         return password_verify($password, $storedHash);
+    }
+
+    public function needsRehash($hash): bool
+    {
+        return password_needs_rehash($hash, self::ALGORITHM);
     }
 }
