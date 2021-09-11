@@ -35,7 +35,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Groups',
         'PageSearchIndex',
         'ConfigStore',
-        'GatheringDataSources',
         'Logs',
         'PageTypePublishTargetTypes',
         'AttributeKeyCategories',

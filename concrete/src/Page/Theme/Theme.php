@@ -1317,27 +1317,4 @@ class Theme extends ConcreteObject
         return [];
     }
 
-    /**
-     * @deprecated
-     */
-    public function getThemeGatheringGridItemMargin()
-    {
-        return 20;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getThemeGatheringGridItemWidth()
-    {
-        return 150;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getThemeGatheringGridItemHeight()
-    {
-        return 150;
-    }
 }

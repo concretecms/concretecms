@@ -16,10 +16,11 @@ final class Version20210815000000 extends AbstractMigration implements Repeatabl
 
     public function upgradeDatabase()
     {
-
-        $this->refreshEntities([
-            Feed::class,
-        ]);
+        $this->refreshEntities(
+            [
+                Feed::class,
+            ]
+        );
         $this->refreshBlockType('page_list');
 
         $bt = BlockType::getByHandle('core_theme_documentation_toc');
@@ -71,8 +72,6 @@ final class Version20210815000000 extends AbstractMigration implements Repeatabl
 
         $installer->clearDocumentation($atomik, $atomik->getDocumentationProvider());
         $installer->install($elemental, $atomik->getDocumentationProvider());
-
-
     }
 
 }

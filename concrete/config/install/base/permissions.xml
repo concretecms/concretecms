@@ -19,7 +19,6 @@
         <category handle="marketplace" package=""/>
         <category handle="basic_workflow" package=""/>
         <category handle="page_type" package=""/>
-        <category handle="gathering" package=""/>
         <category handle="group_tree_node" package=""/>
         <category handle="group_folder" package="" />
         <category handle="express_tree_node" package=""/>
@@ -498,7 +497,6 @@
 		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="group_tree_node" />
@@ -529,7 +527,6 @@
 		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
@@ -560,7 +557,6 @@
 		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="group_folder" />
                 <category handle="express_tree_node" />
@@ -590,7 +586,6 @@
 		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="group_folder" />
                 <category handle="express_tree_node" />
