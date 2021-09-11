@@ -65,8 +65,9 @@ if ($section) {
                         <svg><use xlink:href="#icon-arrow-left" /></svg>
                         <?= t('Dashboard') ?>
                     </a>
-
-                    <h5><?=h(t($section->getCollectionName()))?></h5>
+                    <a class="ccm-panel-back" href="<?=$section->getCollectionLink()?>">
+                        <h5><?=h(t($section->getCollectionName()))?></h5>
+                    </a>
                 </header>
 
                 <?php
