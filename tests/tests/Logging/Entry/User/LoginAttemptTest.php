@@ -12,7 +12,7 @@ class LoginAttemptTest extends TestCase
     {
         $attempt = new LoginAttempt('foo', '/foobar', ['admin', 'bar'], []);
 
-        $this->assertRegExp('/successful login attempt for .foo./i', $attempt->getMessage());
+        $this->assertMatchesRegularExpression('/successful login attempt for .foo./i', $attempt->getMessage());
         $this->assertEquals([
             'groups' => ['admin', 'bar'],
             'errors' => [],
@@ -26,7 +26,7 @@ class LoginAttemptTest extends TestCase
     {
         $attempt = new LoginAttempt('foo', '/derp', ['registered', 'baz'], ['Something wasn\'t quite right...']);
 
-        $this->assertRegExp('/failed login attempt for .foo./i', $attempt->getMessage());
+        $this->assertMatchesRegularExpression('/failed login attempt for .foo./i', $attempt->getMessage());
         $this->assertEquals([
             'groups' => ['registered', 'baz'],
             'requestPath' => '/derp',

@@ -966,7 +966,7 @@ class FormTest extends TestCase
                 $chunk = preg_quote($chunk, '/');
             });
             $rx = '/^' . implode('\d+', $chunks) . '$/';
-            $this->assertRegExp($rx, $calculated);
+            $this->assertMatchesRegularExpression($rx, $calculated);
         }
     }
 }
