@@ -108,7 +108,7 @@ class ZipTest extends TestCase
         foreach ($this->getDirectories() as $rel => $hidden) {
             $abs = $this->workDir . '/destination/' . $rel;
             if ($hidden && !$includeDotFiles) {
-                $this->assertFileNotExists($abs);
+                $this->assertFileDoesNotExist($abs);
                 $this->assertArrayNotHasKey($rel, $contents);
             } else {
                 $this->assertFileExists($abs);
@@ -123,7 +123,7 @@ class ZipTest extends TestCase
         foreach ($this->getFiles() as $rel => $hidden) {
             $abs = $this->workDir . '/destination/' . $rel;
             if ($hidden && !$includeDotFiles) {
-                $this->assertFileNotExists($abs);
+                $this->assertFileDoesNotExist($abs);
                 $this->assertArrayNotHasKey($rel, $contents);
             } else {
                 $this->assertFileExists($abs);

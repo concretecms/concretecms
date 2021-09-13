@@ -2,6 +2,7 @@
 namespace Concrete\Tests\Multilingual;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Multilingual\Service\Detector;
 use Concrete\TestHelpers\Page\PageTestCase;
 
 class SectionTest extends PageTestCase
@@ -14,6 +15,13 @@ class SectionTest extends PageTestCase
 
         // get entity manager from database connection
         $em = $this->connection()->getEntityManager();
+        $em->clear();
+        // gotta do this for php8
+        $this->app->bind('multilingual/detector', function () {
+            $detector = new Detector();
+            $detector->setApplication($this->app);
+            return $detector;
+        });
 
         // initialize locale service
         $service = new \Concrete\Core\Localization\Locale\Service($em);

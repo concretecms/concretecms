@@ -88,7 +88,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     /**
      * The site type.
      *
-     * @ORM\ManyToOne(targetEntity="Type", inversedBy="sites")
+     * @ORM\ManyToOne(targetEntity="Type", inversedBy="sites", cascade={"persist"})
      * @ORM\JoinColumn(name="siteTypeID", referencedColumnName="siteTypeID")
      *
      * @var \Concrete\Core\Entity\Site\Type|null

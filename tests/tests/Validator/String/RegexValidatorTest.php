@@ -29,7 +29,7 @@ class RegexValidatorTest extends TestCase
 
     public function testInvalidInput()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $validator = new \Concrete\Core\Validator\String\RegexValidator('');
 
         $validator->isValid($validator);
@@ -38,7 +38,8 @@ class RegexValidatorTest extends TestCase
 
     public function testInvalidRegularExpression()
     {
-        $this->expectException(RuntimeException::class);
+
+        $this->expectException(\RuntimeException::class);
         $validator = new \Concrete\Core\Validator\String\RegexValidator('Invalid regex');
         $validator->isValid('test');
     }

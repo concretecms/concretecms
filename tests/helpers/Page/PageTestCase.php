@@ -6,6 +6,7 @@ use Concrete\Core\Cache\Cache;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
+use Doctrine\ORM\EntityManagerInterface;
 use Page;
 use PageTemplate;
 use PageType;
@@ -76,8 +77,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         if (!$service->getDefault()) {
             $service->installDefault();
         }
+        /** @var \Concrete\Core\Entity\Site\Site $site */
+        $site = $service->getDefault();
 
-        Page::addHomePage();
+        Page::addHomePage($site->getSiteTreeObject());
         PageTemplate::add('full', 'Full');
         PageType::add([
             'handle' => 'basic',

@@ -3,6 +3,7 @@
 namespace Concrete\Tests\Validator;
 
 use Concrete\Tests\TestCase;
+use InvalidArgumentException;
 
 class AbstractTranslatableValidatorTest extends TestCase
 {

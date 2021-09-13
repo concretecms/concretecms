@@ -39,13 +39,13 @@ class WorkflowTest extends ConcreteDatabaseTestCase
         $this->assertSame(['cancel', 'approve'], $wf->getAllowedTasks());
         $this->assertEquals($wt, $wf->getWorkflowTypeObject());
         $this->assertSame([], $wf->getRestrictedToPermissionKeyHandles());
-        $this->assertInternalType('string', $wf->getPermissionResponseClassName());
+        $this->assertIsString($wf->getPermissionResponseClassName());
         $this->assertNotEmpty($wf->getPermissionResponseClassName());
         //$this->assertTrue(class_exists($wf->getPermissionResponseClassName()), sprintf('Checking that class %s exists.', $wf->getPermissionResponseClassName()));
-        $this->assertInternalType('string', $wf->getPermissionAssignmentClassName());
+        $this->assertIsString($wf->getPermissionAssignmentClassName());
         $this->assertNotEmpty($wf->getPermissionAssignmentClassName());
         $this->assertTrue(class_exists($wf->getPermissionAssignmentClassName()), sprintf('Checking that class %s exists.', $wf->getPermissionAssignmentClassName()));
-        $this->assertInternalType('string', $wf->getPermissionObjectKeyCategoryHandle());
+        $this->assertIsString($wf->getPermissionObjectKeyCategoryHandle());
         $this->assertNotEmpty($wf->getPermissionObjectKeyCategoryHandle());
         $this->assertSame($wf->getWorkflowID(), $wf->getPermissionObjectIdentifier());
     }

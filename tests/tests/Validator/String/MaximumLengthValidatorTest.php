@@ -29,7 +29,7 @@ class MaximumLengthValidatorTest extends TestCase
 
     public function testInvalidInput()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $validator = new \Concrete\Core\Validator\String\MaximumLengthValidator(5);
         $validator->isValid($validator);
     }
