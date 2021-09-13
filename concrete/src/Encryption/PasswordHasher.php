@@ -3,24 +3,25 @@
 namespace Concrete\Core\Encryption;
 
 use Concrete\Core\Config\Repository\Repository;
-use Hautelook\Phpass\PasswordHash;
 
 class PasswordHasher
 {
     /**
-     * @var \Hautelook\Phpass\PasswordHash
+     * @var int|null
      */
-    private $phpassPasswordHash;
+    private $cost = null;
+
+    private const ALGORITHM = PASSWORD_BCRYPT;
 
     /**
      * @param \Concrete\Core\Config\Repository\Repository $config
      */
     public function __construct(Repository $config)
     {
-        $this->phpassPasswordHash = new PasswordHash(
-            $config->get('concrete.user.password.hash_cost_log2'),
-            $config->get('concrete.user.password.hash_portable')
-        );
+        $cost = $config->get('concrete.user.password.hash_cost_log2', null);
+        if ($cost !== null) {
+            $this->cost = (int) $cost;
+        }
     }
 
     /**
@@ -32,7 +33,9 @@ class PasswordHasher
      */
     public function hashPassword($password)
     {
-        return $this->phpassPasswordHash->HashPassword($password);
+        return password_hash($password, self::ALGORITHM, [
+            'cost' => $this->cost ?: PASSWORD_BCRYPT_DEFAULT_COST
+        ]);
     }
 
     /**
@@ -43,6 +46,11 @@ class PasswordHasher
      */
     public function checkPassword($password, $storedHash)
     {
-        return $this->phpassPasswordHash->CheckPassword($password, $storedHash);
+        return password_verify($password, $storedHash);
+    }
+
+    public function needsRehash($hash): bool
+    {
+        return password_needs_rehash($hash, self::ALGORITHM);
     }
 }
