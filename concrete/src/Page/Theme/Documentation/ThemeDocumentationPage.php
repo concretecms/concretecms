@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Theme\Documentation;
 
 use Concrete\Core\Page\Theme\Theme;
 
-class ThemeDocumentationPage implements DocumentationPageInterface
+class ThemeDocumentationPage extends AbstractDocumentationContentPage
 {
 
     /**
@@ -52,16 +52,19 @@ class ThemeDocumentationPage implements DocumentationPageInterface
     /**
      * @return \SimpleXMLElement
      */
-    public function getContentXmlElement(): \SimpleXMLElement
+    public function getContentXmlElement(): ?\SimpleXMLElement
     {
         $file = $this->contentFile;
-        return simplexml_load_file(
-            $this->theme->getThemeDirectory() .
-            DIRECTORY_SEPARATOR .
-            DIRNAME_THEME_DOCUMENTATION .
-            DIRECTORY_SEPARATOR .
-            $file
-        );
+        if ($file) {
+            return simplexml_load_file(
+                $this->theme->getThemeDirectory() .
+                DIRECTORY_SEPARATOR .
+                DIRNAME_THEME_DOCUMENTATION .
+                DIRECTORY_SEPARATOR .
+                $file
+            );
+        }
+        return null;
     }
 
     /**

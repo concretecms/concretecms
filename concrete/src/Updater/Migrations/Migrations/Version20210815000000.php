@@ -6,8 +6,10 @@ namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Page\Feed;
+use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Theme\Documentation\Installer;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
@@ -22,6 +24,39 @@ final class Version20210815000000 extends AbstractMigration implements Repeatabl
             ]
         );
         $this->refreshBlockType('page_list');
+
+        $template = Template::getByHandle(THEME_DOCUMENTATION_PAGE_TEMPLATE);
+        if (!is_object($template)) {
+            Template::add(
+                THEME_DOCUMENTATION_PAGE_TEMPLATE,
+                'Theme Documentation',
+                FILENAME_PAGE_TEMPLATE_DEFAULT_ICON,
+                null,
+                true
+            );
+        }
+
+        $type = Type::getByHandle(THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE);
+        if (!$type) {
+            $type = Type::add(
+                [
+                    'handle' => THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE,
+                    'name' => 'Theme Documentation Category',
+                    'internal' => true
+                ]
+            );
+        }
+
+        $type = Type::getByHandle(THEME_DOCUMENTATION_PAGE_TYPE);
+        if (!$type) {
+            $type = Type::add(
+                [
+                    'handle' => THEME_DOCUMENTATION_PAGE_TYPE,
+                    'name' => 'Theme Documentation',
+                    'internal' => true
+                ]
+            );
+        }
 
         $bt = BlockType::getByHandle('core_theme_documentation_toc');
         if (!is_object($bt)) {
@@ -59,19 +94,8 @@ final class Version20210815000000 extends AbstractMigration implements Repeatabl
 
         $atomik = Theme::getByHandle('atomik');
         if (!$atomik) {
-            $atomik = Theme::add('atomik');
+            Theme::add('atomik');
         }
-        $elemental = Theme::getByHandle('elemental');
-        $installer = $this->app->make(Installer::class);
-
-        /**
-         * @var Installer $installer
-         */
-        $installer->clearDocumentation($elemental, $elemental->getDocumentationProvider());
-        $installer->install($elemental, $elemental->getDocumentationProvider());
-
-        $installer->clearDocumentation($atomik, $atomik->getDocumentationProvider());
-        $installer->install($elemental, $atomik->getDocumentationProvider());
     }
 
 }

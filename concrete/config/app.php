@@ -275,7 +275,6 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageContentRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPackagesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportThemeDocumentationRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportConfigValuesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemCaptchaLibrariesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',

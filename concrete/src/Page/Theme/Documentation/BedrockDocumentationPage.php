@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Theme\Documentation;
 
 use Concrete\Core\Page\Theme\Theme;
 
-class BedrockDocumentationPage implements DocumentationPageInterface
+class BedrockDocumentationPage extends AbstractDocumentationContentPage
 {
 
     /**
@@ -45,7 +45,7 @@ class BedrockDocumentationPage implements DocumentationPageInterface
     /**
      * @return \SimpleXMLElement
      */
-    public function getContentXmlElement(): \SimpleXMLElement
+    public function getContentXmlElement(): ?\SimpleXMLElement
     {
         $file = $this->contentFile;
         return simplexml_load_file(

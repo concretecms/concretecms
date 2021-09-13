@@ -1634,6 +1634,7 @@
 
     <pagetemplates>
         <pagetemplate handle="core_stack" name="Stack" internal="1" package=""/>
+        <pagetemplate handle="core_theme_documentation" name="Theme Documentation" internal="1" package=""/>
         <pagetemplate handle="desktop" name="Desktop" internal="1" package=""/>
     </pagetemplates>
 

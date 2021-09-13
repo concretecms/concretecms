@@ -28,15 +28,6 @@ trait BedrockThemeTrait
         return 'bootstrap5';
     }
 
-    public function getDocumentationPages(): array
-    {
-        return [
-            new BedrockDocumentationPage( 'Colors', 'colors.xml'),
-            new BedrockDocumentationPage( 'Typography', 'typography.xml'),
-            new BedrockDocumentationPage( 'Components', 'components.xml'),
-        ];
-    }
-
     public function getColorCollection(): ?ColorCollection
     {
         $factory = new ColorCollectionFactory();

@@ -8,7 +8,7 @@ $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
 $show_tooltips = (bool) $config->get('concrete.accessibility.toolbar_tooltips');
 $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
 $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeTheme->getThemeID(), $previewPage->getCollectionID());
-$previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents') . '?cID=' . $previewPage->getCollectionID();
+$previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents') . '?pThemeID=' . $customizeTheme->getThemeID() . '&amp;cID=' . $previewPage->getCollectionID();
 ?>
 
 <?= View::element('icons') ?>
@@ -40,12 +40,23 @@ $previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents')
                         ) ?></span>
                 </a>
             </li>
-            <?php if (isset($documentationPages) && count($documentationPages) > 0) { ?>
+            <?php if (isset($documentationNavigation)) {
+
+                $documentationPages = $documentationNavigation->getItems();
+
+                ?>
                 <li class="ccm-toolbar-button-with-text float-end me-4">
                     <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><?=$customizeTheme->getThemeName()?></a>
                     <ul class="dropdown-menu">
-                        <?php foreach($documentationPages as $page) { ?>
-                            <li><a class="dropdown-item" href="<?=$view->action('preview', $customizeTheme->getThemeID(), $page->getCollectionID())?>"><?=t($page->getCollectionName())?></a></li>
+                        <?php foreach($documentationPages as $item) { ?>
+                            <?php if (count($item->getChildren())) { ?>
+                                <li><h6 class="dropdown-header"><?=$item->getName()?></h6></li>
+                                <?php foreach($item->getChildren() as $child) { ?>
+                                    <li><a class="dropdown-item" href="<?=$child->getURL()?>"><?=t($child->getName())?></a></li>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <li><a class="dropdown-item" href="<?=$item->getURL()?>"><?=t($item->getName())?></a></li>
+                            <?php } ?>
                         <?php } ?>
                     </ul>
                 </li>

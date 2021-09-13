@@ -3516,7 +3516,9 @@ EOT
                 $mc1 = $pt->getPageTypePageTemplateDefaultPageObject($template);
                 $mc2 = $pt->getPageTypePageTemplateDefaultPageObject();
                 $masterCIDBlocks = $mc1->getCollectionID();
-                $masterCID = $mc2->getCollectionID();
+                if ($mc2) {
+                    $masterCID = $mc2->getCollectionID();
+                }
             }
         }
 

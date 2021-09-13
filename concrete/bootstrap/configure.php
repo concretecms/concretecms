@@ -301,6 +301,7 @@ const STACK_CATEGORY_PAGE_TYPE = 'core_stack_category';
 const THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE = 'core_theme_documentation_category';
 const THEME_DOCUMENTATION_PAGE_TYPE = 'core_theme_documentation';
 const THEME_DOCUMENTATION_PAGE_PATH = '/!themes';
+const THEME_DOCUMENTATION_PAGE_TEMPLATE = 'core_theme_documentation';
 
 /*
  * ----------------------------------------------------------------------------

@@ -273,6 +273,11 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $template = $this->getPageTypeDefaultPageTemplateObject();
         }
 
+        if (!$template) {
+            // We're probably on an internal page like core theme documentation or core stack display
+            return;
+        }
+
         $db = Loader::db();
         $cID = $db->GetOne(
             'select cID from PageTypePageTemplateDefaultPages where ptID = ? and pTemplateID = ?',

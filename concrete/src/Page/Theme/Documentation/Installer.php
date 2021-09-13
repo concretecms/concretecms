@@ -17,9 +17,9 @@ class Installer
     public function clearDocumentation(Theme $theme, DocumentationProviderInterface $provider)
     {
         $provider->clearSupportingElements();
-        $pages = $theme->getThemeDocumentationPages();
-        foreach ($pages as $page) {
-            $page->delete();
+        $documentationPage = $theme->getThemeDocumentationParentPage();
+        if ($documentationPage) {
+            $documentationPage->delete();
         }
     }
 
@@ -38,13 +38,11 @@ class Installer
             $parent = $documentation->add($type, ['name' => $theme->getThemeName(), 'handle' => $theme->getThemeHandle()]);
         }
 
-        $type = Type::getByHandle(THEME_DOCUMENTATION_PAGE_TYPE);
         foreach ($provider->getPages() as $documentationPage) {
-            $page = $parent->add($type, ['name' => $documentationPage->getName()]);
+            $documentationPage->installDocumentationPage($parent);
 
-            $routine = new ImportPageContentRoutine();
-            $routine->importPageAreas($page, $documentationPage->getContentXmlElement());
         }
+        $provider->finishInstallation();
     }
     
 }

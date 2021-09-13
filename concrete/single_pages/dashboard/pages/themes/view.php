@@ -1,160 +1,183 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.');
-/**
- * @var Concrete\Core\Form\Service\Form $form
- * @var Concrete\Core\Validation\CSRF\Token $token
- * @var Concrete\Core\Page\Theme\Theme $activeTheme
- */
-// HELPERS
-$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-$ih = $app->make('helper/concrete/ui');
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
-$alreadyActiveMessage = t('This theme is currently active on your site.');
+<h3><?=t('Installed Themes')?></h3>
 
-if (isset($activate_confirm)) {
-    // Confirmation Dialogue.
-    // Separate inclusion of dashboard header and footer helpers to allow for more UI-consistant 'cancel' button in pane footer, rather than alongside activation confirm button in alert-box.?>
-    <div class="alert alert-danger">
-        <h5><strong><?=t('Apply this theme to every page on your site?'); ?></strong></h5>
-    </div>
-    <div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">
-            <?= $ih->button(t('Ok'), $activate_confirm, 'right', 'btn btn-primary'); ?>
-            <?= $ih->button(t('Cancel'), URL::to('/dashboard/pages/themes/'), 'left'); ?>
-        </div>
-    </div>
-    <?php
-} else {
-    // Themes listing / Themes landing page.
-    // Separate inclusion of dashboard header and footer helpers - no pane footer.
-    ?>
-    <h3><?=t('Currently Installed'); ?></h3>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table"><?php
-        if (count($tArray) == 0) {
-            ?><tbody>
-                <tr>
-                    <td><p><?=t('No themes are installed.'); ?></p></td>
-               </tr>
-            </tbody><?php
-        } else {
-            ?><tbody>
-            <?php
-            foreach ($tArray as $t) {
+<?php if (count($tArray)) { ?>
+
+    <div class="ps-0 container-fluid">
+        <div class="row row-cols-3">
+
+            <?php foreach($tArray as $t) {
+                $thumbnail = $t->getThemeThumbnail();
+                $thumbnail->class('card-img-top')->width(null)->height(null);
                 ?>
-                <tr <?php if ($activeTheme->getThemeID() == $t->getThemeID()) {
-                    ?> class="ccm-theme-active" <?php
-                } ?>>
-                    <td>
-                        <div class="ccm-themes-thumbnail" style="padding:4px;background-color:#FFF;border-radius:3px;border:1px solid #DDD;">
-                            <?=$t->getThemeThumbnail(); ?>
-                        </div>
-                    </td>
-                    <td width="100%" style="vertical-align:middle;">
-                        <div class="btn-group float-end">
-                        <?php
-                        if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>
-                            <button disabled class="btn btn-secondary btn-sm"><?=t('Activate')?></button>
-                        <?php } else { ?>
-                            <a href="<?=$view->action('activate', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Activate')?></a>
-                        <?php } ?>
-                        <?php if ($t->hasThemeDocumentation()) { ?>
-                            <a href="javascript:void(0)" class="btn btn-secondary btn-sm" data-dialog="reset-documentation-<?=$t->getThemeID()?>"><?=t('Reset Documentation')?></a>
-                        <?php } ?>
-                        <?php if ($t->isThemeCustomizable()) { ?>
-                            <a href="<?=$view->action('preview', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Preview &amp; Customize')?></a>
-                        <?php } else { ?>
-                            <a href="<?=$view->action('preview', $t->getThemeID())?>" class="btn btn-secondary btn-sm"><?=t('Preview')?></a>
-                       <?php } ?>
-                        <a href="<?=$view->action('inspect', $t->getThemeID())?>" class="btn btn-sm btn-secondary"><?=t('Page Templates')?></a>
-                        <?php
-                        if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>
-                            <button disabled class="btn btn-danger btn-sm"><?=t('Remove')?></button>
-                        <?php } else { ?>
-                            <a href="<?=$view->action('remove', $t->getThemeID(), $token->generate('remove'))?>" class="btn btn-secondary btn-sm"><?=t('Remove')?></a>
-                        <?php } ?>
-                    </div>
-                        <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName(); ?></strong></p>
-                        <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription(); ?></em></p>
 
+                <div class="col">
+                    <div class="card h-100 <?php if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>border-primary border<?php } ?>">
+                        <?=$thumbnail ?>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <h5 class="card-title mb-0"><?=$t->getThemeDisplayName(); ?></h5>
+                                <div class="dropdown ms-auto">
+                                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog"></i>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <?php if ($activeTheme->getThemeID() == $t->getThemeID() && $activeTheme->hasSkins()) { ?>
+                                            <li class="dropdown-header"><?=t('Active Skin')?></li>
+                                            <?php
+                                            $skins = $activeTheme->getSkins();
+                                            foreach ($skins as $skin) { ?>
+                                                <li><a href="<?=$view->action('save_selected_skin', $skin->getIdentifier(), $token->generate('save_selected_skin'))?>"
+                                                       class="dropdown-item">
+                                                        <?php if ($themeSkinIdentifier == $skin->getIdentifier()) { ?>
+                                                            <span class="text-success"><i class="fa fa-check"></i> <?=$skin->getName()?></span>
+                                                        <?php } else { ?>
+                                                            <?=$skin->getName()?>
+                                                        <?php } ?>
+                                                    </a></li>
+                                            <?php } ?>
+                                        <?php } ?>
+                                        <?php if ($activeTheme->getThemeID() != $t->getThemeID()) { ?>
+                                            <li><a href="javascript:void(0)"
+                                                   data-dialog="activate-theme-<?=$t->getThemeID()?>"
+                                                   class="dropdown-item"><?=t('Activate')?></a></li>
+                                        <?php } ?>
+                                        <?php if ($t->supportsThemeDocumentation()) { ?>
+                                            <li class="dropdown-divider"></li>
+                                            <li class="dropdown-header"><?=t('Documentation')?></li>
+                                            <?php /* No, this is not a typo. Theme documentation is used for documentation purposes AND for previewing when customizing */ ?>
+                                            <li><a href="<?=$view->action('preview', $t->getThemeID())?>" class="dropdown-item"><?=t('View')?></a></li>
+                                            <?php if ($t->hasThemeDocumentation()) { ?>
+                                                <li><a href="" class="dropdown-item" data-dialog="uninstall-documentation-<?=$t->getThemeID()?>"><?=t('Uninstall')?></a></li>
+                                            <?php } else { ?>
+                                                <li><a href="javascript:void(0)" class="dropdown-item" data-dialog="install-documentation-<?=$t->getThemeID()?>"><?=t('Install')?></a></li>
+                                            <?php } ?>
+                                            <li class="dropdown-divider"></li>
+                                        <?php } ?>
+                                        <?php if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>
+                                            <?php if ($t->isThemeCustomizable()) { ?>
+                                                <li><a href="<?=$view->action('preview', $t->getThemeID())?>" class="dropdown-item"><?=t('Customize')?></a></li>
+                                            <?php }
+                                        } else { ?>
+                                            <li><a href="<?=$view->action('preview', $t->getThemeID())?>" class="dropdown-item"><?=t('Preview')?></a></li>
+                                        <?php } ?>
+                                        <li><a href="<?=$view->action('inspect', $t->getThemeID())?>" class="dropdown-item"><?=t('Page Templates')?></a></li>
+                                        <li><a href="<?=$view->action('remove', $t->getThemeID(), $token->generate('remove'))?>"
+                                               class="dropdown-item <?php if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>disabled<?php } else { ?>text-danger<?php } ?>"><?=t('Remove Theme')?></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="card-text text-secondary small"><?=$t->getThemeDisplayDescription(); ?></p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="d-none">
+                    <div data-dialog-wrapper="activate-theme-<?=$t->getThemeID()?>">
+                        <form method="post" data-form-activate-theme="<?=$t->getThemeID()?>" action="<?= $view->action('activate_confirm') ?>">
+                            <?php $token->output("activate_confirm") ?>
+                            <input type="hidden" name="pThemeID" value="<?=$t->getThemeID()?>">
+                            <p><?= t('This will reset any page customizations and apply the selected theme to all pages on your site.') ?></p>
+                            <div class="dialog-buttons">
+                                <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+                                <button type="submit" onclick="$('form[data-form-activate-theme=<?=$t->getThemeID()?>]').trigger('submit')" class="btn btn-primary"><?=t('Activate')?></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <?php if ($t->supportsThemeDocumentation()) { ?>
+                    <div class="d-none">
                         <?php if ($t->hasThemeDocumentation()) { ?>
-                        <div class="d-none">
-                            <div data-dialog-wrapper="reset-documentation-<?=$t->getThemeID()?>">
-                                <form method="post" data-form-reset-documentation="<?=$t->getThemeID()?>" action="<?= $view->action('reset_documentation', $t->getThemeID()) ?>">
-                                    <?php $token->output("reset_documentation") ?>
-                                    <p><?= t('This will reset the theme documentation to the content that ships with the theme.') ?></p>
+                            <div data-dialog-wrapper="uninstall-documentation-<?=$t->getThemeID()?>">
+                                <form method="post" data-form-uninstall-documentation="<?=$t->getThemeID()?>" action="<?= $view->action('uninstall_documentation', $t->getThemeID()) ?>">
+                                    <?php $token->output("uninstall_documentation") ?>
+                                    <p><?= t('This will uninstall the theme documentation added to this theme, and remove any files, images or demonstration data added with it.') ?></p>
                                     <div class="dialog-buttons">
                                         <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
-                                        <button type="submit" onclick="$('form[data-form-reset-documentation=<?=$t->getThemeID()?>]').trigger('submit')" class="btn btn-primary"><?=t('Reset')?></button>
+                                        <button type="submit" onclick="$('form[data-form-uninstall-documentation=<?=$t->getThemeID()?>]').trigger('submit')" class="btn btn-primary"><?=t('Uninstall')?></button>
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        <?php } else { ?>
+                            <div data-dialog-wrapper="install-documentation-<?=$t->getThemeID()?>">
+                                <form method="post" data-form-install-documentation="<?=$t->getThemeID()?>" action="<?= $view->action('install_documentation', $t->getThemeID()) ?>">
+                                    <?php $token->output("install_documentation") ?>
+                                    <p><?= t('This will install documentation for this theme. It may include files, images or other CMS data for demonstration purposes.') ?></p>
+                                    <div class="dialog-buttons">
+                                        <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+                                        <button type="submit" onclick="$('form[data-form-install-documentation=<?=$t->getThemeID()?>]').trigger('submit')" class="btn btn-primary"><?=t('Install')?></button>
+                                    </div>
+                                </form>
+                            </div>
                         <?php } ?>
-                        <?php if ($activeTheme->getThemeID() == $t->getThemeID() && $activeTheme->hasSkins()) {
+                    </div>
+                <?php } ?>
 
-                            $skins = $activeTheme->getSkins(); ?>
-                            <form method="post" action="<?=$view->action('save_selected_skin'); ?>" >
-                                <div><strong><?=t('Skins')?></strong></div>
-                                <?php $token->output('save_selected_skin'); ?>
-                                <?php
-                                foreach($skins as $skin) { ?>
-                                    <button type="submit" name="themeSkinIdentifier"
-                                            value="<?=$skin->getIdentifier()?>"
-                                            class="<?php if ($themeSkinIdentifier == $skin->getIdentifier()) { ?>active<?php } ?> btn btn-sm btn-secondary">
-                                        <?=$skin->getName()?>
-                                    </button>
-                                <?php } ?>
+            <?php } ?>
+
+        </div>
+    </div>
+
+<?php } else { ?>
+
+    <p><?=t('No themes are installed.'); ?></p>
+
+<?php } ?>
+
+<?php
+if (count($tArray2) > 0) {
+    ?>
+
+    <h3 class="mt-5"><?=t('Themes Available to Install'); ?></h3>
+
+        <div class="ps-0 container-fluid">
+            <div class="row row-cols-3">
+
+            <?php foreach($tArray2 as $t) {
+                $thumbnail = $t->getThemeThumbnail();
+                $thumbnail->class('card-img-top')->width(null)->height(null);
+                ?>
+
+                    <div class="col">
+                        <div class="card h-100">
+                            <?=$thumbnail ?>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h5 class="card-title mb-0"><?=$t->getThemeDisplayName(); ?></h5>
                                 </div>
-                            </form>
 
+                                <p class="card-text text-secondary small"><?=$t->getThemeDisplayDescription(); ?></p>
 
-                        <?php } ?>
-                    </td>
-                </tr>
-                <?php
-            } ?></tbody><?php
-        } ?></table>
+                                <p class="card-text">
+                                <form method="post" action="<?=$view->action('install')?>">
+                                    <?=$token->output('install_theme')?>
+                                    <input type="hidden" name="theme" value="<?=$t->getThemeHandle()?>">
+                                    <button type="submit" class="btn w-100 btn-block btn-secondary"><?=t('Install')?></button>
+                                </form>
+                                </p>
+                            </div>
 
-    <?php
-    if (count($tArray2) > 0) {
-        ?>
-        <hr>
-        <h3><?=t('Themes Available to Install'); ?></h3>
-        <table class="table">
-        
-            <tbody>
-            <?php foreach ($tArray2 as $t) {
-            ?>
-                <tr>
-                    <td>
-                        <div class="ccm-themes-thumbnail" style="padding:4px;background-color:#FFF;border-radius:3px;border:1px solid #DDD;">
-                            <?=$t->getThemeThumbnail(); ?>
                         </div>
-                    </td>
-                    <td width="100%" style="vertical-align:middle;">
-                        <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName(); ?></strong></p>
-                        <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription(); ?></em></p>
-                        <div class="ccm-themes-button-row clearfix"><?php
-                            if (strlen($t->error) > 0) {
-                                ?><div class="alert alert-danger" role="alert"><?php echo nl2br(h($t->error)); ?></div><?php
-                            } else {
-                                echo $ih->button(t('Install'), $view->action('install', $t->getThemeHandle()), 'left', 'btn-secondary');
-                            } ?></div>
-                    </td>
-                </tr>
-            <?php
-        } ?>
-            </tbody>
-        </table>
-        <?php
-    }
-        if (Config::get('concrete.marketplace.enabled') == true) {
-            ?>
+                    </div>
 
-            <div class="mt-5">
-                <h3 class="mt-2"><?=t('Want more themes?'); ?></h3>
-                <p><?=t('You can download themes and add-ons from the marketplace.'); ?></p>
-                <p><a class="btn btn-success" href="<?=URL::to('/dashboard/extend/themes'); ?>"><?=t('Get More Themes'); ?></a></p>
+                </div>
             </div>
-        <?php
-        }
-    }
+        <?php } ?>
+<?php } ?>
+
+<?php
+if (Config::get('concrete.marketplace.enabled') == true) {
+    ?>
+
+    <div class="mt-5">
+        <h3 class="mt-2"><?=t('Want more themes?'); ?></h3>
+        <p><?=t('You can download themes and add-ons from the marketplace.'); ?></p>
+        <p><a class="btn btn-success" href="<?=URL::to('/dashboard/extend/themes'); ?>"><?=t('Get More Themes'); ?></a></p>
+    </div>
+    <?php
+}
+

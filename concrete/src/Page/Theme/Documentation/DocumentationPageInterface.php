@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Theme\Documentation;
 
+use Concrete\Core\Page\Page;
+
 interface DocumentationPageInterface
 {
 
@@ -10,8 +12,9 @@ interface DocumentationPageInterface
     public function getName(): string;
 
     /**
-     * @return \SimpleXMLElement
+     * @return void
      */
-    public function getContentXmlElement(): \SimpleXMLElement;
+    public function installDocumentationPage(Page $parent);
+
 
 }

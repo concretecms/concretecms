@@ -1,0 +1,305 @@
+<concrete5-cif version="1.0">
+    <area name="Main">
+        <blocks>
+            <block type="core_theme_documentation_breadcrumb" name="">
+                <style>
+                    <backgroundColor/>
+                    <backgroundRepeat/>
+                    <backgroundSize/>
+                    <backgroundPosition/>
+                    <borderWidth/>
+                    <borderColor/>
+                    <borderStyle/>
+                    <borderRadius/>
+                    <baseFontSize/>
+                    <alignment/>
+                    <textColor/>
+                    <linkColor/>
+                    <paddingTop/>
+                    <paddingBottom/>
+                    <paddingLeft/>
+                    <paddingRight/>
+                    <marginTop/>
+                    <marginBottom/>
+                    <marginLeft/>
+                    <marginRight/>
+                    <rotate/>
+                    <boxShadowHorizontal/>
+                    <boxShadowVertical/>
+                    <boxShadowBlur/>
+                    <boxShadowSpread/>
+                    <boxShadowColor/>
+                    <customClass>mt-5</customClass>
+                    <customID/>
+                    <customElementAttribute/>
+                    <hideOnExtraSmallDevice/>
+                    <hideOnSmallDevice/>
+                    <hideOnMediumDevice/>
+                    <hideOnLargeDevice/>
+                </style>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h1>Basics</h1>
+
+<p class="lead">Basic block types for working with your site.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Content</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque varius in nunc nec cursus. Nunc at leo magna. Nulla vulputate lorem nec mauris faucibus mollis. Vestibulum metus nulla, rutrum eu dictum eu, egestas eu lectus. Vivamus eu auctor metus. Quisque sodales nulla eget turpis consectetur, nec efficitur nisi congue. Mauris in turpis nec dolor interdum ullamcorper. Nulla ullamcorper pretium metus, id rutrum nunc vehicula eget. Phasellus in massa eget neque porta rutrum et sed justo.</p>
+
+<p>Cras efficitur arcu volutpat mi placerat pulvinar vitae eu dolor. Praesent semper euismod consectetur. Morbi porta orci quis sollicitudin vulputate. Etiam aliquam hendrerit ex at pharetra. Aliquam eu finibus nisl. Curabitur iaculis ante diam, nec maximus diam scelerisque ut. Maecenas hendrerit placerat lectus. Donec ultricies urna vel rhoncus congue.</p>
+
+<p>Donec metus ipsum, interdum a mauris ut, commodo facilisis tellus. Maecenas et mollis ex, non convallis turpis. Mauris congue ac metus vitae congue. Quisque efficitur dui dolor, eu convallis dolor dignissim nec. Aliquam sit amet tellus at leo gravida convallis nec at mi. Sed aliquam molestie dictum. Maecenas condimentum libero at turpis aliquam hendrerit. Donec sit amet velit turpis. Aliquam eget imperdiet lorem, a ornare augue.</p>
+
+<p>Vivamus semper sagittis convallis. Vivamus convallis nulla sagittis ligula ornare, in malesuada eros feugiat. Ut euismod arcu vel dolor elementum, eu egestas neque convallis. Curabitur id lorem urna. In sit amet sapien porttitor, blandit justo vitae, pharetra ex. Fusce aliquam felis at porttitor consequat. In rhoncus fermentum purus, vel maximus dui facilisis vel. Sed ut blandit metus. Vivamus tincidunt sem a ante ultrices feugiat. Suspendisse tincidunt vulputate quam, et tristique nisl condimentum in. Duis quis nibh ipsum. Donec vel tortor quis metus facilisis porta suscipit quis elit.</p>
+
+<p>Duis tristique eu elit et blandit. Vestibulum fermentum ac magna porttitor feugiat. Cras quis quam eget lacus varius pretium. Nam nulla felis, dignissim eu porta in, rhoncus eget quam. Phasellus blandit semper nisl, suscipit rhoncus mi faucibus quis. Proin porta consequat sem id ultrices. Cras dictum nisl lacus, et vulputate metus varius id.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Primary Border Top</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="" custom-template="primary_border_top.php">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque varius in nunc nec cursus. Nunc at leo magna. Nulla vulputate lorem nec mauris faucibus mollis. Vestibulum metus nulla, rutrum eu dictum eu, egestas eu lectus. Vivamus eu auctor metus. Quisque sodales nulla eget turpis consectetur, nec efficitur nisi congue. Mauris in turpis nec dolor interdum ullamcorper. Nulla ullamcorper pretium metus, id rutrum nunc vehicula eget. Phasellus in massa eget neque porta rutrum et sed justo.</p>
+
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">HTML</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="html" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content>
+                            <![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque varius in nunc nec cursus. Nunc at leo magna. Nulla vulputate lorem nec mauris faucibus mollis. Vestibulum metus nulla, rutrum eu dictum eu, egestas eu lectus. Vivamus eu auctor metus. Quisque sodales nulla eget turpis consectetur, nec efficitur nisi congue. Mauris in turpis nec dolor interdum ullamcorper. Nulla ullamcorper pretium metus, id rutrum nunc vehicula eget. Phasellus in massa eget neque porta rutrum et sed justo.</p>]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Horizontal Rule</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="horizontal_rule" name=""/>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">File</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="file" name="">
+                <data table="btContentFile">
+                    <record>
+                        <fID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</fID>
+                        <fileLinkText><![CDATA[atomik-documentation-image-wide-01.jpg]]></fileLinkText>
+                        <filePassword><![CDATA[]]></filePassword>
+                        <forceDownload><![CDATA[0]]></forceDownload>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Feature Link&nbsp; <span class="badge bg-info">New!</span></h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="feature_link" name="">
+                <data table="btFeatureLink">
+                    <record>
+                        <title><![CDATA[Feature Link Title]]></title>
+                        <body><![CDATA[<p>This is the body text.</p>
+]]></body>
+                        <buttonText><![CDATA[Click Me]]></buttonText>
+                        <buttonExternalLink><![CDATA[]]></buttonExternalLink>
+                        <buttonInternalLinkCID><![CDATA[0]]></buttonInternalLinkCID>
+                        <buttonFileLinkID><![CDATA[0]]></buttonFileLinkID>
+                        <buttonColor><![CDATA[accent]]></buttonColor>
+                        <buttonStyle><![CDATA[]]></buttonStyle>
+                        <buttonSize><![CDATA[]]></buttonSize>
+                        <titleFormat><![CDATA[h3]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Feature</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="feature" name="">
+                <data table="btFeature">
+                    <record>
+                        <icon><![CDATA[fas fa-comment]]></icon>
+                        <title><![CDATA[Feature Title]]></title>
+                        <paragraph><![CDATA[<p>This is the feature block.</p>
+]]></paragraph>
+                        <externalLink><![CDATA[]]></externalLink>
+                        <internalLinkCID>{ccm:export:page:}</internalLinkCID>
+                        <titleFormat><![CDATA[h4]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Stacked</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="feature" name="" custom-template="stacked.php">
+                <data table="btFeature">
+                    <record>
+                        <icon><![CDATA[fas fa-comment]]></icon>
+                        <title><![CDATA[Feature]]></title>
+                        <paragraph><![CDATA[<p>This is the feature block using the&nbsp;<strong>Stacked</strong> custom template.</p>
+]]></paragraph>
+                        <externalLink><![CDATA[]]></externalLink>
+                        <internalLinkCID/>
+                        <titleFormat><![CDATA[h2]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Stacked Primary</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="feature" name="" custom-template="stacked_primary.php">
+                <data table="btFeature">
+                    <record>
+                        <icon><![CDATA[fas fa-comment]]></icon>
+                        <title><![CDATA[Feature]]></title>
+                        <paragraph><![CDATA[<p>This is the feature block using the&nbsp;<strong>Stacked Primary</strong> custom template.</p>
+]]></paragraph>
+                        <externalLink><![CDATA[]]></externalLink>
+                        <internalLinkCID/>
+                        <titleFormat><![CDATA[h2]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Image</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="image" name="">
+                <data table="btContentImage">
+                    <record>
+                        <fID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</fID>
+                        <fOnstateID/>
+                        <cropImage><![CDATA[0]]></cropImage>
+                        <maxWidth><![CDATA[0]]></maxWidth>
+                        <maxHeight><![CDATA[0]]></maxHeight>
+                        <externalLink><![CDATA[]]></externalLink>
+                        <internalLinkCID/>
+                        <fileLinkID/>
+                        <openLinkInNewWindow><![CDATA[0]]></openLinkInNewWindow>
+                        <altText><![CDATA[]]></altText>
+                        <title><![CDATA[]]></title>
+                        <sizingOption><![CDATA[thumbnails_default]]></sizingOption>
+                    </record>
+                </data>
+                <thumbnails>
+                    <thumbnail breakpointHandle="xs" handle="file_manager_listing"/>
+                    <thumbnail breakpointHandle="xl" handle="file_manager_listing"/>
+                    <thumbnail breakpointHandle="sm" handle="file_manager_listing"/>
+                    <thumbnail breakpointHandle="md" handle="file_manager_listing"/>
+                    <thumbnail breakpointHandle="lg" handle="file_manager_listing"/>
+                </thumbnails>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Hero Image&nbsp;&nbsp;<span class="badge bg-info">New!</span></h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="hero_image" name="">
+                <data table="btHeroImage">
+                    <record>
+                        <image>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</image>
+                        <title><![CDATA[Hero Image]]></title>
+                        <body><![CDATA[<p>This is the hero image block with the height set to 70.</p>
+]]></body>
+                        <buttonText><![CDATA[Learn More]]></buttonText>
+                        <buttonExternalLink><![CDATA[]]></buttonExternalLink>
+                        <buttonInternalLinkCID><![CDATA[1]]></buttonInternalLinkCID>
+                        <buttonFileLinkID><![CDATA[0]]></buttonFileLinkID>
+                        <height><![CDATA[70]]></height>
+                        <buttonColor><![CDATA[light]]></buttonColor>
+                        <buttonStyle><![CDATA[outline]]></buttonStyle>
+                        <buttonSize><![CDATA[lg]]></buttonSize>
+                    </record>
+                </data>
+            </block>
+        </blocks>
+    </area>
+</concrete5-cif>

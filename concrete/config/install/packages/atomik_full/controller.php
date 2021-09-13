@@ -2,6 +2,7 @@
 
 namespace Concrete\StartingPointPackage\AtomikFull;
 
+use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Filesystem;
@@ -20,26 +21,6 @@ class Controller extends StartingPointPackage
     public function getPackageDescription()
     {
         return t('Creates a full services agency site using the new Atomik theme.');
-    }
-
-    private function moveFiles(array $fileNames, string $folderName)
-    {
-        $folder = FileFolder::getNodeByName($folderName);
-        if ($folder) {
-            $db = $this->app->make(Connection::class);
-            foreach ($fileNames as $name) {
-                $fID = $db->fetchOne('select fID from FileVersions where fvFilename = ?', [$name]);
-                if ($fID) {
-                    $file = File::getByID($fID);
-                    if ($file) {
-                        $fileNode = $file->getFileNodeObject();
-                        if ($fileNode) {
-                            $fileNode->move($folder);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public function install_file_manager()
@@ -74,16 +55,18 @@ class Controller extends StartingPointPackage
     {
         parent::import_files();
 
+        $importer = new ContentImporter();
+
         // Now move the files
-        $this->moveFiles(['atomik-logo-transparent.png', 'atomik-logo.png'], 'Brand');
-        $this->moveFiles(['blog-01.jpg', 'blog-02.jpg', 'blog-03.jpg', 'blog-04.jpg', 'blog-05.jpg', 'blog-06.jpg'], 'Blog');
-        $this->moveFiles(['collaboration-01.jpg', 'collaboration-02.jpg', 'collaboration-03.jpg'], 'Collaboration Slider');
-        $this->moveFiles(['dummy.pdf'], 'Documents');
-        $this->moveFiles(['gallery-headphones.jpg', 'gallery-shoes.jpg', 'gallery-shoes2.jpg', 'gallery-skincare.jpg', 'gallery-watch.jpg', 'gallery-watch2.jpg'], 'Gallery');
-        $this->moveFiles(['hands-01.jpg', 'laptops-01.jpg', 'laptops-02.jpg', 'people-01.jpg', 'testimonial-01.jpg', 'testimonial-bg.jpg'], 'Stripes');
-        $this->moveFiles(['hero-01.jpg', 'hero-resources.jpg'], 'Hero Images');
-        $this->moveFiles(['logo-01.png', 'logo-02.png', 'logo-03.png', 'logo-04.png'], 'Logo Slider');
-        $this->moveFiles(['team-01.jpg', 'team-02.jpg', 'team-03.jpg', 'team-04.jpg', 'team-05.jpg', 'team-06.jpg'], 'Team');
+        $importer->moveFilesByName(['atomik-logo-transparent.png', 'atomik-logo.png'], 'Brand');
+        $importer->moveFilesByName(['blog-01.jpg', 'blog-02.jpg', 'blog-03.jpg', 'blog-04.jpg', 'blog-05.jpg', 'blog-06.jpg'], 'Blog');
+        $importer->moveFilesByName(['collaboration-01.jpg', 'collaboration-02.jpg', 'collaboration-03.jpg'], 'Collaboration Slider');
+        $importer->moveFilesByName(['dummy.pdf'], 'Documents');
+        $importer->moveFilesByName(['gallery-headphones.jpg', 'gallery-shoes.jpg', 'gallery-shoes2.jpg', 'gallery-skincare.jpg', 'gallery-watch.jpg', 'gallery-watch2.jpg'], 'Gallery');
+        $importer->moveFilesByName(['hands-01.jpg', 'laptops-01.jpg', 'laptops-02.jpg', 'people-01.jpg', 'testimonial-01.jpg', 'testimonial-bg.jpg'], 'Stripes');
+        $importer->moveFilesByName(['hero-01.jpg', 'hero-resources.jpg'], 'Hero Images');
+        $importer->moveFilesByName(['logo-01.png', 'logo-02.png', 'logo-03.png', 'logo-04.png'], 'Logo Slider');
+        $importer->moveFilesByName(['team-01.jpg', 'team-02.jpg', 'team-03.jpg', 'team-04.jpg', 'team-05.jpg', 'team-06.jpg'], 'Team');
 
     }
 }

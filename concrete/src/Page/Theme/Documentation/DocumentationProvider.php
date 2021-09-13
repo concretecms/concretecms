@@ -12,6 +12,10 @@ class DocumentationProvider implements DocumentationProviderInterface
     {
     }
 
+    public function finishInstallation(): void
+    {
+    }
+
     public static function createFromArray($pages): DocumentationProvider
     {
         $provider = new self();

@@ -800,6 +800,8 @@ class Theme extends ConcreteObject
                 $pt->updateThemeCustomClass();
 
                 $result = $pt;
+            } else {
+                throw new \Exception($res->pError);
             }
         }
 
@@ -821,7 +823,12 @@ class Theme extends ConcreteObject
         return $this->getColorCollection() instanceof ColorCollection;
     }
 
-    public function hasThemeDocumentation(): bool
+    /**
+     * Checks to see whether the capability of theme documentation exists for this theme.
+     *
+     * @return bool
+     */
+    public function supportsThemeDocumentation(): bool
     {
         $provider = $this->getDocumentationProvider();
         if ($provider instanceof DocumentationProviderInterface) {
@@ -830,19 +837,24 @@ class Theme extends ConcreteObject
         return false;
     }
 
-    /**
-     * (Re)Installs the theme documentation, if it exists.
-     */
-    public function installThemeDocumentation()
+    public function getThemeDocumentationParentPage(): ?Page
     {
-        $provider = $this->getDocumentationProvider();
-        if ($provider instanceof DocumentationProviderInterface) {
-
-            // Let's clear the documentation
-            $installer = app(Installer::class);
-            $installer->clearDocumentation($this, $provider);
-            $installer->install($this, $provider);
+        $parentPage = Page::getByPath(THEME_DOCUMENTATION_PAGE_PATH . '/' . $this->getThemeHandle());
+        if ($parentPage && !$parentPage->isError()) {
+            return $parentPage;
         }
+        return null;
+    }
+
+    /**
+     * Checks to see if theme documentation has been installed
+     *
+     * @return bool
+     */
+    public function hasThemeDocumentation(): bool
+    {
+        $documentationPage = $this->getThemeDocumentationParentPage();
+        return !is_null($documentationPage);
     }
 
     /**
@@ -857,8 +869,11 @@ class Theme extends ConcreteObject
             $documentationList = new PageList();
             $documentationList->setSiteTreeToAll();
             $documentationList->includeSystemPages();
-            $documentationList->filterByParentID($parentPage->getCollectionID());
-            $documentationList->filterByPageTypeHandle(THEME_DOCUMENTATION_PAGE_TYPE);
+            $documentationList->filterByPath($parentPage->getCollectionPath());
+            $documentationList->filterByPageTypeHandle([
+                THEME_DOCUMENTATION_PAGE_TYPE,
+                THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE]
+            );
             $documentationList->sortByDisplayOrder();
             $themeDocumentationPages = $documentationList->getResults();
             return $themeDocumentationPages;

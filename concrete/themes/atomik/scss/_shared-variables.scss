@@ -81,6 +81,24 @@ $btn-padding-x-lg: 1.75rem;
 
 // Merge our bootstrap threme colors and our custom colors
 $theme-colors: map-merge($theme-colors, $custom-colors);
+// It's weird that I have to do this –I'm just copying these from Bootstrap but without doing this my custom
+// colors aren't included in certain utilities because the map that those utilities are built with doesn't
+// include them.
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+$utilities-colors: map-merge(
+    $theme-colors-rgb,
+    (
+            "black": to-rgb($black),
+            "white": to-rgb($white),
+            "body":  to-rgb($body-color)
+    )
+);
+// Shouldn't these two utilities be set from my custom utilities color map above?
+// Shouldn't my custom utilities color map be already populated by my custom theme-colors-rgb? Shouldn't my
+// custom theme-colors-rgb be already populated by my custom merged theme-colors?
+
+$utilities-text-colors: map-loop($utilities-colors, rgba-css-var, "$key", "text");
+$utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
 
 // Top Navigation Bar
 $navbar-nav-link-padding-x: 1.25rem;

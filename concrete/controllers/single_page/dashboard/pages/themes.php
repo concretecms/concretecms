@@ -9,6 +9,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Page\Theme\Documentation\DocumentationNavigationFactory;
 use Concrete\Core\Page\Theme\Documentation\Installer;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
@@ -40,15 +41,19 @@ class Themes extends DashboardSitePageController
         $this->set('install', $this->action('install'));
     }
 
-    public function save_selected_skin()
+    public function save_selected_skin($themeSkinIdentifier = null, $token = null)
     {
         $activeTheme = Theme::getSiteTheme();
-        if (!$this->token->validate('save_selected_skin')) {
+        if (!$this->token->validate('save_selected_skin', $token)) {
             $this->error->add($this->token->getErrorMessage());
         }
 
+        if (!$themeSkinIdentifier) {
+            $this->error->add(t('You must specify a valid theme skin identifier.'));
+        }
+
         if (!$this->error->has()) {
-            $this->site->setThemeSkinIdentifier($this->request->request->get('themeSkinIdentifier'));
+            $this->site->setThemeSkinIdentifier(h($themeSkinIdentifier));
             $this->entityManager->persist($this->site);
             $this->entityManager->flush();
             $this->flash('success', t('Theme skin updated.'));
@@ -56,23 +61,40 @@ class Themes extends DashboardSitePageController
         return $this->buildRedirect($this->action());
     }
 
-    public function reset_documentation($pThemeID = null)
+    public function install_documentation($pThemeID = null)
     {
         $theme = Theme::getByID($pThemeID);
         if ($theme) {
-            if (!$this->token->validate('reset_documentation')) {
+            if (!$this->token->validate('install_documentation')) {
+                $this->error->add($this->token->getErrorMessage());
+            }
+
+            if (!$this->error->has()) {
+                $installer = $this->app->make(Installer::class);
+                $installer->install($theme, $theme->getDocumentationProvider());
+                $this->flash('success', t('Theme documentation installed.'));
+            }
+        }
+        return $this->buildRedirect($this->action());
+    }
+
+    public function uninstall_documentation($pThemeID = null)
+    {
+        $theme = Theme::getByID($pThemeID);
+        if ($theme) {
+            if (!$this->token->validate('uninstall_documentation')) {
                 $this->error->add($this->token->getErrorMessage());
             }
 
             if (!$this->error->has()) {
                 $installer = $this->app->make(Installer::class);
                 $installer->clearDocumentation($theme, $theme->getDocumentationProvider());
-                $installer->install($theme, $theme->getDocumentationProvider());
-                $this->flash('success', t('Theme documentation reset.'));
+                $this->flash('success', t('Theme documentation removed.'));
             }
         }
         return $this->buildRedirect($this->action());
     }
+
 
 
     public function preview($pThemeID = null, $previewPageID = null)
@@ -97,10 +119,14 @@ class Themes extends DashboardSitePageController
                         }
                     }
                 } else {
-                    $previewPage = $themeDocumentationPages[0];
+                    $themeDocumentationParent = $theme->getThemeDocumentationParentPage();
+                    if ($themeDocumentationParent) {
+                        $previewPage = $themeDocumentationParent->getFirstChild();
+                    }
                 }
             }
-            $this->set('documentationPages', $themeDocumentationPages);
+            $factory = new DocumentationNavigationFactory($theme);
+            $this->set('documentationNavigation', $factory->createNavigation());
             $this->set('previewPage', $previewPage);
             $this->render('/dashboard/pages/themes/preview');
         } else {
@@ -172,52 +198,49 @@ class Themes extends DashboardSitePageController
         $this->set('activate_confirm', $this->action('activate_confirm', $pThemeID, $this->token->generate('activate')));
     }
 
-    public function install($pThemeHandle = null)
+    public function install()
     {
-        $th = Theme::getByFileHandle($pThemeHandle);
-        if ($pThemeHandle == null) {
-            return $this->buildRedirect($this->action());
+        $th = Theme::getByFileHandle($this->request->request->get('theme'));
+
+        if (!$th) {
+            $this->error->add(t('Invalid theme handle.'));
         }
 
-        $v = $this->app->make('helper/validation/error');
-        try {
-            if (is_object($th)) {
-                $t = Theme::add($pThemeHandle);
+        if (!$this->token->validate('install_theme')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
 
+        $existing = Theme::getByHandle($this->request->request->get('theme'));
+        if ($existing) {
+            $this->error->add('That theme has already been installed.');
+        }
+
+        if (!$this->error->has()) {
+            try {
+                $t = Theme::add($this->request->request->get('theme'));
+                $this->flash('success', t('Theme %s installed successfully', $t->getThemeName()));
                 return $this->buildRedirect($this->action('inspect', $t->getThemeID(), 'install'));
+            } catch (Exception $e) {
+                $this->error->add($e);
             }
-            throw new Exception('Invalid Theme');
-        } catch (Exception $e) {
-            switch ($e->getMessage()) {
-                case Theme::E_THEME_INSTALLED:
-                    $v->add(t('That theme has already been installed.'));
-                    break;
-                default:
-                    $v->add($e->getMessage());
-                    break;
-            }
-
-            $this->set('error', $v);
         }
+
         $this->view();
     }
 
-    // this can be run from /layouts/add/ or /layouts/edit/ or /layouts/ - anything really
-
-    public function activate_confirm($pThemeID, $token)
+    public function activate_confirm()
     {
-        $l = Theme::getByID($pThemeID);
-        $val = $this->app->make('helper/validation/error');
-        if (!$this->token->validate('activate', $token)) {
-            $val->add($this->token->getErrorMessage());
-            $this->set('error', $val);
-        } elseif (!is_object($l)) {
-            $val->add('Invalid Theme');
-            $this->set('error', $val);
-        } else {
-            $l->applyToSite();
-
-            return $this->buildRedirect($this->action('inspect', $l->getThemeID(), 'activate'));
+        $theme = Theme::getByID($this->request->request->get('pThemeID'));
+        if (!$theme) {
+            $this->error->add(t('Invalid theme.'));
+        }
+        if (!$this->token->validate('activate_confirm')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $theme->applyToSite();
+            $this->flash('success', t('Applied %s theme to site', $theme->getThemeName()));
+            return $this->buildRedirect($this->action('inspect', $theme->getThemeID(), 'activate'));
         }
 
         $this->view();

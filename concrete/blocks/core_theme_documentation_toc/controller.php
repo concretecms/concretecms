@@ -2,6 +2,10 @@
 namespace Concrete\Block\CoreThemeDocumentationToc;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Navigation\NavigationFactory;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Theme\Documentation\DocumentationNavigationFactory;
+use Concrete\Core\Page\Theme\Theme;
 
 class Controller extends BlockController
 {
@@ -19,17 +23,21 @@ class Controller extends BlockController
 
     public function view()
     {
-        $pages = [];
         $themeID = 0;
         $c = $this->getCollectionObject();
         if ($c) {
-            $theme = $c->getCollectionThemeObject();
+            $parent = Page::getByID($c->getCollectionParentID());
+            $theme = Theme::getByHandle($parent->getCollectionHandle());
             if ($theme) {
-                $pages = $theme->getThemeDocumentationPages();
-                $themeID = $theme->getThemeID();
+                $documentationPage = $theme->getThemeDocumentationParentPage();
+                if ($documentationPage) {
+                    $factory = new DocumentationNavigationFactory($theme);
+                    $navigation = $factory->createNavigation($theme->getThemeDocumentationParentPage());
+                    $themeID = $theme->getThemeID();
+                }
             }
         }
-        $this->set('pages', $pages);
+        $this->set('navigation', $navigation);
         $this->set('themeID', $themeID);
     }
 

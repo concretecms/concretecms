@@ -35,7 +35,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btCacheBlockOutputLifetime = 300;
-    protected $btIgnorePageThemeGridFrameworkContainer = true;
 
     /**
      * {@inheritdoc}

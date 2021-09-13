@@ -48,6 +48,10 @@ $form-label-font-weight: 600;
 $enable-gradients: false;
 $enable-shadows: true;
 
+/* cards */
+$card-box-shadow: 0 2px 3px rgba(0, 0, 0, .12);
+$card-border-width: 0;
+
 /* transitions */
 $transition-base: all 0.25s ease-in-out;
 $transition-fade: opacity 0.1s ease-in-out;

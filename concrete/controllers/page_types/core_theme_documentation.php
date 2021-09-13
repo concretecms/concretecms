@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\PageType;
 
+use Concrete\Core\Html\Service\Navigation;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\Controller\PageTypeController;
 use Concrete\Core\Page\Page;
@@ -27,8 +28,11 @@ class CoreThemeDocumentation extends PageTypeController
 
         // Make sure we can view the stacks page
         if ($permissions->canViewPage()) {
-            $parent = Page::getByID($this->getPageObject()->getCollectionParentID());
-            $themeHandle = $parent->getCollectionHandle();
+            $navigation = new Navigation();
+            $parents = $navigation->getTrailToCollection($this->getPageObject());
+            $totalParents = count($parents);
+            $themePage = $parents[$totalParents - 2]; // Minus two because the array is zero lengthed.
+            $themeHandle = $themePage->getCollectionHandle();
             $this->setTheme($themeHandle);
             return;
         }

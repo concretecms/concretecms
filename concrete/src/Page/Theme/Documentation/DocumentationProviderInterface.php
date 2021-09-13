@@ -8,6 +8,8 @@ interface DocumentationProviderInterface
 
     public function installSupportingElements(): void;
 
+    public function finishInstallation(): void;
+
     /**
      * @return DocumentationPageInterface[]
      */
