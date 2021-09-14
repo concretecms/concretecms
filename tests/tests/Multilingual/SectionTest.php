@@ -5,6 +5,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Multilingual\Service\Detector;
 use Concrete\TestHelpers\Page\PageTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SectionTest extends PageTestCase
 {
@@ -15,7 +16,7 @@ class SectionTest extends PageTestCase
         $this->app->make('cache/request')->disable();
 
         // get entity manager from database connection
-        $em = $this->connection()->getEntityManager();
+        $em = $this->app->make(EntityManagerInterface::class);
         // gotta do this for php8
         $this->app->bind('multilingual/detector', function () {
             $detector = new Detector();

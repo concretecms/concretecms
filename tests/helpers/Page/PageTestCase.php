@@ -2,8 +2,7 @@
 
 namespace Concrete\TestHelpers\Page;
 
-use Concrete\Core\Cache\Cache;
-use Concrete\Core\Entity\Site\Site;
+
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
@@ -11,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Page;
 use PageTemplate;
 use PageType;
+use Stash\Driver\Ephemeral;
+use Stash\Pool;
 
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
@@ -69,17 +70,22 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
-
-        $service = Core::make('site/type');
+        $app = Application::getFacadeApplication();
+        $service = $app->make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
         }
-
-        $service = Core::make('site');
+        $service = $app->make('site');
+        // PhP unit and laravel containers mean the request cache is somehow enabled? but only after soo many test runs
+        // So we force the cache to be disabled
+        $requestCache = $app->make('cache/request');
+        $requestCache->disable();
+        $service->setCache($requestCache);
         if (!$service->getDefault()) {
             $service->installDefault();
         }
-        Page::addHomePage();
+        $site = $service->getDefault();
+        Page::addHomePage($site->getSiteTreeObject());
         PageTemplate::add('full', 'Full');
         PageType::add([
             'handle' => 'basic',
