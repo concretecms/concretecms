@@ -420,6 +420,7 @@ class Service
         $localeService->updatePluralSettings($locale);
 
         $this->entityManager->persist($site);
+        $this->entityManager->persist($tree);
         $this->entityManager->persist($locale);
         $this->entityManager->flush();
 

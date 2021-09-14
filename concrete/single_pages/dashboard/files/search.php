@@ -136,8 +136,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                                 </a>
                             </td>
                         <?php } else { ?>
-                            <td class="<?php
-                            echo $class ?>">
+                            <td class="<?=$class?? '' ?>">
                                 <?php
                                 echo $column->getColumnValue($item); ?>
                             </td>

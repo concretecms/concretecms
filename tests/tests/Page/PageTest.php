@@ -15,10 +15,6 @@ use SinglePage;
 
 class PageTest extends PageTestCase
 {
-    public function tearDown(): void
-    {
-        parent::tearDown();
-    }
 
     public function testHomePageExists()
     {

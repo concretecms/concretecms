@@ -75,7 +75,7 @@ class SanitizerTest extends TestCase
     {
         $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
         $lines = explode("\n", $sanitized);
-        static::assertMatchesRegularExpression('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
+        static::assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
         $xml = trim(implode('', $lines));
 
         static::assertSame($expectedOutput, $xml);

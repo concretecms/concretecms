@@ -38,12 +38,12 @@ class TextTest extends ConcreteDatabaseTestCase
     {
         return [
             ['Mixed with English and Germaen', 'Mixed with English and Germän', 'de_DE'],
-            ['Mixed with English and ', 'Mixed with English and 日本語', 'ja_JP'],
-            ['Mixed with English and .doc', 'Mixed with English and 日本語.doc', 'ja_JP'],
-            ['Mixed with English and .', 'Mixed with English and 日本語.日本語', 'ja_JP'],
-            ['', '日本語', 'ja_JP'],
-            ['.doc', '日本語.doc', 'ja_JP'],
-            ['.', '日本語.日本語', 'ja_JP'],
+            ['Mixed with English and Ri Ben Yu (nihongo)', 'Mixed with English and 日本語（にほんご）', 'ja_JP'],
+            ['Mixed with English and Ri Ben Yu .doc', 'Mixed with English and 日本語.doc', 'ja_JP'],
+            ['Mixed with English and nihongo.Ri Ben Yu ', 'Mixed with English and にほんご.日本語', 'ja_JP'],
+            ['Ri Ben Yu ', '日本語', 'ja_JP'],
+            ['Ri Ben Yu .doc', '日本語.doc', 'ja_JP'],
+            ['katakana.Ri Ben Yu ', 'ｶﾀｶﾅ.日本語', 'ja_JP'],
         ];
     }
 
@@ -83,8 +83,8 @@ class TextTest extends ConcreteDatabaseTestCase
      */
     public function testAsciify($expected, $input1, $input2)
     {
-        $this->markTestSkipped('The asciify provider does not recognise Japanese at the moment, treats it as Chinese');
-        //$this->assertEquals($expected, $this->object->asciify($input1, $input2));
+        //$this->markTestSkipped('The asciify provider does not recognise Japanese at the moment, treats it as Chinese');
+        $this->assertEquals($expected, $this->object->asciify($input1, $input2));
     }
 
     /**

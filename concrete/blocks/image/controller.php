@@ -490,7 +490,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         parent::save($args);
 
-        if (is_array($args["selectedThumbnailTypes"])) {
+        if (isset($args["selectedThumbnailTypes"]) && is_array($args["selectedThumbnailTypes"])) {
             foreach ($args["selectedThumbnailTypes"] as $breakpointHandle => $ftTypeID) {
                 /** @noinspection PhpUnhandledExceptionInspection */
                 /** @noinspection SqlDialectInspection */

@@ -229,7 +229,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
                 if ($strategy === 'async') {
                     self::assertNull($thumbnail->width);
                     self::assertNull($thumbnail->height);
-                    self::assertFileDoesNotExist($realPath);
+                    self::assertFileNotExists($realPath);
                 } else {
                     self::assertGreaterThan(0, $thumbnail->width);
                     self::assertGreaterThan(0, $thumbnail->height);

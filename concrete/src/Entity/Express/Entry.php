@@ -411,7 +411,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
             $name = $this->entryFormatter->format($mask, $this);
         }
 
-        if (!$name) {
+        if (!isset($name)) {
             $name = $this->entryFormatter->getLabel($this);
         }
 

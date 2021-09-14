@@ -6,6 +6,7 @@ use HtmlObject\Element;
 $app = Application::getFacadeApplication();
 /** @var Form $form */
 $form = $app->make(Form::class);
+$options = [];
 
 // Checkbox list.
 if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {

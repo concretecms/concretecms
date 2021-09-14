@@ -15,7 +15,7 @@ use Concrete\Core\Package\Dependency\DependencyChecker;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Common\Proxy\ProxyGenerator;
 use Doctrine\DBAL\Driver\PDOConnection;
 use Doctrine\DBAL\Schema\Comparator as SchemaComparator;

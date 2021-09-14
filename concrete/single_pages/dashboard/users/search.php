@@ -93,7 +93,7 @@ use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
                             <?php echo $column->getColumnValue(); ?>
                         </td>
                     <?php } else { ?>
-                        <td class="<?php echo $class ?>">
+                        <td class="<?=$class?? '' ?>">
                             <?php echo $column->getColumnValue(); ?>
                         </td>
                     <?php } ?>

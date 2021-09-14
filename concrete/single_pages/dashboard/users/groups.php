@@ -107,7 +107,7 @@ use Concrete\Core\User\Group\Menu;
                             </a>
                         </td>
                     <?php } else { ?>
-                        <td class="<?php echo $class ?>">
+                        <td class="<?=$class?? '' ?>">
                             <?php echo $column->getColumnValue(); ?>
                         </td>
                     <?php } ?>

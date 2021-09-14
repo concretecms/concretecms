@@ -103,8 +103,8 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        \Core::make(EntityManagerInterface::class)->clear();
-        \Core::make('cache')->flush();
+        ORM::entityManager('core')->clear();
+        Core::make('cache/request')->flush();
     }
 
     /**

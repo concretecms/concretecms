@@ -3,6 +3,7 @@
 namespace Concrete\TestHelpers\Page;
 
 use Concrete\Core\Cache\Cache;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
@@ -47,9 +48,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     ]; // so brutal
 
     protected $metadatas = [
+        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
-        'Concrete\Core\Entity\Site\Type',
+        'Concrete\Core\Entity\Site\SkeletonTree',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
         'Concrete\Core\Entity\Page\Relation\MultilingualRelation',
@@ -77,10 +79,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         if (!$service->getDefault()) {
             $service->installDefault();
         }
-        /** @var \Concrete\Core\Entity\Site\Site $site */
-        $site = $service->getDefault();
-
-        Page::addHomePage($site->getSiteTreeObject());
+        Page::addHomePage();
         PageTemplate::add('full', 'Full');
         PageType::add([
             'handle' => 'basic',

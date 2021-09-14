@@ -226,7 +226,7 @@ class FileImporterTest extends FileStorageTestCase
                 if ($strategy === 'async') {
                     static::assertNull($thumbnail->width);
                     static::assertNull($thumbnail->height);
-                    static::assertFileDoesNotExist($realPath);
+                    static::assertFileNotExists($realPath);
                 } else {
                     static::assertGreaterThan(0, $thumbnail->width);
                     static::assertGreaterThan(0, $thumbnail->height);

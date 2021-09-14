@@ -22,11 +22,11 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      * @see ConcreteDatabaseTestCase::$metadatas
      */
     protected $metadatas = [
+        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
-        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings',

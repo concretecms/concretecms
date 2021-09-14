@@ -165,7 +165,7 @@ class IpAccessControlService implements LoggerAwareInterface
             ->setDateTime(new DateTime('now'))
         ;
         $this->em->persist($event);
-        $this->em->flush($event);
+        $this->em->flush();
 
         return $event;
     }

@@ -265,7 +265,7 @@ class AddMessage extends FrontendController
         } else {
             $blockController = $this->getBlockController();
             $parentMessage = $this->getParentMessage();
-            $canReview = $blockController()->enableTopCommentReviews && $parentMessage === null;
+            $canReview = $blockController->enableTopCommentReviews && $parentMessage === null;
             if ($canReview !== true) {
                 $errors[] = t('Reviews have not been enabled for this discussion.');
                 $review = null;

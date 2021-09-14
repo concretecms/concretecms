@@ -65,7 +65,6 @@ class Service
         $tree->setLocale($locale);
         $locale->setSiteTree($tree);
         $locale = $this->updatePluralSettings($locale);
-        $this->entityManager->persist($site);
         $this->entityManager->persist($tree);
         $this->entityManager->persist($locale);
         $this->entityManager->flush();

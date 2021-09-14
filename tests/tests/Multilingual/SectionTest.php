@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Tests\Multilingual;
 
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Multilingual\Service\Detector;
 use Concrete\TestHelpers\Page\PageTestCase;
@@ -15,7 +16,6 @@ class SectionTest extends PageTestCase
 
         // get entity manager from database connection
         $em = $this->connection()->getEntityManager();
-        $em->clear();
         // gotta do this for php8
         $this->app->bind('multilingual/detector', function () {
             $detector = new Detector();
@@ -28,7 +28,9 @@ class SectionTest extends PageTestCase
 
         // get current site
         $site = $this->app->make('site')->getSite();
-
+        if (!$em->contains($site)) {
+            $site = $em->getRepository(Site::class)->find($site->getSiteID());
+        };
         // get page template "full"
         $template = \Concrete\Core\Page\Template::getByHandle('full');
 

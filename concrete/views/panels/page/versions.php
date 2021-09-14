@@ -482,7 +482,7 @@ use Concrete\Core\Support\Facade\Url;
     });
 </script>
 
-<?php if ($isDialogMode): ?>
+<?php if (isset($isDialogMode) && $isDialogMode === true): ?>
     <section id="ccm-panel-page-versions" class="ccm-ui">
         <header>
             <a href="" data-panel-navigation="back" class="ccm-panel-back">
