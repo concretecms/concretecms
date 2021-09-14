@@ -13,7 +13,8 @@ class ClearCacheCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:clear-cache')
             ->setDescription('Clear the cache')
@@ -24,7 +25,7 @@ class ClearCacheCommand extends Command
 If the --thumbnails options is not specified, we'll use the last value set in the dashboard.
 
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-clear-cache
@@ -55,6 +56,6 @@ EOT
         $cms->clearCaches();
         $output->writeln('<info>done.</info>');
 
-        return self::SUCCESS;
+        return static::SUCCESS;
     }
 }

@@ -32,14 +32,12 @@ class ConfigCommand extends Command
         $item = $this->argument('item');
         switch ($this->argument('action')) {
             case 'get':
-                $this->doGetAction($repository, $item);
-                break;
+                return $this->doGetAction($repository, $item);
             case 'set':
-                $this->doSetAction($repository, $item);
-                break;
+                return $this->doSetAction($repository, $item);
             default:
                 $this->output->error('Invalid action specified, please specify either "set" or "get"');
-                break;
+                return static::FAILURE;
         }
     }
 
@@ -137,9 +135,11 @@ EOT
      * @param $repository
      * @param $item
      */
-    private function doGetAction($repository, $item)
+    private function doGetAction($repository, $item): int
     {
         $this->output->writeln($this->serialize($repository->get($item)));
+
+        return static::SUCCESS;
     }
 
     /**
@@ -148,14 +148,18 @@ EOT
      * @param Repository $repository
      * @param string $item
      */
-    private function doSetAction(Repository $repository, $item)
+    private function doSetAction(Repository $repository, $item): int
     {
         if (!$this->hasArgument('value')) {
             $this->output->error('A value must be provided when using the "set" action.');
+
+            return static::FAILURE;
         }
 
         $value = $this->argument('value');
         $repository->save($item, $this->unserialize($value));
+
+        return static::SUCCESS;
     }
 
     /**

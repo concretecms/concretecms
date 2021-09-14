@@ -17,14 +17,15 @@ class FillThumbnailsTableCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:fill-thumbnails-table')
             ->setDescription('Populate the thumbnail table with all the files.')
             ->addEnvOption()
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 EOT
             )
@@ -54,6 +55,8 @@ EOT
             }
         }
         $output->writeln("{$count} thumbnail paths processed.");
+
+        return static::SUCCESS;
     }
 
     /**

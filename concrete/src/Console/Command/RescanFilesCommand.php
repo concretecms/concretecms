@@ -59,6 +59,6 @@ class RescanFilesCommand extends Command
             $count++;
         }
         $output->writeln("{$count} files rescanned.");
-        return self::SUCCESS;
+        return static::SUCCESS;
     }
 }

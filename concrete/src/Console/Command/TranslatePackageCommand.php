@@ -17,7 +17,8 @@ class TranslatePackageCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:package:translate')
             ->setAliases([
@@ -47,13 +48,13 @@ Examples:
 Please remark that this command can also parse legacy (pre-5.7) packages.
             
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
             
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-translate
 EOT
-            )
-            ;
+        )
+        ;
     }
     
     /**
@@ -217,6 +218,8 @@ EOT
             $po->toMoFile($moFile);
             $output->writeln('<info>done.</info>');
         }
+
+        return static::SUCCESS;
     }
     
     private function guessPackageDetails($packageDirectory)
@@ -250,8 +253,8 @@ EOT
                             
                             return $keep;
                         }
-                        )
-                    );
+                    )
+                );
                 // Look for package version
                 for ($i = 0; $i < count($tokens) - 2; ++$i) {
                     if (

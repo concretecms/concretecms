@@ -23,18 +23,25 @@ use Throwable;
 abstract class Command extends SymfonyCommand
 {
     /**
-     * The return code we should return when running the command is successful.
+     * @deprecated Use SUCCESS
      *
      * @var int
      */
-    public const RETURN_CODE_ON_SUCCESS = 0;
+    public const RETURN_CODE_ON_SUCCESS = self::SUCCESS;
 
     /**
-     * The return code we should return when an exception is thrown while running the command.
+     * @deprecated Use FAILURE
      *
      * @var int
      */
-    public const RETURN_CODE_ON_FAILURE = 1;
+    public const RETURN_CODE_ON_FAILURE = self::FAILURE;
+
+    /**
+     * Concrete requires symfony/console ^5.2, and the INVALID constant has been introduced in symfony/console 5.3.0
+     *
+     * @var int
+     */
+    public const INVALID = 2;
 
     /**
      * The name of the CLI option that allows running CLI commands as root without confirmation.
@@ -547,14 +554,27 @@ abstract class Command extends SymfonyCommand
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      *
-     * @return mixed
+     * @return int
+     *
+     * @see \Symfony\Component\Console\Command\Command::execute()
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (!method_exists($this, 'handle')) {
             throw new LogicException('You must define the public handle() method in the command implementation.');
         }
-
-        return $this->getApplication()->getConcrete()->call([$this, 'handle']);
+        $result = $this->getApplication()->getConcrete()->call([$this, 'handle']);
+        switch (gettype($result)) {
+            case 'integer':
+                return $result;
+            case 'boolean':
+                return $result ? static::SUCCESS : static::FAILURE;
+            case 'double':
+                return (int) $result;
+            case 'string':
+                return is_numeric($result) ? (int) $result : static::SUCCESS;
+            default:
+                return static::SUCCESS;
+        }
     }
 }

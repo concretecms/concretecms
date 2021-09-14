@@ -37,6 +37,7 @@ class CommandRegistry implements ApplicationAwareInterface
     protected $commands = [
         Command\InfoCommand::class,
         Command\InstallCommand::class,
+        Command\IsInstalledCommand::class,
         Command\InstallLanguageCommand::class,
         Command\TranslatePackageCommand::class,
         Command\GenerateIDESymbolsCommand::class,
