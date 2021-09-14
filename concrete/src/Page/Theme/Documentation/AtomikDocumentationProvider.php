@@ -53,7 +53,12 @@ class AtomikDocumentationProvider implements DocumentationProviderInterface
         $importer->deleteFilesByName(
             [
                 'atomik-documentation-image-wide-01.jpg',
-                'atomik-documentation-image-tall-01.jpg'
+                'atomik-documentation-image-tall-01.jpg',
+                'atomik-documentation-video.mp4',
+                'atomik-documentation-image-logo-01.png',
+                'atomik-documentation-image-logo-02.png',
+                'atomik-documentation-image-logo-03.png',
+                'atomik-documentation-image-logo-04.png',
             ]
         );
 
