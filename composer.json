@@ -25,7 +25,7 @@
     "process-timeout": 0,
     "vendor-dir": "./concrete/vendor",
     "platform": {
-      "php": "7.4"
+      "php": "7.3"
     }
   },
   "replace": {
