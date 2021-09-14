@@ -52,8 +52,8 @@ div.ccm-page {
         z-index: 5; // to put it over any other elements
         transition: all 0.2s;
 
-        &.fixed-top {
-          position: fixed; // need to declare this because otherwise our customizations override this
+        &.sticky-top {
+          position: sticky; // need to declare this because otherwise our customizations override this
         }
 
         .navbar-brand {

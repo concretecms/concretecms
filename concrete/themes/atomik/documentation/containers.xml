@@ -49,6 +49,7 @@
                                 <buttonColor><![CDATA[accent]]></buttonColor>
                                 <buttonStyle><![CDATA[outline]]></buttonStyle>
                                 <buttonSize><![CDATA[lg]]></buttonSize>
+                                <titleFormat><![CDATA[h4]]></titleFormat>
                             </record>
                         </data>
                     </block>

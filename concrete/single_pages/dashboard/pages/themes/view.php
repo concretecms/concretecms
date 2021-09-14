@@ -47,9 +47,9 @@
                                             <li class="dropdown-divider"></li>
                                             <li class="dropdown-header"><?=t('Documentation')?></li>
                                             <?php /* No, this is not a typo. Theme documentation is used for documentation purposes AND for previewing when customizing */ ?>
-                                            <li><a href="<?=$view->action('preview', $t->getThemeID())?>" class="dropdown-item"><?=t('View')?></a></li>
                                             <?php if ($t->hasThemeDocumentation()) { ?>
-                                                <li><a href="" class="dropdown-item" data-dialog="uninstall-documentation-<?=$t->getThemeID()?>"><?=t('Uninstall')?></a></li>
+                                                <li><a href="<?=$view->action('preview', $t->getThemeID())?>" class="dropdown-item"><?=t('View')?></a></li>
+                                                <li><a href="javascript:void(0)" class="dropdown-item" data-dialog="uninstall-documentation-<?=$t->getThemeID()?>"><?=t('Uninstall')?></a></li>
                                             <?php } else { ?>
                                                 <li><a href="javascript:void(0)" class="dropdown-item" data-dialog="install-documentation-<?=$t->getThemeID()?>"><?=t('Install')?></a></li>
                                             <?php } ?>
