@@ -3,7 +3,7 @@ namespace Concrete\Core\Utility\Service;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Application;
-use Hautelook\Phpass\PasswordHash;
+use Concrete\Core\User\PasswordHash;
 
 /**
  * \@package Helpers

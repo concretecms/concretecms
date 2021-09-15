@@ -71,8 +71,6 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/egulias/email-validator/documentation',
 				'/concrete/vendor/egulias/email-validator/tests',
 				'/concrete/vendor/gettext/languages/bin',
-				'/concrete/vendor/hautelook/phpass/lib',
-				'/concrete/vendor/hautelook/phpass/Tests',
 				'/concrete/vendor/league/flysystem/build',
 				'/concrete/vendor/lusitanian/oauth/examples',
 				'/concrete/vendor/lusitanian/oauth/tests',
