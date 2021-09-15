@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * Namespace: <none>
  */
 
-$router->all('/ccm/system/captcha/picture', '\Concrete\Core\Captcha\CaptchaWithPictureInterface::displayCaptchaPicture');
+$router->all('/ccm/system/captcha/picture', '\Concrete\Core\Captcha\SecurimageController::displayCaptchaPicture');
 $router->all('/ccm/system/dialogs/language/update/details', '\Concrete\Controller\Dialog\Language\Update\Details::view');
 $router->all('/dashboard/blocks/stacks/list', '\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page');
 $router->all('/ccm/system/notification/alert/archive/', '\Concrete\Controller\Backend\Notification\Alert::archive');
