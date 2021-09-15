@@ -39,7 +39,7 @@ class DatabaseServiceProviderTest extends TestCase
     {
         return [
             ['Doctrine\ORM\Configuration', 'Doctrine\ORM\Configuration', 'This is not an instance of Doctrine\ORM\Configuration.'],
-            ['Doctrine\Common\Cache\ArrayCache', 'Symfony\Component\Cache\DoctrineProvider', 'This is not an instance of Doctrine\Common\Cache\Psr6\DoctrineProvider'],
+            ['Doctrine\Common\Cache\ArrayCache', 'Symfony\Component\Cache\DoctrineProvider', 'This is not an instance of Symfony\Component\Cache\DoctrineProvider'],
             ['Doctrine\Common\Annotations\AnnotationReader', 'Doctrine\Common\Annotations\AnnotationReader', 'This is not an instance of Doctrine\Common\Annotations\AnnotationReader'],
             ['Doctrine\Common\Annotations\SimpleAnnotationReader', 'Doctrine\Common\Annotations\SimpleAnnotationReader', 'This is not an instance of Doctrine\Common\Annotations\SimpleAnnotationReader'],
             ['Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain', 'Doctrine\Persistence\Mapping\Driver\MappingDriverChain', 'This is not an instance of Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain'],

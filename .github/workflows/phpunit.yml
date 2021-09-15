@@ -34,6 +34,9 @@ jobs:
           - "locked"
         operating-system:
           - "ubuntu-latest"
+        composer:
+          - "composer:v1, prestissimo"
+          - "composer:v2"
 
         include:
           - php-version: 8.0
@@ -57,7 +60,7 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
           coverage: pcov
           ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
-          tools: composer:v2, prestissimo
+          tools: ${{matrix.composer}}
 
       - name: "Prepare mysql user"
         run: |
@@ -86,7 +89,6 @@ jobs:
         if: ${{ matrix.dependencies == 'locked' }}
         run: |
           composer install --no-interaction --no-progress --no-suggest
-          composer update --no-interaction --no-progress --no-suggest
 
 
       - name: "Tests"
