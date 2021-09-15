@@ -3,6 +3,8 @@
 namespace Concrete\Core\User;
 
 /**
+ * @deprecated
+ *
  * IMPORTANT: This is a clone of hautelook/phpass –a portable password hashing framework. This used to be delivered
  * via composer, but the package disappeared from there. In version 9 and above this file is not needed, but given
  * 8.5.x's latest in life nature, it's easier for this to be copied as is into the core. Original file continues below:
@@ -32,7 +34,7 @@ namespace Concrete\Core\User;
  *
  * @author Solar Designer <solar@openwall.com>
  */
-class PasswordHash
+final class PasswordHash
 {
     private $itoa64;
     private $iteration_count_log2;
