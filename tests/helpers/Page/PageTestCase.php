@@ -55,6 +55,8 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Summary\Category',
         'Concrete\Core\Entity\Page\Template',
         'Concrete\Core\Entity\Page\Summary\PageTemplate',
+        'Concrete\Core\Entity\User\User',
+        'Concrete\Core\Entity\User\UserSignup',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Value\Value',

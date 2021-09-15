@@ -23,9 +23,15 @@ class BasicPageDriver implements DriverInterface
      */
     protected $installationService;
 
-    public function __construct(InstallationService $installationService)
+    /**
+     * @var UserInfoRepository
+     */
+    protected $userInfoRepository;
+
+    public function __construct(InstallationService $installationService, UserInfoRepository $userInfoRepository)
     {
         $this->installationService = $installationService;
+        $this->userInfoRepository = $userInfoRepository;
     }
 
     use GetThumbnailTrait;
@@ -73,8 +79,7 @@ class BasicPageDriver implements DriverInterface
         if ($thumbnail) {
             $collection->addField($thumbnail);
         }
-        $repository = app(UserInfoRepository::class);
-        $author = $repository->getByID($mixed->getCollectionUserID());
+        $author = $this->userInfoRepository->getByID($mixed->getCollectionUserID());
         if ($author) {
             $collection->addField(new DataField(FieldInterface::FIELD_AUTHOR, new AuthorDataFieldData($author)));
         }
