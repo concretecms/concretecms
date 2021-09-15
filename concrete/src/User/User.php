@@ -15,7 +15,6 @@ use Concrete\Core\User\Group\Group;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\Group\GroupList;
-use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\User\Point\Action\Action as UserPointAction;
 use Concrete\Core\Encryption\PasswordHasher;
@@ -965,7 +964,7 @@ class User extends ConcreteObject
     /**
      * @deprecated Use $app->make(\Concrete\Core\Encryption\PasswordHasher::class)
      *
-     * @return \Hautelook\Phpass\PasswordHash
+     * @return \Concrete\Core\User\PasswordHash
      */
     public function getUserPasswordHasher()
     {
