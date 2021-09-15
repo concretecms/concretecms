@@ -44,7 +44,12 @@
     },
     "allow-subpatches": [
       "concrete5/dependency-patches"
-    ]
+    ],
+    "patches": {
+      "lcobucci/jwt:3.4.5": {
+        "Adds php 8 compability to jwt version 3.4.5" : "patches/jwt.patch"
+      }
+    }
   },
   "autoload-dev": {
     "psr-4": {

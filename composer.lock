@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2fe7b47cbfd28947cfbcdd0ca27146ef",
+    "content-hash": "3cecd86919e39f005107da0c06da8c5e",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2319,7 +2319,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v8.60.0",
+            "version": "v8.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -2373,7 +2373,7 @@
         },
         {
             "name": "illuminate/config",
-            "version": "v8.60.0",
+            "version": "v8.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/config.git",
@@ -2421,16 +2421,16 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v8.60.0",
+            "version": "v8.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "ecb645e1838cdee62eebd07ded490b1de5505f35"
+                "reference": "862b64ea4ab56e307a1676104a1b93295d347ad0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/ecb645e1838cdee62eebd07ded490b1de5505f35",
-                "reference": "ecb645e1838cdee62eebd07ded490b1de5505f35",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/862b64ea4ab56e307a1676104a1b93295d347ad0",
+                "reference": "862b64ea4ab56e307a1676104a1b93295d347ad0",
                 "shasum": ""
             },
             "require": {
@@ -2468,11 +2468,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-08-03T13:42:24+00:00"
+            "time": "2021-09-09T13:55:23+00:00"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v8.60.0",
+            "version": "v8.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -2520,7 +2520,7 @@
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v8.60.0",
+            "version": "v8.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
@@ -2582,7 +2582,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v8.60.0",
+            "version": "v8.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -2628,16 +2628,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v8.60.0",
+            "version": "v8.61.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "c0fbc05c4362de423a7a4da137098e9d1affaf54"
+                "reference": "b0a21c41163381dd9a5abbd68fe85ed7b4247d30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/c0fbc05c4362de423a7a4da137098e9d1affaf54",
-                "reference": "c0fbc05c4362de423a7a4da137098e9d1affaf54",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/b0a21c41163381dd9a5abbd68fe85ed7b4247d30",
+                "reference": "b0a21c41163381dd9a5abbd68fe85ed7b4247d30",
                 "shasum": ""
             },
             "require": {
@@ -2692,7 +2692,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-09-08T12:48:16+00:00"
+            "time": "2021-09-13T18:43:43+00:00"
         },
         {
             "name": "imagine/imagine",
@@ -3129,16 +3129,16 @@
         },
         {
             "name": "lcobucci/jwt",
-            "version": "3.4.x-dev",
+            "version": "3.4.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/deek87/jwt.git",
-                "reference": "a61e8f46e78d511b5c0678189e3a86de226b7c7c"
+                "url": "https://github.com/lcobucci/jwt.git",
+                "reference": "511629a54465e89a31d3d7e4cf0935feab8b14c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deek87/jwt/zipball/a61e8f46e78d511b5c0678189e3a86de226b7c7c",
-                "reference": "a61e8f46e78d511b5c0678189e3a86de226b7c7c",
+                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/511629a54465e89a31d3d7e4cf0935feab8b14c1",
+                "reference": "511629a54465e89a31d3d7e4cf0935feab8b14c1",
                 "shasum": ""
             },
             "require": {
@@ -3172,14 +3172,7 @@
                     "compat/lcobucci-clock-polyfill.php"
                 ]
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Lcobucci\\JWT\\": [
-                        "test/unit",
-                        "test/functional"
-                    ]
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -3193,22 +3186,23 @@
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
             "keywords": [
                 "JWS",
-                "JWT"
+                "jwt"
             ],
             "support": {
-                "source": "https://github.com/deek87/jwt/tree/3.4.x"
+                "issues": "https://github.com/lcobucci/jwt/issues",
+                "source": "https://github.com/lcobucci/jwt/tree/3.4.5"
             },
             "funding": [
                 {
-                    "type": "github",
-                    "url": "https://github.com/lcobucci"
+                    "url": "https://github.com/lcobucci",
+                    "type": "github"
                 },
                 {
-                    "type": "patreon",
-                    "url": "https://www.patreon.com/lcobucci"
+                    "url": "https://www.patreon.com/lcobucci",
+                    "type": "patreon"
                 }
             ],
-            "time": "2021-09-14T11:01:22+00:00"
+            "time": "2021-02-16T09:40:01+00:00"
         },
         {
             "name": "league/csv",
@@ -12825,7 +12819,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "lcobucci/jwt": 20,
         "theorchard/monolog-cascade": 20
     },
     "prefer-stable": true,

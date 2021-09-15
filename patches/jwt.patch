@@ -1,0 +1,57 @@
+From a61e8f46e78d511b5c0678189e3a86de226b7c7c Mon Sep 17 00:00:00 2001
+From: Derek Cameron <derek@concrete5.co.jp>
+Date: Tue, 14 Sep 2021 20:01:22 +0900
+Subject: [PATCH] PHP8 Compatibility changes from Auth0
+
+---
+ src/Signer/OpenSSL.php | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/src/Signer/OpenSSL.php b/src/Signer/OpenSSL.php
+index 1c7706cc..f598c530 100644
+--- a/src/Signer/OpenSSL.php
++++ b/src/Signer/OpenSSL.php
+@@ -13,6 +13,13 @@
+
+ abstract class OpenSSL extends BaseSigner
+ {
++    private $phpVersion8 = false;
++
++    public function __construct()
++    {
++        $this->phpVersion8 = (PHP_MAJOR_VERSION >= 8);
++    }
++
+     public function createHash($payload, Key $key)
+     {
+         $privateKey = $this->getPrivateKey($key->getContent(), $key->getPassphrase());
+@@ -26,7 +33,9 @@ public function createHash($payload, Key $key)
+
+             return $signature;
+         } finally {
+-            openssl_free_key($privateKey);
++            if (!$this->phpVersion8) {
++                openssl_free_key($privateKey);
++            }
+         }
+     }
+
+@@ -54,7 +63,9 @@ public function doVerify($expected, $payload, Key $key)
+     {
+         $publicKey = $this->getPublicKey($key->getContent());
+         $result    = openssl_verify($payload, $expected, $publicKey, $this->getAlgorithm());
+-        openssl_free_key($publicKey);
++        if (!$this->phpVersion8) {
++            openssl_free_key($publicKey);
++        }
+
+         return $result === 1;
+     }
+@@ -81,7 +92,7 @@ private function getPublicKey($pem)
+      */
+     private function validateKey($key)
+     {
+-        if (! is_resource($key)) {
++        if (($this->phpVersion8 && $key === false) || (!$this->phpVersion8 && !is_resource($key))) {
+             throw InvalidKeyProvided::cannotBeParsed(openssl_error_string());
+         }

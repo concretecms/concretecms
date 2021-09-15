@@ -27,7 +27,7 @@ jobs:
         php-version:
           # disabling for now
           # - "7.2"
-          # - "7.3"
+          - "7.3"
           - "7.4"
           - "8.0"
         dependencies:
@@ -36,7 +36,7 @@ jobs:
           - "ubuntu-latest"
 
         include:
-          - php-version: 7.4
+          - php-version: 8.0
             operating-system: "ubuntu-latest"
             dependencies: "highest"
 # Lowest doesn't work at the moment. Revisit once we have dependencies updated.
