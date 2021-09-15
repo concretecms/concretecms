@@ -6,9 +6,8 @@ use Concrete\Core\Config\Repository\Repository;
 
 class PasswordHasher
 {
-    /**
-     * @var int|null
-     */
+
+    /** @var int|null */
     private $cost = null;
 
     private const ALGORITHM = PASSWORD_BCRYPT;
