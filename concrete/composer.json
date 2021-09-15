@@ -64,7 +64,6 @@
     "mobiledetect/mobiledetectlib": "2.*",
     "monolog/monolog": "^1.5.0",
     "sunra/php-simple-html-dom-parser": "^1.5.2",
-    "hautelook/phpass": "0.3.*",
     "voku/urlify": "~1.0.1",
     "dapphp/securimage": "3.*",
     "anahkiasen/html-object": "~1.4",
