@@ -35,17 +35,17 @@ jobs:
         operating-system:
           - "ubuntu-latest"
         composer:
-          - "composer:v1, prestissimo"
           - "composer:v2"
 
         include:
           - php-version: 8.0
             operating-system: "ubuntu-latest"
             dependencies: "highest"
-# Lowest doesn't work at the moment. Revisit once we have dependencies updated.
+          # Lowest doesn't work at the moment. With composer version 1 only.
           - php-version: 7.3
             operating-system: "ubuntu-latest"
             dependencies: "lowest"
+            composer: "composer:v1, prestissimo"
 
     steps:
       - name: "Checkout"
@@ -68,7 +68,7 @@ jobs:
           mysql -h127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
 
       - name: Enable code coverage
-        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked' && matrix.composer = 'composer:v2'
+        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked'
         run: printf 'CODE_COVERAGE=y\n' >> "$GITHUB_ENV"
 
       - name: "Install lowest dependencies"
