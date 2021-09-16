@@ -20,7 +20,8 @@
  */
 div#ccm-tooltip-holder {
   &,
-  .tooltip {
+  .tooltip,
+  .popover {
     z-index: $index-level-tooltip-holder;
   }
 }

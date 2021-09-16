@@ -17,7 +17,7 @@ class PageNotification {
     <div class="ccm-notifications-box">
         <div class="ccm-notifications-box-header">
             <div data-bs-toggle="collapse" data-bs-target=".ccm-notifications-box-body" aria-expanded="true" role="button">${ccmi18n.notifications}</div>
-            <a href="#" class="ccm-notifications-box-close"><svg><use xlink:href="#icon-dialog-close"></use></svg></a></div>
+            <a href="#" class="btn-close ccm-notifications-box-close"></a></div>
         <div class="ccm-notifications-box-body collapse show"></div>
     </div>
 `

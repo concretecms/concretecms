@@ -25,20 +25,6 @@ div.ccm-panel {
     right: 17px;
     text-decoration: none;
     top: 7px;
-
-    > a,
-    svg {
-      fill: $gray-500;
-      height: 24px;
-      transition: fill 0.1s ease-in-out;
-      width: 24px;
-    }
-
-    &:hover {
-      svg {
-        fill: $blue;
-      }
-    }
   }
 }
 

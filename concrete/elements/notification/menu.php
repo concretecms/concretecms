@@ -18,8 +18,8 @@ if ($listView->getMenu() instanceof \Concrete\Core\Application\UserInterface\Con
 
 <?php } else { ?>
 
-    <button type="button" data-notification-action="archive" class="btn btn-secondary btn-waiting-for-me-archive">
-        <svg><use xlink:href="#icon-dialog-close" /></svg>
+    <button type="button" data-notification-action="archive" class="btn btn-secondary btn-close">
+
     </button>
 
 <?php } ?>

@@ -1293,11 +1293,6 @@
                             fileUploader.initIncomingDirectoryTab()
                             fileUploader.initRemoteFilesTab()
 
-                            // apply close button
-                            $dialogEl
-                                .parent()
-                                .find('.ui-dialog-titlebar-close')
-                                .html('<svg><use xlink:href="#icon-dialog-close" /></svg>')
                         }
                     })
                 },

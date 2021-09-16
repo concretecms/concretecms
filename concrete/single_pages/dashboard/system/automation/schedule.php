@@ -57,9 +57,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                         <form method="post" @submit.prevent="deleteScheduledTaskSubmit(scheduledTask.id)">
                             <div class="modal-header">
                                 <h5 class="modal-title">Delete Process</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <svg><use xlink:href="#icon-dialog-close" /></svg>
-                                </button>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
                                 <?=t('Delete this scheduled task?')?>

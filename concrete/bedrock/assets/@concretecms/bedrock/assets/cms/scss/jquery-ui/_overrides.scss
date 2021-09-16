@@ -37,7 +37,6 @@ html.ccm-toolbar-visible {
       background-color: $modal-header-bg;
       color: $modal-title-color;
       display: flex;
-      justify-content: space-between;
       padding: $modal-header-padding-y $modal-header-padding-x;
 
       span {
@@ -61,35 +60,30 @@ html.ccm-toolbar-visible {
       }
 
 
-      button.ui-dialog-titlebar-close {
-        svg {
-          height: 24px;
-          width: 24px;
-        }
-      }
-
-      button.ui-dialog-titlebar-help {
+      button.btn-help {
+        border: 0;
+        background: transparent;
         svg {
           height: 20px;
           width: 20px;
+          fill: white;
+          opacity: .5;
+        }
+        &:hover {
+          svg {
+            opacity: .75;
+          }
         }
       }
 
 
       button {
-        background: transparent;
-        border: 0;
         color: white;
-        float: right;
-        font-size: 1.5rem;
+        font-size: 1rem;
         height: auto;
         line-height: 1;
-        margin: (-$modal-header-padding-y) (-$modal-header-padding-x) (-$modal-header-padding-y) auto;
-
-
-        opacity: 1;
-        padding: $modal-header-padding;
-        position: static;
+        margin-right: 0.5rem;
+        padding: 0.625rem 0.9rem;
         transition: color 0.1s ease-in-out;
         width: auto;
 
@@ -105,12 +99,6 @@ html.ccm-toolbar-visible {
 
           }
         }
-
-        svg {
-          fill: white;
-          transition: fill 0.1s ease-in-out;
-        }
-
       }
 
     }

@@ -60,15 +60,13 @@
                         <form method="post" @submit.prevent="deleteProcessSubmit(process.id)">
                             <div class="modal-header">
                                 <h5 class="modal-title">Delete Process</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <svg><use xlink:href="#icon-dialog-close" /></svg>
-                                </button>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 Delete this process log entry? The record of the process along with any logs will be removed.
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </div>
                         </form>

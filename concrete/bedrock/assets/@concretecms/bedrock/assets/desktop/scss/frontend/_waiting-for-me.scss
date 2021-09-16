@@ -93,7 +93,7 @@ div.ccm-block-desktop-waiting-for-me {
         border-radius: 50%;
         box-shadow: none;
         display: block;
-        font-size: $font-size-lg;
+        font-size: 1rem;
         font-weight: bold;
         height: 40px;
         line-height: 50px;
@@ -103,6 +103,10 @@ div.ccm-block-desktop-waiting-for-me {
         text-decoration: none;
         transition: none;
         width: 40px !important;
+
+        &.btn-close {
+          border: 1px solid #c6c6c6; // This needs to be explicit because .btn-close has strong styling otherwise
+        }
 
         i {
           color: #ccc;
@@ -117,17 +121,6 @@ div.ccm-block-desktop-waiting-for-me {
 
         &.dropdown-toggle::after {
           display: none;
-        }
-      }
-
-      .btn-waiting-for-me-archive {
-        svg {
-          fill: #c6c6c6;
-          height: 20px;
-          left: 7px;
-          position: absolute;
-          top: 7px;
-          width: 20px;
         }
       }
     }

@@ -10,34 +10,6 @@ div.ccm-ui {
       letter-spacing: $modal-title-letter-spacing;
     }
 
-    button {
-      color: white;
-
-      opacity: 1;
-      transition: color 0.1s ease-in-out;
-
-      &:not(:disabled):not(.disabled) {
-        &:hover,
-        &:focus {
-          color: $gray-600;
-          opacity: 1;
-
-          svg {
-            fill: $gray-600;
-          }
-
-        }
-      }
-
-      svg {
-        fill: white;
-        height: 24px;
-        transition: fill 0.1s ease-in-out;
-        width: 24px;
-      }
-
-    }
-
 
   }
 }

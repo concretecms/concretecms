@@ -37,7 +37,7 @@
         }
 
         var $close = $dialog.parent().find('.ui-dialog-titlebar-close')
-        $close.html('<svg><use xlink:href="#icon-dialog-close" /></svg>')
+        $close.addClass('btn-close btn-close-white')
         $.fn.dialog.activateDialogContents($dialog)
 
         // on some brother (eg: Chrome) the resizable get hidden because the button pane
@@ -341,7 +341,7 @@
             } else {
                 helpText = 'Help'
             }
-            var button = $('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><svg><use xlink:href="#icon-dialog-help" /></svg></button>')
+            var button = $('<button class="btn-help"><svg><use xlink:href="#icon-dialog-help" /></svg></button>')
             var container = $('#ccm-tooltip-holder')
             button.insertBefore($dialog.parent().find('.ui-dialog-titlebar-close'))
 
