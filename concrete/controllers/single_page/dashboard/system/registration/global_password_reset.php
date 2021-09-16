@@ -23,7 +23,6 @@ class GlobalPasswordReset extends DashboardPageController
         $users->ignorePermissions();
         foreach ($users->getResults() as $userInfo) {
             if ($userInfo instanceof UserInfo) {
-                $userInfo->resetUserPassword();
                 $userInfo->markAsPasswordReset();
             }
         }
