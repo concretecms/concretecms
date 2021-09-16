@@ -1,0 +1,21 @@
+/* stylelint-disable selector-class-pattern */
+.theme-atomik {
+  .ccm-page-profile {
+
+    .ccm-profile-header {
+      background-color: rgba($primary, 0.1);
+    }
+
+    .ccm-profile-username {
+      h1 {
+        margin-bottom: 0;
+        @extend .display-1;
+        font-family: $display-font-family;
+      }
+    }
+
+    .ccm-profile-statistics {
+      color: $dark;
+    }
+  }
+}

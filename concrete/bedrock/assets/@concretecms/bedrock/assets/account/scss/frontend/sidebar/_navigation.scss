@@ -1,0 +1,11 @@
+/* stylelint-disable selector-class-pattern */
+.ccm-page-account {
+  .ccm-page-account-navigation {
+    background-color: $light;
+    padding: 1rem;
+
+    a.active {
+      font-weight: bold;
+    }
+  }
+}

@@ -36,11 +36,6 @@ class SlotTemplate implements \JsonSerializable, ProvidesTagsInterface
     /**
      * @ORM\Column(type="string")
      */
-    protected $formFactor = '';
-
-    /**
-     * @ORM\Column(type="string")
-     */
     protected $name = '';
 
     /**
@@ -103,21 +98,6 @@ class SlotTemplate implements \JsonSerializable, ProvidesTagsInterface
     {
         return tc('BoardSlotTemplateName', $this->getName());
     }
-    
-    public function getFormFactor(): string
-    {
-        return $this->formFactor;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setFormFactor(string $formFactor): self
-    {
-        $this->formFactor = $formFactor;
-
-        return $this;
-    }
 
     /**
      * @return $this
@@ -167,7 +147,6 @@ class SlotTemplate implements \JsonSerializable, ProvidesTagsInterface
     {
         $template = $node->addChild('template');
         $template->addAttribute('handle', $this->getHandle());
-        $template->addAttribute('form-factor', $this->getFormFactor());
         $template->addAttribute('name', h($this->getName()));
         $template->addAttribute('icon', h($this->getIcon()));
         $template->addAttribute('package', $this->getPackageHandle());
@@ -181,7 +160,6 @@ class SlotTemplate implements \JsonSerializable, ProvidesTagsInterface
             'handle' => $this->getHandle(),
             'name' => $this->getName(),
             'contentSlots' => $this->getDriver()->getTotalContentSlots(),
-            'formFactor' => $this->getFormFactor(),
         ];
     }
 

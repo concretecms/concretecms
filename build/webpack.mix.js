@@ -57,11 +57,46 @@ mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
 mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
 
 // Copy Bedrock assets so that themes can include them for style customization, etc...
-mix.copy('node_modules/@concretecms/bedrock/assets/', '../concrete/css/bedrock/@concretecms/bedrock/assets');
-mix.copy('node_modules/bootstrap/scss', '../concrete/css/bedrock/bootstrap/scss');
-mix.copy('node_modules/@fortawesome/fontawesome-free/', '../concrete/css/bedrock/@fortawesome/fontawesome-free');
-mix.copy('node_modules/fullcalendar/dist', '../concrete/css/bedrock/fullcalendar/dist');
+if (mix.inProduction()) {
+    // Note: this should only copy SCSS assets if possible, because the only reason we're copying them is because
+    // we need to include them in our theme customizer.
 
+    // Bootstrap SCSS
+    mix.copy('node_modules/bootstrap/scss', '../concrete/bedrock/assets/bootstrap/scss');
+
+    // Bedrock
+    mix.copy('node_modules/@concretecms/bedrock/assets/account/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/account/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/basics/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/basics/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/bedrock/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/bedrock/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/boards/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/boards/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/calendar/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/calendar/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/ckeditor/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/ckeditor/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/cms/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/cms/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/conversations/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/conversations/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/desktop/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/desktop/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/documents/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/documents/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/express/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/express/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/faq/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/faq/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/imagery/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/imagery/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/maps/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/maps/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/multilingual/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/multilingual/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/navigation/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/navigation/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/polls/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/polls/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/profile/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/profile/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/search/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/search/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/social/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/social/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/taxonomy/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/taxonomy/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/testimonials/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/testimonials/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/video/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/video/scss');
+
+    // Font Awesome
+    mix.copy('node_modules/@fortawesome/fontawesome-free/less', '../concrete/bedrock/assets/@fortawesome/fontawesome-free/less');
+    mix.copy('node_modules/@fortawesome/fontawesome-free/metadata', '../concrete/bedrock/assets/@fortawesome/fontawesome-free/metadata');
+    mix.copy('node_modules/@fortawesome/fontawesome-free/scss', '../concrete/bedrock/assets/@fortawesome/fontawesome-free/scss');
+
+    // Fullcalendar
+    mix.copy('node_modules/fullcalendar/dist', '../concrete/bedrock/assets/fullcalendar/dist');
+}
 
 /**
  * Build shared assets
@@ -94,16 +129,35 @@ mix
     });
 
 
-
 /**
  * Build Block Components
  */
 mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js');
+mix.js('assets/blocks/accordion/accordion.js', '../concrete/blocks/accordion/auto.js');
 
 
 /**
  * Build accessory Features
  */
+mix
+    .sass('node_modules/@concretecms/bedrock/assets/account/scss/frontend.scss', 'css/features/account/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('node_modules/@concretecms/bedrock/assets/account/js/frontend.js', 'js/features/account/frontend.js');
+
+mix
+    .sass('node_modules/@concretecms/bedrock/assets/profile/scss/frontend.scss', 'css/features/profile/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+
 mix
     .sass('node_modules/@concretecms/bedrock/assets/boards/scss/frontend.scss', 'css/features/boards/frontend.css', {
         sassOptions: {
@@ -279,7 +333,7 @@ mix
 
 // Elemental Theme
 mix
-    .sass('../concrete/themes/elemental/skins/default/scss/main.scss', 'themes/elemental/skins/default/',  {
+    .sass('../concrete/themes/elemental/skins/default/scss/main.scss', 'themes/elemental/skins/default/', {
         sassOptions: {
             includePaths: [
                 path.resolve(__dirname, './node_modules/')
@@ -288,16 +342,26 @@ mix
     })
     .js('assets/themes/elemental/js/main.js', 'themes/elemental');
 mix
-    .sass('../concrete/themes/elemental/skins/night-road/scss/main.scss', 'themes/elemental/skins/night-road/',  {
+    .sass('../concrete/themes/elemental/skins/night-road/scss/main.scss', 'themes/elemental/skins/night-road/', {
         sassOptions: {
             includePaths: [
                 path.resolve(__dirname, './node_modules/')
             ]
         }
     })
+// Atomik Theme
+mix
+    .sass('../concrete/themes/atomik/skins/default/scss/main.scss', 'themes/atomik/skins/default/', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('assets/themes/atomik/js/main.js', 'themes/atomik');
 // Dashboard Theme
 mix
-    .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard',  {
+    .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard', {
         sassOptions: {
             includePaths: [
                 path.resolve(__dirname, './node_modules/')

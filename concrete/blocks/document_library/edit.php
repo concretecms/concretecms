@@ -105,17 +105,6 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
             </div>
 
             <div class="form-group">
-                <?= $form->label('showFolders', t('Show Folders')) ?>
-
-                <div class="form-check">
-                    <label>
-                        <?= $form->checkbox('showFolders', '1', !$hideFolders) ?>
-                        <?= t('Show Folders') ?>
-                    </label>
-                </div>
-            </div>
-
-            <div class="form-group">
                 <?php echo $form->label('setMode', t('Files must be')) ?>
 
                 <div class="form-check">
@@ -137,6 +126,17 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
 
             <br/>
         <?php } ?>
+
+        <div class="form-group">
+            <?= $form->label('showFolders', t('Show Folders')) ?>
+
+            <div class="form-check">
+                <label>
+                    <?= $form->checkbox('showFolders', '1', !$hideFolders) ?>
+                    <?= t('Show Folders') ?>
+                </label>
+            </div>
+        </div>
 
         <div class="form-group">
             <?php echo $form->label('tags', t('Filter By Tag (optional)')) ?>

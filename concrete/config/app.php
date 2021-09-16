@@ -236,9 +236,6 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportDesignTagsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardSlotTemplatesRoutine',
@@ -269,6 +266,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypesBaseRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageStructureRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeTargetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeDefaultsRoutine',
@@ -282,6 +280,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\PopulateBoardInstancesRoutine',
     ],
 
     /*
@@ -463,6 +462,10 @@ return [
             ['css', 'css/features/account/frontend.css'],
         ],
 
+        'feature/profile/frontend' => [
+            ['css', 'css/features/profile/frontend.css'],
+        ],
+
         'feature/desktop/frontend' => [
             ['javascript', 'js/features/desktop/frontend.js'],
             ['css', 'css/features/desktop/frontend.css'],
@@ -638,6 +641,12 @@ return [
             [
                 ['javascript', 'feature/account/frontend'],
                 ['css', 'feature/account/frontend'],
+            ],
+        ],
+
+        'feature/profile/frontend' => [
+            [
+                ['css', 'feature/profile/frontend'],
             ],
         ],
 

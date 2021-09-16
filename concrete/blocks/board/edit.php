@@ -1,8 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<?php
+$instanceName = $instance->getBoardInstanceName();
+if (!$instanceName) {
+    $instanceName = t('(No Name)');
+}
+
+?>
 <ul class="ccm-inline-toolbar ccm-ui" data-inline-toolbar="board">
     <li><label><a target="_blank" href="<?php echo URL::to('/dashboard/boards/instances/details', $instance->getBoardInstanceID())?>">
-        <?php echo $instance->getBoardInstanceName()?>
+        <?=t('Instance: %s', $instanceName)?>
     </a></li>
     <li class="ccm-inline-toolbar-icon-cell">
         <a href="javascript:void(0);"

@@ -6,16 +6,12 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Board\Command\CreateBoardInstanceCommand;
 use Concrete\Core\Board\Command\RegenerateBoardInstanceCommand;
 use Concrete\Core\Board\Instance\Renderer;
-use Concrete\Core\Board\Template\TemplateLocator;
 use Concrete\Core\Entity\Board\Board;
-use Concrete\Core\Board\Template\TemplateInstance;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Permission\Checker;
-use Cookie;
 use Doctrine\ORM\EntityManager;
-use Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -59,6 +55,41 @@ class Controller extends BlockController
         $this->set('boardSelect', $boardSelect);
         $this->set('boards', $boards);
     }
+
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        $data = $blockNode->addChild('data');
+        if ($this->boardInstanceID) {
+            $instance = $this->app->make(EntityManager::class)->find(Instance::class, $this->boardInstanceID);
+            if ($instance) {
+                $data->addChild('board', $instance->getBoard()->getBoardName());
+            }
+        }
+    }
+
+    public function getImportData($blockNode, $page)
+    {
+        $args = [];
+        $boardName = (string) $blockNode->data->board;
+        if ($boardName) {
+            $board = $this->app->make(EntityManager::class)->getRepository(Board::class)
+                ->findOneByBoardName($boardName);
+            if ($board) {
+                $instances = $board->getInstances();
+                if (empty($instances[0])) {
+                    $command = new CreateBoardInstanceCommand();
+                    $command->setBoard($board);
+                    $command->setSite($this->app->make('site')->getSite());
+                    $instance = $this->app->executeCommand($command);
+                } else {
+                    $instance = $instances[0];
+                }
+                $args['boardInstanceID'] = $instance->getBoardInstanceID();
+            }
+        }
+        return $args;
+    }
+
 
     public function action_get_instances()
     {

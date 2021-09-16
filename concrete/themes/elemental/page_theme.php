@@ -4,6 +4,10 @@ namespace Concrete\Theme\Elemental;
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Page\Theme\BedrockThemeTrait;
+use Concrete\Core\Page\Theme\Documentation\BedrockDocumentationPage;
+use Concrete\Core\Page\Theme\Documentation\DocumentationProvider;
+use Concrete\Core\Page\Theme\Documentation\DocumentationProviderInterface;
+use Concrete\Core\Page\Theme\Documentation\ThemeDocumentationPage;
 use Concrete\Core\Page\Theme\Theme;
 
 class PageTheme extends Theme implements ThemeProviderInterface
@@ -25,6 +29,7 @@ class PageTheme extends Theme implements ThemeProviderInterface
     {
         return [
             Features::BASICS,
+            Features::TYPOGRAPHY,
             Features::CALENDAR,
             Features::CONVERSATIONS,
             Features::FAQ,
@@ -142,4 +147,17 @@ class PageTheme extends Theme implements ThemeProviderInterface
 
         return $presets;
     }
+
+    public function getDocumentationProvider(): ?DocumentationProviderInterface
+    {
+        $pages = [
+            new ThemeDocumentationPage($this, 'Overview', 'overview.xml'),
+            new BedrockDocumentationPage( 'Colors', 'colors.xml'),
+            new BedrockDocumentationPage( 'Typography', 'typography.xml'),
+            new BedrockDocumentationPage( 'Components', 'components.xml'),
+        ];
+
+        return DocumentationProvider::createFromArray($pages);
+    }
+
 }

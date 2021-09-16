@@ -45,22 +45,11 @@ class AvailableTemplateCollectionFactory
      */
     public function getAvailableTemplates(Instance $instance, int $slot)
     {
-
-        $availableTemplates = $this->getBoardSlotTemplates($instance->getBoard());
-
-        $availableTemplatesByFormFactor = [];
-        foreach($availableTemplates as $availableTemplate) {
-            $availableTemplatesByFormFactor[$availableTemplate->getFormFactor()][] = $availableTemplate;
+        $templates = $this->getBoardSlotTemplates($instance->getBoard());
+        $filteredTemplates = [];
+        foreach ($templates as $template) {
+            $filteredTemplates[] = $template;
         }
-
-        $driver = $instance->getBoard()->getTemplate()->getDriver();
-        $formFactor = $driver->getFormFactor();
-        if (is_array($formFactor)) {
-            $formFactor = $formFactor[$slot];
-        } else {
-            $formFactor = $driver->getFormFactor();
-        }
-        $filteredTemplates = $availableTemplatesByFormFactor[$formFactor];
         return $filteredTemplates;
     }
 

@@ -24,49 +24,35 @@ if (!$images && $page && $page->isEditMode()) { ?>
 }
 ?>
 
-<div class="ccm-gallery-container ccm-gallery-<?php echo h($bID) ?>">
-    <?php
-    /** @var File $image */
-    foreach ($images as $image) {
-        $tag = (new Image($image['file']))->getTag();
-        $tag->addClass('gallery-w-100 gallery-h-auto');
-        $size = $image['displayChoices']['size']['value'] ?? null;
-        $downloadLink = null;
-        $fileVersion = $image['file']->getApprovedVersion();
-        if ($includeDownloadLink && $fileVersion instanceof Version) {
-            $downloadLink = $fileVersion->getForceDownloadURL();
+<div id="ccm-block-gallery-<?=$bID?>">
+    <div class="ccm-block-gallery">
+        <div class="row gx-0">
+        <?php
+        /** @var File $image */
+        foreach ($images as $image) {
+            $tag = (new Image($image['file']))->getTag();
+            $size = $image['displayChoices']['size']['value'] ?? null;
+            $caption = $image['displayChoices']['caption']['value'] ?? null;
+            $hoverCaption = $image['displayChoices']['hover_caption']['value'] ?? null;
+            $downloadLink = null;
+            $fileVersion = $image['file']->getApprovedVersion();
+            if ($includeDownloadLink && $fileVersion instanceof Version) {
+                $downloadLink = $fileVersion->getForceDownloadURL();
+            }
+            ?>
+            <a class="col-md-<?php echo $size === 'wide' ? '12' : '6' ?>"
+                 href="<?php echo h($image['file']->getThumbnailUrl(null)) ?>" data-gallery-lightbox="true"
+                 data-caption="<?=h($caption)?>"
+                 data-download-link="<?php echo h($downloadLink); ?>">
+                <div class="ccm-block-gallery-image"><?php echo $tag ?></div>
+                <div class="ccm-block-gallery-image-overlay">
+                    <div class="ccm-block-gallery-image-overlay-color"></div>
+                    <div class="ccm-block-gallery-image-overlay-text"><?=h($hoverCaption)?></div>
+                </div>
+            </a>
+            <?php
         }
         ?>
-        <div class="<?php echo $size === 'wide' ? 'gallery-w-100' : 'gallery-w-50' ?>"
-             href="<?php echo h($image['file']->getThumbnailUrl(null)) ?>" data-magnific="true"
-             data-download-link="<?php echo h($downloadLink); ?>">
-            <div class="gallery-16-9">
-                <?php echo $tag ?>
-            </div>
         </div>
-        <?php
-    }
-    ?>
+    </div>
 </div>
-<script>
-    $(function () {
-        $('.ccm-gallery-<?php echo $bID ?> [data-magnific=true]').magnificPopup({
-            type: 'image',
-            gallery: {
-                enabled: true
-            },
-            image: {
-                titleSrc: function (item) {
-                    var downloadLink = item.el.attr('data-download-link');
-                    if (downloadLink.length) {
-                        var $a = $("<a></a>");
-                        $a.attr("href", downloadLink);
-                        $a.attr("target", "_blank");
-                        $a.html("<?php echo h(t("Click here to download.")); ?>");
-                        return $a.wrap('<div/>').parent().html();
-                    }
-                }
-            }
-        });
-    })
-</script>

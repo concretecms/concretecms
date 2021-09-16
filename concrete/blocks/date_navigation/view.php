@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-block-date-navigation-wrapper">
+<div class="ccm-block-date-navigation">
 
     <div class="ccm-block-date-navigation-header">
         <<?php echo $titleFormat; ?>><?=h($title); ?></<?php echo $titleFormat; ?>>

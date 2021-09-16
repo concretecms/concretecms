@@ -17,7 +17,7 @@ class ItemSegmenter implements LoggerAwareInterface
 
     public function getLoggerChannel()
     {
-        Channels::CHANNEL_CONTENT;
+        return Channels::CHANNEL_CONTENT;
     }
 
     /**

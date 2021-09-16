@@ -1,1 +1,0 @@
-import './frontend/google-map'

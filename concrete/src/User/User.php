@@ -251,7 +251,7 @@ class User extends ConcreteObject
                     }
                     $this->uTimezone = $ux->getUserTimezone();
                 } elseif ($ux === -1) {
-                    $this->uID = -1;
+                    $this->uID = 0;
                     $this->uName = t('Guest');
                 }
                 $this->uGroups = $this->_getUserGroups(true);

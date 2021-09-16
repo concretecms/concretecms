@@ -5,15 +5,24 @@ use Concrete\Controller\Element\Navigation\AccountMenu;
 use Concrete\Core\Attribute\Context\DashboardFormContext;
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\User\User;
 use Loader;
 use Concrete\Core\Page\Controller\PageController as CorePageController;
 
-class AccountPageController extends CorePageController
+class AccountPageController extends CorePageController implements UsesFeatureInterface
 {
     public $helpers = array('html', 'form', 'text');
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::ACCOUNT
+        ];
+    }
 
     public function on_start()
     {

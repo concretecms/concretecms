@@ -188,14 +188,14 @@ class FileLocatorTest extends TestCase
             ->method('exists')
             ->will($this->returnValueMap([
                 [DIR_APPLICATION . '/elements/conversation/display.php', false],
-                [DIR_PACKAGES . '/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', true],
+                [DIR_PACKAGES . '/brilliant_theme/themes/brilliant/elements/conversation/display.php', true],
             ]));
 
         $this->locator->addLocation(new FileLocator\ThemeElementLocation($theme));
         $this->locator->setFilesystem($filesystem);
         $record = $this->locator->getRecord(DIRNAME_ELEMENTS . '/conversation/display.php');
-        $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', $record->getFile());
-        $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/elements/concrete/conversation/display.php', $record->getUrl());
+        $this->assertEquals(DIR_BASE . '/packages/brilliant_theme/themes/brilliant/elements/conversation/display.php', $record->getFile());
+        $this->assertEquals('/path/to/server/packages/brilliant_theme/themes/brilliant/elements/conversation/display.php', $record->getUrl());
         $this->assertTrue($record->exists());
     }
 }

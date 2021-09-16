@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventOccurrence;
 use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\Entity\User\User;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Summary\Data\Extractor\Driver\BasicCalendarEventDriver;
@@ -19,6 +20,9 @@ use Concrete\Core\Summary\Data\Field\FieldInterface;
 use Concrete\Core\Summary\Data\Extractor\Driver\BasicPageDriver;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverCollection;
 use Concrete\Core\Summary\Data\Field\ImageDataFieldData;
+use Concrete\Core\User\Avatar\AvatarInterface;
+use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\UserInfoRepository;
 use Concrete\Tests\TestCase;
 use Doctrine\ORM\EntityManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -41,12 +45,21 @@ class DriverCollectionTest extends TestCase
         $page->shouldReceive('getCollectionDescription')->once()->andReturn('asd');
         $page->shouldReceive('getCollectionDatePublicObject')->andReturn($date);
         $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
+        $page->shouldReceive('getCollectionUserID')->once();
         $installationService = M::mock(InstallationService::class);
+        $userInfoRepository = M::mock(UserInfoRepository::class);
+        $userInfo = M::mock(UserInfo::class);
+        $mockAvatar = M::mock(AvatarInterface::class);
+        $mockAvatar->shouldReceive('getPath');
+        $userInfo->shouldReceive('getUserDisplayName')->andReturn('testuser');
+        $userInfo->shouldReceive('getUserID');
+        $userInfo->shouldReceive('getUserAvatar')->andReturn($mockAvatar);
         $installationService->shouldReceive('isMultisiteEnabled');
-        $driver = M::mock(BasicPageDriver::class, [$installationService])->makePartial();
+        $userInfoRepository->shouldReceive('getByID')->once()->andReturn($userInfo);
+        $driver = M::mock(BasicPageDriver::class, [$installationService, $userInfoRepository])->makePartial();
         $driverCollection->addDriver($driver);
         $collection = $driverCollection->extractData($page);
-        $this->assertCount(5, $collection->getFields());
+        $this->assertCount(6, $collection->getFields());
         $field = $collection->getField(FieldInterface::FIELD_DESCRIPTION);
         $this->assertInstanceOf(DataFieldData::class, $field);
         $this->assertEquals('asd', $field);
@@ -80,17 +93,26 @@ class DriverCollectionTest extends TestCase
         $eventVersion->shouldReceive('getName')->andReturn('testtitle');
         $eventVersion->shouldReceive('getDescription')->andReturn('FOOOO');
 
+        $author = M::mock(User::class);
+        $userInfo = M::mock(UserInfo::class);
+        $mockAvatar = M::mock(AvatarInterface::class);
+        $mockAvatar->shouldReceive('getPath');
+        $author->shouldReceive('getUserInfoObject')->andReturn($userInfo);
+        $userInfo->shouldReceive('getUserDisplayName')->andReturn('testuser');
+        $userInfo->shouldReceive('getUserID');
+        $userInfo->shouldReceive('getUserAvatar')->andReturn($mockAvatar);
+
         $event->shouldReceive('getAttribute')->with('event_thumbnail')->once()->andReturn($file);
         $event->shouldReceive('getAttribute')->with('event_category')->once()->andReturn(null);
         $eventVersion->shouldReceive('getOccurrences')->andReturn([$occurrence]);
-
+        $eventVersion->shouldReceive('getAuthor')->andReturn($author);
         $repository->shouldReceive('get');
 
         $driver1 = new BasicCalendarEventDriver($entityManager, $linkFormatter, $repository);
         $driverCollection->addDriver($driver1);
 
         $collection = $driverCollection->extractData($event);
-        $this->assertCount(7, $collection->getFields());
+        $this->assertCount(8, $collection->getFields());
         $fields = $collection->getFields();
         $this->assertArrayHasKey('title', $fields);
         $this->assertArrayHasKey('date', $fields);

@@ -1,0 +1,7 @@
+.theme-atomik {
+  > div.container {
+    ol.breadcrumb {
+      margin-bottom: 0; // The margin is handled by the global container padding.
+    }
+  }
+}

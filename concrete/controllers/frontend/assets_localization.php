@@ -661,11 +661,18 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
             'dictCancelUploadConfirmation' => t('Are you sure you want to cancel this upload?'),
             'dictRemoveFile' => t('Remove file'),
             'dictMaxFilesExceeded' => t('You can not upload any more files.'),
-            'resizeQuality' => $this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100,
-            'chunking' => (bool) $config->get('concrete.upload.chunking.enabled'),
-            'chunkSize' => $this->getDropzoneChunkSize(),
-            'timeout' => 1000 * $timeout,
+            // See below - this is not the right place for anything except multilingual strings.
+            //'resizeQuality' => $this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100,
+            //'chunking' => (bool) $config->get('concrete.upload.chunking.enabled'),
+            //'chunkSize' => $this->getDropzoneChunkSize(),
+            //'timeout' => 1000 * $timeout,
         ];
+
+        // Note - this entire method is not really used anymore. We should probably bring back the previous snippets
+        // because we need the ability to have dropzone be translated. HOWEVER, the snippets below are problematic
+        // (specifically including the ccm_token in here), so we're not going to bring those back as is. This is not
+        // the appropriate place for these config values and settings anyway.
+        /*
         $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
         if ($maxWidth > 0) {
             $options['resizeWidth'] = $maxWidth;
@@ -673,11 +680,13 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
         $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
         if ($maxHeight > 0) {
             $options['resizeHeight'] = $maxHeight;
-        }
+        }*/
+
         $content = '';
         foreach ($options as $optionKey => $optionValue) {
             $content .= 'Dropzone.prototype.defaultOptions[' . json_encode($optionKey) . '] = ' . json_encode($optionValue) . ";\n";
         }
+        /*
         if ($maxWidth > 0 || $maxHeight > 0) {
             $content .= <<<'EOT'
 Dropzone.prototype.defaultOptions.accept = function(file, done) {
@@ -715,7 +724,7 @@ Dropzone.prototype.defaultOptions.params = function(files, xhr, chunk) {
 };
 EOT
         ;
-
+*/
         return $this->createJavascriptResponse($content);
     }
 

@@ -31,6 +31,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceHeight = '400';
     protected $btTable = 'btDocumentLibrary';
     protected $fileAttributes = [];
+    protected $btExportFileFolderColumns = ['folderID'];
 
     /** @var FileFolder|null */
     protected $rootNode = null;
@@ -55,49 +56,49 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
-    public function action_navigate($blockID, $folderID = 0)
+    public function action_navigate($folderID = 0)
     {
-        if ($blockID != $this->bID || $this->hideFolders) {
-            return $this->view();
-        }
-
-        $parentID = intval($this->folderID);
-        /** @var Node $parentFolder */
-        if ($parentID && !$parentFolder = FileFolder::getByID($parentID)) {
-            return $this->app->make(ResponseFactory::class)->error('Invalid parent folder.');
-        }
-
-        /** @var Node $subFolder */
-        if (!$subFolder = FileFolder::getByID($folderID)) {
-            return $this->app->make(ResponseFactory::class)->error('Invalid folder ID.');
-        }
-
-        $breadcrumbs = [$subFolder];
-
-        if ($parentID) {
-            // Make sure this folder is a subfolder of the main folder.
-            $subsParent = $subFolder->getTreeNodeParentID();
-            while ($subsParent && $subsParent != $parentID) {
-                if (!$subsParent = FileFolder::getByID($subsParent)) {
-                    break;
-                }
-                $breadcrumbs[] = $subsParent;
-
-                $subsParent = $subsParent->getTreeNodeParentID();
+        if (!$this->hideFolders) {
+            $parentID = intval($this->folderID);
+            /** @var Node $parentFolder */
+            if ($parentID && !$parentFolder = FileFolder::getByID($parentID)) {
+                return $this->app->make(ResponseFactory::class)->error('Invalid parent folder.');
             }
 
-            if (!$subsParent) {
+            /** @var Node $subFolder */
+            if (!$subFolder = FileFolder::getByID($folderID)) {
                 return $this->app->make(ResponseFactory::class)->error('Invalid folder ID.');
             }
+
+            $breadcrumbs = [$subFolder];
+
+            if ($parentID) {
+                // Make sure this folder is a subfolder of the main folder.
+                $subsParent = $subFolder->getTreeNodeParentID();
+                while ($subsParent && $subsParent != $parentID) {
+                    if (!$subsParent = FileFolder::getByID($subsParent)) {
+                        break;
+                    }
+                    $breadcrumbs[] = $subsParent;
+
+                    $subsParent = $subsParent->getTreeNodeParentID();
+                }
+
+                if (!$subsParent) {
+                    return $this->app->make(ResponseFactory::class)->error('Invalid folder ID.');
+                }
+            } else {
+                $parentFolder = $this->getRootFolder(true);
+            }
+
+            $breadcrumbs[] = $parentFolder;
+
+            $this->rootNode = $subFolder;
+            $this->view();
+            $this->set('breadcrumbs', $this->formatBreadcrumbs(array_reverse($breadcrumbs)));
         } else {
-            $parentFolder = $this->getRootFolder(true);
+            return $this->view();
         }
-
-        $breadcrumbs[] = $parentFolder;
-
-        $this->rootNode = $subFolder;
-        $this->view();
-        $this->set('breadcrumbs', $this->formatBreadcrumbs(array_reverse($breadcrumbs)));
     }
 
     public function on_start()
@@ -292,9 +293,6 @@ class Controller extends BlockController implements UsesFeatureInterface
                         ->setParameter('sets', $sets, Connection::PARAM_INT_ARRAY)
                         ->setParameter('count', count($sets));
 
-                    if (!$this->hideFolders) {
-                        $query->orWhere('nt.treeNodeTypeHandle = "file_folder"');
-                    }
                     break;
                 case 'any':
                 default:
@@ -692,6 +690,11 @@ class Controller extends BlockController implements UsesFeatureInterface
             $list->enableSubFolderSearch();
         }
 
+        if ($this->hideFolders) {
+            $list->getQueryObject()->andWhere('nt.treeNodeTypeHandle <> "file_folder"');
+        }
+
+
         return $list;
     }
 
@@ -913,6 +916,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $view = new BlockView($this->getBlockObject());
 
         /** @var FileFolder $crumb */
+        $return = [];
         foreach ($breadcrumbs as $crumb) {
             if ($crumb->getTreeNodeID() == $this->getRootFolder()->getTreeNodeID()) {
                 $action = $this->getBlockObject()->getBlockCollectionObject()->getCollectionLink();
@@ -923,8 +927,12 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $action = $action->setPath($actionPath);
             }
 
-            yield $action => $crumb->getTreeNodeDisplayName();
+            $return[] = [
+                'url' => $action,
+                'name' => $crumb->getTreeNodeDisplayName()
+            ];
         }
+        return $return;
     }
 
     protected function enableSubFolderSearch(FolderItemList $list)

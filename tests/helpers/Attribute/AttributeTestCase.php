@@ -41,6 +41,8 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
         'Concrete\Core\Entity\Attribute\Value\Value\BooleanValue',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
+        'Concrete\Core\Entity\User\User',
+        'Concrete\Core\Entity\User\UserSignup',
         'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Key\UserValue',

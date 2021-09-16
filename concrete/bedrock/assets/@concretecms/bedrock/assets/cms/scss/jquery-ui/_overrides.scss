@@ -1,0 +1,148 @@
+/* stylelint-disable declaration-property-value-blacklist */
+// Note: these are not SASS overrides in the traditional sense. Since jQuery just imports
+// via base CSS, we have to do CSS based overrides for the Concrete stuff.
+
+html.ccm-toolbar-visible {
+  .ui-front {
+    z-index: $index-level-modal-overlay;
+  }
+
+  .ui-dialog {
+    box-shadow: $modal-content-box-shadow-sm-up;
+    padding: 0;
+
+    z-index: $index-level-dialog;
+    /* hide section titles for panels when those panels are shown in dialogs */
+    section {
+      header {
+        display: none;
+      }
+    }
+
+    &.ui-widget-content {
+      border: 0;
+      border-radius: $modal-content-border-radius;
+    }
+
+    .ui-dialog-content {
+      padding: $modal-inner-padding;
+      /* trying to do btn dropdowns within a dialog is getting cut off, let's try adding this here to fix that.
+       * I'm commenting here in case this causes other problems
+       */
+      position: static;
+    }
+
+    .ui-dialog-titlebar {
+      align-items: flex-start;
+      background-color: $modal-header-bg;
+      color: $modal-title-color;
+      display: flex;
+      padding: $modal-header-padding-y $modal-header-padding-x;
+
+      span {
+        font-size: $modal-title-font-size;
+        font-weight: $modal-title-font-weight;
+        letter-spacing: $modal-title-letter-spacing;
+        line-height: $modal-title-line-height;
+      }
+
+      &.ui-widget-header {
+        border: 0;
+      }
+
+      &.ui-corner-all {
+        border-radius: 0;
+      }
+
+      .ui-dialog-title {
+        float: none;
+        margin: 0;
+      }
+
+
+      button.btn-help {
+        background: transparent;
+        border: 0;
+
+        svg {
+          fill: white;
+          height: 20px;
+          opacity: 0.5;
+          width: 20px;
+        }
+
+        &:hover {
+          svg {
+            opacity: 0.75;
+          }
+        }
+      }
+
+
+      button {
+        color: white;
+        font-size: 1rem;
+        height: auto;
+        line-height: 1;
+        margin-right: 0.5rem;
+        padding: 0.625rem 0.9rem;
+        transition: color 0.1s ease-in-out;
+        width: auto;
+
+        &:not(:disabled):not(.disabled) {
+          &:hover,
+          &:focus {
+            color: $gray-600;
+            opacity: 1;
+
+            svg {
+              fill: $gray-600;
+            }
+
+          }
+        }
+      }
+
+    }
+  }
+
+  .ui-widget {
+    font-family: inherit;
+  }
+
+  .ui-widget-header {
+    color: inherit;
+  }
+
+  .ui-widget-content {
+    color: inherit; // These inherits ensure that this comes from bootstrap not jQuery UI
+  }
+
+  .ui-widget-overlay {
+    opacity: 0;
+    transition: $transition-fade;
+
+    &.ui-widget-overlay-active {
+      background: $modal-backdrop-bg;
+      opacity: $modal-backdrop-opacity;
+    }
+  }
+
+  .ui-dialog-buttonpane {
+    align-items: center;
+    border-top: $modal-footer-border-width solid $modal-footer-border-color;
+    border-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-top: 0;
+    // copied from the .modal-footer in bootstrap
+    padding: 0;
+    padding: $modal-inner-padding - $modal-footer-margin-between / 2;
+
+    button {
+      margin: $modal-footer-margin-between / 2;
+    }
+
+  }
+}

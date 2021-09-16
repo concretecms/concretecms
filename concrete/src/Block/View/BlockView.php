@@ -6,6 +6,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\Events\BlockBeforeRender;
 use Concrete\Core\Block\Events\BlockOutput;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
@@ -30,6 +31,9 @@ use Concrete\Core\View\View;
  */
 class BlockView extends AbstractView
 {
+
+    use HandleRequiredFeaturesTrait;
+
     protected $block;
     protected $area;
     protected $blockType;
@@ -179,7 +183,13 @@ class BlockView extends AbstractView
 
                     $this->setViewTemplate($bvt->getTemplate());
                 }
-                $this->handleRequiredFeatures($this->controller);
+                $page = $this->controller->getCollectionObject();
+                if ($page) {
+                    $theme = $page->getCollectionThemeObject();
+                    if ($theme) {
+                        $this->handleRequiredFeatures($this->controller, $theme);
+                    }
+                }
                 break;
             case 'add':
                 if ($this->controller->blockViewRenderOverride) {
@@ -284,40 +294,6 @@ class BlockView extends AbstractView
         }
 
         $loc->popActiveContext();
-    }
-
-    /**
-     * Given a block controller that we're rendering, we request all the features required by that block controller
-     * and then add them to the page's header/footer via requireAsset, if they're not already provided by the theme
-     * (which we check via getThemeSupportedFeatures)
-     * 
-     * @param BlockController $controller
-     */
-    protected function handleRequiredFeatures(BlockController $controller): void 
-    {
-        $logger = app(LoggerFactory::class)->createLogger(Channels::CHANNEL_CONTENT);
-        if ($controller instanceof UsesFeatureInterface) {
-            $page = $controller->getCollectionObject();
-            if ($page && $page instanceof Page) {
-                $theme = $page->getCollectionThemeObject();
-                if ($theme && $theme instanceof Theme) {
-                    $assetList = AssetList::getInstance();
-                    foreach ($controller->getRequiredFeatures() as $feature) {
-                        if (!in_array($feature, $theme->getThemeSupportedFeatures())) {
-                            $assetHandle = "feature/{$feature}/frontend";
-                            if ($assetList->getAssetGroup($assetHandle)) {
-                                $this->requireAsset($assetHandle);
-                            } else {
-                                $logger->info(
-                                    t("Block type requested required feature '%s' but it was not registered.",
-                                        $assetHandle)
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public function setBlockViewHeaderFile($file)

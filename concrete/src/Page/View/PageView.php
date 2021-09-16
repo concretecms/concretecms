@@ -17,7 +17,7 @@ use PageTheme;
 use Permissions;
 use URL;
 use Concrete\Core\User\User;
-use View;
+use Concrete\Core\View\View;
 use Config;
 
 class PageView extends View

@@ -2,6 +2,7 @@
 
 namespace Concrete\Block\Gallery;
 
+use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
@@ -12,6 +13,7 @@ use Concrete\Core\File\File as ConcreteFile;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Utility\Service\Number;
+use Concrete\Core\Utility\Service\Xml;
 use Generator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -22,6 +24,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceWidth = '750';
     protected $btInterfaceHeight = '820';
     protected $btExportTables = ['btGallery', 'btGalleryEntries', 'btGalleryEntryDisplayChoices'];
+    protected $btExportFileColumns = ['fID'];
     protected $btCacheBlockRecord = false;
     /** @var int */
     protected $includeDownloadLink;
@@ -44,6 +47,64 @@ class Controller extends BlockController implements UsesFeatureInterface
         return [
             Features::IMAGERY
         ];
+    }
+
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        $blockNode->addChild('includeDownloadLink', $this->includeDownloadLink);
+
+        // now we can do the entries.
+        $entries = $this->getEntries();
+        $entriesNode = $blockNode->addChild('entries');
+        $xml = new Xml();
+        foreach ($entries as $entry) {
+            $entryNode = $entriesNode->addChild('entry');
+            $entryNode->addChild('fID', ContentExporter::replaceFileWithPlaceHolder($entry['id']));
+            $choicesNode = $entryNode->addChild('displaychoices');
+            if (count($entry['displayChoices'])) {
+                foreach ($entry['displayChoices'] as $dckey => $displayChoice) {
+                    $choiceNode = $choicesNode->addChild('choice');
+                    $choiceNode->addChild('dckey', $dckey);
+                    $xml->createCDataNode($choiceNode, 'value', $displayChoice['value']);
+                }
+            }
+        }
+    }
+
+
+    public function importAdditionalData($b, $blockNode)
+    {
+        $db = $this->app->make(Connection::class);
+        $data['includeDownloadLink'] = (string)$blockNode->includeDownloadLink;
+        if ($data['includeDownloadLink']) {
+            $db->update('btGallery', $data, ['bID' => $b->getBlockID()]);
+        }
+        $inspector = \Core::make('import/value_inspector');
+
+        if (isset($blockNode->entries->entry)) {
+            $idx = 0;
+            foreach ($blockNode->entries->entry as $entryNode) {
+                $result = $inspector->inspect((string)$entryNode->fID);
+                $db->insert(
+                    'btGalleryEntries',
+                    ['idx' => $idx, 'bID' => $b->getBlockID(), 'fID' => $result->getReplacedValue()]
+                );
+                $entryID = $db->lastInsertID();
+                if (isset($entryNode->displaychoices->choice)) {
+                    foreach ($entryNode->displaychoices->choice as $choiceNode) {
+                        $db->insert(
+                            'btGalleryEntryDisplayChoices',
+                            [
+                                'entryID' => $entryID,
+                                'bID' => $b->getBlockID(),
+                                'dcKey' => (string) $choiceNode->dckey,
+                                'value' => (string) $choiceNode->value,
+                            ]
+                        );
+                    }
+                }
+            }
+        }
     }
 
     public function getBlockTypeName()
@@ -351,6 +412,16 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected function getDisplayChoices(): array
     {
         return [
+            "caption" => [
+                "value" => '',
+                "title" => t('Caption'),
+                "type" => 'text',
+            ],
+            "hover_caption" => [
+                "value" => '',
+                "title" => t('Hover Caption'),
+                "type" => 'text',
+            ],
             "size" => [
                 "value" => 'standard',
                 "title" => 'Size',

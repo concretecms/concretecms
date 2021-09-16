@@ -26,11 +26,8 @@ $saveUrl = Url::createFromUrl($view->action('save_avatar'))->setQuery(array(
 ?>
 
 <div data-view="account">
-    <h2>
-        <?php echo $c->getCollectionName()?>
-    </h2>
-  
-    <p>
+
+    <p class="lead">
         <?php echo t('Change the picture attached to my posts.') ?>
     </p>
 

@@ -1,0 +1,34 @@
+div.theme-atomik {
+  .ccm-block-testimonial-wrapper {
+    margin-bottom: 0;
+  }
+
+  .ccm-block-testimonial {
+    margin-bottom: 2rem;
+
+    .ccm-block-testimonial-image {
+      margin: 0 0 2rem 0;
+      float: none;
+      img {
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        max-height: inherit;
+      }
+    }
+
+    .ccm-block-testimonial-text {
+      text-align: center;
+
+      .ccm-block-testimonial-name {
+        @extend .h4;
+      }
+
+      .ccm-block-testimonial-position {
+        font-style: normal;
+        font-size: $font-size-sm;
+        color: $secondary;
+      }
+    }
+  }
+}

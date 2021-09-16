@@ -1,0 +1,549 @@
+<concrete5-cif version="1.0">
+    <area name="Main">
+        <blocks>
+            <block type="core_theme_documentation_breadcrumb" name="">
+                <style>
+                    <backgroundColor/>
+                    <backgroundRepeat/>
+                    <backgroundSize/>
+                    <backgroundPosition/>
+                    <borderWidth/>
+                    <borderColor/>
+                    <borderStyle/>
+                    <borderRadius/>
+                    <baseFontSize/>
+                    <alignment/>
+                    <textColor/>
+                    <linkColor/>
+                    <paddingTop/>
+                    <paddingBottom/>
+                    <paddingLeft/>
+                    <paddingRight/>
+                    <marginTop/>
+                    <marginBottom/>
+                    <marginLeft/>
+                    <marginRight/>
+                    <rotate/>
+                    <boxShadowHorizontal/>
+                    <boxShadowVertical/>
+                    <boxShadowBlur/>
+                    <boxShadowSpread/>
+                    <boxShadowColor/>
+                    <customClass>mt-5</customClass>
+                    <customID/>
+                    <customElementAttribute/>
+                    <hideOnExtraSmallDevice/>
+                    <hideOnSmallDevice/>
+                    <hideOnMediumDevice/>
+                    <hideOnLargeDevice/>
+                </style>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h1>Navigation</h1>
+
+<p class="lead">Linking and navigating your site and data.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Auto-Nav</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>One Level</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="autonav" name="">
+                <data table="btNavigation">
+                    <record>
+                        <orderBy><![CDATA[display_asc]]></orderBy>
+                        <displayPages><![CDATA[top]]></displayPages>
+                        <displayPagesCID/>
+                        <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                        <displaySubPages><![CDATA[none]]></displaySubPages>
+                        <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                        <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                        <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Expanded</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="autonav" name="">
+                <data table="btNavigation">
+                    <record>
+                        <orderBy><![CDATA[display_asc]]></orderBy>
+                        <displayPages><![CDATA[top]]></displayPages>
+                        <displayPagesCID/>
+                        <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                        <displaySubPages><![CDATA[all]]></displaySubPages>
+                        <displaySubPageLevels><![CDATA[all]]></displaySubPageLevels>
+                        <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                        <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Page Title</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="page_title" name="">
+                <data table="btPageTitle">
+                    <record>
+                        <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                        <useFilterTitle><![CDATA[0]]></useFilterTitle>
+                        <useFilterTopic><![CDATA[0]]></useFilterTopic>
+                        <useFilterTag><![CDATA[0]]></useFilterTag>
+                        <useFilterDate><![CDATA[0]]></useFilterDate>
+                        <topicTextFormat><![CDATA[0]]></topicTextFormat>
+                        <tagTextFormat><![CDATA[upperWord]]></tagTextFormat>
+                        <dateTextFormat><![CDATA[0]]></dateTextFormat>
+                        <filterDateFormat><![CDATA[F Y]]></filterDateFormat>
+                        <titleText><![CDATA[Navigation]]></titleText>
+                        <formatting><![CDATA[h1]]></formatting>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Top Navigation Bar&nbsp; <span class="badge bg-info">New!</span></h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="top_navigation_bar" name="" custom-container-settings="0">
+                <data table="btTopNavigationBar">
+                    <record>
+                        <brandingText><![CDATA[Concrete Site]]></brandingText>
+                        <brandingLogo/>
+                        <brandingTransparentLogo/>
+                        <includeBrandText><![CDATA[1]]></includeBrandText>
+                        <includeBrandLogo><![CDATA[0]]></includeBrandLogo>
+                        <includeTransparency><![CDATA[0]]></includeTransparency>
+                        <includeStickyNav><![CDATA[0]]></includeStickyNav>
+                        <includeNavigation><![CDATA[1]]></includeNavigation>
+                        <includeNavigationDropdowns><![CDATA[1]]></includeNavigationDropdowns>
+                        <includeSearchInput><![CDATA[1]]></includeSearchInput>
+                        <searchInputFormActionPageID><![CDATA[0]]></searchInputFormActionPageID>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Accordion&nbsp;&nbsp;<span class="badge bg-info">New!</span></h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="accordion" name="">
+                <data table="btAccordion">
+                    <record/>
+                </data>
+                <data table="btAccordionEntries">
+                    <record>
+                        <id><![CDATA[4]]></id>
+                        <title><![CDATA[Entry 1]]></title>
+                        <sortOrder><![CDATA[0]]></sortOrder>
+                        <description><![CDATA[<p>This is the body text of entry 1.</p>
+]]></description>
+                    </record>
+                    <record>
+                        <id><![CDATA[5]]></id>
+                        <title><![CDATA[Entry 2]]></title>
+                        <sortOrder><![CDATA[1]]></sortOrder>
+                        <description><![CDATA[<p>This is the body text of entry 2.</p>
+]]></description>
+                    </record>
+                    <record>
+                        <id><![CDATA[6]]></id>
+                        <title><![CDATA[Entry 3]]></title>
+                        <sortOrder><![CDATA[2]]></sortOrder>
+                        <description><![CDATA[<p>This is the body text of entry three. Are you sensing a pattern yet?</p>
+]]></description>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">FAQ</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="faq" name="">
+                <data table="btFaq">
+                    <record>
+                        <blockTitle><![CDATA[]]></blockTitle>
+                    </record>
+                </data>
+                <data table="btFaqEntries">
+                    <record>
+                        <id><![CDATA[8]]></id>
+                        <linkTitle><![CDATA[Question 1]]></linkTitle>
+                        <title><![CDATA[Question 1 Title Text]]></title>
+                        <sortOrder><![CDATA[0]]></sortOrder>
+                        <description><![CDATA[<p>This is the description</p>
+]]></description>
+                    </record>
+                    <record>
+                        <id><![CDATA[9]]></id>
+                        <linkTitle><![CDATA[Question 2]]></linkTitle>
+                        <title><![CDATA[Question 2 Title Text]]></title>
+                        <sortOrder><![CDATA[1]]></sortOrder>
+                        <description><![CDATA[<p>This is the answer of question 2.</p>
+]]></description>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Page List</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="page_list" name="">
+                <data table="btPageList">
+                    <record>
+                        <num><![CDATA[6]]></num>
+                        <orderBy><![CDATA[display_asc]]></orderBy>
+                        <cParentID/>
+                        <cThis><![CDATA[0]]></cThis>
+                        <cThisParent><![CDATA[0]]></cThisParent>
+                        <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                        <buttonLinkText><![CDATA[]]></buttonLinkText>
+                        <pageListTitle><![CDATA[]]></pageListTitle>
+                        <filterByRelated><![CDATA[0]]></filterByRelated>
+                        <filterByCustomTopic><![CDATA[0]]></filterByCustomTopic>
+                        <filterDateOption><![CDATA[all]]></filterDateOption>
+                        <filterDateDays><![CDATA[0]]></filterDateDays>
+                        <filterDateStart><![CDATA[]]></filterDateStart>
+                        <filterDateEnd><![CDATA[]]></filterDateEnd>
+                        <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
+                        <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
+                        <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
+                        <includeName><![CDATA[1]]></includeName>
+                        <includeDescription><![CDATA[1]]></includeDescription>
+                        <includeDate><![CDATA[0]]></includeDate>
+                        <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                        <paginate><![CDATA[0]]></paginate>
+                        <displayAliases><![CDATA[0]]></displayAliases>
+                        <displaySystemPages><![CDATA[0]]></displaySystemPages>
+                        <ignorePermissions><![CDATA[0]]></ignorePermissions>
+                        <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                        <ptID/>
+                        <pfID/>
+                        <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                        <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                        <noResultsMessage><![CDATA[]]></noResultsMessage>
+                        <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                        <truncateChars><![CDATA[0]]></truncateChars>
+                        <titleFormat><![CDATA[h5]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Resource List</h4>
+
+<p class="small text-secondary">(Note: if you&#39;ve removed the resource page type from your site you may not see anything here.)</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="page_list" name="" custom-template="resource_list.php">
+                <data table="btPageList">
+                    <record>
+                        <num><![CDATA[4]]></num>
+                        <orderBy><![CDATA[display_asc]]></orderBy>
+                        <cParentID/>
+                        <cThis><![CDATA[0]]></cThis>
+                        <cThisParent><![CDATA[0]]></cThisParent>
+                        <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                        <buttonLinkText><![CDATA[]]></buttonLinkText>
+                        <pageListTitle><![CDATA[]]></pageListTitle>
+                        <filterByRelated><![CDATA[0]]></filterByRelated>
+                        <filterByCustomTopic><![CDATA[0]]></filterByCustomTopic>
+                        <filterDateOption><![CDATA[all]]></filterDateOption>
+                        <filterDateDays><![CDATA[0]]></filterDateDays>
+                        <filterDateStart><![CDATA[]]></filterDateStart>
+                        <filterDateEnd><![CDATA[]]></filterDateEnd>
+                        <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
+                        <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
+                        <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
+                        <includeName><![CDATA[1]]></includeName>
+                        <includeDescription><![CDATA[1]]></includeDescription>
+                        <includeDate><![CDATA[0]]></includeDate>
+                        <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                        <paginate><![CDATA[0]]></paginate>
+                        <displayAliases><![CDATA[0]]></displayAliases>
+                        <displaySystemPages><![CDATA[0]]></displaySystemPages>
+                        <ignorePermissions><![CDATA[0]]></ignorePermissions>
+                        <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                        <ptID>{ccm:export:pagetype:resource}</ptID>
+                        <pfID/>
+                        <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                        <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                        <noResultsMessage><![CDATA[]]></noResultsMessage>
+                        <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                        <truncateChars><![CDATA[0]]></truncateChars>
+                        <titleFormat><![CDATA[h5]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Blog Entry Grid</h4>
+
+<p class="small text-secondary">(Note: if you&#39;ve removed the blog entry page type from your site you may not see anything here.)</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="page_list" name="" custom-template="blog_entry_grid.php">
+                <data table="btPageList">
+                    <record>
+                        <num><![CDATA[3]]></num>
+                        <orderBy><![CDATA[display_asc]]></orderBy>
+                        <cParentID/>
+                        <cThis><![CDATA[0]]></cThis>
+                        <cThisParent><![CDATA[0]]></cThisParent>
+                        <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                        <buttonLinkText><![CDATA[]]></buttonLinkText>
+                        <pageListTitle><![CDATA[]]></pageListTitle>
+                        <filterByRelated><![CDATA[0]]></filterByRelated>
+                        <filterByCustomTopic><![CDATA[0]]></filterByCustomTopic>
+                        <filterDateOption><![CDATA[all]]></filterDateOption>
+                        <filterDateDays><![CDATA[0]]></filterDateDays>
+                        <filterDateStart><![CDATA[]]></filterDateStart>
+                        <filterDateEnd><![CDATA[]]></filterDateEnd>
+                        <relatedTopicAttributeKeyHandle><![CDATA[]]></relatedTopicAttributeKeyHandle>
+                        <customTopicAttributeKeyHandle><![CDATA[]]></customTopicAttributeKeyHandle>
+                        <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
+                        <includeName><![CDATA[1]]></includeName>
+                        <includeDescription><![CDATA[1]]></includeDescription>
+                        <includeDate><![CDATA[0]]></includeDate>
+                        <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                        <paginate><![CDATA[0]]></paginate>
+                        <displayAliases><![CDATA[0]]></displayAliases>
+                        <displaySystemPages><![CDATA[0]]></displaySystemPages>
+                        <ignorePermissions><![CDATA[0]]></ignorePermissions>
+                        <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                        <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                        <pfID/>
+                        <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                        <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                        <noResultsMessage><![CDATA[]]></noResultsMessage>
+                        <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                        <truncateChars><![CDATA[0]]></truncateChars>
+                        <titleFormat><![CDATA[h5]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Next &amp; Previous Nav</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="next_previous" name="">
+                <data table="btNextPrevious">
+                    <record>
+                        <nextLabel><![CDATA[Next]]></nextLabel>
+                        <previousLabel><![CDATA[Previous]]></previousLabel>
+                        <parentLabel><![CDATA[Up]]></parentLabel>
+                        <loopSequence><![CDATA[1]]></loopSequence>
+                        <orderBy><![CDATA[display_asc]]></orderBy>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Date Navigation</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="date_navigation" name="">
+                <data table="btDateNavigation">
+                    <record>
+                        <title><![CDATA[Archives]]></title>
+                        <filterByParent><![CDATA[0]]></filterByParent>
+                        <redirectToResults><![CDATA[0]]></redirectToResults>
+                        <cParentID/>
+                        <cTargetID/>
+                        <ptID/>
+                        <titleFormat><![CDATA[h5]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Tags</h2>
+
+<p class="text-secondary small">(Note: if you aren&#39;t using the tags page attribute you won&#39;t see anything here.)</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="tags" name="">
+                <data table="btTags">
+                    <record>
+                        <title><![CDATA[Tags]]></title>
+                        <targetCID/>
+                        <displayMode><![CDATA[page]]></displayMode>
+                        <cloudCount><![CDATA[20]]></cloudCount>
+                        <titleFormat><![CDATA[h5]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Topic List</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="topic_list" name="">
+                <data>
+                    <mode>S</mode>
+                    <title>Topics</title>
+                    <topicAttributeKeyHandle>blog_entry_topics</topicAttributeKeyHandle>
+                    <tree>Blog Entries</tree>
+                    <cParentID/>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">RSS Displayer</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="rss_displayer" name="">
+                <data table="btRssDisplay">
+                    <record>
+                        <title><![CDATA[Concrete CMS]]></title>
+                        <url><![CDATA[https://www.concretecms.com/rss/blog]]></url>
+                        <dateFormat><![CDATA[:longDate:]]></dateFormat>
+                        <itemsToDisplay><![CDATA[5]]></itemsToDisplay>
+                        <showSummary><![CDATA[1]]></showSummary>
+                        <launchInNewWindow><![CDATA[1]]></launchInNewWindow>
+                        <titleFormat><![CDATA[h1]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Switch Language</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="switch_language" name="">
+                <data table="btSwitchLanguage">
+                    <record>
+                        <label><![CDATA[Choose Language]]></label>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Flags</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="switch_language" name="" custom-template="flags">
+                <data table="btSwitchLanguage">
+                    <record>
+                        <label><![CDATA[Choose Language]]></label>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Flags Set Default</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="switch_language" name="" custom-template="flags_set_default">
+                <data table="btSwitchLanguage">
+                    <record>
+                        <label><![CDATA[Choose Language]]></label>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Breadcrumbs&nbsp; <span class="badge bg-info">New!</span></h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="breadcrumbs" name="">
+                <data table="btBreadcrumbs">
+                    <record>
+                        <includeCurrent><![CDATA[1]]></includeCurrent>
+                        <ignoreExcludeNav><![CDATA[1]]></ignoreExcludeNav>
+                        <ignorePermission><![CDATA[1]]></ignorePermission>
+                    </record>
+                </data>
+            </block>
+        </blocks>
+    </area>
+</concrete5-cif>

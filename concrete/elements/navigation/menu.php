@@ -15,9 +15,10 @@ if (!empty($top)) {
                     for ($i = 0; $i < $n; $i++) {
                         $page = $pages[$i];
                         $next = ($i + 1 < $n) ? $pages[$i + 1] : null;
+                        $menuItemClass = $view->controller->getMenuItemClass($page);
                         ?>
-                        <li class="nav-item <?=$view->controller->getMenuItemClass($page)?>">
-                            <a class="nav-link" href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
+                        <li class="nav-item <?=$menuItemClass?>">
+                            <a class="nav-link <?php if (strpos($menuItemClass, 'nav-selected') > -1) { ?>active<?php } ?>" href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
                             <?php
                             if ($view->controller->displayChildPages($page)) {
                                 $children = $view->controller->getChildPages($page);
