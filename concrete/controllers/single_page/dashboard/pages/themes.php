@@ -124,9 +124,9 @@ class Themes extends DashboardSitePageController
                         $previewPage = $themeDocumentationParent->getFirstChild();
                     }
                 }
+                $factory = new DocumentationNavigationFactory($theme);
+                $this->set('documentationNavigation', $factory->createNavigation());
             }
-            $factory = new DocumentationNavigationFactory($theme);
-            $this->set('documentationNavigation', $factory->createNavigation());
             $this->set('previewPage', $previewPage);
             $this->render('/dashboard/pages/themes/preview');
         } else {
