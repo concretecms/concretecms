@@ -6,9 +6,9 @@ div.ccm-block-hero-image {
   div.ccm-block-hero-image-text,
   div.ccm-block-hero-image-cover {
     height: 50vh;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
     width: 100%;
   }
 
@@ -21,12 +21,9 @@ div.ccm-block-hero-image {
   }
 
   div.ccm-block-hero-image-image {
-    background-size: cover;
     background-position: center center;
-    z-index: 1;
+    background-size: cover;
     height: 50vh;
+    z-index: 1;
   }
-
-
-
 }

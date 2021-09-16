@@ -1,18 +1,14 @@
 /* stylelint-disable selector-class-pattern */
 .ccm-page-user-directory {
-
   .ccm-page-user-directory-entry {
-
-    padding: 1rem;
-    display: flex;
     align-items: center;
+    display: flex;
+    padding: 1rem;
 
     .ccm-page-user-directory-avatar {
       border-radius: 50%;
-      max-width: 80px;
       margin-right: 2rem;
+      max-width: 80px;
     }
   }
-
-
 }

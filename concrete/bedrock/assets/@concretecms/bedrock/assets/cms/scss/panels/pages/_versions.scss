@@ -58,7 +58,8 @@ section#ccm-panel-page-versions {
         background-color: $primary;
         color: $white;
 
-        a, a.ccm-hover-icon {
+        a,
+        a.ccm-hover-icon {
           svg {
             fill: $white !important;
           }

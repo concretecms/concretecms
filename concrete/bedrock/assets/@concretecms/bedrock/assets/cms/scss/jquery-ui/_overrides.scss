@@ -61,17 +61,19 @@ html.ccm-toolbar-visible {
 
 
       button.btn-help {
-        border: 0;
         background: transparent;
+        border: 0;
+
         svg {
-          height: 20px;
-          width: 20px;
           fill: white;
-          opacity: .5;
+          height: 20px;
+          opacity: 0.5;
+          width: 20px;
         }
+
         &:hover {
           svg {
-            opacity: .75;
+            opacity: 0.75;
           }
         }
       }
