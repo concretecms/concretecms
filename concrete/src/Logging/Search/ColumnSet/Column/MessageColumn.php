@@ -26,7 +26,7 @@ class MessageColumn extends Column implements PagerColumnInterface
 
     public function getColumnCallback()
     {
-        return 'getMessage';
+        return ['\Concrete\Core\Logging\Search\ColumnSet\DefaultSet', 'getFormattedMessage'];
     }
 
     /**
