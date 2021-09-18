@@ -23,7 +23,7 @@ use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\BannedWord\Service as BannedWordService;
 use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -311,7 +311,7 @@ class AddMessage extends FrontendController
     protected function dispatchEvent(ConversationMessage $message): void
     {
         $event = new MessageEvent($message);
-        $dispatcher = $this->app->make(EventDispatcherInterface::class);
+        $dispatcher = $this->app->make(EventDispatcher::class);
         $dispatcher->dispatch('on_conversations_message_add', $event);
     }
 
