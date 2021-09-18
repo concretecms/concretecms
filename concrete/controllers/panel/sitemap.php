@@ -2,10 +2,9 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Loader;
-use PageType;
-use Page as ConcretePage;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Permission\Checker;
 
 class Sitemap extends BackendInterfaceController
 {
@@ -13,24 +12,25 @@ class Sitemap extends BackendInterfaceController
     protected $frequentPageTypes = array();
     protected $otherPageTypes = array();
     protected $site;
+    protected $canViewSitemap;
 
     public function on_start()
     {
-        $sh = Loader::helper('concrete/dashboard/sitemap');
+        $sh = $this->app->make('helper/concrete/dashboard/sitemap');
         $this->canViewSitemap = $sh->canRead();
-        $this->site = \Core::make('site')->getSite();
+        $this->site = $this->app->make('site')->getSite();
         $type = $this->site->getType();
-        $frequentlyUsed = PageType::getFrequentlyUsedList($type);
+        $frequentlyUsed = Type::getFrequentlyUsedList($type);
         foreach ($frequentlyUsed as $pt) {
-            $ptp = new Permissions($pt);
+            $ptp = new Checker($pt);
             if ($ptp->canAddPageType()) {
                 $this->frequentPageTypes[] = $pt;
             }
         }
 
-        $otherPageTypes = PageType::getInfrequentlyUsedList($type);
+        $otherPageTypes = Type::getInfrequentlyUsedList($type);
         foreach ($otherPageTypes as $pt) {
-            $ptp = new Permissions($pt);
+            $ptp = new Checker($pt);
             if ($ptp->canAddPageType()) {
                 $this->otherPageTypes[] = $pt;
             }
@@ -44,12 +44,12 @@ class Sitemap extends BackendInterfaceController
 
     public function view()
     {
-        $drafts = ConcretePage::getDrafts($this->site);
+        $drafts = Page::getDrafts($this->site);
         $mydrafts = array();
         foreach ($drafts as $d) {
-            $dp = new Permissions($d);
+            $dp = new Checker($d);
             $pt = $d->getPagetypeObject();
-            $tp = new Permissions($pt);
+            $tp = new Checker($pt);
             if ($tp->canEditPageTypeDrafts() || $dp->canEditPageContents()) {
                 $mydrafts[] = $d;
             }
@@ -57,7 +57,7 @@ class Sitemap extends BackendInterfaceController
 
         $siteTreeID = 0;
         if ($this->request->query->has('cID')) {
-            $page = ConcretePage::getByID(intval($this->request->query->get('cID')));
+            $page = Page::getByID(intval($this->request->query->get('cID')));
             if ($page && !$page->isError()) {
                 $siteTreeID = $page->getSiteTreeID();
             }
