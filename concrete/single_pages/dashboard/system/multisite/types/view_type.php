@@ -50,7 +50,7 @@ if ($sites === []) {
         foreach ($sites as $site) {
             ?>
             <li>
-                <a href="<?= $urlResolver->resolve(['/dashboard/system/multisite/sites', 'view_site', $site->getSiteID()]) ?>"><i class="fa fa-link"></i> <?= h($site->getSiteName()) ?></a>
+                <a href="<?= $urlResolver->resolve(['/dashboard/system/multisite/sites', 'view_site', $site->getSiteID()]) ?>"><i class="fas fa-link"></i> <?= h($site->getSiteName()) ?></a>
             </li>
             <?php
         }

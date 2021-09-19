@@ -175,7 +175,7 @@ $(document).ready(function() {
                 getAddonData: function(mpHandle) {
                     if (this.state === this.STATE.LOADING) {
                         return {
-                            iconClass: 'fa fa-question-circle text-muted',
+                            iconClass: 'fas fa-question-circle text-muted',
                             stateClass: '',
                             stateHtml: <?= json_encode('<i>' . t('Loading... ') . '</i>') ?>,
                         }
@@ -190,7 +190,7 @@ $(document).ready(function() {
                         });
                     }
                     var result = {
-                        iconClass: 'fa fa-question-circle text-muted',
+                        iconClass: 'fas fa-question-circle text-muted',
                         stateClass: '',
                         stateHtml: <?= json_encode('<i>' . t('No information about this add-on available.') . '</i>') ?>,
                     }
@@ -221,15 +221,15 @@ $(document).ready(function() {
                     };
                     switch(notice.safety) {
                         case 'info':
-                            result.iconClass = 'fa fa-question-circle text-info';
+                            result.iconClass = 'fas fa-question-circle text-info';
                             result.textClass = '';
                             break;
                         case 'warning':
-                            result.iconClass  = 'fa fa-warning text-warning';
+                            result.iconClass  = 'fas fa-exclamation-triangle text-warning';
                             result.textClass = 'text-warning';
                             break;
                         case 'danger':
-                            result.iconClass  = 'fa fa-exclamation-circle text-danger';
+                            result.iconClass  = 'fas fa-exclamation-circle text-danger';
                             result.textClass = 'text-danger';
                             break;
                     }

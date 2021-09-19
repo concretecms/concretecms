@@ -242,7 +242,7 @@ EOL;
 <tr data-ccm-user-id="{$user->getUserID()}" class="ccm-list-record">
     <td><input type="hidden" name="{$fieldName}[]" value="{$user->getUserID()}" />{$user->getUserName()}</td>
     <td>{$user->getUserEmail()}</td>
-    <td><a href="#" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button"></i></a></td>
+    <td><a href="#" class="ccm-user-list-clear icon-link"><i class="fas fa-minus-circle ccm-user-list-clear-button"></i></a></td>
 </tr>
 EOT;
             }
@@ -255,7 +255,7 @@ EOT;
         <tr>
             <th>{$i18n['username']}</th>
             <th>{$i18n['emailAddress']}</th>
-            <th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="{$i18n['chooseUser']}" href="{$searchLink}"><i class="fa fa-plus-circle" /></a></th>
+            <th style="width: 1px"><a class="icon-link ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="{$i18n['chooseUser']}" href="{$searchLink}"><i class="fas fa-plus-circle" /></a></th>
         </tr>
     </thead>
     <tbody>
@@ -290,7 +290,7 @@ $(function() {
                 .append($('<td />')
                     .text(uEmail)
                 )
-                .append($('<td><a href="#" class="ccm-user-list-clear icon-link"><i class="fa fa-minus-circle ccm-user-list-clear-button"></i></a></td>'))
+                .append($('<td><a href="#" class="ccm-user-list-clear icon-link"><i class="fas fa-minus-circle ccm-user-list-clear-button"></i></a></td>'))
             );
             updateNoUsers();
         };

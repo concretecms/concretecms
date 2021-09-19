@@ -8,7 +8,7 @@ class UpVoteType extends Type
 {
     public function outputRatingTypeHTML()
     {
-        echo '<a href="javascript:void(0)" class="conversation-rate-message ccm-conversation-message-control-icon" data-conversation-rating-type="up_vote"><i class="fa fa-thumbs-up"></i></a>';
+        echo '<a href="javascript:void(0)" class="conversation-rate-message ccm-conversation-message-control-icon" data-conversation-rating-type="up_vote"><i class="fas fa-thumbs-up"></i></a>';
     }
 
     public function rateMessage()

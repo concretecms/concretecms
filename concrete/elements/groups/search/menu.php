@@ -53,14 +53,14 @@ $checker = new Permissions($currentFolder);
         <ul class="ccm-dashboard-header-icons">
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('Jump to Folder')) ?>" data-launch-dialog="navigate-group-manager" href="javascript:void(0);">
-                    <i class="fa fa-folder" aria-hidden="true"></i>
+                    <i class="fas fa-folder" aria-hidden="true"></i>
                 </a>
             </li>
 
             <?php if ($checker->canAddGroupFolder()) { ?>
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('New Folder')) ?>" href="javascript:void(0);" data-launch-dialog="add-group-manager-folder">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    <i class="fas fa-plus" aria-hidden="true"></i>
                 </a>
             </li>
             <?php } ?>
@@ -69,7 +69,7 @@ $checker = new Permissions($currentFolder);
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('Add Group')) ?>"
                    href="<?php echo (string)UrlFacade::to("/dashboard/users/add_group"); ?>">
-                    <i class="fa fa-users" aria-hidden="true"></i>
+                    <i class="fas fa-users" aria-hidden="true"></i>
                 </a>
             </li>
 

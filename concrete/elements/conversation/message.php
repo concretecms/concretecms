@@ -89,7 +89,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                                 $thumb = $im->getThumbnail($file, '90', '90', true);
                                 ?>
                                 <div class="image-popover-hover" data-full-image="<?php echo $file->getURL() ?>">
-                                    <div class="glyph-container"><i class="fa fa-search"></i></div>
+                                    <div class="glyph-container"><i class="fas fa-search"></i></div>
                                 </div>
                                 <div class="attachment-preview-container">
                                     <img class="posted-attachment-image" src="<?php  echo $thumb->src;
@@ -102,7 +102,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                                 <a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
                                 <?php if (!$message->isConversationMessageDeleted() && $canEditMessage) { ?>
                                     <a rel="<?php echo $attachment['cnvMessageAttachmentID']; ?>"
-                                       class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-alt"></i></a>
+                                       class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fas fa-trash-alt"></i></a>
                                 <?php } ?>
                             </p>
                             </div>
@@ -135,16 +135,16 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                     <?php if ($displaySocialLinks) { ?>
                         <li class="ccm-conversation-social-share">
                             <a class="ccm-conversation-message-control-icon share-popup" href="https://twitter.com/intent/tweet?url=<?php echo $cnvMessageURL?>"
-                            title="<?=t('Share message URL on Twitter.')?>"><i class="fa fa-twitter"></i></a>
+                            title="<?=t('Share message URL on Twitter.')?>"><i class="fab fa-twitter"></i></a>
                         </li>
                         <li class="ccm-conversation-social-share">
                             <a class="ccm-conversation-message-control-icon share-popup" href="http://www.facebook.com/sharer.php?u=<?php echo $cnvMessageURL?>"
-                            title="<?=t('Share message URL on Facebook.')?>"><i class="fa fa-facebook"></i></a>
+                            title="<?=t('Share message URL on Facebook.')?>"><i class="fab fa-facebook"></i></a>
                         </li>
                     <?php } ?>
                     <li class="ccm-conversation-social-share">
                         <a class="ccm-conversation-message-control-icon share-permalink" data-message-id="<?= $message->getConversationMessageID() ?>" rel="<?php echo $cnvMessageURL ?>"
-                        title="<?=t('Get message URL.')?>" data-dialog-title="<?php echo t('Link') ?>"  href="#"><i class="fa fa-link"></i></a>
+                        title="<?=t('Get message URL.')?>" data-dialog-title="<?php echo t('Link') ?>"  href="#"><i class="fas fa-link"></i></a>
                     </li>
                 </ul>
 			<?php } ?>

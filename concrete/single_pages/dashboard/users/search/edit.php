@@ -265,7 +265,7 @@ if (count($languages) > 0) {
                         <div class="d-flex" v-for="group in groups">
                             <div class="me-auto"><span v-html="group.gDisplayName"></span></div>
                             <div><a class="ccm-hover-icon" href="#" @click.prevent="removeGroup(group.gID)"><i
-                                            class="fa fa-minus-circle"></i></a></div>
+                                            class="fas fa-minus-circle"></i></a></div>
                         </div>
                     </div>
                     <div v-if="groups.length === 0" class="mb-3"><?= t('None') ?></div>

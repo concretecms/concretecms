@@ -74,9 +74,9 @@ use Concrete\Core\Support\Facade\Url;
                             <?php if ($fvv->getFileVersionID() != $fv->getFileVersionID()) { ?>
                                 <a class="me-2 ccm-hover-icon" href="<?= URL::to(
                                     '/dashboard/files/details', 'preview_version', $f->getFileID(), $fvv->getFileVersionID()) ?>">
-                                    <i class="fa fa-search"></i></a>
+                                    <i class="fas fa-search"></i></a>
                                 <?php } else { ?>
-                                    <i class="me-2 fa fa-search" style="opacity: 0.2"></i>
+                                    <i class="me-2 fas fa-search" style="opacity: 0.2"></i>
                                 <?php } ?>
                         <?php } ?>
 
@@ -85,7 +85,7 @@ use Concrete\Core\Support\Facade\Url;
                         <a data-action="delete-version"
                            data-file-version-id="<?= $fvv->getFileVersionID() ?>"
                            data-token="<?= $token->generate('version/delete/' . $fvv->getFileID() . "/" . $fvv->getFileVersionId()) ?>"
-                           href="javascript:void(0)" class="ccm-hover-icon"><i class="fa fa-trash"></i></a>
+                           href="javascript:void(0)" class="ccm-hover-icon"><i class="fas fa-trash-alt"></i></a>
                         <?php } ?>
 
                     </td>

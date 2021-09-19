@@ -358,7 +358,7 @@ $(document).ready(function() {
     }
 
     $.fn.hideLoading = function() {
-        $(this).find('button').html('<i class="fa fa-play"></i> <?= t('Run') ?>').prop('disabled', false);
+        $(this).find('button').html('<i class="fas fa-play"></i> <?= t('Run') ?>').prop('disabled', false);
         var $row = $(this);
         $row.removeClass();
         $row.find('td').css('background-color', '');

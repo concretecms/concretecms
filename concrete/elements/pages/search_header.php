@@ -29,7 +29,7 @@
         <?php
         } ?>
         <div class="col-auto">
-            <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
+            <button class="btn btn-info" type="submit"><i class="fas fa-search"></i></button>
         </div>
 
     </form>

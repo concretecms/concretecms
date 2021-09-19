@@ -5,7 +5,7 @@ class ManyToManyFormatter extends AbstractFormatter
 {
     public function getIcon()
     {
-        return '<i class="fa fa-cubes"></i><i class="fa fa-arrow-right"></i> <i class="fa fa-cubes"></i>';
+        return '<i class="fas fa-cubes"></i><i class="fas fa-arrow-right"></i> <i class="fas fa-cubes"></i>';
     }
 
     public function getTypeDisplayName()

@@ -45,7 +45,7 @@ $responseObject = $permissionChecker->getResponseObject();
                     <label class="control-label form-label" for="bName">
                         <?php echo t('Block Name') ?>
 
-                        <i class="fa fa-question-circle launch-tooltip"
+                        <i class="fas fa-question-circle launch-tooltip"
                            title="<?php echo h(t('This can be useful when working with a block programmatically. This is rarely used or needed.')) ?>"></i>
                     </label>
 

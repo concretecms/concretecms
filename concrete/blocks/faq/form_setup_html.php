@@ -87,7 +87,7 @@
                 </div>
                 <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
                 <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>
-                <i class="fa fa-arrows"></i>
+                <i class="fas fa-trash-alt"></i>
 
                 <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="<?php echo $row['sortOrder']; ?>">
             </div>
@@ -113,7 +113,7 @@
         </div>
         <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
         <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>
-        <i class="fa fa-arrows"></i>
+        <i class="fas fa-trash-alt"></i>
 
         <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="">
     </div>

@@ -31,7 +31,7 @@
                                                 <li><a href="<?=$view->action('save_selected_skin', $skin->getIdentifier(), $token->generate('save_selected_skin'))?>"
                                                        class="dropdown-item">
                                                         <?php if ($themeSkinIdentifier == $skin->getIdentifier()) { ?>
-                                                            <span class="text-success"><i class="fa fa-check"></i> <?=$skin->getName()?></span>
+                                                            <span class="text-success"><i class="fas fa-check"></i> <?=$skin->getName()?></span>
                                                         <?php } else { ?>
                                                             <?=$skin->getName()?>
                                                         <?php } ?>

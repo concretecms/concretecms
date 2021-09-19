@@ -265,7 +265,7 @@ if ($controller->getAction() == 'add'
                 ?>
                 <li>
                     <a href="<?= $view->action('edit', $feed->getID()) ?>">
-                        <i class="fa fa-rss"></i> <?= $feed->getFeedDisplayTitle() ?>
+                        <i class="fas fa-rss"></i> <?= $feed->getFeedDisplayTitle() ?>
                     </a>
                 </li>
                 <?php

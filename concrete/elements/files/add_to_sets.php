@@ -46,7 +46,7 @@ $form = $app->make(Form::class);
 </div>
 
 <button type="button" class="btn-sm btn btn-secondary" data-action="add-file-set">
-    <?php echo t('Add Set') ?> <i class="fa fa-plus-circle"></i>
+    <?php echo t('Add Set') ?> <i class="fas fa-plus-circle"></i>
 </button>
 
 <script type="text/template" class="ccm-template-file-set-checkbox">
@@ -64,7 +64,7 @@ $form = $app->make(Form::class);
         </div>
         <div class="input-group-text">
             <a href="javascript:void(0);" class="ccm-hover-icon">
-                <i class="fa fa-minus-circle"></i>
+                <i class="fas fa-minus-circle"></i>
             </a>
         </div>
     </div>

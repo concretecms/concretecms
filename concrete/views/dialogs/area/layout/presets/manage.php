@@ -22,7 +22,7 @@ use Concrete\Core\Area\Layout\Preset\UserPreset;
 
                         <a href="javascript:void(0)" class="float-end icon-link delete-area-layout-preset"
                            data-action="delete-area-layout-preset">
-                            <i class="fa fa-trash-alt"></i>
+                            <i class="fas fa-trash-alt"></i>
                         </a>
                     </span>
                 </li>

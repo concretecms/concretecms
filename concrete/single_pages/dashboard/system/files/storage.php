@@ -55,7 +55,7 @@ switch ($controller->getTask()) {
                     <?= $form->label('fslName', t('Name')); ?>
                     <div class="input-group">
                         <?= $form->text('fslName', $fslName); ?>
-                        <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                        <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
                     </div>
                 </div>
                 <?php
@@ -116,7 +116,7 @@ switch ($controller->getTask()) {
         <ul class="item-select-list">
             <?php foreach ($locations as $location) { ?>
                 <li>
-                    <a href="<?= $view->action('edit', $location->getID()); ?>"><i class="fa fa-hdd-o"></i> <?= $location->getDisplayName(); ?></a>
+                    <a href="<?= $view->action('edit', $location->getID()); ?>"><i class="far fa-hdd"></i> <?= $location->getDisplayName(); ?></a>
                 </li>
             <?php } ?>
         </ul>

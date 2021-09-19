@@ -50,7 +50,7 @@ class DeletePageRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
     {
-        return '<i class="fa fa-trash-o"></i>';
+        return '<i class="far fa-trash-alt"></i>';
     }
 
     public function getWorkflowRequestApproveButtonText()

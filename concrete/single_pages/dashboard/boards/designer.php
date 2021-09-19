@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             ?>
             <li><a href="<?=URL::to('/dashboard/boards/designer/', 'view_element', $element->getID())?>">
-                    <i class="fa fa-th"></i>
+                    <i class="fas fa-th"></i>
                     <?=$name?>
                     <span class="text-muted float-end"><?=$created->format('F d, Y g:i a')?></span>
                 </a>
@@ -51,7 +51,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
             ?>
             <li><a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#element-draft-<?=$element->getId()?>">
-                    <i class="fa fa-th"></i>
+                    <i class="fas fa-th"></i>
                     <?=$name?>
                     <span class="text-muted float-end"><?=$created->format('F d, Y g:i a')?></span>
                 </a>

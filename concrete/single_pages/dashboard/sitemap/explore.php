@@ -24,7 +24,7 @@ if (!$canRead) {
         <?php
         if ($includeSystemPages) {
             ?>
-            <a class="dropdown-item" href="<?= $view->action('include_system_pages', 0) ?>"><span class="text-success"><i class="fa fa-check"></i> <?= t('Include System Pages in Sitemap') ?></span></a>
+            <a class="dropdown-item" href="<?= $view->action('include_system_pages', 0) ?>"><span class="text-success"><i class="fas fa-check"></i> <?= t('Include System Pages in Sitemap') ?></span></a>
             <?php
         } else {
             ?>

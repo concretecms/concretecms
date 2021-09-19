@@ -19,7 +19,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <ul class="item-select-list">
                 <?php foreach($clients as $client) { ?>
                     <li><a href="<?=URL::to('/dashboard/system/api/integrations', 'view_client', $client->getIdentifier())?>">
-                        <i class="fa fa-handshake-o"></i>
+                        <i class="far fa-handshake"></i>
                         <?=$client->getName()?>
                     </a></li>
                     <?php

@@ -160,7 +160,7 @@ $token = $app->make(Token::class);
                            dialog-width="640"
                            dialog-height="400"
                            data-command="add-form-set-control">
-                            <i class="fa fa-plus"></i>
+                            <i class="fas fa-plus"></i>
                         </a>
                     </li>
 

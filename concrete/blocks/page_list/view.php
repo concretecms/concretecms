@@ -28,7 +28,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
         <?php if (isset($rssUrl) && $rssUrl) {
             ?>
             <a href="<?php echo $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed">
-                <i class="fa fa-rss"></i>
+                <i class="fas fa-rss"></i>
             </a>
             <?php
         } ?>

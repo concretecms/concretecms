@@ -22,9 +22,9 @@ if ($controller->getTask() == 'view_detail') {
         </div>
         <div class="ccm-marketplace-detail-theme-slideshow-nav">
             <nav>
-                <li><a href="#" data-navigation="marketplace-slideshow-previous"><i class="fa fa-chevron-left"></i></a></li>
-                <li><a href="#" data-navigation="marketplace-slideshow-next"><i class="fa fa-chevron-right"></i></a></li>
-                <li><a href="#" data-launch="marketplace-slideshow-gallery"><i class="fa fa-image"></i></a></li>
+                <li><a href="#" data-navigation="marketplace-slideshow-previous"><i class="fas fa-chevron-left"></i></a></li>
+                <li><a href="#" data-navigation="marketplace-slideshow-next"><i class="fas fa-chevron-right"></i></a></li>
+                <li><a href="#" data-launch="marketplace-slideshow-gallery"><i class="far fa-image"></i></a></li>
             </nav>
         </div>
 
@@ -71,7 +71,7 @@ if ($controller->getTask() == 'view_detail') {
                     <?php 
 }
     ?>
-                    <li class="list-group-item"><a href="<?=$item->getRemoteHelpURL()?>" target="_blank"><i class="fa fa-comment"></i> <?=t('Get Help')?></a></li>
+                    <li class="list-group-item"><a href="<?=$item->getRemoteHelpURL()?>" target="_blank"><i class="fas fa-comment"></i> <?=t('Get Help')?></a></li>
                 </ul>
             </div>
             <div class="col-md-7 col-md-offset-1">

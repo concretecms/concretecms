@@ -85,7 +85,7 @@ class DeleteUserRequest extends UserRequest
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
     {
-        return '<i class="fa fa-thumbs-o-up"></i>';
+        return '<i class="far fa-thumbs-up"></i>';
     }
 
     public function getWorkflowRequestApproveButtonText()

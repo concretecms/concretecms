@@ -24,7 +24,7 @@ class FlatSitemapProvider extends StandardSitemapProvider
 
         if (is_object($parent) && !$parent->isError()) {
             $n = $dh->getNode($parent->getCollectionID());
-            $n->icon = 'fa fa-angle-double-up';
+            $n->icon = 'fas fa-angle-double-up';
             $n->expanded = true;
             $n->displaySingleLevel = true;
 

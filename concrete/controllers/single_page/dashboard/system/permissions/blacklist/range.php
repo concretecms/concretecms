@@ -50,7 +50,7 @@ class Range extends Blacklist
     {
         $html = '';
         $html .= '<tr data-range-id="' . $range->getIpAccessControlRangeID() . '">';
-        $html .= '<td><a class="btn btn-xs btn-danger ccm-iprange-delete" href="#"><i class="fa fa-times"></i></a></td>';
+        $html .= '<td><a class="btn btn-xs btn-danger ccm-iprange-delete" href="#"><i class="fas fa-times"></i></a></td>';
         $html .= '<td><code>' . $range->getIpRange() . '</code></td>';
         if ($range->getType() === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
             $html .= '<td>';

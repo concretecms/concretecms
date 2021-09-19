@@ -61,7 +61,7 @@ if ($key !== null) {
             <?= $form->label('akHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('akHandle', $akHandle, ['autofocus' => 'autofocus']) ?>
-                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
 
@@ -69,7 +69,7 @@ if ($key !== null) {
             <?= $form->label('akName', t('Name')) ?>
             <div class="input-group">
                 <?= $form->text('akName', $key === null ? '' : $key->getAttributeKeyName()) ?>
-                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
 

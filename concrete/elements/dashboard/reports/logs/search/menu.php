@@ -51,7 +51,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <ul class="ccm-dashboard-header-icons">
             <li>
                 <a href="<?php echo (string)UrlFacade::to("/dashboard/reports/logs/export"); ?>" class="ccm-hover-icon" title="<?php echo h(t('Export CSV')) ?>">
-                    <i class="fa fa-download" aria-hidden="true"></i>
+                    <i class="fas fa-download" aria-hidden="true"></i>
                 </a>
             </li>
         </ul>

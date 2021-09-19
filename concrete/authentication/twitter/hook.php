@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied');
 <div class="form-group">
     <a href="<?= \URL::to('/ccm/system/authentication/oauth2/twitter/attempt_attach'); ?>"
        class="btn btn-primary btn-twitter">
-        <i class="fa fa-twitter"></i>
+        <i class="fab fa-twitter"></i>
         <?= t('Attach a %s account', t('twitter')) ?>
     </a>
 </div>

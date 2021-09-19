@@ -33,7 +33,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?= $form->radio('manipulation_library', $id, $id === $manipulation_library, ['required' => 'required']) ?>
                 <label>
                     <?= h($name) ?>
-                    <?= t('(currently working: %s)', '<span class="ccm-check-manipulation-library" data-check-src="' . h($view->action('test_manipulation_library', $id, $token->generate('thumbnail-check-library-' . $id))) . '"><i class="fa fa-spinner fa-spin"></i></span>')?>
+                    <?= t('(currently working: %s)', '<span class="ccm-check-manipulation-library" data-check-src="' . h($view->action('test_manipulation_library', $id, $token->generate('thumbnail-check-library-' . $id))) . '"><i class="fas fa-spinner fa-spin"></i></span>')?>
                 </label>
             </div>
             <?php
@@ -82,7 +82,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     ?>
                     <span class="small text-muted" id="use_exif_data_to_rotate_images-warning"<?= $use_exif_data_to_rotate_images ? '' : ' style="display:none"' ?>>
                         <br>
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                        <i class="fas fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
                         <?= t('This feature requires the %s PHP extension, which is not currently enabled.', '<code>EXIF</code>') ?>
                     </span>
                     <script>
@@ -145,7 +145,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $(window).load(function() {
     function checked($container, ok) {
         $container.html(
-            ok ? '<i class="fa fa-check" style="color: green"></i>' : '<i class="fa fa-remove" style="color: red"></i>'
+            ok ? '<i class="fas fa-check" style="color: green"></i>' : '<i class="fas fa-times" style="color: red"></i>'
         );
     }
     $('.ccm-check-manipulation-library').each(function() {

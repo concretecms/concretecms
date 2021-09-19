@@ -88,7 +88,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?= $form->label(
                     'ENABLE_LOG_API',
                     t('Log API request headers') .
-                    ' <i class="fa fa-question-circle launch-tooltip" title="' .
+                    ' <i class="fas fa-question-circle launch-tooltip" title="' .
                     t('The logging level needs to be set to the value: Debug') . '"></i>',
                     ['class' => 'form-check-label']
                 ); ?>

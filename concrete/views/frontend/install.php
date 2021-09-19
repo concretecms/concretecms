@@ -130,17 +130,17 @@ if ($install_config) {
                                         <td>
                                             <?php
                                             if ($preconditionState === null) {
-                                                echo '<i class="precondition-state fa fa-spinner fa-spin"></i>';
+                                                echo '<i class="precondition-state fas fa-spinner fa-spin"></i>';
                                             } else {
                                                 switch ($preconditionState) {
                                                     case PreconditionResult::STATE_PASSED:
-                                                        echo '<i class="precondition-state fa fa-check"></i>';
+                                                        echo '<i class="precondition-state fas fa-check"></i>';
                                                         break;
                                                     case PreconditionResult::STATE_WARNING:
                                                         if (!$precondition instanceof WebPreconditionInterface) {
                                                             $showRerunTests = true;
                                                         }
-                                                        echo '<i class="precondition-state fa fa-warning"></i>';
+                                                        echo '<i class="precondition-state fas fa-exclamation-triangle"></i>';
                                                         break;
                                                     case PreconditionResult::STATE_SKIPPED:
                                                         break;
@@ -152,7 +152,7 @@ if ($install_config) {
                                                                 $requiredPreconditionFailed = true;
                                                             }
                                                         }
-                                                        echo '<i class="precondition-state fa fa-exclamation-circle"></i>';
+                                                        echo '<i class="precondition-state fas fa-exclamation-circle"></i>';
                                                         break;
                                                 }
                                             }
@@ -165,7 +165,7 @@ if ($install_config) {
                                             <?php
                                             if ($preconditionMessage !== '') {
                                                 ?>
-                                                <i class="fa fa-question-circle launch-tooltip"
+                                                <i class="fas fa-question-circle launch-tooltip"
                                                    title="<?= h($preconditionMessage) ?>"></i>
                                                 <?php
                                             }
@@ -225,7 +225,7 @@ if ($install_config) {
                         .addClass(success ? 'fa-check' : 'fa-exclamation-circle');
                     $message.empty();
                     if (message) {
-                        const $icon = $('<i class="fa fa-question-circle launch-tooltip" />').attr('title', message)
+                        const $icon = $('<i class="fas fa-question-circle launch-tooltip" />').attr('title', message)
                         const tooltip = new bootstrap.Tooltip($icon)
                         $message.append($icon);
                     }
@@ -267,7 +267,7 @@ if ($install_config) {
                 <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
                 <button class="btn btn-danger" type="submit">
                     <?= t('Run Tests Again') ?>
-                    <i class="fa fa-refresh"></i>
+                    <i class="fas fa-sync"></i>
                 </button>
             </form>
             <form method="post" action="<?= $urlResolver->resolve(['install', 'setup']) ?>"
@@ -649,7 +649,7 @@ if ($install_config) {
                             inviteToStayHere = false;
                             $("#install-progress-summary").html(<?= json_encode(t('All Done.')) ?>);
                             NProgress.done();
-                            $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site') . ' <i class="fa fa-thumbs-up"></i>')?>);
+                            $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site') . ' <i class="fas fa-thumbs-up"></i>')?>);
                             $('div.ccm-install-title ul.breadcrumb li.active').text(<?= json_encode(t('Installation Complete.')) ?>);
                             setTimeout(function () {
                                 $("#interstitial-message").hide();
@@ -722,7 +722,7 @@ if ($install_config) {
             <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'"
                     data-button="installation-complete" class="float-end btn btn-sm btn-primary">
                 <?= t('Installing...') ?>
-                <i class="fa fa-spinner fa-spin"></i>
+                <i class="fas fa-spinner fa-spin"></i>
             </button>
         </div>
     </div>

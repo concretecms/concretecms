@@ -128,9 +128,9 @@ class Group extends TreeNode
         if (is_object($obj)) {
             $obj->gID = $this->gID;
             if (count($this->getTreeNodeGroupObject()->getChildGroups()) > 0) {
-                $obj->icon = 'fa fa-users-folder';
+                $obj->icon = 'fas fa-folder';
             } else {
-                $obj->icon = 'fa fa-users';
+                $obj->icon = 'fas fa-users';
             }
             if (isset($this->gID)) {
                 $obj->title = $this->getTreeNodeDisplayName('text');

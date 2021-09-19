@@ -28,8 +28,8 @@ $packageService = $app->make(\Concrete\Core\Package\PackageService::class);
                     <?php if ($canEdit) {
                         ?>
                         <div class="btn-group">
-                            <a href="<?=$view->url('/account/edit_profile')?>" class="btn btn-lg btn-outline-secondary"><i class="fa fa-cog"></i> <?=t('Edit')?></a>
-                            <a href="<?=$view->url('/')?>" class="btn btn-lg btn-outline-secondary"><i class="fa fa-home"></i> <?=t('Home')?></a>
+                            <a href="<?=$view->url('/account/edit_profile')?>" class="btn btn-lg btn-outline-secondary"><i class="fas fa-cog"></i> <?=t('Edit')?></a>
+                            <a href="<?=$view->url('/')?>" class="btn btn-lg btn-outline-secondary"><i class="fas fa-home"></i> <?=t('Home')?></a>
                         </div>
                         <?php
                     } else {

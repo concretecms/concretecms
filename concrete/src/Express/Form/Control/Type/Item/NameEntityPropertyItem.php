@@ -10,7 +10,7 @@ class NameEntityPropertyItem implements ItemInterface
 
     public function getIcon()
     {
-        return '<i class="fa fa-header"></i>';
+        return '<i class="fas fa-heading"></i>';
     }
 
     public function getItemIdentifier()

@@ -31,7 +31,7 @@ else {
             <tr class="ccm_ip-access-control-category" onclick="<?= h('window.location.href = ' . json_encode($href) . ';') ?>">
                 <td><a href="<?= h($href) ?>"><code><?= h($category->getHandle()) ?></code></a></td>
                 <td><a href="<?= h($href) ?>"><?= h($category->getDisplayName()) ?></a></td>
-                <td><?= $category->isEnabled() ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-ban text-danger"></i>' ?></td>
+                <td><?= $category->isEnabled() ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-ban text-danger"></i>' ?></td>
                 <td>
                     <?php
                     if ($category->getPackage() !== null) {

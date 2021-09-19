@@ -106,7 +106,7 @@ $form = $app->make(Form::class);
                 <?php foreach ($groupSets as $gs) { ?>
                     <li>
                         <a href="<?php echo (string)Url::to('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID()); ?>">
-                            <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName(); ?>
+                            <i class="fas fa-users"></i> <?php echo $gs->getGroupSetDisplayName(); ?>
                         </a>
                     </li>
                 <?php } ?>

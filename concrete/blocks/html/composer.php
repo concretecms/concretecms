@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     echo $form->label($view->field('content'), $label);
 
     if ($description) { ?>
-        <i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?php echo $description ?>"></i>
+        <i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?php echo $description ?>"></i>
     <?php } ?>
 
     <div class="controls">

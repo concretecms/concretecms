@@ -65,7 +65,7 @@
                     <td><a <?php if ($version->isApproved()) { ?>style="display: none"<?php } ?> data-action="delete-version"
                            data-calendar-event-version-id="<?= $version->getID() ?>"
                            data-token="<?= Core::make('token')->generate('calendar/event/version/delete/' . $version->getID()) ?>"
-                           href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>
+                           href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a></td>
             </tr>
             <?php
             $count--;

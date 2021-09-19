@@ -6,7 +6,7 @@
 
     <div class="ccm-block-desktop-latest-form-inner">
         <div class="ccm-block-desktop-latest-form-icon">
-            <i class="fa fa-upload fa-lg"></i>
+            <i class="fas fa-upload fa-lg"></i>
         </div>
 
         <h3><?=t('Latest Form')?></h3>
