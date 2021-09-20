@@ -1,14 +1,21 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+/** @var \Concrete\Block\Feature\Controller $controller */
+/** @var \Concrete\Core\Form\Service\Form $form */
+$bID = $bID ?? 0;
+$icon = $icon ?? '';
+$title = $title ?? '';
+$titleFormat = $titleFormat ?? '';
+$internalLinkCID = $internalLinkCID ?? 0;
+$externalLink = $externalLink ?? '';
+?>
 
 <fieldset>
     <legend><?=t('Display')?></legend>
     <div class="form-group ccm-block-select-icon">
         <?php echo $form->label('icon', t('Icon'))?>
-        <div class="input-group">
-            <?php echo $form->select('icon', $icons, $icon); ?>
-            <div class="input-group-addon">
-                <i data-preview="icon" class="<?php echo !$icon ?: 'fa fa-' . $icon ?>"></i>
-            </div>
+        <div id="ccm-icon-selector-<?= h($bID) ?>">
+            <icon-selector name="icon" selected="<?= h($icon) ?>" />
         </div>
     </div>
 
@@ -55,12 +62,12 @@
 
 <script type="text/javascript">
 $(function() {
-    $('div.ccm-block-select-icon').on('change', 'select', function(event) {
-        $(event.delegateTarget).find('i[data-preview="icon"]').removeClass();
-        if ($(this).val()) {
-            $(event.delegateTarget).find('i[data-preview="icon"]').addClass('fa fa-' + $(this).val());
-        }
-    });
+    Concrete.Vue.activateContext('cms', function(Vue, config) {
+        new Vue({
+            el: '#ccm-icon-selector-<?= h($bID) ?>',
+            components: config.components
+        })
+    })
     $('select[data-select=feature-link-type]').on('change', function() {
        if ($(this).val() == '0') {
            $('div[data-select-contents=feature-link-type-internal]').hide();
