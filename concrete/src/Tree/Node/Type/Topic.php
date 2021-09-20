@@ -66,7 +66,7 @@ class Topic extends TreeNode
         if (is_object($obj)) {
             $p = new \Permissions($this);
             $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
-            $obj->icon = 'far fa-file';
+            $obj->icon = 'fas fa-file';
             return $obj;
         }
     }

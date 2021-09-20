@@ -40,7 +40,7 @@ $resolverManager = app(ResolverManagerInterface::class);
 					<?php if ($attachmentsEnabled) {
     ?>
 						<button type="button" class="float-end btn btn-secondary ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files');
-    ?>"><i class="far fa-image"></i></button>
+    ?>"><i class="fas fa-image"></i></button>
 					<?php
 }
     ?>
@@ -91,7 +91,7 @@ $resolverManager = app(ResolverManagerInterface::class);
 					<?php if ($attachmentsEnabled) {
     ?>
 						<button type="button" class="float-end btn btn-secondary ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files');
-    ?>"><i class="far fa-image"></i></button>
+    ?>"><i class="fas fa-image"></i></button>
 					<?php
 }
     ?>

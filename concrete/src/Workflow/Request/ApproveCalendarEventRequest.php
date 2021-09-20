@@ -96,7 +96,7 @@ class ApproveCalendarEventRequest extends CalendarEventRequest
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
     {
-        return '<i class="far fa-thumbs-up"></i>';
+        return '<i class="fas fa-thumbs-up"></i>';
     }
 
     public function getWorkflowRequestApproveButtonText()
@@ -107,7 +107,7 @@ class ApproveCalendarEventRequest extends CalendarEventRequest
     public function getRequestIconElement()
     {
         $span = new Element('i');
-        $span->addClass('far fa-calendar');
+        $span->addClass('fas fa-calendar');
 
         return $span;
     }

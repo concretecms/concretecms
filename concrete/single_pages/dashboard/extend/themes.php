@@ -24,7 +24,7 @@ if ($controller->getTask() == 'view_detail') {
             <nav>
                 <li><a href="#" data-navigation="marketplace-slideshow-previous"><i class="fas fa-chevron-left"></i></a></li>
                 <li><a href="#" data-navigation="marketplace-slideshow-next"><i class="fas fa-chevron-right"></i></a></li>
-                <li><a href="#" data-launch="marketplace-slideshow-gallery"><i class="far fa-image"></i></a></li>
+                <li><a href="#" data-launch="marketplace-slideshow-gallery"><i class="fas fa-image"></i></a></li>
             </nav>
         </div>
 

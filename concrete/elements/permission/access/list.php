@@ -31,7 +31,7 @@ foreach ($accessTypes as $accessType => $title) {
 	<a href="<?= h($resolverManager->resolve(['/ccm/system/permissions/access/entity']) . "?peID={$pae->getAccessEntityID()}?>&pdID={$pdID}&accessType={$accessType}") ?>" dialog-width="510" dialog-height="500" dialog-title="<?=t('Add Access Entity')?>" class="<?php if (!is_object($pa->getPermissionDurationObject())) {
     ?>icon-link<?php
 }
-    ?> float-end dialog-launch"><i class="far fa-clock <?php if (is_object($pa->getPermissionDurationObject())) {
+    ?> float-end dialog-launch"><i class="fas fa-clock <?php if (is_object($pa->getPermissionDurationObject())) {
     ?>text-info<?php
 }
     ?>"></i></a>

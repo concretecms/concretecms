@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die('Access denied.');
     <?= $form->label('apisecret', t('App Secret')) ?>
     <div class="input-group">
         <?= $form->password('apisecret', $apisecret, ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
-        <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="far fa-eye"></i></button>
+        <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="fas fa-eye"></i></button>
     </div>
 </div>
 
@@ -53,13 +53,13 @@ $(document).ready(function() {
             $apisecret.attr('type', 'text');
             $('#showsecret')
                 .attr('title', <?= json_encode(t('Hide secret key')) ?>)
-                .html('<i class="far fa-eye-slash"></i>')
+                .html('<i class="fas fa-eye-slash"></i>')
             ;
         } else {
             $apisecret.attr('type', 'password');
             $('#showsecret')
                 .attr('title', <?= json_encode(t('Show secret key')) ?>)
-                .html('<i class="far fa-eye"></i>')
+                .html('<i class="fas fa-eye"></i>')
             ;
         }
     });

@@ -188,7 +188,7 @@ $identifier = $app->make(Identifier::class);
             <a href="javascript:void(0);"
                title="<?php echo h(t('Background Color and Image')); ?>">
 
-                <i class="far fa-image"></i>
+                <i class="fas fa-image"></i>
             </a>
 
             <div class="ccm-dropdown-menu">

@@ -50,7 +50,7 @@ class DeleteCalendarEventRequest extends ApproveCalendarEventRequest
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
     {
-        return '<i class="far fa-trash-alt"></i>';
+        return '<i class="fas fa-trash-alt"></i>';
     }
 
     public function getWorkflowRequestApproveButtonText()
@@ -61,7 +61,7 @@ class DeleteCalendarEventRequest extends ApproveCalendarEventRequest
     public function getRequestIconElement()
     {
         $span = new Element('i');
-        $span->addClass('far fa-calendar');
+        $span->addClass('fas fa-calendar');
 
         return $span;
     }

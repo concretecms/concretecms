@@ -67,7 +67,7 @@ abstract class PageRequest extends Request
     public function getRequestIconElement()
     {
         $span = new Element('i');
-        $span->addClass('far fa-file-alt');
+        $span->addClass('fas fa-file-alt');
         return $span;
     }
 

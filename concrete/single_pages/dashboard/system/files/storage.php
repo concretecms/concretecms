@@ -116,7 +116,7 @@ switch ($controller->getTask()) {
         <ul class="item-select-list">
             <?php foreach ($locations as $location) { ?>
                 <li>
-                    <a href="<?= $view->action('edit', $location->getID()); ?>"><i class="far fa-hdd"></i> <?= $location->getDisplayName(); ?></a>
+                    <a href="<?= $view->action('edit', $location->getID()); ?>"><i class="fas fa-hdd"></i> <?= $location->getDisplayName(); ?></a>
                 </li>
             <?php } ?>
         </ul>

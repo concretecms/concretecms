@@ -42,7 +42,7 @@ if ($controller->getTask() == 'view_detail') {
             </div>
         </div>
         <nav>
-            <li><a href="#" data-launch="marketplace-gallery"><i class="far fa-image"></i> <?=t('Screenshots')?></a></li>
+            <li><a href="#" data-launch="marketplace-gallery"><i class="fas fa-image"></i> <?=t('Screenshots')?></a></li>
         </nav>
     </div>
 

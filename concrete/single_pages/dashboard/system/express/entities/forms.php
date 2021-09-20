@@ -38,7 +38,7 @@ use Concrete\Core\View\View;
                 <?php foreach ($forms as $form) { ?>
                     <li>
                         <a href="<?php echo (string)Url::to('/dashboard/system/express/entities/forms', 'view_form_details', $form->getID()) ?>">
-                            <i class="far fa-list-alt"></i> <?php echo h($form->getName()) ?>
+                            <i class="fas fa-list-alt"></i> <?php echo h($form->getName()) ?>
                         </a>
                     </li>
                 <?php } ?>

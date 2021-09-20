@@ -25,7 +25,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
             <?=$publishTitle?>
         </button>
         <button id="ccm-check-in-schedule" type="button" class="pe-3 ps-3 btn btn-primary" <?= $publishAction ?: 'disabled' ?>>
-            <i class="far fa-clock"></i>
+            <i class="fas fa-clock"></i>
         </button>
     </div>
     <div id="ccm-check-in-schedule-wrapper" style="display:none;">

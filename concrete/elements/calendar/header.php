@@ -68,7 +68,7 @@ if (!isset($month)) {
         <a href="<?= URL::to('/dashboard/calendar/events', 'view',
             $calendar->getID()) ?>" class="btn btn-secondary <?php if ($mode != 'list') {
     ?>active<?php
-} ?>"><i class="far fa-calendar-alt"></i></a>
+} ?>"><i class="fas fa-calendar-alt"></i></a>
         <a href="<?= URL::to('/dashboard/calendar/event_list', 'view',
             $calendar->getID()) ?>" class="btn btn-secondary <?php if ($mode == 'list') {
     ?>active<?php

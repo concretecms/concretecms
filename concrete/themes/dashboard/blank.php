@@ -9,7 +9,7 @@ $this->inc('elements/header.php');
             <?php if ($_bookmarked) { ?>
                 <i class="fas fa-lg fa-bookmark"></i>
             <?php } else { ?>
-                <i class="far fa-lg fa-bookmark"></i>
+                <i class="fas fa-lg fa-bookmark"></i>
             <?php } ?>
         </a>
     <?php } ?>

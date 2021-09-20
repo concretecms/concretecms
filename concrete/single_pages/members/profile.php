@@ -19,7 +19,7 @@ $packageService = $app->make(\Concrete\Core\Package\PackageService::class);
                     <h1><?=$profile->getUserName()?></h1>
                     <div class="ccm-profile-statistics">
                         <div class="ccm-profile-statistics-item">
-                            <i class="far fa-calendar-alt"></i> <?=t(/*i18n: %s is a date */'Joined on %s', $dh->formatDate($profile->getUserDateAdded(), true))?>
+                            <i class="fas fa-calendar-alt"></i> <?=t(/*i18n: %s is a date */'Joined on %s', $dh->formatDate($profile->getUserDateAdded(), true))?>
                         </div>
                     </div>
 

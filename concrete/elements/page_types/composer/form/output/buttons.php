@@ -16,7 +16,7 @@ $publishDate = $v->getPublishDate();
     <div class="float-end btn-group" data-page-type-composer-form-btns="publish">
         <button type="button" data-page-type-composer-form-btn="publish" class="ps-3 pe-3 btn btn-primary"><?=$publishTitle?></button>
         <button data-page-type-composer-form-btn="schedule" type="button" class="ps-3 pe-3 btn btn-primary <?php if ($publishDate) { ?>active<?php } ?>">
-            <i class="far fa-clock"></i>
+            <i class="fas fa-clock"></i>
         </button>
     </div>
 

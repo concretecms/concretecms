@@ -439,7 +439,7 @@ echo $userInterface->tabs([
                 <!--suppress HtmlUnknownTarget, HtmlRequiredAltAttribute -->
                 <img src="<%= image_url %>"/>
                 <% } else { %>
-                <i class="far fa-image"></i>
+                <i class="fas fa-image"></i>
                 <% } %>
             </div>
             <input type="hidden" name="<?php echo $view->field('fID'); ?>[]" class="image-fID" value="<%=fID%>"/>
