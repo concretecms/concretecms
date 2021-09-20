@@ -890,15 +890,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function edit()
     {
         $this->requireAsset('css', 'font-awesome');
-        $classes = $this->getIconClasses();
-
-        // let's clean them up
-        $icons = array('' => t('Choose Icon'));
-        $txt = Core::make('helper/text');
-        foreach ($classes as $class) {
-            $icons[$class] = $txt->unhandle(substr($class, 7));
-        }
-        $this->set('icons', $icons);
     }
 
     public function getSearchableContent()
