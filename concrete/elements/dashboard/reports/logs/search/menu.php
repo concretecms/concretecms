@@ -50,6 +50,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div class="col-auto">
         <ul class="ccm-dashboard-header-icons">
             <li>
+                <a href="<?php echo (string)UrlFacade::to("/ccm/system/dialogs/logs/delete_all"); ?>" class="ccm-hover-icon dialog-launch" dialog-title="Delete All" title="<?php echo h(t('Clear log')) ?>">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </li>
+            <li>
                 <a href="<?php echo (string)UrlFacade::to("/dashboard/reports/logs/export"); ?>" class="ccm-hover-icon" title="<?php echo h(t('Export CSV')) ?>">
                     <i class="fa fa-download" aria-hidden="true"></i>
                 </a>
