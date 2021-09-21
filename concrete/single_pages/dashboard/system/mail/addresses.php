@@ -49,7 +49,7 @@
         <legend><?php echo t('Website Registration Notification'); ?></legend>
         <div class="form-group">
             <?php echo $form->label('registerNotificationName', t('Email From Name')); ?>
-            <?php echo $form->email('registerNotificationName', $registerNotificationName); ?>
+            <?php echo $form->text('registerNotificationName', $registerNotificationName); ?>
         </div>
         <div class="form-group">
             <?php echo $form->label('registerNotificationAddress', t('Email Address')); ?>

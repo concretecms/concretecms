@@ -8,6 +8,9 @@ use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
 
 
 class DeleteAll extends BackendInterfaceController
@@ -17,13 +20,13 @@ class DeleteAll extends BackendInterfaceController
 
     protected function canAccess()
     {
-        $page = Page::getByPath('/dashboard/reports/logs');
-        $checker = new Permissions($page);
-        return $checker->canViewPage();
+        $key = Key::getByHandle("delete_log_entries");
+        return $key->validate();
     }
 
     public function view()
-    {}
+    {
+    }
 
     public function submit()
     {
@@ -32,7 +35,7 @@ class DeleteAll extends BackendInterfaceController
         /** @var EditResponse $editResponse */
         $editResponse = new EditResponse();
 
-        if($this->canAccess()){
+        if ($this->canAccess()) {
             /** @var Connection $db */
             $db = $this->app->make(Connection::class);
 
@@ -42,11 +45,10 @@ class DeleteAll extends BackendInterfaceController
             $db->executeQuery("TRUNCATE TABLE Logs");
 
             $editResponse->setMessage(t('Log cleared successfully.'));
-        }else{
+        } else {
             $editResponse->setMessage(t('Access denied'));
         }
 
         return $responseFactory->json($editResponse->getJSONObject());
-
     }
 }
