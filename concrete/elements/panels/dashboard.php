@@ -66,7 +66,7 @@ if ($section) {
                         <?= t('Dashboard') ?>
                     </a>
 
-                    <h5><?=h(t($section->getCollectionName()))?></h5>
+                    <h5><a href="<?=$section->getCollectionLink()?>"><?=h(t($section->getCollectionName()))?></a></h5>
                 </header>
 
                 <?php

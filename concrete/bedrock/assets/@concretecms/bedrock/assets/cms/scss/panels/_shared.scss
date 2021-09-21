@@ -544,13 +544,9 @@ div.ccm-panel-transitioning {
 
 div.ccm-panel-content {
   header {
-    a.ccm-panel-back {
+    a {
       color: $gray-700;
-      display: block;
-      margin-bottom: 30px;
-      margin-top: -15px;
       text-decoration: none;
-
       transition: color 0.1s ease-in-out;
 
       &:hover {
@@ -560,6 +556,12 @@ div.ccm-panel-content {
           fill: $blue;
         }
       }
+    }
+
+    a.ccm-panel-back {
+      display: block;
+      margin-bottom: 30px;
+      margin-top: -15px;
 
       svg {
         height: 20px;
@@ -567,7 +569,6 @@ div.ccm-panel-content {
         width: 20px;
       }
     }
-
   }
 }
 
