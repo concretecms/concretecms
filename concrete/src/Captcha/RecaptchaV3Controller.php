@@ -141,17 +141,21 @@ if (typeof window.RecaptchaV3 === "undefined") {
                 }
             ));
         });
-
-        grecaptcha.ready(function () {
-            $('.recaptcha-v3').each(function () {
-                grecaptcha.execute(
-                    $(this).data("clientId"),
-                    {
-                        action: 'submit'
-                    }
-                );
-            });
-        });
+		
+		function ready() {
+			grecaptcha.ready(function () {
+				$('.recaptcha-v3').each(function () {
+					grecaptcha.execute(
+						$(this).data("clientId"),
+						{
+							action: 'submit'
+						}
+					);
+				});
+			});
+		}
+		ready();
+		setInterval(ready, 110000);
     };
 }
 </script>
