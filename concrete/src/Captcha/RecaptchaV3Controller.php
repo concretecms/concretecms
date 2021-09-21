@@ -141,17 +141,21 @@ if (typeof window.RecaptchaV3 === "undefined") {
                 }
             ));
         });
-
-        grecaptcha.ready(function () {
-            $('.recaptcha-v3').each(function () {
-                grecaptcha.execute(
-                    $(this).data("clientId"),
-                    {
-                        action: 'submit'
-                    }
-                );
+		
+        function recaptchaReady() {
+            grecaptcha.ready(function () {
+                $('.recaptcha-v3').each(function () {
+                    grecaptcha.execute(
+                        $(this).data("clientId"),
+                        {
+                            action: 'submit'
+                        }
+                    );
+                });
             });
-        });
+        }
+		recaptchaReady();
+		setInterval(recaptchaReady, 110000);
     };
 }
 </script>
@@ -190,7 +194,9 @@ EOL;
         $queryString = http_build_query(
             [
                 'secret' => $config->get('captcha.recaptcha_v3.secret_key'),
-                'remoteip' => $config->get('captcha.recaptcha_v3.send_ip') ? (string)$this->app->make(IPService::class)->getRequestIPAddress() : '',
+                'remoteip' => $config->get('captcha.recaptcha_v3.send_ip') ? (string)$this->app->make(
+                    IPService::class
+                )->getRequestIPAddress() : '',
                 'response' => $this->request->request->get('g-recaptcha-response'),
             ]
         );
@@ -235,12 +241,17 @@ EOL;
         }
         $score = (float)$score;
         $minimumScore = $config->get('captcha.recaptcha_v3.score');
-        if (array_get($data, 'action') === 'submit' && array_get($data, 'success') === true && $score >= $minimumScore) {
+        if (array_get($data, 'action') === 'submit' && array_get(
+                $data,
+                'success'
+            ) === true && $score >= $minimumScore) {
             return true;
         }
 
         if ($config->get('captcha.recaptcha_v3.log_score') && $score < $minimumScore) {
-            $this->logger->notice(t('reCAPTCHA V3 blocked as score returned (%1$s) is below the threshold (%2$s)', $score, $minimumScore));
+            $this->logger->notice(
+                t('reCAPTCHA V3 blocked as score returned (%1$s) is below the threshold (%2$s)', $score, $minimumScore)
+            );
         }
 
         return false;
