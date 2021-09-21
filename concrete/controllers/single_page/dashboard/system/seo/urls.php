@@ -181,12 +181,12 @@ class Urls extends DashboardSitePageController
                         break;
                 }
 
-                return h($message) . $this->getServerCodeHtml($rule->getCode());
+                return h($message) .'<br>'. $this->getServerCodeHtml($rule->getCode());
         }
     }
 
     protected function getServerCodeHtml(string $ruleCode): string
     {
-        return $this->app->make(Form::class)->textarea('', h($ruleCode), ['rows' => substr_count($ruleCode, "\n") + 1, 'onclick' => 'this.select()', 'readonly' => 'readonly', 'class' => 'font-monospace']);
+        return $this->app->make(Form::class)->textarea('', h($ruleCode), ['rows' => substr_count($ruleCode, "\n") + 1, 'onclick' => 'this.select()', 'readonly' => 'readonly', 'class' => 'font-monospace w-100']);
     }
 }
