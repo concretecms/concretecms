@@ -20,6 +20,8 @@ $router->all('/bulk/delete', 'Bulk\Delete::view');
 $router->all('/bulk/delete/submit', 'Bulk\Delete::submit');
 $router->all('/delete', 'Delete::view');
 $router->all('/delete/submit', 'Delete::submit');
+$router->all('/delete_all', 'DeleteAll::view');
+$router->all('/delete_all/submit', 'DeleteAll::submit');
 
 $router->all('/advanced_search/preset/edit', 'Preset\Edit::view');
 $router->all('/advanced_search/preset/edit/edit_search_preset', 'Preset\Edit::edit_search_preset');
