@@ -1,35 +1,34 @@
 <?php
 
-namespace Concrete\Core\Support\CodingStyle;
+declare(strict_types=1);
+
+namespace Concrete\Core\Support\CodingStyle\PhpFixer;
 
 use ArrayObject;
+use PhpCsFixer\Cache\CacheManagerInterface;
 use PhpCsFixer\Cache\Directory;
 use PhpCsFixer\Cache\FileCacheManager;
 use PhpCsFixer\Cache\FileHandler;
 use PhpCsFixer\Cache\NullCacheManager;
 use PhpCsFixer\Cache\Signature;
+use PhpCsFixer\Differ\UnifiedDiffer;
 use PhpCsFixer\Error\ErrorsManager;
 use PhpCsFixer\Linter\Linter;
-use PhpCsFixer\Runner\Runner;
+use PhpCsFixer\Runner\Runner as PhpCsFixerRunner;
 use PhpCsFixer\ToolInfo;
-use Concrete\Core\Events\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Finder\Finder;
 use Traversable;
 
 /**
  * Wrapper to PHP-CS-Fixer.
  */
-class PhpFixerRunner
+class Runner
 {
     /**
-     * @var \Concrete\Core\Support\CodingStyle\PhpFixerRuleResolver
+     * @var \Concrete\Core\Support\CodingStyle\PhpFixer\RuleResolver
      */
     protected $ruleResolver;
-
-    /**
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
 
     /**
      * @var array
@@ -37,43 +36,42 @@ class PhpFixerRunner
     protected $steps;
 
     /**
-     * @var \PhpCsFixer\Error\ErrorsManager
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher|null
      */
-    protected $errorManager;
+    private $eventDispatcher;
+
+    /**
+     * @var \PhpCsFixer\Error\ErrorsManager|null
+     */
+    private $errorsManager;
 
     /**
      * @var string|null
      */
     private $phpCSFixerVersion;
 
-    /**
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerRuleResolver $ruleResolver
-     * @param EventDispatcher $eventDispatcher
-     */
-    public function __construct(PhpFixerRuleResolver $ruleResolver, EventDispatcher $eventDispatcher)
+    public function __construct(RuleResolver $ruleResolver, EventDispatcher $eventDispatcher)
     {
         $this->ruleResolver = $ruleResolver;
-        $this->eventDispatcher = $eventDispatcher;
         $this->resetSteps();
         $this->resetErrors();
     }
 
-    /**
-     * @return EventDispatcher
-     */
-    public function getEventDispatcher()
+    public function getEventDispatcher(): EventDispatcher
     {
+        if ($this->eventDispatcher === null) {
+            $this->eventDispatcher = new EventDispatcher();
+        }
+
         return $this->eventDispatcher;
     }
 
     /**
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
-     * @param array $paths
-     * @param int $flags
+     * @param string[] $paths
      *
      * @return $this
      */
-    public function addStep(PhpFixerOptions $options, array $paths, $flags)
+    public function addStep(Options $options, array $paths, int $flags): self
     {
         $this->steps[] = [
             'options' => $options,
@@ -87,25 +85,23 @@ class PhpFixerRunner
     /**
      * @return $this
      */
-    public function resetSteps()
+    public function resetSteps(): self
     {
         $this->steps = [];
 
         return $this;
     }
 
-    /**
-     * @return \PhpCsFixer\Error\ErrorsManager
-     */
-    public function getErrorManager()
+    public function getErrorsManager(): ErrorsManager
     {
-        return $this->errorManager;
+        if ($this->errorsManager === null) {
+            $this->errorsManager = new ErrorsManager();
+        }
+
+        return $this->errorsManager;
     }
 
-    /**
-     * @return int
-     */
-    public function calculateNumberOfFiles()
+    public function calculateNumberOfFiles(): int
     {
         $sum = 0;
         foreach (array_keys($this->steps) as $stepIndex) {
@@ -116,12 +112,7 @@ class PhpFixerRunner
         return $sum;
     }
 
-    /**
-     * @param bool $dryRun
-     *
-     * @return array
-     */
-    public function apply($dryRun)
+    public function apply(bool $dryRun): array
     {
         $this->resetErrors();
         $changes = [];
@@ -132,31 +123,23 @@ class PhpFixerRunner
         return $changes;
     }
 
-    /**
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
-     * @param \Symfony\Component\Finder\Finder|\ArrayObject $finder
-     * @param int $flags
-     * @param bool $dryRun
-     *
-     * @return array|void[]|NULL[]|string[][]|string[][][]
-     */
-    protected function applyStep(PhpFixerOptions $options, Traversable $finder, $flags, $dryRun)
+    protected function applyStep(Options $options, Traversable $finder, int $flags, bool $dryRun): array
     {
         $rules = $this->ruleResolver->getRules($flags, true, $options->getMinimumPhpVersion());
         $fixers = $this->ruleResolver->getFixers($rules);
 
         $linter = new Linter();
-        $runner = new Runner(
+        $runner = new PhpCsFixerRunner(
             $finder,
             $fixers,
-            new Differ(),
-            $this->eventDispatcher,
-            $this->errorManager,
+            new UnifiedDiffer(),
+            $this->getEventDispatcher(),
+            $this->getErrorsManager(),
             $linter,
             $dryRun,
             $this->createCacheManager($options, $flags, $dryRun, $rules),
             null,
-            false
+            false,
         );
 
         $changes = [];
@@ -173,12 +156,9 @@ class PhpFixerRunner
     }
 
     /**
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
-     * @param array $paths
-     *
-     * @return \Symfony\Component\Finder\Finder
+     * @param string[] $paths
      */
-    protected function createFinder(PhpFixerOptions $options, array $paths)
+    protected function createFinder(Options $options, array $paths): Finder
     {
         $pathsByType = ['dir' => [], 'file' => []];
         foreach ($paths as $path) {
@@ -206,15 +186,7 @@ class PhpFixerRunner
         return $finder;
     }
 
-    /**
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
-     * @param int $flags
-     * @param bool $dryRun
-     * @param array $rules
-     *
-     * @return \PhpCsFixer\Cache\CacheManagerInterface
-     */
-    protected function createCacheManager(PhpFixerOptions $options, $flags, $dryRun, array $rules)
+    protected function createCacheManager(Options $options, $flags, $dryRun, array $rules): CacheManagerInterface
     {
         if ($options->isCacheDisabled()) {
             return new NullCacheManager();
@@ -222,38 +194,23 @@ class PhpFixerRunner
 
         return new FileCacheManager(
             new FileHandler($this->getCacheFilename($options, $flags)),
-            new Signature(
-                PHP_VERSION,
-                $this->getPhpCSFixerVersion(),
-                '    ',
-                "\n",
-                $rules
-            ),
+            new Signature(PHP_VERSION, $this->getPhpCSFixerVersion(), '    ', "\n", $rules),
             $dryRun,
-            new Directory($options->getWebRoot())
+            new Directory($options->getWebRoot()),
         );
     }
 
-    /**
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
-     * @param int $flags
-     *
-     * @return string
-     */
-    protected function getCacheFilename(PhpFixerOptions $options, $flags)
+    protected function getCacheFilename(Options $options, int $flags): string
     {
-        return $options->getWebRoot() . '/.php_cs.cache.' . $flags . '@' . trim(preg_replace('/[^\w\.\@]+/', '_', PHP_VERSION), '_');
+        return $options->getWebRoot() . '/.php-cs-fixer.cache.' . $flags . '@' . trim(preg_replace('/[^\w\.\@]+/', '_', PHP_VERSION), '_');
     }
 
-    protected function resetErrors()
+    protected function resetErrors(): void
     {
-        $this->errorManager = new ErrorsManager();
+        $this->errorsManager = null;
     }
 
-    /**
-     * @return string
-     */
-    protected function getPhpCSFixerVersion()
+    protected function getPhpCSFixerVersion(): string
     {
         if ($this->phpCSFixerVersion === null) {
             $phpCSFixerToolInfo = new ToolInfo();
@@ -263,10 +220,7 @@ class PhpFixerRunner
         return $this->phpCSFixerVersion;
     }
 
-    /**
-     * @param int $stepIndex
-     */
-    private function expandFinder($stepIndex)
+    private function expandFinder(int $stepIndex): void
     {
         if ($this->steps[$stepIndex]['finder'] instanceof Finder) {
             $this->steps[$stepIndex]['finder'] = new ArrayObject(iterator_to_array($this->steps[$stepIndex]['finder']->getIterator()));

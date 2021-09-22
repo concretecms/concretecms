@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Concrete\Core\Support\CodingStyle;
 
 use DirectoryIterator;
@@ -9,60 +11,64 @@ use RuntimeException;
 use SplFileInfo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Terminal;
 
 class PhpFixer
 {
     /**
-     * Coding style rules flag: compatible with PHP versions prior to 5.5.9 (the minimum PHP version required by concrete5).
+     * Coding style rules flag: no flags.
      *
      * @var int
      */
-    const FLAG_OLDPHP = 0x01;
+    public const FLAG_NONE = 0b00000000;
+
+    /**
+     * Coding style rules flag: compatible with very old PHP versions.
+     *
+     * @var int
+     */
+    public const FLAG_OLDPHP = 0b00000001;
 
     /**
      * Coding style rules flag: PHP-only files.
      *
      * @var int
      */
-    const FLAG_PHPONLY = 0x02;
+    public const FLAG_PHPONLY = 0b00000010;
 
     /**
      * Coding style rules flag: bootstrap files.
      *
      * @var int
      */
-    const FLAG_BOOTSTRAP = 0x03; // FLAG_OLDPHP | FLAG_PHPONLY
+    public const FLAG_BOOTSTRAP = self::FLAG_OLDPHP | self::FLAG_PHPONLY;
 
     /**
      * Coding style rules flag: files that implement classes following the PSR-4 rules.
      *
      * @var int
      */
-    const FLAG_PSR4CLASS = 0x06; // Includes FLAG_PHPONLY
+    public const FLAG_PSR4CLASS = 0b00000100 + self::FLAG_PHPONLY;
 
     /**
-     * @var \Concrete\Core\Support\CodingStyle\PhpFixerOptions
+     * @var \Concrete\Core\Support\CodingStyle\PhpFixer\Options
      */
     protected $options;
 
     /**
-     * @var \Concrete\Core\Support\CodingStyle\PhpFixerRuleResolver
+     * @var \Concrete\Core\Support\CodingStyle\PhpFixer\RuleResolver
      */
     protected $ruleResolver;
 
     /**
-     * @var \Concrete\Core\Support\CodingStyle\PhpFixerRunner
+     * @var \Concrete\Core\Support\CodingStyle\PhpFixer\Runner
      */
     protected $runner;
 
     /**
      * Initialize the instance.
-     *
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerOptions $options
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerRuleResolver $ruleResolver
-     * @param \Concrete\Core\Support\CodingStyle\PhpFixerRunner $runner
      */
-    public function __construct(PhpFixerOptions $options, PhpFixerRuleResolver $ruleResolver, PhpFixerRunner $runner)
+    public function __construct(PhpFixer\Options $options, PhpFixer\RuleResolver $ruleResolver, PhpFixer\Runner $runner)
     {
         $this->options = $options;
         $this->ruleResolver = $ruleResolver;
@@ -71,39 +77,37 @@ class PhpFixer
 
     /**
      * Get the fixer options.
-     *
-     * @return \Concrete\Core\Support\CodingStyle\PhpFixerOptions
      */
-    public function getOptions()
+    public function getOptions(): PhpFixer\Options
     {
         return $this->options;
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param \SplFileInfo[] $paths with absolute paths
-     * @param bool $dryRun
-     *
-     * @return array
      */
-    public function fix(InputInterface $input, OutputInterface $output, array $paths, $dryRun = false)
+    public function fix(InputInterface $input, OutputInterface $output, array $paths, $dryRun = false): PhpFixer\Result
     {
         $pathRuleList = [];
         foreach ($paths as $path) {
-            $pathRuleList = $this->mergePathAndFlags($pathRuleList, $this->splitPathToPathAndFlags($path));
+            $pathRuleList = $this->mergePathsAndFlags($pathRuleList, $this->splitPathToPathAndFlags($path));
         }
         $this->runner->resetSteps();
         foreach ($pathRuleList as $flags => $paths) {
             $this->runner->addStep($this->options, $paths, $flags);
         }
 
-        $progressOutput = new ProcessOutput($output, $this->runner->getEventDispatcher(), null, $this->runner->calculateNumberOfFiles());
+        $progressOutput = new ProcessOutput(
+            $output,
+            $this->runner->getEventDispatcher(),
+            (new Terminal())->getWidth(),
+            $this->runner->calculateNumberOfFiles(),
+        );
         $counters = [];
-        $counter = function (FixerFileProcessedEvent $e) use (&$counters) {
+        $counter = static function(FixerFileProcessedEvent $e) use (&$counters) {
             $status = $e->getStatus();
             if (isset($counters[$status])) {
-                ++$counters[$status];
+                $counters[$status]++;
             } else {
                 $counters[$status] = 1;
             }
@@ -117,17 +121,13 @@ class PhpFixer
             $this->runner->getEventDispatcher()->removeListener(FixerFileProcessedEvent::NAME, $counter);
         }
 
-        return [$counters, $changes, clone $this->runner->getErrorManager()];
+        return new PhpFixer\Result($counters, $changes, clone $this->runner->getErrorsManager());
     }
 
     /**
-     * @param \SplFileInfo $path
-     *
      * @throws \RuntimeException if $path could not be found
-     *
-     * @return array
      */
-    protected function splitPathToPathAndFlags(SplFileInfo $path)
+    protected function splitPathToPathAndFlags(SplFileInfo $path): array
     {
         if ($path->isFile()) {
             return $this->splitFileToPathAndFlags($path);
@@ -138,12 +138,7 @@ class PhpFixer
         throw new RuntimeException(t('Failed to find the file/directory %s', $path->getPathname()));
     }
 
-    /**
-     * @param \SplFileInfo $file
-     *
-     * @return array
-     */
-    protected function splitFileToPathAndFlags(SplFileInfo $file)
+    protected function splitFileToPathAndFlags(SplFileInfo $file): array
     {
         if (strpos($file->getFilename(), '.') === 0) {
             // Exclude dot files
@@ -153,7 +148,7 @@ class PhpFixer
         $fullPath = $this->options->normalizePath($file->getPathname(), false, false);
         if (strpos($fullPath, $this->options->getWebRoot()) !== 0) {
             // Outside the webroot: we don't know the exact rules.
-            return $isExtensionOk ? [0 => [$fullPath]] : [];
+            return $isExtensionOk ? [self::FLAG_NONE => [$fullPath]] : [];
         }
         $relativePath = substr($fullPath, strlen($this->options->getWebRoot()));
         if ($isExtensionOk === false && !in_array($relativePath, $this->options->getFilterIncludeFiles())) {
@@ -183,15 +178,10 @@ class PhpFixer
             }
         }
         // No specific rules found.
-        return [0 => [$fullPath]];
+        return [self::FLAG_NONE => [$fullPath]];
     }
 
-    /**
-     * @param \SplFileInfo $directory
-     *
-     * @return array
-     */
-    protected function splitDirectoryToPathAndFlags(SplFileInfo $directory)
+    protected function splitDirectoryToPathAndFlags(SplFileInfo $directory): array
     {
         if (strpos($directory->getFilename(), '.') === 0) {
             // Exclude dot directories
@@ -204,7 +194,7 @@ class PhpFixer
         $fullPath = $this->options->normalizePath($directory->getPathname(), true, false);
         if (strpos($fullPath, $this->options->getWebRoot()) !== 0) {
             // Outside the webroot: we don't know the exact rules.
-            return [0 => [$fullPath]];
+            return [self::FLAG_NONE => [$fullPath]];
         }
         $relativePath = substr($fullPath, strlen($this->options->getWebRoot()));
         if ($relativePath === '') {
@@ -216,7 +206,7 @@ class PhpFixer
             $iterator = new DirectoryIterator($fullPath);
             foreach ($iterator as $child) {
                 if (!$child->isDot()) {
-                    $result = $this->mergePathAndFlags($result, $this->splitPathToPathAndFlags($child));
+                    $result = $this->mergePathsAndFlags($result, $this->splitPathToPathAndFlags($child));
                 }
             }
 
@@ -242,16 +232,10 @@ class PhpFixer
             }
         }
         // No specific rules found.
-        return [0 => [$fullPath]];
+        return [self::FLAG_NONE => [$fullPath]];
     }
 
-    /**
-     * @param array $list1
-     * @param array $list2
-     *
-     * @return array
-     */
-    protected function mergePathAndFlags($list1, $list2)
+    protected function mergePathsAndFlags(array $list1, array $list2): array
     {
         foreach ($list2 as $key => $paths) {
             if (isset($list1[$key])) {

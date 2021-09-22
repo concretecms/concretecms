@@ -64,11 +64,8 @@ mix-manifest.json
 __IDE_SYMBOLS__.php
 .phpstorm.meta.php
 
-# ignore custom php-cs-fixer configuration file
-/.php_cs
-
-# ignore php-cs-fixer cache file
-/.php_cs.cache*
+# ignore php-cs-fixer cache files
+/.php-cs-fixer.cache*
 
 # ignore Visual Code project files
 .vscode

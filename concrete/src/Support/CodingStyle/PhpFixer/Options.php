@@ -1,14 +1,17 @@
 <?php
 
-namespace Concrete\Core\Support\CodingStyle;
+declare(strict_types=1);
+
+namespace Concrete\Core\Support\CodingStyle\PhpFixer;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Install\Preconditions\PhpVersion;
 use RuntimeException;
 
 /**
  * Options for PhpFixer.
  */
-class PhpFixerOptions
+class Options
 {
     /**
      * @var \Concrete\Core\Config\Repository\Repository
@@ -18,9 +21,9 @@ class PhpFixerOptions
     /**
      * The absolute path to the web root directory.
      *
-     * @var string|null
+     * @var string
      */
-    private $webRoot;
+    private $webRoot = '';
 
     /**
      * The list of file extensions to be parsed.
@@ -122,8 +125,6 @@ class PhpFixerOptions
 
     /**
      * Initialize the instance.
-     *
-     * @param \Concrete\Core\Config\Repository\Repository $config
      */
     public function __construct(Repository $config)
     {
@@ -136,10 +137,8 @@ class PhpFixerOptions
      * @param string $path the path to be normalized
      * @param bool $isDir is $path a directory?
      * @param bool $isRelative is $path relative to the webroot?
-     *
-     * @return string
      */
-    public function normalizePath($path, $isDir, $isRelative)
+    public function normalizePath(string $path, bool $isDir, bool $isRelative): string
     {
         $result = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         if ($isRelative) {
@@ -154,22 +153,18 @@ class PhpFixerOptions
 
     /**
      * Get the default absolute path to the web root directory.
-     *
-     * @return string
      */
-    public static function getDefaultWebRoot()
+    public static function getDefaultWebRoot(): string
     {
         return DIR_BASE;
     }
 
     /**
      * Get the absolute path to the web root directory.
-     *
-     * @return string
      */
-    public function getWebRoot()
+    public function getWebRoot(): string
     {
-        if ($this->webRoot === null) {
+        if ($this->webRoot === '') {
             $this->setWebRoot(static::getDefaultWebRoot());
         }
 
@@ -179,15 +174,13 @@ class PhpFixerOptions
     /**
      * Set the absolute path to the web root directory.
      *
-     * @param string|mixed $value
-     *
      * @throws \RuntimeException if $value is not a valid directory path
      *
      * @return $this
      */
-    public function setWebRoot($value)
+    public function setWebRoot(string $value): self
     {
-        $absPath = is_string($value) && $value !== '' ? realpath($value) : false;
+        $absPath = $value === '' ? false : realpath($value);
         if ($absPath === false || !is_dir($absPath)) {
             throw new RuntimeException(t('Unable to find the directory %s', $value));
         }
@@ -201,7 +194,7 @@ class PhpFixerOptions
      *
      * @return string[] always lower case, without leading dots
      */
-    public function getFilterByExtensions()
+    public function getFilterByExtensions(): array
     {
         if ($this->filterByExtensions === null) {
             $this->setFilterByExtensions(preg_split('/\s+/', $this->config->get('coding_style.php.filter.extensions'), -1, PREG_SPLIT_NO_EMPTY));
@@ -217,7 +210,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setFilterByExtensions(array $value)
+    public function setFilterByExtensions(array $value): self
     {
         $filterByExtensions = [];
         foreach ($value as $extension) {
@@ -233,7 +226,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getFilterIncludeFiles()
+    public function getFilterIncludeFiles(): array
     {
         if ($this->filterIncludeFiles === null) {
             $this->setFilterIncludeFiles(preg_split('/\s+/', $this->config->get('coding_style.php.filter.include'), -1, PREG_SPLIT_NO_EMPTY));
@@ -249,7 +242,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setFilterIncludeFiles($value)
+    public function setFilterIncludeFiles(array $value): self
     {
         $filterIncludeFiles = [];
         foreach ($value as $path) {
@@ -265,7 +258,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getIgnoredDirectoriesByName()
+    public function getIgnoredDirectoriesByName(): array
     {
         if ($this->ignoredDirectoriesByName === null) {
             $this->setIgnoredDirectoriesByName(preg_split('/\s+/', $this->config->get('coding_style.php.ignore_directories.by_name'), -1, PREG_SPLIT_NO_EMPTY));
@@ -281,7 +274,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setIgnoredDirectoriesByName(array $value)
+    public function setIgnoredDirectoriesByName(array $value): self
     {
         $this->ignoredDirectoriesByName = $value;
 
@@ -293,7 +286,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getIgnoredDirectoriesByPath()
+    public function getIgnoredDirectoriesByPath(): array
     {
         if ($this->ignoredDirectoriesByPath === null) {
             $this->setIgnoredDirectoriesByPath(preg_split('/\s+/', $this->config->get('coding_style.php.ignore_directories.by_path'), -1, PREG_SPLIT_NO_EMPTY));
@@ -309,7 +302,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setIgnoredDirectoriesByPath(array $value)
+    public function setIgnoredDirectoriesByPath(array $value): self
     {
         $ignoredDirectoriesByPath = [];
         foreach ($value as $path) {
@@ -326,7 +319,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getBootstrapFiles()
+    public function getBootstrapFiles(): array
     {
         if ($this->bootstrapFiles === null) {
             $this->setBootstrapFiles(preg_split('/\s+/', $this->config->get('coding_style.php.bootstrap_files'), -1, PREG_SPLIT_NO_EMPTY));
@@ -342,7 +335,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setBootstrapFiles(array $value)
+    public function setBootstrapFiles(array $value): self
     {
         $bootstrapFiles = [];
         foreach ($value as $path) {
@@ -359,7 +352,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getPhpOnlyNonPsr4Files()
+    public function getPhpOnlyNonPsr4Files(): array
     {
         if ($this->phpOnlyNonPsr4Files === null) {
             $this->setPhpOnlyNonPsr4Files(preg_split('/\s+/', $this->config->get('coding_style.php.php_only.non_psr4.files'), -1, PREG_SPLIT_NO_EMPTY));
@@ -375,7 +368,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setPhpOnlyNonPsr4Files(array $value)
+    public function setPhpOnlyNonPsr4Files(array $value): self
     {
         $phpOnlyNonPsr4Files = [];
         foreach ($value as $path) {
@@ -393,7 +386,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getPhpOnlyNonPsr4Directories()
+    public function getPhpOnlyNonPsr4Directories(): array
     {
         if ($this->phpOnlyNonPsr4Directories === null) {
             $this->setPhpOnlyNonPsr4Directories(preg_split('/\s+/', $this->config->get('coding_style.php.php_only.non_psr4.directories'), -1, PREG_SPLIT_NO_EMPTY));
@@ -409,7 +402,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setPhpOnlyNonPsr4Directories(array $value)
+    public function setPhpOnlyNonPsr4Directories(array $value): self
     {
         $phpOnlyNonPsr4Directories = [];
         foreach ($value as $path) {
@@ -427,7 +420,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getPhpOnlyNonPsr4Regexes()
+    public function getPhpOnlyNonPsr4Regexes(): array
     {
         if ($this->phpOnlyNonPsr4Regexes === null) {
             $phpOnlyNonPsr4Regexes = [];
@@ -448,7 +441,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getPhpOnlyPsr4Files()
+    public function getPhpOnlyPsr4Files(): array
     {
         if ($this->phpOnlyPsr4Files === null) {
             $this->setPhpOnlyPsr4Files(preg_split('/\s+/', $this->config->get('coding_style.php.php_only.psr4.files'), -1, PREG_SPLIT_NO_EMPTY));
@@ -464,7 +457,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setPhpOnlyPsr4Files(array $value)
+    public function setPhpOnlyPsr4Files(array $value): self
     {
         $phpOnlyPsr4Files = [];
         foreach ($value as $path) {
@@ -482,7 +475,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getPhpOnlyPsr4Directories()
+    public function getPhpOnlyPsr4Directories(): array
     {
         if ($this->phpOnlyPsr4Directories === null) {
             $this->setPhpOnlyPsr4Directories(preg_split('/\s+/', $this->config->get('coding_style.php.php_only.psr4.directories'), -1, PREG_SPLIT_NO_EMPTY));
@@ -498,7 +491,7 @@ class PhpFixerOptions
      *
      * @return $this
      */
-    public function setPhpOnlyPsr4Directories(array $value)
+    public function setPhpOnlyPsr4Directories(array $value): self
     {
         $phpOnlyPsr4Directories = [];
         foreach ($value as $path) {
@@ -516,7 +509,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    public function getPhpOnlyPsr4Regexes()
+    public function getPhpOnlyPsr4Regexes(): array
     {
         if ($this->phpOnlyPsr4Regexes === null) {
             $phpOnlyPsr4Regexes = [];
@@ -534,10 +527,8 @@ class PhpFixerOptions
 
     /**
      * Is the fixers cache disabled.
-     *
-     * @return bool
      */
-    public function isCacheDisabled()
+    public function isCacheDisabled(): bool
     {
         return $this->isCacheDisabled;
     }
@@ -545,15 +536,21 @@ class PhpFixerOptions
     /**
      * Is the fixers cache disabled.
      *
-     * @param bool $value
-     *
      * @return $this
      */
-    public function setIsCacheDisabled($value)
+    public function setIsCacheDisabled(bool $value): self
     {
-        $this->isCacheDisabled = (bool) $value;
+        $this->isCacheDisabled = $value;
 
         return $this;
+    }
+
+    /**
+     * Get the default minimum PHP version.
+     */
+    public static function getDefaultMinimumPHPVersion(): string
+    {
+        return PhpVersion::MINIMUM_PHP_VERSION;
     }
 
     /**
@@ -561,21 +558,29 @@ class PhpFixerOptions
      *
      * @return string empty string if the default one
      */
-    public function getMinimumPhpVersion()
+    public function getMinimumPhpVersion(): string
     {
+        if ($this->minimumPhpVersion === '') {
+            $this->setMinimumPhpVersion(static::getDefaultMinimumPHPVersion());
+        }
+
         return $this->minimumPhpVersion;
     }
 
     /**
      * Set the minimum PHP version.
      *
-     * @param string $value empty string if the default one
+     * @throws \RuntimeException if $value is not a valid PHP version
      *
      * @return $this
      */
-    public function setMinimumPhpVersion($value)
+    public function setMinimumPhpVersion(string $value): self
     {
-        $this->minimumPhpVersion = (string) $value;
+        $matches = null;
+        if (!preg_match('/^(?<version>[1-9]\d*(\.\d+)*)/', $value, $matches)) {
+            throw new RuntimeException(t('"%s" is not a valid PHP version', $value));
+        }
+        $this->minimumPhpVersion = $matches['version'];
 
         return $this;
     }
@@ -584,10 +589,8 @@ class PhpFixerOptions
      * Check if a directory contains PHP files with mixed flags.
      *
      * @param string $path the normalized relative path of the directory
-     *
-     * @return bool
      */
-    public function isDirectoryWithMixedContents($path)
+    public function isDirectoryWithMixedContents(string $path): bool
     {
         foreach ($this->getDirectoriesWithMixedContentsRegex() as $rx) {
             if (preg_match($rx, $path)) {
@@ -603,7 +606,7 @@ class PhpFixerOptions
      *
      * @return string[]
      */
-    protected function getDirectoriesWithMixedContentsRegex()
+    protected function getDirectoriesWithMixedContentsRegex(): array
     {
         if ($this->directoriesWithMixedContentsRegex === null) {
             $directoriesWithMixedContentsRegex = [];
@@ -638,9 +641,9 @@ class PhpFixerOptions
      * Add items to the list of regular expressions that should be used to check if a directory contains files with mixed flags.
      *
      * @param string $path the normalized relative path
-     * @param array $directoriesWithMixedContentsRegex
+     * @param string[] $directoriesWithMixedContentsRegex
      */
-    protected function addDirectoriesWithMixedContentsRegex($path, array &$directoriesWithMixedContentsRegex)
+    protected function addDirectoriesWithMixedContentsRegex(string $path, array &$directoriesWithMixedContentsRegex): void
     {
         // Remove the trailing slash (for directories)
         $pathWithoutLeadingSlash = rtrim($path, '/');
@@ -651,7 +654,7 @@ class PhpFixerOptions
         if ($containingDirectoryPath !== '') {
             $relativePath = '';
             $dirnames = explode('/', $containingDirectoryPath);
-            for (; ;) {
+            for (;;) {
                 $dirname = array_shift($dirnames);
                 if ($dirname === null) {
                     break;
