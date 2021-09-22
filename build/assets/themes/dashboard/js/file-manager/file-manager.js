@@ -168,7 +168,10 @@
             var fID = $(this).data('file-id');
             $.concreteAjax({
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
-                data: { fID: fID },
+                data: {
+                    token: CCM_SECURITY_TOKEN,
+                    fID: fID
+                },
                 success: function(r) {
                     window.location.reload();
                 }
