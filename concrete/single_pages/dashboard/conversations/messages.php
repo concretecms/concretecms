@@ -54,7 +54,7 @@ $resolverManager = app(ResolverManagerInterface::class);
                     </td>
                     <td>
                         <div class="ccm-popover ccm-conversation-message-popover popover fade" data-menu="<?=$msg->getConversationMessageID()?>">
-                            <div class="arrow"></div><div class="popover-inner">
+                            <div class="popover-arrow"></div><div class="popover-inner">
                                 <ul class="dropdown-menu">
                                 <?php if (is_object($page)) { ?>
                                     <li><a href="<?=$page->getCollectionLink()?>#cnv<?=$cnv->getConversationID()?>Message<?=$msg->getConversationMessageID()?>" class="dropdown-item"><?=t('View Conversation')?></a></li>
