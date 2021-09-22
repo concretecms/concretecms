@@ -229,7 +229,8 @@ EOL;
             'chooseUser' => t('Choose User'),
             'noUsers' => t('No users selected.'),
         ];
-        $searchLink = $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/dialogs/user/search']);
+        $searchLink = $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/dialogs/user/search']) .
+            '?multipleSelection=1';
         $valn = $this->app->make(Numbers::class);
         $userInfoRepository = $this->app->make(UserInfoRepository::class);
         $preselectedUsers = '';
@@ -274,11 +275,10 @@ $(function() {
                 noUsersRow.hide();
             }
         },
-        userSelectCallback = function(e, data) {
-            e.stopPropagation();
-            var uID = data.uID,
-                uName = data.uName,
-                uEmail = data.uEmail;
+        userSelectCallback = function(user) {
+            var uID = user.id,
+                uName = user.name,
+                uEmail = user.email;
             if (container.find('tr[data-ccm-user-id=' + uID + ']').length > 0) {
                 return;
             }
@@ -302,13 +302,17 @@ $(function() {
     container.find('.ccm-user-select-item')
         .dialog()
         .on('click', function(e) {
-            ConcreteEvent.subscribe('UserSearchDialogSelectUser', userSelectCallback)
+            ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(event, data) {
+                jQuery.fn.dialog.closeTop()
+                ConcreteEvent.unbind(event);
+                if (data.users) {
+                    data.users.forEach(function(user) {
+                        userSelectCallback(user)
+                    })
+                }
+            })
         })
     ;
-    ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser', function(e) {
-        ConcreteEvent.unsubscribe('UserSearchDialogSelectUser');
-        jQuery.fn.dialog.closeTop();
-    });
 });
 </script>
 EOT
