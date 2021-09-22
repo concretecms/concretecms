@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 ?>
 <div class="ccm-ui h-100" id="ccm-sitemap-search-selector">
     <div class="container-fluid h-100">
-        <div class="row h-100">
+        <div class="row h-100 position-relative">
             <div class="col-3 border-right flex-column">
                 <ul class="nav flex-column">
                     <li class="nav-item">
