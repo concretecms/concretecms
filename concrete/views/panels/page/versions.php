@@ -42,9 +42,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <% } %>
             <% } %>
             <% if (cvIsScheduled) { %>
-            <p><?= t('Scheduled by') ?>
-                <%-cvApproverUserName%> <?= tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/
-                    'ScheduledByFor', ' for ') ?> <%-cvPublishDate%></p>
+            <p><?= t('Scheduled by') ?> <%-cvApproverUserName%>
+                <% if (cvPublishDate && cvPublishEndDate) { %>
+                    <?= tc(/*i18n: In the sentence Scheduled by USERNAME between DATE/TIME and DATE/TIME*/'ScheduledDate', 'between %s and %s', '<%-cvPublishDate%>', '<%-cvPublishEndDate%>') ?>
+                <% } else if (cvPublishDate) { %>
+                    <?= tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledDate', 'for %s', '<%-cvPublishDate%>') ?>
+                <% } else if (cvPublishEndDate) { %>
+                    <?= tc(/*i18n: In the sentence Scheduled by USERNAME to close on DATE/TIME*/'ScheduledDate', 'to close on %s', '<%-cvPublishEndDate%>') ?>
+                <% } %>
+            </p>
             <% } %>
         </div>
         <div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
@@ -239,14 +245,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
                             'name': 'cvID',
                             'value': cvID
                         }], function (r) {
-                            ConcreteAlert.notify({
-                                'message': r.message
-                            });
-                            ConcretePageVersionList.handleVersionUpdateResponse(r);
-                            ConcreteEvent.publish('PageVersionChanged.unapproved', {
-                                cID: <?= (int)$c->getCollectionID() ?>,
-                                cvID: cvID
-                            });
+                            if (r.redirectURL) {
+                                window.location.href = r.redirectURL;
+                            } else {
+                                ConcreteAlert.notify({
+                                    'message': r.message
+                                });
+                                ConcretePageVersionList.handleVersionUpdateResponse(r);
+                                ConcreteEvent.publish('PageVersionChanged.unapproved', {
+                                    cID: <?= (int)$c->getCollectionID() ?>,
+                                    cvID: cvID
+                                });
+                            }
                         });
                         break;
                     case 'duplicate':

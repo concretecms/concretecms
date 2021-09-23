@@ -493,16 +493,29 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 }
                                 $buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
                             }
+                            $isActive = false;
+                            $active = \Concrete\Core\Page\Collection\Version\Version::get($c, 'ACTIVE');
+                            if (is_object($active) && !$active->isError()) {
+                                $isActive = true;
+                            }
+                            if ($isActive) {
+                                $pendingMessage = t('This page is newer than what appears to visitors on your live site.');
+                                $notifyIcon = 'fa fa-cog';
+                            } else {
+                                $pendingMessage = t("This page is not approved and visitors can't see it.");
+                                $notifyIcon = 'fa fa-exclamation-triangle';
+                            }
                             echo $cih->notify([
                                 'title' => t('Page is Pending Approval.'),
-                                'text' => t('This page is newer than what appears to visitors on your live site.'),
+                                'text' => $pendingMessage,
                                 'type' => 'info',
-                                'icon' => 'fa fa-cog',
+                                'icon' => $notifyIcon,
                                 'buttons' => $buttons,
                             ]);
                         }
                     } else {
                         $publishDate = $vo->getPublishDate();
+                        $publishEndDate = $vo->getPublishEndDate();
                         if ($publishDate && $dateHelper->toDateTime() < $dateHelper->toDateTime($publishDate)) {
                             $date = $dateHelper->formatDate($publishDate);
                             $time = $dateHelper->formatTime($publishDate);
@@ -518,6 +531,17 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
                                 'type' => 'info',
                                 'icon' => 'fa fa-cog',
                                 'buttons' => $buttons,
+                            ]);
+                        } elseif ($publishEndDate && $dateHelper->toDateTime() < $dateHelper->toDateTime($publishEndDate)) {
+                            $date = $dateHelper->formatDate($publishEndDate);
+                            $time = $dateHelper->formatTime($publishEndDate);
+                            $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page is scheduled to be closed on %1$s at %2$s.', $date, $time);
+                            echo $cih->notify([
+                                'title' => t('Scheduled to close.'),
+                                'text' => $message,
+                                'type' => 'info',
+                                'icon' => 'fa fa-info-circle',
+                                'buttons' => [],
                             ]);
                         }
                     }

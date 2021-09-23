@@ -234,8 +234,8 @@ class Versions extends BackendInterfacePageController
                     // we are deferred
                     $r->setMessage(t('<strong>Request Saved.</strong> You must complete the workflow before this change is active.'));
                 } else {
-                    $r->addCollectionVersion(CollectionVersion::get($c, $cvID));
-                    $r->setMessage(t('Version %s unapproved successfully', $v->getVersionID()));
+                    $r->addCollectionVersion($v);
+                    $r->setRedirectURL($c->getCollectionLink());
                 }
             } else {
                 $e = Loader::helper('validation/error');
