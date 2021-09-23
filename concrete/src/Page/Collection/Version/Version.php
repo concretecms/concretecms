@@ -881,7 +881,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             ->set('cvIsApproved', 0)
             ->set('cvApproverUID', 0)
             ->where('cID = :cID')
-            ->where('cvID = :cvID')
+            ->andWhere('cvID = :cvID')
             ->setParameter('cID', $cID)
             ->setParameter('cvID', $cvID)
             ->execute();
