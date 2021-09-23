@@ -1,3 +1,7 @@
+/* gradients and shadows */
+$enable-gradients: false;
+$enable-shadows: true;
+
 /* colors */
 $gray-300: #d8d8d8;
 $gray-400: #9b9b9b;
@@ -32,10 +36,13 @@ $btn-font-size: 0.9rem;
 $btn-box-shadow: inset 0 0;
 
 /* forms */
+$input-focus-box-shadow: 0 0;
 $input-placeholder-color: #b2b3b4;
 $input-border-color: rgb(235, 235, 235);
+$form-select-border-color: rgb(235, 235, 235);
+$form-select-box-shadow: 0 0;
 $input-border-radius: 4px;
-$input-border-width: 2px;
+//$input-border-width: 1px;
 $input-color: $dark-blue;
 $input-padding-y: 0.5rem;
 $label-margin-bottom: 0.4rem;
@@ -43,10 +50,6 @@ $input-box-shadow: inset 0 0;
 $custom-select-box-shadow: inset 0 0;
 $form-label-color: $gray-700;
 $form-label-font-weight: 600;
-
-/* gradients and shadows */
-$enable-gradients: false;
-$enable-shadows: true;
 
 /* cards */
 $card-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12);

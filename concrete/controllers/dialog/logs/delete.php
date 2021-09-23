@@ -52,8 +52,9 @@ class Delete extends BackendInterfaceController
         /** @noinspection SqlNoDataSourceInspection */
         $db->executeQuery("DELETE FROM Logs WHERE logID = ?", [$logItem]);
 
+        $this->flash('success', t('Log entry successfully deleted.')); // It will be displayed on page reload
+
         $editResponse = new EditResponse();
-        $editResponse->setMessage(t('Log entry successfully deleted.'));
         return $responseFactory->json($editResponse->getJSONObject());
     }
 }

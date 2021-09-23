@@ -36,7 +36,12 @@ class Delete extends Node
 
         if (!$error->has()) {
             $response = new EditResponse();
-            $response->setMessage(t('%s deleted successfully.', $node->getTreeNodeDisplayName()));
+            if ($node->getTreeNodeTypeHandle() == 'file_folder') {
+                $this->flash('success', t('File folder deleted successfully.'));
+            }  else {
+                // The file manager has a different way of handling this than just showing the message.
+                $response->setMessage(t('%s deleted successfully.', $node->getTreeNodeDisplayName()));
+            }
             $response->setAdditionalDataAttribute('treeNodeID', $treeNodeID);
             $response->setAdditionalDataAttribute('treeJSONObject', $node->getJSONObject());
 

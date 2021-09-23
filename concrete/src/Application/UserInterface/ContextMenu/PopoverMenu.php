@@ -19,7 +19,7 @@ class PopoverMenu extends AbstractMenu
         $menu->addClass('popover')
             ->addClass('fade');
         $menu->appendChild(
-            (new Element('div'))->addClass('arrow')
+            (new Element('div'))->addClass('popover-arrow')
         );
 
         $inner = (new Element('div'))->addClass('popover-inner');

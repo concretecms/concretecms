@@ -35,9 +35,10 @@ class Delete extends UserInterface
             $file = File::getByID($this->request->attributes->get('fID'));
             $file->delete();
 
+            $this->flash('success', t('File deleted successfully.'));
+
             $response = new EditResponse();
             $response->setFile($file);
-            $response->setMessage(t('File deleted successfully.'));
             return new JsonResponse($response);
         }
         $this->view($fID);

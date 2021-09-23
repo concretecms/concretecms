@@ -28,6 +28,7 @@ import './search/advanced-search-launcher';
 import './search/preset-selector';
 import './search/results-table';
 import './file-manager/file-manager';
+import './page-search/page-search';
 import './groups/group-manager';
 
 // Custom UI for Pages

@@ -15,7 +15,7 @@ $form = $app->make(Form::class)
 ?>
 
 <div class="ccm-ui">
-    <form method="post" data-dialog-form="delete-log-entry" action="<?php echo $controller->action('submit') ?>">
+    <form method="post" data-dialog-form="delete-bulk-log-entries" action="<?php echo $controller->action('submit') ?>">
 
         <?php
         foreach ($logItems as $logItem) {
@@ -38,3 +38,14 @@ $form = $app->make(Form::class)
         </strong>
     </form>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function (e, data) {
+            if (data.form === 'delete-bulk-log-entries') {
+                window.location.reload()
+            }
+        });
+    });
+</script>
+

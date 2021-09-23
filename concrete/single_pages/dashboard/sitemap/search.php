@@ -131,7 +131,7 @@ use Concrete\Core\Page\Menu;
 <script>
     (function ($) {
         $(function () {
-            let searchResultsTable = new window.ConcreteSearchResultsTable($("#ccm-search-results-table"));
+            let searchResultsTable = new window.ConcretePageSearchTable($("#ccm-search-results-table"));
             searchResultsTable.setupBulkActions();
         });
     })(jQuery);
