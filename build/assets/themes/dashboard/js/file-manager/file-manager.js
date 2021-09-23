@@ -103,6 +103,10 @@
         ConcreteEvent.subscribe('FileManagerDeleteFilesComplete', function() {
             window.location.reload()
         })
+        // File Folder
+        ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function() {
+            window.location.reload()
+        })
     }
 
     ConcreteFileManagerTable.prototype.disableSelectAllOnInvalidNodeTypeSelection = function() {
