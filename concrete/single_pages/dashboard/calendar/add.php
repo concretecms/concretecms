@@ -79,7 +79,7 @@ if ($calendar !== null) {
                         '' => t('Do not link to a "More Details" page.'),
                         'create' => t('Create and link to a new "More Details" page.'),
                         'associate' => t('Link to an existing page')
-                    ], $enableMoreDetails, ["class" => "form-control"])
+                    ], $enableMoreDetails)
                     ?>
                 </div>
 
