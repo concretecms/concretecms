@@ -378,7 +378,7 @@ class Types extends DashboardPageController
             $breadcrumb = $this->app->make(DashboardBreadcrumbFactory::class)->getBreadcrumb($this->getPageObject());
             $breadcrumb->add(new Item('', $type->getSiteTypeName()));
             $this->setBreadcrumb($breadcrumb);
-            $menu = new Element('dashboard/system/multisite/site_type/menu', '', $this->getPageObject(), [$type]);
+            $menu = new Element('dashboard/system/multisite/site_type/menu', '', $this->getPageObject(), ['type' => $type]);
         }
         $this->set('typeMenu', $menu);
     }
