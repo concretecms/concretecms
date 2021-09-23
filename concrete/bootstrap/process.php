@@ -79,7 +79,6 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 $pkr = new UnapprovePageRequest();
                 $pkr->setRequestedPage($c);
                 $v = CollectionVersion::get($c, "SCHEDULED");
-                $v->setPublishInterval(null, null);
                 $pkr->setRequestedVersionID($v->getVersionID());
                 $pkr->setRequesterUserID($u->getUserID());
                 $response = $pkr->trigger();

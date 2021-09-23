@@ -848,32 +848,45 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public function deny()
     {
         $app = Facade::getFacadeApplication();
+        /** @var Connection $db */
         $db = $app->make('database')->connection();
-        $cvID = $this->cvID;
-        $cID = $this->cID;
+        $qb = $db->createQueryBuilder();
+        $cvID = $this->getVersionID();
+        $cID = $this->getCollectionID();
 
         // first we update a collection updated record
         $dh = $app->make('helper/date');
-        $db->executeQuery('update Collections set cDateModified = ? where cID = ?', array(
-            $dh->getOverridableNow(),
-            $cID,
-        ));
+        $qb->update('Collections')
+            ->set('cDateModified', ':cDateModified')
+            ->where('cID = :cID')
+            ->setParameter('cDateModified', $dh->getOverridableNow())
+            ->setParameter('cID', $cID)
+            ->execute();
 
         // first we remove approval for all versions of this collection
-        $v = array(
-            $cID,
-        );
-        $q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
-        $db->executeQuery($q, $v);
-        $this->cvIsApproved = 0;
+        $qb2 = $db->createQueryBuilder();
+        $qb2->update('CollectionVersions')
+            ->set('cvIsApproved', 0)
+            ->set('cvPublishDate', ':cvPublishDate')
+            ->set('cvPublishEndDate', ':cvPublishEndDate')
+            ->where('cID = :cID')
+            ->setParameter('cID', $cID)
+            ->setParameter('cvPublishDate', null)
+            ->setParameter('cvPublishEndDate', null)
+            ->execute();
 
         // now we deny our version
-        $v2 = array(
-            $cID,
-            $cvID,
-        );
-        $q2 = "update CollectionVersions set cvIsApproved = 0, cvApproverUID = 0 where cID = ? and cvID = ?";
-        $db->executeQuery($q2, $v2);
+        $qb3 = $db->createQueryBuilder();
+        $qb3->update('CollectionVersions')
+            ->set('cvIsApproved', 0)
+            ->set('cvApproverUID', 0)
+            ->where('cID = :cID')
+            ->where('cvID = :cvID')
+            ->setParameter('cID', $cID)
+            ->setParameter('cvID', $cvID)
+            ->execute();
+        $this->setPublishInterval(null, null);
+        $this->cvIsApproved = 0;
         $this->refreshCache();
     }
 
