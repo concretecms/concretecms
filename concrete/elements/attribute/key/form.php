@@ -138,17 +138,16 @@ if ($key !== null) {
 
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
 
-        try {
-            View::element(
+        if ($category->getCategoryEntity()->getPackageHandle()) {
+            $element = Element::get(
                 'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
-                ['key' => $key],
-                $category->getCategoryEntity()->getPackageID() ? $category->getCategoryEntity()->getPackageHandle() : null
+                $category->getCategoryEntity()->getPackageHandle()
             );
-        } catch (ErrorException $e) {
-            if (strpos($e->getMessage(), 'No such file or directory') === false) {
-                // This isn't the error we expected to catch
-                throw $e;
-            }
+        } else {
+            $element = Element::get('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle());
+        }
+        if ($element->exists()) {
+            $element->render();
         }
     }
 
