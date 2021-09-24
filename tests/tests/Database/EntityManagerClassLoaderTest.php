@@ -6,7 +6,7 @@ use Concrete\Tests\TestCase;
 
 class EntityManagerClassLoaderTest extends TestCase
 {
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();

@@ -28,7 +28,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
      * Move a couple of test packages to the packages folder to be used by
      * these tests.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
 
@@ -56,7 +56,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
      * Delete all the temporary package folders from the packages directory
      * after all tests have run.
      */
-    public static function tearDownAfterClass()
+    public static function TearDownAfterClass():void
     {
         $installPackages = self::getTestPackages();
 

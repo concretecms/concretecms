@@ -16,7 +16,7 @@ class ImageTest extends TestCase
      */
     protected $storageLocation;
 
-    public function setUp()
+    public function setUp():void
     {
         $local = new LocalConfiguration();
         $local->setRootPath(sys_get_temp_dir());

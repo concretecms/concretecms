@@ -16,7 +16,7 @@ class FormatterTest extends TestCase
      */
     protected $formatter;
 
-    public function setUp()
+    public function setUp():void
     {
         $addressFormatRepository = new AddressFormatRepository();
         $countryRepository = new CountryRepository();

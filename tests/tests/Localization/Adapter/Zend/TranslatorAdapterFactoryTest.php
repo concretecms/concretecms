@@ -15,7 +15,7 @@ class TranslatorAdapterFactoryTest extends TestCase
 {
     protected $factory;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->factory = new TranslatorAdapterFactory();
     }

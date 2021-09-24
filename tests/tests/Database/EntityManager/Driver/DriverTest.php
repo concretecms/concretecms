@@ -14,7 +14,7 @@ use Concrete\Tests\TestCase;
  */
 class DriverTest extends TestCase
 {
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $driver = new YamlDriver('config/yaml');
@@ -26,7 +26,7 @@ class DriverTest extends TestCase
      */
     public function testGetDriver()
     {
-        $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver', $this->driver->getDriver());
+        $this->assertInstanceOf('Doctrine\Persistence\Mapping\Driver\MappingDriver', $this->driver->getDriver());
     }
 
     /**

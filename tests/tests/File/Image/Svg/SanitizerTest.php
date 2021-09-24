@@ -26,7 +26,7 @@ class SanitizerTest extends TestCase
      *
      * @see PHPUnit_Framework_TestCase::setupBeforeClass()
      */
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         parent::setUpBeforeClass();
         $app = Application::getFacadeApplication();
@@ -44,7 +44,7 @@ class SanitizerTest extends TestCase
      *
      * @see PHPUnit_Framework_TestCase::tearDown()
      */
-    public function tearDown()
+    public function TearDown():void
     {
         Mockery::close();
     }
@@ -75,17 +75,15 @@ class SanitizerTest extends TestCase
     {
         $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
         $lines = explode("\n", $sanitized);
-        $this->assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
+        static::assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
         $xml = trim(implode('', $lines));
 
-        $this->assertSame($expectedOutput, $xml);
+        static::assertSame($expectedOutput, $xml);
     }
 
-    /**
-     * @expectedException Concrete\Core\File\Image\Svg\SanitizerException
-     */
     public function testLoadInvalidFile()
     {
+        $this->expectException(\Concrete\Core\File\Image\Svg\SanitizerException::class);
         self::$sanitizer->sanitizeFile(__DIR__ . '/does-not-exist');
     }
 
@@ -100,21 +98,20 @@ class SanitizerTest extends TestCase
     }
 
     /**
-     * @expectedException Concrete\Core\File\Image\Svg\SanitizerException
+     *
      *
      * @param mixed $invalidSvgData
      * @dataProvider provideInvalidData
      */
     public function testInvalidData($invalidSvgData)
     {
+        $this->expectException(\Concrete\Core\File\Image\Svg\SanitizerException::class);
         self::$sanitizer->sanitizeData($invalidSvgData, self::$sanitizerOptions);
     }
 
-    /**
-     * @expectedException Concrete\Core\File\Image\Svg\SanitizerException
-     */
     public function testShouldThrowIfFileDoesNotExist()
     {
+        $this->expectException(\Concrete\Core\File\Image\Svg\SanitizerException::class);
         $filename = __DIR__ . '/test-file';
         $fs = Mockery::mock(Filesystem::class);
         $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(false);

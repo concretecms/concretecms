@@ -85,6 +85,12 @@ class Client implements ClientEntityInterface
         $this->identifier = $identifier;
     }
 
+
+    public function isConfidential()
+    {
+        return true;
+    }
+
     /**
      * {@inheritdoc}
      *

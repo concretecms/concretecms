@@ -144,11 +144,9 @@ class RouterTest extends TestCase
         $this->assertEquals('oh hai', $response->getContent());
     }
 
-    /**
-     * @expectedException \Symfony\Component\Routing\Exception\ResourceNotFoundException
-     */
     public function testInvalidRoute()
     {
+        $this->expectException(\Symfony\Component\Routing\Exception\ResourceNotFoundException::class);
         $request = Request::create('http://www.awesome.com/something/uh/oh/something_else');
         $router = new Router(new RouteCollection(), new RouteActionFactory());
         $router->matchRoute($request);

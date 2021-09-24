@@ -27,11 +27,9 @@ class MinimumLengthValidatorTest extends TestCase
         $this->assertNotEmpty($error);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testInvalidInput()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $validator = new \Concrete\Core\Validator\String\MinimumLengthValidator(5);
         $validator->isValid($validator);
     }

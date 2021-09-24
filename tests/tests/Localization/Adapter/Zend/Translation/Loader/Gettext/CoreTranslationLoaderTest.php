@@ -20,7 +20,7 @@ class CoreTranslationLoaderTest extends LocalizationTestsBase
     protected $loader;
     private static $languagesDirectoryExisted = false;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         $filesystem = new Filesystem();
@@ -29,7 +29,7 @@ class CoreTranslationLoaderTest extends LocalizationTestsBase
         $filesystem->copyDirectory($langDir, $appLangDir);
     }
 
-    public function setUp()
+    public function setUp():void
     {
         $factory = new TranslatorAdapterFactory();
         $this->adapter = $factory->createTranslatorAdapter('fi_FI');

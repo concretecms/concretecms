@@ -2,11 +2,9 @@
 
 namespace Concrete\Core\Database;
 
-use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
+
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Package\PackageList;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
 use Config;
 use Database;
 use Events;

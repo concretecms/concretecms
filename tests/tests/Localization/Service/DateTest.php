@@ -164,7 +164,7 @@ class DateTest extends TestCase
         $this->assertEquals($expected, $date->getTimezone($timezone));
     }
 
-    public function setUp()
+    public function setUp():void
     {
         $this->localization = new Localization();
         $translatorAdapterFactory = new TranslatorAdapterFactory();
@@ -179,7 +179,7 @@ class DateTest extends TestCase
         $this->config->set('app.server_timezone', 'UTC');
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         $this->localization->setActiveContext(Localization::CONTEXT_SYSTEM);
         $this->config->set('app.server_timezone', $this->serverTimezone);

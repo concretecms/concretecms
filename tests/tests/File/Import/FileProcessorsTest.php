@@ -52,7 +52,7 @@ class FileProcessorsTest extends FileStorageTestCase
         ]);
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         self::$app = Application::getFacadeApplication();

@@ -8,14 +8,12 @@ use Concrete\Core\Notification\Notifier\StandardNotifier;
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\Notification\Subscription\StandardSubscription;
 use Concrete\Core\Notification\Type\UserDeactivatedType;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Concrete\Tests\TestCase;
 use Mockery as M;
 
 class UserDeactivatedTypeTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
     public function testPassingDefaultValues()
     {
@@ -50,11 +48,9 @@ class UserDeactivatedTypeTest extends TestCase
         $this->assertEquals($notifier, $type->getNotifier());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testUnsupportedFactoryMethod()
     {
+        $this->expectException(\RuntimeException::class);
         $app = M::mock(Application::class);
         $notifier = M::mock(StandardNotifier::class);
         $subject = M::mock(SubjectInterface::class);

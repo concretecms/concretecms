@@ -6,12 +6,10 @@ use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\View;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
 use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 class AttributeViewTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
 
     public function actionProvider()
     {

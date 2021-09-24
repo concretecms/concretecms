@@ -49,7 +49,7 @@ class NameCorePageProperty extends CorePageProperty
     {
         $e = Core::make('helper/validation/error');
         $val = $this->getRequestValue();
-        if ($val['name']) {
+        if (is_array($val) && $val['name']) {
             $name = $val['name'];
         } else {
             $name = $this->getPageTypeComposerControlDraftValue();
