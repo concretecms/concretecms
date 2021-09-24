@@ -72,7 +72,6 @@
     "zendframework/zend-mail": "^2.8",
     "zendframework/zend-cache": "^2.8",
     "zendframework/zend-http": "^2.8",
-    "zendframework/zend-feed": "^2.8",
     "zendframework/zend-i18n": "^2.8",
     "nesbot/carbon": "^2.1",
     "egulias/email-validator": "1.*",
