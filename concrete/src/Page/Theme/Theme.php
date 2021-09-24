@@ -1321,7 +1321,9 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Get the handles of the thumbnail types and related resolution breakpoint.
+     * Get the handles of the thumbnail types and related resolution breakpoint. Important: make sure to define these
+     * in proper ascending size order, otherwise you might get inconsistencies in certain aspects of the UI that
+     * refer to these image types.
      *
      * @return array
      *

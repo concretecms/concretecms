@@ -147,7 +147,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         if ($activeTheme instanceof Theme) {
             $activeThemeResponsiveImageMap = $activeTheme->getThemeResponsiveImageMap();
-            asort($activeThemeResponsiveImageMap);
         }
 
         return $activeThemeResponsiveImageMap;
