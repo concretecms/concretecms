@@ -2,6 +2,7 @@
 namespace Concrete\Core\Feed;
 
 use Concrete\Core\Cache\Adapter\LaminasCacheDriver;
+use GuzzleHttp\Client;
 use Laminas\Feed\Reader\Reader;
 
 class FeedService
@@ -18,6 +19,8 @@ class FeedService
         if ($cache !== false) {
             Reader::setCache(new LaminasCacheDriver('cache/expensive', $cache));
         }
+
+        Reader::setHttpClient(new GuzzleClient());
 
         // Load the RSS feed, either from remote URL or from cache
         // (if specified above and still fresh)
