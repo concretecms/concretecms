@@ -30,7 +30,7 @@ class NotificationTest extends TestCase
         $this->assertInstanceOf('Concrete\Core\Notification\View\ListViewInterface', $view);
 
         $icon = (string) $view->renderIcon();
-        $this->assertEquals('<i class="fa fa-user"></i>', $icon);
+        $this->assertEquals('<i class="fas fa-user"></i>', $icon);
     }
 
     public function testNotificationTypeManager()
