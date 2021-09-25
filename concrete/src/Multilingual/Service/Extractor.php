@@ -189,7 +189,7 @@ class Extractor
 
         PoGenerator::toFile($translations, $po);
 
-        /* Do not generate mo for empty catalog, it crashes Zend\I18n gettext loader */
+        /* Do not generate mo for empty catalog, it crashes Laminas\I18n gettext loader */
         $empty = true;
         foreach ($translations as $entry) {
             if ($entry->hasTranslation()) {

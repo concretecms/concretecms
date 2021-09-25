@@ -1,11 +1,11 @@
 <?php
-namespace Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext;
+namespace Concrete\Core\Localization\Translator\Adapter\Laminas\Translation\Loader\Gettext;
 
 use Concrete\Core\Localization\Translator\Translation\Loader\AbstractTranslationLoader;
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
 
 /**
- * Translation loader that loads the concrete5 core translations for the Zend
+ * Translation loader that loads the concrete5 core translations for the Laminas
  * translation adapter.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>

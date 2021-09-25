@@ -3,11 +3,11 @@
 namespace Concrete\Core\Localization\Translator\Loader;
 
 use Gettext\Languages\Language;
-use Zend\I18n\Translator\Loader\Gettext as ZendGettext;
-use Zend\I18n\Translator\Plural\Rule;
-use Zend\I18n\Translator\TextDomain;
+use Laminas\I18n\Translator\Loader\Gettext as LaminasGettext;
+use Laminas\I18n\Translator\Plural\Rule;
+use Laminas\I18n\Translator\TextDomain;
 
-class Gettext extends ZendGettext
+class Gettext extends LaminasGettext
 {
     /**
      * Tthe absolute path of the web root.
@@ -29,7 +29,7 @@ class Gettext extends ZendGettext
     /**
      * {@inheritdoc}
      *
-     * @see \Zend\I18n\Translator\Loader\Gettext::load()
+     * @see \Laminas\I18n\Translator\Loader\Gettext::load()
      */
     public function load($locale, $filename)
     {
@@ -46,10 +46,10 @@ class Gettext extends ZendGettext
     /**
      * Fix the plural rules of the translations loaded from a file.
      *
-     * @param \Zend\I18n\Translator\TextDomain $textDomain
+     * @param \Laminas\I18n\Translator\TextDomain $textDomain
      * @param \Gettext\Languages\Language $localeInfo
      *
-     * @return \Zend\I18n\Translator\TextDomain
+     * @return \Laminas\I18n\Translator\TextDomain
      */
     private function fixPlurals(TextDomain $textDomain, Language $localeInfo)
     {

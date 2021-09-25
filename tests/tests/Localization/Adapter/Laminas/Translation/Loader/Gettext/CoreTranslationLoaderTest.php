@@ -1,16 +1,16 @@
 <?php
 
-namespace Concrete\Tests\Localization\Adapter\Zend\Translation\Loader\Gettext;
+namespace Concrete\Tests\Localization\Adapter\Laminas\Translation\Loader\Gettext;
 
-use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\CoreTranslationLoader;
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\Translation\Loader\Gettext\CoreTranslationLoader;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\TestHelpers\Localization\LocalizationTestsBase;
 use Illuminate\Filesystem\Filesystem;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\CoreTranslationLoader.
+ * Concrete\Core\Localization\Translator\Adapter\Laminas\Translation\Loader\Gettext\CoreTranslationLoader.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
@@ -24,7 +24,7 @@ class CoreTranslationLoaderTest extends LocalizationTestsBase
     {
         parent::setUpBeforeClass();
         $filesystem = new Filesystem();
-        $langDir = DIR_TESTS . '/assets/Localization/Adapter/Zend/Translation/Loader/Gettext/languages/fi_FI';
+        $langDir = DIR_TESTS . '/assets/Localization/Adapter/Laminas/Translation/Loader/Gettext/languages/fi_FI';
         $appLangDir = parent::getTranslationsFolder() . '/fi_FI';
         $filesystem->copyDirectory($langDir, $appLangDir);
     }

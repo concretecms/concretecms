@@ -1,13 +1,13 @@
 <?php
 
-namespace Concrete\Tests\Localization\Adapter\Zend;
+namespace Concrete\Tests\Localization\Adapter\Laminas;
 
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory;
 use Concrete\Tests\TestCase;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory.
+ * Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
@@ -24,6 +24,6 @@ class TranslatorAdapterFactoryTest extends TestCase
     {
         $adapter = $this->factory->createTranslatorAdapter('en_US');
 
-        $this->assertInstanceOf('Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter', $adapter);
+        $this->assertInstanceOf('Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapter', $adapter);
     }
 }

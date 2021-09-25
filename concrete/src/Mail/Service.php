@@ -11,13 +11,13 @@ use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
 use Monolog\Logger;
 use Throwable;
-use Zend\Mail\Header\MessageId as MessageIdHeader;
-use Zend\Mail\Headers;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\TransportInterface;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Mime;
-use Zend\Mime\Part as MimePart;
+use Laminas\Mail\Header\MessageId as MessageIdHeader;
+use Laminas\Mail\Headers;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\TransportInterface;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Mime;
+use Laminas\Mime\Part as MimePart;
 
 class Service
 {
@@ -599,7 +599,7 @@ class Service
             $fromStr = $config->get('concrete.email.default.address');
         }
 
-        // The currently included Zend library has a bug in setReplyTo that
+        // The currently included Laminas library has a bug in setReplyTo that
         // adds the Reply-To address as a recipient of the email. We must
         // set the Reply-To before any header with addresses and then clear
         // all recipients so that a copy is not sent to the Reply-To address.
@@ -718,7 +718,7 @@ class Service
 
                 $attachedFiles = [];
 
-                if ($mailWithoutAttachments->getBody() instanceof \Zend\Mime\Message) {
+                if ($mailWithoutAttachments->getBody() instanceof \Laminas\Mime\Message) {
                     $parts = $mailWithoutAttachments->getBody()->getParts();
 
                     if (is_array($parts)) {
@@ -768,7 +768,7 @@ class Service
     }
 
     /**
-     * @deprecated To get the mail transport, call \Core::make(\Zend\Mail\Transport\TransportInterface::class)
+     * @deprecated To get the mail transport, call \Core::make(\Laminas\Mail\Transport\TransportInterface::class)
      */
     public static function getMailerObject()
     {

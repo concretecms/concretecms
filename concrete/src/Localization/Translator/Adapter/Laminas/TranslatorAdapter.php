@@ -1,11 +1,11 @@
 <?php
-namespace Concrete\Core\Localization\Translator\Adapter\Zend;
+namespace Concrete\Core\Localization\Translator\Adapter\Laminas;
 
 use Concrete\Core\Localization\Translator\TranslatorAdapterInterface;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 /**
- * Translator adapter that wraps the Zend translator to provide the
+ * Translator adapter that wraps the Laminas translator to provide the
  * translator methods needed in concrete5.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>

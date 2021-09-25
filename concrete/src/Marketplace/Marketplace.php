@@ -12,7 +12,6 @@ use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\Legacy\TaskPermission;
 use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\PathUrlResolver;
-use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Exception;
 use Concrete\Core\Http\Request;
 
@@ -122,11 +121,6 @@ class Marketplace implements ApplicationAwareInterface
             $result = $this->fileHelper->getContents(
                 $url,
                 $this->config->get('concrete.marketplace.request_timeout'));
-        } catch (TimeoutException $e) {
-            // Catch a timeout
-            $this->connectionError = self::E_CONNECTION_TIMEOUT;
-
-            return null;
         } catch (Exception $e) {
             $this->connectionError = self::E_GENERAL_CONNECTION_ERROR;
 

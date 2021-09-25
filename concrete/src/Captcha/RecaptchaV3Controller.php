@@ -212,7 +212,6 @@ EOL;
 
             return false;
         }
-        /** @var \Zend\Http\Response $response */
         $data = @json_decode($response->getBody(), true);
         if (!is_array($data)) {
             $this->logger->alert(t('Error loading reCAPTCHA: %s', t('invalid response')));

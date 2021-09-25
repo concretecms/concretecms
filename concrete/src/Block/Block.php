@@ -1929,10 +1929,7 @@ EOT
 
      *
      * @param mixed $data Custom data to be added to the queue messages
-     * @param \ZendQueue\Queue $queue The queue to add the messages too (it will be emptied before adding the new messages)
      * @param bool $includeThisBlock Include this block instance in the queue?
-     *
-     * @return \ZendQueue\Queue
      */
     public function queueForDefaultsUpdate($data, $includeThisBlock = true)
     {

@@ -1,14 +1,14 @@
 <?php
 
-namespace Concrete\Tests\Localization\Adapter\Zend;
+namespace Concrete\Tests\Localization\Adapter\Laminas;
 
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapter;
 use Concrete\Tests\TestCase;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter.
+ * Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapter.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
@@ -18,7 +18,7 @@ class TranslatorAdapterTest extends TestCase
 
     public function setUp():void
     {
-        $translationsFile = DIR_TESTS . '/assets/Localization/Adapter/Zend/translations.php';
+        $translationsFile = DIR_TESTS . '/assets/Localization/Adapter/Laminas/translations.php';
 
         $translator = new Translator();
         $translator->addTranslationFile('phparray', $translationsFile);
@@ -30,7 +30,7 @@ class TranslatorAdapterTest extends TestCase
     public function testGetTranslator()
     {
         $translator = $this->adapter->getTranslator();
-        $this->assertInstanceOf('Zend\I18n\Translator\Translator', $translator);
+        $this->assertInstanceOf('Laminas\I18n\Translator\Translator', $translator);
     }
 
     public function testSetAndGetLocale()
