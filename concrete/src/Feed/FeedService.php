@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Feed;
 
-use Concrete\Core\Cache\Adapter\ZendCacheDriver;
-use Zend\Feed\Reader\Reader;
+use Concrete\Core\Cache\Adapter\LaminasCacheDriver;
+use Laminas\Feed\Reader\Reader;
 
 class FeedService
 {
@@ -16,7 +16,7 @@ class FeedService
     public function load($url, $cache = 3600)
     {
         if ($cache !== false) {
-            Reader::setCache(new ZendCacheDriver('cache/expensive', $cache));
+            Reader::setCache(new LaminasCacheDriver('cache/expensive', $cache));
         }
 
         // Load the RSS feed, either from remote URL or from cache

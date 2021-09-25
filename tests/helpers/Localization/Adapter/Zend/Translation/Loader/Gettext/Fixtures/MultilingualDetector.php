@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\TestHelpers\Localization\Adapter\Zend\Translation\Loader\Gettext\Fixtures;
+namespace Concrete\TestHelpers\Localization\Adapter\Laminas\Translation\Loader\Gettext\Fixtures;
 
 /**
  * Dummy multilingual detector that allows us to test the site translation

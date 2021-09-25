@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Translations for the Zend translator for testing purposes.
+ * Translations for the Laminas translator for testing purposes.
  *
  * It is easier to maintain the PHP format translations for the test purpsoes.
- * We are not testing the Zend internal components here, only the integration
- * between the Zend library and concrete5 because of which the translation
+ * We are not testing the Laminas internal components here, only the integration
+ * between the Laminas library and concrete5 because of which the translation
  * definition format is irrelevant for these tests.
  *
  * For the plural forms arrays:

@@ -1,9 +1,9 @@
 <?php
 
-namespace Concrete\Tests\Localization\Adapter\Zend\Translation\Loader\Gettext;
+namespace Concrete\Tests\Localization\Adapter\Laminas\Translation\Loader\Gettext;
 
-use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\PackagesTranslationLoader;
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\Translation\Loader\Gettext\PackagesTranslationLoader;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
@@ -12,7 +12,7 @@ use Illuminate\Filesystem\Filesystem;
 
 /**
  * Tests for:
- * Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\PackagesTranslationLoader.
+ * Concrete\Core\Localization\Translator\Adapter\Laminas\Translation\Loader\Gettext\PackagesTranslationLoader.
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
@@ -105,7 +105,7 @@ class PackagesTranslationLoaderTest extends ConcreteDatabaseTestCase
 
     private static function getTestPackages()
     {
-        $pkgSource = DIR_TESTS . '/assets/Localization/Adapter/Zend/Translation/Loader/Gettext/packages';
+        $pkgSource = DIR_TESTS . '/assets/Localization/Adapter/Laminas/Translation/Loader/Gettext/packages';
         $packages = [];
 
         $filesystem = new Filesystem();
