@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
@@ -50,35 +51,25 @@ EOT
      */
     protected function fixOverlappingStartEndDates()
     {
-        $rs = $this->connection->executeQuery(<<<'EOT'
-select
-    cv1.cID,
-    cv1.cvID
-from
-    CollectionVersions as cv1
-    inner join CollectionVersions as cv2
-        on cv1.cID = cv2.cID
-        and cv1.cvID <> cv2.cvID
-        and cv1.cvIsApproved = cv2.cvIsApproved
-where
-    cv1.cvIsApproved = 1
-    and ifnull(cv1.cvPublishDate, '0000-00-00 00:00:00') <= ifnull(cv1.cvPublishEndDate, '9999-99-99 99:99:99')
-    and ifnull(cv1.cvPublishEndDate, '9999-99-99 99:99:99') >= ifnull(cv2.cvPublishDate, '0000-00-00 00:00:00')
-order by
-    cv1.cID,
-    cv1.cvID desc
-EOT
-        );
-        $page = null;
-        while (($row = $rs->fetch(PDO::FETCH_ASSOC)) !== false) {
-            if ($page === null || $page->getCollectionID() != $row['cID']) {
-                $page = Page::getByID($row['cID'], $row['cvID']);
-            } else {
-                $page->loadVersionObject($row['cvID']);
-            }
+        $qb = $this->connection->createQueryBuilder();
+        $result = $qb->select('p.cID')
+            ->from('Pages', 'p')
+            ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
+            ->innerJoin('p', 'CollectionVersions', 'cv', 'p.cID = cv.cID')
+            ->andWhere('p.cPointerID < 1')
+            ->andWhere('p.cIsTemplate = 0')
+            ->andWhere('cv.cvID = (select cvID from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and (cvPublishDate is not null or cvPublishEndDate is not null) order by cvPublishDate desc limit 1)')
+            ->execute()
+        ;
+
+        while ($row = $result->fetch()) {
+            $page = Page::getByID($row['cID'], 'SCHEDULED');
             $version = $page->getVersionObject();
-            // Force fixing other collection version publish date/time interval
-            $version->setPublishInterval($version->getPublishDate(), $version->getPublishDate());
+            try {
+                // Force fixing other collection version publish date/time interval
+                $version->setPublishInterval($version->getPublishDate(), $version->getPublishEndDate());
+            } catch (UserMessageException $e) {
+            }
         }
     }
 }
