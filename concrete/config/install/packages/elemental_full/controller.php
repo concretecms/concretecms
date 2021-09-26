@@ -4,14 +4,14 @@ namespace Concrete\StartingPointPackage\ElementalFull;
 
 use Concrete\Core\Package\StartingPointPackage;
 
-class Controller extends StartingPointPackage
+class controller extends StartingPointPackage
 {
     protected $pkgHandle = 'elemental_full';
     protected $pkgContentProvidesFileThumbnails = true;
 
     public function getPackageName()
     {
-        return t('Elemental (Full)');
+        return t('Full Site');
     }
 
     public function getPackageDescription()

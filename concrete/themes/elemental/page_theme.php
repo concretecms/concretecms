@@ -3,43 +3,44 @@ namespace Concrete\Theme\Elemental;
 
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
 use Concrete\Core\Feature\Features;
-use Concrete\Core\Page\Theme\BedrockThemeTrait;
-use Concrete\Core\Page\Theme\Documentation\BedrockDocumentationPage;
-use Concrete\Core\Page\Theme\Documentation\DocumentationProvider;
-use Concrete\Core\Page\Theme\Documentation\DocumentationProviderInterface;
-use Concrete\Core\Page\Theme\Documentation\ThemeDocumentationPage;
 use Concrete\Core\Page\Theme\Theme;
 
 class PageTheme extends Theme implements ThemeProviderInterface
 {
-    
-    use BedrockThemeTrait;
-    
-    public function getThemeName()
-    {
-        return t('Elemental++');
-    }
-
-    public function getThemeDescription()
-    {
-        return t('Elegant, spacious theme built on Bootstrap 4, with support for blogs, portfolios, layouts and more.');
-    }
 
     public function getThemeSupportedFeatures()
     {
         return [
             Features::BASICS,
             Features::TYPOGRAPHY,
-            Features::CALENDAR,
-            Features::CONVERSATIONS,
             Features::FAQ,
             Features::NAVIGATION,
-            Features::IMAGERY,
             Features::FORMS,
             Features::SEARCH,
             Features::TESTIMONIALS,
             Features::TAXONOMY,
         ];
+    }
+
+    public function registerAssets()
+    {
+        $this->requireAsset('font-awesome');
+        $this->requireAsset('jquery');
+        $this->requireAsset('vue');
+        $this->requireAsset('bootstrap');
+        $this->requireAsset('moment');
+    }
+
+    protected $pThemeGridFrameworkHandle = 'bootstrap3';
+
+    public function getThemeName()
+    {
+        return t('Elemental');
+    }
+
+    public function getThemeDescription()
+    {
+        return t('Elegant, spacious theme with support for blogs, portfolios, layouts and more.');
     }
 
     /**
@@ -147,17 +148,4 @@ class PageTheme extends Theme implements ThemeProviderInterface
 
         return $presets;
     }
-
-    public function getDocumentationProvider(): ?DocumentationProviderInterface
-    {
-        $pages = [
-            new ThemeDocumentationPage($this, 'Overview', 'overview.xml'),
-            new BedrockDocumentationPage( 'Colors', 'colors.xml'),
-            new BedrockDocumentationPage( 'Typography', 'typography.xml'),
-            new BedrockDocumentationPage( 'Components', 'components.xml'),
-        ];
-
-        return DocumentationProvider::createFromArray($pages);
-    }
-
 }
