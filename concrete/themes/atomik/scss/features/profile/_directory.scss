@@ -16,9 +16,8 @@
 
     .ccm-profile-username {
       h1 {
+        @include heading-display(1);
         margin-bottom: 0;
-        @extend .display-1;
-        font-family: $display-font-family;
       }
     }
 

@@ -1,13 +1,13 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 
-// Font sizes
-$display-font-sizes: (
-    1: 4rem,
-    2: 3.5rem,
-    3: 3rem,
-    4: 2rem
+// Modify theme colors sass map
+$custom-colors: (
+    "light-accent": $light-accent,
+    "accent": $accent,
+    "dark-accent": $dark-accent
 );
+
 
 // Grid Gutters
 $grid-gutter-width: 1.875rem;
@@ -32,6 +32,7 @@ $container-max-widths: (
 // Typography
 $lead-font-weight: 400;
 $lead-line-height: 2em;
+$headings-font-weight: 800;
 
 // Cards
 $enable-shadows: true;

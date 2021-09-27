@@ -3,8 +3,7 @@ div.theme-atomik {
   .ccm-page-account {
 
     h1 {
-      font-family: $display-font-family;
-      @extend .display-1;
+      @include heading-display(1);
     }
 
 

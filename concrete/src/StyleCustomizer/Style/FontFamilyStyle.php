@@ -18,17 +18,20 @@ class FontFamilyStyle extends Style
         $variable = $collection->getVariable($this->getVariable());
         if ($variable) {
             $value = new FontFamilyValue($variable->getValue());
-            return $value;
+        } else {
+            $value = new FontFamilyValue(''); // This enables us to omit the font entirely from our _customizable-variables.scss file, and use Bootstrap/Bedrock defaults. See atomik/default for example.
         }
-        return null;
+        return $value;
     }
 
     public function createValueFromRequestDataCollection(array $styles): ?ValueInterface
     {
         foreach ($styles as $style) {
             if (isset($style['variable']) && $style['variable'] == $this->getVariable()) {
-                $value = new FontFamilyValue($style['value']['fontFamily']);
-                return $value;
+                if (isset($style['value']['fontFamily']) && $style['value']['fontFamily'] != '') {
+                    $value = new FontFamilyValue($style['value']['fontFamily']);
+                    return $value;
+                }
             }
         }
         return null;

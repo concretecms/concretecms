@@ -78,6 +78,10 @@ class ScssNormalizer implements NormalizerInterface
                     $collection->add(new ImageVariable($this->fixVariable($variable), $url));
                 }
             }
+
+            if ($value[0] == 'color') {
+                $collection->add(new ColorVariable($this->fixVariable($variable), $value[1], $value[2], $value[3], $value[4]));
+            }
         }
         return $collection;
     }

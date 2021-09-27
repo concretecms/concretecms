@@ -343,6 +343,13 @@ mix
             ]
         }
     })
+    .sass('../concrete/themes/atomik/skins/rustic-elegance/scss/main.scss', 'themes/atomik/skins/rustic-elegance/', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
     .js('assets/themes/atomik/js/main.js', 'themes/atomik');
 // Dashboard Theme
 mix

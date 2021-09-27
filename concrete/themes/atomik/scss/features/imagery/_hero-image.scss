@@ -15,6 +15,7 @@ div.theme-atomik {
       h1 {
         font-family: $display-font-family;
         @include font-size($hero-image-title-font-size);
+        font-weight: 500;
         margin-bottom: 0;
       }
 

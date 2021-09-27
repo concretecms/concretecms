@@ -305,7 +305,7 @@ class Theme extends ConcreteObject
     {
         $env = Environment::get();
         return $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES,
+            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES,
             $this->getPackageHandle()
         );
     }
