@@ -60,7 +60,6 @@ class Preview extends BackendInterfaceController
                 $controller = $page->getPageController();
                 $view = $controller->getViewObject();
                 $previewRequest = new SkinCustomizerPreviewRequest();
-                $previewRequest->setTheme($theme);
                 $previewRequest->setSkin($skin);
 
                 if ($this->request->request->has('styles')) {

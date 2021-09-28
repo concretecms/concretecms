@@ -14,7 +14,7 @@ class SkinPreviewRequest implements PreviewRequestInterface
     /**
      * @return SkinInterface
      */
-    public function getSkin(): SkinInterface
+    public function getSkin(): ?SkinInterface
     {
         return $this->skin;
     }

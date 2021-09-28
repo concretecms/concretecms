@@ -21,7 +21,7 @@ class PageDesignPreviewRequest extends SkinPreviewRequest
     /**
      * @return Template
      */
-    public function getPageTemplate(): Template
+    public function getPageTemplate(): ?Template
     {
         return $this->template;
     }
