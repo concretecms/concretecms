@@ -10,6 +10,7 @@ jobs:
     env:
       LC_ALL: en_US.UTF-8
       CODE_COVERAGE: n
+    continue-on-error: ${{ matrix.php-version == '8.1' }}
 
     runs-on: ${{ matrix.operating-system }}
     services:
@@ -23,7 +24,6 @@ jobs:
           - 3306:3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
-      continue-on-error: ${{ matrix.php-version == '8.1' }}
       matrix:
         php-version:
           - "7.3"
