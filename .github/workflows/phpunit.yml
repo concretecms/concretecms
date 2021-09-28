@@ -23,6 +23,7 @@ jobs:
           - 3306:3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
+      continue-on-error: ${{ matrix.php-version == '8.1' }}
       matrix:
         php-version:
           - "7.3"
@@ -44,6 +45,9 @@ jobs:
             operating-system: "ubuntu-latest"
             dependencies: "locked"
             composer: "composer:v1, prestissimo"
+          - php-version: 8.1
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
 
     steps:
       - name: "Checkout"
@@ -79,8 +83,6 @@ jobs:
       - name: "Install highest dependencies"
         if: ${{ matrix.dependencies == 'highest' }}
         run: |
-          composer install --no-interaction --no-progress --no-suggest
-          # Run twice for mediawiki merge
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Install locked dependencies"
