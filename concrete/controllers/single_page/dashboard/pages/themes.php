@@ -39,7 +39,12 @@ class Themes extends DashboardSitePageController
 
         $this->set('activate', $this->action('activate'));
         $this->set('install', $this->action('install'));
+
+        $siteService = $this->app->make('site');
+
+        $this->set('hasPageLevelCustomizations', $siteService->hasPageLevelThemeCustomizations($this->getSite()));
     }
+
 
     public function save_selected_skin($themeSkinIdentifier = null, $token = null)
     {
@@ -60,6 +65,20 @@ class Themes extends DashboardSitePageController
         }
         return $this->buildRedirect($this->action());
     }
+
+    public function reset_customizations()
+    {
+        if (!$this->token->validate('reset_customizations')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+        if (!$this->error->has()) {
+            $siteService = $this->app->make('site');
+            $siteService->resetPageLevelThemeCustomizations($this->getSite());
+            $this->flash('success', t('Customizations reset successfully.'));
+        }
+        return $this->buildRedirect($this->action());
+    }
+
 
     public function install_documentation($pThemeID = null)
     {
@@ -238,7 +257,7 @@ class Themes extends DashboardSitePageController
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
-            $theme->applyToSite();
+            $theme->applyToSite($this->getSite());
             $this->flash('success', t('Applied %s theme to site', $theme->getThemeName()));
             return $this->buildRedirect($this->action('inspect', $theme->getThemeID(), 'activate'));
         }

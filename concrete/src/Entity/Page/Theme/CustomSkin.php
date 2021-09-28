@@ -218,6 +218,8 @@ class CustomSkin implements \JsonSerializable, SkinInterface
             'skinID' => $this->getSkinID(),
             'skinIdentifier' => $this->getSkinIdentifier(),
             'skinName' => $this->getSkinName(),
+            'name' => $this->getSkinName(),
+            'identifier' => $this->getSkinIdentifier(),
         ];
     }
 

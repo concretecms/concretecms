@@ -37,7 +37,7 @@ use Punic\Comparer;
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
  */
-class Theme extends ConcreteObject
+class Theme extends ConcreteObject implements \JsonSerializable
 {
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = '.php';
@@ -354,13 +354,37 @@ class Theme extends ConcreteObject
      */
     public function getSkinByIdentifier(string $skinIdentifier): ?SkinInterface
     {
-        $skins = $this->getSkins();
-        foreach ($skins as $skin) {
-            if ($skin->getIdentifier() == $skinIdentifier) {
-                return $skin;
+        if ($this->hasSkins()) {
+            $skins = $this->getSkins();
+            foreach ($skins as $skin) {
+                if ($skin->getIdentifier() == $skinIdentifier) {
+                    return $skin;
+                }
             }
         }
         return null;
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function jsonSerialize()
+    {
+        $hasSkins = $this->hasSkins();
+
+        $data = [
+            'pThemeID' => $this->getThemeID(),
+            'pThemeDisplayName' => $this->getThemeDisplayName(),
+            'pThemeDisplayDescription' => $this->getThemeDisplayDescription(),
+            'hasSkins' => $hasSkins,
+            'skins' => [],
+        ];
+
+        if ($hasSkins) {
+            $data['skins'] = $this->getSkins();
+        }
+
+        return $data;
     }
 
 
@@ -1162,6 +1186,7 @@ class Theme extends ConcreteObject
         $site->setThemeID($this->getThemeID());
         $entityManager->persist($site);
         $entityManager->flush();
+
 
         $treeIDs = [0];
         foreach($site->getLocales() as $locale) {

@@ -7,7 +7,7 @@ use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
-use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
+use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
 use Concrete\Core\Site\Service;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Environment;

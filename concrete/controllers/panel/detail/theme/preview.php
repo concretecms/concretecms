@@ -5,7 +5,7 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
+use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Compiler\Compiler;
@@ -59,7 +59,7 @@ class Preview extends BackendInterfaceController
                 $req->setCurrentPage($page);
                 $controller = $page->getPageController();
                 $view = $controller->getViewObject();
-                $previewRequest = new SkinPreviewRequest();
+                $previewRequest = new SkinCustomizerPreviewRequest();
                 $previewRequest->setTheme($theme);
                 $previewRequest->setSkin($skin);
 

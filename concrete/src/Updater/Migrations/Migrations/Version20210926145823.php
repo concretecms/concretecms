@@ -13,6 +13,6 @@ final class Version20210926145823 extends AbstractMigration implements Repeatabl
 
     public function upgradeDatabase()
     {
-
+        $this->refreshDatabaseTables(['CollectionVersions']);
     }
 }
