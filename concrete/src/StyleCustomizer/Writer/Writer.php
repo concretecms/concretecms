@@ -4,6 +4,7 @@ namespace Concrete\Core\StyleCustomizer\Writer;
 
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Illuminate\Filesystem\Filesystem;
+use tubalmartin\CssMin\Minifier;
 
 /**
  * Responsible for writing CSS into the filesystem for use with a particular skin.
@@ -17,16 +18,23 @@ class Writer
     protected $filesystem;
 
     /**
+     * @var Minifier
+     */
+    protected $minifier;
+
+    /**
      * Writer constructor.
      * @param Filesystem $filesystem
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem, Minifier $minifier)
     {
         $this->filesystem = $filesystem;
+        $this->minifier = $minifier;
     }
 
     public function writeStyles(CustomSkin $skin, string $styles)
     {
+        $styles = $this->minifier->run($styles);
         $directory = DIR_FILES_UPLOADED_STANDARD . DIRECTORY_SEPARATOR . DIRNAME_STYLE_CUSTOMIZER_SKINS;
         if (!$this->filesystem->isDirectory($directory)) {
             $this->filesystem->makeDirectory($directory);
