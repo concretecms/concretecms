@@ -762,6 +762,14 @@ class File extends Controller
                 throw new UserMessageException(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', $url));
             }
         }
+
+        $fileValidationService = $this->app->make('helper/validation/file');
+
+        if (!$fileValidationService->extension($filename)) {
+            $fileHelper = $this->app->make('helper/file');
+            throw new UserMessageException(t('The file extension "%s" is not valid.', $fileHelper->getExtension($filename)));
+        }
+        
         $fullFilename = $temporaryDirectory . '/' . $filename;
         // write the downloaded file to a temporary location on disk
         $handle = fopen($fullFilename, 'wb');
