@@ -182,7 +182,7 @@ class FileImporterTest extends FileStorageTestCase
             'png' => ['png', IMAGETYPE_PNG],
         ] as $thumbnailFormat => list($expectedExtension, $expectedFileType)) {
             $config->set('concrete.misc.default_thumbnail_format', $thumbnailFormat);
-            foreach (['async'] as $strategy) {
+            foreach (['now'] as $strategy) {
                 $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
                 $fi = static::$app->make(FileImporter::class);
                 $fo = $fi->importLocalFile($file, '123412345678_plants.jpg');
