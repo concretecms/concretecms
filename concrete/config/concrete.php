@@ -1104,6 +1104,14 @@ return [
              */
             'validate_email' => false,
 
+            /**
+             * Threshold in seconds to delete unvalidated users
+             *
+             * @see \Concrete\Core\Command\Task\Controller\RemoveUnvalidatedUsersController
+             * @var int Seconds
+             */
+            'validate_email_threshold' => 5184000, // 60 days
+
             /*
              * Admins approve each registration
              *
