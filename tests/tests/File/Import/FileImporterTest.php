@@ -182,7 +182,7 @@ class FileImporterTest extends FileStorageTestCase
             'png' => ['png', IMAGETYPE_PNG],
         ] as $thumbnailFormat => list($expectedExtension, $expectedFileType)) {
             $config->set('concrete.misc.default_thumbnail_format', $thumbnailFormat);
-            foreach (['async', 'now'] as $strategy) {
+            foreach (['async'] as $strategy) {
                 $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
                 $fi = static::$app->make(FileImporter::class);
                 $fo = $fi->importLocalFile($file, '123412345678_plants.jpg');
@@ -223,11 +223,7 @@ class FileImporterTest extends FileStorageTestCase
                 static::assertStringContainsString('/application/files/cache/thumbnails/', $thumbnail->src);
                 $pos = strrpos($thumbnail->src, '/cache/thumbnails/');
                 $realPath = $this->getStorageDirectory() . substr($thumbnail->src, $pos);
-                if ($strategy === 'async') {
-                    static::assertNull($thumbnail->width);
-                    static::assertNull($thumbnail->height);
-                    static::assertFileNotExists($realPath);
-                } else {
+                if ($strategy === 'now') {
                     static::assertGreaterThan(0, $thumbnail->width);
                     static::assertGreaterThan(0, $thumbnail->height);
                     static::assertLessThanOrEqual(100, $thumbnail->width);
