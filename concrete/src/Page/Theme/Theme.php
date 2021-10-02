@@ -11,9 +11,11 @@ use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Theme\Color\ColorCollection;
 use Concrete\Core\Page\Theme\Documentation\DocumentationProviderInterface;
 use Concrete\Core\Page\Theme\Documentation\Installer;
+use Concrete\Core\StyleCustomizer\Customizer\Customizer;
+use Concrete\Core\StyleCustomizer\Customizer\CustomizerFactory;
+use Concrete\Core\StyleCustomizer\Customizer\CustomizerInterface;
 use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
-use Concrete\Core\StyleCustomizer\StyleListParser;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Doctrine\ORM\EntityManager;
@@ -244,11 +246,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
      */
     public function hasPresetSkins(): bool
     {
-        $env = Environment::get();
-        $r = $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
-            $this->getPackageHandle()
-        );
+        $r = $this->getSkinDirectoryRecord();
         return $r->exists();
     }
 
@@ -256,7 +254,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
     {
         $env = Environment::get();
         return $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
+            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
             $this->getPackageHandle()
         );
     }
@@ -267,8 +265,11 @@ class Theme extends ConcreteObject implements \JsonSerializable
      */
     public function getPresetSkins(): array
     {
-        $factory = app(SkinFactory::class);
-        $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile(), $this);
+        $skins = [];
+        if ($this->hasPresetSkins()) {
+            $factory = app(SkinFactory::class);
+            $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile(), $this);
+        }
         return $skins;
     }
 
@@ -300,40 +301,21 @@ class Theme extends ConcreteObject implements \JsonSerializable
         return $allSkins;
     }
 
-
-    public function getStyleConfigurationFileRecord(): Record
-    {
-        $env = Environment::get();
-        return $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES,
-            $this->getPackageHandle()
-        );
-    }
-
     /**
-     * Checks the theme for a styles.xml file (which is how customizations happen).
-     *
      * @return bool
      */
     public function isThemeCustomizable()
     {
-        return $this->getStyleConfigurationFileRecord()->exists();
+        if ($this->getThemeCustomizer()) {
+            return true;
+        }
+        return false;
     }
 
-    /**
-     * Retrieves the list of customizable styles for this theme..
-     *
-     * @return \Concrete\Core\StyleCustomizer\StyleList
-     */
-    public function getThemeCustomizableStyleList(SkinInterface $skin)
+    public function getThemeCustomizer(): ?Customizer
     {
-        if (!isset($this->styleList)) {
-            $record = $this->getStyleConfigurationFileRecord();
-            $xml = simplexml_load_file($record->file);
-            $parser = app(StyleListParser::class);
-            return $parser->parse($xml, $skin);
-        }
-        return $this->styleList;
+        $customizer = app(CustomizerFactory::class)->createFromTheme($this);
+        return $customizer;
     }
 
     /**

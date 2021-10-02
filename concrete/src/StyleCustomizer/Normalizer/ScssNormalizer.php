@@ -80,7 +80,11 @@ class ScssNormalizer implements NormalizerInterface
             }
 
             if ($value[0] == 'color') {
-                $collection->add(new ColorVariable($this->fixVariable($variable), $value[1], $value[2], $value[3], $value[4]));
+                $rgbaValue = null;
+                if (isset($value[4])) {
+                    $rgbaValue = $value[4];
+                }
+                $collection->add(new ColorVariable($this->fixVariable($variable), $value[1], $value[2], $value[3], $rgbaValue));
             }
         }
         return $collection;

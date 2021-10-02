@@ -35,7 +35,7 @@ class Writer
     public function writeStyles(CustomSkin $skin, string $styles)
     {
         $styles = $this->minifier->run($styles);
-        $directory = DIR_FILES_UPLOADED_STANDARD . DIRECTORY_SEPARATOR . DIRNAME_STYLE_CUSTOMIZER_SKINS;
+        $directory = DIR_FILES_UPLOADED_STANDARD . DIRECTORY_SEPARATOR . DIRNAME_STYLE_CUSTOMIZER_PRESETS;
         if (!$this->filesystem->isDirectory($directory)) {
             $this->filesystem->makeDirectory($directory);
         }
@@ -46,7 +46,7 @@ class Writer
 
     public function clearStyles(CustomSkin $skin)
     {
-        $directory = DIR_FILES_UPLOADED_STANDARD . DIRECTORY_SEPARATOR . DIRNAME_STYLE_CUSTOMIZER_SKINS;
+        $directory = DIR_FILES_UPLOADED_STANDARD . DIRECTORY_SEPARATOR . DIRNAME_STYLE_CUSTOMIZER_PRESETS;
         $file = $directory . DIRECTORY_SEPARATOR . $skin->getIdentifier() . '.css';
         if ($this->filesystem->isFile($file)) {
             $this->filesystem->delete($file);

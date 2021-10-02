@@ -7,8 +7,8 @@ $config = Core::make('config');
 $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
 $show_tooltips = (bool) $config->get('concrete.accessibility.toolbar_tooltips');
 $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
-$panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize', $customizeTheme->getThemeID(), $previewPage->getCollectionID());
-$previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents') . '?skinIdentifier=' . $previewPage->getPageskin()->getIdentifier() . '&pThemeID=' . $customizeTheme->getThemeID() . '&amp;cID=' . $previewPage->getCollectionID();
+$panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize/theme', $customizeTheme->getThemeID(), $previewPage->getCollectionID());
+$previewContentsURL = URL::to('/ccm/system/panels/page/design/preview_contents') . '?cID=' . $previewPage->getCollectionID();
 ?>
 
 <?= View::element('icons') ?>

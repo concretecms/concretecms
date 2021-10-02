@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Theme;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
@@ -23,22 +24,26 @@ class Customize extends BackendInterfaceController
     {
         $theme = Theme::getByID($pThemeID);
         if ($theme) {
-            $this->set('theme', $theme);
-            $this->set('presetSkins', $theme->getPresetSkins());
-            $this->set('customSkins', $theme->getCustomSkins());
-            $previewPage = Page::getByID($previewPageID);
-            $checker = new Checker($previewPage);
-            if ($checker->canViewPage()) {
+            $customizer = $theme->getThemeCustomizer();
+            if ($customizer) {
+                $this->set('customizer', $customizer);
+                $this->set('theme', $theme);
                 $previewPage = Page::getByID($previewPageID);
-                $this->set('previewPage', $previewPage);
-                $activeSkin = SkinInterface::SKIN_DEFAULT;
-                $site = $previewPage->getSite();
-                if ($site) {
+                $checker = new Checker($previewPage);
+                if ($checker->canViewPage()) {
+                    $previewPage = Page::getByID($previewPageID);
+                    $this->set('previewPage', $previewPage);
+                    $activeSkin = SkinInterface::SKIN_DEFAULT;
+                    $site = $previewPage->getSite();
+                    if (!$site) {
+                        // We must be doing something like previewing a documentation page that has no site
+                        $site = $this->app->make('site')->getActiveSiteForEditing();
+                    }
                     if ($site->getThemeSkinIdentifier()) {
                         $activeSkin = $site->getThemeSkinIdentifier();
                     }
+                    $this->set('activeSkin', $activeSkin);
                 }
-                $this->set('activeSkin', $activeSkin);
             }
         }
     }

@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Theme;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactory;
@@ -12,15 +13,12 @@ use Concrete\Core\Page\Theme\Command\SkinCommandValidator;
 use Concrete\Core\Page\Theme\Command\UpdateCustomSkinCommand;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\CustomizerVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
-use Concrete\Core\StyleCustomizer\WebFont\WebFontCollectionFactory;
 use Concrete\Core\User\User;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
-class CustomizeSkin extends BackendInterfaceController
+class CustomizePreset extends BackendInterfaceController
 {
     protected $viewPath = '/panels/theme/customize';
     protected $controllerActionPath = '/panels/theme/customize';
@@ -32,36 +30,82 @@ class CustomizeSkin extends BackendInterfaceController
         return $checker->canViewPage();
     }
 
-    public function view($pThemeID, $skinIdentifier, $previewPageID)
+    protected function loadPreviewPage($previewPageID)
     {
-        $this->requireAsset('ace');
         $previewPage = Page::getByID($previewPageID);
         $checker = new Checker($previewPage);
         if ($checker->canViewPage()) {
-            $theme = Theme::getByID($pThemeID);
-            if ($theme) {
-                $skin = $theme->getSkinByIdentifier($skinIdentifier);
-                if ($skin) {
-                    $styleList = $theme->getThemeCustomizableStyleList($skin);
-                    $adapterFactory = $this->app->make(AdapterFactory::class);
-                    $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
-                    $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
-                    $customizerVariableCollectionFactory = $this->app->make(CustomizerVariableCollectionFactory::class);
-                    $adapter = $adapterFactory->createFromTheme($theme);
-                    $variableCollection = $variableCollectionFactory->createVariableCollectionFromSkin($adapter, $skin);
-                    $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
-                    $groupedStyleValueList = $valueList->createGroupedStyleValueList($styleList);
-                    $this->set('styleList', $groupedStyleValueList);
-                    $this->set('styles', $customizerVariableCollectionFactory->createFromStyleValueList($valueList));
-                    $this->set('skin', $skin);
-                    $this->set('pThemeID', $pThemeID);
-                    $this->set('skinIdentifier', $skinIdentifier);
-                    $this->set('previewPage', $previewPage);
-                    return;
-                }
-            }
+            $this->set('previewPage', $previewPage);
+        } else {
+            throw new \RuntimeException(t('Unable to preview page: %s', $previewPage->getCollectionID()));
         }
-        throw new \RuntimeException(t('Invalid theme ID, preview page or skin identifier.'));
+    }
+
+    protected function getCustomizer($pThemeID)
+    {
+        $theme = Theme::getByID($pThemeID);
+        if ($theme) {
+            $customizer = $theme->getThemeCustomizer();
+            if ($customizer) {
+                return $customizer;
+            } else {
+                throw new \RuntimeException(t('Theme %s cannot be customized', $theme->getThemeHandle()));
+            }
+        } else {
+            throw new \RuntimeException(t('Invalid theme: %s', h($pThemeID)));
+        }
+    }
+
+    public function view($pThemeID, $presetIdentifier, $previewPageID)
+    {
+        $this->loadPreviewPage($previewPageID);
+        $customizer = $this->getCustomizer($pThemeID);
+        $preset = $customizer->getPresetByIdentifier($presetIdentifier);
+        if ($preset) {
+            $styleList = $customizer->getThemeCustomizableStyleList($preset);
+            $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
+            $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
+            $customizerVariableCollectionFactory = $this->app->make(CustomizerVariableCollectionFactory::class);
+            $variableCollection = $variableCollectionFactory->createFromPreset($customizer, $preset);
+            $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
+            $groupedStyleValueList = $valueList->createGroupedStyleValueList($styleList);
+            $this->set('styleList', $groupedStyleValueList);
+            $this->set('styles', $customizerVariableCollectionFactory->createFromStyleValueList($valueList));
+            $this->set('preset', $preset);
+            $this->set('pThemeID', $pThemeID);
+            $this->set('presetIdentifier', $presetIdentifier);
+            $this->requireAsset('ace');
+        } else {
+            throw new \RuntimeException(t('Invalid preset: %s', h($presetIdentifier)));
+        }
+    }
+
+    public function viewSkin($pThemeID, $skinIdentifier, $previewPageID)
+    {
+        $this->loadPreviewPage($previewPageID);
+        $customizer = $this->getCustomizer($pThemeID);
+        $skin = $customizer->getTheme()->getSkinByIdentifier($skinIdentifier);
+        if ($skin) {
+            /**
+             * @var $skin CustomSkin
+             */
+            $preset = $customizer->getPresetByIdentifier($skin->getPresetStartingPoint());
+            $styleList = $customizer->getThemeCustomizableStyleList($preset);
+            $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
+            $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
+            $customizerVariableCollectionFactory = $this->app->make(CustomizerVariableCollectionFactory::class);
+            $variableCollection = $variableCollectionFactory->createFromCustomSkin($skin);
+            $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
+            $groupedStyleValueList = $valueList->createGroupedStyleValueList($styleList);
+            $this->set('styleList', $groupedStyleValueList);
+            $this->set('styles', $customizerVariableCollectionFactory->createFromStyleValueList($valueList));
+            $this->set('preset', $preset);
+            $this->set('pThemeID', $pThemeID);
+            $this->set('skinIdentifier', $skinIdentifier);
+            $this->requireAsset('ace');
+        } else {
+            throw new \RuntimeException(t('Invalid skin: %s', h($skinIdentifier)));
+        }
     }
 
     /**
@@ -72,18 +116,19 @@ class CustomizeSkin extends BackendInterfaceController
      * @param $skinIdentifier
      * @return mixed
      */
-    public function create($pThemeID, $skinIdentifier)
+    public function createSkin($pThemeID, $presetIdentifier)
     {
         if ($this->app->make('token')->validate()) {
             $theme = Theme::getByID($pThemeID);
             if ($theme) {
-                $skin = $theme->getSkinByIdentifier($skinIdentifier);
-                if ($skin) {
+                $customizer = $theme->getThemeCustomizer();
+                $preset = $customizer->getPresetByIdentifier($presetIdentifier);
+                if ($preset) {
                     $styles = $this->request->request->get('styles');
                     $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
                     $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
                     $styleValueList = $styleValueListFactory->createFromRequestArray(
-                        $theme->getThemeCustomizableStyleList($skin),
+                        $customizer->getThemeCustomizableStyleList($preset),
                         $styles
                     );
                     $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
@@ -99,7 +144,7 @@ class CustomizeSkin extends BackendInterfaceController
                         $command = new CreateCustomSkinCommand();
                         $command->setAuthorID($u->getUserID());
                         $command->setThemeID($theme->getThemeID());
-                        $command->setPresetSkinStartingPoint($skinIdentifier);
+                        $command->setPresetStartingPoint($presetIdentifier);
                         $command->setSkinName($this->request->request->get('skinName'));
                         $command->setCustomCss($this->request->request->get('customCss'));
                         $command->setVariableCollection($collection);
@@ -135,11 +180,13 @@ class CustomizeSkin extends BackendInterfaceController
             if ($theme) {
                 $skin = $theme->getSkinByIdentifier($skinIdentifier);
                 if ($skin) {
+                    $customizer = $theme->getThemeCustomizer();
+                    $preset = $customizer->getPresetByIdentifier($skin->getPresetStartingPoint());
                     $styles = $this->request->request->get('styles');
                     $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
                     $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
                     $styleValueList = $styleValueListFactory->createFromRequestArray(
-                        $theme->getThemeCustomizableStyleList($skin),
+                        $customizer->getThemeCustomizableStyleList($preset),
                         $styles
                     );
                     $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);

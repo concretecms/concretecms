@@ -18,10 +18,9 @@ class FontFamilyStyle extends Style
         $variable = $collection->getVariable($this->getVariable());
         if ($variable) {
             $value = new FontFamilyValue($variable->getValue());
-        } else {
-            $value = new FontFamilyValue(''); // This enables us to omit the font entirely from our _customizable-variables.scss file, and use Bootstrap/Bedrock defaults. See atomik/default for example.
+            return $value;
         }
-        return $value;
+        return null;
     }
 
     public function createValueFromRequestDataCollection(array $styles): ?ValueInterface

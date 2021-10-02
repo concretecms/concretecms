@@ -1,13 +1,10 @@
 <?php
 namespace Concrete\Core\Page\View\Preview;
 
-class SkinCustomizerPreviewRequest extends SkinPreviewRequest
+class ThemeCustomizerRequest implements PreviewRequestInterface
 {
 
     /**
-     * If we're previewing a custom skin's modification slike setting a new color on a link, changing a font family,
-     * we're going to have customCss set in this parameter
-     *
      * @var string|null
      */
     protected $customCss;

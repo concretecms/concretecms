@@ -3906,16 +3906,20 @@ EOT
 
     public function getPageSkin()
     {
+        $skinIdentifier = null;
         if (isset($this->vObj->pThemeSkinIdentifier)) {
             $skinIdentifier = $this->vObj->pThemeSkinIdentifier;
         } else {
             $site = $this->getSite();
-            $skinIdentifier = SkinInterface::SKIN_DEFAULT;
-            if ($site) {
-                if ($site->getThemeSkinIdentifier()) {
-                    $skinIdentifier = $site->getThemeSkinIdentifier();
-                }
+            if (!$site) {
+                $site = Core::make('site')->getSite();
             }
+            if ($site->getThemeSkinIdentifier()) {
+                $skinIdentifier = $site->getThemeSkinIdentifier();
+            }
+        }
+        if (!$skinIdentifier) {
+            $skinIdentifier = SkinInterface::SKIN_DEFAULT;
         }
         $theme = $this->getCollectionThemeObject();
         $skin = $theme->getSkinByIdentifier($skinIdentifier);

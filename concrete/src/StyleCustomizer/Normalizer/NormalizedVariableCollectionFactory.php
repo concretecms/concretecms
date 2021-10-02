@@ -5,8 +5,9 @@ namespace Concrete\Core\StyleCustomizer\Normalizer;
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\StyleCustomizer\Adapter\AdapterInterface;
+use Concrete\Core\StyleCustomizer\Customizer\Customizer;
+use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 use Concrete\Core\StyleCustomizer\Skin\PresetSkin;
-use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\StyleCustomizer\Style\StyleValueList;
 use Concrete\Core\StyleCustomizer\Style\Value\ValueContainerInterface;
 
@@ -49,19 +50,20 @@ class NormalizedVariableCollectionFactory
         return $collection;
     }
 
-    public function createVariableCollectionFromSkin(AdapterInterface $adapter, SkinInterface $skin): NormalizedVariableCollection
+    public function createFromPreset(Customizer $customizer, PresetInterface $preset): NormalizedVariableCollection
     {
-        if ($skin instanceof PresetSkin) {
-            $file = $adapter->getVariablesFile($skin);
-            $normalizer = $adapter->getVariableNormalizer();
-            return $normalizer->createVariableCollectionFromFile($file);
+        $type = $customizer->getType();
+        $file = $type->getPresetType()->getVariablesFile($preset);
+        $normalizer = $type->getVariableNormalizer();
+        return $normalizer->createVariableCollectionFromFile($file);
+    }
+
+    public function createFromCustomSkin(CustomSkin $skin)
+    {
+        $collection = $skin->getVariableCollection();
+        if ($collection) {
+            return $this->serializer->denormalize($collection, NormalizedVariableCollection::class);
         }
-        if ($skin instanceof CustomSkin) {
-            $collection = $skin->getVariableCollection();
-            if ($collection) {
-                return $this->serializer->denormalize($collection, NormalizedVariableCollection::class);
-            }
-        }
-        throw new \Exception(t('Unable to create variable collection from skin: %s', $skin->getName()));
+        return new NormalizedVariableCollection();
     }
 }

@@ -21,7 +21,7 @@ class CreateCustomSkinCommand extends Command
     /**
      * @var string
      */
-    protected $presetSkinStartingPoint;
+    protected $presetStartingPoint;
 
     /**
      * @var string
@@ -121,17 +121,17 @@ class CreateCustomSkinCommand extends Command
     /**
      * @return string
      */
-    public function getPresetSkinStartingPoint(): string
+    public function getPresetStartingPoint(): string
     {
-        return $this->presetSkinStartingPoint;
+        return $this->presetStartingPoint;
     }
 
     /**
-     * @param string $presetSkinStartingPoint
+     * @param string $presetStartingPoint
      */
-    public function setPresetSkinStartingPoint(string $presetSkinStartingPoint): void
+    public function setPresetStartingPoint(string $presetStartingPoint): void
     {
-        $this->presetSkinStartingPoint = $presetSkinStartingPoint;
+        $this->presetStartingPoint = $presetStartingPoint;
     }
 
 

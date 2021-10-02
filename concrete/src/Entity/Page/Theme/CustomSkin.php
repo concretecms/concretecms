@@ -40,7 +40,7 @@ class CustomSkin implements \JsonSerializable, SkinInterface
     /**
      * @ORM\Column(type="string")
      */
-    protected $presetSkinStartingPoint = '';
+    protected $presetStartingPoint = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
@@ -236,17 +236,17 @@ class CustomSkin implements \JsonSerializable, SkinInterface
     /**
      * @return string
      */
-    public function getPresetSkinStartingPoint(): string
+    public function getPresetStartingPoint(): string
     {
-        return $this->presetSkinStartingPoint;
+        return $this->presetStartingPoint;
     }
 
     /**
-     * @param string $presetSkinStartingPoint
+     * @param string $presetStartingPoint
      */
-    public function setPresetSkinStartingPoint(string $presetSkinStartingPoint): void
+    public function setPresetStartingPoint(string $presetStartingPoint): void
     {
-        $this->presetSkinStartingPoint = $presetSkinStartingPoint;
+        $this->presetStartingPoint = $presetStartingPoint;
     }
 
     public function getTheme(): Theme
@@ -256,7 +256,7 @@ class CustomSkin implements \JsonSerializable, SkinInterface
 
     public function getStylesheet(): Element
     {
-        $stylesheet = REL_DIR_FILES_UPLOADED_STANDARD . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS . '/' . $this->getIdentifier() . '.css';
+        $stylesheet = REL_DIR_FILES_UPLOADED_STANDARD . '/' . DIRNAME_STYLE_CUSTOMIZER_PRESETS . '/' . $this->getIdentifier() . '.css';
         $element = new Element('link', null);
         $element->rel('stylesheet')->type('text/css')->href($stylesheet);
         return $element;

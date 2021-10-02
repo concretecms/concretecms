@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
-<styles version="1.0">
+<styles version="2.0" lang="scss">
     <webfonts>
-        <skin identifier="default">
+        <preset identifier="default">
             <font type="google" name="Montserrat" />
             <font type="google" name="Bebas Neue" />
             <font type="google" name="Raleway" />
-        </skin>
-        <skin identifier="rustic-elegance">
+        </preset>
+        <preset identifier="rustic-elegance">
             <font type="google" name="Prata" />
             <font type="google" name="Lato" />
-        </skin>
+        </preset>
     </webfonts>
     <set name="Base Colors">
         <style name="Primary" variable="primary" type="color"/>

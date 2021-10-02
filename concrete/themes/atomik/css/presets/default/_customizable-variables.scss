@@ -10,10 +10,8 @@ $accent: #F14A20 !default;
 $dark-accent: #014357 !default;
 
 // Body Font
-// Note: we're using the system Bootstrap default for the font family base in this skin. The best way to do that
-// is to just leave it out of the _customizable-variables file. But I didn't want to do that without noting
-// That I was doing it, because then it might look like a bug. So here it is, but commented out.
-// $font-family-base: $font-family-sans-serif !default;
+// Note we have copied the bootstrap defaults.
+$font-family-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 
 // Hero Image
 $hero-image-title-color: #fff !default;

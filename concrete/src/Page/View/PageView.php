@@ -3,10 +3,9 @@ namespace Concrete\Core\Page\View;
 
 use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\View\Preview\PageDesignPreviewRequest;
-use Concrete\Core\Page\View\Preview\PreviewRequest;
 use Concrete\Core\Page\View\Preview\PreviewRequestInterface;
-use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
+use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -239,14 +238,14 @@ class PageView extends View
     public function getThemeStyles()
     {
         $customStyles = null;
-        if (isset($this->customPreviewRequest) && $this->customPreviewRequest instanceof SkinPreviewRequest) {
-            $request = $this->customPreviewRequest;
-            $skin = $request->getSkin();
-            $stylesheet = $skin->getStylesheet();
-            if ($this->customPreviewRequest instanceof SkinCustomizerPreviewRequest) {
-                if ($this->customPreviewRequest->getCustomCss() !== null) {
-                    $customStyles = $this->customPreviewRequest->getCustomCss();
-                }
+        if (isset($this->customPreviewRequest)) {
+            if ($this->customPreviewRequest instanceof SkinPreviewRequest) {
+                $skinIdentifier = $this->customPreviewRequest->getSkin()->getIdentifier();
+                $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+                $stylesheet = $skin->getStylesheet();
+            }
+            if ($this->customPreviewRequest instanceof ThemeCustomizerRequest) {
+                $customStyles = $this->customPreviewRequest->getCustomCss();
             }
         } else {
             $skin = $this->c->getPageSkin();

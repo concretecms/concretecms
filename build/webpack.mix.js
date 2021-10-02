@@ -336,14 +336,14 @@ mix.js('assets/themes/elemental/js/main.js', 'themes/elemental');
 
 // Atomik Theme
 mix
-    .sass('../concrete/themes/atomik/skins/default/scss/main.scss', 'themes/atomik/skins/default/', {
+    .sass('../concrete/themes/atomik/css/presets/default/main.scss', 'themes/atomik/css/skins/default.css', {
         sassOptions: {
             includePaths: [
                 path.resolve(__dirname, './node_modules/')
             ]
         }
     })
-    .sass('../concrete/themes/atomik/skins/rustic-elegance/scss/main.scss', 'themes/atomik/skins/rustic-elegance/', {
+    .sass('../concrete/themes/atomik/css/presets/rustic-elegance/main.scss', 'themes/atomik/css/skins/rustic-elegance.css', {
         sassOptions: {
             includePaths: [
                 path.resolve(__dirname, './node_modules/')

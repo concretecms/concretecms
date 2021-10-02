@@ -2,14 +2,14 @@
 
 namespace Concrete\Core\StyleCustomizer\Style\Parser;
 
-use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 use Concrete\Core\StyleCustomizer\Style\FontWeightStyle;
 use Concrete\Core\StyleCustomizer\Style\Style;
 
 class FontWeightParser implements ParserInterface
 {
 
-    public function parseNode(\SimpleXMLElement $element, SkinInterface $skin): Style
+    public function parseNode(\SimpleXMLElement $element, PresetInterface $preset): Style
     {
         $style = new FontWeightStyle();
         $style->setName((string) $element['name']);

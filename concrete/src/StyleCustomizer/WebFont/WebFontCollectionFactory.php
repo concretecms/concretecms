@@ -3,31 +3,30 @@
 namespace Concrete\Core\StyleCustomizer\WebFont;
 
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
-use Concrete\Core\StyleCustomizer\Skin\PresetSkin;
-use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 
 class WebFontCollectionFactory
 {
 
     /**
-     * @param SkinInterface $skin
+     * @param PresetInterface $preset
      * @return WebFontCollection
      */
-    public function createFromSkin(SkinInterface $skin): WebFontCollection
+    public function createFromPreset(PresetInterface $preset): WebFontCollection
     {
-        if ($skin instanceof CustomSkin) {
-            $skinIdentifier = $skin->getPresetSkinStartingPoint();
+        if ($preset instanceof CustomSkin) {
+            $presetIdentifier = $preset->getPresetStartingPoint();
         } else {
-            $skinIdentifier = $skin->getIdentifier();
+            $presetIdentifier = $preset->getIdentifier();
         }
         $collection = new WebFontCollection();
-        $record = $skin->getTheme()->getStyleConfigurationFileRecord();
-        if ($record->exists()) {
-            $xml = simplexml_load_file($record->getFile());
+        $file = $preset->getTheme()->getThemeCustomizer()->getConfigurationFile();
+        if ($file) {
+            $xml = simplexml_load_file($file);
             if ($xml->webfonts) {
-                foreach ($xml->webfonts->skin as $skinNode) {
-                    if ((string) $skinNode['identifier'] == $skinIdentifier) {
-                        foreach ($skinNode->font as $fontNode) {
+                foreach ($xml->webfonts->preset as $presetNode) {
+                    if ((string) $presetNode['identifier'] == $presetIdentifier) {
+                        foreach ($presetNode->font as $fontNode) {
                             $font = new WebFont((string) $fontNode['name'], (string) $fontNode['type']);
                             $collection->add($font);
                         }

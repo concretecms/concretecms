@@ -15,6 +15,15 @@ class ColorStyle extends Style
     public function createValueFromVariableCollection(NormalizedVariableCollection $collection): ?ValueInterface
     {
         $variable = $collection->getVariable($this->getVariable());
+        if (!$variable) {
+            // Legacy backward compatibility hack. The old customizer required that the "type" of the variable
+            // be the variable suffix. So the `page-background` variable is written as `page-background-color`
+            // in the .less file. Let's check to see if this exists. Note to devs: you should NOT use this
+            // convention going forward. Just name your variables the same in the .xml file and the .less/.sass
+            // files. Note, this is only required on color, size, image, and type styles, because those are the
+            // only types of variables available to the legacy customizer.
+            $variable = $collection->getVariable($this->getVariable() . '-color');
+        }
         if ($variable) {
             $color = new Parser($variable->getValue());
             if ($color) {

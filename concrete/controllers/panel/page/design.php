@@ -119,14 +119,18 @@ class Design extends BackendUIPageController
         }
         if ($this->request->query->has('pThemeID')) {
             $pt = Theme::getByID(h($this->request->query->get('pThemeID')));
-            if ($pt) {
-                $previewRequest->setTheme($pt);
-                if ($this->request->query->has('skinIdentifier')) {
-                    $skin = $pt->getSkinByIdentifier(h($this->request->query->get('skinIdentifier')));
-                    if ($skin) {
-                        $previewRequest->setSkin($skin);
-                    }
-                }
+        } else {
+            $pt = $this->page->getCollectionThemeObject();
+        }
+        if ($pt) {
+            $previewRequest->setTheme($pt);
+            if ($this->request->query->has('skinIdentifier')) {
+                $skin = $pt->getSkinByIdentifier(h($this->request->query->get('skinIdentifier')));
+            } else {
+                $skin = $this->page->getPageSkin();
+            }
+            if ($skin) {
+                $previewRequest->setSkin($skin);
             }
         }
 
