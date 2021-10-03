@@ -2,12 +2,13 @@
 
 namespace Concrete\TestHelpers\Page;
 
+use Concrete\Core\Page\Single as SinglePage;
+use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
 use Page;
 use PageTemplate;
-use PageType;
 
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
@@ -44,6 +45,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'PageTypeComposerFormLayoutSets',
         'BlockFeatureAssignments',
         'BlockPermissionAssignments',
+        'Stacks',
     ]; // so brutal
 
     protected $metadatas = [
@@ -83,6 +85,13 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         PageType::add([
             'handle' => 'basic',
             'name' => 'Basic',
+        ]);
+
+        SinglePage::addGlobal(STACKS_PAGE_PATH);
+        PageType::add([
+            'handle' => STACKS_PAGE_TYPE,
+            'name' => 'Stacks',
+            'internal' => 1,
         ]);
     }
 

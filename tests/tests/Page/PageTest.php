@@ -2,13 +2,16 @@
 
 namespace Concrete\Tests\Page;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Single;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Page\Type\Type;
 use Concrete\TestHelpers\Page\PageTestCase;
 use Config;
 use Core;
 use Database;
 use Exception;
 use Loader;
-use Page;
 use PageTemplate;
 use PageType;
 use SinglePage;
@@ -551,5 +554,26 @@ class PageTest extends PageTestCase
             'contact' => $contact,
             'another' => $another,
         ];
+    }
+
+    public function testInstantiate()
+    {
+        $this->app->make('cache/request')->enable();
+
+        $page = self::createPage('Test Page');
+        $stack = Stack::addStack('Test Stack');
+
+        $pageID = $page->getCollectionID();
+        $stackID = $stack->getCollectionID();
+
+        $newPageInstance = Page::getByID($pageID);
+        $newStackInstance = Stack::getByID($stackID);
+
+        $this->assertTrue($newPageInstance instanceof Page);
+        $this->assertTrue($newStackInstance instanceof Stack);
+        $this->assertEquals($pageID, $newPageInstance->getCollectionID());
+        $this->assertEquals($stackID, $newStackInstance->getCollectionID());
+
+        $this->app->make('cache/request')->disable();
     }
 }
