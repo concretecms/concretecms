@@ -14,8 +14,6 @@ use Concrete\Core\Page\Theme\Theme;
 class PageTheme extends Theme
 {
     
-    use BedrockThemeTrait;
-
     use BedrockThemeTrait {
         getColorCollection as getBedrockColorCollection;
     }
