@@ -14,11 +14,7 @@ class WebFontCollectionFactory
      */
     public function createFromPreset(PresetInterface $preset): WebFontCollection
     {
-        if ($preset instanceof CustomSkin) {
-            $presetIdentifier = $preset->getPresetStartingPoint();
-        } else {
-            $presetIdentifier = $preset->getIdentifier();
-        }
+        $presetIdentifier = $preset->getIdentifier();
         $collection = new WebFontCollection();
         $file = $preset->getTheme()->getThemeCustomizer()->getConfigurationFile();
         if ($file) {
