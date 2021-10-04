@@ -248,12 +248,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $str = '||';
         $nodeKeys = $this->attributeValue->getValue();
-        foreach ($nodeKeys as $nodeObj) {
-            $str .= $nodeObj->getTreeNodeDisplayPath() . '||';
+        if ($nodeKeys) {
+            foreach ($nodeKeys as $nodeObj) {
+                $str .= $nodeObj->getTreeNodeDisplayPath() . '||';
+            }
         }
 
-        // remove line break for empty list
-        if ($str == "\n") {
+        if ($str == "||") {
             return '';
         }
 
