@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="PageTemplates")
  */
-class Template
+class Template implements \JsonSerializable
 {
     /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue **/
     public $pTemplateID;
@@ -120,5 +120,16 @@ class Template
             ) . '" title="' . $this->getPageTemplateDisplayName() . '" />';
 
         return $iconImg;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'pTemplateID' => $this->getPageTemplateID(),
+            'pTemplateHandle' => $this->getPageTemplateHandle(),
+            'pTemplateName' => $this->getPageTemplateName(),
+            'pTemplateDisplayName' => $this->getPageTemplateDisplayName(),
+            'pTemplateIconImage' => $this->getPageTemplateIconImage(),
+        ];
     }
 }

@@ -332,26 +332,18 @@ mix
     .js('assets/cms.js', 'js/cms.js');
 
 // Elemental Theme
-mix
-    .sass('../concrete/themes/elemental/skins/default/scss/main.scss', 'themes/elemental/skins/default/', {
-        sassOptions: {
-            includePaths: [
-                path.resolve(__dirname, './node_modules/')
-            ]
-        }
-    })
-    .js('assets/themes/elemental/js/main.js', 'themes/elemental');
-mix
-    .sass('../concrete/themes/elemental/skins/night-road/scss/main.scss', 'themes/elemental/skins/night-road/', {
-        sassOptions: {
-            includePaths: [
-                path.resolve(__dirname, './node_modules/')
-            ]
-        }
-    })
+mix.js('assets/themes/elemental/js/main.js', 'themes/elemental');
+
 // Atomik Theme
 mix
-    .sass('../concrete/themes/atomik/skins/default/scss/main.scss', 'themes/atomik/skins/default/', {
+    .sass('../concrete/themes/atomik/css/presets/default/main.scss', 'themes/atomik/css/skins/default.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .sass('../concrete/themes/atomik/css/presets/rustic-elegance/main.scss', 'themes/atomik/css/skins/rustic-elegance.css', {
         sassOptions: {
             includePaths: [
                 path.resolve(__dirname, './node_modules/')

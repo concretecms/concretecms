@@ -4,13 +4,13 @@ namespace Concrete\StartingPointPackage\ElementalBlank;
 
 use Concrete\Core\Package\StartingPointPackage;
 
-class Controller extends StartingPointPackage
+class controller extends StartingPointPackage
 {
     protected $pkgHandle = 'elemental_blank';
 
     public function getPackageName()
     {
-        return t('Empty Site (Elemental)');
+        return t('Empty Site');
     }
 
     public function getPackageDescription()

@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $this->inc('elements/header.php');
 ?>
 
+<main>
     <?php
     $a = new Area('Page Header');
     $a->enableGridContainer();
@@ -36,6 +37,7 @@ $this->inc('elements/header.php');
     $a->enableGridContainer();
     $a->display($c);
     ?>
+</main>
 
 <?php
 $this->inc('elements/footer.php');

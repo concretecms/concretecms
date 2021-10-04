@@ -1,0 +1,22 @@
+div.theme-atomik {
+  div.ccm-block-feature-link {
+
+    div.ccm-block-feature-link-text {
+      font-size: 1.25rem;
+
+      p {
+        color: $secondary;
+      }
+    }
+
+    @include make-display-headings();
+
+  }
+
+  // Handle image blocks butting up right next to feature link blocks
+  picture + .ccm-block-feature-link {
+    margin-top: 2rem;
+  }
+
+}
+

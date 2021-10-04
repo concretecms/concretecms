@@ -20,15 +20,19 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <section data-vue="theme-customizer">
 
     <theme-customizer
-            preview-action="<?=URL::to('/ccm/system/panels/details/theme/do_preview', $pThemeID, $skinIdentifier, $previewPage->getCollectionID())?>"
-            create-new-action="<?=URL::to('/ccm/system/panels/theme/customize/create_skin', $pThemeID, $skinIdentifier)?>"
-            save-action="<?=URL::to('/ccm/system/panels/theme/customize/save_skin', $pThemeID, $skinIdentifier)?>"
-            delete-action="<?=URL::to('/ccm/system/panels/theme/customize/delete_skin', $pThemeID, $skinIdentifier)?>"
-            :styles='<?=json_encode($styles)?>'
-            :style-list='<?=json_encode($styleList)?>'
+            <?php if ($skinIdentifier) { ?>
+                preview-action="<?=URL::to('/ccm/system/panels/details/theme/preview_skin_iframe', $pThemeID, $skinIdentifier, $previewPage->getCollectionID())?>"
+                delete-action="<?=URL::to('/ccm/system/panels/theme/customize/delete_skin', $pThemeID, $skinIdentifier)?>"
+                save-action="<?=URL::to('/ccm/system/panels/theme/customize/save_skin', $pThemeID, $skinIdentifier)?>"
+            <?php } else if ($presetIdentifier) { ?>
+                preview-action="<?=URL::to('/ccm/system/panels/details/theme/preview_preset_iframe', $pThemeID, $presetIdentifier, $previewPage->getCollectionID())?>"
+                create-new-action="<?=URL::to('/ccm/system/panels/theme/customize/create_skin', $pThemeID, $presetIdentifier)?>"
+            <?php } ?>
+            :styles='<?=h(json_encode($styles))?>'
+            :style-list='<?=h(json_encode($styleList))?>'
 
             <?php if ($skin instanceof \Concrete\Core\Entity\Page\Theme\CustomSkin) { ?>
-                :custom-css='<?=json_encode($skin->getCustomCss())?>'
+                :custom-css='<?=h(json_encode($skin->getCustomCss()))?>'
             <?php } ?>
     >
 

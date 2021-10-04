@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
-    <themes>
-        <theme handle="elemental" package="" activated="1"/>
-    </themes>
     <attributekeys>
         <attributekey handle="job_posting_department" name="Department" package="" searchable="1" indexed="1"
                       type="select" category="collection">
@@ -985,7 +982,7 @@
                                         </style>
                                         <data table="btFeature">
                                             <record>
-                                                <icon><![CDATA[pencil]]></icon>
+                                                <icon><![CDATA[pencil-alt]]></icon>
                                                 <title><![CDATA[Easy to Edit]]></title>
                                                 <paragraph>
                                                     <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
@@ -1063,7 +1060,7 @@
                                         </style>
                                         <data table="btFeature">
                                             <record>
-                                                <icon><![CDATA[youtube-play]]></icon>
+                                                <icon><![CDATA[youtube]]></icon>
                                                 <title><![CDATA[Media Rich]]></title>
                                                 <paragraph>
                                                     <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
@@ -1123,46 +1120,6 @@
                                             </record>
                                         </data>
                                     </block>
-                                    <block type="page_list" name="" custom-template="thumbnail_title_description">
-                                        <data table="btPageList">
-                                            <record>
-                                                <num><![CDATA[1]]></num>
-                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                                <cParentID/>
-                                                <cThis><![CDATA[0]]></cThis>
-                                                <cThisParent><![CDATA[1]]></cThisParent>
-                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
-                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
-                                                <pageListTitle><![CDATA[]]></pageListTitle>
-                                                <filterByRelated><![CDATA[0]]></filterByRelated>
-                                                <filterByCustomTopic><![CDATA[0]]></filterByCustomTopic>
-                                                <filterDateOption><![CDATA[]]></filterDateOption>
-                                                <filterDateDays><![CDATA[0]]></filterDateDays>
-                                                <filterDateStart><![CDATA[]]></filterDateStart>
-                                                <filterDateEnd><![CDATA[]]></filterDateEnd>
-                                                <relatedTopicAttributeKeyHandle>
-                                                    <![CDATA[]]></relatedTopicAttributeKeyHandle>
-                                                <customTopicAttributeKeyHandle>
-                                                    <![CDATA[]]></customTopicAttributeKeyHandle>
-                                                <customTopicTreeNodeID><![CDATA[0]]></customTopicTreeNodeID>
-                                                <includeName><![CDATA[1]]></includeName>
-                                                <includeDescription><![CDATA[1]]></includeDescription>
-                                                <includeDate><![CDATA[0]]></includeDate>
-                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
-                                                <paginate><![CDATA[0]]></paginate>
-                                                <displayAliases><![CDATA[0]]></displayAliases>
-                                                <ignorePermissions><![CDATA[0]]></ignorePermissions>
-                                                <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
-                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                <pfID/>
-                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
-                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
-                                                <noResultsMessage><![CDATA[]]></noResultsMessage>
-                                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
-                                                <truncateChars><![CDATA[0]]></truncateChars>
-                                            </record>
-                                        </data>
-                                    </block>
                                 </column>
                                 <column span="6" offset="0">
                                     <block type="content" name="">
@@ -1172,11 +1129,79 @@
                                             </record>
                                         </data>
                                     </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="2" offset="0">
+                                    <block type="page_list" name="">
+                                        <style>
+                                            <customClass>recent-blog-entry</customClass>
+                                        </style>
+                                        <data table="btPageList">
+                                            <record>
+                                                <num><![CDATA[1]]></num>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                <cParentID/>
+                                                <cThis><![CDATA[0]]></cThis>
+                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                <includeName><![CDATA[0]]></includeName>
+                                                <includeDescription><![CDATA[0]]></includeDescription>
+                                                <includeDate><![CDATA[0]]></includeDate>
+                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                <paginate><![CDATA[0]]></paginate>
+                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                                <displayThumbnail><![CDATA[1]]></displayThumbnail>
+                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="3" offset="0">
+                                    <block type="page_list" name="">
+                                        <style>
+                                            <customClass>recent-blog-entry</customClass>
+                                        </style>
+                                        <data table="btPageList">
+                                            <record>
+                                                <num><![CDATA[1]]></num>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                <cParentID/>
+                                                <cThis><![CDATA[0]]></cThis>
+                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                <includeName><![CDATA[1]]></includeName>
+                                                <includeDescription><![CDATA[1]]></includeDescription>
+                                                <includeDate><![CDATA[0]]></includeDate>
+                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                <paginate><![CDATA[0]]></paginate>
+                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="6" offset="1">
                                     <block type="content" name="">
                                         <data table="btContentLocal">
                                             <record>
-                                                <content><![CDATA[
-                                                    <p>  <span class="title-thin">We specialize in making your concepts a reality.</span>  </p>  <p>    Sed cursus facilisis dignissim. Aliquam rhoncus enim et pellentesque varius. Nulla sodales nibh lorem, sit amet imperdiet arcu commodo sit amet. Mauris sed scelerisque nisl. Ut auctor ipsum tellus, vel viverra massa elementum sit amet.  </p>  <p>    Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida.<br>  </p>  <br/>  <p>  <a href="{ccm:export:page:/contact}"><span class="btn btn-success">Contact Us Today</span></a>  </p>]]></content>
+                                                <content>
+                                                    <![CDATA[<p>  <span class="title-thin">We specialize in making your concepts a reality.</span>  </p>  <p>    Sed cursus facilisis dignissim. Aliquam rhoncus enim et pellentesque varius. Nulla sodales nibh lorem, sit amet imperdiet arcu commodo sit amet. Mauris sed scelerisque nisl. Ut auctor ipsum tellus, vel viverra massa elementum sit amet.  </p>  <p>    Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida.<br>  </p>  <br/>  <p>  <a href="{ccm:export:page:/contact}"><span class="btn btn-success">Contact Us Today</span></a>  </p>]]></content>
                                             </record>
                                         </data>
                                     </block>
@@ -1184,7 +1209,6 @@
                             </columns>
                         </arealayout>
                     </block>
-
                 </blocks>
             </area>
             <area name="Page Footer">
@@ -1296,75 +1320,82 @@
                             </columns>
                         </arealayout>
                     </block>
-                    <block type="core_container" name="">
-                        <container handle="two_column_accent">
-                            <containerarea name="Header">
-                                <block type="content" name="">
-                                    <data table="btContentLocal">
-                                        <record>
-                                            <content><![CDATA[
-                                    <p style="text-align: center"><span class="title-caps">What Clients Are Saying About Us</span></p>]]></content>
-                                        </record>
-                                    </data>
-                                </block>
-                            </containerarea>
-                            <containerarea name="Column 1">
-                                <block type="testimonial" name="">
-                                    <data table="btTestimonial">
-                                        <record>
-                                            <fID>{ccm:export:file:391572475596:avatar_none.png}</fID>
-                                            <name><![CDATA[Franz Maruna]]></name>
-                                            <position><![CDATA[CEO & Founder]]></position>
-                                            <company><![CDATA[PortlandLabs]]></company>
-                                            <companyURL><![CDATA[http://concrete5.org]]></companyURL>
-                                            <paragraph><![CDATA[
-                                                    Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="testimonial" name="">
-                                    <data table="btTestimonial">
-                                        <record>
-                                            <fID>{ccm:export:file:391572475596:avatar_none.png}</fID>
-                                            <name><![CDATA[John Doe]]></name>
-                                            <position><![CDATA[Marketing Directory]]></position>
-                                            <company><![CDATA[CompanyCo]]></company>
-                                            <companyURL><![CDATA[]]></companyURL>
-                                            <paragraph><![CDATA[
-                                                    Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
-                                        </record>
-                                    </data>
-                                </block>
-                            </containerarea>
-                            <containerarea name="Column 2">
-                                <block type="testimonial" name="">
-                                    <data table="btTestimonial">
-                                        <record>
-                                            <fID>{ccm:export:file:391572475596:avatar_none.png}</fID>
-                                            <name><![CDATA[Andrew Embler]]></name>
-                                            <position><![CDATA[CTO & Founder]]></position>
-                                            <company><![CDATA[PortlandLabs]]></company>
-                                            <companyURL><![CDATA[http://concrete5.org]]></companyURL>
-                                            <paragraph><![CDATA[
-                                                    Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="testimonial" name="">
-                                    <data table="btTestimonial">
-                                        <record>
-                                            <fID>{ccm:export:file:391572475596:avatar_none.png}</fID>
-                                            <name><![CDATA[Jane Doe]]></name>
-                                            <position><![CDATA[IT Manager]]></position>
-                                            <company><![CDATA[CompanyCo]]></company>
-                                            <companyURL><![CDATA[]]></companyURL>
-                                            <paragraph><![CDATA[
-                                                    Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
-                                        </record>
-                                    </data>
-                                </block>
-                            </containerarea>
-                        </container>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <style>
+                    <customClass>area-content-accent</customClass>
+                </style>
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content>
+                                    <![CDATA[<p style="text-align: center"><span class="title-caps">What Clients Are Saying About Us</span></p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="5" offset="0">
+                                    <block type="testimonial" name="">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:avatar_none.png}</fID>
+                                                <name><![CDATA[Franz Maruna]]></name>
+                                                <position><![CDATA[CEO & Founder]]></position>
+                                                <company><![CDATA[concrete5]]></company>
+                                                <companyURL><![CDATA[http://concrete5.org]]></companyURL>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="testimonial" name="">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:avatar_none.png}</fID>
+                                                <name><![CDATA[John Doe]]></name>
+                                                <position><![CDATA[Marketing Directory]]></position>
+                                                <company><![CDATA[CompanyCo]]></company>
+                                                <companyURL><![CDATA[]]></companyURL>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="5" offset="2">
+                                    <block type="testimonial" name="">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:avatar_none.png}</fID>
+                                                <name><![CDATA[Andrew Embler]]></name>
+                                                <position><![CDATA[CTO & Founder]]></position>
+                                                <company><![CDATA[concrete5]]></company>
+                                                <companyURL><![CDATA[http://concrete5.org]]></companyURL>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="testimonial" name="">
+                                        <data table="btTestimonial">
+                                            <record>
+                                                <fID>{ccm:export:file:avatar_none.png}</fID>
+                                                <name><![CDATA[Jane Doe]]></name>
+                                                <position><![CDATA[IT Manager]]></position>
+                                                <company><![CDATA[CompanyCo]]></company>
+                                                <companyURL><![CDATA[]]></companyURL>
+                                                <paragraph>
+                                                    <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
                     </block>
                 </blocks>
             </area>
@@ -2387,7 +2418,7 @@
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><span class="title-caps-bold">Heading 3</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><p><a href="{ccm:export:file:123412345678:plants.jpg}" data-concrete5-link-lightbox="image"><concrete-picture alt="" file="123412345678:plants.jpg" /></a></p><p><span class="image-caption">Look at my beautiful image. Don't you to look more?</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p>]]></content>
+                                    <![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><span class="title-caps-bold">Heading 3</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><p><a href="{ccm:export:file:123412345678:plants.jpg}" data-concrete5-link-lightbox="image"><concrete-picture alt="" file="123412345678:plants.jpg" /></a></p><p><span class="image-caption">Look at my beautiful image.</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -3033,9 +3064,9 @@
         </page>
     </pages>
     <sociallinks>
-        <link service="facebook" url="https://facebook.com/concretecms"/>
-        <link service="github" url="https://github.com/concrete5"/>
-        <link service="twitter" url="https://twitter.com/concrete_cms"/>
+        <link service="facebook" url="http://facebook.com/concrete5"/>
+        <link service="github" url="http://github.com/concrete5"/>
+        <link service="twitter" url="http://twitter.com/concrete5"/>
     </sociallinks>
     <trees>
         <tree type="topic" name="Blog Entries">
@@ -3066,7 +3097,7 @@
         <feed>
             <parent>{ccm:export:page:/blog}</parent>
             <title>Blog</title>
-            <description>Concrete Blog</description>
+            <description>concrete5 Blog</description>
             <handle>blog</handle>
             <pagetype>{ccm:export:pagetype:blog_entry}</pagetype>
             <contenttype type="description"/>

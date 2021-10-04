@@ -43,6 +43,12 @@
 // 3. Prevent adjustments of font size after orientation changes in iOS.
 // 4. Change the default tap highlight to be completely transparent in iOS.
 
+html.ccm-toolbar-visible {
+  // We _could_ set this by setting font-size-root, but we don't really want to screw with the theme loading this
+  // unless we know the toolbar is visible.
+  font-size: 16px; // By setting this here, rem declarations in BS5 work off of 16px, and the base theme can do whatever it wants at body
+}
+
 .ccm-ui {
   margin: 0; // 1
   font-family: $font-family-base;
