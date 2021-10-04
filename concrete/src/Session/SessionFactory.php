@@ -100,7 +100,7 @@ class SessionFactory implements SessionFactoryInterface
      */
     protected function getDatabaseHandler(array $config)
     {
-        return $this->app->make(PdoSessionHandler::class, [
+        return new PdoSessionHandler(
             $this->app->make(Connection::class)->getWrappedConnection(),
             [
                 'db_table' => 'Sessions',
@@ -109,8 +109,8 @@ class SessionFactory implements SessionFactoryInterface
                 'db_time_col' => 'sessionTime',
                 'db_lifetime_col' => 'sessionLifeTime',
                 'lock_mode' => PdoSessionHandler::LOCK_ADVISORY,
-            ],
-        ]);
+            ]
+        );
     }
 
     /**
