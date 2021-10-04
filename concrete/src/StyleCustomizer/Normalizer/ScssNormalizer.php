@@ -73,6 +73,10 @@ class ScssNormalizer implements NormalizerInterface
                 );
             }
             if ($value[0] == 'function' && $value[1] == 'url') {
+                // This is used for background images, etc... It's important that the `url(...)` be a part of the
+                // the variable, so that we can pass it into the ImageVariable custom variable type.
+                // Legacy themes didn't do this, they kept the URL as part of the .less file and the variable
+                // was just text, which isn't great.
                 $url = $value[2][2][0][2][0]; // lol, there HAS to be a more reliable way of doing this.
                 if ($url) {
                     $collection->add(new ImageVariable($this->fixVariable($variable), $url));

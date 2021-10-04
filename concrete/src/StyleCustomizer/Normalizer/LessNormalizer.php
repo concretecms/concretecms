@@ -19,7 +19,7 @@ class LessNormalizer implements NormalizerInterface
      * @param string $variableName
      * @return string
      */
-    private function normalizeVariableName(string $variableName)
+    protected function normalizeVariableName(string $variableName)
     {
         return str_replace('@', '', $variableName);
     }
