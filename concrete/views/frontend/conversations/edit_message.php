@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?php
             if ($attachmentsEnabled) {
                 ?>
-                <button type="button" class="float-end btn btn-info btn-sm ccm-conversation-attachment-toggle" title="<?= t('Attach Files') ?>"><i class="far fa-image"></i></button>
+                <button type="button" class="float-end btn btn-info btn-sm ccm-conversation-attachment-toggle" title="<?= t('Attach Files') ?>"><i class="fas fa-image"></i></button>
                 <?php
             }
             ?>

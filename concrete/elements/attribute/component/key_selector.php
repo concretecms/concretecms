@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div v-for="attribute in selectedAttributes" :key="attribute.akID">
         <div class="form-group">
             <a class="float-end ccm-hover-icon" href="#" @click.prevent="removeAttribute(attribute.akID)">
-                <i class="fa fa-minus-circle"></i>
+                <i class="fas fa-minus-circle"></i>
             </a>
             <label class="control-label form-label" :for="attribute.controlID">{{attribute.label}}</label>
             <div v-if="isBulkMode && attribute.hasMultipleValues" class="ccm-attribute-key-multiple-values card card-body p-2">

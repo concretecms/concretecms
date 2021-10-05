@@ -18,19 +18,19 @@
                 </div>
             </div>
             <div class="col-auto">
-                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i></button>
+                <button class="btn btn-info" type="submit"><i class="fas fa-search"></i></button>
             </div>
             <div class="col-auto">
                 <ul class="ccm-header-search-navigation">
                     <li>
                         <a href="<?= $exportURL ?>" class="link-primary">
-                            <i class="fa fa-download"></i> <?= t('Export to CSV') ?>
+                            <i class="fas fa-download"></i> <?= t('Export to CSV') ?>
                         </a>
                     </li>
                     <?php if ($manageURL) { ?>
                         <li>
                             <a href="<?= $manageURL ?>" class="link-primary">
-                                <i class="fa fa-cog"></i> <?= t('Manage Data Object') ?>
+                                <i class="fas fa-cog"></i> <?= t('Manage Data Object') ?>
                             </a>
                         </li>
                     <?php } ?>

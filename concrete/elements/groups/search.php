@@ -47,7 +47,7 @@ if (!$pk->validate()) { ?>
                 <?php echo $form->hidden("filter", $request->request('filter')); ?>
                 <div class="form-group">
                     <div class="ccm-search-main-lookup-field">
-                        <i class="fa fa-search"></i>
+                        <i class="fas fa-search"></i>
                         <?php echo $form->search('keywords', $request->request('keywords'), ['placeholder' => t('Name')]) ?>
                         <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1">
                             <?php echo t('Search') ?>

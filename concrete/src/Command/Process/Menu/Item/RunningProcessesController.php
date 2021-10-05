@@ -69,7 +69,7 @@ class RunningProcessesController extends Controller
         }
 
         $icon = new Element('i', '');
-        $icon->addClass('fa fa-tasks');
+        $icon->addClass('fas fa-tasks');
 
         $accessibility = new Element('span', t('Active Processes'));
         $accessibility->addClass('ccm-toolbar-accessibility-title');

@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <header class="ps-0 pe-0">
         <div id="dropdown-menu" class="dropdown" data-panel-menu="dropdown">
-            <div class="ccm-panel-header-list-grid-view-switcher"><i class="fa fa-list fa-xs fa-fw"></i></div>
+            <div class="ccm-panel-header-list-grid-view-switcher"><i class="fas fa-list fa-xs fa-fw"></i></div>
             <h4 data-bs-toggle="dropdown" data-panel-header="dropdown-menu" class="dropdown-toggle">
                 <?php
                 switch ($tab) {
@@ -561,7 +561,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         aria-expanded="true"
                         aria-controls="ccm-block-set-<?= $i ?>"
                 >
-                    <?= $setName ?><i class="fa fa-chevron-up float-end"></i>
+                    <?= $setName ?><i class="fas fa-chevron-up float-end"></i>
                 </header>
                 <div id="ccm-block-set-<?= $i ?>" class="ccm-block-set collapse show">
                     <?php

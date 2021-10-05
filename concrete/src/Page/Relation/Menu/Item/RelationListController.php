@@ -67,7 +67,7 @@ class RelationListController extends Controller
             $link->appendChild($accessibility);
         } else {
             $icon = new Element('i', '');
-            $icon->addClass('fa fa-sitemap');
+            $icon->addClass('fas fa-sitemap');
 
             $accessibility = new Element('span', t('Related Pages'));
             $accessibility->addClass('ccm-toolbar-accessibility-title');

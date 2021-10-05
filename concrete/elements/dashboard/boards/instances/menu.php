@@ -6,7 +6,7 @@ $board = $instance->getBoard();
 
 <div class="mb-3">
     <a href="<?=URL::to('/dashboard/boards/details', $board->getBoardID())?>">
-        <i class="fa fa-arrow-up"></i> <?=t('Back to Board')?>
+        <i class="fas fa-arrow-up"></i> <?=t('Back to Board')?>
     </a>
 </div>
 

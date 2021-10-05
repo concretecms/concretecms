@@ -43,7 +43,7 @@ class UserDeactivatedListViewTest extends TestCase
         $view = new UserDeactivatedListView($notification);
         $view->setApplication($app);
 
-        $this->assertEquals('fa fa-user-times', $view->getIconClass());
+        $this->assertEquals('fas fa-user-times', $view->getIconClass());
         $this->assertEquals('User Deactivated', $view->getTitle());
         $this->assertStringMatchesFormat('%s has been manually deactivated by %s', $view->getActionDescription());
     }

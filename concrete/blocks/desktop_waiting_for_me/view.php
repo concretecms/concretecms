@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div data-list="notification">
 
         <h3><?=t('Waiting For Me')?>
-            <i class="ccm-block-desktop-waiting-for-me-loader fa fa-refresh fa-spin"></i>
+            <i class="ccm-block-desktop-waiting-for-me-loader fas fa-sync fa-spin"></i>
         </h3>
 
 

@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <script type="text/template" class="attribute">
     <div class="form-group <% if (pending) { %>ccm-page-attribute-adding<% } %>" data-attribute-key-id="<%=akID%>">
-        <a href="javascript:void(0)" data-remove-attribute-key="<%=akID%>"><i class="fa fa-minus-circle"></i></a>
+        <a href="javascript:void(0)" data-remove-attribute-key="<%=akID%>"><i class="fas fa-minus-circle"></i></a>
         <label class="col-form-label" for="<%=controlID%>"><%=label%></label>
         <div>
             <%=content%>

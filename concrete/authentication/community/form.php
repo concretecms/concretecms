@@ -50,7 +50,7 @@ if (isset($message)) {
         if (svg) {
             var img = new Image();
             img.onerror = function() {
-                svg.parent().replaceWith('<i class="fa fa-user"></i>');
+                svg.parent().replaceWith('<i class="fas fa-user"></i>');
             };
             img.src = svg.parent().data('src');
             $(function() {

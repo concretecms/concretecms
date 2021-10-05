@@ -212,7 +212,7 @@ if ($editingJobSet !== null) {
                                     <?php
                                     if ($j->canUninstall()) {
                                         ?>
-                                        <a href="<?= $controller->action('uninstall', $j->getJobID(), $uninstallToken) ?>" class="icon-link launch-tooltip btn btn-danger btn-sm btn-uninstall-job" title="<?= t('Remove this Job') ?>"><i class="far fa-trash-alt"></i></a>
+                                        <a href="<?= $controller->action('uninstall', $j->getJobID(), $uninstallToken) ?>" class="icon-link launch-tooltip btn btn-danger btn-sm btn-uninstall-job" title="<?= t('Remove this Job') ?>"><i class="fas fa-trash-alt"></i></a>
                                         <?php
                                     }
                                     ?>
@@ -358,7 +358,7 @@ $(document).ready(function() {
     }
 
     $.fn.hideLoading = function() {
-        $(this).find('button').html('<i class="fa fa-play"></i> <?= t('Run') ?>').prop('disabled', false);
+        $(this).find('button').html('<i class="fas fa-play"></i> <?= t('Run') ?>').prop('disabled', false);
         var $row = $(this);
         $row.removeClass();
         $row.find('td').css('background-color', '');

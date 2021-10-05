@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="form-group">
 	<label><?=$label?></label>
 	<?php if ($description): ?>
-	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
+	<i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
 	<?php endif; ?>
 	<?php
     $content = $controller->getContentEditMode();

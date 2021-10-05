@@ -252,7 +252,7 @@ if (!isset($mode) || !$mode) {
                            "fvID" => $fv->getFileVersionID()
                        ]) ?>">
 
-                        <?php echo count($thumbnails) ?> <i class="fa fa-edit"></i>
+                        <?php echo count($thumbnails) ?> <i class="fas fa-edit"></i>
                     </a>
                 </p>
             </div>

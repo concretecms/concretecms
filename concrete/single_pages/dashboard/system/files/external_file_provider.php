@@ -74,7 +74,7 @@ switch ($controller->getAction()) {
                         <?php echo $form->text('efpName', $efpName); ?>
 
                         <span class="input-group-text">
-                            <i class="fa fa-asterisk"></i>
+                            <i class="fas fa-asterisk"></i>
                         </span>
                     </div>
                 </div>

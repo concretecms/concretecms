@@ -61,7 +61,7 @@ $token = $app->make(Token::class);
                             <?php echo $form->hidden("entry[]", $entry->getID()); ?>
 
                             <a href="#" class="icon-link" data-command="move-entry">
-                                <i class="fa fa-arrows"></i>
+                                <i class="fas fa-arrows-alt"></i>
                             </a>
                         </td>
 

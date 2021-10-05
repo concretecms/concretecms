@@ -318,7 +318,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                         if ($obj instanceof Concrete\Core\Package\BrokenPackage) {
                             ?>
                             <div class="ms-auto launch-tooltip float-end" title="<?=t('This package is corrupted. Make sure it has a valid controller.php file and that it has been updated for Concrete 5.7.0 and later.')?>">
-                                <button type="button" disabled="disabled" class="btn btn-sm btn-secondary"><i class="fa fa-exclamation-circle"></i> <?= t('Can\'t Install!'); ?></button>
+                                <button type="button" disabled="disabled" class="btn btn-sm btn-secondary"><i class="fas fa-exclamation-circle"></i> <?= t('Can\'t Install!'); ?></button>
                             </div>
                             <?php
                         } else {

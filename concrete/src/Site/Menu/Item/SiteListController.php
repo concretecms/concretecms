@@ -54,7 +54,7 @@ class SiteListController extends Controller
             $element->setAttribute('class', 'ccm-menu-item-site-list-container');
 
             $icon = new Element('i');
-            $icon->addClass('fa fa-globe');
+            $icon->addClass('fas fa-globe');
             $element->appendChild($icon);
 
             $select = new Element('select', null, [
@@ -88,7 +88,7 @@ class SiteListController extends Controller
             $element->setAttribute('class', 'ccm-menu-item-site-list-container ccm-menu-item-site-list-inactive');
 
             $icon = new Element('i');
-            $icon->addClass('fa fa-globe');
+            $icon->addClass('fas fa-globe');
             $element->appendChild($icon);
 
             $label = new Element('span');

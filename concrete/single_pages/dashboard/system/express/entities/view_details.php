@@ -117,7 +117,7 @@ use Concrete\Core\View\View;
                                     <?php echo t('Unknown') ?>
                                 </span>
 
-                                <i class="launch-tooltip fa fa-info-circle"
+                                <i class="launch-tooltip fas fa-info-circle"
                                    title="<?php echo h(t('Unable to find site results folder. Please rescan folders below.')) ?>"></i>
                             <?php } ?>
                         </td>

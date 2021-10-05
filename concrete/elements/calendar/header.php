@@ -68,11 +68,11 @@ if (!isset($month)) {
         <a href="<?= URL::to('/dashboard/calendar/events', 'view',
             $calendar->getID()) ?>" class="btn btn-secondary <?php if ($mode != 'list') {
     ?>active<?php
-} ?>"><i class="fa fa-calendar"></i></a>
+} ?>"><i class="fas fa-calendar-alt"></i></a>
         <a href="<?= URL::to('/dashboard/calendar/event_list', 'view',
             $calendar->getID()) ?>" class="btn btn-secondary <?php if ($mode == 'list') {
     ?>active<?php
-} ?>"><i class="fa fa-list"></i></a>
+} ?>"><i class="fas fa-list"></i></a>
         <?php if ($calendarPermissions->canAddCalendarEvent()) {
     ?>
             <a class="dialog-launch btn btn-primary" dialog-width="1100" dialog-title="<?= t('Add Event') ?>"

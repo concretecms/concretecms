@@ -439,7 +439,7 @@ echo $userInterface->tabs([
                 <!--suppress HtmlUnknownTarget, HtmlRequiredAltAttribute -->
                 <img src="<%= image_url %>"/>
                 <% } else { %>
-                <i class="fa fa-picture-o"></i>
+                <i class="fas fa-image"></i>
                 <% } %>
             </div>
             <input type="hidden" name="<?php echo $view->field('fID'); ?>[]" class="image-fID" value="<%=fID%>"/>
@@ -484,7 +484,7 @@ echo $userInterface->tabs([
                 data-slide-edit-text="<?php echo t('Edit Slide'); ?>"><?php echo t('Edit Slide'); ?></button>
         <button type="button"
                 class="btn btn-sm btn-danger ccm-delete-image-slider-entry ccm-delete-image-slider-entry-<?php echo $bID; ?>"><?php echo t('Remove'); ?></button>
-        <i class="fa fa-arrows"></i>
+        <i class="fas fa-arrows-alt"></i>
 
         <input class="ccm-image-slider-entry-sort" type="hidden" name="<?php echo $view->field('sortOrder'); ?>[]"
                value="<%=sort_order%>"/>

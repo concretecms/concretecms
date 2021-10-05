@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <a class="btn btn-secondary btn-sm ms-2"
            href="<?php echo (string)Url::to('/dashboard/users/add_group') ?>"
            title="<?php echo t('Add Group') ?>">
-            <?php echo t('Add Group') ?> <i class="fa fa-plus-circle"></i>
+            <?php echo t('Add Group') ?> <i class="fas fa-plus-circle"></i>
         </a>
     <?php } ?>
 </div>

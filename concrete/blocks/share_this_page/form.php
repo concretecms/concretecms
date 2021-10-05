@@ -27,7 +27,7 @@ use Concrete\Core\Sharing\ShareThisPage\Service;
 <script type="text/template" class="service-template">
     <div class="form-group">
         <a href="#" data-remove="service" class="float-end">
-            <i class="fa fa-minus-circle"></i>
+            <i class="fas fa-minus-circle"></i>
         </a>
 
         <label for="serviceList" class="control-label form-label">

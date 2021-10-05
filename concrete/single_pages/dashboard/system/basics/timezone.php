@@ -31,7 +31,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <div>
                 <?php if (!$dbTimezoneOk) {
                 ?>
-                    <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>
+                    <p class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i>
                         <?= $dbDeltaDescription; ?>
                     </p>
                     <p>
@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?php
             } else {
                 ?>
-                    <div class="text-success"><i class="fa fa-check"></i>
+                    <div class="text-success"><i class="fas fa-check"></i>
                         <?=t('Success. These time zone values match.'); ?>
                     </div>
                 <?php

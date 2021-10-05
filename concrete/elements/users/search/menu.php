@@ -52,14 +52,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('Export to CSV')) ?>"
                    href="<?php echo (string)UrlFacade::to("/dashboard/users/search/csv_export"); ?>">
-                    <i class="fa fa-download" aria-hidden="true"></i>
+                    <i class="fas fa-download" aria-hidden="true"></i>
                 </a>
             </li>
 
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('Add User')) ?>"
                    href="<?php echo (string)UrlFacade::to("/dashboard/users/add"); ?>">
-                    <i class="fa fa-user-plus" aria-hidden="true"></i>
+                    <i class="fas fa-user-plus" aria-hidden="true"></i>
                 </a>
             </li>
         </ul>

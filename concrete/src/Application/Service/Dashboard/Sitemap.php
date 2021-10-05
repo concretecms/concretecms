@@ -241,11 +241,11 @@ class Sitemap
         $cPointerID = $c->getCollectionPointerID();
         if ($cAlias) {
             if ($cPointerID > 0) {
-                $cIconClass = 'fa fa-sign-in';
+                $cIconClass = 'fas fa-sign-out-alt';
                 $cAlias = 'POINTER';
                 $cID = $c->getCollectionPointerOriginalID();
             } else {
-                $cIconClass = 'fa fa-external-link';
+                $cIconClass = 'fas fa-external-link-alt';
                 $cAlias = 'LINK';
             }
         }

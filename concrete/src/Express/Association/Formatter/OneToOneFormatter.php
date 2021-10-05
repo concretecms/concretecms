@@ -5,7 +5,7 @@ class OneToOneFormatter extends AbstractFormatter
 {
     public function getIcon()
     {
-        return '<i class="fa fa-cube"></i><i class="fa fa-arrow-right"></i> <i class="fa fa-cube"></i>';
+        return '<i class="fas fa-cube"></i><i class="fas fa-arrow-right"></i> <i class="fas fa-cube"></i>';
     }
 
     public function getTypeDisplayName()

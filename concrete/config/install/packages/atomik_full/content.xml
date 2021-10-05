@@ -1152,7 +1152,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                 <block type="feature" name="" custom-template="stacked.php">
                                     <data table="btFeature">
                                         <record>
-                                            <icon><![CDATA[far fa-user]]></icon>
+                                            <icon><![CDATA[fas fa-user]]></icon>
                                             <title>
                                                 <![CDATA[Show off some features with this flexible layout!]]></title>
                                             <paragraph></paragraph>

@@ -10,7 +10,7 @@ $this->inc('elements/header.php'); ?>
     ?>
         <div class="ccm-marketplace-nav">
             <nav>
-            <li><a href="<?=$controller->action('view')?>"><i class="fa fa-chevron-left"></i> <?=t('Back')?></a></li>
+            <li><a href="<?=$controller->action('view')?>"><i class="fas fa-chevron-left"></i> <?=t('Back')?></a></li>
             </nav>
         </div>
     <?php 
@@ -33,7 +33,7 @@ $this->inc('elements/header.php'); ?>
         <div class="ccm-marketplace-search">
             <?=$form->select('marketplaceRemoteItemSetID', $sets, $selectedSet, array('style' => 'width: 150px'))?>
             <div class="ccm-marketplace-search-input">
-                <i class="fa fa-search"></i>
+                <i class="fas fa-search"></i>
                 <input type="search" name="keywords" value="<?=$keywords?>" />
             </div>
             <button type="submit" class="btn btn-primary btn-sm"><?=t('Search')?></button>

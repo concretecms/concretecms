@@ -51,7 +51,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 				<div class="input-group">
                     <?=$form->label('wfName', t('Name'), ['class'=>'input-group-text'])?>
 					<?=$form->text('wfName', $wfName)?>
-                    <div class="input-group-text"><i class="fa fa-asterisk"></i></div>
+                    <div class="input-group-text"><i class="fas fa-asterisk"></i></div>
 				</div>
 			</div>
 			
@@ -110,7 +110,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 	<ul class="item-select-list">
 	<?php foreach ($workflows as $workflow) {
     ?>
-		<li><a href="<?=$view->url('/dashboard/system/permissions/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fa fa-exchange"></i> <?=$workflow->getWorkflowDisplayName()?></a></li>
+		<li><a href="<?=$view->url('/dashboard/system/permissions/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fas fa-exchange-alt"></i> <?=$workflow->getWorkflowDisplayName()?></a></li>
 	<?php 
 }
     ?>

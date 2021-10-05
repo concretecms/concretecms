@@ -30,7 +30,7 @@ $url = $app->make('url/manager');
 ?>
 <div style="display: none">
     <div class="btn-group" id="ccm-account-menu">
-        <a class="btn btn-secondary" href="<?=$desktop->getCollectionLink()?>"><i class="fa fa-user"></i> <?=$ui->getUserDisplayName()?></a>
+        <a class="btn btn-secondary" href="<?=$desktop->getCollectionLink()?>"><i class="fas fa-user"></i> <?=$ui->getUserDisplayName()?></a>
         <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
             <span class="caret"></span>
         </button>
@@ -52,8 +52,8 @@ $url = $app->make('url/manager');
                 }
             ?>
             <li class="divider"></li>
-            <li><a href="<?=$url->resolve(['/'])?>"><i class="fa fa-home"></i> <?=t('Home')?></a></li>
-            <li><a href="<?=$url->resolve(['/login', 'do_logout', $app->make('token')->generate('do_logout')])?>"><i class="fa fa-sign-out"></i> <?=t('Sign Out')?></a></li>
+            <li><a href="<?=$url->resolve(['/'])?>"><i class="fas fa-home"></i> <?=t('Home')?></a></li>
+            <li><a href="<?=$url->resolve(['/login', 'do_logout', $app->make('token')->generate('do_logout')])?>"><i class="fas fa-sign-out-alt"></i> <?=t('Sign Out')?></a></li>
         </ul>
     </div>
 </div>

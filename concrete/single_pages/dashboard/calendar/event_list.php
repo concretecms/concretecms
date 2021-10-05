@@ -56,7 +56,7 @@ $topic_id = Request::getInstance()->get('topic_id');
                     print h($event->getName());
 
                     if (!$occurrence->getVersion()->isApproved()) {
-                        print ' <i class="fa fa-exclamation-circle"></i>';
+                        print ' <i class="fas fa-exclamation-circle"></i>';
                     }
                     ?>
 

@@ -31,7 +31,7 @@ use \Concrete\Core\Sharing\SocialNetwork\Service as Service;
     ?>
                     </span>
                     <input name="<?=$this->field('serviceInfo')?>[]" type="text" value="<?=$data['serviceInfo'][$i]?>" />
-                    <button type="button" class="ccm-social-link-attribute-remove-line btn btn-link"><i class="fa fa-trash-o"></i></button>
+                    <button type="button" class="ccm-social-link-attribute-remove-line btn btn-link"><i class="fas fa-trash-alt"></i></button>
                 </span>
             </span>
         </div>
@@ -42,7 +42,7 @@ use \Concrete\Core\Sharing\SocialNetwork\Service as Service;
 </div>
 
 <div>
-	<button type="button" class="btn btn-small btn-primary ccm-social-link-attribute-add-service"><?=t("Add Link")?> <i class="fa fa-plus"></i></button>
+	<button type="button" class="btn btn-small btn-primary ccm-social-link-attribute-add-service"><?=t("Add Link")?> <i class="fas fa-plus"></i></button>
 </div>
 
 <script type="text/javascript">$(function() { ConcreteSocialLinksAttribute.init(); });</script>

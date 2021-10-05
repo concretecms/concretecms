@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
-<i class="fa fa-sliders mobile-leading-icon"></i>
-<a href="<?= URL::to('/dashboard') ?>"><?php echo t('Dashboard') ?></a><i class="fa fa-caret-down drop-down-toggle"></i>
+<i class="fas fa-sliders-h mobile-leading-icon"></i>
+<a href="<?= URL::to('/dashboard') ?>"><?php echo t('Dashboard') ?></a><i class="fas fa-caret-down drop-down-toggle"></i>
 <ul class="list-unstyled">
     <?php
     $walk = function ($pages) use (&$walk, &$view) {
@@ -16,7 +16,7 @@
                     <a href="<?=$page->getCollectionLink()?>"><?=t($page->getCollectionName())?></a>
                     <?php
                     if ($children) {
-                        echo '<i class="fa fa-caret-down drop-down-toggle"></i>';
+                        echo '<i class="fas fa-caret-down drop-down-toggle"></i>';
                     }
                     ?>
                     <?php
