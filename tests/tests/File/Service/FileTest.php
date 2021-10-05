@@ -12,7 +12,7 @@ class FileTest extends TestCase
      */
     protected $fileHelper;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->fileHelper = Core::make('helper/file');
     }

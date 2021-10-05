@@ -94,7 +94,7 @@ use Concrete\Core\Page\Menu;
                             </a>
                         </td>
                     <?php else: ?>
-                        <td class="<?php echo $class ?>">
+                        <td class="<?=$class?? '' ?>">
                             <?php echo $column->getColumnValue(); ?>
                         </td>
                     <?php endif; ?>
@@ -131,7 +131,7 @@ use Concrete\Core\Page\Menu;
 <script>
     (function ($) {
         $(function () {
-            let searchResultsTable = new window.ConcreteSearchResultsTable($("#ccm-search-results-table"));
+            let searchResultsTable = new window.ConcretePageSearchTable($("#ccm-search-results-table"));
             searchResultsTable.setupBulkActions();
         });
     })(jQuery);

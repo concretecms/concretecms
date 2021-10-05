@@ -8,16 +8,15 @@ use Illuminate\Filesystem\Filesystem;
 
 class SkinFactory
 {
+    /**
+     * @var Text
+     */
+    protected $textService;
 
     /**
      * @var Filesystem
      */
     protected $filesystem;
-
-    /**
-     * @var Text
-     */
-    protected $textService;
 
     public function __construct(Filesystem $filesystem, Text $textService)
     {
@@ -25,10 +24,11 @@ class SkinFactory
         $this->textService = $textService;
     }
 
-    public function createFromDirectory(string $path, Theme $theme): ?SkinInterface
+    public function createFromPath(string $path, Theme $theme): ?SkinInterface
     {
-        $directoryName = basename($path);
-        $skin = new PresetSkin($path, $directoryName, $this->textService->unhandle($directoryName), $theme);
+        $fileName = basename($path);
+        $identifier = substr($fileName, 0, strpos($fileName, '.css'));
+        $skin = new PresetSkin($identifier, $this->textService->unhandle($identifier), $theme);
         return $skin;
     }
 
@@ -41,7 +41,13 @@ class SkinFactory
     {
         $skins = [];
         foreach($this->filesystem->directories($path) as $skin) {
-            $skin = $this->createFromDirectory($skin, $theme);
+            $skin = $this->createFromPath($skin, $theme);
+            if ($skin) {
+                $skins[] = $skin;
+            }
+        }
+        foreach($this->filesystem->files($path) as $skin) {
+            $skin = $this->createFromPath($skin, $theme);
             if ($skin) {
                 $skins[] = $skin;
             }

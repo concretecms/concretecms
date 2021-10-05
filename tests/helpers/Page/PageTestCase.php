@@ -2,12 +2,16 @@
 
 namespace Concrete\TestHelpers\Page;
 
+
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Core;
+use Doctrine\ORM\EntityManagerInterface;
 use Page;
 use PageTemplate;
 use PageType;
+use Stash\Driver\Ephemeral;
+use Stash\Pool;
 
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
@@ -44,9 +48,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     ]; // so brutal
 
     protected $metadatas = [
+        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
-        'Concrete\Core\Entity\Site\Type',
+        'Concrete\Core\Entity\Site\SkeletonTree',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
         'Concrete\Core\Entity\Page\Relation\MultilingualRelation',
@@ -63,26 +68,31 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Key',
     ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
-
-        $service = Core::make('site/type');
+        $app = Application::getFacadeApplication();
+        $service = $app->make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
         }
-
-        $service = Core::make('site');
+        $service = $app->make('site');
+        // PhP unit and laravel containers mean the request cache is somehow enabled? but only after soo many test runs
+        // So we force the cache to be disabled
+        $requestCache = $app->make('cache/request');
+        $requestCache->disable();
+        $service->setCache($requestCache);
         if (!$service->getDefault()) {
             $service->installDefault();
         }
-
-        Page::addHomePage();
+        $site = $service->getDefault();
+        Page::addHomePage($site->getSiteTreeObject());
         PageTemplate::add('full', 'Full');
         PageType::add([
             'handle' => 'basic',
             'name' => 'Basic',
         ]);
+
     }
 
     public function setUp(): void

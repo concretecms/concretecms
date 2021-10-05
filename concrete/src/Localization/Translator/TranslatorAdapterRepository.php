@@ -2,7 +2,7 @@
 namespace Concrete\Core\Localization\Translator;
 
 use Concrete\Core\Application\Application;
-use Zend\I18n\Translator\Translator;
+use Laminas\I18n\Translator\Translator;
 
 /**
  * Basic implementation of the {@link TranslatorAdapterRepositoryInterface}.

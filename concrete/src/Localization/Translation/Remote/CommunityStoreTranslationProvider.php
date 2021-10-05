@@ -346,8 +346,6 @@ class CommunityStoreTranslationProvider implements ProviderInterface
 
     /**
      * @param string $path
-     *
-     * @return \Zend\Http\Request
      */
     protected function buildRequest($path)
     {

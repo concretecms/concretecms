@@ -16,11 +16,6 @@ class PresetSkin implements SkinInterface
     /**
      * @var string
      */
-    protected $directory;
-
-    /**
-     * @var string
-     */
     protected $name;
 
     /**
@@ -28,25 +23,11 @@ class PresetSkin implements SkinInterface
      */
     protected $theme;
 
-    /**
-     * PresetSkin constructor.
-     * @param string $directory
-     * @param string $name
-     */
-    public function __construct(string $directory, string $identifier, string $name, Theme $theme)
+    public function __construct(string $identifier, string $name, Theme $theme)
     {
-        $this->directory = $directory;
         $this->name = $name;
         $this->identifier = $identifier;
         $this->theme = $theme;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDirectory(): string
-    {
-        return $this->directory;
     }
 
     /**
@@ -90,7 +71,7 @@ class PresetSkin implements SkinInterface
     {
         $theme = $this->getTheme();
         $path = $theme->getSkinDirectoryRecord()->getUrl();
-        $stylesheet = $path . '/' . $this->getIdentifier() . '/' . FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT;
+        $stylesheet = $path . '/' . $this->getIdentifier() . '.css';
         $element = new Element('link', null);
         $element->rel('stylesheet')->type('text/css')->href($stylesheet);
         return $element;

@@ -6,7 +6,6 @@ use Concrete\Core\Entity\Validator\UsedString;
 use Concrete\Core\Validator\String\ReuseValidator;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Concrete\Tests\TestCase;
 use Mockery as M;
 use ReflectionMethod;
@@ -16,8 +15,6 @@ use Concrete\Core\Entity\User\User as EntityUser;
 
 class ReuseValidatorTest extends TestCase
 {
-
-    use MockeryPHPUnitIntegration;
 
     public function testValidating()
     {

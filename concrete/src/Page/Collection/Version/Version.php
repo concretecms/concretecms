@@ -120,6 +120,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public $pThemeID;
 
     /**
+     * The identifier of any custom skin attached to this page version.
+     *
+     * @var string
+     */
+    public $pThemeSkinIdentifier;
+
+    /**
      * @deprecated what's deprecated is the public part of this property: use the getPublishDate() / setPublishDate() / setPublishInterval() methods instead
      *
      * @var string|null

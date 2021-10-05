@@ -23,7 +23,7 @@ class URLTest extends TestCase
      * This should be the case whether something is being called via URL::to, URL::page,
      * or Page::getCollectionLink or \Concrete\Core\Html\Service\Navigation::getLinkToCollection
      */
-    public function setUp()
+    public function setUp():void
     {
         $locale = new \Concrete\Core\Entity\Site\Locale();
         $locale->setCountry('US');
@@ -57,7 +57,7 @@ class URLTest extends TestCase
         parent::setUp();
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         Core::make('site')->getSite()->getConfigRepository()->set('seo.canonical_url', $this->oldUrl);
         $this->clearCanonicalUrl();

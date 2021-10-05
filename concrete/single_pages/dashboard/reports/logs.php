@@ -83,7 +83,7 @@ use Concrete\Core\Logging\Search\Result\Result;
 
                 <?php foreach ($item->getColumns() as $column) { ?>
                     <?php /** @var ItemColumn $column */ ?>
-                    <td class="<?php echo $class; ?>">
+                    <td>
                         <?php echo $column->getColumnValue(); ?>
                     </td>
                 <?php } ?>

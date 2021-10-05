@@ -39,7 +39,7 @@ class AccountPageController extends CorePageController implements UsesFeatureInt
         $theme = $collection->getThemeByRoute('/account');
 
         $profileFormRenderer = null;
-        if ($theme[0] === VIEW_CORE_THEME || !$theme[0]) {
+        if ($theme !== false && ($theme[0] === VIEW_CORE_THEME || !$theme[0])) {
             // We're using the default theme, so let's do our fancy dashboard overriding of the theme if we can.
             if ($dh->inDashboard($desktop) && $this->getPageObject()->getCollectionPath() != '/account/welcome') {
                 $this->setTheme('dashboard');

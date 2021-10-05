@@ -1,0 +1,29 @@
+div.col-sidebar {
+  div.ccm-block-tags-wrapper {
+    margin: 25px 40px 25px 40px;
+  }
+}
+
+div.ccm-block-tags-header {
+  font-size: @body-type-font-size;
+}
+
+div.ccm-block-tags-wrapper a:hover {
+  text-decoration: none;
+}
+
+span.ccm-block-tags-tag {
+  background-color: @page-background-color;
+  border-color: @footer-social-icon-color;
+  border-width: 1px;
+  border-style: solid;
+  color: @body-type-color;
+
+    &.ccm-block-tags-tag-selected {
+      border-color: darken(@footer-social-icon-hover-color, 10%);
+    }
+}
+
+div.ccm-block-tags-wrapper a:hover span.ccm-block-tags-tag {
+  border-color: @footer-social-icon-hover-color;
+}

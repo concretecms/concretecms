@@ -80,7 +80,7 @@ class PageListTest extends PageTestCase
         ]);
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
 

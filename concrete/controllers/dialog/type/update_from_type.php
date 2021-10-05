@@ -5,6 +5,7 @@ use Block;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand;
@@ -20,6 +21,9 @@ class UpdateFromType extends BackendInterfaceController
 
     public function on_start()
     {
+
+        throw new UserMessageException(t('This feature is not implemented yet.'));
+
         parent::on_start();
 
         $request = $this->request;

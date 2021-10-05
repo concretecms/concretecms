@@ -99,8 +99,7 @@ echo $userInterface->tabs([
 
 <div class="tab-content">
     <div class="tab-pane show active pagelist-form" id="page-list-settings" role="tabpanel">
-        <input type="hidden" name="pageListToolsDir"
-               value="<?php /* echo $urlService->getBlockTypeToolsURL($bt) */ ?>/"/>
+        <input type="hidden" name="pageListPreviewPane" value="<?= h($controller->getActionURL('preview_pane')) ?>"/>
 
         <fieldset>
             <div class="form-group">

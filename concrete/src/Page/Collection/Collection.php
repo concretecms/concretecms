@@ -1116,7 +1116,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         if ($r) {
             if ($r->rowCount() > 0) {
                 // then we know we got a value; we increment it and return
-                $res = $r->fetchRow();
+                $res = $r->fetchAssociative();
                 $displayOrder = $res['cbdis'];
                 if ($displayOrder === null) {
                     return 0;

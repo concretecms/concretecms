@@ -272,7 +272,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             // The post comes through in the select2 format. Either a SelectAttributeOption:ID item
             // or a new item.
             $option = false;
-            if ($data['atSelectOptionValue']) {
+            if (isset($data['atSelectOptionValue'])) {
                 if (preg_match(
                     '/SelectAttributeOption\:(.+)/i',
                     $data['atSelectOptionValue'],
@@ -304,7 +304,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             // The post comes through in the select2 format. A comma-separated
             // list of SelectAttributeOption:ID items and new items.
             $options = [];
-            if ($data['atSelectOptionValue']) {
+            if (isset($data['atSelectOptionValue'])) {
                 if (!is_array($data['atSelectOptionValue'])) {
                     $data['atSelectOptionValue'] = explode(',', $data['atSelectOptionValue']);
                 }
@@ -458,12 +458,24 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return is_object($value = $this->getAttributeValue()->getValue()) && ((string) $value != '');
     }
 
+    public function validateKey($data = false)
+    {
+        $e = $this->app->make('error');
+        $selectedPostValues = $this->getSelectValuesFromPost();
+        if (empty($selectedPostValues)) {
+            $e->add(t("You must at least add one value for this option list."));
+        };
+
+        return $e;
+
+    }
+
     public function validateForm($p)
     {
         $this->load();
         $options = $this->request('atSelectOptionValue');
 
-        return $options != '';
+        return !empty($options);
     }
 
     public function searchForm($list)

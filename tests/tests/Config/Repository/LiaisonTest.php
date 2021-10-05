@@ -17,8 +17,7 @@ class LiaisonTest extends TestCase
     /** @var Repository */
     protected $repository;
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $files = new Filesystem();
 
         $loader = new LiaisonLoader($files);

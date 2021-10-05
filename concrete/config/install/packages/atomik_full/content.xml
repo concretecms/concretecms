@@ -518,6 +518,7 @@
                                             <buttonColor><![CDATA[accent]]></buttonColor>
                                             <buttonStyle><![CDATA[outline]]></buttonStyle>
                                             <buttonSize><![CDATA[lg]]></buttonSize>
+                                            <titleFormat><![CDATA[h2]]></titleFormat>
                                         </record>
                                     </data>
                                 </block>
@@ -782,6 +783,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                             <buttonColor><![CDATA[primary]]></buttonColor>
                                             <buttonStyle><![CDATA[outline]]></buttonStyle>
                                             <buttonSize><![CDATA[lg]]></buttonSize>
+                                            <titleFormat><![CDATA[h2]]></titleFormat>
                                         </record>
                                     </data>
                                 </block>
@@ -1054,6 +1056,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                             <buttonColor><![CDATA[primary]]></buttonColor>
                                             <buttonStyle><![CDATA[outline]]></buttonStyle>
                                             <buttonSize><![CDATA[lg]]></buttonSize>
+                                            <titleFormat><![CDATA[h2]]></titleFormat>
                                         </record>
                                     </data>
                                 </block>
@@ -1236,6 +1239,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                                             <buttonColor><![CDATA[primary]]></buttonColor>
                                             <buttonStyle><![CDATA[outline]]></buttonStyle>
                                             <buttonSize><![CDATA[lg]]></buttonSize>
+                                            <titleFormat><![CDATA[h2]]></titleFormat>
                                         </record>
                                     </data>
                                 </block>

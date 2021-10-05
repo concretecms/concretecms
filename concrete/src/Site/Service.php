@@ -13,6 +13,7 @@ use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
@@ -21,6 +22,7 @@ use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntrySiteResults;
 use Concrete\Core\User\Group\Group;
 use Doctrine\ORM\EntityManagerInterface;
+use Monolog\Logger;
 use Punic\Comparer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Site\Type\Service as SiteTypeService;
@@ -420,6 +422,7 @@ class Service
         $localeService->updatePluralSettings($locale);
 
         $this->entityManager->persist($site);
+        $this->entityManager->persist($tree);
         $this->entityManager->persist($locale);
         $this->entityManager->flush();
 
@@ -513,4 +516,61 @@ class Service
         return $this->getByID($siteResultsNode->getSiteID());
     }
 
+
+    /**
+     * Checks whether the site in question has custom page level theme modifications; either custom style rules
+     * defined in the old style customizer, or custom skins set at the page version level.
+     *
+     * @param Site $site
+     * @return bool
+     */
+    public function hasPageLevelThemeCustomizations(Site $site): bool
+    {
+        $treeIDs = [0];
+        foreach($site->getLocales() as $locale) {
+            $tree = $locale->getSiteTree();
+            if (is_object($tree)) {
+                $treeIDs[] = $tree->getSiteTreeID();
+            }
+        }
+
+        $treeIDs = implode(',', $treeIDs);
+
+        $db = $this->entityManager->getConnection();
+        $customStylePageRecords = $db->fetchOne("select count(CollectionVersionThemeCustomStyles.cID) from CollectionVersionThemeCustomStyles inner join Pages on (CollectionVersionThemeCustomStyles.cID = Pages.cID) where Pages.siteTreeID in ({$treeIDs})");
+        if ($customStylePageRecords > 0) {
+            return true;
+        }
+
+        $customSkinPageRecords = $db->fetchOne("select count(CollectionVersions.cID) from CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID) where Pages.siteTreeID in ({$treeIDs}) and CollectionVersions.pThemeSkinIdentifier is not null");
+        if ($customSkinPageRecords > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Resets any page level customizations or custom skin records at the page version level for a particular site.
+     *
+     * @param Site $site
+     */
+    public function resetPageLevelThemeCustomizations(Site $site)
+    {
+        core_log(t('Page level theme customizations reset for site: %s', $site->getSiteHandle()), Logger::NOTICE, Channels::CHANNEL_SITE_ORGANIZATION);
+
+        $treeIDs = [0];
+        foreach($site->getLocales() as $locale) {
+            $tree = $locale->getSiteTree();
+            if (is_object($tree)) {
+                $treeIDs[] = $tree->getSiteTreeID();
+            }
+        }
+
+        $treeIDs = implode(',', $treeIDs);
+
+        $db = $this->entityManager->getConnection();
+        $db->executeStatement("delete CollectionVersionThemeCustomStyles from CollectionVersionThemeCustomStyles inner join Pages on (CollectionVersionThemeCustomStyles.cID = Pages.cID) where Pages.siteTreeID in ({$treeIDs})");
+        $db->executeStatement("update CollectionVersions inner join Pages on (CollectionVersions.cID = Pages.cID) set pThemeSkinIdentifier = null where Pages.siteTreeID in ({$treeIDs})");
+    }
 }

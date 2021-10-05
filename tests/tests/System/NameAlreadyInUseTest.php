@@ -14,7 +14,7 @@ class NameAlreadyInUseTest extends TestCase
      */
     private $webroot;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->webroot = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', DIR_BASE), '/');
     }

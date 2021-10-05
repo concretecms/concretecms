@@ -1,0 +1,127 @@
+.ccm-responsive-overlay {
+  background: white;
+  display: none;
+  position: absolute;
+  border-bottom: 5px solid @header-site-title-type-color;
+  width: 100%;
+  z-index: 99;
+  top: 120px;
+  left: 0px;
+  padding-top: 15px;
+  padding-left: 20px;
+  -webkit-text-size-adjust: none;
+  ul {
+    padding-left: 0;
+    li {
+      list-style-type: none;
+      &.parent-ul {
+        a {
+          &:after {
+            padding-left: 7px;
+            padding-top: 3px;
+            font-size: 20px;
+            content: "\f107";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 700;
+            font-style: normal;
+            display: inline-block;
+            cursor: pointer;
+            text-decoration: inherit;
+          }
+        }
+      }
+      a {
+        &:hover {
+          color: @header-navigation-hover-color;;
+        }
+        color: @header-navigation-type-color;
+        font-size: 18px;
+        display: inline-block;
+        width: 80%;
+        padding: 7px 5% 7px 0px;
+        margin: 0% 5% 0% 0;
+        padding-left: 15px;
+        height: 100%;
+        font-weight: 200;
+        text-decoration: none;
+      }
+      ul {
+        li {
+          &.last-li {
+            a{
+              padding-top: 0px;
+              font-size: 15px;
+              &:after {
+                content: '';
+              }
+            }
+          }
+          padding-left: 10px;
+        }
+      }
+      display: block;
+    }
+  }
+}
+
+
+.ccm-responsive-menu-launch {
+  display: none;
+  cursor: pointer;
+  margin-top: 10px;
+  float: right;
+  &.responsive-button-close {
+    i {
+      &:after {
+        font-size: 20px;
+        color: @header-navigation-type-color;
+        content: "\f077";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 700;
+        font-style: normal;
+        display: inline-block;
+        cursor: pointer;
+        text-decoration: inherit;
+      }
+    }
+  }
+  i {
+    &:after {
+      font-size: 20px;
+      content: "\f0c9";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 700;
+      color: @header-navigation-type-color;
+      font-style: normal;
+      display: inline-block;
+      cursor: pointer;
+      text-decoration: inherit;
+    }
+  }
+}
+
+@media all and (max-width: @screen-xs-max) {
+
+  .ccm-responsive-menu-launch {
+    display: block;
+  }
+
+  .ccm-responsive-navigation.original {
+    display: none;
+  }
+
+  header {
+    .ccm-search-block-form {
+      margin-top: 20px;
+    }
+  }
+
+
+
+}
+
+@media all and (min-width: @screen-xs-max) {
+  .ccm-responsive-overlay {
+    display: none !important;
+  }
+}

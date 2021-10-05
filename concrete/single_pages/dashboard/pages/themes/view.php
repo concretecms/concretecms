@@ -80,7 +80,7 @@
                         <form method="post" data-form-activate-theme="<?=$t->getThemeID()?>" action="<?= $view->action('activate_confirm') ?>">
                             <?php $token->output("activate_confirm") ?>
                             <input type="hidden" name="pThemeID" value="<?=$t->getThemeID()?>">
-                            <p><?= t('This will reset any page customizations and apply the selected theme to all pages on your site.') ?></p>
+                            <p><?= t('This will reset any page-level theme choices and apply the selected theme to all pages on your site.') ?></p>
                             <div class="dialog-buttons">
                                 <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
                                 <button type="submit" onclick="$('form[data-form-activate-theme=<?=$t->getThemeID()?>]').trigger('submit')" class="btn btn-primary"><?=t('Activate')?></button>
@@ -169,12 +169,43 @@ if (count($tArray2) > 0) {
         <?php } ?>
 <?php } ?>
 
+<?php if ($hasPageLevelCustomizations) { ?>
+
+
+    <div class="mt-5">
+        <h3><?=t('Customizations'); ?></h3>
+        <div class="alert alert-warning">
+            <p><?=t('Pages on your site have custom page-level styles applied, or custom skins applied to individual versions. To reset these customizations click below.'); ?></p>
+            <form method="post" action="<?=$view->action('reset_customizations')?>">
+                <?=$token->output('reset_customizations')?>
+                <button type="button" data-dialog="reset-customizations" class="btn btn-secondary"><?=t('Reset')?></button>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-none">
+        <div data-dialog-wrapper="reset-customizations">
+            <form method="post" data-form="reset-customizations" action="<?= $view->action('reset_customizations') ?>">
+                <?php $token->output("reset_customizations") ?>
+                <p><?= t('This will clear any customizations or page-level custom skins on your site.') ?></p>
+                <div class="dialog-buttons">
+                    <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+                    <button type="submit" onclick="$('form[data-form=reset-customizations]').trigger('submit')" class="btn btn-primary"><?=t('Reset')?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+<?php } ?>
+
+
 <?php
 if (Config::get('concrete.marketplace.enabled') == true) {
     ?>
 
     <div class="mt-5">
-        <h3 class="mt-2"><?=t('Want more themes?'); ?></h3>
+        <h3><?=t('Want more themes?'); ?></h3>
         <p><?=t('You can download themes and add-ons from the marketplace.'); ?></p>
         <p><a class="btn btn-success" href="<?=URL::to('/dashboard/extend/themes'); ?>"><?=t('Get More Themes'); ?></a></p>
     </div>

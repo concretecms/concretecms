@@ -64,8 +64,8 @@ class Messenger extends AbstractController
         if ($this->token->validate('consume_messages', $this->request->request->get('token'))) {
             session_write_close();
             $logger = app(LoggerFactory::class)->createLogger(Channels::CHANNEL_MESSENGER);
-            $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(5, $this->logger));
-            $this->eventDispatcher->addSubscriber(new StopWorkerOnTimeLimitListener(5, $this->logger));
+            $this->eventDispatcher->addSubscriber(new StopWorkerOnMessageLimitListener(5, $logger));
+            $this->eventDispatcher->addSubscriber(new StopWorkerOnTimeLimitListener(5, $logger));
             $worker = new Worker(
                 [$this->transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC)],
                 $this->bus,

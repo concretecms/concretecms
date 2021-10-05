@@ -11,7 +11,7 @@ class TemplateLocatorTest extends TestCase
 {
     const ATTRIBUTE_HANDLE = 'test_attribute';
 
-    public function setUp()
+    public function setUp():void
     {
         $fs = new Filesystem();
         $dir = DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE;
@@ -23,7 +23,7 @@ class TemplateLocatorTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         $fs = new Filesystem();
         $dir = DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' . static::ATTRIBUTE_HANDLE;

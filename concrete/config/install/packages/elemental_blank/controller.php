@@ -10,7 +10,7 @@ class controller extends StartingPointPackage
 
     public function getPackageName()
     {
-        return t('Empty Site (Elemental)');
+        return t('Empty Site');
     }
 
     public function getPackageDescription()

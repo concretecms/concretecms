@@ -25,12 +25,10 @@ use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Tests\TestCase;
 use Doctrine\ORM\EntityManager;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 class DriverCollectionTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
     public function testExtractData()
     {

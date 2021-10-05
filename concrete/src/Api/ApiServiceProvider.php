@@ -28,7 +28,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
-use phpseclib\Crypt\RSA;
+use phpseclib3\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\CryptKey;
 
@@ -92,14 +92,11 @@ class ApiServiceProvider extends ServiceProvider
         $keyPair = $config->get('api.keypair');
 
         if (!$keyPair) {
-            $rsa = $this->app->make(RSA::class);
-
             // Generate a new RSA key
-            $keyPair = $rsa->createKey(2048);
+            $privateKey = RSA::createKey(2048);
+            $publicKey = $privateKey->getPublicKey();
 
-            foreach ($keyPair as &$item) {
-                $item = str_replace("\r\n", "\n", $item);
-            }
+            $keyPair = [self::KEY_PRIVATE=>str_replace("\r\n","\n",$privateKey->__toString()),self::KEY_PUBLIC=>str_replace("\r\n","\n",$publicKey->__toString())];
 
             // Save the keypair
             $config->save('api.keypair', $keyPair);
@@ -110,10 +107,10 @@ class ApiServiceProvider extends ServiceProvider
 
     /**
      * Get a key by handle
-     * @param $handle privatekey | publickey
+     * @param string $handle privatekey | publickey
      * @return string|null
      */
-    private function getKey($handle)
+    private function getKey(string $handle)
     {
         if (!$this->keyPair) {
             $this->keyPair = $this->getKeyPair();
@@ -140,12 +137,12 @@ class ApiServiceProvider extends ServiceProvider
         // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret
         $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give($this->getKey(self::KEY_PRIVATE));
         $this->app->when(AuthorizationServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
+        $this->app->when(AuthorizationServer::class)->needs('$encryptionKey')->give($this->app->make('config/database')->get('concrete.security.token.encryption'));
         $this->app->when(AuthorizationServer::class)->needs(ResponseTypeInterface::class)->give(function() {
             return $this->app->make(IdTokenResponse::class);
         });
 
         $this->app->extend(AuthorizationServer::class, function (AuthorizationServer $server) {
-            $server->setEncryptionKey($this->app->make('config/database')->get('concrete.security.token.encryption'));
 
             $oneHourTTL = new \DateInterval('PT1H');
             $oneDayTTL = new \DateInterval('P1D');

@@ -40,7 +40,7 @@ class RendererTest extends TestCase
 
         $rendered = id(new Renderer($array))->render();
 
-        /** @var Closure $closure */
+        /** @var \Closure $closure */
         $closure = eval('return function(){' . substr($rendered, 5) . '};');
 
         $this->assertTrue($this->same($closure(), $array));
@@ -80,20 +80,16 @@ class RendererTest extends TestCase
         return true;
     }
 
-    /**
-     * @expectedException \Concrete\Core\Config\RendererInvalidTypeException
-     */
     public function testInvalidTypeClosure()
     {
+        $this->expectException(\Concrete\Core\Config\RendererInvalidTypeException::class);
         $renderer = new Renderer(['closure' => function () {},]);
         $renderer->render();
     }
 
-    /**
-     * @expectedException \Concrete\Core\Config\RendererInvalidTypeException
-     */
     public function testInvalidTypeObject()
     {
+        $this->expectException(\Concrete\Core\Config\RendererInvalidTypeException::class);
         $renderer = new Renderer(['object' => $this]);
         $renderer->render();
     }

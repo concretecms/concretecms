@@ -92,7 +92,7 @@ if ($version) {
 
 
                 <div class="form-group">
-                    <label for="name" class="control-label form-label">
+                    <label for="name" class="form-label">
                         <?= t('Name') ?>
                     </label>
 
@@ -100,7 +100,7 @@ if ($version) {
                     <hr/>
                 </div>
                 <div class="form-group">
-                    <label for="name" class="control-label form-label">
+                    <label for="name" class="form-label">
                         <?= t('Description') ?>
                     </label>
 
@@ -110,7 +110,7 @@ if ($version) {
                 <?php if ($permissions->canEditCalendarEventMoreDetailsLocation()) { ?>
 
                     <div class="form-group">
-                        <label for="page" class="control-label form-label"><?=t('More Details Link Destination')?></label>
+                        <label for="page" class="form-label"><?=t('More Details Link Destination')?></label>
                         <?php
                         $cID = false;
                         if (is_object($version)) {

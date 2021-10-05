@@ -6,13 +6,11 @@ use Concrete\Core\Html\Service\Navigation;
 use Concrete\Core\Page\Page;
 use Concrete\Tests\TestCase;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumbFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 
 class DashboardBreadcrumbNavigationTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
     public function testCreateNavigation()
     {

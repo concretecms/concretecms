@@ -11,6 +11,7 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\Mapping as ORM;
+use Laminas\Feed\Writer\Feed as LaminasFeed;
 
 /**
  * @ORM\Entity
@@ -495,7 +496,7 @@ class Feed
         $pagination = $pl->getPagination();
         $results = $pagination->getCurrentPageResults();
         if (count($results)) {
-            $writer = new \Zend\Feed\Writer\Feed();
+            $writer = new LaminasFeed();
             $writer->setTitle($this->getTitle());
             $writer->setDescription($this->getDescription());
             if ($this->getIconFileID()) {

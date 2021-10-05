@@ -4,7 +4,7 @@
 
     &.bs-popover-top,
     &.bs-popover-bottom {
-      .arrow {
+      .popover-arrow {
         left: 50%;
         margin-left: -0.5rem;
       }
@@ -12,10 +12,14 @@
 
     &.bs-popover-left,
     &.bs-popover-right {
-      .arrow {
+      .popover-arrow {
         margin-top: -0.5rem;
         top: 50%;
       }
     }
+  }
+
+  .bootstrap-select {
+    z-index: 2001;
   }
 }

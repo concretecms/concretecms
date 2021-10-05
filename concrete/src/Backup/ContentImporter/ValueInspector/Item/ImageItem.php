@@ -11,7 +11,13 @@ class ImageItem extends FileItem
     public function getContentValue()
     {
         if ($o = $this->getContentObject()) {
-            return sprintf("{CCM:FID_%s}", $o->getFileID());
+            if ($o->getFileUUID()) {
+                $identifier = $o->getFileUUID();
+            } else {
+                $identifier = $o->getFileID();
+            }
+            return sprintf("{CCM:FID_%s}", $identifier);
         }
     }
+
 }

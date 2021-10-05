@@ -2,37 +2,33 @@
 namespace Concrete\Core\StyleCustomizer\Compiler;
 
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
-use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\StyleCustomizer\Adapter\AdapterInterface;
+use Concrete\Core\StyleCustomizer\Customizer\Customizer;
+use Concrete\Core\StyleCustomizer\Customizer\Type\TypeInterface;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
-use Concrete\Core\StyleCustomizer\Skin\PresetSkin;
-use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 
 class Compiler
 {
 
     /**
-     * @param AdapterInterface $adapter
-     * @param PresetSkin $presetSkin
+     * @param Customizer $customizer
+     * @param PresetInterface $preset
      * @param NormalizedVariableCollection $collection
      * @return string
      */
-    public function compileFromSkin(AdapterInterface $adapter, SkinInterface $skin, NormalizedVariableCollection $collection): string
+    public function compileFromPreset(Customizer $customizer, PresetInterface $preset, NormalizedVariableCollection $collection): string
     {
-        $processor = $adapter->getProcessor();
-        if ($skin instanceof PresetSkin) {
-            $presetSkin = $skin;
-        } else {
-            /**
-             * @var $skin CustomSkin
-             */
-            $theme = $skin->getTheme();
-            $presetSkin = $theme->getSkinByIdentifier($skin->getPresetSkinStartingPoint());
-        }
-        $file = $adapter->getPresetEntryPointFile($presetSkin);
+        $customizerType = $customizer->getType();
+        $presetType = $customizerType->getPresetType();
+        $processor = $customizerType->getStyleProcessor();
+        $file = $presetType->getEntryPointFile($preset);
         $css = $processor->compileFileToString($file, $collection);
         return $css;
     }
 
-
+    public function compileFromCustomSkin(Customizer $customizer, CustomSkin $skin, NormalizedVariableCollection $collection): string
+    {
+        $preset = $customizer->getPresetByIdentifier($skin->getPresetStartingPoint());
+        return $this->compileFromPreset($customizer, $preset, $collection);
+    }
 }

@@ -48,6 +48,15 @@ class Mobile extends ElementController
         $modifier = new NavigationModifier();
         $modifier->addModifier($this->app->make(AppendHTMLModifier::class, ['currentPage' => $this->currentPage]));
         $this->set('navigation', $modifier->process($navigation));
+        $pageInUseBySomeoneElse = false;
+
+        if ($this->currentPage->isCheckedOut()) {
+            if (!$this->currentPage->isCheckedOutByMe()) {
+                $pageInUseBySomeoneElse = true;
+            }
+        }
+
+        $this->set('pageInUseBySomeoneElse',$pageInUseBySomeoneElse);
     }
 
 }

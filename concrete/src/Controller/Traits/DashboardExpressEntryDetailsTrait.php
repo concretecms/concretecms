@@ -53,12 +53,11 @@ trait DashboardExpressEntryDetailsTrait
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $entity = $r->findOneById($id);
         if (!is_object($entity)) {
-            $this->redirect('/dashboard/express/entries');
+            return $this->buildRedirect('/dashboard/express/entries');
         }
-        if ($owner_entry_id) {
-            $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entry');
-            $entry = $r->findOneById($owner_entry_id);
-        }
+
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entry');
+        $entry = $r->findOneById($owner_entry_id);
         $permissions = new Checker($entity);
         if (!$permissions->canAddExpressEntries()) {
             throw new \Exception(t('You do not have access to add entries of this entity type.'));

@@ -33,7 +33,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
     private $category;
 
     /**
-     * @var \Concrete\Core\Permission\IPService
+     * @var \Concrete\Core\Permission\IpAccessControlService
      */
     private $ipService;
 
@@ -62,7 +62,7 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         ;
         $em->persist($this->category);
         $em->flush($this->category);
-        $this->ipService = $app->make(IPService::class);
+        $this->ipService = $app->make('failed_login');
     }
 
     public function automaticBanEnabledProvider()
@@ -91,12 +91,12 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         for ($attempt = 1; $attempt <= $allowedAttempts; ++$attempt) {
             $this->assertFalse($this->ipService->isWhitelisted($ip));
             $this->assertFalse($this->ipService->isBlacklisted($ip));
-            $this->assertFalse($this->ipService->failedLoginsThresholdReached($ip));
-            $this->ipService->logFailedLogin($ip);
+            $this->assertFalse($this->ipService->isThresholdReached($ip));
+            $this->ipService->registerEvent($ip);
             if ($attempt < $allowedAttempts) {
-                $this->assertFalse($this->ipService->failedLoginsThresholdReached($ip));
+                $this->assertFalse($this->ipService->isThresholdReached($ip));
             } else {
-                $this->assertTrue($this->ipService->failedLoginsThresholdReached($ip));
+                $this->assertTrue($this->ipService->isThresholdReached($ip));
             }
         }
         $this->assertFalse($this->ipService->isWhitelisted($ip));
@@ -119,9 +119,9 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         ;
         $ip = IPFactory::parseAddressString('1.2.3.4');
         for ($attempt = 1; $attempt <= 10; ++$attempt) {
-            $this->ipService->logFailedLogin($ip);
+            $this->ipService->registerEvent($ip);
         }
-        $this->assertFalse($this->ipService->failedLoginsThresholdReached($ip));
+        $this->assertFalse($this->ipService->isThresholdReached($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
     }
 
@@ -140,9 +140,9 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         $this->assertTrue($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
         for ($attempt = 1; $attempt <= 10; ++$attempt) {
-            $this->ipService->logFailedLogin($ip);
+            $this->ipService->registerEvent($ip);
         }
-        $this->assertFalse($this->ipService->failedLoginsThresholdReached($ip));
+        $this->assertFalse($this->ipService->isThresholdReached($ip));
         $this->assertTrue($this->ipService->isWhitelisted($ip));
         $this->assertFalse($this->ipService->isBlacklisted($ip));
     }

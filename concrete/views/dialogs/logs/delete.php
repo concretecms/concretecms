@@ -34,3 +34,14 @@ $form = $app->make(Form::class)
         </strong>
     </form>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function (e, data) {
+            if (data.form === 'delete-log-entry') {
+                window.location.reload()
+            }
+        });
+    });
+</script>
+

@@ -11,9 +11,11 @@ use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Theme\Color\ColorCollection;
 use Concrete\Core\Page\Theme\Documentation\DocumentationProviderInterface;
 use Concrete\Core\Page\Theme\Documentation\Installer;
+use Concrete\Core\StyleCustomizer\Customizer\Customizer;
+use Concrete\Core\StyleCustomizer\Customizer\CustomizerFactory;
+use Concrete\Core\StyleCustomizer\Customizer\CustomizerInterface;
 use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
-use Concrete\Core\StyleCustomizer\StyleListParser;
 use Concrete\Core\Support\Facade\Facade;
 use Config;
 use Doctrine\ORM\EntityManager;
@@ -37,7 +39,7 @@ use Punic\Comparer;
  * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files.
  * Themes inherit down the tree when a page is added, but can also be set at the site-wide level (thereby overriding any previous choices.).
  */
-class Theme extends ConcreteObject
+class Theme extends ConcreteObject implements \JsonSerializable
 {
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = '.php';
@@ -244,11 +246,7 @@ class Theme extends ConcreteObject
      */
     public function hasPresetSkins(): bool
     {
-        $env = Environment::get();
-        $r = $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
-            $this->getPackageHandle()
-        );
+        $r = $this->getSkinDirectoryRecord();
         return $r->exists();
     }
 
@@ -256,7 +254,7 @@ class Theme extends ConcreteObject
     {
         $env = Environment::get();
         return $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
+            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . DIRNAME_STYLE_CUSTOMIZER_SKINS,
             $this->getPackageHandle()
         );
     }
@@ -267,8 +265,11 @@ class Theme extends ConcreteObject
      */
     public function getPresetSkins(): array
     {
-        $factory = app(SkinFactory::class);
-        $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile(), $this);
+        $skins = [];
+        if ($this->hasPresetSkins()) {
+            $factory = app(SkinFactory::class);
+            $skins = $factory->createMultipleFromDirectory($this->getSkinDirectoryRecord()->getFile(), $this);
+        }
         return $skins;
     }
 
@@ -300,40 +301,21 @@ class Theme extends ConcreteObject
         return $allSkins;
     }
 
-
-    public function getStyleConfigurationFileRecord(): Record
-    {
-        $env = Environment::get();
-        return $env->getRecord(
-            DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES,
-            $this->getPackageHandle()
-        );
-    }
-
     /**
-     * Checks the theme for a styles.xml file (which is how customizations happen).
-     *
      * @return bool
      */
     public function isThemeCustomizable()
     {
-        return $this->getStyleConfigurationFileRecord()->exists();
+        if ($this->getThemeCustomizer()) {
+            return true;
+        }
+        return false;
     }
 
-    /**
-     * Retrieves the list of customizable styles for this theme..
-     *
-     * @return \Concrete\Core\StyleCustomizer\StyleList
-     */
-    public function getThemeCustomizableStyleList(SkinInterface $skin)
+    public function getThemeCustomizer(): ?Customizer
     {
-        if (!isset($this->styleList)) {
-            $record = $this->getStyleConfigurationFileRecord();
-            $xml = simplexml_load_file($record->file);
-            $parser = app(StyleListParser::class);
-            return $parser->parse($xml, $skin);
-        }
-        return $this->styleList;
+        $customizer = app(CustomizerFactory::class)->createFromTheme($this);
+        return $customizer;
     }
 
     /**
@@ -354,13 +336,37 @@ class Theme extends ConcreteObject
      */
     public function getSkinByIdentifier(string $skinIdentifier): ?SkinInterface
     {
-        $skins = $this->getSkins();
-        foreach ($skins as $skin) {
-            if ($skin->getIdentifier() == $skinIdentifier) {
-                return $skin;
+        if ($this->hasSkins()) {
+            $skins = $this->getSkins();
+            foreach ($skins as $skin) {
+                if ($skin->getIdentifier() == $skinIdentifier) {
+                    return $skin;
+                }
             }
         }
         return null;
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function jsonSerialize()
+    {
+        $hasSkins = $this->hasSkins();
+
+        $data = [
+            'pThemeID' => $this->getThemeID(),
+            'pThemeDisplayName' => $this->getThemeDisplayName(),
+            'pThemeDisplayDescription' => $this->getThemeDisplayDescription(),
+            'hasSkins' => $hasSkins,
+            'skins' => [],
+        ];
+
+        if ($hasSkins) {
+            $data['skins'] = $this->getSkins();
+        }
+
+        return $data;
     }
 
 
@@ -1163,6 +1169,7 @@ class Theme extends ConcreteObject
         $entityManager->persist($site);
         $entityManager->flush();
 
+
         $treeIDs = [0];
         foreach($site->getLocales() as $locale) {
             $tree = $locale->getSiteTree();
@@ -1321,7 +1328,9 @@ class Theme extends ConcreteObject
     }
 
     /**
-     * Get the handles of the thumbnail types and related resolution breakpoint.
+     * Get the handles of the thumbnail types and related resolution breakpoint. Important: make sure to define these
+     * in proper ascending size order, otherwise you might get inconsistencies in certain aspects of the UI that
+     * refer to these image types.
      *
      * @return array
      *

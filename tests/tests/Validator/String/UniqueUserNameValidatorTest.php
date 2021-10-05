@@ -18,15 +18,16 @@ class UniqueUserNameValidatorTest extends ConcreteDatabaseTestCase
 
     public function testIsValid()
     {
+        /** @var \Concrete\Core\Validator\String\UniqueUserNameValidator  $validator */
         $validator = \Core::make(\Concrete\Core\Validator\String\UniqueUserNameValidator::class);
 
-        $this->assertNotEmpty($validator->getRequirementStrings());
+        static::assertNotEmpty($validator->getRequirementStrings());
 
-        $this->assertTrue($validator->isValidFor('new_user'));
-        $this->assertFalse($validator->isValid('admin'));
-        $this->assertFalse($validator->isValidFor('admin'));
-        $this->assertTrue($validator->isValidFor('admin', 1));
-        $this->assertFalse($validator->isValidFor('admin', 2));
+        static::assertTrue($validator->isValidFor('new_user'));
+        static::assertFalse($validator->isValid('admin'));
+        static::assertFalse($validator->isValidFor('admin'));
+        static::assertTrue($validator->isValidFor('admin', 1));
+        static::assertFalse($validator->isValidFor('admin', 2));
     }
 
     public function testErrorAdded()
@@ -37,11 +38,9 @@ class UniqueUserNameValidatorTest extends ConcreteDatabaseTestCase
         $this->assertNotEmpty($error);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testInvalidInput()
     {
+        $this->expectException(\Exception::class);
         $validator = \Core::make(\Concrete\Core\Validator\String\UniqueUserNameValidator::class);
         $validator->isValid($validator);
     }

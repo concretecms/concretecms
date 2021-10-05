@@ -23,6 +23,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var int $installStep */
 
+$locale = $locale ?? Localization::BASE_LOCALE;
+
 $install_config = Config::get('install_overrides');
 $uh = Core::make('helper/concrete/urls');
 if ($install_config) {

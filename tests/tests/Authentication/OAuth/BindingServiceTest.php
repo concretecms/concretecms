@@ -18,8 +18,6 @@ use Psr\Log\LoggerInterface;
 class BindingServiceTest extends TestCase
 {
 
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testClearBindingWithBadConnection()
     {
         $fakeDatabaseManager = M::mock(DatabaseManager::class);
@@ -106,7 +104,7 @@ class BindingServiceTest extends TestCase
 
     public function testClearBinding()
     {
-        $this->markTestSkipped('The updated DBAL library breaks this test. Please fix this test.');
+//        $this->markTestSkipped('The updated DBAL library breaks this test. Please fix this test.');
 
         $fakeDatabaseManager = M::mock(DatabaseManager::class);
         $fakeConnection = $this->createFakeConnection();
@@ -117,21 +115,21 @@ class BindingServiceTest extends TestCase
         $service = new BindingService($fakeDatabaseManager);
 
         // Make sure we attempt to delete with "AND"
-        $fakeConnection->shouldReceive('executeUpdate')->once()
+        $fakeConnection->shouldReceive('executeStatement')->once()
             ->with('DELETE FROM OauthUserMap WHERE (namespace = :namespace) AND ((user_id = :id) OR (binding = :binding))', [
                 'namespace' => 'test',
+                'id' => 1,
                 'binding' => 'foo',
-                'id' => 1
             ], [])
             ->andReturn($fakeResult);
         $this->assertEquals(1, $service->clearBinding(1, 'foo', 'test'));
 
         // Make sure we attempt to delete with "OR"
-        $fakeConnection->shouldReceive('executeUpdate')->once()
+        $fakeConnection->shouldReceive('executeStatement')->once()
             ->with('DELETE FROM OauthUserMap WHERE (namespace = :namespace) AND ((user_id = :id) AND (binding = :binding))', [
                 'namespace' => 'test',
+                'id' => 1,
                 'binding' => 'foo',
-                'id' => 1
             ], [])
             ->andReturn(1);
         $this->assertEquals(1, $service->clearBinding(1, 'foo', 'test', true));
