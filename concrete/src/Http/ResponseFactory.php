@@ -265,7 +265,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 $dl->setupSiteInterfaceLocalization($collection);
                 $request->setCurrentPage($collection);
 
-                return $this->view($v, $code, $headers);
+                return $this->view($v, Response::HTTP_SERVICE_UNAVAILABLE, $headers);
             }
         }
 
