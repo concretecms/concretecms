@@ -224,7 +224,7 @@ class PageController extends Controller
             $requestPath = $request->getPath();
         }
 
-        if (!empty($this->c->getCollectionPath()) && strpos($requestPath, $this->c->getCollectionPath()) !== false) {
+        if (!empty($this->c->getCollectionPath()) && stripos($requestPath, $this->c->getCollectionPath()) !== false) {
             // If the request path starts with the collection path, remove it
             $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
         } else {
