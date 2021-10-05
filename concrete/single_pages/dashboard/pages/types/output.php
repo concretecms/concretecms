@@ -26,8 +26,8 @@ $pageTypePageTemplateObjects = $pagetype->getPageTypePageTemplateObjects();
 foreach ($pageTypePageTemplateObjects as $pt) {
     ?>
     <tr>
-        <td style="width: 1px">></a></td>
-        <td style="vertical-align: middle"><p class="lead" style="margin-bottom: 0px"></p></td>
+        <td style="width: 1px"><a href="<?= $view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID()); ?>" target="_blank"><?= $pt->getPageTemplateIconImage(); ?></a></td>
+        <td style="vertical-align: middle"><p class="lead" style="margin-bottom: 0px"><?= $pt->getPageTemplateDisplayName(); ?></p></td>
         <td style="width: 250px; vertical-align: middle">
             <div class="btn-group float-end">
                 <a href="<?= $view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID()); ?>" class="btn btn-secondary btn-sm"><?= t('Edit'); ?></a>
