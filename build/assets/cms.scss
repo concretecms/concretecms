@@ -57,6 +57,9 @@
 
   // Utilities
   @import "bootstrap/scss/utilities/api";
+
+  // Plugins
+  @import "bootstrap-select/sass/bootstrap-select";
 }
 
 // This is the actual public entry point to the cms.css on the front-end
