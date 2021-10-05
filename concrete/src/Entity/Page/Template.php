@@ -113,11 +113,10 @@ class Template implements \JsonSerializable
         $em->flush();
     }
 
-    public function getPageTemplateIconImage()
+    public function getPageTemplateIconImage($class = null)
     {
         $src = REL_DIR_FILES_PAGE_TEMPLATE_ICONS . '/' . $this->pTemplateIcon;
-        $iconImg = '<img src="' . $src . '" height="' . \Config::get('concrete.icons.page_template.height') . '" width="' . \Config::get('concrete.icons.page_template.width') . '" alt="' . $this->getPageTemplateDisplayName(
-            ) . '" title="' . $this->getPageTemplateDisplayName() . '" />';
+        $iconImg = '<img class="' . h($class) . '" src="' . $src . '" alt="' . $this->getPageTemplateDisplayName() . '" title="' . $this->getPageTemplateDisplayName() . '" />';
 
         return $iconImg;
     }
