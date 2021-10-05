@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Query\QueryFactory;
-use Concrete\Core\User\Search\SearchProvider;
+use Concrete\Core\Express\Search\SearchProvider;
 
 class CustomizeSearch extends DashboardPageController
 {
@@ -32,7 +32,7 @@ class CustomizeSearch extends DashboardPageController
                 /**
                  * @var $provider \Concrete\Core\Express\Search\SearchProvider
                  */
-                $provider = $this->app->make(\Concrete\Core\Express\Search\SearchProvider::class);
+                $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
                 $factory = $this->app->make(QueryFactory::class);
                 $query = $factory->createFromAdvancedSearchRequest($provider, $this->request);
                 /**
@@ -59,7 +59,7 @@ class CustomizeSearch extends DashboardPageController
             /**
              * @var $provider SearchProvider
              */
-            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array('entity' => $entity, 'category' => $entity->getAttributeKeyCategory()));
+            $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
             $element = new CustomizeResults($provider);
             $this->set('customizeElement', $element);
         } else {
