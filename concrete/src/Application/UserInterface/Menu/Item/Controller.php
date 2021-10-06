@@ -41,10 +41,10 @@ class Controller extends AbstractController implements ControllerInterface
         if ($icon_str) {
             $icon = new Element('i');
             /*
-             * Allows menu items to set icons with full FA spec such as fas and far
+             * Allows menu items to set icons with full FA spec such as fas,far...fab
              * Defaults to prior behaviour of prefixing if full FA spec is not specified
              */
-            if(preg_match("/\b(fa|fas|far)\b/",$icon_str)){
+            if(preg_match("/\b(fa|fas|far|fal|fad|fab)\b/",$icon_str)){
                 $icon->addClass($icon_str);
             } else {
                 $icon->addClass('fa fa-' . $icon_str);
