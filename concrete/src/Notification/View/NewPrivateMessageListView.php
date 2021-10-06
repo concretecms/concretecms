@@ -20,7 +20,7 @@ class NewPrivateMessageListView extends StandardListView
 
     public function getIconClass()
     {
-        return 'fa fa-envelope';
+        return 'fas fa-envelope';
     }
 
     public function getInitiatorUserObject()

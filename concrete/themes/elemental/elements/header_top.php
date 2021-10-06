@@ -3,7 +3,8 @@
 <html lang="<?php echo Localization::activeLanguage() ?>">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <?=$view->getThemeStyles()?>
+    <link rel="stylesheet" type="text/css" href="<?php echo $view->getThemePath()?>/css/bootstrap-modified.css">
+    <?php echo $html->css($view->getStylesheet('main.less')) ?>
     <?php
     View::element('header_required', [
         'pageTitle' => isset($pageTitle) ? $pageTitle : '',
@@ -12,6 +13,17 @@
     ]);
     ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+            var msViewportStyle = document.createElement('style');
+            msViewportStyle.appendChild(
+                document.createTextNode(
+                    '@-ms-viewport{width:auto!important}'
+                )
+            );
+            document.querySelector('head').appendChild(msViewportStyle);
+        }
+    </script>
 </head>
 <body>
 

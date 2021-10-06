@@ -8,7 +8,7 @@ use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 ?>
 <li class="float-end ccm-toolbar-mobile-menu-button d-block d-md-none">
-  <i class="fa fa-bars"></i>
+  <i class="fas fa-bars"></i>
 </li>
 
 <?php
@@ -98,8 +98,8 @@ if (!$dh->inDashboard()) {
                             }
                             ?>
                             <li class="parent-ul">
-                                <i class="fa fa-cog mobile-leading-icon"></i>
-                                <a href="#"><?php echo t('Page Properties') ?></a><i class="fa fa-caret-down drop-down-toggle"></i>
+                                <i class="fas fa-cog mobile-leading-icon"></i>
+                                <a href="#"><?php echo t('Page Properties') ?></a><i class="fas fa-caret-down drop-down-toggle"></i>
                                 <ul class="list-unstyled">
                                     <?php
                                     $pagetype = PageType::getByID($c->getPageTypeID());
@@ -244,13 +244,13 @@ if (!$dh->inDashboard()) {
                         }?>
                         <?php // dashboard menu ?>
                         <li class="parent-ul">
-                          <i class="fa fa-sliders-h mobile-leading-icon"></i>
+                          <i class="fas fa-sliders-h mobile-leading-icon"></i>
                           <a href="<?= URL::to('/dashboard');?>"><?= t('Dashboard');?></a>
-                          <i class="fa fa-caret-down drop-down-toggle"></i>
+                          <i class="fas fa-caret-down drop-down-toggle"></i>
                           <?php $walkNavigation($navigation->getItems());?>
                         </li>
                         <li>
-                            <i class="fa fa-sign-out-alt mobile-leading-icon"></i>
+                            <i class="fas fa-sign-out-alt mobile-leading-icon"></i>
                             <a href="<?= URL::to('/login', 'do_logout', $valt->generate('do_logout')); ?>"><?= t('Sign Out'); ?></a>
                         </li>
                     </ul>

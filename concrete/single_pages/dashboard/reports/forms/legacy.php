@@ -171,7 +171,7 @@ EOT
 
         <div class="ccm-dashboard-header-buttons">
             <a id="ccm-export-results" class="btn btn-success" href="<?php echo $view->action('csv')?>?qsid=<?php echo $questionSet ?>">
-                <i class='fa fa-download'></i> <?php echo t('Export to CSV') ?>
+                <i class='fas fa-download'></i> <?php echo t('Export to CSV') ?>
             </a>
         </div>
 

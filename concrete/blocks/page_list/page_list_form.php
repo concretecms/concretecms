@@ -222,7 +222,7 @@ echo $userInterface->tabs([
                     <div class="form-group">
                         <label class="control-label form-label">
                             <?php echo t('Days in the Past') ?>
-                            <i class="launch-tooltip fa fa-question-circle"
+                            <i class="launch-tooltip fas fa-question-circle"
                                title="<?php echo t('Leave 0 to show all past dated pages') ?>"></i>
                         </label>
 
@@ -234,7 +234,7 @@ echo $userInterface->tabs([
                     <div class="form-group">
                         <label class="control-label form-label">
                             <?php echo t('Days in the Future') ?>
-                            <i class="launch-tooltip fa fa-question-circle"
+                            <i class="launch-tooltip fas fa-question-circle"
                                title="<?php echo t('Leave 0 to show all future dated pages') ?>"></i>
                         </label>
 
@@ -563,7 +563,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="loader">
-                <i class="fa fa-cog fa-spin"></i>
+                <i class="fas fa-cog fa-spin"></i>
             </div>
         </fieldset>
     </div>

@@ -1,24 +1,23 @@
 <?php
 namespace Concrete\Core\Page\View;
 
-use Concrete\Core\Entity\Page\Theme\CustomSkin;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\View\Preview\PageDesignPreviewRequest;
+use Concrete\Core\Page\View\Preview\PreviewRequestInterface;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
-use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
+use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\User\User;
+use Concrete\Core\View\View;
+use Config;
 use Environment;
 use Events;
 use HtmlObject\Element;
 use Loader;
 use PageCache;
-use Concrete\Core\Entity\Page\Template;
-use Concrete\Core\Page\Template as PageTemplate;
 use PageTheme;
 use Permissions;
 use URL;
-use Concrete\Core\User\User;
-use Concrete\Core\View\View;
-use Config;
 
 class PageView extends View
 {
@@ -36,27 +35,9 @@ class PageView extends View
         return $items;
     }
 
-    /**
-     * Called from previewing functions, this lets us override the page's template with one of our own choosing.
-     */
-    public function setCustomPageTemplate(Template $pt)
-    {
-        $this->pTemplateID = $pt->getPageTemplateID();
-    }
-
     public function getPageTemplate()
     {
         return PageTemplate::getByID($this->pTemplateID);
-    }
-
-    /**
-     * Called from previewing functions, this lets us override the page's theme with one of our own choosing.
-     */
-    public function setCustomPageTheme(PageTheme $pt)
-    {
-//        $this->themeObject = $pt;
-        $this->themeHandle = $pt->getThemeHandle();
-        $this->themePkgHandle = $pt->getPackageHandle();
     }
 
     public function renderSinglePageByFilename($cFilename, $pkgHandle = null)
@@ -235,41 +216,39 @@ class PageView extends View
                 $this->pTemplatePkgHandle = $this->c->getPageTemplateObject()->getPackageHandle();
             }
         }
-        if (!isset($this->pThemeID)) {
-            $this->pThemeID = $this->c->getPageTemplateID(); // @TODO kill this code? It looks completely wrong.
-        }
     }
 
     /**
      * @param mixed $customPreviewRequest
      */
-    public function setCustomPreviewRequest($customPreviewRequest): void
+    public function setCustomPreviewRequest(PreviewRequestInterface $customPreviewRequest): void
     {
         $this->customPreviewRequest = $customPreviewRequest;
+        if ($customPreviewRequest instanceof PageDesignPreviewRequest) {
+            if ($customPreviewRequest->getPageTemplate()) {
+                $this->pTemplateID = $customPreviewRequest->getPageTemplate()->getPageTemplateID();
+            }
+            if ($customPreviewRequest->getTheme()) {
+                $this->themeHandle = $customPreviewRequest->getTheme()->getThemeHandle();
+                $this->themePkgHandle = $customPreviewRequest->getTheme()->getPackageHandle();
+            }
+        }
     }
 
     public function getThemeStyles()
     {
-        $skin = null;
         $customStyles = null;
-        if (isset($this->customPreviewRequest) && $this->customPreviewRequest instanceof SkinPreviewRequest) {
-            $request = $this->customPreviewRequest;
-            $theme = $request->getTheme();
-            $skinIdentifier = $request->getSkin()->getIdentifier();
-            $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
-            $stylesheet = $skin->getStylesheet();
-            if ($this->customPreviewRequest->getCustomCss() !== null) {
+        if (isset($this->customPreviewRequest)) {
+            if ($this->customPreviewRequest instanceof SkinPreviewRequest) {
+                $skinIdentifier = $this->customPreviewRequest->getSkin()->getIdentifier();
+                $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+                $stylesheet = $skin->getStylesheet();
+            }
+            if ($this->customPreviewRequest instanceof ThemeCustomizerRequest) {
                 $customStyles = $this->customPreviewRequest->getCustomCss();
             }
         } else {
-            $site = $this->c->getSite();
-            $skinIdentifier = SkinInterface::SKIN_DEFAULT;
-            if ($site) {
-                if ($site->getThemeSkinIdentifier()) {
-                    $skinIdentifier = $site->getThemeSkinIdentifier();
-                }
-            }
-            $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+            $skin = $this->c->getPageSkin();
             $stylesheet = $skin->getStylesheet();
         }
         if ($customStyles) {

@@ -136,7 +136,7 @@ $identifier = $app->make(Identifier::class);
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                title="<?php echo h(t('Text Size and Color')); ?>">
-                <i class="fa fa-font"></i>
+                <i class="fas fa-font"></i>
             </a>
 
             <div class="ccm-dropdown-menu">
@@ -188,7 +188,7 @@ $identifier = $app->make(Identifier::class);
             <a href="javascript:void(0);"
                title="<?php echo h(t('Background Color and Image')); ?>">
 
-                <i class="fa fa-image"></i>
+                <i class="fas fa-image"></i>
             </a>
 
             <div class="ccm-dropdown-menu">
@@ -327,7 +327,7 @@ $identifier = $app->make(Identifier::class);
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                title="<?php echo h(t('Margin and Padding')); ?>">
-                <i class="fa fa-arrows-alt-h"></i>
+                <i class="fas fa-arrows-alt-h"></i>
             </a>
 
             <div class="ccm-dropdown-menu <?php echo $style instanceof CustomStyle ? "ccm-inline-design-dropdown-menu-doubled" : ""; ?>">
@@ -424,7 +424,7 @@ $identifier = $app->make(Identifier::class);
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                title="<?php echo h(t('Shadow and Rotation (CSS3)')); ?>">
-                <i class="fa fa-magic"></i>
+                <i class="fas fa-magic"></i>
             </a>
 
             <div class="ccm-dropdown-menu ccm-inline-design-dropdown-menu-doubled">
@@ -530,7 +530,7 @@ $identifier = $app->make(Identifier::class);
                                 <legend>
                                     <?php echo t('Device Visibility') ?>
 
-                                    <i class="fa fa-question-circle launch-tooltip"
+                                    <i class="fas fa-question-circle launch-tooltip"
                                        title="<?php echo h(t('Hide the current content on a particular type of device. Un-check a device below to hide the content.')) ?>"></i>
                                 </legend>
 
@@ -563,7 +563,7 @@ $identifier = $app->make(Identifier::class);
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                title="<?php echo t('Custom CSS Classes, Block Name, Block Templates and Reset Styles') ?>">
-                <i class="fa fa-cog"></i>
+                <i class="fas fa-cog"></i>
             </a>
 
             <div class="ccm-dropdown-menu">

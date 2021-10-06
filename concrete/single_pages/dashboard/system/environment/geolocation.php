@@ -184,7 +184,7 @@ if (isset($geolocator)) {
                     $out.closest('tr').show();
                     switch (field) {
                         case 'hasData':
-                            $out.html(value ? '<i class="fa fa-check"></i>' : '<i class="fa fa-times"></i>');
+                            $out.html(value ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>');
                             break;
                         case 'error':
                             $out.text(<?= json_encode(t('%s (error code: %d)')); ?>.replace(/%d/, value.code.toString()).replace(/%s/, value.message));

@@ -4,6 +4,8 @@ namespace Concrete\Block\Feature;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Html\Service\FontAwesomeIcon;
+use Concrete\Core\Validation\SanitizeService;
 use Page;
 use Concrete\Core\Block\BlockController;
 use Core;
@@ -19,6 +21,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btExportPageColumns = array('internalLinkCID');
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
+
+    protected $icon;
 
     public function getBlockTypeDescription()
     {
@@ -83,6 +87,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function view()
     {
+        $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
         $this->set('paragraph', LinkAbstractor::translateFrom($this->paragraph));
         $this->set('linkURL', $this->getLinkURL());
     }
@@ -885,15 +890,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function edit()
     {
         $this->requireAsset('css', 'font-awesome');
-        $classes = $this->getIconClasses();
-
-        // let's clean them up
-        $icons = array('' => t('Choose Icon'));
-        $txt = Core::make('helper/text');
-        foreach ($classes as $class) {
-            $icons[$class] = $txt->unhandle(substr($class, 7));
-        }
-        $this->set('icons', $icons);
     }
 
     public function getSearchableContent()
@@ -916,6 +912,13 @@ class Controller extends BlockController implements UsesFeatureInterface
                 break;
         }
         $args['paragraph'] = LinkAbstractor::translateTo($args['paragraph']);
+        /** @var SanitizeService $security */
+        $security = $this->app->make('helper/security');
+        $args['icon'] = $security->sanitizeString($args['icon']);
+        $args['title'] = $security->sanitizeString($args['title']);
+        $args['titleFormat'] = $security->sanitizeString($args['titleFormat']);
+        $args['internalLinkCID'] = $security->sanitizeInt($args['internalLinkCID']);
+        $args['externalLink'] = $security->sanitizeURL($args['externalLink']);
         unset($args['linkType']);
         parent::save($args);
     }

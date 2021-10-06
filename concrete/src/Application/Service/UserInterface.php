@@ -367,7 +367,7 @@ class UserInterface
     {
         $defaults = [
             'type' => 'success',
-            'icon' => 'fa fa-check-mark',
+            'icon' => 'fas fa-check-square',
             'title' => false,
             'text' => false,
             'form' => false,

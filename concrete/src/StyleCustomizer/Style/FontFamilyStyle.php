@@ -27,8 +27,10 @@ class FontFamilyStyle extends Style
     {
         foreach ($styles as $style) {
             if (isset($style['variable']) && $style['variable'] == $this->getVariable()) {
-                $value = new FontFamilyValue($style['value']['fontFamily']);
-                return $value;
+                if (isset($style['value']['fontFamily']) && $style['value']['fontFamily'] != '') {
+                    $value = new FontFamilyValue($style['value']['fontFamily']);
+                    return $value;
+                }
             }
         }
         return null;

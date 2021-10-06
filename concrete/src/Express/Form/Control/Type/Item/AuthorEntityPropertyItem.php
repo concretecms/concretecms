@@ -10,7 +10,7 @@ class AuthorEntityPropertyItem implements ItemInterface
 
     public function getIcon()
     {
-        return '<i class="fa fa-user"></i>';
+        return '<i class="fas fa-user"></i>';
     }
 
     public function getItemIdentifier()

@@ -92,7 +92,7 @@ class ApprovePageRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
     {
-        return '<i class="fa fa-thumbs-o-up"></i>';
+        return '<i class="fas fa-thumbs-up"></i>';
     }
 
     public function getWorkflowRequestApproveButtonText()
@@ -114,7 +114,7 @@ class ApprovePageRequest extends PageRequest
         }
 
         $span = new Element('i');
-        $span->addClass('fa fa-file');
+        $span->addClass('fas fa-file');
         return $span;
     }
 

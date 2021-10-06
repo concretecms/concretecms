@@ -23,12 +23,12 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="d-grid">
-                    <button data-action="choose-new-form" type="button" class="btn btn-secondary"><i class="fa fa-plus-circle" style="opacity: 0.3"></i> &nbsp; <?=t('New Form'); ?></button>
+                    <button data-action="choose-new-form" type="button" class="btn btn-secondary"><i class="fas fa-plus-circle" style="opacity: 0.3"></i> &nbsp; <?=t('New Form'); ?></button>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div class="d-grid">
-                    <button data-action="choose-existing-form" type="button" class="btn btn-secondary"><i class="fa fa-database" style="opacity: 0.3"></i> &nbsp; <?=t('Existing Express Entity Form'); ?></button>
+                    <button data-action="choose-existing-form" type="button" class="btn btn-secondary"><i class="fas fa-database" style="opacity: 0.3"></i> &nbsp; <?=t('Existing Express Entity Form'); ?></button>
                 </div>
             </div>
         </div>
@@ -248,7 +248,7 @@
     <span class="float-end">
         <a href="javascript:void(0)" class="icon-link"><i style="cursor: move" class="fas fa-arrows-alt"></i></a>
         <a href="javascript:void(0)" class="icon-link" data-action="edit-control"><i class="fas fa-pencil-alt"></i></a>
-        <a href="javascript:void(0)" class="icon-link" data-action="delete-control"><i class="fa fa-trash"></i></a>
+        <a href="javascript:void(0)" class="icon-link" data-action="delete-control"><i class="fas fa-trash-alt"></i></a>
         </span>
     <% if (control.isRequired) { %>
     <span style="margin-right: 20px" class="float-end badge bg-info"><?=t('Required'); ?></span>
@@ -278,7 +278,7 @@
         <?=$form->label('type', t('Answer Type')); ?>
 
         <% if (!id) { %>
-            &nbsp; <i class="fa fa-refresh fa-spin" style="display: none"></i>
+            &nbsp; <i class="fas fa-sync fa-spin" style="display: none"></i>
             <select name="type" class="form-select">
                 <option value=""><?=t('** Choose Field'); ?></option>
             <% _.each(types, function(group) { %>

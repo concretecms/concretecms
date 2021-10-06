@@ -1386,6 +1386,8 @@
       <default value="0"/>
       <notnull/>
     </field>
+    <field name="pThemeSkinIdentifier" type="string">
+    </field>
     <field name="cvActivateDatetime" type="datetime"/>
     <field name="cvPublishDate" type="datetime" />
     <field name="cvPublishEndDate" type="datetime" />

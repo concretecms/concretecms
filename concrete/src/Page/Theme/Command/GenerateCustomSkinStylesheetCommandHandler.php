@@ -3,7 +3,6 @@
 namespace Concrete\Core\Page\Theme\Command;
 
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\StyleCustomizer\Adapter\AdapterFactory;
 use Concrete\Core\StyleCustomizer\Compiler\Compiler;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
@@ -11,11 +10,6 @@ use Concrete\Core\StyleCustomizer\Writer\Writer;
 
 class GenerateCustomSkinStylesheetCommandHandler
 {
-
-    /**
-     * @var AdapterFactory
-     */
-    protected $adapterFactory;
 
     /**
      * @var StyleValueListFactory
@@ -38,19 +32,16 @@ class GenerateCustomSkinStylesheetCommandHandler
     protected $writer;
 
     /**
-     * @param AdapterFactory $adapterFactory
      * @param StyleValueListFactory $styleValueListFactory
      * @param NormalizedVariableCollectionFactory $variableCollectionFactory
      * @param Compiler $compiler
      */
     public function __construct(
-        AdapterFactory $adapterFactory,
         StyleValueListFactory $styleValueListFactory,
         NormalizedVariableCollectionFactory $variableCollectionFactory,
         Compiler $compiler,
         Writer $writer
     ) {
-        $this->adapterFactory = $adapterFactory;
         $this->styleValueListFactory = $styleValueListFactory;
         $this->variableCollectionFactory = $variableCollectionFactory;
         $this->compiler = $compiler;
@@ -61,14 +52,14 @@ class GenerateCustomSkinStylesheetCommandHandler
     {
         $skin = $command->getCustomSkin();
         $theme = Theme::getByID($command->getThemeID());
-        $presetSkin = $theme->getSkinByIdentifier($skin->getPresetSkinStartingPoint());
-        $adapter = $this->adapterFactory->createFromTheme($theme);
+        $customizer = $theme->getThemeCustomizer();
+        $preset = $customizer->getPresetByIdentifier($skin->getPresetStartingPoint());
         $styleValueList = $this->styleValueListFactory->createFromVariableCollection(
-            $theme->getThemeCustomizableStyleList($skin),
+            $customizer->getThemeCustomizableStyleList($preset),
             $skin->getVariableCollection()
         );
         $collection = $this->variableCollectionFactory->createFromStyleValueList($styleValueList);
-        $result = $this->compiler->compileFromSkin($adapter, $presetSkin, $collection);
+        $result = $this->compiler->compileFromPreset($customizer, $preset, $collection);
         $result .= $skin->getCustomCss();
         $this->writer->writeStyles($skin, $result);
     }

@@ -125,7 +125,7 @@ use Concrete\Core\User\Group\GroupType; ?>
         <div class="form-group">
             <div class="form-check">
                 <?=$form->checkbox('gIsAutomated', 1, false)?>
-                <?=$form->label('gIsAutomated',t('This group is automatically entered.') . '<i class="fa fa-question-circle launch-tooltip" title="'.t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.").'"></i>', ['class'=>'form-check-label'])?>
+                <?=$form->label('gIsAutomated',t('This group is automatically entered.') . '<i class="fas fa-question-circle launch-tooltip" title="'.t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.").'"></i>', ['class'=>'form-check-label'])?>
             </div>
         </div>
 

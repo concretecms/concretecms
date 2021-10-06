@@ -65,13 +65,13 @@ class RemoteItem extends ConcreteObject
     {
         switch ($this->getSkillLevel()) {
             case 'beginner':
-                return 'fa fa-cog ccm-marketplace-skill-level-beginner';
+                return 'fas fa-cog ccm-marketplace-skill-level-beginner';
             case 'intermediate':
-                return 'fa fa-cog ccm-marketplace-skill-level-intermediate';
+                return 'fas fa-cog ccm-marketplace-skill-level-intermediate';
             case 'advanced':
-                return 'fa fa-cog ccm-marketplace-skill-level-advanced';
+                return 'fas fa-cog ccm-marketplace-skill-level-advanced';
             case 'bleeding_edge':
-                return 'fa fa-cogs ccm-marketplace-skill-level-bleeding-edge';
+                return 'fas fa-cogs ccm-marketplace-skill-level-bleeding-edge';
         }
     }
     public function getSkillLevelDisplayName()

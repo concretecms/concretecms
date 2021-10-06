@@ -38,7 +38,6 @@ class Aliasing extends BackendInterfaceBlockController
                 $p = new \Permissions($b);
                 if ($p->canAdminBlock() && $c->isMasterCollection()) {
                     $blocks = $this->block->queueForDefaultsAliasing($_POST['addBlock'], $_POST['updateForkedBlocks']);
-                    $processor = $this->app->make(BatchProcessor::class);
                     $batch = Batch::create(t('Update Defaults'), function() use ($blocks) {
                         foreach ($blocks as $b) {
                             if ($b['action'] == 'update_forked_alias') {

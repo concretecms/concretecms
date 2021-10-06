@@ -24,7 +24,7 @@ $class = 'ccm-area-footer';
 ?>
     </div>
     <div class="<?=$class?> ccm-ui">
-        <div class="ccm-area-footer-handle" data-area-menu-handle="<?=$a->getAreaID()?>" id="area-menu-footer-<?=$a->getAreaID()?>"><span><i class="fa fa-share-alt"></i> <?=$a->getAreaDisplayName()?></span></div>
+        <div class="ccm-area-footer-handle" data-area-menu-handle="<?=$a->getAreaID()?>" id="area-menu-footer-<?=$a->getAreaID()?>"><span><i class="fas fa-share-alt"></i> <?=$a->getAreaDisplayName()?></span></div>
         <div class="popover fade" data-area-menu="area-menu-a<?=$a->getAreaID()?>">
             <div class="popover-arrow"></div>
             <div class="popover-inner">

@@ -13,7 +13,7 @@
             <label for="name" ><?php echo t('Name'); ?></label>
             <div class="input-group">
                 <?php echo $form->text('name', array('autofocus' => 'autofocus', 'autocomplete' => 'off', 'required' => 'required')); ?>
-                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
 
@@ -21,7 +21,7 @@
             <label for="redirect"><?php echo t('Redirect'); ?></label>
             <div class="input-group">
                 <?php echo $form->url('redirect', array('autocomplete' => 'off')); ?>
-                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
 

@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="mb-3">
     <a href="<?=URL::to('/dashboard/boards/designer')?>">
-        <i class="fa fa-arrow-up"></i> <?=t('Back to Library')?>
+        <i class="fas fa-arrow-up"></i> <?=t('Back to Library')?>
     </a>
 </div>
 

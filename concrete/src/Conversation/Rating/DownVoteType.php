@@ -8,7 +8,7 @@ class DownVoteType extends Type
 {
     public function outputRatingTypeHTML()
     {
-        echo '<a href="javascript:void(0)" class="conversation-rate-message ccm-conversation-message-control-icon" data-conversation-rating-type="down_vote"><i class="fa fa-thumbs-down"></i></a>';
+        echo '<a href="javascript:void(0)" class="conversation-rate-message ccm-conversation-message-control-icon" data-conversation-rating-type="down_vote"><i class="fas fa-thumbs-down"></i></a>';
     }
 
     public function rateMessage()

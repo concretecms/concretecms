@@ -108,7 +108,7 @@ $dh = $app->make(Date::class);
                     <?php foreach ($files as $f): ?>
                         <tr id="fID_<?php echo $f->getFileID() ?>" class="">
                             <td>
-                                <i class="fa fa-arrows-v"></i>
+                                <i class="fas fa-arrows-alt-v"></i>
                             </td>
 
                             <td class="ccm-file-manager-search-results-thumbnail">
@@ -321,7 +321,7 @@ $dh = $app->make(Date::class);
                 <a class="btn btn-secondary btn-sm ms-2"
                    href="<?php echo Url::to('/dashboard/files/add_set') ?>"
                    title="<?php echo t('Add File Set') ?>">
-                    <?php echo t('Add File Set') ?> <i class="fa fa-plus-circle"></i>
+                    <?php echo t('Add File Set') ?> <i class="fas fa-plus-circle"></i>
                 </a>
             </div>
         </form>

@@ -1,0 +1,29 @@
+div.theme-atomik {
+  div.ccm-block-hero-image {
+
+    div.ccm-block-hero-image-cover {
+      background-color: $hero-image-cover-bg;
+    }
+
+    div.ccm-block-hero-image-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: $hero-image-title-color;
+
+      h1 {
+        font-family: $display-font-family;
+        @include font-size($hero-image-title-font-size);
+        font-weight: 500;
+        margin-bottom: 0;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        text-align: center;
+      }
+
+    }
+
+  }
+}

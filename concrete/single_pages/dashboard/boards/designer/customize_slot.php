@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                             <span class="badge bg-light me-3" v-if="contentObject.title">{{contentObject.title}}</span>
                         </span>
 
-                        <i class="ms-2 fa fa-spinner fa-spin" v-if="!loadedTemplateOptions.includes(index)"></i>
+                        <i class="ms-2 fas fa-spinner fa-spin" v-if="!loadedTemplateOptions.includes(index)"></i>
                     </div>
                 </div>
             </div>

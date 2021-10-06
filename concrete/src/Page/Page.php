@@ -38,6 +38,7 @@ use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
@@ -1942,6 +1943,17 @@ class Page extends Collection implements CategoryMemberInterface,
         $db = Database::connection();
         $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl->getThemeID(), $this->cID, $this->vObj->getVersionID()]);
         $this->themeObject = $pl;
+    }
+
+    /**
+     * Set the theme skin of this page.
+     *
+     * @param SkinInterface $skin
+     */
+    public function setThemeSkin(SkinInterface $skin)
+    {
+        $db = Database::connection();
+        $db->executeQuery('update CollectionVersions set pThemeSkinIdentifier = ? where cID = ? and cvID = ?', [$skin->getIdentifier(), $this->cID, $this->vObj->getVersionID()]);
     }
 
     /**
@@ -3890,6 +3902,28 @@ EOT
                 $tc->_duplicateAll($tc, $nc, $preserveUserID, $site);
             }
         }
+    }
+
+    public function getPageSkin()
+    {
+        $skinIdentifier = null;
+        if (isset($this->vObj->pThemeSkinIdentifier)) {
+            $skinIdentifier = $this->vObj->pThemeSkinIdentifier;
+        } else {
+            $site = $this->getSite();
+            if (!$site) {
+                $site = Core::make('site')->getSite();
+            }
+            if ($site->getThemeSkinIdentifier()) {
+                $skinIdentifier = $site->getThemeSkinIdentifier();
+            }
+        }
+        if (!$skinIdentifier) {
+            $skinIdentifier = SkinInterface::SKIN_DEFAULT;
+        }
+        $theme = $this->getCollectionThemeObject();
+        $skin = $theme->getSkinByIdentifier($skinIdentifier);
+        return $skin;
     }
 
     /**

@@ -19,7 +19,7 @@ $packageService = $app->make(\Concrete\Core\Package\PackageService::class);
                     <h1><?=$profile->getUserName()?></h1>
                     <div class="ccm-profile-statistics">
                         <div class="ccm-profile-statistics-item">
-                            <i class="far fa-calendar-alt"></i> <?=t(/*i18n: %s is a date */'Joined on %s', $dh->formatDate($profile->getUserDateAdded(), true))?>
+                            <i class="fas fa-calendar-alt"></i> <?=t(/*i18n: %s is a date */'Joined on %s', $dh->formatDate($profile->getUserDateAdded(), true))?>
                         </div>
                     </div>
 
@@ -28,8 +28,8 @@ $packageService = $app->make(\Concrete\Core\Package\PackageService::class);
                     <?php if ($canEdit) {
                         ?>
                         <div class="btn-group">
-                            <a href="<?=$view->url('/account/edit_profile')?>" class="btn btn-lg btn-outline-secondary"><i class="fa fa-cog"></i> <?=t('Edit')?></a>
-                            <a href="<?=$view->url('/')?>" class="btn btn-lg btn-outline-secondary"><i class="fa fa-home"></i> <?=t('Home')?></a>
+                            <a href="<?=$view->url('/account/edit_profile')?>" class="btn btn-lg btn-outline-secondary"><i class="fas fa-cog"></i> <?=t('Edit')?></a>
+                            <a href="<?=$view->url('/')?>" class="btn btn-lg btn-outline-secondary"><i class="fas fa-home"></i> <?=t('Home')?></a>
                         </div>
                         <?php
                     } else {

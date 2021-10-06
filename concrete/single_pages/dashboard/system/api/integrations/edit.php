@@ -17,7 +17,7 @@ $consentType = $client->getConsentType();
             <label for="name" ><?php echo t('Name'); ?></label>
             <div class="input-group">
                 <?php echo $form->text('name', $client->getName(), array('autofocus' => 'autofocus', 'autocomplete' => 'off', 'required' => 'required')); ?>
-                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
 
@@ -25,7 +25,7 @@ $consentType = $client->getConsentType();
             <label for="redirect"><?php echo t('Redirect'); ?></label>
             <div class="input-group">
                 <?php echo $form->url('redirect', implode('|', (array) $client->getRedirectUri()), array('autocomplete' => 'off')); ?>
-                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
             <span class="help-block"><?= t('Separate multiple redirect urls using %s (pipe) characters', '<code>|</code>') ?></span>
         </div>

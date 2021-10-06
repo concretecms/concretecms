@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
- * @var $provider \Concrete\Core\User\Search\SearchProvider
+ * @var $provider \Concrete\Core\Express\Search\SearchProvider
  */
 $available = $provider->getAvailableColumnSet();
 $coreProperties = array();

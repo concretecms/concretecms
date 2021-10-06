@@ -29,7 +29,7 @@ if ($this->controller->getTask() == 'translate_po') {
       var saveToFileToken = <?php echo json_encode($app->make('token')->generate('export_translations')); ?>;
       $('.ccm-save-to-file').on('click', function() {
         var $btn = $(this);
-        $btn.addClass('disabled').css('width', $btn.outerWidth() + 'px').html('<span class="fa fa-spinner fa-spin"></span>');
+        $btn.addClass('disabled').css('width', $btn.outerWidth() + 'px').html('<span class="fas fa-spinner fa-spin"></span>');
         $.ajax({
           cache: false,
           dataType: 'json',
@@ -96,7 +96,7 @@ if ($this->controller->getTask() == 'translate_po') {
                                 <?php
                                 echo $pc->getLocale();
                                 if ($pc->getLocale() != $defaultSourceLocale) {
-                                    ?><a href="#" class="icon-link launch-tooltip" title="<?php echo REL_DIR_LANGUAGES_SITE_INTERFACE; ?>/<?php echo $pc->getLocale(); ?>.mo"><i class="fa fa-question-circle"></i></a><?php
+                                    ?><a href="#" class="icon-link launch-tooltip" title="<?php echo REL_DIR_LANGUAGES_SITE_INTERFACE; ?>/<?php echo $pc->getLocale(); ?>.mo"><i class="fas fa-question-circle"></i></a><?php
                                 }
                                 ?>
                             </td>

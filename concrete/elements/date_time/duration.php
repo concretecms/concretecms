@@ -67,7 +67,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
 
     <div class="ccm-date-time-duration-wrapper">
 
-        <a href="javascript:void(0)" data-delete="duration" class="ccm-date-time-duration-delete icon-link"><i class="fa fa-minus-circle"></i></a>
+        <a href="javascript:void(0)" data-delete="duration" class="ccm-date-time-duration-delete icon-link"><i class="fas fa-minus-circle"></i></a>
 
         <input type="hidden" name="<%=options.namespace%>_repetitionSetID[]" value="<%=repetition.setID%>">
         <input type="hidden" name="<%=options.namespace%>_repetitionID_<%=repetition.setID%>" value="<%=repetition.repetitionID%>">
@@ -78,7 +78,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                     <div class="row">
                         <div class="col-sm-12">
                             <label class="form-label"><?= tc('Start date', 'From')  ?></label> <i
-                                class="fa fa-info-circle launch-tooltip"
+                                class="fas fa-info-circle launch-tooltip"
                                 title="<?php echo t('Choose Repeat Event and choose a frequency to make this event recurring.') ?>"></i>
                         </div>
                     </div>

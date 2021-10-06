@@ -39,8 +39,8 @@ $u = $app->make(Concrete\Core\User\User::class);
             <td><?= $locale->getLanguageText() ?></td>
             <td><?= $locale->getLocale() ?></td>
             <td style="white-space: nowrap">
-                <a data-dialog-title="<?= t('Delete Locale') ?>" data-dialog="delete-section-<?= $locale->getLocaleID() ?>" href="#" class="icon-link"><i class="fa fa-trash"></i></a>
-                <a data-dialog-title="<?= t('Change Locale') ?>" data-dialog="change-section-<?= $locale->getLocaleID() ?>" href="#" class="icon-link"><i class="fa fa-edit"></i></a>
+                <a data-dialog-title="<?= t('Delete Locale') ?>" data-dialog="delete-section-<?= $locale->getLocaleID() ?>" href="#" class="icon-link"><i class="fas fa-trash-alt"></i></a>
+                <a data-dialog-title="<?= t('Change Locale') ?>" data-dialog="change-section-<?= $locale->getLocaleID() ?>" href="#" class="icon-link"><i class="fas fa-edit"></i></a>
             </td>
         </tr>
         <?php
@@ -136,7 +136,7 @@ foreach ($locales as $locale) {
         <div class="form-check">
             <?= $form->checkbox('alwaysTrackUserLocale', 1, $alwaysTrackUserLocale) ?>
             <label>
-                <span><?= t('Always track user locale.') ?> <i class="launch-tooltip control-label fa fa-question-circle" title="<?= h(t('Tracking user locales requires the creation of session cookies. Disable this option to avoid tracking user locale in case the session cookie is not yet set.')) ?>"></i></span>
+                <span><?= t('Always track user locale.') ?> <i class="launch-tooltip control-label fas fa-question-circle" title="<?= h(t('Tracking user locales requires the creation of session cookies. Disable this option to avoid tracking user locale in case the session cookie is not yet set.')) ?>"></i></span>
             </label>
         </div>
     </div>

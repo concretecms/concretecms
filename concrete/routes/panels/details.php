@@ -32,5 +32,7 @@ $router->all('/ccm/system/panels/details/page/seo', '\Concrete\Controller\Panel\
 $router->all('/ccm/system/panels/details/page/seo/submit', '\Concrete\Controller\Panel\Detail\Page\Seo::submit');
 $router->all('/ccm/system/panels/details/page/versions', '\Concrete\Controller\Panel\Detail\Page\Versions::view');
 $router->all('/ccm/system/panels/details/page/devices', '\Concrete\Controller\Panel\Page\Devices::detail');
-$router->all('/ccm/system/panels/details/theme/preview/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\Preview::view');
-$router->all('/ccm/system/panels/details/theme/do_preview/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\Preview::doPreview');
+$router->all('/ccm/system/panels/details/theme/preview_preset/{pThemeID}/{presetIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewPreset::view');
+$router->all('/ccm/system/panels/details/theme/preview_preset_iframe/{pThemeID}/{presetIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewPreset::viewIframe');
+$router->all('/ccm/system/panels/details/theme/preview_skin/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewSkin::view');
+$router->all('/ccm/system/panels/details/theme/preview_skin_iframe/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewSkin::viewIframe');

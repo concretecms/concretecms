@@ -25,7 +25,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
             <?=$publishTitle?>
         </button>
         <button id="ccm-check-in-schedule" type="button" class="pe-3 ps-3 btn btn-primary" <?= $publishAction ?: 'disabled' ?>>
-            <i class="far fa-clock"></i>
+            <i class="fas fa-clock"></i>
         </button>
     </div>
     <div id="ccm-check-in-schedule-wrapper" style="display:none;">
@@ -36,7 +36,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
         <?php if (count($publishErrors->getList())) { ?>
             <div class="small">
             <?php foreach ($publishErrors->getList() as $error): ?>
-                <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
+                <div class="text-warning"><strong><i class="fas fa-exclamation-triangle"></i> <?=$error?></strong></div>
                 <br/>
             <?php endforeach; ?>
             </div>
@@ -47,7 +47,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
             <div class="small">
                 <div class="text-info">
                     <strong>
-                        <i class="fa fa-question-circle"></i>
+                        <i class="fas fa-question-circle"></i>
                         <?=t('You can specify page name, page location and attributes from the ' .
                              '<a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="%s" ' .
                              'data-panel-transition="fade">Page Compose interface</a>.',

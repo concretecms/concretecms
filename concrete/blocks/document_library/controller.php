@@ -595,7 +595,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             case 'edit_properties':
                 $fp = new \Permissions($file);
                 if ($fp->canEditFileProperties()) {
-                    return sprintf('<a href="#" data-document-library-edit-properties="%s" class="ccm-block-document-library-icon"><i class="fa fa-pencil"></i></a>',
+                    return sprintf('<a href="#" data-document-library-edit-properties="%s" class="ccm-block-document-library-icon"><i class="fas fa-pencil-alt"></i></a>',
                         $file->getFileID());
                 }
                 break;
@@ -904,7 +904,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             case 'thumbnail':
             case 'image':
                 return sprintf(
-                    '<i class="fa fa-folder ccm-block-document-library-icon-folder" aria-hidden="true"></i><span class="sr-only">%s</span>',
+                    '<i class="fas fa-folder ccm-block-document-library-icon-folder" aria-hidden="true"></i><span class="sr-only">%s</span>',
                     t('folder icon')
                 );
             case 'title':

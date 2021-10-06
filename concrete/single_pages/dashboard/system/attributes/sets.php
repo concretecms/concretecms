@@ -140,7 +140,7 @@ $txt = Loader::helper('text'); ?>
                 ?>
 				<li id="asID_<?php echo $asl->getAttributeSetID()?>" class="<?= $numSets > 1 ? ' ccm-item-select-list-sort' : '' ?>">
                     <a href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>">
-                        <i class="fa fa-cubes"></i>
+                        <i class="fas fa-cubes"></i>
                         <?php echo $asl->getAttributeSetDisplayName()?>
                     </a>
                     <?php
@@ -200,7 +200,7 @@ $txt = Loader::helper('text'); ?>
                     ?>
 					<li class="item-select-list" id="acID_<?php echo $cat->getAttributeKeyCategoryID()?>">
 						<a href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>">
-                            <i class="fa fa-cubes"></i>
+                            <i class="fas fa-cubes"></i>
                             <?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?>
                         </a>
 					</li>

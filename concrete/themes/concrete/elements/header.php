@@ -61,12 +61,12 @@ $config = $site->getConfigRepository();
         </li>
         <li class="float-end">
             <a href="<?=URL::to('/')?>">
-                <i class="fa fa-home"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?=tc('toolbar', 'Return to Website') ?></span>
+                <i class="fas fa-home"></i><span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?=tc('toolbar', 'Return to Website') ?></span>
             </a>
         </li>
         <li class="float-end">
             <a href="<?=URL::to('/account')?>">
-                <i class="fa fa-user"></i>
+                <i class="fas fa-user"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
                     <?=t('My Account') ?>
                 </span>

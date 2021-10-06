@@ -10,6 +10,7 @@ jobs:
     env:
       LC_ALL: en_US.UTF-8
       CODE_COVERAGE: n
+    continue-on-error: ${{ matrix.php-version == '8.1' }}
 
     runs-on: ${{ matrix.operating-system }}
     services:
@@ -44,6 +45,9 @@ jobs:
             operating-system: "ubuntu-latest"
             dependencies: "locked"
             composer: "composer:v1, prestissimo"
+          - php-version: 8.1
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
 
     steps:
       - name: "Checkout"
@@ -79,19 +83,23 @@ jobs:
       - name: "Install highest dependencies"
         if: ${{ matrix.dependencies == 'highest' }}
         run: |
-          composer install --no-interaction --no-progress --no-suggest
-          # Run twice for mediawiki merge
           composer update --no-interaction --no-progress --no-suggest
 
       - name: "Install locked dependencies"
         if: ${{ matrix.dependencies == 'locked' }}
         run: |
           composer install --no-interaction --no-progress --no-suggest
+        # Since continue on error still marks a job as failed.
+        # We also have to add continue-on-error here so it doesnt X the whole build
+        # See https://github.com/actions/toolkit/issues/399
+        continue-on-error: ${{ matrix.php-version == '8.1' }}
 
 
       - name: "Tests"
         if: env.CODE_COVERAGE == 'n'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit
+        # Same as above
+        continue-on-error: ${{ matrix.php-version == '8.1' }}
 
       - name: "Tests with coverage"
         if: env.CODE_COVERAGE == 'y'

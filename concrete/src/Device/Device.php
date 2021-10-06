@@ -202,19 +202,19 @@ class Device implements DeviceInterface
         $type = $this->getType();
 
         if ($type == self::UNKNOWN) {
-            return 'ccm-device-icon-unknown fa fa-question';
+            return 'ccm-device-icon-unknown fas fa-question';
         }
 
         if ($this->isMobile()) {
-            return 'ccm-device-icon-mobile fa fa-mobile';
+            return 'ccm-device-icon-mobile fas fa-mobile-alt';
         }
 
         if ($this->isTablet()) {
-            return 'ccm-device-icon-tablet fa fa-tablet';
+            return 'ccm-device-icon-tablet fas fa-tablet';
         }
 
         if ($this->isDesktop()) {
-            return 'ccm-device-icon-desktop fa fa-desktop';
+            return 'ccm-device-icon-desktop fas fa-desktop';
         }
     }
 

@@ -33,7 +33,7 @@ if (!empty($pages)) {
     <div class="form-group">
         <?= $form->label('keywords', t('Search')) ?>
         <div class="input-group">
-            <span class="input-group-text"><i class="fa fa-search"></i></span>
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
             <?= $form->search('keywords', $searchRequest['keywords'], ['placeholder' => t('Keywords')]) ?>
         </div>
     </div>

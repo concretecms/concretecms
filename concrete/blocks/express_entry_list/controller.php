@@ -143,7 +143,8 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                 $fieldManager = $this->getSearchFieldManager($entity);
                 $fieldSelectorElement = new SearchFieldSelector($fieldManager, $this->getActionURL('add_search_field'));
-
+                $fieldSelectorElement->setIncludeJavaScript(true);
+                
                 $query = new Query();
                 if ($this->filterFields) {
                     $filterFields = unserialize($this->filterFields);

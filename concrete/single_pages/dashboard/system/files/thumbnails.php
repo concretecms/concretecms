@@ -36,14 +36,14 @@ if (isset($type)) {
             <?= $form->label('ftTypeHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : [])) ?>
-                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeName', t('Name')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeName', $type->getName(), ['required' => 'required', 'maxlength' => '255']) ?>
-                <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
@@ -79,7 +79,7 @@ if (isset($type)) {
                     <?= t('Create animated thumbnails for animated images') ?>
                     <span class="small text-muted" id="ftKeepAnimations-warning" <?= $type->isKeepAnimations() ? '' : ' style="display: none"' ?>>
                         <br />
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                        <i class="fas fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
                         <?php
                         if ($manipulationLibrarySupportsAnimations) {
                             ?>

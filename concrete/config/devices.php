@@ -11,6 +11,18 @@ return [
 
     // APPLE
 
+    /* iPhone 13, 6.1" Super Retina XDR, 2532x1170 @3x */
+    'iphone13' => [
+        'type' => DeviceType::MOBILE,
+        'name' => 'iPhone 13',
+        'class' => '\Concrete\Core\Device\Apple\IPhone\IPhone13Device',
+        'width' => 2289, // Safe area
+        'height' => 1170,
+        'pixel_ratio' => 3,
+        'default_orientation' => 'portrait',
+        'agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+    ],
+
     /* iPhone 6, 1334x750 @2x */
     'iphone6' => [
         'type' => DeviceType::MOBILE,
@@ -36,16 +48,16 @@ return [
     ],
 
     /* iPhone 5, 1136x640 @2x */
-    'iphone5' => [
-        'type' => DeviceType::MOBILE,
-        'name' => 'iPhone 5s',
-        'class' => '\Concrete\Core\Device\Apple\IPhone\IPhone5Device',
-        'width' => 1136,
-        'height' => 640,
-        'pixel_ratio' => 2,
-        'default_orientation' => 'portrait',
-        'agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4',
-    ],
+//    'iphone5' => [
+//        'type' => DeviceType::MOBILE,
+//        'name' => 'iPhone 5s',
+//        'class' => '\Concrete\Core\Device\Apple\IPhone\IPhone5Device',
+//        'width' => 1136,
+//        'height' => 640,
+//        'pixel_ratio' => 2,
+//        'default_orientation' => 'portrait',
+//        'agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_1_2 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B440 Safari/600.1.4',
+//    ],
 
     /* iPad, 2048x1536 @2x*/
     'ipad' => [

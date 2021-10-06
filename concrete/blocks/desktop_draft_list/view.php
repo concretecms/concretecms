@@ -2,7 +2,7 @@
 
 <div class="ccm-block-desktop-draft-list">
     <h3><?= t('Page Drafts'); ?>
-        <i class="ccm-block-desktop-draft-list-for-me-loader fa fa-refresh fa-spin pull-right hidden"></i>
+        <i class="ccm-block-desktop-draft-list-for-me-loader fas fa-sync fa-spin pull-right hidden"></i>
     </h3>
     <?php if (!empty($drafts)) {
     ?>

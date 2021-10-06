@@ -49,7 +49,7 @@ $fileManager = $app->make(FileManager::class);
             </small>
         </label>
 
-        <i class="fa fa-question-circle launch-tooltip" title=""
+        <i class="fas fa-question-circle launch-tooltip" title=""
            data-original-title="<?php echo t('The image hover effect requires constraining the image size.'); ?>"></i>
 
         <?php echo $fileManager->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo); ?>

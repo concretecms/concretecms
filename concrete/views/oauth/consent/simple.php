@@ -35,7 +35,7 @@ foreach ($auth->getScopes() as $scope) {
                     foreach ($mainScopes as $scope) {
                         ?>
                         <dd style="border: solid 1px rgba(255,255,255,0.2); border-width: 1px 0 0; padding: 10px">
-                            <i class="fa fa-check-square"></i>
+                            <i class="fas fa-check-square"></i>
                             <span style="padding: 0 10px"><?= h($scope->getDescription()) ?></span>
                         </dd>
                         <?php

@@ -116,7 +116,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                             <label class="ccm-fancy-checkbox">
                                 <?php echo $form->checkbox("", $item->getItem()->getTreeNodeId(), $item->isFavoredItem(), ["class" => "ccm-favorite-folder-switch"]); ?>
                                 <i class="fas fa-star checked"></i>
-                                <i class="far fa-star unchecked"></i>
+                                <i class="fas fa-star unchecked"></i>
                             </label>
                         <?php }?>
                     </td>
