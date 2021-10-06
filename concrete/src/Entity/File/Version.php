@@ -1503,6 +1503,16 @@ class Version implements ObjectInterface
                             if ($config->get('concrete.misc.basic_thumbnailer_generation_strategy') == 'async') {
                                 $rescanFileCommand = new GenerateThumbnailAsyncCommand($file->getFileID(), $this->getFileVersionID(), $type->getHandle());
                                 $app->executeCommand($rescanFileCommand);
+
+                                if ($type->getHandle() == $config->get('concrete.icons.file_manager_listing.handle') && !$this->fvHasListingThumbnail) {
+                                    $this->fvHasListingThumbnail = true;
+                                    $this->save();
+                                }
+
+                                if ($type->getHandle() == $config->get('concrete.icons.file_manager_detail.handle') && !$this->fvHasDetailThumbnail) {
+                                    $this->fvHasDetailThumbnail = true;
+                                    $this->save();
+                                }
                             } else {
                                 $this->generateThumbnail($type);
                             }
@@ -1774,12 +1784,22 @@ class Version implements ObjectInterface
             $app = Application::getFacadeApplication();
             $config = $app->make('config');
             if ($this->fvHasDetailThumbnail) {
+                $location = $this->getFile()->getFileStorageLocationObject();
+                $filesystem = $location->getFileSystemObject();
                 $type = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
-                $result = '<img src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
-                if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
-                    $result .= ' srcset="' . $this->getThumbnailURL($type->getDoubledVersion()) . ' 2x"';
+
+                if ($filesystem->has($type->getBaseVersion()->getFilePath($this))) {
+                    $result = '<img src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+                    if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
+                        $result .= ' srcset="' . $this->getThumbnailURL($type->getDoubledVersion()) . ' 2x"';
+                    }
+                    $result .= ' />';
+                } else {
+                    /** @var ThumbnailPlaceholderService $thumbnailPlaceholderService */
+                    $thumbnailPlaceholderService = $app->make(ThumbnailPlaceholderService::class);
+                    $result = $thumbnailPlaceholderService->getThumbnailPlaceholder($this, $type->getBaseVersion());
                 }
-                $result .= ' />';
+
             } else {
                 $image = $app->make('html/image', ['f' => $this->getFile()]);
                 $tag = $image->getTag();
