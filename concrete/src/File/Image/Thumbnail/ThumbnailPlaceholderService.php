@@ -42,7 +42,8 @@ class ThumbnailPlaceholderService
                 "style" => sprintf(
                     "max-width: %s;",
                     (string)$width
-                )
+                ),
+                "class" => "placeholder"
             ]
         );
     }
@@ -65,7 +66,7 @@ class ThumbnailPlaceholderService
     )
     {
         $defaults = [
-            "class" => "ccm-image-wrapper",
+            "class" => "ccm-image-wrapper placeholder-glow",
             "data-thumbnail-type-handle" => $thumbnailType->getHandle(),
             "data-file-id" => (string)$fileVersion->getFileID(),
             "data-file-version-id" => (string)$fileVersion->getFileVersionID()
