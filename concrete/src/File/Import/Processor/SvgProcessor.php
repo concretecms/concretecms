@@ -112,7 +112,7 @@ class SvgProcessor implements ValidatorInterface, PreProcessorInterface
      */
     public function shouldValidate(ImportingFile $file, ImportOptions $options)
     {
-        return $this->getAction() === static::ACTION_SANITIZE && ($file->getFileType()->isSVG()) || $file->getMimeType() === "image/svg+xml";
+        return $this->getAction() !== static::ACTION_DISABLED && ($file->getFileType()->isSVG()) || $file->getMimeType() === "image/svg+xml";
     }
 
     /**
@@ -152,7 +152,7 @@ class SvgProcessor implements ValidatorInterface, PreProcessorInterface
      */
     public function shouldPreProcess(ImportingFile $file, ImportOptions $options)
     {
-        return $this->getAction() === static::ACTION_SANITIZE && $file->getFileType()->isSVG();
+        return $this->getAction() === static::ACTION_SANITIZE && ($file->getFileType()->isSVG()) || $file->getMimeType() === "image/svg+xml";
     }
 
     /**
