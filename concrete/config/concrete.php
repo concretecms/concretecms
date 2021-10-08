@@ -765,7 +765,7 @@ return [
         // Community Translation instance offering concrete5 translations
         'community_translation' => [
             // API entry point of the Community Translation instance
-            'entry_point' => 'http://translate.concrete5.org/api',
+            'entry_point' => 'https://translate.concreteorg.org/api',
             // API Token to be used for the Community Translation instance
             'api_token' => '',
             // Languages below this translation progress won't be considered
@@ -773,15 +773,15 @@ return [
             // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
             // Base URI for package details
-            'package_url' => 'https://translate.concrete5.org/translate/package',
+            'package_url' => 'https://translate.concreteorg.org/translate/package',
         ],
     ],
     'urls' => [
-        'concrete5' => 'http://www.concrete5.org',
-        'concrete5_secure' => 'https://www.concrete5.org',
+        'concrete5' => 'http://marketplace.concretecms.com',
+        'concrete5_secure' => 'https://marketplace.concretecms.com',
         'newsflow' => 'http://newsflow.concrete5.org',
-        'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
-        'privacy_policy' => '//www.concrete5.org/legal/privacy-policy',
+        'background_feed' => '//backgroundimages.concrete5.org/wallpaper', // staying at concrete5.org for the momen
+        'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
