@@ -1,11 +1,8 @@
 <?php
-namespace Concrete\Controller\Backend\Board\Instance;
+namespace Concrete\Controller\Backend\Board\Instance\Rules;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\Board\Instance\Slot\Menu\Manager;
-use Concrete\Core\Board\Instance\Slot\RenderedSlot;
-use Concrete\Core\Board\Instance\Slot\SlotRenderer;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
 use Concrete\Core\Page\Theme\Theme;
@@ -13,10 +10,10 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\View\View;
 use Doctrine\ORM\EntityManager;
 
-class PreviewRule extends Controller
+class Preview extends Controller
 {
 
-    protected $viewPath = '/backend/board/instance/preview_rule';
+    protected $viewPath = '/backend/board/instance/rules/preview';
 
     public function __construct()
     {

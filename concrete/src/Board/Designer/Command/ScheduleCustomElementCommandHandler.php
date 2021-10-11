@@ -52,9 +52,9 @@ class ScheduleCustomElementCommandHandler
         $element = $command->getElement();
         $batchIdentifier = $this->uuidGenerator->generate($this->entityManager, $element);
         foreach($command->getInstances() as $instance) {
-            $startDate = new \DateTime($command->getStartDate(), new \DateTimeZone($command->getTimezone()));
-            if ($command->getEndDate()) {
-                $endDate = new \DateTime($command->getEndDate(), new \DateTimeZone($command->getTimezone()));
+            $startDate = new \DateTime($command->getStartDateTime(), new \DateTimeZone($command->getTimezone()));
+            if ($command->getEndDateTime()) {
+                $endDate = new \DateTime($command->getEndDateTime(), new \DateTimeZone($command->getTimezone()));
             }
             $block = $element->createBlock();
             $boardCommand = new AddDesignerSlotToBoardCommand();
@@ -81,7 +81,7 @@ class ScheduleCustomElementCommandHandler
             $logger->info(t('Element {elementName} scheduled for {slot} in instance {instanceID} successfully with start date {startDate} and lock type {lockType}'), [
                 'slot' => $command->getSlot(),
                 'instanceID' => $instance->getBoardInstanceID(),
-                'startDate' => $command->getStartDate(),
+                'startDate' => $command->getStartDateTime(),
                 'elementName' => $element->getElementName(),
                 'lockType' => $command->getLockType()
             ]);

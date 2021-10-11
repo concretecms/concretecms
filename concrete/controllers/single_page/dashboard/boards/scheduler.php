@@ -85,6 +85,7 @@ class Scheduler extends DashboardSitePageController
             $this->error->add($this->token->getErrorMessage());
         }
         if (!$this->error->has()) {
+
             $command = new ScheduleCustomElementCommand($element);
             $instances = [];
             foreach((array) $this->request->request->get('instances') as $instanceId) {
@@ -101,8 +102,11 @@ class Scheduler extends DashboardSitePageController
             $command->setSlot((int) $this->request->request->get('slot'));
             $command->setLockType($this->request->request->get('lockType'));
             $command->setTimezone($this->request->request->get('timezone'));
-            $command->setStartDate($this->request->request->get('start'));
-            $command->setEndDate($this->request->request->get('end'));
+            $startDateTime = $this->request->request->get('startDate') . ' ' . $this->request->request->get('startTime');
+            $endDateTime = $this->request->request->get('endDate') . ' ' . $this->request->request->get('endTime');
+            $command->setStartDateTime($startDateTime);
+            $command->setEndDateTime($endDateTime);
+
             $this->app->executeCommand($command);
 
             $this->flash('success', t('Board element scheduled successfully.'));
