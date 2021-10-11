@@ -1,6 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-
+$form = Core::make('helper/form');
+$date = Core::make('date')
 ?>
 
 <div class="ccm-ui">
@@ -74,6 +75,55 @@ defined('C5_EXECUTE') or die("Access Denied.");
             </div>
         </div>
 
+        <div v-show="currentStep == 'schedule'">
+            <form autocomplete="off">
+                <div class="mb-3">
+                    <label class="form-label"><?=t('From')?></label>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <v-date-picker
+                                    :masks="{'input': 'YYYY-MM-DD'}"
+                                    v-model='startDate'
+                                    :input-props='{name: "startDate", class: ["form-control", {"is-invalid": invalidStartDate}]}'
+                            ></v-date-picker>
+                        </div>
+                        <div class="col-6">
+                            <input type="time" class="form-control" v-model="startTime">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><?=t('To')?></label>
+                    <div class="row">
+                        <div class="col-6">
+                            <v-date-picker
+                                    :masks="{'input': 'YYYY-MM-DD'}"
+                                    v-model='endDate'
+                                    :input-props='{name: "end", class: ["form-control", {"is-invalid": invalidEndDate}]}'
+                            ></v-date-picker>
+                        </div>
+                        <div class="col-6">
+                            <input type="time" class="form-control" v-model="endTime">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <?= $form->label('timezone', t('Time Zone')); ?>
+                            <?= $form->select('timezone', $date->getTimezones(), ['v-model' => 'timezone']) ?>
+                        </div>
+                        <div class="col-6">
+                            <label class="control-label form-label" for="chooseSlot"><?= t('Slot') ?></label>
+                            <select class="form-select" id="chooseSlot" v-model="slot">
+                                <option v-for="currentSlot in instance.board.template.slots" :value="currentSlot">{{currentSlot}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div class="dialog-buttons">
             <button class="btn btn-secondary" @click="handleCancelButton">{{cancelButtonText}}</button>
             <button type="button" @click="handleSaveButton"
@@ -96,6 +146,48 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 this.activeDataSource = this.dataSources[0].id
             },
             methods: {
+                createRule() {
+                    var my = this
+                    new ConcreteAjaxRequest({
+                        url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/boards/custom_slot/save_template?boardInstanceID=' +
+                            my.boardInstanceID,
+                        method: 'POST',
+                        data: {
+                            // Comment this out because with it we're not turning this into a draft post.
+                            // Uncomment this when we figure out a way to determine whether we're using the schedule functionality
+                            // or the create in place functionality
+                            //slot: my.slot,
+                            slot: 0,
+                            selectedTemplateOption: my.templateOptions[my.selectedTemplateOption]
+                        },
+                        success: function (r) {
+                            my.currentStep = 'schedule'
+                            my.currentRule = r
+                        }
+                    })
+                },
+                scheduleRule() {
+                    var my = this
+                    if (my.currentRule) {
+                        new ConcreteAjaxRequest({
+                            url: CCM_DISPATCHER_FILENAME + '/ccm/system/board/instance/save_rule/' +
+                                my.currentRule.id,
+                            method: 'POST',
+                            data: {
+                                ccm_token: '<?=Core::make('token')->generate('save_rule')?>',
+                                slot: this.slot,
+                                startDate: this.startDateFormatted,
+                                endDate: this.endDateFormatted,
+                                startTime: this.startTime,
+                                endTime: this.endTime,
+                                timezone: this.timezone,
+                            },
+                            success: function (r) {
+                                window.location.reload()
+                            }
+                        })
+                    }
+                },
                 getTemplates() {
                     var my = this
                     new ConcreteAjaxRequest({
@@ -118,6 +210,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     }
                     if (this.currentStep === 'templates') {
                         this.currentStep = 'items'
+                    }
+                    if (this.currentStep === 'schedule') {
+                        this.currentStep = 'templates'
                     }
                 },
                 toggleChecked(item) {
@@ -143,29 +238,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     })
                 },
                 handleSaveButton() {
-                    var my = this
                     if (this.currentStep === 'items') {
                         this.getTemplates();
                     }
                     if (this.currentStep === 'templates') {
-                        new ConcreteAjaxRequest({
-                            url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/boards/custom_slot/save_template?boardInstanceID=' +
-                                my.boardInstanceID,
-                            method: 'POST',
-                            dataType: 'html',
-                            data: {
-                                slot: my.slot,
-                                selectedTemplateOption: my.templateOptions[my.selectedTemplateOption]
-                            },
-                            success: function (r) {
-                                var customSlotData = {
-                                    content: r,
-                                    slot: my.slot,
-                                }
-                                ConcreteEvent.fire('SaveCustomSlot', customSlotData)
-                                jQuery.fn.dialog.closeTop()
-                            }
-                        })
+                        this.createRule()
+                    }
+                    if (this.currentStep === 'schedule') {
+                        this.scheduleRule()
                     }
                 }
             },
@@ -173,29 +253,51 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 cancelButtonText: function () {
                     if (this.currentStep == 'items') {
                         return '<?=t('Close')?>'
-                    } else if (this.currentStep === 'templates') {
+                    } else if (this.currentStep == 'templates' || this.currentStep == 'schedule') {
                         return '<?=t('Back')?>'
                     }
                 },
                 saveButtonText: function () {
-                    if (this.currentStep == 'items') {
+                    if (this.currentStep == 'items' || this.currentStep == 'templates') {
                         return '<?=t('Next')?>'
-                    } else if (this.currentStep === 'templates') {
+                    } else if (this.currentStep === 'schedule') {
                         return '<?=t('Save')?>'
                     }
-                }
+                },
+                startDateFormatted() {
+                    if (this.startDate) {
+                        return moment(this.startDate).format("YYYY-MM-DD")
+                    }
+                    return null
+                },
+                endDateFormatted() {
+                    if (this.endDate) {
+                        return moment(this.endDate).format("YYYY-MM-DD")
+                    }
+                    return null
+                },
             },
             watch: {},
             data: {
+                invalidStartDate: false,
+                invalidEndDate: false,
+                invalidSelectedElement: false,
+                startDate: '',
+                endDate: '',
+                startTime: '00:00',
+                endTime: '23:59',
+                slot: <?=(int)$slot?>,
+                timezone: '<?=date_default_timezone_get()?>',
                 currentStep: 'items',
                 searchKeywords: '',
                 selectedItemIds: [],
                 boardInstanceID: <?=$instance->getBoardInstanceID()?>,
-                slot: <?=(int)$slot?>,
+                instance: <?=json_encode($instance)?>,
                 dataSources: <?=$dataSourcesJson?>,
                 activeDataSource: 0,
+                currentRule: null,
                 templateOptions: [],
-                selectedTemplateOption: -1
+                selectedTemplateOption: -1,
             }
         })
     })

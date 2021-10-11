@@ -77,6 +77,8 @@ abstract class BoardSlotCommandHandler
             'bID' => $command->getBlockID(),
             'ruleType' => $this->getRuleType($command)
         ]);
+
+        return $rule;
     }
 
 

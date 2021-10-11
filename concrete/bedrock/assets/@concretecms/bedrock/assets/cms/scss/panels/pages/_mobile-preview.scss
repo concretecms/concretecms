@@ -16,6 +16,11 @@
   }
 
   .ccm-device-orientation-portrait {
+    .ccm-device-iphone13 {
+      background: url('../../concrete/images/devices/iphone/iphone13.png') no-repeat;
+      padding: 75px 38px 62px 39px;
+    }
+
     .ccm-device-iphone6 {
       background: url('../../concrete/images/devices/iphone/iphone6.png') no-repeat;
       padding: 108px 28px;
@@ -49,6 +54,11 @@
   }
 
   .ccm-device-orientation-landscape {
+    .ccm-device-iphone13 {
+      background: url('../../concrete/images/devices/iphone/iphone13-landscape.png') no-repeat;
+      padding: 38px 76px 38px 62px;
+    }
+
     .ccm-device-iphone6 {
       background: url('../../concrete/images/devices/iphone/iphone6-landscape.png') no-repeat;
       padding: 28px 108px;
