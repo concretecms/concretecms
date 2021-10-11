@@ -185,7 +185,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
             'png' => ['png', IMAGETYPE_PNG],
         ] as $thumbnailFormat => list($expectedExtension, $expectedFileType)) {
             $config->set('concrete.misc.default_thumbnail_format', $thumbnailFormat);
-            foreach (['async', 'now'] as $strategy) {
+            foreach (['now'] as $strategy) {
                 $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
                 $fi = new Importer();
                 $fo = $fi->import($file, '123412345678_plants.jpg');
@@ -226,21 +226,15 @@ class DeprecatedImporterTest extends FileStorageTestCase
                 self::assertStringContainsString('/application/files/cache/thumbnails/', $thumbnail->src);
                 $pos = strrpos($thumbnail->src, '/cache/thumbnails/');
                 $realPath = $this->getStorageDirectory() . substr($thumbnail->src, $pos);
-                if ($strategy === 'async') {
-                    self::assertNull($thumbnail->width);
-                    self::assertNull($thumbnail->height);
-                    self::assertFileNotExists($realPath);
-                } else {
-                    self::assertGreaterThan(0, $thumbnail->width);
-                    self::assertGreaterThan(0, $thumbnail->height);
-                    self::assertLessThanOrEqual(100, $thumbnail->width);
-                    self::assertLessThanOrEqual(100, $thumbnail->height);
-                    self::assertFileExists($realPath);
-                    list($width, $height, $type) = getimagesize($realPath);
-                    self::assertSame($thumbnail->width, $width);
-                    self::assertSame($thumbnail->height, $height);
-                    self::assertSame($expectedFileType, $type);
-                }
+                self::assertGreaterThan(0, $thumbnail->width);
+                self::assertGreaterThan(0, $thumbnail->height);
+                self::assertLessThanOrEqual(100, $thumbnail->width);
+                self::assertLessThanOrEqual(100, $thumbnail->height);
+                self::assertFileExists($realPath);
+                list($width, $height, $type) = getimagesize($realPath);
+                self::assertSame($thumbnail->width, $width);
+                self::assertSame($thumbnail->height, $height);
+                self::assertSame($expectedFileType, $type);
             }
         }
     }
