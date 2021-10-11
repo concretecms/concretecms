@@ -6,6 +6,7 @@ use Concrete\Core\Command\Task\Controller\CheckAutomatedGroupsController;
 use Concrete\Core\Command\Task\Controller\ClearCacheController;
 use Concrete\Core\Command\Task\Controller\DeactivateUsersController;
 use Concrete\Core\Command\Task\Controller\GenerateSitemapController;
+use Concrete\Core\Command\Task\Controller\GenerateThumbnailsController;
 use Concrete\Core\Command\Task\Controller\ProcessEmailController;
 use Concrete\Core\Command\Task\Controller\ReindexContentController;
 use Concrete\Core\Command\Task\Controller\RemoveOldFileAttachmentsController;
@@ -43,6 +44,10 @@ class Manager extends CoreManager
         return $this->container->make(DeactivateUsersController::class);
     }
 
+    public function createGenerateThumbnailsDriver()
+    {
+        return $this->container->make(GenerateThumbnailsController::class);
+    }
 
     public function createUpdateStatisticsDriver()
     {

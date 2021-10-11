@@ -22,8 +22,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
         foreach ($thumbnail_generation_strategies as $id => $name) {
             ?>
             <div class="form-check">
-                <?= $form->radio('thumbnail_generation_strategy', $id, $id === $thumbnail_generation_strategy, ['required' => 'required']) ?>
-                <label><?= h($name) ?></label>
+                <?= $form->radio('thumbnail_generation_strategy', $id, $id === $thumbnail_generation_strategy, ['required' => 'required', 'id' => 'thumbnail_generation_strategy' . $id]) ?>
+                <?= $form->label('thumbnail_generation_strategy' . $id, $name, ["class" => "form-check-label"]) ?>
             </div>
             <?php
         }
@@ -36,8 +36,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
         foreach ($thumbnail_formats as $id => $name) {
             ?>
             <div class="form-check">
-                <?= $form->radio('thumbnail_format', $id, $id === $thumbnail_format, ['required' => 'required']) ?>
-                <label><?= h($name) ?></label>
+                <?= $form->radio('thumbnail_format', $id, $id === $thumbnail_format, ['required' => 'required', 'id' => 'thumbnail_format' . $id]) ?>
+                <?= $form->label('thumbnail_format' . $id, $name, ["class" => "form-check-label"]) ?>
             </div>
             <?php
         }
@@ -48,7 +48,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?= $form->label('create_high_dpi_thumbnails', t('Create high DPI thumbnails')) ?>
         <div class="form-check">
             <?= $form->checkbox('create_high_dpi_thumbnails', 1, $create_high_dpi_thumbnails) ?>
-            <label><?= t('Create high DPI thumbnails') ?></label>
+            <?= $form->label('create_high_dpi_thumbnails', t('Create high DPI thumbnails'), ["class" => "form-check-label"]) ?>
         </div>
     </div>
 

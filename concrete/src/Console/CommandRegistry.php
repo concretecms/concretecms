@@ -65,7 +65,6 @@ class CommandRegistry implements ApplicationAwareInterface
         Command\JobCommand::class,
         Command\RefreshEntitiesCommand::class,
         Command\GenerateSitemapCommand::class,
-        Command\FillThumbnailsTableCommand::class,
         Command\RescanFilesCommand::class,
         Command\UpdateCommand::class,
         Command\SetDatabaseCharacterSetCommand::class,
