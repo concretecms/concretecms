@@ -43,34 +43,24 @@ if ($file instanceof FileEntity && $file->hasFileUUID()) {
         <?php echo t('This file requires a password to download.') ?>
     </p>
 
-    <?php if (isset($error)) { ?>
-        <div class="ccm-error-response">
-            <?php echo $error ?>
-        </div>
-    <?php } ?>
-
     <form action="<?php echo h($submitPasswordUrl) ?>" method="post">
-        <?php if (isset($force)) { ?>
-            <?php echo $form->hidden("force", $force); ?>
-        <?php } ?>
+
+        <div class="hstack gap-3">
+            <?php echo $form->password("password", ["placeholder" => t('Password'), "class" => "form-control"]); ?>
+            <button type="submit" class="btn btn-secondary">
+                <?php echo t('Download') ?>
+            </button>
+        </div>
 
         <?php echo $form->hidden("rcID", $rcID); ?>
 
-        <div class="form-group">
-            <?php echo $form->label("password", t("Password")); ?>
-            <?php echo $form->password("password", ["class" => "form-control"]); ?>
-        </div>
-
-        <button type="submit">
-            <?php echo t('Download') ?>
-        </button>
     </form>
 <?php } ?>
 
 <?php if (isset($rc) && is_object($rc)) { ?>
-    <p>
-        <a href="<?php echo h((string)Url::to($rc)) ?>">
-            &lt; <?php echo t('Back') ?>
+    <div class="mt-5">
+        <a href="<?php echo h((string) Url::to($rc)) ?>">
+            &lt; <?php echo t('Return to previous page.') ?>
         </a>
-    </p>
+    </div>
 <?php }
