@@ -1708,7 +1708,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 </blocks>
             </area>
         </page>
-        <page name="Blog" path="/about/blog" public-date="2021-07-31 16:20:28" filename="" pagetype="page"
+        <page name="Blog" path="/about/blog" public-date="2021-07-31 16:20:28" filename="" pagetype="blog"
               template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_subpages_from_nav">
