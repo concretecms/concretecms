@@ -14,7 +14,7 @@ class FileManager
     /**
      * Sets up a form field to let users pick a file.
      *
-     * @param string $inputID The ID of the form field
+     * @param string $inputID The ID of the form field – NOTE this is no longer used but remains for backward compatibility.
      * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
      * @param string $chooseText The text to be used to tell users "Choose a File"
      * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
@@ -60,11 +60,12 @@ class FileManager
         $vh = $app->make('helper/validation/numbers');
 
         $fID = 0;
-        $chooseText = t('Choose File');
         $inputName = (string) $inputName;
 
         if ($chooseText !== '') {
             $chooseText = (string) $chooseText;
+        } else {
+            $chooseText = t('Choose File');
         }
         if ($vh->integer($request->request->get($inputName))) {
             $file = $app->make(EntityManagerInterface::class)->find(FileEntity::class, $request->request->get($inputName));
