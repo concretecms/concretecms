@@ -89,7 +89,8 @@ final class Version20210815000000 extends AbstractMigration implements Repeatabl
             'Theme Documentation',
             [
                 'icon_dashboard' => 'fas fa-palette',
-            ]
+            ],
+            true
         );
 
         $atomik = Theme::getByHandle('atomik');
