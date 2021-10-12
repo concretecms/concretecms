@@ -23,6 +23,13 @@ if ($service->isMultisiteEnabled()) {
             <div class="alert alert-danger">
                 <?= t('You must enable multiple site hosting before you can access multiple sites or site types.') ?>
             </div>
+        <?php
+        } else if (Config::get('concrete.permissions.model') == 'simple') {
+        ?>
+            <div class="alert alert-info">
+                <?= t('Advanced permissions are turned off.') ?>
+                <?= t('You must enable Advanced permissions before you enable multiple site hosting.') ?>
+            </div>
         <?php } else { ?>
             <p><?= t('Multiple sites are not currently enabled. Enable them below.') ?></p>
         <?php } ?>
