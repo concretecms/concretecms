@@ -79,6 +79,10 @@ class DownloadFile extends PageController
                 return false;
             }
 
+            if ($file->getPassword()) {
+                return false;
+            }
+
             $fre = $file->getFileResource();
             $fsl = $file->getFileStorageLocationObject()->getFileSystemObject();
             $mimeType = $file->getMimeType();
