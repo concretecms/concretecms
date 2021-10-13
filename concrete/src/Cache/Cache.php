@@ -175,7 +175,7 @@ abstract class Cache implements FlushableInterface
 
     public function save(CacheItemInterface $item)
     {
-        $this->pool->save($item);
+        return $this->pool->save($item);
     }
 
     /**
