@@ -765,7 +765,7 @@ return [
         // Community Translation instance offering concrete5 translations
         'community_translation' => [
             // API entry point of the Community Translation instance
-            'entry_point' => 'https://translate.concreteorg.org/api',
+            'entry_point' => 'https://translate.concretecms.org/api',
             // API Token to be used for the Community Translation instance
             'api_token' => '',
             // Languages below this translation progress won't be considered
@@ -773,7 +773,7 @@ return [
             // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
             // Base URI for package details
-            'package_url' => 'https://translate.concreteorg.org/translate/package',
+            'package_url' => 'https://translate.concretecms.org/translate/package',
         ],
     ],
     'urls' => [
