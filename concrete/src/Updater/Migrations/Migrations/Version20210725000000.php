@@ -74,14 +74,7 @@ final class Version20210725000000 extends AbstractMigration implements Repeatabl
 
         $jobsToUninstall = [
             'fill_thumbnails_table',
-            'check_automated_groups',
-            'index_search_all',
-            'index_search',
-            'deactivate_users',
-            'remove_old_page_versions',
-            'update_statistics',
             'update_gatherings',
-            'generate_sitemap'
         ];
         foreach($jobsToUninstall as $jHandle) {
             $job = Job::getByHandle($jHandle);
