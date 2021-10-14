@@ -39,10 +39,8 @@ final class Version20210910234801 extends AbstractMigration implements Repeatabl
         $this->connection->executeQuery('DROP TABLE IF EXISTS GatheringDataSources');
         $this->connection->executeQuery('DROP TABLE IF EXISTS GatheringConfiguredDataSources');
 
-        $category = Category::getByHandle('gathering');
-        if ($category) {
-            $category->delete();
-        }
+        $this->connection->executeQuery("delete from PermissionKeyCategories where pkHandle = 'gathering'");
+        $this->connection->executeQuery("delete from PermissionKeys where pkHandle in ('edit_gatherings', 'edit_gathering_items')");
 
         // Drop features
         // Note: other tables related to this functionality were dropped in a previous migration.
