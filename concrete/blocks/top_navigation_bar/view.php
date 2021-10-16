@@ -13,7 +13,7 @@
                 <?php } ?>
                 <?php if ($logo && ($includeBrandLogo && !$includeBrandText)) { ?>
                     <img src="<?=$logo->getURL()?>" class="logo">
-                    <?php if ($$transparentLogo) { ?>
+                    <?php if ($transparentLogo) { ?>
                         <img src="<?=$transparentLogo->getURL()?>" class="logo-transparent">
                     <?php } ?>
                 <?php } ?>
