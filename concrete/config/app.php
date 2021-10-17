@@ -748,6 +748,11 @@ return [
                 ['css', 'feature/basics/frontend'],
             ],
         ],
+        'core/conversation' => [
+            [
+            ],
+            true,
+        ],
     ],
     // HTTP Client options
     'http_client' => [

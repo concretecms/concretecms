@@ -250,8 +250,14 @@ EOL;
      */
     public function outputSimpleEditor($key, $content = null)
     {
+        $simplePlugins = ['basicstyles','dialogadvtab','divarea','image','tab','toolbar','undo','wysiwygarea','normalizeonchange'];
+        if ($this->allowFileManager()) {
+            $simplePlugins += ['concrete5filemanager', 'concrete5uploadimage'];
+        }
+        $this->pluginManager->select($simplePlugins);
+
         return $this->outputEditorWithOptions($key, [
-            'plugins' => 'basicstyles,dialogadvtab,divarea,image,tab,toolbar,undo,wysiwygarea,concrete5filemanager,concrete5inline,concrete5uploadimage,normalizeonchange',
+            'plugins' => implode(',', $simplePlugins),
         ], $content);
     }
 
