@@ -643,7 +643,7 @@
               pagetype="" description="Connect to the Concrete community." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>concrete5.org, my account, marketplace</value>
+                    <value>concretecms.com, my account, marketplace</value>
                 </attributekey>
             </attributes>
         </page>
@@ -1554,7 +1554,7 @@
                                         <data table="btRssDisplay">
                                             <record>
                                                 <title>Tutorials</title>
-                                                <url>http://documentation.concretecms.org/rss/tutorials</url>
+                                                <url>https://documentation.concretecms.org/rss/tutorials</url>
                                                 <dateFormat>longDate</dateFormat>
                                                 <itemsToDisplay>1</itemsToDisplay>
                                                 <showSummary>1</showSummary>
@@ -1609,7 +1609,7 @@
                         <data table="btRssDisplay">
                             <record>
                                 <title>News from concretecms.com</title>
-                                <url>http://www.concretecms.com/rss/blog</url>
+                                <url>https://www.concretecms.com/rss/blog</url>
                                 <dateFormat>longDate</dateFormat>
                                 <itemsToDisplay>3</itemsToDisplay>
                                 <showSummary>1</showSummary>
