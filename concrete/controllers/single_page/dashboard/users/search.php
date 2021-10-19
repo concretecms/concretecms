@@ -284,33 +284,42 @@ class Search extends DashboardPageController
     public function change_password($uID = false)
     {
         $this->setupUser($uID);
-        if ($this->canEditPassword) {
-            $password = $this->post('uPassword');
-            $passwordConfirm = $this->post('uPasswordConfirm');
+        $sr = new UserEditResponse();
+        $sr->setUser($this->user);
 
-            $this->app->make('validator/password')->isValidFor($password, $this->user, $this->error);
+        if ($this->canEditPassword && !empty($this->request->request->get('uPasswordNew'))) {
+            $passwordMine = (string) $this->request->request->get('uPasswordMine');
+            $passwordNew = $this->request->request->get('uPasswordNew');
+            $passwordNewConfirm = $this->request->request->get('uPasswordNewConfirm');
 
-            if (!$this->app->make('helper/validation/token')->validate('change_password')) {
-                $this->error->add($this->app->make('helper/validation/token')->getErrorMessage());
-            }
-            if ($password != $passwordConfirm) {
-                $this->error->add(t('The two passwords provided do not match.'));
-            }
+            $this->app->make('validator/password')->isValidFor($passwordNew, $this->user, $this->error);
 
-            $sr = new UserEditResponse();
-            $sr->setUser($this->user);
-            if (!$this->error->has()) {
-                $data = [
-                    'uPassword' => $password,
-                    'uPasswordConfirm' => $passwordConfirm,
-                ];
-                $this->user->update($data);
-                $sr->setMessage(t('Password updated successfully.'));
-            } else {
-                $sr->setError($this->error);
+            if ($passwordNew) {
+                $me = $this->app->make(User::class)->getUserInfoObject();
+
+                if (!$me->passwordMatches($passwordMine)) {
+                    $this->error->add(t('Your password is invalid.'));
+                }
+
+                if ($passwordNew != $passwordNewConfirm) {
+                    $this->error->add(t('The two passwords provided do not match.'));
+                }
+
+                if (!$this->error->has()) {
+                    $data = [
+                        'uPassword' => $passwordNew,
+                        'uPasswordConfirm' => $passwordNew,
+                    ];
+
+                    $this->user->update($data);
+
+                    $sr->setMessage(t('Password updated successfully.'));
+                }
             }
-            $sr->outputJSON();
         }
+
+        $sr->setError($this->error);
+        $sr->outputJSON();
     }
 
     public function get_timezones()

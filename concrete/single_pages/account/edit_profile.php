@@ -6,7 +6,7 @@
 	<?php $valt->output('profile_edit'); ?>
 	<fieldset>
         <legend><?= t('Basic Information'); ?></legend>
-	
+
         <div class="form-group">
             <?= $form->label('uName', t('Username')); ?>
             <?= $form->text('uName', $profile->getUserName()); ?>
@@ -82,18 +82,23 @@
     <br/>
 	<fieldset>
     	<legend><?= t('Change Password'); ?></legend>
+
+        <div class="form-group">
+            <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
+            <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
+        </div>
+
         <div class="form-group">
             <?= $form->label('uPasswordNew', t('New Password')); ?>
             <?= $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
-            <a href="javascript:void(0)" title="<?= t('Leave blank to keep current password.'); ?>"><i class="icon-question-sign"></i></a>
 		</div>
 
         <div class="form-group">
             <?= $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
-            <div class="controls">
-                <?= $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
-            </div>
+            <?= $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
         </div>
+
+        <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
 	</fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">

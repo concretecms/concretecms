@@ -554,6 +554,19 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
+     * Checks the uPassword record for the current user and returns true if the hashed version of the
+     * passed password matches.
+     *
+     * @param $uPassword
+     * @return bool
+     */
+    public function passwordMatches($uPassword)
+    {
+        $hasher = $this->application->make(PasswordHasher::class);
+        return $hasher->CheckPassword($uPassword, $this->getUserPassword());
+    }
+
+    /**
      * @param int[] $groupArray
      */
     public function updateGroups($groupArray)
