@@ -219,6 +219,20 @@ class PageView extends View
     }
 
     /**
+     * @deprecated. Previewing functions should use `setCustomPreviewRequest` below – but the legacy customizer
+     * cannot, because it needs to have access to a modified theme object from within this context, so we need
+     * to be able to actually set it through. Don't use this method.
+     *
+     * Called from previewing functions, this lets us override the page's theme with one of our own choosing.
+     */
+    public function setCustomPageTheme(PageTheme $pt)
+    {
+        $this->themeObject = $pt;
+        $this->themePkgHandle = $pt->getPackageHandle();
+    }
+
+
+    /**
      * @param mixed $customPreviewRequest
      */
     public function setCustomPreviewRequest(PreviewRequestInterface $customPreviewRequest): void

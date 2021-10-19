@@ -3,13 +3,17 @@
 namespace Concrete\Core\StyleCustomizer\Style\Parser;
 
 use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
-use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
-use Concrete\Core\StyleCustomizer\Style\Style;
+use Concrete\Core\StyleCustomizer\Style\StyleInterface;
 use Concrete\Core\StyleCustomizer\Style\TypeStyle;
 use Concrete\Core\StyleCustomizer\WebFont\WebFontCollectionFactory;
 
-class TypeParser implements ParserInterface
+class TypeParser extends AbstractParser
 {
+
+    public function createStyleObject(): StyleInterface
+    {
+        return new TypeStyle();
+    }
 
     /**
      * @var WebFontCollectionFactory
@@ -24,12 +28,10 @@ class TypeParser implements ParserInterface
         $this->webFontCollectionFactory = $webFontCollectionFactory;
     }
 
-    public function parseNode(\SimpleXMLElement $element, PresetInterface $preset): Style
+    public function parseNode(\SimpleXMLElement $element, PresetInterface $preset): StyleInterface
     {
         $collection = $this->webFontCollectionFactory->createFromPreset($preset);
-        $style = new TypeStyle();
-        $style->setName((string) $element['name']);
-        $style->setVariable((string) $element['variable']);
+        $style = parent::parseNode($element, $preset);
         $style->setWebFonts($collection);
         return $style;
     }

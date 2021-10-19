@@ -3,7 +3,9 @@ namespace Concrete\Core\StyleCustomizer\Customizer\Type;
 
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizerInterface;
 use Concrete\Core\StyleCustomizer\Preset\Type\TypeInterface as PresetTypeInterface;
+use Concrete\Core\StyleCustomizer\Preview\PreviewHandlerInterface;
 use Concrete\Core\StyleCustomizer\Processor\ProcessorInterface;
+use Concrete\Core\StyleCustomizer\Style\Parser\Manager\ManagerInterface;
 
 interface TypeInterface
 {
@@ -15,5 +17,9 @@ interface TypeInterface
     public function supportsCustomSkins(): bool;
 
     public function getStyleProcessor(): ProcessorInterface;
+
+    public function getParserManager(): ManagerInterface;
+
+    public function getPreviewHandler(): PreviewHandlerInterface;
 
 }

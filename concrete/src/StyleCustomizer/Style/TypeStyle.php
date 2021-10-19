@@ -11,6 +11,9 @@ use Concrete\Core\StyleCustomizer\WebFont\WebFontCollection;
 class TypeStyle extends Style
 {
 
+    const PARSE_SUBJECT_VARIABLE_COLLECTION = 'collection';
+    const PARSE_SUBJECT_REQUEST = 'request';
+
     use WebFontCollectionStyleTrait;
 
     private function getStyleTypes(): array
@@ -26,7 +29,7 @@ class TypeStyle extends Style
         ];
     }
 
-    protected function parseStyleValueForVariable(string $variableName, NormalizedVariableCollection $collection): TypeValue
+    protected function parseStyleValueForVariable(string $variableName, string $parseType, $subject): TypeValue
     {
         $typeValue = new TypeValue();
         foreach ($this->getStyleTypes() as $styleType) {
@@ -36,7 +39,11 @@ class TypeStyle extends Style
             if ($style instanceof FontFamilyStyle) {
                 $style->setWebFonts($this->getWebFonts());
             }
-            $value = $style->createValueFromVariableCollection($collection);
+            if ($parseType === self::PARSE_SUBJECT_VARIABLE_COLLECTION) {
+                $value = $style->createValueFromVariableCollection($subject);
+            } else if ($parseType === self::PARSE_SUBJECT_REQUEST) {
+                $value = $style->createValueFromRequestDataCollection($subject);
+            }
             if ($value) {
                 $styleValue = new StyleValue($style, $value);
                 $typeValue->addSubStyleValue($styleValue);
@@ -47,16 +54,7 @@ class TypeStyle extends Style
 
     public function createValueFromVariableCollection(NormalizedVariableCollection $collection): ?ValueInterface
     {
-        $typeValue = $this->parseStyleValueForVariable($this->getVariable(), $collection);
-        if (!$typeValue->hasSubStyleValues()) {
-            // Legacy backward compatibility hack. The old customizer required that the "type" of the variable
-            // be the variable suffix. So the `body` type variable is written as `body-type-color`, `body-type-font-size`, etc...
-            // in the .less file. Let's check to see if this exists. Note to devs: you should NOT use this
-            // convention going forward. Just name your variables the same in the .xml file and the .less/.sass
-            // files. Note, this is only required on color, size, image, and type styles, because those are the
-            // only types of variables available to the legacy customizer.
-            $typeValue = $this->parseStyleValueForVariable($this->getVariable() . '-type', $collection);
-        }
+        $typeValue = $this->parseStyleValueForVariable($this->getVariableToInspect(), self::PARSE_SUBJECT_VARIABLE_COLLECTION, $collection);
         if ($typeValue->hasSubStyleValues()) {
             return $typeValue;
         }
@@ -65,15 +63,10 @@ class TypeStyle extends Style
 
     public function createValueFromRequestDataCollection(array $styles): ?ValueInterface
     {
-        $typeValue = new TypeValue();
-        foreach ($this->getStyleTypes() as $styleType) {
-            $style = app($styleType[0]);
-            $style->setVariable($this->getVariable() . '-' . $styleType[1]);
-            $value = $style->createValueFromRequestDataCollection($styles);
-            if ($value) {
-                $styleValue = new StyleValue($style, $value);
-                $typeValue->addSubStyleValue($styleValue);
-            }
+        $typeValue = $this->parseStyleValueForVariable($this->getVariable(), self::PARSE_SUBJECT_REQUEST, $styles);
+        if (!$typeValue->hasSubStyleValues()) {
+            // Legacy backward compatibility hack. See above
+            $typeValue = $this->parseStyleValueForVariable($this->getVariable() . '-type', self:: PARSE_SUBJECT_REQUEST, $styles);
         }
         if ($typeValue->hasSubStyleValues()) {
             return $typeValue;

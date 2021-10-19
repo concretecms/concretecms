@@ -7,7 +7,7 @@ use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Preset\PresetFactory;
 use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 use Concrete\Core\StyleCustomizer\StyleList;
-use Concrete\Core\StyleCustomizer\StyleListParser;
+use Concrete\Core\StyleCustomizer\StyleListFactory;
 
 final class Customizer
 {
@@ -119,7 +119,7 @@ final class Customizer
     public function getThemeCustomizableStyleList(PresetInterface $preset): StyleList
     {
         $xml = simplexml_load_file($this->getConfigurationFile());
-        $parser = $this->app->make(StyleListParser::class);
-        return $parser->parse($xml, $preset);
+        $factory = $this->app->make(StyleListFactory::class);
+        return $factory->createStyleList($this->getType()->getParserManager(), $xml, $preset);
     }
 }

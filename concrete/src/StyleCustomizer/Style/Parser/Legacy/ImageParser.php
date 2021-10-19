@@ -1,8 +1,9 @@
 <?php
 
-namespace Concrete\Core\StyleCustomizer\Style\Parser;
+namespace Concrete\Core\StyleCustomizer\Style\Parser\Legacy;
 
-use Concrete\Core\StyleCustomizer\Style\ImageStyle;
+use Concrete\Core\StyleCustomizer\Style\Legacy\ImageStyle;
+use Concrete\Core\StyleCustomizer\Style\Parser\AbstractParser;
 use Concrete\Core\StyleCustomizer\Style\StyleInterface;
 
 class ImageParser extends AbstractParser

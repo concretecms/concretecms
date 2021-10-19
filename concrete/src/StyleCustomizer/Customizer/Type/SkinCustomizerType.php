@@ -6,8 +6,12 @@ use Concrete\Core\StyleCustomizer\Normalizer\NormalizerInterface;
 use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizer;
 use Concrete\Core\StyleCustomizer\Preset\Type\ScssDirectoryPresetType;
 use Concrete\Core\StyleCustomizer\Preset\Type\TypeInterface as PresetTypeInterface;
+use Concrete\Core\StyleCustomizer\Preview\PreviewHandlerInterface;
+use Concrete\Core\StyleCustomizer\Preview\StandardPreviewHandler;
 use Concrete\Core\StyleCustomizer\Processor\ProcessorInterface;
 use Concrete\Core\StyleCustomizer\Processor\ScssProcessor;
+use Concrete\Core\StyleCustomizer\Style\Parser\Manager\ManagerInterface;
+use Concrete\Core\StyleCustomizer\Style\Parser\Manager\Version2Manager;
 
 class SkinCustomizerType extends AbstractCustomizerType
 {
@@ -50,9 +54,19 @@ class SkinCustomizerType extends AbstractCustomizerType
         return $this->app->make(ScssProcessor::class);
     }
 
+    public function getParserManager(): ManagerInterface
+    {
+        return $this->app->make(Version2Manager::class);
+    }
+
     public function supportsCustomSkins(): bool
     {
         return true;
+    }
+
+    public function getPreviewHandler(): PreviewHandlerInterface
+    {
+        return $this->app->make(StandardPreviewHandler::class);
     }
 
 }

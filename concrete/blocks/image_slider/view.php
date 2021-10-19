@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $navigationTypeText = (0 == $navigationType) ? 'arrows' : 'pages';
 $c = Page::getCurrentPage();
-if ($c->isEditMode()) {
+if ($c && $c->isEditMode()) {
     $loc = Localization::getInstance();
     $loc->pushActiveContext(Localization::CONTEXT_UI); ?>
     <div class="ccm-edit-mode-disabled-item" style="<?php echo isset($width) ? "width: $width;" : ''; ?><?php echo isset($height) ? "height: $height;" : ''; ?>">

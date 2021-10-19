@@ -34,7 +34,6 @@ abstract class Style implements StyleInterface
         $class = get_class($class);
         $class = substr($class, strrpos($class, '\\') + 1);
         $type = uncamelcase(substr($class, 0, strrpos($class, $suffix)));
-
         return $type;
     }
 
@@ -105,6 +104,18 @@ abstract class Style implements StyleInterface
     public function getVariable()
     {
         return $this->variable;
+    }
+
+    /**
+     * Gets the name of the CSS variable we should use to inspect the data collection AND
+     * write into the request data collection. The reason for this is because the new customizer
+     * just has a unified approach to this –whereas the old customizer made you define the name of the
+     * variable in the xml file as `page-background` and reference it with `page-background-color` in the
+     * variable collections.
+     */
+    public function getVariableToInspect()
+    {
+        return $this->getVariable();
     }
 
     public function jsonSerialize()

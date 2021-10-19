@@ -10,7 +10,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 
 <div class="ccm-panel-detail-form-actions">
-    <button class="float-end btn btn-success" type="button" onclick="ConcreteEvent.publish('ThemeCustomizerCreateSkin')"><?= t('Create New') ?></button>
+    <?php if ($customizer->supportsCustomSkins()) { ?>
+        <button class="float-end btn btn-success" type="button" onclick="ConcreteEvent.publish('ThemeCustomizerCreateSkin')"><?= t('Create New') ?></button>
+    <?php } else { ?>
+
+    <?php } ?>
 </div>
 
 <script type="text/javascript">
