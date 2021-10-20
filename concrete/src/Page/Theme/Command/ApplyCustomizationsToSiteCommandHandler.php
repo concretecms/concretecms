@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Page\Theme\Command;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
@@ -9,7 +10,6 @@ use Concrete\Core\StyleCustomizer\Style\PresetFontsFileStyle;
 use Concrete\Core\StyleCustomizer\Style\StyleValue;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
 use Concrete\Core\StyleCustomizer\Style\Value\PresetFontsFileValue;
-use Doctrine\ORM\EntityManager;
 
 class ApplyCustomizationsToSiteCommandHandler
 {
@@ -25,9 +25,9 @@ class ApplyCustomizationsToSiteCommandHandler
     protected $variableCollectionFactory;
 
     /**
-     * @var EntityManager
+     * @var Connection
      */
-    protected $entityManager;
+    protected $db;
 
     /**
      * @param StyleValueListFactory $styleValueListFactory
@@ -36,19 +36,15 @@ class ApplyCustomizationsToSiteCommandHandler
     public function __construct(
         StyleValueListFactory $styleValueListFactory,
         NormalizedVariableCollectionFactory $variableCollectionFactory,
-        EntityManager $entityManager
+        Connection $db
     ) {
         $this->styleValueListFactory = $styleValueListFactory;
         $this->variableCollectionFactory = $variableCollectionFactory;
-        $this->entityManager = $entityManager;
+        $this->db = $db;
     }
 
-    public function __invoke(ApplyCustomizationsToSiteCommand $command)
+    protected function populateData($theme, $command)
     {
-        $db = $this->entityManager->getConnection();
-        $db->delete('PageThemeCustomStyles', ['pThemeID' => $command->getThemeID()]);
-
-        $theme = Theme::getByID($command->getThemeID());
         $customizer = $theme->getThemeCustomizer();
         $preset = $customizer->getPresetByIdentifier($command->getPresetStartingPoint());
         $styles = $command->getStyles();
@@ -67,6 +63,7 @@ class ApplyCustomizationsToSiteCommandHandler
         }
 
         // This is brutal but it's done this way for backward compatibility
+        $db = $this->db;
         $db->beginTransaction();
         $db->insert('StyleCustomizerValueLists', []);
         $scvlID = $db->LastInsertId();
@@ -83,6 +80,17 @@ class ApplyCustomizationsToSiteCommandHandler
             $record->save();
             $sccRecordID = $record->getRecordID();
         }
+
+        return [$scvlID, $sccRecordID];
+    }
+
+    public function __invoke(ApplyCustomizationsToSiteCommand $command)
+    {
+        $db = $this->db;
+        $db->delete('PageThemeCustomStyles', ['pThemeID' => $command->getThemeID()]);
+
+        $theme = Theme::getByID($command->getThemeID());
+        list($scvlID, $sccRecordID) = $this->populateData($theme, $command);
 
         $db->insert(
             'PageThemeCustomStyles',

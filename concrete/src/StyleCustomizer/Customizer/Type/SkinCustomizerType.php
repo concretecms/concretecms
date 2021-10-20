@@ -66,6 +66,11 @@ class SkinCustomizerType extends AbstractCustomizerType
         return true;
     }
 
+    public function supportsPageCustomization(): bool
+    {
+        return false;
+    }
+
     public function getPreviewHandler(): PreviewHandlerInterface
     {
         return $this->app->make(StandardPreviewHandler::class);

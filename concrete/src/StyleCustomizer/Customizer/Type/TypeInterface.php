@@ -16,6 +16,8 @@ interface TypeInterface
 
     public function supportsCustomSkins(): bool;
 
+    public function supportsPageCustomization(): bool;
+
     public function getStyleProcessor(): ProcessorInterface;
 
     public function getParserManager(): ParserManagerInterface;

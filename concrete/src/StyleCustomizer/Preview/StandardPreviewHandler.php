@@ -44,6 +44,7 @@ class StandardPreviewHandler implements PreviewHandlerInterface
     {
         $request = Request::getInstance();
         $request->setCustomRequestUser(-1);
+        $request->setCurrentPage($page);
 
         $previewRequest = new ThemeCustomizerRequest();
         $previewRequest->setCustomCss($css);

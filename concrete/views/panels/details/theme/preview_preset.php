@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <?php if ($customizer->supportsCustomSkins()) { ?>
         <button class="float-end btn btn-success" type="button" onclick="ConcreteEvent.publish('ThemeCustomizerCreateSkin')"><?= t('Create New') ?></button>
     <?php } else { ?>
-        <button class="float-end btn btn-success" type="button" onclick="ConcreteEvent.publish('ThemeCustomizerSaveGlobalStyles')"><?= t('Apply to Site') ?></button>
+        <button class="float-end btn btn-success" type="button" onclick="ConcreteEvent.publish('ThemeCustomizerSaveStyles')"><?= t('Save Styles') ?></button>
 
     <?php } ?>
 </div>

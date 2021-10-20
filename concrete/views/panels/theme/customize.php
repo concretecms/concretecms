@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?php if ($customizer->supportsCustomSkins()) { ?>
                     create-new-skin-action="<?=URL::to('/ccm/system/panels/theme/customize/create_skin', $pThemeID, $presetIdentifier)?>"
                 <?php } else { ?>
-                    save-global-styles-action="<?=URL::to('/ccm/system/panels/theme/customize/save_global_styles', $pThemeID, $presetIdentifier)?>"
+                    save-styles-action="<?=URL::to('/ccm/system/panels/theme/customize/save_styles', $previewPage->getCollectionID(), $pThemeID, $presetIdentifier)?>"
                 <?php } ?>
             <?php } ?>
             :styles='<?=h(json_encode($styles))?>'

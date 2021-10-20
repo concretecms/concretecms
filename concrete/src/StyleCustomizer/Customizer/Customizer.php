@@ -116,6 +116,11 @@ final class Customizer
         return $this->getType()->supportsCustomSkins();
     }
 
+    public function supportsPageCustomization(): bool
+    {
+        return $this->getType()->supportsPageCustomization();
+    }
+
     public function getThemeCustomizableStyleList(PresetInterface $preset): StyleList
     {
         $xml = simplexml_load_file($this->getConfigurationFile());

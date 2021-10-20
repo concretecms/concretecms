@@ -7,6 +7,7 @@ if (is_object($selectedTemplate)) {
 $selectedThemeID = 0;
 if (is_object($selectedTheme)) {
     $selectedThemeID = $selectedTheme->getThemeID();
+    $customizer = $selectedTheme->getThemeCustomizer();
 }
 
 $selectedSkinIdentifier = '';
@@ -93,21 +94,36 @@ if ($skin) {
                 </div>
             </div>
 
-            <?php
-            if (Config::get('concrete.marketplace.enabled')) {
-                ?>
-                <div class="ccm-marketplace-btn-wrapper d-grid">
-                <button type="button" onclick="window.location.href='<?= URL::to('/dashboard/extend/themes') ?>'" class="btn-info btn btn-large"><?= t("Get More Themes") ?></button>
-                </div>
-                <?php
-            }
-            ?>
+
             <?php
         }
         ?>
 
         </div>
+
+        <div class="ccm-panel-content-inner">
+            <div class="ccm-panel-page-design-page-group">
+            <?php
+            if ($customizer && $customizer->supportsPageCustomization()) {
+                $panelCustomizeTheme = URL::to('/ccm/system/panels/theme/customize/theme', $selectedThemeID, $c->getCollectionID());
+                ?>
+                <a class="btn btn-secondary btn-block mb-3" href="#" data-launch-sub-panel-url="<?=$panelCustomizeTheme?>">
+                    <?=t('Customize')?>
+                </a>
+            <?php } ?>
+            <?php
+            if (Config::get('concrete.marketplace.enabled')) {
+                ?>
+                <div class="ccm-marketplace-btn-wrapper d-grid">
+                    <button type="button" onclick="window.location.href='<?= URL::to('/dashboard/extend/themes') ?>'" class="btn-info btn btn-large"><?= t("Get More Themes") ?></button>
+                </div>
+                <?php
+            }
+            ?>
+            </div>
+        </div>
     </form>
+
 </section>
 
 <script type="text/javascript">

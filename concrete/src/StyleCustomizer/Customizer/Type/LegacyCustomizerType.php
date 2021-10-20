@@ -42,6 +42,11 @@ class LegacyCustomizerType extends AbstractCustomizerType
         return false;
     }
 
+    public function supportsPageCustomization(): bool
+    {
+        return true;
+    }
+
     public function getPreviewHandler(): PreviewHandlerInterface
     {
         return $this->app->make(LegacyStylesheetPreviewHandler::class);

@@ -6,6 +6,7 @@ use Concrete\Core\Page\View\Preview\PageDesignPreviewRequest;
 use Concrete\Core\Page\View\Preview\PreviewRequestInterface;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -318,7 +319,8 @@ class PageView extends View
                     $style = $this->c->getCustomStyleObject();
                     if (is_object($style)) {
                         $scl = $style->getValueList();
-                        $sheetObject->setValueList($scl);
+                        $collection = app(NormalizedVariableCollectionFactory::class)->createFromStyleValueList($scl);
+                        $sheetObject->setVariableCollection($collection);
                         // write cache output file
                         $sheetObject->output();
                         // return cache output file
