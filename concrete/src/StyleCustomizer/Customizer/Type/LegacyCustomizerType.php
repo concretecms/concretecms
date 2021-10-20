@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Customizer\Type;
 
+use Concrete\Core\StyleCustomizer\Customizations\LegacyCustomizationsManager;
+use Concrete\Core\StyleCustomizer\Customizations\ManagerInterface as CustomizationsManagerInterface;
 use Concrete\Core\StyleCustomizer\Normalizer\LegacyNormalizer;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizerInterface;
 use Concrete\Core\StyleCustomizer\Preset\Type\LessFilePresetType;
@@ -43,6 +45,11 @@ class LegacyCustomizerType extends AbstractCustomizerType
     public function getPreviewHandler(): PreviewHandlerInterface
     {
         return $this->app->make(LegacyStylesheetPreviewHandler::class);
+    }
+
+    public function getCustomizationsManager(): CustomizationsManagerInterface
+    {
+        return $this->app->make(LegacyCustomizationsManager::class);
     }
 
 }

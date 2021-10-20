@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Customizer\Type;
 
+use Concrete\Core\StyleCustomizer\Customizations\ManagerInterface as CustomizationsManagerInterface;
+use Concrete\Core\StyleCustomizer\Customizations\SkinCustomizationsManager;
 use Concrete\Core\StyleCustomizer\Customizer\Type\TypeInterface as CustomizerTypeInterface;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizerInterface;
 use Concrete\Core\StyleCustomizer\Normalizer\ScssNormalizer;
@@ -69,4 +71,8 @@ class SkinCustomizerType extends AbstractCustomizerType
         return $this->app->make(StandardPreviewHandler::class);
     }
 
+    public function getCustomizationsManager(): CustomizationsManagerInterface
+    {
+        return $this->app->make(SkinCustomizationsManager::class);
+    }
 }

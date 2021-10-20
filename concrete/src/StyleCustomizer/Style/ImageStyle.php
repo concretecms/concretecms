@@ -79,7 +79,7 @@ class ImageStyle extends Style
                 $url = $value->getImageURL();
             }
         }
-        $variable = $this->createImageVariable($this->getVariable(), $url);
+        $variable = $this->createImageVariable($this->getVariableToInspect(), $url);
         if ($fID) {
             $variable->setFileID($fID);
         }

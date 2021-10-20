@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactory;
+use Concrete\Core\Page\Theme\Command\ApplyCustomizationsToSiteCommand;
 use Concrete\Core\Page\Theme\Command\CreateCustomSkinCommand;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Command\DeleteCustomSkinCommand;
@@ -74,6 +75,7 @@ class CustomizePreset extends BackendInterfaceController
             $this->set('preset', $preset);
             $this->set('pThemeID', $pThemeID);
             $this->set('presetIdentifier', $presetIdentifier);
+            $this->set('customizer', $customizer);
             $this->requireAsset('ace');
         } else {
             throw new \RuntimeException(t('Invalid preset: %s', h($presetIdentifier)));
@@ -164,6 +166,43 @@ class CustomizePreset extends BackendInterfaceController
         }
         throw new UserMessageException(t('Access Denied'));
     }
+
+    /**
+     * Controller method run when a preset is used with the legacy customizer or other customizer that does not
+     * suppport skins.
+     *
+     * @param $pThemeID
+     * @param $skinIdentifier
+     * @return mixed
+     */
+    public function saveGlobalStyles($pThemeID, $presetIdentifier)
+    {
+        if ($this->app->make('token')->validate()) {
+            $theme = Theme::getByID($pThemeID);
+            if ($theme) {
+                $customizer = $theme->getThemeCustomizer();
+                $preset = $customizer->getPresetByIdentifier($presetIdentifier);
+                if ($preset) {
+
+                    $command = new ApplyCustomizationsToSiteCommand();
+                    $command->setThemeID($theme->getThemeID());
+                    $command->setPresetStartingPoint($presetIdentifier);
+                    if ($this->request->request->has('customCss')) {
+                        $command->setCustomCss($this->request->request->get('customCss'));
+                    }
+                    $command->setStyles($this->request->request->get('styles'));
+                    $this->app->executeCommand($command);
+
+                    $responseFactory = $this->app->make(ResponseFactory::class);
+                    return $responseFactory->json(['applied' => true]);
+                }
+            }
+            throw new \RuntimeException(t('Invalid theme ID or skin identifier.'));
+        }
+        throw new UserMessageException(t('Access Denied'));
+    }
+
+
 
     /**
      * Controller method run when custom skins are saved. Custom skins can have custom variables, then be updated

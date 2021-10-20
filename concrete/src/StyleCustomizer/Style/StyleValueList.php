@@ -23,7 +23,12 @@ class StyleValueList
 
     public function addValue(StyleInterface $style, ValueInterface $value)
     {
-        $this->values[] = new StyleValue($style, $value);
+        $this->add(new StyleValue($style, $value));
+    }
+
+    public function add(StyleValue $styleValue)
+    {
+        $this->values[] = $styleValue;
     }
 
     /**

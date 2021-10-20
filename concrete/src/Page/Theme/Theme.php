@@ -14,6 +14,7 @@ use Concrete\Core\Page\Theme\Documentation\Installer;
 use Concrete\Core\StyleCustomizer\Customizer\Customizer;
 use Concrete\Core\StyleCustomizer\Customizer\CustomizerFactory;
 use Concrete\Core\StyleCustomizer\Customizer\CustomizerInterface;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Support\Facade\Facade;
@@ -455,9 +456,20 @@ class Theme extends ConcreteObject implements \JsonSerializable
     public function getStylesheet($stylesheet)
     {
         $stylesheet = $this->getStylesheetObject($stylesheet);
-        $styleValues = $this->getThemeCustomStyleObjectValues();
-        if (!is_null($styleValues)) {
-            $stylesheet->setValueList($styleValues);
+        $style = $this->getThemeCustomStyleObject();
+        $variableCollection = null;
+        if (is_object($style)) {
+            $style = $this->getThemeCustomStyleObject();
+            if (is_object($style)) {
+                $valueList = $style->getValueList();
+                $factory = app(NormalizedVariableCollectionFactory::class);
+                $collection = $factory->createFromStyleValueList($valueList);
+            }
+
+        }
+
+        if (!is_null($collection)) {
+            $stylesheet->setVariableCollection($collection);
         }
         if (!$this->isThemePreviewRequest()) {
             if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
@@ -494,23 +506,6 @@ class Theme extends ConcreteObject implements \JsonSerializable
 
             return $o;
         }
-    }
-
-    /**
-     * @return \Concrete\Core\StyleCustomizer\Style\ValueList|null
-     * @deprecated
-     *
-     * Get the value list of the custom style object if one exists.
-     *
-     */
-    public function getThemeCustomStyleObjectValues()
-    {
-        $style = $this->getThemeCustomStyleObject();
-        if (is_object($style)) {
-            return $style->getValueList();
-        }
-
-        return null;
     }
 
     /**
