@@ -239,13 +239,18 @@ if (isset($user) && is_object($user)) {
                     <?= $token->output('change_password') ?>
 
                     <div class="form-group">
-                        <?= $form->label('uPassword', t('Password')) ?>
-                        <?= $form->password('uPassword', ['autocomplete' => 'off']) ?>
+                        <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
+                        <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
                     </div>
 
                     <div class="form-group">
-                        <?= $form->label('uPasswordConfirm', t('Confirm Password')) ?>
-                        <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']) ?>
+                        <?= $form->label('uPasswordNew', t('Password')) ?>
+                        <?= $form->password('uPasswordNew', ['autocomplete' => 'off']) ?>
+                    </div>
+
+                    <div class="form-group">
+                        <?= $form->label('uPasswordNewConfirm', t('Confirm Password')) ?>
+                        <?= $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']) ?>
                     </div>
 
                     <div class="dialog-buttons">
@@ -318,7 +323,7 @@ if (isset($user) && is_object($user)) {
                     element: 'div[data-dialog=change-password]',
                     title: '<?=t('Change Password')?>',
                     width: '280',
-                    height: '220',
+                    height: '280',
                     modal: true,
                     close: function () {
                         $(this).find('input[type=password]').val('');
