@@ -30,7 +30,7 @@ class DatabaseCharset extends DashboardPageController
             try {
                 $manager->apply('', $collation, '', '', null, $warnings);
             } catch (Exception $x) {
-                $this->errors->add($x);
+                $this->error->add($x);
             }
         }
         if ($this->error->has()) {
