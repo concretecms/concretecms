@@ -26,11 +26,15 @@ class PreviewPreset extends BackendInterfaceController
     public function view($pThemeID, $presetIdentifier, $pageID)
     {
         $theme = Theme::getByID($pThemeID);
+        if (!$theme->isThemeCustomizable()) {
+            throw new \RuntimeException(t('Theme %s is not customizable', $theme->getThemeHandle()));
+        }
         $page = Page::getByID($pageID);
         $this->set('previewPage', $page);
         $this->set('pThemeID', $pThemeID);
         $this->set('presetIdentifier', $presetIdentifier);
         $this->set('token', $this->app->make('token'));
+        $this->set('customizer', $theme->getThemeCustomizer());
     }
 
     public function viewIframe($pThemeID, $presetIdentifier, $pageID)
@@ -39,51 +43,18 @@ class PreviewPreset extends BackendInterfaceController
             $page = Page::getByID($pageID);
             $checker = new Checker($page);
             if ($checker->canViewPage()) {
-
                 $theme = Theme::getByID($pThemeID);
                 $customizer = $theme->getThemeCustomizer();
                 $preset = $customizer->getPresetByIdentifier($presetIdentifier);
-
-                $req = Request::getInstance();
-                $req->setCurrentPage($page);
-                $controller = $page->getPageController();
-                $view = $controller->getViewObject();
-                $previewRequest = new ThemeCustomizerRequest();
-
-                $compiler = $this->app->make(Compiler::class);
-                $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
-                $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
-
+                $previewHandler = $customizer->getType()->getPreviewHandler();
                 if ($this->request->request->has('styles')) {
                     // This is a preview request with custom, changed style data. Let's parse
                     // that data and compile it into a temporary CSS file.
-                    $styles = json_decode($this->request->request->get('styles'), true);
-                    $styleValueList = $styleValueListFactory->createFromRequestArray($customizer->getThemeCustomizableStyleList($preset), $styles);
-                    $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
-                    $result = $compiler->compileFromPreset($customizer, $preset, $collection);
-
-                    if ($this->request->request->has('customCss')) {
-                        // This is custom CSS from the "Custom CSS" button at the bottom of the customizer. This just gets
-                        // appended to the SCSS generated from the theme.
-                        $result .= $this->request->request->get('customCss');
-                    }
-
+                    $response = $previewHandler->getCustomPreviewResponse($customizer, $page, $preset, $this->request->request->all());
                 } else {
-                    // Let's turn out selected preset into CSS on the fly.
-                    $collection = $variableCollectionFactory->createFromPreset($customizer, $preset);
-                    $result = $compiler->compileFromPreset($customizer, $preset, $collection);
+                    $response = $previewHandler->getPresetPreviewResponse($customizer, $page, $preset);
                 }
-
-                $previewRequest->setCustomCss($result);
-                $view->setCustomPreviewRequest($previewRequest);
-
-                $req->setCustomRequestUser(-1);
-                $response = new Response();
-                $content = $view->render();
-                $response->setContent($content);
-
                 return $response;
-
             }
         }
         throw new UserMessageException(t('Access Denied'));

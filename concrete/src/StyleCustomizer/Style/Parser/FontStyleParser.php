@@ -2,19 +2,15 @@
 
 namespace Concrete\Core\StyleCustomizer\Style\Parser;
 
-use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 use Concrete\Core\StyleCustomizer\Style\FontStyleStyle;
-use Concrete\Core\StyleCustomizer\Style\Style;
+use Concrete\Core\StyleCustomizer\Style\StyleInterface;
 
-class FontStyleParser implements ParserInterface
+class FontStyleParser extends AbstractParser
 {
 
-    public function parseNode(\SimpleXMLElement $element, PresetInterface $preset): Style
+    public function createStyleObject(): StyleInterface
     {
-        $style = new FontStyleStyle();
-        $style->setName((string) $element['name']);
-        $style->setVariable((string) $element['variable']);
-        return $style;
+        return new FontStyleStyle();
     }
 
 }

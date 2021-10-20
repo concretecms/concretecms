@@ -2,19 +2,16 @@
 
 namespace Concrete\Core\StyleCustomizer\Style\Parser;
 
-use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 use Concrete\Core\StyleCustomizer\Style\ColorStyle;
-use Concrete\Core\StyleCustomizer\Style\Style;
+use Concrete\Core\StyleCustomizer\Style\StyleInterface;
 
-class ColorParser implements ParserInterface
+class ColorParser extends AbstractParser
 {
 
-    public function parseNode(\SimpleXMLElement $element, PresetInterface $preset): Style
+    public function createStyleObject(): StyleInterface
     {
-        $style = new ColorStyle();
-        $style->setName((string) $element['name']);
-        $style->setVariable((string) $element['variable']);
-        return $style;
+        return new ColorStyle();
     }
+
 
 }

@@ -1,8 +1,12 @@
 <?php
 namespace Concrete\Core\StyleCustomizer;
 
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Config;
 
+/**
+ * @deprecated. Use skins instead.
+ */
 class Stylesheet
 {
     protected $file; // full path to stylesheet e.g. /full/path/to/concrete/themes/greek_yogurt/css/main.less
@@ -11,7 +15,10 @@ class Stylesheet
     protected $relativeOutputDirectory; // e.g /files/cache/themes/greek_yogurt/css/main.css"
     protected $stylesheet; // e.g "css/main.less";
 
-    protected $valueList;
+    /**
+     * @var NormalizedVariableCollection
+     */
+    protected $variableCollection;
 
     public function __construct($stylesheet, $file, $sourceUriRoot, $outputDirectory, $relativeOutputDirectory)
     {
@@ -22,9 +29,9 @@ class Stylesheet
         $this->relativeOutputDirectory = $relativeOutputDirectory;
     }
 
-    public function setValueList(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList)
+    public function setVariableCollection(NormalizedVariableCollection $variableCollection)
     {
-        $this->valueList = $valueList;
+        $this->variableCollection = $variableCollection;
     }
     /**
      * Compiles the stylesheet using LESS. If a ValueList is provided they are
@@ -42,15 +49,14 @@ class Stylesheet
             )
         );
         $parser = $parser->parseFile($this->file, $this->sourceUriRoot);
-        if (isset($this->valueList) && $this->valueList instanceof \Concrete\Core\StyleCustomizer\Style\ValueList) {
-            $variables = array();
-            foreach ($this->valueList->getValues() as $value) {
-                $variables = array_merge($value->toLessVariablesArray(), $variables);
+        if (isset($this->variableCollection) && $this->variableCollection instanceof NormalizedVariableCollection) {
+            $variables = [];
+            foreach ($this->variableCollection->getValues() as $variable) {
+                $variables[$variable->getName()] = (string) $variable->getValue();
             }
             $parser->ModifyVars($variables);
         }
         $css = $parser->getCss();
-
         return $css;
     }
 

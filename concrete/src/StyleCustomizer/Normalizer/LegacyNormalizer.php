@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Core\StyleCustomizer\Normalizer;
+use Concrete\Core\StyleCustomizer\Normalizer\Legacy\ImageVariable;
 
 /**
  * Class LegacyNormalizer

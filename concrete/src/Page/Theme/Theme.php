@@ -14,6 +14,7 @@ use Concrete\Core\Page\Theme\Documentation\Installer;
 use Concrete\Core\StyleCustomizer\Customizer\Customizer;
 use Concrete\Core\StyleCustomizer\Customizer\CustomizerFactory;
 use Concrete\Core\StyleCustomizer\Customizer\CustomizerInterface;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Support\Facade\Facade;
@@ -369,6 +370,55 @@ class Theme extends ConcreteObject implements \JsonSerializable
         return $data;
     }
 
+    /**
+     * @deprecated but still required by the legacy theme customizer
+     * Set this instance to be a preview for the current request.
+     */
+    public function enablePreviewRequest()
+    {
+        $this->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE.'/preview');
+        $this->setStylesheetCachePath(Config::get('concrete.cache.directory').'/preview');
+        $this->pThemeIsPreview = true;
+    }
+
+    /**
+     * Get all the customizable LESS stylesheets.
+     * @deprecated
+
+     * @return \Concrete\Core\StyleCustomizer\Stylesheet[]
+     */
+    public function getThemeCustomizableStyleSheets()
+    {
+        $sheets = [];
+        $env = Environment::get();
+        if ($this->isThemeCustomizable()) {
+            $directory = $env->getPath(
+                DIRNAME_THEMES.'/'.$this->getThemeHandle().'/'.DIRNAME_CSS,
+                $this->getPackageHandle()
+            );
+            $dh = Loader::helper('file');
+            $files = $dh->getDirectoryContents($directory);
+            foreach ($files as $f) {
+                if (strrchr($f, '.') == '.less') {
+                    $sheets[] = $this->getStylesheetObject($f);
+                }
+            }
+        }
+
+        return $sheets;
+    }
+
+    /**
+     * @deprecated
+     * Is this instance a preview for the current request?
+     *
+     * @return bool
+     */
+    public function isThemePreviewRequest()
+    {
+        return $this->pThemeIsPreview;
+    }
+
 
     /**
      * @param string $stylesheet
@@ -406,15 +456,32 @@ class Theme extends ConcreteObject implements \JsonSerializable
     public function getStylesheet($stylesheet)
     {
         $stylesheet = $this->getStylesheetObject($stylesheet);
-        $styleValues = $this->getThemeCustomStyleObjectValues();
-        if (!is_null($styleValues)) {
-            $stylesheet->setValueList($styleValues);
+        $style = $this->getThemeCustomStyleObject();
+        $variableCollection = null;
+        if (is_object($style)) {
+            $style = $this->getThemeCustomStyleObject();
+            if (is_object($style)) {
+                $valueList = $style->getValueList();
+                $factory = app(NormalizedVariableCollectionFactory::class);
+                $collection = $factory->createFromStyleValueList($valueList);
+            }
+
         }
-        if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
-            $stylesheet->output();
+
+        if (!is_null($collection)) {
+            $stylesheet->setVariableCollection($collection);
+        }
+        if (!$this->isThemePreviewRequest()) {
+            if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
+                $stylesheet->output();
+            }
         }
         $path = $stylesheet->getOutputRelativePath();
-        $path .= '?ts=' . filemtime($stylesheet->getOutputPath());
+        if ($this->isThemePreviewRequest()) {
+            $path .= '?ts='.time();
+        } else {
+            $path .= '?ts='.filemtime($stylesheet->getOutputPath());
+        }
 
         return $path;
     }
@@ -439,23 +506,6 @@ class Theme extends ConcreteObject implements \JsonSerializable
 
             return $o;
         }
-    }
-
-    /**
-     * @return \Concrete\Core\StyleCustomizer\Style\ValueList|null
-     * @deprecated
-     *
-     * Get the value list of the custom style object if one exists.
-     *
-     */
-    public function getThemeCustomStyleObjectValues()
-    {
-        $style = $this->getThemeCustomStyleObject();
-        if (is_object($style)) {
-            return $style->getValueList();
-        }
-
-        return null;
     }
 
     /**

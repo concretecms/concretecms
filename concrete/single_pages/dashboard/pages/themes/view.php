@@ -169,16 +169,16 @@ if (count($tArray2) > 0) {
         <?php } ?>
 <?php } ?>
 
-<?php if ($hasPageLevelCustomizations) { ?>
+<?php if ($hasThemeCustomizations) { ?>
 
 
     <div class="mt-5">
-        <h3><?=t('Customizations'); ?></h3>
+        <h3><?=t('Customizations Detected'); ?></h3>
         <div class="alert alert-warning">
-            <p><?=t('Pages on your site have custom page-level styles applied, or custom skins applied to individual versions. To reset these customizations click below.'); ?></p>
+            <p><?=t('Theme customizations have been detected on your site theme or on individual pages in your site. To begin the reset process for these customizations, click below.'); ?></p>
             <form method="post" action="<?=$view->action('reset_customizations')?>">
                 <?=$token->output('reset_customizations')?>
-                <button type="button" data-dialog="reset-customizations" class="btn btn-secondary"><?=t('Reset')?></button>
+                <button type="button" data-dialog="reset-customizations" data-dialog-width="500" class="btn btn-secondary"><?=t('Reset')?></button>
             </form>
         </div>
     </div>
@@ -187,7 +187,24 @@ if (count($tArray2) > 0) {
         <div data-dialog-wrapper="reset-customizations">
             <form method="post" data-form="reset-customizations" action="<?= $view->action('reset_customizations') ?>">
                 <?php $token->output("reset_customizations") ?>
-                <p><?= t('This will clear any customizations or page-level custom skins on your site.') ?></p>
+                <?php if ($hasSiteThemeCustomizations) { ?>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                               name="resetSiteThemeCustomizations" id="resetSiteThemeCustomizations" value="1" checked>
+                        <label class="form-check-label" for="resetSiteThemeCustomizations">
+                            <?=t('Revert site-wide theme customizations to the default preset.')?>
+                        </label>
+                    </div>
+                <?php } ?>
+                <?php if ($hasPageThemeCustomizations) { ?>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                               name="resetPageThemeCustomizations" id="resetPageThemeCustomizations" value="1" checked>
+                        <label class="form-check-label" for="resetPageThemeCustomizations">
+                            <?=t('Reset page specific theme customizations.')?>
+                        </label>
+                    </div>
+                <?php } ?>
                 <div class="dialog-buttons">
                     <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
                     <button type="submit" onclick="$('form[data-form=reset-customizations]').trigger('submit')" class="btn btn-primary"><?=t('Reset')?></button>

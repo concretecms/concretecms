@@ -81,8 +81,7 @@ class ImageVariable implements VariableInterface
         $this->fID = $fID;
     }
 
-
-    public function getValue()
+    public function getComputedUrl()
     {
         $url = null;
         if ($this->fID) {
@@ -94,7 +93,12 @@ class ImageVariable implements VariableInterface
         if (!$url) {
             $url = $this->getUrl();
         }
-        return sprintf("url('%s')", $url);
+        return $url;
+    }
+
+    public function getValue()
+    {
+        return sprintf("url('%s')", $this->getComputedUrl());
     }
 
     public function jsonSerialize()

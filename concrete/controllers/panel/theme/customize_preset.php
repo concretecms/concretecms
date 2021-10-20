@@ -3,20 +3,24 @@ namespace Concrete\Controller\Panel\Theme;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Entity\Page\Theme\CustomSkin;
-use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactory;
-use Concrete\Core\Page\Theme\Command\CreateCustomSkinCommand;
+use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Theme\Command\ApplyCustomizationsToPageCommand;
+use Concrete\Core\Page\Theme\Command\ApplyCustomizationsToSiteCommand;
+use Concrete\Core\Page\Theme\Command\CreateCustomSkinCommand;
 use Concrete\Core\Page\Theme\Command\DeleteCustomSkinCommand;
 use Concrete\Core\Page\Theme\Command\SkinCommandValidator;
 use Concrete\Core\Page\Theme\Command\UpdateCustomSkinCommand;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\CustomizerVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
 use Concrete\Core\User\User;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CustomizePreset extends BackendInterfaceController
 {
@@ -25,19 +29,18 @@ class CustomizePreset extends BackendInterfaceController
 
     public function canAccess()
     {
-        $page = Page::getByPath('/dashboard/pages/themes');
-        $checker = new Checker($page);
-        return $checker->canViewPage();
+        $pk = PermissionKey::getByHandle('customize_themes');
+        return $pk->validate();
     }
 
     protected function loadPreviewPage($previewPageID)
     {
         $previewPage = Page::getByID($previewPageID);
         $checker = new Checker($previewPage);
-        if ($checker->canViewPage()) {
+        if ($checker->canEditPageTheme()) {
             $this->set('previewPage', $previewPage);
         } else {
-            throw new \RuntimeException(t('Unable to preview page: %s', $previewPage->getCollectionID()));
+            throw new \RuntimeException(t('Unable to customize theme for page: %s', $previewPage->getCollectionID()));
         }
     }
 
@@ -74,6 +77,7 @@ class CustomizePreset extends BackendInterfaceController
             $this->set('preset', $preset);
             $this->set('pThemeID', $pThemeID);
             $this->set('presetIdentifier', $presetIdentifier);
+            $this->set('customizer', $customizer);
             $this->requireAsset('ace');
         } else {
             throw new \RuntimeException(t('Invalid preset: %s', h($presetIdentifier)));
@@ -124,22 +128,13 @@ class CustomizePreset extends BackendInterfaceController
                 $customizer = $theme->getThemeCustomizer();
                 $preset = $customizer->getPresetByIdentifier($presetIdentifier);
                 if ($preset) {
-                    $styles = $this->request->request->get('styles');
-                    $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
-                    $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
-                    $styleValueList = $styleValueListFactory->createFromRequestArray(
-                        $customizer->getThemeCustomizableStyleList($preset),
-                        $styles
-                    );
-                    $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
-
                     $responseFactory = $this->app->make(ResponseFactory::class);
                     $validator = $this->app->make(SkinCommandValidator::class);
-
                     $error = $validator->validate($this->request->request->get('skinName'), $theme);
                     if ($error->has()) {
                         return $responseFactory->json($error);
                     } else {
+
                         $u = $this->app->make(User::class);
                         $command = new CreateCustomSkinCommand();
                         $command->setAuthorID($u->getUserID());
@@ -147,8 +142,7 @@ class CustomizePreset extends BackendInterfaceController
                         $command->setPresetStartingPoint($presetIdentifier);
                         $command->setSkinName($this->request->request->get('skinName'));
                         $command->setCustomCss($this->request->request->get('customCss'));
-                        $command->setVariableCollection($collection);
-
+                        $command->setStyles($this->request->request->get('styles'));
                         $skin = $this->app->executeCommand($command);
 
                         return $responseFactory->json(
@@ -166,6 +160,57 @@ class CustomizePreset extends BackendInterfaceController
     }
 
     /**
+     * Controller method run when a preset is used with the legacy customizer or other customizer that does not
+     * suppport skins.
+     * @deprecated
+     * @param $pThemeID
+     * @param $skinIdentifier
+     * @return mixed
+     */
+    public function saveStyles($previewPageID, $pThemeID, $presetIdentifier)
+    {
+        if ($this->app->make('token')->validate()) {
+            $this->loadPreviewPage($previewPageID);
+            $theme = Theme::getByID($pThemeID);
+            if ($theme) {
+                $customizer = $theme->getThemeCustomizer();
+                $preset = $customizer->getPresetByIdentifier($presetIdentifier);
+                if ($preset) {
+
+                    if ($this->request->request->get('applyTo') == 'site') {
+                        $command = new ApplyCustomizationsToSiteCommand();
+                    } else {
+                        $command = new ApplyCustomizationsToPageCommand();
+                        $command->setPage($this->get('previewPage'));
+                    }
+
+                    $command->setThemeID($theme->getThemeID());
+                    $command->setPresetStartingPoint($presetIdentifier);
+                    if ($this->request->request->has('customCss')) {
+                        $command->setCustomCss($this->request->request->get('customCss'));
+                    }
+                    $command->setStyles($this->request->request->get('styles'));
+                    $this->app->executeCommand($command);
+
+                    $editResponse = new EditResponse();
+                    $editResponse->setPage($this->get('previewPage'));
+                    $editResponse->setTitle(t('Theme Customization'));
+                    if ($this->request->request->get('applyTo') == 'site') {
+                        $editResponse->setMessage(t('Global styles updated successfully.'));
+                    } else {
+                        $editResponse->setMessage(t('Page styles updated successfully.'));
+                    }
+                    return new JsonResponse($editResponse);
+                }
+            }
+            throw new \RuntimeException(t('Invalid theme ID or skin identifier.'));
+        }
+        throw new UserMessageException(t('Access Denied'));
+    }
+
+
+
+    /**
      * Controller method run when custom skins are saved. Custom skins can have custom variables, then be updated
      * and tweaked and re-saved as necessary.
      *
@@ -180,22 +225,12 @@ class CustomizePreset extends BackendInterfaceController
             if ($theme) {
                 $skin = $theme->getSkinByIdentifier($skinIdentifier);
                 if ($skin) {
-                    $customizer = $theme->getThemeCustomizer();
-                    $preset = $customizer->getPresetByIdentifier($skin->getPresetStartingPoint());
-                    $styles = $this->request->request->get('styles');
-                    $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
-                    $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
-                    $styleValueList = $styleValueListFactory->createFromRequestArray(
-                        $customizer->getThemeCustomizableStyleList($preset),
-                        $styles
-                    );
-                    $collection = $variableCollectionFactory->createFromStyleValueList($styleValueList);
 
                     $responseFactory = $this->app->make(ResponseFactory::class);
 
                     $command = new UpdateCustomSkinCommand();
                     $command->setCustomSkin($skin);
-                    $command->setVariableCollection($collection);
+                    $command->setStyles($this->request->request->get('styles'));
                     $command->setCustomCss($this->request->request->get('customCss'));
 
                     $skin = $this->app->executeCommand($command);

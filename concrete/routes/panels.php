@@ -48,5 +48,6 @@ $router->all('/theme/customize/skin/{pThemeID}/{skinIdentifier}/{previewPageID}'
 $router->post('/theme/customize/create_skin/{pThemeID}/{presetIdentifier}', 'Theme\CustomizePreset::createSkin');
 $router->post('/theme/customize/save_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizePreset::save');
 $router->post('/theme/customize/delete_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizePreset::delete');
+$router->post('/theme/customize/save_styles/{previewPageID}/{pThemeID}/{presetIdentifier}', 'Theme\CustomizePreset::saveStyles');
 $router->all('/sitemap', 'Sitemap::view');
 $router->all('/help', 'Help::view');

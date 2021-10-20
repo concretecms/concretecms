@@ -15,9 +15,11 @@ class UpdateCustomSkinCommand extends Command
     protected $customSkin;
 
     /**
-     * @var NormalizedVariableCollection
+     * The styles data as posted by the customizer
+     *
+     * @var array
      */
-    protected $variableCollection;
+    protected $styles;
 
     /**
      * @var string
@@ -57,23 +59,20 @@ class UpdateCustomSkinCommand extends Command
     }
 
     /**
-     * @return NormalizedVariableCollection
+     * @return array
      */
-    public function getVariableCollection(): NormalizedVariableCollection
+    public function getStyles(): array
     {
-        return $this->variableCollection;
+        return $this->styles;
     }
 
     /**
-     * @param NormalizedVariableCollection $variableCollection
+     * @param array $styles
      */
-    public function setVariableCollection(NormalizedVariableCollection $variableCollection): void
+    public function setStyles(array $styles): void
     {
-        $this->variableCollection = $variableCollection;
+        $this->styles = $styles;
     }
-
-
-
 
 
 }

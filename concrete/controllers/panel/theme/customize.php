@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 
 class Customize extends BackendInterfaceController
@@ -15,9 +16,8 @@ class Customize extends BackendInterfaceController
 
     public function canAccess()
     {
-        $page = Page::getByPath('/dashboard/pages/themes');
-        $checker = new Checker($page);
-        return $checker->canViewPage();
+        $pk = PermissionKey::getByHandle('customize_themes');
+        return $pk->validate();
     }
 
     public function view($pThemeID, $previewPageID)
@@ -30,7 +30,7 @@ class Customize extends BackendInterfaceController
                 $this->set('theme', $theme);
                 $previewPage = Page::getByID($previewPageID);
                 $checker = new Checker($previewPage);
-                if ($checker->canViewPage()) {
+                if ($checker->canEditPageTheme()) {
                     $previewPage = Page::getByID($previewPageID);
                     $this->set('previewPage', $previewPage);
                     $activeSkin = SkinInterface::SKIN_DEFAULT;

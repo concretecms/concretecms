@@ -6,6 +6,7 @@ use Concrete\Core\Page\View\Preview\PageDesignPreviewRequest;
 use Concrete\Core\Page\View\Preview\PreviewRequestInterface;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -219,6 +220,20 @@ class PageView extends View
     }
 
     /**
+     * @deprecated. Previewing functions should use `setCustomPreviewRequest` below – but the legacy customizer
+     * cannot, because it needs to have access to a modified theme object from within this context, so we need
+     * to be able to actually set it through. Don't use this method.
+     *
+     * Called from previewing functions, this lets us override the page's theme with one of our own choosing.
+     */
+    public function setCustomPageTheme(PageTheme $pt)
+    {
+        $this->themeObject = $pt;
+        $this->themePkgHandle = $pt->getPackageHandle();
+    }
+
+
+    /**
      * @param mixed $customPreviewRequest
      */
     public function setCustomPreviewRequest(PreviewRequestInterface $customPreviewRequest): void
@@ -304,7 +319,8 @@ class PageView extends View
                     $style = $this->c->getCustomStyleObject();
                     if (is_object($style)) {
                         $scl = $style->getValueList();
-                        $sheetObject->setValueList($scl);
+                        $collection = app(NormalizedVariableCollectionFactory::class)->createFromStyleValueList($scl);
+                        $sheetObject->setVariableCollection($collection);
                         // write cache output file
                         $sheetObject->output();
                         // return cache output file

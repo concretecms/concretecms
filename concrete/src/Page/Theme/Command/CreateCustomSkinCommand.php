@@ -34,9 +34,11 @@ class CreateCustomSkinCommand extends Command
     protected $authorID;
 
     /**
-     * @var NormalizedVariableCollection
+     * The styles data as posted by the customizer
+     *
+     * @var array
      */
-    protected $variableCollection;
+    protected $styles;
 
     /**
      * @return string
@@ -103,22 +105,6 @@ class CreateCustomSkinCommand extends Command
     }
 
     /**
-     * @return NormalizedVariableCollection
-     */
-    public function getVariableCollection(): NormalizedVariableCollection
-    {
-        return $this->variableCollection;
-    }
-
-    /**
-     * @param NormalizedVariableCollection $variableCollection
-     */
-    public function setVariableCollection(NormalizedVariableCollection $variableCollection): void
-    {
-        $this->variableCollection = $variableCollection;
-    }
-
-    /**
      * @return string
      */
     public function getPresetStartingPoint(): string
@@ -134,7 +120,21 @@ class CreateCustomSkinCommand extends Command
         $this->presetStartingPoint = $presetStartingPoint;
     }
 
+    /**
+     * @return array
+     */
+    public function getStyles(): array
+    {
+        return $this->styles;
+    }
 
+    /**
+     * @param array $styles
+     */
+    public function setStyles(array $styles): void
+    {
+        $this->styles = $styles;
+    }
 
 
 

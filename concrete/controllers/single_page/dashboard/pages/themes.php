@@ -42,7 +42,18 @@ class Themes extends DashboardSitePageController
 
         $siteService = $this->app->make('site');
 
-        $this->set('hasPageLevelCustomizations', $siteService->hasPageLevelThemeCustomizations($this->getSite()));
+        $hasSiteThemeCustomizations = false;
+        $hasPageThemeCustomizations = false;
+        $customizer = $activeTheme->getThemeCustomizer();
+        if ($customizer) {
+            $type = $customizer->getType();
+            $customizationsManager = $type->getCustomizationsManager();
+            $hasSiteThemeCustomizations = $customizationsManager->hasSiteThemeCustomizations($this->getSite());
+            $hasPageThemeCustomizations = $customizationsManager->hasPageThemeCustomizations($this->getSite());
+        }
+        $this->set('hasSiteThemeCustomizations', $hasSiteThemeCustomizations);
+        $this->set('hasPageThemeCustomizations', $hasPageThemeCustomizations);
+        $this->set('hasThemeCustomizations', $hasSiteThemeCustomizations || $hasPageThemeCustomizations);
     }
 
 
@@ -71,9 +82,28 @@ class Themes extends DashboardSitePageController
         if (!$this->token->validate('reset_customizations')) {
             $this->error->add($this->token->getErrorMessage());
         }
+        $activeTheme = Theme::getSiteTheme();
+        $customizer = $activeTheme->getThemeCustomizer();
+        if (!$customizer) {
+            $this->error->add(t('The active site theme is not customizable.'));
+        }
         if (!$this->error->has()) {
-            $siteService = $this->app->make('site');
-            $siteService->resetPageLevelThemeCustomizations($this->getSite());
+            $type = $customizer->getType();
+            $customizationsManager = $type->getCustomizationsManager();
+            $commands = [];
+            if ($this->request->request->has('resetSiteThemeCustomizations')) {
+                $commands[] = $customizationsManager->getResetSiteThemeCustomizationsCommand($this->getSite());
+            }
+            if ($this->request->request->has('resetPageThemeCustomizations')) {
+                $commands[] = $customizationsManager->getResetPageThemeCustomizationsCommand($this->getSite());
+            }
+
+            foreach($commands as $command) {
+                if ($command) {
+                    $this->app->executeCommand($command);
+                }
+            }
+
             $this->flash('success', t('Customizations reset successfully.'));
         }
         return $this->buildRedirect($this->action());

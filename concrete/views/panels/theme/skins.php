@@ -50,3 +50,6 @@ if ($customizer->supportsCustomSkins()) {
         </menu>
     <?php } ?>
 </section>
+
+<script src="//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+

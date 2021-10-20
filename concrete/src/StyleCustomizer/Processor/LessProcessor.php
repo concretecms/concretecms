@@ -25,6 +25,7 @@ class LessProcessor implements ProcessorInterface
         foreach ($collection->getValues() as $variable) {
             $variables[$variable->getName()] = (string) $variable->getValue();
         }
+        $parser->ModifyVars($variables);
         $css = $parser->getCss();
         return $css;
     }
