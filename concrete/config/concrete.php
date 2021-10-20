@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0RC5',
     'version_installed' => '9.0.0RC4',
-    'version_db' => '20211001145301', // the key of the latest database migration
+    'version_db' => '20211020151701', // the key of the latest database migration
 
     /*
      * Installation status
@@ -170,11 +170,11 @@ return [
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
         /*
-         * Disallowed file extension list (takes the precedence over the extensions whitelist).
+         * Disallowed file extension list (takes the precedence over the extensions allowlist).
          *
          * @var string semi-colon separated.
          */
-        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
+        'extensions_denylist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
 
         'chunking' => [
             // Enable uploading files in chunks?
@@ -1182,11 +1182,11 @@ return [
      */
     'spam' => [
         /*
-         * Whitelist group ID
+         * Allowlist group ID
          *
          * @var int
          */
-        'whitelist_group' => 0,
+        'allowlist_group' => 0,
 
         /*
          * Notification email

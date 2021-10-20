@@ -342,7 +342,7 @@ class Controller extends AuthenticationTypeController
 
         /** @var \Concrete\Core\Permission\IPService $ip_service */
         $ip_service = Core::make('ip');
-        if ($ip_service->isBlacklisted()) {
+        if ($ip_service->isDenylisted()) {
             throw new \Exception($ip_service->getErrorMessage());
         }
 

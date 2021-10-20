@@ -7,8 +7,8 @@ $config = $app->make('config');
 <form method="post" id="site-form" action="<?=$view->action('update_library')?>">
     <div class="form-group">
       <div class="input-group">
-        <?=$form->label('group_id', t('Spam Whitelist Group'),['class'=>'input-group-text'])?>
-        <?=$form->select('group_id', (array) $groups, $whitelistGroup, ['class'=>'form-select']);?>
+        <?=$form->label('group_id', t('Spam Allowlist Group'),['class'=>'input-group-text'])?>
+        <?=$form->select('group_id', (array) $groups, $allowlistGroup, ['class'=>'form-select']);?>
       </div>
     </div>
 

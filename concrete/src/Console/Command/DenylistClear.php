@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BlacklistClear extends Command
+class DenylistClear extends Command
 {
     /**
      * Value for the '--automatic-bans' option: all bans.
@@ -38,8 +38,8 @@ class BlacklistClear extends Command
         $automaticBansAll = static::DELETE_AUTOMATIC_BANS_ALL;
         $automaticBansExpired = static::DELETE_AUTOMATIC_BANS_EXPIRED;
         $this
-            ->setName('c5:blacklist:clear')
-            ->setDescription('Clear blacklist-related data')
+            ->setName('c5:denylist:clear')
+            ->setDescription('Clear denylist-related data')
             ->addArgument('handle', InputArgument::IS_ARRAY, 'List of IP Access Control Category handles (if not specified: apply to all the categories)')
             ->addEnvOption()
             ->addOption('min-age', 'm', InputOption::VALUE_REQUIRED, 'Clear events older that this number of seconds (0 for all)')
@@ -47,7 +47,7 @@ class BlacklistClear extends Command
             ->addOption('list', 'l', InputOption::VALUE_NONE, 'List the available IP Access Control Category handles')
             ->addOption('failed-login-age', 'f', InputOption::VALUE_REQUIRED, '*DEPRECATED* use --min-age')
             ->setHelp(<<<EOT
-You can use this command to clear the data related to IP address blacklist.
+You can use this command to clear the data related to IP address denylist.
 
 To clear the events data, use the --min-age option.
 To clear the automatic bans, use the --automatic-bans option.
@@ -56,7 +56,7 @@ Returns codes:
   $okExitCode operation completed successfully
   $errExitCode errors occurred
 
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-blacklist-clear
+More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-denylist-clear
 EOT
             )
         ;
@@ -138,10 +138,10 @@ EOT
                 }
                 switch ($automaticBans) {
                     case static::DELETE_AUTOMATIC_BANS_ALL:
-                        $count = $service->deleteAutomaticBlacklist(false);
+                        $count = $service->deleteAutomaticDenylist(false);
                         break;
                     case static::DELETE_AUTOMATIC_BANS_EXPIRED:
-                        $count = $service->deleteAutomaticBlacklist(true);
+                        $count = $service->deleteAutomaticDenylist(true);
                         break;
                 }
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_QUIET) {

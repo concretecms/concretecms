@@ -4,16 +4,16 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Page\View\PageView $view */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
 /* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist\Configure $controller */
+/* @var Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist\Configure $controller */
 
 /* @var Concrete\Core\Entity\Permission\IpAccessControlCategory $category */
 /* @var array $units */
 
-$view->element('dashboard/system/permissions/blacklist/menu', ['category' => $category, 'type' => null]);
+$view->element('dashboard/system/permissions/denylist/menu', ['category' => $category, 'type' => null]);
 ?>
 
-<form method="post" id="ipblacklist-form" action="<?= $view->action('update_ipblacklist', $category->getIpAccessControlCategoryID()) ?>">
-    <?php $token->output('update_ipblacklist-' . $category->getIpAccessControlCategoryID()) ?>
+<form method="post" id="ipdenylist-form" action="<?= $view->action('update_ipdenylist', $category->getIpAccessControlCategoryID()) ?>">
+    <?php $token->output('update_ipdenylist-' . $category->getIpAccessControlCategoryID()) ?>
     <div class="ccm-pane-body">
         <div class="form-group row row-cols-auto gx-3 align-items-center">
             <div class="col-auto">

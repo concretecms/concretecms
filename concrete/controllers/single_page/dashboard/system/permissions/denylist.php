@@ -8,7 +8,7 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\IpAccessControlService;
 use Punic\Comparer;
 
-class Blacklist extends DashboardPageController
+class Denylist extends DashboardPageController
 {
     /**
      * @var \Doctrine\Common\Persistence\ObjectRepository|null

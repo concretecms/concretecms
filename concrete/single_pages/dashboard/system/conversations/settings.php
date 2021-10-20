@@ -5,7 +5,7 @@ $file = \Core::make('helper/file');
 $token = \Core::make('token');
 
 /**
- * @var string[] $file_access_file_types_blacklist
+ * @var string[] $file_access_file_types_denylist
  */
 
 ?>
@@ -42,10 +42,10 @@ $token = \Core::make('token');
             <label class="control-label form-label"><?= t('Allowed File Extensions (Comma separated, no periods).') ?></label>
             <?= $form->textarea('fileExtensions', $fileExtensions) ?>
             <?php
-            if ($file_access_file_types_blacklist !== []) {
+            if ($file_access_file_types_denylist !== []) {
                 ?>
                 <div class="text-muted small">
-                    <?= t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $file_access_file_types_blacklist) . '</code>') ?><br />
+                    <?= t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $file_access_file_types_denylist) . '</code>') ?><br />
                     <?= t('If you want to unblock these extensions, you have to manually set the %s configuration key.', '<code>conversations.files.disallowed_types</code>') ?>
                 </div>
                 <?php

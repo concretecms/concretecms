@@ -1,14 +1,14 @@
 <?php
 
-namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist;
 
-use Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist;
+use Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Punic\Unit;
 
-class Configure extends Blacklist
+class Configure extends Denylist
 {
     const UNIT_SECONDS = 's';
     const UNIT_MINUTES = 'm';
@@ -20,7 +20,7 @@ class Configure extends Blacklist
         $category = $this->getCategory($id);
         if ($category === null) {
             return $this->app->make(ResponseFactoryInterface::class)->redirect(
-                $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/system/permissions/blacklist']),
+                $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/system/permissions/denylist']),
                 302
             );
         }
@@ -34,19 +34,19 @@ class Configure extends Blacklist
         ]);
     }
 
-    public function update_ipblacklist($id = '')
+    public function update_ipdenylist($id = '')
     {
         $category = $this->getCategory($id);
         if ($category === null) {
             $this->flash('error', t('Unable to find the requested category'));
 
             return $this->app->make(ResponseFactoryInterface::class)->redirect(
-                $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/system/permissions/blacklist']),
+                $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/system/permissions/denylist']),
                 302
             );
         }
         try {
-            if (!$this->token->validate('update_ipblacklist-' . $category->getIpAccessControlCategoryID())) {
+            if (!$this->token->validate('update_ipdenylist-' . $category->getIpAccessControlCategoryID())) {
                 throw new UserMessageException($this->token->getErrorMessage());
             }
             $post = $this->request->request;
@@ -81,7 +81,7 @@ class Configure extends Blacklist
 
             if (!$this->error->has()) {
                 $this->entityManager->flush($category);
-                $this->flash('success', t('IP Blacklist settings saved.'));
+                $this->flash('success', t('IP Denylist settings saved.'));
 
                 return $this->app->make(ResponseFactoryInterface::class)->redirect(
                     $this->action('view', $category->getIpAccessControlCategoryID()),

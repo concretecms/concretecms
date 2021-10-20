@@ -1,8 +1,8 @@
 <?php
 
-namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist;
 
-use Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist;
+use Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist;
 use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Entity\Permission\IpAccessControlRange;
 use Concrete\Core\Error\UserMessageException;
@@ -15,14 +15,14 @@ use IPLib\Address\AddressInterface;
 use IPLib\Factory as IPFactory;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Range extends Blacklist
+class Range extends Denylist
 {
     public function view($type = null, $id = '')
     {
         $service = $this->getService($id);
         if ($service === null) {
             return $this->app->make(ResponseFactoryInterface::class)->redirect(
-                $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/system/permissions/blacklist']),
+                $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/system/permissions/denylist']),
                 302
             );
         }
@@ -30,14 +30,14 @@ class Range extends Blacklist
         $type = (int) $type;
         switch ($type) {
             case IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL:
-                $this->set('pageTitle', t('%s: Blacklisted IP addresses (manual)', $category->getDisplayName()));
+                $this->set('pageTitle', t('%s: Denylisted IP addresses (manual)', $category->getDisplayName()));
                 break;
             case IpAccessControlService::IPRANGETYPE_WHITELIST_MANUAL:
-                $this->set('pageTitle', t('%s: Whitelisted IP addresses', $category->getDisplayName()));
+                $this->set('pageTitle', t('%s: Allowlisted IP addresses', $category->getDisplayName()));
                 break;
             case IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC:
             default:
-                $this->set('pageTitle', t('%s: Blacklisted IP addresses (automatic)', $category->getDisplayName()));
+                $this->set('pageTitle', t('%s: Denylisted IP addresses (automatic)', $category->getDisplayName()));
                 $type = IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC;
                 break;
         }
@@ -81,13 +81,13 @@ class Range extends Blacklist
         if (!$this->request->request->get('force') && ($type & IpAccessControlService::IPRANGEFLAG_BLACKLIST) === IpAccessControlService::IPRANGEFLAG_BLACKLIST) {
             $myIP = $this->app->make(AddressInterface::class);
             if ($range->contains($myIP)) {
-                if (!$service->isWhitelisted($myIP)) {
+                if (!$service->isAllowlisted($myIP)) {
                     if ($range instanceof \IPLib\Range\Single) {
                         $msg = t('The specified IP address is the one you are currently using.');
                     } else {
                         $msg = t('The specified IP range contains the IP address you are currently using.');
                     }
-                    $msg .= "\n" . t("If you don't add your IP address to the whitelist, you won't be able to log-in anymore from the current IP address.");
+                    $msg .= "\n" . t("If you don't add your IP address to the allowlist, you won't be able to log-in anymore from the current IP address.");
 
                     return $this->app->make(ResponseFactoryInterface::class)->json(['require_force' => $msg]);
                 }
@@ -113,17 +113,17 @@ class Range extends Blacklist
             if ($record->getType() !== (int) $type) {
                 throw new UserMessageException(t('The specified IP range is invalid'));
             }
-            $myIpWasWhitelisted = false;
+            $myIpWasAllowlisted = false;
             if (($type & IpAccessControlService::IPRANGEFLAG_WHITELIST) === IpAccessControlService::IPRANGEFLAG_WHITELIST) {
                 $myIP = $this->app->make(AddressInterface::class);
                 $range = $record->getIpRange();
                 if ($range->contains($myIP)) {
-                    $myIpWasWhitelisted = true;
+                    $myIpWasAllowlisted = true;
                 }
             }
             $service->deleteRange($record);
-            if ($myIpWasWhitelisted && $service->isBlacklisted($myIP)) {
-                $result = t("The removed range contained your current IP address, which is now in the blacklist.\nIf you want to log in again with the current IP address, you should add your IP to the whitelist, or remove the relevant blacklist records.");
+            if ($myIpWasAllowlisted && $service->isDenylisted($myIP)) {
+                $result = t("The removed range contained your current IP address, which is now in the denylist.\nIf you want to log in again with the current IP address, you should add your IP to the allowlist, or remove the relevant denylist records.");
             }
         }
 
@@ -167,13 +167,13 @@ class Range extends Blacklist
         $type = (int) $type;
         switch ($type) {
             case IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC:
-                $filename = 'blacklist-automatic';
+                $filename = 'denylist-automatic';
                 break;
             case IpAccessControlService::IPRANGETYPE_BLACKLIST_MANUAL:
-                $filename = 'blacklist-manual';
+                $filename = 'denylist-manual';
                 break;
             case IpAccessControlService::IPRANGETYPE_WHITELIST_MANUAL:
-                $filename = 'whitelist';
+                $filename = 'allowlist';
                 break;
             default:
                 $filename = 'ip-ranges';
@@ -207,7 +207,7 @@ class Range extends Blacklist
 
     public function clear_data($id)
     {
-        if (!$this->token->validate('blacklist-clear-data/' . $id)) {
+        if (!$this->token->validate('denylist-clear-data/' . $id)) {
             throw new UserMessageException($this->token->getErrorMessage());
         }
         $service = $this->getService($id);
@@ -225,22 +225,22 @@ class Range extends Blacklist
             }
             $deleteFailedLoginAttemptsMinAge *= 24 * 60 * 60;
         }
-        switch ($post->get('delete-automatic-blacklist')) {
+        switch ($post->get('delete-automatic-denylist')) {
             case 'yes-keep-current':
-                $deleteAutomaticBlacklist = true;
-                $deleteAutomaticBlacklistOnlyExpired = true;
+                $deleteAutomaticDenylist = true;
+                $deleteAutomaticDenylistOnlyExpired = true;
                 break;
             case 'yes-all':
-                $deleteAutomaticBlacklist = true;
-                $deleteAutomaticBlacklistOnlyExpired = false;
+                $deleteAutomaticDenylist = true;
+                $deleteAutomaticDenylistOnlyExpired = false;
                 break;
         }
         $messages = [];
         if ($deleteFailedLoginAttempts) {
             $messages[] = t2('%s failed login attempt has been deleted.', '%s failed login attempts have been deleted.', $service->deleteEvents($deleteFailedLoginAttemptsMinAge));
         }
-        if ($deleteAutomaticBlacklist) {
-            $messages[] = t2('%s automatically banned IP address has been deleted.', '%s automatically banned IP addresses have been deleted.', $service->deleteAutomaticBlacklist($deleteAutomaticBlacklistOnlyExpired));
+        if ($deleteAutomaticDenylist) {
+            $messages[] = t2('%s automatically banned IP address has been deleted.', '%s automatically banned IP addresses have been deleted.', $service->deleteAutomaticDenylist($deleteAutomaticDenylistOnlyExpired));
         }
         if (empty($messages)) {
             throw new UserMessageException(t('Please specify what you would like to delete.'));

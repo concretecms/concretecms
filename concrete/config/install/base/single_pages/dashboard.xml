@@ -1121,24 +1121,24 @@
         <page name="Workflows" path="/dashboard/system/permissions/workflows"
               filename="/dashboard/system/permissions/workflows.php"
               pagetype="" description="" package=""/>
-        <page name="IP Blacklist" path="/dashboard/system/permissions/blacklist"
-              filename="/dashboard/system/permissions/blacklist.php" pagetype="" description="" package="">
+        <page name="IP Blacklist" path="/dashboard/system/permissions/denylist"
+              filename="/dashboard/system/permissions/denylist.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>security, lock ip, lock out, block ip, address, restrict, access</value>
                 </attributekey>
             </attributes>
         </page>
-        <page name="Configure IP Blocking" path="/dashboard/system/permissions/blacklist/configure"
-              filename="/dashboard/system/permissions/blacklist/configure.php" pagetype="" description="" package="">
+        <page name="Configure IP Blocking" path="/dashboard/system/permissions/denylist/configure"
+              filename="/dashboard/system/permissions/denylist/configure.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value>1</value>
                 </attributekey>
             </attributes>
         </page>
-        <page name="IP Range" path="/dashboard/system/permissions/blacklist/range"
-              filename="/dashboard/system/permissions/blacklist/range.php" pagetype="" description="" package="">
+        <page name="IP Range" path="/dashboard/system/permissions/denylist/range"
+              filename="/dashboard/system/permissions/denylist/range.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value>1</value>

@@ -9,8 +9,8 @@ defined('C5_EXECUTE') or die('Access denied.');
  * @var string $apisecret
  * @var bool $registrationEnabled
  * @var int|null $registrationGroup
- * @var string[] $whitelist
- * @var string[] $blacklist
+ * @var string[] $allowlist
+ * @var string[] $denylist
  */
 ?>
 
@@ -46,17 +46,17 @@ defined('C5_EXECUTE') or die('Access denied.');
     <legend><?= t('Domain Filtering') ?></legend>
     <p><?= h(t('Google allows accounts be created against custom domains like "example.com". These lists allow you to use standard PHP regular expressions to filter against the domain name or email address. For example user@example.com would filter against "example.com".')) ?></p>
     <div class="form-group">
-        <?= $form->label('whitelist', t('Domain Whitelist regex')) ?>
-        <?= $form->textarea('whitelist', implode("\n", $whitelist), ['class' => 'font-monospace', 'spellcheck' => 'false']) ?>
-        <small class="text-muted"><?= t('One per line, to whitelist all %s domains: %s', '<code>concrete5.org</code>', '<code>~^concrete5\\.org$~i</code>') ?></small>
+        <?= $form->label('allowlist', t('Domain Allowlist regex')) ?>
+        <?= $form->textarea('allowlist', implode("\n", $allowlist), ['class' => 'font-monospace', 'spellcheck' => 'false']) ?>
+        <small class="text-muted"><?= t('One per line, to allowlist all %s domains: %s', '<code>concrete5.org</code>', '<code>~^concrete5\\.org$~i</code>') ?></small>
     </div>
     <div class="form-group">
-        <?= $form->label('blacklist', t('Domain Blacklist regex')) ?>
-        <?= $form->textarea('blacklist', implode("\n", $blacklist), ['class' => 'font-monospace', 'spellcheck' => 'false']) ?>
+        <?= $form->label('denylist', t('Domain Denylist regex')) ?>
+        <?= $form->textarea('denylist', implode("\n", $denylist), ['class' => 'font-monospace', 'spellcheck' => 'false']) ?>
         <small class="text-muted">
             <?= t('One per line') ?><br />
             <?= t('Format: %s.', sprintf('<code>[ "~%s~i", "%s" ]</code>', t('Regex'), t('Error Message'))) ?><br />
-            <?= t('To disallow everything other than whitelist: %s.', sprintf('<code>[ "~.*~", "%s" ]</code>', t('Invalid domain.'))) ?>
+            <?= t('To disallow everything other than allowlist: %s.', sprintf('<code>[ "~.*~", "%s" ]</code>', t('Invalid domain.'))) ?>
         </small>
     </div>
 </fieldset>

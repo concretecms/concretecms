@@ -86,7 +86,7 @@ class Register extends PageController
             $username = trim($username);
             $username = preg_replace('/ +/', ' ', $username);
 
-            if ($ip->isBlacklisted()) {
+            if ($ip->isDenylisted()) {
                 $e->add($ip->getErrorMessage());
             }
 

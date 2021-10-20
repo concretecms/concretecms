@@ -95,7 +95,7 @@ class DashboardManager extends AbstractManager
             '/dashboard/system/mail/method' => implode('', [
                 '<p>' . t('Set concrete5 to use an external SMTP server, instead of the default PHP Mail function, for sending email.') . '</p>',
             ]),
-            '/dashboard/system/permissions/blacklist' => implode('', [
+            '/dashboard/system/permissions/denylist' => implode('', [
                 '<p>' . t('Block users at specific IP addresses from logging into your site. Blocked users can still view pages that are visible to guests.') . '</p>',
             ]),
             '/dashboard/system/permissions/tasks' => implode('', [
