@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90f1edfab9a9599f9ee345d353ffdcbe",
+    "content-hash": "9698d235820e57457598d6aa6bf5ed45",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -190,16 +190,16 @@
         },
         {
             "name": "concrete5/dependency-patches",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/dependency-patches.git",
-                "reference": "ab8d9078c862d0decf90dbca90de411fbb987fa7"
+                "reference": "2a3e751c17cf6b6e0df8ecdbe8bd6a2a34133284"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/ab8d9078c862d0decf90dbca90de411fbb987fa7",
-                "reference": "ab8d9078c862d0decf90dbca90de411fbb987fa7",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/2a3e751c17cf6b6e0df8ecdbe8bd6a2a34133284",
+                "reference": "2a3e751c17cf6b6e0df8ecdbe8bd6a2a34133284",
                 "shasum": ""
             },
             "require": {
@@ -212,7 +212,11 @@
                         "Fix access array offset on value of type null": "doctrine/annotations/access-array-offset-on-null.patch"
                     },
                     "doctrine/orm:2.5.14": {
-                        "Fix UnitOfWork::createEntity()": "doctrine/orm/UnitOfWork-createEntity-continue.patch"
+                        "Fix UnitOfWork::createEntity()": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
+                        "Fix access array offset on value of type null": "doctrine/orm/access-array-offset-on-null.patch"
+                    },
+                    "egulias/email-validator:1.2.15": {
+                        "Fix access array offset on value of type null": "egulias/email-validator/access-array-offset-on-null.patch"
                     },
                     "zendframework/zend-stdlib:2.7.7": {
                         "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
@@ -238,6 +242,9 @@
                     },
                     "zendframework/zend-validator:2.8.2": {
                         "Fix idn_to_ascii/idn_to_utf8 deprecation warning": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch"
+                    },
+                    "lcobucci/jwt:3.4.5": {
+                        "Adds php 8 compability to jwt version 3.4.5": "lcobucci/jwt/php8-compatibility.patch"
                     }
                 }
             },
@@ -257,9 +264,9 @@
             "homepage": "https://github.com/concrete5/dependency-patches",
             "support": {
                 "issues": "https://github.com/concrete5/dependency-patches/issues",
-                "source": "https://github.com/concrete5/dependency-patches/tree/1.5.0"
+                "source": "https://github.com/concrete5/dependency-patches/tree/1.6.0"
             },
-            "time": "2019-07-29T08:25:31+00:00"
+            "time": "2021-10-18T16:51:00+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
