@@ -166,7 +166,7 @@ class AddFile extends FrontendController
         $config = $this->app->make('config');
         $extensions = $config->get('conversations.files.disallowed_types');
         if ($extensions === null) {
-            $extensions = $config->get('concrete.upload.extensions_denylist', $config->get('concrete.upload.extensions_blacklist'););
+            $extensions = $config->get('concrete.upload.extensions_denylist', $config->get('concrete.upload.extensions_blacklist'));
         }
         $helperFile = $this->app->make('helper/concrete/file');
 
