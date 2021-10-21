@@ -24,8 +24,8 @@ class UserEmailValidatorServiceProvider extends Provider
                 $app->make(
                     UniqueUserEmailValidator::class,
                     [
-                        'testMXRecord' => $config->get('concrete.user.email.test_mx_record'),
-                        'strict' => $config->get('concrete.user.email.strict'),
+                        'testMXRecord' => $config->get('concrete.user.email.test_mx_record', false),
+                        'strict' => $config->get('concrete.user.email.strict', false),
                     ]
                 )
             );

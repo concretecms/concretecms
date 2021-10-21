@@ -145,7 +145,7 @@ class Controller extends BlockController
 
     public function save($args)
     {
-        if ($args['newInstance']) {
+        if (!empty($args['newInstance'])) {
             // Create a new instance for this board
             $board = $this->app->make(EntityManager::class)
                 ->find(Board::class, $args['boardID']);

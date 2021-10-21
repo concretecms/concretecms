@@ -26,7 +26,7 @@ class DatabaseTest extends ConcreteDatabaseTestCase
     public function testInvalidConnection()
     {
         $this->expectException(\Doctrine\DBAL\Driver\PDOException::class);
-        $this->expectExceptionMessage("getaddrinfo failed");
+        $this->expectExceptionMessageMatches('/(getaddrinfo (?:for .+)? failed)/');
         $connection = Database::getFactory()->createConnection(
             [
                 'database' => md5(mt_rand()),
