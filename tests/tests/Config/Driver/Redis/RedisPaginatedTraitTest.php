@@ -29,7 +29,7 @@ class RedisPaginatedTraitTest extends TestCase
 
 
         $redis = M::mock('Redis');
-        $expectedIterators = [null, 127, 135, 205];
+        $expectedIterators = [0, 127, 135, 205];
         $returnValues = [['cfg=foo', 'cfg=bar'], ['cfg=baz'], false];
 
         $redis->shouldReceive('scan')->times(3)->with(
