@@ -293,7 +293,7 @@ var ccmi18n_tree = ' . json_encode([
         ]) . ';
 var ccmi18n_tourist = ' . json_encode([
             'template' => implode('', [
-                '<div class="popover ccm-help-tour" role="tooltip">',
+                '<div class="popover ccm-ui ccm-help-tour" role="tooltip">',
                 '<div class="popover-arrow"></div>',
                 '<a class="ccm-help-tour-close fas fa-times" href="#" data-role="end"></a>',
                 '<div class="popover-body"></div>',
