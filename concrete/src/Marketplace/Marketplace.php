@@ -156,34 +156,42 @@ class Marketplace implements ApplicationAwareInterface
         // Get the marketplace instance
         $marketplace = static::getInstance();
         $file .= '?csiURL=' . urlencode($marketplace->getSiteURL()) . "&csiVersion=" . APP_VERSION;
-
-        // Retreive the package
-        $pkg = $marketplace->get($file);
-
+        $timestamp = time();
+        $tmpFile = $marketplace->fileHelper->getTemporaryDirectory() . '/' . $timestamp . '.zip';
         $error = $marketplace->app->make('error');
-        if (empty($pkg)) {
+
+        $chunksize = 1 * (1024 * 1024); // split into 1MB chunks
+        $handle = fopen($file, 'rb');
+        $fp = fopen($tmpFile, 'w');
+
+        if ($handle === false) {
             $error->add(t('An error occurred while downloading the package.'));
-        }
-        if ($pkg == \Package::E_PACKAGE_INVALID_APP_VERSION) {
-            $error->add(t('This package isn\'t currently available for this version of Concrete . Please contact the maintainer of this package for assistance.'));
-        }
-
-        $file = time();
-        // Use the same method as the Archive library to build a temporary file name.
-        $tmpFile = $marketplace->fileHelper->getTemporaryDirectory() . '/' . $file . '.zip';
-        $fp = fopen($tmpFile, "wb");
-        if ($fp) {
-            fwrite($fp, $pkg);
-            fclose($fp);
+        } else if ($fp === false) {
+            $error->add(t('Concrete was not able to save the package.'));
         } else {
-            $error->add(t('Concrete was not able to save the package after download.'));
+            while (!feof($handle)) {
+                $data = fread($handle, $chunksize);
+
+                if ($data == \Package::E_PACKAGE_INVALID_APP_VERSION) {
+                    $error->add(t('This package isn\'t currently available for this version of Concrete . Please contact the maintainer of this package for assistance.'));
+                } else {
+                    fwrite($fp, $data, strlen($data));
+                }
+            }
+
+            fclose($handle);
+            fclose($fp);
         }
 
-        if ($error->has()) {
+        if($error->has()) {
+            if (file_exists($tmpFile)) {
+                @unlink($tmpFile);
+            }
+
             return $error;
+        } else {
+            return $timestamp;
         }
-
-        return $file;
     }
 
     /**
