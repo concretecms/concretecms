@@ -150,7 +150,7 @@ class LoginServiceTest extends TestCase
 
         $ipService->shouldReceive('logFailedLogin')->twice();
         $ipService->shouldReceive('failedLoginsThresholdReached')->twice()->andReturnValues([false, true]);
-        $ipService->shouldReceive('addToBlacklistForThresholdReached')->once();
+        $ipService->shouldReceive('addToDenylistForThresholdReached')->once();
         $ipService->shouldReceive('getErrorMessage')->once()->andReturn('Error Message');
 
         $attemptService->shouldReceive('trackAttempt');

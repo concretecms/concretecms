@@ -7,13 +7,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var Concrete\Core\Page\View\PageView $view */
 /* @var Concrete\Core\Validation\CSRF\Token $token */
 /* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Controller\SinglePage\Dashboard\System\Permissions\Blacklist\Range $controller */
+/* @var Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist\Range $controller */
 
 /* @var int $type */
 /* @var Concrete\Core\Permission\IpAccessControlService $service */
 /* @var IPLib\Address\AddressInterface $myIPAddress */
 
-$view->element('dashboard/system/permissions/blacklist/menu', ['category' => $service->getCategory(), 'type' => $type]);
+$view->element('dashboard/system/permissions/denylist/menu', ['category' => $service->getCategory(), 'type' => $type]);
 
 if (($type & IpAccessControlService::IPRANGEFLAG_MANUAL) === IpAccessControlService::IPRANGEFLAG_MANUAL) {
     ?>
@@ -114,9 +114,9 @@ if (($type & IpAccessControlService::IPRANGEFLAG_MANUAL) === IpAccessControlServ
 <?php
 if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
     ?>
-    <div style="display: none" data-dialog="ccm-blacklist-clear-data-dialog" class="ccm-ui">
-        <form data-dialog-form="ccm-blacklist-clear-data-form" method="POST" action="<?= $view->action('clear_data', $service->getCategory()->getIpAccessControlCategoryID()) ?>">
-            <?php $token->output('blacklist-clear-data/' . $service->getCategory()->getIpAccessControlCategoryID()) ?>
+    <div style="display: none" data-dialog="ccm-denylist-clear-data-dialog" class="ccm-ui">
+        <form data-dialog-form="ccm-denylist-clear-data-form" method="POST" action="<?= $view->action('clear_data', $service->getCategory()->getIpAccessControlCategoryID()) ?>">
+            <?php $token->output('denylist-clear-data/' . $service->getCategory()->getIpAccessControlCategoryID()) ?>
             <div class="form-check-inline">
 
                     <?= $form->checkbox('delete-failed-login-attempts', 'yes', false, ['class'=>'mb-sm-2']) ?>
@@ -124,16 +124,16 @@ if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
 
             </div>
             <div class="form-check">
-                <?= $form->radio('delete-automatic-blacklist', 'yes-keep-current', true) ?>
-                <?= $form->label('delete-automatic-blacklist1', t('Delete expired automatic bans')) ?>
+                <?= $form->radio('delete-automatic-denylist', 'yes-keep-current', true) ?>
+                <?= $form->label('delete-automatic-denylist1', t('Delete expired automatic bans')) ?>
             </div>
             <div class="form-check">
-                <?= $form->radio('delete-automatic-blacklist', 'yes-all', false) ?>
-                <?= $form->label('delete-automatic-blacklist2', t('Delete every automatic ban (including the current ones)')) ?>
+                <?= $form->radio('delete-automatic-denylist', 'yes-all', false) ?>
+                <?= $form->label('delete-automatic-denylist2', t('Delete every automatic ban (including the current ones)')) ?>
             </div>
             <div class="form-check">
-                <?= $form->radio('delete-automatic-blacklist', 'nope', false) ?>
-                <?= $form->label('delete-automatic-blacklist3', t("Don't delete any automatic ban")) ?>
+                <?= $form->radio('delete-automatic-denylist', 'nope', false) ?>
+                <?= $form->label('delete-automatic-denylist3', t("Don't delete any automatic ban")) ?>
             </div>
         </form>
         <div class="dialog-buttons">
@@ -143,7 +143,7 @@ if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
     </div>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a class="btn btn-danger float-end" data-launch-dialog="ccm-blacklist-clear-data-dialog"><?= t('Delete') ?></a>
+            <a class="btn btn-danger float-end" data-launch-dialog="ccm-denylist-clear-data-dialog"><?= t('Delete') ?></a>
         </div>
     </div>
     <?php
@@ -192,8 +192,8 @@ $(document).ready(function() {
     <?php
     if ($type === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
         ?>
-        var $dialog = $('div[data-dialog="ccm-blacklist-clear-data-dialog"]');
-        $('[data-launch-dialog="ccm-blacklist-clear-data-dialog"]').on('click', function(e) {
+        var $dialog = $('div[data-dialog="ccm-denylist-clear-data-dialog"]');
+        $('[data-launch-dialog="ccm-denylist-clear-data-dialog"]').on('click', function(e) {
             e.preventDefault();
             jQuery.fn.dialog.open({
                 element: $dialog,
@@ -204,7 +204,7 @@ $(document).ready(function() {
             });
         });
         ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
-            if (data.form === 'ccm-blacklist-clear-data-form') {
+            if (data.form === 'ccm-denylist-clear-data-form') {
                 window.location.reload();
             }
         });

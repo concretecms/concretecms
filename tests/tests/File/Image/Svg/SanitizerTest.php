@@ -34,9 +34,9 @@ class SanitizerTest extends TestCase
         self::$sanitizerOptions = new SanitizerOptions();
         self::$sanitizerOptions
             ->setUnsafeElements('script script2')
-            ->setElementWhitelist('script2')
+            ->setElementAllowlist('script2')
             ->setUnsafeAttributes('onload onload2 onclick')
-            ->setAttributeWhitelist('onload2');
+            ->setAttributeAllowlist('onload2');
     }
 
     /**

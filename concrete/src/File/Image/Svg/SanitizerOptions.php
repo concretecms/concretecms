@@ -93,14 +93,14 @@ EOT
      *
      * @var string[]
      */
-    private $elementWhitelist;
+    private $elementAllowlist;
 
     /**
      * The list of XML attributes to not consider as unsafe.
      *
      * @var string[]
      */
-    private $attributeWhitelist;
+    private $attributeAllowlist;
 
     /**
      * Initialize the instance.
@@ -110,8 +110,8 @@ EOT
         $this
             ->setUnsafeElements(static::$defaultUnsafeElements)
             ->setUnsafeAttributes(static::$defaultUnsafeAttributes)
-            ->setElementWhitelist(static::$defaultElementWhiteList)
-            ->setAttributeWhitelist(static::$defaultAttributeWhiteList)
+            ->setElementAllowlist(static::$defaultElementWhiteList)
+            ->setAttributeAllowlist(static::$defaultAttributeWhiteList)
         ;
     }
 
@@ -168,9 +168,9 @@ EOT
      *
      * @return string[]
      */
-    public function getElementWhitelist()
+    public function getElementAllowlist()
     {
-        return $this->elementWhitelist;
+        return $this->elementAllowlist;
     }
 
     /**
@@ -180,9 +180,9 @@ EOT
      *
      * @return $this
      */
-    public function setElementWhitelist($value)
+    public function setElementAllowlist($value)
     {
-        $this->elementWhitelist = $this->normalizeStringList($value);
+        $this->elementAllowlist = $this->normalizeStringList($value);
 
         return $this;
     }
@@ -192,9 +192,9 @@ EOT
      *
      * @return string[]
      */
-    public function getAttributeWhitelist()
+    public function getAttributeAllowlist()
     {
-        return $this->attributeWhitelist;
+        return $this->attributeAllowlist;
     }
 
     /**
@@ -204,9 +204,9 @@ EOT
      *
      * @return $this
      */
-    public function setAttributeWhitelist($value)
+    public function setAttributeAllowlist($value)
     {
-        $this->attributeWhitelist = $this->normalizeStringList($value);
+        $this->attributeAllowlist = $this->normalizeStringList($value);
 
         return $this;
     }

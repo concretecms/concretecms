@@ -150,7 +150,7 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
 
         // Deal with excessive logins from an IP
         if ($this->ipService->failedLoginsThresholdReached()) {
-            $this->ipService->addToBlacklistForThresholdReached();
+            $this->ipService->addToDenylistForThresholdReached();
             $ipFailed = true;
         }
 

@@ -284,7 +284,7 @@ class Sanitizer
     protected function processNode(DOMElement $element, SanitizerOptions $options, array &$removedNodes)
     {
         $elementName = strtolower((string) $element->localName);
-        if (!in_array($elementName, $options->getElementWhitelist(), true) && in_array($elementName, $options->getUnsafeElements(), true)) {
+        if (!in_array($elementName, $options->getElementAllowlist(), true) && in_array($elementName, $options->getUnsafeElements(), true)) {
             $element->parentNode->removeChild($element);
             if (isset($removedNodes['elements'][$elementName])) {
                 ++$removedNodes['elements'][$elementName];
@@ -295,7 +295,7 @@ class Sanitizer
             foreach ($element->attributes as $attribute) {
                 /* @var \DOMAttr $attribute */
                 $attributeName = strtolower((string) $attribute->localName);
-                if (!in_array($attributeName, $options->getAttributeWhitelist(), true) && in_array($attributeName, $options->getUnsafeAttributes(), true)) {
+                if (!in_array($attributeName, $options->getAttributeAllowlist(), true) && in_array($attributeName, $options->getUnsafeAttributes(), true)) {
                     $element->removeAttribute($attribute->name);
                     if (isset($removedNodes['attributes'][$attributeName])) {
                         ++$removedNodes['attributes'][$attributeName];

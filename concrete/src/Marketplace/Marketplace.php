@@ -354,7 +354,7 @@ class Marketplace implements ApplicationAwareInterface
 
             if (!$csToken && !$this->isConnected()) {
                 return '<div class="ccm-error">' . t(
-                    'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concretecms.com">help@concretecms.com</a>.') . '</div>';
+                    'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be denylisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concretecms.com">help@concretecms.com</a>.') . '</div>';
             } else {
                 $time = time();
                 $ifr = '<script type="text/javascript">

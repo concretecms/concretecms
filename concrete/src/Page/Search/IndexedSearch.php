@@ -32,7 +32,7 @@ class IndexedSearch
     {
         $action = Config::get('concrete.misc.search_index_area_method');
         if (!strlen($action)) {
-            $action = 'blacklist';
+            $action = 'denylist';
         }
 
         return $action;
@@ -59,7 +59,7 @@ class IndexedSearch
     {
         if (!isset($this->searchableAreaNames)) {
             $searchableAreaNamesInitial = $this->getSavedSearchableAreas();
-            if ('blacklist' == $this->getSearchableAreaAction()) {
+            if ('denylist' == $this->getSearchableAreaAction()) {
                 $areas = Area::getHandleList();
                 foreach ($areas as $blArHandle) {
                     if (!in_array($blArHandle, $searchableAreaNamesInitial)) {

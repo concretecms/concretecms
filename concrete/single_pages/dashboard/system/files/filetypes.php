@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var string $file_access_file_types
- * @var string[] $file_access_file_types_blacklist
+ * @var string[] $file_access_file_types_denylist
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Validation\CSRF\Token $token
  * @var Concrete\Core\Page\View\PageView $view
@@ -23,12 +23,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <?php
-    if ($file_access_file_types_blacklist !== []) {
+    if ($file_access_file_types_denylist !== []) {
         ?>
         <div class="alert alert-info">
-            <?= t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $file_access_file_types_blacklist) . '</code>') ?><br />
+            <?= t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $file_access_file_types_denylist) . '</code>') ?><br />
             <br />
-            <?= t('If you want to unblock these extensions, you have to manually set the %s configuration key.', '<code>concrete.upload.extensions_blacklist</code>') ?>
+            <?= t('If you want to unblock these extensions, you have to manually set the %s configuration key.', '<code>concrete.upload.extensions_denylist</code>') ?>
         </div>
         <?php
     }
