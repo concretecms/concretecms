@@ -91,7 +91,7 @@ $(function () {
     var tour = new Tour({
         name: 'dashboard-system-urls',
         steps: steps,
-        framework: 'bootstrap4',
+        framework: 'bootstrap5',
         template: ccmi18n_tourist.template,
         localization: ccmi18n_tourist.localization,
         storage: false,
