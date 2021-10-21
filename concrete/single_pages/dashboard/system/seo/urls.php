@@ -95,6 +95,7 @@ $(function () {
         template: ccmi18n_tourist.template,
         localization: ccmi18n_tourist.localization,
         storage: false,
+        container: '#ccm-tooltip-holder',
         showProgressBar: false,
         sanitizeWhitelist: {
             a: [/^data-/, 'href']
@@ -104,6 +105,7 @@ $(function () {
         },
         onStart: function() {
             window.ConcretePanelManager.getByIdentifier('help').hide();
+            $('#tourBackdrop').detach() // https://github.com/IGreatlyDislikeJavascript/bootstrap-tourist/issues/42
         },
         onShown: ConcreteHelpGuideManager.updateStepFooter,
         onEnd: function() {
