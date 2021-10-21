@@ -57,7 +57,7 @@ html.ccm-toolbar-visible {
   line-height: $line-height-base;
   color: $body-color;
   text-align: $body-text-align;
-  background-color: $body-bg; // 2
+  //background-color: $body-bg; // 2 Concrete can't have this
   -webkit-text-size-adjust: 100%; // 3
   -webkit-tap-highlight-color: rgba($black, 0); // 4
 }
