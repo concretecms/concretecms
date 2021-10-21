@@ -18,11 +18,11 @@ final class Version20211020151701 extends AbstractMigration implements Repeatabl
         Page::getByPath('/dashboard/system/permissions/blacklist/configure')->delete();
         Page::getByPath('/dashboard/system/permissions/blacklist/range')->delete();
 
-        $this->createSinglePage('/dashboard/system/permissions/denylist', '', [
+        $this->createSinglePage('/dashboard/system/permissions/denylist', 'IP Blacklist', [
             "meta_keywords" => "security, lock ip, lock out, block ip, address, restrict, access"
         ]);
 
-        $configurePage = $this->createSinglePage('/dashboard/system/permissions/denylist/configure');
+        $configurePage = $this->createSinglePage('/dashboard/system/permissions/denylist/configure', 'Configure IP Blocking');
 
         if ($configurePage && !$configurePage->isError()) {
             if ($this->isAttributeHandleValid(PageCategory::class, 'exclude_nav')) {
@@ -30,7 +30,7 @@ final class Version20211020151701 extends AbstractMigration implements Repeatabl
             }
         }
 
-        $rangePage = $this->createSinglePage('/dashboard/system/permissions/denylist/range');
+        $rangePage = $this->createSinglePage('/dashboard/system/permissions/denylist/range', 'IP Range');
 
         if ($rangePage && !$rangePage->isError()) {
             if ($this->isAttributeHandleValid(PageCategory::class, 'exclude_nav')) {
