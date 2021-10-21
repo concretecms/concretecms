@@ -1121,7 +1121,7 @@
         <page name="Workflows" path="/dashboard/system/permissions/workflows"
               filename="/dashboard/system/permissions/workflows.php"
               pagetype="" description="" package=""/>
-        <page name="IP Blacklist" path="/dashboard/system/permissions/denylist"
+        <page name="IP Deny List" path="/dashboard/system/permissions/denylist"
               filename="/dashboard/system/permissions/denylist.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">

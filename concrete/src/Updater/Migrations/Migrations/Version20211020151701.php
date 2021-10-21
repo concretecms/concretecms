@@ -18,7 +18,7 @@ final class Version20211020151701 extends AbstractMigration implements Repeatabl
         Page::getByPath('/dashboard/system/permissions/blacklist/configure')->delete();
         Page::getByPath('/dashboard/system/permissions/blacklist/range')->delete();
 
-        $this->createSinglePage('/dashboard/system/permissions/denylist', 'IP Blacklist', [
+        $this->createSinglePage('/dashboard/system/permissions/denylist', 'IP Deny List', [
             "meta_keywords" => "security, lock ip, lock out, block ip, address, restrict, access"
         ]);
 
