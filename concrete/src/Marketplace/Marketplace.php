@@ -166,20 +166,22 @@ class Marketplace implements ApplicationAwareInterface
 
         if ($handle === false) {
             $error->add(t('An error occurred while downloading the package.'));
-        }
+        } else if ($fp === false) {
+            $error->add(t('Concrete was not able to save the package.'));
+        } else {
+            while (!feof($handle)) {
+                $data = fread($handle, $chunksize);
 
-        while (!feof($handle)) {
-            $data = fread($handle, $chunksize);
-
-            if ($data == \Package::E_PACKAGE_INVALID_APP_VERSION) {
-                $error->add(t('This package isn\'t currently available for this version of Concrete . Please contact the maintainer of this package for assistance.'));
-            } else {
-                fwrite($fp, $data, strlen($data));
+                if ($data == \Package::E_PACKAGE_INVALID_APP_VERSION) {
+                    $error->add(t('This package isn\'t currently available for this version of Concrete . Please contact the maintainer of this package for assistance.'));
+                } else {
+                    fwrite($fp, $data, strlen($data));
+                }
             }
-        }
 
-        fclose($handle);
-        fclose($fp);
+            fclose($handle);
+            fclose($fp);
+        }
 
         if($error->has()) {
             if (file_exists($tmpFile)) {
