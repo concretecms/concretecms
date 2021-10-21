@@ -84,27 +84,30 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 						<?php
                         $file = File::getByID($attachment['fID']);
                         if (is_object($file)) {
-                            if (strpos($file->getMimeType(), 'image') !== false) {
-                                $paragraphPadding = 'image-preview';
-                                $thumb = $im->getThumbnail($file, '90', '90', true);
-                                ?>
-                                <div class="image-popover-hover" data-full-image="<?php echo $file->getURL() ?>">
-                                    <div class="glyph-container"><i class="fa fa-search"></i></div>
-                                </div>
-                                <div class="attachment-preview-container">
-                                    <img class="posted-attachment-image" src="<?php  echo $thumb->src;
-                                    ?>" width="<?php  echo $thumb->width;
-                                    ?>" height="<?php  echo $thumb->height;
-                                    ?>" alt="attachment image" />
-                                </div>
-                            <?php } ?>
-							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID']; ?>">
-                                <a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
-                                <?php if (!$message->isConversationMessageDeleted() && $canEditMessage) { ?>
-                                    <a rel="<?php echo $attachment['cnvMessageAttachmentID']; ?>"
-                                    class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
+                            $permissions = new \Concrete\Core\Permission\Checker($file);
+                            if ($permissions->canViewFile()) {
+                                if (strpos($file->getMimeType(), 'image') !== false) {
+                                    $paragraphPadding = 'image-preview';
+                                    $thumb = $im->getThumbnail($file, '90', '90', true);
+                                    ?>
+                                    <div class="image-popover-hover" data-full-image="<?php echo $file->getURL() ?>">
+                                        <div class="glyph-container"><i class="fa fa-search"></i></div>
+                                    </div>
+                                    <div class="attachment-preview-container">
+                                        <img class="posted-attachment-image" src="<?php  echo $thumb->src;
+                                        ?>" width="<?php  echo $thumb->width;
+                                        ?>" height="<?php  echo $thumb->height;
+                                        ?>" alt="attachment image" />
+                                    </div>
                                 <?php } ?>
-                            </p>
+                                <p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID']; ?>">
+                                    <a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
+                                    <?php if (!$message->isConversationMessageDeleted() && $canEditMessage) { ?>
+                                        <a rel="<?php echo $attachment['cnvMessageAttachmentID']; ?>"
+                                        class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
+                                    <?php } ?>
+                                </p>
+                            <?php } ?>
 						</div>
     					<?php }
                         $paragraphPadding = '';
