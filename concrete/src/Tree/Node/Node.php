@@ -447,7 +447,7 @@ abstract class Node extends ConcreteObject implements \Concrete\Core\Permission\
             } else {
                 foreach ($newParent->getTreeNodeParentArray() as $newParentAncestor) {
                     if ($newParentAncestor->getTreeNodeID() == $this->getTreeNodeID()) {
-                        $result = MoveException(t("It's not possible to move a node under one of its descending nodes"));
+                        $result = new MoveException(t("It's not possible to move a node under one of its descending nodes"));
                         break;
                     }
                 }
