@@ -17,8 +17,6 @@ $board = $instance->getBoard();
     >
         <?=t('Details')?>
     </a>
-</div>
-<div class="list-group">
     <a
             class="list-group-item <?=($action === 'rules') ? ' active' : ''?>"
             href="<?=URL::to('/dashboard/boards/instances/rules', $instance->getBoardInstanceID())?>"

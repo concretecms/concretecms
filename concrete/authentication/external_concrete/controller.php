@@ -174,6 +174,22 @@ class Controller extends GenericOauth2TypeController
         $this->setData();
     }
 
+    public function getBindingForUser($user)
+    {
+        $binding = parent::getBindingForUser($user);
+        if ($binding) {
+            return $binding;
+        } else {
+            if (is_object($user)) {
+                $userID = $user->getUserID();
+            } else {
+                $userID = (int) $user;
+            }
+
+            return $this->getBindingService()->getUserBinding($userID, 'external_concrete5');
+        }
+    }
+
     /**
      * Method for setting general data for all views.
      */
