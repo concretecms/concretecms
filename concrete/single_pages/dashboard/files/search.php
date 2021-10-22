@@ -116,7 +116,15 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                             <label class="ccm-fancy-checkbox">
                                 <?php echo $form->checkbox("", $item->getItem()->getTreeNodeId(), $item->isFavoredItem(), ["class" => "ccm-favorite-folder-switch"]); ?>
                                 <i class="fas fa-star checked"></i>
-                                <i class="fas fa-star unchecked"></i>
+                                <?php
+                                /* This was changed back because someone said that Font Awesome Regular icons require the pro license.
+                                 * That may be true for some icons, but this icon explicitly is listed in the free icons on fontawesome.com,
+                                 * and does not have a pro badge beneath the regular listing. Therefore I am going to use the regular icon in order
+                                 * to have an outline only star, and begin the process of moving away from a less restrictive and byzantine
+                                 * icon system
+                                 */
+                                 ?>
+                                <i class="far fa-star unchecked"></i>
                             </label>
                         <?php }?>
                     </td>
