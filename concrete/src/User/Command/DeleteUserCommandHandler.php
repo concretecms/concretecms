@@ -6,10 +6,8 @@ use Concrete\Core\Command\Task\Output\OutputAwareInterface;
 use Concrete\Core\Command\Task\Output\OutputAwareTrait;
 use Concrete\Core\User\UserInfoRepository;
 
-class DeleteUserCommandHandler implements OutputAwareInterface
+class DeleteUserCommandHandler
 {
-    use OutputAwareTrait;
-
     /** @var UserInfoRepository */
     protected $repository;
 
@@ -26,14 +24,9 @@ class DeleteUserCommandHandler implements OutputAwareInterface
      */
     public function __invoke(DeleteUserCommand $command)
     {
-        $this->output->write(t('Deleting user ID: %s', $command->getUserID()));
         $user = $this->repository->getByID($command->getUserID());
         if ($user) {
-            if ($user->delete() === false) {
-                $this->output->write(t('Deleting user %s has been canceled...', $command->getUserID()));
-            }
-        } else {
-            $this->output->write(t('Userinfo object for ID %s not found. Skipping...', $command->getUserID()));
+            $user->delete();
         }
     }
 }

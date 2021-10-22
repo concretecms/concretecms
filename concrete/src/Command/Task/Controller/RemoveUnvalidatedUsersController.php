@@ -10,7 +10,7 @@ use Concrete\Core\Command\Task\Runner\CommandTaskRunner;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\User\Command\DeleteUserCommand;
+use Concrete\Core\User\Command\DeleteUserTaskCommand;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -65,7 +65,7 @@ class RemoveUnvalidatedUsersController extends AbstractController
                 if ($result->rowCount() > 0) {
                     $batch = Batch::create();
                     while ($row = $result->fetch()) {
-                        $batch->add(new DeleteUserCommand($row['uID']));
+                        $batch->add(new DeleteUserTaskCommand($row['uID']));
                     }
                     return new BatchProcessTaskRunner($task, $batch, $input, t('Removing invalidated users...'));
                 }
