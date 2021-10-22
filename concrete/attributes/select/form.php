@@ -83,9 +83,14 @@ if ($akSelectAllowOtherValues) {
         }
     }
 
+
+    /*
+       Note: the form-control on here is NOT ideal, that's bootstrap 4 markup,
+       but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here */
+    */
     echo (string) new Element(
         'span',
-        $form->selectMultiple($view->field('atSelectOptionValue'), $options, count($selectedOptionIDs) ? $selectedOptionIDs : '', ['data-select-and-add' => $akID]),
+        $form->selectMultiple($view->field('atSelectOptionValue'), $options, count($selectedOptionIDs) ? $selectedOptionIDs : '', ['class' => 'form-control', 'data-select-and-add' => $akID]),
         [
             'class' => 'ccm-select-values-selector',
             'id' => 'ccm-select-values-selector-' . $akID,
