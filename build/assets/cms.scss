@@ -11,6 +11,7 @@
 // The html and body tags are combined into the bootstrap/reboot.scss file, and the rest of the tags are
 // just copied into reboot_tags.scss
 @import "@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
+@import "@concretecms/bedrock/assets/cms/scss/bootstrap/root-modified"; // see below
 .ccm-ui {
   @import "@concretecms/bedrock/assets/cms/scss/bootstrap/reboot-tags";
 
@@ -21,7 +22,11 @@
   @import "bootstrap/scss/utilities";
 
   // Layout & components
-  @import "bootstrap/scss/root";
+  // Important – we can't import root here because it includes :root inside it, which puts our CMS specific variables
+  // onto the :root node, which could collide with other variables. So let's copy the root.scss from bootstrap into
+  // our own location, just like we do with reboot. To keep this file up to date, just copy the contents of
+  // bootstrap/css/root and remove :root from the file, and copy it into the root-modified file above.
+  //@import "bootstrap/scss/root";
   //@import "bootstrap/scss/reboot";
   @import "bootstrap/scss/type";
   @import "bootstrap/scss/images";

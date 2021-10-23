@@ -57,6 +57,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?php echo t('Default Timezone'); ?>
             </label>
             <div class="row ps-3">
+                <?php
+                /* Currently Bootstrap Select is broken with optgroup
+                 * https://github.com/snapappointments/bootstrap-select/issues/2607
+                 * So I'm going to remove optgroups here for the time being. It's either that or remove
+                 * BS Select from this list. Either way, when this is fixed, pull in an updated version of the library
+                 * and up revert this
+                 */
+                /*
+                ?>
                 <select class="selectpicker" name="timezone" data-live-search="true" data-width="auto">
                     <?php
                     foreach ($timezones as $areaName => $namedTimezones) {
@@ -75,6 +84,29 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                 <?php
                             } ?>
                         </optgroup>
+                        <?php
+                    }
+                    ?>
+                </select>
+                */ ?>
+
+
+                <select class="selectpicker" name="timezone" data-live-search="true" data-width="auto">
+                    <?php
+                    foreach ($timezones as $areaName => $namedTimezones) {
+                        ?>
+                            <?php
+                            foreach ($namedTimezones as $tzID => $tzName) {
+                                $zone = new DateTimeZone($tzID);
+                                $zoneName = Punic\Calendar::getTimezoneNameNoLocationSpecific($zone);
+                                if ($zoneName) {
+                                    $zoneName = '(' . $zoneName . ')';
+                                } ?>
+                                <option value="<?= h($tzID); ?>"<?= strcasecmp($tzID, $timezone) === 0 ? ' selected="selected"' : ''; ?>>
+                                    <?= h($tzName); ?> <?=$zoneName; ?>
+                                </option>
+                                <?php
+                            } ?>
                         <?php
                     }
                     ?>

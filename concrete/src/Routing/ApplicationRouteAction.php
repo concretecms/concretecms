@@ -55,7 +55,9 @@ class ApplicationRouteAction implements RouteActionInterface
         // Call the resolved object method
         $argumentsResolver = $this->app->make(ArgumentResolver::class);
         $arguments = $argumentsResolver->getArguments($request, $callback);
-        return $this->app->call($callback, $arguments);
+        // Note: this no longer works, because Laravel needs you to pass the key of the arguments directly.
+        //return $this->app->call($callback, $arguments);
+        return call_user_func_array($callback, $arguments);
     }
 
 }

@@ -53,6 +53,12 @@ class SiteSelector
         </select>
 EOL;
         } else {
+            /* Currently Bootstrap Select is broken with optgroup
+             * https://github.com/snapappointments/bootstrap-select/issues/2607
+             * So I'm going to remove optgroups here for the time being. It's either that or remove
+             * BS Select from this list. Either way, when this is fixed, pull in an updated version of the library
+             * and up revert this
+             */
         $html = <<<EOL
         <select name="siteID" data-select="search-sites" class="form-select">
             <optgroup label="{$defaults}">
@@ -66,9 +72,11 @@ EOL;
 EOL;
         }
 
+        /*
         $html .= <<<'EOL'
         <script type="text/javascript">$(function() { $('select[data-select=search-sites]').selectpicker({width: '100%'}); });</script>
 EOL;
+        */
 
         return $html;
     }
