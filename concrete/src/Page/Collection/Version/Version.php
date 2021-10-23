@@ -7,6 +7,8 @@ use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
+use Concrete\Core\Localization\Service\Date;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Page;
 use PageType;
 use Permissions;
@@ -720,10 +722,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $newHandle = $this->cvHandle;
 
         // update a collection updated record
-        $db->executeQuery(
-            'update Collections set cDateModified = ? where cID = ?',
-            [$now, $cID]
-        );
+        $this->updateCollectionDateModified();
 
         $pageWithActiveVersion->refreshCache();
 
@@ -864,38 +863,49 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
+    private function updateCollectionDateModified(): void
+    {
+        $app = Facade::getFacadeApplication();
+        $cID = $this->getCollectionID();
+        /** @var Date $dh */
+        $dh = $app->make(Date::class);
+        $now = $dh->getOverridableNow();
+        /** @var QueryBuilder $qb */
+        $qb = $app->make(Connection::class)->createQueryBuilder();
+        $qb->update('Collections')
+            ->set('cDateModified', ':cDateModified')
+            ->where('cID = :cID')
+            ->setParameter('cDateModified', $now)
+            ->setParameter('cID', $cID)
+            ->execute();
+    }
+
     /**
      * Mark this collection version as not approved.
      */
-    public function deny()
+    public function deny(): void
     {
         $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $cvID = $this->cvID;
-        $cID = $this->cID;
+        $cvID = $this->getVersionID();
+        $cID = $this->getCollectionID();
 
         // first we update a collection updated record
-        $dh = $app->make('helper/date');
-        $db->executeQuery('update Collections set cDateModified = ? where cID = ?', array(
-            $dh->getOverridableNow(),
-            $cID,
-        ));
-
-        // first we remove approval for all versions of this collection
-        $v = array(
-            $cID,
-        );
-        $q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
-        $db->executeQuery($q, $v);
-        $this->cvIsApproved = 0;
+        $this->updateCollectionDateModified();
 
         // now we deny our version
-        $v2 = array(
-            $cID,
-            $cvID,
-        );
-        $q2 = "update CollectionVersions set cvIsApproved = 0, cvApproverUID = 0 where cID = ? and cvID = ?";
-        $db->executeQuery($q2, $v2);
+        /** @var QueryBuilder $qb */
+        $qb = $app->make(Connection::class)->createQueryBuilder();
+        $qb->update('CollectionVersions')
+            ->set('cvIsApproved', ':cvIsApproved')
+            ->set('cvApproverUID', ':cvApproverUID')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->setParameter('cvIsApproved', 0)
+            ->setParameter('cvApproverUID', 0)
+            ->setParameter('cID', $cID)
+            ->setParameter('cvID', $cvID)
+            ->execute();
+
         $this->refreshCache();
     }
 
