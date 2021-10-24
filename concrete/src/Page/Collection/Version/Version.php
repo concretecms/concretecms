@@ -665,7 +665,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         );
         $this->cvPublishDate = $startDateTime;
         $this->cvPublishEndDate = $endDateTime;
-        $this->avoidApprovalOverlapping();
     }
 
     /**
@@ -748,7 +747,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->cvDateApproved = $now;
         $this->cvPublishDate = $cvPublishDate;
         $this->cvPublishEndDate = $cvPublishEndDate;
-        $this->avoidApprovalOverlapping();
         $c = Page::getByID($cID, $cvID);
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
         if ($oldHandle != $newHandle && !$c->isGeneratedCollection()) {

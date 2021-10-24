@@ -228,18 +228,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             case self::PAGE_VERSION_ACTIVE:
             default:
                 $app = Application::getFacadeApplication();
-                $nowParameter = $query->createNamedParameter($app->make('date')->getOverridableNow());
-                $query
-                    ->andWhere($expr->eq('cv.cvIsApproved', 1))
-                    ->andWhere($expr->orX(
-                        $expr->isNull('cv.cvPublishDate'),
-                        $expr->lte('cv.cvPublishDate', $nowParameter)
-                    ))
-                    ->andWhere($expr->orX(
-                        $expr->isNull('cv.cvPublishEndDate'),
-                        $expr->gte('cv.cvPublishEndDate', $nowParameter)
-                    ))
-                ;
+                $query->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate <= :cvPublishDate or cvPublishDate is null) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)))');
+                $query->setParameter('cvPublishDate', $app->make('date')->getOverridableNow());
                 break;
         }
 
