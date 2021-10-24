@@ -457,7 +457,6 @@ class Theme extends ConcreteObject implements \JsonSerializable
     {
         $stylesheet = $this->getStylesheetObject($stylesheet);
         $style = $this->getThemeCustomStyleObject();
-        $variableCollection = null;
         if (is_object($style)) {
             $style = $this->getThemeCustomStyleObject();
             if (is_object($style)) {
@@ -465,7 +464,6 @@ class Theme extends ConcreteObject implements \JsonSerializable
                 $factory = app(NormalizedVariableCollectionFactory::class);
                 $collection = $factory->createFromStyleValueList($valueList);
             }
-
         }
 
         if (!is_null($collection)) {
