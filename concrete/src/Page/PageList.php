@@ -192,7 +192,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if ($this->includeAliases) {
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'Pages', 'pa', 'p.cPointerID = pa.cID')
-                ->leftJoin('p', 'PagePaths', 'pp', 'p.cID = pp.cID and pp.ppIsCanonical = true')
                 ->leftJoin('pa', 'PageSearchIndex', 'psi', 'psi.cID = if(pa.cID is null, p.cID, pa.cID)')
                 ->leftJoin('p', 'PageTypes', 'pt', 'pt.ptID = if(pa.cID is null, p.ptID, pa.ptID)')
                 ->leftJoin('p', 'CollectionSearchIndexAttributes', 'csi', 'csi.cID = if(pa.cID is null, p.cID, pa.cID)')
@@ -201,7 +200,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 ->andWhere('p.cIsTemplate = 0 or pa.cIsTemplate = 0');
         } else {
             $query->from('Pages', 'p')
-                ->leftJoin('p', 'PagePaths', 'pp', '(p.cID = pp.cID and pp.ppIsCanonical = true)')
                 ->leftJoin('p', 'PageSearchIndex', 'psi', 'p.cID = psi.cID')
                 ->leftJoin('p', 'PageTypes', 'pt', 'p.ptID = pt.ptID')
                 ->leftJoin('c', 'CollectionSearchIndexAttributes', 'csi', 'c.cID = csi.cID')
@@ -563,6 +561,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByPath($path, $includeAllChildren = true)
     {
+        $this->query->leftJoin('p', 'PagePaths', 'pp', 'p.cID = pp.cID and pp.ppIsCanonical = true');
         if (!$includeAllChildren) {
             $this->query->andWhere('pp.cPath = :cPath');
             $this->query->setParameter('cPath', $path);

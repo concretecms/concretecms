@@ -102,6 +102,9 @@ class StandardSearchIndexer implements SearchIndexerInterface
         array_walk(
             $dropColumns,
             function ($columnName) use ($toTable) {
+                if ($toTable->hasIndex($columnName)) {
+                    $toTable->dropIndex($columnName);
+                }
                 if ($toTable->hasColumn($columnName)) {
                     $toTable->dropColumn($columnName);
                 }
@@ -124,6 +127,22 @@ class StandardSearchIndexer implements SearchIndexerInterface
                         $column['type'],
                         isset($column['options']) ? $column['options'] : []
                     );
+                }
+            }
+        }
+
+        // If attribute category has index definition
+        if ($category instanceof StandardSearchIndexerInterface) {
+            $categorySearchIndexFieldDefinition = $category->getSearchIndexFieldDefinition();
+            if (
+                is_array($categorySearchIndexFieldDefinition)
+                && isset($categorySearchIndexFieldDefinition['index'])
+                && is_array($categorySearchIndexFieldDefinition['index'])
+                && in_array($key->getAttributeKeyHandle(), $categorySearchIndexFieldDefinition['index'])
+            ) {
+                $indexName = $this->getIndexEntryColumnName($key->getAttributeKeyHandle());
+                if ($toTable->hasColumn($indexName) && !$toTable->hasIndex($indexName)) {
+                    $toTable->addIndex([$indexName, 'cID'], $indexName);
                 }
             }
         }
