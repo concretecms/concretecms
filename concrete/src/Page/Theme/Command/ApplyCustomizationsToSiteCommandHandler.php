@@ -5,6 +5,7 @@ namespace Concrete\Core\Page\Theme\Command;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\StyleCustomizer\CustomCssRecord;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\StyleCustomizer\Traits\ExtractPresetFontsFileStyleFromLegacyPresetTrait;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Style\PresetFontsFileStyle;
 use Concrete\Core\StyleCustomizer\Style\StyleValue;
@@ -13,6 +14,8 @@ use Concrete\Core\StyleCustomizer\Style\Value\PresetFontsFileValue;
 
 class ApplyCustomizationsToSiteCommandHandler
 {
+
+    use ExtractPresetFontsFileStyleFromLegacyPresetTrait;
 
     /**
      * @var StyleValueListFactory
@@ -54,13 +57,7 @@ class ApplyCustomizationsToSiteCommandHandler
         );
 
         // Get the preset font file
-        $type = $customizer->getType();
-        $presetFile = $type->getPresetType()->getVariablesFile($preset);
-        $fileVariableCollection = $type->getVariableNormalizer()->createVariableCollectionFromFile($presetFile);
-        $presetFontsFileVariable = $fileVariableCollection->getVariable('preset-fonts-file');
-        if ($presetFontsFileVariable) {
-            $styleValueList->add(new StyleValue(new PresetFontsFileStyle(), new PresetFontsFileValue($presetFontsFileVariable->getValue())));
-        }
+        $this->addPresetFontsFileStyleToStyleValueList($customizer->getType(), $preset, $styleValueList);
 
         // This is brutal but it's done this way for backward compatibility
         $db = $this->db;

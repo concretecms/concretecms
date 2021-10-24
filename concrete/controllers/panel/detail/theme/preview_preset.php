@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Detail\Theme;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
