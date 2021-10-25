@@ -1,26 +1,37 @@
 <?php
+
+use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Form\Service\Widget\DateTime as DateTimeWidget;
+use Concrete\Core\Page\Collection\Version\Version;
+use Concrete\Core\Support\Facade\Application;
+
 defined('C5_EXECUTE') or die("Access Denied.");
-$datetime = Loader::helper('form/date_time');
+
+$app = Application::getFacadeApplication();
+/** @var Form $form */
+$form = $app->make('helper/form');
+/** @var DateTimeWidget $datetime */
+$datetime = $app->make('helper/form/date_time');
 
 $publishDate = '';
 $publishEndDate = '';
+$activeVersionExists = false;
+$scheduledVersionExists = false;
 if (isset($page) && is_object($page)) {
-    $v = CollectionVersion::get($page, "RECENT");
+    $v = Version::get($page, "RECENT");
     $publishDate = $v->getPublishDate();
     $publishEndDate = $v->getPublishEndDate();
-
-    $scheduled = CollectionVersion::get($page, "SCHEDULED");
-    if (!$scheduled->isError()) {
-        ?>
-        <div class="alert alert-warning">
-            <p><?= t("At least one version is already scheduled to publish."); ?><br>
-            <?= t("This version will be scheduled to publish separately."); ?></p>
-        </div>
-        <?php
+    $activeVersion = Version::get($page, 'ACTIVE');
+    if (!$activeVersion->isError()) {
+        $activeVersionExists = true;
+    }
+    $scheduledVersion = Version::get($page, 'SCHEDULED');
+    if (!$scheduledVersion->isError()) {
+        $scheduledVersionExists = true;
     }
 }
 
-$dateService = Core::make('date');
+$dateService = $app->make('date');
 $timezone = $dateService->getUserTimeZoneID();
 $timezone = $dateService->getTimezoneDisplayName($timezone);
 ?>
@@ -39,6 +50,21 @@ $timezone = $dateService->getTimezoneDisplayName($timezone);
 <div style="text-align: right">
     <span class="form-text help-block"><?=t('Time Zone: %s', $timezone)?></span>
 </div>
+
+<?php if ($activeVersionExists || $scheduledVersionExists) {
+    if ($scheduledVersionExists) {
+        $keepOtherScheduling = t('Keep existing scheduling. This version will go live separately.');
+    } else {
+        $keepOtherScheduling = t('Keep live version approved.');
+    }
+    ?>
+<div class="form-group">
+    <div class="form-check form-switch">
+        <?= $form->checkbox('keepOtherScheduling', 1, false) ?>
+        <?= $form->label('keepOtherScheduling', $keepOtherScheduling) ?>
+    </div>
+</div>
+<?php } ?>
 
 <div class="dialog-buttons">
     <button type="submit" name="action" value="schedule"

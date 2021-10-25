@@ -105,6 +105,9 @@ class CheckIn extends BackendInterfacePageController
                         $dateTime = new DateTime();
                         $publishDateTime = $dateTime->translate('cvPublishDate');
                         $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
+                        if ($this->request->request->get('keepOtherScheduling')) {
+                            $pkr->setKeepOtherScheduling(true);
+                        }
                         $pkr->scheduleVersion($publishDateTime, $publishEndDateTime);
                     }
 

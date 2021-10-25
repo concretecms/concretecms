@@ -197,6 +197,8 @@ class Versions extends BackendInterfacePageController
                 $v = CollectionVersion::get($c, $_REQUEST['cvID']);
                 $pkr->setRequestedVersionID($v->getVersionID());
                 $pkr->setRequesterUserID($u->getUserID());
+                // We keep other scheduling if you click approve from versions panel
+                $pkr->setKeepOtherScheduling(true);
                 $response = $pkr->trigger();
                 if (!($response instanceof WorkflowProgressResponse)) {
                     // we are deferred

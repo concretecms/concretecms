@@ -8,8 +8,8 @@ use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
 use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Page\Page;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Page;
 use PageType;
 use Permissions;
 use Concrete\Core\User\User;
@@ -694,13 +694,21 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @param bool $doReindexImmediately reindex the collection contents now? Otherwise it's reindexing will just be scheduled
      * @param string|\DateTime|int|null $cvPublishDate the scheduled date/time when the collection is published (start)
      * @param string|\DateTime|int|null $cvPublishEndDate the scheduled date/time when the collection is published (end)
+     * @param bool $keepOtherScheduling Set to true to keep scheduling of other versions
+     *                                  (e.g., users can view the current live version until the publish date of this version).
+     *                                  Set to false (default) to disapprove all other versions
+     *                                  (e.g., users can't see this page until the publish date of this version, even if this page is live now).
+     *
+     * @since 9.0.0 Added $keepOtherScheduling argument
      *
      * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
      */
-    public function approve($doReindexImmediately = true, $cvPublishDate = null, $cvPublishEndDate = null)
+    public function approve($doReindexImmediately = true, $cvPublishDate = null, $cvPublishEndDate = null, bool $keepOtherScheduling = false)
     {
         $app = Facade::getFacadeApplication();
+        /** @var Connection $db */
         $db = $app->make(Connection::class);
+        /** @var Date $dh */
         $dh = $app->make('helper/date');
         $u = $app->make(\Concrete\Core\User\User::class);
         $uID = $u->getUserID();
@@ -722,6 +730,22 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
 
         // update a collection updated record
         $this->updateCollectionDateModified();
+
+        // disapprove other versions
+        $disapproveVersionsQuery = $db->createQueryBuilder();
+        $disapproveVersionsQuery->update('CollectionVersions')
+            ->set('cvIsApproved', ':cvIsApproved')
+            ->where('cID = :cID')
+            ->andWhere('cvIsApproved = 1')
+            ->setParameter('cvIsApproved', 0)
+            ->setParameter('cID', $cID);
+        if ($keepOtherScheduling) {
+            // We can disapprove live versions only their scheduling is already end
+            $expr = $disapproveVersionsQuery->expr();
+            $disapproveVersionsQuery->andWhere($expr->and($expr->isNotNull('cvPublishEndDate'), $expr->lte('cvPublishEndDate', ':now')));
+            $disapproveVersionsQuery->setParameter(':now', $dh->getOverridableNow());
+        }
+        $disapproveVersionsQuery->execute();
 
         $pageWithActiveVersion->refreshCache();
 

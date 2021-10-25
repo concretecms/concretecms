@@ -44,7 +44,8 @@ class EditResponse extends PageEditResponse
         foreach ($this->versions as $v) {
             $obj = new stdClass();
             $obj->cvID = $v->getVersionID();
-            $obj->cvIsApproved = $v->isApprovedNow();
+            $obj->cvIsApproved = (bool)$v->isApproved();
+            $obj->cvIsApprovedNow = $v->isApprovedNow();
             $obj->cvIsScheduled = $v->getPublishDate() || $v->getPublishEndDate();
             $obj->cvPublishDate = $dateHelper->formatDateTime($v->getPublishDate());
             $obj->cvPublishEndDate = $dateHelper->formatDateTime($v->getPublishEndDate());

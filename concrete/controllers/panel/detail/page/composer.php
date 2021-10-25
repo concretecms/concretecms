@@ -87,13 +87,17 @@ class Composer extends BackendInterfacePageController
             if (!$e->has()) {
                 $publishDateTime = false;
                 $publishEndDateTime = false;
+                $keepOtherScheduling = false;
                 if ($this->request->request->get('action') == 'schedule') {
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
                     $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
+                    if ($this->request->request->get('keepOtherScheduling')) {
+                        $keepOtherScheduling = true;
+                    }
                 }
 
-                $pagetype->publish($c, $publishDateTime, $publishEndDateTime);
+                $pagetype->publish($c, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
                 $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($c));
             }
             $ptr->outputJSON();
