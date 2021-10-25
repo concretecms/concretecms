@@ -739,7 +739,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             ->andWhere('cvIsApproved = 1')
             ->setParameter('cvIsApproved', 0)
             ->setParameter('cID', $cID);
-        if ($keepOtherScheduling) {
+        if ($keepOtherScheduling && ($cvPublishDate || $cvPublishEndDate)) {
             // We can disapprove live versions only their scheduling is already end
             $expr = $disapproveVersionsQuery->expr();
             $disapproveVersionsQuery->andWhere($expr->and($expr->isNotNull('cvPublishEndDate'), $expr->lte('cvPublishEndDate', ':now')));
