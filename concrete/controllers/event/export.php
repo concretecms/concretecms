@@ -76,13 +76,6 @@ class Export implements ApplicationAwareInterface
                                 'SEQUENCE' => $i++
                             ];
 
-                            $author = $approvedEventVersion->getAuthor();
-
-                            if ($author instanceof User) {
-                                $arrEvent['ORGANIZER'] = "CN=" . $approvedEventVersion->getAuthor()->getUserName(
-                                    ) . ":MAILTO:" . $approvedEventVersion->getAuthor()->getUserEmail();
-                            }
-
                             $vCalendar->add('VEVENT', $arrEvent);
                         }
 
