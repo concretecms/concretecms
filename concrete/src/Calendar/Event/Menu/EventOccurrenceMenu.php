@@ -29,7 +29,7 @@ class EventOccurrenceMenu extends PopoverMenu
         $this->addItem(new DialogLinkItem(
             \URL::to('ccm/calendar/dialogs/event/occurrence') . '?occurrenceID=' . $occurrence->getID(), t('Details'),
             t('View Event'), 500, 500));
-        $this->addItem(new LinkItem(Url::to('/ccm/calendar/dialogs/event/export')->setQuery(['eventID' => $occurrence->getEvent()->getID()]), t('Export Event')));
+        $this->addItem(new LinkItem(Url::to('/ccm/calendar/event/export')->setQuery(['eventID' => $occurrence->getEvent()->getID()]), t('Export Event')));
         $permissions = new \Permissions($calendar);
 
         if ($permissions->canEditCalendarEvents()) {
