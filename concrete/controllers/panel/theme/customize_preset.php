@@ -181,7 +181,9 @@ class CustomizePreset extends BackendInterfaceController
                         $command = new ApplyCustomizationsToSiteCommand();
                     } else {
                         $command = new ApplyCustomizationsToPageCommand();
-                        $command->setPage($this->get('previewPage'));
+                        $previewPage = $this->get('previewPage');
+                        $nvc = $previewPage->getVersionToModify();
+                        $command->setPage($nvc);
                     }
 
                     $command->setThemeID($theme->getThemeID());

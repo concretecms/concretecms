@@ -20,6 +20,10 @@ $router->all('/ccm/system/accept_privacy_policy/', '\Concrete\Controller\Backend
 $router->all('/ccm/system/account/remove_inbox_new_message_status', '\Concrete\Controller\Backend\Account::removeInboxNewMessageStatus');
 
 $router->all('/ccm/system/css/layout/{arLayoutID}', '\Concrete\Controller\Frontend\Stylesheet::layout');
+// @deprecated –used by the old on-demand theme customizer
+$router->all('/ccm/system/css/page/{cID}/{stylesheet}/{cvID}', '\Concrete\Controller\Frontend\Stylesheet::page_version');
+// @deprecated –used by the old on-demand theme customizer
+$router->all('/ccm/system/css/page/{cID}/{stylesheet}', '\Concrete\Controller\Frontend\Stylesheet::page');
 $router->all('/ccm/system/backend/editor_data/', '\Concrete\Controller\Backend\EditorData::view');
 $router->all('/ccm/system/backend/get_remote_help/', '\Concrete\Controller\Backend\GetRemoteHelp::view');
 $router->all('/ccm/system/backend/intelligent_search/', '\Concrete\Controller\Backend\IntelligentSearch::view');
