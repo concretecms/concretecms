@@ -12,6 +12,7 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 class Controller extends StartingPointPackage
 {
     protected $pkgHandle = 'atomik_full';
+    protected $pkgContentProvidesFileThumbnails = true;
 
     public function getPackageName()
     {
