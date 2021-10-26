@@ -31,9 +31,9 @@ class Rules extends AbstractController
         if ($boardInstanceSlotRuleID) {
             $boardInstanceRule = $em->find(InstanceSlotRule::class, $boardInstanceSlotRuleID);
             if ($boardInstanceRule) {
-                $board = $boardInstanceRule->getInstance()->getBoard();
-                if ($board) {
-                    $permissions = new Checker($board);
+                $instance = $boardInstanceRule->getInstance();
+                if ($instance) {
+                    $permissions = new Checker($instance);
                     $canEditRule = $permissions->canEditBoardInstanceSlot((int) $data['slot']);
                     if (!$canEditRule) {
                         $error->add(t('You do not have permission to edit this instance slot rule.'));

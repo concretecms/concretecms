@@ -1,9 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php $view->inc('elements/header.php'); ?>
 
-<div class="container">
+<div class="container ccm-page-account">
 <div class="row">
-<div class="col-sm-10 col-sm-offset-1">
+<div class="col-sm-10 offset-sm-1">
 <?php
 View::element(
     'system_errors',
@@ -18,20 +18,23 @@ View::element(
 </div>
 </div>
 
-<div class="mt-5 mb-5 row justify-content-center">
-    <div class="col-10">
+<div class="row">
+    <div class="col-sm-10 offset-sm-1">
         <h1 class="display-4"><?=t('My Account')?></h1>
-        <hr>
+
+        <div class="row">
+            <div class="col-sm-8">
+
+                <?php echo $innerContent ?>
+            </div>
+            <div class="col-sm-4">
+                <?php
+                $nav->render();
+                ?>
+            </div>
+        </div>
     </div>
-    <div class="col-6">
-        
-        <?php echo $innerContent ?>
-    </div>
-    <div class="col-4">
-        <?php
-        $nav->render();
-        ?>
-    </div>
+</div>
 </div>
 
 <?php $view->inc('elements/footer.php'); ?>
