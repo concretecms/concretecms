@@ -60,7 +60,12 @@ class ServiceFactory
      */
     public function createService(OAuthServiceFactory $factory)
     {
-        $config = $this->config->get('auth.external_concrete');
+        if ($this->config->has('auth.external_concrete')) {
+            $config = $this->config->get('auth.external_concrete');
+        } else {
+            // legacy support
+            $config = $this->config->get('auth.external_concrete5');
+        }
 
         $appId = array_get($config, 'appid');
         $appSecret = array_get($config, 'secret');
