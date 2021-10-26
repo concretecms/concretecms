@@ -25,20 +25,10 @@ class CoreThemeDocumentation extends PageTypeController
     {
         $documentationPage = Page::getByPath('/dashboard/pages/themes');
         $permissions = new Checker($documentationPage);
-
-        // Make sure we can view the stacks page
-        if ($permissions->canViewPage()) {
-            $navigation = new Navigation();
-            $parents = $navigation->getTrailToCollection($this->getPageObject());
-            $totalParents = count($parents);
-            $themePage = $parents[$totalParents - 2]; // Minus two because the array is zero lengthed.
-            $themeHandle = $themePage->getCollectionHandle();
-            $this->setTheme($themeHandle);
-            return;
+        // Make sure we can view the page
+        if (!$permissions->canViewPage()) {
+            return $this->factory->notFound('');
         }
-
-        // If we can't view the stacks page, send a 404
-        return $this->factory->notFound('');
     }
 
 }

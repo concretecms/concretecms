@@ -36,10 +36,12 @@ class Installer
             $type = Type::getByHandle(THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE);
             $documentation = Page::getByPath(THEME_DOCUMENTATION_PAGE_PATH);
             $parent = $documentation->add($type, ['name' => $theme->getThemeName(), 'handle' => $theme->getThemeHandle()]);
+            $parent->setTheme($theme);
         }
 
         foreach ($provider->getPages() as $documentationPage) {
-            $documentationPage->installDocumentationPage($parent);
+            $newDocumentationPage = $documentationPage->installDocumentationPage($parent);
+            $newDocumentationPage->setTheme($theme);
 
         }
         $provider->finishInstallation();

@@ -44,6 +44,7 @@
                         <content><![CDATA[<h1>Calendar & Events</h1>
 
 <p class="lead">Turn your site into a collaborative calendar with the following block types.</p>
+<p>(Note: you will have to modify the existing block types within this documentation to point to your installed calendar and its events.</p>
 ]]></content>
                     </record>
                 </data>
