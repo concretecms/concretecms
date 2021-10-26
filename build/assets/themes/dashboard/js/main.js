@@ -21,9 +21,6 @@ Concrete.Vue.createContext('backend', {
 // Desktops and waiting for me
 import '@concretecms/bedrock/assets/desktop/js/frontend';
 
-// Avatar picker
-import '@concretecms/bedrock/assets/account/js/frontend';
-
 // Calendar
 import '@concretecms/bedrock/assets/calendar/js/backend';
 

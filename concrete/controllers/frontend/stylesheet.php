@@ -3,6 +3,7 @@ namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\Layout;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Controller;
 use Page;
 use Permissions;
@@ -10,6 +11,57 @@ use Response;
 
 class Stylesheet extends Controller
 {
+    /**
+     * @deprecated
+     */
+    public function page_version($cID, $stylesheet, $cvID)
+    {
+        $c = Page::getByID($cID);
+        if (is_object($c) && !$c->isError()) {
+            $cp = new Permissions($c);
+            if ($cp->canViewPageVersions()) {
+                $c->loadVersionObject($cvID);
+
+                $theme = $c->getCollectionThemeObject();
+                $stylesheet = $theme->getStylesheetObject($stylesheet);
+                $style = $c->getCustomStyleObject();
+                if (is_object($style)) {
+                    $collection = app(NormalizedVariableCollectionFactory::class)->createFromStyleValueList($style->getValueList());
+                    $stylesheet->setVariableCollection($collection);
+                }
+                $response = new Response();
+                $response->headers->set('Content-Type', 'text/css');
+                $response->setContent($stylesheet->getCss());
+
+                return $response;
+            }
+        }
+    }
+
+    /**
+     * @deprecated
+     */
+    public function page($cID, $stylesheet)
+    {
+        $c = Page::getByID($cID, 'ACTIVE');
+        if (is_object($c) && !$c->isError()) {
+            $cp = new Permissions($c);
+            if ($cp->canViewPage()) {
+                $theme = $c->getCollectionThemeObject();
+                $stylesheet = $theme->getStylesheetObject($stylesheet);
+                $style = $c->getCustomStyleObject();
+                if (is_object($style)) {
+                    $collection = app(NormalizedVariableCollectionFactory::class)->createFromStyleValueList($style->getValueList());
+                    $stylesheet->setVariableCollection($collection);
+                }
+                $response = new Response();
+                $response->headers->set('Content-Type', 'text/css');
+                $response->setContent($stylesheet->getCss());
+
+                return $response;
+            }
+        }
+    }
 
     public function layout($arLayoutID)
     {

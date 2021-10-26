@@ -6,13 +6,15 @@ use Concrete\Core\Board\Instance\Slot\Rule\CustomSlotContentFormatter;
 use Concrete\Core\Board\Instance\Slot\Rule\FormatterInterface;
 use Concrete\Core\Board\Instance\Slot\Rule\SlotPinnedFormatter;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Permission\Response\BoardInstanceSlotRuleResponse;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="InstanceSlotRuleRepository")
  * @ORM\Table(name="BoardInstanceSlotRules")
  */
-class InstanceSlotRule implements \JsonSerializable
+class InstanceSlotRule implements \JsonSerializable, ObjectInterface
 {
 
     /**
@@ -320,12 +322,8 @@ class InstanceSlotRule implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        $checker = new Checker($this->getInstance()->getBoard());
-        if ($this->isLocked()) {
-            $canDeleteRule = $checker->canEditBoardLockedRules();
-        } else {
-            $canDeleteRule = $checker->canEditBoardContents();
-        }
+        $checker = new Checker($this);
+        $canDeleteRule = $checker->canDeleteBoardInstanceSlotRule();
         return [
             'id' => $this->getBoardInstanceSlotRuleID(),
             'startDate' => $this->getStartDate(),
@@ -343,6 +341,27 @@ class InstanceSlotRule implements \JsonSerializable
             'batchIdentifier' => $this->getBatchIdentifier(),
         ];
     }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->getBoardInstanceSlotRuleID();
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return BoardInstanceSlotRuleResponse::class;
+    }
+
 
 
 }

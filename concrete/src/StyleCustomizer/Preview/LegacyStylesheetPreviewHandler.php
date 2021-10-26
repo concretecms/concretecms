@@ -11,6 +11,7 @@ use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Preset\PresetInterface;
 use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
+use Concrete\Core\StyleCustomizer\Traits\ExtractPresetFontsFileStyleFromLegacyPresetTrait;
 
 /**
  * Used by the legacy customizer, this preview handler loops through all customizable style sheets in the theme's root
@@ -19,6 +20,8 @@ use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
  */
 class LegacyStylesheetPreviewHandler implements PreviewHandlerInterface
 {
+
+    use ExtractPresetFontsFileStyleFromLegacyPresetTrait;
 
     /**
      * @var StyleValueListFactory
@@ -47,6 +50,7 @@ class LegacyStylesheetPreviewHandler implements PreviewHandlerInterface
 
         $styles = json_decode($requestData['styles'], true);
         $styleValueList = $this->styleValueListFactory->createFromRequestArray($customizer->getThemeCustomizableStyleList($preset), $styles);
+        $this->addPresetFontsFileStyleToStyleValueList($customizer->getType(), $preset, $styleValueList);
         $collection = $this->variableCollectionFactory->createFromStyleValueList($styleValueList);
         return $this->deliverResponse($customizer, $page, $collection);
     }

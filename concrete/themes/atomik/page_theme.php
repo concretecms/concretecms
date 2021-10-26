@@ -34,7 +34,6 @@ class PageTheme extends Theme
             Features::ACCOUNT,
             Features::BASICS,
             Features::TYPOGRAPHY,
-            Features::CALENDAR,
             Features::DOCUMENTS,
             Features::CONVERSATIONS,
             Features::FAQ,

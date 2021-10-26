@@ -49,7 +49,12 @@ class Controller extends GenericOauth2TypeController
      */
     public function registrationGroupID()
     {
-        return (int) $this->config->get('auth.external_concrete.registration.group');
+        if ($this->config->has('auth.external_concrete.registration.group')) {
+            return (int) $this->config->get('auth.external_concrete.registration.group');
+        } else {
+            // Legacy support
+            return (int) $this->config->get('auth.external_concrete5.registration.group');
+        }
     }
 
     /**
@@ -60,7 +65,12 @@ class Controller extends GenericOauth2TypeController
      */
     public function supportsRegistration()
     {
-        return (bool) $this->config->get('auth.external_concrete.registration.enabled', false);
+        if ($this->config->has('auth.external_concrete.registration.enabled')) {
+            return (bool) $this->config->get('auth.external_concrete.registration.enabled');
+        } else {
+            // Legacy support
+            return (bool) $this->config->get('auth.external_concrete5.registration.enabled', false);
+        }
     }
 
     /**
@@ -140,7 +150,12 @@ class Controller extends GenericOauth2TypeController
     {
         $this->set('groupSelector', $this->app->make(GroupSelector::class));
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('data', (array) $this->config->get('auth.external_concrete', []));
+        if ($this->config->has('auth.external_concrete')) {
+            $this->set('data', (array)$this->config->get('auth.external_concrete', []));
+        } else {
+            // legacy support
+            $this->set('data', (array)$this->config->get('auth.external_concrete5', []));
+        }
         $this->set('redirectUri', $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete/callback']));
 
         $list = $this->app->make(GroupList::class);
@@ -195,7 +210,12 @@ class Controller extends GenericOauth2TypeController
      */
     private function setData()
     {
-        $data = $this->config->get('auth.external_concrete', '');
+        if ($this->config->has('auth.external_concrete')) {
+            $data = $this->config->get('auth.external_concrete', '');
+        } else {
+            // legacy support
+            $data = $this->config->get('auth.external_concrete5', '');
+        }
         $authUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete/attempt_auth']);
         $attachUrl = $this->urlResolver->resolve(['/ccm/system/authentication/oauth2/external_concrete/attempt_attach']);
         $baseUrl = $this->urlResolver->resolve(['/']);

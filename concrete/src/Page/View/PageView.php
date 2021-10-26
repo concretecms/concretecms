@@ -282,6 +282,10 @@ class PageView extends View
      */
     public function getStyleSheet($stylesheet)
     {
+        if ($this->themeObject->isThemePreviewRequest()) {
+            return $this->themeObject->getStylesheet($stylesheet);
+        }
+
         if ($this->c->hasPageThemeCustomizations()) {
             // page has theme customizations, check if we need to serve an uncached version of the style sheet,
             // either because caching is deactivated or because the version is not approved yet

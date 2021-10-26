@@ -60,7 +60,8 @@
       transition: $panel-menu-item-transition;
 
       // Plus and minus icons
-      .fa, .fas {
+      .fa,
+      .fas {
         // Displayed when selected or on hover
         font-size: 1.3125em; // 21px
         left: 21px;

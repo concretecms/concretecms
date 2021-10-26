@@ -126,7 +126,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $this->assertIsIterable($allStyles);
         $style = $allStyles->current();
         $this->assertEquals('Primary', $style->getName());
-        $this->assertCount(15, iterator_to_array($allStyles));
+        $this->assertCount(17, iterator_to_array($allStyles));
     }
 
     public function testStyleListTypeOptions()
@@ -244,7 +244,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
         $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(14, $variableCollection);
+        $this->assertCount(16, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 
@@ -290,7 +290,7 @@ EOL;
         $variableCollection = $variableCollectionFactory->createFromPreset($customizer, $defaultPreset);
         $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
         $this->assertInstanceOf(StyleValueList::class, $valueList);
-        $this->assertCount(14, $valueList->getValues());
+        $this->assertCount(16, $valueList->getValues());
 
         $styleValue = $valueList->getValues()[2];
         $this->assertInstanceOf(StyleValue::class, $styleValue);
@@ -303,7 +303,7 @@ EOL;
 
         $variableCollectionFactory = new CustomizerVariableCollectionFactory();
         $customizerVariableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
-        $this->assertCount(14, $customizerVariableCollection->getValues());
+        $this->assertCount(16, $customizerVariableCollection->getValues());
     }
 
 

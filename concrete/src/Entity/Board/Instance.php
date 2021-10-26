@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Board;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Permission\Assignment\BoardAssignment;
 use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Permission\Response\BoardInstanceResponse;
 use Concrete\Core\Permission\Response\BoardResponse;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="InstanceRepository")
  * @ORM\Table(name="BoardInstances")
  */
-class Instance implements \JsonSerializable
+class Instance implements \JsonSerializable, ObjectInterface
 {
 
     /**
@@ -256,4 +257,23 @@ class Instance implements \JsonSerializable
         return (string) $this->getBoardInstanceID();
     }
 
+    public function getPermissionAssignmentClassName()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->getBoardInstanceID();
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return BoardInstanceResponse::class;
+    }
 }

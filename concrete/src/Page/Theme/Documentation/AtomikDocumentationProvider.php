@@ -90,6 +90,19 @@ class AtomikDocumentationProvider implements DocumentationProviderInterface
             'forms.xml'
         );
 
+        // We need this because if you haven't installed Atomik Full (i.e. you've installed Elemental instead)
+        // You're not gonna have these containers in your site.
+        $importer->importContentFile(
+            $this->theme->getThemeDirectory() .
+            DIRECTORY_SEPARATOR .
+            DIRNAME_THEME_DOCUMENTATION .
+            DIRECTORY_SEPARATOR .
+            'support' .
+            DIRECTORY_SEPARATOR .
+            'containers.xml'
+        );
+
+
         $importer->importFiles(
             $this->theme->getThemeDirectory() .
             DIRECTORY_SEPARATOR .
