@@ -10,7 +10,7 @@ foreach ($boardInstance->getRules() as $rule) {
 <div class="ccm-ui">
     <div data-view="board-instance-scheduler">
 
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center mb-3">
             <div><?=t('Below is a list of custom content rules for this board.')?></div>
             <a href="#" data-button-action="add-scheduled-slot" class="ms-auto btn btn-secondary"><?=t('Add Scheduled Slot')?></a>
         </div>
