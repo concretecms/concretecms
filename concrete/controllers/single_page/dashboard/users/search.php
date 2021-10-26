@@ -14,6 +14,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Url\Url;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\User\User;
@@ -100,6 +101,15 @@ class Search extends DashboardPageController
         $headerSearch = $this->getHeaderSearch();
         $headerMenu->getElementController()->setQuery($result->getQuery());
         $headerSearch->getElementController()->setQuery($result->getQuery());
+
+        $exportArgs = [$this->getPageObject()->getCollectionPath(), 'csv_export'];
+        if ($this->getAction() == 'advanced_search') {
+            $exportArgs[] = 'advanced_search';
+        }
+        $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
+        $query = Url::createFromServer($_SERVER)->getQuery();
+        $exportURL = $exportURL->setQuery($query);
+        $headerMenu->getElementController()->setExportURL($exportURL);
 
         $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
         $this->set('result', $result);
@@ -551,11 +561,8 @@ class Search extends DashboardPageController
     /**
      * Export Users using the current search filters into a CSV.
      */
-    public function csv_export()
+    public function csv_export($searchMethod = null)
     {
-        $search = $this->app->make('Concrete\Controller\Search\Users');
-        $result = $search->getCurrentSearchObject();
-
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=concrete_users.csv',
@@ -563,6 +570,20 @@ class Search extends DashboardPageController
         $app = $this->app;
         $config = $this->app->make('config');
         $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
+
+        if ($searchMethod === 'advanced_search') {
+            $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
+                $this->getSearchProvider(),
+                $this->request,
+                Request::METHOD_GET
+            );
+        } else {
+            $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
+                $this->getSearchKeywordsField()
+            ]);
+        }
+
+        $result = $this->createSearchResult($query);
 
         return StreamedResponse::create(
             function () use ($app, $result, $bom) {
