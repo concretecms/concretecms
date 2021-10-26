@@ -86,7 +86,7 @@ if ($akSelectAllowOtherValues) {
 
     /*
        Note: the form-control on here is NOT ideal, that's bootstrap 4 markup,
-       but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here */
+       but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here
     */
     echo (string) new Element(
         'span',
