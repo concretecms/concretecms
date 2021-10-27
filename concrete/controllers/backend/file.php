@@ -415,13 +415,16 @@ class File extends Controller
                     }
                     break;
             }
-            $this->checkRemoteURlsToImport($urls);
+
+            $validIps = (array) $this->checkRemoteURlsToImport($urls);
+
             $originalPage = $this->getImportOriginalPage();
             $fi = $this->app->make(Importer::class);
             $volatileDirectory = $this->app->make(VolatileDirectory::class);
             foreach ($urls as $url) {
                 try {
-                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath());
+                    $host = (string) \League\Url\Url::createFromUrl($url)->getHost();
+                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validIps[$host] ?? null);
                     $fileVersion = $fi->import($downloadedFile, false, $replacingFile ?: $this->getDestinationFolder());
                     if (!$fileVersion instanceof FileVersionEntity) {
                         $errors->add($url . ': ' . $fi->getErrorMessage($fileVersion));
@@ -762,6 +765,7 @@ class File extends Controller
      * Check that a list of strings are valid "incoming" file names.
      *
      * @param string $urls
+     * @return array<string, string> An array of domains and their validated IPs
      *
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified URLs are not valid
      *
@@ -769,6 +773,7 @@ class File extends Controller
      */
     protected function checkRemoteURlsToImport(array $urls)
     {
+        $validIps = [];
         foreach ($urls as $u) {
             try {
                 $url = Url::createFromUrl($u);
@@ -782,6 +787,11 @@ class File extends Controller
             $host = trim((string)$url->getHost());
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+            }
+
+            // If we've already validated this hostname just skip it.
+            if (array_key_exists($host, $validIps)) {
+                continue;
             }
 
             $ipFormatBlocks = [
@@ -804,10 +814,15 @@ class File extends Controller
                     $ip = IPFactory::parseAddressString($dns['ip']);
                 }
             }
-            if ($ip !== null && !in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {
+
+            if ($ip !== null && $ip->getRangeType() !== IPRangeType::T_PUBLIC) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
+
+            $validIps[$host] = $ip->toString();
         }
+
+        return $validIps;
     }
 
     /**
@@ -820,14 +835,26 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
      */
-    protected function downloadRemoteURL($url, $temporaryDirectory)
+    protected function downloadRemoteURL($url, $temporaryDirectory, string $ip = null)
     {
         /** @var Client $client */
         $client = $this->app->make(Client::class);
         $request = new Request('GET', $url);
-        $response = $client->send($request, [
-            RequestOptions::ALLOW_REDIRECTS => false
-        ]);
+
+        $config = [
+            RequestOptions::ALLOW_REDIRECTS => false,
+        ];
+
+        if ($ip) {
+            $host = parse_url($url, PHP_URL_HOST);
+            $scheme = parse_url($url, PHP_URL_SCHEME);
+            $port = parse_url($url, PHP_URL_PORT) ?: ($scheme === 'http' ? 80 : 443);
+
+            // Specify IP if one is provided.
+            $config['curl'] = [CURLOPT_RESOLVE => ["{$host}:{$port}:{$ip}"]];
+        }
+
+        $response = $client->send($request, $config);
 
         if ($response->getStatusCode() !== 200) {
             throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
