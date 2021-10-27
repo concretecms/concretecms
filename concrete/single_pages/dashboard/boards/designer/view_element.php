@@ -14,7 +14,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <h5><?=t('Template')?></h5>
 <div class="mb-3">
-    <?=$element->getSlotTemplate()->getName()?>
+    <?php if ($element->getSlotTemplate()) { ?>
+        <?=$element->getSlotTemplate()->getName()?>
+    <?php } else { ?>
+        <?=t('(Unknown Template)')?>
+    <<?php } ?>
 </div>
 
 <h5><?=t('Preview')?></h5>

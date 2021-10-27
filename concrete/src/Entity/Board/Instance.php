@@ -35,6 +35,7 @@ class Instance implements \JsonSerializable, ObjectInterface
 
     /**
      * @ORM\OneToMany(targetEntity="InstanceSlotRule", cascade={"remove"}, mappedBy="instance", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"isLocked" = "ASC", "dateCreated" = "ASC"})
      */
     protected $rules;
 
