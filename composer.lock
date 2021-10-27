@@ -190,16 +190,16 @@
         },
         {
             "name": "concrete5/dependency-patches",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/dependency-patches.git",
-                "reference": "2a3e751c17cf6b6e0df8ecdbe8bd6a2a34133284"
+                "reference": "43f3a7517708c21e7bf0a047778ba6976eb66ae6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/2a3e751c17cf6b6e0df8ecdbe8bd6a2a34133284",
-                "reference": "2a3e751c17cf6b6e0df8ecdbe8bd6a2a34133284",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/43f3a7517708c21e7bf0a047778ba6976eb66ae6",
+                "reference": "43f3a7517708c21e7bf0a047778ba6976eb66ae6",
                 "shasum": ""
             },
             "require": {
@@ -245,6 +245,9 @@
                     },
                     "lcobucci/jwt:3.4.5": {
                         "Adds php 8 compability to jwt version 3.4.5": "lcobucci/jwt/php8-compatibility.patch"
+                    },
+                    "lcobucci/jwt:3.4.6": {
+                        "Adds php 8 compability to jwt version 3.4.6": "lcobucci/jwt/php8-compatibility.patch"
                     }
                 }
             },
@@ -264,9 +267,9 @@
             "homepage": "https://github.com/concrete5/dependency-patches",
             "support": {
                 "issues": "https://github.com/concrete5/dependency-patches/issues",
-                "source": "https://github.com/concrete5/dependency-patches/tree/1.6.0"
+                "source": "https://github.com/concrete5/dependency-patches/tree/1.6.1"
             },
-            "time": "2021-10-18T16:51:00+00:00"
+            "time": "2021-10-27T20:00:13+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
@@ -4834,16 +4837,16 @@
         },
         {
             "name": "lcobucci/jwt",
-            "version": "3.4.5",
+            "version": "3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lcobucci/jwt.git",
-                "reference": "511629a54465e89a31d3d7e4cf0935feab8b14c1"
+                "reference": "3ef8657a78278dfeae7707d51747251db4176240"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/511629a54465e89a31d3d7e4cf0935feab8b14c1",
-                "reference": "511629a54465e89a31d3d7e4cf0935feab8b14c1",
+                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/3ef8657a78278dfeae7707d51747251db4176240",
+                "reference": "3ef8657a78278dfeae7707d51747251db4176240",
                 "shasum": ""
             },
             "require": {
@@ -4895,7 +4898,7 @@
             ],
             "support": {
                 "issues": "https://github.com/lcobucci/jwt/issues",
-                "source": "https://github.com/lcobucci/jwt/tree/3.4.5"
+                "source": "https://github.com/lcobucci/jwt/tree/3.4.6"
             },
             "funding": [
                 {
@@ -4907,7 +4910,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-02-16T09:40:01+00:00"
+            "time": "2021-09-28T19:18:28+00:00"
         },
         {
             "name": "league/csv",
