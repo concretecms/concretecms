@@ -78,8 +78,12 @@ $date = Core::make('date')
         <div v-show="currentStep == 'schedule'">
             <form autocomplete="off">
                 <div class="mb-3">
+                    <label class="form-label"><?=t('Name')?></label>
+                    <input type="text" class="form-control" v-model="customSlotName">
+                </div>
+                <div class="mb-3">
                     <label class="form-label"><?=t('From')?></label>
-                    <div class="row mb-3">
+                    <div class="row">
                         <div class="col-6">
                             <v-date-picker
                                     :masks="{'input': 'YYYY-MM-DD'}"
@@ -178,6 +182,7 @@ $date = Core::make('date')
                                 slot: this.slot,
                                 startDate: this.startDateFormatted,
                                 endDate: this.endDateFormatted,
+                                name: this.customSlotName,
                                 startTime: this.startTime,
                                 endTime: this.endTime,
                                 timezone: this.timezone,
@@ -284,6 +289,7 @@ $date = Core::make('date')
                 invalidSelectedElement: false,
                 startDate: '',
                 endDate: '',
+                customSlotName: '',
                 startTime: '00:00',
                 endTime: '23:59',
                 slot: <?=(int)$slot?>,

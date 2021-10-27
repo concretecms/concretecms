@@ -50,6 +50,7 @@ class Rules extends AbstractController
             $command = new ScheduleBoardInstanceRuleCommand();
             $command->setBoardInstanceSlotRuleID($boardInstanceSlotRuleID);
             $command->setStartDate($data['startDate']);
+            $command->setName($data['name']);
             $command->setEndDate($data['endDate']);
             $command->setStartTime($data['startTime']);
             $command->setEndTime($data['endTime']);

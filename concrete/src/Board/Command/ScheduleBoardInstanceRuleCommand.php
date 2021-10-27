@@ -21,6 +21,11 @@ class ScheduleBoardInstanceRuleCommand extends Command
     /**
      * @var string
      */
+    protected $name;
+
+    /**
+     * @var string
+     */
     protected $startDate = '';
 
     /**
@@ -161,10 +166,21 @@ class ScheduleBoardInstanceRuleCommand extends Command
         $this->timezone = $timezone;
     }
 
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
-
-
-
+    /**
+     * @param string $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
 
 
 }
