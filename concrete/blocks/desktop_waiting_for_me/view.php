@@ -75,7 +75,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $pagination->setBaseURL($view->action('reload_results') . '?filter=' . rawurlencode($filter));
             ?>
 
-            <?=$pagination->renderDefaultView(); ?>
+            <?php
+            $c = Page::getCurrentPage();
+            $theme = $c->getController()->getTheme();
+            if (is_string($theme) && ($theme === VIEW_CORE_THEME || $theme === 'dashboard')) { ?>
+                <?= $pagination->renderView('dashboard'); ?>
+            <?php } else { ?>
+                <?= $pagination->renderDefaultView(); ?>
+            <?php } ?>
 
         <?php } ?>
 

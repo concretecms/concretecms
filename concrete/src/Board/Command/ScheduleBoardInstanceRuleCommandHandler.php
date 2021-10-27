@@ -40,6 +40,9 @@ class ScheduleBoardInstanceRuleCommandHandler
             $rule->setStartDate($startDateTime->getTimestamp());
             $rule->setEndDate($endDateTime->getTimestamp());
             $rule->setSlot($command->getSlot());
+            if ($command->getName()) {
+                $rule->setNotes($command->getName());
+            }
             $this->entityManager->persist($rule);
             $this->entityManager->flush();
         }

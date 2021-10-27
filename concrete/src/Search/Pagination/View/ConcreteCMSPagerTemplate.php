@@ -29,7 +29,7 @@ class ConcreteCMSPagerTemplate extends ConcreteBootstrap4Template
     public function previousEnabled($page): string
     {
         $href = $this->generateRoute($page);
-        return '<li class="page-item"><a class="page-link" href="' . $href . '">' . t('Previous') . '</a></li>';
+        return '<li class="page-item"><a class="page-link" href="' . $href . '">' . t('Previous') . '</a></li><li class="disabled page-item"><a class="page-link" href="#" disabled="disabled" onclick="return false">...</a></li>';
     }
 
     public function nextDisabled(): string
@@ -40,7 +40,7 @@ class ConcreteCMSPagerTemplate extends ConcreteBootstrap4Template
     public function nextEnabled($page): string
     {
         $href = $this->generateRoute($page);
-        return '<li class="page-item"><a class="page-link" href="' . $href . '">' . t('Next'). '</a></li> ';
+        return '<li class="disabled page-item"><a class="page-link" href="#" disabled="disabled" onclick="return false">...</a></li><li class="page-item"><a class="page-link" href="' . $href . '">' . t('Next'). '</a></li> ';
     }
 
     public function last($page): string
@@ -55,7 +55,16 @@ class ConcreteCMSPagerTemplate extends ConcreteBootstrap4Template
 
     public function current($page): string
     {
-        return '';
+        $href = $this->generateRoute($page);
+        $pageNumber = 1;
+        $pageResult = '/ccm_cursor=([\d\|]+)/';
+        if (preg_match_all($pageResult, $href, $pageResultMatches)) {
+            $page = '/(\d+)/';
+            if (preg_match_all($page, $pageResultMatches[1][0], $pageMatches)) {
+                $pageNumber = count($pageMatches[1]) + 1;
+            }
+        }
+        return '<li class="page-item"><a class="page-link" href="' . $href . '">' . $pageNumber . '</a></li> ';
     }
 
     public function first(): string

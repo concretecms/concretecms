@@ -15,6 +15,10 @@ use PageType;
 use Permissions;
 use View;
 
+/**
+ * Note – this came from a half-completed pull request, and no routes actually reference this controller anymore.
+ * I'm keeping it around in case we decide to finish the functionality at some point.
+ */
 class UpdateFromType extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/type/update_from_type';
