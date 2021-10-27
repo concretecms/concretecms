@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Core\Authentication\Type\ExternalConcrete;
 
-use Lcobucci\JWT\Claim;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Parsing\Decoder;
+use Lcobucci\JWT\{
+    Encoding\JoseEncoder,
+    Parser,
+    Token\Parser as TokenParser
+};
 use OAuth\Common\Http\Uri\Uri;
 use OAuth\OAuth2\Token\StdOAuth2Token;
 use OAuth\UserData\Extractor\LazyExtractor;
@@ -90,14 +92,18 @@ class Extractor extends LazyExtractor
     /**
      * Convert a claim into its raw value
      *
-     * @param \Lcobucci\JWT\Claim $claim
+     * @param \Lcobucci\JWT\Claim|string $claim
      *
      * @return string
      */
-    protected function claim(Claim $claim = null)
+    protected function claim($claim = null)
     {
         if (!$claim) {
             return null;
+        }
+
+        if (is_string($claim)) {
+            return $claim;
         }
 
         return $claim->getValue();
@@ -125,11 +131,18 @@ class Extractor extends LazyExtractor
             return json_decode($this->service->request(self::USER_PATH), true)['data'];
         }
 
-        $decoder = new Parser();
-        $idToken = $decoder->parse($idTokenString);
+        if (class_exists(TokenParser::class)) {
+            $decoder = new TokenParser(new JoseEncoder());
+            $token = $decoder->parse($idTokenString);
+            $claims = $token->claims()->all();
+        } else {
+            $decoder = new Parser();
+            $token = $decoder->parse($idTokenString);
+            $claims = $token->getClaims();
+        }
 
         return [
-            'claims' => $idToken->getClaims()
+            'claims' => $claims
         ];
     }
 }
