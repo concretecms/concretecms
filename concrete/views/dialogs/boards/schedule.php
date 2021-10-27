@@ -37,7 +37,7 @@ foreach ($boardInstance->getRules() as $rule) {
                         href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/boards/custom_slot/replace?slot=1&boardInstanceID=<?=h($boardInstance->getBoardInstanceID())?>',
                         width: '960',
                         height: '720',
-                        title: 'Replace Slot'
+                        title: <?=json_encode(t('Add Scheduled Slot'))?>,
                     })
                 })
             },
