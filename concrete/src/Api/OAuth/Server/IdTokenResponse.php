@@ -7,10 +7,19 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Site\Service;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Token\RegisteredClaims;
+use Lcobucci\JWT\{
+    Builder,
+    Encoding\ChainedFormatter,
+    Encoding\JoseEncoder,
+    Token,
+    Token\Builder as TokenBuilder,
+    Token\RegisteredClaims
+};
+use Lcobucci\JWT\Signer\{
+    Key,
+    Key\InMemory,
+    Rsa\Sha256
+};
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
 use League\OpenIdConnectClaims\ClaimsSet;
@@ -84,7 +93,14 @@ class IdTokenResponse extends BearerTokenResponse
 
         // Initialize the builder
         $now = new \DateTimeImmutable();
-        $builder = (new Builder())
+
+        if (class_exists(TokenBuilder::class)) {
+            $builder = new TokenBuilder(new JoseEncoder(), ChainedFormatter::default());
+        } else {
+            $builder = new Builder();
+        }
+
+        $builder = $builder
             ->permittedFor($accessToken->getClient()->getIdentifier())
             ->issuedBy($issuer ? $issuer->getSiteCanonicalURL() : 'concrete5')
             ->issuedAt($now)
@@ -124,8 +140,19 @@ class IdTokenResponse extends BearerTokenResponse
         }
 
         // Return the newly signed token
-        $key = new Key($this->privateKey->getKeyContents(), $this->privateKey->getPassPhrase());
-        return $builder->getToken(new Sha256(), $key);
+        if (class_exists(InMemory::class)) {
+            $key = InMemory::plainText($this->privateKey->getKeyContents(), (string) $this->privateKey->getPassPhrase());
+        } else {
+            $key = new Key($this->privateKey->getKeyContents(), $this->privateKey->getPassPhrase());
+        }
+
+        $token = $builder->getToken(new Sha256(), $key);
+
+        if ($token instanceof Token) {
+            return $token->toString();
+        }
+
+        return $token;
     }
 
     /**
