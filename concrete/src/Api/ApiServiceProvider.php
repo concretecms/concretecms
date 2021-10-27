@@ -17,6 +17,7 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Routing\Router;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\AuthorizationValidators\BearerTokenValidator;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
@@ -56,6 +57,16 @@ class ApiServiceProvider extends ServiceProvider
         }
         $this->app->singleton(ScopeRegistryInterface::class, function() {
             return new ScopeRegistry();
+        });
+        
+        // Provide our public key to the BearerTokenValidator
+        $this->app->extend(BearerTokenValidator::class, function(BearerTokenValidator $validator) {
+            if (method_exists($validator, 'setPublicKey')) {
+                $key = (string) $this->getKey(self::KEY_PUBLIC);
+                $validator->setPublicKey(new CryptKey($key));
+            }
+
+            return $validator;
         });
     }
 
