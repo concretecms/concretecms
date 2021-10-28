@@ -37,7 +37,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\File\StorageLocation\StorageLocation',
     ];
 
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -62,7 +62,7 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase
         $this->cleanup();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->cleanup();

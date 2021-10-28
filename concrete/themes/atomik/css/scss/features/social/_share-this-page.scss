@@ -1,0 +1,19 @@
+div.theme-atomik {
+  .ccm-block-share-this-page {
+    h4 {
+      font-family: $display-font-family;
+      @extend .display-4;
+    }
+
+    a {
+      @extend .badge;
+      color: $dark;
+      background-color: $light;
+
+      &:hover {
+        color: $primary;
+      }
+    }
+  }
+
+}

@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Tree\Menu;
 
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu as ContextMenu;
+use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Tree\Node\Node;
 
-abstract class Menu extends ContextMenu
+abstract class Menu extends PopoverMenu
 {
 
     public function __construct(Node $node)

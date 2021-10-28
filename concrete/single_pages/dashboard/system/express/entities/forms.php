@@ -1,49 +1,52 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
+<?php
 
-<div class="ccm-dashboard-header-buttons btn-group">
+defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Controller\Element\Dashboard\Express\Menu;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Form as ExpressForm;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\View\View;
 
-    <?php
-    $manage = new \Concrete\Controller\Element\Dashboard\Express\Menu($entity);
-    $manage->render();
-    ?>
+/** @var Entity $entity */
+/** @var ExpressForm[] $forms */
+?>
 
-    <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'add', $entity->getId())?>" class="btn btn-primary">
-        <?=t("Add Form")?>
-    </a>
+<div class="ccm-dashboard-header-buttons">
+    <div class="btn-group">
 
+        <?php
+        $manage = new Menu($entity);
+        /** @noinspection PhpDeprecationInspection */
+        $manage->render();
+        ?>
+
+        <a href="<?php echo (string)Url::to('/dashboard/system/express/entities/forms', 'add', $entity->getId()) ?>"
+           class="btn btn-primary">
+            <?php echo t("Add Form") ?>
+        </a>
+    </div>
 </div>
 
-
 <div class="row">
-    <?php View::element('dashboard/express/detail_navigation', array('entity' => $entity))?>
+    <?php /** @noinspection PhpUnhandledExceptionInspection */
+    View::element('dashboard/express/detail_navigation', ['entity' => $entity]) ?>
+
     <div class="col-md-8">
-
-        <?php if (count($forms)) {
-    ?>
-
+        <?php if (count($forms)) { ?>
             <ul class="item-select-list" id="ccm-stack-list">
-                <?php foreach ($forms as $form) {
-    ?>
+                <?php foreach ($forms as $form) { ?>
                     <li>
-                        <a href="<?=URL::to('/dashboard/system/express/entities/forms', 'view_form_details', $form->getID())?>">
-                            <i class="fa fa-list-alt"></i> <?=h($form->getName())?>
+                        <a href="<?php echo (string)Url::to('/dashboard/system/express/entities/forms', 'view_form_details', $form->getID()) ?>">
+                            <i class="fas fa-list-alt"></i> <?php echo h($form->getName()) ?>
                         </a>
                     </li>
-                <?php 
-}
-    ?>
+                <?php } ?>
             </ul>
-
-        <?php
-
-} else {
-    ?>
-            <p><?=t('You have not created any forms.')?></p>
-        <?php
-
-} ?>
-
-
+        <?php } else { ?>
+            <p>
+                <?php echo t('You have not created any forms.') ?>
+            </p>
+        <?php } ?>
     </div>
 </div>

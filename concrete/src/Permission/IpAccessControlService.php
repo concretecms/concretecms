@@ -20,14 +20,14 @@ class IpAccessControlService implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     /**
-     * Bit mask for blacklist ranges.
+     * Bit mask for denylist ranges.
      *
      * @var int
      */
     const IPRANGEFLAG_BLACKLIST = 0x0001;
 
     /**
-     * Bit mask for whitelist ranges.
+     * Bit mask for allowlist ranges.
      *
      * @var int
      */
@@ -48,21 +48,21 @@ class IpAccessControlService implements LoggerAwareInterface
     const IPRANGEFLAG_AUTOMATIC = 0x0020;
 
     /**
-     * IP range type: manually added to the blacklist.
+     * IP range type: manually added to the denylist.
      *
      * @var int
      */
     const IPRANGETYPE_BLACKLIST_MANUAL = 0x0011; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_MANUAL
 
     /**
-     * IP range type: automatically added to the blacklist.
+     * IP range type: automatically added to the denylist.
      *
      * @var int
      */
     const IPRANGETYPE_BLACKLIST_AUTOMATIC = 0x0021; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_AUTOMATIC
 
     /**
-     * IP range type: manually added to the whitelist.
+     * IP range type: manually added to the allowlist.
      *
      * @var int
      */
@@ -117,7 +117,9 @@ class IpAccessControlService implements LoggerAwareInterface
     }
 
     /**
-     * Check if an IP address is blacklisted.
+     * @deprecated
+     *
+     * Check if an IP address is denylisted.
      *
      * @param \IPLib\Address\AddressInterface|null $ipAddress
      *
@@ -125,19 +127,45 @@ class IpAccessControlService implements LoggerAwareInterface
      */
     public function isBlacklisted(AddressInterface $ipAddress = null)
     {
+        return $this->isDenylisted($ipAddress);
+    }
+
+    /**
+     * Check if an IP address is denylisted.
+     *
+     * @param \IPLib\Address\AddressInterface|null $ipAddress
+     *
+     * @return bool
+     */
+    public function isDenylisted(AddressInterface $ipAddress = null)
+    {
         $range = $this->getRange($ipAddress);
 
         return $range !== null && ($range->getType() & self::IPRANGEFLAG_BLACKLIST);
     }
 
     /**
-     * Check if an IP address is whitelisted.
+     * @deprecated
+     *
+     * Check if an IP address is allowlisted.
      *
      * @param \IPLib\Address\AddressInterface|null $ipAddress
      *
      * @return bool
      */
     public function isWhitelisted(AddressInterface $ipAddress = null)
+    {
+        return $this->isAllowlisted($ipAddress);
+    }
+
+    /**
+     * Check if an IP address is allowlisted.
+     *
+     * @param \IPLib\Address\AddressInterface|null $ipAddress
+     *
+     * @return bool
+     */
+    public function isAllowlisted(AddressInterface $ipAddress = null)
     {
         $range = $this->getRange($ipAddress);
 
@@ -165,7 +193,7 @@ class IpAccessControlService implements LoggerAwareInterface
             ->setDateTime(new DateTime('now'))
         ;
         $this->em->persist($event);
-        $this->em->flush($event);
+        $this->em->flush();
 
         return $event;
     }
@@ -183,7 +211,7 @@ class IpAccessControlService implements LoggerAwareInterface
         if (!$evenIfDisabled && !$this->getCategory()->isEnabled()) {
             return false;
         }
-        if ($this->isWhitelisted($ipAddress)) {
+        if ($this->isAllowlisted($ipAddress)) {
             return false;
         }
         if ($ipAddress === null) {
@@ -223,14 +251,14 @@ class IpAccessControlService implements LoggerAwareInterface
     }
 
     /**
-     * Add an IP address to the list of blacklisted IP address when too many events occur.
+     * Add an IP address to the list of denylisted IP address when too many events occur.
      *
-     * @param \IPLib\Address\AddressInterface $ipAddress the IP to add to the blacklist (if null, we'll use the current IP address)
+     * @param \IPLib\Address\AddressInterface $ipAddress the IP to add to the denylist (if null, we'll use the current IP address)
      * @param bool $evenIfDisabled if set to true, we'll add the IP address even if the IP ban system is disabled in the configuration
      *
      * @return \Concrete\Core\Entity\Permission\IpAccessControlRange|null
      */
-    public function addToBlacklistForThresholdReached(AddressInterface $ipAddress = null, $evenIfDisabled = false)
+    public function addToDenylistForThresholdReached(AddressInterface $ipAddress = null, $evenIfDisabled = false)
     {
         if (!$evenIfDisabled && !$this->getCategory()->isEnabled()) {
             return null;
@@ -245,14 +273,14 @@ class IpAccessControlService implements LoggerAwareInterface
         }
 
         $range = $this->createRange(
-            IPFactory::rangeFromBoundaries($ipAddress, $ipAddress),
+            IPFactory::getRangeFromBoundaries($ipAddress, $ipAddress),
             static::IPRANGETYPE_BLACKLIST_AUTOMATIC,
             $banExpiration
         );
 
         if ($this->getCategory()->getLogChannelHandle() !== '') {
             $this->logger->warning(
-                t('IP address %1$s added to blacklist for the category %2$s.', $ipAddress->toString(), $this->getCategory()->getDisplayName()),
+                t('IP address %1$s added to denylist for the category %2$s.', $ipAddress->toString(), $this->getCategory()->getDisplayName()),
                 [
                     'ip_address' => $ipAddress->toString(),
                     'category' => $this->getCategory()->getHandle(),
@@ -380,13 +408,13 @@ class IpAccessControlService implements LoggerAwareInterface
     }
 
     /**
-     * Clear the IP addresses automatically blacklisted.
+     * Clear the IP addresses automatically denylisted.
      *
      * @param bool $onlyExpired
      *
      * @return int the number of records deleted
      */
-    public function deleteAutomaticBlacklist($onlyExpired = true)
+    public function deleteAutomaticDenylist($onlyExpired = true)
     {
         $qb = $this->em->createQueryBuilder();
         $x = $qb->expr();

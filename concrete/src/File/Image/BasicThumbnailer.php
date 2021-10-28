@@ -5,11 +5,12 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation;
+use Concrete\Core\File\Command\GenerateCustomThumbnailAsyncCommand;
 use Concrete\Core\File\Image\Thumbnail\ThumbnailerInterface;
+use Concrete\Core\File\Image\Thumbnail\ThumbnailPlaceholderService;
 use Concrete\Core\File\Image\Thumbnail\Type\CustomThumbnail;
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Core\File\StorageLocation\StorageLocationInterface;
-use Concrete\Core\Http\ResponseAssetGroup;
 use Exception;
 use Image;
 use Imagine\Image\Box;
@@ -258,7 +259,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
      *
      * @return \stdClass
      */
-    private function processThumbnail($async, $obj, $maxWidth, $maxHeight, $crop)
+    public function processThumbnail($async, $obj, $maxWidth, $maxHeight, $crop)
     {
         if ($obj instanceof File) {
             $storage = $obj->getFileStorageLocationObject();
@@ -271,10 +272,7 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
         $version = null;
 
         $fh = $this->app->make('helper/file');
-        if ($async) {
-            $assetGroup = ResponseAssetGroup::get();
-            $assetGroup->requireAsset('core/frontend/thumbnail-builder');
-        }
+
         $baseFilename = '';
         $extension = '';
         if ($obj instanceof File) {
@@ -305,13 +303,19 @@ class BasicThumbnailer implements ThumbnailerInterface, ApplicationAwareInterfac
 
         $abspath = '/cache/thumbnails/' . $filename;
 
-        if ($async && $obj instanceof File) {
-            $customThumb = new CustomThumbnail($maxWidth, $maxHeight, $abspath, $crop);
+        if (!$filesystem->has($abspath)) {
+            if ($async && $obj instanceof File) {
+                $rescanFileCommand = new GenerateCustomThumbnailAsyncCommand($obj->getFileID(), (int)$maxWidth, (int)$maxHeight, (bool)$crop);
+                $this->app->executeCommand($rescanFileCommand);
 
-            $path_resolver = $this->app->make('Concrete\Core\File\Image\Thumbnail\Path\Resolver');
-            $path_resolver->getPath($obj->getVersion(), $customThumb);
-        } else {
-            if (!$filesystem->has($abspath)) {
+                /** @var ThumbnailPlaceholderService $thumbnailPlaceholderService */
+                $thumbnailPlaceholderService = $this->app->make(ThumbnailPlaceholderService::class);
+                $thumb = new \stdClass();
+                $thumb->src = 'data:image/svg+xml;base64,' . base64_encode((string)$thumbnailPlaceholderService->getThumbnailImage($maxWidth, $maxHeight));
+                $thumb->width = $maxWidth;
+                $thumb->height = $maxHeight;
+                return $thumb;
+            } else {
                 $created = false;
                 try {
                     if ($obj instanceof File) {

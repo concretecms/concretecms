@@ -19,7 +19,7 @@ class SelectValueTest extends AttributeValueTestCase
         ]);
     }
 
-    protected function setUp()
+    public function setUp(): void
     {
         \Database::query('truncate atSelectOptionsSelected');
         parent::setUp();

@@ -2,6 +2,9 @@
 namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Concrete\Core\Tree\Node\Type\Formatter\CategoryListFormatter;
+use Concrete\Core\Tree\Node\Type\Formatter\GroupFormatter;
+use Concrete\Core\Tree\Node\Type\Formatter\LegacyGroupFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\GroupMenu;
 use Loader;
 use Concrete\Core\User\Group\Group as UserGroup;
@@ -37,6 +40,15 @@ class Group extends TreeNode
     public function getTreeNodeMenu()
     {
         return new GroupMenu($this);
+    }
+
+    public function getListFormatter()
+    {
+        if (count($this->getTreeNodeGroupObject()->getChildGroups()) > 0) {
+            return new LegacyGroupFormatter();
+        } else {
+            return new GroupFormatter();
+        }
     }
 
     public function getTreeNodeGroupObject()
@@ -115,7 +127,11 @@ class Group extends TreeNode
         $obj = parent::getTreeNodeJSON();
         if (is_object($obj)) {
             $obj->gID = $this->gID;
-            $obj->icon = 'fa fa-users';
+            if (count($this->getTreeNodeGroupObject()->getChildGroups()) > 0) {
+                $obj->icon = 'fas fa-folder';
+            } else {
+                $obj->icon = 'fas fa-users';
+            }
             if (isset($this->gID)) {
                 $obj->title = $this->getTreeNodeDisplayName('text');
             }

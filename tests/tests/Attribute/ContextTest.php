@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Attribute;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ContextTest extends PHPUnit_Framework_TestCase
+class ContextTest extends TestCase
 {
     public function testCreateAttributePanelContext()
     {

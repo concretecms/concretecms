@@ -78,7 +78,7 @@ class Install extends Controller
     {
         $v = new View('/frontend/install');
         $v->setViewTheme('concrete');
-
+        $v->setViewTemplate('background_image.php');
         return $v;
     }
 
@@ -89,18 +89,11 @@ class Install extends Controller
      */
     public function on_start()
     {
-        $this->addHeaderItem('<link href="' . ASSETS_URL_CSS . '/views/install.css" rel="stylesheet" type="text/css" media="all" />');
-        $this->requireAsset('core/app');
-        $this->requireAsset('javascript', 'backstretch');
-        $this->requireAsset('javascript', 'bootstrap/collapse');
         $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
 
         $config = $this->app->make('config');
-        $this->set('backgroundFade', 0);
-        $this->set('pageTitle', t('Install concrete5'));
+        $this->set('pageTitle', t('Install Concrete CMS'));
         $image = date('Ymd') . '.jpg';
-        $this->set('image', date('Ymd') . '.jpg');
-        $this->set('imagePath', $config->get('concrete.urls.background_feed') . '/' . $image);
         $this->set('concreteVersion', $config->get('concrete.version'));
 
         $locale = $this->request->request->get('locale');
@@ -111,13 +104,12 @@ class Install extends Controller
         Cache::disableAll();
 
         if ($this->app->isInstalled()) {
-            throw new UserMessageException(t('concrete5 is already installed.'));
+            throw new UserMessageException(t('Concrete is already installed.'));
         }
     }
 
     public function view()
     {
-        $this->set('backgroundFade', 500);
         if ($this->getInstallerOptions()->hasConfigurationFiles()) {
             $this->testAndRunInstall();
         } else {
@@ -311,7 +303,7 @@ class Install extends Controller
                     'default-connection' => 'concrete',
                     'connections' => [
                         'concrete' => [
-                            'driver' => 'c5_pdo_mysql',
+                            'driver' => 'concrete_pdo_mysql',
                             'server' => $post->get('DB_SERVER'),
                             'database' => $post->get('DB_DATABASE'),
                             'username' => $post->get('DB_USERNAME'),
@@ -501,14 +493,13 @@ class Install extends Controller
         if ($e->has()) {
             $this->set('error', $e);
         } else {
-            $this->set('backgroundFade', 0);
             $spl = $this->getInstaller()->getStartingPoint(true);
             $this->set('installPackage', $spl->getPackageHandle());
             $this->set('installRoutines', $spl->getInstallRoutines());
             $this->set(
                 'successMessage',
                 t(
-                    'concrete5 has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
+                    'Concrete has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
                     USER_SUPER
                 )
             );

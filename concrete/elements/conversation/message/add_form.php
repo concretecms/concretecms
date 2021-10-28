@@ -1,8 +1,12 @@
 <?php
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Core::make('helper/form');
 $val = Core::make('token');
 $u = Core::make(Concrete\Core\User\User::class);
+$resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <?php if ($displayForm && $displayPostingForm == $position) {
@@ -32,11 +36,11 @@ $u = Core::make(Concrete\Core\User\User::class);
 					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 					<?php echo $form->hidden('cID', $cID) ?>
 					<?php echo $form->hidden('bID', $bID) ?>
-					<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-primary"><?=t('Submit')?></button>
+					<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="float-end btn btn-submit btn-primary"><?=t('Submit')?></button>
 					<?php if ($attachmentsEnabled) {
     ?>
-						<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files');
-    ?>"><i class="fa fa-image"></i></button>
+						<button type="button" class="float-end btn btn-secondary ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files');
+    ?>"><i class="fas fa-image"></i></button>
 					<?php
 }
     ?>
@@ -45,11 +49,11 @@ $u = Core::make(Concrete\Core\User\User::class);
 						<a href="<?=URL::to('/ccm/system/dialogs/conversation/subscribe', $conversation->getConversationID())?>" data-conversation-subscribe="unsubscribe" <?php if (!$conversation->isUserSubscribed($u)) {
     ?>style="display: none"<?php
 }
-    ?> class="btn pull-right btn-default"><?=t('Un-Subscribe')?></a>
+    ?> class="btn float-end btn-secondary"><?=t('Un-Subscribe')?></a>
 						<a href="<?=URL::to('/ccm/system/dialogs/conversation/subscribe', $conversation->getConversationID())?>" data-conversation-subscribe="subscribe" <?php if ($conversation->isUserSubscribed($u)) {
     ?>style="display: none"<?php
 }
-    ?> class="btn pull-right btn-default"><?=t('Subscribe to Conversation')?></a>
+    ?> class="btn float-end btn-secondary"><?=t('Subscribe to Conversation')?></a>
 					<?php
 }
     ?>
@@ -58,8 +62,7 @@ $u = Core::make(Concrete\Core\User\User::class);
 			<?php if ($attachmentsEnabled) {
     ?>
 				<div class="ccm-conversation-attachment-container">
-					<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');
-    ?>" class="dropzone" id="file-upload">
+					<form action="<?= h($resolverManager->resolve(['/ccm/frontend/conversations/add_file'])) ?>" class="dropzone" id="file-upload">
 						<div class="ccm-conversation-errors alert alert-danger"></div>
 						<?php $val->output('add_conversations_file');
     ?>
@@ -84,11 +87,11 @@ $u = Core::make(Concrete\Core\User\User::class);
 					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 					<?php echo $form->hidden('cID', $cID) ?>
 					<?php echo $form->hidden('bID', $bID) ?>
-					<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-primary"><?=t('Reply')?> </button>
+					<button type="btn btn-primary" data-submit="conversation-message" class="float-end btn btn-primary"><?=t('Reply')?> </button>
 					<?php if ($attachmentsEnabled) {
     ?>
-						<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files');
-    ?>"><i class="fa fa-image"></i></button>
+						<button type="button" class="float-end btn btn-secondary ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files');
+    ?>"><i class="fas fa-image"></i></button>
 					<?php
 }
     ?>
@@ -97,8 +100,7 @@ $u = Core::make(Concrete\Core\User\User::class);
 			<?php if ($attachmentsEnabled) {
     ?>
 				<div class="ccm-conversation-attachment-container">
-					<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');
-    ?>" class="dropzone" id="file-upload-reply">
+					<form action="<?= h($resolverManager->resolve(['/ccm/frontend/conversations/add_file'])) ?>" class="dropzone" id="file-upload-reply">
 						<div class="ccm-conversation-errors alert alert-danger"></div>
 						<?php $val->output('add_conversations_file');
     ?>

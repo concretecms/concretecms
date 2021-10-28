@@ -3,10 +3,6 @@ namespace Concrete\Core\Block\Menu;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Application\UserInterface\ContextMenu\AbstractManager;
-use Concrete\Core\Application\UserInterface\ContextMenu\ManagerInterface;
-use Concrete\Core\Area\Area;
-use Concrete\Core\Block\Block;
-use Concrete\Core\Page\Page;
 
 class Manager extends AbstractManager
 {

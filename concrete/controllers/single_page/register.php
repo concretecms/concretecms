@@ -86,7 +86,7 @@ class Register extends PageController
             $username = trim($username);
             $username = preg_replace('/ +/', ' ', $username);
 
-            if ($ip->isBlacklisted()) {
+            if ($ip->isDenylisted()) {
                 $e->add($ip->getErrorMessage());
             }
 
@@ -172,7 +172,12 @@ class Register extends PageController
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
                     if ($config->get('concrete.email.register_notification.address')) {
-                        $mh->from($config->get('concrete.email.register_notification.address'), t('Website Registration Notification'));
+                        if (Config::get('concrete.email.register_notification.name')) {
+                            $fromName = Config::get('concrete.email.register_notification.name');
+                        } else {
+                            $fromName = t('Website Registration Notification');
+                        }
+                        $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {

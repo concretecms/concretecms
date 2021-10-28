@@ -7,21 +7,21 @@ use Concrete\TestHelpers\Foundation\ClassLoaderTestCase;
 
 class ClassloaderTest extends ClassLoaderTestCase
 {
-    public static function tearDownAfterClass()
+    public static function TearDownAfterClass():void
     {
         parent::tearDownAfterClass();
         $coreAutoloader = ClassLoader::getInstance();
         $coreAutoloader->reset();
     }
 
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $coreAutoloader = ClassLoader::getInstance();
         $coreAutoloader->disable();
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         parent::tearDown();
         $coreAutoloader = ClassLoader::getInstance();
@@ -160,7 +160,6 @@ class ClassloaderTest extends ClassLoaderTestCase
             ['Concrete\Controller\Frontend\Jobs'],
             ['Concrete\Controller\PageType\CoreStack'],
             ['Concrete\Controller\Panel\Add'],
-            ['Concrete\Controller\Search\FileFolder'],
             ['Concrete\Controller\SinglePage\Account\Avatar'],
             ['Concrete\Controller\SinglePage\Dashboard\System\Basics\Name'],
             ['Concrete\Authentication\Concrete\Controller'],
@@ -168,9 +167,6 @@ class ClassloaderTest extends ClassLoaderTestCase
             ['Concrete\Block\CoreAreaLayout\Controller'],
             ['Concrete\Block\ExpressForm\Controller'],
             ['Concrete\Block\SocialLinks\Controller'],
-            ['Concrete\Job\IndexSearch'],
-            ['Concrete\Job\ProcessEmail'],
-            ['Concrete\Job\RemoveOldPageVersions'],
             ['Concrete\Theme\Elemental\PageTheme'],
             ['Concrete\Theme\Dashboard\PageTheme'],
 

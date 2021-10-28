@@ -1,76 +1,77 @@
-<?php defined('C5_EXECUTE') or die('Access denied.'); ?>
+<?php
+
+defined('C5_EXECUTE') or die('Access denied.');
+
+/**
+ * @var Concrete\Core\Form\Service\Widget\GroupSelector $groupSelector
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Url\UrlImmutable $callbackUrl
+ * @var string $apikey
+ * @var string $apisecret
+ * @var bool $registrationEnabled
+ * @var int|null $registrationGroup
+ */
+?>
 
 <div class="alert alert-info">
-    <h4><?php echo t('Twitter Login Configuration'); ?></h4>
-    <p><?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', 'https://apps.twitter.com/'); ?></p>
-    <p><?php echo t('Check the box labeled "Allow this application to be used to Sign in with Twitter".'); ?></p>
-    <p><?php echo t('Set the "Callback URL" to:%s.', ' <code>'.\URL::to('/ccm/system/authentication/oauth2/twitter/callback').'</code>'); ?></p>
+    <?= t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', 'https://apps.twitter.com/') ?>
+    <ol class="mb-0">
+        <li><?= t('Check the box labeled "Allow this application to be used to Sign in with Twitter".') ?></li>
+        <li><?= t('Set the "Callback URL" to: %s', '<code>' . $callbackUrl . '</code>') ?></li>
+    </ol>
 </div>
 
-<div class='form-group'>
-    <?=$form->label('apikey', t('Consumer Key (API Key)'))?>
-    <?=$form->text('apikey', $apikey, array('autocomplete' => 'off'))?>
+<div class="form-group">
+    <?= $form->label('apikey', t('Consumer Key (API Key)')) ?>
+    <?= $form->text('apikey', $apikey, ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
 </div>
-<div class='form-group'>
-    <?=$form->label('apisecret', t('Consumer Secret (API Secret)'))?>
+<div class="form-group">
+    <?= $form->label('apisecret', t('Consumer Secret (API Secret)')) ?>
     <div class="input-group">
-        <?=$form->password('apisecret', $apisecret, array('autocomplete' => 'off'))?>
-        <span class="input-group-btn">
-        <button id="showsecret" class="btn btn-warning" type="button"><?php echo t('Show API secret')?></button>
-      </span>
+        <?= $form->password('apisecret', $apisecret, ['autocomplete' => 'off', 'class' => 'font-monospace']) ?>
+        <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="fas fa-eye"></i></button>
     </div>
 </div>
-<div class='form-group'>
-    <div class="input-group">
-        <label type="checkbox">
-            <input type="checkbox" name="registration_enabled" value="1" <?= \Config::get('auth.twitter.registration.enabled', false) ? 'checked' : '' ?>>
-            <span style="font-weight:normal"><?= t('Allow automatic registration') ?></span>
-        </label>
-        </span>
+
+<div class="form-group">
+    <?= $form->label('', t('Registration')) ?>
+    <div class="form-check">
+        <?= $form->checkbox('registration_enabled', '1', $registrationEnabled) ?>
+        <label class="form-check-label" for="registration_enabled"><?= t('Allow automatic registration') ?></label>
     </div>
 </div>
-<div class='form-group registration-group'>
-    <label for="registration_group" class="control-label"><?= t('Group to enter on registration') ?></label>
-    <select name="registration_group" class="form-control">
-        <option value="0"><?= t("None") ?></option>
-        <?php
-        /** @var \Group $group */
-        foreach ($groups as $group) {
-            ?>
-            <option value="<?= $group->getGroupID() ?>" <?= intval($group->getGroupID(), 10) === intval(
-                \Config::get('auth.twitter.registration.group', false),
-                10) ? 'selected' : '' ?>>
-                <?= $group->getGroupDisplayName(false) ?>
-            </option>
-        <?php
-
-        }
-        ?>
-    </select>
+<div class="form-group registration-group">
+    <?= $form->label('registration_group', t('Group to enter on registration')) ?>
+    <?= $groupSelector->selectGroup('registration_group', $registrationGroup, tc('Group', 'None')) ?>
 </div>
 
-<script type="text/javascript">
+<script>
+$(document).ready(function() {
 
-    (function RegistrationGroup() {
-
-        var input = $('input[name="registration_enabled"]'),
-            group_div = $('div.registration-group');
-
-        input.change(function () {
-            input.get(0).checked && group_div.show() || group_div.hide();
-        }).change();
-
-    }());
-
-    var button = $('#showsecret');
-    button.click(function() {
-        var apisecret = $('#apisecret');
-        if(apisecret.attr('type') == 'password') {
-            apisecret.attr('type', 'text');
-            button.html('<?php echo addslashes(t('Hide API secret'))?>');
+    $('#showsecret').on('click', function(e) {
+        e.preventDefault();
+        var $apisecret = $('#apisecret');
+        if ($apisecret.attr('type') == 'password') {
+            $apisecret.attr('type', 'text');
+            $('#showsecret')
+                .attr('title', <?= json_encode(t('Hide secret key')) ?>)
+                .html('<i class="fas fa-eye-slash"></i>')
+            ;
         } else {
-            apisecret.attr('type', 'password');
-            button.html('<?php echo addslashes(t('Show API secret'))?>');
+            $apisecret.attr('type', 'password');
+            $('#showsecret')
+                .attr('title', <?= json_encode(t('Show secret key')) ?>)
+                .html('<i class="fas fa-eye"></i>')
+            ;
         }
     });
+
+    $('input[name="registration_enabled"]')
+        .on('change', function () {
+            $('div.registration-group').toggle($(this).is(':checked'));
+        })
+        .trigger('change')
+    ;
+
+}());
 </script>

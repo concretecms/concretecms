@@ -121,6 +121,18 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     }
 
     /**
+     * @deprecated use $app->make('failed_login')->isDenylisted()
+     *
+     * @param \IPLib\Address\AddressInterface|null $ip
+     *
+     * @return bool
+     */
+    public function isDenylisted(AddressInterface $ip = null)
+    {
+        return $this->getFailedLoginService()->isDenylisted($ip);
+    }
+
+    /**
      * @deprecated use $app->make('failed_login')->isBlacklisted()
      *
      * @param \IPLib\Address\AddressInterface|null $ip
@@ -130,6 +142,18 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     public function isBlacklisted(AddressInterface $ip = null)
     {
         return $this->getFailedLoginService()->isBlacklisted($ip);
+    }
+
+    /**
+     * @deprecated use $app->make('failed_login')->isAllowlisted()
+     *
+     * @param \IPLib\Address\AddressInterface|null $ip
+     *
+     * @return bool
+     */
+    public function isAllowlisted(AddressInterface $ip = null)
+    {
+        return $this->getFailedLoginService()->isAllowlisted($ip);
     }
 
     /**
@@ -179,14 +203,14 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     }
 
     /**
-     * @deprecated use $app->make('failed_login')->addToBlacklistForThresholdReached()
+     * @deprecated use $app->make('failed_login')->addToDenylistForThresholdReached()
      *
      * @param \IPLib\Address\AddressInterface $ip
      * @param bool $ignoreConfig
      */
-    public function addToBlacklistForThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
+    public function addToDenylistForThresholdReached(AddressInterface $ip = null, $ignoreConfig = false)
     {
-        $this->getFailedLoginService()->addToBlacklistForThresholdReached($ip, $ignoreConfig);
+        $this->getFailedLoginService()->addToDenylistForThresholdReached($ip, $ignoreConfig);
     }
 
     /**
@@ -262,15 +286,15 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     }
 
     /**
-     * @deprecated use $app->make('failed_login')->deleteAutomaticBlacklist()
+     * @deprecated use $app->make('failed_login')->deleteAutomaticDenylist()
      *
      * @param bool $onlyExpired
      *
      * @return int
      */
-    public function deleteAutomaticBlacklist($onlyExpired = true)
+    public function deleteAutomaticDenylist($onlyExpired = true)
     {
-        return $this->getFailedLoginService()->deleteAutomaticBlacklist($onlyExpired);
+        return $this->getFailedLoginService()->deleteAutomaticDenylist($onlyExpired);
     }
 
     /**
@@ -280,13 +304,13 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
      */
     public function getRequestIP()
     {
-        $ip = $this->app->make(\IPLib\Address\AddressInterface::class);
+        $ip = $this->app->make(AddressInterface::class);
 
         return new IPAddress((string) $ip);
     }
 
     /**
-     * @deprecated use $app->make('failed_login')->isBlacklisted()
+     * @deprecated use $app->make('failed_login')->isDenylisted()
      *
      * @param mixed $ip
      */
@@ -294,14 +318,14 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     {
         $ipAddress = null;
         if ($ip instanceof IPAddress) {
-            $ipAddress = IPFactory::addressFromString($ip->getIp(IPAddress::FORMAT_IP_STRING));
+            $ipAddress = IPFactory::parseAddressString($ip->getIp(IPAddress::FORMAT_IP_STRING));
         }
 
-        return $this->getFailedLoginService()->isBlacklisted($ipAddress);
+        return $this->getFailedLoginService()->isDenylisted($ipAddress);
     }
 
     /**
-     * @deprecated use $app->make('failed_login')->addToBlacklistForThresholdReached()
+     * @deprecated use $app->make('failed_login')->addToDenylistForThresholdReached()
      *
      * @param mixed $ip
      * @param mixed $ignoreConfig
@@ -310,9 +334,9 @@ class IPService implements ApplicationAwareInterface, LoggerAwareInterface
     {
         $ipAddress = null;
         if ($ip instanceof IPAddress) {
-            $ipAddress = IPFactory::addressFromString($ip->getIp(IPAddress::FORMAT_IP_STRING));
+            $ipAddress = IPFactory::parseAddressString($ip->getIp(IPAddress::FORMAT_IP_STRING));
         }
-        $this->getFailedLoginService()->addToBlacklistForThresholdReached($ipAddress, $ignoreConfig);
+        $this->getFailedLoginService()->addToDenylistForThresholdReached($ipAddress, $ignoreConfig);
     }
 
     /**

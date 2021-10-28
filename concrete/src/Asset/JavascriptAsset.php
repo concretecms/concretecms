@@ -6,16 +6,7 @@ use Config;
 
 class JavascriptAsset extends Asset
 {
-    /**
-     * @var bool
-     */
-    protected $assetSupportsMinification = true;
-
-    /**
-     * @var bool
-     */
-    protected $assetSupportsCombination = true;
-
+    
     /**
      * @return string
      */
@@ -72,9 +63,6 @@ class JavascriptAsset extends Asset
                 foreach ($assets as $asset) {
                     $contents = $asset->getAssetContents();
                     if (isset($contents)) {
-                        if ($asset->assetSupportsMinification()) {
-                            $contents = \JShrink\Minifier::minify($contents);
-                        }
                         $js .= $contents.";\n\n";
                     }
                 }

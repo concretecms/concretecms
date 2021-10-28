@@ -16,9 +16,9 @@ class Version20141017000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     * @see \Doctrine\Migrations\AbstractMigration::getDescription()
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return '5.7.1';
     }
@@ -76,7 +76,7 @@ class Version20141017000000 extends AbstractMigration implements RepeatableMigra
         try {
             $community = AuthenticationType::getByHandle('community');
         } catch (Exception $e) {
-            $community = AuthenticationType::add('community', 'concrete5.org');
+            $community = AuthenticationType::add('community', 'community.concretecms.com');
             if (is_object($community)) {
                 $community->disable();
             }

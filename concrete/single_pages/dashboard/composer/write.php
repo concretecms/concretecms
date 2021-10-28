@@ -4,7 +4,6 @@
 <?php if (is_object($pagetype)) {
     ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($pagetype->getPageTypeName(), false, false, false)?>
 	<form method="post" data-form="composer" class="form-horizontal">
 	<div class="ccm-pane-body">
 		<?php Loader::helper('concrete/composer')->display($pagetype, $draft);
@@ -17,13 +16,9 @@
 
 	</form>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
-
-<?php 
+<?php
 } else {
     ?>
-
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composer'), false, 'span10 offset1')?>
 
 	<?php if (count($pagetypes) > 0) {
     ?>
@@ -34,24 +29,21 @@
     if ($ccp->canEditPageTypeInComposer()) {
         ?>
 		<li class="item-select-page"><a href="<?=$view->url('/dashboard/composer/write', 'composer', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
-		<?php 
+		<?php
     }
     ?>
-	<?php 
+	<?php
 }
     ?>
 	</ul>
-	<?php 
+	<?php
 } else {
     ?>
 		<p><?=t('You do not have any page types.')?></p>
-	<?php 
+	<?php
 }
     ?>
 
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
-
-
-<?php 
+<?php
 } ?>

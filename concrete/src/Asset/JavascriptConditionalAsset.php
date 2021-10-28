@@ -8,16 +8,6 @@ class JavascriptConditionalAsset extends Asset
     protected $conditional = null;
 
     /**
-     * @var bool
-     */
-    protected $assetSupportsMinification = false;
-
-    /**
-     * @var bool
-     */
-    protected $assetSupportsCombination = false;
-
-    /**
      * @return string
      */
     public function getAssetType()

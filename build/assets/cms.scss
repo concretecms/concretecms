@@ -1,0 +1,78 @@
+// Bootstrap Core First
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/mixins';
+
+// Concrete Variables
+@import "@concretecms/bedrock/assets/cms/scss/variables";
+@import "@fortawesome/fontawesome-free/scss/variables";
+
+// Bootstrap Variables. Unless this is AFTER Concrete variables we override any Bootstrap defaults.
+// Attention future self: Do NOT try and move this to before our own custom bedrock CMS variables above.
+// You will want to, because it will be cleaner and it will let you use Bootstrap variables within our own variables.
+// But stay strong – without this being broken out AFTER our own variables we can't customizable Bootstrap colors, etc...
+@import 'bootstrap/scss/variables';
+
+// Import the subset of Bootstrap that is required in the CMS entry point.
+// Make sure to namespace it to .ccm-ui
+// Reboot HTML body and reboot tags are basically the bootstrap reboot.scss file split into two parts.
+// The html and body tags are combined into the bootstrap/reboot.scss file, and the rest of the tags are
+// just copied into reboot_tags.scss
+@import "@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
+@import "@concretecms/bedrock/assets/cms/scss/bootstrap/root-modified"; // see below
+.ccm-ui {
+  @import "@concretecms/bedrock/assets/cms/scss/bootstrap/reboot-tags";
+
+  // Configuration
+  //@import "functions";
+  //@import "variables";
+  //@import "mixins";
+  @import "bootstrap/scss/utilities";
+
+  // Layout & components
+  // Important – we can't import root here because it includes :root inside it, which puts our CMS specific variables
+  // onto the :root node, which could collide with other variables. So let's copy the root.scss from bootstrap into
+  // our own location, just like we do with reboot. To keep this file up to date, just copy the contents of
+  // bootstrap/css/root and remove :root from the file, and copy it into the root-modified file above.
+  //@import "bootstrap/scss/root";
+  //@import "bootstrap/scss/reboot";
+  @import "bootstrap/scss/type";
+  @import "bootstrap/scss/images";
+  @import "bootstrap/scss/containers";
+  @import "bootstrap/scss/grid";
+  @import "bootstrap/scss/tables";
+  @import "bootstrap/scss/forms";
+  @import "bootstrap/scss/buttons";
+  @import "bootstrap/scss/transitions";
+  @import "bootstrap/scss/dropdown";
+  @import "bootstrap/scss/button-group";
+  @import "bootstrap/scss/nav";
+  @import "bootstrap/scss/navbar";
+  @import "bootstrap/scss/card";
+  @import "bootstrap/scss/accordion";
+  @import "bootstrap/scss/breadcrumb";
+  @import "bootstrap/scss/pagination";
+  @import "bootstrap/scss/badge";
+  @import "bootstrap/scss/alert";
+  @import "bootstrap/scss/progress";
+  @import "bootstrap/scss/list-group";
+  @import "bootstrap/scss/close";
+  @import "bootstrap/scss/toasts";
+  //@import "bootstrap/scss/modal";
+  @import "bootstrap/scss/tooltip";
+  @import "bootstrap/scss/popover";
+  //@import "carousel";
+  @import "bootstrap/scss/spinners";
+  @import "bootstrap/scss/offcanvas";
+
+  // Helpers
+  @import "bootstrap/scss/helpers";
+
+  // Utilities
+  @import "bootstrap/scss/utilities/api";
+
+  // Plugins
+  @import "bootstrap-select/sass/bootstrap-select";
+}
+
+// This is the actual public entry point to the cms.css on the front-end
+@import "@concretecms/bedrock/assets/cms/scss/base";

@@ -8,6 +8,8 @@ use Concrete\Core\Page\Page;
 
 class Controller extends AttributeTypeController
 {
+    protected $searchIndexFieldDefinition = ['type' => 'integer', 'options' => ['default' => 0, 'notnull' => false]];
+    
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('link');

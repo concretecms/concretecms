@@ -4,7 +4,7 @@ namespace Concrete\Tests\Database\EntityManager\Driver;
 
 use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * CoreDriverTest.
@@ -12,7 +12,7 @@ use PHPUnit_Framework_TestCase;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class CoreDriverTest extends PHPUnit_Framework_TestCase
+class CoreDriverTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application
@@ -32,7 +32,7 @@ class CoreDriverTest extends PHPUnit_Framework_TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = Application::getFacadeApplication();
@@ -66,7 +66,7 @@ class CoreDriverTest extends PHPUnit_Framework_TestCase
      */
     public function testGetNamespace()
     {
-        $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
+        $this->assertInstanceOf('Doctrine\Persistence\Mapping\Driver\MappingDriverChain',
             $this->driverChain, 'Is not a Doctrine ORM MappingDriverChain');
         $drivers = $this->driverChain->getDrivers();
 

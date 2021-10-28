@@ -7,9 +7,9 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Locale\Service as LocaleService;
 use Concrete\Core\Support\Facade\Facade;
 use Core;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class PageCacheTest extends PHPUnit_Framework_TestCase
+class PageCacheTest extends TestCase
 {
     public function testGetCacheHostForPage()
     {

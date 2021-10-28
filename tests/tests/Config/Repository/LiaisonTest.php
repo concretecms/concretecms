@@ -7,9 +7,9 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\TestHelpers\Config\Repository\LiaisonLoader;
 use Concrete\TestHelpers\Config\Repository\LiaisonSaver;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class LiaisonTest extends PHPUnit_Framework_TestCase
+class LiaisonTest extends TestCase
 {
     /** @var Liaison */
     protected $liaison;
@@ -17,8 +17,7 @@ class LiaisonTest extends PHPUnit_Framework_TestCase
     /** @var Repository */
     protected $repository;
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $files = new Filesystem();
 
         $loader = new LiaisonLoader($files);

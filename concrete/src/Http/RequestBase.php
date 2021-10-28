@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Http;
 
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\User;
 use Core;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -109,6 +111,10 @@ class RequestBase extends SymfonyRequest
     {
         $this->hasCustomRequestUser = true;
         $this->customRequestUser = $ui;
+        $app = Facade::getFacadeApplication();
+        $app->singleton(User::class, function() {
+            return new User(); // Not super thrilled about this. But it's necessary now that the user class is a singleton.
+        });
     }
 
     /**

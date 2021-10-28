@@ -4,9 +4,9 @@ namespace Concrete\Tests\Config;
 
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Config\RendererInvalidTypeException;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class RendererTest extends PHPUnit_Framework_TestCase
+class RendererTest extends TestCase
 {
     public function testRendering()
     {
@@ -40,7 +40,7 @@ class RendererTest extends PHPUnit_Framework_TestCase
 
         $rendered = id(new Renderer($array))->render();
 
-        /** @var Closure $closure */
+        /** @var \Closure $closure */
         $closure = eval('return function(){' . substr($rendered, 5) . '};');
 
         $this->assertTrue($this->same($closure(), $array));
@@ -82,30 +82,15 @@ class RendererTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidTypeClosure()
     {
-        $renderer = new Renderer(
-            [
-                'closure' => function () {
-                },
-            ]);
-        try {
-            $renderer->render();
-        } catch (RendererInvalidTypeException $e) {
-            return;
-        }
-        $this->fail('Didn\'t detect invalid Closure type.');
+        $this->expectException(\Concrete\Core\Config\RendererInvalidTypeException::class);
+        $renderer = new Renderer(['closure' => function () {},]);
+        $renderer->render();
     }
 
     public function testInvalidTypeObject()
     {
-        $renderer = new Renderer(
-            [
-                'object' => $this,
-            ]);
-        try {
-            $renderer->render();
-        } catch (RendererInvalidTypeException $e) {
-            return;
-        }
-        $this->fail('Didn\'t detect invalid Closure type.');
+        $this->expectException(\Concrete\Core\Config\RendererInvalidTypeException::class);
+        $renderer = new Renderer(['object' => $this]);
+        $renderer->render();
     }
 }

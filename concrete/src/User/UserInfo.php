@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\User;
 
 use Concrete\Core\Antispam\Service;
@@ -11,6 +12,9 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Entity\Attribute\Value\UserValue;
 use Concrete\Core\Entity\Express\Entry;
+use Concrete\Core\Entity\File\DownloadStatistics;
+use Concrete\Core\Entity\File\File;
+use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -47,7 +51,7 @@ use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
 use League\URL\URLInterface;
 use stdClass;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Concrete\Core\Events\EventDispatcher;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
@@ -173,6 +177,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
+     * @deprecated
      * @return Group[]
      */
     public function getUserBadges()
@@ -232,24 +237,24 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $this->attributeCategory->deleteValue($attribute);
         }
 
-        $this->connection->executeQuery('DELETE FROM OauthUserMap WHERE user_id = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM Logs WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM UserGroups WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM Piles WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM ConfigStore WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM ConversationSubscriptions WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM OauthUserMap WHERE user_id = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM Logs WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM UserSearchIndexAttributes WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM UserGroups WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM Piles WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM ConfigStore WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM ConversationSubscriptions WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM PermissionAccessEntityUsers WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('DELETE FROM authTypeConcreteCookieMap WHERE uID = ?', [(int)$this->getUserID()]);
 
         // Conversation messages and ratings should be detached from the user
-        $this->connection->executeQuery('UPDATE ConversationMessages SET uID = 0, cnvMessageAuthorName = NULL, cnvMessageAuthorEmail = NULL, cnvMessageAuthorWebsite = NULL, cnvMessageSubmitIP = NULL, cnvMessageSubmitUserAgent = NULL WHERE uID = ?', [(int) $this->getUserID()]);
-        $this->connection->executeQuery('UPDATE ConversationMessageRatings SET cnvMessageRatingIP = NULL, uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('UPDATE ConversationMessages SET uID = 0, cnvMessageAuthorName = NULL, cnvMessageAuthorEmail = NULL, cnvMessageAuthorWebsite = NULL, cnvMessageSubmitIP = NULL, cnvMessageSubmitUserAgent = NULL WHERE uID = ?', [(int)$this->getUserID()]);
+        $this->connection->executeQuery('UPDATE ConversationMessageRatings SET cnvMessageRatingIP = NULL, uID = 0 WHERE uID = ?', [(int)$this->getUserID()]);
 
         // Public file sets should be detached from the user
         $this->connection->executeQuery('UPDATE FileSets SET uID = 0 WHERE uID = ? AND fsType = ?', [
-            (int) $this->getUserID(),
+            (int)$this->getUserID(),
             Set::TYPE_PUBLIC,
         ]);
 
@@ -258,14 +263,19 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $set->delete();
         }
 
-        $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
-        $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int) USER_SUPER_ID, (int) $this->getUserID()]);
-        $this->connection->executeQuery('UPDATE DownloadStatistics set uID = 0 WHERE uID = ?', [(int) $this->getUserID()]);
+        $this->connection->executeQuery('UPDATE Blocks set uID = ? WHERE uID = ?', [(int)USER_SUPER_ID, (int)$this->getUserID()]);
+        $this->connection->executeQuery('UPDATE Pages set uID = ? WHERE uID = ?', [(int)USER_SUPER_ID, (int)$this->getUserID()]);
+        $this->entityManager->createQueryBuilder()
+            ->update(DownloadStatistics::class, 'ds')
+            ->set('ds.downloaderID', ':null')
+            ->where($this->entityManager->getExpressionBuilder()->eq('ds.downloaderID', ':uID'))
+            ->getQuery()
+            ->execute(['null' => null, 'uID' => $this->getUserID()]);
 
         // We need to clear out the doctrine proxies for userSignups or we will get a Doctrine Error
         /** @var UserSignup[] $userSignups */
-        $userSignups = $this->entityManager->getRepository(UserSignup::class)->findBy(['createdBy' => (int) $this->getUserID()]);
-        $superAdminEntity = $this->entityManager->getRepository(UserEntity::class)->find((int) USER_SUPER_ID);
+        $userSignups = $this->entityManager->getRepository(UserSignup::class)->findBy(['createdBy' => (int)$this->getUserID()]);
+        $superAdminEntity = $this->entityManager->getRepository(UserEntity::class)->find((int)USER_SUPER_ID);
 
         foreach ($userSignups as $userSignup) {
             // If there is no SuperAdmin Just remove the relatedUserSignups
@@ -277,7 +287,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             }
         }
 
-        $expressEntities = $this->entityManager->getRepository(Entry::class)->findBy(['author' => (int) $this->getUserID()]);
+        $expressEntities = $this->entityManager->getRepository(Entry::class)->findBy(['author' => (int)$this->getUserID()]);
         /** @var Entry $expressEntity */
         foreach ($expressEntities as $expressEntity) {
             // If there is no SuperAdmin Just remove the Express Entry
@@ -328,7 +338,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             ]
         );
 
-        $this->connection->executeQuery('update Users set uHasAvatar = 1 where uID = ? limit 1', [$this->getUserID()]);
+        $this->connection->executeQuery('update Users set uHasAvatar = 1, uDateLastUpdated = NOW() where uID = ? limit 1', [$this->getUserID()]);
 
         // run any internal event we have for user update
         $ui = $this->application->make(UserInfoRepository::class)->getByID($this->getUserID());
@@ -351,13 +361,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      * @param string $subject
      * @param string $text
      * @param PrivateMessage $inReplyTo
+     * @param File[] $attachments
      *
      * @return ErrorList|false|null Returns:
      * - an error if the send limit has been reached
      * - false if the message is detected as spam
      * - null if no errors occurred
      */
-    public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = null)
+    public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = null, $attachments = [])
     {
         if (Limit::isOverLimit($this->getUserID())) {
             return Limit::getErrorObject();
@@ -393,6 +404,10 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                 'insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)',
                 [$msgID, $recipient->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_INBOX, 1, 1]
             );
+            // add file attachments
+            foreach ($attachments as $attachment) {
+                $this->connection->executeQuery('insert into UserPrivateMessagesAttachments (msgID, fID) values (?, ?)', [$msgID, $attachment->getFileID()]);
+            }
         }
 
         // If the message is in reply to another message, we make a note of that here
@@ -468,7 +483,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
      */
     public function update($data)
     {
-        $uID = (int) $this->getUserID();
+        $uID = (int)$this->getUserID();
         if ($uID === 0) {
             $result = false;
         } else {
@@ -477,6 +492,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $passwordChangedOn = null;
             $fields = [];
             $values = [];
+            $nullFields = [];
             if (isset($data['uName'])) {
                 $fields[] = 'uName = ?';
                 $values[] = $data['uName'];
@@ -498,7 +514,15 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                 $fields[] = 'uDefaultLanguage = ?';
                 $values[] = $data['uDefaultLanguage'];
             }
-            if (isset($data['uPassword']) && (string) $data['uPassword'] !== '') {
+            if (isset($data['uHomeFileManagerFolderID'])) {
+                if ($data['uHomeFileManagerFolderID'] == '') {
+                    $nullFields[] = 'uHomeFileManagerFolderID';
+                } else {
+                    $fields[] = 'uHomeFileManagerFolderID = ?';
+                    $values[] = $data['uHomeFileManagerFolderID'];
+                }
+            }
+            if (isset($data['uPassword']) && (string)$data['uPassword'] !== '') {
                 if (isset($data['uPasswordConfirm']) && $data['uPassword'] === $data['uPasswordConfirm']) {
                     $passwordChangedOn = $this->application->make('date')->getOverridableNow();
                     $fields[] = 'uPassword = ?';
@@ -518,6 +542,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     'update Users set  ' . implode(', ', $fields) . 'where uID = ? limit 1',
                     array_merge($values, [$uID])
                 );
+                if (!empty($nullFields)) {
+                    $nullFieldsStr = '';
+                    foreach ($nullFields as $nullField) {
+                        $nullFieldsStr .= (strlen($nullFieldsStr) > 0 ? ", " : "") . $nullField . " = NULL";
+                    }
+                    $nullQuery = sprintf('update Users set %s where uID = ? limit 1', $nullFieldsStr);
+                    $this->connection->executeQuery($nullQuery, [$uID]);
+                }
                 if ($emailChanged) {
                     $this->connection->executeQuery('DELETE FROM UserValidationHashes WHERE uID = ?', [$uID]);
                     $h = $this->application->make('helper/validation/identifier');
@@ -525,7 +557,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                 }
                 // now we check to see if the user is updated his or her own logged in record
                 $session = $this->application->make('session');
-                if ($session->has('uID') && $uID === (int) $session->get('uID')) {
+                if ($session->has('uID') && $uID === (int)$session->get('uID')) {
                     if (isset($data['uName'])) {
                         $session->set('uName', $data['uName']);
                     }
@@ -534,6 +566,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     }
                     if (isset($data['uDefaultLanguage'])) {
                         $session->set('uDefaultLanguage', $data['uDefaultLanguage']);
+                    }
+                    if (isset($data['uHomeFileManagerFolderID'])) {
+                        $session->set('uHomeFileManagerFolderID', $data['uHomeFileManagerFolderID']);
                     }
                     if ($passwordChangedOn !== null) {
                         $session->set('uLastPasswordChange', $passwordChangedOn);
@@ -551,6 +586,19 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         }
 
         return $result;
+    }
+
+    /**
+     * Checks the uPassword record for the current user and returns true if the hashed version of the
+     * passed password matches.
+     *
+     * @param $uPassword
+     * @return bool
+     */
+    public function passwordMatches(string $uPassword): bool
+    {
+        $hasher = $this->application->make(PasswordHasher::class);
+        return $hasher->CheckPassword($uPassword, $this->getUserPassword());
     }
 
     /**
@@ -861,6 +909,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
+     * @see \Concrete\Core\Entity\User\User::getUserID()
+     */
+    public function getUserDateLastUpdated()
+    {
+        return $this->entity->getUserDateLastUpdated();
+    }
+
+    /**
      * @see \Concrete\Core\Entity\User\User::getUserName()
      */
     public function getUserName()
@@ -890,6 +946,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     public function getUserEmail()
     {
         return $this->entity->getUserEmail();
+    }
+
+    /**
+     * @see \Concrete\Core\Entity\User\User::getHomeFileManagerFolderID()
+     */
+    public function getUserHomeFolderId()
+    {
+        return $this->entity->getHomeFileManagerFolderID();
     }
 
     /**

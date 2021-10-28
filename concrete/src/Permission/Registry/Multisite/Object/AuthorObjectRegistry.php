@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Permission\Registry\Multisite\Object;
 
 use Concrete\Core\Permission\Registry\AbstractObjectRegistry;
@@ -10,7 +11,6 @@ use Concrete\Core\Permission\Registry\Entry\Object\TaskPermissionsEntry;
 
 class AuthorObjectRegistry extends AbstractObjectRegistry
 {
-
     public function __construct()
     {
         $this->addEntry(new PermissionsEntry(new HomePage(), [
@@ -27,9 +27,9 @@ class AuthorObjectRegistry extends AbstractObjectRegistry
         $this->addEntry(new PermissionsEntry(new FileFolder(''), [
             'search_file_folder',
         ]));
-        $this->addEntry(new PermissionsEntry(new FileFolder('/Shared Files'), [
+        $this->addEntry(new PermissionsEntry(new FileFolder('/' . t('Shared Files')), [
             'search_file_folder',
-            'add_file'
+            'add_file',
         ]));
 
         $this->addEntry(new PermissionsEntry(new Page('/dashboard/blocks/stacks'), ['view_page'], false));
@@ -44,6 +44,4 @@ class AuthorObjectRegistry extends AbstractObjectRegistry
         $this->addEntry(new TaskPermissionsEntry('add_block'));
         $this->addEntry(new TaskPermissionsEntry('add_stack'));
     }
-
-
 }

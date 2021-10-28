@@ -41,7 +41,7 @@ class AuthenticationType extends ConcreteObject
         $q = $db->query('SELECT * FROM AuthenticationTypes'
             . ($activeOnly ? ' WHERE authTypeIsEnabled=1 ' : '')
             . ' ORDER BY ' . ($sorted ? 'authTypeDisplayOrder' : 'authTypeID'));
-        while ($row = $q->fetchRow()) {
+        while ($row = $q->fetch()) {
             $list[] = self::load($row);
         }
 
@@ -122,7 +122,7 @@ class AuthenticationType extends ConcreteObject
         $list = [];
 
         $q = $db->query('SELECT * FROM AuthenticationTypes WHERE pkgID=?', [$pkg->getPackageID()]);
-        while ($row = $q->FetchRow()) {
+        while ($row = $q->fetch()) {
             $list[] = self::load($row);
         }
 
@@ -313,7 +313,7 @@ class AuthenticationType extends ConcreteObject
     public function disable()
     {
         if ($this->getAuthenticationTypeID() == 1) {
-            throw new Exception(t('The core concrete5 authentication cannot be disabled.'));
+            throw new Exception(t('The core authentication cannot be disabled.'));
         }
         $db = Loader::db();
         $db->Execute(

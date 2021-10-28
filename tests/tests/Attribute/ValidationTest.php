@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Attribute;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ValidationTest extends PHPUnit_Framework_TestCase
+class ValidationTest extends TestCase
 {
     public function testAttributeKeyErrorFunctionality()
     {

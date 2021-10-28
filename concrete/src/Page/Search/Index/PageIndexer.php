@@ -38,9 +38,7 @@ class PageIndexer implements IndexingDriverInterface, ApplicationAwareInterface
     public function index($page)
     {
         if ($page = $this->getPage($page)) {
-            if ($page->getVersionObject()) {
-                return $page->reindex($this->search, true);
-            }
+            $this->search->reindexPage($page);
         }
 
         return false;

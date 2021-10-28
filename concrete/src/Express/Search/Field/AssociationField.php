@@ -11,6 +11,7 @@ use Concrete\Core\Form\Context\Registry\ControlRegistry;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Search\Field\AbstractField;
 use Concrete\Core\Search\ItemList\ItemList;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class AssociationField extends AbstractField
 {
@@ -49,7 +50,14 @@ class AssociationField extends AbstractField
     /**
      * Initialize the instance.
      */
-    public function __construct(Association $association)
+    public function __construct(Association $association = null)
+    {
+        if ($association) {
+            $this->loadAssociation($association);
+        }
+    }
+
+    protected function loadAssociation(Association $association)
     {
         $this->association = $association;
         $this->associationID = $association->getId();
@@ -109,11 +117,33 @@ class AssociationField extends AbstractField
     }
 
     /**
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        $json = parent::jsonSerialize();
+        $json['associationID'] = $this->association->getId();
+        return $json;
+    }
+
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
+    {
+        $em = \Database::connection()->getEntityManager();
+        $association = $em->find('Concrete\Core\Entity\Express\Association', $data['associationID']);
+        $this->loadAssociation($association);
+        parent::denormalize($denormalizer, $data, $format, $context);
+
+    }
+
+    /**
      * Initialize the instance once it has been deserialized.
      */
     public function __wakeup()
     {
         $em = \Database::connection()->getEntityManager();
-        $this->association = $em->find('Concrete\Core\Entity\Express\Association', $this->associationID);
+        $association = $em->find('Concrete\Core\Entity\Express\Association', $this->associationID);
+        if ($association) {
+            $this->loadAssociation($association);
+        }
     }
 }

@@ -1,10 +1,7 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
-use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Permission\Category;
-use Concrete\Core\Validation\BannedWord\BannedWord;
 
 class ImportThemesRoutine extends AbstractRoutine
 {

@@ -11,6 +11,7 @@ use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Install\PreconditionService;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Package\Routine\AttachModeCompatibleRoutineInterface;
+use Concrete\Core\Package\StartingPointPackage;
 use Concrete\Core\Support\Facade\Application;
 use Database;
 use DateTimeZone;
@@ -55,10 +56,11 @@ class InstallCommand extends Command
 
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:install')
-            ->setDescription('Install concrete5')
+            ->setDescription('Install Concrete')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addOption('db-server', null, InputOption::VALUE_REQUIRED, 'Location of database server')
@@ -66,7 +68,7 @@ class InstallCommand extends Command
             ->addOption('db-password', null, InputOption::VALUE_REQUIRED, 'Database password')
             ->addOption('db-database', null, InputOption::VALUE_REQUIRED, 'Database name')
             ->addOption('timezone', null, InputOption::VALUE_REQUIRED, 'The system time zone, compatible with the database one', @date_default_timezone_get() ?: 'UTC')
-            ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'concrete5 Site')
+            ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'Concrete Site')
             ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
             ->addOption('canonical-url-alternative', null, InputOption::VALUE_REQUIRED, 'Alternative canonical URL', '')
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
@@ -75,16 +77,16 @@ class InstallCommand extends Command
             ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username')
             ->addOption('demo-password', null, InputOption::VALUE_REQUIRED, 'Additional user password')
             ->addOption('demo-email', null, InputOption::VALUE_REQUIRED, 'Additional user email', 'demo@example.com')
-            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The default concrete5 interface language (eg en_US)')
+            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'The default interface language (eg en_US)')
             ->addOption('site-locale', null, InputOption::VALUE_REQUIRED, 'The default site locale (eg en_US)')
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Use configuration file for installation')
-            ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing concrete5 instance')
+            ->addOption('attach', null, InputOption::VALUE_NONE, 'Attach if database contains an existing instance')
             ->addOption('force-attach', null, InputOption::VALUE_NONE, 'Always attach')
             ->addOption('interactive', 'i', InputOption::VALUE_NONE, 'Install using interactive (wizard) mode')
             ->addOption('ignore-warnings', null, InputOption::VALUE_NONE, 'Ignore warnings')
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-install
@@ -96,7 +98,7 @@ EOT
     {
         $app = Application::getFacadeApplication();
         if ($app->isInstalled()) {
-            throw new Exception('concrete5 is already installed.');
+            throw new Exception('Concrete is already installed.');
         }
         if ($this->getPreconditionsPassed($app, $output) !== true) {
             throw new Exception('One or more precondition failed!');
@@ -109,12 +111,12 @@ EOT
             switch ($this->checkOptionPreconditions($app, $installer, $input, $output)) {
                 case self::OPTIONPRECONDITIONS_ERROR:
                     $output->writeln('One or more precondition failed!');
-                    exit(1);
+                    exit(static::FAILURE);
                 case self::OPTIONPRECONDITIONS_WARNINGS:
                     if (!$input->getOption('ignore-warnings')) {
                         if (!$input->isInteractive()) {
                             $output->writeln('One or more precondition failed!');
-                            exit(1);
+                            exit(static::FAILURE);
                         }
                         $confirm = new Question('Configuration warnings detected. Would you like to install anyway? [Y]es / [N]o: ', false);
                         $confirm->setValidator(function ($given) {
@@ -129,7 +131,7 @@ EOT
                         // Cancel if they said no
                         if (stripos('n', $answer) === 0) {
                             $output->writeln('Installation cancelled.');
-                            exit(1);
+                            exit(static::FAILURE);
                         }
                     }
                     break;
@@ -181,6 +183,8 @@ EOT
             $output->writeln('done.');
         }
         $output->writeln('<info>Installation Complete!</info>');
+
+        return static::SUCCESS;
     }
 
     /**
@@ -235,7 +239,7 @@ EOT
                         // Cancel if they said no
                         if (stripos('n', $answer) === 0) {
                             $output->writeln('Installation cancelled.');
-                            exit(1);
+                            exit(static::FAILURE);
                         }
                         continue 2;
                     case self::OPTIONPRECONDITIONS_WARNINGS:
@@ -251,7 +255,7 @@ EOT
                         // Cancel if they said no
                         if (stripos('a', $answer) === 0) {
                             $output->writeln('Installation cancelled.');
-                            exit(1);
+                            exit(static::FAILURE);
                         }
                         if (stripos('y', $answer) === 0) {
                             continue 2;
@@ -292,7 +296,7 @@ EOT
                 // Cancel if they said no
                 if (stripos('n', $answer) === 0) {
                     $output->writeln('Installation cancelled.');
-                    exit(1);
+                    exit(static::FAILURE);
                 }
 
                 // Retry if they ask so
@@ -506,15 +510,17 @@ EOT
 
                 return true;
             },
-            ['site', 'concrete5'],
+            ['site', 'Concrete'],
             'canonical-url',
             'canonical-url-alternative',
             [
                 'starting-point',
                 'elemental_blank',
                 function (Question $question, InputInterface $input) {
-                    return new ChoiceQuestion($question->getQuestion(), ['elemental_blank', 'elemental_full'],
-                        $question->getDefault());
+                    $available = array_map(function($item) { return $item->getPackageHandle(); }, StartingPointPackage::getAvailableList());
+                    $available = array_unique(array_merge($available, ['elemental_blank', 'elemental_full']));
+
+                    return new ChoiceQuestion($question->getQuestion(), $available, $question->getDefault());
                 },
             ],
             'admin-email',
@@ -616,10 +622,12 @@ EOT
                 $requiredPreconditions[] = $precondition;
             }
         }
-        foreach ([
+
+        $preconditionList = [
             'Checking required preconditions:' => $requiredPreconditions,
             'Checking optional preconditions:' => $optionalPreconditions,
-        ] as $text => $preconditions) {
+        ];
+        foreach ($preconditionList as $text => $preconditions) {
             if (empty($preconditions)) {
                 continue;
             }
@@ -716,7 +724,7 @@ EOT
                     'default-connection' => 'concrete',
                     'connections' => [
                         'concrete' => [
-                            'driver' => 'c5_pdo_mysql',
+                            'driver' => 'concrete_pdo_mysql',
                             'server' => $options['db-server'],
                             'database' => $options['db-database'],
                             'username' => $options['db-username'],
@@ -765,10 +773,11 @@ EOT
                 $requiredPreconditions[] = $precondition;
             }
         }
-        foreach ([
+        $preconditionList = [
             'Checking required configuration preconditions:' => $requiredPreconditions,
             'Checking optional configuration preconditions:' => $optionalPreconditions,
-        ] as $text => $preconditions) {
+        ];
+        foreach ($preconditionList as $text => $preconditions) {
             if (empty($preconditions)) {
                 continue;
             }

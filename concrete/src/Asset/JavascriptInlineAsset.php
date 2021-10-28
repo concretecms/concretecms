@@ -3,15 +3,6 @@ namespace Concrete\Core\Asset;
 
 class JavascriptInlineAsset extends JavascriptAsset
 {
-    /**
-     * @var bool
-     */
-    protected $assetSupportsMinification = false;
-
-    /**
-     * @var bool
-     */
-    protected $assetSupportsCombination = false;
 
     /**
      * @return bool

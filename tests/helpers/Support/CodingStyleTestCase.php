@@ -2,11 +2,11 @@
 
 namespace Concrete\TestHelpers\Support;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-abstract class CodingStyleTestCase extends PHPUnit_Framework_TestCase
+abstract class CodingStyleTestCase extends TestCase
 {
     /**
      * @var string[]|null

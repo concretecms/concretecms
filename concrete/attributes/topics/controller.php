@@ -202,25 +202,26 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function form($additionalClass = false)
     {
         $this->load();
-        $this->requireAsset('core/topics');
-        $this->requireAsset('javascript', 'jquery/form');
         if (is_object($this->attributeValue)) {
             $valueIDs = [];
-            foreach ($this->attributeValue->getValueObject()->getSelectedTopics() as $value) {
-                $valueID = $value->getTreeNodeID();
-                $withinParentScope = false;
-                $nodeObj = TreeNode::getByID($value->getTreeNodeID());
-                if (is_object($nodeObj)) {
-                    $parentNodeArray = $nodeObj->getTreeNodeParentArray();
-                    // check to see if selected node is still within parent scope, in case it has been changed.
-                    foreach ($parentNodeArray as $parent) {
-                        if ($parent->treeNodeID == $this->akTopicParentNodeID) {
-                            $withinParentScope = true;
-                            break;
+            $valueObject = $this->attributeValue->getValueObject();
+            if ($valueObject) {
+                foreach ($valueObject->getSelectedTopics() as $value) {
+                    $valueID = $value->getTreeNodeID();
+                    $withinParentScope = false;
+                    $nodeObj = TreeNode::getByID($value->getTreeNodeID());
+                    if (is_object($nodeObj)) {
+                        $parentNodeArray = $nodeObj->getTreeNodeParentArray();
+                        // check to see if selected node is still within parent scope, in case it has been changed.
+                        foreach ($parentNodeArray as $parent) {
+                            if ($parent->treeNodeID == $this->akTopicParentNodeID) {
+                                $withinParentScope = true;
+                                break;
+                            }
                         }
-                    }
-                    if ($withinParentScope) {
-                        $valueIDs[] = $valueID;
+                        if ($withinParentScope) {
+                            $valueIDs[] = $valueID;
+                        }
                     }
                 }
             }
@@ -248,12 +249,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $str = '||';
         $nodeKeys = $this->attributeValue->getValue();
-        foreach ($nodeKeys as $nodeObj) {
-            $str .= $nodeObj->getTreeNodeDisplayPath() . '||';
+        if ($nodeKeys) {
+            foreach ($nodeKeys as $nodeObj) {
+                $str .= $nodeObj->getTreeNodeDisplayPath() . '||';
+            }
         }
 
-        // remove line break for empty list
-        if ($str == "\n") {
+        if ($str == "||") {
             return '';
         }
 
@@ -262,7 +264,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function search()
     {
-        $this->requireAsset('core/topics');
         $this->load();
         $tree = TopicTree::getByID(Core::make('helper/security')->sanitizeInt($this->akTopicTreeID));
         $this->set('tree', $tree);
@@ -297,8 +298,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function type_form()
     {
-        $this->requireAsset('core/topics');
-        $this->requireAsset('javascript', 'jquery/form');
         $this->load();
         $tt = new TopicTree();
         $defaultTree = $tt->getDefault();

@@ -1,0 +1,36 @@
+.ccm-ui {
+  .ccm-image-cell-grid {
+    padding-top: 2em;
+
+    .ccm-image-cell {
+
+      margin-bottom: 2em;
+
+      &:hover,
+      &.active {
+        img {
+          border-color: $image-cell-border-hover-color;
+          opacity: 1;
+        }
+      }
+
+      div.ccm-image-cell-title {
+        font-size: 0.8rem;
+        margin-top: 0.5em;
+        overflow: hidden;
+      }
+
+      img {
+        border: 1px solid $image-cell-border-color;
+        border-radius: $image-cell-border-radius;
+        box-shadow: $image-cell-box-shadow;
+        height: 120px;
+        opacity: 0.9;
+        padding: 0.5rem;
+        transition: $transition-base;
+        width: 120px;
+      }
+    }
+
+  }
+}

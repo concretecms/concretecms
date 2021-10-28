@@ -1,0 +1,67 @@
+div.theme-atomik {
+
+  .ccm-board-blog {
+
+    .blog-featured-post {
+      h5 {
+        @include font-size(50px);
+      }
+
+      p {
+        font-size: $lead-font-size;
+      }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      a {
+        color: $body-color;
+        transition: color 0.2s linear;
+
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    .blog-author-byline {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+
+      @include media-breakpoint-down(md) {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      div.blog-author-byline-avatar {
+        img {
+          max-width: 20px;
+        }
+      }
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+
+    hr {
+      background-color: $gray-500;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .col-blog-sidebar {
+      > div {
+        margin-bottom: 2rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

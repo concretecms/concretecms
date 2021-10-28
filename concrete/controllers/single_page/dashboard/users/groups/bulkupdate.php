@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Users\Groups;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Group;
@@ -14,9 +15,17 @@ class Bulkupdate extends DashboardPageController
     {
         $this->move();
 
+        $gParentNode = $this->get('gParentNode');
+        if ($gParentNode) {
+            $checker = new Checker($gParentNode);
+            if (!$checker->canAddTreeSubNode()) {
+                $this->error->add(t('You do not have permission to move groups beneath this target location.'));
+            }
+        }
+
         if (!$this->error->has()) {
             $selectedGroups = $this->get('selectedGroups');
-            $gParentNode = $this->get('gParentNode');
+
 
             foreach ($selectedGroups as $g) {
                 $node = GroupTreeNode::getTreeNodeByGroupID($g->getGroupID());
@@ -24,8 +33,10 @@ class Bulkupdate extends DashboardPageController
                     $node->move($gParentNode);
                 }
             }
+
+            $this->redirect('/dashboard/users/groups', 'bulk_update_complete');
+
         }
-        $this->redirect('/dashboard/users/groups', 'bulk_update_complete');
     }
 
     public function move()
@@ -69,7 +80,6 @@ class Bulkupdate extends DashboardPageController
 
     public function search()
     {
-        $this->requireAsset('core/groups');
         $tree = GroupTree::get();
         $this->set("tree", $tree);
         $gName = (string) $this->app->make('helper/security')->sanitizeString($this->request('gName'));

@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 $ih = Loader::helper('concrete/ui');
-$enabledVals = array('0' => t('No'), '1' => t('Yes'));
-$secureVals = array('' => t('None'), 'SSL' => 'SSL', 'TLS' => 'TLS');
+$enabledVals = ['0' => t('No'), '1' => t('Yes')];
+$secureVals = ['' => t('None'), 'SSL' => 'SSL', 'TLS' => 'TLS'];
 $form = Loader::helper('form');
 ?>
 
@@ -55,7 +55,7 @@ $form = Loader::helper('form');
 
         <div class="form-group">
             <?php echo $form->label('miConnectionMethod', t('Connection Method')); ?>
-            <?php echo $form->select('miConnectionMethod', array('POP' => 'POP', 'IMAP' => 'IMAP'), $mi->getMailImporterConnectionMethod()); ?>
+            <?php echo $form->select('miConnectionMethod', ['POP' => 'POP', 'IMAP' => 'IMAP'], $mi->getMailImporterConnectionMethod()); ?>
         </div>
     </fieldset>
 
@@ -74,22 +74,22 @@ $form = Loader::helper('form');
     } else {
     ?>
 
-	<table class="table table-striped" border="0" cellspacing="1" cellpadding="0">
+	<table class="table table-striped">
     	<tr>
-    		<td class="header"><?php echo t('Name'); ?></td>
-    		<td class="header"><?php echo t('Server'); ?></td>
-    		<td class="header"><?php echo t('Email Address'); ?></td>
-    		<td class="header"><?php echo t('Enabled'); ?></td>
-    		<td class="header">&nbsp;</td>
+    		<td scope="col" class="header"><?php echo t('Name'); ?></td>
+    		<td scope="col" class="header"><?php echo t('Server'); ?></td>
+    		<td scope="col" class="header"><?php echo t('Email Address'); ?></td>
+    		<td scope="col" class="header"><?php echo t('Enabled'); ?></td>
+    		<td scope="col" class="header">&nbsp;</td>
     	</tr>
     	<?php foreach ($importers as $mi) { ?>
 		<tr>
-			<td><?php echo $mi->getMailImporterName(); ?></td>
-			<td><?php echo $mi->getMailImporterServer(); ?></td>
-			<td><?php echo $mi->getMailImporterEmail(); ?></td>
-			<td><?php echo $mi->isMailImporterEnabled() ? t('Yes') : t('No'); ?></td>
-			<td width="60">
-            <?php echo $ih->button(t('Edit'), $view->url('/dashboard/system/mail/importers', 'edit_importer', $mi->getMailImporterID()), 'left', 'btn-xs'); ?>
+			<td scope="row"><?php echo $mi->getMailImporterName(); ?></td>
+			<td scope="row"><?php echo $mi->getMailImporterServer(); ?></td>
+			<td scope="row"><?php echo $mi->getMailImporterEmail(); ?></td>
+			<td scope="row"><?php echo $mi->isMailImporterEnabled() ? t('Yes') : t('No'); ?></td>
+			<td scope="row" width="60">
+            <?php echo $ih->button(t('Edit'), $view->url('/dashboard/system/mail/importers', 'edit_importer', $mi->getMailImporterID()), 'left', 'btn-secondary btn-sm'); ?>
             </td>
 		</tr>
     	<?php } ?>

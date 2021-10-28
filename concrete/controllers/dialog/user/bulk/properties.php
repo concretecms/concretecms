@@ -1,54 +1,168 @@
 <?php
+
 namespace Concrete\Controller\Dialog\User\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use PermissionKey;
-use Concrete\Core\Http\ResponseAssetGroup;
-use Permissions;
+use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\User\EditResponse as UserEditResponse;
-use UserAttributeKey;
-use Loader;
-use UserInfo;
-use Exception;
+use Concrete\Core\User\UserInfoRepository;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\Key;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Properties extends BackendInterfaceController
 {
+    use KeySelectorControllerTrait;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\Controller::$viewPath
+     */
     protected $viewPath = '/dialogs/user/bulk/properties';
-    protected $users = array();
+
+    /**
+     * @var UserInfoRepository
+     */
+    protected $userInfoRepository;
+
+    /**
+     * @var CategoryInterface
+     */
+    protected $category;
+
+    /**
+     * List of pages to edit.
+     *
+     * @var array
+     */
+    protected $users = [];
+
+    /**
+     * Define whether the current user can edit user properties.
+     *
+     * @var bool
+     */
     protected $canEdit = false;
 
-    protected function canAccess()
-    {
-        $tp = Loader::helper('concrete/user');
-        if ($tp->canAccessUserSearchInterface()) {
-            $this->populateUsers();
-        }
+    /**
+     * @var int[]
+     */
+    protected $allowedEditAttributes = [];
 
-        return $this->canEdit;
+    public function __construct(CategoryService $attributeCategoryService, UserInfoRepository $userInfoRepository)
+    {
+        parent::__construct();
+
+        $categoryEntity = $attributeCategoryService->getByHandle('user');
+        $this->category = $categoryEntity->getAttributeKeyCategory();
+        $this->userInfoRepository = $userInfoRepository;
     }
 
-    protected function populateUsers()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::on_start()
+     */
+    public function on_start()
     {
-        if (is_array($_REQUEST['item'])) {
-            foreach ($_REQUEST['item'] as $uID) {
-                $ui = UserInfo::getByID($uID);
+        parent::on_start();
+
+        $this->populateUsers();
+        $this->setupAllowedEditAttributes();
+    }
+
+    public function view()
+    {
+        $keySelector = $this->app->make(ElementManager::class)->get('attribute/component/key_selector', [
+            'category' => $this->getCategory()
+        ]);
+        /** @var \Concrete\Controller\Element\Attribute\Component\KeySelector $controller */
+        $controller = $keySelector->getElementController();
+        $controller->setSelectAttributeUrl($this->action('get_attribute'));
+        $controller->setObjects($this->getObjects());
+
+        $this->set('users', $this->users);
+        $this->set('keySelector', $keySelector);
+        $this->set('form', $this->app->make('helper/form'));
+    }
+
+    public function submit()
+    {
+        if ($this->validateAction()) {
+            $this->saveAttributes();
+            $r = new UserEditResponse();
+            $r->setUsers($this->users);
+            $r->setMessage(t('Attributes updated successfully.'));
+
+            return new JsonResponse($r);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::getObjects()
+     */
+    public function getObjects(): array
+    {
+        return $this->users;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::getCategory()
+     */
+    public function getCategory(): CategoryInterface
+    {
+        return $this->category;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::canEditAttributeKey()
+     */
+    public function canEditAttributeKey(int $akID): bool
+    {
+        return in_array($akID, $this->allowedEditAttributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::canAccess()
+     */
+    protected function canAccess()
+    {
+        $up = $this->app->make('helper/concrete/user');
+        if ($up->canAccessUserSearchInterface()) {
+            return ($this->getAction() === 'getAttribute' || $this->canEdit) && count($this->allowedEditAttributes) > 0;
+        }
+
+        return false;
+    }
+
+    protected function populateUsers(): void
+    {
+        $items = $this->request->get('item');
+        if (is_array($items)) {
+            foreach ($items as $uID) {
+                $ui = $this->userInfoRepository->getByID($uID);
                 if (is_object($ui) && !$ui->isError()) {
                     $this->users[] = $ui;
                 }
             }
         }
 
-        $allowedEditAttributes = array();
-        $pk = PermissionKey::getByHandle('edit_user_properties');
-        $assignment = $pk->getMyAssignment();
-        if (is_object($assignment)) {
-            $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();
-            $this->set('allowedEditAttributes', $this->allowedEditAttributes);
-        }
         if (count($this->users) > 0) {
             $this->canEdit = true;
             foreach ($this->users as $ui) {
-                $up = new Permissions($ui);
+                $up = new Checker($ui);
                 if (!$up->canEditUser()) {
                     $this->canEdit = false;
                 }
@@ -56,61 +170,14 @@ class Properties extends BackendInterfaceController
         } else {
             $this->canEdit = false;
         }
-
-        return $this->canEdit;
     }
 
-    public function view()
+    protected function setupAllowedEditAttributes(): void
     {
-        $r = ResponseAssetGroup::get();
-        $r->requireAsset('core/app/editable-fields');
-        $this->populateUsers();
-        $form = Loader::helper('form');
-        $attribs = UserAttributeKey::getList();
-        $this->set('users', $this->users);
-        $this->set('attributes', $attribs);
-    }
-
-    public function updateAttribute()
-    {
-        $ur = new UserEditResponse();
-        $ak = UserAttributeKey::getByID($_REQUEST['name']);
-        if ($this->validateAction()) {
-            $this->populateUsers();
-            if ($this->canEdit && in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
-                foreach ($this->users as $ui) {
-                    $ui->saveUserAttributesForm(array($ak));
-                    $ui->reindex();
-                }
-                $ur->setUsers($this->users);
-                $val = $ui->getAttributeValueObject($ak);
-                $ur->setAdditionalDataAttribute('value',  $val->getDisplayValue());
-                $ur->setMessage(t('Users updated successfully.'));
-            } else {
-                throw new Exception(t("You don't have access to update this attribute."));
-            }
+        $pk = Key::getByHandle('edit_user_properties');
+        $assignment = $pk->getMyAssignment();
+        if ($assignment) {
+            $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();
         }
-        $ur->outputJSON();
-    }
-
-    public function clearAttribute()
-    {
-        $ur = new UserEditResponse();
-        $ak = UserAttributeKey::getByID($_REQUEST['akID']);
-        if ($this->validateAction()) {
-            $this->populateUsers();
-            if ($this->canEdit && in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
-                foreach ($this->users as $ui) {
-                    $ui->clearAttribute($ak);
-                    $ui->reindex();
-                }
-                $ur->setUsers($this->users);
-                $ur->setAdditionalDataAttribute('value',  false);
-                $ur->setMessage(t('Attributes cleared successfully.'));
-            } else {
-                throw new Exception(t("You don't have access to update this attribute."));
-            }
-        }
-        $ur->outputJSON();
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <permissioncategories>
+        <category handle="logs" package=""/>
+    </permissioncategories>
+
+    <permissionkeys>
+        <!-- logs //-->
+        <permissionkey handle="view_log_entries" name="View Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_log_entries" name="Delete Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="export_log_entries" name="Export Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+    </permissionkeys>
+</concrete5-cif>

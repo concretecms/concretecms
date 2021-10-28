@@ -9,11 +9,11 @@ $preferences = Core::make('Concrete\Core\Calendar\Utility\Preferences');
 <?=Core::make('token')->output('update_permissions_inheritance')?>
             <?php if (!$calendar->arePermissionsSetToOverride()) {
     ?>
-                <button name="update_inheritance" value="override" class="btn btn-default pull-right"><?=t('Override Default Permissions')?></button>
+                <button name="update_inheritance" value="override" class="btn btn-secondary float-end"><?=t('Override Default Permissions')?></button>
             <?php 
 } else {
     ?>
-                <button name="update_inheritance" value="revert" class="btn btn-default pull-right"><?=t('Remove Custom Permissions')?></button>
+                <button name="update_inheritance" value="revert" class="btn btn-secondary float-end"><?=t('Remove Custom Permissions')?></button>
             <?php 
 } ?>
 </form>
@@ -36,12 +36,12 @@ $preferences = Core::make('Concrete\Core\Calendar\Utility\Preferences');
 
     <?php if ($calendar->arePermissionsSetToOverride()) {
     ?>
-        <a href="<?=URL::to($preferences->getPreferredViewPath(), 'view', $calendar->getID())?>" class="btn btn-default"><?=t('Back')?></a>
-        <button type="submit" name="submit" class="btn pull-right btn-primary"><?=t('Save')?></button>
+        <a href="<?=URL::to($preferences->getPreferredViewPath(), 'view', $calendar->getID())?>" class="btn btn-secondary"><?=t('Back')?></a>
+        <button type="submit" name="submit" class="btn float-end btn-primary"><?=t('Save')?></button>
     <?php 
 } else {
     ?>
-        <a href="<?=URL::to($preferences->getPreferredViewPath(), 'view', $calendar->getID())?>" class="btn btn-default"><?=t('Back')?></a>
+        <a href="<?=URL::to($preferences->getPreferredViewPath(), 'view', $calendar->getID())?>" class="btn btn-secondary"><?=t('Back')?></a>
     <?php 
 } ?>
 

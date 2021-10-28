@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Package\ItemCategory;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Support\Manager as CoreManager;
 
@@ -9,6 +10,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Manager extends CoreManager
 {
+    public function __construct(Application $application)
+    {
+        parent::__construct($application);
+    }
+
     public function createAuthenticationTypeDriver()
     {
         return new AuthenticationType();
@@ -44,6 +50,16 @@ class Manager extends CoreManager
         return new StorageLocationType();
     }
 
+    public function createExternalFileProviderTypeDriver()
+    {
+        return new ExternalFileProviderType();
+    }
+
+    public function createImageEditorDriver()
+    {
+        return new ImageEditor();
+    }
+
     public function createAntispamLibraryDriver()
     {
         return new AntispamLibrary();
@@ -72,11 +88,6 @@ class Manager extends CoreManager
     public function createGroupDriver()
     {
         return new Group();
-    }
-
-    public function createUserPointActionDriver()
-    {
-        return new UserPointAction();
     }
 
     public function createAttributeKeyCategoryDriver()

@@ -7,7 +7,9 @@ use Concrete\Core\Controller\Controller;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Html\Service\Html;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Page\View\PageView;
@@ -22,6 +24,9 @@ class PageController extends Controller
     protected $parameters = array();
     protected $replacement = null;
     protected $requestValidated;
+
+    /** @var bool A flag to track whether we've loaded sets from the session flash bags */
+    private $hasCheckedSessionMessages = false;
 
     /**
      * array of method names that can't be called through the url
@@ -110,23 +115,37 @@ class PageController extends Controller
         return $this->replacement;
     }
 
+    /**
+     * Get the things "set" against this controller with `$this->set(...)`
+     * This output array may also contain items set with `$this->flash(...)` like `message` `error` `success` or other
+     * custom keys
+     *
+     * @return array Associative array of things set against this controller
+     */
     public function getSets()
     {
-        $app = $this->app;
-        $sets = parent::getSets();
-        $validator = $app->make(SessionValidator::class);
-        $session = Application::getFacadeApplication()->make('session');
-        if ($validator->hasActiveSession()) {
-            if ($session->getFlashBag()->has('page_message')) {
+        // Check if we've already looked at the session flashbag, if so just move on
+        if ($this->hasCheckedSessionMessages === false) {
+            $this->hasCheckedSessionMessages = true;
+            $app = $this->app;
+            $validator = $app->make(SessionValidator::class);
+            $session = Application::getFacadeApplication()->make('session');
+
+            // Check if we have an active session and our expected flash message
+            if ($validator->hasActiveSession() && $session->getFlashBag()->has('page_message')) {
                 $value = $session->getFlashBag()->get('page_message');
+
+                // Add each page_message item to the sets for the page
                 foreach ($value as $message) {
-                    $sets[$message[0]] = $message[1];
-                    $sets[$message[0].'IsHTML'] = isset($message[2]) && $message[2];
+                    $this->set($message[0], $message[1]);
+
+                    // Also set a `{$key}IsHTML` helper boolean to tell whether the set value is supposed to be HTML
+                    $this->set($message[0] . 'IsHTML', isset($message[2]) && $message[2]);
                 }
             }
         }
 
-        return $sets;
+        return parent::getSets();
     }
 
     /**
@@ -205,7 +224,7 @@ class PageController extends Controller
             $requestPath = $request->getPath();
         }
 
-        if (!empty($this->c->getCollectionPath()) && strpos($requestPath, $this->c->getCollectionPath()) !== false) {
+        if (!empty($this->c->getCollectionPath()) && stripos($requestPath, $this->c->getCollectionPath()) !== false) {
             // If the request path starts with the collection path, remove it
             $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
         } else {
@@ -364,5 +383,28 @@ class PageController extends Controller
     public function getSearchableContent()
     {
         return;
+    }
+
+    /**
+     * Build a Redirect Response that instruct the browser to load the first accessible child page of this page.
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response Return a RedirectResponse if an accessible child page is found, a forbidden Response otherwise
+     */
+    public function buildRedirectToFirstAccessibleChildPage()
+    {
+        $myPage = $this->getPageObject();
+        if ($myPage && !$myPage->isError()) {
+            $firstChildPage = $myPage->getFirstChild();
+            if ($firstChildPage && !$firstChildPage->isError() && (new Checker($firstChildPage))->canRead()) {
+                return $this->buildRedirect([$firstChildPage]);
+            }
+            foreach ($myPage->getCollectionChildren() as $childPage) {
+                if (!$childPage->isError() && (new Checker($childPage))->canRead()) {
+                    return $this->buildRedirect([$childPage]);
+                }
+            }
+        }
+
+        return $this->app->make(ResponseFactoryInterface::class)->forbidden($this->request->getUri());
     }
 }

@@ -1,15 +1,15 @@
-# Building concrete5 Assets
+# Building Concrete Assets
 
-The concrete5 version currently available on GitHub already contains the required CSS and JavaScript assets.
+The Concrete version currently available on GitHub already contains the required CSS and JavaScript assets.
 If you want to modify these assets you'll need to rebuild them. 
 
 ## Requirements
 
-In order to build assets for concrete5 you need:
+In order to build assets for Concrete you need:
 
 - [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/) (may be bundled with Node.js)
-- [Grunt](https://gruntjs.com/) (install it globally with `npm --global install gulp`)
+- [Grunt](https://gruntjs.com/) (install it globally with `npm install -g grunt-cli`)
 
 Once you have installed the grunt client, you need to install the project dependencies. From inside the `build` directory launch the following command:
 ```
@@ -68,9 +68,9 @@ To let GIT reconsider your local assets, simply run `grunt gitskip-off`.
 
 ## Debugging JavaScript with source maps
 
-If you have installed concrete5 in a sub-directory and you want to debug JavaScript with SourceMaps, you should update the `Gruntfile.js` file, changing the following line:
+If you have installed Concrete in a sub-directory and you want to debug JavaScript with SourceMaps, you should update the `Gruntfile.js` file, changing the following line:
 `config.DIR_REL = '';`
-For instance, if your concrete5 installation is at http://www.domain.com/c5subfolder, you should change it to:
+For instance, if your Concrete installation is at http://www.domain.com/c5subfolder, you should change it to:
 `config.DIR_REL = '/c5subfolder';`
 
 
@@ -87,9 +87,9 @@ You have to specify the following parameters:
 
 Examples:
 ```Shell
-grunt translations --ctEntryPoint=https://translate.concrete5.org/api --ctPackage=concrete5 --ctPackageVersion=dev-8 --ctLocales=de_DE,it_IT,el_GR
+grunt translations --ctEntryPoint=https://translate.concretecms.org/api --ctPackage=concrete --ctPackageVersion=dev-8 --ctLocales=de_DE,it_IT,el_GR
 
-grunt translations --ctEntryPoint=https://translate.concrete5.org/api --ctPackage=concrete5 --ctPackageVersion=dev-8 --ctProgressLimit=90
+grunt translations --ctEntryPoint=https://translate.concretecms.org/api --ctPackage=concrete --ctPackageVersion=dev-8 --ctProgressLimit=90
 ```
 As stated above, some or all of these options can also be specified in the `Gruntfile.parameters.js` file (but the command-line options take the precedence).
 
@@ -98,7 +98,7 @@ As stated above, some or all of these options can also be specified in the `Grun
 
 You can use the `remove-short-tags` grunt task.
 It accepts the following parameters (in `Gruntfile.parameters.js` or in command line):
-- `package` The package handle you want to work on. If not specified (or if its value is `-`) the task work on the whole concrete5 directory. 
+- `package` The package handle you want to work on. If not specified (or if its value is `-`) the task work on the whole Concrete directory. 
 - `destination` The destination path. If not specified the source files will be overwritten.
 - `shortTagRemover` A shell command that will replace short tags with long tags for a specific file. It must accept two syntaxes:
 	- `command filename`: the command should overwrite the specified file

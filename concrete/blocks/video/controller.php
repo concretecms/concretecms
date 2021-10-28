@@ -2,16 +2,18 @@
 namespace Concrete\Block\Video;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use File;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = 450;
     protected $btInterfaceHeight = 440;
     protected $btTable = 'btVideo';
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
-    protected $btExportFileColumns = ['fID'];
+    protected $btExportFileColumns = ['webmfID', 'oggfID', 'posterfID', 'mp4fID'];
     protected $btWrapperClass = 'ccm-ui';
 
     public function getBlockTypeDescription()
@@ -62,6 +64,13 @@ class Controller extends BlockController
     public function getPosterFileObject()
     {
         return ($id = $this->getPosterFileID()) ? File::getByID($id) : null;
+    }
+    
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::VIDEO
+        ];
     }
 
     public function save($data)

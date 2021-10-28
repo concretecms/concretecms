@@ -9,11 +9,15 @@ use Request;
 class MiniSurvey
 {
     public $btTable = 'btForm';
+
     public $btQuestionsTablename = 'btFormQuestions';
+
     public $btAnswerSetTablename = 'btFormAnswerSet';
+
     public $btAnswersTablename = 'btFormAnswers';
 
     public $lastSavedMsqID = 0;
+
     public $lastSavedqID = 0;
 
     public function __construct()
@@ -198,10 +202,10 @@ class MiniSurvey
                         </td>
                     </tr>';
                 } else {
-                */
+                 */
                 $requiredSymbol = ($questionRow['required']) ? '&nbsp;<span class="required">*</span>' : '';
                 echo '<div class="form-group">
-                    <label class="control-label" for="Question' . (int) ($questionRow['msqID']) . '">' . $questionRow['question'] . '' . $requiredSymbol . '</label></td>
+                    <label class="control-label form-label" for="Question' . (int) ($questionRow['msqID']) . '">' . $questionRow['question'] . '' . $requiredSymbol . '</label></td>
                     <div>' . $this->loadInputType($questionRow, $showEdit) . '</div>
                 </div>';
                 //}
@@ -234,14 +238,14 @@ class MiniSurvey
 						<div class="miniSurveyQuestion"><?php echo $questionRow['question'] . ' ' . $requiredSymbol?></div>
 						<?php  /* <div class="miniSurveyResponse"><?php echo $this->loadInputType($questionRow,$showEdit)?></div> */ ?>
 						<div class="miniSurveyOptions">
-							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false"><i class="fa fa-chevron-up"></i></a>
-							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false"><i class="fa fa-chevron-down"></i></a>
-							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.reloadQuestion(<?=(int) ($questionRow['qID']) ?>);return false"><i class="fa fa-pencil"></i></a>
-							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.deleteQuestion(this,<?=(int) ($questionRow['msqID']) ?>,<?=(int) ($questionRow['qID'])?>);return false"><i class="fa fa-trash"></i></a>
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false"><i class="fas fa-chevron-up"></i></a>
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false"><i class="fas fa-chevron-down"></i></a>
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.reloadQuestion(<?=(int) ($questionRow['qID']) ?>);return false"><i class="fas fa-pencil-alt"></i></a>
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.deleteQuestion(this,<?=(int) ($questionRow['msqID']) ?>,<?=(int) ($questionRow['qID'])?>);return false"><i class="fas fa-trash"></i></a>
 						</div>
 						<div class="clearfix"></div>
 					</li>
-				<?php 
+				<?php
             }
             echo '</div></div>';
         }
@@ -263,19 +267,18 @@ class MiniSurvey
                     $checked=(Request::request('Question'.$msqID.'_0')==trim($options[0]))?'checked':'';
                     $html.= '<input name="Question'.$msqID.'_0" type="checkbox" value="'.trim($options[0]).'" '.$checked.' />';
                 } else {
-                */
+                 */
                 $html .= '<div class="checkboxList">' . "\r\n";
-                for ($i = 0; $i < count($options); ++$i) {
+                for ($i = 0; $i < count($options); $i++) {
                     if (strlen(trim($options[$i])) == 0) {
                         continue;
                     }
                     $checked = (Request::request('Question' . $msqID . '_' . $i) == trim($options[$i])) ? 'checked' : '';
-                    $html .= '  <div class="checkbox"><label><input name="Question' . $msqID . '_' . $i . '" type="checkbox" value="' . trim($options[$i]) . '" ' . $checked . ' /> <span>' . $options[$i] . '</span></label></div>' . "\r\n";
+                    $html .= '  <div class="form-check"><input id="question_'. $msqID . '_'.$i.($showEdit ? '_preview' : '').'" name="Question' . $msqID . '_' . $i . '" class="form-check-input" type="checkbox" value="' . trim($options[$i]) . '" ' . $checked . ' /><label class="form-check-label" for="question_'. $msqID . '_'.$i. ($showEdit ? '_preview' : '').'"> <span>' . $options[$i] . '</span></label></div>' . "\r\n";
                 }
                 $html .= '</div>';
                 //}
                 return $html;
-
             case 'select':
                 if ($this->frontEndMode) {
                     $selected = (!Request::request('Question' . $msqID)) ? 'selected="selected"' : '';
@@ -287,23 +290,22 @@ class MiniSurvey
                 }
 
                 return '<select class="form-control" name="Question' . $msqID . '" id="Question' . $msqID . '" >' . $html . '</select>';
-
             case 'radios':
+                $index = 1;
                 foreach ($options as $option) {
                     if (strlen(trim($option)) == 0) {
                         continue;
                     }
                     $checked = (Request::request('Question' . $msqID) == trim($option)) ? 'checked' : '';
-                    $html .= '<div class="radio"><label><input name="Question' . $msqID . '" type="radio" value="' . trim($option) . '" ' . $checked . ' /> <span>' . $option . '</span></label></div>';
+                    $html .= '<div class="form-check"><input class="form-check-input" id="Question' . $msqID . '_'.$index.'" name="Question' . $msqID . '" type="radio" value="' . trim($option) . '" ' . $checked . ' /><label for="Question' . $msqID . '_'.$index.'" class="form-check-label"> <span>' . $option . '</span></label></div>';
+                    $index++;
                 }
 
                 return $html;
-
             case 'fileupload':
                 $html = '<input type="file" name="Question' . $msqID . '" class="form-control" id="Question' . $msqID . '" />';
 
                 return $html;
-
             case 'text':
                 $val = (Request::request('Question' . $msqID)) ? Core::make('helper/text')->entities(Request::request('Question' . $msqID)) : '';
 
@@ -377,16 +379,15 @@ class MiniSurvey
             $vals = [$positionNum, (int) $qID, (int) $qsID];
             $sql = 'UPDATE btFormQuestions SET position=? WHERE msqID=? AND questionSetId=?';
             $rs = $this->db->executeQuery($sql, $vals);
-            ++$positionNum;
+            $positionNum++;
         }
     }
 
     public function limitRange($val, $min, $max)
     {
         $val = ($val < $min) ? $min : $val;
-        $val = ($val > $max) ? $max : $val;
 
-        return $val;
+        return ($val > $max) ? $max : $val;
     }
 
     //Run on Form block edit

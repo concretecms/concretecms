@@ -1,83 +1,95 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<fieldset>
-    <legend><?=t('Filtering')?></legend>
-    <div class='form-group'>
-        <label for='title' class="control-label"><?=t('By Parent Page')?>:</label>
-        <div class="checkbox">
-            <label>
-                <input <?php if (isset($cParentID) && (int) $cParentID > 0) {
-    ?>checked<?php 
-} ?> name="filterByParent" type="checkbox" value="1" />
-                <?=t('Filter by Parent Page')?>
-            </label>
-        </div>
-        <div id="ccm-block-related-pages-parent-page">
-            <?php
-            echo Loader::helper('form/page_selector')->selectPage('cParentID', isset($cParentID) ? $cParentID : null);
-            ?>
-        </div>
-    </div>
+<?php
 
-    <div class="form-group">
-        <label class="control-label"><?= t('By Page Type') ?></label>
-        <?php ?>
-            <select class="form-control" name="ptID" id="selectPTID">
-                <option value="0">** <?php echo t('All') ?> **</option>
-                <?php
-                foreach ($pagetypes as $ct) {
-                    ?>
-                    <option
-                        value="<?= $ct->getPageTypeID() ?>" <?php if ((isset($ptID) ? $ptID : null) == $ct->getPageTypeID()) {
-    ?> selected <?php 
+defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Form\Service\Widget\PageSelector;
+use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Support\Facade\Application;
+
+/** @var Type[] $pagetypes */
+
+$app = Application::getFacadeApplication();
+/** @var Form $form */
+$form = $app->make(Form::class);
+/** @var PageSelector $pageSelector */
+$pageSelector = $app->make(PageSelector::class);
+
+$pageTypeList = [
+    0 => '** ' . t('All') . ' **'
+];
+
+foreach ($pagetypes as $ct) {
+    $pageTypeList[$ct->getPageTypeID()] = $ct->getPageTypeDisplayName();
 }
-                    ?>>
-                        <?= $ct->getPageTypeDisplayName() ?>
-                    </option>
-                <?php
 
-                }
-                ?>
-            </select>
-        <?php ?>
+?>
+
+<fieldset>
+    <legend>
+        <?php echo t('Filtering') ?>
+    </legend>
+
+    <div class='form-group'>
+        <?php echo $form->label("title", t('By Parent Page')); ?>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("filterByParent", "1", (isset($cParentID) && (int)$cParentID > 0)); ?>
+            <?php echo $form->label("filterByParent", t('Filter by Parent Page'), ["class" => "form-check-label"]) ?>
+        </div>
+
+        <div id="ccm-block-related-pages-parent-page">
+            <?php echo $pageSelector->selectPage('cParentID', isset($cParentID) ? $cParentID : null); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->label("ptID", t('By Page Type')); ?>
+        <?php echo $form->select('ptID', $pageTypeList, $ptID); ?>
     </div>
 </fieldset>
+
 <fieldset>
-    <legend><?=t("Results")?></legend>
+    <legend>
+        <?php echo t("Results") ?>
+    </legend>
+
     <div class="form-group">
-        <div class="checkbox">
-            <label>
-                <input <?php if (isset($cTargetID) && (int) $cTargetID > 0) {
-    ?>checked<?php 
-} ?> name="redirectToResults" type="checkbox" value="1" />
-                <?=t('Redirect to Different Page on Click')?>
-            </label>
+        <div class="form-check">
+            <?php echo $form->checkbox("redirectToResults", "1", (isset($cTargetID) && (int)$cTargetID > 0)); ?>
+            <?php echo $form->label("redirectToResults", t('Redirect to Different Page on Click'), ["class" => "form-check-label"]) ?>
         </div>
+
         <div id="ccm-block-related-pages-search-page">
-            <?php
-            echo Loader::helper('form/page_selector')->selectPage('cTargetID', isset($cTargetID) ? $cTargetID : null);
-            ?>
+            <?php  echo $pageSelector->selectPage('cTargetID', isset($cTargetID) ? $cTargetID : null); ?>
         </div>
     </div>
 </fieldset>
-<fieldset>
-    <legend><?=t('Formatting')?></legend>
-    <div class="form-group">
-        <label class="control-label" for="title"><?=t('Title')?></label>
-        <input class="form-control" name="title" id="title" value="<?=$title?>" />
-    </div>
-</fieldset>
 
+<fieldset>
+    <legend>
+        <?php echo t('Formatting') ?>
+    </legend>
+
+    <div class="form-group">
+        <?php echo $form->label("title", t('Title')); ?>
+	    <div class="input-group">
+		    <?php echo $form->text('title', $title); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+		</div>
+	</div>
+</fieldset>
 
 <script type="text/javascript">
-    $(function() {
-        $("input[name=filterByParent]").on('change', function() {
+    $(function () {
+        $("input[name=filterByParent]").on('change', function () {
             if ($(this).is(":checked")) {
                 $('#ccm-block-related-pages-parent-page').show();
             } else {
                 $('#ccm-block-related-pages-parent-page').hide();
             }
         }).trigger('change');
-        $("input[name=redirectToResults]").on('change', function() {
+        $("input[name=redirectToResults]").on('change', function () {
             if ($(this).is(":checked")) {
                 $('#ccm-block-related-pages-search-page').show();
             } else {

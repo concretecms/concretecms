@@ -12,7 +12,7 @@ class PhpVersion implements PreconditionInterface
      *
      * @var string
      */
-    const MINIMUM_PHP_VERSION = '5.5.9';
+    const MINIMUM_PHP_VERSION = '7.3';
 
     /**
      * {@inheritdoc}
@@ -55,7 +55,7 @@ class PhpVersion implements PreconditionInterface
         if (version_compare(PHP_VERSION, static::MINIMUM_PHP_VERSION) < 0) {
             $result
                 ->setState(PreconditionResult::STATE_FAILED)
-                ->setMessage(t('concrete5 requires at least PHP version %1$s (you are running PHP version %2$s).', static::MINIMUM_PHP_VERSION, PHP_VERSION))
+                ->setMessage(t('Concrete requires at least PHP version %1$s (you are running PHP version %2$s).', static::MINIMUM_PHP_VERSION, PHP_VERSION))
             ;
         } else {
             $result->setMessage(t('you are running PHP version %s', PHP_VERSION));

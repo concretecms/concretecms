@@ -45,7 +45,6 @@ class Import extends UserInterface
 
     public function view()
     {
-        $this->requireAsset('core/file-uploader');
         $this->setViewHelpers();
         $this->setViewSets();
     }

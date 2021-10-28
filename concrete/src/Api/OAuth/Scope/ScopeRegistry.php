@@ -21,7 +21,7 @@ class ScopeRegistry implements ScopeRegistryInterface
     public function getScopes()
     {
         return [
-            $this->buildScope('openid', 'Remotely authenticate into concrete5.'),
+            $this->buildScope('openid', 'Remotely authenticate into Concrete.'),
             $this->buildScope('account:read', 'Read information about the remotely authenticated user.'),
             $this->buildScope('files:read', 'Read detailed information about uploaded files.'),
             $this->buildScope('site:trees:read', 'Read information about system site trees.'),

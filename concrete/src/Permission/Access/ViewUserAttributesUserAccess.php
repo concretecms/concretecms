@@ -50,12 +50,12 @@ class ViewUserAttributesUserAccess extends UserAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery('select * from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
             $db->executeQuery('insert into UserPermissionViewAttributeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from UserPermissionViewAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['akID']);
             $db->executeQuery('insert into UserPermissionViewAttributeAccessListCustom  (peID, paID, akID) values (?, ?, ?)', $v);
         }

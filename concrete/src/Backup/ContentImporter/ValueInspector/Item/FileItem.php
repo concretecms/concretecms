@@ -72,7 +72,12 @@ class FileItem implements ItemInterface
     public function getContentValue()
     {
         if ($o = $this->getContentObject()) {
-            return sprintf("{CCM:FID_DL_%s}", $o->getFileID());
+            if ($o->getFileUUID()) {
+                $identifier = $o->getFileUUID();
+            } else {
+                $identifier = $o->getFileID();
+            }
+            return sprintf("{CCM:FID_DL_%s}", $identifier);
         }
     }
 

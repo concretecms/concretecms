@@ -5,9 +5,9 @@ namespace Concrete\Tests\File\Service;
 use Concrete\Core\File\StorageLocation\Configuration\LocalConfiguration;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\File\Service\Fixtures\TestStorageLocation;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ImageTest extends PHPUnit_Framework_TestCase
+class ImageTest extends TestCase
 {
     protected $output;
 
@@ -16,7 +16,7 @@ class ImageTest extends PHPUnit_Framework_TestCase
      */
     protected $storageLocation;
 
-    protected function setUp()
+    public function setUp():void
     {
         $local = new LocalConfiguration();
         $local->setRootPath(sys_get_temp_dir());
@@ -110,5 +110,6 @@ class ImageTest extends PHPUnit_Framework_TestCase
 
     public function testStreamingImageOperations()
     {
+        $this->markTestIncomplete('Not implemented.');
     }
 }

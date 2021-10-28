@@ -3,12 +3,9 @@ namespace Concrete\Core\Notification\View;
 
 
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
 use Concrete\Core\Entity\Notification\Notification;
 use Concrete\Core\Entity\Notification\UserSignupNotification;
-use Concrete\Core\Entity\Notification\WorkflowProgressNotification;
 use Concrete\Core\Notification\View\Menu\WorkflowProgressListViewMenu;
-use Concrete\Core\Workflow\Progress\Progress;
 use Concrete\Core\Workflow\Progress\SiteProgressInterface;
 use HtmlObject\Element;
 

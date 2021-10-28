@@ -1,114 +1,111 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Page\View\PageView $view */
-
-/* @var bool $invalidateOnIPMismatch */
-/* @var bool $invalidateOnUserAgentMismatch */
-/* @var bool $invalidateInactiveUsers */
-/* @var number $inactiveTime */
-/* @var string $trustedProxyUrl */
-/* @var string $invalidateAction */
-/* @var string $saveAction */
-/* @var string $confirmInvalidateString */
+/**
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\AutomatedLogout $controller
+ * @var Concrete\Core\Url\UrlImmutable $trustedProxyUrl
+ * @var bool $invalidateOnIPMismatch
+ * @var bool $invalidateOnUserAgentMismatch
+ * @var bool $invalidateInactiveUsers
+ * @var int|null $inactiveTime
+ * @var string $confirmInvalidateString
+ */
 ?>
-<form action="<?= $saveAction ?>" method="POST">
+<form method="POST" action="<?= $controller->action('save') ?>">
     <?php $token->output('save_automated_logout') ?>
 
-    <fieldset>
-        <legend><?= t('Session Security') ?></legend>
-        <div class="help-block">
+    <div class="form-group">
+        <?= $form->label('', t('Session Security')) ?>
+        <div class="alert alert-info">
             <?= t('These settings help prevent a user from stealing other logged in user sessions. You may want to configure %s"Trusted Proxies"%s instead', '<a href="' . $trustedProxyUrl . '">', '</a>') ?>
         </div>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('invalidateOnIPMismatch', '1', $invalidateOnIPMismatch) ?>
-                    <?= t('Log users out if their IP changes') ?>
-            </div>
+        <div class="form-check">
+            <?= $form->checkbox('invalidateOnIPMismatch', '1', $invalidateOnIPMismatch) ?>
+            <label class="form-check-label" for="invalidateOnIPMismatch"><?= t('Log users out if their IP changes') ?></label>
         </div>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('invalidateOnUserAgentMismatch', '1', $invalidateOnUserAgentMismatch) ?>
-                    <?= t("Log users out if their browser's user agent changes") ?>
-                </label>
-            </div>
+        <div class="form-check">
+            <?= $form->checkbox('invalidateOnUserAgentMismatch', '1', $invalidateOnUserAgentMismatch) ?>
+            <label class="form-check-label" for="invalidateOnUserAgentMismatch"><?= t("Log users out if their browser's user agent changes") ?></label>
         </div>
-        <div class="form-group">
-            <div class="form-inline">
-                <div class="checkbox">
-                    <label>
-                        <?= $form->checkbox('invalidateInactiveUsers','1', $invalidateInactiveUsers) ?>
-                        <?= t("Automatically log out users who are inactive for %s seconds or more.", $form->number('inactiveTime', $inactiveTime, ["style"=>"width:100px; display:inline-block;"])) ?>
-                    </label>
-                </div>
-            </div>
+        <div class="form-check">
+            <?= $form->checkbox('invalidateInactiveUsers', '1', $invalidateInactiveUsers) ?>
+            <label class="form-check-label" for="invalidateInactiveUsers">
+                <span class="row row-cols-auto g-0 align-items-center">
+                    <?= t(
+    'Automatically log out users who are inactive for %s seconds or more.',
+    $form->number('inactiveTime', $inactiveTime, ['style' => 'width: 5rem', 'min' => '15', 'class' => 'form-control-sm ms-1 me-1'] + ($invalidateInactiveUsers ? [] : ['disabled' => 'disabled']))
+) ?>
+                </span>
+            </label>
         </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?= t('Invalidate Active Sessions') ?></legend>
-
-        <div class="form-group">
-            <p>
-                <?=t('Type %s in the following box to proceed.', "<code>{$confirmInvalidateString}</code>")?>
-            </p>
-            <div class="input">
-                <?= $form->text('confirmation', [
-                    'data-submit' => $invalidateAction
-                ]) ?>
-                <div class="invalid-feedback text-danger help-text">
-                    <?= t('Please type %s to proceed.', "<code>{$confirmInvalidateString}</code>") ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="alert alert-danger">
-                <strong><?=t('Warning:')?></strong> <?=t('This action will automatically log out all users (including yourself!)')?>
-            </div>
-        </div>
-    </fieldset>
-
-
+    </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="pull-right">
-                <a href="#" class="invalidate-submit btn btn-danger"><?= t('Log out all active users') ?></a>
+            <div class="float-end">
+                <a href="javascript:void(0)" class="btn btn-danger" id="invalidate-sessions-button"><?= t('Log out all active users') ?></a>
                 <button class="btn btn-primary" type="submit"><?= t('Save') ?></button>
             </div>
         </div>
     </div>
 </form>
 
-<script type="application/javascript">
-    (function() {
-        var confirmation = $('[name="confirmation"]'),
-            button = $('.invalidate-submit'),
-            invalidFeedback = confirmation.parent().children('.invalid-feedback').slideUp(0);
+<form method="POST" id="invalidate-sessions-form" action="<?= $controller->action('invalidate_sessions') ?>">
+    <?php $token->output('invalidate_sessions') ?>
 
-        // Bind running feedback on the input
-        confirmation.keyup(function() {
-            if (confirmation.val().toLowerCase() === <?= json_encode($confirmInvalidateString)?>.toLowerCase()) {
-                confirmation.parent().removeClass('has-warning').addClass('has-success');
-            } else {
-                confirmation.parent().removeClass('has-success').addClass('has-warning');
-            }
-        });
+    <div class="form-group">
+        <?= $form->label('', t('Invalidate Active Sessions')) ?>
+        <?= $form->text('confirmation', '', ['autocomplete' => 'off']) ?>
+        <small class="text-muted">
+            <?= t('Type %s in the above box to proceed.', "<code>{$confirmInvalidateString}</code>") ?>
+        </small>
+    </div>
+
+</form>
 
 
-        // Bind clicking functionality on the button
-        button.click(function() {
-            if (confirmation.val().toLowerCase() == <?= json_encode($confirmInvalidateString)?>.toLowerCase()) {
-                confirmation.parent().find('.invalid-feedback').slideUp().parent().removeClass('has-error');
-                window.location = confirmation.data('submit');
-            } else {
-                confirmation.parent().find('.invalid-feedback').slideDown().parent().addClass('has-error');
-            }
-        });
-    }());
+<script>
+$(document).ready(function() {
+
+    $('#invalidateInactiveUsers')
+        .on('change', function() {
+            $('#inactiveTime').attr('disabled', $(this).is(':checked') ? null : 'disabled');
+        })
+        .trigger('change')
+    ;
+    var $confirmation = $('#confirmation')
+        $form = $('#invalidate-sessions-form');
+
+    $form.on('submit', function(e) {
+        e.preventDefault();
+        return false;
+    });
+    function isConfirmed() {
+        return $confirmation.val().toLowerCase() === <?= json_encode($confirmInvalidateString)?>.toLowerCase();
+    }
+
+    $confirmation.on('focus input', function() {
+        var ok = isConfirmed();
+        $confirmation.toggleClass('is-valid', ok).toggleClass('is-invalid', !ok);
+        
+    });
+
+    $('#invalidate-sessions-button').on('click', function(e) {
+        e.preventDefault();
+        if (!isConfirmed()) {
+            $confirmation.select().focus();
+            return;
+        }
+        ConcreteAlert.confirm(
+            <?= json_encode('<strong>' . t('Warning:') . '</strong> ' . t('This action will automatically log out all users (including yourself!)')) ?>,
+            function() {
+                $form.off('submit').submit();
+            },
+            'btn-danger',
+            <?= json_encode(t('Log out')) ?>
+        );
+    });
+});
 </script>

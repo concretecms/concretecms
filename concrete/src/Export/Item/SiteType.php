@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Export\Item;
 
+use Concrete\Core\Page\Exporter;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Page\Template;

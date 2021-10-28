@@ -1,8 +1,8 @@
 <?php
 
-use Concrete\Core\Block\View\BlockView;
-
 defined('C5_EXECUTE') or die('Access Denied.');
+
+$blockPreviewUrl = URL::to('/ccm/system/block/preview');
 ?>
 <div class="blocks">
     <?php
@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             data-has-add-template="<?= $type->hasAddTemplate() ?>"
             data-supports-inline-add="<?= $type->supportsInlineAdd() ?>"
             data-btID="<?= $type->getBlockTypeID() ?>"
-            data-dragging-avatar="<?= h('<p><img src="' . $icon . '" /><span>' . t($type->getBlockTypeName()) . '</span></p>') ?>"
+            data-dragging-avatar="<?= h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeInSetName()) . '</span></p>') ?>"
             title="<?= t($type->getBlockTypeName()) ?>"
             data-block-id="<?= (int) $block->getBlockID() ?>"
         >
@@ -29,10 +29,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
             </div>
             <div class="block-content">
-                <?php
-                $bv = new BlockView($block);
-                $bv->render('scrapbook');
-                ?>
+                <iframe src="<?= $blockPreviewUrl->setQuery(['bID' => $block->getBlockID(), 'sID' => $stack->getCollectionID(), 'cID' => $c->getCollectionID()]); ?>" scrolling="no"></iframe>
             </div>
             <div class="block-handle"></div>
         </div>

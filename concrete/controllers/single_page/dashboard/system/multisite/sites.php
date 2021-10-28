@@ -1,21 +1,23 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multisite;
 
-use Concrete\Controller\Element\Dashboard\Site\Menu;
 use Concrete\Core\Application\UserInterface\OptionsForm\OptionsForm;
 use Concrete\Core\Controller\Traits\MultisiteRequiredTrait;
 use Concrete\Core\Entity\Site\Domain;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Filesystem\Element;
+use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardBreadcrumbFactory;
+use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Site\Type\OptionsFormProvider;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Url\Url;
 
 class Sites extends DashboardPageController
 {
-
     use MultisiteRequiredTrait;
 
     public function view()
@@ -25,145 +27,115 @@ class Sites extends DashboardPageController
 
     public function view_site($id = null)
     {
-        $site = $this->setSite($id);
+        $id = (int) $id;
+        $site = $id === 0 ? null : $this->app->make('site')->getByID($id);
+        if ($site === null) {
+            $this->flash('error', t('The site specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
+        $this->setCurrentSite($site);
         $this->set('pageTitle', t('View Site'));
-        $this->set('site', $site);
-        $this->set('site_menu', new Menu($site));
         $this->render('/dashboard/system/multisite/sites/view_site');
     }
 
-    public function view_domains($id = null)
+    public function add($siteTypeID = null)
     {
-        $site = $this->setSite($id);
-        $service = $this->app->make('site');
-        $domains = $service->getSiteDomains($site);
-        $this->set('domains', $domains);
-        $this->set('site', $site);
-        $this->set('site_menu', new Menu($site));
-        $this->set('canonicalDomain', Url::createFromUrl($site->getSiteCanonicalURL())->getHost());
-        $this->render('/dashboard/system/multisite/sites/view_domains');
-    }
-
-    public function delete_domain($domainID = null, $token = null)
-    {
-        if ($domainID) {
-            $domain = $this->getDomain($domainID);
-            if (is_object($domain)) {
-                $site = $this->setSite($domain->getSite());
-            }
-        }
-
-        if (!$this->token->validate('delete_domain', $token)) {
-            $this->error->add($this->token->getErrorMessage());
-        }
-
-        if (!$this->error->has()) {
-            $this->entityManager->remove($domain);
-            $this->entityManager->flush();
-            $this->flash('success', t('Domain deleted successfully.'));
-            $this->redirect('/dashboard/system/multisite/sites', 'view_domains', $site->getSiteID());
+        $service = $this->app->make('site/type');
+        $siteTypeID = (int) $siteTypeID;
+        $siteType = $siteTypeID === 0 ? null : $service->getByID($siteTypeID);
+        if ($siteType !== null) {
+            $provider = new OptionsFormProvider($siteType);
+            $optionsForm = new OptionsForm($provider);
+            $this->set('type', $siteType);
+            $this->set('optionsForm', $optionsForm);
+            $this->set('timezone', $this->app->make('site')->getSite()->getConfigRepository()->get('timezone'));
+            $this->set('timezones', $this->app->make('date')->getGroupedTimezones());
+            $this->render('/dashboard/system/multisite/sites/form');
         } else {
-            $this->view();
+            $list = $service->getUserAddedList();
+            if (count($list) === 1) {
+                return $this->buildRedirect($this->action(['add', $list[0]->getSiteTypeID()]));
+            }
+            $this->set('urlResolver', $this->app->make(ResolverManagerInterface::class));
+            $this->set('types', $list);
+            $this->set('service', $service);
+            $this->render('/dashboard/system/multisite/sites/select_type');
         }
     }
 
     public function delete_site()
     {
         $service = $this->app->make('site');
-        /**
-         * @var $site Site
-         */
-        $site = $service->getByID($this->request->request->get('id'));
+        $id = (int) $this->request->request->get('id');
+        $site = $id === 0 ? null : $service->getByID($id);
+        if ($site === null) {
+            $this->flash('error', t('The site specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
         if (!$this->token->validate('delete_site')) {
             $this->error->add($this->token->getErrorMessage());
         }
-        if (!is_object($site)) {
-            $this->error->add(t('Invalid site.'));
-        }
-        if (is_object($site) && $site->isDefault()) {
+        if ($site->isDefault()) {
             $this->error->add(t('You may not delete the default site.'));
         }
         if (!$this->error->has()) {
             $service->delete($site);
             $this->flash('success', t('Site removed successfully.'));
-            $this->redirect('/dashboard/system/multisite/sites');
-        }
-        $this->view();
-    }
 
-
-    protected function getDomain($domainID)
-    {
-        $domain = $this->entityManager->getRepository(Domain::class)
-            ->findOneByID($domainID);
-        if (!is_object($domain)) {
-            $this->error->add(t('Invalid domain ID.'));
+            return $this->buildRedirect($this->action());
         }
 
-        return $domain;
+        return $this->view_site($site->getSiteID());
     }
 
-    protected function setSite($id)
+    public function view_domains($id = null)
     {
+        $id = (int) $id;
         $service = $this->app->make('site');
-        $site = $service->getByID($id);
-        if (is_object($site)) {
-            $this->set('site', $site);
-            $this->set('site_menu', new Menu($site));
-        } else {
-            throw new \Exception(t('Invalid site.'));
+        $site = $id === 0 ? null : $service->getByID($id);
+        if ($site === null) {
+            $this->flash('error', t('The site specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
         }
-        return $site;
+        $this->setCurrentSite($site);
+        $domains = $service->getSiteDomains($site);
+        $this->set('domains', $domains);
+        $this->set('canonicalDomain', Url::createFromUrl($site->getSiteCanonicalURL())->getHost());
+        $this->render('/dashboard/system/multisite/sites/view_domains');
     }
 
     public function add_domain()
     {
-        $site = $this->setSite($this->request->request->get('id'));
+        $id = (int) $this->request->request->get('id');
+        $service = $this->app->make('site');
+        $site = $id === 0 ? null : $service->getByID($id);
+        if ($site === null) {
+            $this->flash('error', t('The site specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
         if (!$this->token->validate('add_domain')) {
             $this->error->add($this->token->getErrorMessage());
         }
-
+        $domainName = trim($this->request->request->get('domain'));
+        if ($domainName === '') {
+            $this->error->add(t('Please specify the domain'));
+        }
         if (!$this->error->has()) {
             $domain = new Domain();
-            $domain->setDomain($this->request->request->get('domain'));
+            $domain->setDomain($domainName);
             $domain->setSite($site);
             $this->entityManager->persist($domain);
             $this->entityManager->flush();
             $this->flash('success', t('Domain added successfully.'));
-            $this->redirect('/dashboard/system/multisite/sites', 'view_domains', $site->getSiteID());
-        } else {
-            $this->view();
-        }
-    }
 
-
-    public function add($siteTypeID = null)
-    {
-        $service = $this->app->make('site/type');
-        $siteType = null;
-        if ($siteTypeID) {
-            $siteType = $service->getByID(intval($siteTypeID));
+            return $this->buildRedirect($this->action('view_domains', $site->getSiteID()));
         }
-        if ($siteType) {
-            $provider = new OptionsFormProvider($siteType);
-            $optionsForm = new OptionsForm($provider);
-            $this->set('buttonLabel', t('Add'));
-            $this->set('type', $siteType);
-            $this->set('optionsForm', $optionsForm);
-            $this->set('timezone', $this->app->make('site')->getSite()->getConfigRepository()->get('timezone'));
-            $this->set('timezones', $this->app->make('date')->getGroupedTimezones());
-            $this->render('/dashboard/system/multisite/sites/form');
 
-        } else {
-            $list = $service->getUserAddedList();
-            if (count($list) == 1) {
-                return $this->redirect('/dashboard/system/multisite/sites/add', $list[0]->getSiteTypeID());
-            } else {
-                $this->set('types', $list);
-                $this->set('service', $service);
-                $this->render('/dashboard/system/multisite/sites/select_type');
-            }
-        }
+        return $this->view_domains($site->getSiteID());
     }
 
     public function submit()
@@ -172,50 +144,84 @@ class Sites extends DashboardPageController
         if (!$this->token->validate('submit')) {
             $this->error->add($this->token->getErrorMessage());
         }
-        $handle = $this->request->request->get('handle');
-        $name = $this->request->request->get('name');
-        $type = \Core::make('site/type')->getByID($this->request->request->get('siteTypeID'));
-
-        if (!$name) {
-            $this->error->add(t('Name required.'));
-        }
-        if (!$type) {
+        $typeID = (int) $this->request->request->get('siteTypeID');
+        $type = $typeID === 0 ? null : $this->app->make('site/type')->getByID($typeID);
+        if ($type === null) {
             $this->error->add(t('Type required.'));
+        } else {
+            $templateID = $type->getSiteTypeHomePageTemplateID();
+            $template = $templateID ? Template::getByID($templateID) : null;
+            $template = Template::getByID($type->getSiteTypeHomePageTemplateID());
+            if ($template === null) {
+                $this->error->add(t('This site type does not have a home page template assigned to it.'));
+            }
+            $themeID = $type->getSiteTypeThemeID();
+            $theme = $themeID ? Theme::getByID($themeID) : null;
+            if ($theme === null || $theme->isError()) {
+                $this->error->add(t('This site type does not have a theme assigned to it.'));
+            }
         }
-
-        if (!$handle) {
+        $handle = (string) $this->request->request->get('handle');
+        if ($handle === '') {
             $this->error->add(t('Handle required.'));
-        } else if (!$vs->handle($handle)) {
+        } elseif (!$vs->handle($handle)) {
             $this->error->add(t('Handles must contain only letters, numbers or the underscore symbol.'));
         }
-
-        if (is_object($type) && $type->getSiteTypeHomePageTemplateID()) {
-            $template = Template::getByID($type->getSiteTypeHomePageTemplateID());
-        }
-        if (!isset($template) || !is_object($template)) {
-            $this->error->add(t('This site type does not have a home page template assigned to it.'));
-        }
-
-        $theme = null;
-        if (is_object($type) && $type->getSiteTypeThemeID()) {
-            $theme = Theme::getByID($type->getSiteTypeThemeID());
-        }
-        if (!isset($theme) || !is_object($theme)) {
-            $this->error->add(t('This site type does not have a theme assigned to it.'));
+        $name = trim((string) $this->request->request->get('name'));
+        if ($name === '') {
+            $this->error->add(t('Name required.'));
         }
 
         if (!$this->error->has()) {
             $service = $this->app->make('site');
             $site = $service->add($type, $theme, $handle, $name, 'en_US');
-
             $siteConfig = $site->getConfigRepository();
             $siteConfig->save('seo.canonical_url', $this->post('canonical_url'));
             $siteConfig->save('timezone', $this->request->request->get('timezone'));
-
             $this->flash('success', t('Site created successfully.'));
-            return Redirect::to('/dashboard/system/multisite/sites', 'view_site', $site->getSiteID());
+
+            return $this->buildRedirect($this->action('view_site', $site->getSiteID()));
         }
-        $this->add($this->request->request->get('siteTypeID'));
+
+        return $this->add($type === null ? null : $type->getSiteTypeID());
     }
 
+    public function delete_domain($domainID = null, $token = null)
+    {
+        $domainID = (int) $domainID;
+        $domain = $domainID === 0 ? null : $this->entityManager->getRepository(Domain::class)->findOneByID($domainID);
+        if ($domain === null) {
+            $this->flash('error', t('The domain specified does not exist.'));
+
+            return $this->buildRedirect($this->action());
+        }
+        $site = $domain->getSite();
+        if (!$this->token->validate('delete_domain', $token)) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
+        if (!$this->error->has()) {
+            $this->entityManager->remove($domain);
+            $this->entityManager->flush();
+            $this->flash('success', t('Domain deleted successfully.'));
+
+            return $this->buildRedirect($this->action('view_domains', $site->getSiteID()));
+        }
+
+        return $this->view_domains($site->getSiteID());
+    }
+
+    protected function setCurrentSite(?Site $site): void
+    {
+        $this->set('site', $site);
+        if ($site === null || $site->getSiteID() === null) {
+            $menu = null;
+        } else {
+            $breadcrumb = $this->app->make(DashboardBreadcrumbFactory::class)->getBreadcrumb($this->getPageObject());
+            $breadcrumb->add(new Item('', $site->getSiteName()));
+            $this->setBreadcrumb($breadcrumb);
+            $menu = new Element('dashboard/system/multisite/site/menu', '', $this->getPageObject(), ['site' => $site]);
+        }
+        $this->set('siteMenu', $menu);
+    }
 }

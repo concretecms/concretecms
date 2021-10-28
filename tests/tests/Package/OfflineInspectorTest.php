@@ -6,9 +6,9 @@ use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Package\Offline\Inspector;
 use Concrete\Core\Package\Offline\PackageInfo;
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class OfflineInspectorTest extends PHPUnit_Framework_TestCase
+class OfflineInspectorTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application
@@ -20,7 +20,7 @@ class OfflineInspectorTest extends PHPUnit_Framework_TestCase
      */
     private static $inspector;
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         self::$app = Application::getFacadeApplication();
         self::$inspector = self::$app->build(Inspector::class);

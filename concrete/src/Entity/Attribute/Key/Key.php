@@ -26,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class Key implements AttributeKeyInterface, ExportableInterface, ControlInterface
+class Key implements AttributeKeyInterface, ExportableInterface, ControlInterface, \JsonSerializable
 {
     use PackageTrait;
 
@@ -330,4 +330,11 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
         return array();
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'akID' => $this->getAttributeKeyID(),
+            'akName' => $this->getAttributeKeyDisplayName('text'),
+        ];
+    }
 }

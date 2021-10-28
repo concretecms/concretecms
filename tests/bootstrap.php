@@ -2,6 +2,9 @@
 
 use Concrete\Core\Http\Request;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit\Framework\Error\Notice;
+use Whoops\Handler\PlainTextHandler;
+use Whoops\Run;
 
 // Fix for phpstorm + tests run in separate processes
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
@@ -49,7 +52,6 @@ $app = require DIR_BASE_CORE . '/bootstrap/start.php';
 
 // Configure error reporting (test more strictly than core settings)
 error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
-PHPUnit_Framework_Error_Notice::$enabled = false;
 
 // Initialize the database
 $cn = $app->make('database')->connection('travisWithoutDB');

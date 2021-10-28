@@ -17,9 +17,6 @@ class Typography
      */
     public function output($inputName, $value = [], $options = [])
     {
-        $r = ResponseAssetGroup::get();
-        $r->requireAsset('core/style-customizer');
-
         $options['inputName'] = $inputName;
         $options = array_merge($options, $value);
         $strOptions = json_encode($options);

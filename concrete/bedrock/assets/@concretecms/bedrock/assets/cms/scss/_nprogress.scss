@@ -1,0 +1,56 @@
+/* stylelint-disable property-no-vendor-prefix, at-rule-no-vendor-prefix */
+/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+
+  .bar {
+    background: #29d;
+    height: 2px;
+    left: 0;
+
+    position: fixed;
+    top: 0;
+
+    width: 100%;
+    z-index: $index-level-nprogress;
+  }
+
+  .peg {
+    box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+    display: block;
+    height: 100%;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+
+    -webkit-transform: rotate(3deg) translate(0, -4px);
+    -ms-transform: rotate(3deg) translate(0, -4px);
+    transform: rotate(3deg) translate(0, -4px);
+    width: 100px;
+  }
+
+  .spinner {
+    display: none;
+  }
+
+}
+
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+
+.nprogress-custom-parent #nprogress .spinner,
+.nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+
+@-webkit-keyframes nprogress-spinner {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes nprogress-spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+

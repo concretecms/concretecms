@@ -32,6 +32,11 @@ class Group extends Tree
         }
     }
 
+    /**
+     * Get the Group instance.
+     *
+     * @return Group|null
+     */
     public static function get()
     {
         $db = Database::connection();

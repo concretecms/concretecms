@@ -17,8 +17,6 @@ if (is_object($set)) {
 
 }
 
-$ag = \Concrete\Core\Http\ResponseAssetGroup::get();
-$ag->requireAsset('core/style-customizer');
 $pt = $c->getCollectionThemeObject();
 
 $blockClasses = $pt->getThemeBlockClasses();
@@ -33,7 +31,11 @@ if (isset($blockClasses['*'])) {
 
 $enableBlockContainer = -1;
 if ($pt->supportsGridFramework() && $b->overrideBlockTypeContainerSettings()) {
-    $enableBlockContainer = $b->enableBlockContainer();
+    if ($b->enableBlockContainer()) {
+        $enableBlockContainer = 1;
+    } else {
+        $enableBlockContainer = 0;
+    }
 }
 
 $gf = $pt->getThemeGridFrameworkObject();

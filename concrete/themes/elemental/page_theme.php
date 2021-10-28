@@ -2,33 +2,33 @@
 namespace Concrete\Theme\Elemental;
 
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
+use Concrete\Core\Feature\Features;
 use Concrete\Core\Page\Theme\Theme;
 
 class PageTheme extends Theme implements ThemeProviderInterface
 {
+
+    public function getThemeSupportedFeatures()
+    {
+        return [
+            Features::BASICS,
+            Features::TYPOGRAPHY,
+            Features::FAQ,
+            Features::NAVIGATION,
+            Features::FORMS,
+            Features::SEARCH,
+            Features::TESTIMONIALS,
+            Features::TAXONOMY,
+        ];
+    }
+
     public function registerAssets()
     {
-        //$this->providesAsset('javascript', 'bootstrap/*');
-        $this->providesAsset('css', 'bootstrap/*');
-        $this->providesAsset('css', 'blocks/form');
-        $this->providesAsset('css', 'blocks/social_links');
-        $this->providesAsset('css', 'blocks/share_this_page');
-        $this->providesAsset('css', 'blocks/feature');
-        $this->providesAsset('css', 'blocks/testimonial');
-        $this->providesAsset('css', 'blocks/date_navigation');
-        $this->providesAsset('css', 'blocks/topic_list');
-        $this->providesAsset('css', 'blocks/faq');
-        $this->providesAsset('css', 'blocks/tags');
-        $this->providesAsset('css', 'core/frontend/*');
-        $this->providesAsset('css', 'blocks/feature/templates/hover_description');
-
-        $this->providesAsset('css', 'blocks/event_list');
-
-        $this->requireAsset('css', 'font-awesome');
-        $this->requireAsset('javascript', 'jquery');
-        $this->requireAsset('javascript', 'picturefill');
-        $this->requireAsset('javascript-conditional', 'html5-shiv');
-        $this->requireAsset('javascript-conditional', 'respond');
+        $this->requireAsset('font-awesome');
+        $this->requireAsset('jquery');
+        $this->requireAsset('vue');
+        $this->requireAsset('bootstrap');
+        $this->requireAsset('moment');
     }
 
     protected $pThemeGridFrameworkHandle = 'bootstrap3';

@@ -1,5 +1,12 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var Concrete\Core\Page\Type\Composer\Control\Control $control
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var string $label
+ * @var string $description
+ */
+
 $pagetype = $set->getPageTypeObject();
 $target = $pagetype->getPageTypePublishTargetObject();
 $c = $control->getPageObject();
@@ -12,14 +19,16 @@ if (is_object($parent) && $parent->isError()) {
 ?>
 
 <div class="form-group">
-	<label class="control-label"><?=$label?></label>
-    <?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) : ?>
+    <?= $form->label('', $label) ?>
+    <?php if ($control->isPageTypeComposerControlRequiredByDefault() || $control->isPageTypeComposerFormControlRequiredOnThisRequest()) { ?>
         <span class="label label-info"><?= t('Required') ?></span>
-    <?php endif; ?>
-	<?php if ($description): ?>
-	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
-	<?php endif; ?>
+    <?php } ?>
+
+	<?php if ($description) { ?>
+	    <i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?= $description ?>"></i>
+	<?php } ?>
+
 	<div data-composer-field="name">
-		<?=$target->includeChooseTargetForm($control, $pagetype, isset($parent) ? $parent : null)?>
+		<?= $target->includeChooseTargetForm($control, $pagetype, $parent ?? null) ?>
 	</div>
 </div>

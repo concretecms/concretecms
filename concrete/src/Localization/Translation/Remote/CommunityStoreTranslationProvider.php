@@ -4,11 +4,13 @@ namespace Concrete\Core\Localization\Translation\Remote;
 use Concrete\Core\Cache\Cache;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Client\Client as HttpClient;
+use Concrete\Core\Http\Client\Factory;
 use DateTime;
 use Exception;
 use Gettext\Translations;
-use Zend\Http\Request;
-use Zend\Http\Response;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 
 class CommunityStoreTranslationProvider implements ProviderInterface
 {
@@ -32,22 +34,20 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     protected $cache;
 
     /**
-     * The HTTP client to be used to communicate with the Community Translation server.
-     *
-     * @var HttpClient
+     * @var Factory
      */
-    protected $httpClient;
+    protected $httpClientFactory;
 
     /**
      * @param Repository $config The configuration repository containind the default values
      * @param Cache $cache The cache to be used (won't be used if the cache lifetime is 0)
      * @param HttpClient $httpClient The HTTP client to be used to communicate with the Community Translation server
      */
-    public function __construct(Repository $config, Cache $cache, HttpClient $httpClient)
+    public function __construct(Repository $config, Cache $cache, Factory $httpClientFactory)
     {
         $this->config = $config;
         $this->cache = $cache;
-        $this->httpClient = $httpClient;
+        $this->httpClientFactory = $httpClientFactory;
     }
 
     /**
@@ -234,13 +234,12 @@ class CommunityStoreTranslationProvider implements ProviderInterface
         }
         if ($data === null) {
             $request = $this->buildRequest('package/' . rawurlencode($packageHandle) . '/best-match-version/locales/' . $progressLimit . '/?v=' . rawurlencode($packageVersion));
-            $this->httpClient->reset();
-            $response = $this->httpClient->send($request);
-            $this->httpClient->reset();
-            if ($response->getStatusCode() === 404) {
-                $data = [];
-            } else {
+            $client = $this->httpClientFactory->createFromConfig($this->config);
+            try {
+                $response = $client->send($request);
                 $data = $this->getJsonFromResponse($response);
+            } catch (RequestException $e) {
+                $data = [];
             }
             if ($cacheItem !== null) {
                 $cacheItem->set($data)->expiresAfter($cacheLifetime)->save();
@@ -305,10 +304,9 @@ class CommunityStoreTranslationProvider implements ProviderInterface
     public function fetchPackageTranslations($packageHandle, $packageVersion, $localeID, $formatHandle = 'mo')
     {
         $request = $this->buildRequest('package/' . rawurlencode($packageHandle) . '/best-match-version/translations/' . rawurldecode($localeID) . '/' . rawurldecode($formatHandle) . '/?v=' . rawurlencode($packageVersion));
-        $this->httpClient->reset();
-        $response = $this->httpClient->send($request);
-        $this->httpClient->reset();
-        $responseBody = $response->getBody();
+        $client = $this->httpClientFactory->createFromConfig($this->config);
+        $response = $client->send($request);
+        $responseBody = $response->getBody()->getContents();
         if ($response->getStatusCode() >= 400) {
             throw new Exception($responseBody);
         }
@@ -335,10 +333,9 @@ class CommunityStoreTranslationProvider implements ProviderInterface
             ]
         );
         unset($translations);
-        $this->httpClient->reset();
-        $response = $this->httpClient->send($request);
-        $this->httpClient->reset();
-        $responseBody = $response->getBody();
+        $client = $this->httpClientFactory->createFromConfig($this->config);
+        $response = $client->send($request);
+        $responseBody = $response->getBody()->getContents();
         if ($response->getStatusCode() >= 400) {
             throw new Exception($responseBody);
         }
@@ -349,21 +346,19 @@ class CommunityStoreTranslationProvider implements ProviderInterface
 
     /**
      * @param string $path
-     *
-     * @return \Zend\Http\Request
      */
     protected function buildRequest($path)
     {
-        $request = new Request();
-        $apiToken = $this->getApiToken();
-        if ($apiToken !== '') {
-            $request->getHeaders()->addHeaders(['API-Token' => $apiToken]);
-        }
         $path = (string) $path;
         if ($path !== '' && $path[0] !== '/') {
             $path = '/' . $path;
         }
-        $request->setUri($this->getEntryPoint() . $path);
+
+        $request = new Request('get', $this->getEntryPoint() . $path);
+        $apiToken = $this->getApiToken();
+        if ($apiToken !== '') {
+            $request->withAddedHeader('API-Token', $apiToken);
+        }
 
         return $request;
     }
@@ -377,7 +372,7 @@ class CommunityStoreTranslationProvider implements ProviderInterface
      */
     protected function getJsonFromResponse(Response $response)
     {
-        $responseBody = $response->getBody();
+        $responseBody = $response->getBody()->getContents();
         if ($response->getStatusCode() >= 400) {
             throw new Exception($responseBody);
         }

@@ -15,6 +15,7 @@ use Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionRespons
 use PageEditResponse;
 use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
@@ -108,7 +109,11 @@ class Versions extends BackendInterfacePageController
                 $v->delete();
                 // finally, we redirect the user to the new drafts page in composer mode.
                 $r->setPage($nc);
-                $r->setRedirectURL(\Core::getApplicationURL() . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
+                $r->setRedirectURL(
+                    $this->app->make(ResolverManagerInterface::class)->resolve([
+                        "/ccm/system/page/checkout/{$nc->getCollectionID()}/first/" . $this->app->make('token')->generate(),
+                    ])
+                );
             }
             $r->outputJSON();
         }

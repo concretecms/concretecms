@@ -7,9 +7,9 @@ $this->inc('elements/header.php');
     <?php if (isset($_bookmarked)) { ?>
         <a href="#" class="ccm-dashboard-page-header-bookmark" data-page-id="<?=$c->getCollectionID()?>" data-token="<?=$token->generate('access_bookmarks')?>" data-bookmark-action="<?php if ($_bookmarked) { ?>remove-favorite<?php } else { ?>add-favorite<?php } ?>">
             <?php if ($_bookmarked) { ?>
-                <i class="fa fa-lg fa-bookmark"></i>
+                <i class="fas fa-lg fa-bookmark"></i>
             <?php } else { ?>
-                <i class="fa fa-lg fa-bookmark-o"></i>
+                <i class="fas fa-lg fa-bookmark"></i>
             <?php } ?>
         </a>
     <?php } ?>
@@ -42,21 +42,19 @@ if (!empty($_error)) {
 if (isset($message)) {
     ?>
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
-		<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($message))?></div>
+		<div class="alert alert-info alert-dismissible"><button type="button" class="btn-close" data-bs-dismiss="alert"></button><?=nl2br(h($message))?></div>
 	</div>
 	<?php
 
 } elseif (isset($success)) {
     ?>
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
-		<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(h($success))?></div>
+		<div class="alert alert-success alert-dismissible"><button type="button" class="btn-close" data-bs-dismiss="alert"></button><?=nl2br(h($success))?></div>
 	</div>
 	<?php 
 }
 
 echo $innerContent;
-
-echo Core::make('helper/concrete/ui/help')->display('dashboard', $c->getCollectionPath());
 
 if (isset($headerMenu) && $headerMenu instanceof \Concrete\Core\Controller\ElementController) {
     $headerMenu->render();
@@ -71,7 +69,7 @@ if (isset($breadcrumb) && (!empty($breadcrumb))) {
                 ?><li class="<?=$value['active'] ? 'ccm-undroppable-search-item active' : 'ccm-droppable-search-item'?>" data-collection-id="<?=$value['id']?>"><?php
                 if (isset($value['children'])) {
                     ?><span class="dropdown">
-                    <button type="button" class="btn btn-default btn-xs" data-toggle="dropdown">
+                    <button type="button" class="btn btn-default btn-xs" data-bs-toggle="dropdown">
                         <?=$value['name']?>
                         <span class="caret"></span>
                     </button>

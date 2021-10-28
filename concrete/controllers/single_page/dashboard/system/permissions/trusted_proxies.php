@@ -6,6 +6,7 @@ use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use IPLib\Address\AddressInterface;
 use IPLib\Factory;
+use IPLib\ParseStringFlag;
 use IPLib\Range\Pattern;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -51,7 +52,7 @@ class TrustedProxies extends DashboardPageController
         $currentProxyIP = null;
         if ($this->request->isFromTrustedProxy()) {
             $clientIP = $this->app->make(AddressInterface::class);
-            $rawClientIP = Factory::addressFromString($this->request->server->get('REMOTE_ADDR'), true, true, true);
+            $rawClientIP = Factory::parseAddressString($this->request->server->get('REMOTE_ADDR'), ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::MAY_INCLUDE_ZONEID);
             if ((string) $clientIP !== (string) $rawClientIP) {
                 $currentProxyIP = $rawClientIP;
             }
@@ -110,7 +111,7 @@ class TrustedProxies extends DashboardPageController
         if (is_string($input)) {
             foreach (preg_split('/\s+/', $input, -1, PREG_SPLIT_NO_EMPTY) as $rawRange) {
                 if (!in_array($rawRange, $invalidIPs, true)) {
-                    $range = Factory::rangeFromString($rawRange);
+                    $range = Factory::parseRangeString($rawRange);
                     if ($range === null || $range instanceof Pattern) {
                         $invalidIPs[] = $rawRange;
                     } else {

@@ -257,16 +257,10 @@ class StandardSitemapProvider implements ProviderInterface
     protected function getSitemapDataProvider()
     {
         $dh = $this->app->make('helper/concrete/dashboard/sitemap');
-        if ($this->request->query->has('displayNodePagination') && $this->request->query->get('displayNodePagination')) {
-            $dh->setDisplayNodePagination(true);
-        } else {
-            $dh->setDisplayNodePagination(false);
-        }
-        if ($this->request->query->has('isSitemapOverlay') && $this->request->query->get('isSitemapOverlay')) {
-            $dh->setIsSitemapOverlay(true);
-        } else {
-            $dh->setIsSitemapOverlay(false);
-        }
+        $queryString = $this->request->query;
+        $dh->setDisplayNodePagination($queryString->get('displayNodePagination') ? true : false);
+        $dh->setIsSitemapOverlay($queryString->get('isSitemapOverlay') ? true : false);
+        $dh->setIncludeSystemPages($queryString->get('includeSystemPages') ? true : false);
 
         return $dh;
     }

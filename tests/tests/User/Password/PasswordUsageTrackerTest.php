@@ -9,15 +9,12 @@ use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 use ReflectionMethod;
 
-class PasswordUsageTrackerTest extends PHPUnit_Framework_TestCase
+class PasswordUsageTrackerTest extends TestCase
 {
-
-    use MockeryPHPUnitIntegration;
 
     public function testTrackUse()
     {

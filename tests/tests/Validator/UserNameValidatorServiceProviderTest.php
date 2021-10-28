@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class UserNameValidatorServiceProviderTest extends PHPUnit_Framework_TestCase
+class UserNameValidatorServiceProviderTest extends TestCase
 {
     public function testIsInstance()
     {

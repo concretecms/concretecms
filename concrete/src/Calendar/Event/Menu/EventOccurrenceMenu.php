@@ -1,14 +1,16 @@
 <?php
+
 namespace Concrete\Core\Calendar\Event\Menu;
 
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DialogLinkItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\LinkItem;
-use Concrete\Core\Application\UserInterface\ContextMenu\Menu;
+use Concrete\Core\Application\UserInterface\ContextMenu\PopoverMenu;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
+use Concrete\Core\Support\Facade\Url;
 
-class EventOccurrenceMenu extends Menu
+class EventOccurrenceMenu extends PopoverMenu
 {
 
     public function __construct(CalendarEventVersionOccurrence $occurrence)
@@ -26,21 +28,26 @@ class EventOccurrenceMenu extends Menu
         }
         $this->addItem(new DialogLinkItem(
             \URL::to('ccm/calendar/dialogs/event/occurrence') . '?occurrenceID=' . $occurrence->getID(), t('Details'),
-        t('View Event'), 500, 500));
+            t('View Event'), 500, 500));
+        $this->addItem(new LinkItem(Url::to('/ccm/calendar/event/export')->setQuery(['eventID' => $occurrence->getEvent()->getID()]), t('Export Event')));
         $permissions = new \Permissions($calendar);
 
         if ($permissions->canEditCalendarEvents()) {
             $this->addItem(new DividerItem());
             $this->addItem(new DialogLinkItem(
-                \URL::to('/ccm/calendar/dialogs/event/edit') . '?versionOccurrenceID=' . $occurrence->getID(),  t('Edit'),
-                t('Edit'), 640, 500
+                \URL::to('/ccm/calendar/dialogs/event/edit') . '?versionOccurrenceID=' . $occurrence->getID(), t('Edit'),
+                t('Edit'), 1100, 600
+            ));
+            $this->addItem(new DialogLinkItem(
+                \URL::to('/ccm/calendar/dialogs/event/summary_templates') . '?versionOccurrenceID=' . $occurrence->getID(), t('Summary Templates'),
+                t('Summary Templates'), '90%', '70%'
             ));
             if ($permissions->canCopyCalendarEvents()) {
                 $year = date('Y', $occurrence->getStart());
                 $month = date('m', $occurrence->getStart());
                 $this->addItem(new DialogLinkItem(
                     \URL::to('/ccm/calendar/dialogs/event/duplicate') . '?year=' . $year . '&amp;month=' . $month .
-                    '&amp;eventID=' . $occurrence->getEvent()->getID(),  t('Duplicate'),
+                    '&amp;eventID=' . $occurrence->getEvent()->getID(), t('Duplicate'),
                     t('Duplicate'), 400, 300
                 ));
             }

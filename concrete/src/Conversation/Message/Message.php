@@ -250,24 +250,26 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
     {
         /** @var \Concrete\Core\Conversation\Editor\Editor $editor */
         $editor = ConversationEditor::getActive();
+        $config = ['htmlawed' => true];
+
         if ($dashboardOverride) {
-            return $editor->formatConversationMessageBody($this->getConversationObject(), $this->cnvMessageBody);
+            return $editor->formatConversationMessageBody($this->getConversationObject(), $this->cnvMessageBody, $config);
         } elseif ($this->cnvIsMessageDeleted) {
             return $editor->formatConversationMessageBody($this->getConversationObject(),
-                t('This message has been deleted.'));
+                t('This message has been deleted.'), $config);
             //return t('This message has been deleted.');
         } elseif (!$this->cnvIsMessageApproved) {
             if ($this->conversationMessageHasFlag('spam')) {
                 return $editor->formatConversationMessageBody($this->getConversationObject(),
-                    t('This message has been flagged as spam.'));
+                    t('This message has been flagged as spam.'), $config);
                 //return t('This message has been flagged as spam.');
             }
 
             return $editor->formatConversationMessageBody($this->getConversationObject(),
-                t('This message is queued for approval.'));
+                t('This message is queued for approval.'), $config);
             // return t('This message is queued for approval.');
         } else {
-            return $editor->formatConversationMessageBody($this->getConversationObject(), $this->cnvMessageBody);
+            return $editor->formatConversationMessageBody($this->getConversationObject(), $this->cnvMessageBody, $config);
         }
     }
 

@@ -43,9 +43,6 @@ if ($display_account_menu) {
         if ($u->isRegistered()) {
             $dh = $app->make('helper/concrete/dashboard');
             if (!$dh->inDashboard($c)) {
-                $v = View::getRequestInstance();
-                $v->requireAsset('core/account');
-                $v->addFooterItem('<script>$(function() { if (window.ccm_enableUserProfileMenu) ccm_enableUserProfileMenu(); });</script>');
                 $localization->pushActiveContext(Localization::CONTEXT_UI);
                 try {
                     View::element('account/menu');

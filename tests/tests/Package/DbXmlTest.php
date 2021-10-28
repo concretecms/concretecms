@@ -4,9 +4,9 @@ namespace Concrete\Tests\Package;
 
 use Database;
 use Package;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class DbXmlTest extends PHPUnit_Framework_TestCase
+class DbXmlTest extends TestCase
 {
     /**
      * Tests that the table is properly updated according to the updated

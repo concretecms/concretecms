@@ -13,12 +13,16 @@ use Concrete\Core\Entity\Site\SiteTree;
 use Concrete\Core\Entity\Site\Type;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Localization\Localization;
+use Concrete\Core\Logging\Channels;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Site\Resolver\ResolverFactory;
 use Concrete\Core\Site\Type\Controller\Manager;
+use Concrete\Core\Tree\Node\Node;
+use Concrete\Core\Tree\Node\Type\ExpressEntrySiteResults;
 use Concrete\Core\User\Group\Group;
 use Doctrine\ORM\EntityManagerInterface;
+use Monolog\Logger;
 use Punic\Comparer;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Site\Type\Service as SiteTypeService;
@@ -418,6 +422,7 @@ class Service
         $localeService->updatePluralSettings($locale);
 
         $this->entityManager->persist($site);
+        $this->entityManager->persist($tree);
         $this->entityManager->persist($locale);
         $this->entityManager->flush();
 
@@ -473,5 +478,43 @@ class Service
             return $factory->createEntity($domain->getSite());
         }
     }
+
+    /**
+     * Resolve the site instance associated with a given results node ID
+     *
+     * This is usually useful when resolving a site object from an express entry.
+     * You'd do `$service->getByExpressNodeID($entry->getResultsNodeID());`
+     *
+     * @param int $resultsNodeID
+     *
+     * @return Site|null
+     */
+    public function getSiteByExpressResultsNodeID(int $resultsNodeID): ?Site
+    {
+        /** @TODO Use an overridable way to resolve results nodes */
+        $siteResultsNode = Node::getByID($resultsNodeID);
+        if ($siteResultsNode instanceof ExpressEntrySiteResults) {
+            return $this->getSiteByExpressResultsNode($siteResultsNode);
+        }
+
+        return null;
+    }
+
+    /**
+     * Resolve a site instance using an express results node
+     *
+     * This is typically useful when resolving the site from an express entry.
+     *
+     * @see Service::getSiteByExpressResultsNodeID()
+     *
+     * @param ExpressEntrySiteResults $siteResultsNode
+     *
+     * @return Site|null
+     */
+    public function getSiteByExpressResultsNode(ExpressEntrySiteResults $siteResultsNode): ?Site
+    {
+        return $this->getByID($siteResultsNode->getSiteID());
+    }
+
 
 }

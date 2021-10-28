@@ -1,0 +1,35 @@
+div.theme-atomik {
+  &.page-type-blog-entry {
+
+    .col-sidebar {
+      > div {
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 6px solid $primary;
+
+        &:last-child {
+          margin-bottom: 0;
+          padding-bottom: 0;
+          border-bottom: 0;
+        }
+      }
+
+      // Now let's add the blue border and spacing in edit mode
+      .ccm-area-block-list {
+        > .ccm-area-drag-area {
+          padding-top: 2rem;
+          margin-top: 2rem;
+          border-top: 6px solid $primary;
+
+          &:first-child, &:last-child { // silly concrete markup makes this tough.
+            margin-top: 0;
+            padding-top: 0;
+            border-top: 0;
+          }
+        }
+      }
+    }
+
+  }
+
+}

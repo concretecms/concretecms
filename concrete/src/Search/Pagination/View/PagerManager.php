@@ -7,11 +7,16 @@ class PagerManager extends CoreManager
 {
     protected function createApplicationDriver()
     {
-        return new ConcreteBootstrap3PagerView();
+        return new ConcreteCMSPagerView();
     }
 
     protected function createDashboardDriver()
     {
-        return new ConcreteBootstrap3PagerView();
+        return new ConcreteCMSPagerView();
+    }
+
+    protected function createCmsDriver()
+    {
+        return new ConcreteCMSPagerView();
     }
 }

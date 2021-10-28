@@ -15,6 +15,7 @@ class KeywordsField extends AbstractField
     {
         if ($keywords) {
             $this->data['keywords'] = $keywords;
+            $this->isLoaded = true;
         }
     }
 
@@ -54,8 +55,10 @@ class KeywordsField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $keywords = $this->data['keywords'];
-        $list->filterByKeywords($keywords);
+        if (isset($this->data['keywords'])) {
+            $list->filterByKeywords($this->data['keywords']);
+        }
+
     }
 
     /**

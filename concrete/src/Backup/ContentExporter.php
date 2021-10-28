@@ -1,42 +1,19 @@
 <?php
 namespace Concrete\Core\Backup;
 
-use Concrete\Core\Page\Feed;
-use Concrete\Core\Page\PageList;
-use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
-use Concrete\Core\Tree\Tree;
-use Page;
-use Package;
-use PageType;
 use Block;
+use Concrete\Core\Page\Feed;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use File;
-use PageTheme;
-use Concrete\Core\Block\BlockType\BlockTypeList;
-use Loader;
-use Concrete\Core\Attribute\Key\Key as AttributeKey;
-use Concrete\Core\Attribute\Set as AttributeSet;
-use Concrete\Core\Package\PackageList;
-use Concrete\Core\Permission\Key\Key as PermissionKey;
-use Job;
-use SimpleXMLElement;
-use Concrete\Core\Workflow\Type as WorkflowType;
-use Concrete\Core\Page\Stack\StackList;
-use PageTemplate;
-use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
-use Concrete\Core\Attribute\Type as AttributeType;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
-use Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
-use Concrete\Core\Feature\Feature;
-use Concrete\Core\Feature\Category\Category as FeatureCategory;
-use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
-use Concrete\Core\Gathering\Item\Template\Template as GatheringItemTemplate;
-use Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
-use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
-use Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
-use Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
 use FileList;
-use ZipArchive;
+use Job;
+use Loader;
+use Package;
+use Page;
+use PageTemplate;
+use PageTheme;
+use PageType;
 
 class ContentExporter
 {
@@ -128,6 +105,16 @@ class ContentExporter
             return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
         }
     }
+
+    public static function replaceFileFolderWithPlaceHolder($treeNodeID)
+    {
+        if ($treeNodeID > 0) {
+            $folder = FileFolder::getByID($treeNodeID);
+
+            return '{ccm:export:filefolder:' . $folder->getTreeNodeDisplayPath() . '}';
+        }
+    }
+
 
     public static function replacePageFeedWithPlaceholder($pfID)
     {

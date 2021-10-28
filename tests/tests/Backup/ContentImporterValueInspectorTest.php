@@ -34,7 +34,7 @@ class ContentImporterValueInspectorTest extends FileStorageTestCase
     public function testMakeCore()
     {
         $inspector = Core::make('import/value_inspector');
-        $this->assertEquals(6, count($inspector->getInspectionRoutines()));
+        $this->assertEquals(7, count($inspector->getInspectionRoutines()));
     }
 
     public function providerMatchedSimpleValues()
@@ -119,6 +119,7 @@ EOL;
         // create the default storage location first.
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
+
 
         $importer = Core::make(FileImporter::class);
         $prefix = $importer->generatePrefix();

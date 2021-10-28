@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Page\Command\DeletePageCommand;
 use Concrete\Core\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
@@ -20,6 +21,7 @@ class Delete extends BackendInterfacePageController
 
     public function view()
     {
+        $this->set('sitemap', false);
         $this->set('numChildren', $this->page->getNumChildren());
     }
 
@@ -41,11 +43,8 @@ class Delete extends BackendInterfacePageController
                     if ($c->isExternalLink()) {
                         $c->delete();
                     } else {
-                        $pkr = new DeletePagePageWorkflowRequest();
-                        $pkr->setRequestedPage($c);
-                        $pkr->setRequesterUserID($u->getUserID());
-                        $u->unloadCollectionEdit($c);
-                        $response = $pkr->trigger();
+                        $command = new DeletePageCommand($c->getCollectionID(), $u->getUserID());
+                        $response = $this->app->executeCommand($command);
                         $pr = new PageEditResponse();
                         $pr->setPage($c);
                         $parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');

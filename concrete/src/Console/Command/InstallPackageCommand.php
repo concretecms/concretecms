@@ -15,12 +15,15 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class InstallPackageCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:package:install')
             ->setAliases([
@@ -29,14 +32,14 @@ class InstallPackageCommand extends Command
             ])
             ->addOption('full-content-swap', null, InputOption::VALUE_NONE, 'If this option is specified a full content swap will be performed (if the package supports it)')
             ->addOption('languages', 'l', InputOption::VALUE_REQUIRED, 'Force to install ("yes") or to not install ("no") language files. If "auto", language files will be installed if the package is connected to the project ("auto" requires that the canonical URL is set)', 'auto')
-            ->setDescription('Install a concrete5 package')
+            ->setDescription('Install a package')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be installed')
             ->addArgument('package-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the package install routine (example: foo=bar baz=foo)')
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-install
@@ -149,12 +152,37 @@ EOT
 
         $swapper = $pkg->getContentSwapper();
         if ($swapper->allowsFullContentSwap($pkg) && $input->getOption('full-content-swap')) {
+            $options = [];
+
+            if (count($pkg->getContentSwapFiles()) > 1) {
+                $contentSwapFiles = [];
+                $contentSwapTemplateNames = [];
+                $index = 1;
+
+                foreach($pkg->getContentSwapFiles() as $contentSwapFile => $contentSwapTemplateName) {
+                    $contentSwapFiles[$index] = $contentSwapFile;
+                    $contentSwapTemplateNames[] = sprintf("%s: %s", $index, $contentSwapTemplateName);
+                    $index++;
+                }
+                $io = new SymfonyStyle($input, $output);
+                $io->listing($contentSwapTemplateNames);
+
+                $helper = $this->getHelper('question');
+                $selectedContentSwapFile = $helper->ask($input, $output, new Question('Select the number of the content swap file you want to install: ', 1));
+
+                if (isset($contentSwapFiles[$selectedContentSwapFile])) {
+                    $options["contentSwapFile"] = $contentSwapFiles[$selectedContentSwapFile];
+                }
+            }
+
             $output->write('Performing full content swap... ');
-            $swapper->swapContent($pkg, []);
+            $swapper->swapContent($pkg, $options);
             if (method_exists($pkg, 'on_after_swap_content')) {
                 $pkg->on_after_swap_content([]);
             }
             $output->writeln('<info>done.</info>');
         }
+
+        return static::SUCCESS;
     }
 }

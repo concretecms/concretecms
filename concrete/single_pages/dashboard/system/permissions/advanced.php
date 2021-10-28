@@ -1,10 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-$h = Loader::helper('concrete/dashboard');
-$ih = Loader::helper('concrete/ui');
-$form = Loader::helper('form');
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+$h = $app->make('helper/concrete/dashboard');
+$ih = $app->make('helper/concrete/ui');
+$form = $app->make('helper/form');
 ?>
 <form id="permissions-form" action="<?php echo $view->action('enable_advanced_permissions')?>" method="post">
-<?php echo Loader::helper('validation/token')->output('enable_advanced_permissions')?>
+<?php echo $app->make('helper/validation/token')->output('enable_advanced_permissions')?>
 <?php if (Config::get('concrete.permissions.model') != 'simple') {
     ?>
     <p><?=t('Advanced permissions are turned on.')?></p>

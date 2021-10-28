@@ -6,11 +6,10 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Config\CompositeLoader;
 use Concrete\Core\Config\LoaderInterface;
 use \Mockery as M;
+use Concrete\Tests\TestCase;
 
-class CompositeLoaderTest extends \PHPUnit_Framework_TestCase
+class CompositeLoaderTest extends TestCase
 {
-
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     protected $app;
     protected $composite;
@@ -18,8 +17,7 @@ class CompositeLoaderTest extends \PHPUnit_Framework_TestCase
     protected $loader2;
     protected $loader3;
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $this->loader1 = M::mock(LoaderInterface::class);
         $this->loader2 = M::mock(LoaderInterface::class);
         $this->loader3 = M::mock(LoaderInterface::class);
@@ -32,7 +30,7 @@ class CompositeLoaderTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->loader1 = null;
         $this->loader2 = null;
@@ -103,10 +101,4 @@ class CompositeLoaderTest extends \PHPUnit_Framework_TestCase
 
         $loader->exists('foo');
     }
-
-    public function testLoad()
-    {
-
-    }
-
 }

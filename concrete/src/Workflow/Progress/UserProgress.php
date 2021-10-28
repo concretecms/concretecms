@@ -4,6 +4,8 @@ namespace Concrete\Core\Workflow\Progress;
 use Concrete\Core\Workflow\Request\UserRequest;
 use Loader;
 use \Concrete\Core\Workflow\Workflow;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Validation\CSRF\Token;
 
 class UserProgress extends Progress
 {
@@ -39,7 +41,14 @@ class UserProgress extends Progress
 
     public function getWorkflowProgressFormAction()
     {
-        return REL_DIR_FILES_TOOLS_REQUIRED . '/' . DIRNAME_WORKFLOW . '/categories/user?task=save_user_workflow_progress&uID=' . $this->uID . '&wpID=' . $this->getWorkflowProgressID() . '&' . Loader::helper('validation/token')->getParameter('save_user_workflow_progress');
+        $url = app(ResolverManagerInterface::class)->resolve(['/ccm/system/workflow/categories/user/save_progress']);
+        $token = app(Token::class);
+        $query = $url->getQuery();
+        $query->modify([
+            'uID' => $this->uID,
+            'wpID' => $this->getWorkflowProgressID(),
+            $token::DEFAULT_TOKEN_NAME => $token->generate('save_user_workflow_progress')
+        ]);
     }
 
     public function getPendingWorkflowProgressList()
@@ -65,7 +74,7 @@ class UserProgress extends Progress
         $r = $db->Execute('SELECT wp.wpID FROM UserWorkflowProgress uwp INNER JOIN WorkflowProgress wp ON wp.wpID = uwp.wpID WHERE uwp.uID = ? ' . $filter,
             $requestedUID);
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $wp = UserProgress::getByID($row['wpID']);
             if (is_object($wp)) {
                 $list[] = $wp;

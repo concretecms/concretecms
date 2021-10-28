@@ -1,0 +1,13 @@
+div.theme-atomik {
+  .ccm-block-date-navigation {
+
+    @include make-display-headings();
+
+    ul.ccm-block-date-navigation-dates {
+      background-color: rgba($light-accent, 0.2);
+      padding: 1rem;
+      @extend .list-unstyled;
+    }
+  }
+
+}

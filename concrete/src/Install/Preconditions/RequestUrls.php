@@ -32,7 +32,7 @@ class RequestUrls implements WebPreconditionInterface
      */
     public function getName()
     {
-        return t('Supports concrete5 request URLs');
+        return t('Supports Concrete request URLs');
     }
 
     /**
@@ -83,7 +83,8 @@ class RequestUrls implements WebPreconditionInterface
     public function getHtml()
     {
         $url = json_encode((string) $this->resolver->resolve(['/install', 'web_precondition', 'request_urls', '20']));
-        $errorMessage = json_encode(t('concrete5 cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.'));
+        $errorMessage = json_encode(t('Concrete cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.'));
+        $ajaxFailErrorMessage = json_encode(t('Request failed: unable to verify support for request URLs'));
         $myIdentifier = json_encode($this->getUniqueIdentifier());
 
         return <<<EOT
@@ -103,7 +104,7 @@ $(document).ready(function() {
         }
     })
     .fail(function(xhr, textStatus, errorThrown) {
-        setWebPreconditionResult({$myIdentifier}, false, {$errorMessage});
+        setWebPreconditionResult({$myIdentifier}, false, {$ajaxFailErrorMessage});
     });
 });
 </script>

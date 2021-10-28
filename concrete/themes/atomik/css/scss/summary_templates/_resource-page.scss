@@ -1,0 +1,39 @@
+.theme-atomik {
+  div.ccm-summary-template-resource-page {
+
+    @include media-breakpoint-up(lg) {
+
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      .row {
+        width: 100%;
+
+        > * {
+          display: flex;
+          align-items: center;
+
+          a {
+            width: 100%; // wrapper around thumbnail
+          }
+        }
+      }
+
+      img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 120px;
+        max-height: 120px;
+        @include media-breakpoint-up(xl) {
+          max-width: 160px;
+          max-height: 160px;
+
+        }
+      }
+
+    }
+
+  }
+}

@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\File;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ExecutableFilesTest extends PHPUnit_Framework_TestCase
+class ExecutableFilesTest extends TestCase
 {
     public function testExecutableFiles()
     {
@@ -28,6 +28,7 @@ class ExecutableFilesTest extends PHPUnit_Framework_TestCase
         });
         sort($actual);
         $expected = [
+            'concrete/bin/concrete',
             'concrete/bin/concrete5',
             'tests/assets/Docker/run-install.sh',
             'tests/assets/Docker/run-update.sh',

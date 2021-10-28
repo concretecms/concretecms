@@ -1,0 +1,82 @@
+/* stylelint-disable selector-class-pattern */
+/*! http://responsiveslides.com v1.55 by @viljamis */
+.rslides {
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.rslides > li {
+  backface-visibility: hidden;
+  display: none;
+  left: 0;
+  margin-bottom: 0 !important;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.rslides > li:first-child {
+  display: block;
+  float: left;
+  position: relative;
+}
+
+.rslides img {
+  border: 0;
+  display: block;
+  float: left;
+  height: auto;
+  width: 100%;
+}
+
+.rslides_nav {
+  background: transparent url('data:image/gif;base64,R0lGODlhTAA9AMQAABAQEDAwMO/v78/Pz7+/v39/f6+vr1BQUCAgIGBgYJ+fn0BAQN/f33BwcI+Pj////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAAAALAAAAABMAD0AAAXkICSOZGmeaKqubOu+cCzPdG3feK7vfO//wKBwSCwaj8ikcslsOp/QqHRKrVqv2Fog4NsiAYTHY8ALPwiAImAgFi90gfY4PVTIyTuzWDEsyAUIPAACcgVBCXIPbz1xcgk/AYRthj8Nf1yCkmIGQnZtAnQ6eg8MoT9rcgQ7jW2YQqxirjeDcg5Efp+mNweJj0G8cgc9uGICsjyRhT+eYqU+qG2cp2zRPsxzQbSTPJafga+aD984CImLQ4itOuVtvkULBgTCOwcGBvNZ+fr7/P3+/wADChxIsKDBgwgTKlzIsKFDKSEAADs=') no-repeat left top;
+  height: 61px;
+  left: 0;
+  margin-top: -45px;
+  opacity: 0.7;
+  overflow: hidden;
+  position: absolute;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  text-decoration: none;
+  top: 50%;
+  width: 38px;
+  z-index: 99;
+}
+
+.rslides_tabs {
+  padding-bottom: 10px;
+  padding-left: 0;
+  padding-top: 0;
+}
+
+.rslides_tabs li {
+  display: inline-block;
+  list-style-type: none;
+  margin-right: 5px;
+}
+
+.rslides_tabs li.rslides_here a {
+  background: #333;
+}
+
+.rslides_tabs li a {
+  background: #ccccc9;
+  border-radius: 30px;
+  display: inline-block;
+  height: 15px;
+  margin-right: 10px;
+  overflow: hidden;
+  text-indent: -9999px;
+  width: 15px;
+}
+
+.rslides_nav.next {
+  background-position: right top;
+  left: auto;
+  right: 0;
+}

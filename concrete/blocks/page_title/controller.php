@@ -1,12 +1,14 @@
 <?php
 namespace Concrete\Block\PageTitle;
 
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Tree\Node\Type\Topic;
 use Core;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = 470;
     protected $btInterfaceHeight = 500;
@@ -48,6 +50,13 @@ class Controller extends BlockController
         }
 
         return $title;
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::BASICS
+        ];
     }
 
     public function view()

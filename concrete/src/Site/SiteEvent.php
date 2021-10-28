@@ -2,9 +2,8 @@
 namespace Concrete\Core\Site;
 
 use Concrete\Core\Entity\Site\Site;
-use Symfony\Component\EventDispatcher\Event;
 
-class SiteEvent extends Event
+class SiteEvent
 {
 
     protected $site;

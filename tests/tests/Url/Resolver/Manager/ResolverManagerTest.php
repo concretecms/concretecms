@@ -3,9 +3,9 @@
 namespace Concrete\Tests\Url\Resolver\Manager;
 
 use Concrete\TestHelpers\CreateClassMockTrait;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ResolverManagerTest extends PHPUnit_Framework_TestCase
+class ResolverManagerTest extends TestCase
 {
     use CreateClassMockTrait;
 
@@ -18,7 +18,7 @@ class ResolverManagerTest extends PHPUnit_Framework_TestCase
 
     protected $defaultResponse = 'DEFAULT';
 
-    protected function setUp()
+    public function setUp():void
     {
         $obj = $this;
 

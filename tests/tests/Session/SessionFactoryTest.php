@@ -7,9 +7,9 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Session\SessionFactory;
 use Concrete\Core\Session\SessionFactoryInterface;
 use Concrete\Core\Session\Storage\Handler\NativeFileSessionHandler;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class SessionFactoryTest extends PHPUnit_Framework_TestCase
+class SessionFactoryTest extends TestCase
 {
     /** @var Application */
     protected $app;
@@ -20,7 +20,7 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
     /** @var SessionFactoryInterface */
     protected $factory;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->app = clone \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $this->app['config'] = clone $this->app['config'];
@@ -29,7 +29,7 @@ class SessionFactoryTest extends PHPUnit_Framework_TestCase
         $this->factory = new SessionFactory($this->app, $this->request);
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->app = $this->request = null;
     }

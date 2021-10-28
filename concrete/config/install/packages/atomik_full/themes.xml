@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <thumbnailtypes>
+        <thumbnailtype name="Resource List Entry" handle="resource_list_entry" sizingMode="proportional" width="510" height="510" />
+        <thumbnailtype name="Testimonial Circle" handle="testimonial_circle" sizingMode="exact" width="180" height="180" />
+        <thumbnailtype name="Stripe Column Image" handle="stripe_column" sizingMode="exact" width="850" height="650" />
+        <thumbnailtype name="Gallery" handle="atomik_gallery" sizingMode="exact" width="860" height="614" />
+        <thumbnailtype name="Blog Entry Thumbnail" handle="blog_entry_thumbnail" sizingMode="exact" width="660" height="428" />
+    </thumbnailtypes>
+    <summarytemplates>
+        <template handle="blog_image_left" name="Blog Image Left"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field required="1">thumbnail</field>
+                <field required="1">date</field>
+            </fields>
+        </template>
+        <template handle="blog_image_right" name="Blog Image Right"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field required="1">thumbnail</field>
+                <field required="1">author</field>
+                <field required="1">date</field>
+            </fields>
+        </template>
+        <template handle="blog_image_top" name="Blog Image Top"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field required="1">thumbnail</field>
+                <field required="1">author</field>
+                <field required="1">date</field>
+            </fields>
+        </template>
+        <template handle="blog_entry_card" name="Blog Entry Card"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field required="1">thumbnail</field>
+                <field required="1">author</field>
+                <field required="1">date</field>
+            </fields>
+        </template>
+        <template handle="resource_page" name="Resource Page Entry"
+                  icon="blank.png" package="">
+            <categories>
+                <category handle="page"/>
+            </categories>
+            <fields>
+                <field required="1">title</field>
+                <field required="1">link</field>
+                <field required="1">thumbnail</field>
+                <field required="1">author</field>
+                <field>description</field>
+            </fields>
+        </template>
+    </summarytemplates>
+</concrete5-cif>

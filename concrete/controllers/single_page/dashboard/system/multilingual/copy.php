@@ -2,12 +2,11 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Multilingual;
 
 use Concrete\Controller\Panel\Multilingual;
-use Concrete\Core\Foundation\Queue\Queue;
-use Concrete\Core\Multilingual\Page\Section\Processor\MultilingualProcessorTarget;
-use Concrete\Core\Multilingual\Page\Section\Processor\Processor;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Command\RescanMultilingualPageCommand;
 use Concrete\Core\Page\Controller\DashboardSitePageController;
+use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\User\User;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -36,24 +35,32 @@ class Copy extends DashboardSitePageController
         if ($this->token->validate('rescan_locale')) {
             $u = $this->app->make(User::class);
             if ($u->isSuperUser()) {
-                \Core::make('cache/request')->disable();
+
                 $section = Section::getByID($_REQUEST['locale']);
-                $target = new MultilingualProcessorTarget($section);
-                $processor = new Processor($target);
-                if (!empty($_POST['process'])) {
-                    foreach ($processor->receive() as $task) {
-                        $processor->execute($task);
-                    }
-                    $obj = new \stdClass();
-                    $obj->totalItems = $processor->getTotalTasks();
-                    echo json_encode($obj);
-                    exit;
-                } else {
-                    $processor->process();
+                $pages = $section->populateRecursivePages(
+                    [],
+                    [
+                        'cID' => $section->getCollectionID(), ],
+                    $section->getCollectionParentID(),
+                    0,
+                    false
+                );
+
+                // Add in all the stack pages found for the current locale.
+                $list = new StackList();
+                $list->filterByLanguageSection($section);
+                $results = $list->get();
+                foreach ($results as $result) {
+                    $pages[] = ['cID' => $result->getCollectionID()];
                 }
-                $totalItems = $processor->getTotalTasks();
-                \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d task", "%d tasks", $totalItems)));
-                exit;
+
+                $commands = [];
+                foreach ($pages as $page) {
+                    $commands[] = new RescanMultilingualPageCommand($page['cID']);
+                }
+
+                $batch = Batch::create(t('Rescan Pages'), $commands);
+                return $this->dispatchBatch($batch);
             }
         }
     }

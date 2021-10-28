@@ -5,8 +5,11 @@ use Concrete\Controller\Dialog\Tree\Node;
 use Concrete\Core\Application\EditResponse;
 use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
 use Concrete\Core\File\Filesystem;
+use Concrete\Core\File\Search\SearchProvider;
 use Concrete\Core\File\StorageLocation\StorageLocationFactory;
 use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Search\Query\QueryFactory;
+use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -91,10 +94,21 @@ class Add extends Node
 
         if (!$this->error->has()) {
             $filesystem = new Filesystem();
-            $folder = $filesystem->addFolder($this->node, $folderName, $fslID);
+            $folder = $filesystem->addFolder($this->getNode(), $folderName, $fslID);
+
+            // Let's store the new folder IDs in session so we can highlight them on redirect.
+            $this->app->make('session')->getFlashBag()->set('file_manager.updated_nodes', [$folder->getTreeNodeID()]);
+
+            // Redirect to the folder in the file manager, with date modified descending as our query.
+            // Note, it'd be nice if it were easier to build this than simply hard coding the logic but
+            // this isn't too bad.
+            // Note: I tried using $this->app->to() and it didn't work (?!?) so I'm using the facade.
+            $redirectURL = (string) Url::to(
+                '/dashboard/files/search/', 'folder', $folder->getTreeNodeParentID()
+            )->setQuery(['ccm_order_by' => 'dateModified', 'ccm_order_by_direction' => 'desc']);
             $response->setMessage(t('Folder added.'));
             $response->setAdditionalDataAttribute('folder', $folder);
-
+            $response->setRedirectURL($redirectURL);
             return new JsonResponse($response);
         }
 

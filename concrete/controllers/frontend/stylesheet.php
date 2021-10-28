@@ -3,6 +3,7 @@ namespace Concrete\Controller\Frontend;
 
 use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\Layout;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Controller;
 use Page;
 use Permissions;
@@ -10,6 +11,9 @@ use Response;
 
 class Stylesheet extends Controller
 {
+    /**
+     * @deprecated
+     */
     public function page_version($cID, $stylesheet, $cvID)
     {
         $c = Page::getByID($cID);
@@ -22,8 +26,8 @@ class Stylesheet extends Controller
                 $stylesheet = $theme->getStylesheetObject($stylesheet);
                 $style = $c->getCustomStyleObject();
                 if (is_object($style)) {
-                    $scl = $style->getValueList();
-                    $stylesheet->setValueList($scl);
+                    $collection = app(NormalizedVariableCollectionFactory::class)->createFromStyleValueList($style->getValueList());
+                    $stylesheet->setVariableCollection($collection);
                 }
                 $response = new Response();
                 $response->headers->set('Content-Type', 'text/css');
@@ -34,6 +38,9 @@ class Stylesheet extends Controller
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function page($cID, $stylesheet)
     {
         $c = Page::getByID($cID, 'ACTIVE');
@@ -44,8 +51,8 @@ class Stylesheet extends Controller
                 $stylesheet = $theme->getStylesheetObject($stylesheet);
                 $style = $c->getCustomStyleObject();
                 if (is_object($style)) {
-                    $scl = $style->getValueList();
-                    $stylesheet->setValueList($scl);
+                    $collection = app(NormalizedVariableCollectionFactory::class)->createFromStyleValueList($style->getValueList());
+                    $stylesheet->setVariableCollection($collection);
                 }
                 $response = new Response();
                 $response->headers->set('Content-Type', 'text/css');

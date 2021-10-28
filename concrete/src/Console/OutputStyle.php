@@ -11,7 +11,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Terminal;
 
 /**
- * concrete5's output style.
+ * Concrete's output style.
  * Inspiration goes to illuminate/console
  */
 class OutputStyle extends SymfonyStyle

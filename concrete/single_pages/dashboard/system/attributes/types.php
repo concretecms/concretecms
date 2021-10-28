@@ -18,7 +18,7 @@ $valt = Core::make('token');
 			<th><?=t('Name')?></th>
 			<?php foreach ($categories as $cat) {
     ?>
-				<th><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></th>
+				<th style="width: 95px; text-align: center" ><?=$txt->unhandle($cat->getAttributeKeyCategoryHandle())?></th>
 			<?php 
 } ?>
 		</tr>
@@ -71,9 +71,9 @@ $types = PendingAttributeType::getList(); ?>
                             echo $form->hidden("atHandle", $at->getAttributeTypeHandle());
 							print $formatter->getListIconElement();
     ?>
-                        <?=$at->getAttributeTypeDisplayName()?>
+							<?=$at->getAttributeTypeDisplayName()?>
 
-                        <?=$ch->submit(t("Install"), 'submit', 'right', 'btn-default btn-xs')?>
+							<?=$ch->submit(t("Install"), 'submit', 'right', 'btn-secondary btn-xs')?>
                         </form>
 
                     </span>

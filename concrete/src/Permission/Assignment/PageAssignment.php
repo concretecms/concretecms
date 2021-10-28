@@ -119,20 +119,21 @@ class PageAssignment extends Assignment
     /**
      * {@inheritdoc}
      *
-     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyToolsURL()
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
      */
-    public function getPermissionKeyToolsURL($task = false)
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
         $pageArray = $this->pk->getMultiplePageArray();
-        if (is_array($pageArray) && count($pageArray) > 0) {
-            $cIDStr = '';
+        if (is_array($pageArray) && $pageArray !== []) {
+            $cIDs = [];
             foreach ($pageArray as $sc) {
-                $cIDStr .= '&cID[]=' . $sc->getCollectionID();
+                $cIDs[] = $sc->getCollectionID();
             }
-
-            return parent::getPermissionKeyToolsURL($task) . $cIDStr;
+            $options += ['cID' => $cIDs];
         } else {
-            return parent::getPermissionKeyToolsURL($task) . '&cID=' . $this->getPermissionObject()->getCollectionID();
+            $options += ['cID' => $this->getPermissionObject()->getCollectionID()];
         }
+
+        return parent::getPermissionKeyTaskURL($task, $options);
     }
 }

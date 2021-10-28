@@ -16,12 +16,12 @@ use Concrete\Core\Permission\Access\ListItem\ListItem;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Permission\Logger;
 use Concrete\Core\User\User;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 use Psr\Log\LoggerInterface;
 
-class LogAssignmentTest extends \PHPUnit_Framework_TestCase
+class LogAssignmentTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     public function testShouldLogPermissionAssignment()
     {

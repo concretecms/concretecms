@@ -6,15 +6,6 @@ use Config;
 
 class CssAsset extends Asset
 {
-    /**
-     * @var bool
-     */
-    protected $assetSupportsMinification = true;
-
-    /**
-     * @var bool
-     */
-    protected $assetSupportsCombination = true;
 
     /**
      * The default media of this asset.
@@ -182,9 +173,6 @@ class CssAsset extends Asset
                     $contents = $asset->getAssetContents();
                     if (isset($contents)) {
                         $contents = self::changePaths($contents, $asset->getAssetURLPath(), $relativeDirectory);
-                        if ($asset->assetSupportsMinification()) {
-                            $contents = \CssMin::minify($contents);
-                        }
                         $css .= $contents."\n\n";
                     }
                 }

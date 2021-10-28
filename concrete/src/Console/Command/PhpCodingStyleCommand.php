@@ -12,7 +12,7 @@ use RuntimeException;
 use SplFileInfo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 class PhpCodingStyleCommand extends Command
 {
@@ -33,8 +33,9 @@ EOT
         parent::__construct($name);
     }
 
-    public function handle(PhpFixer $fixer, EventDispatcherInterface $eventDispatcher)
+    public function handle(PhpFixer $fixer, EventDispatcher $eventDispatcher)
     {
+        class_alias('Symfony\Component\EventDispatcher\Event', 'PhpCsFixer\Event\Event');
         $action = $this->input->getArgument('action');
         switch ($action) {
             case 'fix':
@@ -77,24 +78,27 @@ EOT
         $this->printErrors($errors, $dryRun);
         $this->printCountersTable($counters, $dryRun);
         if ($dryRun) {
-            return empty($changes) && $errors->isEmpty() ? 0 : 1;
+            return empty($changes) && $errors->isEmpty() ? static::SUCCESS : static::FAILURE;
         }
 
-        return $errors->isEmpty() ? 0 : 1;
+        return $errors->isEmpty() ? static::SUCCESS : static::FAILURE;
     }
 
     protected function configure()
     {
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
+
         $this->setHelp(<<<EOT
 Check or fix the PHP coding style.
 
 Return values when checking the coding style:
-- 0: the coding style is valid and no error occurred
-- 1: some fixes are needed or some error occurred
+- {$okExitCode}: the coding style is valid and no error occurred
+- {$errExitCode}: some fixes are needed or some error occurred
 
 Return values when applying the coding style:
-- 0: no error occurred
-- 1: some error occurred
+- {$okExitCode}: no error occurred
+- {$errExitCode}: some error occurred
 EOT
         );
     }

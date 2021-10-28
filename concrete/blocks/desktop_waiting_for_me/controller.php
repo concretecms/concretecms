@@ -30,8 +30,6 @@ class Controller extends BlockController
 
     public function view()
     {
-        $this->requireAsset('core/notification');
-
         $filterValues = ['' => t('** Show All')];
 
         $factory = $this->app->make(FilterListFactory::class);

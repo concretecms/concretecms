@@ -24,6 +24,7 @@ class EditUserPropertiesUserKey extends UserKey
             $asl->setAllowEditAvatar(1);
             $asl->setAllowEditTimezone(1);
             $asl->setAllowEditDefaultLanguage(1);
+            $asl->setAllowEditHomeFileManagerFolderID(1);
             $asl->setAttributesAllowedArray($allAKIDs);
             $asl->setAttributesAllowedPermission('A');
 
@@ -62,6 +63,9 @@ class EditUserPropertiesUserKey extends UserKey
             if ($l->allowEditDefaultLanguage() && (!in_array('uDefaultLanguage', $excluded))) {
                 $asl->setAllowEditDefaultLanguage(1);
             }
+            if ($l->allowEditHomeFileManagerFolderID() && (!in_array('uHomeFileManagerFolderID', $excluded))) {
+                $asl->setAllowEditHomeFileManagerFolderID(1);
+            }
             if ($l->getAccessType() == UserKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditUserName()) {
                 $asl->setAllowEditUserName(0);
                 $excluded[] = 'uName';
@@ -85,6 +89,10 @@ class EditUserPropertiesUserKey extends UserKey
             if ($l->getAccessType() == UserKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditDefaultLanguage()) {
                 $asl->setAllowEditDefaultLanguage(0);
                 $excluded[] = 'uDefaultLanguage';
+            }
+            if ($l->getAccessType() == UserKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditHomeFileManagerFolderID()) {
+                $asl->setAllowEditHomeFileManagerFolderID(0);
+                $excluded[] = 'uHomeFileManagerFolderID';
             }
             if ($l->getAttributesAllowedPermission() == 'N') {
                 $akIDs = array();

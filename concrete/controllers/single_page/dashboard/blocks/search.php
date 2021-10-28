@@ -7,7 +7,6 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Search\ColumnSet\DefaultSet;
 use Concrete\Core\File\Search\Result\Result;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Controller\Search\Files as SearchFilesController;
 use View;
 use Loader;
 

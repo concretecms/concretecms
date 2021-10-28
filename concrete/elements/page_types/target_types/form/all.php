@@ -1,7 +1,12 @@
 <?php
-
 defined('C5_EXECUTE') or die("Access Denied.");
-$form = Loader::helper('form');
+/**
+ * @var Concrete\Core\Page\Page $target
+ * @var Concrete\Core\Page\Type\Composer\Control\Control $control
+ * @var Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration $configuration
+ */
+
+$form = app('helper/form');
 $cParentID = false;
 if (is_object($target)) {
     $cParentID = $target->getCollectionID();
@@ -20,7 +25,7 @@ if (is_object($control->getPageObject())) {
 if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $configuration->getPageTypePublishTargetTypeID()) {
     $configuredTarget = $pagetype->getPageTypePublishTargetObject();
 
-    $ps = Loader::helper('form/page_selector');
+    $ps = app('helper/form/page_selector');
     if ($configuredTarget->getSelectorFormFactor() == 'sitemap_in_page') {
         if ($configuredTarget->getStartingPointPageID()) {
             $siteMapParentID = $configuredTarget->getStartingPointPageID();

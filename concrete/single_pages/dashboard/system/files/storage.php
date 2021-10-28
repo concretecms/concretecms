@@ -55,7 +55,7 @@ switch ($controller->getTask()) {
                     <?= $form->label('fslName', t('Name')); ?>
                     <div class="input-group">
                         <?= $form->text('fslName', $fslName); ?>
-                        <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                        <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
                     </div>
                 </div>
                 <?php
@@ -67,15 +67,15 @@ switch ($controller->getTask()) {
                 ?>
                 <div class="form-group">
                     <?= $form->label('fslIsDefault', t('Default Location')); ?>
-                    <div class="radio">
+                    <div class="form-check">
+                        <?= $form->radio('fslIsDefault', 1, $fslIsDefault, $args); ?>
                         <label>
-                            <?= $form->radio('fslIsDefault', 1, $fslIsDefault, $args); ?>
                             <?= t('Yes, make this the default storage location for new files.'); ?>
                         </label>
                     </div>
-                    <div class="radio">
+                    <div class="form-check">
+                        <?= $form->radio('fslIsDefault', 0, $fslIsDefault, $args); ?>
                         <label>
-                            <?= $form->radio('fslIsDefault', 0, $fslIsDefault, $args); ?>
                             <?= t('No, this is not the default storage location.'); ?>
                         </label>
                     </div>
@@ -89,11 +89,11 @@ switch ($controller->getTask()) {
             <?php } ?>
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
-                    <a href="<?= URL::to($c); ?>" class="btn pull-left btn-default"><?= t('Back'); ?></a>
+                    <a href="<?= URL::to($c); ?>" class="btn float-start btn-secondary"><?= t('Back'); ?></a>
                     <?php if ($location !== null) { ?>
-                        <button type="submit" class="btn btn-primary pull-right"><?= t('Save'); ?></button>
+                        <button type="submit" class="btn btn-primary float-end"><?= t('Save'); ?></button>
                     <?php } else { ?>
-                        <button type="submit" class="btn btn-primary pull-right"><?= t('Add'); ?></button>
+                        <button type="submit" class="btn btn-primary float-end"><?= t('Add'); ?></button>
                     <?php } ?>
                 </div>
             </div>
@@ -116,19 +116,23 @@ switch ($controller->getTask()) {
         <ul class="item-select-list">
             <?php foreach ($locations as $location) { ?>
                 <li>
-                    <a href="<?= $view->action('edit', $location->getID()); ?>"><i class="fa fa-hdd-o"></i> <?= $location->getDisplayName(); ?></a>
+                    <a href="<?= $view->action('edit', $location->getID()); ?>"><i class="fas fa-hdd"></i> <?= $location->getDisplayName(); ?></a>
                 </li>
             <?php } ?>
         </ul>
         <form method="get" action="<?= $view->action('select_type'); ?>" id="ccm-file-storage-location-type-form">
             <fieldset>
                 <legend><?= t('Add Location'); ?></legend>
-                <label for="atID"><?= t('Choose Type'); ?></label>
-                <div class="form-inline">
-                    <div class="form-group">
-                        <?= $form->select('fslTypeID', $types); ?>
+                <div class="form-group">
+                    <label for="atID"><?= t('Choose Type'); ?></label>
+                    <div class="row row-cols-auto g-0 align-items-center">
+                        <div class="me-2 col-auto">
+                            <?= $form->select('fslTypeID', $types); ?>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-secondary"><?= t('Go'); ?></button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-default"><?= t('Go'); ?></button>
                 </div>
             </fieldset>
         </form>

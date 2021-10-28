@@ -10,6 +10,7 @@ use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Updater\ApplicationUpdate\DiagnosticFactory;
 use Config;
+use GuzzleHttp\Psr7\Request;
 
 class ApplicationUpdate
 {
@@ -135,35 +136,37 @@ class ApplicationUpdate
     public function getDiagnosticObject()
     {
         $app = Application::getFacadeApplication();
-        $client = $app->make('http/client');
-        $request = $client->getRequest();
-        $request->setUri(Config::get('concrete.updates.services.inspect_update'));
-        $request->setMethod('POST');
-        $request->getPost()->set('current_version', Config::get('concrete.version_installed'));
-        $request->getPost()->set('requested_version', $this->getVersion());
-        $request->getPost()->set('site_url', (string) \Core::getApplicationURL());
+
+        $formData = [
+            'current_version' => Config::get('concrete.version_installed'),
+            'requested_version' => $this->getVersion(),
+            'site_url' => (string) \Core::getApplicationURL()
+        ];
 
         $mi = Marketplace::getInstance();
         if ($mi->isConnected() && !$mi->hasConnectionError()) {
             $config = \Core::make('config/database');
-            $request->getPost()->set('marketplace_token', $config->get('concrete.marketplace.token'));
+            $formData['marketplace_token'] = $config->get('concrete.marketplace.token');
             $list = Package::getInstalledList();
             $packages = [];
             foreach ($list as $pkg) {
                 $packages[] = ['version' => $pkg->getPackageVersion(), 'handle' => $pkg->getPackageHandle()];
             }
-            $request->getPost()->set('packages', $packages);
+            $formData['packages'] = $packages;
         }
+
         $info = \Core::make('\Concrete\Core\System\Info');
         $overrides = $info->getOverrideList();
-        $request->getPost()->set('overrides', $overrides);
         $info = $info->getJSONOBject();
-        $request->getPost()->set('environment', json_encode($info));
+        $formData['overrides'] = $overrides;
+        $formData['environment'] = json_encode($info);
 
-        $client->setMethod('POST');
-        $response = $client->send();
-        $body = $response->getBody();
+        $client = $app->make('http/client');
+        $response = $client->post(Config::get('concrete.updates.services.inspect_update'), [
+            'form_params' => $formData
+        ]);
 
+        $body = $response->getBody()->getContents();
         $diagnostic = DiagnosticFactory::getFromJSON($body);
 
         return $diagnostic;

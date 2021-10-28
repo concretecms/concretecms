@@ -14,14 +14,11 @@ use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\Notification\UserNotificationEventHandler;
 use Hamcrest\Core\IsEqual;
 use Hamcrest_Core_IsEqual;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 
-class UserNotificationEventHandlerTest extends PHPUnit_Framework_TestCase
+class UserNotificationEventHandlerTest extends TestCase
 {
-
-    use MockeryPHPUnitIntegration;
 
     public function testHandlingEvent()
     {

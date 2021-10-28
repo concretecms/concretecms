@@ -5,12 +5,13 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\File\Service\File;
-use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Support\Facade\Package;
+
+use Concrete\Core\Legacy\TaskPermission;
+use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\PathUrlResolver;
-use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Exception;
 use Concrete\Core\Http\Request;
 
@@ -23,6 +24,7 @@ class Marketplace implements ApplicationAwareInterface
     const E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED = 21;
     const E_UNRECOGNIZED_SITE_TOKEN = 22;
     const E_DELETED_SITE_TOKEN = 31;
+    const E_SITE_TYPE_MISMATCH_MULTISITE = 34;
     const E_CONNECTION_TIMEOUT = 41;
     const E_GENERAL_CONNECTION_ERROR = 99;
 
@@ -78,12 +80,16 @@ class Marketplace implements ApplicationAwareInterface
 
         if ($csToken != '') {
             $fh = $this->app->make('helper/file');
+            $installationService = $this->app->make(InstallationService::class);
+            if ($installationService->isMultisiteEnabled()) {
+                $ms = '&ms=1';
+            }
             $csiURL = urlencode($this->getSiteURL());
-            $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+            $url = $this->config->get('concrete.urls.concrete') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION . $ms;
             $vn = $this->app->make('helper/validation/numbers');
             $r = $this->get($url);
 
-            if ($r === null) {
+            if ($r === null && !$this->connectionError) {
                 $this->isConnected = true;
             } else {
                 if ($vn->integer($r)) {
@@ -114,16 +120,15 @@ class Marketplace implements ApplicationAwareInterface
         try {
             $result = $this->fileHelper->getContents(
                 $url,
-                $this->config->get('concrete.marektplace.request_timeout'));
-        } catch (TimeoutException $e) {
-            // Catch a timeout
-            $this->connectionError = self::E_CONNECTION_TIMEOUT;
-
-            return null;
+                $this->config->get('concrete.marketplace.request_timeout'));
         } catch (Exception $e) {
             $this->connectionError = self::E_GENERAL_CONNECTION_ERROR;
 
             return null;
+        }
+
+        if ($result === false) {
+            $this->connectionError = self::E_GENERAL_CONNECTION_ERROR;
         }
 
         return $result ?: null;
@@ -151,34 +156,42 @@ class Marketplace implements ApplicationAwareInterface
         // Get the marketplace instance
         $marketplace = static::getInstance();
         $file .= '?csiURL=' . urlencode($marketplace->getSiteURL()) . "&csiVersion=" . APP_VERSION;
-
-        // Retreive the package
-        $pkg = $marketplace->get($file);
-
+        $timestamp = time();
+        $tmpFile = $marketplace->fileHelper->getTemporaryDirectory() . '/' . $timestamp . '.zip';
         $error = $marketplace->app->make('error');
-        if (empty($pkg)) {
+
+        $chunksize = 1 * (1024 * 1024); // split into 1MB chunks
+        $handle = fopen($file, 'rb');
+        $fp = fopen($tmpFile, 'w');
+
+        if ($handle === false) {
             $error->add(t('An error occurred while downloading the package.'));
-        }
-        if ($pkg == \Package::E_PACKAGE_INVALID_APP_VERSION) {
-            $error->add(t('This package isn\'t currently available for this version of concrete5 . Please contact the maintainer of this package for assistance.'));
-        }
-
-        $file = time();
-        // Use the same method as the Archive library to build a temporary file name.
-        $tmpFile = $marketplace->fileHelper->getTemporaryDirectory() . '/' . $file . '.zip';
-        $fp = fopen($tmpFile, "wb");
-        if ($fp) {
-            fwrite($fp, $pkg);
-            fclose($fp);
+        } else if ($fp === false) {
+            $error->add(t('Concrete was not able to save the package.'));
         } else {
-            $error->add(t('concrete5 was not able to save the package after download.'));
+            while (!feof($handle)) {
+                $data = fread($handle, $chunksize);
+
+                if ($data == \Package::E_PACKAGE_INVALID_APP_VERSION) {
+                    $error->add(t('This package isn\'t currently available for this version of Concrete . Please contact the maintainer of this package for assistance.'));
+                } else {
+                    fwrite($fp, $data, strlen($data));
+                }
+            }
+
+            fclose($handle);
+            fclose($fp);
         }
 
-        if ($error->has()) {
+        if($error->has()) {
+            if (file_exists($tmpFile)) {
+                @unlink($tmpFile);
+            }
+
             return $error;
+        } else {
+            return $timestamp;
         }
-
-        return $file;
     }
 
     /**
@@ -228,7 +241,7 @@ class Marketplace implements ApplicationAwareInterface
         // Retrieve the URL contents
         $csToken = $marketplace->databaseConfig->get('concrete.marketplace.token');
         $csiURL = urlencode($marketplace->getSiteURL());
-        $url = $marketplace->config->get('concrete.urls.concrete5') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
+        $url = $marketplace->config->get('concrete.urls.concrete') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
         $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $json = $marketplace->get($url);
 
@@ -273,7 +286,7 @@ class Marketplace implements ApplicationAwareInterface
     public function getSitePageURL()
     {
         $token = $this->databaseConfig->get('concrete.marketplace.url_token');
-        $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.site_page');
+        $url = $this->config->get('concrete.urls.concrete') . $this->config->get('concrete.urls.paths.site_page');
 
         return $url . '/' . $token;
     }
@@ -285,9 +298,9 @@ class Marketplace implements ApplicationAwareInterface
         // b. pass you through to the page AFTER connecting.
         $tp = new TaskPermission();
         if ($this->request->getScheme() === 'https') {
-            $frameURL = $this->config->get('concrete.urls.concrete5_secure');
+            $frameURL = $this->config->get('concrete.urls.concrete_secure');
         } else {
-            $frameURL = $this->config->get('concrete.urls.concrete5');
+            $frameURL = $this->config->get('concrete.urls.concrete');
         }
         if ($tp->canInstallPackages()) {
             $csToken = null;
@@ -308,9 +321,9 @@ class Marketplace implements ApplicationAwareInterface
                 if ($this->hasConnectionError()) {
                     if ($this->connectionError == self::E_DELETED_SITE_TOKEN) {
                         $connectMethod = 'view';
-                        $csToken = self::generateSiteToken();
-
-                        if (!$csToken && $this->connectionError === self::E_CONNECTION_TIMEOUT) {
+                        try {
+                            $csToken = self::generateSiteToken();
+                        } catch (RequestException $exception) {
                             return '<div class="ccm-error">' .
                                 t('Unable to generate a marketplace token. Request timed out.') .
                                 '</div>';
@@ -320,9 +333,9 @@ class Marketplace implements ApplicationAwareInterface
                     }
                 } else {
                     // new connection
-                    $csToken = self::generateSiteToken();
-
-                    if (!$csToken && $this->connectionError === self::E_CONNECTION_TIMEOUT) {
+                    try {
+                        $csToken = self::generateSiteToken();
+                    } catch (RequestException $exception) {
                         return '<div class="ccm-error">' .
                         t('Unable to generate a marketplace token. Request timed out.') .
                         '</div>';
@@ -341,7 +354,7 @@ class Marketplace implements ApplicationAwareInterface
 
             if (!$csToken && !$this->isConnected()) {
                 return '<div class="ccm-error">' . t(
-                    'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be blacklisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concrete5.org">help@concrete5.org</a>.') . '</div>';
+                    'Unable to generate a marketplace token. Please ensure that allow_url_fopen is turned on, or that cURL is enabled on your server. If these are both true, It\'s possible your site\'s IP address may be denylisted for some reason on our server. Please ask your webhost what your site\'s outgoing cURL request IP address is, and email it to us at <a href="mailto:help@concretecms.com">help@concretecms.com</a>.') . '</div>';
             } else {
                 $time = time();
                 $ifr = '<script type="text/javascript">
@@ -373,11 +386,13 @@ class Marketplace implements ApplicationAwareInterface
 
     /**
      * @return bool|string
+     *
+     * @throws RequestException
      */
     public function generateSiteToken()
     {
         return $this->get(
-            $this->config->get('concrete.urls.concrete5') .
+            $this->config->get('concrete.urls.concrete') .
             $this->config->get('concrete.urls.paths.marketplace.connect_new_token'));
     }
 
@@ -407,7 +422,7 @@ class Marketplace implements ApplicationAwareInterface
                     'Unable to get information about this product.') . '</div>';
             }
             if ($this->isConnected()) {
-                $url = $this->config->get('concrete.urls.concrete5_secure') . $this->config->get('concrete.urls.paths.marketplace.checkout');
+                $url = $this->config->get('concrete.urls.concrete_secure') . $this->config->get('concrete.urls.paths.marketplace.checkout');
                 $csiURL = urlencode($this->getSiteURL());
                 $csiBaseURL = $csiURL;
                 $csToken = $this->getSiteToken();

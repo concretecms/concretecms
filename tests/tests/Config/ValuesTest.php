@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Config;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ValuesTest extends PHPUnit_Framework_TestCase
+class ValuesTest extends TestCase
 {
     public function provideConfiguredAliases()
     {

@@ -19,8 +19,6 @@ class Color
      */
     public function output($inputName, $value = null, $options = [])
     {
-        $view = View::getInstance();
-        $view->requireAsset('core/colorpicker');
         $r = Request::getInstance();
         if ($r->request->has($inputName)) {
             $value = h($r->request->get($inputName));

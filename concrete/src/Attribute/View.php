@@ -19,6 +19,7 @@ class View extends AbstractView
 {
     protected $attributeValue;
     protected $attributeKey;
+    protected $attributeObject;
     protected $attributeType;
     protected $attributePkgHandle;
     protected $templateLocator;
@@ -32,6 +33,14 @@ class View extends AbstractView
     protected function getAttributeKey()
     {
         return $this->attributeKey;
+    }
+
+    /**
+     * @param ObjectInterface $attributeObject
+     */
+    public function setAttributeObject(ObjectInterface $attributeObject): void
+    {
+        $this->attributeObject = $attributeObject;
     }
 
     protected function constructView($mixed)
@@ -144,6 +153,9 @@ class View extends AbstractView
             $this->controller = $this->attributeType->getController();
             $this->controller->setAttributeKey($this->attributeKey);
             $this->controller->setAttributeValue($this->attributeValue);
+            if (isset($this->attributeObject)) {
+                $this->controller->setAttributeObject($this->attributeObject);
+            }
             if (is_object($this->attributeKey)) {
                 $this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
             }

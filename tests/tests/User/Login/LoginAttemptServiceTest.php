@@ -7,15 +7,13 @@ use Concrete\Core\Entity\User\LoginAttempt;
 use Concrete\Core\Entity\User\LoginAttemptRepository;
 use Concrete\Core\User\Login\LoginAttemptService;
 use Doctrine\ORM\EntityManager;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
-class LoginAttemptServiceTest extends PHPUnit_Framework_TestCase
+class LoginAttemptServiceTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
     public function testPruneAttemptsFromConfig()
     {
@@ -24,7 +22,7 @@ class LoginAttemptServiceTest extends PHPUnit_Framework_TestCase
         $fakeAttempt2 = M::mock(LoginAttempt::class);
         $config = M::mock(Repository::class);
         $repository = M::mock(LoginAttemptRepository::class);
-        $director = M::mock(EventDispatcherInterface::class);
+        $director = M::mock(EventDispatcher::class);
 
         $em = M::mock(EntityManager::class);
         $em->shouldReceive('remove')->once()->with($fakeAttempt);

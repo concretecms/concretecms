@@ -2,7 +2,8 @@
 
 return [
     'drivers' => [
-        'c5_pdo_mysql' => '\Concrete\Core\Database\Driver\PDOMySqlConcrete5\Driver',
+        'c5_pdo_mysql' => '\Concrete\Core\Database\Driver\PDOMySqlConcrete\Driver',
+        'concrete_pdo_mysql' => '\Concrete\Core\Database\Driver\PDOMySqlConcrete\Driver',
     ],
 
     /*
@@ -33,6 +34,13 @@ return [
             ],
         ],
     ],
+
+    'redis' => [
+
+        'parameters' => [],
+        'options' => []
+    ],
+
 
     // The preferred database character set (derived from preferred_collation if empty)
     'preferred_character_set' => '',

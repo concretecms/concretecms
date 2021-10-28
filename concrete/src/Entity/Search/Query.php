@@ -1,12 +1,18 @@
 <?php
 namespace Concrete\Core\Entity\Search;
 
+use Concrete\Core\Foundation\Serializer\JsonSerializer;
+use Concrete\Core\Search\Field\FieldInterface;
+use Concrete\Core\Search\ProviderInterface;
+use Concrete\Core\Utility\Service\Xml;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
  * @ORM\Embeddable
  */
-class Query implements \JsonSerializable
+class Query implements \JsonSerializable, DenormalizableInterface
 {
     const MAX_ITEMS_PER_PAGE = 10;
 
@@ -26,7 +32,7 @@ class Query implements \JsonSerializable
     private $itemsPerPage;
 
     /**
-     * @return mixed
+     * @return FieldInterface[]
      */
     public function getFields()
     {
@@ -39,6 +45,16 @@ class Query implements \JsonSerializable
     public function setFields($fields)
     {
         $this->fields = $fields;
+    }
+
+    /**
+     * Adds a field to the query object.
+     *
+     * @param FieldInterface $field
+     */
+    public function addField(FieldInterface $field)
+    {
+        $this->fields[] = $field;
     }
 
     /**
@@ -61,6 +77,8 @@ class Query implements \JsonSerializable
     {
         return [
             'fields' => $this->fields,
+            'columnSet' => $this->columns,
+            'itemsPerPage' => $this->getItemsPerPage(),
         ];
     }
 
@@ -79,4 +97,31 @@ class Query implements \JsonSerializable
     {
         return $this->itemsPerPage;
     }
+
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
+    {
+        $searchProvider = $context['searchProvider'];
+        /**
+         * @var $searchProvider ProviderInterface
+         */
+        $fieldManager = $searchProvider->getFieldManager();
+        foreach($data['fields'] as $fieldRecord) {
+            $field = $fieldManager->getFieldByKey($fieldRecord['key']);
+            $field = $denormalizer->denormalize($fieldRecord, get_class($field), 'json', $context);
+            $this->fields[] = $field;
+        }
+        $columnSet = $searchProvider->getBaseColumnSet();
+        $all = $searchProvider->getAllColumnSet();
+        foreach($data['columnSet']['columns'] as $columnRecord) {
+            $column = $all->getColumnByKey($columnRecord['columnKey']);
+            $columnSet->addColumn($column);
+            if ($data['columnSet']['sortColumn'] == $columnRecord['columnKey']) {
+                $columnSet->setDefaultSortColumn($column);
+            }
+        }
+        $this->setColumns($columnSet);
+        $this->itemsPerPage = $data['itemsPerPage'];
+    }
+
+
 }

@@ -5,82 +5,61 @@ namespace Concrete\Core\StyleCustomizer\Style\Value;
 class ImageValue extends Value
 {
     /**
-     * The URL of the image.
-     *
      * @var string
      */
-    protected $imageUrl = '';
+    protected $imageURL;
 
     /**
-     * The ID of the associated File instance.
-     *
-     * @var int|null
+     * @var integer
      */
-    protected $fID;
+    protected $imageFileID;
 
-    /**
-     * Set the URL of the image.
-     *
-     * @param string $url
-     *
-     * @return $this
-     */
-    public function setUrl($url)
+    public function __construct()
     {
-        $this->imageUrl = (string) $url;
-
-        return $this;
     }
 
     /**
-     * Get the URL of the image.
-     *
      * @return string
      */
-    public function getUrl()
+    public function getImageURL(): ?string
     {
-        return (string) $this->imageUrl;
+        return $this->imageURL;
     }
 
     /**
-     * Set the ID of the associated File instance.
-     *
-     * @param int|null $fID
-     *
-     * @return $this
+     * @param string $imageURL
      */
-    public function setFileID($fID)
+    public function setImageURL(string $imageURL): void
     {
-        $this->fID = $fID ? (int) $fID : null;
+        $this->imageURL = $imageURL;
     }
 
     /**
-     * Get the ID of the associated File instance.
-     *
-     * @return int|null
+     * @return int
      */
-    public function getFileID()
+    public function getImageFileID(): ?int
     {
-        return $this->fID ? (int) $this->fID : null;
+        return $this->imageFileID;
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Value\Value::toStyleString()
+     * @param int $imageFileID
      */
-    public function toStyleString()
+    public function setImageFileID(int $imageFileID): void
     {
-        return 'background-image: url(' . $this->getUrl() . ')';
+        $this->imageFileID = $imageFileID;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Value\Value::toLessVariablesArray()
-     */
-    public function toLessVariablesArray()
+
+    public function jsonSerialize()
     {
-        return [$this->getVariable() . '-image' => "'" . $this->getUrl() . "'"];
+        return [
+            'imageURL' => $this->getImageURL(),
+            'imageFileID' => $this->getImageFileID(),
+        ];
     }
+
+
+
+
 }

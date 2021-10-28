@@ -5,7 +5,7 @@ namespace Concrete\Tests\Database\EntityManager\Driver;
 use Concrete\Core\Database\EntityManager\Driver\ApplicationDriver;
 use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * ApplicationDriverTest.
@@ -13,7 +13,7 @@ use PHPUnit_Framework_TestCase;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class ApplicationDriverTest extends PHPUnit_Framework_TestCase
+class ApplicationDriverTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application
@@ -33,7 +33,7 @@ class ApplicationDriverTest extends PHPUnit_Framework_TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = Application::getFacadeApplication();
@@ -45,7 +45,7 @@ class ApplicationDriverTest extends PHPUnit_Framework_TestCase
     /**
      * Clean up after each tests.
      */
-    public function tearDown()
+    public function TearDown():void
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();
@@ -318,7 +318,7 @@ class ApplicationDriverTest extends PHPUnit_Framework_TestCase
      *
      * @param \Exception $e
      */
-    protected function onNotSuccessfulTest(\Exception $e)
+    protected function onNotSuccessfulTest(\Throwable $e):void
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();

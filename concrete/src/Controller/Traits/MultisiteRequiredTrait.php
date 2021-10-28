@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Controller\Traits;
 
 use Concrete\Core\Site\InstallationService;
@@ -9,16 +10,17 @@ use Concrete\Core\Site\InstallationService;
  */
 trait MultisiteRequiredTrait
 {
-
+    /**
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+     */
     public function on_start()
     {
         parent::on_start();
         $service = $this->app->make(InstallationService::class);
         if (!$service->isMultisiteEnabled()) {
-            $this->redirect('/dashboard/system/multisite/settings', 'multisite_required');
-            exit;
+            return $this->buildRedirect('/dashboard/system/multisite/settings', 'multisite_required');
         }
+
+        return null;
     }
-
-
 }

@@ -2,16 +2,20 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
-use Concrete\Controller\Element\Dashboard\Navigation;
-use Concrete\Controller\Element\Navigation\Menu;
 use Concrete\Core\Application\Service\DashboardMenu;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FavoritesNavigationCache;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\FavoritesNavigationFactory;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationFactory;
+use Concrete\Core\Navigation\Item\PageItem;
 use Cookie;
 use Loader;
 use Page;
-use BlockType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\User\User;
 use UserInfo;
+use URL;
+use Core;
+use PageList;
 
 class Dashboard extends BackendInterfacePageController
 {
@@ -24,20 +28,28 @@ class Dashboard extends BackendInterfacePageController
         return $dh->canRead();
     }
 
+    public function view()
+    {
+        // Moved all the logic for this into the view because we have to reference the view in multiple spots
+        // and passing the data around is tedious.
+    }
+
     protected function toggleFavorite($action)
     {
         $h = \Core::make('helper/concrete/dashboard');
         if ($h->inDashboard($this->page) && $this->permissions->canViewPage()) {
-            \Core::make("helper/concrete/ui")->clearInterfaceItemsCache();
+            $cache = $this->app->make(FavoritesNavigationCache::class);
+            $cache->clear();
             $u = $this->app->make(User::class);
-            if (\Core::make('token')->validate('access_bookmarks', $this->request->query->get('ccm_token'))) {
-                $qn = DashboardMenu::getMine();
-                if ($action == 'add' && !$qn->contains($this->page)) {
-                    $qn->add($this->page);
-                } else if ($qn->contains($this->page)) {
-                    $qn->remove($this->page);
+            if ($this->app->make('token')->validate('access_bookmarks', $this->request->query->get('ccm_token'))) {
+                $navigation = $this->app->make(FavoritesNavigationFactory::class)->createNavigation();
+                if ($action == 'add' && !$navigation->has(new PageItem($this->page))) {
+                    $navigation->add(new PageItem($this->page));
+                } elseif ($navigation->has(new PageItem($this->page))) {
+                    $navigation->remove(new PageItem($this->page));
                 }
-                $u->saveConfig('QUICK_NAV_BOOKMARKS', serialize($qn));
+                $u->saveConfig('DASHBOARD_FAVORITES', json_encode($navigation));
+
                 return new JsonResponse(['action' => $action]);
             }
         }
@@ -53,34 +65,4 @@ class Dashboard extends BackendInterfacePageController
         return $this->toggleFavorite('remove');
     }
 
-    public function view()
-    {
-        if ($this->request->get('tab')) {
-            Cookie::set('panels/dashboard/tab', $this->request->get('tab'));
-            $tab = $this->request->get('tab');
-        } else {
-            $tab = Cookie::get('panels/dashboard/tab');
-        }
-
-        $nav = array();
-        if ($tab != 'favorites') {
-            $nav = new \Concrete\Controller\Element\Navigation\DashboardMenu($this->page);
-            $this->set('nav', $nav);
-        } else {
-            $dh = Loader::helper('concrete/dashboard');
-            $qn = \Concrete\Core\Application\Service\DashboardMenu::getMine();
-            foreach ($qn->getItems() as $path) {
-                $c = Page::getByPath($path, 'ACTIVE');
-                if (is_object($c) && !$c->isError()) {
-                    $nav[] = $c;
-                }
-            }
-            $this->set('nav', $nav);
-        }
-
-        $u = $this->app->make(User::class);
-        $ui = UserInfo::getByID($u->getUserID());
-        $this->set('ui', $ui);
-        $this->set('tab', $tab);
-    }
 }

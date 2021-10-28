@@ -5,6 +5,8 @@ use Concrete\Core\Calendar\Event\Workflow\Progress\ProgressList;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\Core\Workflow\Request\CalendarEventRequest;
 use Concrete\Core\Calendar\Event\Event;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Validation\CSRF\Token;
 
 class CalendarEventProgress extends Progress implements SiteProgressInterface
 {
@@ -59,7 +61,7 @@ class CalendarEventProgress extends Progress implements SiteProgressInterface
         $filter .= ' order by ' . $sortBy;
         $r = $db->Execute('select wp.wpID from PageWorkflowProgress pwp inner join WorkflowProgress wp on pwp.wpID = wp.wpID where cID = ? ' . $filter, array($c->getCollectionID()));
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $wp = static::getByID($row['wpID']);
             if (is_object($wp)) {
                 $list[] = $wp;
@@ -72,7 +74,16 @@ class CalendarEventProgress extends Progress implements SiteProgressInterface
 
     public function getWorkflowProgressFormAction()
     {
-        return REL_DIR_FILES_TOOLS_REQUIRED . '/' . DIRNAME_WORKFLOW . '/categories/page?task=save_workflow_progress&cID=' . $this->eventID . '&wpID=' . $this->getWorkflowProgressID() . '&' . \Core::make('helper/validation/token')->getParameter('save_workflow_progress');
+        $url = app(ResolverManagerInterface::class)->resolve(['/ccm/system/workflow/categories/calendar_event/save_progress']);
+        $token = app(Token::class);
+        $query = $url->getQuery();
+        $query->modify([
+            'cID' => $this->eventID,
+            'wpID' => $this->getWorkflowProgressID(),
+            $token::DEFAULT_TOKEN_NAME => $token->generate('save_workflow_progress')
+        ]);
+        
+        return (string) $url->setQuery($query);
     }
 
     public function getPendingWorkflowProgressList()

@@ -3,6 +3,7 @@ namespace Concrete\Core\Express\Form\Control\View;
 
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\Control;
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Express\EntryList;
 use Concrete\Core\Express\Form\Context\ContextInterface;
 use Concrete\Core\Express\Form\OwnedEntityForm;
@@ -25,9 +26,15 @@ class AssociationView extends View
         parent::__construct($context, $control);
         $this->entry = $context->getEntry();
         $this->association = $this->control->getAssociation();
+        /**
+         * @var $entity Entity
+         */
         $entity = $this->association->getTargetEntity();
         if (AssociationControl::TYPE_ENTRY_SELECTOR != $control->getEntrySelectorMode()) {
             $list = new EntryList($entity);
+            if ($entity->usesSeparateSiteResultsBuckets()) {
+                $list->filterBySite(app('site')->getActiveSiteForEditing());
+            }
             $this->allEntries = $list->getResults();
         }
 

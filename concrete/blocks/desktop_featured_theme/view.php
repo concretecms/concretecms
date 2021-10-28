@@ -13,8 +13,8 @@
 				<h3><?=$remoteItem->getName()?></h3>
 				<p><?=$remoteItem->getDescription()?></p>
 				<div class="btn-group">
-					<a href="<?=$remoteItem->getRemoteURL()?>" class="btn btn-info"><?=$remoteItem->getDisplayPrice()?></a>
-					<a href="<?=$remoteItem->getRemoteURL()?>" class="btn btn-info"><?=t('Learn More')?></a>
+					<a href="<?=$remoteItem->getRemoteURL()?>" class="btn btn-primary active"><?=$remoteItem->getDisplayPrice()?></a>
+					<a href="<?=$remoteItem->getRemoteURL()?>" class="btn btn-primary"><?=t('Learn More')?></a>
 				</div>
 			</div>
 

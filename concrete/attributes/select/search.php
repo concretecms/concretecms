@@ -2,22 +2,24 @@
 <?php
 $options = $this->controller->getOptions();
 if ($akSelectAllowMultipleValues) {
+    $index = 1;
     ?>
 
 	<?php foreach ($options as $opt) {
     ?>
-		<div class="checkbox"><label><input type="checkbox" name="<?=$this->field('atSelectOptionID')?>[]" value="<?=$opt->getSelectAttributeOptionID()?>" <?php if (in_array($opt->getSelectAttributeOptionID(), $selectedOptions)) {
+		<div class="form-check"><input class="form-check-input" type="checkbox" id="<?=$this->field('atSelectOptionID')?>[]_<?=$index?>" name="<?=$this->field('atSelectOptionID')?>[]" value="<?=$opt->getSelectAttributeOptionID()?>" <?php if (in_array($opt->getSelectAttributeOptionID(), $selectedOptions)) {
     ?> checked <?php 
 }
-    ?> /><?=$opt->getSelectAttributeOptionDisplayValue()?></label></div>
-	<?php 
+    ?> /><label class="form-check-label" for="<?=$this->field('atSelectOptionID')?>[]_<?=$index?>"><?=$opt->getSelectAttributeOptionDisplayValue()?></label></div>
+	<?php
+        $index++;
 }
     ?>
 
 <?php 
 } else {
     ?>
-	<select class="form-control" name="<?=$this->field('atSelectOptionID')?>[]">
+	<select class="form-select" name="<?=$this->field('atSelectOptionID')?>[]">
 		<option value=""><?=t('** All')?></option>
 	<?php foreach ($options as $opt) {
     ?>

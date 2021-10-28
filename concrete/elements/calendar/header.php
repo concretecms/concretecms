@@ -16,17 +16,18 @@ if (!isset($month)) {
 <div class="ccm-dashboard-header-buttons">
     <div class="btn-group">
         <div class="btn-group">
-            <button type="button" id="calendar_button" class="btn btn-default" data-toggle="dropdown">
+            <button type="button" id="calendar_button" class="btn btn-secondary dropdown-toggle"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?= h($calendar->getName()) ?>
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="calendar_button">
+            <div class="dropdown-menu" role="menu" aria-labelledby="calendar_button">
                 <?php foreach ($calendars as $cal) {
     $p = new \Permissions($cal);
     if ($p->canViewCalendarInEditInterface()) {
         ?>
-                        <li><a href="<?= URL::to($preferences->getPreferredViewPath(), 'view',
-                                $cal->getID()) ?>"><?= h($cal->getName()) ?></a></li>
+                        <a href="<?= URL::to($preferences->getPreferredViewPath(), 'view',
+                                $cal->getID()) ?>" class="dropdown-item"><?= h($cal->getName()) ?></a>
                     <?php
     }
     ?>
@@ -35,20 +36,19 @@ if (!isset($month)) {
 } ?>
                 <?php if ($calendarPermissions->canEditCalendar() || $calendarPermissions->canEditCalendarPermissions()) {
     ?>
-                <li class="divider"></li>
-                <li class="dropdown-header"><?= t('Edit') ?></li>
+                <div class="dropdown-divider"></div>
 
             <?php if ($calendarPermissions->canEditCalendar()) {
     ?>
-                <li><a href="<?= URL::to('/dashboard/calendar/add', $calendar->getID()) ?>"><?= t("Details") ?></a>
-                </li>
+                <a href="<?= URL::to('/dashboard/calendar/add', $calendar->getID()) ?>"
+                   class="dropdown-item"><?= t("Details") ?></a>
             <?php
 }
     ?>
             <?php if ($calendarPermissions->canEditCalendarPermissions()) {
     ?>
-                <li><a href="<?= URL::to('/dashboard/calendar/permissions',
-                        $calendar->getID()) ?>"><?= t("Permissions") ?></a>
+                <a href="<?= URL::to('/dashboard/calendar/permissions',
+                    $calendar->getID()) ?>" class="dropdown-item"><?= t("Permissions") ?></a>
 
                     <?php
 }
@@ -58,25 +58,25 @@ if (!isset($month)) {
 
                     <?php if ($calendarPermissions->canDeleteCalendar()) {
     ?>
-                <li class="divider"></li>
-                <li><a href="#" data-dialog="delete-calendar"><span class="text-danger"><?= t(
-                                "Delete Calendar") ?></span></a></li>
+                        <div class="dropdown-divider"></div>
+                <a href="#" data-dialog="delete-calendar" class="dropdown-item"><span class="text-danger"><?= t(
+                                "Delete Calendar") ?></span></a>
             <?php
 } ?>
-            </ul>
+            </div>
         </div>
         <a href="<?= URL::to('/dashboard/calendar/events', 'view',
-            $calendar->getID()) ?>" class="btn btn-default <?php if ($mode != 'list') {
+            $calendar->getID()) ?>" class="btn btn-secondary <?php if ($mode != 'list') {
     ?>active<?php
-} ?>"><i class="fa fa-calendar"></i></a>
+} ?>"><i class="fas fa-calendar-alt"></i></a>
         <a href="<?= URL::to('/dashboard/calendar/event_list', 'view',
-            $calendar->getID()) ?>" class="btn btn-default <?php if ($mode == 'list') {
+            $calendar->getID()) ?>" class="btn btn-secondary <?php if ($mode == 'list') {
     ?>active<?php
-} ?>"><i class="fa fa-list"></i></a>
+} ?>"><i class="fas fa-list"></i></a>
         <?php if ($calendarPermissions->canAddCalendarEvent()) {
     ?>
-            <a class="dialog-launch btn btn-primary" dialog-width="640" dialog-title="<?= t('Add Event') ?>"
-               dialog-height="500"
+            <a class="dialog-launch btn btn-primary" dialog-width="1100" dialog-title="<?= t('Add Event') ?>"
+               dialog-height="600"
                href="<?= URL::to('/ccm/calendar/dialogs/event/add?caID=' . $calendar->getID()) ?>"><?= t("Add Event") ?></a>
         <?php
 } ?>
@@ -93,8 +93,8 @@ if (!isset($month)) {
             <p><?= t('Are you sure? This action cannot be undone.') ?></p>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-            <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?= t(
+            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+            <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?= t(
                     'Delete Calendar') ?></button>
         </div>
     </div>
@@ -124,9 +124,15 @@ if (!isset($month)) {
         width: 100%;
     }
 
-    table.ccm-dashboard-calendar > thead > tr > td,
-    table.ccm-dashboard-calendar {
-        border-width: 0px !important;
+    table.ccm-dashboard-calendar > thead > tr  {
+        border-width: 0 0 0 0 !important;
+    }
+    table.ccm-dashboard-calendar > thead > tr > td {
+        border-width: 0 0 0 0 !important;
+    }
+
+    table.ccm-dashboard-calendar > thead > tr > td h4 {
+        text-align: center;
     }
 
     table.ccm-dashboard-calendar td {

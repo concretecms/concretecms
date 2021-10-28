@@ -35,7 +35,7 @@ class CollectionAttributeTest extends AttributeTestCase
             'CollectionSearchIndexAttributes',
             'CollectionVersions',
             'CollectionVersionBlocks',
-            'GatheringDataSources', ]
+            ]
         );
         $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Page\PagePath',

@@ -77,32 +77,7 @@ class Type
         $child = $node->addChild('thumbnailtypes');
         $list = static::getList();
         foreach ($list as $link) {
-            $linkNode = $child->addChild('thumbnailtype');
-            $linkNode->addAttribute('name', $link->getName());
-            $linkNode->addAttribute('handle', $link->getHandle());
-            $linkNode->addAttribute('sizingMode', $link->getSizingMode());
-            $linkNode->addAttribute('upscalingEnabled', $link->isUpscalingEnabled() ? '1' : '0');
-            $linkNode->addAttribute('keepAnimations', $link->isKeepAnimations() ? '1' : '0');
-            if ($link->getWidth()) {
-                $linkNode->addAttribute('width', $link->getWidth());
-            }
-            if ($link->getHeight()) {
-                $linkNode->addAttribute('height', $link->getHeight());
-            }
-            if ($link->isRequired()) {
-                $linkNode->addAttribute('required', $link->isRequired());
-            }
-            $linkNode->addAttribute('limitedToFileSets', $link->isLimitedToFileSets() ? '1' : '0');
-            $filesetsNode = null;
-            foreach ($link->getAssociatedFileSets() as $afs) {
-                $fileSet = FileSet::getByID($afs->getFileSetID());
-                if ($fileSet !== null) {
-                    if ($filesetsNode === null) {
-                        $filesetsNode = $linkNode->addChild('fileSets');
-                    }
-                    $filesetsNode->addChild('fileSet')->addAttribute('name', $fileSet->getFileSetName());
-                }
-            }
+            $link->export($child);
         }
     }
 

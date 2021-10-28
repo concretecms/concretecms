@@ -38,7 +38,7 @@ final class PackPackageCommand extends Command
     const SHORTTAGS_KEEPECHO = 'keep-echo';
 
     /**
-     * Use SHORTTAGS_ALL for concrete5 5.x packages, SHORTTAGS_KEEPECHO for concrete5 8+ packages.
+     * Use SHORTTAGS_ALL for Concrete 5.x packages, SHORTTAGS_KEEPECHO for Concrete 8+ packages.
      *
      * @var string
      */
@@ -122,6 +122,8 @@ final class PackPackageCommand extends Command
         $filters = $this->createFilters($app, $packageInfo);
         $writers = $this->createWriters($app, $packageInfo);
         $packer->process($packageInfo, $filters, $writers);
+
+        return static::SUCCESS;
     }
 
     /**
@@ -136,7 +138,8 @@ final class PackPackageCommand extends Command
         $keepSources = self::KEEP_SOURCES;
         $keepComposerJson = self::KEEP_COMPOSER_JSON;
         $keepComposerLock = self::KEEP_COMPOSER_LOCK;
-        $errExitCode = self::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:package:pack')
             ->setAliases([
@@ -144,7 +147,7 @@ final class PackPackageCommand extends Command
                 'c5:pack-package',
             ])
             ->setDescription('Process a package (expand PHP short tags, compile icons and translations, create zip archive)')
-            ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a concrete5 package)')
+            ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to work on (or the path to a directory containing a Concrete package)')
             ->addEnvOption()
             ->addOption('short-tags', 's', InputOption::VALUE_REQUIRED, 'Expand PHP short tags [' . self::SHORTTAGS_ALL . '|' . self::SHORTTAGS_KEEPECHO . '|' . self::SHORTTAGS_NO . '|' . self::SHORTTAGS_AUTO . ']', self::SHORTTAGS_AUTO)
             ->addOption('compile-icons', 'i', InputOption::VALUE_REQUIRED, 'Compile SVG icons to PNG icons [' . self::YNA_YES . '|' . self::YNA_NO . '|' . self::YNA_AUTO . ']?', self::YNA_AUTO)
@@ -170,7 +173,7 @@ To include in the zip archive the composer.json file but not the composer.lock f
 Please remark that this command can also parse legacy (pre-5.7) packages.
 
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-pack
@@ -221,10 +224,10 @@ EOT
         $filters = [];
         switch ($this->input->getOption('compile-icons')) {
             case self::YNA_YES:
-                $filters[] = $app->make(SvgIconRasterizer::class, [$packageInfo->getMayorMinimumCoreVersion(), false, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(SvgIconRasterizer::class, ['coreVersion' => $packageInfo->getMayorMinimumCoreVersion(), 'checkEditDate' => false, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::YNA_AUTO:
-                $filters[] = $app->make(SvgIconRasterizer::class, [$packageInfo->getMayorMinimumCoreVersion(), true, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(SvgIconRasterizer::class, ['coreVersion' => $packageInfo->getMayorMinimumCoreVersion(), 'checkEditDate' => true, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::YNA_NO:
                 break;
@@ -233,10 +236,10 @@ EOT
         }
         switch ($this->input->getOption('compile-translations')) {
             case self::YNA_YES:
-                $filters[] = $app->make(TranslationCompiler::class, [false, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(TranslationCompiler::class, ['checkEditDate' => false, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::YNA_AUTO:
-                $filters[] = $app->make(TranslationCompiler::class, [true, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(TranslationCompiler::class, ['checkEditDate' => true, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::YNA_NO:
                 break;
@@ -249,10 +252,10 @@ EOT
         }
         switch ($shortTags) {
             case self::SHORTTAGS_ALL:
-                $filters[] = $app->make(ShortTagExpander::class, [true, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(ShortTagExpander::class, ['expandEcho' => true, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::SHORTTAGS_KEEPECHO:
-                $filters[] = $app->make(ShortTagExpander::class, [false, $this->output, $volatileDirectory]);
+                $filters[] = $app->make(ShortTagExpander::class, ['expandEcho' => false, 'output' => $this->output, 'volatileDirectory' => $volatileDirectory]);
                 break;
             case self::SHORTTAGS_NO:
                 break;
@@ -276,7 +279,7 @@ EOT
                 $excludeFlags |= $keepOptionFlags;
             }
         }
-        $filters[] = $app->make(FileExcluder::class, [$excludeFlags, $this->output]);
+        $filters[] = $app->make(FileExcluder::class, ['excludeFiles' => $excludeFlags, 'output' => $this->output]);
 
         return $filters;
     }
@@ -296,7 +299,7 @@ EOT
     {
         $writers = [];
         if ($this->input->getOption('update-source-directory')) {
-            $writers[] = $app->make(SourceUpdater::class, [$packageInfo->getPackageDirectory(), $this->output]);
+            $writers[] = $app->make(SourceUpdater::class, ['basePath' => $packageInfo->getPackageDirectory(), 'output' => $this->output]);
         }
         if ($this->input->getParameterOption(['--zip', '-z']) !== false) {
             $zipOption = (string) $this->input->getOption('zip');
@@ -305,10 +308,10 @@ EOT
             } else {
                 $zipFilename = $zipOption;
             }
-            $writers[] = $app->make(Zipper::class, [$zipFilename, $packageInfo->getHandle(), $this->output]);
+            $writers[] = $app->make(Zipper::class, ['zipFilename' => $zipFilename, 'rootDirectory' => $packageInfo->getHandle(), 'output' => $this->output]);
         }
         if ($this->input->getOption('copy') !== null) {
-            $writers[] = $app->make(Cloner::class, [$this->input->getOption('copy'), $this->input->getOption('overwrite'), $this->output]);
+            $writers[] = $app->make(Cloner::class, ['destinationDirectory' => $this->input->getOption('copy'), 'overwrite' => $this->input->getOption('overwrite'), 'output' => $this->output]);
         }
         if (empty($writers)) {
             throw new Exception('No operation will be performed');

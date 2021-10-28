@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Search\Field\Field;
 
+use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\File\FileList;
 use Concrete\Core\File\Type\Type;
 use Concrete\Core\Search\Field\AbstractField;
@@ -46,7 +47,7 @@ class PageTypeField extends AbstractField
             }
             ), $this->data['ptID']);
         } else {
-            $html = '<select name="ptID" class="form-control">';
+            $html = '<select name="ptID" class="form-select">';
             foreach($types as $type) {
                 $html .= '<optgroup label="' . $type->getSiteTypeName() . '">';
                 $types = \PageType::getList(false, $type);
@@ -59,6 +60,23 @@ class PageTypeField extends AbstractField
             $html .= '</select>';
         }
         return $html;
+    }
+
+    public function export(\SimpleXMLElement $element)
+    {
+        $fieldNode = $element->addChild('field');
+        $fieldNode->addAttribute('key', $this->getKey());
+        $fieldNode->addChild('pagetype', ContentExporter::replacePageTypeWithPlaceHolder($this->data['ptID']));
+    }
+
+    public function loadDataFromImport(\SimpleXMLElement $element)
+    {
+        if (!$this->isLoaded) {
+            $inspector = app('import/value_inspector');
+            $result = $inspector->inspect((string) $element->pagetype);
+            $this->data['ptID'] = $result->getReplacedValue();
+            $this->isLoaded = true;
+        }
     }
 
 

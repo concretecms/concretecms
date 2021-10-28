@@ -27,7 +27,6 @@ class Thumbnails extends DashboardPageController
 
     public function view()
     {
-        $this->requireAsset('core/colorpicker');
         $list = TypeService::getList();
         $this->set('types', $list);
     }
@@ -54,7 +53,6 @@ class Thumbnails extends DashboardPageController
             $this->set('allowConditionalThumbnails', false);
         } else {
             $this->set('allowConditionalThumbnails', true);
-            $this->requireAsset('selectize');
             $this->set('fileSetOptions', $this->getFileSetOptions());
             $this->set('fileSets', $this->getPublicFileSets(false));
         }

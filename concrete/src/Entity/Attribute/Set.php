@@ -1,12 +1,13 @@
 <?php
+
 namespace Concrete\Core\Entity\Attribute;
 
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Export\Item\AttributeSet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Concrete\Core\Export\Item\AttributeSet;
 
 /**
  * @ORM\Entity
@@ -18,7 +19,7 @@ use Concrete\Core\Export\Item\AttributeSet;
  *     }
  * )
  */
-class Set implements ExportableInterface
+class Set implements ExportableInterface, \JsonSerializable
 {
     use PackageTrait;
 
@@ -33,11 +34,6 @@ class Set implements ExportableInterface
      * @ORM\JoinColumn(name="akCategoryID", referencedColumnName="akCategoryID")
      */
     protected $category;
-
-    public function __construct()
-    {
-        $this->keys = new ArrayCollection();
-    }
 
     /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned":true})
@@ -65,6 +61,16 @@ class Set implements ExportableInterface
      */
     protected $asIsLocked = false;
 
+    public function __construct()
+    {
+        $this->keys = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getAttributeSetID();
+    }
+
     /**
      * @return mixed
      */
@@ -79,14 +85,15 @@ class Set implements ExportableInterface
     }
 
     /**
-     * @return Key
+     * @return Key[]
      */
     public function getAttributeKeys()
     {
-        $keys = array();
-        foreach($this->keys as $set_key) {
+        $keys = [];
+        foreach ($this->keys as $set_key) {
             $keys[] = $set_key->getAttributeKey();
         }
+
         return $keys;
     }
 
@@ -220,8 +227,11 @@ class Set implements ExportableInterface
         $this->keys->add($setKey);
     }
 
-    public function __toString()
+    public function jsonSerialize()
     {
-        return (string) $this->getAttributeSetID();
+        return [
+            'name' => $this->getAttributeSetDisplayName('text'),
+            'keys' => $this->getAttributeKeys(),
+        ];
     }
 }

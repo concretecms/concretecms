@@ -1,10 +1,9 @@
 <?php
 namespace Concrete\Core\User\Event;
 
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 use Concrete\Core\User\User as ConcreteUser;
 
-class User extends AbstractEvent
+class User
 {
     protected $u;
 

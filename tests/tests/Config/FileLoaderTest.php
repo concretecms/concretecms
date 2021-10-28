@@ -5,7 +5,7 @@ namespace Concrete\Tests\Config;
 use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\Renderer;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * Class FileLoaderTest.
@@ -23,7 +23,7 @@ use PHPUnit_Framework_TestCase;
  *   /application/config/namespace/group.php
  *   /application/config/namespace/environment.group.php
  */
-class FileLoaderTest extends PHPUnit_Framework_TestCase
+class FileLoaderTest extends TestCase
 {
     /** @var FileLoader */
     protected $loader;
@@ -43,8 +43,7 @@ class FileLoaderTest extends PHPUnit_Framework_TestCase
     /** @var array */
     protected $to_remove = [];
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $this->loader = new FileLoader($this->files = new Filesystem());
         $this->group = md5(time() . uniqid());
         $this->namespace = md5(time() . uniqid());
@@ -109,7 +108,7 @@ class FileLoaderTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $remove = array_reverse($this->to_remove);
         foreach ($remove as $path) {

@@ -1,32 +1,25 @@
 <?php
 if (isset($error)) {
     ?>
-    <div class="alert alert-danger"><?= $error ?></div>
+    <div class="alert alert-danger"><?= $error; ?></div>
     <?php
-
 }
 if (isset($message)) {
     ?>
-    <div class="alert alert-success"><?= $message ?></div>
+    <div class="alert alert-success"><?= $message; ?></div>
 <?php
 }
 ?>
 
-<div class="form-group">
-    <span>
-        <?= t('Sign in with a community account') ?>
-    </span>
-    <hr class="ccm-authentication-type-community">
-</div>
-<div class="form-group">
-    <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_auth');
-?>" class="btn btn-primary btn-community btn-block">
-        <img src="<?= Core::getApplicationURL() ?>/concrete/images/logo.svg" class="concrete5-icon"></i>
-        <?= t('Log in with concrete5.org') ?>
-    </a>
-</div>
-<div class="form-group">
-    <p><?= t('Join the concrete5.org community to setup multiple websites, shop for extensions, and get support.') ?></p>
+<div class="form-group external-auth-option">
+    <div class="d-grid">
+        <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_auth');
+        ?>" class="btn btn-primary btn-community"
+           title="<?= t('Join the Concrete community to setup multiple websites, shop for extensions, and get support.'); ?>">
+            <img src="<?= Core::getApplicationURL(); ?>/concrete/images/logo.svg" class="concrete-icon"></i>
+            <?= t('Log in with community.concretecms.com'); ?>
+        </a>
+    </div>
 </div>
 <style>
     .ccm-ui .btn-community {
@@ -45,7 +38,7 @@ if (isset($message)) {
       width: 16px;
     }
 
-    img.concrete5-icon {
+    img.concrete-icon {
         width: 20px;
         margin-right:5px;
     }
@@ -57,7 +50,7 @@ if (isset($message)) {
         if (svg) {
             var img = new Image();
             img.onerror = function() {
-                svg.parent().replaceWith('<i class="fa fa-user"></i>');
+                svg.parent().replaceWith('<i class="fas fa-user"></i>');
             };
             img.src = svg.parent().data('src');
             $(function() {

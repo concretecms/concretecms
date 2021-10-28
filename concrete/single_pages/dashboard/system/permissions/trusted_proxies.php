@@ -48,8 +48,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php
         foreach ($trustableHeaders as $trustableHeader) {
             ?>
-            <div class="checkbox">
-                <label>
+            <div class="form-check">
+                <label class="form-check-label">
                     <?= $form->checkbox('trustedHeaders[]', $trustableHeader, in_array($trustableHeader, $trustedHeaders, true)) ?>
                     <code><?= h($trustableHeader) ?></code>
                 </label>
@@ -112,7 +112,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit"><?=t('Save')?></button>
+            <button class="float-end btn btn-primary" type="submit"><?=t('Save')?></button>
         </div>
     </div>
 

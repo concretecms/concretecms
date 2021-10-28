@@ -2,8 +2,9 @@
 namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Search\ItemList\ItemList;
+use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 
-interface FieldInterface extends \JsonSerializable
+interface FieldInterface extends \JsonSerializable, DenormalizableInterface
 {
     /**
      * Get the field key.
@@ -39,4 +40,19 @@ interface FieldInterface extends \JsonSerializable
      * @param array $request
      */
     public function loadDataFromRequest(array $request);
+
+    /**
+     * Exports the data to CIF
+     *
+     * @param \SimpleXMLElement $element
+     * @return mixed
+     */
+    public function export(\SimpleXMLElement $element);
+
+    /**
+     * @param \SimpleXMLElement $element
+     * @return void
+     */
+    public function loadDataFromImport(\SimpleXMLElement $element);
+
 }

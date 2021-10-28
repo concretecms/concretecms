@@ -45,6 +45,7 @@ class ChooseEvent extends BackendInterfaceController
             $text = $formatter->getEventOccurrenceTextColor($occurrence);
             $obj = new \stdClass();
             $obj->id = $event->getID();
+            $obj->occurrenceID = $occurrence->getID();
             $obj->title = $event->getName();
             $obj->start = $service->formatCustom('Y-m-d H:i:s', $occurrence->getStart());
             $obj->end = $service->formatCustom('Y-m-d H:i:s', $occurrence->getEnd());

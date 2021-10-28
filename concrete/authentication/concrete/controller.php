@@ -2,6 +2,7 @@
 namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
@@ -51,7 +52,7 @@ class Controller extends AuthenticationTypeController
 
     public function getAuthenticationTypeIconHTML()
     {
-        return '<i class="fa fa-user"></i>';
+        return '<i class="fas fa-user"></i>';
     }
 
     public function verifyHash(User $u, $hash)
@@ -59,32 +60,20 @@ class Controller extends AuthenticationTypeController
         $uID = (int) $u->getUserID();
         $db = $this->app->make(Connection::class);
         $hasher = $this->app->make(PasswordHasher::class);
-        $validRow = null;
-        foreach ($db->fetchAll('select validThrough, token from authTypeConcreteCookieMap WHERE uID = ? ORDER BY validThrough DESC', [$uID]) as $row) {
+        $validRow = false;
+        $validThrough = (new \DateTime())->getTimestamp();
+        $rows = $db->fetchAll('SELECT validThrough, token FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough > ? ORDER BY validThrough DESC', [$uID, $validThrough]);
+        foreach ($rows as $row) {
             if ($hasher->checkPassword($hash, $row['token'])) {
-                $validRow = $row;
+                $validRow = true;
                 break;
             }
         }
-        if ($validRow === null) {
-            return;
-        }
-        $stillValid = time() < $validRow['validThrough'];
-        if ($stillValid) {
-            $newTime = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
-            $db->update(
-                'authTypeConcreteCookieMap',
-                ['validThrough' => $newTime],
-                ['uID' => $uID, 'token' => $row['token']]
-            );
-        } else {
-            $db->delete(
-                'authTypeConcreteCookieMap',
-                ['uID' => $uID, 'token' => $row['token']]
-            );
-        }
 
-        return $stillValid;
+        // delete all invalid entries for this user
+        $db->executeUpdate('DELETE FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough < ?', [$uID, $validThrough]);
+
+        return $validRow;
     }
 
     public function view()
@@ -338,14 +327,22 @@ class Controller extends AuthenticationTypeController
         $post = $this->post();
 
         if (empty($post['uName']) || empty($post['uPassword'])) {
-            throw new Exception(t('Please provide both username and password.'));
+            /** @var Repository $config */
+            $config = $this->app->make(Repository::class);
+
+            if ($config->get('concrete.user.registration.email_registration')) {
+                throw new Exception(t('Please provide both email address and password.'));
+            } else {
+                throw new Exception(t('Please provide both username and password.'));
+            }
         }
+        
         $uName = $post['uName'];
         $uPassword = $post['uPassword'];
 
         /** @var \Concrete\Core\Permission\IPService $ip_service */
         $ip_service = Core::make('ip');
-        if ($ip_service->isBlacklisted()) {
+        if ($ip_service->isDenylisted()) {
             throw new \Exception($ip_service->getErrorMessage());
         }
 

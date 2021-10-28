@@ -14,7 +14,6 @@ class PageReport extends DashboardSitePageController
 
     public function view()
     {
-        $this->requireAsset('core/sitemap');
         $list = MultilingualSection::getList($this->getSite());
         $sections = array();
         usort($list, function ($item) {

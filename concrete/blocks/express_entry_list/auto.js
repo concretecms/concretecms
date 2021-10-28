@@ -13,7 +13,7 @@ $(function() {
     }
 
     ConcreteExpressEntryListBlockForm.prototype.initEntitySelector = function() {
-        var $source = $('#ccm-tab-content-search'),
+        var $source = $('#search'),
             $searchFieldSelectorContainer = $('div[data-container=search-field-selector]');
             $customizeContainer = $('div[data-container=customize-results]');
             _searchAttributesTemplate = _.template($('script[data-template=express-attribute-search-list]').html()),
@@ -42,17 +42,17 @@ $(function() {
     }
 
     ConcreteExpressEntryListBlockForm.prototype.setSearchableProperties = function(attributes, selected) {
-        var $attributesContainer = $('#ccm-tab-content-search div[data-container=advanced-search]');
+        var $attributesContainer = $('#search div[data-container=advanced-search]');
         $attributesContainer.html(_searchAttributesTemplate({attributes: attributes, selected: selected}));
     }
 
     ConcreteExpressEntryListBlockForm.prototype.setSearchableAssociations = function(associations, selected) {
-        var $associationsContainer = $('#ccm-tab-content-search div[data-container=search-associations]');
+        var $associationsContainer = $('#search div[data-container=search-associations]');
         $associationsContainer.html(_searchAssociationsTemplate({associations: associations, selected: selected}));
     }
 
     ConcreteExpressEntryListBlockForm.prototype.setLinkableProperties = function(attributes, selected) {
-        var $attributesContainer = $('#ccm-tab-content-results div[data-container=linked-attributes]');
+        var $attributesContainer = $('#results div[data-container=linked-attributes]');
         $attributesContainer.html(_linkedAttributesTemplate({attributes: attributes, selected: selected}));
     }
 
@@ -93,7 +93,6 @@ $(function() {
 
 
     Concrete.event.bind('block.express_entry_list.open', function(e, data) {
-
         new ConcreteExpressEntryListBlockForm(data);
 
     });

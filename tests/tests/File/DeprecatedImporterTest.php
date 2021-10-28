@@ -2,19 +2,26 @@
 
 namespace Concrete\Tests\File;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\Key\Category;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Attribute\Type as AttributeType;
 use Concrete\Core\Cache\CacheLocal;
+use Concrete\Core\File\File;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type as ThumbnailType;
 use Concrete\Core\File\Importer;
+use Concrete\Core\Support\Facade\Facade;
 use Concrete\TestHelpers\File\FileStorageTestCase;
-use Config;
-use Core;
 
 class DeprecatedImporterTest extends FileStorageTestCase
 {
+    /** @var Application */
+    protected $app;
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
@@ -42,18 +49,22 @@ class DeprecatedImporterTest extends FileStorageTestCase
             'Concrete\Core\Entity\Attribute\Type',
             'Concrete\Core\Entity\Attribute\Category',
         ]);
-        Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
+        $this->app = Facade::getFacadeApplication();;
+        $this->app->make('config')->set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
     }
 
-    public function setUp()
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function setUp(): void
     {
         parent::setUp();
-        $config = \Core::make('config');
+        $config = $this->app->make('config');
         $config->set('concrete.misc.default_thumbnail_format', 'jpeg');
         $config->set('concrete.misc.basic_thumbnailer_generation_strategy', 'now');
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
 
@@ -69,7 +80,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
     {
         $fi = new Importer();
         $r = $fi->import('foo.txt', 'foo.txt');
-        $this->assertEquals($r, Importer::E_FILE_INVALID);
+        self::assertEquals(Importer::E_FILE_INVALID, $r);
     }
 
     public function testFileInvalidExtension()
@@ -78,7 +89,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
         touch($file);
         $fi = new Importer();
         $r = $fi->import($file, 'test.invalid');
-        $this->assertEquals($r, Importer::E_FILE_INVALID_EXTENSION);
+        self::assertEquals(Importer::E_FILE_INVALID_EXTENSION, $r);
     }
 
     public function testFileInvalidStorageLocation()
@@ -87,7 +98,7 @@ class DeprecatedImporterTest extends FileStorageTestCase
         touch($file);
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');
-        $this->assertEquals($r, Importer::E_FILE_INVALID_STORAGE_LOCATION);
+        self::assertEquals(Importer::E_FILE_INVALID_STORAGE_LOCATION, $r);
     }
 
     public function testFileValid()
@@ -101,17 +112,17 @@ class DeprecatedImporterTest extends FileStorageTestCase
         $fi = new Importer();
         $r = $fi->import($file, 'test.txt');
 
-        $this->assertInstanceOf('\Concrete\Core\Entity\File\Version', $r);
-        $this->assertEquals($r->getFileVersionID(), 1);
-        $this->assertEquals($r->getFileID(), 1);
-        $this->assertEquals('test.txt', $r->getFilename());
+        self::assertInstanceOf('\Concrete\Core\Entity\File\Version', $r);
+        self::assertEquals(1, $r->getFileVersionID());
+        self::assertEquals(1, $r->getFileID());
+        self::assertEquals('test.txt', $r->getFilename());
         $fo = $r->getFile();
         $fsl = $fo->getFileStorageLocationObject();
-        $this->assertEquals(true, $fsl->isDefault());
-        $this->assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $fsl);
+        self::assertEquals(true, $fsl->isDefault());
+        self::assertInstanceOf('\Concrete\Core\Entity\File\StorageLocation\StorageLocation', $fsl);
         $apr = str_split($r->getPrefix(), 4);
 
-        $this->assertEquals('/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
+        self::assertEquals('/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
             $r->getRelativePath()
         );
     }
@@ -127,9 +138,9 @@ class DeprecatedImporterTest extends FileStorageTestCase
         $fi = new Importer();
         $fi->import($file, 'test.txt');
 
-        $f = \File::getByID(1);
+        $f = File::getByID(1);
         $versions = $f->getFileVersions();
-        $this->assertEquals(1, count($versions));
+        self::assertCount(1, $versions);
     }
 
     public function testImageImportSize()
@@ -142,20 +153,19 @@ class DeprecatedImporterTest extends FileStorageTestCase
         $fi = new Importer();
         $fo = $fi->import($file, 'My Logo.png');
         $type = $fo->getTypeObject();
-        $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
+        self::assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
-        $this->assertEquals(113, $fo->getAttribute('width'));
-        $this->assertEquals(113, $fo->getAttribute('height'));
+        self::assertEquals(113, $fo->getAttribute('width'));
+        self::assertEquals(113, $fo->getAttribute('height'));
     }
 
     public function testThumbnailStorageLocation()
     {
         mkdir($this->getStorageDirectory());
-        $fsl = $this->getStorageLocation();
 
-        $helper = Core::make('helper/concrete/file');
+        $helper = $this->app->make('helper/concrete/file');
         $path = $helper->getThumbnailFilePath('137803870092', 'testing.gif', 1);
-        $this->assertEquals('/thumbnails/1378/0387/0092/testing.jpg', $path);
+        self::assertEquals('/thumbnails/1378/0387/0092/testing.jpg', $path);
     }
 
     public function testImageImport()
@@ -164,31 +174,31 @@ class DeprecatedImporterTest extends FileStorageTestCase
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $cf = Core::make('helper/concrete/file');
-        $fh = Core::make('helper/file');
-        $config = Core::make('config');
-        $file = DIR_BASE . '/concrete/themes/elemental/images/background-slider-night-road.png';
+        $cf = $this->app->make('helper/concrete/file');
+        $fh = $this->app->make('helper/file');
+        $config = $this->app->make('config');
+        $file = DIR_BASE . '/concrete/config/install/packages/elemental_full/files/123412345678_plants.jpg';
         $humbnailTypes = ThumbnailType::getList();
         foreach ([
-            'auto' => ['png', IMAGETYPE_PNG],
+            'auto' => ['jpg', IMAGETYPE_JPEG],
             'jpeg' => ['jpg', IMAGETYPE_JPEG],
             'png' => ['png', IMAGETYPE_PNG],
         ] as $thumbnailFormat => list($expectedExtension, $expectedFileType)) {
             $config->set('concrete.misc.default_thumbnail_format', $thumbnailFormat);
-            foreach (['async', 'now'] as $strategy) {
+            foreach (['now'] as $strategy) {
                 $config->set('concrete.misc.basic_thumbnailer_generation_strategy', $strategy);
                 $fi = new Importer();
-                $fo = $fi->import($file, 'background-slider-night-road.png');
-                $this->assertTrue(is_object($fo), 'Import failed (' . (is_object($fo) ? null : Importer::getErrorMessage($fo)) . ')');
+                $fo = $fi->import($file, '123412345678_plants.jpg');
+                self::assertTrue(is_object($fo), 'Import failed (' . (is_object($fo) ? null : Importer::getErrorMessage($fo)) . ')');
                 $type = $fo->getTypeObject();
-                $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
+                self::assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
-                $this->assertTrue((bool) $fo->hasThumbnail(1));
-                $this->assertTrue((bool) $fo->hasThumbnail(2));
-                $this->assertFalse((bool) $fo->hasThumbnail(3));
+                self::assertTrue((bool) $fo->hasThumbnail(1));
+                self::assertTrue((bool) $fo->hasThumbnail(2));
+                self::assertFalse((bool) $fo->hasThumbnail(3));
 
-                $this->assertEquals(
-                    '/application/files/thumbnails/file_manager_detail' . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), $expectedExtension), 2),
+                self::assertEquals(
+                    'http://www.dummyco.com/application/files/thumbnails/file_manager_detail' . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), $expectedExtension), 2),
                     $fo->getThumbnailURL('file_manager_detail'),
                     "Check thumbnail URL with: format={$thumbnailFormat}, strategy={$strategy}"
                 );
@@ -203,34 +213,28 @@ class DeprecatedImporterTest extends FileStorageTestCase
                         $thumbnailType->getDoubledVersion(),
                     ] as $thumbnailTypeVersion) {
                         $thumbnailPath = $thumbnailTypeVersion->getFilePath($fo);
-                        $this->assertTrue($fsl->has($thumbnailPath), "Check thumbnail existence with: format={$thumbnailFormat}, strategy={$strategy}");
+                        self::assertTrue($fsl->has($thumbnailPath), "Check thumbnail existence with: format={$thumbnailFormat}, strategy={$strategy}");
                         $handler = $fsl->get($thumbnailPath);
                         list($width, $height, $type) = getimagesizefromstring($handler->read());
-                        $this->assertSame($expectedFileType, $type, "Check thumbnail type with: format={$thumbnailFormat}, strategy={$strategy}");
+                        self::assertSame($expectedFileType, $type, "Check thumbnail type with: format={$thumbnailFormat}, strategy={$strategy}");
                     }
                 }
-                $basicThumbnailer = Core::build(BasicThumbnailer::class, ['storageLocation' => $storageLocation]);
+                $basicThumbnailer = $this->app->build(BasicThumbnailer::class, ['storageLocation' => $storageLocation]);
                 /* @var BasicThumbnailer $basicThumbnailer */
                 $thumbnail = $basicThumbnailer->getThumbnail($fo->getFile(), 100, 100);
-                $this->assertSame('.' . $expectedExtension, substr($thumbnail->src, -4));
-                $this->assertContains('/application/files/cache/thumbnails/', $thumbnail->src);
+                static::assertSame('.' . $expectedExtension, substr($thumbnail->src, -4));
+                self::assertStringContainsString('/application/files/cache/thumbnails/', $thumbnail->src);
                 $pos = strrpos($thumbnail->src, '/cache/thumbnails/');
                 $realPath = $this->getStorageDirectory() . substr($thumbnail->src, $pos);
-                if ($strategy === 'async') {
-                    $this->assertNull($thumbnail->width);
-                    $this->assertNull($thumbnail->height);
-                    $this->assertFileNotExists($realPath);
-                } else {
-                    $this->assertGreaterThan(0, $thumbnail->width);
-                    $this->assertGreaterThan(0, $thumbnail->height);
-                    $this->assertLessThanOrEqual(100, $thumbnail->width);
-                    $this->assertLessThanOrEqual(100, $thumbnail->height);
-                    $this->assertFileExists($realPath);
-                    list($width, $height, $type) = getimagesize($realPath);
-                    $this->assertSame($thumbnail->width, $width);
-                    $this->assertSame($thumbnail->height, $height);
-                    $this->assertSame($expectedFileType, $type);
-                }
+                self::assertGreaterThan(0, $thumbnail->width);
+                self::assertGreaterThan(0, $thumbnail->height);
+                self::assertLessThanOrEqual(100, $thumbnail->width);
+                self::assertLessThanOrEqual(100, $thumbnail->height);
+                self::assertFileExists($realPath);
+                list($width, $height, $type) = getimagesize($realPath);
+                self::assertSame($thumbnail->width, $width);
+                self::assertSame($thumbnail->height, $height);
+                self::assertSame($expectedFileType, $type);
             }
         }
     }
@@ -248,17 +252,17 @@ class DeprecatedImporterTest extends FileStorageTestCase
 
         $fi = new Importer();
         $fo = $fi->importIncomingFile('trees.png');
-        $this->assertInstanceOf('\Concrete\Core\Entity\File\Version', $fo);
+        self::assertInstanceOf('\Concrete\Core\Entity\File\Version', $fo);
         $type = $fo->getTypeObject();
-        $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
+        self::assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
-        $this->assertTrue((bool) $fo->hasThumbnail(1));
-        $this->assertTrue((bool) $fo->hasThumbnail(2));
-        $this->assertFalse((bool) $fo->hasThumbnail(3));
+        self::assertTrue((bool) $fo->hasThumbnail(1));
+        self::assertTrue((bool) $fo->hasThumbnail(2));
+        self::assertFalse((bool) $fo->hasThumbnail(3));
 
-        $cf = Core::make('helper/concrete/file');
-        $fh = Core::make('helper/file');
-        $this->assertEquals('/application/files/thumbnails/file_manager_detail'
+        $cf = $this->app->make('helper/concrete/file');
+        $fh = $this->app->make('helper/file');
+        self::assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
             . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
             $fo->getThumbnailURL('file_manager_detail'));
     }
@@ -274,13 +278,13 @@ class DeprecatedImporterTest extends FileStorageTestCase
 
         $f = \File::getByID($file->getFileID());
         $fv = $f->getVersion(1);
-        $this->assertEquals('sample.txt', $fv->getFilename());
+        self::assertEquals('sample.txt', $fv->getFilename());
         $fv->delete();
 
         CacheLocal::flush();
 
         $fv2 = $f->getVersion(1);
-        $this->assertNull($fv2);
+        self::assertNull($fv2);
     }
 
     public function testImporterMimeType()
@@ -296,8 +300,8 @@ class DeprecatedImporterTest extends FileStorageTestCase
         $fi = new Importer();
         $fo2 = $fi->import($sample, 'tiny.png');
 
-        $this->assertEquals('text/plain', $fo1->getMimeType());
-        $this->assertEquals('image/png', $fo2->getMimeType());
+        self::assertEquals('text/plain', $fo1->getMimeType());
+        self::assertEquals('image/png', $fo2->getMimeType());
     }
 
     public function testFileDuplicate()
@@ -311,12 +315,12 @@ class DeprecatedImporterTest extends FileStorageTestCase
 
         $f = \File::getByID($file->getFileID());
         $f2 = $f->duplicate();
-        $this->assertNotEquals($file->getFileID(), $f2->getFileID());
+        self::assertNotEquals($file->getFileID(), $f2->getFileID());
 
         $versions = $f2->getVersionList();
-        $this->assertCount(1, $versions);
-        $this->assertEquals(1, $versions[0]->getFileVersionID());
-        $this->assertEquals($f2->getFileID(), $versions[0]->getFileID());
+        self::assertCount(1, $versions);
+        self::assertEquals(1, $versions[0]->getFileVersionID());
+        self::assertEquals($f2->getFileID(), $versions[0]->getFileID());
     }
 
     public function testFileAttributesDuplicate()
@@ -332,8 +336,8 @@ class DeprecatedImporterTest extends FileStorageTestCase
 
         $attributes = $f->getAttributes();
         $attributesNew = $f2->getAttributes();
-        $this->assertCount(2, $attributes);
-        $this->assertCount(2, $attributesNew);
+        self::assertCount(2, $attributes);
+        self::assertCount(2, $attributesNew);
     }
 
     public function testFileVersionDuplicate()
@@ -347,8 +351,8 @@ class DeprecatedImporterTest extends FileStorageTestCase
 
         $fv = $f->getVersion(1);
         $fv2 = $fv->duplicate();
-        $this->assertEquals(2, $fv2->getFileVersionID());
-        $this->assertEquals(false, $fv->isApproved());
+        self::assertEquals(2, $fv2->getFileVersionID());
+        self::assertEquals(false, $fv->isApproved());
     }
 
     public function testFileReplace()
@@ -366,11 +370,11 @@ class DeprecatedImporterTest extends FileStorageTestCase
         $sample = DIR_TESTS . '/assets/File/StorageLocation/sample.txt';
         $r = $fi->import($sample, 'sample.txt', $fo);
 
-        $this->assertInstanceOf('\Concrete\Core\Entity\File\Version', $r);
-        $this->assertEquals(2, $r->getFileVersionID());
-        $this->assertEquals('sample.txt', $r->getFilename());
+        self::assertInstanceOf('\Concrete\Core\Entity\File\Version', $r);
+        self::assertEquals(2, $r->getFileVersionID());
+        self::assertEquals('sample.txt', $r->getFilename());
         $apr = str_split($r->getPrefix(), 4);
-        $this->assertEquals('http://www.dummyco.com/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/sample.txt',
+        self::assertEquals('http://www.dummyco.com/application/files/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/sample.txt',
             $r->getURL()
         );
     }
@@ -392,21 +396,21 @@ class DeprecatedImporterTest extends FileStorageTestCase
         $f = \File::getByID($r->getFileID());
         $fv4b = $f->getVersion(4);
 
-        $this->assertEquals(1, $r->getFileVersionID());
-        $this->assertEquals(2, $fv2->getFileVersionID());
-        $this->assertEquals(3, $fv3->getFileVersionID());
-        $this->assertEquals(4, $fv4b->getFileVersionID());
-        $this->assertEquals(4, $fv4->getFileVersionID());
-        $this->assertEquals($fv4, $fv4b);
+        self::assertEquals(1, $r->getFileVersionID());
+        self::assertEquals(2, $fv2->getFileVersionID());
+        self::assertEquals(3, $fv3->getFileVersionID());
+        self::assertEquals(4, $fv4b->getFileVersionID());
+        self::assertEquals(4, $fv4->getFileVersionID());
+        self::assertEquals($fv4, $fv4b);
 
         $fv3->approve();
-        $this->assertEquals(true, $fv3->isApproved());
+        self::assertEquals(true, $fv3->isApproved());
 
         $f = \File::getByID($r->getFileID());
         $fv1 = $f->getVersion(1);
-        $this->assertEquals(false, $fv1->isApproved());
+        self::assertEquals(false, $fv1->isApproved());
         $fva = $f->getApprovedVersion();
-        $this->assertEquals($fva, $fv3);
+        self::assertEquals($fva, $fv3);
     }
 
     protected function cleanup()

@@ -10,9 +10,9 @@ use Concrete\Core\File\Tracker\UsageTracker;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\TestHelpers\Statistics\UsageTracker\TrackableBlockController;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class FileUsageTrackerTest extends PHPUnit_Framework_TestCase
+class FileUsageTrackerTest extends TestCase
 {
     public function testTrackingCollection()
     {

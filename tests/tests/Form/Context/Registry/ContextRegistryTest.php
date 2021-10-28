@@ -15,14 +15,14 @@ use Concrete\Core\Express\Form\Control\View\AttributeKeyFormView;
 use Concrete\Core\Express\Form\Control\View\AttributeKeyView;
 use Concrete\Core\Form\Context\Registry\ControlRegistry;
 use Concrete\Tests\Express\Form\Control\View\TestView;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\ClassLoader\MapClassLoader;
 
-class ContextRegistryTest extends PHPUnit_Framework_TestCase
+class ContextRegistryTest extends TestCase
 {
     private static $classLoader;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         static::$classLoader = new MapClassLoader([
             TestView::class => DIR_TESTS . '/assets/Express/Form/Control/View/TestView.php',

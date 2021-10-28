@@ -1,38 +1,33 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 
-use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Core;
-use Symfony\Component\HttpFoundation\Request;
 
 class Clearcache extends DashboardPageController
 {
-    public $helpers = array('form');
-
     public function view()
     {
+        $config = $this->app->make('config');
+        $this->set('clearThumbnails', (bool) $config->get('concrete.cache.clear.thumbnails'));
     }
 
     public function do_clear()
     {
-        if ($this->token->validate("clear_cache")) {
-            if ($this->isPost()) {
-                $thumbnails = $this->request('thumbnails') === '1';
-                $config = $this->app->make(Repository::class);
-                $config->set('concrete.cache.clear.thumbnails', $thumbnails);
-                $config->save('concrete.cache.clear.thumbnails', $thumbnails);
-                $this->app->clearCaches();
-                $this->redirect('/dashboard/system/optimization/clearcache', 'cache_cleared');
-            }
-        } else {
-            $this->set('error', array($this->token->getErrorMessage()));
+        $post = $this->request->request;
+        if (!$this->token->validate('clear_cache')) {
+            $this->error->add($this->token->getErrorMessage());
         }
-    }
+        if ($this->error->has()) {
+            return $this->view();
+        }
+        $clearThumbnails = (bool) $post->get('thumbnails');
+        $config = $this->app->make('config');
+        $config->set('concrete.cache.clear.thumbnails', $clearThumbnails);
+        $config->save('concrete.cache.clear.thumbnails', $clearThumbnails);
+        $this->app->clearCaches();
+        $this->flash('success', t('Cached files removed.'));
 
-    public function cache_cleared()
-    {
-        $this->set('message', t('Cached files removed.'));
-        $this->view();
+        return $this->buildRedirect($this->action(''));
     }
 }

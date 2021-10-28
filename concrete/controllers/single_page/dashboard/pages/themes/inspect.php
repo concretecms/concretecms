@@ -1,18 +1,15 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
 
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Concrete\Core\Page\Theme\Theme;
-use Loader;
-use PageTheme;
-use Package;
-use PageTemplate;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Theme\Theme as PageTheme;
 use Exception;
 
 class Inspect extends DashboardPageController
 {
-    protected $helpers = array('html');
-
     public function on_before_render()
     {
         parent::on_before_render();
@@ -23,10 +20,10 @@ class Inspect extends DashboardPageController
     public function view($pThemeID = null, $message = false)
     {
         if (!$pThemeID) {
-            $this->redirect('/dashboard/pages/themes/');
+            return $this->buildRedirect('/dashboard/pages/themes/');
         }
 
-        $v = Loader::helper('validation/error');
+        $v = $this->app->make('helper/validation/error');
         $pt = PageTheme::getByID($pThemeID);
         if (is_object($pt)) {
             $files = $pt->getFilesInTheme();
@@ -42,7 +39,7 @@ class Inspect extends DashboardPageController
                 $this->set(
                     'message',
                     t(
-                        "Theme installed. You may automatically create page templates from template files contained in your theme using the form below."
+                        'Theme installed. You may automatically create page templates from template files contained in your theme using the form below.'
                     )
                 );
                 break;
@@ -50,7 +47,7 @@ class Inspect extends DashboardPageController
                 $this->set(
                     'message',
                     t(
-                        "Theme activated. You may automatically create page templates from template files contained in your theme using the form below."
+                        'Theme activated. You may automatically create page templates from template files contained in your theme using the form below.'
                     )
                 );
                 break;
@@ -67,17 +64,17 @@ class Inspect extends DashboardPageController
     {
         try {
             $pt = PageTheme::getByID($pThemeID);
-            $txt = Loader::helper('text');
-            if (!is_array($this->post('pageTemplates'))) {
-                throw new Exception(t("You must specify at least one template to create."));
+            if (!is_array($this->request->request->get('pageTemplates'))) {
+                throw new Exception(t('You must specify at least one template to create.'));
             }
 
             $pkg = false;
             $pkgHandle = $pt->getPackageHandle();
             if ($pkgHandle) {
-                $pkg = Package::getByHandle($pkgHandle);
+                $pkg = $this->app->make(PackageService::class)->getByHandle($pkgHandle);
             }
 
+            $txt = $this->app->make('helper/text');
             foreach ($this->post('pageTemplates') as $pTemplateHandle) {
                 $pTemplateName = $txt->unhandle($pTemplateHandle);
                 $pTemplateIcon = $pTemplateHandle . '.png';

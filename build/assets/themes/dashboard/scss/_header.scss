@@ -1,0 +1,132 @@
+/* Page header title, bookmark icon: */
+div#ccm-dashboard-content {
+
+  header {
+
+    div.ccm-dashboard-header-row {
+      padding: 0 $dashboard-content-padding-r 0 $dashboard-content-padding-l;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+    }
+
+    div.ccm-dashboard-header-row + div.ccm-dashboard-header-row {
+      padding-top: 0;
+    }
+
+      // top left, breadcrumb
+    div.ccm-dashboard-header-row {
+      div.ccm-dashboard-breadcrumb {
+        padding-top: $breadcrumb-padding-y;
+
+        .breadcrumb {
+          padding-top: 0; // the padding is controlled by the outer div, which we need for pages where there is no menu
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    // top right, search
+    div.ccm-dashboard-header-search {
+      margin-left: auto;
+
+    }
+
+    // bottom left, page title
+    div.ccm-dashboard-header-title {
+
+      display: flex;
+      padding-bottom: 10px;
+      padding-top: 0;
+
+      .header-icon {
+        .icon-bookmark {
+          height: 41px;
+          width: 41px;
+          margin-right: 3px;
+          // SVG cant render $gray-700 variable, you need to use interpolation and works like a charm
+          --icon-color: #{$gray-700};
+
+          &.bookmarked {
+            --icon-color: #{$blue};
+          }
+        }
+      }
+
+      h1 {
+        font-weight: normal;
+        font-size: 1.5rem;
+        display: inline-block;
+        margin-top: auto;
+        margin-bottom: auto;
+        line-height: 1.5rem;
+        color: $gray-700;
+      }
+
+      //background-color: #f3f3f3;
+      /**
+       * since moving from margin to padding wte dont' need this anymore
+
+      margin-bottom: 30px;
+      */
+
+      a.ccm-dashboard-page-header-bookmark {
+        margin-right: 8px;
+        color: rgba(16, 81, 146, 0.3);
+
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+
+    // bottom right menu/buttons
+    div.ccm-dashboard-header-menu {
+      margin-left: auto;
+
+      .ccm-dashboard-header-buttons {
+        /*
+         * If buttons have been moved via JS from the content to the header, let's show them here
+         */
+        display: block;
+      }
+
+      ul.ccm-dashboard-header-icons {
+
+        @include list-unstyled();
+        margin-bottom: 0px;
+
+        a {
+          color: $body-color;
+          transition: $transition-base;
+
+          &:hover {
+            color: $blue;
+            text-decoration: none;
+          }
+        }
+
+        li {
+          display: inline-block;
+          margin-left: 20px;
+        }
+        svg {
+          max-width: 21px;
+          max-height: 21px;
+        }
+      }
+    }
+
+
+  }
+
+  /*
+   * If users have defined ccm-dashboard-header-buttons within the page content, then we need to
+   * hide that DIV until it gets moved, so let's display none down here
+   */
+  div.ccm-dashboard-header-buttons {
+    display: none;
+  }
+
+}

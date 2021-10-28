@@ -1,0 +1,83 @@
+<concrete5-cif version="1.0">
+    <expressentities>
+        <entity id="77c4eb1a-136c-11ec-9fc5-8aa7a7509c1c" handle="atomik_employee" plural_handle="atomik_employees"
+                name="Atomik Employee" supports_custom_display_order="" include_in_public_list="0"
+                use_separate_site_result_buckets=""
+                description="This is sample content for the Atomik theme documentation. It may be removed without hurting the site. "
+                default_view_form="77c4ef3e-136c-11ec-9fc5-8aa7a7509c1c"
+                default_edit_form="77c4ef3e-136c-11ec-9fc5-8aa7a7509c1c" results-folder="/">
+            <attributekeys>
+                <attributekey handle="employee_first_name" name="First Name" package="" searchable="1" indexed="1"
+                              type="text" category="">
+                    <type placeholder=""/>
+                </attributekey>
+                <attributekey handle="employee_last_name" name="Last Name" package="" searchable="1" indexed="1"
+                              type="text" category="">
+                    <type placeholder=""/>
+                </attributekey>
+                <attributekey handle="employee_start_date" name="Start Date" package="" searchable="1" indexed="1"
+                              type="date_time" category="">
+                    <type use-now-if-empty="0" mode="date" text-custom-format="" time-resolution="60"/>
+                </attributekey>
+                <attributekey handle="employee_email_address" name="Email Address" package="" searchable="1" indexed="1"
+                              type="email" category=""/>
+                <attributekey handle="employee_phone_number" name="Phone" package="" searchable="1" indexed="1"
+                              type="telephone" category=""/>
+                <attributekey handle="employee_home_address" name="Home Address" package="" searchable="1" indexed="1"
+                              type="address" category="">
+                    <type custom-countries="0" default-country="" geolocate-country="0"/>
+                </attributekey>
+                <attributekey handle="employee_notes" name="Internal Notes" package="" searchable="1" indexed="1"
+                              type="textarea" category="">
+                    <type mode="text"/>
+                </attributekey>
+            </attributekeys>
+            <forms>
+                <form id="77c4ef3e-136c-11ec-9fc5-8aa7a7509c1c" name="Form">
+                    <fieldsets>
+                        <fieldset title="Basics" description="">
+                            <controls>
+                                <control id="1c666202-136d-11ec-9fc5-8aa7a7509c1c" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="employee_first_name"/>
+                                </control>
+                                <control id="1dcd709a-136d-11ec-9fc5-8aa7a7509c1c" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="employee_last_name"/>
+                                </control>
+                                <control id="2931e52e-136d-11ec-9fc5-8aa7a7509c1c" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="employee_email_address"/>
+                                </control>
+                            </controls>
+                        </fieldset>
+                        <fieldset title="Contact Information" description="">
+                            <controls>
+                                <control id="2b6f31de-136d-11ec-9fc5-8aa7a7509c1c" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="employee_phone_number"/>
+                                </control>
+                                <control id="2d95638e-136d-11ec-9fc5-8aa7a7509c1c" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="employee_home_address"/>
+                                </control>
+                            </controls>
+                        </fieldset>
+                        <fieldset title="Notes" description="">
+                            <controls>
+                                <control id="21fcf4ce-136d-11ec-9fc5-8aa7a7509c1c" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="employee_start_date"/>
+                                </control>
+                                <control id="23c44bc2-136d-11ec-9fc5-8aa7a7509c1c" type="attribute_key" required=""
+                                         custom-label="">
+                                    <attributekey handle="employee_notes"/>
+                                </control>
+                            </controls>
+                        </fieldset>
+                    </fieldsets>
+                </form>
+            </forms>
+        </entity>
+    </expressentities>
+</concrete5-cif>

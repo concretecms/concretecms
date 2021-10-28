@@ -1,3 +1,138 @@
+# 9.0.0
+
+## Major New Features
+
+* Boards
+* Summary Templates
+* Multisite support.
+* New modern theme for 2021 – Atomik
+* New Gallery block built into the core.
+* Completely rebuilt file manager that has much better folder and advanced search support, support for home folders, favorite folders, external file providers, a new file upload UI and much much more.
+* Completely new upload experience that adds support for additional service provider plugins.
+* A completely new integrated image editor
+* Overhauled theme customizer, with support for skins, non-customizable skins, SCSS support, Bootstrap 5 and more.
+* Tasks: a completely rebuilt, much improved version of classic Concrete Jobs, with support for queueing, scheduling, unified input/output within the console and web interfaces, live output with Mercure and more.
+* User Group Types: Add the ability to create types of groups, including roles within groups, group management based on roles within groups, and more.
+* An overhauled UI built off of Bootstrap 5 and Concrete Bedrock
+
+## Other New Features and Improvements
+
+* Express now supports multisite.
+* Added the ability to edit page aliases from within the Dashboard sitemap (thanks mlocati)
+* Added the ability to customize the from name registration email parameter (thanks katzueno)
+* New Breadcrumb Navigation block now available (thanks hissy)
+* Much improved performance throughout, due to better navigation caching, and cache optimization (hissy and core team)
+* Added pagination to clipboard panel and the ability to reset all clipboards from the Dashboard (thanks bitterdev)
+* Added configuration for whether to log email body contents or just metadata (thanks bitterdev)
+* Support for interactive theme documentation and block preview.
+* Added bulk page permissions commands to the page search interface (thanks bitterdev)
+* Added the ability to upload a CSV of users to assign to a particular group. (thanks bitterdev)
+* Completely new image editor plugin framework. Ships with TUI Image Editor.
+* New icon selector component when working with block types like Feature that allow users to select icons.
+* Added logging for file uploads and file deletions (thanks bitterdev)
+* File manager can now automatically populate file attributes from EXIF metadata on upload (thanks bitterdev)
+* Implement Clear-Site-Data header after a successful login (thanks ahukkanen)
+* Added block title format for Date Navigation block (thanks katalysis)
+* Much improved Image block, including the ability to load images in lightboxes, display thumbnails of image in the page, and much more.
+* add delete button to package that is just uninstalled or download (thanks hissy)
+* Improved login performance when logging in with Remember Me cookie.
+* New Page Version Comment field available in page composer (thanks hissy)
+* Introduce new middlewares for security options (thanks hissy)
+* User must now confirm the existing password when changing their own password or another user’s password in the Dashboard.
+* Much improved asynchronous thumbnail generation process, with enhancements from the CLI task runner and Mercure (thanks bitterdev)
+
+## Bug Fixes
+
+* Files are not placed in a folder's selected storage location if it has a custom storage location (thanks danklassen)
+* Fixes bug where files moved to folders were not using those folders storage locations (thanks danklassen)
+* If a form redirects to an external page that includes a query parameter, the result is a malformed URL. (thanks JeffPaetkau)
+* FIxed error when marking URL slug as required in composer form (thanks httnnnkrng)
+* Fixed: User workflows - User activation does not trigger on admin email validations (thanks bitterdev)
+* Document Library - Handle missing folder
+* Avoid an exception on express_entry_detail block when the express form ID is not exists (thanks biplobice)
+* Copied block with no edit mode has "edit block" link which throws excepetion (thanks gutig)
+* Fixed bugs within Redis-powered full page caching driver (thanks matt9mg)
+
+## Developer Updates
+
+* Badges and community points have been removed from the core. If you need this functionality, install the Community Badges add-on from
+  https://github.com/concrete5/community_badges prior to upgrading your site.
+* Concrete now runs on PHP 8.
+* Tools have been completely removed, including from blocks and packages. Their functionality has been more securely and flexibly available with the routing and controller systems for many years now. (thanks mlocati!)
+* Completely rebuilt new queue system, built on Symfony Messenger.
+* Completely new command/message system, built on Symfony Messenger.
+* Many core components updated to their latest version, including Laravel and Symfony components.
+* Add overridable collection handle generator (thanks hissy)
+* Removing old process.php script for backend requests.
+* Introducing a new command bus pattern. Developers can use to encapsulate their commands, reusing them with one or two lines in multiple places.
+* Swapped underlying HTTP client with Guzzle and PSR7.
+* Router adds support for single action controllers with __invoke (thanks shahroq)
+* Allow Form helper to handle new HTML input types (thanks JohnTheFish)
+* https://github.com/concrete5/concrete5/pull/9479 (thanks jeffPaetkau)
+* Blacklist/whitelist terminology renamed throughout the core.
+
+## Backward Compatibility Notes
+
+* If you use `Core::make()`, `$app->make()` or anything similar in your packages, and provide arguments to these classes at the same time, recent updates to the Laravel Container class may break some older code. Please see this tutorial for more information: https://documentation.concretecms.org/tutorials/add-developers-get-your-add-ons-ready-concrete-cms-90
+* Beginning in version 8, we added the ability to override core elements from within your themes. For example, if the core requires an element via `View::element(‘conversations/add_post’;` the core looks for this add-on in `concrete/elements/conversations/add_post.php`. However, if the currently active theme provides this element in `themes/my_theme/elements/concrete/conversations/add_post.php`, it will be used instead. We are changing this to remove the `concrete/` directory from the `elements` directory within your theme. That means in order to override any core element from within your theme, you only need to make it available at the same path within the `elements/` directory of your theme.
+* If you register custom help for specific pages in your package, make sure to do so from within your package’s `on_start` method rather than from within the Dashboard page. Our new help panel requires this. See https://github.com/concrete5/concrete5/issues/9869#issuecomment-927136592 for more information.
+* Console command `c5:blacklist:clear` has been renamed `c5:denylist:clear`
+* If you work with Concrete cookies directly in your server configurations, be aware that they have been renamed. The default session cookie has been changed from CONCRETE5 to CONCRETE; the default is-logged-in cookie has been changed from CONCRETE5_LOGIN to CONCRETE_LOGIN.
+
+# 8.5.6
+
+## New Features
+
+* Added Session Options Dashboard page that will allow administrators to configure many aspects of the session cookie.
+
+## Behavioral Improvements
+
+* Added support for translation placeholders (thanks shahroq)
+* Re-enabled connect to community for the marketplace; reworked to sidestep issues with browser cookie compatibility
+* Add autocomplete=off to various password fields.
+* "Index Search Engine - Updates" job should not re-index all entries (thanks hissy)
+* Fix default formatting of datetime exports in express export csv (thanks deek87)
+* Improvements to IP parsing for actions like allowlist/blocklist (thanks mlocati)
+
+## Bug Fixes
+
+* Fixed error when pages weren’t getting accurately set in the full page cache.
+* Fixes for errors/warning occurring with PHP 7.3 and 7.4 when "Consider warnings as errors" is set (thanks arielkamoyedji)
+* Additional dialogs within CKEditor link dialog (Sitemap, Browse Server) prevent further page scrolling even after being closed (thanks hissy)
+* Fix error attaching a Facebook account to a user profile (thanks biplobice)
+* Fixed disappearing survey and calendar event dialogs in some cases (thanks hissy)
+* Bug fixes on switching language using the Switch Language block (thanks biplobice)
+* Fixed inability to save channel logging settings on the Dashboard page (thanks Hmone23)
+* Fixed bug where layouts can’t be moved above blocks (thanks Haeflimi)
+* Fixed bug in the 8.5 file manager when selecting on single file in multi-file selector (thanks deek87)
+* Fix to show page drafts created by the current user (thanks hissy)
+* Fix user selector attribute being un-searchable (Note: you will have to recreate your attributes before they are properly searchable).
+* Bug fixes to search popup with pagination (thanks deek87, katz, hissy)
+
+* Fixed 403 Error in Page Defaults when using REDIS for Caching (thanks deek87)
+
+## Security Fixes
+
+(Special thanks to Solar Security Research Team and Concrete CMS Japan)
+
+* Fixed Hackerone report 1102067, CVE-2021-40097: Authenticated path traversal to RCE by adding a regular expression
+* Fixed Hackerone report 1102080, CVE-2021-40098: Path Traversal leading to RCE via external form by adding a regular expression
+* Fixed Hackerone report 982130, CVE-2021-40099: RCE Vulnerability by making fetching the update json scheme from concrete5 to be over HTTPS (instead of HTTP)
+* Fixed Hackerone report 616770, CVE-2021-40100: Stored XSS in Conversations (both client and admin) when Active Conversation Editor is set to "Rich Text"
+* Fixed Hackerone report 921288, CVE-2021-40102: Arbitrary File delete via PHAR deserialization
+* Fixed Hackerone report 1063039, CVE-2021-36766: Security issues when allowing phar:// within the directory input field. (thanks deek87)
+* Fixed Hackerone report 1102211, CVE-2021-40103: Path Traversal to Arbitrary File Reading and SSRF
+* Fixed Hackerone report 1102088, CVE-2021-40104: SVG sanitizer bypass by swapping out the  SVG sanitizer in the core with this third party library darylldoyle/svg-sanitizer
+* Fixed Hackerone report 1102054, CVE-2021-40105: Fixed XSS vulnerability in the Markdown Editor class in the conversation options
+* Fixed Hackerone report 1102042, CVE-2021-40106: Unauth stored xss in blog comments (website field)
+* Fixed Hackerone report 1102020, CVE-2021-40107: Stored XSS in comment section/FileManger via "view_inline" option
+* Fixed Hackerone report 1102018, CVE-2021-40108:  Adjusted core so that ccm_token is verified on  "/index.php/ccm/calendar/dialogs/event/add/save" endpoint
+* Fixed Hackerone report 1102225 which was split into two CVEs: An attacker could duplicate topics and files which could possibly lead to UI inconvenience, and exhaustion of disk space.
+* For CVE-2021-22949: Added checking CSRF token when duplicating files in the File Manager.
+* For CVE-2021-22953: Added checking CSRF token when cloning topics in the sitemap.
+* Fixed Hackerone report 1102177, CVE-2021-22950: To fix CSRF in conversation attachment delete action, updated core to verify ccm_token when conversation attachments are deleted.
+* Fixed Hackerone report 1102105, CVE-2021-40109:  To fix a reported SSRF vulnerability, the core was updated to disable redirects on upload, add an http client method to send request without following redirects, and put in a number of url/IP protections (examples: blocked big Endian urls, blocked IP variants from importing, prevented importing from hexadecimal/octal/long IPs)
+
 # 8.5.5
 
 ## New Features
@@ -6,7 +141,7 @@
 
 ## Behavioral Improvements
 
-* Removed version from meta generator tag. 
+* Removed version from meta generator tag.
 * CKEditor updated to 4.15.0 (thanks mlocati)
 * Page drafts are now viewable by the view page draft permission (thanks HMone23)
 * Updated list of UK counties (thanks Mesuva)
@@ -24,7 +159,7 @@
 * Fixed: [CKEDITOR] Error code: editor-element-conflict. (thanks mlocati)
 * Fixed error: No such file or directory error when editing an aliased block which is not editable (thanks mlocati)
 * Fix some issues when using tags on multilingual site (thanks hissy)
-* Fix duration of IP bans (they were supposed to last seconds but instead used the same value and in minutes) (thanks mlocati) 
+* Fix duration of IP bans (they were supposed to last seconds but instead used the same value and in minutes) (thanks mlocati)
 * Fixed: Stacks don't update if caching is enabled (thanks hissy)
 * Correctly parse non-decimal IP addresses (thanks mlocati)
 * Fix: enable to send private message to all groups at once (thanks hissy)
@@ -37,11 +172,11 @@
 * Fixes filtering by multiple topic attributes on an item list (thanks hissy)
 * Banned words with multibyte characters are now accurately detected (thanks hissy)
 * Use UserMessageException when invalid path traversal is detected (thanks mlocati)
- * Do not remove picture elements on rendering textarea attribute value (thanks hissy)
+* Do not remove picture elements on rendering textarea attribute value (thanks hissy)
 * Fix "call to a member function overrideCollectionPermissions() on a non-object" in AreaAssignment (thanks mlocati)
 
 
-## Security Fixes 
+## Security Fixes
 
 * Fixed CVE-2021-28145 XSS in Surveys fixed (thanks deek87)
 * Fixed CVE-2021-3111 Stored XSS on express entries H1 report 873474
@@ -50,8 +185,6 @@
 ## Developer Updates
 
 * Allow routes with optional arguments (thanks mlocati)
-
-
 
 # 8.5.4
 

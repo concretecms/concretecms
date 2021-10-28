@@ -4,6 +4,7 @@ namespace Concrete\Core\Http;
 use Concrete\Controller\Frontend\PageForbidden;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Command\Process\Menu\Item\RunningProcessesItem;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\Service\Ajax;
@@ -93,6 +94,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
 
         if (is_object($c) && !$c->isError()) {
             // Display not found
+            $dl = $this->app->make('multilingual/detector');
+            $dl->setupSiteInterfaceLocalization($c);
             $this->request->setCurrentPage($c);
 
             return $this->controller($c->getPageController(), $code, $headers);
@@ -122,6 +125,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $item = '/page_forbidden';
         $c = Page::getByPath($item);
         if (is_object($c) && !$c->isError()) {
+            $dl = $this->app->make('multilingual/detector');
+            $dl->setupSiteInterfaceLocalization($c);
             $this->request->setCurrentPage($c);
 
             return $this->controller($c->getPageController(), $code, $headers);
@@ -228,6 +233,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             throw new \RuntimeException('Cannot resolve collections without a reference to the application');
         }
 
+        $dl = $this->app->make('multilingual/detector');
         $request = $this->request;
 
         if ($collection->isError() && $collection->getError() == COLLECTION_NOT_FOUND) {
@@ -256,9 +262,10 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             if ($smm == 1 && !Key::getByHandle('view_in_maintenance_mode')->validate() && ($_SERVER['REQUEST_METHOD'] != 'POST' || $this->app->make('token')->validate() == false)) {
                 $v = new View('/frontend/maintenance_mode');
                 $v->addScopeItems(['c' => $collection]);
+                $dl->setupSiteInterfaceLocalization($collection);
                 $request->setCurrentPage($collection);
 
-                return $this->view($v, $code, $headers);
+                return $this->view($v, Response::HTTP_SERVICE_UNAVAILABLE, $headers);
             }
         }
 
@@ -310,8 +317,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
             return $response;
         }
 
-        $dl = $cms->make('multilingual/detector');
-
         if (!$request->getPath()
             && $request->isMethod('GET')
             && !$request->query->has('cID')
@@ -337,11 +342,9 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 return $this->redirect(\URL::to($collection));
             }
         }
-        $dl->setupSiteInterfaceLocalization($collection);
 
+        $dl->setupSiteInterfaceLocalization($collection);
         $request->setCurrentPage($collection);
-        $c = $collection; // process.php needs this
-        require DIR_BASE_CORE . '/bootstrap/process.php';
         $u = $this->app->make(User::class);
 
         // On page view event.
@@ -355,10 +358,13 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $menu = $this->app->make('helper/concrete/ui/menu');
         $menu->addMenuItem($item);
 
+        // Running processes item
+        $item = new RunningProcessesItem();
+        $menu->addMenuItem($item);
+
         // Multisite item
         $item = new SiteListItem();
         $menu->addMenuItem($item);
-
         $controller = $collection->getPageController();
 
         // we update the current page with the one bound to this controller.

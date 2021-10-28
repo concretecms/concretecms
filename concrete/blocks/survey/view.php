@@ -37,7 +37,7 @@ $optionNamesAbbrev = [];
 foreach ($options as $opt) {
     $optionNamesAbbrev[] = $i;
     $optionResults[] = $opt->getResults();
-    ++$i;
+    $i++;
     $graphColors[] = array_pop($availableChartColors);
     $totalVotes += (int) ($opt->getResults());
 }
@@ -87,7 +87,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                                     </td>
                                 </tr>
                                 <?php
-                                ++$i;
+                                $i++;
                                 ?>
                                 <?php
 
@@ -106,10 +106,12 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                         <img
                                 border=""
                                 src="//chart.apis.google.com/chart?chf=bg,s,FFFFFF00&cht=p&chd=t:<?= implode(
-                                    ',',
-                                    $optionResults) ?>&chs=180x180&chco=<?= implode(
-                                    ',',
-                                    $graphColors) ?>"
+                        ',',
+                        $optionResults
+                    ) ?>&chs=180x180&chco=<?= implode(
+                                        ',',
+                                        $graphColors
+                                    ) ?>"
                                 alt="<?php echo t('survey results');
                                 ?>"/>
                     </div>
@@ -154,16 +156,15 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
 
         }
         $options = $controller->getPollOptions();
+        $index = 1;
         foreach ($options as $opt) {
             ?>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionID" value="<?= $opt->getOptionID() ?>"/>
-                    <?= h($opt->getOptionName()) ?>
-                </label>
+            <div class="form-check">
+                <?=$form->radio('optionID',$opt->getOptionID())?>
+                <?=$form->label('optionID'.$index, h($opt->getOptionName()), ['class'=>'form-check-label'])?>
             </div>
         <?php
-
+        $index++;
         }
         if (!$controller->requiresRegistration() || (int) $uID > 0) {
             ?>

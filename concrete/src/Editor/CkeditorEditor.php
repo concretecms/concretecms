@@ -109,9 +109,9 @@ class CkeditorEditor implements EditorInterface
         $pluginManager = $this->getPluginManager();
 
         if ($this->allowFileManager()) {
-            $pluginManager->select(['concrete5filemanager', 'concrete5uploadimage']);
+            $pluginManager->select(['concretefilemanager', 'concreteuploadimage']);
         } else {
-            $pluginManager->deselect(['concrete5filemanager', 'concrete5uploadimage']);
+            $pluginManager->deselect(['concretefilemanager', 'concreteuploadimage']);
         }
 
         $this->requireEditorAssets();
@@ -124,11 +124,12 @@ class CkeditorEditor implements EditorInterface
 
         $defaultOptions = [
             'plugins' => implode(',', $plugins),
-            'stylesSet' => 'concrete5styles',
+            'stylesSet' => 'concretestyles',
             'filebrowserBrowseUrl' => 'a',
             'uploadUrl' => (string) URL::to('/ccm/system/file/upload'),
             'language' => $this->getLanguageOption(),
             'customConfig' => '',
+            'disableNativeSpellChecker' => false,
             'allowedContent' => true,
             'baseFloatZIndex' => 1990, /* Must come below modal variable in variables.less */
             'image2_captionedClass' => 'content-editor-image-captioned',
@@ -155,18 +156,12 @@ class CkeditorEditor implements EditorInterface
         function(identifier) {
             window.CCM_EDITOR_SECURITY_TOKEN = "{$this->token}";
             CKEDITOR.dtd.{$removeEmptyIcon} = false;
-            if (CKEDITOR.stylesSet.get('concrete5styles') === null) {
-                CKEDITOR.stylesSet.add('concrete5styles', {$this->getStylesJson()});
+            if (CKEDITOR.stylesSet.get('concretestyles') === null) {
+                CKEDITOR.stylesSet.add('concretestyles', {$this->getStylesJson()});
             }
             var element = $(identifier),
-                destroyed = false,
                 form = element.closest('form'),
                 ckeditor = element.ckeditor({$options}).editor;
-            CKEDITOR.on('inline', function(e) {
-                if (destroyed === false && element.has(e.data.element.$)) {
-                    return false;
-                }
-            });
             function resetMode() {
                 if (ckeditor.mode === 'source' && ckeditor.setMode) {
                     ckeditor.setMode('wysiwyg');
@@ -178,7 +173,6 @@ class CkeditorEditor implements EditorInterface
             ckeditor.on('remove', function(){
                 form.off('submit', resetMode);
                 $(this).destroy();
-                destroyed = true;
             });
             form.on('submit', resetMode);
             if (CKEDITOR.env.ie) {
@@ -229,7 +223,7 @@ EOL;
             $pluginManager->deselect('autogrow');
         }
 
-        $pluginManager->select('concrete5inline');
+        $pluginManager->select('concreteinline');
         $identifier = $this->getIdentifier();
 
         $html = sprintf(
@@ -249,6 +243,22 @@ EOL;
         );
 
         return $html;
+    }
+
+    /**
+     * Outputs a simple, sanitized editor.
+     */
+    public function outputSimpleEditor($key, $content = null)
+    {
+        $simplePlugins = ['basicstyles','dialogadvtab','divarea','image','tab','toolbar','undo','wysiwygarea','normalizeonchange'];
+        if ($this->allowFileManager()) {
+            $simplePlugins += ['concrete5filemanager', 'concrete5uploadimage'];
+        }
+        $this->pluginManager->select($simplePlugins);
+
+        return $this->outputEditorWithOptions($key, [
+            'plugins' => implode(',', $simplePlugins),
+        ], $content);
     }
 
     /**
@@ -342,8 +352,7 @@ EOL;
      */
     public function requireEditorAssets()
     {
-        $this->assets->requireAsset('core/file-manager');
-        $this->assets->requireAsset('editor/ckeditor4');
+        $this->assets->requireAsset('ckeditor');
 
         $plugins = $this->pluginManager->getSelectedPluginObjects();
 

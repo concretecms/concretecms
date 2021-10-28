@@ -11,14 +11,14 @@
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <button class="pull-right btn btn-success" type="submit" ><?=t('Import')?></button>
+                <button class="float-end btn btn-success" type="submit" ><?=t('Import')?></button>
             </div>
         </div>
     </form>
 
 <?php } else { ?>
     <div class="alert alert-warning">
-        <?=t('No calendar data found. Currently this page is only used to import calendar data from the concrete5 marketplace calendar, which is now fully integrated into the core.')?>
+        <?=t('No calendar data found. Currently this page is only used to import calendar data from the marketplace calendar, which is now fully integrated into the core.')?>
     </div>
 
 <?php } ?>

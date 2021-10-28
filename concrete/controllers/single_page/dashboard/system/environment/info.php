@@ -1,37 +1,55 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 
+use Concrete\Core\Http\Response;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\System\Info as SystemInfo;
 
 class Info extends DashboardPageController
 {
     public function get_environment_info()
     {
-        $info = $this->app->make(\Concrete\Core\System\Info::class);
-        /* @var \Concrete\Core\System\Info $info */
+        $info = $this->app->make(SystemInfo::class);
 
-        echo "# concrete5 Version\n".$info->getCoreVersions()."\n\n";
-
+        $dbInfos = '';
         if ($info->isInstalled()) {
-            echo "# Database Information\nVersion: {$info->getDBMSVersion()}\nSQL Mode: {$info->getDBMSSqlMode()}\n\n";
+            $dbInfos = "\n# Database Information\nVersion: {$info->getDBMSVersion()}\nSQL Mode: {$info->getDBMSSqlMode()}\n";
         }
 
-        echo "# concrete5 Packages\n".($info->getPackages() ?: 'None')."\n\n";
+        $packages = $info->getPackages() ?: 'None';
+        $overrides = $info->getOverrides() ?: 'None';
+        $phpExtensions = ($info->getPhpExtensions() === false) ? 'Unable to determine' : $info->getPhpExtensions();
 
-        echo "# concrete5 Overrides\n".($info->getOverrides() ?: 'None')."\n\n";
+        $content = <<<EOL
+# Concrete Version
+{$info->getCoreVersions()}
+{$dbInfos}
+# Concrete Packages
+{$packages}
 
-        echo "# concrete5 Cache Settings\n".$info->getCache()."\n\n";
+# Concrete Overrides
+{$overrides}
 
-        echo "# Server Software\n".$info->getServerSoftware()."\n\n";
+# Concrete Cache Settings
+{$info->getCache()}
 
-        echo "# Server API\n".$info->getServerAPI()."\n\n";
+# Server Software
+{$info->getServerSoftware()}
 
-        echo "# PHP Version\n".$info->getPhpVersion()."\n\n";
+# Server API
+{$info->getServerAPI()}
 
-        echo "# PHP Extensions\n".($info->getPhpExtensions() === false ? 'Unable to determine' : $info->getPhpExtensions())."\n\n";
+# PHP Version
+{$info->getPhpVersion()}
 
-        echo "# PHP Settings\n".$info->getPhpSettings();
+# PHP Extensions
+{$phpExtensions}
 
-        exit;
+# PHP Settings
+{$info->getPhpSettings()}
+EOL;
+
+        return new Response($content);
     }
 }

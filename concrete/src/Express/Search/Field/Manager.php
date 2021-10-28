@@ -2,13 +2,9 @@
 namespace Concrete\Core\Express\Search\Field;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
-use Concrete\Core\Attribute\Category\CategoryService;
-use Concrete\Core\Entity\Express\ManyToManyAssociation;
-use Concrete\Core\Entity\Express\ManyToOneAssociation;
-use Concrete\Core\Entity\Express\OneToManyAssociation;
-use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Field\Manager as FieldManager;
+use Concrete\Core\Site\InstallationService;
 
 class Manager extends FieldManager
 {
@@ -54,10 +50,13 @@ class Manager extends FieldManager
 
     protected function populateGroups()
     {
-        $this->addGroup(t('Core Properties'), [
-            new KeywordsField()
-        ]);
+        $properties = [new KeywordsField()];
+        $installationService = app(InstallationService::class);
+        if ($installationService->isMultisiteEnabled()) {
+            $properties[] = new SiteField();
+        }
 
+        $this->addGroup(t('Core Properties'), $properties);
         $associations = $this->expressCategory->getExpressEntity()->getAssociations();
         $group = [];
         if (count($associations)) {

@@ -1,22 +1,11 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 
-use Loader;
-
+/**
+ * @deprecated
+ * Only here to keep errors from happening on upgrade
+ */
 class GatheringKey extends Key
 {
-    public function copyFromDefaultsToGathering(PermissionKey $pk)
-    {
-        $db = Loader::db();
-        $paID = $pk->getPermissionAccessID();
-        if ($paID) {
-            $db = Loader::db();
-            $db->Replace('GatheringPermissionAssignments', array(
-                'gaID' => $this->permissionObject->getGatheringID(),
-                'paID' => $paID,
-                'pkID' => $this->getPermissionKeyID(),
-                ),
-                array('gaID', 'pkID'), true);
-        }
-    }
+
 }

@@ -5,7 +5,7 @@ namespace Concrete\Tests\Localization\Translator;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\TestHelpers\Localization\Translator\Fixtures\DummyTranslatorAdapter;
 use Concrete\TestHelpers\Localization\Translator\Fixtures\DummyTranslatorAdapterFactory;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use ReflectionObject;
 
 /**
@@ -14,11 +14,11 @@ use ReflectionObject;
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
-class TranslatorAdapterRepositoryTest extends PHPUnit_Framework_TestCase
+class TranslatorAdapterRepositoryTest extends TestCase
 {
     protected $repository;
 
-    protected function setUp()
+    public function setUp():void
     {
         $factory = new DummyTranslatorAdapterFactory();
         $this->repository = new TranslatorAdapterRepository($factory);

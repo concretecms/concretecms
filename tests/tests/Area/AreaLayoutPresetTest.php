@@ -13,8 +13,10 @@ use Request;
 
 class AreaLayoutPresetTest extends PageTestCase
 {
-    public function __construct()
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
+        parent::__construct($name, $data, $dataName);
+
         $this->tables = array_merge($this->tables, [
             'AreaLayoutPresets',
             'AreaLayoutsUsingPresets',
@@ -25,8 +27,18 @@ class AreaLayoutPresetTest extends PageTestCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
+
+        $this->tables = array_merge($this->tables, [
+            'AreaLayoutPresets',
+            'AreaLayoutsUsingPresets',
+            'AreaLayouts',
+            'AreaLayoutColumns',
+            'AreaLayoutCustomColumns',
+            'AreaLayoutThemeGridColumns',
+        ]);
+
         $service = Core::make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
@@ -38,7 +50,7 @@ class AreaLayoutPresetTest extends PageTestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $manager = Core::make('manager/area_layout_preset_provider');
         $manager->reset();

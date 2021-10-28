@@ -1,0 +1,27 @@
+/**
+ * These are the menus on /dashboard and /dashboard/system – they are mostly just unstyled lists but their
+ * text treatment is different.
+ */
+div#ccm-dashboard-content {
+
+  .ccm-dashboard-section-menu {
+    padding-bottom: 85px;
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    h2 {
+      display: block;
+      width: 100%;
+      padding: 0;
+      margin-bottom: 10px;
+      font-weight: 200;
+      margin-top: 0px;
+      line-height: inherit;
+      color: $gray-700;
+      border-bottom: 1px solid $gray-200;
+    }
+  }
+
+}

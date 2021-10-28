@@ -7,16 +7,14 @@ use Loader;
 
 class TreeNodeAssignment extends Assignment
 {
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
-        return parent::getPermissionKeyToolsURL($task) . '&treeNodeID=' . $this->getPermissionObject()->getTreeNodeID();
-    }
-
-    protected function getPermissionKeyToolsBaseURL(PermissionKeyCategory $akc)
-    {
-        $uh = Loader::helper('concrete/urls');
-
-        return $uh->getToolsURL('permissions/categories/tree/node', $akc->getPackageHandle());
+        return parent::getPermissionKeyTaskURL($task, $options + ['treeNodeID' => $this->getPermissionObject()->getTreeNodeID()]);
     }
 
     public function getPermissionAccessObject()

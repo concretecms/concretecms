@@ -4,11 +4,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @var $provider \Concrete\Core\User\Search\SearchProvider
  */
 $available = $provider->getAvailableColumnSet();
-$current = $provider->getCurrentColumnSet();
+$current = isset($query) ? $query->getColumns() : $provider->getDefaultColumnSet();
 $all = $provider->getAllColumnSet();
 $list = $provider->getCustomAttributeKeys();
 $itemsPerPageOptions = $provider->getItemsPerPageOptions();
-$itemsPerPage = $provider->getItemsPerPage();
+$itemsPerPage = isset($query) ? $query->getItemsPerPage() : $provider->getItemsPerPage();
 $form = Core::make('helper/form');
 
 if (!isset($type)) {
@@ -19,19 +19,27 @@ if (!isset($type)) {
 <section data-section="customize-results">
 
     <fieldset>
-        <legend><?= t('Choose Columns') ?></legend>
+        <legend class="mb-3"><?= t('Choose Columns') ?></legend>
 
         <?php
         if (count($available->getColumns())) {
             ?>
             <div class="form-group">
-                <label class="control-label"><?= t('Standard Properties') ?></label>
+                <label class="control-label form-label"><?= t('Standard Properties') ?></label>
                 <?php
                 $columns = $available->getColumns();
                 foreach ($columns as $col) {
                     ?>
-                    <div class="checkbox"><label><?= $form->checkbox($col->getColumnKey(), 1,
-                                $current->contains($col)) ?> <span><?= $col->getColumnName() ?></span></label></div>
+                    <div class="form-check">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="<?= $col->getColumnKey() ?>"
+                               id="<?= $col->getColumnKey() ?>"
+                               value="1"
+                               <?php if ($current->contains($col)) { ?>checked<?php } ?>>
+                        <label class="form-check-label"
+                               for="<?= $col->getColumnKey() ?>"><?= $col->getColumnName() ?></label>
+                    </div>
                     <?php
                 }
                 ?>
@@ -44,13 +52,20 @@ if (!isset($type)) {
         if (count($list)) {
             ?>
             <div class="form-group">
-                <label class="control-label"><?= t('Custom Attributes') ?></label>
+                <label class="control-label form-label"><?= t('Custom Attributes') ?></label>
                 <?php
                 foreach ($list as $ak) {
                     ?>
-                    <div class="checkbox"><label><?= $form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1,
-                                $current->contains($ak)) ?>
-                            <span><?= $ak->getAttributeKeyDisplayName() ?></span></label></div>
+                    <div class="form-check">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               name="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"
+                               id="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"
+                               value="1"
+                               <?php if ($current->contains($ak)) { ?>checked<?php } ?>>
+                        <label class="form-check-label"
+                               for="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"><?= $ak->getAttributeKeyDisplayName() ?></label>
+                    </div>
                     <?php
                 }
                 ?>
@@ -59,41 +74,43 @@ if (!isset($type)) {
         }
         ?>
     </fieldset>
-
+    <hr>
     <fieldset>
         <legend><?= t('Column Order') ?></legend>
 
-        <p><?= t('Click and drag to change column order.') ?></p>
-        <ul class="item-select-list" data-search-column-list="<?= $type ?>">
-            <?php
-            foreach ($current->getColumns() as $col) {
-                ?>
-                <li style="cursor: move" data-field-order-column="<?= $col->getColumnKey() ?>"><input type="hidden"
-                                                                                                      name="column[]"
-                                                                                                      value="<?= $col->getColumnKey() ?>"/><?= $col->getColumnName() ?>
-                    <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
-                </li>
+        <div class="form-group">
+            <p><?= t('Click and drag to change column order.') ?></p>
+            <ul class="item-select-list" data-search-column-list="<?= $type ?>">
                 <?php
-            }
-            ?>
-        </ul>
+                foreach ($current->getColumns() as $col) {
+                    ?>
+                    <li style="cursor: move" data-field-order-column="<?= $col->getColumnKey() ?>"><input type="hidden"
+                                                                                                          name="column[]"
+                                                                                                          value="<?= $col->getColumnKey() ?>"/><?= $col->getColumnName() ?>
+                        <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </div>
     </fieldset>
-
+    <hr>
     <fieldset>
         <legend><?= t('Sort By') ?></legend>
 
         <?php $ds = $current->getDefaultSortColumn(); ?>
 
         <div class="form-group">
-            <label class="control-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>
+            <label class="control-label form-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
-                class="form-control" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
-                name="fSearchDefaultSort">
+                    class="form-select" data-search-select-default-column="<?= $type ?>" id="fSearchDefaultSort"
+                    name="fSearchDefaultSort">
                 <?php
                 foreach ($all->getSortableColumns() as $col) {
                     ?>
                     <option id="<?= $col->getColumnKey() ?>"
-                            value="<?= $col->getColumnKey() ?>" <?php if ($col->getColumnKey() == $ds->getColumnKey()) { ?> selected="selected" <?php } ?>><?= $col->getColumnName() ?></option>
+                            value="<?= $col->getColumnKey() ?>" <?php if ($ds && $col->getColumnKey() == $ds->getColumnKey()) { ?> selected="selected" <?php } ?>><?= $col->getColumnName() ?></option>
                     <?php
                 }
                 ?>
@@ -101,35 +118,39 @@ if (!isset($type)) {
         </div>
 
         <div class="form-group">
-            <label class="control-label" for="fSearchDefaultSortDirection"><?= t('Direction') ?></label>
+            <label class="control-label form-label" for="fSearchDefaultSortDirection"><?= t('Direction') ?></label>
             <select <?php if (count($all->getSortableColumns()) == 0) { ?> disabled="disabled"<?php } ?>
-                class="form-control" data-search-select-default-column-direction="<?= $type ?>"
-                name="fSearchDefaultSortDirection">
+                    class="form-select" data-search-select-default-column-direction="<?= $type ?>"
+                    name="fSearchDefaultSortDirection">
                 <option
-                    value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="selected"<?php } ?>><?= t('Ascending') ?></option>
+                        value="asc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'asc') { ?> selected="selected"<?php } ?>><?= t('Ascending') ?></option>
                 <option
-                    value="desc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="selected"<?php } ?>><?= t('Descending') ?></option>
+                        value="desc" <?php if (is_object($ds) && $ds->getColumnDefaultSortDirection() == 'desc') { ?> selected="selected"<?php } ?>><?= t('Descending') ?></option>
             </select>
         </div>
 
     </fieldset>
 
     <?php if ($includeNumberOfResults) { ?>
+        <hr>
 
         <fieldset>
             <legend><?= t('Number of Results') ?></legend>
-            <select class="form-control" name="fSearchItemsPerPage">
-                <?php
-                foreach ($itemsPerPageOptions as $option) {
-                    ?>
-                    <option <?php if ($itemsPerPage == $option) { ?> selected="selected"<?php } ?>
-                        value="<?= $option ?>">
-                        <?= $option ?>
-                    </option>
+
+            <div class="form-group">
+                <select class="form-select" name="fSearchItemsPerPage">
                     <?php
-                }
-                ?>
-            </select>
+                    foreach ($itemsPerPageOptions as $option) {
+                        ?>
+                        <option <?php if ($itemsPerPage == $option) { ?> selected="selected"<?php } ?>
+                                value="<?= $option ?>">
+                            <?= $option ?>
+                        </option>
+                        <?php
+                    }
+                    ?>
+                </select>
+            </div>
         </fieldset>
 
     <?php } ?>
@@ -146,7 +167,7 @@ if (!isset($type)) {
             opacity: 0.5
         });
         $form.on('click', 'input[type=checkbox]', function () {
-            var label = $(this).parent().find('span').html(),
+            var label = $(this).parent().find('label').html(),
                 id = $(this).attr('id');
 
             if ($(this).prop('checked')) {

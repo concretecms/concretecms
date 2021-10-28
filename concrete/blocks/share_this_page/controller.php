@@ -2,6 +2,8 @@
 namespace Concrete\Block\ShareThisPage;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Sharing\ShareThisPage\ServiceList;
 use Concrete\Core\Sharing\ShareThisPage\Service;
 use Database;
@@ -9,14 +11,14 @@ use Core;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
-    protected $btCacheBlockOutput = false;
-    protected $btCacheBlockOutputOnPost = false;
-    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btShareThisPage';
 
@@ -32,16 +34,17 @@ class Controller extends BlockController
         return t("Share This Page");
     }
 
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::SOCIAL
+        ];
+    }
+
     public function edit()
     {
-        $selected = $this->getSelectedServices();
-        $services = array();
-        foreach ($selected as $s) {
-            $services[] = $s->getHandle();
-        }
-
-        $this->set('selected', json_encode($services));
-        $this->set('services', ServiceList::get());
+        $this->set('selectedServices', $this->getSelectedServices());
+        $this->set('availableServices', ServiceList::get());
     }
 
     public function add()

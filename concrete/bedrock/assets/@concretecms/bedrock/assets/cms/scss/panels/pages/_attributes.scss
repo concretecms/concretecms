@@ -1,0 +1,166 @@
+/**
+ * Attributes Side Panel
+ */
+#ccm-menu-page-attributes {
+  .ccm-panel-content-inner {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0.5rem;
+  }
+
+  .ccm-panel-header-search {
+    margin-bottom: 20px;
+    margin-left: -24px;
+    margin-right: -11px;
+    position: relative;
+    width: calc(100% + 35px);
+
+    input {
+      border-width: 0;
+      padding: 10px 35px 10px 10px;
+      width: 100%;
+    }
+
+    svg {
+      fill: $gray-600;
+      height: 20px;
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+    }
+  }
+
+  .ccm-menu-page-attributes-set {
+    border-top: 1px solid $gray-200;
+    margin-bottom: 0.625rem; // 10px
+    padding: 0;
+    padding-top: 1.5625rem;
+
+    h5 {
+      font-size: 1em;
+      padding-left: 25px;
+    }
+
+    ul {
+      list-style: none;
+      margin-top: 1rem;
+      padding-left: 0;
+    }
+
+    // Selectable attribute element
+    a[data-attribute-key] {
+      color: $panel-menu-item-color;
+      display: block;
+      line-height: 1.8em;
+      padding: 10px 21px 12px 50px;
+      position: relative;
+      text-decoration: none;
+      transition: $panel-menu-item-transition;
+
+      // Plus and minus icons
+      .fa,
+      .fas {
+        // Displayed when selected or on hover
+        font-size: 1.3125em; // 21px
+        left: 21px;
+        opacity: 0;
+        position: absolute;
+        top: 14px;
+        transition: $panel-menu-item-transition;
+      }
+
+      // Always show a remove icon on selected attributes
+      &.ccm-menu-page-attribute-selected {
+        background-color: $panel-menu-item-active-bg-color !important;
+        color: $panel-menu-item-active-color !important;
+        font-weight: $panel-menu-item-active-font-weight;
+
+        .fa-minus-circle {
+          display: inline;
+        }
+      }
+
+      // Show add icon only on hover on unselected attributes
+      &:hover {
+        background-color: $panel-menu-item-hover-bg-color;
+        text-decoration: none;
+
+        .fa-plus-circle {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+#ccm-dialog-attributes-container {
+  display: block;
+  float: left;
+  width: 100%;
+}
+
+#ccm-dialog-attributes-menu {
+  display: block;
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 30%;
+}
+
+#ccm-dialog-attributes-detail {
+  display: block;
+  float: left;
+  margin: 0 0 0 65px;
+  padding: 0;
+  width: calc(70% - 65px);
+}
+
+/**
+ * Attributes Details Page
+ */
+#ccm-detail-page-attributes {
+  h3 {
+    margin-bottom: 40px;
+    margin-left: 0;
+  }
+
+  .ccm-detail-page-attributes-id {
+    float: right;
+  }
+
+  // Fixed and selectable attributes
+  .form-group {
+    opacity: 1;
+    padding-left: 0;
+    padding-right: 0;
+    transition: $transition-fade;
+
+    .col-form-label {
+      padding-bottom: 6px;
+      padding-top: 0;
+    }
+
+    &.ccm-page-attribute-adding,
+    &.ccm-page-attribute-removing {
+      opacity: 0;
+    }
+
+    // Selectable attributes
+    &[data-attribute-key-id] {
+      background-color: #f9f9f9; // ~ $panel-background-color
+      border: 2px solid #e8e8e8;
+      padding: 12px 45px 15px 48px;
+
+      [data-remove-attribute-key] {
+        color: inherit;
+        font-size: 21px;
+        line-height: 1em;
+        margin-left: -32px;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+  }
+}

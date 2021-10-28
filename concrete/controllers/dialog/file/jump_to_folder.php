@@ -21,7 +21,6 @@ class JumpToFolder extends \Concrete\Controller\Backend\UserInterface
     public function view()
     {
         $filesystem = new Filesystem();
-        $this->requireAsset('core/file-folder-selector');
         $rootTreeNodeID = $filesystem->getRootFolder()->getTreeNodeID();
         $this->set('rootTreeNodeID', $rootTreeNodeID);
     }

@@ -9,6 +9,11 @@ use Concrete\Core\User\UserInfo;
 
 class Controller extends AttributeTypeController
 {
+    protected $searchIndexFieldDefinition = [
+        'type' => 'integer',
+        'options' => ['default' => 0, 'notnull' => false],
+    ];
+
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('user');
@@ -61,6 +66,11 @@ class Controller extends AttributeTypeController
         $av->setValue($value);
 
         return $av;
+    }
+
+    public function getSearchIndexValue()
+    {
+        return $this->attributeValue->getValue();
     }
 
     public function createAttributeValueFromRequest()

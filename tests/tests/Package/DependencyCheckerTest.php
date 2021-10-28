@@ -9,11 +9,11 @@ use Concrete\Core\Package\Dependency\RequiredPackageException;
 use Concrete\Core\Package\Dependency\VersionMismatchException;
 use Concrete\Core\Package\Package;
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use ReflectionClass;
 use ReflectionException;
 
-class DependencyCheckerTest extends PHPUnit_Framework_TestCase
+class DependencyCheckerTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application
@@ -25,13 +25,13 @@ class DependencyCheckerTest extends PHPUnit_Framework_TestCase
      */
     private static $checker;
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         self::$app = Application::getFacadeApplication();
         self::$checker = self::$app->build(DependencyChecker::class);
     }
 
-    public function testForInstallProvider()
+    public function installProvider()
     {
         $packages = [
             self::createPackage('handle0', '0.1', 'Name 0', []),
@@ -143,7 +143,7 @@ class DependencyCheckerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testForInstallProvider
+     * @dataProvider installProvider
      *
      * @param Package $package
      * @param array $installedPackages
@@ -156,7 +156,7 @@ class DependencyCheckerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expectedErrors, $errors);
     }
 
-    public function testForUninstallProvider()
+    public function uninstallProvider()
     {
         $packages = [
             self::createPackage('handle0', '0.1', 'Name 0', []),
@@ -198,7 +198,7 @@ class DependencyCheckerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testForUninstallProvider
+     * @dataProvider uninstallProvider
      *
      * @param Package $package
      * @param array $otherInstalledPackages

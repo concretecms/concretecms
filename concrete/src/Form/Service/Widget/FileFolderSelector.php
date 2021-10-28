@@ -9,11 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class FileFolderSelector
 {
 
-    public function selectFileFolder($field, $folder = null)
+    public function selectFileFolder($field, $folder = null, $updateSelectionOnPost = true)
     {
-        $v = \View::getInstance();
-        $v->requireAsset('core/file-folder-selector');
-
         $identifier = new Identifier();
         $identifier = $identifier->getString(32);
 
@@ -22,7 +19,7 @@ class FileFolderSelector
         $args = new \stdClass();
         $selected = 0;
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && $updateSelectionOnPost) {
             if (isset($_POST[$field])) {
                 $selected = intval($_POST[$field]);
             }

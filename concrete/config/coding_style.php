@@ -6,7 +6,7 @@ return [
             // Whitespace-separated list of file extensions to be parsed
             'extensions' => 'php',
             // Whitespace-separated list of additional files (relative to the webroot) to be parsed
-            'include' => 'concrete/bin/concrete5',
+            'include' => 'concrete/bin/concrete',
         ],
         'ignore_directories' => [
             // Whitespace-separated list of directory names that should not be parsed
@@ -15,7 +15,7 @@ return [
             'by_path' => 'application/config/doctrine application/files tests/assets',
         ],
         // Whitespace-separated list of file paths (relative to the webroot) that are executed before checking the PHP version.
-        'bootstrap_files' => 'index.php concrete/dispatcher.php concrete/bin/concrete5',
+        'bootstrap_files' => 'index.php concrete/dispatcher.php concrete/bin/concrete',
         'php_only' => [
             'non_psr4' => [
                 // Whitespace-separated list of file paths (relative to the webroot) that only contain PHP and that don't follow PSR-4 class names (allowed placeholders: <HANDLE>).

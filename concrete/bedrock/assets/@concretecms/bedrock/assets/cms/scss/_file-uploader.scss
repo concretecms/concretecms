@@ -1,0 +1,250 @@
+.ccm-file-uploader-container-dropzone {
+  position: relative;
+
+  .ccm-file-uploader-container-dropzone-file-element {
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+
+    &.hidden {
+      display: none;
+    }
+  }
+}
+
+.ccm-file-upload-container-wrapper {
+  border: 1px solid #989898;
+  cursor: pointer;
+  display: block;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  margin: auto;
+  position: relative;
+  width: 100%;
+}
+
+.ccm-incoming-files-container {
+  margin-bottom: 15px;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.ccm-directory-selector-container {
+  margin-top: 15px;
+
+  .dropdown-item {
+    padding-left: 204px; // We need this default in order to handle the many levels of sub-nodes.
+
+    &.level-1 {
+      padding-left: 12px;
+    }
+
+    &.level-2 {
+      padding-left: 36px;
+    }
+
+    &.level-3 {
+      padding-left: 60px;
+    }
+
+    &.level-4 {
+      padding-left: 84px;
+    }
+
+    &.level-5 {
+      padding-left: 108px;
+    }
+
+    &.level-6 {
+      padding-left: 132px;
+    }
+
+    &.level-7 {
+      padding-left: 156px;
+    }
+
+    &.level-8 {
+      padding-left: 180px;
+    }
+
+  }
+}
+
+.ccm-file-upload-container {
+  display: block;
+  height: 400px;
+  overflow-y: auto;
+  position: relative;
+  user-select: none;
+  width: 100%;
+
+  &.dz-started .dz-default {
+    display: none;
+  }
+
+  .dz-default {
+    height: 100%;
+    position: relative;
+    width: 100%;
+
+    .dz-button {
+      background-color: $light-blue;
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      font-size: 1.2em;
+      height: 100%;
+      outline: none;
+      position: absolute;
+      width: 100%;
+
+      img {
+        display: block;
+        margin: auto auto 15px;
+        width: 150px;
+      }
+
+      span {
+        display: block;
+        font-size: 1em;
+        margin: auto;
+        width: 150px;
+      }
+    }
+  }
+}
+
+.ccm-file-upload-wrapper {
+  position: relative;
+
+  .ccm-file-upload-item-wrapper {
+    border: 1px solid $border-color;
+    box-shadow: 5px 5px 7px -5px rgba(0, 0, 0, 0.75);
+    display: block;
+    float: left;
+    margin: 20px 20px 50px;
+    padding: 10px;
+    position: relative;
+    width: calc(100% - 42px);
+
+    .ccm-file-upload-label {
+      bottom: -30px;
+      color: $gray-700;
+      font-size: 1em;
+      left: 0;
+      overflow: hidden;
+      position: absolute;
+      text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .ccm-file-upload-item {
+      background: $gray-300;
+      overflow: hidden;
+      padding-top: 100%;
+      position: relative;
+
+      .ccm-file-upload-item-inner {
+        height: 100%;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        .ccm-file-upload-image-wrapper {
+          display: block;
+          height: 100%;
+          position: relative;
+          width: 100%;
+        }
+
+        img {
+          bottom: 0;
+          height: auto;
+          margin: auto;
+          position: absolute;
+          top: 0;
+          transform: scale(1.2);
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &.in-progress {
+    .ccm-file-upload-item-wrapper {
+      .ccm-file-upload-item {
+        .ccm-file-upload-item-inner {
+          img {
+            filter: blur(5px);
+          }
+        }
+      }
+    }
+  }
+
+  .ccm-file-upload-item {
+    .ccm-file-upload-item-inner {
+      .ccm-file-upload-progress-text {
+        svg {
+          color: $gray-700;
+          font-size: 1em;
+          font-weight: bold;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+        }
+      }
+
+      .ccm-file-upload-progress {
+        display: none;
+        height: 100%;
+        left: 0;
+        padding: 10px;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
+    }
+
+    .ccm-file-upload-item-inner {
+      .ccm-file-upload-progress-text {
+        display: none;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
+    }
+  }
+
+  &.in-progress {
+    .ccm-file-upload-item-inner {
+      .ccm-file-upload-progress-text {
+        display: block;
+      }
+
+      .ccm-file-upload-progress {
+        display: block;
+      }
+    }
+  }
+}
+
+.ccm-file-uploader-new-directory-name-container {
+  &.hidden-container {
+    display: none;
+  }
+}
+
+#ccm-file-import-tab-menu {
+  margin-bottom: 15px;
+}

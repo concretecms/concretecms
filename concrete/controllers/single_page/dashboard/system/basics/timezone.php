@@ -28,7 +28,6 @@ class Timezone extends DashboardSitePageController
 
     public function view()
     {
-        $this->requireAsset('selectize');
         $dh = $this->app->make('date');
         $siteConfig = $this->getSite()->getConfigRepository();
         $config = $this->app->make('config');

@@ -328,24 +328,6 @@ EOT
     }
 
     /**
-     * Get the URL of a task for this workflow.
-     *
-     * @param string $task
-     *
-     * @return string
-     */
-    public function getWorkflowToolsURL($task)
-    {
-        $type = $this->getWorkflowTypeObject();
-        $app = Application::getFacadeApplication();
-        $uh = $app->make('helper/concrete/urls');
-        $url = $uh->getToolsURL('workflow/types/' . $type->getWorkflowTypeHandle(), $type->getPackageHandle());
-        $url .= '?wfID=' . $this->getWorkflowID() . '&task=' . $task . '&' . $app->make('token')->getParameter($task);
-
-        return $url;
-    }
-
-    /**
      * Change the (English) name of this workflow.
      *
      * @param string $wfName

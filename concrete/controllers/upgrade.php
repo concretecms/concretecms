@@ -83,17 +83,17 @@ class Upgrade extends BackendUserInterfaceController
         $sav = $this->siteVersion;
 
         if (!$sav) {
-            $message = t('Unable to determine your current version of concrete5. Upgrading cannot continue.');
+            $message = t('Unable to determine your current version of Concrete CMS. Upgrading cannot continue.');
         } elseif ($this->request->query->get('force', 0) == 1) {
             $this->set('do_upgrade', true);
         } else {
             if (version_compare($sav, APP_VERSION, '>')) {
                 $message = t('Upgrading from <b>%s</b>', $sav) . '<br/>';
                 $message .= t('Upgrading to <b>%s</b>', APP_VERSION) . '<br/><br/>';
-                $message .= t('Your current website uses a version of concrete5 greater than this one. You cannot upgrade.');
+                $message .= t('Your current website uses a version of Concrete greater than this one. You cannot upgrade.');
             } else {
                 if (version_compare($sav, APP_VERSION, '=')) {
-                    $message = t('Your site is already up to date! The current version of concrete5 is <b>%s</b>.', APP_VERSION);
+                    $message = t('Your site is already up to date! The current version of Concrete is <b>%s</b>.', APP_VERSION);
                 } else {
                     $message = '';
                     $message .= t('Upgrading from <b>%s</b>', $sav) . '<br/>';

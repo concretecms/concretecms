@@ -2,6 +2,7 @@
 
 namespace Concrete\Block\CoreAreaLayout;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
@@ -12,19 +13,21 @@ use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Asset\CssAsset;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Core;
 use Database;
 use Page;
 use URL;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btSupportsInlineAdd = true;
     protected $btSupportsInlineEdit = true;
     protected $btTable = 'btCoreAreaLayout';
     protected $btIsInternal = true;
     protected $btCacheSettingsInitialized = false;
+    protected $requiredFeatures = [];
 
     public function cacheBlockOutput()
     {
@@ -57,6 +60,12 @@ class Controller extends BlockController
         return t('Area Layout');
     }
 
+    public function getRequiredFeatures(): array
+    {
+        $this->setupCacheSettings();
+        return $this->requiredFeatures;
+    }
+
     public function registerViewAssets($outputContent = '')
     {
         if (is_object($this->block) && $this->block->getBlockFilename() == 'parallax') {
@@ -65,12 +74,10 @@ class Controller extends BlockController
         }
 
         $arLayout = $this->getAreaLayoutObject();
-        if (is_object($arLayout)) {            
+        if (is_object($arLayout)) {
             if ($arLayout instanceof CustomLayout) {
                 $asset = new CssAsset();
                 $asset->setAssetURL(URL::to('/ccm/system/css/layout', $arLayout->getAreaLayoutID()));
-                $asset->setAssetSupportsMinification(false);
-                $asset->setAssetSupportsCombination(false);
                 $this->requireAsset($asset);
             }
         }
@@ -255,7 +262,9 @@ class Controller extends BlockController
         $a = $b->getBlockAreaObject();
         $this->arLayout = $this->getAreaLayoutObject();
         if (is_object($this->arLayout)) {
-            $this->arLayout->setAreaObject($a);
+            if ($a instanceof Area) {
+                $this->arLayout->setAreaObject($a);
+            }
             $this->set('columns', $this->arLayout->getAreaLayoutColumns());
             $c = Page::getCurrentPage();
             $this->set('c', $c);
@@ -275,7 +284,6 @@ class Controller extends BlockController
 
     public function edit()
     {
-        $this->addHeaderItem(Core::make('helper/html')->javascript('layouts.js'));
         $this->view();
         // since we set a render override in view() we have to explicitly declare edit
         if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
@@ -301,12 +309,10 @@ class Controller extends BlockController
             $this->render('edit_preset');
         }
         $this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
-        $this->requireAsset('core/style-customizer');
     }
 
     public function add()
     {
-        $this->addHeaderItem(Core::make('helper/html')->javascript('layouts.js'));
         $maxColumns = 12; // normally
         // now we check our active theme and see if it has other plans
         $c = Page::getCurrentPage();
@@ -325,7 +331,6 @@ class Controller extends BlockController
         }
         $this->set('columnsNum', 1);
         $this->set('maxColumns', $maxColumns);
-        $this->requireAsset('core/style-customizer');
     }
 
     protected function setupCacheSettings()
@@ -343,18 +348,22 @@ class Controller extends BlockController
         $c = $this->getCollectionObject();
 
         $blocks = [];
-        $layout = $this->getAreaLayoutObject();
-        $layout->setAreaObject($this->getAreaObject());
-        if ($layout) {
-            foreach ($layout->getAreaLayoutColumns() as $column) {
-                $area = $column->getSubAreaObject();
-                if ($area) {
-                    foreach ($area->getAreaBlocksArray($c) as $block) {
-                        $blocks[] = $block;
+        if ($this->getAreaObject() instanceof Area) {
+            $layout = $this->getAreaLayoutObject();
+            $layout->setAreaObject($this->getAreaObject());
+
+            if ($layout) {
+                foreach ($layout->getAreaLayoutColumns() as $column) {
+                    $area = $column->getSubAreaObject();
+                    if ($area) {
+                        foreach ($area->getAreaBlocksArray($c) as $block) {
+                            $blocks[] = $block;
+                        }
                     }
                 }
             }
         }
+
 
         $arrAssetBlocks = [];
 
@@ -394,6 +403,13 @@ class Controller extends BlockController
             $objController->on_start();
             $objController->outputAutoHeaderItems();
             $objController->registerViewAssets();
+            if ($objController instanceof UsesFeatureInterface) {
+                foreach($objController->getRequiredFeatures() as $feature) {
+                    if (!in_array($feature, $this->requiredFeatures)) {
+                        $this->requiredFeatures[] = $feature;
+                    }
+                }
+            }
         }
     }
 
@@ -419,7 +435,7 @@ class Controller extends BlockController
                 $page->setCustomStyleSet($area, $set);
             }
             foreach ($columnNode->block as $bx) {
-                $bt = \BlockType::getByHandle($bx['type']);
+                $bt = \BlockType::getByHandle((string) $bx['type']);
                 if (!is_object($bt)) {
                     throw new \Exception(t('Invalid block type handle: %s', (string) ($bx['type'])));
                 }

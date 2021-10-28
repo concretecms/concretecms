@@ -4,9 +4,9 @@ namespace Concrete\Tests\Config;
 
 use Concrete\Core\Config\FileSaver;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class FileSaverTest extends PHPUnit_Framework_TestCase
+class FileSaverTest extends TestCase
 {
     /** @var FileSaver */
     protected $saver;
@@ -14,8 +14,7 @@ class FileSaverTest extends PHPUnit_Framework_TestCase
     /** @var FileSystem */
     protected $files;
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $this->saver = new FileSaver($this->files = new Filesystem());
     }
 

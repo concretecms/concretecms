@@ -8,7 +8,7 @@
 </div>
 <div class="form-group">
     <a href="<?= \URL::to('/ccm/system/authentication/oauth2/google/attempt_attach'); ?>" class="btn btn-primary btn-google">
-        <i class="fa fa-google"></i>
+        <i class="fab fa-google"></i>
         <?= t('Attach a %s account', t('Google')) ?>
     </a>
 </div>

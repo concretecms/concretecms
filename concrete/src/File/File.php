@@ -31,6 +31,21 @@ class File
     {
         return $fID ? Application::getFacadeApplication()->make(EntityManagerInterface::class)->find(FileEntity::class, $fID) : null;
     }
+    /**
+     * Return a file object for the given file UUID.
+     *
+     * @param int $fUUID The file unique identifier
+     *
+     * @return FileEntity|null
+     */
+    public static function getByUUID($fUUID)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $app->make(EntityManagerInterface::class);
+
+        return $fUUID ? $entityManager->getRepository(FileEntity::class)->findOneBy(["fUUID" => $fUUID]) : null;
+    }
 
     /**
      * Return the relative path for a file (may not exist).
@@ -108,6 +123,7 @@ class File
         }
 
         $f = new FileEntity();
+        $f->generateFileUUID();
         $f->storageLocation = $fsl;
         $f->fDateAdded = new Carbon($date);
         $f->folderTreeNodeID = $folder->getTreeNodeID();

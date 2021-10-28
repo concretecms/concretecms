@@ -12,10 +12,6 @@ use Exception;
 
 class Update extends DashboardPageController
 {
-    public function on_start()
-    {
-        $this->error = Loader::helper('validation/error');
-    }
     public function do_update($pkgHandle = false)
     {
         $tp = new TaskPermission();
@@ -32,7 +28,6 @@ class Update extends DashboardPageController
                     try {
                         $p->upgradeCoreData();
                         $p->upgrade();
-                        $p->upgradePackageThemes();
                         $loc->popActiveContext();
                         $this->set('message', t('The package has been updated successfully.'));
                     } catch (Exception $e) {

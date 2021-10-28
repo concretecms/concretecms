@@ -1,0 +1,35 @@
+div.ccm-block-calendar-event-list {
+  clear: both;
+  margin-bottom: 10px;
+}
+
+div.ccm-block-calendar-event-list-wrapper {
+  clear: both;
+  margin-bottom: 10px;
+}
+
+
+div.ccm-block-calendar-event-list-event-date {
+  float: left;
+  height: 50px;
+  margin-right: 10px;
+  width: 50px;
+}
+
+div.ccm-block-calendar-event-list-event-date span {
+  display: block;
+  text-align: center;
+}
+
+div.ccm-block-calendar-event-list-event-date span:first-child {
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+}
+
+
+div.ccm-block-calendar-event-list-event {
+  clear: both;
+  padding-bottom: 10px;
+}
+

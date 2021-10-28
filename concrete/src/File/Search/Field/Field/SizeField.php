@@ -37,8 +37,14 @@ class SizeField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $from = $this->data['size_from'];
-        $to = $this->data['size_to'];
+        $from = 0;
+        $to = 0;
+        if (!empty($this->data['size_from'])) {
+            $from = $this->data['size_from'];
+        }
+        if (!empty($this->data['size_to'])) {
+            $to = $this->data['size_to'];
+        }
         $list->filterBySize($from, $to);
     }
 }

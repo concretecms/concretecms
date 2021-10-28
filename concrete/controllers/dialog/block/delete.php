@@ -2,9 +2,9 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Block\Command\DeleteBlockCommand;
 use Concrete\Core\Block\Events\BlockDelete;
-use Concrete\Core\Page\EditResponse as PageEditResponse;
-use Concrete\Core\Page\EditResponse;
+use Concrete\Core\Command\Batch\Batch;
 
 class Delete extends BackendInterfaceBlockController
 {
@@ -63,39 +63,18 @@ class Delete extends BackendInterfaceBlockController
     {
         if ($this->validateAction()) {
             if ($this->permissions->canDeleteBlock() && $this->page->isMasterCollection()) {
-                $name = sprintf('delete_block_%s', $this->block->getBlockID());
-                $queue = \Queue::get($name);
-
-                if ($_POST['process']) {
-                    $obj = new \stdClass();
-                    $messages = $queue->receive(20);
-                    foreach ($messages as $key => $p) {
-                        $block = unserialize($p->body);
-
-                        $page = \Page::getByID($block['cID'], $block['cvID']);
-                        $b = \Block::getByID($block['bID'], $page, $block['arHandle']);
-                        if (is_object($b) && !$b->isError()) {
-                            $b->deleteBlock();
-                        }
-                        $queue->deleteMessage($p);
-
+                $blocks = $this->block->queueForDefaultsUpdate($_POST);
+                $batch = Batch::create(t('Delete Child Pages Blocks'), function() use ($blocks) {
+                    foreach ($blocks as $b) {
+                        yield new DeleteBlockCommand(
+                            $b['bID'],
+                            $b['cID'],
+                            $b['cvID'],
+                            $b['arHandle']
+                        );
                     }
-                    $obj->totalItems = $queue->count();
-                    if ($queue->count() == 0) {
-                        $queue->deleteQueue($name);
-                    }
-                    $obj->bID = $this->block->getBlockID();
-                    $obj->aID = $this->area->getAreaID();
-                    $obj->message = t('All child blocks deleted successfully.');
-                    echo json_encode($obj);
-                    $this->app->shutdown();
-                } else {
-                    $queue = $this->block->queueForDefaultsUpdate($_POST, $queue);
-                }
-
-                $totalItems = $queue->count();
-                \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d block", "%d blocks", $totalItems)));
-                $this->app->shutdown();
+                });
+                return $this->dispatchBatch($batch);
             }
         }
     }

@@ -1,7 +1,7 @@
 <?php
-
 namespace Concrete\Controller\SinglePage;
 
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Concrete\Core\Http\ResponseFactoryInterface;
@@ -19,7 +19,6 @@ use UserInfo;
 
 class Login extends PageController implements LoggerAwareInterface
 {
-
     use LoggerAwareTrait;
 
     public function getLoggerChannel()
@@ -52,10 +51,6 @@ class Login extends PageController implements LoggerAwareInterface
     }
 
     /**
-     * Concrete5_Controller_Login::callback
-     * Call an AuthenticationTypeController method throw a uri.
-     * Use: /login/TYPE/METHOD/PARAM1/.../PARAM10.
-     *
      * @param string $type
      * @param string $method
      * @param null $a
@@ -109,7 +104,6 @@ class Login extends PageController implements LoggerAwareInterface
     }
 
     /**
-     * Concrete5_Controller_Login::authenticate
      * Authenticate the user using a specific authentication type.
      *
      * @param $type    AuthenticationType handle
@@ -149,9 +143,7 @@ class Login extends PageController implements LoggerAwareInterface
     public function finishAuthentication(
         AuthenticationType $type,
         User $u
-    )
-    {
-        $this->app->instance(User::class, $u);
+    ) {
         if (!$type || !($type instanceof AuthenticationType)) {
             return $this->view();
         }
@@ -208,6 +200,10 @@ class Login extends PageController implements LoggerAwareInterface
         $ue = new \Concrete\Core\User\Event\User($u);
         $this->app->make('director')->dispatch('on_user_login', $ue);
 
+        /** @var NavigationCache $navigationCache */
+        $navigationCache = $this->app->make(NavigationCache::class);
+        $navigationCache->clear();
+
         return new RedirectResponse(
             $this->app->make('url/manager')->resolve(['/login', 'login_complete'])
         );
@@ -225,6 +221,21 @@ class Login extends PageController implements LoggerAwareInterface
         if ($u->isRegistered()) {
             $pll = $this->app->make(PostLoginLocation::class);
             $response = $pll->getPostLoginRedirectResponse(true);
+
+            // Expire the site cache in the logged in user's browser to avoid
+            // their full page cache serving local cached versions of the pages
+            // as they are now logged in and should probably see extra elements
+            // on the pages.
+            //
+            // Unfortunately this does not work in all browsers for insecure
+            // origins by default and you may see an error in the browser
+            // console. To get it to work, see the following e.g. in Chrome:
+            // chrome://flags/#unsafely-treat-insecure-origin-as-secure
+            // ----
+            // Update (from andrew): This slows down sites significantly on login. Sometimes it takes 20-30 seconds
+            // to login, which is unacceptable. If browsers figure out how to do this asynchronously at some point
+            // we can look to re-enable this.
+            // $response->headers->set('Clear-Site-Data', '"cache"');
 
             return $response;
         } else {
@@ -279,7 +290,6 @@ class Login extends PageController implements LoggerAwareInterface
 
     /**
      * @deprecated Use the getPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
-     *
      * @see \Concrete\Core\User\PostLoginLocation::getPostLoginUrl()
      *
      * @return string
@@ -294,7 +304,6 @@ class Login extends PageController implements LoggerAwareInterface
 
     /**
      * @deprecated Use the getSessionPostLoginUrl method of \Concrete\Core\User\PostLoginLocation
-     *
      * @see \Concrete\Core\User\PostLoginLocation::getSessionPostLoginUrl()
      *
      * @return string|false
@@ -309,7 +318,6 @@ class Login extends PageController implements LoggerAwareInterface
 
     public function view($type = null, $element = 'form')
     {
-        $this->requireAsset('javascript', 'backstretch');
         $this->set('authTypeParams', $this->getSets());
 
         $user = $this->app->make(User::class);

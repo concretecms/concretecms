@@ -56,4 +56,5 @@ abstract class TreeCollection implements TreeCollectionInterface
     {
         return $this->entryGroups;
     }
+
 }

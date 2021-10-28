@@ -1,0 +1,308 @@
+<svg display="none">
+    <defs>
+        <symbol id="icon-pencil" width="16px" height="16px" viewBox="0 0 16 16" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Header-Editor-Default" transform="translate(-81.000000, -16.000000)">
+                    <g id="Group-2">
+                        <g id="icons8-pencil" transform="translate(60.000000, 0.000000)" fill-rule="nonzero">
+                            <path d="M33.9802627,16 C33.7647899,16 33.5490787,16.0820789 33.3848682,16.2467106 L31.9473684,17.6842105 L35.3157895,21.0526316 L36.7532893,19.6151316 C37.0825524,19.2858684 37.0825524,18.7527632 36.7532893,18.4243421 L34.5756581,16.2467106 C34.4110265,16.0820789 34.1957364,16 33.9802627,16 Z M30.6842105,18.9473684 L22.6842105,26.9473684 C22.6842105,26.9473684 23.5305263,26.9515789 23.9473684,27.3684211 C24.3642105,27.7852632 24.3552632,28.6184211 24.3552632,28.6184211 C24.3552632,28.6184211 25.2138947,28.6349474 25.6315789,29.0526316 C26.0492632,29.4703158 26.0526316,30.3157895 26.0526316,30.3157895 L34.0526316,22.3157895 L30.6842105,18.9473684 Z M21.5641448,28.6315789 L21,32 L24.3684211,31.4358552 L21.5641448,28.6315789 Z"
+                                  id="Shape"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+        <symbol id="icon-cog" width="16px" height="16px" viewBox="0 0 16 16" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Header-Editor-Default" transform="translate(-139.000000, -16.000000)">
+                    <g id="Group-2">
+                        <g id="icons8-settings" transform="translate(139.000000, 16.000000)" fill-rule="nonzero">
+                            <path d="M5.99531256,0 L5.60156248,2.01875 C4.94495544,2.26704096 4.33782088,2.61392328 3.80468752,3.05156248 L1.86562504,2.38281248 L0,5.61718752 L1.55156248,6.9656248 C1.49654976,7.3031888 1.46093752,7.6468952 1.46093752,8 C1.46093752,8.3531048 1.49654976,8.6968112 1.55156248,9.0343752 L0,10.3828128 L1.86562504,13.6171872 L3.80468752,12.9484376 C4.33782088,13.3860768 4.94495544,13.7329592 5.60156248,13.9812496 L5.99531256,16 L9.72656232,16 L10.1203127,13.9812496 C10.7769199,13.7329592 11.3840543,13.3860768 11.9171871,12.9484376 L13.8562503,13.6171872 L15.7218751,10.3828128 L14.1703127,9.0343752 C14.2253255,8.6968112 14.2609375,8.3531048 14.2609375,8 C14.2609375,7.6468952 14.2253255,7.3031888 14.1703127,6.9656248 L15.7218751,5.61718752 L13.8562503,2.38281248 L11.9171871,3.05156248 C11.3840543,2.61392328 10.7769199,2.26704096 10.1203127,2.01875 L9.72656232,0 L5.99531256,0 Z M7.86093752,4.8 C9.62813752,4.8 11.0609375,6.2328 11.0609375,8 C11.0609375,9.7672 9.62813752,11.2 7.86093752,11.2 C6.09373752,11.2 4.66093752,9.7672 4.66093752,8 C4.66093752,6.2328 6.09373752,4.8 7.86093752,4.8 Z"
+                                  id="Shape-Copy"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-plus" width="16px" height="16px" viewBox="0 0 16 16" version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Header-Editor-Default" transform="translate(-197.000000, -16.000000)">
+                    <g id="Group-2">
+                        <g id="icons8-plus-math" transform="translate(197.000000, 16.000000)" fill-rule="nonzero">
+                            <path d="M7.2,0 C6.7187504,0 6.4,0.3187504 6.4,0.8 L6.4,6.4 L0.8,6.4 C0.3187504,6.4 0,6.7187504 0,7.2 L0,8.8 C0,9.2812504 0.3187504,9.6 0.8,9.6 L6.4,9.6 L6.4,15.2 C6.4,15.6812504 6.7187504,16 7.2,16 L8.8,16 C9.2812504,16 9.6,15.6812504 9.6,15.2 L9.6,9.6 L15.2,9.6 C15.6812504,9.6 16,9.2812504 16,8.8 L16,7.2 C16,6.7187504 15.6812504,6.4 15.2,6.4 L9.6,6.4 L9.6,0.8 C9.6,0.3187504 9.2812504,0 8.8,0 L7.2,0 Z"
+                                  id="Path"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-minus-circle" width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Dialog---Advanced-Search-01" transform="translate(-1006.000000, -370.000000)">
+                    <g id="Group" transform="translate(383.000000, 225.000000)">
+                        <g id="ic_remove_circle_outline" transform="translate(621.000000, 143.000000)">
+                            <g id="Icon-24px">
+                                <path d="M7,11 L7,13 L17,13 L17,11 L7,11 L7,11 Z M12,2 C6.48,2 2,6.48 2,12 C2,17.52 6.48,22 12,22 C17.52,22 22,17.52 22,12 C22,6.48 17.52,2 12,2 L12,2 Z M12,20 C7.59,20 4,16.41 4,12 C4,7.59 7.59,4 12,4 C16.41,4 20,7.59 20,12 C20,16.41 16.41,20 12,20 L12,20 Z" id="Shape"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-help" width="16px" height="16px" viewBox="0 0 16 16" version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Header-Editor-Default" transform="translate(-1283.000000, -16.000000)">
+                    <g id="Group-2">
+                        <g id="icons8-help-(1)" transform="translate(1283.000000, 16.000000)" fill-rule="nonzero">
+                            <path d="M8,0 C3.584,0 0,3.584 0,8 C0,12.416 3.584,16 8,16 C12.416,16 16,12.416 16,8 C16,3.584 12.416,0 8,0 Z M8.8,13.6 L7.2,13.6 L7.2,12 L8.8,12 L8.8,13.6 Z M10.456,7.4 L9.736,8.136 C9.16,8.72 8.8,9.2 8.8,10.4 L7.2,10.4 L7.2,10 C7.2,9.12 7.56,8.32 8.136,7.736 L9.128,6.728 C9.424,6.44 9.6,6.04 9.6,5.6 C9.6,4.72 8.88,4 8,4 C7.12,4 6.4,4.72 6.4,5.6 L4.8,5.6 C4.8,3.832 6.232,2.4 8,2.4 C9.768,2.4 11.2,3.832 11.2,5.6 C11.2,6.304 10.912,6.944 10.456,7.4 Z"
+                                  id="Shape"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-sitemap" width="14px" height="16px" viewBox="0 0 14 16" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Header-Editor-Default" transform="translate(-1345.000000, -16.000000)">
+                    <g id="Group-2">
+                        <g id="Screen-Shot-2020-01-30-at-2.48.35-PM">
+                            <g id="icons8-documents" fill-rule="nonzero">
+                                <g transform="translate(1345.000000, 16.000000)" id="Shape">
+                                    <path d="M1.45454545,0 C0.654545455,0 0,0.654545455 0,1.45454545 L0,11.6363636 L1.45454545,11.6363636 L1.45454545,1.45454545 L10.1818182,1.45454545 L10.1818182,0 L1.45454545,0 Z M2.90909091,2.90909091 L2.90909091,16 L13.8181818,16 L13.8181818,6.54545455 L10.1818182,2.90909091 L2.90909091,2.90909091 Z M5.81818182,8.72727273 L10.9090909,8.72727273 L10.9090909,10.1818182 L5.81818182,10.1818182 L5.81818182,8.72727273 Z M5.81818182,11.6363636 L10.9090909,11.6363636 L10.9090909,13.0909091 L5.81818182,13.0909091 L5.81818182,11.6363636 Z"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-dashboard" width="16px" height="16px" viewBox="0 0 16 16" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Header-Editor-Default" transform="translate(-1403.000000, -16.000000)">
+                    <g id="icons8-slider" fill-rule="nonzero">
+                        <g transform="translate(1403.000000, 16.000000)" id="Shape">
+                            <path d="M6.4,0 C5.35871248,0 4.47828872,0.67099888 4.14687504,1.6 L0,1.6 L0,3.2 L4.14687504,3.2 C4.47828872,4.12900112 5.35871248,4.8 6.4,4.8 C7.7232,4.8 8.8,3.7232 8.8,2.4 C8.8,1.0768 7.7232,0 6.4,0 Z M10.4,1.6 L10.4,3.2 L16,3.2 L16,1.6 L10.4,1.6 Z M10.4,5.6 C9.3587128,5.6 8.4782888,6.27099888 8.1468752,7.2 L0,7.2 L0,8.8 L8.1468752,8.8 C8.4782888,9.7290008 9.3587128,10.4 10.4,10.4 C11.7232,10.4 12.8,9.3232 12.8,8 C12.8,6.6768 11.7232,5.6 10.4,5.6 Z M14.4,7.2 L14.4,8.8 L16,8.8 L16,7.2 L14.4,7.2 Z M4,11.2 C2.95871248,11.2 2.07828872,11.8709992 1.74687504,12.8 L0,12.8 L0,14.4 L1.74687504,14.4 C2.07828872,15.3290008 2.95871248,16 4,16 C5.3232,16 6.4,14.9232 6.4,13.6 C6.4,12.2768 5.3232,11.2 4,11.2 Z M8,12.8 L8,14.4 L16,14.4 L16,12.8 L8,12.8 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-search" width="16px" height="16px" viewBox="0 0 16 16" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Header-Editor---Page-Nav" transform="translate(-1038.000000, -16.000000)">
+                    <g id="Group-2">
+                        <g id="Screen-Shot-2020-01-30-at-2.48.35-PM">
+                            <g id="icons8-search" fill-rule="nonzero">
+                                <g transform="translate(1038.000000, 16.000000)" id="Shape">
+                                    <path d="M6.38123167,0 C2.85337262,0 0,2.7879658 0,6.23495702 C0,9.68194861 2.85337262,12.469914 6.38123167,12.469914 C7.64076256,12.469914 8.8064518,12.1088825 9.79472141,11.495702 L14.4046921,16 L16,14.4412607 L11.4486804,10.0057307 C12.2668624,8.95702006 12.7624633,7.65759303 12.7624633,6.23495702 C12.7624633,2.7879658 9.9090911,0 6.38123167,0 Z M6.38123167,1.46704871 C9.08357781,1.46704871 11.2609971,3.59455578 11.2609971,6.23495702 C11.2609971,8.87535826 9.08357781,11.0028653 6.38123167,11.0028653 C3.67888554,11.0028653 1.50146628,8.87535826 1.50146628,6.23495702 C1.50146628,3.59455578 3.67888554,1.46704871 6.38123167,1.46704871 Z"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-arrow-left" width="18px" height="14px" viewBox="0 0 18 14" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Concrete-Header---Dashboard" transform="translate(-81.000000, -18.000000)">
+                    <g id="icons8-left-(1)" transform="translate(80.000000, 17.000000)" fill-rule="nonzero">
+                        <polygon id="Path"
+                                 points="8 0.9296875 0.9296875 8 8 15.070312 9.5 13.570312 4.9296875 9 19 9 19 7 4.9296875 7 9.5 2.4296875"></polygon>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-bookmark-page" width="40px" height="40px" viewBox="0 0 39.83 39.83" version="1.0"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols">
+                <g id="Icon---Bookmark">
+                    <path fill="#dfdfde"
+                          d="M36.2,39.83H3.64A3.64,3.64,0,0,1,0,36.2V3.64A3.64,3.64,0,0,1,3.64,0H36.2a3.64,3.64,0,0,1,3.63,3.64V36.2A3.64,3.64,0,0,1,36.2,39.83ZM3.64,1A2.68,2.68,0,0,0,1,3.64V36.2a2.67,2.67,0,0,0,2.67,2.66H36.2a2.66,2.66,0,0,0,2.66-2.66V3.64A2.67,2.67,0,0,0,36.2,1Z"/>
+                    <path fill="var(--icon-color)"
+                          d="M24.72,10.32h-9.6a1.59,1.59,0,0,0-1.6,1.6v17.6l6.4-5.6,6.4,5.6V11.92A1.6,1.6,0,0,0,24.72,10.32Z"/>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-dialog-help" width="20px" height="20px" viewBox="0 0 20 20" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Dialog---Add-Page-List" transform="translate(-1021.000000, -105.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Rectangle" fill-opacity="0.6" xlink:href="#path-1"></use>
+                    <g id="Group" mask="url(#mask-2)">
+                        <g transform="translate(315.000000, 80.000000)">
+                            <g id="icons8-info-(1)" stroke-width="1" fill="none" fill-rule="evenodd"
+                               transform="translate(706.000000, 25.000000)">
+                                <path d="M10,0 C4.47591167,0 0,4.47591167 0,10 C0,15.5240883 4.47591167,20 10,20 C15.5240883,20 20,15.5240883 20,10 C20,4.47591167 15.5240883,0 10,0 Z M10,1.66666667 C14.602865,1.66666667 18.3333333,5.39713583 18.3333333,10 C18.3333333,14.602865 14.602865,18.3333333 10,18.3333333 C5.39713583,18.3333333 1.66666667,14.602865 1.66666667,10 C1.66666667,5.39713583 5.39713583,1.66666667 10,1.66666667 Z M10,4.84375 C9.847005,4.84375 9.7200525,4.840495 9.58333333,4.86979167 C9.446615,4.89908833 9.31966167,4.97395833 9.21875,5.05208333 C9.11783833,5.13020833 9.04296917,5.23763 8.984375,5.36458333 C8.92578167,5.49153667 8.90625,5.64127583 8.90625,5.83333333 C8.90625,6.02213583 8.92578167,6.171875 8.984375,6.30208333 C9.04296917,6.43229167 9.11783833,6.53645833 9.21875,6.61458333 C9.31966167,6.69270833 9.446615,6.73828167 9.58333333,6.77083333 C9.7200525,6.80338583 9.847005,6.82291667 10,6.82291667 C10.14974,6.82291667 10.309245,6.80338583 10.4427083,6.77083333 C10.5761717,6.73828167 10.6803383,6.69270833 10.78125,6.61458333 C10.8821617,6.53645833 10.9570317,6.43229167 11.015625,6.30208333 C11.0742192,6.17513 11.1197917,6.02213583 11.1197917,5.83333333 C11.1197917,5.64127583 11.0742192,5.49153667 11.015625,5.36458333 C10.9570317,5.23763 10.8821617,5.13020833 10.78125,5.05208333 C10.6803383,4.97395833 10.5761717,4.89908833 10.4427083,4.86979167 C10.309245,4.840495 10.14974,4.84375 10,4.84375 Z M8.984375,7.63020833 L8.984375,15.1041667 L11.015625,15.1041667 L11.015625,7.63020833 L8.984375,7.63020833 Z"
+                                      id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+        <symbol id="icon-menu-launcher" width="16px" height="4px" viewBox="0 0 16 4" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Panel---Page-Settings---Versions-Specs" transform="translate(-322.000000, -443.000000)">
+                    <g id="Group-Copy-3" transform="translate(-1.000000, 49.000000)">
+                        <g id="Group-3-Copy" transform="translate(16.250000, 373.000000)">
+                            <g id="ic_more_horiz" transform="translate(305.750000, 14.000000)">
+                                <g id="Icon-24px">
+                                    <path d="M3,7 C1.9,7 1,7.9 1,9 C1,10.1 1.9,11 3,11 C4.1,11 5,10.1 5,9 C5,7.9 4.1,7 3,7 L3,7 Z M15,7 C13.9,7 13,7.9 13,9 C13,10.1 13.9,11 15,11 C16.1,11 17,10.1 17,9 C17,7.9 16.1,7 15,7 L15,7 Z M9,7 C7.9,7 7,7.9 7,9 C7,10.1 7.9,11 9,11 C10.1,11 11,10.1 11,9 C11,7.9 10.1,7 9,7 L9,7 Z"
+                                          id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-info" width="18px" height="18px" viewBox="0 0 18 18" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Panel---Page-Settings---Versions-Specs" transform="translate(-352.000000, -436.000000)"
+                   fill-rule="nonzero">
+                    <g id="Group-Copy-3" transform="translate(-1.000000, 49.000000)">
+                        <g id="Group-3-Copy" transform="translate(16.250000, 373.000000)">
+                            <g id="icons8-info" transform="translate(336.750000, 14.000000)">
+                                <path d="M9,0 C4.0293,0 0,4.0293 0,9 C0,13.9707 4.0293,18 9,18 C13.9707,18 18,13.9707 18,9 C18,4.0293 13.9707,0 9,0 Z M9.9,13.5 L8.1,13.5 L8.1,8.1 L9.9,8.1 L9.9,13.5 Z M9.9,6.3 L8.1,6.3 L8.1,4.5 L9.9,4.5 L9.9,6.3 Z"
+                                      id="Shape"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-panel-stack" width="24px" height="20px" viewBox="0 0 24 20" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Concrete---Add-Panel---Stacks" transform="translate(-39.000000, -225.000000)"
+                   fill-rule="nonzero">
+                    <g id="Group-3" transform="translate(0.000000, 49.000000)">
+                        <g id="icons8-stack" transform="translate(39.000000, 176.000000)">
+                            <path d="M0,0 L0,6 L24,6 L24,0 L0,0 Z M19,2 L22,2 L22,4 L19,4 L19,2 Z M0,7 L0,13 L24,13 L24,7 L0,7 Z M19,9 L22,9 L22,11 L19,11 L19,9 Z M0,14 L0,20 L24,20 L24,14 L0,14 Z M19,16 L22,16 L22,18 L19,18 L19,16 Z"
+                                  id="Shape"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-panel-folder" width="24px" height="22px" viewBox="0 0 24 22" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Concrete---Add-Panel---Stacks" transform="translate(-39.000000, -375.000000)"
+                   fill-rule="nonzero">
+                    <g id="Group-3" transform="translate(0.000000, 49.000000)">
+                        <g id="icons8-folder-copy" transform="translate(39.000000, 326.000000)">
+                            <path d="M1.56521739,0 C0.706972278,0 0,0.706972278 0,1.56521739 L0,6.26086957 L0,7.30434783 L0,20.3478261 C0,21.2060713 0.706972278,21.9130435 1.56521739,21.9130435 L22.4347826,21.9130435 C23.2930278,21.9130435 24,21.2060713 24,20.3478261 L24,7.82608696 L24,6.26086957 L24,3.65217391 C24,2.7939288 23.2930278,2.08695652 22.4347826,2.08695652 L8.34782609,2.08695652 C8.39299304,2.08695652 8.33164696,2.08714643 8.20414383,1.94021739 C8.07664017,1.79328835 7.91969687,1.54953454 7.75577426,1.28804348 C7.59185217,1.02655242 7.42005757,0.747542557 7.20346487,0.502377704 C6.98687165,0.257212904 6.68804557,0 6.26086957,0 L1.56521739,0 Z M1.56521739,1.04347826 L6.26086957,1.04347826 C6.22917391,1.04347826 6.2927687,1.04713565 6.42187513,1.19327447 C6.55098313,1.33941397 6.70812052,1.58214323 6.87126365,1.8423913 C7.03440678,2.10263937 7.20335426,2.3806247 7.41542139,2.625 C7.627488,2.8693753 7.91944017,3.13043478 8.34782609,3.13043478 L22.4347826,3.13043478 C22.7295809,3.13043478 22.9565217,3.35737565 22.9565217,3.65217391 L22.9565217,4.79347826 C22.7922303,4.73422957 22.6183529,4.69565217 22.4347826,4.69565217 L1.56521739,4.69565217 C1.38164739,4.69565217 1.20776948,4.73422957 1.04347826,4.79347826 L1.04347826,1.56521739 C1.04347826,1.27041903 1.27041903,1.04347826 1.56521739,1.04347826 Z M1.56521739,5.73913043 L22.4347826,5.73913043 C22.7295809,5.73913043 22.9565217,5.9660713 22.9565217,6.26086957 L22.9565217,7.82608696 L22.9565217,20.3478261 C22.9565217,20.6426243 22.7295809,20.8695652 22.4347826,20.8695652 L1.56521739,20.8695652 C1.27041903,20.8695652 1.04347826,20.6426243 1.04347826,20.3478261 L1.04347826,7.30434783 L1.04347826,6.26086957 C1.04347826,5.9660713 1.27041903,5.73913043 1.56521739,5.73913043 Z"
+                                  id="Shape"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-navigate-to-folder" width="21px" height="9px" viewBox="0 0 21 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Main-Header-with-Bookmark-Copy" transform="translate(-961.000000, -86.000000)">
+                    <g id="Main-Header-with-Bookmark">
+                        <g id="Group-4" transform="translate(960.000000, 79.000000)">
+                            <g id="ic_undo">
+                                <g id="Icon-24px">
+                                    <path d="M11.5,8 C8.85,8 6.45,8.99 4.6,10.6 L1,7 L1,16 L10,16 L6.38,12.38 C7.77,11.22 9.54,10.5 11.5,10.5 C15.04,10.5 18.05,12.81 19.1,16 L21.47,15.22 C20.08,11.03 16.15,8 11.5,8 L11.5,8 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-create-folder" width="20px" height="16px" viewBox="0 0 20 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" fill-rule="evenodd">
+                <g id="Main-Header-with-Bookmark-Copy" transform="translate(-1017.000000, -83.000000)">
+                    <g id="Main-Header-with-Bookmark">
+                        <g id="Group-4" transform="translate(960.000000, 79.000000)">
+                            <g id="ic_create_new_folder" transform="translate(54.000000, 0.000000)">
+                                <g id="Icon-24px">
+                                    <path d="M21,6 L13,6 L11,4 L5,4 C3.89,4 3.01,4.89 3.01,6 L3,18 C3,19.11 3.89,20 5,20 L21,20 C22.11,20 23,19.11 23,18 L23,8 C23,6.89 22.11,6 21,6 L21,6 Z M20,14 L17,14 L17,17 L15,17 L15,14 L12,14 L12,12 L15,12 L15,9 L17,9 L17,12 L20,12 L20,14 L20,14 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+
+        <symbol id="icon-add-files" width="14px" height="17px" viewBox="0 0 14 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Symbols" stroke="none" fill-rule="evenodd">
+                <g id="Main-Header-with-Bookmark-Copy" transform="translate(-1073.000000, -82.000000)">
+                    <g id="Main-Header-with-Bookmark">
+                        <g id="Group-4" transform="translate(960.000000, 79.000000)">
+                            <g id="ic_file_upload" transform="translate(108.000000, 0.000000)">
+                                <g id="Icon-24px">
+                                    <path d="M9,16 L15,16 L15,10 L19,10 L12,3 L5,10 L9,10 L9,16 Z M5,18 L19,18 L19,20 L5,20 L5,18 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </symbol>
+
+        <symbol id="icon-loader-circles" version="1.1" id="L4" style="background: black" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  viewBox="0 0 250 100" enable-background="new 0 0 0 0" xml:space="preserve">
+  <circle stroke="none" cx="32" cy="50" r="32">
+    <animate
+      attributeName="opacity"
+      dur="1s"
+      values="0;1;0"
+      repeatCount="indefinite"
+      begin="0.1"/>
+  </circle>
+  <circle stroke="none" cx="124" cy="50" r="32">
+    <animate
+      attributeName="opacity"
+      dur="1s"
+      values="0;1;0"
+      repeatCount="indefinite"
+      begin="0.2"/>
+  </circle>
+  <circle stroke="none" cx="216" cy="50" r="32">
+    <animate
+      attributeName="opacity"
+      dur="1s"
+      values="0;1;0"
+      repeatCount="indefinite"
+      begin="0.3"/>
+  </circle>
+</symbol>
+
+    </defs>
+</svg>

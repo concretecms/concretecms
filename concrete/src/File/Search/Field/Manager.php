@@ -7,6 +7,7 @@ use Concrete\Core\File\Search\Field\Field\AddedToPageField;
 use Concrete\Core\File\Search\Field\Field\DateAddedField;
 use Concrete\Core\File\Search\Field\Field\ExtensionField;
 use Concrete\Core\File\Search\Field\Field\FileSetField;
+use Concrete\Core\File\Search\Field\Field\FolderField;
 use Concrete\Core\File\Search\Field\Field\SizeField;
 use Concrete\Core\File\Search\Field\Field\StorageLocationField;
 use Concrete\Core\File\Search\Field\Field\TypeField;
@@ -27,6 +28,7 @@ class Manager extends FieldManager
         $this->fileCategory = $fileCategory;
         $this->addGroup(t('Core Properties'), [
             new KeywordsField(),
+            new FolderField(),
             new FileSetField(),
             new ExtensionField(),
             new TypeField(),

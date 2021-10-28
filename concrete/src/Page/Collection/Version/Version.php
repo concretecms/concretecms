@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Collection\Version;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectTrait;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
@@ -12,7 +13,6 @@ use Permissions;
 use Concrete\Core\User\User;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
-use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
@@ -118,6 +118,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @var int|string
      */
     public $pThemeID;
+
+    /**
+     * The identifier of any custom skin attached to this page version.
+     *
+     * @var string
+     */
+    public $pThemeSkinIdentifier;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the getPublishDate() / setPublishDate() / setPublishInterval() methods instead
@@ -234,6 +241,17 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     public static function get($c, $cvID)
     {
         $app = Facade::getFacadeApplication();
+
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $key = '/Page/Collection/' . $c->getCollectionID() . '/Version/' . $cvID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
         $db = $app->make('database')->connection();
         $now = $app->make('date')->getOverridableNow();
 
@@ -280,6 +298,11 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         }
 
         $cv->cID = $c->getCollectionID();
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($cv);
+            $cache->save($item);
+        }
 
         return $cv;
     }
@@ -770,7 +793,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $app->make('director')->dispatch('on_page_version_approve', $ev);
 
         $c->reindex(false, $doReindexImmediately);
-        $c->writePageThemeCustomizations();
         $this->refreshCache();
     }
 
@@ -878,7 +900,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
     }
 
     /**
-     * Delete this version and its related data (blocks, feature assignments, attributes, custom styles, ...).
+     * Delete this version and its related data (blocks, attributes, custom styles, ...).
      */
     public function delete()
     {
@@ -903,12 +925,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
                 unset($b);
             }
         }
-
-        $features = CollectionVersionFeatureAssignment::getList($this);
-        foreach ($features as $fa) {
-            $fa->delete();
-        }
-
+        
         $category = $app->make('Concrete\Core\Attribute\Category\PageCategory');
         $attributes = $category->getAttributeValues($this);
         foreach ($attributes as $attribute) {

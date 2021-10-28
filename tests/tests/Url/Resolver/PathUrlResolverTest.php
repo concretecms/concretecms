@@ -6,8 +6,7 @@ use Concrete\TestHelpers\Url\Resolver\ResolverTestCase;
 
 class PathUrlResolverTest extends ResolverTestCase
 {
-    protected function setUp()
-    {
+    public function setUp():void    {
         parent::setUp();
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $this->urlResolver = $app->make('Concrete\Core\Url\Resolver\PathUrlResolver');
