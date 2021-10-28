@@ -9,7 +9,7 @@ class PageUrlResolverTest extends ResolverTestCase
 {
     use CreateClassMockTrait;
 
-    protected function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();

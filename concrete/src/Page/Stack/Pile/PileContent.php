@@ -1,11 +1,14 @@
 <?php
 namespace Concrete\Core\Page\Stack\Pile;
 
+use Concrete\Core\Application\Service\Urls;
+use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Support\Facade\Application;
 use Loader;
 use Concrete\Core\Foundation\ConcreteObject;
-use Block;
+use Concrete\Core\Block\Block;
 
-class PileContent extends ConcreteObject
+class PileContent extends ConcreteObject implements \JsonSerializable
 {
     public $p, $pID, $pcID, $itemID, $itemType, $quantity, $timestamp, $displayOrder;
 
@@ -98,7 +101,7 @@ class PileContent extends ConcreteObject
         $v = array($pcID);
         $q = "select pID, pcID, itemID, itemType, displayOrder, quantity, timestamp from PileContents where pcID = ?";
         $r = $db->query($q, $v);
-        $row = $r->fetchRow();
+        $row = $r->fetch();
 
         $pc = new self();
         if (is_array($row)) {
@@ -131,5 +134,43 @@ class PileContent extends ConcreteObject
         $modules = explode(',', PILE_MODULES_INSTALLED);
 
         return $modules;
+    }
+
+    public function jsonSerialize()
+    {
+        $block = Block::getByID($this->getItemID());
+
+        if (!$block || !is_object($block) || $block->isError()) {
+            return [];
+        }
+
+        /** @var \Concrete\Core\Entity\Block\BlockType\BlockType $type */
+        $type = $block->getBlockTypeObject();
+        $app = Application::getFacadeApplication();
+        /** @var Urls $ci */
+        $ci = $app->make(Urls::class);
+
+        $icon = $ci->getBlockTypeIconURL($type);
+
+        ob_start();
+        $bv = new BlockView($block);
+        $bv->render('scrapbook');
+        $blockContent = ob_get_contents();
+        ob_end_clean();
+
+        return [
+            "name" => $type->getBlockTypeName(),
+            "handle" => $type->getBlockTypeHandle(),
+            "dialogTitle" => t('Add %s', t($type->getBlockTypeName())),
+            "dialogWidth" => (int)$type->getBlockTypeInterfaceWidth(),
+            "dialogHeight" => (int)$type->getBlockTypeInterfaceHeight(),
+            "hasAddTemplate" => (int)$type->hasAddTemplate(),
+            "supportsInlineAdd" => (int)$type->supportsInlineAdd(),
+            "blockTypeId" => $type->getBlockTypeID(),
+            "pileContentId" => $this->getPileContentID(),
+            "draggingAvatar" => h('<div class="ccm-block-icon-wrapper d-flex align-items-center justify-content-center"><img src="' . $icon . '" /></div><p><span>' . t($type->getBlockTypeName()) . '</span></p>'),
+            "blockId" => (int) $block->getBlockID(),
+            "blockContent" => $blockContent
+        ];
     }
 }

@@ -145,13 +145,13 @@ abstract class GridFramework
     {
         switch ($class) {
             case self::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL:
-                return 'fa fa-mobile-phone';
+                return 'fas fa-mobile-alt';
             case self::DEVICE_CLASSES_HIDE_ON_SMALL:
-                return 'fa fa-tablet';
+                return 'fas fa-tablet-alt';
             case self::DEVICE_CLASSES_HIDE_ON_MEDIUM:
-                return 'fa fa-laptop';
+                return 'fas fa-laptop';
             case self::DEVICE_CLASSES_HIDE_ON_LARGE:
-                return 'fa fa-desktop';
+                return 'fas fa-desktop';
         }
     }
 

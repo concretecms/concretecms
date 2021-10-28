@@ -1,114 +1,90 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");?>
-
 <?php
 
-$type_menu->render();
+defined('C5_EXECUTE') or die('Access Denied.');
 
-?>
+/**
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Multisite\Types $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Entity\Site\Type $type
+ * @var Concrete\Core\Filesystem\Element $typeMenu
+ * @var Concrete\Core\Page\View\PageView $view
+ * @var Concrete\Core\Entity\Site\Group\Group|null $group
+ * @var Concrete\Core\Entity\Site\Group\Group[] $groups (when $group is null)
+ */
+$typeMenu->render();
 
-<?php if ($controller->getTask() == 'add_group'
-    || $controller->getTask() == 'create_group'
-    || $controller->getTask() == 'edit_group'
-    || $controller->getTask() == 'update_group'
-    || $controller->getTask() == 'delete_group') {
-    $url = '';
-    $ssHandle = '';
-    $action = $view->action('create_group', $type->getSiteTypeID());
-    $tokenString = 'create_group';
-    $buttonText = t('Add');
-    if (is_object($group)) {
-        $groupName = $group->getSiteGroupName();
-        $action = $view->action('update_group', $group->getSiteGroupID());
-        $tokenString = 'update_group';
-        $buttonText = t('Save');
-    }
-    ?>
-
-    <?php if (is_object($group)) {
+if ($group !== null) {
+    if ($group->getSiteGroupID() !== null) {
         ?>
-        <div class="ccm-dashboard-header-buttons">
-            <button data-dialog="delete-group" class="btn btn-danger"><?php echo t("Delete Group")?></button>
-        </div>
-
-        <div style="display: none">
-            <div id="ccm-dialog-delete-site-group" class="ccm-ui">
-                <form method="post" class="form-stacked" action="<?=$view->action('delete_group')?>">
-                    <?=Loader::helper("validation/token")->output('delete_group')?>
-                    <input type="hidden" name="siteGID" value="<?=$group->getSiteGroupID()?>" />
-                    <p><?=t('Are you sure? This action cannot be undone.')?></p>
+        <div class="ccm-dashboard-dialog-wrapper">
+            <div data-dialog-wrapper="delete-group">
+                <form method="post" action="<?= $controller->action('delete_group') ?>">
+                    <?php $token->output('delete_group') ?>
+                    <input type="hidden" name="siteGID" value="<?= $group->getSiteGroupID() ?>" />
+                    <?= t('Are you sure? This action cannot be undone.') ?>
+                    <div class="dialog-buttons">
+                        <button class="btn btn-secondary" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+                        <button class="btn btn-danger" onclick="$('div[data-dialog-wrapper=delete-group] form').submit()"><?= t('Delete Group') ?></button>
+                    </div>
                 </form>
-                <div class="dialog-buttons">
-                    <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-                    <button class="btn btn-danger pull-right" onclick="$('#ccm-dialog-delete-site-group form').submit()"><?=t('Delete Group')?></button>
-                </div>
             </div>
         </div>
-
         <?php
     }
     ?>
-
-    <script type="text/javascript">
-        $(function() {
-            $('button[data-dialog=delete-group]').on('click', function() {
-                jQuery.fn.dialog.open({
-                    element: '#ccm-dialog-delete-site-group',
-                    modal: true,
-                    width: 320,
-                    title: '<?=t("Delete Site Group")?>',
-                    height: 'auto'
-                });
-            });
-        });
-    </script>
-
-    <form method="post" action="<?=$action?>">
-        <?=$this->controller->token->output($tokenString)?>
-
+    <form method="post" action="<?= $group->getSiteGroupID() === null ? $controller->action('create_group', $type->getSiteTypeID()) : $controller->action('update_group', $group->getSiteGroupID()) ?>">
+        <?php $token->output($group->getSiteGroupID() === null ? 'create_group' : 'update_group') ?>
         <div class="form-group">
-            <?=$form->label('groupName', t('Name'))?>
-            <?=$form->text('groupName', $groupName)?>
+            <?= $form->label('groupName', t('Name')) ?>
+            <?= $form->text('groupName', $group->getSiteGroupName(), ['required' => 'required']) ?>
         </div>
-
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=URL::to('/dashboard/system/multsite/types', 'view_groups', $type->getSiteTypeID())?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
-                <button class="pull-right btn btn-success" type="submit" ><?=$buttonText?></button>
+                <div class="float-end">
+                    <a class="btn btn-secondary" href="<?= $controller->action('view_groups', $type->getSiteTypeID()) ?>"><?= t('Cancel') ?></a>
+                    <?php
+                    if ($group->getSiteGroupID() !== null) {
+                        ?>
+                        <a href="javascript:void(0)" class="btn btn-danger" data-dialog="delete-group" data-dialog-title="<?= t('Delete Group') ?>" data-dialog-width="400"><?= t('Delete Group') ?></a>
+                        <?php
+                    }
+                    ?>
+                    <button class="pull-right btn btn-primary" type="submit" ><?= $group->getSiteGroupID() === null ? t('Add') : t('Save') ?></button>
+                </div>
             </div>
         </div>
-
     </form>
     <?php
 } else {
-    ?>
-
-
-    <div class="ccm-dashboard-header-buttons">
-        <a href="<?php echo View::url('/dashboard/system/multisite/types', 'add_group', $type->getSiteTypeID())?>" class="btn btn-primary"><?php echo t("Add Group")?></a>
-    </div>
-
-
-    <?php if (count($groups) > 0) {
+    if ($groups === []) {
         ?>
-
+        <div class="alert alert-info">
+            <?= t('You have not added any site groups.') ?>
+        </div>
+        <?php
+    } else {
+        ?>
         <ul class="item-select-list">
-            <?php foreach ($groups as $group) {
+            <?php
+            foreach ($groups as $group) {
                 ?>
-                <li><a href="<?=$this->action('edit_group', $group->getSiteGroupID())?>"><i class="fa fa-users"></i> <?=$group->getSiteGroupName()?></a></li>
+                <li>
+                    <a href="<?= $controller->action('edit_group', $group->getSiteGroupID()) ?>"><i class="fas fa-users"></i> <?= h($group->getSiteGroupName()) ?></a>
+                </li>
                 <?php
             }
             ?>
         </ul>
-
-
-        <?php
-    } else {
-        ?>
-        <p><?=t("You have not added any site groups.")?></p>
         <?php
     }
     ?>
-
-
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <div class="float-end">
+                <a class="btn btn-primary" href="<?= $controller->action('add_group', $type->getSiteTypeID()) ?>"><?= t('Add Group') ?></a>
+            </div>
+        </div>
+    </div>
     <?php
-} ?>
+}

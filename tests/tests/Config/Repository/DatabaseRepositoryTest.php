@@ -14,7 +14,7 @@ class DatabaseRepositoryTest extends ConcreteDatabaseTestCase
 
     protected $tables = ['Config'];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repository = new Repository(new DatabaseLoader(), new DatabaseSaver(), 'test');
     }

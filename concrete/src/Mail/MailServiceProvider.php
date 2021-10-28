@@ -3,7 +3,7 @@ namespace Concrete\Core\Mail;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Mail\Transport\Factory as TransportFactory;
-use Zend\Mail\Transport\TransportInterface;
+use Laminas\Mail\Transport\TransportInterface;
 
 class MailServiceProvider extends ServiceProvider
 {
@@ -20,7 +20,7 @@ class MailServiceProvider extends ServiceProvider
             $app->bind($key, $value);
         }
 
-        $this->app->singleton(TransportInterface::class, function () use ($app) {
+        $this->app->bind(TransportInterface::class, function () use ($app) {
             $factory = $app->make(TransportFactory::class);
 
             return $factory->createTransportFromConfig($app->make('config'));

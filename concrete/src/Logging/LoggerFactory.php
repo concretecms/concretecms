@@ -3,15 +3,15 @@
 namespace Concrete\Core\Logging;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Logging\Configuration\ConfigurationFactory;
 use Concrete\Core\Logging\Configuration\ConfigurationInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class LoggerFactory
 {
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @var \Concrete\Core\Events\EventDispatcher
      */
     protected $dispatcher;
 

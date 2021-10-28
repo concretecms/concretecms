@@ -2,11 +2,20 @@
 namespace Concrete\Controller\Element\Search;
 
 use Concrete\Core\Controller\ElementController;
+use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Search\ProviderInterface;
 
 class CustomizeResults extends ElementController
 {
+    /**
+     * @var ProviderInterface
+     */
     protected $provider;
+
+    /**
+     * @var Query
+     */
+    protected $query;
 
     protected $includeNumberOfResults = true;
 
@@ -26,10 +35,11 @@ class CustomizeResults extends ElementController
         $this->includeNumberOfResults = $includeNumberOfResults;
     }
 
-    public function __construct(ProviderInterface $provider)
+    public function __construct(ProviderInterface $provider, Query $query = null)
     {
         parent::__construct();
         $this->provider = $provider;
+        $this->query = $query;
     }
 
     public function getElement()
@@ -40,6 +50,7 @@ class CustomizeResults extends ElementController
     public function view()
     {
         $this->set('provider', $this->provider);
+        $this->set('query', $this->query);
         $this->set('includeNumberOfResults', $this->includeNumberOfResults());
     }
 }

@@ -5,6 +5,8 @@ use Core;
 use Database;
 use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Validation\CSRF\Token;
 
 class Category extends ConcreteObject
 {
@@ -24,7 +26,7 @@ class Category extends ConcreteObject
         $db = Database::get();
         self::$categories = array();
         $r = $db->Execute('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $pkc = new static();
             $pkc->setPropertiesFromArray($row);
             self::$categories[$pkc->getPermissionKeyCategoryID()] = $pkc;
@@ -65,10 +67,10 @@ class Category extends ConcreteObject
         $db = Database::get();
         $list = array();
         $r = $db->Execute('select pkCategoryID from PermissionKeyCategories where pkgID = ? order by pkCategoryID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['pkCategoryID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -97,18 +99,31 @@ class Category extends ConcreteObject
         return $ak;
     }
 
-    public function getToolsURL($task = false)
+    /**
+     * Build the URL of a task (replaces the previous getToolsURL method)
+     *
+     * @param string $task The task to be executed ('save_permission' if empty)
+     *
+     * @param array $options Optional arguments (will be added to the query string).
+     *
+     * @return string
+     */
+    public function getTaskURL(string $task = '', array $options = []): string
     {
-        if (!$task) {
+        if ($task === '') {
             $task = 'save_permission';
         }
-        $uh = Core::make('helper/concrete/urls');
-        $akc = static::getByID($this->getPermissionKeyCategoryID());
-        $url = $uh->getToolsURL('permissions/categories/' . $this->pkCategoryHandle, $akc->getPackageHandle());
-        $token = Core::make('helper/validation/token')->getParameter($task);
-        $url .= '?' . $token . '&task=' . $task;
-
-        return $url;
+        $categoryHandle = $this->getPermissionKeyCategoryHandle();
+        $pathChunks = [
+            '/ccm/system/permissions/categories',
+            $categoryHandle,
+            $task
+        ];
+        $app = app();
+        $token = $app->make(Token::class);
+        $options += [$token::DEFAULT_TOKEN_NAME => $token->generate("{$task}@{$categoryHandle}")];
+        
+        return (string) $app->make(ResolverManagerInterface::class)->resolve($pathChunks)->setQuery($options);
     }
 
     public function getPermissionKeyCategoryID()
@@ -164,7 +179,7 @@ class Category extends ConcreteObject
         $db = Database::get();
         $cats = array();
         $r = $db->Execute('select pkCategoryID from PermissionKeyCategories order by pkCategoryID asc');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $cats[] = static::getByID($row['pkCategoryID']);
         }
 

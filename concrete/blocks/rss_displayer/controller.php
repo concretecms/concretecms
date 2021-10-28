@@ -2,10 +2,12 @@
 namespace Concrete\Block\RssDisplayer;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Loader;
 use Core;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $itemsToDisplay = "5";
     public $showSummary = "1";
@@ -45,6 +47,13 @@ class Controller extends BlockController
      * @var int
      */
     protected $rssFeedCacheLifetime = 1800;
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::NAVIGATION
+        ];
+    }
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
@@ -174,6 +183,7 @@ class Controller extends BlockController
             'title' => '',
             'standardDateFormat' => '',
             'customDateFormat' => '',
+            'titleFormat' => '',
         ];
         $args = [
             'url' => $data['url'],
@@ -181,6 +191,7 @@ class Controller extends BlockController
             'showSummary' => $data['showSummary'] ? 1 : 0,
             'launchInNewWindow' => $data['launchInNewWindow'] ? 1 : 0,
             'title' => $data['title'],
+            'titleFormat' => $data['titleFormat'],
         ];
         switch ($data['standardDateFormat']) {
             case ':custom:':

@@ -25,17 +25,19 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                     ?>
                     <p><?php echo t('Copy all pages from a locale to another section. This will only copy pages that have not been associated. It will not replace or remove any pages from the destination section.') ?></p>
                     <div class="form-group">
-                        <label class="control-label"><?php echo t('Copy From') ?></label>
+                        <label class="control-label form-label"><?php echo t('Copy From') ?></label>
                         <?php echo $copyLocaleSelect1 ?>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label"><?php echo tc('Destination', 'To') ?></label>
+                        <label class="control-label form-label"><?php echo tc('Destination', 'To') ?></label>
                         <?php echo $copyLocaleSelect2 ?>
                     </div>
 
                     <?php echo Loader::helper('validation/token')->output('copy_tree') ?>
-                    <button class="btn btn-default pull-left" type="submit" name="copy"><?= t('Copy Tree') ?></button>
+                    <div class="form-group">
+                        <button class="btn btn-secondary float-start" type="submit" name="copy"><?= t('Copy Tree') ?></button>
+                    </div>
 
                     <?php
                 } elseif (count($locales) == 1) {
@@ -55,20 +57,19 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                             var ctf = $('select[name=copyTreeFrom]').val();
                             var ctt = $('select[name=copyTreeTo]').val();
                             if (ctt > 0 && ctf > 0 && ctt != ctf) {
-                                ccm_triggerProgressiveOperation(
-                                    CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
-                                    [
+                                new ConcreteProgressiveOperation({
+                                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/drag_request/copy_all',
+                                    data: [
                                         {'name': 'origCID', 'value': ctf},
                                         {'name': 'destCID', 'value': ctt},
                                         {'name': 'copyChildrenOnly', 'value': true},
-                                        {'name': 'multilingual', 'value': true},
                                         {name: <?= json_encode($token::DEFAULT_TOKEN_NAME) ?>, value: <?= json_encode($token->generate('/dialogs/page/drag_request'))?>}
                                     ],
-                                    <?= json_encode(t('Copy Locale Tree')) ?>,
-                                    function () {
+                                    title: "<?=t('Copy Locale Tree')?>",
+                                    onComplete: function() {
                                         window.location.href = <?=json_encode((string) $this->action('tree_copied')) ?>;
                                     }
-                                );
+                                });
                             } else {
                                 alert(<?= json_encode(t('You must choose two separate multilingual sections to copy from/to')) ?>);
                             }
@@ -97,14 +98,16 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                     ?>
                     <p><?php echo t('Scans all blocks within the selected section. Any links to pages within another multilingual section will be updated to link to the pages within the selected tree. Any blocks within the scanned section that reference pages in another multilingual section will be updated to point to the page within the selected tree.') ?></p>
                     <div class="form-group">
-                        <label class="control-label"><?php echo t('Rescan Locale') ?></label>
+                        <label class="control-label form-label"><?php echo t('Rescan Locale') ?></label>
                         <?php echo $form->select('rescanLocale', $copyLocales);
                         ?>
                     </div>
 
                     <?php echo Loader::helper('validation/token')->output('rescan_locale') ?>
-                    <button class="btn btn-default pull-left" type="submit"
-                            name="rescan_locale"><?= t('Rescan Locale') ?></button>
+                    <div class="form-group">
+                        <button class="btn btn-secondary float-start" type="submit"
+                                name="rescan_locale"><?= t('Rescan Locale') ?></button>
+                    </div>
 
                     <?php
                 } elseif (count($pages) == 1) {
@@ -123,20 +126,20 @@ use Concrete\Core\Multilingual\Page\Section\Section as MultilingualSection;
                         $("#ccm-internationalization-rescan-tree").on('submit', function () {
                             var ctf = $('select[name=rescanLocale]').val();
                             if (ctf > 0) {
-                                ccm_triggerProgressiveOperation(
-                                    '<?=$view->action('rescan_locale')?>',
-                                    [
+                                new ConcreteProgressiveOperation({
+                                    url: '<?=$view->action('rescan_locale')?>',
+                                    data: [
                                         {'name': 'locale', 'value': ctf},
                                         {
                                             'name': 'ccm_token',
                                             'value': '<?=Core::make('token')->generate('rescan_locale')?>'
                                         }
                                     ],
-                                    "<?=t('Rescan Links')?>",
-                                    function () {
+                                    title: "<?=t('Rescan Links')?>",
+                                    onComplete: function() {
                                         window.location.href = "<?=$this->action('links_rescanned')?>";
                                     }
-                                );
+                                });
                             }
                             return false;
                         });

@@ -99,11 +99,11 @@ class Application
      */
     public function getAllowedFileExtensions()
     {
-        $whitelist = array_map('strtolower', $this->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions')));
-        $blacklist = array_map('strtolower', $this->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions_blacklist')));
-        $whitelistNotBlacklist = array_diff($whitelist, $blacklist);
-        sort($whitelistNotBlacklist);
+        $allowlist = array_map('strtolower', $this->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions')));
+        $denylist = array_map('strtolower', $this->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions_denylist', Config::get('concrete.upload.extensions_blacklist'))));
+        $allowlistNotDenylist = array_diff($allowlist, $denylist);
+        sort($allowlistNotDenylist);
 
-        return $whitelistNotBlacklist;
+        return $allowlistNotDenylist;
     }
 }

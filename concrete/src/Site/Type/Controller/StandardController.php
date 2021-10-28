@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Site\Type\Controller;
 
 use Concrete\Core\Application\Application;
@@ -10,38 +11,35 @@ use Concrete\Core\Permission\Registry\Multisite\Access\DefaultHomePageAccessRegi
 use Concrete\Core\Permission\Registry\Multisite\Access\SiteFileFolderAccessRegistry;
 use Concrete\Core\Permission\Registry\ObjectAssignment;
 use Concrete\Core\Site\Type\Formatter\DefaultFormatter;
+use Concrete\Core\Site\Type\Formatter\FormatterInterface;
 use Concrete\Core\Site\Type\Skeleton\Service as SkeletonService;
 use Concrete\Core\Site\User\Group\Service as GroupService;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Symfony\Component\HttpFoundation\Request;
 
 class StandardController implements ControllerInterface
 {
-
     /**
-     * @var Applier
+     * @var \Concrete\Core\Permission\Registry\Applier
      */
     protected $permissionsApplier;
 
     /**
-     * @var SkeletonService
+     * @var \Concrete\Core\Site\Type\Skeleton\Service
      */
     protected $skeletonService;
 
     /**
-     * @var GroupService
+     * @var \Concrete\Core\Site\User\Group\Service
      */
     protected $groupService;
 
     /**
-     * @var Application
+     * @var \Concrete\Core\Application\Application
      */
     protected $app;
 
-    public function __construct(
-        Application $app,
-        Applier $permissionsApplier,
-        SkeletonService $skeletonService,
-        GroupService $groupService)
+    public function __construct(Application $app, Applier $permissionsApplier, SkeletonService $skeletonService, GroupService $groupService)
     {
         $this->permissionsApplier = $permissionsApplier;
         $this->app = $app;
@@ -49,7 +47,67 @@ class StandardController implements ControllerInterface
         $this->skeletonService = $skeletonService;
     }
 
-    protected function addSiteFolder(Site $site, Request $request)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Site\Type\Controller\ControllerInterface::add()
+     */
+    public function add(Site $site, Request $request): Site
+    {
+        $this->addSiteFolder($site, $request);
+
+        return $site;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Site\Type\Controller\ControllerInterface::update()
+     */
+    public function update(Site $site, Request $request): Site
+    {
+        return $site;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Site\Type\Controller\ControllerInterface::delete()
+     */
+    public function delete(Site $site): bool
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Site\Type\Controller\ControllerInterface::addType()
+     */
+    public function addType(Type $type): Type
+    {
+        $home = $this->skeletonService->getHomePage($type);
+        $this->permissionsApplier->applyAssignment(
+            new ObjectAssignment(
+                new \Concrete\Core\Permission\Registry\Entry\Object\Object\Page($home),
+                new DefaultHomePageAccessRegistry()
+            )
+        );
+
+        return $type;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Site\Type\Controller\ControllerInterface::getFormatter()
+     */
+    public function getFormatter(Type $type): FormatterInterface
+    {
+        return new DefaultFormatter($type);
+    }
+
+    protected function addSiteFolder(Site $site, Request $request): FileFolder
     {
         $filesystem = new Filesystem();
         $root = $filesystem->getRootFolder();
@@ -60,38 +118,7 @@ class StandardController implements ControllerInterface
             new \Concrete\Core\Permission\Registry\Entry\Object\Object\FileFolder($folder),
             new SiteFileFolderAccessRegistry($site, $this->groupService)
         );
-    }
 
-    public function add(Site $site, Request $request)
-    {
-        $this->addSiteFolder($site, $request);
-        return $site;
-    }
-
-    public function update(Site $site, Request $request)
-    {
-        return $site;
-    }
-
-    public function delete(Site $site)
-    {
-        return false;
-    }
-
-    public function addType(Type $type)
-    {
-        $home = $this->skeletonService->getHomePage($type);
-        $this->permissionsApplier->applyAssignment(
-            new ObjectAssignment(
-                new \Concrete\Core\Permission\Registry\Entry\Object\Object\Page($home),
-                new DefaultHomePageAccessRegistry()
-            )
-        );
-        return $type;
-    }
-
-    public function getFormatter(Type $type)
-    {
-        return new DefaultFormatter($type);
+        return $folder;
     }
 }

@@ -3,7 +3,7 @@ namespace Concrete\Core\Express\Search\ColumnSet;
 
 use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\Express\Search\Column\AssociationColumn;
+use Concrete\Core\Express\Search\ColumnSet\Column\AssociationColumn;
 use Concrete\Core\Search\Column\Column;
 
 class Available extends DefaultSet

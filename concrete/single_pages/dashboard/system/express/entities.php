@@ -13,7 +13,7 @@
 
             <li>
                 <a href="<?=URL::to('/dashboard/system/express/entities', 'view_entity', $entity->getID())?>">
-                    <i class="fa fa-database"></i> <?=$entity->getEntityDisplayName()?>
+                    <i class="fas fa-database"></i> <?=$entity->getEntityDisplayName()?>
                 </a>
             </li>
         <?php 

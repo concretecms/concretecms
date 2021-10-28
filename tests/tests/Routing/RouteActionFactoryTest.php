@@ -8,8 +8,10 @@ use Concrete\Core\Routing\Route;
 use Concrete\Core\Routing\RouteActionFactory;
 use Concrete\Core\Routing\RouteActionInterface;
 use Mockery as M;
+use Concrete\Tests\TestCase;
 
-class RouteActionFactoryTest extends \PHPUnit_Framework_TestCase
+
+class RouteActionFactoryTest extends TestCase
 {
 
     public function testRouteActionPassesThrough()

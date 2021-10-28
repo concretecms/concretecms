@@ -5,6 +5,7 @@ use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetGroup;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Asset\AssetPointer;
+use Monolog\Logger;
 
 class ResponseAssetGroup
 {
@@ -151,53 +152,7 @@ class ResponseAssetGroup
                 } else {
                     return 0;
                 }
-
-                /*
-                // o1 not an asset, o2 not an asset
-                if ((!($a1 instanceof Asset)) && (!($a2 instanceof Asset))) {
-                    return sortByKey($k1, $k2);
-                }
-
-                // o1 an asset, doesn't support post processing, o2 not an asset
-                if ($a1 instanceof Asset && (!$a1->assetSupportsPostProcessing()) && (!($a2 instanceof Asset))) {
-                    return -1; // always come before post processing.
-                }
-
-                // o1 an asset, supports post processing, o2 not an asset
-                if ($a1 instanceof Asset && $a1->assetSupportsPostProcessing() && (!($a2 instanceof Asset))) {
-                    return 1; // asset 1 must ALWAYS come after asset 2
-                }
-
-                // o1 not an asset, o2 an asset, doesn't support post processing
-                if ((!($a1 instanceof Asset)) && $a2 instanceof Asset && (!$a2->assetSupportsPostProcessing())) {
-                    return -1; // always come before post processing.
-                }
-
-                // o1 an asset, doesn't support post processing, o2 an asset, doesn't support post processing
-                if ($a1 instanceof Asset && !$a1->assetSupportsPostProcessing() && $a2 instanceof Asset && !$a2->assetSupportsPostProcessing()) {
-                    return sortByKey($k1, $k2);
-                }
-
-                // o1 an asset, supports post processing, o2 an asset, doesn't support post processing
-                if ($a1 instanceof Asset && $a1->assetSupportsPostProcessing() && $a2 instanceof Asset && (!$a2->assetSupportsPostProcessing())) {
-                    return 1; // asset 1 must ALWAYS come after asset 2
-                }
-
-                // o1 not an asset, o2 an asset, supports post processing
-                if ((!($a1 instanceof Asset)) && $a2 instanceof Asset && ($a2->assetSupportsPostProcessing())) {
-                    return sortByKey($k1, $k2);
-                }
-
-                // o1 an asset, doesn't support post processing, o2 an asset, supports post processing
-                if ($a1 instanceof Asset && !$a1->assetSupportsPostProcessing() && $a2 instanceof Asset && $a2->assetSupportsPostProcessing()) {
-                    return -1;
-                }
-
-                // o1 an asset, supports post processing, o2 an asset, supports post processing
-                if ($a1 instanceof Asset && $a1->assetSupportsPostProcessing() && $a2 instanceof Asset && $a2->assetSupportsPostProcessing()) {
-                    return sortByKey($k1, $k2);
-                }
-                */
+                
 
             });
 
@@ -257,7 +212,10 @@ class ResponseAssetGroup
             if (isset($r)) {
                 $this->requiredAssetGroup->addGroup($r);
             } else {
-                throw new \Exception(t('"%s" is not a valid asset group handle', $assetType));
+                core_log(
+                    t('ResponseAssetGroup::requireAsset required "%s" but "%s" is not a valid asset group handle', $assetType, $assetType),
+                    Logger::NOTICE
+                );
             }
         }
     }

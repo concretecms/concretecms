@@ -4,9 +4,9 @@ namespace Concrete\Tests\Localization\Adapter\Core;
 
 use Concrete\Core\Localization\Translator\Adapter\Core\TranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory as LaminasTranslatorAdapterFactory;
 use Concrete\Core\Support\Facade\Facade;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * Tests for:
@@ -14,19 +14,19 @@ use PHPUnit_Framework_TestCase;
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
-class TranslatorAdapterFactoryTest extends PHPUnit_Framework_TestCase
+class TranslatorAdapterFactoryTest extends TestCase
 {
     protected $factory;
 
-    protected function setUp()
+    public function setUp():void
     {
         $app = Facade::getFacadeApplication();
 
         $config = $app->make('config');
         $plainFactory = new PlainTranslatorAdapterFactory();
-        $zendFactory = new ZendTranslatorAdapterFactory();
+        $laminasFactory = new LaminasTranslatorAdapterFactory();
 
-        $this->factory = new TranslatorAdapterFactory($config, $plainFactory, $zendFactory);
+        $this->factory = new TranslatorAdapterFactory($config, $plainFactory, $laminasFactory);
     }
 
     public function testCreateTranslatorAdapterWithBaseLocale()
@@ -40,6 +40,6 @@ class TranslatorAdapterFactoryTest extends PHPUnit_Framework_TestCase
     {
         $adapter = $this->factory->createTranslatorAdapter('tlh_US');
 
-        $this->assertInstanceOf('Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter', $adapter);
+        $this->assertInstanceOf('Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapter', $adapter);
     }
 }

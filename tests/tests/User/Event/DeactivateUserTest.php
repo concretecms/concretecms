@@ -7,12 +7,11 @@ use Concrete\Core\Entity\User\User;
 use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\UserInfo;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 
-class DeactivateUserTest extends PHPUnit_Framework_TestCase
+class DeactivateUserTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
 
     public function testStaticFactory()
     {

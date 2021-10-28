@@ -1,0 +1,35 @@
+.theme-atomik {
+  div.ccm-summary-template-blog-entry-thumbnail {
+
+    .ccm-summary-template-blog-entry-thumbnail-image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.1s linear;
+      background-color: rgba($primary, 0.7);
+    }
+
+    height: 100%;
+    .card {
+      height: 100%;
+
+      .card-title {
+        text-align: center;
+        color: $dark;
+      }
+
+      &:hover {
+        .ccm-summary-template-blog-entry-thumbnail-image-overlay {
+          opacity: 1
+        }
+        .card-title {
+          color: $primary;
+        }
+      }
+    }
+  }
+}

@@ -3,6 +3,7 @@
 namespace Concrete\Core\Mail;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\GroupLogger;
@@ -10,12 +11,13 @@ use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
 use Monolog\Logger;
 use Throwable;
-use Zend\Mail\Header\MessageId as MessageIdHeader;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\TransportInterface;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Mime;
-use Zend\Mime\Part as MimePart;
+use Laminas\Mail\Header\MessageId as MessageIdHeader;
+use Laminas\Mail\Headers;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\TransportInterface;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Mime;
+use Laminas\Mime\Part as MimePart;
 
 class Service
 {
@@ -131,6 +133,10 @@ class Service
      */
     protected $throwOnFailure;
 
+    const LOG_MAILS_NONE = '';
+    const LOG_MAILS_ONLY_METADATA = 'metadata';
+    const LOG_MAILS_METADATA_AND_BODY = 'metadata_and_body';
+
     /**
      * Initialize the instance.
      *
@@ -142,6 +148,14 @@ class Service
         $this->app = $app;
         $this->transport = $transport;
         $this->reset();
+    }
+
+    public function __destruct()
+    {
+        try {
+            $this->transport = null;
+        } catch (Throwable $x) {
+        }
     }
 
     /**
@@ -532,6 +546,32 @@ class Service
         $this->headers = $headers;
     }
 
+    private function isMetaDataLoggingEnabled() {
+        /** @var Repository $config */
+        $config = $this->app->make(Repository::class);
+        $logging = $config->get('concrete.log.emails');
+
+        if ((is_numeric($logging) && $logging == 1) || $logging === true) {
+            // legacy support
+            return true;
+        } else {
+            return $logging === self::LOG_MAILS_ONLY_METADATA || $logging === self::LOG_MAILS_METADATA_AND_BODY;
+        }
+    }
+
+    private function isBodyLoggingEnabled() {
+        /** @var Repository $config */
+        $config = $this->app->make(Repository::class);
+        $logging = $config->get('concrete.log.emails');
+
+        if ((is_numeric($logging) && $logging == 1) || $logging === true) {
+            // legacy support
+            return true;
+        } else {
+            return $logging === self::LOG_MAILS_METADATA_AND_BODY;
+        }
+    }
+
     /**
      * Sends the email.
      *
@@ -547,7 +587,6 @@ class Service
         $fromStr = $this->generateEmailStrings([$this->from]);
         $toStr = $this->generateEmailStrings($this->to);
         $replyStr = $this->generateEmailStrings($this->replyto);
-
         $mail = (new Message())->setEncoding(APP_CHARSET);
 
         if (is_array($this->from) && count($this->from)) {
@@ -560,7 +599,7 @@ class Service
             $fromStr = $config->get('concrete.email.default.address');
         }
 
-        // The currently included Zend library has a bug in setReplyTo that
+        // The currently included Laminas library has a bug in setReplyTo that
         // adds the Reply-To address as a recipient of the email. We must
         // set the Reply-To before any header with addresses and then clear
         // all recipients so that a copy is not sent to the Reply-To address.
@@ -648,22 +687,20 @@ class Service
             $l = new GroupLogger(Channels::CHANNEL_EXCEPTIONS, Logger::CRITICAL);
             $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $sendError->getMessage());
             $l->write($sendError->getTraceAsString());
-            if ($config->get('concrete.log.emails')) {
-                $l->write(t('Template Used') . ': ' . $this->template);
-                $l->write(t('To') . ': ' . $toStr);
-                $l->write(t('From') . ': ' . $fromStr);
-                if (isset($this->replyto)) {
-                    $l->write(t('Reply-To') . ': ' . $replyStr);
-                }
-                $l->write(t('Subject') . ': ' . $this->subject);
-                $l->write(t('Body') . ': ' . $this->body);
-            }
             $l->close();
         }
 
-        // add email to log
-        if ($config->get('concrete.log.emails') && !$this->getTesting()) {
+        if ($this->isMetaDataLoggingEnabled() && !$this->getTesting()) {
             $l = new GroupLogger(Channels::CHANNEL_EMAIL, Logger::NOTICE);
+            $l->write(t('Template Used') . ': ' . $this->template);
+            $l->write(t('To') . ': ' . $toStr);
+            $l->write(t('From') . ': ' . $fromStr);
+            if (isset($this->replyto)) {
+                $l->write(t('Reply-To') . ': ' . $replyStr);
+            }
+            $l->write(t('Subject') . ': ' . $this->subject);
+            $l->write(t('Body') . ': ' . $this->body);
+
             if ($config->get('concrete.email.enabled')) {
                 if ($sendError === null) {
                     $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL HAS BEEN SENT') . '**');
@@ -674,12 +711,44 @@ class Service
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
             }
             $l->write(t('Template Used') . ': ' . $this->template);
-            $detail = $mail->toString();
-            $encoding = $mail->getHeaders()->get('Content-Transfer-Encoding');
-            if (is_object($encoding) && $encoding->getFieldValue() === 'quoted-printable') {
-                $detail = quoted_printable_decode($detail);
+
+            if ($this->isBodyLoggingEnabled()) {
+                // Clone the mail without attachments for logging
+                $mailWithoutAttachments = clone $mail;
+
+                $attachedFiles = [];
+
+                if ($mailWithoutAttachments->getBody() instanceof \Laminas\Mime\Message) {
+                    $parts = $mailWithoutAttachments->getBody()->getParts();
+
+                    if (is_array($parts)) {
+                        foreach ($parts as $key => $part) {
+                            $partHeaders = $part->getHeadersArray();
+
+                            if (!(isset($partHeaders["disposition"]) && $partHeaders["disposition"] === Mime::DISPOSITION_ATTACHMENT)) {
+                                $attachedFiles[] = $part->getFileName();
+                                unset($parts[$key]);
+                            }
+                        }
+
+                        $mailWithoutAttachments->getBody()->setParts($parts);
+                    }
+                }
+
+                $mailDetails = $mailWithoutAttachments->toString();
+                $encoding = $mailWithoutAttachments->getHeaders()->get('Content-Transfer-Encoding');
+                if (is_object($encoding) && $encoding->getFieldValue() === 'quoted-printable') {
+                    $mailDetails = quoted_printable_decode($mailDetails);
+                }
+
+                // append the attached file names to the mail log
+                foreach($attachedFiles as $attachedFile) {
+                    $mailDetails .= t("[Attached File: %s]" , $attachedFile) . Headers::EOL;
+                }
+
+                $l->write(t('Mail Details: %s', $mailDetails));
             }
-            $l->write(t('Mail Details: %s', $detail));
+
             $l->close();
         }
 
@@ -699,7 +768,7 @@ class Service
     }
 
     /**
-     * @deprecated To get the mail transport, call \Core::make(\Zend\Mail\Transport\TransportInterface::class)
+     * @deprecated To get the mail transport, call \Core::make(\Laminas\Mail\Transport\TransportInterface::class)
      */
     public static function getMailerObject()
     {

@@ -1,0 +1,37 @@
+div.ccm-dashboard-update-details {
+    padding-top: 30px;
+    padding-bottom: 60px;
+    color: #999;
+    div.ccm-dashboard-update-thumbnail {
+        img {
+            width: 97px;
+            height: 97px;
+        }
+        float: left;
+        margin-right: 40px;
+        border-radius: 4px;
+    }
+    h2 {
+        margin: 10px 0px 20px 0px;
+        padding: 0px;
+        color: #333 !important;
+        font-weight: 300;
+    }
+}
+
+div.ccm-dashboard-update-detail-columns {
+    .ccm-dashboard-update-detail-main {
+        h3 {
+            margin-top: 0px;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+    }
+}
+
+div.ccm-dashboard-update-detail-release-notes {
+    h2 {
+        line-height: 16px;
+    }
+}

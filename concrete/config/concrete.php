@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '8.5.5',
-    'version_installed' => '8.5.5',
-    'version_db' => '20201116182100', // the key of the latest database migration
+    'version' => '9.0.0RC5',
+    'version_installed' => '9.0.0RC5',
+    'version_db' => '20211028000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -63,6 +63,84 @@ return [
          * @var int|null
          */
         'error_reporting' => null,
+
+        /**
+         * Hide specified superglobal keys and config items from whoops error output.
+         * If you wanted to hide an environment variable named "DB_PASSWORD", you'd specify it like this:
+         * ```
+         * '_ENV' => ['DB_PASSWORD'],
+         * ```
+         *
+         * The same applies for all superglobals.
+         *
+         * @var array<string, string[]>
+         */
+        'hide_keys' => [
+            /** @var string[] */
+            '_ENV' => [
+                // Likely database environment variables
+                'DB_PASSWORD',
+                'DB_USERNAME',
+                'DB_HOSTNAME',
+                'DB_HOST',
+                'DB_SERVER',
+                'DATABASE_PASSWORD',
+                'DATABASE_USERNAME',
+                'DATABASE_HOSTNAME',
+                'DATABASE_HOST',
+                'DATABASE_SERVER',
+            ],
+
+            /** @var string[] */
+            '_SERVER' => [
+                // Likely database environment variables
+                'DB_PASSWORD',
+                'DB_USERNAME',
+                'DB_HOSTNAME',
+                'DB_HOST',
+                'DB_SERVER',
+                'DATABASE_PASSWORD',
+                'DATABASE_USERNAME',
+                'DATABASE_HOSTNAME',
+                'DATABASE_HOST',
+                'DATABASE_SERVER',
+            ],
+
+            /** @var string[] */
+            '_GET' => [],
+
+            /** @var string[] */
+            '_POST' => [],
+
+            /** @var string[] */
+            '_FILES' => [],
+
+            /** @var string[] */
+            '_COOKIE' => [
+                'CONCRETE',
+            ],
+
+            /** @var string[] */
+            '_SESSION' => [],
+
+            /**
+             * Hide specified config keys from whoops error output
+             * `concrete.debug.display_errors` will hide that specific config item while `concrete.debug` will hide
+             * all items in the `concrete.debug` array.
+             *
+             * @var string[]
+             */
+            'config' => [
+                'concrete.proxy.password',
+                'concrete.mail.methods.smtp.password',
+                'concrete.email.default.address',
+                'concrete.email.form_block.address',
+                'concrete.email.forgot_password.address',
+                'concrete.email.validate_registration.address',
+                'concrete.email.workflow_notification.address',
+                'concrete.debug.hide_keys',
+            ],
+        ]
     ],
 
     /*
@@ -92,11 +170,11 @@ return [
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
         /*
-         * Disallowed file extension list (takes the precedence over the extensions whitelist).
+         * Disallowed file extension list (takes the precedence over the extensions allowlist).
          *
          * @var string semi-colon separated.
          */
-        'extensions_blacklist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
+        'extensions_denylist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
 
         'chunking' => [
             // Enable uploading files in chunks?
@@ -190,13 +268,6 @@ return [
         'blocks' => true,
 
         /*
-         * Cache Assets
-         *
-         * @var bool
-         */
-        'assets' => false,
-
-        /*
          * Cache Theme CSS/JS
          *
          * @var bool
@@ -281,7 +352,7 @@ return [
                                     'ttl' => 10
                                 ],
                             ],*/
-                            'prefix' => 'c5_overrides',
+                            'prefix' => 'concrete_overrides',
                             'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
@@ -305,7 +376,7 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix' => 'c5_expensive',
+                            'prefix' => 'concrete_expensive',
                             'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
@@ -321,7 +392,7 @@ return [
                     'redis' => [
                         'class' => \Concrete\Core\Cache\Driver\RedisStashDriver::class,
                         'options' => [
-                            'prefix' => 'c5_object',
+                            'prefix' => 'concrete_object',
                             'database' => 0, // Use different Redis Databases - optional
                         ],
                     ],
@@ -339,6 +410,126 @@ return [
         'enable_custom' => true,
         'enable_layouts' => true,
     ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Queue/Command/Messenger settings
+     * ------------------------------------------------------------------------
+     */
+    'processes' => [
+
+        'logging' => [
+
+            /*
+             * Do we log task process output (triggered in the dashboard or in the CLI) to a file somewhere?
+             *
+             * @var string (none|file)
+             */
+            'method' => 'none',
+
+            'file' => [
+
+                /*
+                 * The directory that holds process logs
+                 *
+                 * @var string
+                 */
+                'directory' => '',
+
+            ],
+
+        ],
+
+        'scheduler' => [
+
+            /*
+             * Are scheduled tasks available? Scheduled tasks require running a console command every minute.
+             *
+             * @var bool
+             */
+            'enable' => false,
+
+        ],
+
+
+        /**
+         * The point after which old completed are automatically removed from the system.
+         */
+        'delete_threshold' => 7 // days
+
+    ],
+
+    'messenger' => [
+
+        'default_bus' => 'default',
+
+        'buses' => [
+            'default' => [
+                'default_middleware' => true,
+                'middleware' => [],
+            ]
+        ],
+
+        'routing' => [
+            'Concrete\Core\Foundation\Command\AsyncCommandInterface' => ['async'],
+        ],
+
+        'transports' => [
+            'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncTransport',
+            'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultSyncTransport', // used for tests and advanced configuration
+        ],
+
+        'consume' => [
+
+            /**
+             * Listener. If set to app, then queueable operations like rescanning files and deleting bulk pages
+             * will be polled and executed through browser XHR processes. If set to worker you must run
+             * `concrete/bin/messenger:consume` from the command line. This command can be run multiple times to
+             * add additional queue workers for command processing.
+             *
+             * @var string (app|worker)
+             */
+            'method' => 'app',
+
+        ],
+
+        /*
+         * If we're consuming the queue through polling, how many entries do we do at a time
+         *
+         * @var int
+         */
+        'polling_batch' => [
+            'default' => 10,
+            'rescan_file' => 5,
+            'delete_page' => 100,
+            'delete_page_forever' => 100,
+            'copy_page' => 10,
+        ],
+
+
+    ],
+
+    /*
+ * ------------------------------------------------------------------------
+ * Events settings
+ * ------------------------------------------------------------------------
+ */
+    'events' => [
+
+        'broadcast' => [
+
+            /*
+             * Driver
+             *
+             * @var string (redis|none)
+             */
+            'driver' => ''
+
+        ],
+
+
+    ],
+
 
     /*
      * ------------------------------------------------------------------------
@@ -440,13 +631,17 @@ return [
          */
         'enabled' => true,
         'default' => [
-            'address' => 'concrete5-noreply@concrete5',
+            'address' => 'concrete-cms-noreply@concretecms',
             'name' => '',
         ],
         'form_block' => [
             'address' => false,
         ],
         'forgot_password' => [
+            'address' => null,
+            'name' => null,
+        ],
+        'register_notification' => [
             'address' => null,
             'name' => null,
         ],
@@ -527,7 +722,7 @@ return [
 
     /*
      * ------------------------------------------------------------------------
-     * Getting external news and help from concrete5.org
+     * Getting external news and help from concretecms.com
      * ------------------------------------------------------------------------
      */
     'external' => [
@@ -539,7 +734,7 @@ return [
         'intelligent_search_help' => true,
 
         /*
-         * Enable concrete5 news within your site
+         * Enable Concrete news within your site
          *
          * @var bool concrete.external.news
          */
@@ -554,6 +749,7 @@ return [
     'misc' => [
         'user_timezones' => false,
         'package_backup_directory' => DIR_FILES_UPLOADED_STANDARD . '/trash',
+        'display_package_delete_button' => true,
         'enable_progressive_page_reindex' => true,
         'mobile_theme_id' => 0,
         'sitemap_approve_immediately' => true,
@@ -582,7 +778,6 @@ return [
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
-        'help_overlay' => true,
         'require_version_comments' => false,
         /*
          * Control whether a block type can me moved to different block type sets
@@ -591,14 +786,7 @@ return [
          */
         'enable_move_blocktypes_across_sets' => false,
         /*
-         * Control whether or not the image editor should add crossOrigin when loading images from external sources (s3, etc)
-         */
-        'image_editor_cors_policy' => [
-            'enable_cross_origin' => false,
-            'anonymous_request' => true,
-        ],
-        /*
-         * Check whether to add a "generator" tag with the concrete5 version to the site pages
+         * Check whether to add a "generator" tag with the Concrete version to the site pages
          *
          * @var bool
          */
@@ -615,8 +803,8 @@ return [
         'enable_permissions_protection' => true,
         'check_threshold' => 172800,
         'services' => [
-            'get_available_updates' => 'http://www.concrete5.org/tools/update_core',
-            'inspect_update' => 'http://www.concrete5.org/tools/inspect_update',
+            'get_available_updates' => 'https://marketplace.concretecms.com/tools/update_core',
+            'inspect_update' => 'https://marketplace.concretecms.com/tools/inspect_update',
         ],
         // Set to true to skip checking if there's a newer core version available (useful for example if the core is upgraded via composer)
         'skip_core' => false,
@@ -639,13 +827,13 @@ return [
         ],
         'file_manager_listing' => [
             'handle' => 'file_manager_listing',
-            'width' => 60,
-            'height' => 60,
+            'width' => 120,
+            'height' => 120,
         ],
         'file_manager_detail' => [
             'handle' => 'file_manager_detail',
-            'width' => 400,
-            'height' => 400,
+            'width' => 500,
+            'height' => 500,
         ],
         'user_avatar' => [
             'width' => 80,
@@ -681,13 +869,6 @@ return [
                 // Space-separated list of attributes to be kept
                 'allowed_attributes' => '',
             ],
-            /*
-             * Background color of the Image Editor saveArea
-             * Leave empty to use a transparent background
-             *
-             * @var string
-             */
-            'image_editor_save_area_background_color' => '',
         ],
         /*
          * Options for the results per page dropdown
@@ -720,28 +901,21 @@ return [
      */
     'accessibility' => [
         /*
-         * Show titles in the concrete5 toolbars
+         * Show titles in the toolbars
          *
          * @var bool
          */
         'toolbar_titles' => false,
 
         /*
-         * Increase the font size in the concrete5 toolbars
+         * Increase the font size in the toolbars
          *
          * @var bool
          */
         'toolbar_large_font' => false,
 
         /*
-         * Show help system
-         *
-         * @var bool
-         */
-        'display_help_system' => true,
-
-        /*
-         * Show tooltips in the concrete5 toolbars
+         * Show tooltips in the toolbars
          *
          * @var bool
          */
@@ -762,10 +936,10 @@ return [
         'choose_language_login' => false,
         // Fetch language files when installing a package connected to the marketplace [boolean]
         'auto_install_package_languages' => true,
-        // Community Translation instance offering concrete5 translations
+        // Community Translation instance offering translations
         'community_translation' => [
             // API entry point of the Community Translation instance
-            'entry_point' => 'http://translate.concrete5.org/api',
+            'entry_point' => 'https://translate.concretecms.org/api',
             // API Token to be used for the Community Translation instance
             'api_token' => '',
             // Languages below this translation progress won't be considered
@@ -773,29 +947,28 @@ return [
             // Lifetime (in seconds) of the cache items associated to downloaded data
             'cache_lifetime' => 3600, // 1 hour
             // Base URI for package details
-            'package_url' => 'https://translate.concrete5.org/translate/package',
+            'package_url' => 'https://translate.concretecms.org/translate/package',
         ],
     ],
     'urls' => [
-        'concrete5' => 'http://www.concrete5.org',
-        'concrete5_secure' => 'https://www.concrete5.org',
-        'newsflow' => 'http://newsflow.concrete5.org',
-        'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
-        'privacy_policy' => '//www.concrete5.org/legal/privacy-policy',
+        'concrete' => 'http://marketplace.concretecms.com',
+        'concrete_secure' => 'https://marketplace.concretecms.com',
+        'background_feed' => '//backgroundimages.concrete5.org/wallpaper', // staying at concrete5.org for the momen
+        'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
+        'activity_slots' => 'https://marketing.concretecms.com/ccm/marketing/activity_slots',
         'help' => [
-            'developer' => 'http://documentation.concrete5.org/developers',
-            'user' => 'http://documentation.concrete5.org/editors',
-            'forum' => 'http://www.concrete5.org/community/forums',
-            'slack' => 'https://www.concrete5.org/slack',
+            'developer' => 'https://documentation.concretecms.org/developers',
+            'user' => 'https://documentation.concretecms.org/user-guide',
+            'forum' => 'https://forums.concretecms.org',
+            'remote_search' => 'https://documentation.concretecms.org/ccm/documentation/remote_search',
         ],
         'paths' => [
-            'menu_help_service' => '/tools/get_remote_help_list/',
             'site_page' => '/private/sites',
-            'newsflow_slot_content' => '/tools/slot_content/',
             'marketplace' => [
+                'projects' => '/profile/projects/',
                 'connect' => '/marketplace/connect',
                 'connect_success' => '/marketplace/connect/-/connected',
                 'connect_validate' => '/marketplace/connect/-/validate',
@@ -830,14 +1003,23 @@ return [
         'name' => false,
 
         /*
-         * Background image url
+         * Controls how we show the background image on the login/other concrete pages. None = no image, Feed =
+         * standard behavior, "custom" = custom image.
          *
-         * @var null|string
+         * @var string "none"|"feed"|"custom"
          */
-        'background_image' => null,
+        'background_image' => 'feed',
+
+        /*
+         * If the background image is custom, this is where it loads from.
+         *
+         * @var null|string Custom URL for background image.
+         */
+        'background_url' => null,
+
     ],
     'session' => [
-        'name' => 'CONCRETE5',
+        'name' => 'CONCRETE',
         'handler' => 'file',
         'redis' => [
             'database' => 1, // Use different Redis Databases - optional
@@ -922,6 +1104,14 @@ return [
              */
             'validate_email' => false,
 
+            /**
+             * Threshold in seconds to delete unvalidated users
+             *
+             * @see \Concrete\Core\Command\Task\Controller\RemoveUnvalidatedUsersController
+             * @var int Seconds
+             */
+            'validate_email_threshold' => 5184000, // 60 days
+
             /*
              * Admins approve each registration
              *
@@ -1000,11 +1190,11 @@ return [
      */
     'spam' => [
         /*
-         * Whitelist group ID
+         * Allowlist group ID
          *
          * @var int
          */
-        'whitelist_group' => 0,
+        'allowlist_group' => 0,
 
         /*
          * Notification email
@@ -1045,8 +1235,33 @@ return [
             ],
         ],
         'misc' => [
-            /*
-             * Defence Click Jacking.
+            /**
+             * Content Security Policy (CSP) HTTP response header
+             * A modern way to protect from cross-site scripting attacks.
+             * Highly recommended to set a rule for your website.
+             *
+             * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+             *
+             * @var bool|string|string[] CSP policies. Allowed to set multiple policies by an array.
+             */
+            'content_security_policy' => false,
+
+            /**
+             * Strict-Transport-Security (HSTS) HTTP response header
+             * This header informs the browser to load always https:// pages.
+             * You can set a policy if your site always accessible on SSL.
+             *
+             * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+             *
+             * @var bool|string
+             */
+            'strict_transport_security' => false,
+
+            /**
+             * X-Frame-Options HTTP response header
+             * Protect from click-jacking attacks by blocking your site embedded into other sites.
+             *
+             * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
              *
              * @var bool|string DENY, SAMEORIGIN, ALLOW-FROM uri
              */
@@ -1116,8 +1331,6 @@ return [
     ],
     'limits' => [
         'sitemap_pages' => 100,
-        'delete_pages' => 100,
-        'copy_pages' => 10,
         'page_search_index_batch' => 200,
         'job_queue_batch' => 10,
         'style_customizer' => [
@@ -1168,6 +1381,21 @@ return [
             'password_credentials' => false,
             'refresh_token' => true,
         ],
+    ],
+
+    /*
+     * ------------------------------------------------------------------------
+     * Notification settings
+     * ------------------------------------------------------------------------
+     */
+    'notification' => [
+        /*
+         * Enable Server-Sent Events?
+         *
+         * @var bool
+         */
+        'server_sent_events' => false,
+
     ],
 
     'mutex' => [

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Site\Type\Controller;
 
 use Concrete\Core\Application\Application;
@@ -6,23 +7,35 @@ use Concrete\Core\Support\Manager as CoreManager;
 
 class Manager extends CoreManager
 {
-
+    /**
+     * @var string
+     */
     protected $standardController = StandardController::class;
 
+    public function __construct(Application $application)
+    {
+        parent::__construct($application);
+    }
+
     /**
-     * @param mixed $standardController
+     * @return $this
      */
-    public function setStandardController($standardController)
+    public function setStandardController(string $vaiue): self
     {
-        $this->standardController = $standardController;
+        $this->standardController = $vaiue;
+
+        return $this;
     }
 
-
-    protected function getStandardController()
-    {
-        return $this->app->make($this->standardController);
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Illuminate\Support\Manager::driver()
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return \Concrete\Core\Site\Type\Controller\ControllerInterface
+     */
     public function driver($driver = null)
     {
         if (!isset($this->customCreators[$driver]) && !isset($this->drivers[$driver])) {
@@ -32,9 +45,8 @@ class Manager extends CoreManager
         return parent::driver($driver);
     }
 
-    public function __construct(Application $application)
+    protected function getStandardController(): ControllerInterface
     {
-        parent::__construct($application);
+        return $this->app->make($this->standardController);
     }
-
 }

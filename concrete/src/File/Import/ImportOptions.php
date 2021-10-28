@@ -258,7 +258,11 @@ class ImportOptions
      */
     protected function getFolderStorageLocation(FileFolder $folder)
     {
-        $storageLocation = $this->storageLocationFactory->fetchDefault();
+        $storageLocation = $folder->getTreeNodeStorageLocationObject();
+
+        if ($storageLocation === null) {
+            $storageLocation = $this->storageLocationFactory->fetchDefault();
+        }
 
         if ($storageLocation === null) {
             throw ImportException::fromErrorCode(ImportException::E_FILE_INVALID_STORAGE_LOCATION);

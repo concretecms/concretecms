@@ -5,6 +5,7 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Category;
 use Core;
+use Page;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -35,11 +36,6 @@ class Controller extends BlockController
     public function add()
     {
         $this->set('types', array());
-    }
-
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('javascript', 'google-charts');
     }
 
     protected function loadTypes()

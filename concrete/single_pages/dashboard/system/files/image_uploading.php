@@ -16,6 +16,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /* @var bool $use_exif_data_to_rotate_images */
 /* @var bool $exif_reader_supported */
 /* @var string|null $thumbnailOptionsURL */
+/** @var bool $use_exif_data_for_file_name_attribute */
+/** @var bool $use_exif_data_for_description_attribute */
+/** @var bool $use_exif_data_for_keyword_attribute */
+/** @var bool $use_exif_data_for_additional_attributes */
 ?>
 <form method="POST" action="<?= $view->action('save') ?>">
     <?= $token->output('image-options') ?>
@@ -25,11 +29,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <?php
         foreach ($manipulation_libraries as $id => $name) {
             ?>
-            <div class="radio">
+            <div class="form-check">
+                <?= $form->radio('manipulation_library', $id, $id === $manipulation_library, ['required' => 'required']) ?>
                 <label>
-                    <?= $form->radio('manipulation_library', $id, $id === $manipulation_library, ['required' => 'required']) ?>
                     <?= h($name) ?>
-                    <?= t('(currently working: %s)', '<span class="ccm-check-manipulation-library" data-check-src="' . h($view->action('test_manipulation_library', $id, $token->generate('thumbnail-check-library-' . $id))) . '"><i class="fa fa-spinner fa-spin"></i></span>')?>
+                    <?= t('(currently working: %s)', '<span class="ccm-check-manipulation-library" data-check-src="' . h($view->action('test_manipulation_library', $id, $token->generate('thumbnail-check-library-' . $id))) . '"><i class="fas fa-spinner fa-spin"></i></span>')?>
                 </label>
             </div>
             <?php
@@ -38,47 +42,47 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 
     <div class="form-group">
-        <?= $form->label('jpeg_quality', t('JPEG quality'), ['class' => 'launch-tooltip control-label', 'title' => t('JPEG quality ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file)')]) ?>
+        <?= $form->label('jpeg_quality', t('JPEG quality'), ['class' => 'launch-tooltip control-label form-label', 'title' => t('JPEG quality ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file)')]) ?>
         <?= $form->number('jpeg_quality', $jpeg_quality, ['required' => 'required', 'min' => '0', 'max' => '100']) ?>
     </div>
 
     <div class="form-group">
-        <?= $form->label('png_compression', t('PNG compression quality'), ['class' => 'launch-tooltip control-label', 'title' => t('PNG compression quality ranges from 0 (no compression) to 9 (maximum compression)')]) ?>
+        <?= $form->label('png_compression', t('PNG compression quality'), ['class' => 'launch-tooltip control-label form-label', 'title' => t('PNG compression quality ranges from 0 (no compression) to 9 (maximum compression)')]) ?>
         <?= $form->number('png_compression', $png_compression, ['required' => 'required', 'min' => '0', 'max' => '9']) ?>
     </div>
 
     <div class="form-group">
-        <?= $form->label('restrict_max_width', t('Maximum width of uploaded images'), ['class' => 'launch-tooltip', 'title' => t('Here you can set the maximum width of uploaded images: images wider that this value will be scaled down. Leave empty to allow any image width.')]) ?>
+        <?= $form->label('restrict_max_width', t('Maximum width of uploaded images'), ['class' => 'launch-tooltip form-label', 'title' => t('Here you can set the maximum width of uploaded images: images wider that this value will be scaled down. Leave empty to allow any image width.')]) ?>
         <div class="input-group">
             <?= $form->number('restrict_max_width', $restrict_max_width > 0 ? $restrict_max_width : '', ['min' => '0']) ?>
-            <div class="input-group-addon"><?= t(/* i18n: short for pixels */ 'px') ?></div>
+            <div class="input-group-text"><?= t(/* i18n: short for pixels */ 'px') ?></div>
         </div>
     </div>
     <div class="form-group">
-        <?= $form->label('restrict_max_height', t('Maximum height of uploaded images'), ['class' => 'launch-tooltip', 'title' => t('Here you can set the maximum height of uploaded images: images taller that this value will be scaled down. Leave empty to allow any image height.')]) ?>
+        <?= $form->label('restrict_max_height', t('Maximum height of uploaded images'), ['class' => 'launch-tooltip form-label', 'title' => t('Here you can set the maximum height of uploaded images: images taller that this value will be scaled down. Leave empty to allow any image height.')]) ?>
         <div class="input-group">
             <?= $form->number('restrict_max_height', $restrict_max_height > 0 ? $restrict_max_height : '', ['min' => '0']) ?>
-            <div class="input-group-addon"><?= t(/* i18n: short for pixels */ 'px') ?></div>
+            <div class="input-group-text"><?= t(/* i18n: short for pixels */ 'px') ?></div>
         </div>
     </div>
 
     <div class="form-group">
-        <?= $form->label('svg_processor_action', t('SVG Processing'), ['class' => 'launch-tooltip', 'title' => t("SVG images may contain interactive contents. Albeit this feature may be useful, it can be used by an attacker to store malicious code in the images. Disable the SVG checks only if you trust the users that will upload images to the site.")]) ?>
+        <?= $form->label('svg_processor_action', t('SVG Processing'), ['class' => 'launch-tooltip form-label', 'title' => t("SVG images may contain interactive contents. Albeit this feature may be useful, it can be used by an attacker to store malicious code in the images. Disable the SVG checks only if you trust the users that will upload images to the site.")]) ?>
         <?= $form->select('svg_processor_action', $svg_processor_actions, $svg_processor_action, ['required' => 'required']) ?>
     </div>
 
     <div class="form-group">
         <?= $form->label('', t('Other Options')) ?>
-        <div class="checkbox">
-            <label>
-                <?= $form->checkbox('use_exif_data_to_rotate_images', 1, $use_exif_data_to_rotate_images) ?>
+        <div class="form-check">
+            <?= $form->checkbox('use_exif_data_to_rotate_images', 1, $use_exif_data_to_rotate_images) ?>
+            <label for="use_exif_data_to_rotate_images" class="form-check-label">
                 <?= t('Use EXIF metadata to auto-rotate images uploaded images.') ?>
                 <?php
                 if (!$exif_reader_supported) {
                     ?>
                     <span class="small text-muted" id="use_exif_data_to_rotate_images-warning"<?= $use_exif_data_to_rotate_images ? '' : ' style="display:none"' ?>>
                         <br>
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                        <i class="fas fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
                         <?= t('This feature requires the %s PHP extension, which is not currently enabled.', '<code>EXIF</code>') ?>
                     </span>
                     <script>
@@ -96,6 +100,29 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 ?>
             </label>
         </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("use_exif_data_for_file_name_attribute", 1, $use_exif_data_for_file_name_attribute, ["class" => "form-check-input"]); ?>
+            <?php echo $form->label("use_exif_data_for_file_name_attribute", t("Use EXIF metadata to populate the file name."), ["class" => "form-check-label"]); ?>
+        </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("use_exif_data_for_description_attribute", 1, $use_exif_data_for_description_attribute, ["class" => "form-check-input"]); ?>
+            <?php echo $form->label("use_exif_data_for_description_attribute", t("Use EXIF metadata to populate the description."), ["class" => "form-check-label"]); ?>
+        </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("use_exif_data_for_keyword_attribute", 1, $use_exif_data_for_keyword_attribute, ["class" => "form-check-input"]); ?>
+            <?php echo $form->label("use_exif_data_for_keyword_attribute", t("Use EXIF metadata to populate the keywords."), ["class" => "form-check-label"]); ?>
+        </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox("use_exif_data_for_additional_attributes", 1, $use_exif_data_for_additional_attributes, ["class" => "form-check-input"]); ?>
+            <?php echo $form->label("use_exif_data_for_additional_attributes", t("Use EXIF metadata to populate additional data if available."), ["class" => "form-check-label"]); ?>
+        </div>
+
+
+
     </div>
 
     <?php
@@ -110,7 +137,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit"><?= t('Save') ?></button>
+            <button class="float-end btn btn-primary" type="submit"><?= t('Save') ?></button>
         </div>
     </div>
 </form>
@@ -118,7 +145,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $(window).load(function() {
     function checked($container, ok) {
         $container.html(
-            ok ? '<i class="fa fa-check" style="color: green"></i>' : '<i class="fa fa-remove" style="color: red"></i>'
+            ok ? '<i class="fas fa-check" style="color: green"></i>' : '<i class="fas fa-times" style="color: red"></i>'
         );
     }
     $('.ccm-check-manipulation-library').each(function() {

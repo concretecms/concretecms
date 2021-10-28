@@ -1,73 +1,77 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-$token = \Core::make('token');
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var Concrete\Core\Application\Service\Dashboard $dashboard
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Html\Service\Html $html
+ * @var Concrete\Core\Application\Service\UserInterface $interface
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\Profiles $controller
+ * @var bool $publicProfiles
+ * @var bool $gravatarFallback
+ * @var bool $displayAccountMenu
+ * @var string $gravatarMaxLevel
+ * @var array $gravatarMaxLevels
+ * @var string $gravatarImageSet
+ * @var array $gravatarImageSets
+ */
 ?>
 
-<form method="post" id="public-profiles-form" action="<?php echo $view->url('/dashboard/system/registration/profiles', 'update_profiles')?>">
-    <?php $token->output('update_profile'); ?>
+<form method="POST" action="<?= $controller->action('update_profiles') ?>">
+    <?php $token->output('update_profile') ?>
 
     <div class="form-group">
-        <label id="optionsCheckboxes" for="public_profiles" class="control-label"><?php echo t('Profile Options')?></label>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" id="public_profiles" name="public_profiles" value="1" <?php if ($public_profiles) { ?> checked <?php } ?>>
-                <span><?php echo t('Enable public profiles.')?></span>
+        <?= $form->label('public_profiles', t('Profile Options')) ?>
+        <div class="form-check">
+            <?= $form->checkbox('public_profiles', '1', $publicProfiles) ?>
+            <label class="form-check-label" for="public_profiles"><?= t('Enable public profiles.') ?></label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <?= $form->label('display_account_menu', t('Account Menu')) ?>
+        <div class="form-check">
+            <?= $form->checkbox('display_account_menu', '1', $displayAccountMenu) ?>
+            <label class="form-check-label" for="display_account_menu">
+                <?= t('Show the account menu when logged in.') ?><br />
+                <small class="text-muted"><?= t('Site themes may override this value.') ?></small>
             </label>
         </div>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label('gravatar_fallback', t('Fall Back To Gravatar')); ?>
-        <div class="checkbox">
-            <label>
-                <?php echo $form->checkbox('gravatar_fallback', 1, $gravatar_fallback); ?>
-                <span><?php echo t('Use image from <a href="http://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one.')?></span>
-            </label>
+        <?= $form->label('gravatar_fallback', t('Fall Back To Gravatar')) ?>
+        <div class="form-check">
+            <?= $form->checkbox('gravatar_fallback', 1, $gravatarFallback) ?>
+            <label class="form-check-label" for="gravatar_fallback"><?= t('Use image from <a href="https://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one.') ?></label>
         </div>
     </div>
 
-    <div class="form-group">
-        <?php echo $form->label('display_account_menu', t('Account Menu')); ?>
-        <div class="checkbox">
-            <label>
-                <input name="display_account_menu" id="display_account_menu" value="1" type="checkbox" <?= $display_account_menu ? 'checked' : '' ?> />
-                <span class="launch-tooltip" title="<?= h(t('Site themes may override this value.')) ?>"><?= t('Show the account menu when logged in.') ?></span>
-            </label>
-        </div>
+    <div class="form-group gravatar-options">
+        <?= $form->label('gravatar_max_level', t('Maximum Gravatar Rating')) ?>
+        <?= $form->select('gravatar_max_level', $gravatarMaxLevels, $gravatarMaxLevel) ?>
     </div>
 
-    <div id="gravatar-options">
-        <div class="form-group">
-            <?php echo $form->label('gravatar_max_level', t('Maximum Gravatar Rating')); ?>
-            <?php echo $form->select('gravatar_max_level', $gravatar_level_options, $gravatar_max_level); ?>
-        </div>
-
-        <div class="form-group">
-            <?php echo $form->label('gravatar_image_set', t('Gravatar Image Set')); ?>
-            <?php echo $form->select('gravatar_image_set', $gravatar_set_options, $gravatar_image_set); ?>
-        </div>
+    <div class="form-group gravatar-options">
+    	<?= $form->label('gravatarImageSet', t('Gravatar Image Set')) ?>
+        <?= $form->select('gravatar_image_set', $gravatarImageSets, $gravatarImageSet) ?>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <button class="float-end btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 </form>
 
 <script>
-$(document).ready(function(){
-    $('#gravatar_fallback').change(function(){
-        if($(this).prop('checked') == true) {
-            $('#gravatar-options').css('display', 'block');
-        } else {
-            $('#gravatar-options').css('display', 'none');
-        }
+$(document).ready(function() {
+    function gravatarUpdated() {
+        $('.gravatar-options').toggleClass('d-none', $('#gravatar_fallback').is(':checked') ? false : true);
+    }
+    $('#gravatar_fallback').on('change', function() {
+        gravatarUpdated();
     });
+
+    gravatarUpdated();
 });
 </script>
-
-<style>
-#gravatar-options {
-    display: <?php echo $gravatar_fallback ? 'block' : 'none'; ?>;
-}
-</style>

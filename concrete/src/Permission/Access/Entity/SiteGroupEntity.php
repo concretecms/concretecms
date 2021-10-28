@@ -91,7 +91,7 @@ class SiteGroupEntity extends Entity
 
     public function getAccessEntityTypeLinkHTML()
     {
-        $html = '<a href="javascript:void(0)" onclick="ccm_choosePermissionAccessEntitySiteGroup()">' . tc('PermissionAccessEntityTypeName', 'Multisite Group') . '</a>';
+        $html = '<a href="javascript:void(0)" class="dropdown-item" onclick="ccm_choosePermissionAccessEntitySiteGroup()">' . tc('PermissionAccessEntityTypeName', 'Multisite Group') . '</a>';
 
         return $html;
     }

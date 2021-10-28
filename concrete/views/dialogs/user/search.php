@@ -1,48 +1,20 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * @var bool $multipleSelection
+ */
 ?>
 
-<div data-search="users" class="ccm-ui">
-
-    <?php
-    $header->render();
-    ?>
-
-    <?php Loader::element('users/search', array('result' => $result))?>
-
+<div data-choose="user" class="h-100">
+    <concrete-user-chooser :multiple-selection="<?= json_encode($multipleSelection); ?>"></concrete-user-chooser>
 </div>
-
 <script type="text/javascript">
-    $(function() {
-        $('div[data-search=users]').concreteAjaxSearch({
-            result: <?=json_encode($result->getJSONObject())?>,
-            onLoad: function(concreteSearch) {
-                concreteSearch.subscribe('SearchBulkActionSelect', function (e, data) {
-                    if (data.value == 'select_users') {
-                        $.each(data.items, function (i, item) {
-                            var $item = $(item);
-                            ConcreteEvent.publish('UserSearchDialogSelectUser', {
-                                uID: $item.attr('data-user-id'),
-                                uEmail: $item.attr('data-user-email'),
-                                uName: $item.attr('data-user-name')
-                            });
-                        });
-                        ConcreteEvent.publish('UserSearchDialogAfterSelectUser');
-                    }
-                });
-            },
-            onUpdateResults: function (concreteSearch) {
-                concreteSearch.$element.find('select[data-bulk-action=users] option:eq(0)').after('<option value="select_users"><?=t('Choose Users')?></option>');
-                concreteSearch.$element.unbind('click').on('click', 'a[data-user-id]', function () {
-                    ConcreteEvent.publish('UserSearchDialogSelectUser', {
-                        uID: $(this).attr('data-user-id'),
-                        uEmail: $(this).attr('data-user-email'),
-                        uName: $(this).attr('data-user-name')
-                    });
-                    ConcreteEvent.publish('UserSearchDialogAfterSelectUser');
-                    return false;
-                });
-            }
-        });
-    });
+
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-choose=user]',
+            components: config.components
+        })
+    })
+
 </script>

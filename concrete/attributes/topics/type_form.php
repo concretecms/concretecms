@@ -28,8 +28,6 @@
                 $('input[name="akTopicTreeID"]').val($(this).find(':selected').val());
                 $('.tree-view-template').remove();
                 $('.tree-view-container').append(treeViewTemplate);
-                var toolsURL = '<?php echo Loader::helper('concrete/urls')->getToolsURL('tree/load');
-    ?>';
                 var chosenTree = $(this).val();
                 $('.tree-view-template').concreteTree({
                     'treeID': chosenTree,
@@ -49,7 +47,7 @@
     <legend><?=t('Topic Tree')?></legend>
     <div class="clearfix"></div>
         <div class="form-group">
-        <select class="form-control" name="topicTreeIDSelect">
+        <select class="form-select" name="topicTreeIDSelect">
             <?php foreach ($trees as $stree) {
     ?>
                 <option value="<?=$stree->getTreeID()?>" <?php if ($tree->getTreeID() == $stree->getTreeID()) {
@@ -67,11 +65,13 @@
         </div>
     </div>
         <legend><?= t('Select Mode'); ?></legend>
+
         <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('akTopicAllowMultipleValues', 1, $allowMultipleValues)?> <span><?=t('Allow multiple nodes to be chosen.') ?></span>
-                </label>
+            <label class="control-label"><?=t('Multiple Nodes')?></label>
+            <div class="form-check">
+                <?=$form->checkbox('akTopicAllowMultipleValues', 1, $allowMultipleValues)?>
+                <?=$form->label('akTopicAllowMultipleValues',
+                '<span>' .t('Allow multiple nodes to be chosen.') . '</span>',['class'=>'form-check-label'])?>
             </div>
         </div>
     <input type="hidden" name="akTopicParentNodeID" value="<?php echo $parentNode ?>">

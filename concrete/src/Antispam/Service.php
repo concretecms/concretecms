@@ -29,9 +29,9 @@ class Service
     /**
      * @return Group|null
      */
-    public function getWhitelistGroup()
+    public function getAllowlistGroup()
     {
-        return Group::getByID(Config::get('concrete.spam.whitelist_group'));
+        return Group::getByID(Config::get('concrete.spam.allowist_group', Config::get('concrete.spam.whitelist_group')));
     }
 
     /**
@@ -83,9 +83,9 @@ class Service
             if (!$user) {
                 $user = Core::make(User::class);
             }
-            $wlg = $this->getWhitelistGroup();
+            $wlg = $this->getAllowlistGroup();
             if ($wlg instanceof Group && $user->inGroup($wlg)) {
-                // Never spam if user is in the whitelist
+                // Never spam if user is in the allowlist
                 return true;
             }
 

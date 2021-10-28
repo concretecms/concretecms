@@ -4,7 +4,7 @@ namespace Concrete\Tests\Database\EntityManager\Driver;
 
 use Concrete\Core\Database\EntityManager\Driver\Driver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * DriverTest.
@@ -12,9 +12,9 @@ use PHPUnit_Framework_TestCase;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class DriverTest extends PHPUnit_Framework_TestCase
+class DriverTest extends TestCase
 {
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $driver = new YamlDriver('config/yaml');
@@ -26,7 +26,7 @@ class DriverTest extends PHPUnit_Framework_TestCase
      */
     public function testGetDriver()
     {
-        $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver', $this->driver->getDriver());
+        $this->assertInstanceOf('Doctrine\Persistence\Mapping\Driver\MappingDriver', $this->driver->getDriver());
     }
 
     /**

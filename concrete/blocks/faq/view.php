@@ -15,7 +15,7 @@ $faqEntryCount = 1;
         </div>
         <div class="ccm-faq-block-entries">
             <?php foreach ($rows as $row) { ?>
-                <div class="faq-entry-content">
+                <div class="ccm-faq-entry-content">
                     <a name="<?php echo $bID . $faqEntryCount; ?>"></a>
                     <h3><?php echo $row['title']; ?></h3>
                     <?php echo $row['description']; ?>

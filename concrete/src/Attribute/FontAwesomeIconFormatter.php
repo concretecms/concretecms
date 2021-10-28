@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Attribute;
 
+use Concrete\Core\Html\Service\FontAwesomeIcon;
+use Concrete\Core\Support\Facade\Application;
 use HtmlObject\Element;
 
 class FontAwesomeIconFormatter implements IconFormatterInterface
@@ -12,11 +14,17 @@ class FontAwesomeIconFormatter implements IconFormatterInterface
         $this->icon = $icon;
     }
 
+    /**
+     * @return Element
+     */
     public function getListIconElement()
     {
-        $span = new Element('i');
-        $span->addClass('ccm-attribute-icon fa fa-' . $this->icon);
+        $app = Application::getFacadeApplication();
+        $icon = $app->make(FontAwesomeIcon::class, ['name' => $this->icon]);
+        $icon->setFixedWidth(true);
+        $element = $icon->getTag();
+        $element->addClass('ccm-attribute-icon');
 
-        return $span;
+        return $element;
     }
 }

@@ -22,16 +22,18 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      * @see ConcreteDatabaseTestCase::$metadatas
      */
     protected $metadatas = [
+        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
-        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
+        'Concrete\Core\Entity\Summary\Category',
+        'Concrete\Core\Entity\Page\Summary\PageTemplate',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Type',
@@ -39,6 +41,8 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
         'Concrete\Core\Entity\Attribute\Value\Value\BooleanValue',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
+        'Concrete\Core\Entity\User\User',
+        'Concrete\Core\Entity\User\UserSignup',
         'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Key\UserValue',
@@ -58,9 +62,9 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
-    protected function setUp()
+    public function setUp(): void
     {
         // Truncate tables
         $this->truncateTables();
@@ -175,9 +179,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         $object->clearAttribute($ak);
         $object = $this->getAttributeObjectForGet();
         $cav = $object->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $this->fail(t("clearAttribute did not delete '%s'.", $handle));
-        }
+        $this->assertEmpty($cav, t("clearAttribute did not delete '%s'.", $handle));
     }
 
     abstract protected function getAttributeKeyClass();

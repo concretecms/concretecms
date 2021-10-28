@@ -2,12 +2,13 @@
 
 namespace Concrete\Core\Application;
 
-use Concrete\Core\Cache\CacheClearer;
+use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Messenger\MessageBusManager;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
 use Concrete\Core\Foundation\Runtime\RuntimeInterface;
@@ -18,7 +19,6 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
-use Concrete\Core\Support\Facade\Package;
 use Concrete\Core\System\Mutex\MutexInterface;
 use Concrete\Core\Updater\Update;
 use Concrete\Core\Url\Url;
@@ -34,7 +34,7 @@ use Page;
 use Psr\Log\LoggerAwareInterface as PsrLoggerAwareInterface;
 use Redirect;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 use View;
 
 class Application extends Container
@@ -42,6 +42,24 @@ class Application extends Container
     protected $installed = null;
     protected $environment = null;
     protected $packages = [];
+
+    /**
+     * Dispatches a command/message on the message bus. If the command is executed immediately, the result is returned.
+     * This is a convenience method for mostly synchronous commands, and it uses the command bus.
+     *
+     * @param object $command
+     * @param string $onBus
+     * @return mixed
+     */
+    public function executeCommand($command, $onBus = 'default')
+    {
+        $messageBus = $this->make(MessageBusManager::class)->getBus($onBus);
+        $envelope = $messageBus->dispatch($command);
+        $handled = $envelope->last(HandledStamp::class);
+        if ($handled instanceof HandledStamp) {
+            return $handled->getResult();
+        }
+    }
 
     /**
      * Turns off the lights.
@@ -84,11 +102,65 @@ class Application extends Container
      */
     public function clearCaches()
     {
-        $this->make(CacheClearer::class)->flush();
+        $command = new ClearCacheCommand();
+        $this->executeCommand($command);
     }
 
     /**
-     * Returns true if concrete5 is installed, false if it has not yet been.
+     * If we have job scheduling running through the site, we check to see if it's time to go for it.
+     */
+    protected function handleScheduledJobs()
+    {
+        $config = $this['config'];
+
+        if ($config->get('concrete.jobs.enable_scheduling')) {
+            $c = Page::getCurrentPage();
+            if ($c instanceof Page && !$c->isAdminArea()) {
+                // check for non dashboard page
+                $jobs = Job::getList(true);
+                $auth = Job::generateAuth();
+                $url = '';
+                // jobs
+                if (count($jobs)) {
+                    foreach ($jobs as $j) {
+                        if ($j->isScheduledForNow()) {
+                            $url = View::url(
+                                                  '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
+                                                  )
+                                );
+                            break;
+                        }
+                    }
+                }
+
+                // job sets
+                if (!strlen($url)) {
+                    $jSets = JobSet::getList(true);
+                    if (is_array($jSets) && count($jSets)) {
+                        foreach ($jSets as $set) {
+                            if ($set->isScheduledForNow()) {
+                                $url = View::url(
+                                                      '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
+                                                      )
+                                    );
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (strlen($url)) {
+                    try {
+                        $this->make('http/client')->get($url);
+                    } catch (Exception $x) {
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns true if Concrete is installed, false if it has not yet been.
      */
     public function isInstalled()
     {
@@ -104,7 +176,7 @@ class Application extends Container
     }
 
     /**
-     * Checks to see whether we should deliver a concrete5 response from the page cache.
+     * Checks to see whether we should deliver a Concrete response from the page cache.
      *
      * @param \Concrete\Core\Http\Request $request
      */
@@ -369,9 +441,9 @@ class Application extends Container
      *
      * @return mixed
      */
-    public function build($concrete, array $parameters = [])
+    public function build($concrete)
     {
-        $object = parent::build($concrete, $parameters);
+        $object = parent::build($concrete);
         if (is_object($object)) {
             if ($object instanceof ApplicationAwareInterface) {
                 $object->setApplication($this);
@@ -441,57 +513,5 @@ class Application extends Container
     {
         return $this->singleton($abstract, $concrete);
     }
-
-    /**
-     * If we have job scheduling running through the site, we check to see if it's time to go for it.
-     */
-    protected function handleScheduledJobs()
-    {
-        $config = $this['config'];
-
-        if ($config->get('concrete.jobs.enable_scheduling')) {
-            $c = Page::getCurrentPage();
-            if ($c instanceof Page && !$c->isAdminArea()) {
-                // check for non dashboard page
-                $jobs = Job::getList(true);
-                $auth = Job::generateAuth();
-                $url = '';
-                // jobs
-                if (count($jobs)) {
-                    foreach ($jobs as $j) {
-                        if ($j->isScheduledForNow()) {
-                            $url = View::url(
-                                                  '/ccm/system/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID(
-                                                  )
-                                );
-                            break;
-                        }
-                    }
-                }
-
-                // job sets
-                if (!strlen($url)) {
-                    $jSets = JobSet::getList(true);
-                    if (is_array($jSets) && count($jSets)) {
-                        foreach ($jSets as $set) {
-                            if ($set->isScheduledForNow()) {
-                                $url = View::url(
-                                                      '/ccm/system/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID(
-                                                      )
-                                    );
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (strlen($url)) {
-                    try {
-                        $this->make('http/client')->setUri($url)->send();
-                    } catch (Exception $x) {
-                    }
-                }
-            }
-        }
-    }
+    
 }

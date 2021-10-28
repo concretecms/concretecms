@@ -1,81 +1,64 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
-use Concrete\Core\Application\EditResponse;
-use Concrete\Core\Attribute\Key\CollectionKey;
-use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Page\Controller\DashboardPageController;
-use PageType;
-use Loader;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type as PageType;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Support\Facade\Url;
 
 class Attributes extends DashboardPageController
 {
-    protected $pagetype;
+    /**
+     * @var PageType
+     */
+    protected $pageType;
+
+    /**
+     * @var Page
+     */
     protected $defaultPage;
 
-    protected function setupPageType($ptID)
+    public function view($ptID = 0)
     {
-        $this->pagetype = PageType::getByID($ptID);
-        if (!$this->pagetype) {
-            $this->redirect('/dashboard/pages/types');
+        $this->setupPageType($ptID);
+        $this->set('pagetype', $this->pageType);
+
+        $category = $this->getCategoryObject();
+        $attributesView = $this->elementManager->get('attribute/editable_set_list', ['categoryEntity' => $category, 'attributedObject' => $this->defaultPage]);
+        /** @var \Concrete\Controller\Element\Attribute\EditableSetList $controller */
+        $controller = $attributesView->getElementController();
+        $controller->setEditDialogURL(Url::to('/ccm/system/dialogs/type/attributes', $this->pageType->getPageTypeID()));
+
+        $this->set('attributesView', $attributesView);
+    }
+
+    protected function setupPageType($ptID): void
+    {
+        if ($ptID > 0) {
+            $this->pageType = PageType::getByID((int) $ptID);
         }
-        $cmp = new \Permissions($this->pagetype);
+
+        if (!$this->pageType) {
+            $this->buildRedirect('/dashboard/pages/types')->send();
+            $this->app->shutdown();
+        }
+
+        $cmp = new Checker($this->pageType);
         if (!$cmp->canEditPageType()) {
             throw new \Exception(t('You do not have access to edit this page type.'));
         }
-        $this->defaultPage = $this->pagetype->getPageTypePageTemplateDefaultPageObject();
+
+        $this->defaultPage = $this->pageType->getPageTypePageTemplateDefaultPageObject();
     }
 
-    public function view($ptID = false)
+    protected function getCategoryObject(): Category
     {
-        $this->setupPageType($ptID);
-        $this->requireAsset('core/app/editable-fields');
-        $this->set('pagetype', $this->pagetype);
-        $this->set('defaultPage', $this->defaultPage);
-        $category = AttributeKeyCategory::getByHandle('collection');
-        $this->set('category', $category);
-    }
+        $categoryService = $this->app->make(CategoryService::class);
 
-    public function update_attribute($ptID = false)
-    {
-        $this->setupPageType($ptID);
-        $sr = new EditResponse();
-        if (Loader::helper('validation/token')->validate()) {
-            $ak = CollectionKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['name']));
-            if (is_object($ak)) {
-                $controller = $ak->getController();
-                $val = $controller->createAttributeValueFromRequest();
-                $val = $this->defaultPage->setAttribute($ak, $val);
-            }
-        } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-        }
-        if ($this->error->has()) {
-            $sr->setError($this->error);
-        } else {
-            $sr->setMessage(t('Attribute saved successfully.'));
-            $sr->setAdditionalDataAttribute('value',  $val->getDisplayValue());
-        }
-        $sr->outputJSON();
-    }
-
-    public function clear_attribute($ptID = false)
-    {
-        $this->setupPageType($ptID);
-        $sr = new EditResponse();
-        if (Loader::helper('validation/token')->validate()) {
-            $ak = CollectionKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['akID']));
-            if (is_object($ak)) {
-                $this->defaultPage->clearAttribute($ak);
-            }
-        } else {
-            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
-        }
-        if ($this->error->has()) {
-            $sr->setError($this->error);
-        } else {
-            $sr->setMessage(t('Attribute cleared successfully.'));
-        }
-        $sr->outputJSON();
+        return $categoryService->getByHandle('collection');
     }
 }

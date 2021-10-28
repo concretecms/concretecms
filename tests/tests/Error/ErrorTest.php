@@ -3,9 +3,9 @@
 namespace Concrete\Tests\Error;
 
 use Core;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ErrorTest extends PHPUnit_Framework_TestCase
+class ErrorTest extends TestCase
 {
     public function testErrorMethodsBackwardCompatibility()
     {

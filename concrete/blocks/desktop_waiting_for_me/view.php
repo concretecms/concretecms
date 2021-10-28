@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div data-list="notification">
 
         <h3><?=t('Waiting For Me')?>
-            <i class="ccm-block-desktop-waiting-for-me-loader fa fa-refresh fa-spin"></i>
+            <i class="ccm-block-desktop-waiting-for-me-loader fas fa-sync fa-spin"></i>
         </h3>
 
 
@@ -75,7 +75,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $pagination->setBaseURL($view->action('reload_results') . '?filter=' . rawurlencode($filter));
             ?>
 
-            <?=$pagination->renderDefaultView(); ?>
+            <?php
+            $c = Page::getCurrentPage();
+            $theme = $c->getController()->getTheme();
+            if (is_string($theme) && ($theme === VIEW_CORE_THEME || $theme === 'dashboard')) { ?>
+                <?= $pagination->renderView('dashboard'); ?>
+            <?php } else { ?>
+                <?= $pagination->renderDefaultView(); ?>
+            <?php } ?>
 
         <?php } ?>
 

@@ -55,6 +55,7 @@ class ArrangeBlocks extends Page
         }
 
         $movingBlockID = (int) $post->get('block');
+
         if ($movingBlockID === 0) {
             $e->add(t('Unable to find the block to be moved.'));
         }
@@ -68,11 +69,9 @@ class ArrangeBlocks extends Page
         if (!in_array($movingBlockID, $sortedBlockIDs, true)) {
             $e->add(t('Unable to find the block to be moved.'));
         }
-
         if ($e->has()) {
             return;
         }
-
         if ($this->app->make('config')->get('concrete.permissions.model') == 'advanced') {
             // first, we check to see if we have permissions to edit the area contents for the source area.
             $ap = new Checker($sourceArea);

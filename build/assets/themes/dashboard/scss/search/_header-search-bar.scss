@@ -1,0 +1,22 @@
+div.ccm-dashboard-header-search {
+
+  a.ccm-header-launch-advanced-search {
+    margin-right: 20px;
+    line-height: 42px;
+}
+
+  input[type=text],
+  input[type=search] {
+    border-radius: 2px;
+    border-width: 1px;
+    border-color: $gray-300;
+  }
+
+  .input-group-icon {
+    border-width: 1px;
+    border-radius: 2px;
+    border-color: $gray-300;
+  }
+
+
+}

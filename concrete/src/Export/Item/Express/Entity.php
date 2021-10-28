@@ -24,6 +24,7 @@ class Entity implements ItemInterface
         $node->addAttribute('name', $entity->getName());
         $node->addAttribute('supports_custom_display_order', $entity->supportsCustomDisplayOrder() ? '1' : '');
         $node->addAttribute('include_in_public_list', $entity->getIncludeInPublicList() ? '1' : '');
+        $node->addAttribute('use_separate_site_result_buckets', $entity->usesSeparateSiteResultsBuckets() ? '1' : '');
         $node->addAttribute('description', h($entity->getDescription()));
         $node->addAttribute('default_view_form', $entity->getDefaultViewForm()->getID());
         $node->addAttribute('default_edit_form', $entity->getDefaultEditForm()->getID());

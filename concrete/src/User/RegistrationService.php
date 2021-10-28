@@ -98,6 +98,11 @@ class RegistrationService implements RegistrationServiceInterface
             $uDefaultLanguage = $data['uDefaultLanguage'];
         }
 
+        $uHomeFileManagerFolderID = null;
+        if (isset($data['uHomeFileManagerFolderID']) && $data['uHomeFileManagerFolderID'] != '') {
+            $uHomeFileManagerFolderID = $data['uHomeFileManagerFolderID'];
+        }
+
         $entity = new UserEntity();
         $entity->setUserName($data['uName']);
         $entity->setUserEmail($data['uEmail']);
@@ -105,6 +110,7 @@ class RegistrationService implements RegistrationServiceInterface
         $entity->setUserIsValidated($uIsValidated);
         $entity->setUserIsFullRecord($uIsFullRecord);
         $entity->setUserDefaultLanguage($uDefaultLanguage);
+        $entity->setHomeFileManagerFolderID($uHomeFileManagerFolderID);
         $entity->setUserIsActive(true);
 
         $this->entityManager->persist($entity);

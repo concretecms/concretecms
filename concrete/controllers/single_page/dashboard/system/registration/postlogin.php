@@ -1,46 +1,67 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
 use Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
-use Loader;
+use Concrete\Core\Page\Page;
 
 class Postlogin extends DashboardPageController
 {
-    public $helpers = array('form');
-
-    public function __construct($c)
+    public function view($message = null)
     {
-        parent::__construct($c);
-        $this->token = Loader::helper('validation/token');
-
-        //login redirection
-        $this->set('site_login_redirect', Config::get('concrete.misc.login_redirect'));
-        $this->set('login_redirect_cid', intval(Config::get('concrete.misc.login_redirect_cid')));
+        $config = $this->app->make('config');
+        $this->set('pageSelector', $this->app->make('helper/form/page_selector'));
+        $loginRedirect = $config->get('concrete.misc.login_redirect');
+        if (!in_array($loginRedirect, $this->getAvailableLoginRedirects(), true)) {
+            $loginRedirect = 'HOMEPAGE';
+        }
+        $this->set('loginRedirect', $loginRedirect);
+        $this->set('loginRedirectCID', ((int) $config->get('concrete.misc.login_redirect_cid')) ?: null);
     }
 
     public function update_login_redirect()
     {
-        if ($this->token->validate("update_login_redirect")) {
-            if ($this->isPost()) {
-                Config::save('concrete.misc.login_redirect', $this->post('LOGIN_REDIRECT'));
-                Config::save('concrete.misc.login_redirect_cid', intval($this->post('LOGIN_REDIRECT_CID')));
-
-                $this->redirect('/dashboard/system/registration/postlogin', 'login_redirect_saved');
-            }
-        } else {
-            $this->set('error', array($this->token->getErrorMessage()));
+        $config = $this->app->make('config');
+        $post = $this->request->request;
+        if (!$this->token->validate('update_login_redirect')) {
+            $this->error->add($this->token->getErrorMessage());
         }
+        $loginRedirect = $post->get('login_redirect');
+        if (!in_array($loginRedirect, $this->getAvailableLoginRedirects(), true)) {
+            $this->error->add(t('Please specify the login destination.'));
+        }
+        if ($loginRedirect === 'CUSTOM') {
+            $loginRedirectCID = (int) $post->get('login_redirect_cid');
+            $loginRedirectPage = $loginRedirectCID === 0 ? null : Page::getByID($loginRedirectCID);
+            if ($loginRedirectPage === null || $loginRedirectPage->isError()) {
+                $this->error->add(t('Please specify the custom login destination.'));
+            }
+        }
+        if ($this->error->has()) {
+            return $this->view();
+        }
+        if (!in_array($loginRedirect, $this->getAvailableLoginRedirects(), true)) {
+            $loginRedirect = 'HOMEPAGE';
+        }
+        $config->save('concrete.misc.login_redirect', $loginRedirect);
+        if ($loginRedirect === 'CUSTOM') {
+            $config->save('concrete.misc.login_redirect_cid', $loginRedirectCID);
+        }
+
+        $this->flash('success', t('Login redirection saved.'));
+
+        return $this->buildRedirect($this->action());
     }
 
-    public function view($message = null)
+    /**
+     * @return string[]
+     */
+    protected function getAvailableLoginRedirects(): array
     {
-        if ($message) {
-            if ($message == 'login_redirect_saved') {
-                $this->set('message', t('Login redirection saved.'));
-            } else {
-                $this->set('message', $message);
-            }
-        }
+        return [
+            'HOMEPAGE',
+            'DESKTOP',
+            'CUSTOM',
+        ];
     }
 }

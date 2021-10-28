@@ -14,7 +14,7 @@ class FileManager
     /**
      * Sets up a form field to let users pick a file.
      *
-     * @param string $inputID The ID of the form field
+     * @param string $inputID The ID of the form field – NOTE this is no longer used but remains for backward compatibility.
      * @param string $inputName The name of the form field (the selected file ID will be posted with this name)
      * @param string $chooseText The text to be used to tell users "Choose a File"
      * @param \Concrete\Core\Entity\File\File|\Concrete\Core\Entity\File\Version|int|null $preselectedFile the pre-selected file (or its ID)
@@ -59,40 +59,50 @@ class FileManager
         $request = $app->make(Request::class);
         $vh = $app->make('helper/validation/numbers');
 
-        $view->requireAsset('core/file-manager');
-        $fileSelectorArguments = [
-            'inputName' => (string) $inputName,
-            'fID' => null,
-            'filters' => [],
-        ];
+        $fID = 0;
+        $inputName = (string) $inputName;
+
+        if ($chooseText !== '') {
+            $chooseText = (string) $chooseText;
+        } else {
+            $chooseText = t('Choose File');
+        }
         if ($vh->integer($request->request->get($inputName))) {
             $file = $app->make(EntityManagerInterface::class)->find(FileEntity::class, $request->request->get($inputName));
             if ($file !== null) {
-                $fileSelectorArguments['fID'] = $file->getFileID();
+                $fID = $file->getFileID();
             }
         } elseif ($vh->integer($preselectedFile)) {
-            $fileSelectorArguments['fID'] = (int) $preselectedFile;
+            $fID = (int) $preselectedFile;
         } elseif (is_object($preselectedFile)) {
-            $fileSelectorArguments['fID'] = (int) $preselectedFile->getFileID();
-        }
-        if ($fileSelectorArguments['fID'] === null && (string) $chooseText !== '') {
-            $fileSelectorArguments['chooseText'] = (string) $chooseText;
+            $fID = (int) $preselectedFile->getFileID();
         }
 
+        /*
+         *later
+        */
+        /*
         if (isset($args['filters']) && is_array($args['filters'])) {
             $fileSelectorArguments['filters'] = $args['filters'];
         }
+        */
 
-        $fileSelectorArgumentsJson = json_encode($fileSelectorArguments);
+        $uniqid = uniqid();
         $html = <<<EOL
-<div class="ccm-file-selector" data-file-selector="{$inputID}"></div>
+<div data-concrete-file-input="{$uniqid}">
+    <concrete-file-input :file-id="{$fID}" choose-text="{$chooseText}" input-name="{$inputName}"></concrete-file-input>
+</div>
 <script type="text/javascript">
 $(function() {
-    $('[data-file-selector="{$inputID}"]').concreteFileSelector({$fileSelectorArgumentsJson});
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-concrete-file-input="{$uniqid}"]',
+            components: config.components
+        })
+    })
 });
 </script>
 EOL;
-
         return $html;
     }
 

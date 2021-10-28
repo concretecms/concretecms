@@ -42,7 +42,7 @@ class SearchPreset extends Node
 
     public function getTreeNodeMenu()
     {
-        return new SavedSearchMenu($this);
+        return null;
     }
 
     public function getSavedSearchObject()

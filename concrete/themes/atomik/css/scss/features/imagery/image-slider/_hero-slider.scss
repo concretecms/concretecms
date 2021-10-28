@@ -1,0 +1,48 @@
+div.theme-atomik {
+
+  .ccm-image-slider-hero-image {
+
+    .ccm-image-slider {
+      .rslides_nav {
+        @include media-breakpoint-down(md) {
+          display: block;
+
+          &.prev {
+            left: 0.5rem;
+          }
+
+          &.next {
+            right: 0.5rem;
+          }
+        }
+      }
+    }
+
+    img {
+      min-height: 600px;
+      object-fit: cover;
+    }
+  }
+
+  .ccm-image-slider-hero-image-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: $hero-image-title-color;
+
+    h1 {
+      font-family: $display-font-family;
+      @include font-size($hero-image-title-font-size);
+      margin-bottom: 0;
+    }
+  }
+
+
+}

@@ -1,32 +1,42 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); 
+$app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
+?>
 
 <?php ob_start(); ?>
-<?=Loader::element('permission/help');?>
+<?=View::element('permission/help');?>
 <?php $help = ob_get_contents(); ?>
 <?php ob_end_clean(); ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('User Permissions'), $help, 'span8 offset2', false)?>
 <form method="post" action="<?=$view->action('save')?>" role="form">
-	<?=Loader::helper('validation/token')->output('save_permissions')?>
-	
+
+  <?=$app->make('helper/validation/token')->output('save_permissions')?>
+
 	<?php
     $tp = new TaskPermission();
     if ($tp->canAccessTaskPermissions()) {
-        ?>	
-		<?php Loader::element('permission/lists/user')?>
-	<?php 
+        ?>
+
+        <div class="pb-3">
+            <h3><?=t('General User Permissions')?></h3>
+            <?php View::element('permission/lists/user')?>
+        </div>
+        <div>
+            <h3><?=t('Default Group Permissions')?></h3>
+            <div class="help-block"><?=t('Individual groups and group folders may override these permissions.')?></div>
+            <?php View::element('permission/lists/tree/node', ['node' => $root, 'disableDialog' => true])?>
+        </div>
+
+	<?php
     } else {
         ?>
 		<p><?=t('You cannot access task permissions.')?></p>
-	<?php 
+	<?php
     } ?>
 
-	<div class="ccm-dashboard-form-actions-wrapper">
+    <div class="ccm-dashboard-form-actions-wrapper">
 	    <div class="ccm-dashboard-form-actions">
-            <a href="<?=$view->url('/dashboard/system/permissions/users')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <a href="<?=$view->url('/dashboard/system/permissions/users')?>" class="btn btn-secondary float-start"><?=t('Cancel')?></a>
+            <button class="float-end btn btn-primary" type="submit" ><?=t('Save')?></button>
 	    </div>
 	</div>
 </form>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>

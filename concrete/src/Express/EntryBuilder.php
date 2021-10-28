@@ -3,6 +3,7 @@ namespace Concrete\Core\Express;
 
 use Concrete\Core\Entity\Express\Association;
 use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Express\Association\Applier;
 use Concrete\Core\Express\Entry\Manager as EntryManager;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
@@ -16,6 +17,11 @@ class EntryBuilder
     protected $entity;
     protected $attributes = [];
     protected $associations = [];
+
+    /**
+     * @var Site
+     */
+    protected $site;
 
     public function __construct(
         EntryManager $entryManager
@@ -55,9 +61,18 @@ class EntryBuilder
         return $this;
     }
 
+    /**
+     * @param Site $site
+     */
+    public function setSite(Site $site): void
+    {
+        $this->site = $site;
+    }
+
+
     public function save()
     {
-        $entry = $this->entryManager->addEntry($this->getEntity());
+        $entry = $this->entryManager->addEntry($this->getEntity(), $this->site);
         foreach($this->attributes as $key => $value) {
             $entry->setAttribute($key, $value);
         }

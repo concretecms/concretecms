@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\ExpressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
+use Concrete\Core\Express\ObjectManager;
 use Doctrine\ORM\Query\Expr;
 
 class Controller extends AttributeTypeController
@@ -38,6 +39,39 @@ class Controller extends AttributeTypeController
         return $type;
     }
 
+    public function exportKey($akey)
+    {
+        /**
+         * @var $type ExpressSettings
+         */
+        $type = $this->getAttributeKeySettings();
+        if ($entity = $type->getEntity()) {
+            $akey->addChild('entity')->addAttribute('handle', $entity->getHandle());
+        }
+
+        return $akey;
+    }
+
+
+    public function importKey(\SimpleXMLElement $akey)
+    {
+        $type = $this->getAttributeKeySettings();
+        /**
+         * @var $type ExpressSettings
+         */
+        if (isset($akey->entity)) {
+            $handle = (string) $akey->entity['handle'];
+            $entity = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Entity')
+                ->findOneByHandle($handle);
+            if ($entity) {
+                $type->setEntity($entity);
+            }
+        }
+
+        return $type;
+    }
+
+
     public function type_form()
     {
         $this->load();
@@ -52,6 +86,14 @@ class Controller extends AttributeTypeController
                 $entry = $value->getSelectedEntries()[0];
             }
         }
+        if (!$entry) {
+            if ($this->request->query->has($this->attributeKey->getAttributeKeyHandle())) {
+                $entry = $this->app->make(ObjectManager::class)->getEntry(
+                    (int) $this->request->query->get($this->attributeKey->getAttributeKeyHandle())
+                );
+            }
+        }
+
         $entrySelector = $this->app->make('form/express/entry_selector');
         $this->set('entrySelector', $entrySelector);
         $this->set('entry', $entry);

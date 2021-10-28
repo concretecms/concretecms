@@ -22,7 +22,6 @@ class Topics extends DashboardPageController
         }
 
         $this->set('tree', $tree);
-        $this->requireAsset('core/topics');
 
         $trees = [];
         if (is_object($defaultTree)) {

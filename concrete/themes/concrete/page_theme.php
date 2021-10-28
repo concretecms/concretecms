@@ -1,12 +1,19 @@
 <?php
 namespace Concrete\Theme\Concrete;
 
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Page\Theme\BedrockThemeTrait;
+
 class PageTheme extends \Concrete\Core\Page\Theme\Theme
 {
-    public function registerAssets()
+
+    use BedrockThemeTrait;
+
+    public function getThemeSupportedFeatures()
     {
-        $this->providesAsset('css', 'core/frontend/*');
-        $this->requireAsset('javascript-conditional', 'html5-shiv');
-        $this->requireAsset('javascript-conditional', 'respond');
+        return [
+            Features::ACCOUNT
+        ];
     }
+
 }

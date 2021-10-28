@@ -57,7 +57,7 @@ class BlockRenderTest extends PageTestCase
         $this->metadatas[] = 'Concrete\Core\Entity\Package';
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
 
@@ -72,7 +72,7 @@ class BlockRenderTest extends PageTestCase
         $em->flush();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -97,7 +97,7 @@ class BlockRenderTest extends PageTestCase
         $bv->render('view');
         $contents = ob_get_clean();
 
-        $this->assertEquals($blockContent, trim($contents));
+        static::assertEquals($blockContent, trim($contents));
     }
 
     public function testBlockViewChangingScopeVariables()
@@ -140,7 +140,7 @@ class BlockRenderTest extends PageTestCase
         // Logout the user
         $ui->getUserObject()->logout(true);
 
-        $this->assertContains(
+        static::assertStringContainsString(
             'data-block-id="' . $block->getBlockID() . '"',
             $contents
         );

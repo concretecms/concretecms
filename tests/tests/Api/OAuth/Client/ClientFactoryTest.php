@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Concrete\Tests\Api\OAuth\Client;
 
@@ -7,12 +8,10 @@ use Concrete\Core\Application\Application;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Id\UuidGenerator;
 use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ClientFactoryTest extends PHPUnit_Framework_TestCase
+class ClientFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     protected $app;
     protected $em;
     protected $uuidGenerator;
@@ -23,7 +22,7 @@ class ClientFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * @before
      */
-    public function before()
+    public function before():void
     {
         $this->app = M::mock(Application::class);
         $this->em = M::mock(EntityManager::class);
@@ -33,7 +32,12 @@ class ClientFactoryTest extends PHPUnit_Framework_TestCase
 
         // Handle "build"
         $this->app->shouldReceive('build')->andReturnUsing(function($abstract, $data=[]) {
-            return M::mock($abstract, $data)->makePartial();
+            switch ($abstract) {
+                case 'Concrete\Core\Api\OAuth\Client\Credentials':
+                    return app($abstract, $data);
+                default:
+                    return M::mock($abstract, $data)->makePartial();
+            }
         });
 
         // Handle "make"
@@ -46,12 +50,15 @@ class ClientFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * @after
      */
-    public function after()
+    public function after(): void
     {
         $this->app = $this->em = $this->uuidGenerator = $this->factory = null;
     }
 
-    public function testCredentials()
+    /**
+     * @covers \Concrete\Core\Api\OAuth\Client\ClientFactory::generateCredentials
+     */
+    public function testCredentials(): void
     {
         $defaultKeyLength = 64;
         $defaultSecretLength = 96;
@@ -62,39 +69,41 @@ class ClientFactoryTest extends PHPUnit_Framework_TestCase
         $credentials3 = $this->factory->generateCredentials($customKeyLength, $customSecretLength);
 
         // Make sure none of the credentials are empty
-        $this->assertNotEmpty($credentials1->getKey(), 'Credentials generated with empty key!');
-        $this->assertNotEmpty($credentials2->getKey(), 'Credentials generated with empty key!');
-        $this->assertNotEmpty($credentials1->getSecret(), 'Credentials generated with empty secret!');
-        $this->assertNotEmpty($credentials2->getSecret(), 'Credentials generated with empty secret!');
+        self::assertNotEmpty($credentials1->getKey(), 'Credentials generated with empty key!');
+        self::assertNotEmpty($credentials2->getKey(), 'Credentials generated with empty key!');
+        self::assertNotEmpty($credentials1->getSecret(), 'Credentials generated with empty secret!');
+        self::assertNotEmpty($credentials2->getSecret(), 'Credentials generated with empty secret!');
 
         // Make sure the keys aren't the same as the secrets
-        $this->assertNotSame($credentials1->getKey(), $credentials1->getSecret(), 'Credentials generated with equivalent key and secret!');
-        $this->assertNotSame($credentials2->getKey(), $credentials2->getSecret(), 'Credentials generated with equivalent key and secret!');
+        self::assertNotSame($credentials1->getKey(), $credentials1->getSecret(), 'Credentials generated with equivalent key and secret!');
+        self::assertNotSame($credentials2->getKey(), $credentials2->getSecret(), 'Credentials generated with equivalent key and secret!');
 
         // Make sure the two credentials aren't the same at all
-        $this->assertNotSame($credentials1->getKey(), $credentials2->getKey(), 'Credentials generated with the same key twice!');
-        $this->assertNotSame($credentials1->getSecret(), $credentials2->getSecret(), 'Credentials generated with the same secret twice!');
+        self::assertNotSame($credentials1->getKey(), $credentials2->getKey(), 'Credentials generated with the same key twice!');
+        self::assertNotSame($credentials1->getSecret(), $credentials2->getSecret(), 'Credentials generated with the same secret twice!');
 
         // Make sure the size is right
-        $this->assertEquals($defaultKeyLength, strlen($credentials1->getKey()), 'Default size key is the wrong size.');
-        $this->assertEquals($defaultSecretLength, strlen($credentials1->getSecret()), 'Custom size secret is the wrong size.');
-        $this->assertEquals($customKeyLength, strlen($credentials3->getKey()), 'Custom size key is the wrong size.');
-        $this->assertEquals($customSecretLength, strlen($credentials3->getSecret()), 'Custom size secret is the wrong size.');
+        self::assertEquals($defaultKeyLength, strlen($credentials1->getKey()), 'Default size key is the wrong size.');
+        self::assertEquals($defaultSecretLength, strlen($credentials1->getSecret()), 'Custom size secret is the wrong size.');
+        self::assertEquals($customKeyLength, strlen($credentials3->getKey()), 'Custom size key is the wrong size.');
+        self::assertEquals($customSecretLength, strlen($credentials3->getSecret()), 'Custom size secret is the wrong size.');
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage A key must have a length longer than 16
+     * @covers \Concrete\Core\Api\OAuth\Client\ClientFactory::generateCredentials
+     * @return void
      */
-    public function testShortKeysException()
+    public function testShortKeysException():void
     {
-        $this->factory->generateCredentials(10, 10);
+       $this->expectException(\InvalidArgumentException::class);
+       $this->expectExceptionMessage('A key must have a length longer than 16');
+       $this->factory->generateCredentials(10, 10);
     }
 
     /**
-     * @todo Enable scopes when scopes is implemented
+     * @covers \Concrete\Core\Api\OAuth\Client\ClientFactory::createClient
      */
-    public function testCreateClient()
+    public function testCreateClient():void
     {
         $client = $this->factory->createClient(
             'Ritas Toaster',
@@ -104,7 +113,7 @@ class ClientFactoryTest extends PHPUnit_Framework_TestCase
             'secret'
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'uu-i-d',
                 'Ritas Toaster',
@@ -122,6 +131,7 @@ class ClientFactoryTest extends PHPUnit_Framework_TestCase
                 $client->getClientSecret()
             ]
         );
+        return;
     }
 
 }

@@ -4,24 +4,11 @@ namespace Concrete\Core\Page\Search\Field\Field;
 use Concrete\Core\Form\Service\Widget\SiteSelector;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Search\Field\AbstractField;
+use Concrete\Core\Search\Field\AbstractSiteField;
 use Concrete\Core\Search\ItemList\ItemList;
 
-class SiteField extends AbstractField
+class SiteField extends AbstractSiteField
 {
-
-    protected $requestVariables = [
-        'siteID'
-    ];
-
-    public function getKey()
-    {
-        return 'site_field';
-    }
-
-    public function getDisplayName()
-    {
-        return t('Site');
-    }
 
     /**
      * @param PageList $list
@@ -42,12 +29,6 @@ class SiteField extends AbstractField
                 $list->setSiteTreeObject($site->getSiteTreeObject());
             }
         }
-    }
-
-    public function renderSearchField()
-    {
-        $selector = new SiteSelector();
-        return $selector->selectSite('siteID', $this->data['siteID'], true, true);
     }
 
 

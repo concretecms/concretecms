@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\File\Image\Thumbnail\Type;
 
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
+use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -478,6 +479,36 @@ class Type
     public function getDoubledVersion()
     {
         return $this->getVersion(true);
+    }
+
+    public function export(\SimpleXMLElement $node)
+    {
+        $linkNode = $node->addChild('thumbnailtype');
+        $linkNode->addAttribute('name', $this->getName());
+        $linkNode->addAttribute('handle', $this->getHandle());
+        $linkNode->addAttribute('sizingMode', $this->getSizingMode());
+        $linkNode->addAttribute('upscalingEnabled', $this->isUpscalingEnabled() ? '1' : '0');
+        $linkNode->addAttribute('keepAnimations', $this->isKeepAnimations() ? '1' : '0');
+        if ($this->getWidth()) {
+            $linkNode->addAttribute('width', $this->getWidth());
+        }
+        if ($this->getHeight()) {
+            $linkNode->addAttribute('height', $this->getHeight());
+        }
+        if ($this->isRequired()) {
+            $linkNode->addAttribute('required', $this->isRequired());
+        }
+        $linkNode->addAttribute('limitedToFileSets', $this->isLimitedToFileSets() ? '1' : '0');
+        $filesetsNode = null;
+        foreach ($this->getAssociatedFileSets() as $afs) {
+            $fileSet = FileSet::getByID($afs->getFileSetID());
+            if ($fileSet !== null) {
+                if ($filesetsNode === null) {
+                    $filesetsNode = $linkNode->addChild('fileSets');
+                }
+                $filesetsNode->addChild('fileSet')->addAttribute('name', $fileSet->getFileSetName());
+            }
+        }
     }
 
     /**

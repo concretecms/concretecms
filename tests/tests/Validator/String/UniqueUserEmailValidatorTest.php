@@ -43,9 +43,8 @@ class UniqueUserEmailValidatorTest extends ConcreteDatabaseTestCase
 
     public function testInvalidInput()
     {
+        $this->expectException(\Exception::class);
         $validator = \Core::make(\Concrete\Core\Validator\String\UniqueUserEmailValidator::class);
-
-        $this->setExpectedException('Exception');
         $validator->isValid($validator);
     }
 }

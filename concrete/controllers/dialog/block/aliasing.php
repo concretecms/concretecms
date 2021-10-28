@@ -2,6 +2,9 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand;
+use Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Template;
@@ -34,59 +37,29 @@ class Aliasing extends BackendInterfaceBlockController
                 $b = \Block::getByID($_GET['bID'], $c, $a);
                 $p = new \Permissions($b);
                 if ($p->canAdminBlock() && $c->isMasterCollection()) {
-                    $name = sprintf('update_defaults_%s', $b->getBlockID());
-                    $queue = \Queue::get($name);
-
-                    if ($_POST['process']) {
-                        $obj = new \stdClass();
-                        $messages = $queue->receive(20);
-                        foreach ($messages as $key => $p) {
-                            $record = unserialize($p->body);
-
-                            $page = \Page::getByID($record['cID'], $record['cvID']);
-                            if ($record['action'] == 'add_alias') {
-                                $this->block->alias($page);
-                            } else if ($record['action'] == 'update_forked_alias') {
-                                $forked = \Block::getByID($record['bID'], $page, $record['arHandle']);
-                                if (is_object($forked) && !$forked->isError()) {
-                                    // take the current block that is in defaults, and replace the block on the page
-                                    // with that block.
-                                    $existingDisplayOrder = $forked->getBlockDisplayOrder();
-                                    $bt = $b->getBlockTypeObject();
-
-                                    // Now we delete the existing forked block.
-                                    $forked->deleteBlock();
-
-                                    if ($bt->isCopiedWhenPropagated()) {
-                                        $b = $this->block->duplicate($page, true);
-                                    } else {
-                                        $this->block->alias($page);
-                                        $b = \Block::getByID($this->block->getBlockID(), $page, $record['arHandle']);
-                                    }
-
-                                    $b->setAbsoluteBlockDisplayOrder($existingDisplayOrder);
-                                    $page->rescanDisplayOrder($record['arHandle']);
-                                }
+                    $blocks = $this->block->queueForDefaultsAliasing($_POST['addBlock'], $_POST['updateForkedBlocks']);
+                    $batch = Batch::create(t('Update Defaults'), function() use ($blocks) {
+                        foreach ($blocks as $b) {
+                            if ($b['action'] == 'update_forked_alias') {
+                                $commandClass = UpdateForkedAliasDefaultsBlockCommand::class;
+                            } else {
+                                $commandClass = AddAliasDefaultsBlockCommand::class;
                             }
-                            $queue->deleteMessage($p);
 
+                            $command = new $commandClass(
+                                $this->block->getBlockID(),
+                                $this->page->getCollectionID(),
+                                $this->page->getVersionID(),
+                                $this->area->getAreaHandle(),
+                                $b['bID'],
+                                $b['cID'],
+                                $b['cvID'],
+                                $b['arHandle']
+                            );
+                            yield $command;
                         }
-                        $obj->totalItems = $queue->count();
-                        if ($queue->count() == 0) {
-                            $queue->deleteQueue($name);
-                        }
-                        $obj->bID = $b->getBlockID();
-                        $obj->aID = $a->getAreaID();
-                        $obj->message = t('All child blocks updated successfully.');
-
-                        return $this->app->make(ResponseFactoryInterface::class)->json($obj);
-                    } else {
-                        $r = $this->request->request;
-                        $queue = $this->block->queueForDefaultsAliasing($r->get('addBlock'), $r->get('updateForkedBlocks'), $queue);
-                    }
-
-                    $totalItems = $queue->count();
-                    \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d pages", "%d pages", $totalItems)));
+                    });
+                    return $this->dispatchBatch($batch);
                 }
             }
         }

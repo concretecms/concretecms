@@ -7,13 +7,12 @@ use Concrete\Core\User\Logger;
 use Concrete\Core\User\LogSubscriber;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 use Psr\Log\LoggerInterface;
 
-class UserLoggingTest extends \PHPUnit_Framework_TestCase
+class UserLoggingTest extends TestCase
 {
-
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     public function getUserInfoWithPasswordEvent()
     {

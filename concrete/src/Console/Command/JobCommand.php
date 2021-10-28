@@ -16,10 +16,11 @@ class JobCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:job')
-            ->setDescription(t('Run a concrete5 job'))
+            ->setDescription(t('Run a Concrete job'))
             ->addEnvOption()
             ->addOption('set', null, InputOption::VALUE_NONE, t('Find jobs by set instead of job handle'))
             ->addOption('list', null, InputOption::VALUE_NONE, t('List available jobs'))
@@ -30,7 +31,7 @@ class JobCommand extends Command
             )
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-job
@@ -41,7 +42,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
+        $rc = static::SUCCESS;
         $options = $input->getOptions();
         $formatter = $this->getHelper('formatter');
 
@@ -81,7 +82,7 @@ EOT
                     if ($set) {
                         $jobs = array_merge($jobs, $set->getJobs());
                     } else {
-                        $rc = 1;
+                        $rc = static::FAILURE;
                         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
                             $output->writeln(
                                 '<error>' . t('A job set with name "%s" was not found', $setName) . '</error>'
@@ -95,7 +96,7 @@ EOT
                     if ($job) {
                         $jobs[] = $job;
                     } else {
-                        $rc = 1;
+                        $rc = static::FAILURE;
                         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
                             $output->writeln(
                                 '<error>' . t('A job with handle "%s" was not found', $jobHandle) . '</error>'
@@ -114,11 +115,11 @@ EOT
 
                     $result = $job->executeJob();
                     if ($result->isError()) {
-                        $rc = 1;
+                        $rc = static::FAILURE;
                         if ($output->getVerbosity() >= OutputInterface::VERBOSITY_NORMAL) {
                             $output->writeln(
                                 $formatter->formatSection(
-                                    $job->getJobHandle(), '<error>' . t('Job Failed') . '</error>'
+                                    $job->getJobHandle(), '<error>' . t('Job Failed: %s', $result->getResultMessage()) . '</error>'
                                 )
                             );
                         }

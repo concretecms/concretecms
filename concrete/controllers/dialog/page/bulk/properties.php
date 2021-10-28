@@ -1,31 +1,146 @@
 <?php
+
 namespace Concrete\Controller\Dialog\Page\Bulk;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Permissions;
-use Page;
-use Concrete\Core\Http\ResponseAssetGroup;
-use CollectionAttributeKey;
-use PageEditResponse;
-use Loader;
+use Concrete\Core\Attribute\Category\CategoryInterface;
+use Concrete\Core\Attribute\Category\CategoryService;
+use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
+use Concrete\Core\Filesystem\ElementManager;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\Key;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Properties extends BackendInterfaceController
 {
+    use KeySelectorControllerTrait;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\Controller::$viewPath
+     */
     protected $viewPath = '/dialogs/page/bulk/properties';
-    protected $pages = array();
+
+    /**
+     * @var CategoryInterface
+     */
+    protected $category;
+
+    /**
+     * List of pages to edit.
+     *
+     * @var array
+     */
+    protected $pages = [];
+
+    /**
+     * Define whether the user can edit page properties.
+     *
+     * @var bool
+     */
     protected $canEdit = false;
 
-    protected function canAccess()
-    {
-        $this->populatePages();
+    /**
+     * @var int[]
+     */
+    protected $allowedEditAttributes = [];
 
-        return $this->canEdit;
+    public function __construct(CategoryService $attributeCategoryService)
+    {
+        parent::__construct();
+
+        $categoryEntity = $attributeCategoryService->getByHandle('collection');
+        $this->category = $categoryEntity->getAttributeKeyCategory();
     }
 
-    protected function populatePages()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Controller\AbstractController::on_start()
+     */
+    public function on_start()
     {
-        if (is_array($_REQUEST['item'])) {
-            foreach ($_REQUEST['item'] as $cID) {
+        parent::on_start();
+
+        $this->populatePages();
+        $this->setupAllowedEditAttributes();
+    }
+
+    public function view()
+    {
+        $keySelector = $this->app->make(ElementManager::class)->get('attribute/component/key_selector', [
+            'category' => $this->getCategory()
+        ]);
+        /** @var \Concrete\Controller\Element\Attribute\Component\KeySelector $controller */
+        $controller = $keySelector->getElementController();
+        $controller->setSelectAttributeUrl($this->action('get_attribute'));
+        $controller->setObjects($this->getObjects());
+
+        $this->set('pages', $this->pages);
+        $this->set('keySelector', $keySelector);
+        $this->set('form', $this->app->make('helper/form'));
+    }
+
+    public function submit()
+    {
+        if ($this->validateAction()) {
+            $this->saveAttributes();
+            $r = new PageEditResponse();
+            $r->setPages($this->pages);
+            $r->setMessage(t('Attributes updated successfully.'));
+
+            return new JsonResponse($r);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::getObjects()
+     */
+    public function getObjects(): array
+    {
+        return $this->pages;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::getCategory()
+     */
+    public function getCategory(): CategoryInterface
+    {
+        return $this->category;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait::canEditAttributeKey()
+     */
+    public function canEditAttributeKey(int $akID): bool
+    {
+        return in_array($akID, $this->allowedEditAttributes);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Controller\Backend\UserInterface::canAccess()
+     */
+    protected function canAccess()
+    {
+        return ($this->getAction() === 'getAttribute' || $this->canEdit) && count($this->allowedEditAttributes) > 0;
+    }
+
+    protected function populatePages(): void
+    {
+        $items = $this->request->get('item');
+        if (is_array($items)) {
+            foreach ($items as $cID) {
                 $c = Page::getByID($cID);
                 if (is_object($c) && !$c->isError()) {
                     $this->pages[] = $c;
@@ -36,68 +151,24 @@ class Properties extends BackendInterfaceController
         if (count($this->pages) > 0) {
             $this->canEdit = true;
             foreach ($this->pages as $c) {
-                $cp = new Permissions($c);
+                $cp = new Checker($c);
                 if (!$cp->canEditPageProperties()) {
                     $this->canEdit = false;
+
+                    break;
                 }
             }
         } else {
             $this->canEdit = false;
         }
-
-        return $this->canEdit;
     }
 
-    public function view()
+    protected function setupAllowedEditAttributes(): void
     {
-        $r = ResponseAssetGroup::get();
-        $r->requireAsset('core/app/editable-fields');
-        $this->populatePages();
-        $form = Loader::helper('form');
-        $attribs = CollectionAttributeKey::getList();
-        $this->set('pages', $this->pages);
-        $this->set('attributes', $attribs);
-    }
-
-    public function updateAttribute()
-    {
-        $pr = new PageEditResponse();
-        $ak = CollectionAttributeKey::getByID($_REQUEST['name']);
-        if ($this->validateAction()) {
-            $this->populatePages();
-            if ($this->canEdit) {
-                foreach ($this->pages as $c) {
-                    $controller = $ak->getController();
-                    $value = $controller->createAttributeValueFromRequest();
-                    $c->setAttribute($ak, $value);
-                    $c->reindex();
-                }
-
-                $pr->setPages($this->pages);
-                $val = $c->getAttributeValueObject($ak);
-                $pr->setAdditionalDataAttribute('value',  $val->getDisplayValue());
-                $pr->setMessage(t('Pages updated successfully.'));
-            }
+        $pk = Key::getByHandle('edit_page_properties');
+        $assignment = $pk->getMyAssignment();
+        if ($assignment) {
+            $this->allowedEditAttributes = $assignment->getAttributesAllowedArray();
         }
-        $pr->outputJSON();
-    }
-
-    public function clearAttribute()
-    {
-        $pr = new PageEditResponse();
-        $ak = CollectionAttributeKey::getByID($_REQUEST['akID']);
-        if ($this->validateAction()) {
-            $this->populatePages();
-            if ($this->canEdit) {
-                foreach ($this->pages as $c) {
-                    $c->clearAttribute($ak);
-                    $c->reindex();
-                }
-                $pr->setPages($this->pages);
-                $pr->setAdditionalDataAttribute('value',  false);
-                $pr->setMessage(t('Attributes cleared successfully.'));
-            }
-        }
-        $pr->outputJSON();
     }
 }

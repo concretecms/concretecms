@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Sites")
  */
-class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
+class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface, \JsonSerializable
 {
     use ObjectTrait;
 
@@ -48,6 +48,14 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
      * @var int
      */
     protected $pThemeID = 0;
+
+    /**
+     * A theme skin to use for this site.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $pThemeSkinIdentifier;
+
 
     /**
      * Is this the default site?
@@ -469,4 +477,31 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface
     {
         $this->pThemeID = $pThemeID;
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getSiteID(),
+            'handle' => $this->getSiteHandle(),
+            'name' => $this->getSiteName(),
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getThemeSkinIdentifier()
+    {
+        return $this->pThemeSkinIdentifier;
+    }
+
+    /**
+     * @param mixed $pThemeSkinIdentifier
+     */
+    public function setThemeSkinIdentifier($pThemeSkinIdentifier): void
+    {
+        $this->pThemeSkinIdentifier = $pThemeSkinIdentifier;
+    }
+
+
 }

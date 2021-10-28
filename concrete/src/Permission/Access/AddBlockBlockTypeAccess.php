@@ -12,12 +12,12 @@ class AddBlockBlockTypeAccess extends BlockTypeAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery('select * from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
             $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['btID']);
             $db->executeQuery('insert into BlockTypePermissionBlockTypeAccessListCustom  (peID, paID, btID) values (?, ?, ?)', $v);
         }

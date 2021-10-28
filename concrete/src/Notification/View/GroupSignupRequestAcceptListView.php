@@ -1,0 +1,51 @@
+<?php
+
+namespace Concrete\Core\Notification\View;
+
+use Concrete\Core\Entity\Notification\GroupSignupRequestAcceptNotification;
+use Concrete\Core\Support\Facade\Facade;
+use Concrete\Core\User\Group\Group;
+use HtmlObject\Element;
+
+class GroupSignupRequestAcceptListView extends StandardListView
+{
+
+    /**
+     * @var GroupSignupRequestAcceptNotification
+     */
+    protected $notification;
+
+    public function getTitle()
+    {
+        return t('Group accepted signup requests');
+    }
+
+    public function getIconClass()
+    {
+        return 'fas fa-user';
+    }
+
+    public function getActionDescription()
+    {
+        $app = Facade::getFacadeApplication();
+        $resolver = $app->make('url/manager');
+
+        $user = $this->notification->getSignupRequestAccept()->getUser();
+        $group = $this->notification->getSignupRequestAccept()->getGroup();
+        $manager = $this->notification->getSignupRequestAccept()->getManager();
+
+        return t('User <a href="%s">%s</a> accepted the request to signup the group %s from user <a href="%s">%s</a>.',
+            $resolver->resolve([$manager->getUserInfoObject()]),
+            $manager->getUserName(),
+            $group->getGroupName(),
+            $resolver->resolve([$user->getUserInfoObject()]),
+            $user->getUserName()
+        );
+    }
+
+    protected function getRequestedByElement()
+    {
+        return new Element('span', t('Created By '));
+    }
+
+}

@@ -34,12 +34,13 @@ class Multilingual extends DashboardPageController
 
     public function on_start()
     {
+        parent::on_start();
         $this->token = Loader::helper('validation/token');
     }
 
     public function interface_settings_saved()
     {
-        $this->set('message', t('Interface settings saved. Please log out and in again to update all backend messages.'));
+        $this->set('success', t('Interface settings saved. Please log out and in again to update all backend messages.'));
         $this->view();
     }
     public function save_interface_language()

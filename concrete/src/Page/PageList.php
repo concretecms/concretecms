@@ -4,6 +4,7 @@ namespace Concrete\Core\Page;
 
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Entity\Page\Template as TemplateEntity;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\Site\Tree;
@@ -36,6 +37,16 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
 
     /** @var Tree */
     protected $siteTree = self::SITE_TREE_CURRENT;
+
+    /**
+     * Determines whether the list should automatically always sort by a column that's in the automatic sort.
+     * This is the default, but it's better to be able to use the AutoSortColumnRequestModifier on a search
+     * result class instead. In order to do that we disable the auto sort here, while still providing the array
+     * of possible auto sort columns.
+     *
+     * @var bool
+     */
+    protected $enableAutomaticSorting = false;
 
     /**
      * Columns in this array can be sorted via the request.
@@ -332,7 +343,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function getResult($queryRow)
     {
-        $c = Page::getByID($queryRow['cID'], 'ACTIVE');
+        $c = Page::getByID($queryRow['cID']);
         if (is_object($c) && $this->checkPermissions($c)) {
             if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
                 $cp = new \Permissions($c);
@@ -349,12 +360,18 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 if ($cp->canViewPageVersions() || $this->permissionsChecker === -1) {
                     $c->loadVersionObject('RECENT_UNAPPROVED');
                 }
+            } else {
+                $c->loadVersionObject('ACTIVE');
             }
+
             if (isset($queryRow['cIndexScore'])) {
                 $c->setPageIndexScore($queryRow['cIndexScore']);
             }
 
-            return $c;
+            $vo = $c->getVersionObject();
+            if ($vo && $vo->getVersionID()) {
+                return $c;
+            }
         }
     }
 
@@ -629,6 +646,11 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         ;
     }
 
+    /**
+     * Filters a page list by a particular block type occurring in the version of a page.
+     *
+     * @param BlockType $bt
+     */
     public function filterByBlockType(BlockType $bt)
     {
         $btID = $bt->getBlockTypeID();
@@ -651,6 +673,36 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         );
         $this->query->setParameter('btID', $btID);
     }
+
+    /**
+     * Filters a page list by a particular container occurring in a page
+     *
+     * @param Container $container
+     */
+    public function filterByContainer(Container $container)
+    {
+        $containerID = $container->getContainerID();
+
+        $query = $this->query->getConnection()->createQueryBuilder();
+        $query->select('distinct p2.cID')
+            ->from('Pages', 'p2')
+            ->innerJoin('p2', 'CollectionVersions', 'cv2', 'cv2.cID = p2.cID')
+            ->innerJoin(
+                'cv2',
+                'CollectionVersionBlocks',
+                'cvb2',
+                'cv2.cID = cvb2.cID and cv2.cvID = cvb2.cvID'
+            )
+            ->innerJoin('cvb2', 'btCoreContainer', 'bcc', 'cvb2.bID = bcc.bID')
+            ->innerJoin('bcc', 'PageContainerInstances', 'pci', 'bcc.containerInstanceID = pci.containerInstanceID')
+            ->andWhere('pci.containerID = :containerID');
+
+        $this->query->andWhere(
+            $this->query->expr()->in('p.cID', $query->getSQL())
+        );
+        $this->query->setParameter('containerID', $containerID);
+    }
+
 
     /**
      * Sorts this list by display order.

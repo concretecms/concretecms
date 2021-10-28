@@ -11,7 +11,7 @@ include DIR_APPLICATION . '/bootstrap/autoload.php';
 
 /**
  * ----------------------------------------------------------------------------
- * Load the concrete5 class loader and trigger it.
+ * Load the Concrete class loader and trigger it.
  * ----------------------------------------------------------------------------.
  */
 require DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Foundation/ClassLoaderInterface.php';

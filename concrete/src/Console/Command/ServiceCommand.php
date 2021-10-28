@@ -16,7 +16,9 @@ final class ServiceCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
+        $errInvalid = static::INVALID;
         $serviceHandles = [];
         $help = '';
         $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
@@ -42,12 +44,12 @@ final class ServiceCommand extends Command
         $help .= <<<EOT
 
 Return codes for the check operation:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
+  $errInvalid web server configuration is not aligned
   $errExitCode errors occurred
-  2 web server configuration is not aligned
 
 Return codes for the update operation:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-service
@@ -67,7 +69,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
+        $rc = static::SUCCESS;
         $manager = Core::make('Concrete\Core\Service\Manager\ServiceManager');
         /* @var \Concrete\Core\Service\Manager\ServiceManager $manager */
         $service = $manager->getService($input->getArgument('service'), $input->getOption('service-version'));
@@ -82,7 +84,7 @@ EOT
         switch ($operation) {
             case 'check':
                 if ($this->checkConfiguration($service, $ruleOptions, $output) === false) {
-                    $rc = 2;
+                    $rc = static::INVALID;
                 }
                 break;
             case 'update':

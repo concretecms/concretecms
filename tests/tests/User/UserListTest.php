@@ -26,7 +26,7 @@ class UserListTest extends UserTestCase
         ],
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

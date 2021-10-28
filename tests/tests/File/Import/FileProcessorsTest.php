@@ -52,7 +52,7 @@ class FileProcessorsTest extends FileStorageTestCase
         ]);
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         self::$app = Application::getFacadeApplication();
@@ -79,7 +79,7 @@ class FileProcessorsTest extends FileStorageTestCase
         self::$app->make('cache/request')->flush();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->getStorageLocation();
@@ -192,64 +192,5 @@ class FileProcessorsTest extends FileStorageTestCase
         $this->assertSame($fileSHA1, sha1_file($file));
         $this->assertInstanceOf(ImportException::class, $error);
         $this->assertSame(ImportException::E_FILE_INVALID, $error->getCode());
-    }
-
-    public function provideLoadHarmfulSvg()
-    {
-        return [
-            [SvgProcessor::ACTION_DISABLED, true, false],
-            [SvgProcessor::ACTION_CHECKVALIDITY, true, false],
-            [SvgProcessor::ACTION_SANITIZE, true, true],
-            [SvgProcessor::ACTION_REJECT, false],
-            [SvgProcessor::ACTION_SANITIZE, true, false, '', 'onclick'],
-            [SvgProcessor::ACTION_REJECT, true, false, '', 'onclick'],
-        ];
-    }
-
-    /**
-     * @dataProvider provideLoadHarmfulSvg
-     *
-     * @param string $action
-     * @param bool $shouldImport
-     * @param bool|null $shouldSanitize
-     * @param string $allowedTags
-     * @param string $allowedAttributes
-     */
-    public function testLoadHarmfulSvg($action, $shouldImport, $shouldSanitize = null, $allowedTags = '', $allowedAttributes = '')
-    {
-        static $index = 0;
-        $index++;
-        $file = DIR_TESTS . '/assets/File/Import/harmful.svg';
-        $fileSHA1 = sha1_file($file);
-        $fileContents = file_get_contents($file);
-        try {
-            $fv = self::$config->withKey(
-                'concrete.file_manager.images.svg_sanitization',
-                [
-                    'action' => $action,
-                    'allowed_tags' => $allowedTags,
-                    'allowed_attributes' => $allowedAttributes,
-                ] + self::$config->get('concrete.file_manager.images.svg_sanitization'),
-                function () use ($file, $index) {
-                    return self::$app->make(FileImporter::class)->importLocalFile($file, "test-harmful-{$index}.svg");
-                }
-            );
-            $error = null;
-        } catch (Exception $x) {
-            $error = $x;
-        }
-        $this->assertSame($fileSHA1, sha1_file($file));
-        if ($shouldImport) {
-            $importedContents = $fv->getFileContents();
-            if ($shouldSanitize) {
-                $this->assertNotEmpty($importedContents);
-                $this->assertNotSame($fileContents, $importedContents);
-            } else {
-                $this->assertSame($fileContents, $importedContents);
-            }
-        } else {
-            $this->assertInstanceOf(ImportException::class, $error);
-            $this->assertSame(ImportException::E_FILE_INVALID, $error->getCode());
-        }
     }
 }

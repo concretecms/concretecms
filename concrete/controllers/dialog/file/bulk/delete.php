@@ -97,7 +97,8 @@ class Delete extends BackendInterfaceController
             }
         }
 
-        $fr->setMessage(t2('%s file deleted successfully.', '%s files deleted successfully.', count($files)));
+        $this->flash('success', t2('%s file deleted successfully.', '%s files deleted successfully.', count($files)));
+
         $fr->outputJSON();
     }
 }

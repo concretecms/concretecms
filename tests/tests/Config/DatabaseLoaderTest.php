@@ -13,7 +13,7 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
     protected $tables = ['Config'];
     protected $fixtures = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loader = new DatabaseLoader();

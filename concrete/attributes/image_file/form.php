@@ -31,24 +31,19 @@ if ($mode == ImageFileSettings::TYPE_FILE_MANAGER) {
         $enableFileCallback = 'document.getElementById(' . json_encode($htmlFileID) . ').disabled = !document.getElementById(' . json_encode($htmlRadioReplaceID) . ').checked'
         ?>
         <input type="hidden" name="<?= $view->field('previousFile') ?>" value="<?= $file->getFileID() ?>" />
-        <div class="radio">
-            <label>
-                <?= $form->radio($view->field('operation'), 'keep', true, ['onchange' => h($enableFileCallback)]) ?>
-                <?= t('Keep existing file (%s)', h($file->getFileName())) ?>
-            </label>
+        <div class="form-check">
+            <?= $form->radio($view->field('operation'), 'keep', true, ['onchange' => h($enableFileCallback)]) ?>
+            <?= $form->label($view->field('operation') . '1', t('Keep existing file (%s)', h($file->getFileName()))) ?>
         </div>
-        <div class="radio">
-            <label>
+        <div class="form-check">
+
                 <?= $form->radio($view->field('operation'), 'remove', false, ['onchange' => h($enableFileCallback)]) ?>
-                <?= t('Remove current file') ?>
-            </label>
+                <?= $form->label($view->field('operation') . '2', t('Remove current file')) ?>
+
         </div>
-        <div class="radio">
-            <label>
-                <?= $form->radio($view->field('operation'), 'replace', false, ['id' => $htmlRadioReplaceID, 'onchange' => h($enableFileCallback)]) ?>
-                <?= t('Replace with') ?>
-                <input type="file" name="<?= h($view->field('value')) ?>" id="<?= $htmlFileID ?>" disabled="disabled" />
-            </label>
+        <div class="form-check">
+            <?= $form->radio($view->field('operation'), 'replace', false, ['id' => $htmlRadioReplaceID, 'onchange' => h($enableFileCallback)]) ?>
+            <?= $form->label($view->field('operation') . '3', t('Replace with') . ' <input type="file" name="'.h($view->field('value')).'" id="'.$htmlFileID.'" disabled="disabled" />') ?>
         </div>
         <?php
     }

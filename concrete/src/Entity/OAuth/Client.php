@@ -85,6 +85,12 @@ class Client implements ClientEntityInterface
         $this->identifier = $identifier;
     }
 
+
+    public function isConfidential()
+    {
+        return true;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -149,7 +155,13 @@ class Client implements ClientEntityInterface
          * is_string() and this returns an empty string. So let's use the falsy check to turn even empty strings
          * into nulls.
          */
-        return $this->redirectUri ? $this->redirectUri : null;
+        $url = $this->redirectUri ? $this->redirectUri : null;
+
+        if (is_string($url) && strpos($url, '|') !== false) {
+            return explode('|', $url);
+        }
+
+        return $url;
     }
 
     /**
@@ -159,7 +171,7 @@ class Client implements ClientEntityInterface
      */
     public function setRedirectUri($redirectUri)
     {
-        $this->redirectUri = $redirectUri;
+        $this->redirectUri = is_array($redirectUri) ? implode('|', $redirectUri) : $redirectUri;
     }
 
     /**

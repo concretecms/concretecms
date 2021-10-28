@@ -6,7 +6,7 @@ use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerDefault;
 use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerYaml;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * PackageProviderFactoryTest.
@@ -14,7 +14,7 @@ use PHPUnit_Framework_TestCase;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class PackageProviderFactoryTest extends PHPUnit_Framework_TestCase
+class PackageProviderFactoryTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application
@@ -24,7 +24,7 @@ class PackageProviderFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = Application::getFacadeApplication();

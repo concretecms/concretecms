@@ -5,18 +5,24 @@ namespace Concrete\Block\Survey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\User\User;
 use Core;
 use Database;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Page;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $options = [];
+
     protected $btTable = 'btSurvey';
+
     protected $btInterfaceWidth = 500;
+
     protected $btInterfaceHeight = 500;
+
     protected $btExportTables = ['btSurvey', 'btSurveyOptions', 'btSurveyResults'];
 
     /**
@@ -52,6 +58,13 @@ class Controller extends BlockController
         return $this->options;
     }
 
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::POLLS,
+        ];
+    }
+
     public function setPollOptions()
     {
         $this->cID = null;
@@ -68,7 +81,7 @@ class Controller extends BlockController
             $r = $db->query($q, $v);
             $this->options = [];
             if ($r) {
-                while ($row = $r->fetchRow()) {
+                while ($row = $r->fetch()) {
                     $opt = new Option();
                     $opt->optionID = $row['optionID'];
                     $opt->cID = $this->cID;
@@ -206,7 +219,7 @@ class Controller extends BlockController
      *
      * @param array|string|null $args
      *
-     * @version 8.5.5 Method added for survey block
+     * @version 9.0.0a3 Method added for survey block
      *
      * @return ErrorList
      */
@@ -229,7 +242,6 @@ class Controller extends BlockController
 
     public function save($args)
     {
-
         $sanitizer = $this->app->make('helper/security');
         if (!$args['showResults']) {
             $args['showResults'] = 0;
@@ -239,7 +251,6 @@ class Controller extends BlockController
         $args['customMessage'] = $sanitizer->sanitizeString($args['customMessage']);
 
         $args['question'] = $sanitizer->sanitizeString($args['question']);
-
 
         parent::save($args);
         /** @var \Concrete\Core\Database\Connection\Connection $db */
@@ -256,15 +267,14 @@ class Controller extends BlockController
         }
         $queryBuilder = $db->createQueryBuilder();
 
-
         $queryBuilder->delete('btSurveyOptions')
             ->andWhere($queryBuilder->expr()->eq('bID', ':blockID'))
-            ->setParameter('blockID', (int) $this->bID, Type::INTEGER);
+            ->setParameter('blockID', (int) $this->bID, Types::INTEGER)
+        ;
         if (!empty($sanitizedArgs)) {
             $queryBuilder->andWhere($queryBuilder->expr()->notIn('optionName', ':names'))->setParameter('names', $sanitizedArgs, Connection::PARAM_STR_ARRAY);
         }
         $queryBuilder->execute();
-
 
         $max = $db->fetchColumn(
             'SELECT MAX(displayOrder) AS maxDisplayOrder FROM btSurveyOptions WHERE bID = :bID',
@@ -279,11 +289,8 @@ class Controller extends BlockController
                 $optionName = $sanitizer->sanitizeString($optionName);
                 // Dont add if the sanitized string is empty
                 if (!empty($optionName)) {
-                    $db->insert(
-                        'btSurveyOptions',
-                        ['bID' => (int) $this->bID, 'optionName' => $optionName, 'displayOrder' => $displayOrder]
-                    );
-                    ++$displayOrder;
+                    $db->insert('btSurveyOptions', ['bID' => (int) $this->bID, 'optionName' => $optionName, 'displayOrder' => $displayOrder]);
+                    $displayOrder++;
                 }
             }
             $db->commit();
@@ -293,7 +300,6 @@ class Controller extends BlockController
         $queryBuilder->delete('btSurveyResults')->where($queryBuilder->expr()->notIn(
             'optionID',
             'SELECT optionID from btSurveyOptions WHERE bID = :bID'
-        ))->andWhere($queryBuilder->expr()->eq('bID', ':bID'))
-            ->setParameter('bID', (int) $this->bID, Type::INTEGER)->execute();
+        ))->andWhere($queryBuilder->expr()->eq('bID', ':bID'))->setParameter('bID', (int) $this->bID, Types::INTEGER)->execute();
     }
 }

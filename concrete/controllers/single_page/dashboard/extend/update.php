@@ -12,10 +12,6 @@ use Exception;
 
 class Update extends DashboardPageController
 {
-    public function on_start()
-    {
-        $this->error = Loader::helper('validation/error');
-    }
     public function do_update($pkgHandle = false)
     {
         $tp = new TaskPermission();

@@ -36,7 +36,7 @@ class Sitemap
     /**
      * @var bool|null
      */
-    protected $includeSystemPages;
+    protected $includeSystemPages = false;
 
     /**
      * Sitemap constructor.
@@ -61,11 +61,6 @@ class Sitemap
      */
     public function includeSystemPages()
     {
-        if ($this->includeSystemPages === null) {
-            $session = $this->app->make('session');
-            $this->includeSystemPages = (bool) $session->get('includeSystemPages');
-        }
-
         return $this->includeSystemPages;
     }
 
@@ -75,12 +70,6 @@ class Sitemap
     public function setIncludeSystemPages($systemPages)
     {
         $this->includeSystemPages = (bool) $systemPages;
-        $session = $this->app->make('session');
-        if ($systemPages) {
-            $session->set('includeSystemPages', true);
-        } else {
-            $session->remove('includeSystemPages');
-        }
     }
 
     /**
@@ -238,12 +227,12 @@ class Sitemap
             $cIconClass = null;
             $cIcon = $c->getCollectionIcon();
             if (!$cIcon) {
-                if ($cID == 1) {
-                    $cIconClass = 'fa fa-home';
+                if ($c->isHomePage()) {
+                    $cIconClass = 'icon-home';
                 } elseif ($numSubpages > 0) {
-                    $cIconClass = 'fa fa-folder-o';
+                    $cIconClass = 'icon-folder';
                 } else {
-                    $cIconClass = 'fa fa-file-o';
+                    $cIconClass = 'icon-page';
                 }
             }
         }
@@ -252,11 +241,11 @@ class Sitemap
         $cPointerID = $c->getCollectionPointerID();
         if ($cAlias) {
             if ($cPointerID > 0) {
-                $cIconClass = 'fa fa-sign-in';
+                $cIconClass = 'fas fa-sign-out-alt';
                 $cAlias = 'POINTER';
                 $cID = $c->getCollectionPointerOriginalID();
             } else {
-                $cIconClass = 'fa fa-external-link';
+                $cIconClass = 'fas fa-external-link-alt';
                 $cAlias = 'LINK';
             }
         }

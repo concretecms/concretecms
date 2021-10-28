@@ -10,20 +10,23 @@ use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Database\Driver\PDOStatement;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
-use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
-use Concrete\Core\Feature\Feature;
 use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\Command\ReindexPageCommand;
 use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
 use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Facade;
 use Config;
+use Doctrine\DBAL\FetchMode;
 use Loader;
 use Page;
 use PageCache;
@@ -97,16 +100,24 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public static function getByID($cID, $version = 'RECENT')
     {
-        $db = Loader::db();
-        $q = 'select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?';
-        $row = $db->getRow($q, [$cID]);
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $qb->select('c.cDateAdded', 'c.cDateModified', 'c.cID')
+            ->from('Collections', 'c')
+            ->where('c.cID = :cID')
+            ->setParameter('cID', $cID);
+        $row = $qb->execute()->fetch();
 
         $c = new self();
-        $c->setPropertiesFromArray($row);
+        if ($row !== false) {
+            $c->setPropertiesFromArray($row);
 
-        if ($version != false) {
-            // we don't do this on the front page
-            $c->loadVersionObject($version);
+            if ($version != false) {
+                // we don't do this on the front page
+                $c->loadVersionObject($version);
+            }
         }
 
         return $c;
@@ -122,14 +133,20 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public static function getByHandle($handle)
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $qb->select('c.cID', 'p.cID')
+            ->from('Collections', 'c')
+            ->leftJoin('c', 'Pages', 'p', 'c.cID = p.cID')
+            ->where('c.cHandle = :cHandle')
+            ->setParameter('cHandle', $handle);
 
         // first we ensure that this does NOT appear in the Pages table. This is not a page. It is more basic than that
-        $r = $db->query(
-            'select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?',
-            [$handle]
-            );
-        if ($r->numRows() == 0) {
+        /** @var PDOStatement $r */
+        $r = $qb->execute();
+        if ($r->rowCount() === 0) {
             // there is nothing in the collections table for this page, so we create and grab
 
             $data = [
@@ -137,16 +154,14 @@ class Collection extends ConcreteObject implements TrackableInterface
             ];
             $cObj = self::createCollection($data);
         } else {
-            $row = $r->fetchRow();
-            if ($row['cID'] > 0 && $row['pcID'] == null) {
+            $row = $r->fetch();
+            if ($row['cID'] > 0 && $row['pcID'] === null) {
                 // there is a collection, but it is not a page. so we grab it
                 $cObj = self::getByID($row['cID']);
             }
         }
 
-        if (isset($cObj)) {
-            return $cObj;
-        }
+        return $cObj ?? null;
     }
 
     /**
@@ -161,10 +176,16 @@ class Collection extends ConcreteObject implements TrackableInterface
         $indexStack = $app->make(IndexManagerInterface::class);
 
         $num = 0;
-        $db = $app['database']->connection();
-        $r = $db->execute('select cID from PageSearchIndex where cRequiresReindex = 1');
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $r = $qb->select('cID')
+            ->from('PageSearchIndex')
+            ->where('cRequiresReindex = 1')
+            ->execute();
         while ($id = $r->fetchColumn()) {
             $indexStack->index(\Concrete\Core\Page\Page::class, $id);
+            $num++;
         }
         Config::save('concrete.misc.do_page_reindex_check', false);
 
@@ -192,7 +213,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public static function createCollection($data)
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
         $dh = Loader::helper('date');
         $cDate = $dh->getOverridableNow();
 
@@ -211,17 +234,20 @@ class Collection extends ConcreteObject implements TrackableInterface
         $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
 
         if (isset($data['cID'])) {
-            $res = $db->query(
-                'insert into Collections (cID, cHandle, cDateAdded, cDateModified) values (?, ?, ?, ?)',
-                [$data['cID'], $data['handle'], $cDate, $cDate]
-                );
+            $res = $db->insert('Collections', [
+                'cID' => $data['cID'],
+                'cHandle' => $data['handle'],
+                'cDateAdded' => $cDate,
+                'cDateModified' => $cDate
+            ]);
             $newCID = $data['cID'];
         } else {
-            $res = $db->query(
-                'insert into Collections (cHandle, cDateAdded, cDateModified) values (?, ?, ?)',
-                [$data['handle'], $cDate, $cDate]
-                );
-            $newCID = $db->Insert_ID();
+            $res = $db->insert('Collections', [
+                'cHandle' => $data['handle'],
+                'cDateAdded' => $cDate,
+                'cDateModified' => $cDate
+            ]);
+            $newCID = $db->lastInsertId();
         }
 
         $cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
@@ -245,29 +271,24 @@ class Collection extends ConcreteObject implements TrackableInterface
 
         if ($res) {
             // now we add a pending version to the collectionversions table
-            $v2 = [
-                $newCID,
-                1,
-                $pTemplateID,
-                $data['name'],
-                $data['handle'],
-                $data['cDescription'],
-                $cDatePublic,
-                $cDate,
-                t(VERSION_INITIAL_COMMENT),
-                $data['uID'],
-                $cvIsApproved,
-                $cvIsNew,
-                $pThemeID,
-            ];
-            $q2 = 'insert into CollectionVersions (cID, cvID, pTemplateID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            $r2 = $db->prepare($q2);
-            $res2 = $db->execute($r2, $v2);
+            $db->insert('CollectionVersions', [
+                'cID' => $newCID,
+                'cvID' => 1,
+                'pTemplateID' => $pTemplateID,
+                'cvName' => $data['name'],
+                'cvHandle' => $data['handle'],
+                'cvDescription' => $data['cDescription'],
+                'cvDatePublic' => $cDatePublic,
+                'cvDateCreated' => $cDate,
+                'cvComments' => t(VERSION_INITIAL_COMMENT),
+                'cvAuthorUID' => $data['uID'],
+                'cvIsApproved' => $cvIsApproved,
+                'cvIsNew' => $cvIsNew,
+                'pThemeID' => $pThemeID,
+            ]);
         }
 
-        $nc = self::getByID($newCID);
-
-        return $nc;
+        return self::getByID($newCID);
     }
 
     /**
@@ -402,63 +423,18 @@ class Collection extends ConcreteObject implements TrackableInterface
         return t('Version %d', $cvID + 1);
     }
 
-    /**
-     * (Re)Index the contents of this collection (or mark the collection as to be reindexed if $actuallyDoReindex is falsy and the concrete.page.search.always_reindex configuration key is falsy).
-     *
-     * @param \Concrete\Core\Page\Search\IndexedSearch|false $index the IndexedSearch instance that indexes the collection content (if falsy: we'll create a new instance of it)
-     * @param bool $actuallyDoReindex Set to true to always reindex the collection immediately (otherwise we'll look at the concrete.page.search.always_reindex configuration key)
-     *
-     * @return bool|null Return false if the collection can't be indexed, NULL otherwise
-     */
-    public function reindex($index = false, $actuallyDoReindex = true)
+    public function reindex()
     {
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
-        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
-            // Retrieve the attribute values for the current page
-            $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
-            $indexer = $category->getSearchIndexer();
-            $values = $category->getAttributeValues($this);
-            foreach ($values as $value) {
-                $indexer->indexEntry($category, $value, $this);
-            }
 
-            if ($index == false) {
-                $index = new IndexedSearch();
-            }
-
-            $index->reindexPage($this);
-
-            $db = \Database::connection();
-            $db->Replace(
-               'PageSearchIndex',
-               ['cID' => $this->getCollectionID(), 'cRequiresReindex' => 0],
-               ['cID'],
-               false
-            );
-
-            $cache = PageCache::getLibrary();
-            $cache->purge($this);
-
-            // we check to see if this page is referenced in any gatherings
-            $c = Page::getByID($this->getCollectionID(), $this->getVersionID());
-            $items = PageGatheringItem::getListByItem($c);
-            foreach ($items as $it) {
-                $it->deleteFeatureAssignments();
-                $it->assignFeatureAssignments($c);
-            }
-        } else {
-            $db = Loader::db();
-            Config::save('concrete.misc.do_page_reindex_check', true);
-            $db->Replace(
-               'PageSearchIndex',
-               ['cID' => $this->getCollectionID(), 'cRequiresReindex' => 1],
-               ['cID'],
-               false
-            );
-        }
+        $command = new ReindexPageCommand($this->getCollectionID());
+        $app = Facade::getFacadeApplication();
+        $app->executeCommand($command);
     }
+
+
 
     /**
      * Set the attribute value for the currently loaded collection version.
@@ -522,21 +498,29 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function clearCollectionAttributes($retainAKIDs = [])
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
         if (count($retainAKIDs) > 0) {
             $cleanAKIDs = [];
             foreach ($retainAKIDs as $akID) {
                 $cleanAKIDs[] = (int) $akID;
             }
-            $akIDStr = implode(',', $cleanAKIDs);
-            $v2 = [$this->getCollectionID(), $this->getVersionID()];
-            $db->query(
-                "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
-                $v2
-            );
+            $qb->delete('CollectionAttributeValues')
+                ->where('cID = :cID')
+                ->andWhere('cvID = :cvID')
+                ->andWhere($qb->expr()->notIn('akID', $cleanAKIDs))
+                ->setParameter('cID', $this->getCollectionID())
+                ->setParameter('cvID', $this->getVersionID())
+                ->execute();
         } else {
-            $v2 = [$this->getCollectionID(), $this->getVersionID()];
-            $db->query('delete from CollectionAttributeValues where cID = ? and cvID = ?', $v2);
+            $qb->delete('CollectionAttributeValues')
+                ->where('cID = :cID')
+                ->andWhere('cvID = :cvID')
+                ->setParameter('cID', $this->getCollectionID())
+                ->setParameter('cvID', $this->getVersionID())
+                ->execute();
         }
         $this->reindex();
     }
@@ -587,22 +571,32 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function hasAliasedContent()
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
         // aliased content is content on the particular page that is being
         // used elsewhere - but the content on the PAGE is the original version
-        $v = [$this->cID];
-        $q = 'select bID from CollectionVersionBlocks where cID = ? and isOriginal = 1';
-        $r = $db->query($q, $v);
+        $r = $qb->select('bID')
+            ->from('CollectionVersionBlocks')
+            ->where('cID = :cID')
+            ->andWhere('isOriginal = 1')
+            ->setParameter('cID', $this->getCollectionID())
+            ->execute();
         $bIDArray = [];
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $bIDArray[] = $row['bID'];
             }
             if (count($bIDArray) > 0) {
-                $bIDList = implode(',', $bIDArray);
-                $v2 = [$bIDList, $this->cID];
-                $q2 = 'select cID from CollectionVersionBlocks where bID in (?) and cID <> ? limit 1';
-                $aliasedCID = $db->getOne($q2, $v2);
+                $qb2 = $db->createQueryBuilder();
+                $qb2->select('cID')
+                    ->from('CollectionVersionBlocks')
+                    ->where($qb2->expr()->in('bID', $bIDArray))
+                    ->andWhere($qb2->expr()->neq('cID', ':cID'))
+                    ->setParameter('cID', $this->getCollectionID())
+                    ->setMaxResults(1);
+                $aliasedCID = $qb2->execute()->fetchColumn();
                 if ($aliasedCID > 0) {
                     return true;
                 }
@@ -647,18 +641,39 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function setCustomStyleSet($area, $set)
     {
-        $db = Loader::db();
-        $db->Replace(
-            'CollectionVersionAreaStyles',
-            [
-                'cID' => $this->getCollectionID(),
-                'cvID' => $this->getVersionID(),
-                'arHandle' => $area->getAreaHandle(),
-                'issID' => $set->getID(),
-            ],
-            ['cID', 'cvID', 'arHandle'],
-            true
-            );
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $r = $qb->select('cID')
+            ->from('CollectionVersionAreaStyles')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('arHandle = :arHandle')
+            ->setParameter('cID', $this->getCollectionID())
+            ->setParameter('cvID', $this->getVersionID())
+            ->setParameter('arHandle', $area->getAreaHandle())
+            ->execute()->fetch();
+
+        $qb2 = $db->createQueryBuilder();
+        if ($r !== false) {
+            $qb2->update('CollectionVersionAreaStyles')
+                ->set('issID', ':issID')
+                ->where('cID = :cID')
+                ->andWhere('cvID = :cvID')
+                ->andWhere('arHandle = :arHandle');
+        } else {
+            $qb2->insert('CollectionVersionAreaStyles')
+                ->setValue('cID', ':cID')
+                ->setValue('cvID', ':cvID')
+                ->setValue('arHandle', ':arHandle')
+                ->setValue('issID', ':issID');
+        }
+        $qb2->setParameter('cID', $this->getCollectionID())
+            ->setParameter('cvID', $this->getVersionID())
+            ->setParameter('arHandle', $area->getAreaHandle())
+            ->setParameter('issID', $set->getID())
+            ->execute();
     }
 
     /**
@@ -668,15 +683,18 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function resetAreaCustomStyle($area)
     {
-        $db = Loader::db();
-        $db->Execute(
-            'delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?',
-            [
-                $this->getCollectionID(),
-                $this->getVersionID(),
-                $area->getAreaHandle(),
-            ]
-            );
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $qb->delete('CollectionVersionAreaStyles')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('arHandle = :arHandle')
+            ->setParameter('cID', $this->getCollectionID())
+            ->setParameter('cvID', $this->getVersionID())
+            ->setParameter('arHandle', $area->getAreaHandle())
+            ->execute();
     }
 
     /**
@@ -692,19 +710,31 @@ class Collection extends ConcreteObject implements TrackableInterface
             return '';
         }
 
-        $db = Loader::db();
         $psss = [];
         $txt = Loader::helper('text');
         CacheLocal::set('pssCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
 
-        $r1 = $db->GetAll(
-                 'select bID, arHandle, issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
-                 [$this->getCollectionID(), $this->getVersionID()]
-        );
-        $r2 = $db->GetAll(
-                 'select arHandle, issID from CollectionVersionAreaStyles where cID = ? and cvID = ? and issID > 0',
-                 [$this->getCollectionID(), $this->getVersionID()]
-        );
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb1 = $db->createQueryBuilder();
+        $r1 = $qb1->select('bID', 'arHandle', 'issID')
+            ->from('CollectionVersionBlockStyles')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('issID > 0')
+            ->setParameter(':cID', $this->getCollectionID())
+            ->setParameter(':cvID', $this->getVersionID())
+            ->execute()->fetchAll();
+        $qb2 = $db->createQueryBuilder();
+        $r2 = $qb2->select('arHandle', 'issID')
+            ->from('CollectionVersionAreaStyles')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('issID > 0')
+            ->setParameter(':cID', $this->getCollectionID())
+            ->setParameter(':cvID', $this->getVersionID())
+            ->execute()->fetchAll();
         foreach ($r1 as $r) {
             $issID = $r['issID'];
             $arHandle = $txt->filterNonAlphaNum($r['arHandle']);
@@ -741,10 +771,13 @@ class Collection extends ConcreteObject implements TrackableInterface
         }
 
         // grab all the header block style rules for items in global areas on this page
-        $rs = $db->GetCol(
-                 'select arHandle from Areas where arIsGlobal = 1 and cID = ?',
-                 [$this->getCollectionID()]
-        );
+        $qb3 = $db->createQueryBuilder();
+        $rs = $qb3->select('arHandle')
+            ->from('Areas')
+            ->where('arIsGlobal = 1')
+            ->andWhere('cID = :cID')
+            ->setParameter('cID', $this->getCollectionID())
+            ->execute()->fetchAll(FetchMode::COLUMN);
         if (count($rs) > 0) {
             $pcp = new Permissions($this);
             foreach ($rs as $garHandle) {
@@ -755,10 +788,15 @@ class Collection extends ConcreteObject implements TrackableInterface
                 }
                 if (is_object($s)) {
                     CacheLocal::set('pssCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
-                    $rs1 = $db->GetAll(
-                              'select bID, issID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
-                              [$s->getCollectionID(), $s->getVersionID()]
-                    );
+                    $qb4 = $db->createQueryBuilder();
+                    $rs1 = $qb4->select('bID', 'issID', 'arHandle')
+                        ->from('CollectionVersionBlockStyles')
+                        ->where('cID = :cID')
+                        ->andWhere('cvID = :cvID')
+                        ->andWhere('issID > 0')
+                        ->setParameter('cID', $s->getCollectionID())
+                        ->setParameter('cvID', $s->getVersionID())
+                        ->execute()->fetchAll();
                     foreach ($rs1 as $r) {
                         $issID = $r['issID'];
                         $obj = StyleSet::getByID($issID);
@@ -809,24 +847,31 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function relateVersionEdits($oc)
     {
-        $db = Loader::db();
-        $v = [
-            $this->getCollectionID(),
-            $this->getVersionID(),
-            $oc->getCollectionID(),
-            $oc->getVersionID(),
-        ];
-        $r = $db->GetOne(
-                'select count(*) from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?',
-                $v
-        );
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $r = (int) $qb = $qb->select('count(*)')
+            ->from('CollectionVersionRelatedEdits')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('cRelationID = :cRelationID')
+            ->andWhere('cvRelationID = :cvRelationID')
+            ->setParameter('cID', $this->getCollectionID())
+            ->setParameter('cvID', $this->getVersionID())
+            ->setParameter('cRelationID', $oc->getCollectionID())
+            ->setParameter('cvRelationID', $oc->getVersionID())
+            ->execute()->fetchColumn();
         if ($r > 0) {
             return false;
         } else {
-            $db->Execute(
-               'insert into CollectionVersionRelatedEdits (cID, cvID, cRelationID, cvRelationID) values (?, ?, ?, ?)',
-               $v
-            );
+            $qb2 = $db->createQueryBuilder();
+            $qb2->insert('CollectionVersionRelatedEdits')
+                ->setValue('cID', $this->getCollectionID())
+                ->setValue('cvID', $this->getVersionID())
+                ->setValue('cRelationID', $oc->getCollectionID())
+                ->setValue('cvRelationID', $oc->getVersionID())
+                ->execute();
         }
     }
 
@@ -855,9 +900,15 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getGlobalBlocks()
     {
-        $db = Loader::db();
-        $v = [Stack::ST_TYPE_GLOBAL_AREA];
-        $rs = $db->GetCol('select stName from Stacks where Stacks.stType = ?', $v);
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $rs = $qb->select('stName')
+            ->from('Stacks')
+            ->where('stType = :stType')
+            ->setParameter('stType', Stack::ST_TYPE_GLOBAL_AREA)
+            ->execute()->fetchAll(FetchMode::COLUMN);
         $blocks = [];
         if (count($rs) > 0) {
             $pcp = new Permissions($this);
@@ -916,10 +967,22 @@ class Collection extends ConcreteObject implements TrackableInterface
         );
 
         if (!is_array($blockIDs)) {
-            $v = [$this->getCollectionID(), $this->getVersionID()];
-            $db = Loader::db();
-            $q = 'select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc';
-            $r = $db->GetAll($q, $v);
+            $app = Application::getFacadeApplication();
+            /** @var Connection $db */
+            $db = $app->make(Connection::class);
+            $qb = $db->createQueryBuilder();
+            $r = $qb->select('b.bID', 'cvb.arHandle')
+                ->from('CollectionVersionBlocks', 'cvb')
+                ->innerJoin('cvb', 'Blocks', 'b', 'cvb.bID = b.bID')
+                ->where('cvb.cID = :cID')
+                ->andWhere($qb->expr()->orX(
+                    'cvb.cvID = :cvID',
+                    'cvb.cbIncludeAll = 1'
+                ))
+                ->orderBy('cvb.cbDisplayOrder', 'asc')
+                ->setParameter('cID', $this->getCollectionID())
+                ->setParameter('cvID', $this->getVersionID())
+                ->execute()->fetchAll();
             $blockIDs = [];
             if (is_array($r)) {
                 foreach ($r as $bl) {
@@ -959,7 +1022,9 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function addBlock($bt, $a, $data)
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
 
         // first we add the block to the system
         $nb = $bt->add($data, $this, $a);
@@ -982,44 +1047,33 @@ class Collection extends ConcreteObject implements TrackableInterface
             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle);
         }
 
-        $cbRelationID = $db->GetOne('select max(cbRelationID) as cbRelationID from CollectionVersionBlocks');
+        $qb = $db->createQueryBuilder();
+        $cbRelationID = (int) $qb->select('max(cbRelationID)')->from('CollectionVersionBlocks')
+            ->execute()->fetchColumn();
         if (!$cbRelationID) {
             $cbRelationID = 1;
         } else {
             ++$cbRelationID;
         }
 
-        $v = [
-            $cID,
-            $vObj->getVersionID(),
-            $nb->getBlockID(),
-            $arHandle,
-            $cbRelationID,
-            $newBlockDisplayOrder,
-            1,
-            (int) ($bt->includeAll()),
-        ];
-        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)';
-
-        $res = $db->Execute($q, $v);
-
-        $controller = $nb->getController();
-        $features = $controller->getBlockTypeFeatureObjects();
-        if (count($features) > 0) {
-            foreach ($features as $fe) {
-                $fd = $fe->getFeatureDetailObject($controller);
-                $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
-                $db->Execute(
-                   'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                   [
-                       $this->getCollectionID(),
-                       $this->getVersionID(),
-                       $nb->getBlockID(),
-                       $fa->getFeatureAssignmentID(),
-                   ]
-                );
-            }
-        }
+        $qb2 = $db->createQueryBuilder();
+        $res = $qb2->insert('CollectionVersionBlocks')
+            ->setValue('cID', ':cID')
+            ->setValue('cvID', ':cvID')
+            ->setValue('bID', ':bID')
+            ->setValue('arHandle', ':arHandle')
+            ->setValue('cbRelationID', ':cbRelationID')
+            ->setValue('cbDisplayOrder', ':cbDisplayOrder')
+            ->setValue('isOriginal', 1)
+            ->setValue('cbIncludeAll', ':cbIncludeAll')
+            ->setParameter('cID', $cID)
+            ->setParameter('cvID', $vObj->getVersionID())
+            ->setParameter('bID', $nb->getBlockID())
+            ->setParameter('arHandle', $arHandle)
+            ->setParameter('cbRelationID', $cbRelationID)
+            ->setParameter('cbDisplayOrder', $newBlockDisplayOrder)
+            ->setParameter('cbIncludeAll', (int) ($bt->includeAll()))
+            ->execute();
 
         return Block::getByID($nb->getBlockID(), $this, $a);
     }
@@ -1034,21 +1088,35 @@ class Collection extends ConcreteObject implements TrackableInterface
      */
     public function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
     {
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
         $cID = $this->cID;
         $cvID = $this->vObj->cvID;
         if ($ignoreVersions) {
-            $q = 'select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and arHandle = ?';
-            $v = [$cID, $arHandle];
+            $qb->select('max(cbDisplayOrder) as cbdis')
+                ->from('CollectionVersionBlocks')
+                ->where('cID = :cID')
+                ->andWhere('arHandle = :arHandle')
+                ->setParameter('cID', $cID)
+                ->setParameter('arHandle', $arHandle);
         } else {
-            $q = 'select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle = ?';
-            $v = [$cID, $cvID, $arHandle];
+            $qb->select('max(cbDisplayOrder) as cbdis')
+                ->from('CollectionVersionBlocks')
+                ->where('cID = :cID')
+                ->andWhere('cvID = :cvID')
+                ->andWhere('arHandle = :arHandle')
+                ->setParameter('cID', $cID)
+                ->setParameter('cvID', $cvID)
+                ->setParameter('arHandle', $arHandle);
         }
-        $r = $db->query($q, $v);
+        /** @var PDOStatement $r */
+        $r = $qb->execute();
         if ($r) {
-            if ($r->numRows() > 0) {
+            if ($r->rowCount() > 0) {
                 // then we know we got a value; we increment it and return
-                $res = $r->fetchRow();
+                $res = $r->fetchAssociative();
                 $displayOrder = $res['cbdis'];
                 if ($displayOrder === null) {
                     return 0;
@@ -1072,69 +1140,63 @@ class Collection extends ConcreteObject implements TrackableInterface
     {
         // this collection function f
 
-        $db = Loader::db();
         $cID = $this->cID;
         $cvID = $this->vObj->cvID;
-        $args = [$cID, $cvID, $arHandle];
-        $q = 'select bID from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle=? order by cbDisplayOrder asc';
-        $r = $db->query($q, $args);
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $r = $qb->select('bID')
+            ->from('CollectionVersionBlocks')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('arHandle = :arHandle')
+            ->orderBy('cbDisplayOrder', 'asc')
+            ->setParameter('cID', $cID)
+            ->setParameter('cvID', $cvID)
+            ->setParameter('arHandle', $arHandle)
+            ->execute();
 
         if ($r) {
             $displayOrder = 0;
-            while ($row = $r->fetchRow()) {
-                $args = [$displayOrder, $cID, $cvID, $arHandle, $row['bID']];
-                $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where cID = ? and cvID = ? and arHandle = ? and bID = ?';
-                $db->query($q, $args);
+            while ($row = $r->fetch()) {
+                $qb2 = $db->createQueryBuilder();
+                $qb2->update('CollectionVersionBlocks')
+                    ->set('cbDisplayOrder', ':cbDisplayOrder')
+                    ->where('cID = :cID')
+                    ->andWhere('cvID = :cvID')
+                    ->andWhere('arHandle = :arHandle')
+                    ->andWhere('bID = :bID')
+                    ->setParameter('cbDisplayOrder', $displayOrder)
+                    ->setParameter('cID', $cID)
+                    ->setParameter('cvID', $cvID)
+                    ->setParameter('arHandle', $arHandle)
+                    ->setParameter('bID', $row['bID'])
+                    ->execute();
                 ++$displayOrder;
             }
-            $r->free();
         }
     }
-
-    /**
-     * Associate a feature to the currently loaded collection version.
-     *
-     * @param Feature $fe
-     */
-    public function addFeature(Feature $fe)
-    {
-        $db = Loader::db();
-        $db->Replace(
-           'CollectionVersionFeatures',
-           ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()],
-           ['cID', 'cvID', 'feID'],
-           true
-        );
-    }
-
-    /**
-     * Get the list of assigned features.
-     *
-     * @return \Concrete\Core\Feature\Assignment\CollectionVersionAssignment[]
-     */
-    public function getFeatureAssignments()
-    {
-        if (is_object($this->vObj)) {
-            return CollectionVersionFeatureAssignment::getList($this);
-        }
-
-        return [];
-    }
-
+    
     /**
      * Update the last edit date/time.
      */
     public function markModified()
     {
         // marks this collection as newly modified
-        $db = Loader::db();
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
         $dh = Loader::helper('date');
         $cDateModified = $dh->getOverridableNow();
 
-        $v = [$cDateModified, $this->cID];
-        $q = 'update Collections set cDateModified = ? where cID = ?';
-        $r = $db->prepare($q);
-        $res = $db->execute($r, $v);
+        $qb = $db->createQueryBuilder();
+        $res = $qb->update('Collections')
+            ->set('cDateModified', ':cDateModified')
+            ->where('cID = :cID')
+            ->setParameter('cDateModified', $cDateModified)
+            ->setParameter('cID', $this->getCollectionID())
+            ->execute();
     }
 
     /**
@@ -1143,7 +1205,9 @@ class Collection extends ConcreteObject implements TrackableInterface
     public function delete()
     {
         if ($this->cID > 0) {
-            $db = Loader::db();
+            $app = Application::getFacadeApplication();
+            /** @var Connection $db */
+            $db = $app->make(Connection::class);
 
             // First we delete all versions
             $vl = new VersionList($this);
@@ -1156,15 +1220,24 @@ class Collection extends ConcreteObject implements TrackableInterface
 
             $cID = $this->getCollectionID();
 
-            $q = "delete from CollectionAttributeValues where cID = {$cID}";
-            $db->query($q);
+            $qb = $db->createQueryBuilder();
+            $qb->delete('CollectionAttributeValues')
+                ->where('cID = :cID')
+                ->setParameter('cID', $cID)
+                ->execute();
 
-            $q = "delete from Collections where cID = '{$cID}'";
-            $r = $db->query($q);
+            $qb = $db->createQueryBuilder();
+            $qb->delete('Collections')
+                ->where('cID = :cID')
+                ->setParameter('cID', $cID)
+                ->execute();
 
             try {
-                $q = "delete from CollectionSearchIndexAttributes where cID = {$cID}";
-                $db->query($q);
+                $qb = $db->createQueryBuilder();
+                $qb->delete('CollectionSearchIndexAttributes')
+                    ->where('cID = :cID')
+                    ->setParameter('cID', $cID)
+                    ->execute();
             } catch (\Exception $e) {
             }
         }

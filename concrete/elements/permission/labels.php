@@ -1,9 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
 if (!isset($pa)) {
     $pa = $pk->getPermissionAccessObject();
 }
-$assignments = array();
+$assignments = [];
 $paID = 0;
 if (is_object($pa)) {
     $paID = $pa->getPermissionAccessID();
@@ -16,7 +16,7 @@ if (is_object($pa)) {
 $str = '';
 
 if (count($assignments) > 0) {
-    for ($i = 0; $i < count($assignments); ++$i) {
+    for ($i = 0; $i < count($assignments); $i++) {
         $class = '';
         $as = $assignments[$i];
         $entity = $as->getAccessEntityObject();
@@ -25,42 +25,45 @@ if (count($assignments) > 0) {
 
         if ($as->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
             if (is_object($pd)) {
-                $class = 'label-warning';
+                $class = 'bg-warning';
                 $pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
             } else {
-                $class = 'label-danger';
+                $class = 'bg-danger';
             }
         } else {
             if (is_object($pd)) {
-                $class = 'label-info';
+                $class = 'bg-info';
                 $pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
             }
         }
 
         if (!$class) {
-            $class = 'label-default';
+            $class = 'bg-secondary';
         }
-        $str .= '<span class="label ' . $class . '" ' . $pdTitle . '>' . $entity->getAccessEntityLabel() . '</span> ';
+        $str .= '<span class="badge ' . $class . '" ' . $pdTitle . '>' . $entity->getAccessEntityLabel() . '</span> ';
     }
 }
 
 ?>
 <?php if (!$str) {
     ?>
-	<span style="color: #ccc"><?=t('None')?></span>
-<?php 
+	<span style="color: #ccc"><?=t('None'); ?></span>
+<?php
 } else {
-    ?>
-	<?=$str?>
-<?php 
-} ?>
+        ?>
+	<?=$str; ?>
+<?php
+    } ?>
 
-<input type="hidden" name="pkID[<?=$pk->getPermissionKeyID()?>]" value="<?=$paID?>" data-pkID="<?=$pk->getPermissionKeyID()?>" />
+<input type="hidden" name="pkID[<?=$pk->getPermissionKeyID(); ?>]" value="<?=$paID; ?>" data-pkID="<?=$pk->getPermissionKeyID(); ?>" />
 </div>
 
 <script type="text/javascript">
 $(function() {
-	$('.ccm-permission-access-line span[title]').tooltip({'container': '#ccm-tooltip-holder'});
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('.ccm-permission-access-line span[title]'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, { container: '#ccm-tooltip-holder' })
+    })
 	$('.ccm-permission-grid-cell .ccm-permission-access-line').draggable({
 		helper: 'clone'	
 	});

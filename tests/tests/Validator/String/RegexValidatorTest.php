@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator\String;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class RegexValidatorTest extends PHPUnit_Framework_TestCase
+class RegexValidatorTest extends TestCase
 {
     public function testIsValid()
     {
@@ -27,24 +27,19 @@ class RegexValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertNotEmpty($error);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidInput()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $validator = new \Concrete\Core\Validator\String\RegexValidator('');
 
         $validator->isValid($validator);
-
-        $this->setExpectedException('RuntimeException');
         $validator->isValid('');
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testInvalidRegularExpression()
     {
+
+        $this->expectException(\RuntimeException::class);
         $validator = new \Concrete\Core\Validator\String\RegexValidator('Invalid regex');
         $validator->isValid('test');
     }

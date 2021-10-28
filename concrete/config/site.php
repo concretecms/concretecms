@@ -5,7 +5,7 @@ return [
     'sites' => [
         'default' => [
             'handle' => 'default',
-            'name' => 'concrete5',
+            'name' => 'Concrete',
             'user' => [
                 'profiles_enabled' => false,
                 'gravatar' => [
@@ -48,8 +48,8 @@ return [
                             'basicstyles',
                             'colordialog',
                             'contextmenu',
-                            'concrete5link',
-                            'concrete5styles',
+                            'concretelink',
+                            'concretestyles',
                             'dialogadvtab',
                             'divarea',
                             'elementspath',
@@ -83,9 +83,9 @@ return [
                             'wysiwygarea',
                         ],
                         'selected_hidden' => [
-                            'concrete5filemanager',
-                            'concrete5inline',
-                            'concrete5uploadimage',
+                            'concretefilemanager',
+                            'concreteinline',
+                            'concreteuploadimage',
                             'dialogadvtab',
                             'divarea',
                             'floatingspace',
@@ -125,7 +125,7 @@ return [
                 ],
                 'plugins' => [
                     'selected' => [
-                        'concrete5lightbox',
+                        'concretelightbox',
                         'undoredo',
                         'specialcharacters',
                         'table',
@@ -146,6 +146,26 @@ return [
                     'excluded_querystring_parameters' => [
                         'cID',
                         'ccm_token',
+                        // calendar block
+                        'start',
+                        'end',
+                        // express_entry_list block
+                        'keywords',
+                        'itemsPerPage',
+                        'search',
+                        // search block
+                        'query',
+                        'search_paths',
+                        'options',
+                        // Facebook
+                        'fbclid',
+                        // Google Analytics & Ads
+                        'utm_source',
+                        'utm_medium',
+                        'utm_campaign',
+                        'utm_content',
+                        'utm_term',
+                        'gclid',
                     ],
                 ],
                 'tracking' => [

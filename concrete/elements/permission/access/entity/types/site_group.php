@@ -5,7 +5,7 @@
     ccm_choosePermissionAccessEntitySiteGroup = function() {
         $.fn.dialog.open({
             title: '<?=t('Choose Site Group')?>',
-            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/access/entity/site_group/' + ccm_permissionObjectKeyCategoryHandle + '/' + ccm_permissionObjectID,
+            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/access/entity/site_group',
             width: 500,
             modal: true,
             height: 350

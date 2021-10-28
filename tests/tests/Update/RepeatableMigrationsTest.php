@@ -5,13 +5,14 @@ namespace Concrete\Tests\Update;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Migrations\Version;
+use Doctrine\Migrations\AbstractMigration;
+use Doctrine\Migrations\Version\Version;
 
 class RepeatableMigrationsTest extends ConcreteDatabaseTestCase
 {
     protected $allowedNotRepeatableMigrations = [
         \Concrete\Core\Updater\Migrations\Migrations\Version20160725000000::class,
+        \Concrete\Core\Updater\Migrations\Migrations\Version20210205193115::class,
     ];
 
     public function testRepeatableMigrations()

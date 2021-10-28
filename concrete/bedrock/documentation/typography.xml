@@ -1,0 +1,194 @@
+<concrete5-cif version="1.0">
+    <area name="Main">
+        <blocks>
+            <block type="core_theme_documentation_breadcrumb" name="">
+                <style>
+                    <customClass>mt-5</customClass>
+                </style>
+            </block>
+            <block type="html" name="" custom-container-settings="1">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[
+                                <div class="mb-5">
+                                    <h1>Typography</h1>
+
+                                        <section class="mt-5">
+
+                                        <h3>Headings</h3>
+
+                                        <table class="table">
+                                        <tr>
+                                            <th class="col-md-6">Heading</th>
+                                            <th class="col-md-6">Example</th>
+                                        </tr>
+                                        <tbody>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;h1&gt;&lt;/h1&gt;</code></td>
+                                                <td class="align-middle"><h1 class="mb-0">h1. Heading</h1></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;h2&gt;&lt;/h2&gt;</code></td>
+                                                <td class="align-middle"><h2 class="mb-0">h2. Heading</h2></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;h3&gt;&lt;/h3&gt;</code></td>
+                                                <td class="align-middle"><h3 class="mb-0">h3. Heading</h3></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;h4&gt;&lt;/h4&gt;</code></td>
+                                                <td class="align-middle"><h4 class="mb-0">h4. Heading</h4></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;h5&gt;&lt;/h5&gt;</code></td>
+                                                <td class="align-middle"><h5 class="mb-0">h5. Heading</h5></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;h6&gt;&lt;/h6&gt;</code></td>
+                                                <td class="align-middle"><h6 class="mb-0">h6. Heading</h6></td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+
+                                        </section>
+
+                                         <section class="mt-5">
+
+                                        <h3>Display Headings</h3>
+
+                                        <table class="table">
+                                        <tr>
+                                            <th class="col-md-6">Heading</th>
+                                            <th class="col-md-6">Example</th>
+                                        </tr>
+                                        <tbody>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;div class=&quot;display-1&quot;&gt;&lt;/div&gt;</code></td>
+                                                <td class="align-middle"><div class="display-1 mb-0">d1 Heading</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;div class=&quot;display-2&quot;&gt;&lt;/div&gt;</code></td>
+                                                <td class="align-middle"><div class="display-2 mb-0">d2 Heading</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;div class=&quot;display-3&quot;&gt;&lt;/div&gt;</code></td>
+                                                <td class="align-middle"><div class="display-3 mb-0">d3 Heading</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;div class=&quot;display-4&quot;&gt;&lt;/div&gt;</code></td>
+                                                <td class="align-middle"><div class="display-4 mb-0">d4 Heading</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;div class=&quot;display-5&quot;&gt;&lt;/div&gt;</code></td>
+                                                <td class="align-middle"><div class="display-5 mb-0">d5 Heading</div></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="align-middle text-center"><code>&lt;div class=&quot;display-6&quot;&gt;&lt;/div&gt;</code></td>
+                                                <td class="align-middle"><div class="display-6 mb-0">d6 Heading</div></td>
+                                            </tr>
+
+                                        </tbody>
+                                        </table>
+
+                                        </section>
+
+                                    ]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="core_area_layout" name="">
+                <arealayout type="theme-grid" columns="12">
+                    <columns>
+                        <column span="6" offset="0">
+                            <block type="html" name="">
+                                <data table="btContentLocal">
+                                    <record>
+                                        <content><![CDATA[
+            <section class="mt-5">
+
+                <h3>Paragraph & Inline Styles</h3>
+
+                <p class="lead">This is a lead paragraph. It stands out from regular paragraphs.</p>
+                <p>You can use the mark tag to <mark>highlight</mark> text.</p>
+                <p><del>This line of text is meant to be treated as deleted text.</del></p>
+                <p><s>This line of text is meant to be treated as no longer accurate.</s></p>
+                <p><ins>This line of text is meant to be treated as an addition to the document.</ins></p>
+                <p><u>This line of text will render as underlined.</u></p>
+                <p><small>This line of text is meant to be treated as fine print.</small></p>
+                <p><strong>This line rendered as bold text.</strong></p>
+                <p><em>This line rendered as italicized text.</em></p>
+
+            </section>
+
+    ]]></content>
+                                    </record>
+                                </data>
+                            </block>
+
+                        </column>
+                        <column span="6" offset="0">
+                            <block type="html" name="">
+                                <data table="btContentLocal">
+                                    <record>
+                                        <content><![CDATA[
+            <section class="mt-5">
+
+                <h3>Blockquotes</h3>
+
+                <blockquote class="blockquote">
+                    <p>This is an example quotation, for everyone to see.</p>
+                </blockquote>
+
+                <div class="pt-3 pb-3"></div>
+
+                <figure>
+                    <blockquote class="blockquote">
+                        <p>I really hope you enjoy Concrete CMS.</p>
+                    </blockquote>
+
+                    <figcaption class="blockquote-footer">
+                        Andrew Embler <cite title="Source Title">Concrete Core Team Leader</cite>
+                    </figcaption>
+                </figure>
+
+
+            </section>
+
+                    <section class="mt-5">
+
+            <h3>Lists</h3>
+
+            <h4>Styled Unordered</h4>
+
+            <ul>
+                <li>List Item 1</li>
+                <li>List Item 2</li>
+                <li>List Item 3</li>
+                <li>List Item 4</li>
+                <li>List Item 5</li>
+            </ul>
+
+            <h4>Unstyled</h4>
+
+            <ul class="list-unstyled">
+                <li>List Item 1</li>
+                <li>List Item 2</li>
+                <li>List Item 3</li>
+                <li>List Item 4</li>
+                <li>List Item 5</li>
+            </ul>
+
+        </section>
+
+
+    ]]></content>
+                                    </record>
+                                </data>
+                            </block>
+                        </column>
+                    </columns>
+                </arealayout>
+            </block>
+        </blocks>
+    </area>
+</concrete5-cif>

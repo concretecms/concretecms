@@ -31,7 +31,8 @@
             eventClick: function(event, jsView, view) {
                 ConcreteEvent.publish('CalendarEventSearchDialogSelectEvent', {
                     id: event.id,
-                    title: event.title
+                    title: event.title,
+                    occurrenceID: event.occurrenceID
                 });
             }
         });

@@ -37,7 +37,6 @@ class EventOccurrence extends BackendInterfaceController
             $this->set('url', $url);
             $this->set('dateFormatter', $this->app->make(CalendarServiceProvider::class)->getDateFormatter());
             $this->set('occurrence', $occurrence);
-            $this->requireAsset('core/lightbox');
         } else {
             die('Access Denied.');
         }

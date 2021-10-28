@@ -11,7 +11,7 @@ class ApiController
 {
 
     /**
-     * Returns an error response in the standard concrete5 error response format.
+     * Returns an error response in the standard Concrete error response format.
      * 
      * @param $message
      * @param int $code

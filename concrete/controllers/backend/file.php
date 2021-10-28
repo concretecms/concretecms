@@ -1,35 +1,46 @@
 <?php
+
 namespace Concrete\Controller\Backend;
 
+use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Command\Batch\Batch as BatchBuilder;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
+use Concrete\Core\Entity\File\Folder\FavoriteFolder;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
+use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Importer;
-use Concrete\Core\File\ImportProcessor\AutorotateImageProcessor;
-use Concrete\Core\File\ImportProcessor\ConstrainImageProcessor;
 use Concrete\Core\File\Incoming;
+use Concrete\Core\File\Rescanner;
 use Concrete\Core\File\Service\VolatileDirectory;
-use Concrete\Core\Foundation\Queue\QueueService;
+use Concrete\Core\File\Type\TypeList as FileTypeList;
+use Concrete\Core\File\ValidationService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Url;
-use Concrete\Core\View\View;
+use Concrete\Core\Utility\Service\Number;
+use Concrete\Core\Utility\Service\Validation\Strings;
+use Concrete\Core\Validation\CSRF\Token;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FileSet;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\RequestOptions;
 use IPLib\Factory as IPFactory;
+use IPLib\ParseStringFlag as IPParseStringFlag;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
 use RuntimeException;
-use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ZipArchive;
 
@@ -76,7 +87,7 @@ class File extends Controller
 
     public function rescan()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
+        $files = $this->getRequestFiles('edit_file_contents');
         $r = new FileEditResponse();
         $r->setFiles($files);
         $error = $this->app->make('error');
@@ -95,44 +106,18 @@ class File extends Controller
 
     public function rescanMultiple()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
-        $q = $this->app->make(QueueService::class)->get('rescan_files');
-        if ($this->request->request->get('process')) {
-            $obj = new stdClass();
-            $em = $this->app->make(EntityManagerInterface::class);
-            $messages = $q->receive(5);
-            foreach ($messages as $msg) {
-                // delete the page here
-                $file = unserialize($msg->body);
-                if ($file !== false) {
-                    $f = $em->find(FileEntity::class, $file['fID']);
-                    if ($f !== null) {
-                        $this->doRescan($f);
-                    }
-                }
-                $q->deleteMessage($msg);
+        $files = $this->getRequestFiles('edit_file_contents');
+        $batch = BatchBuilder::create(t('Rescan Files'), function() use ($files) {
+            foreach ($files as $file) {
+                yield new RescanFileCommand($file->getFileID());
             }
-            $obj->totalItems = $q->count();
-            if ($q->count() == 0) {
-                $q->deleteQueue();
-            }
-
-            return $this->app->make(ResponseFactoryInterface::class)->json($obj);
-        } elseif ($q->count() == 0) {
-            foreach ($files as $f) {
-                $q->send(serialize([
-                    'fID' => $f->getFileID(),
-                ]));
-            }
-        }
-
-        $totalItems = $q->count();
-        View::element('progress_bar', ['totalItems' => $totalItems, 'totalItemsSummary' => t2('%d file', '%d files', $totalItems)]);
+        });
+        return $this->dispatchBatch($batch);
     }
 
     public function approveVersion()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
+        $files = $this->getRequestFiles('edit_file_contents');
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
         $fv = $files[0]->getVersion($fvID);
@@ -149,7 +134,7 @@ class File extends Controller
     {
         $token = $this->app->make('token');
         if (!$token->validate('delete-version')) {
-            $files = $this->getRequestFiles('canEditFileContents');
+            $files = $this->getRequestFiles('edit_file_contents');
         }
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
@@ -167,8 +152,7 @@ class File extends Controller
                 $expr->neq('fvID', $fv->getFileVersionID())
             ))
             ->andWhere($expr->eq('fvPrefix', $fv->getPrefix()))
-            ->andWhere($expr->eq('fvFilename', $fv->getFileName()))
-        ;
+            ->andWhere($expr->eq('fvFilename', $fv->getFileName()));
         $em = $this->app->make(EntityManagerInterface::class);
         $repo = $em->getRepository(FileVersionEntity::class);
         $deleteFilesAndThumbnails = $repo->matching($criteria)->isEmpty();
@@ -223,6 +207,125 @@ class File extends Controller
         return $this->buildImportResponse($importedFileVersions, $errors, $replacingFile !== null);
     }
 
+    public function getFavoriteFolders()
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+
+        if (!$userEntity instanceof User) {
+            $errors->add(t("You are not logged in."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $favoriteFolderList = [];
+
+            /** @var FavoriteFolder[] $favoriteFolderEntries */
+            $favoriteFolderEntries = $favoriteFolderRepository->findBy(["owner" => $userEntity]);
+
+            foreach ($favoriteFolderEntries as $favoriteFolderEntry) {
+                $favoriteFolderTreeNode = Node::getByID($favoriteFolderEntry->getTreeNodeFolderId());
+
+                if ($favoriteFolderTreeNode instanceof FileFolder) {
+                    $favoriteFolderList[$favoriteFolderTreeNode->getTreeNodeID()] = $favoriteFolderTreeNode->getTreeNodeName();
+                }
+            }
+
+            $editResponse->setAdditionalDataAttribute("favoriteFolders", $favoriteFolderList);
+        }
+
+        return $responseFactory->json($editResponse);
+    }
+
+    public function addFavoriteFolder($folderId)
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        $treeNode = Node::getByID($folderId);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+        $favoriteFolderItem = $favoriteFolderRepository->findOneBy(["owner" => $userEntity, "treeNodeFolderId" => $folderId]);
+
+        if (!$userEntity instanceof User) {
+            $errors->add(t("You are not logged in."));
+        }
+
+        if (!(is_object($treeNode) && $treeNode instanceof FileFolder)) {
+            $errors->add(t("The given folder is invalid."));
+        }
+
+        if ($favoriteFolderItem instanceof FavoriteFolder) {
+            $errors->add(t("The folder is already part of the favorite list."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $favoriteFolderItem = new FavoriteFolder();
+            $favoriteFolderItem->setOwner($userEntity);
+            $favoriteFolderItem->setTreeNodeFolderId($folderId);
+
+            $entityManager->persist($favoriteFolderItem);;
+            $entityManager->flush();
+
+            $editResponse->setTitle(t("Folder successfully added"));
+            $editResponse->setMessage(t("The folder has been successfully added to your favorite list."));
+        }
+
+        return $responseFactory->json($editResponse);
+    }
+
+    /** @noinspection DuplicatedCode */
+    public function removeFavoriteFolder($folderId)
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+        $favoriteFolderItem = $favoriteFolderRepository->findOneBy(["owner" => $userEntity, "treeNodeFolderId" => $folderId]);
+
+        if (!$favoriteFolderItem instanceof FavoriteFolder) {
+            $errors->add(t("The given folder is not part of your favorite list."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $entityManager->remove($favoriteFolderItem);;
+            $entityManager->flush();
+
+            $editResponse->setTitle(t("Folder successfully removed"));
+            $editResponse->setMessage(t("The folder has been successfully removed from the your favorite list."));
+        }
+
+        return $responseFactory->json($editResponse);
+    }
+
     /**
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
@@ -232,7 +335,7 @@ class File extends Controller
         $importedFileVersions = [];
         try {
             $token = $this->app->make('token');
-            if (!$token->validate('import_incoming')) {
+            if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage());
             }
             $filenames = $this->request->request->get('send_file');
@@ -256,7 +359,7 @@ class File extends Controller
             $incoming = $this->app->make(Incoming::class);
             $this->checkExistingIncomingFiles($filenames, $incoming);
             $fi = $this->app->make(Importer::class);
-            $removeFilesAfterPost = (bool) $this->request->request->get('removeFilesAfterPost');
+            $removeFilesAfterPost = (bool)$this->request->request->get('removeFilesAfterPost');
             $incomingFileSystemObject = $incoming->getIncomingFilesystem();
             $originalPage = $this->getImportOriginalPage();
             foreach ($filenames as $filename) {
@@ -289,7 +392,7 @@ class File extends Controller
         $importedFileVersions = [];
         try {
             $token = $this->app->make('token');
-            if (!$token->validate('import_remote')) {
+            if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage());
             }
             $urls = $this->request->request->get('url_upload');
@@ -298,6 +401,7 @@ class File extends Controller
             } elseif (!is_array($urls)) {
                 $urls = [];
             }
+
             $urls = array_values(array_filter(array_map('trim', $urls), 'strlen'));
             $replacingFile = $this->getFileToBeReplaced();
             switch (count($urls)) {
@@ -311,13 +415,16 @@ class File extends Controller
                     }
                     break;
             }
-            $this->checkRemoteURlsToImport($urls);
+
+            $validIps = (array) $this->checkRemoteURlsToImport($urls);
+
             $originalPage = $this->getImportOriginalPage();
             $fi = $this->app->make(Importer::class);
             $volatileDirectory = $this->app->make(VolatileDirectory::class);
             foreach ($urls as $url) {
                 try {
-                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath());
+                    $host = (string) \League\Url\Url::createFromUrl($url)->getHost();
+                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validIps[$host] ?? null);
                     $fileVersion = $fi->import($downloadedFile, false, $replacingFile ?: $this->getDestinationFolder());
                     if (!$fileVersion instanceof FileVersionEntity) {
                         $errors->add($url . ': ' . $fi->getErrorMessage($fileVersion));
@@ -340,12 +447,24 @@ class File extends Controller
 
     public function duplicate()
     {
-        $files = $this->getRequestFiles('canCopyFile');
         $r = new FileEditResponse();
-        $newFiles = [];
-        foreach ($files as $f) {
-            $nf = $f->duplicate();
-            $newFiles[] = $nf;
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var \Concrete\Core\Http\Request $request */
+        $request = $this->app->make(\Concrete\Core\Http\Request::class);
+
+        if ($token->validate("", $request->request->get("token"))) {
+            $files = $this->getRequestFiles('copy_file');
+            $newFiles = [];
+            foreach ($files as $f) {
+                $nf = $f->duplicate();
+                $newFiles[] = $nf;
+            }
+            $r->setFiles($newFiles);
+        } else {
+            $errorList = new ErrorList();
+            $errorList->add($token->getErrorMessage());
+            $r->setError($errorList);
         }
         $r->setFiles($newFiles);
         $r->outputJSON();
@@ -361,7 +480,7 @@ class File extends Controller
 
     public function download()
     {
-        $files = $this->getRequestFiles('canViewFileInFileManager');
+        $files = $this->getRequestFiles("view_file_in_file_manager", true);
         if (count($files) > 1) {
             $fh = $this->app->make('helper/file');
             $vh = $this->app->make('helper/validation/identifier');
@@ -408,41 +527,11 @@ class File extends Controller
     protected function doRescan($f)
     {
         $fv = $f->getApprovedVersion();
-        $resp = $fv->refreshAttributes(false);
-        switch ($resp) {
-            case Importer::E_FILE_INVALID:
-                $errorMessage = t('File %s could not be found.', $fv->getFilename()) . '<br/>';
-                throw new UserMessageException($errorMessage, 404);
-        }
-        $config = $this->app->make('config');
-        $newFileVersion = null;
-        if ($config->get('concrete.file_manager.images.use_exif_data_to_rotate_images')) {
-            $processor = new AutorotateImageProcessor();
-            if ($processor->shouldProcess($fv)) {
-                if ($newFileVersion === null) {
-                    $fv = $newFileVersion = $f->createNewVersion(true);
-                }
-                $processor->setRescanThumbnails(false);
-                $processor->process($newFileVersion);
-            }
-        }
-        $width = (int) $config->get('concrete.file_manager.restrict_max_width');
-        $height = (int) $config->get('concrete.file_manager.restrict_max_height');
-        if ($width > 0 || $height > 0) {
-            $processor = new ConstrainImageProcessor($width, $height);
-            if ($processor->shouldProcess($fv)) {
-                if ($newFileVersion === null) {
-                    $fv = $newFileVersion = $f->createNewVersion(true);
-                }
-                $processor->setRescanThumbnails(false);
-                $processor->process($newFileVersion);
-            }
-        }
-        $fv->rescanThumbnails();
-        $fv->releaseImagineImage();
+        $rescanner = $this->app->make(Rescanner::class);
+        $rescanner->rescanFileVersion($fv);
     }
 
-    protected function getRequestFiles($permission = 'canViewFileInFileManager')
+    protected function getRequestFiles($permissionKey = 'view_file_in_file_manager', $checkUUID = false)
     {
         $files = [];
         $fID = $this->request->request->get('fID', $this->request->query->get('fID'));
@@ -451,13 +540,28 @@ class File extends Controller
         } else {
             $fileIDs = [$fID];
         }
-        $em = $this->app->make(EntityManagerInterface::class);
         foreach ($fileIDs as $fID) {
-            $f = $fID ? $em->find(FileEntity::class, $fID) : null;
-            if ($f !== null) {
-                $fp = new ConcretePermissions($f);
-                if ($fp->$permission()) {
-                    $files[] = $f;
+            $fUUID = null;
+
+            if (is_string($fID) && uuid_is_valid($fID)) {
+                $f = \Concrete\Core\File\File::getByUUID($fID);
+                $fUUID = $fID;
+            } else {
+                $f = \Concrete\Core\File\File::getByID($fID);
+            }
+
+            if ($f instanceof \Concrete\Core\Entity\File\File) {
+                if (!$checkUUID || !$f->hasFileUUID() || $f->getFileUUID() === $fUUID) {
+                    $permissionChecker = new Checker($f);
+                    $responseObject = $permissionChecker->getResponseObject();
+
+                    try {
+                        if ($responseObject->validate($permissionKey)) {
+                            $files[] = $f;
+                        }
+                    } catch (Exception $e) {
+                        // Do Nothing
+                    }
                 }
             }
         }
@@ -473,9 +577,9 @@ class File extends Controller
      * @param string $property
      * @param int|null $index
      *
+     * @return \Concrete\Core\Entity\File\Version|null returns NULL if the upload is chunked and we still haven't received the full file
      * @throws \Concrete\Core\Error\UserMessageException
      *
-     * @return \Concrete\Core\Entity\File\Version|null returns NULL if the upload is chunked and we still haven't received the full file
      */
     protected function handleUpload($property, $index = null)
     {
@@ -485,6 +589,7 @@ class File extends Controller
         } else {
             $file = $this->request->files->get($property);
         }
+
         if (!$file instanceof UploadedFile) {
             throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID));
         }
@@ -527,9 +632,9 @@ class File extends Controller
     /**
      * Get the file instance to be replaced by the uploaded file (if any).
      *
-     * @throws \Concrete\Core\Error\UserMessageException in case the file couldn't be found or it's not accessible
-     *
      * @return \Concrete\Core\Entity\File\File|null
+     *
+     * @throws \Concrete\Core\Error\UserMessageException in case the file couldn't be found or it's not accessible
      *
      * @since 8.5.0a3
      */
@@ -540,7 +645,7 @@ class File extends Controller
             if (!$fID) {
                 $this->fileToBeReplaced = null;
             } else {
-                $fID = is_scalar($fID) ? (int) $fID : 0;
+                $fID = is_scalar($fID) ? (int)$fID : 0;
                 $file = $fID === 0 ? null : $this->app->make(EntityManagerInterface::class)->find(FileEntity::class, $fID);
                 if ($file === null) {
                     throw new UserMessageException(t('Unable to find the specified file.'));
@@ -559,9 +664,9 @@ class File extends Controller
     /**
      * Get the destination folder where the uploaded files should be placed.
      *
-     * @throws \Concrete\Core\Error\UserMessageException in case the folder couldn't be found or it's not accessible
-     *
      * @return \Concrete\Core\Tree\Node\Type\FileFolder
+     *
+     * @throws \Concrete\Core\Error\UserMessageException in case the folder couldn't be found or it's not accessible
      *
      * @since 8.5.0a3
      */
@@ -578,7 +683,7 @@ class File extends Controller
             } else {
                 $treeNodeID = $this->request->request->get('currentFolder');
                 if ($treeNodeID) {
-                    $treeNodeID = is_scalar($treeNodeID) ? (int) $treeNodeID : 0;
+                    $treeNodeID = is_scalar($treeNodeID) ? (int)$treeNodeID : 0;
                     $folder = $treeNodeID === 0 ? null : Node::getByID($treeNodeID);
                 } else {
                     $filesystem = new Filesystem();
@@ -591,7 +696,7 @@ class File extends Controller
             if ($replacingFile === null) {
                 $fp = new Checker($folder);
                 if (!$fp->canAddFiles()) {
-                    throw new UserMessageException(t('Unable to add files.'), 400);
+                    throw new UserMessageException(t("You don't have the permission to upload to %s", $folder->getTreeNodeDisplayName()), 400);
                 }
             }
             $this->destinationFolder = $folder;
@@ -616,7 +721,7 @@ class File extends Controller
             if (!$ocID) {
                 $this->importOriginalPage = null;
             } else {
-                $ocID = is_scalar($ocID) ? (int) $ocID : 0;
+                $ocID = is_scalar($ocID) ? (int)$ocID : 0;
                 $page = $ocID === 0 ? null : CorePage::getByID($ocID);
                 if ($page === null || $page->isError()) {
                     throw new UserMessageException(t('Unable to find the specified page.'));
@@ -660,6 +765,7 @@ class File extends Controller
      * Check that a list of strings are valid "incoming" file names.
      *
      * @param string $urls
+     * @return array<string, string> An array of domains and their validated IPs
      *
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified URLs are not valid
      *
@@ -667,32 +773,56 @@ class File extends Controller
      */
     protected function checkRemoteURlsToImport(array $urls)
     {
+        $validIps = [];
         foreach ($urls as $u) {
             try {
                 $url = Url::createFromUrl($u);
             } catch (RuntimeException $x) {
                 throw new UserMessageException(t('The URL "%s" is not valid: %s', $u, $x->getMessage()));
             }
-            $scheme = (string) $url->getScheme();
+            $scheme = (string)$url->getScheme();
             if ($scheme === '') {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
-            $host = trim((string) $url->getHost());
+            $host = trim((string)$url->getHost());
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
-            $ip = IPFactory::addressFromString($host, true, true, true);
+
+            // If we've already validated this hostname just skip it.
+            if (array_key_exists($host, $validIps)) {
+                continue;
+            }
+
+            $ipFormatBlocks = [
+                '/^\d+$/', // No fully integer / octal hostnames http://2130706433 http://017700000001
+                '/^0x[0-9a-f]+$/i', // No Hexadecimal hostnames http://0x07f000001
+            ];
+
+            foreach ($ipFormatBlocks as $block) {
+                if (preg_match($block, $host) !== 0) {
+                    throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                }
+            }
+
+            $ipFlags = IPParseStringFlag::IPV4_MAYBE_NON_DECIMAL | IPParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | IPParseStringFlag::MAY_INCLUDE_PORT | IPParseStringFlag::MAY_INCLUDE_ZONEID;
+            $ip = IPFactory::parseAddressString($host, $ipFlags);
             if ($ip === null) {
                 $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
                 while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
                     $dns = array_shift($dnsList);
-                    $ip = IPFactory::addressFromString($dns['ip'], true, true, true);
+                    $ip = IPFactory::parseAddressString($dns['ip']);
                 }
             }
-            if ($ip !== null && !in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {
+
+            if ($ip !== null && $ip->getRangeType() !== IPRangeType::T_PUBLIC) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
+
+            $validIps[$host] = $ip->toString();
         }
+
+        return $validIps;
     }
 
     /**
@@ -701,39 +831,65 @@ class File extends Controller
      * @param string $url
      * @param string $temporaryDirectory
      *
+     * @return string the local filename
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
-     * @return string the local filename
      */
-    protected function downloadRemoteURL($url, $temporaryDirectory)
+    protected function downloadRemoteURL($url, $temporaryDirectory, string $ip = null)
     {
-        $client = $this->app->make('http/client');
-        $request = $client->getRequest()->setUri($url);
-        $response = $client->send();
-        if (!$response->isSuccess()) {
-            throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
+        /** @var Client $client */
+        $client = $this->app->make(Client::class);
+        $request = new Request('GET', $url);
+
+        $config = [
+            RequestOptions::ALLOW_REDIRECTS => false,
+        ];
+
+        if ($ip) {
+            $host = parse_url($url, PHP_URL_HOST);
+            $scheme = parse_url($url, PHP_URL_SCHEME);
+            $port = parse_url($url, PHP_URL_PORT) ?: ($scheme === 'http' ? 80 : 443);
+
+            // Specify IP if one is provided.
+            $config['curl'] = [CURLOPT_RESOLVE => ["{$host}:{$port}:{$ip}"]];
         }
-        $headers = $response->getHeaders();
+
+        $response = $client->send($request, $config);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
+        }
+
         // figure out a filename based on filename, mimetype, ???
         $matches = null;
         if (preg_match('/^[^#\?]+[\\/]([-\w%]+\.[-\w%]+)($|\?|#)/', $request->getUri(), $matches)) {
             // got a filename (with extension)... use it
             $filename = $matches[1];
         } else {
-            $contentType = $headers->get('ContentType')->getFieldValue();
-            if ($contentType) {
-                list($mimeType) = explode(';', $contentType, 2);
-                $mimeType = trim($mimeType);
-                // use mimetype from http response
-                $extension = $this->app->make('helper/mime')->mimeToExtension($mimeType);
-                if ($extension === false) {
-                    throw new UserMessageException(t('Unknown mime-type: %s', h($mimeType)));
+            foreach ($response->getHeader('Content-Type') as $contentType) {
+                if (!empty($contentType)) {
+                    [$mimeType] = explode(';', $contentType, 2);
+                    $mimeType = trim($mimeType);
+                    // use mimetype from http response
+                    $extension = $this->app->make('helper/mime')->mimeToExtension($mimeType);
+
+                    if ($extension === false) {
+                        throw new UserMessageException(t('Unknown mime-type: %s', h($mimeType)));
+                    }
+                    $filename = date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $extension;
+                } else {
+                    throw new UserMessageException(t(/*i18n: %s is an URL*/ 'Could not determine the name of the file at %s', $url));
                 }
-                $filename = date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $extension;
-            } else {
-                throw new UserMessageException(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', $url));
             }
         }
+
+        $fileValidationService = $this->app->make('helper/validation/file');
+
+        if (!$fileValidationService->extension($filename)) {
+            $fileHelper = $this->app->make('helper/file');
+            throw new UserMessageException(t('The file extension "%s" is not valid.', $fileHelper->getExtension($filename)));
+        }
+
         $fullFilename = $temporaryDirectory . '/' . $filename;
         // write the downloaded file to a temporary location on disk
         $handle = fopen($fullFilename, 'wb');
@@ -754,11 +910,11 @@ class File extends Controller
         switch ($this->request->request->get('responseFormat')) {
             case 'dropzone':
                 if ($errors->has()) {
-                    return $responseFactory->create(json_encode($errors->toText()), 422, ['Content-Type' => 'application/json; charset='.APP_CHARSET]);
+                    return $responseFactory->create(json_encode($errors->toText()), 422, ['Content-Type' => 'application/json; charset=' . APP_CHARSET]);
                 }
                 break;
             default:
-                
+
         }
         $editResponse = new FileEditResponse();
         $editResponse->setError($errors);
@@ -841,5 +997,205 @@ class File extends Controller
         fclose($finalFile);
 
         return new UploadedFile($finalFilePath, $originalFile->getClientOriginalName());
+    }
+
+    public function fetchDirectories()
+    {
+        $directories = [];
+
+        $editResponse = new EditResponse();
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var ErrorList $errors */
+        $errors = $this->app->make(ErrorList::class);
+
+        try {
+            if ($token->validate()) {
+                $filesystem = new Filesystem();
+                $folder = $filesystem->getRootFolder();
+
+                if ($folder instanceof FileFolder) {
+                    $nodes = $folder->getHierarchicalNodesOfType(
+                        "file_folder",
+                        1,
+                        true,
+                        true,
+                        20
+                    );
+
+                    foreach ($nodes as $node) {
+                        /** @var FileFolder $treeNodeObject */
+                        $treeNodeObject = $node["treeNodeObject"];
+                        $nodePermissions = new Checker($treeNodeObject);
+                        if ($nodePermissions->canAddFiles()) {
+                            $directories[] = [
+                                "directoryId" => $treeNodeObject->getTreeNodeID(),
+                                "directoryName" => $treeNodeObject->getTreeNodeName(),
+                                "directoryLevel" => $node["level"]
+                            ];
+                        }
+                    }
+                }
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
+        $editResponse->setAdditionalDataAttribute("directories", $directories);
+
+        return $responseFactory->json($editResponse);
+    }
+
+    public function uploadComplete()
+    {
+        $files = $this->getRequestFiles();
+        $editResponse = new EditResponse();
+        $token = $this->app->make(Token::class);
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $errors = $this->app->make(ErrorList::class);
+
+        if (!$files[0]) {
+            $errors->add(t('Unable to retrieve file object from uploaded completion.'));
+        }
+
+        try {
+            if ($token->validate()) {
+
+                $nodes = [];
+                foreach ($files as $file) {
+                    $node = $file->getFileNodeObject();
+                    if ($node) {
+                        $nodes[] = $node->getTreeNodeID();
+                    }
+                }
+
+                $this->app->make('session')->getFlashBag()->set('file_manager.updated_nodes', $nodes);
+
+                $folder = $files[0]->getFileFolderObject();
+                $redirectURL = (string)\Concrete\Core\Support\Facade\Url::to(
+                    '/dashboard/files/search/', 'folder', $folder->getTreeNodeID()
+                )->setQuery(['ccm_order_by' => 'dateModified', 'ccm_order_by_direction' => 'desc']);
+                $editResponse->setRedirectURL($redirectURL);
+
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
+        return $responseFactory->json($editResponse);
+    }
+
+    public function createDirectory()
+    {
+        $directoryId = null;
+
+        $editResponse = new EditResponse();
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var ErrorList $errors */
+        $errors = $this->app->make(ErrorList::class);
+        /** @var Strings $stringValidator */
+        $stringValidator = $this->app->make(Strings::class);
+
+        try {
+            if ($token->validate()) {
+                $directoryName = $this->request->request->get("directoryName", "");
+
+                if (!$stringValidator->notempty($directoryName)) {
+                    throw new UserMessageException(t('Folder Name cannot be empty.'), 401);
+                }
+
+                $filesystem = new Filesystem();
+
+                $folder = null;
+                if ($this->request->request->has('currentFolder')) {
+                    $folder = $filesystem->getFolder($this->request->request->get('currentFolder'));
+                }
+                if (!$folder) {
+                    $folder = $filesystem->getRootFolder();
+                }
+
+                $permissions = new Checker($folder);
+                if (!$permissions->canAddTreeSubNode()) {
+                    throw new UserMessageException(t('You are not allowed to create folders at this location.'), 401);
+                }
+
+                // the storage location of the root folder is used.
+                $directory = $filesystem->addFolder($folder, $directoryName, $folder->getTreeNodeStorageLocationID());
+
+                $directoryId = $directory->getTreeNodeID();
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
+        $editResponse->setAdditionalDataAttribute("directoryId", $directoryId);
+
+        return $responseFactory->json($editResponse);
+    }
+
+    /** @noinspection DuplicatedCode */
+    public function fetchIncomingFiles()
+    {
+        $files = [];
+        $incomingPath = "";
+        $incomingStorageLocation = "";
+
+        $editResponse = new EditResponse();
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        /** @var ErrorList $errors */
+        $errors = $this->app->make(ErrorList::class);
+        /** @var ValidationService $fh */
+        $fh = $this->app->make(ValidationService::class);
+        /** @var Number $nh */
+        $nh = $this->app->make(Number::class);
+        /** @var Incoming $incoming */
+        $incoming = $this->app->make(Incoming::class);
+
+        try {
+            if ($token->validate()) {
+                $incomingPath = $incoming->getIncomingPath();
+                $incomingStorageLocation = $incoming->getIncomingStorageLocation()->getDisplayName();
+
+                $files = $incoming->getIncomingFilesystem()->listContents($incomingPath);
+
+                foreach (array_keys($files) as $index) {
+                    $files[$index]['allowed'] = $fh->extension($files[$index]['basename']);
+                    $files[$index]['thumbnail'] = FileTypeList::getType($files[$index]['extension'])->getThumbnail();
+                    $files[$index]['displaySize'] = $nh->formatSize($files[$index]['size'], 'KB');
+                }
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
+        $editResponse->setAdditionalDataAttribute("files", $files);
+        $editResponse->setAdditionalDataAttribute("incomingPath", $incomingPath);
+        $editResponse->setAdditionalDataAttribute("incomingStorageLocation", $incomingStorageLocation);
+
+        return $responseFactory->json($editResponse);
     }
 }

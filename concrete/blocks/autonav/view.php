@@ -49,7 +49,7 @@ $c = Page::getCurrentPage();
 
 /** For extra functionality, you can add the following page attributes to your site (via Dashboard > Pages & Themes > Attributes):
  * 1) Handle: exclude_nav
- *    (This is the "Exclude From Nav" attribute that comes pre-installed with concrete5, so you do not need to add it yourself.)
+ *    (This is the "Exclude From Nav" attribute that comes pre-installed with Concrete, so you do not need to add it yourself.)
  *    Functionality: If a page has this checked, it will not be included in the nav menu (and neither will its children / sub-pages).
  *
  * 2) Handle: exclude_subpages_from_nav

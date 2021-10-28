@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator\String;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class MinimumLengthValidatorTest extends PHPUnit_Framework_TestCase
+class MinimumLengthValidatorTest extends TestCase
 {
     public function testIsValid()
     {
@@ -29,9 +29,8 @@ class MinimumLengthValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidInput()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $validator = new \Concrete\Core\Validator\String\MinimumLengthValidator(5);
-
-        $this->setExpectedException('InvalidArgumentException');
         $validator->isValid($validator);
     }
 }

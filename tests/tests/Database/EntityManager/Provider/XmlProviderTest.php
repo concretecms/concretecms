@@ -6,7 +6,7 @@ use Concrete\Core\Database\EntityManager\Provider\XmlProvider;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControllerXml;
 use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * XmlProviderTest.
@@ -14,7 +14,7 @@ use PHPUnit_Framework_TestCase;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class XmlProviderTest extends PHPUnit_Framework_TestCase
+class XmlProviderTest extends TestCase
 {
     use DirectoryHelpers;
 
@@ -28,7 +28,7 @@ class XmlProviderTest extends PHPUnit_Framework_TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         $this->app = Application::getFacadeApplication();
         $this->packageStub = new PackageControllerXml($this->app);

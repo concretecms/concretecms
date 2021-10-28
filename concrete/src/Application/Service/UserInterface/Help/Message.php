@@ -3,13 +3,36 @@ namespace Concrete\Core\Application\Service\UserInterface\Help;
 
 class Message implements MessageInterface
 {
+    /**
+     * The message content, in HTML format.
+     *
+     * @var string
+     */
     protected $content;
+
+    /**
+     * The handle of the tour guide.
+     *
+     * @var string|null
+     */
     protected $guide;
+
+    /**
+     * The link to a video/external URL.
+     *
+     * @var string|null
+     */
     protected $link;
+
+    /**
+     * The message identifier.
+     *
+     * @var string
+     */
     protected $identifier;
 
     /**
-     * @return mixed
+     * @return \HtmlObject\Element
      */
     public function getContent()
     {
@@ -30,15 +53,20 @@ class Message implements MessageInterface
     }
 
     /**
-     * @param mixed $content
+     * @param string|null $content
      */
     public function setMessageContent($content)
     {
         $this->content = $content;
     }
 
+    public function getMessageContent(): ?string
+    {
+        return $this->content;
+    }
+
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getIdentifier()
     {
@@ -46,23 +74,36 @@ class Message implements MessageInterface
     }
 
     /**
-     * @param mixed $identifier
+     * @param string|null $identifier
      */
     public function setIdentifier($identifier)
     {
         $this->identifier = $identifier;
     }
 
+    /**
+     * @param string|null $guide
+     */
     public function addGuide($guide)
     {
         $this->guide = $guide;
     }
 
+    public function getGuide(): ?string
+    {
+        return $this->guide;
+    }
+
     /**
-     * @param mixed $content
+     * @param string|null $link
      */
     public function addLearnMoreLink($link)
     {
         $this->link = $link;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
     }
 }

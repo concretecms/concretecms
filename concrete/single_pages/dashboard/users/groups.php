@@ -1,281 +1,154 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
 
-$valt = Loader::helper('validation/token');
-$ih = Loader::helper('concrete/ui');
-$form = Loader::helper('form');
-$date = Loader::helper('form/date_time');
+/** @noinspection PhpUndefinedMethodInspection */
+/** @noinspection PhpDeprecationInspection */
+/** @noinspection DuplicatedCode */
 
-if (isset($group)) {
-    ?>
+defined('C5_EXECUTE') or die('Access Denied.');
 
-<form method="post" id="update-group-form" class="form-stacked" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>" role="form">
-    <?=$valt->output('add_or_update_group')?>
-	<?php
-	$u = Core::make(Concrete\Core\User\User::class);
+use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
+use Concrete\Core\Application\UserInterface\ContextMenu\MenuInterface;
+use Concrete\Core\User\Group\Group;
+use Concrete\Core\User\Group\Search\Result\Column;
+use Concrete\Core\User\Group\Search\Result\Result;
+use Concrete\Core\User\Group\Search\Result\Item;
+use Concrete\Core\User\Group\Search\Result\ItemColumn;
+use Concrete\Core\Support\Facade\Url;
+use Concrete\Core\User\Group\Menu;
 
-    $delConfirmJS = t('Are you sure you want to permanently remove this group?');
-    if ($u->isSuperUser() == false) {
-        ?>
-		<?=t('You must be logged in as %s to remove groups.', USER_SUPER)?>
-	<?php
-    } else {
-        ?>
+/** @var MenuInterface $menu */
+/** @var Result $result */
+/** @var DropdownMenu $resultsBulkMenu */
 
-	<script type="text/javascript">
-	deleteGroup = function() {
-		if (confirm('<?=$delConfirmJS?>')) {
-			location.href = "<?=$view->url('/dashboard/users/groups', 'delete', $group->getGroupID(), $valt->generate('delete_group_' . $group->getGroupID()))?>";
-		}
-	}
-	</script>
+?>
+<div id="ccm-search-results-table">
+    <table class="ccm-search-results-table" data-search-results="groups">
+        <thead>
+        <tr>
+            <th colspan="2" class="ccm-search-results-bulk-selector">
+                <div class="btn-group dropdown">
+                    <span class="btn btn-secondary" data-search-checkbox-button="select-all">
+                        <!--suppress HtmlFormInputWithoutLabel -->
+                        <input type="checkbox" data-search-checkbox="select-all"/>
+                    </span>
 
-	<?php
-    }
-    ?>
+                    <button
+                            type="button"
+                            disabled="disabled"
+                            data-search-checkbox-button="dropdown"
+                            class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                            data-bs-toggle="dropdown"
+                            data-reference="parent">
 
-    <fieldset>
-	    <legend><?=t('Group Details')?></legend>
-	    <div class="form-group">
-	        <label for="gName"><?=t('Name')?></label>
-	        <input type="text" name="gName" id="gName" class="form-control" value="<?=Loader::helper('text')->entities($group->getGroupName())?>" />
-	    </div>
+                            <span class="sr-only">
+                                <?php echo t("Toggle Dropdown"); ?>
+                            </span>
+                    </button>
 
-	    <div class="form-group">
-	        <label for="gDescription"><?=t('Description')?></label>
-	        <textarea name="gDescription" id="gDescription" rows="6" class="form-control"><?=Loader::helper("text")->entities($group->getGroupDescription())?></textarea>
-	    </div>
-    </fieldset>
-
-	<fieldset>
-        <div class="form-group">
-            <div class="checkbox">
-                <label>
-                <?=$form->checkbox('gIsBadge', 1, $group->isGroupBadge())?>
-                <span><?=t('This group is a badge.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')?>"></i> </span>
-                </label>
-            </div>
-        </div>
-
-        <div id="gUserBadgeOptions" style="display: none">
-		    <div class="form-group">
-			    <label for="gBadgeFID"><?=t('Image')?></label>
-
-                    <?php
-                        $af = Loader::helper('concrete/asset_library');
-    echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $group->getGroupBadgeImageObject());
-    ?>
-
-            </div>
-
-            <div class="form-group">
-                <label for="gBadgeDescription"><?=t('Badge Description')?></label>
-                <?=$form->textarea('gBadgeDescription', h($group->getGroupBadgeDescription()), array('rows' => 6, 'class' => 'form-control'))?>
-            </div>
-
-            <div class="form-group">
-                <label for="gBadgeCommunityPointValue"><?=t('Community Points')?></label>
-                <?=$form->text('gBadgeCommunityPointValue', h($group->getGroupBadgeCommunityPointValue()), array('class' => 'form-control'))?>
-            </div>
-		</div>
-	</fieldset>
-
-	<fieldset>
-		<legend><?=t('Automation')?></legend>
-		<div class="form-group">
-            <div class="checkbox">
-                <label>
-                <?=$form->checkbox('gIsAutomated', 1, $group->isGroupAutomated())?>
-                <span><?=t('This group is automatically entered.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
-                </label>
-            </div>
-
-		</div>
-
-    	<div id="gAutomationOptions" style="display: none">
-    		<div class="form-group">
-    		    <label><?=t('Check Group')?></label>
-
-    		    <div class="checkbox">
-                    <label>
-    				<?=$form->checkbox('gCheckAutomationOnRegister', 1, $group->checkGroupAutomationOnRegister())?>
-    				<span><?=t('When a user registers.')?></span>
-                    </label>
-    			</div>
-
-    			<div class="checkbox">
-                    <label>
-    				<?=$form->checkbox('gCheckAutomationOnLogin', 1, $group->checkGroupAutomationOnLogin())?>
-    				<span><?=t('When a user signs in.')?></span>
-                    </label>
-    			</div>
-
-    			<div class="checkbox">
-                    <label>
-    				<?=$form->checkbox('gCheckAutomationOnJobRun', 1, $group->checkGroupAutomationOnJobRun())?>
-    				<span><?=t('When the "Check Automated Groups" Job runs.')?></span>
-                    </label>
-    			</div>
-    		</div>
-
-    		<div class="alert alert-info">
-    			<?php
-                $path = h($group->getGroupAutomationControllerClass());
-    echo t('For custom automated group actions, make sure an automation group controller exists at %s', $path);
-    ?>
-    		</div>
-    	</div>
-
-    	<div class="form-group">
-            <div class="checkbox">
-                <label>
-    		<?=$form->checkbox('gUserExpirationIsEnabled', 1, $group->isGroupExpirationEnabled())?>
-    		<span><?=t('Automatically remove users from this group')?></span></label></div>
-    	</div>
-
-    	<div class="form-group">
-    		<?=$form->select("gUserExpirationMethod", array(
-                'SET_TIME' => t('at a specific date and time'),
-                'INTERVAL' => t('once a certain amount of time has passed'),
-            ), $group->getGroupExpirationMethod(), array('disabled' => true, 'class' => 'form-control'));
-    ?>
-    	</div>
-
-    	<div id="gUserExpirationSetTimeOptions" style="display: none">
-    	    <div class="form-group">
-    	        <label for="gUserExpirationSetDateTime"><?=t('Expiration Date')?></label>
-                <?=$date->datetime('gUserExpirationSetDateTime', $group->getGroupExpirationDateTime())?>
-            </div>
-    	</div>
-
-    	<div id="gUserExpirationIntervalOptions" style="display: none">
-    	    <div class="form-group">
-                <label for=""><?=t('Accounts expire after')?></label>
-                <div>
-                	<table class="table" style="width: auto">
-                    	<tr>
-                    		<th><?=t('Days')?></th>
-                    		<th><?=t('Hours')?></th>
-                    		<th><?=t('Minutes')?></th>
-                    	</tr>
-
-                        <tr>
-                            <?php
-                                $days = $group->getGroupExpirationIntervalDays();
-    $hours = $group->getGroupExpirationIntervalHours();
-    $minutes = $group->getGroupExpirationIntervalMinutes();
-    $style = 'width: 60px';
-    ?>
-
-                        	<td valign="top">
-                        	    <?=$form->text('gUserExpirationIntervalDays', $days, array('style' => $style))?>
-                        	</td>
-                        	<td valign="top">
-                        	    <?=$form->text('gUserExpirationIntervalHours', $hours, array('style' => $style))?>
-                        	</td>
-                        	<td valign="top">
-                        	    <?=$form->text('gUserExpirationIntervalMinutes', $minutes, array('style' => $style))?>
-                        	</td>
-                        </tr>
-                    </table>
+                    <?php echo $resultsBulkMenu->getMenuElement(); ?>
                 </div>
-            </div>
-    	</div>
+            </th>
 
-    	<div id="gUserExpirationAction" style="display: none">
-    	    <div class="form-group">
-    	        <label for="gUserExpirationAction"><?=t('Expiration Action')?></label>
-                <?=$form->select("gUserExpirationAction", array(
-                        'REMOVE' => t('Remove the user from this group'),
-                        'DEACTIVATE' => t('Deactivate the user account'),
-                        'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account'),
-                ), $group->getGroupExpirationAction(),
-                array('class' => 'form-control'));
-    ?>
-            </div>
-    	</div>
+            <?php foreach ($result->getColumns() as $column): ?>
+                <?php /** @var Column $column */ ?>
+                <th class="<?php echo $column->getColumnStyleClass() ?>">
+                    <?php if ($column->isColumnSortable()): ?>
+                        <a href="<?php echo $column->getColumnSortURL() ?>">
+                            <?php echo $column->getColumnTitle() ?>
+                        </a>
+                    <?php else: ?>
+                        <span>
+                            <?php echo $column->getColumnTitle() ?>
+                        </span>
+                    <?php endif; ?>
+                </th>
+            <?php endforeach; ?>
+        </tr>
+        </thead>
 
-        <input type="hidden" name="gID" value="<?=$group->getGroupID()?>" />
-	</fieldset>
-
-	<div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">
-            <a href="<?=$view->url('/dashboard/users/groups')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
-            <button class="btn pull-right btn-primary" style="margin-left: 10px" type="submit"><?=t('Update Group')?></button>
-
-            <?php if ($u->isSuperUser()) {
-    ?>
-                <?php echo $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'btn-danger');
-    ?>
+        <tbody>
+        <?php foreach ($result->getItems() as $item) { ?>
             <?php
-}
-    ?>
-        </div>
-    </div>
-</form>
+            /** @var Item $item */
+            /** @var Group $group */
+            $group = $item->getItem();
+            ?>
+            <tr data-details-url="javascript:void(0)"
+                <?php if (isset($highlightResults)
+                    && in_array($item->getItem()->getTreeNodeID(), $highlightResults)) { ?>
+                    class="table-row-highlight"<?php } ?>
+            >
+                <td class="ccm-search-results-checkbox">
+                    <?php
+                    if ($item->getResultGroupId() > 0) { ?>
+                        <!--suppress HtmlFormInputWithoutLabel -->
+                        <input data-search-checkbox="individual"
+                               type="checkbox"
+                               data-node-type="<?php
+                               echo $item->getItem()->getTreeNodeTypeHandle() ?>"
+                               data-item-id="<?php echo $item->getResultGroupId() ?>"/>
+                        <?php
+                    } ?>
+                </td>
+
+                <td class="ccm-search-results-icon">
+                    <?php
+                    echo $item->getItem()->getListFormatter()->getIconElement() ?>
+                </td>
+
+                <?php foreach ($item->getColumns() as $column) { ?>
+                    <?php /** @var ItemColumn $column */ ?>
+                    <?php /** @noinspection PhpUndefinedMethodInspection */
+
+                    if ($column->getColumnKey() ==  'name') { ?>
+                        <td class="ccm-search-results-name">
+                            <a href="<?php echo $item->getDetailsURL(); ?>">
+                                <?php echo $column->getColumnValue(); ?>
+                            </a>
+                        </td>
+                    <?php } else { ?>
+                        <td class="<?=$class?? '' ?>">
+                            <?php echo $column->getColumnValue(); ?>
+                        </td>
+                    <?php } ?>
+                <?php } ?>
+
+                <?php $menu = $item->getItem()->getTreeNodeMenu(); ?>
+
+                <?php if ($menu) { ?>
+                    <td class="ccm-search-results-menu-launcher">
+                        <div class="dropdown" data-menu="search-result">
+
+                            <button class="btn btn-icon"
+                                    data-boundary="viewport"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+
+                                <svg width="16" height="4">
+                                    <use xlink:href="#icon-menu-launcher"/>
+                                </svg>
+                            </button>
+
+                            <?php echo $menu->getMenuElement(); ?>
+                        </div>
+                    </td>
+                <?php } ?>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+</div>
+
+<?php echo $result->getPagination()->renderView('dashboard'); ?>
 
 <script type="text/javascript">
-ccm_checkGroupExpirationOptions = function() {
-	var sel = $("select[name=gUserExpirationMethod]");
-	var cb = $("input[name=gUserExpirationIsEnabled]");
-	if (cb.prop('checked')) {
-		sel.attr('disabled', false);
-		switch(sel.val()) {
-			case 'SET_TIME':
-				$("#gUserExpirationSetTimeOptions").show();
-				$("#gUserExpirationIntervalOptions").hide();
-				break;
-			case 'INTERVAL':
-				$("#gUserExpirationSetTimeOptions").hide();
-				$("#gUserExpirationIntervalOptions").show();
-				break;
-		}
-		$("#gUserExpirationAction").show();
-	} else {
-		sel.attr('disabled', true);
-		$("#gUserExpirationSetTimeOptions").hide();
-		$("#gUserExpirationIntervalOptions").hide();
-		$("#gUserExpirationAction").hide();
-	}
-}
-
-$(function() {
-	$("input[name=gUserExpirationIsEnabled]").click(ccm_checkGroupExpirationOptions);
-	$("select[name=gUserExpirationMethod]").change(ccm_checkGroupExpirationOptions);
-	ccm_checkGroupExpirationOptions();
-	$('input[name=gIsBadge]').on('click', function() {
-		if ($(this).is(':checked')) {
-			$('#gUserBadgeOptions').show();
-		} else {
-			$('#gUserBadgeOptions').hide();
-		}
-	}).triggerHandler('click');
-	$('input[name=gIsAutomated]').on('click', function() {
-		if ($(this).is(':checked')) {
-			$('#gAutomationOptions').show();
-		} else {
-			$('#gAutomationOptions').hide();
-		}
-	}).triggerHandler('click');
-
-});
+    (function ($) {
+        $(function () {
+            $('table[data-search-results=groups]').concreteGroupManagerTable({
+                'folderID': '<?php echo $folderID; ?>'
+            });
+        });
+    })(jQuery);
 </script>
-<?php
-} else {
-    ?>
-
-	<?php if ($canAddGroup) {
-    ?>
-	<div class="ccm-dashboard-header-buttons">
-		<a href="<?php echo View::url('/dashboard/users/add_group')?>" class="btn btn-primary"><?php echo t("Add Group")?></a>
-	</div>
-	<?php
-}
-    ?>
-
-
-<?php Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
-
-
-<?php
-} ?>

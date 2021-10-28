@@ -23,11 +23,18 @@ class Column implements ColumnInterface
 
     public function getColumnValue($obj)
     {
-        if (is_array($this->getColumnCallback())) {
-            return call_user_func($this->getColumnCallback(), $obj);
+        $callback = $this->getColumnCallback();
+        if (is_array($callback)) {
+            // PHP 8.0 only allows static functions with call_user_func
+            // So institate the callback if its not callable
+            // (php 8 will return false on is_callable, < less than php 8 will return true)
+            if (is_string($callback[0]) && !is_callable($callback)) {
+                return call_user_func([new $callback[0],$callback[1]], $obj);
+            }
+            return call_user_func($callback, $obj);
         }
 
-        return call_user_func([$obj, $this->getColumnCallback()]);
+        return call_user_func([$obj, $callback]);
     }
 
     public function getColumnKey()
@@ -110,5 +117,14 @@ class Column implements ColumnInterface
         $this->isSortable = $isSortable;
         $this->callback = $callback;
         $this->sortDirection = $this->sanitizeSortDirection($sort);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'columnKey' => $this->getColumnKey(),
+            'isSortable' => $this->isColumnSortable(),
+            'sortDirection' => $this->getColumnSortDirection(),
+        ];
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Service;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ApacheRulesTest extends PHPUnit_Framework_TestCase
+class ApacheRulesTest extends TestCase
 {
     private static $prepared = false;
     /**
@@ -186,7 +186,7 @@ EOT
     private static function prepareClass()
     {
         if (!self::$prepared) {
-            $apache = \Core::make('\Concrete\Core\Service\HTTP\Apache', ['']);
+            $apache = \Core::make('\Concrete\Core\Service\HTTP\Apache', ['version' => '']);
             /* @var $apache \Concrete\Core\Service\HTTP\Apache */
             self::$configurator = $apache->getConfigurator();
             self::$prettyUrlRule = $apache->getGenerator()->getRule('pretty_urls');

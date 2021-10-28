@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class PasswordValidatorServiceProviderTest extends PHPUnit_Framework_TestCase
+class PasswordValidatorServiceProviderTest extends TestCase
 {
     public function testIsInstance()
     {

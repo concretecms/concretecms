@@ -1,7 +1,10 @@
 <?php
+
 namespace Concrete\Core\Sharing\SocialNetwork;
 
-class Service
+use JsonSerializable;
+
+class Service implements JsonSerializable
 {
     protected $ssHandle;
     protected $ssName;
@@ -41,7 +44,7 @@ class Service
         if ($this->customHTML) {
             return $this->customHTML;
         } else {
-            return '<i class="fa fa-' . $this->getIcon() . '" aria-hidden="true" title="' . $this->getDisplayName() . '"></i>';
+            return '<i class="fab fa-' . $this->getIcon() . '" aria-hidden="true" title="' . $this->getDisplayName() . '"></i>';
         }
     }
 
@@ -53,5 +56,13 @@ class Service
                 return $s;
             }
         }
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "handle" => $this->getHandle(),
+            "displayName" => $this->getDisplayName()
+        ];
     }
 }

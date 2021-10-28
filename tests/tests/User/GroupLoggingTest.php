@@ -9,9 +9,10 @@ use Concrete\Core\Logging\Entry\Group\ExitGroup;
 use Concrete\Core\Logging\Entry\Group\UpdateGroup;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\User;
+use Concrete\Tests\TestCase;
 use Mockery as M;
 
-class GroupLoggingTest extends \PHPUnit_Framework_TestCase
+class GroupLoggingTest extends TestCase
 {
 
     public function testGroupEntryLogging()

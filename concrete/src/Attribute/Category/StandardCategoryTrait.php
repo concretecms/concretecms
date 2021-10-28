@@ -1,17 +1,17 @@
 <?php
+
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Attribute\StandardSetManager;
 use Concrete\Core\Entity\Attribute\Category;
-use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Entity\Attribute\Type as AttributeType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 trait StandardCategoryTrait
 {
+    protected $categoryEntity;
 
     abstract public function getEntityManager();
-
-    protected $categoryEntity;
 
     public function setCategoryEntity(Category $category)
     {
@@ -26,17 +26,24 @@ trait StandardCategoryTrait
     public function getSetManager()
     {
         if (!isset($this->setManager)) {
-            $this->setManager = new StandardSetManager($this->categoryEntity, $this->getEntityManager());
+            $this->setManager = new StandardSetManager($this->getCategoryEntity(), $this->getEntityManager());
         }
+
         return $this->setManager;
     }
 
     /**
      * @deprecated
+     *
+     * @param mixed $handle
+     * @param mixed $name
+     * @param mixed|null $pkg
+     * @param mixed|null $locked
      */
     public function addSet($handle, $name, $pkg = null, $locked = null)
     {
         $manager = $this->getSetManager();
+
         return $manager->addSet($handle, $name, $pkg, $locked);
     }
 
@@ -48,7 +55,7 @@ trait StandardCategoryTrait
     public function associateAttributeKeyType(AttributeType $type)
     {
         /**
-         * @var $types ArrayCollection
+         * @var ArrayCollection $types
          */
         $types = $this->getCategoryEntity()->getAttributeTypes();
         if (!$types->contains($type)) {
@@ -63,5 +70,4 @@ trait StandardCategoryTrait
         $this->getEntityManager()->remove($this->getCategoryEntity());
         $this->getEntityManager()->flush();
     }
-
 }

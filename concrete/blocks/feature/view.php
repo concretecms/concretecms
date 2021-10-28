@@ -4,11 +4,14 @@ $title = h($title);
 if ($linkURL) {
     $title = '<a href="' . $linkURL . '">' . $title . '</a>';
 }
+$iconTag = $iconTag ?? '';
 ?>
 <div class="ccm-block-feature-item">
     <?php if ($title) {
     ?>
-        <h4><i class="fa fa-<?=$icon?>"></i> <?=$title?></h4>
+        
+        <<?php echo $titleFormat; ?>><?=$iconTag?> <?=$title?></<?php echo $titleFormat; ?>>
+        
     <?php 
 } ?>
     <?php

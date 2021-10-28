@@ -5,9 +5,9 @@ namespace Concrete\Tests\Cookie;
 use Concrete\Core\Cookie\CookieJar;
 use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Http\Request;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class CookieTest extends PHPUnit_Framework_TestCase
+class CookieTest extends TestCase
 {
     public function testCookiesFromRequest()
     {

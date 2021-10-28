@@ -777,9 +777,9 @@ class Version20160725000000 extends AbstractMigration implements LongRunningMigr
 
         $desktopSet->addBlockType($bt);
 
-        $bt = BlockType::getByHandle('desktop_newsflow_latest');
+        $bt = BlockType::getByHandle('desktop_concrete_latest');
         if (!is_object($bt)) {
-            $bt = BlockType::installBlockType('desktop_newsflow_latest');
+            $bt = BlockType::installBlockType('desktop_concrete_latest');
         }
 
         $desktopSet->addBlockType($bt);

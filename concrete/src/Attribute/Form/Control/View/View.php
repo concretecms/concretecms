@@ -1,12 +1,14 @@
 <?php
 namespace Concrete\Core\Attribute\Form\Control\View;
 
+use Concrete\Core\Attribute\ObjectInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Filesystem\TemplateLocator;
 use Concrete\Core\Attribute\Context\ContextInterface as AttributeContextInterface;
 use Concrete\Core\Form\Control\FormView as BaseFormView;
+use Concrete\Core\Attribute\View as AttributeView;
 
 class View extends BaseFormView
 {
@@ -14,6 +16,11 @@ class View extends BaseFormView
     protected $controller;
     protected $value;
     protected $key;
+
+    /**
+     * @var ObjectInterface
+     */
+    protected $object;
 
     /**
      * @var AttributeContextInterface
@@ -27,6 +34,13 @@ class View extends BaseFormView
         $this->value = $value;
     }
 
+    /**
+     * @param ObjectInterface $object
+     */
+    public function setObject(ObjectInterface $object): void
+    {
+        $this->object = $object;
+    }
 
     public function __construct(ContextInterface $context, Key $key, AbstractValue $value = null)
     {
@@ -51,7 +65,15 @@ class View extends BaseFormView
 
     public function renderControl()
     {
-        echo $this->context->render($this->key, $this->value);
+        if (is_object($this->value)) {
+            $v = new AttributeView($this->value);
+        } else {
+            $v = new AttributeView($this->key);
+        }
+        if (isset($this->object)) {
+            $v->setAttributeObject($this->object);
+        }
+        echo $v->render($this->context);
     }
 
 

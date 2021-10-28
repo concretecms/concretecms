@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\Element\Dashboard\Sitemap;
 
 use Concrete\Core\Controller\ElementController;
@@ -22,12 +23,9 @@ class SitemapOverlay extends ElementController
         if (!$sh->canRead()) {
             throw new UserMessageException(t('Access Denied'));
         }
-        $this->requireAsset('core/sitemap');
         $this->set('overlayID', uniqid());
         $this->set('cParentID', (int) $this->request->query->get('cParentID'));
-        $display = $this->request->query->get('display');
-        if (!empty($display)) {
-            $this->set('display', $display);
-        }
+        $this->set('display', (string) $this->request->query->get('display'));
+        $this->set('includeSystemPages', $this->request->query->get('includeSystemPages') ? true : false);
     }
 }

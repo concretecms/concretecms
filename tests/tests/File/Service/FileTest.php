@@ -3,16 +3,16 @@
 namespace Concrete\Tests\File\Service;
 
 use Core;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class FileTest extends PHPUnit_Framework_TestCase
+class FileTest extends TestCase
 {
     /**
      * @var \Concrete\Core\File\Service\File
      */
     protected $fileHelper;
 
-    protected function setUp()
+    public function setUp():void
     {
         $this->fileHelper = Core::make('helper/file');
     }

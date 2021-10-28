@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Express\Entry;
 
 use Concrete\Core\Application\Application;
@@ -7,6 +8,7 @@ use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Express\Event\Event;
 use Concrete\Core\Express\Form\Control\SaveHandler\SaveHandlerInterface;
@@ -19,6 +21,7 @@ class Manager implements EntryManagerInterface
 {
     protected $entityManager;
     protected $request;
+
 
     /**
      * @var \Concrete\Core\Application\Application
@@ -46,7 +49,9 @@ class Manager implements EntryManagerInterface
      */
     protected function getNewDisplayOrder(Entity $entity)
     {
-        $query = $this->entityManager->createQuery('select max(e.exEntryDisplayOrder) as displayOrder from \Concrete\Core\Entity\Express\Entry e where e.entity = :entity');
+        $query = $this->entityManager->createQuery(
+            'select max(e.exEntryDisplayOrder) as displayOrder from \Concrete\Core\Entity\Express\Entry e where e.entity = :entity'
+        );
         $query->setParameter('entity', $entity);
         $displayOrder = $query->getOneOrNullResult(Query::HYDRATE_SINGLE_SCALAR);
         if (!$displayOrder) {
@@ -58,7 +63,7 @@ class Manager implements EntryManagerInterface
         return $displayOrder;
     }
 
-    public function createEntry(Entity $entity, UserEntity $author = null)
+    public function createEntry(Entity $entity, UserEntity $author = null, Site $site = null)
     {
         $entry = new Entry();
         if (!$author) {
@@ -75,12 +80,17 @@ class Manager implements EntryManagerInterface
             $entry->setEntryDisplayOrder($this->getNewDisplayOrder($entity));
         }
 
+        $resultsNode = $entity->getEntityResultsNodeObject($site);
+        if ($resultsNode) {
+            $entry->setResultsNodeID($resultsNode->getTreeNodeID());
+        }
+
         return $entry;
     }
 
-    public function addEntry(Entity $entity)
+    public function addEntry(Entity $entity, Site $site = null)
     {
-        $entry = $this->createEntry($entity);
+        $entry = $this->createEntry($entity, null, $site);
         $this->entityManager->persist($entry);
         $this->entityManager->flush();
 
@@ -116,7 +126,7 @@ class Manager implements EntryManagerInterface
     {
         $submittedAttributeValues = [];
         foreach ($form->getControls() as $control) {
-            if($control instanceof AttributeKeyControl){
+            if ($control instanceof AttributeKeyControl) {
                 $attributeKey = $control->getAttributeKey();
                 $genericValue = $attributeKey->getController()->createAttributeValueFromRequest();
                 $attributeValue = new ExpressValue();
@@ -130,4 +140,5 @@ class Manager implements EntryManagerInterface
 
         return $submittedAttributeValues;
     }
+
 }

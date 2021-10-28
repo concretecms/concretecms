@@ -136,7 +136,12 @@ class ActivateUserRequest extends UserRequest
         $mh = Loader::helper('mail');
         $mh->to($ui->getUserEmail());
         if (Config::get('concrete.email.register_notification.address')) {
-            $mh->from(Config::get('concrete.email.register_notification.address'), t('Website Registration Notification'));
+            if (Config::get('concrete.email.register_notification.name')) {
+                $fromName = Config::get('concrete.email.register_notification.name');
+            } else {
+                $fromName = t('Website Registration Notification');
+            }
+            $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
         } else {
             $adminUser = UserInfo::getByID(USER_SUPER_ID);
             $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
@@ -179,7 +184,7 @@ class ActivateUserRequest extends UserRequest
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
     {
-        return '<i class="fa fa-thumbs-o-up"></i>';
+        return '<i class="fas fa-thumbs-up"></i>';
     }
 
     public function getWorkflowRequestApproveButtonText()

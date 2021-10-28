@@ -43,7 +43,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings',
     ];
 
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -204,7 +204,7 @@ class ObjectBuilderTest extends ConcreteDatabaseTestCase
         $this->assertEquals($defaultViewForm, $form);
         $this->assertNotEquals($defaultViewForm, $secondForm);
         $this->assertNotEquals($defaultViewForm, $secondForm);
-        
+
     }
 
     public function testCreateAssociation()

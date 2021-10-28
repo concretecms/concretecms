@@ -15,10 +15,6 @@ use SinglePage;
 
 class PageTest extends PageTestCase
 {
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
 
     public function testHomePageExists()
     {
@@ -191,7 +187,7 @@ class PageTest extends PageTestCase
             ['normal page', false],
             ["awesome page's #spring_break98 !!1! SO COOL", false],
             ['niño borracho', false],
-            ['雷鶏', true],
+            ['雷鶏', false],
         ];
     }
 
@@ -526,7 +522,7 @@ class PageTest extends PageTestCase
     /**
      * @return \Concrete\Core\Page\Page[]
      */
-    protected function setupAliases()
+    public function setUpAliases()
     {
         if (($about = Page::getByPath('/about')) || !$about->getCollectionID()) {
             $about = self::createPage('About');

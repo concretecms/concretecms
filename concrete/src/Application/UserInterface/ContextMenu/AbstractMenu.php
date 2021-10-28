@@ -28,30 +28,16 @@ abstract class AbstractMenu implements ModifiableMenuInterface
         $this->items->add($item);
     }
 
-    public function getMenuElement()
+    public function jsonSerialize()
     {
-        if ($this->items->count() > $this->minItemThreshold) {
-            $menu = new Element('div', null, $this->menuAttributes);
-            $menu->addClass('popover')
-                ->addClass('fade');
-            $menu->appendChild(
-                (new Element('div'))->addClass('arrow')
-            );
-
-            $inner = (new Element('div'))->addClass('popover-inner');
-            $list = (new Element('ul'))->addClass('dropdown-menu');
-
-            /**
-             * @var $item ItemInterface
-             */
-            foreach($this->items as $item) {
-                $list->appendChild($item->getItemElement());
-            }
-
-            $inner->appendChild($list);
-            $menu->appendChild($inner);
-            return $menu;
-        }
+        $html = (string) $this->getMenuElement();
+        return $html;
     }
+
+    public function hasItems(): bool
+    {
+        return count($this->items) > 0;
+    }
+
 
 }

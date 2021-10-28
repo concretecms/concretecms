@@ -1,34 +1,29 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * @var bool $multipleSelection
+ * @var \Concrete\Core\File\Component\Chooser\ChooserConfiguration $configuration
+ */
+
+$uploaders = $configuration->getUploaders();
+$choosers = $configuration->getChoosers();
 ?>
 
-<div data-search="files" class="ccm-ui">
+<div data-choose="file-manager" class="h-100">
+    <concrete-file-chooser
+            :uploaders='<?= json_encode($uploaders)?>'
+            :choosers='<?= json_encode($choosers)?>'
+            :multiple-selection="<?= json_encode($multipleSelection); ?>">
 
-	<?php
-	$header->render();
-	?>
-
-	<?php Loader::element('files/search', array('result' => $result))?>
-
+    </concrete-file-chooser>
 </div>
-
 <script type="text/javascript">
-$(function() {
-	$('div[data-search=files]').concreteFileManager({
-		result: <?=json_encode($result->getJSONObject())?>,
-    <?php
-    if (isset($selectMultiple) && $selectMultiple === true) {
-        ?>
-        selectMode: 'multiple',
-        chooseMultiple: true,
-    <?php
-    } else {
-    ?>
-        selectMode: 'choose',
-    <?php
-    }
-    ?>
-		upload_token: '<?=Core::make('token')->generate()?>'
-	});
-});
+
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-choose=file-manager]',
+            components: config.components
+        })
+    })
+
 </script>

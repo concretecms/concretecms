@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Containers" path="/dashboard/pages/containers" filename="/dashboard/pages/containers/view.php"
+              pagetype="" description="Container Templates for Areas." package="" />
+        <page name="Add Container" path="/dashboard/pages/containers/add"
+              filename="/dashboard/pages/containers/add.php" pagetype="" description="Add page containers."
+              package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Boards" path="/dashboard/boards" filename="/dashboard/boards/view.php" pagetype=""
+              description="Express Data Objects" package=""/>
+
+        <page name="View Boards" path="/dashboard/boards/boards" filename="/dashboard/boards/boards.php" pagetype=""
+              description="" package="">
+
+        </page>
+
+        <page name="Add Board" path="/dashboard/boards/add" filename="/dashboard/boards/add.php" pagetype=""
+              description="" package="">
+
+        </page>
+
+        <page name="Board Details" path="/dashboard/boards/details" filename="/dashboard/boards/view_board.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+
+        </page>
+
+        <page name="Edit Board" path="/dashboard/boards/edit" filename="/dashboard/boards/edit.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Data Sources" path="/dashboard/boards/data_sources" filename="/dashboard/boards/data_sources.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Board Appearance" path="/dashboard/boards/appearance" filename="/dashboard/boards/appearance.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Weighting" path="/dashboard/boards/weighting" filename="/dashboard/boards/weighting.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Board Permissions" path="/dashboard/boards/permissions" filename="/dashboard/boards/permissions.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Instances" path="/dashboard/boards/instances" filename="/dashboard/boards/instances.php" pagetype=""
+              description="View instances of your board." package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Instance Details" path="/dashboard/boards/instances/details" filename="/dashboard/boards/instances/details.php" pagetype=""
+              description="View details of your board instance." package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+                <attributekey handle="exclude_search_index">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
+        <page name="Boards" path="/dashboard/system/boards"
+              filename="/dashboard/system/boards/view.php" pagetype=""
+              description="Manage global board settings" package="" />
+        <page name="Board Settings" path="/dashboard/system/boards/settings"
+              filename="/dashboard/system/boards/settings.php" pagetype=""
+              description="" package="" />
+        <page name="Permissions" path="/dashboard/system/boards/permissions"
+              filename="/dashboard/system/boards/permissions.php" pagetype=""
+              description="" package="" />
+    </singlepages>
+
+    <blocktypes>
+        <blocktype handle="core_board_slot" package=""/>
+        <blocktype handle="core_container" package=""/>
+        <blocktype handle="board" package=""/>
+    </blocktypes>
+
+    <permissioncategories>
+        <category handle="board" package=""/>
+        <category handle="board_admin" />
+    </permissioncategories>
+
+    <permissionkeys>
+        <permissionkey handle="add_board" name="Add Board" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="view_boards" name="View Boards" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Guest"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_settings" name="Edit Board Settings" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_contents" name="Edit Board Content" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_locked_rules" name="Edit Locked Rules" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_permissions" name="Edit Permissions" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_boards" name="Delete Boards" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_board" name="View Board" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_settings" name="Edit Settings" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_permissions" name="Edit Permissions" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_contents" name="Edit Contents" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_locked_rules" name="Edit Locked Rules" description="" package="" category="board"/>
+        <permissionkey handle="delete_board" name="Delete Board" description="" package="" category="board"/>
+    </permissionkeys>
+
+    <permissionaccessentitytypes>
+        <permissionaccessentitytype handle="group" package="">
+            <categories>
+                <category handle="board_admin" />
+                <category handle="board" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="user" package="">
+            <categories>
+                <category handle="board_admin" />
+                <category handle="board" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_set" package="">
+            <categories>
+                <category handle="board_admin" />
+                <category handle="board" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_combination" package="">
+            <categories>
+                <category handle="board_admin" />
+                <category handle="board" />
+            </categories>
+        </permissionaccessentitytype>
+    </permissionaccessentitytypes>
+
+
+</concrete5-cif>

@@ -7,12 +7,13 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\Core\Support\Facade\Facade;
+use Concrete\Tests\TestCase;
 
 /**
  * Tests for:
  * Concrete\Core\Localization\Service\Date.
  */
-class DateTest extends \PHPUnit_Framework_TestCase
+class DateTest extends TestCase
 {
     /** @var Localization */
     protected $localization;
@@ -163,7 +164,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $date->getTimezone($timezone));
     }
 
-    protected function setUp()
+    public function setUp():void
     {
         $this->localization = new Localization();
         $translatorAdapterFactory = new TranslatorAdapterFactory();
@@ -178,7 +179,7 @@ class DateTest extends \PHPUnit_Framework_TestCase
         $this->config->set('app.server_timezone', 'UTC');
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         $this->localization->setActiveContext(Localization::CONTEXT_SYSTEM);
         $this->config->set('app.server_timezone', $this->serverTimezone);

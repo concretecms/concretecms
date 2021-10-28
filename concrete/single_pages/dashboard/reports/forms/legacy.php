@@ -117,7 +117,7 @@ EOT
                 <tr>
                     <td><?php echo $text->entities($survey['surveyName']) ?></td>
                     <td><?php echo $text->entities($survey['answerSetCount']) ?></td>
-                    <td style="min-width: 380px" class="text-right">
+                    <td style="min-width: 380px" class="text-end">
                         <form method="post" action="" style="display: inline">
                             <input type="hidden" name="qsID" value="<?php echo intval($qsid) ?>"/>
                             <input type="hidden" name="action" value="deleteFormAnswers"/>
@@ -163,11 +163,7 @@ EOT
         $formPage = $block->getBlockCollectionObject();}
 
     ?>
-    <?php echo $h->getDashboardPaneHeaderWrapper(
-        t('Responses to %s', $surveys[$questionSet]['surveyName']),
-        false,
-        false,
-        false); ?>
+
 <div class="ccm-pane-body <?php if (!$paginator || !strlen($paginator->getPages()) > 0) { ?> ccm-pane-body-footer <?php } ?>">
     <?php if (count($answerSets) == 0) { ?>
         <div><?php echo t('No one has yet submitted this form.') ?></div>
@@ -175,7 +171,7 @@ EOT
 
         <div class="ccm-dashboard-header-buttons">
             <a id="ccm-export-results" class="btn btn-success" href="<?php echo $view->action('csv')?>?qsid=<?php echo $questionSet ?>">
-                <i class='fa fa-download'></i> <?php echo t('Export to CSV') ?>
+                <i class='fas fa-download'></i> <?php echo t('Export to CSV') ?>
             </a>
         </div>
 
@@ -283,5 +279,4 @@ EOT
             </div>
         <?php } ?>
     <?php } ?>
-    <?php echo $h->getDashboardPaneFooterWrapper(false); ?>
 <?php } ?>

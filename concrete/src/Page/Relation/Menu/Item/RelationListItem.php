@@ -11,7 +11,7 @@ class RelationListItem extends Item
     {
         $page = \Page::getCurrentPage();
         $app = \Core::make('app');
-        $controller = $app->make('Concrete\Core\Page\Relation\Menu\Item\RelationListController', array($page));
+        $controller = $app->make('Concrete\Core\Page\Relation\Menu\Item\RelationListController', array('page' => $page));
         $this->setController($controller);
         $this->setPosition('right');
     }

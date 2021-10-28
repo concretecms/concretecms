@@ -138,27 +138,15 @@ class ColorValue extends Value
         return (string) $this->a !== '';
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Value\Value::toStyleString()
-     */
-    public function toStyleString()
+    public function jsonSerialize()
     {
-        if ($this->hasAlpha()) {
-            return sprintf('rgba(%s, %s, %s, %s)', $this->getRed(), $this->getGreen(), $this->getBlue(), $this->getAlpha());
-        } else {
-            return sprintf('rgb(%s, %s, %s)', $this->getRed(), $this->getGreen(), $this->getBlue());
-        }
+        return [
+            'r' => $this->getRed(),
+            'g' => $this->getGreen(),
+            'b' => $this->getBlue(),
+            'a' => $this->getAlpha()
+        ];
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Value\Value::toLessVariablesArray()
-     */
-    public function toLessVariablesArray()
-    {
-        return [$this->getVariable() . '-color' => $this->toStyleString()];
-    }
+
 }

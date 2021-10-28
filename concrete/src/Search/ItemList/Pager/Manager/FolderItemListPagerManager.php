@@ -1,12 +1,7 @@
 <?php
 namespace Concrete\Core\Search\ItemList\Pager\Manager;
 
-use Concrete\Core\File\Search\ColumnSet\FolderSet;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Page\PageList;
-use Concrete\Core\Page\Search\ColumnSet\Available;
-use Concrete\Core\Search\Column\AttributeKeyColumn;
-use Concrete\Core\Search\Column\Column;
+use Concrete\Core\File\Search\ColumnSet\Available;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use Concrete\Core\Tree\Node\Node;
 
@@ -25,7 +20,7 @@ class FolderItemListPagerManager extends AbstractPagerManager
 
     public function getAvailableColumnSet()
     {
-        return new FolderSet();
+        return new Available();
     }
 
     public function sortListByCursor(PagerProviderInterface $itemList, $direction)

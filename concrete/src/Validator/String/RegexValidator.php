@@ -78,7 +78,7 @@ class  RegexValidator extends AbstractTranslatableValidator
         $result = @preg_match($this->getPattern(), $mixed);
 
         if ($result === false) {
-            throw new RuntimeException(sprintf('Regex Error: %i', preg_last_error()));
+            throw new RuntimeException(sprintf('Regex Error: %d', preg_last_error()));
         }
 
         if (!$result) {

@@ -279,7 +279,7 @@ class PackageService
             try {
                 $cl = $this->application->make($class);
             } catch (\Exception $ex) {
-                $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', [$pkgHandle]);
+                $cl = $this->application->make('Concrete\Core\Package\BrokenPackage', ['pkgHandle' => $pkgHandle]);
             }
             $cache->save($item->set($cl));
         }
@@ -292,7 +292,7 @@ class PackageService
      *
      * @param LocalizablePackageInterface $package
      * @param string|null $locale
-     * @param \Zend\I18n\Translator\Translator|'current' $translator
+     * @param \Laminas\I18n\Translator\Translator|'current' $translator
      */
     public function setupLocalization(LocalizablePackageInterface $package, $locale = null, $translator = 'current')
     {

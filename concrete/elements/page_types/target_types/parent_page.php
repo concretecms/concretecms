@@ -1,6 +1,7 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-$form = Loader::helper('form');
+defined('C5_EXECUTE') or die('Access Denied.');
+$form = app('helper/form');
+$pageSelector = app('helper/form/page_selector');
 
 $cParentID = 0;
 $selectorFormFactor = '';
@@ -12,12 +13,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type
 }
 
 ?>
-	<div class="control-group">
-		<?=$form->label('cParentID', t('Publish Beneath Page'))?>
-		<div class="controls">
-			<?php
-            $pf = Loader::helper('form/page_selector');
-            echo $pf->selectPage('cParentID', $cID);
-            ?>
-		</div>
-	</div>
+<div class="form-group">
+    <?=$form->label('cParentID', t('Publish Beneath Page')) ?>
+    <?= $pageSelector->selectPage('cParentID', $cID) ?>
+</div>

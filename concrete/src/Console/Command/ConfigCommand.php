@@ -20,7 +20,9 @@ class ConfigCommand extends Command
         {value? : The value to set}
         {--g|generated-overrides : Save to generated overrides}';
 
-    /** @var Repository */
+    /**
+     * @var Repository
+     */
     protected $repository;
 
     public function handle(Repository $config, Filesystem $filesystem)
@@ -30,16 +32,12 @@ class ConfigCommand extends Command
         $item = $this->argument('item');
         switch ($this->argument('action')) {
             case 'get':
-                $this->doGetAction($repository, $item);
-                break;
-
+                return $this->doGetAction($repository, $item);
             case 'set':
-                $this->doSetAction($repository, $item);
-                break;
-
+                return $this->doSetAction($repository, $item);
             default:
                 $this->output->error('Invalid action specified, please specify either "set" or "get"');
-                break;
+                return static::FAILURE;
         }
     }
 
@@ -47,16 +45,18 @@ class ConfigCommand extends Command
     {
         $this
             ->addEnvOption()
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<'EOT'
 When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
 For instance, with
-concrete5 %command.name% set concrete.test_item 1
+concrete %command.name% set concrete.test_item 1
 The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
-concrete5 %command.name% set concrete.test_item '1'
+concrete %command.name% set concrete.test_item '1'
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
 EOT
-        );
+            )
+        ;
     }
 
     /**
@@ -78,20 +78,16 @@ EOT
             case 'array':
                 $result = json_encode($value, $jsonOptions);
                 break;
-
             case 'boolean':
                 $result = $value ? 'true' : 'false';
                 break;
-
             case 'NULL':
                 $result = 'null';
                 break;
-
             case 'integer':
             case 'double':
                 $result = (string) $value;
                 break;
-
             case 'string':
                 $enquote = false;
                 switch ($value) {
@@ -100,18 +96,17 @@ EOT
                     case 'null':
                         $enquote = true;
                         break;
-
                     default:
                         if (preg_match('/^-?\d+(\.\d*)?$/', $value)) {
                             $enquote = true;
                         }
                         break;
                 }
-                $result = $enquote ? "\"$value\"" : $value;
+                $result = $enquote ? "\"{$value}\"" : $value;
                 break;
         }
         if (!isset($result)) {
-            throw new Exception("Unable to represent variable of type '$type'");
+            throw new Exception("Unable to represent variable of type '{$type}'");
         }
 
         return $result;
@@ -140,9 +135,11 @@ EOT
      * @param $repository
      * @param $item
      */
-    private function doGetAction($repository, $item)
+    private function doGetAction($repository, $item): int
     {
         $this->output->writeln($this->serialize($repository->get($item)));
+
+        return static::SUCCESS;
     }
 
     /**
@@ -151,14 +148,18 @@ EOT
      * @param Repository $repository
      * @param string $item
      */
-    private function doSetAction(Repository $repository, $item)
+    private function doSetAction(Repository $repository, $item): int
     {
         if (!$this->hasArgument('value')) {
             $this->output->error('A value must be provided when using the "set" action.');
+
+            return static::FAILURE;
         }
 
         $value = $this->argument('value');
         $repository->save($item, $this->unserialize($value));
+
+        return static::SUCCESS;
     }
 
     /**

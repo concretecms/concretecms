@@ -4,13 +4,12 @@ namespace Concrete\Attribute\Textarea;
 
 use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Attribute\XEditableConfigurableAttributeInterface;
 use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Core;
 
-class Controller extends DefaultController implements XEditableConfigurableAttributeInterface
+class Controller extends DefaultController
 {
     public $helpers = ['form'];
 
@@ -166,25 +165,6 @@ class Controller extends DefaultController implements XEditableConfigurableAttri
         return TextareaSettings::class;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Attribute\XEditableConfigurableAttributeInterface::getXEditableOptions()
-     */
-    public function getXEditableOptions()
-    {
-        $this->load();
-        if ($this->akTextareaDisplayMode === 'rich_text') {
-            return [
-                'editableMode' => 'inline',
-                'onblur' => 'ignore',
-                'showbuttons' => 'bottom',
-            ];
-        }
-
-        return [];
-    }
-  
     protected function load()
     {
         $ak = $this->getAttributeKey();

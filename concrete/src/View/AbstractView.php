@@ -203,14 +203,6 @@ abstract class AbstractView
         return (string) call_user_func_array(array('URL', 'to'), $args);
     }
 
-    // Legacy Items. Deprecated
-
-    public function setThemeByPath($path, $theme = null, $wrapper = FILENAME_THEMES_VIEW)
-    {
-        $l = Router::get();
-        $l->setThemeByRoute($path, $theme, $wrapper);
-    }
-
     public function renderError($title, $error, $errorObj = null)
     {
         Core::make('helper/concrete/ui')->renderError($title, $error);

@@ -38,7 +38,7 @@ class ConversationMessageAuthorEntity extends Entity
 
     public function getAccessEntityTypeLinkHTML()
     {
-        $html = '<a href="javascript:void(0)" onclick="ccm_choosePermissionAccessEntityConversationMessageAuthor()">' . tc(
+        $html = '<a href="javascript:void(0)" class="dropdown-item" onclick="ccm_choosePermissionAccessEntityConversationMessageAuthor()">' . tc(
                 'PermissionAccessEntityTypeName',
                 'Message Author'
             ) . '</a>';

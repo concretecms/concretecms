@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator\String;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class EmailValidatorTest extends PHPUnit_Framework_TestCase
+class EmailValidatorTest extends TestCase
 {
     public function testIsValid()
     {
@@ -30,9 +30,8 @@ class EmailValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidInput()
     {
+        $this->expectException(\Exception::class);
         $validator = new \Concrete\Core\Validator\String\EmailValidator();
-
-        $this->setExpectedException('Exception');
         $validator->isValid($validator);
     }
 }

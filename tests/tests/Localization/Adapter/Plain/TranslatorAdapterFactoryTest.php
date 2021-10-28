@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Localization\Adapter\Plain;
 
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * Tests for:
@@ -11,11 +11,11 @@ use PHPUnit_Framework_TestCase;
  *
  * @author Antti Hukkanen <antti.hukkanen@mainiotech.fi>
  */
-class TranslatorAdapterFactoryTest extends PHPUnit_Framework_TestCase
+class TranslatorAdapterFactoryTest extends TestCase
 {
     protected $factory;
 
-    protected function setUp()
+    public function setUp():void
     {
         $this->factory = new TranslatorAdapterFactory();
     }

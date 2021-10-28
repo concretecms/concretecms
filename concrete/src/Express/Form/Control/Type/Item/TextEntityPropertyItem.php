@@ -10,7 +10,7 @@ class TextEntityPropertyItem implements ItemInterface
 
     public function getIcon()
     {
-        return '<i class="fa fa-file-text"></i>';
+        return '<i class="fas fa-file-alt"></i>';
     }
 
     public function getItemIdentifier()

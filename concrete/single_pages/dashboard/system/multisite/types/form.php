@@ -1,37 +1,50 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-if (isset($type_menu)) {
-    $type_menu->render();
+/**
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Multisite\Types $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Entity\Site\Type $type
+ * @var Concrete\Core\Filesystem\Element|null $typeMenu
+ * @var array $templates
+ * @var array $themes
+ */
+
+if ($typeMenu !== null) {
+    $typeMenu->render();
 }
-
 ?>
-
-<form method="post" action="<?=$view->action($action)?>">
-    <?php if (is_object($type)) { ?>
-        <input type="hidden" name="id" value="<?=$type->getSiteTypeID()?>">
-    <?php } ?>
-    <?=$token->output('submit')?>
+<form method="post" action="<?= $controller->action($type->getSiteTypeID() === null ? 'create' : 'update') ?>">
+    <?php
+    $token->output('submit');
+    if ($type->getSiteTypeID() !== null) {
+        ?><input type="hidden" name="id" value="<?= $type->getSiteTypeID() ?>" />
+        <?php
+    }
+    ?>
     <div class="form-group">
-        <?=$form->label('handle', t('Handle'))?>
-        <?=$form->text('handle', $handle)?>
+        <?= $form->label('handle', t('Handle')) ?>
+        <?= $form->text('handle', $type->getSiteTypeHandle(), ['required' => 'required']) ?>
     </div>
     <div class="form-group">
-        <?=$form->label('name', t('Name'))?>
-        <?=$form->text('name', $name)?>
+        <?= $form->label('name', t('Name')) ?>
+        <?= $form->text('name', $type->getSiteTypeName(), ['required' => 'required']) ?>
     </div>
     <div class="form-group">
-        <?=$form->label('theme', t('Theme'))?>
-        <?=$form->select('theme', $themes, $themeID)?>
+        <?= $form->label('theme', t('Theme')) ?>
+        <?= $form->select('theme', $themes, $type->getSiteTypeThemeID() ?: '', ['required' => 'required']) ?>
     </div>
     <div class="form-group">
-        <?=$form->label('template', t('Template for Home Page'))?>
-        <?=$form->select('template', $templates, $templateID)?>
+        <?= $form->label('template', t('Template for Home Page')) ?>
+        <?= $form->select('template', $templates, $type->getSiteTypeHomePageTemplateID() ?: '', ['required' => 'required']) ?>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a class="pull-left btn btn-default" href="<?=$backURL?>"><?=t('Cancel')?></a>
-            <button class="pull-right btn btn-primary" type="submit" ><?=$buttonLabel?></button>
+            <div class="float-end">
+                <a class="btn btn-secondary" href="<?= $type->getSiteTypeID() === null ? $controller->action() : $controller->action('view_type', $type->getSiteTypeID()) ?>"><?= t('Cancel') ?></a>
+                <button class="btn btn-primary" type="submit"><?= $type->getSiteTypeID() === null ? t('Create Site Type') : t('Save') ?></button>
+            </div>
         </div>
     </div>
 </form>

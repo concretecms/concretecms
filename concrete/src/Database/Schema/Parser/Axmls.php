@@ -210,6 +210,11 @@ class Axmls extends XmlParser
             return 'blob';
         }
 
+        // Support JSON column types
+        if ($type === 'JSON') {
+            return 'json';
+        }
+
         // This is not strict AXMLS but it will be useful for those who want to use
         // certain Doctrine type features that AXMLS doesn't support
         if ($type == 'TIME') {

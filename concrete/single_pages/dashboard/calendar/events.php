@@ -20,36 +20,31 @@ Loader::element('calendar/header', array(
     <h3 id="calendar-month-name"><?= $monthText ?> <?= $year ?></h3>
 
     <div class="btn-group">
-        <a href="<?= $previousLink ?>" class="btn btn-sm btn-default"><i class="fa fa-angle-double-left"></i></a>
-        <a data-nav="month" href="javascript:void(0)" class="btn btn-sm btn-default"><i class="fa fa-calendar-o"></i></a>
-        <a href="<?= $nextLink ?>" class="btn btn-sm btn-default"><i class="fa fa-angle-double-right"></i></a>
+        <a href="<?= $previousLink ?>" class="btn btn-sm btn-secondary"><i class="fas fa-angle-double-left"></i></a>
+        <a data-nav="month" href="javascript:void(0)" class="btn btn-sm btn-secondary"><i class="fas fa-calendar"></i></a>
+        <a href="<?= $nextLink ?>" class="btn btn-sm btn-secondary"><i class="fas fa-angle-double-right"></i></a>
     </div>
 
     <?php if (isset($topics) && is_array($topics)) {
         ?>
         <div class="btn-group" id="calendar-topics">
-            <button type="button" id="topics_button" class="btn btn-default btn-sm" data-toggle="dropdown">
+            <button type="button" id="topics_button" class="btn btn-secondary btn-sm" data-bs-toggle="dropdown">
                 <?= $topic ? h($topic->getTreeNodeDisplayName('html')) : t('All Categories') ?>
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="topics_button">
-                <li>
-                    <a href="?topic_id=0"><?= t('All Categories') ?></a>
-                </li>
+            <div class="dropdown-menu" role="menu" aria-labelledby="topics_button">
+                <a href="?topic_id=0" class="dropdown-item"><?= t('All Categories') ?></a>
                 <?php
                 /** @var \Concrete\Core\Tree\Node\Node $topic_node */
                 foreach ((array)$topics as $topic_node) {
                     ?>
-                    <li>
-                        <a href="?topic_id=<?= $topic_node->getTreeNodeID() ?>">
+                        <a class="dropdown-item" href="?topic_id=<?= $topic_node->getTreeNodeID() ?>">
                             <?= h($topic_node->getTreeNodeDisplayName('html')) ?>
                         </a>
-                    </li>
                     <?php
-
                 }
                 ?>
-            </ul>
+            </div>
         </div>
 
         <?php
@@ -195,4 +190,25 @@ Loader::element('calendar/header', array(
     $(function() {
         var admin = new ConcreteCalendarAdmin($('body'));
     });
+    <?php
+    // Show an event edit dialog if there was a provided event version occurrence ID
+    if (isset($initialEdit) && $initialEdit) {
+        ?>
+        let initDialog = function() {
+            if (typeof $.fn.dialog !== 'function') {
+                return setTimeout(initDialog, 50);
+            }
+
+            let anchor = $(document.createElement('a'))
+                .attr('dialog-title', 'Edit')
+                .attr('dialog-width', 1100)
+                .attr('dialog-height', 600)
+                .attr('href', "/ccm/calendar/dialogs/event/edit?versionOccurrenceID=<?= (int) $initialEdit ?>")
+
+            anchor.dialog().click()
+        }
+        initDialog()
+        <?php
+    }
+    ?>
 </script>

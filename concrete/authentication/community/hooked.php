@@ -1,11 +1,11 @@
 <?php
 /* @var Concrete\Authentication\Community\Controller $controller */
-$url = $controller->getConcrete5ProfileURL(Core::make(Concrete\Core\User\User::class));
+$url = $controller->getConcreteProfileURL(Core::make(Concrete\Core\User\User::class));
 ?>
 <div class="form-group">
     <a href="<?= h($url) ?>" class="btn btn-primary btn-community">
-        <img src="<?= Core::getApplicationURL() ?>/concrete/images/logo.svg" class="concrete5-icon" />
-        <?= t('View your concrete5 account') ?>
+        <img src="<?= Core::getApplicationURL() ?>/concrete/images/logo.svg" class="concrete-icon" />
+        <?= t('View your community.concretecms.com account') ?>
     </a>
 </div>
 
@@ -22,7 +22,7 @@ $url = $controller->getConcrete5ProfileURL(Core::make(Concrete\Core\User\User::c
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fbae8', endColorstr='#129bd3',GradientType=0 );
     }
 
-    img.concrete5-icon {
+    img.concrete-icon {
         width: 20px;
         margin-right:5px;
     }

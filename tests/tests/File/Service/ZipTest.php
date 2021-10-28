@@ -5,9 +5,9 @@ namespace Concrete\Tests\File\Service;
 use Core;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class ZipTest extends PHPUnit_Framework_TestCase
+class ZipTest extends TestCase
 {
     /**
      * @var \Concrete\Core\File\Service\Zip
@@ -18,7 +18,7 @@ class ZipTest extends PHPUnit_Framework_TestCase
 
     protected $fileSystemProblem = null;
 
-    protected function setUp()
+    public function setUp():void
     {
         $this->zipHelper = Core::make('helper/zip');
         $this->workDir = null;
@@ -59,7 +59,7 @@ class ZipTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         if ($this->workDir !== null) {
             id(new Filesystem())->deleteDirectory($this->workDir);

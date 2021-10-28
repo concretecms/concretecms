@@ -29,8 +29,13 @@ class BasicWorkflowAssignment extends Assignment
         $pa->markAsInUse();
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
-        return parent::getPermissionKeyToolsURL($task) . '&wfID=' . $this->getPermissionObject()->getWorkflowID();
+        return parent::getPermissionKeyTaskURL($task, $options + ['wfID' => $this->getPermissionObject()->getWorkflowID()]);
     }
 }

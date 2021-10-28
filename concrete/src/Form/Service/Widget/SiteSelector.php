@@ -1,11 +1,8 @@
 <?php
+
 namespace Concrete\Core\Form\Service\Widget;
 
-use Concrete\Core\Entity\Site\SiteTree;
-use Concrete\Core\Site\Tree\TreeInterface;
-use Core;
 use Page;
-use Permissions;
 
 class SiteSelector
 {
@@ -17,17 +14,18 @@ class SiteSelector
      *
      * @param $fieldName
      * @param bool|int $cID
+     * @param mixed $siteID
+     * @param mixed $includeCurrent
+     * @param mixed $includeAll
      *
      * @return string
      */
     public function selectSite($fieldName, $siteID = false, $includeCurrent = false, $includeAll = false)
     {
-        $v = \View::getInstance();
-        $v->requireAsset('selectize');
         $currentSelected = $siteID !== 'current' ? 'selected' : '';
         $allSelected = $siteID === 'all' ? 'selected' : '';
         $current = t('Current Site');
-        $all  = t('All Sites');
+        $all = t('All Sites');
         $defaults = t('Default');
         $specific = t('Sites');
 
@@ -50,15 +48,19 @@ class SiteSelector
 
         if (!$includeAll && !$includeCurrent) {
             $html = <<<EOL
-        <select name="siteID" data-select="search-sites">
+        <select name="siteID" data-select="search-sites" class="form-select">
             {$sites}
         </select>
 EOL;
-
         } else {
-
+            /* Currently Bootstrap Select is broken with optgroup
+             * https://github.com/snapappointments/bootstrap-select/issues/2607
+             * So I'm going to remove optgroups here for the time being. It's either that or remove
+             * BS Select from this list. Either way, when this is fixed, pull in an updated version of the library
+             * and up revert this
+             */
         $html = <<<EOL
-        <select name="siteID" data-select="search-sites">
+        <select name="siteID" data-select="search-sites" class="form-select">
             <optgroup label="{$defaults}">
             {$currentLine}
             {$allLine}
@@ -68,15 +70,14 @@ EOL;
             </optgroup>
         </select>
 EOL;
-
         }
 
-        $html .= <<<EOL
-        <script type="text/javascript">$(function() { $('select[data-select=search-sites]').selectize(); });</script>
+        /*
+        $html .= <<<'EOL'
+        <script type="text/javascript">$(function() { $('select[data-select=search-sites]').selectpicker({width: '100%'}); });</script>
 EOL;
+        */
 
         return $html;
     }
-
-
 }

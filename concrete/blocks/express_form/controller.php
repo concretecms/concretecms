@@ -23,6 +23,8 @@ use Concrete\Core\Express\Form\Control\Type\EntityPropertyType;
 use Concrete\Core\Express\Form\Processor\ProcessorInterface;
 use Concrete\Core\Express\Form\Validator\Routine\CaptchaRoutine;
 use Concrete\Core\Express\Generator\EntityHandleGenerator;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\FileProviderInterface;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Set\Set;
@@ -35,12 +37,13 @@ use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
+use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Concrete\Core\Permission\Checker;
 
-class Controller extends BlockController implements NotificationProviderInterface
+class Controller extends BlockController implements NotificationProviderInterface, UsesFeatureInterface
 {
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 700;
@@ -68,6 +71,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function getBlockTypeName()
     {
         return t('Form');
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::FORMS
+        ];
     }
 
     public function view()
@@ -161,6 +171,22 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->view();
     }
 
+    public function validate($args)
+    {
+        $e = $this->app->make('helper/validation/error');
+        if (!empty($args['recipientEmail'])) {
+            $inputtedEmails = array_map('trim', explode(',', $args['recipientEmail']));
+            $validator = new EmailValidator();
+            foreach($inputtedEmails as $email) {
+                if (!$validator->isValid($email)) {
+                    $e->add(t('Email address for recipient "%s" is invalid', $email));
+                }
+            }
+        }
+
+        return $e;
+    }
+
     public function delete()
     {
         parent::delete();
@@ -203,10 +229,16 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
                 $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
                 $manager = $controller->getEntryManager($this->request);
-                $entry = $manager->createEntry($entity);
                 $e = $validator->getErrorList();
-                if (isset($e) && !$e->has() && $this->areFormSubmissionsStored()) {
-                    $entry = $manager->addEntry($entity);
+                if ($e->has()) {
+                    $this->set('error', $e);
+                    $this->view();
+                    return false;
+                }
+
+
+                if ($this->areFormSubmissionsStored()) {
+                    $entry = $manager->addEntry($entity, $this->app->make('site')->getSite());
                     $entry = $manager->saveEntryAttributesForm($form, $entry);
                     $values = $entity->getAttributeKeyCategory()->getAttributeValues($entry);
                     // Check antispam
@@ -258,36 +290,39 @@ class Controller extends BlockController implements NotificationProviderInterfac
                             }
                         }
                     }
-                }
-                if (isset($e) && !$e->has()) {
-                    $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
-                    $notifier = $controller->getNotifier($this);
-                    $notifications = $notifier->getNotificationList();
-                    array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues,$key) {
-                        if (method_exists($notification, "setAttributeValues")) {
-                            $notification->setAttributeValues($submittedAttributeValues);
-                        }
-                    });
-                    $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
-                    $r = null;
-                    if ($this->redirectCID > 0) {
-                        $c = Page::getByID($this->redirectCID);
-                        if (is_object($c) && !$c->isError()) {
-                            $r = Redirect::page($c);
-                            $r->setTargetUrl($r->getTargetUrl() . '?form_success=1&entry=' . $entry->getID());
-                        }
-                    }
-
-                    if (!$r) {
-                        $url = Url::to($this->request->getCurrentPage(), 'form_success', $this->bID);
-                        $r = Redirect::to($url);
-                        $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
-                    }
-
-                    return $processor->deliverResponse($entry, ProcessorInterface::REQUEST_TYPE_ADD, $r);
                 } else {
-                    $this->set('error', $e);
+                    $entry = $manager->createEntry($entity);
                 }
+                if ($this->areFormSubmissionsStored()) {
+                    $submittedAttributeValues = $entry->getAttributeValues();
+                } else {
+                    $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
+                }
+                $notifier = $controller->getNotifier($this);
+                $notifications = $notifier->getNotificationList();
+                array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues) {
+                    if (method_exists($notification, "setAttributeValues")) {
+                        $notification->setAttributeValues($submittedAttributeValues);
+                    }
+                });
+                $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
+                $r = null;
+                if ($this->redirectCID > 0) {
+                    $c = Page::getByID($this->redirectCID);
+                    if (is_object($c) && !$c->isError()) {
+                        $r = Redirect::page($c);
+                        $target = strpos($r->getTargetUrl(),"?") === false ? $r->getTargetUrl()."?" : $r->getTargetUrl()."&";
+                        $r->setTargetUrl($target . 'form_success=1&entry=' . $entry->getID());
+                    }
+                }
+
+                if (!$r) {
+                    $url = Url::to($this->request->getCurrentPage(), 'form_success', $this->bID);
+                    $r = Redirect::to($url);
+                    $r->setTargetUrl($r->getTargetUrl() . '#form' . $this->bID);
+                }
+
+                return $processor->deliverResponse($entry, ProcessorInterface::REQUEST_TYPE_ADD, $r);
             }
         }
         $this->view();
@@ -682,9 +717,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
-        $this->requireAsset('core/tree');
         $this->clearSessionControls();
-        $list = Type::getList();
+        $list = Type::getList("express");
 
         $attribute_fields = [];
 

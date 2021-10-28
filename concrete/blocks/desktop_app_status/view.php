@@ -2,14 +2,14 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /** @var Concrete\Core\Block\View\BlockView $view */
-/** @var string $current_version the currently installed concrete5 version */
-/** @var string $latest_version the last available concrete5 version */
+/** @var string $current_version the currently installed Concrete version */
+/** @var string $latest_version the last available Concrete version */
 /** @var int $updates number of packages with new versions available */
 
 if (version_compare($latest_version, $current_version, '>')) {
     ?>
     <div class="alert alert-info">
-        <?php echo t('The latest version of concrete5 is <strong>%s</strong>. You are currently running concrete5 version <strong>%s</strong>.', $latest_version, $current_version) ?>
+        <?php echo t('The latest version of Concrete is <strong>%s</strong>. You are currently running Concrete version <strong>%s</strong>.', $latest_version, $current_version) ?>
         <a class="pull-right btn btn-info btn-xs" href="<?php echo $view->url('/dashboard/system/update/update')?>"><?php echo t('Update')?></a>
     </div>
     <?php

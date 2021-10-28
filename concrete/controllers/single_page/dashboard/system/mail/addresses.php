@@ -14,6 +14,7 @@ class Addresses extends DashboardPageController
         $this->set('forgotPasswordAddress', $config->get('concrete.email.forgot_password.address'));
         $this->set('formBlockAddress', $config->get('concrete.email.form_block.address'));
         $this->set('spamNotificationAddress', $config->get('concrete.spam.notify_email'));
+        $this->set('registerNotificationName', $config->get('concrete.email.register_notification.name'));
         $this->set('registerNotificationAddress', $config->get('concrete.email.register_notification.address'));
         $this->set('validateRegistrationName', $config->get('concrete.email.validate_registration.name'));
         $this->set('validateRegistrationAddress', $config->get('concrete.email.validate_registration.address'));
@@ -29,11 +30,12 @@ class Addresses extends DashboardPageController
         } else {
             $config = $this->app->make('config');
             $config->save('concrete.email.default.name', $this->request->post('defaultName'));
-            $config->save('concrete.email.default.address', $this->request->post('defaultAddress') ? $this->request->post('defaultAddress') : 'concrete5-noreply@concrete5');
+            $config->save('concrete.email.default.address', $this->request->post('defaultAddress') ? $this->request->post('defaultAddress') : 'concrete-cms-noreply@concretecms');
             $config->save('concrete.email.forgot_password.name', $this->request->post('forgotPasswordName'));
             $config->save('concrete.email.forgot_password.address', $this->request->post('forgotPasswordAddress'));
             $config->save('concrete.email.form_block.address', $this->request->post('formBlockAddress'));
             $config->save('concrete.spam.notify_email', $this->request->post('spamNotificationAddress'));
+            $config->save('concrete.email.register_notification.name', $this->request->post('registerNotificationName'));
             $config->save('concrete.email.register_notification.address', $this->request->post('registerNotificationAddress'));
             $config->save('concrete.email.validate_registration.name', $this->request->post('validateRegistrationName'));
             $config->save('concrete.email.validate_registration.address', $this->request->post('validateRegistrationAddress'));

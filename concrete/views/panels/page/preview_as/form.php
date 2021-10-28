@@ -7,30 +7,24 @@ $currentTime = $dh->formatCustom('Y-m-d H:i:s');
 <section>
     <header>
         <a href="" data-panel-navigation="back" class="ccm-panel-back">
-            <span class="fa fa-chevron-left"></span>
+            <svg><use xlink:href="#icon-arrow-left" /></svg>
+            <?= t('Page Settings') ?>
         </a>
-        <a href="" data-panel-navigation="back">
-          <?php echo t('View as User'); ?>
-        </a>
+        <h5><?= t('View as User') ?></h5>
     </header>
     <form class="preview-panel-form">
         <div class="ccm-panel-content-inner" id="ccm-menu-page-attributes-list">
-            <h5><?php echo t('Date / Time'); ?></h5>
+            <label class="col-form-label"><?php echo t('Date / Time'); ?></label>
             <div id="ccm-view-as-user-wrapper">
-                <div class="form-group">
-                    <?php echo $fdh->datetime('preview_as_user_datetime', $currentTime, false, true, 'dark-panel-calendar'); ?>
-                </div>
+                <?php echo $fdh->datetime('preview_as_user_datetime', $currentTime, false, true, 'dark-panel-calendar'); ?>
             </div>
-            <br>
-            <h5><?php echo t('View As'); ?></h5>
-            <div class="btn-group">
-                <button class="guest-button btn btn-default active"><?php echo t('Guest'); ?></button>
-                <button class="user-button btn btn-default"><?php echo t('Site User'); ?></button>
+            <label class="col-form-label"><?php echo t('View As'); ?></label>
+            <div class="btn-group d-flex">
+                <button class="guest-button btn btn-secondary active"><?php echo t('Guest'); ?></button>
+                <button class="user-button btn btn-secondary"><?php echo t('Site User'); ?></button>
             </div>
-            <br>
-            <br>
             <div class="site-user" style="display:none">
-                <h5><?php echo t('User'); ?></h5>
+                <label class="col-form-label"><?php echo t('User'); ?></label>
                 <input class="form-control custom-user" name="user" />
             </div>
         </div>

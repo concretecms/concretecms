@@ -30,14 +30,12 @@ class EditPermissionsItem extends AbstractNodeItem
 
     public function getItemElement()
     {
-        $element = new Element('li');
-        $link = new Link('#', $this->getItemName());
+        $link = new Link('#', $this->getItemName(), ['class' => 'dropdown-item']);
         $link->setAttribute('data-tree-action', $this->getAction());
         $link->setAttribute('dialog-title', $this->getDialogTitle());
         $link->setAttribute('data-tree-action-url', $this->getActionURL());
         $link->setAttribute('dialog-width', '520');
         $link->setAttribute('dialog-height', '450');
-        $element->appendChild($link);
-        return $element;
+        return $link;
     }
 }

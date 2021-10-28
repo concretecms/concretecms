@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Database;
 
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
 /**
  * EntityManagerConfigFactoryTest.
@@ -11,7 +11,7 @@ use PHPUnit_Framework_TestCase;
  * @author Markus Liechti <markus@liechti.io>
  * @group orm_setup
  */
-class EntityManagerConfigFactoryTest extends PHPUnit_Framework_TestCase
+class EntityManagerConfigFactoryTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application
@@ -21,7 +21,7 @@ class EntityManagerConfigFactoryTest extends PHPUnit_Framework_TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = Application::getFacadeApplication();
@@ -34,7 +34,7 @@ class EntityManagerConfigFactoryTest extends PHPUnit_Framework_TestCase
     {
         $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
         $driverChain = $entityManagerConfigFactory->getMetadataDriverImpl();
-        $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
+        $this->assertInstanceOf('Doctrine\Persistence\Mapping\Driver\MappingDriverChain',
             $driverChain, 'Is not a Doctrine ORM MappingDriverChain');
 
         // mitgrated to Database/EntityManager/Driver/CoreDriverTest
@@ -69,7 +69,7 @@ class EntityManagerConfigFactoryTest extends PHPUnit_Framework_TestCase
 
         $entityManagerConfigFactory = $this->app->make('Concrete\Core\Database\EntityManagerConfigFactory');
         $driverChain = $entityManagerConfigFactory->getMetadataDriverImpl();
-        $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
+        $this->assertInstanceOf('Doctrine\Persistence\Mapping\Driver\MappingDriverChain',
             $driverChain, 'Is not a Doctrine ORM MappingDriverChain');
         $drivers = $driverChain->getDrivers();
         $this->assertArrayHasKey('Application\Entity', $drivers);

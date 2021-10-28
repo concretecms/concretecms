@@ -32,7 +32,7 @@ if (is_object($targetPage)) {
     ?>
 		<?php if ($cfl->getPageTypeComposerFormLayoutSetDisplayDescription()) {
     ?>
-			<span class="help-block"><?=$cfl->getPageTypeComposerFormLayoutSetDisplayDescription()?></span>
+			<span class="form-text"><?=$cfl->getPageTypeComposerFormLayoutSetDisplayDescription()?></span>
 		<?php 
 }
     ?>

@@ -1,0 +1,19 @@
+div.ccm-workflow-dialog-approve-page-preview {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  >.tab-content {
+    height: 100%;
+
+    >.tab-pane {
+      height: 100%;
+
+      >iframe {
+        border: 0;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}

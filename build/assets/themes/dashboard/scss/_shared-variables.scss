@@ -1,0 +1,17 @@
+// Bootstrap Core First
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/mixins';
+
+// Concrete Variables
+@import "@concretecms/bedrock/assets/cms/scss/variables";
+@import "@fortawesome/fontawesome-free/scss/variables";
+
+// Bootstrap Variables. Unless this is AFTER Concrete variables we override any Bootstrap defaults.
+// Attention future self: Do NOT try and move this to before our own custom bedrock CMS variables above.
+// You will want to, because it will be cleaner and it will let you use Bootstrap variables within our own variables.
+// But stay strong – without this being broken out AFTER our own variables we can't customizable Bootstrap colors, etc...
+@import 'bootstrap/scss/variables';
+
+$dashboard-content-padding-l: 37px;
+$dashboard-content-padding-r: 30px;
+$dashboard-content-padding-t: 1rem;

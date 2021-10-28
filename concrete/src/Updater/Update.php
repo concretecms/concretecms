@@ -3,7 +3,7 @@
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
-use Concrete\Core\Cache\CacheClearer;
+use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
@@ -177,9 +177,9 @@ class Update
             }
         }
         $config = $app->make('config');
-        $clearer = $app->make(CacheClearer::class);
-        $clearer->setClearGlobalAreas(false);
-        $clearer->flush();
+        $command = new ClearCacheCommand();
+        $command->setClearGlobalAreas(false);
+        $app->executeCommand($command);
 
         $em = $app->make(EntityManagerInterface::class);
         $cmf = $em->getMetadataFactory();
@@ -240,6 +240,7 @@ class Update
         }
         try {
             $app->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
+            $app->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete', 'all');
         } catch (Exception $x) {
         }
         $config->save('concrete.version_installed', $config->get('concrete.version'));
@@ -257,19 +258,15 @@ class Update
     {
         $app = Application::getFacadeApplication();
         $config = $app->make('config');
-        if ($config->get('concrete.updates.skip_core')) {
-            return null;
-        }
-        $client = $app->make('http/client')->setUri($config->get('concrete.updates.services.get_available_updates'));
-        $client->getRequest()
-            ->setMethod('POST')
-            ->getPost()
-                ->set('LOCALE', Localization::activeLocale())
-                ->set('BASE_URL_FULL', Application::getApplicationURL())
-                ->set('APP_VERSION', APP_VERSION);
         try {
-            $response = $client->send();
-            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody());
+            $response = $app->make('http/client')->post($config->get('concrete.updates.services.get_available_updates'),
+                ['form_params' => [
+                    'LOCALE' =>  Localization::activeLocale(),
+                    'BASE_URL_FULL' => (string) Application::getApplicationURL(),
+                    'APP_VERSION' => APP_VERSION
+                ]]
+            );
+            $update = RemoteApplicationUpdateFactory::getFromJSON($response->getBody()->getContents());
         } catch (Exception $x) {
             $update = null;
         }

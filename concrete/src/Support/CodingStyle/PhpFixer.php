@@ -98,7 +98,7 @@ class PhpFixer
             $this->runner->addStep($this->options, $paths, $flags);
         }
 
-        $progressOutput = new ProcessOutput($output, $this->runner->getEventDispatcher(), $this->runner->calculateNumberOfFiles());
+        $progressOutput = new ProcessOutput($output, $this->runner->getEventDispatcher(), null, $this->runner->calculateNumberOfFiles());
         $counters = [];
         $counter = function (FixerFileProcessedEvent $e) use (&$counters) {
             $status = $e->getStatus();
@@ -157,7 +157,7 @@ class PhpFixer
         }
         $relativePath = substr($fullPath, strlen($this->options->getWebRoot()));
         if ($isExtensionOk === false && !in_array($relativePath, $this->options->getFilterIncludeFiles())) {
-            // Let's skip this file, since it doesn't have the allowed file extensions and it's not in the whitelist
+            // Let's skip this file, since it doesn't have the allowed file extensions and it's not in the allowlist
             return [];
         }
         foreach ($this->options->getIgnoredDirectoriesByPath() as $check) {

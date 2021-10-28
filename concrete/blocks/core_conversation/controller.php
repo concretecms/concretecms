@@ -2,26 +2,18 @@
 namespace Concrete\Block\CoreConversation;
 
 use Concrete\Core\Attribute\Category\PageCategory;
-use Concrete\Core\Block\Block;
-use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\Message\MessageList;
-use Concrete\Core\Feature\ConversationFeatureInterface;
-use Concrete\Core\User\User;
-use Page;
+use Concrete\Core\Entity\Attribute\Key\PageKey;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Page\Page;
 
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
- *
- * @package Blocks
- * @subpackage Conversation
- *
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
  */
-class Controller extends BlockController implements ConversationFeatureInterface
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btInterfaceWidth = 450;
     protected $btInterfaceHeight = 400;
@@ -30,9 +22,6 @@ class Controller extends BlockController implements ConversationFeatureInterface
     protected $conversation;
     protected $btWrapperClass = 'ccm-ui';
     protected $btCopyWhenPropagate = true;
-    protected $btFeatures = [
-        'conversation',
-    ];
 
     public $enableTopCommentReviews;
     public $reviewAggregateAttributeKey;
@@ -45,6 +34,13 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function getBlockTypeName()
     {
         return t("Conversation");
+    }
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::CONVERSATIONS
+        ];
     }
 
     public function getSearchableContent()
@@ -64,12 +60,7 @@ class Controller extends BlockController implements ConversationFeatureInterface
 
         return rtrim($content);
     }
-
-    public function getConversationFeatureDetailConversationObject()
-    {
-        return $this->getConversationObject();
-    }
-
+    
     public function getConversationObject()
     {
         if (!isset($this->conversation)) {
@@ -116,11 +107,6 @@ class Controller extends BlockController implements ConversationFeatureInterface
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('core/conversation');
-        $this->requireAsset('core/lightbox');
-        $u = $this->app->make(User::class);
-        if (!$u->isRegistered()) {
-            $this->requireAsset('css', 'core/frontend/captcha');
-        }
     }
 
     public function view()

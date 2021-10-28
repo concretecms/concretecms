@@ -3,9 +3,9 @@
 namespace Concrete\Tests\Utility\Service;
 
 use Concrete\Core\Utility\Service\Number;
-use PHPUnit_Framework_Testcase;
+use Concrete\Tests\TestCase;
 
-class NumberTest extends PHPUnit_Framework_Testcase
+class NumberTest extends TestCase
 {
     public function flexRoundDataProvider()
     {

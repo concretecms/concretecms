@@ -22,13 +22,22 @@ var ConcreteSocialLinksAttribute = {
             $('button.ccm-social-link-attribute-remove-line').show();
             $('button.ccm-social-link-attribute-remove-line:first').hide();
 
+            if (opt.attr('data-icon') == 'phone-square' ||
+                opt.attr('data-icon') == 'envelope' ||
+                opt.attr('data-icon') == 'external-link-alt'
+            ) {
+              faClass = "fas";
+            } else {
+              faClass = "fab";
+            }
+
             $parentContainer.
                 find('.ccm-social-link-service-text-wrapper').
                 addClass('input-prepend').
                 find('.ccm-social-link-service-add-on-wrapper').show().
                 find('.add-on i').
                 removeClass().
-                addClass('fa fa-'+opt.attr('data-icon'));
+                addClass(faClass+' fa-'+opt.attr('data-icon'));
 
         });
         $('.ccm-social-link-attribute-wrapper select').trigger('change');

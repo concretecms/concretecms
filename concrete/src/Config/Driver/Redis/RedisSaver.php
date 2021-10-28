@@ -63,8 +63,12 @@ class RedisSaver implements SaverInterface
      */
     protected function flattenValue($namespace, $group, $item, $value)
     {
-        $results = [];
         $prefix = "{$namespace}::{$group}" . ($item ? ".{$item}" : '');
+
+        if (!is_array($value)) {
+            return [$prefix => serialize($value)];
+        }
+
         return array_map('serialize', Arr::dot($value, $prefix . '.'));
     }
 }

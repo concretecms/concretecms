@@ -17,9 +17,9 @@ class Formatter
     {
         switch($this->page->getCollectionTypeHandle()) {
             case STACK_CATEGORY_PAGE_TYPE:
-                return '<i class="fa fa-folder"></i>';
+                return '<i class="fas fa-folder"></i>';
             default:
-                return '<i class="fa fa-cubes"></i>';
+                return '<i class="fas fa-cubes"></i>';
 
         }
     }

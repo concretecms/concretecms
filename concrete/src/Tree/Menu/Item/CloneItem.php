@@ -28,7 +28,7 @@ class CloneItem extends AbstractNodeItem
     public function getItemElement()
     {
         $element = parent::getItemElement();
-        $element->getChildren()[0]->setAttribute('data-tree-node-id', $this->node->getTreeNodeID());
+        $element->setAttribute('data-tree-node-id', $this->node->getTreeNodeID());
         return $element;
     }
 

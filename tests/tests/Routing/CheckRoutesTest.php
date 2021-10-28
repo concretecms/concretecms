@@ -7,11 +7,11 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Routing\MatchedRoute;
 use Concrete\Core\Routing\Router;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
-use Exception;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Throwable;
 
-class CheckRoutesTest extends PHPUnit_Framework_TestCase
+class CheckRoutesTest extends TestCase
 {
     public function routeDestinationProvider()
     {
@@ -43,6 +43,7 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
     public function testRouteDestination(Application $app, $path, $callable)
     {
         $checked = false;
+
         if (preg_match('/^([^:]+)::([^:]+)$/', $callable, $m)) {
             $class = $m[1];
             $method = $m[2];
@@ -57,11 +58,18 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
             }
         }
         if ($checked === false) {
-            $this->assertTrue(is_callable($callable), "Not callable! Invalid route for path {$path} : {$callable}");
+            if (PHP_MAJOR_VERSION < 8) {
+                $this->assertTrue(is_callable($callable), "Not callable! Invalid route for path {$path} : {$callable}");
+            } else {
+                // PHP 8 is_callable only works on static methods
+                // get_class_methods only returns public methods so its similar to the old behaviour
+                $this->assertTrue(class_exists($class) && in_array($method, get_class_methods($class)), "Not callable! Invalid route for path {$path} : {$callable}");
+            }
+
         }
     }
 
-    public function provideRouteWithDefaultParameters()
+    public function provideRouteWithDefaultParameters(): array
     {
         $app = ApplicationFacade::getFacadeApplication();
         $result = [];
@@ -81,7 +89,7 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideRouteWithDefaultParameters
      */
-    public function testRouteWithArguments(Application $app, $requestArgumentValue, $requestWithTrailingSlash, $routeWithTrailingShash, $routeWithDefaultArgumentValue)
+    public function testRouteWithArguments(Application $app, bool $requestArgumentValue, bool $requestWithTrailingSlash, bool $routeWithTrailingShash, bool $routeWithDefaultArgumentValue): void
     {
         $router = $app->build(Router::class);
         $request = Request::create('http://localhost/foo/bar' . ($requestArgumentValue ? '/custom-baz' : '') . ($requestWithTrailingSlash ? '/' : ''));
@@ -93,7 +101,7 @@ class CheckRoutesTest extends PHPUnit_Framework_TestCase
         $marchError = null;
         try {
             $matchedRoute = $router->matchRoute($request);
-        } catch (Exception $x) {
+        } catch (Throwable $x) {
             $marchError = $x;
         }
         if ($requestArgumentValue === false && $routeWithDefaultArgumentValue === false) {

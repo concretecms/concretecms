@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Concrete\Core\Session\Storage\Handler\RedisSessionHandler;
 use Redis;
 use RedisArray;
+use Predis\Client;
 
 /**
  * Class SessionFactory
@@ -34,7 +35,7 @@ class SessionFactory implements SessionFactoryInterface
      * This makes testing a little harder, but ensures we apply the session object to the most accurate request instance.
      * Ideally neither would be required, as the operation creating the session would manage associating the two.
      *
-     * @var \Concrete\Core\Session\Request
+     * @var \Concrete\Core\Http\Request
      *
      * @deprecated
      */
@@ -66,7 +67,7 @@ class SessionFactory implements SessionFactoryInterface
         $storage = $this->getSessionStorage($config);
 
         // We have to use "build" here because we have bound this classname to this factory method
-        $session = $this->app->build(SymfonySession::class, [$storage]);
+        $session = new SymfonySession($storage);
         $session->setName(array_get($config, 'name'));
 
         /* @TODO Remove this call. We should be able to set this against the request somewhere much higher than this */
@@ -86,7 +87,7 @@ class SessionFactory implements SessionFactoryInterface
     protected function getFileHandler(array $config)
     {
         return $this->app->make(NativeFileSessionHandler::class, [
-            array_get($config, 'save_path'),
+            'savePath' => array_get($config, 'save_path'),
         ]);
     }
 
@@ -99,7 +100,7 @@ class SessionFactory implements SessionFactoryInterface
      */
     protected function getDatabaseHandler(array $config)
     {
-        return $this->app->make(PdoSessionHandler::class, [
+        return new PdoSessionHandler(
             $this->app->make(Connection::class)->getWrappedConnection(),
             [
                 'db_table' => 'Sessions',
@@ -108,8 +109,8 @@ class SessionFactory implements SessionFactoryInterface
                 'db_time_col' => 'sessionTime',
                 'db_lifetime_col' => 'sessionLifeTime',
                 'lock_mode' => PdoSessionHandler::LOCK_ADVISORY,
-            ],
-        ]);
+            ]
+        );
     }
 
     /**
@@ -123,8 +124,7 @@ class SessionFactory implements SessionFactoryInterface
     {
         // Create new memcached instance
         $memcached = $this->app->make(Memcached::class, [
-            'CCM_SESSION',
-            null,
+            'persistent_id' => 'CCM_SESSION',
         ]);
 
         $servers = array_get($config, 'servers', []);
@@ -140,8 +140,8 @@ class SessionFactory implements SessionFactoryInterface
 
         // Return a newly built handler
         return $this->app->make(MemcachedSessionHandler::class, [
-            $memcached,
-            ['prefix' => array_get($config, 'name') ?: 'CCM_SESSION'],
+            'memcached' => $memcached,
+            'options' => ['prefix' => array_get($config, 'name') ?: 'CCM_SESSION'],
         ]);
     }
 
@@ -175,7 +175,7 @@ class SessionFactory implements SessionFactoryInterface
 
         // Resolve the handler based on config
         $handler = $this->getSessionHandler($config);
-        $storage = $app->make(NativeSessionStorage::class, [[], $handler]);
+        $storage = $app->make(NativeSessionStorage::class, ['options' => [], 'handler' => $handler]);
 
         // Initialize the storage with some options
         $options = array_get($config, 'cookie', []) + [
@@ -190,7 +190,7 @@ class SessionFactory implements SessionFactoryInterface
 
         $storage->setOptions($options);
 
-        return $app->make(Storage\LoggedStorage::class, [$storage]);
+        return $app->make(Storage\LoggedStorage::class, ['wrappedStorage' => $storage]);
     }
 
     /**
@@ -267,11 +267,8 @@ class SessionFactory implements SessionFactoryInterface
         if (empty($servers)) {
             $servers = array_get($config, 'servers', []);
         }
-
-        $redis = $this->getRedisInstance($servers);
-        if (!empty($options['database'])) {
-            $redis->select((int) $options['database']);
-        }
+        // We pass the database because predis cant do select over clusters
+        $redis = $this->getRedisInstance($servers, $options['database']);
 
         // In case of anyone setting prefix on the redis server directly
         // Similar to how we do it on cache
@@ -279,45 +276,76 @@ class SessionFactory implements SessionFactoryInterface
         $prefix = rtrim($prefix, ':') . ':';
 
         // We pass the prefix to the Redis Handler when we build it
-        return $this->app->make(RedisSessionHandler::class, [$redis, ['prefix' => $prefix]]);
+        return $this->app->make(RedisSessionHandler::class, ['redis' => $redis, 'options' => ['prefix' => $prefix]]);
     }
 
     /**
      *  Decides whether to return a Redis Instance or RedisArray Instance depending on the number of servers passed to it.
      *
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
+     * @param int | null $database The concrete.session.redis.database config item
      *
-     * @return \Redis | \RedisArray
+     * @return \Redis | \RedisArray | \Predis\Client
      */
-    private function getRedisInstance(array $servers)
+    private function getRedisInstance(array $servers, int $database = 1)
     {
+        // This is a way to load our predis client or php redis without creating new instances
+        if ($this->app->isShared('session/redis')) {
+            $redis = $this->app->make('session/redis');
+            return $redis;
+        }
         if (count($servers) == 1) {
             // If we only have one server in our array then we just reconnect to it
             $server = $servers[0];
-            $redis = $this->app->make(Redis::class);
-
-            if (isset($server['socket']) && $server['socket']) {
-                $redis->connect($server['socket']);
-            } else {
+            $redis = null;
+            $pass = array_get($server, 'password', null);
+            $socket = array_get($server, 'socket', null);
+            if ($socket === null) {
                 $host = array_get($server, 'host', '');
                 $port = array_get($server, 'port', 6379);
-                $ttl = array_get($server, 'ttl', 0.5);
+                $ttl = array_get($server, 'ttl', 5);
                 // Check for both server/host - fallback due to cache using server
                 $host = !empty($host) ? $host : array_get($server, 'server', '127.0.0.1');
-
-                $redis->connect($host, $port, $ttl);
             }
-
-            // Authorisation is handled by just a password
-            if (isset($server['password'])) {
-                $redis->auth($server['password']);
+            if (class_exists('Redis')) {
+                $redis = new Redis();
+                if ($socket !== null) {
+                    $redis->connect($server['socket']);
+                } else {
+                    $redis->connect($host, $port, $ttl);
+                    if ($pass !== null) {
+                        $redis->auth($pass);
+                    }
+                    $redis->select($database);
+                }
+            } else {
+                if ($socket !== null) {
+                    $redis = new Client(['scheme'=>'unix','path'=>$server['socket'],'database'=>$database,'password'=>$pass]);
+                } else {
+                    $scheme = array_get($server, 'scheme', 'tcp');
+                    $redis = new Client([
+                        'scheme' => $scheme,
+                        'host' => $host,
+                        'port' => $port,
+                        'timeout' => $ttl,
+                        'database' => $database,
+                        'password' => $pass
+                    ]);
+                }
             }
         } else {
             $serverArray = [];
-            $ttl = 0.5;
+            $ttl = 5;
             $password = null;
-            foreach ($this->getRedisServers($servers) as $server) {
-                $serverString = $server['server'];
+
+            foreach ($this->getRedisServers($servers, $database) as $server) {
+               if (class_exists('RedisArray')) {
+                    if ($servers['scheme'] === 'unix') {
+                        $serverString = $server['path'];
+                    } else {
+                        $serverString = $server['host'];
+                    }
+
                 if (isset($server['port'])) {
                     $serverString .= ':' . $server['port'];
                 }
@@ -331,14 +359,26 @@ class SessionFactory implements SessionFactoryInterface
                 }
 
                 $serverArray[] = $serverString;
+                } else {
+                   //$server['alias'] = 'master';
+                    $serverArray[] = $server;
+                }
+
             }
             $options = ['connect_timeout' => $ttl];
             if ($password !== null) {
                 $options['auth'] = $password;
             }
-            $redis = $this->app->make(RedisArray::class, [$serverArray, $options]);
-        }
+            if (class_exists('RedisArray')) {
+                $redis = new RedisArray($serverArray, $options);
+                $redis->select($database);
 
+            } else {
+                $redis = new Client($serverArray);
+            }
+
+        }
+        $this->app->instance('session/redis', $redis);
         return $redis;
     }
 
@@ -346,34 +386,39 @@ class SessionFactory implements SessionFactoryInterface
      * Generator for Redis Array.
      *
      * @param array $servers The `concrete.session.servers` or `concrete.session.redis.servers` config item
+     * @param int $database Which database to use for each connection (only used for predis)
      *
      * @return \Generator| string[] [ $server, $port, $ttl ]
      */
-    private function getRedisServers(array $servers)
+    private function getRedisServers(array $servers, int $database)
     {
         if (!empty($servers)) {
             foreach ($servers as $server) {
                 if (isset($server['socket'])) {
                     $server = [
-                        'server' => array_get($server, 'socket', ''),
-                        'ttl' => array_get($server, 'ttl', null),
+                        'scheme' => 'unix',
+                        'path' => array_get($server, 'socket', ''),
+                        'timeout' => array_get($server, 'ttl', null),
                         'password' => array_get($server, 'password', null),
+                        'database' => array_get($server, 'database', $database)
                     ];
                 } else {
                     $host = array_get($server, 'host', '');
                     // Check for both server/host - fallback due to cache using server
                     $host = !empty($host) ?: array_get($server, 'server', '127.0.0.1');
                     $server = [
-                        'server' => $host,
-                        'port' => array_get($server, 'port', 11211),
-                        'ttl' => array_get($server, 'ttl', null),
+                        'scheme' => 'tcp',
+                        'host' => $host,
+                        'port' => array_get($server, 'port', 6379),
+                        'timeout' => array_get($server, 'ttl', null),
                         'password' => array_get($server, 'password', null),
+                        'database' => array_get($server, 'database', $database)
                     ];
                 }
                 yield $server;
             }
         } else {
-            yield ['server' => '127.0.0.1', 'port' => '6379', 'ttl' => 0.5];
+            yield ['host' => '127.0.0.1', 'port' => '6379', 'timeout' => 5, 'database'=>$database];
         }
     }
 }

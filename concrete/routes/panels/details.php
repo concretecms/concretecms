@@ -1,9 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: <none>
+ * Namespace: <none>
+ */
+
 $router->all('/ccm/system/panels/details/page/attributes', '\Concrete\Controller\Panel\Detail\Page\Attributes::view');
 $router->all('/ccm/system/panels/details/page/attributes/add_attribute', '\Concrete\Controller\Panel\Detail\Page\Attributes::add_attribute');
 $router->all('/ccm/system/panels/details/page/attributes/submit', '\Concrete\Controller\Panel\Detail\Page\Attributes::submit');
@@ -24,3 +32,7 @@ $router->all('/ccm/system/panels/details/page/seo', '\Concrete\Controller\Panel\
 $router->all('/ccm/system/panels/details/page/seo/submit', '\Concrete\Controller\Panel\Detail\Page\Seo::submit');
 $router->all('/ccm/system/panels/details/page/versions', '\Concrete\Controller\Panel\Detail\Page\Versions::view');
 $router->all('/ccm/system/panels/details/page/devices', '\Concrete\Controller\Panel\Page\Devices::detail');
+$router->all('/ccm/system/panels/details/theme/preview_preset/{pThemeID}/{presetIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewPreset::view');
+$router->all('/ccm/system/panels/details/theme/preview_preset_iframe/{pThemeID}/{presetIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewPreset::viewIframe');
+$router->all('/ccm/system/panels/details/theme/preview_skin/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewSkin::view');
+$router->all('/ccm/system/panels/details/theme/preview_skin_iframe/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewSkin::viewIframe');

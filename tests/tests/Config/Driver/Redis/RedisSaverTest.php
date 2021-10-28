@@ -4,14 +4,13 @@ namespace Concrete\Tests\Config\Driver\Redis;
 
 use Concrete\Core\Config\Driver\Redis\RedisSaver;
 use Mockery as M;
+use Concrete\Tests\TestCase;
 
 /**
  * @depends Concrete\Tests\Config\Driver\Redis\RedisPaginatedTraitTest::testPaginatedScan
  */
-class RedisSaverTest extends \PHPUnit_Framework_TestCase
+class RedisSaverTest extends TestCase
 {
-
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
      * @dataProvider namespacesToTest

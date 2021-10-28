@@ -1,21 +1,30 @@
 <?php
+
 namespace Concrete\Core\Site\Type\Formatter;
 
 use HtmlObject\Element;
 
 class DefaultFormatter extends AbstractFormatter
 {
-
-    public function getSiteTypeDescription()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Site\Type\Formatter\FormatterInterface::getSiteTypeDescription()
+     */
+    public function getSiteTypeDescription(): string
     {
         return '';
     }
 
-    public function getSiteTypeIconElement()
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Site\Type\Formatter\FormatterInterface::getSiteTypeIconElement()
+     */
+    public function getSiteTypeIconElement(): Element
     {
         return (new Element('i'))
-            ->addClass('fa fa-file');
+            ->addClass('fas fa-file')
+        ;
     }
-
-
 }

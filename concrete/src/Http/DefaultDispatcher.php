@@ -7,6 +7,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\Middleware\DispatcherDelegate;
 use Concrete\Core\Http\Middleware\MiddlewareStack;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Core\Routing\Router;
 use Concrete\Core\Routing\RouterInterface;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\User\User;
@@ -27,11 +28,11 @@ class DefaultDispatcher implements DispatcherInterface
     private $app;
 
     /**
-     * @var \Concrete\Core\Routing\RouterInterface
+     * @var \Concrete\Core\Routing\Router
      */
     private $router;
 
-    public function __construct(Application $app, RouterInterface $router)
+    public function __construct(Application $app, Router $router)
     {
         $this->app = $app;
         $this->router = $router;

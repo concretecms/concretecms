@@ -31,7 +31,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $f = $this->app->make('helper/form');
         $checked = $this->request('value') == '1' ? true : false;
-        echo '<div class="checkbox"><label>' . $f->checkbox($this->field('value'), 1, $checked) . ' ' . t('Yes') . '</label></div>';
+        echo '<div class="form-check">' . $f->checkbox($this->field('value'), 1, $checked) . ' ' . $f->label($this->field('value'), t('Yes'),['class'=>'form-check-label']) . '</div>';
     }
 
     public function filterByAttribute(AttributedItemList $list, $boolean, $comparison = '=')
@@ -103,8 +103,10 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $value = $this->getAttributeValue()->getValue();
             $checked = $value == 1 ? true : false;
         } else {
-            if ($this->akCheckedByDefault) {
-                $checked = true;
+            if (!isset($this->attributeObject)) {
+                if ($this->akCheckedByDefault) {
+                    $checked = true;
+                }
             }
         }
         $this->set('checked', $checked);

@@ -2,9 +2,10 @@
 
 namespace Concrete\Tests\Validator;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
+use InvalidArgumentException;
 
-class AbstractTranslatableValidatorTest extends PHPUnit_Framework_TestCase
+class AbstractTranslatableValidatorTest extends TestCase
 {
     public function testClosureMessage()
     {
@@ -68,20 +69,16 @@ class AbstractTranslatableValidatorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals([5 => 'REQUIREMENT'], $mock->getRequirementStrings());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidErrorStringExpression()
     {
+        $this->expectException(InvalidArgumentException::class);
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
         $mock->setErrorString(5, $mock);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidRequirementStringExpression()
     {
+        $this->expectException(InvalidArgumentException::class);
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
         $mock->setRequirementString(5, $mock);
     }

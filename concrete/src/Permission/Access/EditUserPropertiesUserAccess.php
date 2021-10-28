@@ -12,7 +12,7 @@ class EditUserPropertiesUserAccess extends UserAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery('select * from UserPermissionEditPropertyAccessList where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$newPA->getPermissionAccessID(),
             $row['peID'],
             $row['attributePermission'],
@@ -22,11 +22,12 @@ class EditUserPropertiesUserAccess extends UserAccess
             $row['uAvatar'],
             $row['uTimezone'],
             $row['uDefaultLanguage'],
+            $row['uHomeFileManagerFolderID'],
             ];
-            $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
+            $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['akID']];
             $db->executeQuery('insert into UserPermissionEditPropertyAttributeAccessListCustom (peID, paID, akID) values (?, ?, ?)', $v);
         }
@@ -48,6 +49,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                 $allowEditUAvatar = 0;
                 $allowEditUTimezone = 0;
                 $allowEditUDefaultLanguage = 0;
+                $allowEditUHomeFileManagerFolderID = 0;
                 if (!empty($args['allowEditUName'][$peID])) {
                     $allowEditUName = $args['allowEditUName'][$peID];
                 }
@@ -66,8 +68,11 @@ class EditUserPropertiesUserAccess extends UserAccess
                 if (!empty($args['allowEditUDefaultLanguage'][$peID])) {
                     $allowEditUDefaultLanguage = $args['allowEditUDefaultLanguage'][$peID];
                 }
-                $v = [$this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUName, $allowEditUEmail, $allowEditUPassword, $allowEditUAvatar, $allowEditUTimezone, $allowEditUDefaultLanguage];
-                $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
+                if (!empty($args['allowEditUHomeFileManagerFolderID'][$peID])) {
+                    $allowEditUHomeFileManagerFolderID = $args['allowEditUHomeFileManagerFolderID'][$peID];
+                }
+                $v = [$this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUName, $allowEditUEmail, $allowEditUPassword, $allowEditUAvatar, $allowEditUTimezone, $allowEditUDefaultLanguage, $allowEditUHomeFileManagerFolderID];
+                $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
             }
         }
 
@@ -79,6 +84,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                 $allowEditUAvatarExcluded = 0;
                 $allowEditUTimezoneExcluded = 0;
                 $allowEditUDefaultLanguageExcluded = 0;
+                $allowEditUHomeFileManagerFolderIDExcluded = 0;
                 if (!empty($args['allowEditUNameExcluded'][$peID])) {
                     $allowEditUNameExcluded = $args['allowEditUNameExcluded'][$peID];
                 }
@@ -97,8 +103,11 @@ class EditUserPropertiesUserAccess extends UserAccess
                 if (!empty($args['allowEditUDefaultLanguageExcluded'][$peID])) {
                     $allowEditUDefaultLanguageExcluded = $args['allowEditUDefaultLanguageExcluded'][$peID];
                 }
-                $v = [$this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUNameExcluded, $allowEditUEmailExcluded, $allowEditUPasswordExcluded, $allowEditUAvatarExcluded, $allowEditUTimezoneExcluded, $allowEditUDefaultLanguageExcluded];
-                $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
+                if (!empty($args['allowEditUHomeFileManagerFolderIDExcluded'][$peID])) {
+                    $allowEditUHomeFileManagerFolderIDExcluded = $args['allowEditUHomeFileManagerFolderIDExcluded'][$peID];
+                }
+                $v = [$this->getPermissionAccessID(), $peID, $attributePermission, $allowEditUNameExcluded, $allowEditUEmailExcluded, $allowEditUPasswordExcluded, $allowEditUAvatarExcluded, $allowEditUTimezoneExcluded, $allowEditUDefaultLanguageExcluded, $allowEditUHomeFileManagerFolderIDExcluded];
+                $db->executeQuery('insert into UserPermissionEditPropertyAccessList (paID, peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
             }
         }
 
@@ -129,7 +138,7 @@ class EditUserPropertiesUserAccess extends UserAccess
         foreach ($list as $l) {
             $attributePermission = null;
             $pe = $l->getAccessEntityObject();
-            $prow = $db->fetchAssoc('select attributePermission, uName, uPassword, uEmail, uAvatar, uTimezone, uDefaultLanguage from UserPermissionEditPropertyAccessList where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);
+            $prow = $db->fetchAssoc('select attributePermission, uName, uPassword, uEmail, uAvatar, uTimezone, uDefaultLanguage, uHomeFileManagerFolderID from UserPermissionEditPropertyAccessList where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);
             if (is_array($prow) && $prow['attributePermission']) {
                 $l->setAttributesAllowedPermission($prow['attributePermission']);
                 $l->setAllowEditUserName($prow['uName']);
@@ -138,6 +147,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                 $l->setAllowEditAvatar($prow['uAvatar']);
                 $l->setAllowEditTimezone($prow['uTimezone']);
                 $l->setAllowEditDefaultLanguage($prow['uDefaultLanguage']);
+                $l->setAllowEditHomeFileManagerFolderID($prow["uHomeFileManagerFolderID"]);
                 $attributePermission = $prow['attributePermission'];
             } elseif ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_INCLUDE) {
                 $l->setAttributesAllowedPermission('A');
@@ -147,6 +157,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                 $l->setAllowEditAvatar(1);
                 $l->setAllowEditTimezone(1);
                 $l->setAllowEditDefaultLanguage(1);
+                $l->setAllowEditHomeFileManagerFolderID(1);
             } else {
                 $l->setAttributesAllowedPermission('N');
                 $l->setAllowEditUserName(0);
@@ -155,6 +166,7 @@ class EditUserPropertiesUserAccess extends UserAccess
                 $l->setAllowEditAvatar(0);
                 $l->setAllowEditTimezone(0);
                 $l->setAllowEditDefaultLanguage(0);
+                $l->setAllowEditHomeFileManagerFolderID(0);
             }
             if ($attributePermission == 'C') {
                 $akIDs = $db->GetCol('select akID from UserPermissionEditPropertyAttributeAccessListCustom where peID = ? and paID = ?', [$pe->getAccessEntityID(), $this->getPermissionAccessID()]);

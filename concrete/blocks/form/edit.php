@@ -1,5 +1,4 @@
-<?php 
-defined('C5_EXECUTE') or die('Access Denied.');
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Block\Form\MiniSurvey;
 
 //$miniSurveyInfo['surveyName']= $bs->surveyName;
@@ -15,11 +14,11 @@ $ui = UserInfo::getByID($u->uID);
 <?php if (is_object($b->getProxyBlock())) {
     ?>
 	var thisbID=parseInt(<?php echo $b->getProxyBlock()->getBlockID()?>); 
-<?php 
+<?php
 } else {
     ?>
 	var thisbID=parseInt(<?php echo $b->getBlockID()?>); 
-<?php 
+<?php
 } ?>
 var thisbtID=parseInt(<?php echo $b->getBlockTypeID()?>); 
 </script>

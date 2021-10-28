@@ -4,9 +4,11 @@ namespace Concrete\Block\Tags;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Block\BlockController;
 use CollectionAttributeKey;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Page;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btTags';
     protected $btInterfaceWidth = "450";
@@ -38,6 +40,13 @@ class Controller extends BlockController
         return t("Tags");
     }
 
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::TAXONOMY
+        ];
+    }
+
     public function add()
     {
         $ak = $this->loadAttribute();
@@ -46,6 +55,7 @@ class Controller extends BlockController
             $this->set('inStackDashboardPage', true);
         }
         $this->set('displayMode', 'page');
+        $this->set('titleFormat', 'h5');
     }
 
     protected function loadAttribute()

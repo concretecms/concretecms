@@ -1,6 +1,8 @@
 <?php
+
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\ObjectTrait;
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry\Association as EntryAssociation;
@@ -10,17 +12,25 @@ use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
 use Concrete\Core\Export\Item\Express\Entry as EntryExporter;
 use Concrete\Core\Express\EntryBuilder\AssociationUpdater;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Permission\Assignment\ExpressEntryAssignment;
 use Concrete\Core\Permission\ObjectInterface as PermissionObjectInterface;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Permission\Response\ExpressEntryResponse;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Support\Facade\Url;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntryRepository")
- * @ORM\Table(name="ExpressEntityEntries")
+ * @ORM\Table(name="ExpressEntityEntries",
+ *  *     indexes={
+ *         @ORM\Index(name="resultsNodeID", columns={"resultsNodeID"}),
+ *         @ORM\Index(name="createdSort", columns={"exEntryDateCreated"}),
+ *         @ORM\Index(name="modifiedSort", columns={"exEntryDateModified"})
+ *     }
+ * )
  * @ORM\EntityListeners({"\Concrete\Core\Express\Entry\Listener"})
  */
 class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeObjectInterface, ExportableInterface
@@ -125,8 +135,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function getObjectAttributeCategory()
     {
-        $category = \Core::make('\Concrete\Core\Attribute\Category\ExpressCategory', [$this->getEntity()]);
-
+        $category = app(ExpressCategory::class, ['entity' => $this->getEntity()]);
         return $category;
     }
 
@@ -196,6 +205,11 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      * @ORM\Column(type="string", nullable=true)
      */
     protected $publicIdentifier;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $resultsNodeID;
 
     /**
      * @return Entity
@@ -289,6 +303,23 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     }
 
     /**
+     * @return mixed
+     */
+    public function getResultsNodeID()
+    {
+        return $this->resultsNodeID;
+    }
+
+    /**
+     * @param mixed $resultsNodeID
+     */
+    public function setResultsNodeID($resultsNodeID): void
+    {
+        $this->resultsNodeID = $resultsNodeID;
+    }
+
+
+    /**
      * @param $handle
      *
      * @return EntryAssociation|null
@@ -370,7 +401,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      *
      * @return mixed
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         if (!$this->entryFormatter) {
             $this->entryFormatter = Application::getFacadeApplication()->make(EntryFormatterInterface::class);
@@ -380,11 +411,16 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
             $name = $this->entryFormatter->format($mask, $this);
         }
 
-        if (!$name) {
+        if (!isset($name)) {
             $name = $this->entryFormatter->getLabel($this);
         }
 
-        return $name;
+        return (string)$name;
+    }
+
+    public function getURL()
+    {
+        return (string)Url::to("/dashboard/express/entries/view_entry/", $this->getID());
     }
 
     /**
@@ -392,9 +428,15 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
      */
     public function jsonSerialize()
     {
+        $app = Application::getFacadeApplication();
+        /** @var Date $dateHelper */
+        $dateHelper = $app->make(Date::class);
         $data = [
             'exEntryID' => $this->getID(),
             'label' => $this->getLabel(),
+            'url' => $this->getURL(),
+            'exEntryDateCreated' => $dateHelper->formatDateTime($this->getDateCreated()),
+            'exEntryDateModified' => $dateHelper->formatDateTime($this->getDateModified()),
         ];
 
         return $data;

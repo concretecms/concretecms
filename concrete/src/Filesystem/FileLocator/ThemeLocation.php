@@ -19,10 +19,14 @@ class ThemeLocation extends AbstractLocation
 
     public function __construct(Theme $theme)
     {
+        $this->setTheme($theme);
+    }
+
+    public function setTheme(Theme $theme)
+    {
         $this->themeHandle = $theme->getThemeHandle();
         $this->pkgHandle = $theme->getPackageHandle();
     }
-
     /**
      * @return mixed
      */
@@ -41,6 +45,8 @@ class ThemeLocation extends AbstractLocation
                 . DIRNAME_THEMES
                 . '/'
                 . $this->themeHandle;
+        } else if ($this->themeHandle === 'elemental' || $this->themeHandle === 'atomik') {
+            return DIR_BASE_CORE . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;
         } else {
             return DIR_APPLICATION . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;
         }
@@ -56,6 +62,8 @@ class ThemeLocation extends AbstractLocation
             . DIRNAME_THEMES
             . '/'
             . $this->themeHandle;
+        } else if ($this->themeHandle === 'elemental') {
+            return ASSETS_URL . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;
         } else {
             return REL_DIR_APPLICATION . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;
         }

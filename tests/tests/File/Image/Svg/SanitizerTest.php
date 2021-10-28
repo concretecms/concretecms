@@ -7,9 +7,9 @@ use Concrete\Core\File\Image\Svg\SanitizerOptions;
 use Concrete\Core\Support\Facade\Application;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class SanitizerTest extends PHPUnit_Framework_TestCase
+class SanitizerTest extends TestCase
 {
     /**
      * @var \Concrete\Core\File\Image\Svg\Sanitizer
@@ -26,7 +26,7 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
      *
      * @see PHPUnit_Framework_TestCase::setupBeforeClass()
      */
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         parent::setUpBeforeClass();
         $app = Application::getFacadeApplication();
@@ -34,10 +34,9 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
         self::$sanitizerOptions = new SanitizerOptions();
         self::$sanitizerOptions
             ->setUnsafeElements('script script2')
-            ->setElementWhitelist('script2')
+            ->setElementAllowlist('script2')
             ->setUnsafeAttributes('onload onload2 onclick')
-            ->setAttributeWhitelist('onload2')
-        ;
+            ->setAttributeAllowlist('onload2');
     }
 
     /**
@@ -45,7 +44,7 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
      *
      * @see PHPUnit_Framework_TestCase::tearDown()
      */
-    public function tearDown()
+    public function TearDown():void
     {
         Mockery::close();
     }
@@ -56,14 +55,14 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     public function provideSanitizeWithDefaultSettings()
     {
         return [
-            ['<svg/>', '<svg/>'],
-            ['<svg good="1" />', '<svg good="1"/>'],
-            ['<svg><script>alert(1);</script></svg>', '<svg/>'],
-            ['<svg><script2>alert(1);</script2></svg>', '<svg><script2>alert(1);</script2></svg>'],
-            ['<svg onload="alert(1)" />', '<svg/>'],
-            ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg foo="1" bar="2"/>'],
-            ['<svg foo="1" OnLoad="alert(1)" OnLoad2="alert(1)" bar="2" />', '<svg foo="1" OnLoad2="alert(1)" bar="2"/>'],
-            ['<svg><script></script><g onLoad="alert(1)"><rect /></g></svg>', '<svg><g><rect/></g></svg>'],
+            ['<svg/>', '<svg></svg>'],
+            ['<svg good="1" />', '<svg></svg>'],
+            ['<svg><script>alert(1);</script></svg>', '<svg></svg>'],
+            ['<svg><script2>alert(1);</script2></svg>', '<svg></svg>'],
+            ['<svg onload="alert(1)" />', '<svg></svg>'],
+            ['<svg foo="1" onload="alert(1)" bar="2" />', '<svg></svg>'],
+            ['<svg foo="1" OnLoad="alert(1)" OnLoad2="alert(1)" bar="2" />', '<svg></svg>'],
+            ['<svg><script></script><g onLoad="alert(1)"><rect /></g></svg>', '<svg>  <g>    <rect></rect>  </g></svg>'],
         ];
     }
 
@@ -76,16 +75,15 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     {
         $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
         $lines = explode("\n", $sanitized);
-        $this->assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
+        static::assertRegExp('/^<\?xml\b[^>]*\?>$/', array_shift($lines));
         $xml = trim(implode('', $lines));
-        $this->assertSame($expectedOutput, $xml);
+
+        static::assertSame($expectedOutput, $xml);
     }
 
-    /**
-     * @expectedException Concrete\Core\File\Image\Svg\SanitizerException
-     */
     public function testLoadInvalidFile()
     {
+        $this->expectException(\Concrete\Core\File\Image\Svg\SanitizerException::class);
         self::$sanitizer->sanitizeFile(__DIR__ . '/does-not-exist');
     }
 
@@ -100,38 +98,26 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Concrete\Core\File\Image\Svg\SanitizerException
+     *
      *
      * @param mixed $invalidSvgData
      * @dataProvider provideInvalidData
      */
     public function testInvalidData($invalidSvgData)
     {
+        $this->expectException(\Concrete\Core\File\Image\Svg\SanitizerException::class);
         self::$sanitizer->sanitizeData($invalidSvgData, self::$sanitizerOptions);
     }
 
-    /**
-     * @expectedException Concrete\Core\File\Image\Svg\SanitizerException
-     */
     public function testShouldThrowIfFileDoesNotExist()
     {
+        $this->expectException(\Concrete\Core\File\Image\Svg\SanitizerException::class);
         $filename = __DIR__ . '/test-file';
         $fs = Mockery::mock(Filesystem::class);
         $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(false);
         $fs->shouldReceive('get')->never();
         $fs->shouldReceive('put')->never();
         $sanitizer = new Sanitizer($fs);
-        $sanitizer->sanitizeFile($filename);
-    }
-
-    public function testShouldNotSaveIfNothingChanged()
-    {
-        $filename = __DIR__ . '/test-file';
-        $fs = Mockery::mock(Filesystem::class);
-        $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
-        $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
-        $fs->shouldReceive('put')->never();
-        $sanitizer = new Sanitizer($fs, self::$sanitizerOptions);
         $sanitizer->sanitizeFile($filename);
     }
 
@@ -142,16 +128,9 @@ class SanitizerTest extends PHPUnit_Framework_TestCase
         $fs = Mockery::mock(Filesystem::class);
         $fs->shouldReceive('isFile')->once()->with($filename)->andReturn(true);
         $fs->shouldReceive('get')->once()->with($filename)->andReturn("<?xml version=\"1.0\"?>\n<svg/>\n");
-        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\"?>\n<svg/>\n");
+        $fs->shouldReceive('put')->once()->with($filename2, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg></svg>\n");
         $sanitizer = new Sanitizer($fs);
         $sanitizer->sanitizeFile($filename, self::$sanitizerOptions, $filename2);
     }
 
-    public function testEncoding()
-    {
-        $input = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<svg test=\"\xE0\" onload=''>\xE8</svg>\n"; // 0xE0 === 'à' in iso-8859-1; 0xE8 === 'è' in iso-8859-1
-        $output = "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<svg test=\"\xE0\">\xE8</svg>\n"; // 0xE0 === 'à' in iso-8859-1; 0xE8 === 'è' in iso-8859-1
-        $sanitized = self::$sanitizer->sanitizeData($input, self::$sanitizerOptions);
-        $this->assertSame($output, $sanitized);
-    }
 }

@@ -9,7 +9,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
 
 <h5><?=t('Version Comments')?></h5>
 
-<div class="ccm-panel-check-in-comments"><textarea name="comments" id="ccm-check-in-comments"<?php echo $require_version_comments ? ' required="required"' : ''; ?>></textarea></div>
+<div class="ccm-panel-check-in-comments"><textarea name="comments" class="form-control" id="ccm-check-in-comments"<?php echo $require_version_comments ? ' required="required"' : ''; ?>></textarea></div>
 
 <?php if ($cp->canApprovePageVersions()) {
 
@@ -19,16 +19,16 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
     ?>
 <div class="ccm-panel-check-in-publish">
     <?php $publishAction = (is_object($publishErrors) && $publishErrors->has()) ? false : true ?>
-    <div class="btn-group">
+    <div class="btn-group d-flex" role="group">
         <button id="ccm-check-in-publish" type="submit" name="action" value="publish"
-                class="btn btn-primary" <?=$publishAction ?: 'disabled' ?>>
+                class="pe-3 ps-3 btn btn-primary" <?=$publishAction ?: 'disabled' ?>>
             <?=$publishTitle?>
         </button>
-        <button id="ccm-check-in-schedule" type="button" class="btn btn-primary" <?= $publishAction ?: 'disabled' ?>>
-            <i class="fa fa-clock-o"></i>
+        <button id="ccm-check-in-schedule" type="button" class="pe-3 ps-3 btn btn-primary" <?= $publishAction ?: 'disabled' ?>>
+            <i class="fas fa-clock"></i>
         </button>
     </div>
-    <div id="ccm-check-in-schedule-wrapper">
+    <div id="ccm-check-in-schedule-wrapper" style="display:none;">
         <?php $composer->displayPublishScheduleSettings($c); ?>
     </div>
     <br/><br/>
@@ -36,7 +36,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
         <?php if (count($publishErrors->getList())) { ?>
             <div class="small">
             <?php foreach ($publishErrors->getList() as $error): ?>
-                <div class="text-warning"><strong><i class="fa fa-warning"></i> <?=$error?></strong></div>
+                <div class="text-warning"><strong><i class="fas fa-exclamation-triangle"></i> <?=$error?></strong></div>
                 <br/>
             <?php endforeach; ?>
             </div>
@@ -47,7 +47,7 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
             <div class="small">
                 <div class="text-info">
                     <strong>
-                        <i class="fa fa-question-circle"></i>
+                        <i class="fas fa-question-circle"></i>
                         <?=t('You can specify page name, page location and attributes from the ' .
                              '<a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="%s" ' .
                              'data-panel-transition="fade">Page Compose interface</a>.',
@@ -62,16 +62,21 @@ $require_version_comments = (bool) Config::get('concrete.misc.require_version_co
 
 <?php
 } ?>
-
-	<button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-block btn-success btn"><?=t('Save Changes')?></button>
+    <div class="d-grid">
+        <button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-success btn"><?=t('Save Changes')?></button>
+    </div>
 
     <?php if ($c->isPageDraft() && $cp->canDeletePage()) {
     ?>
-		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-block btn-danger btn"><?=t('Discard Draft')?></button>
+        <div class="d-grid mt-2">
+            <button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Draft')?></button>
+        </div>
 	<?php
 } elseif ($v->canDiscard()) {
     ?>
-		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-block btn-danger btn"><?=t('Discard Changes')?></button>
+        <div class="d-grid mt-2">
+            <button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Changes')?></button>
+        </div>
 	<?php
 } ?>
 	<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />

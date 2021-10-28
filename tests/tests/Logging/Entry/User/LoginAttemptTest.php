@@ -3,9 +3,9 @@
 namespace Concrete\Tests\Logging\Entry\User;
 
 use Concrete\Core\Logging\Entry\User\LoginAttempt;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class LoginAttemptTest extends PHPUnit_Framework_TestCase
+class LoginAttemptTest extends TestCase
 {
 
     public function testExpectedOutput()

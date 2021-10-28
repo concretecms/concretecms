@@ -17,7 +17,6 @@ class Entries extends DashboardPageController
     {
         $tree = ExpressEntryResults::get();
         $this->set('tree', $tree);
-        $this->requireAsset('core/topics');
     }
 
 

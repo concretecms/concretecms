@@ -18,7 +18,7 @@ class FileRepositoryTest extends ConcreteDatabaseTestCase
 
     protected $tables = ['Config'];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->files = new Filesystem();
         $this->repository = new Repository(new FileLoader($this->files), new FileSaver($this->files), 'test');

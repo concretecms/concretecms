@@ -1,12 +1,12 @@
 <?php
 namespace Concrete\Core\File\Service;
 
-use Zend\Http\Client\Adapter\Exception\TimeoutException;
 use Config;
 use Environment;
 use Exception;
 use Core;
 use Concrete\Core\Support\Facade\Application as CoreApplication;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * File helper.
@@ -316,7 +316,7 @@ class File
      * @param string $filename
      * @param string $timeout
      *
-     * @throws TimeoutException Request timed out
+     * @throws RequestException Request timed out
      *
      * @return string|bool Returns false in case of failure
      */
@@ -325,19 +325,20 @@ class File
         $url = @parse_url($file);
         if (isset($url['scheme']) && isset($url['host'])) {
             $app = CoreApplication::getFacadeApplication();
-            $client = $app->make('http/client')->setUri($file);
+            $client = $app->make('http/client');
+            $options = [];
             if (!empty($timeout) && $timeout > 0) {
-                $client->setOptions(['timeout' => $timeout]);
+                $options['timeout'] = $timeout;
             }
             try {
-                $response = $client->send();
-            } catch (TimeoutException $x) {
+                $response = $client->get($file, $options);
+            } catch (RequestException $x) {
                 throw $x;
             } catch (Exception $x) {
                 $response = null;
             }
 
-            return $response ? $response->getBody() : false;
+            return $response ? $response->getBody()->getContents() : false;
         } else {
             $contents = @file_get_contents($file);
             if ($contents !== false) {

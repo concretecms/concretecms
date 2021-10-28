@@ -2,9 +2,8 @@
 namespace Concrete\Core\Package\Event;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\Event;
 
-class PackageEntities extends Event
+class PackageEntities
 {
     /**
      * @var EntityManagerInterface[]

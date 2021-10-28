@@ -4,7 +4,7 @@
         bootstrap="./tests/bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
+        convertNoticesToExceptions="false"
         convertWarningsToExceptions="true"
         backupGlobals="false"
         backupStaticAttributes="false"
@@ -22,6 +22,9 @@
             <directory suffix=".php">concrete/controllers/</directory>
             <directory suffix="controller.php">concrete/</directory>
             <directory suffix="page_theme.php">concrete/themes/</directory>
+            <exclude>
+                <directory suffix=".php">concrete/vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
     <groups>
@@ -30,4 +33,7 @@
             <group>docker</group>
         </exclude>
     </groups>
+    <php>
+        <ini name="memory_limit" value="-1"/>
+    </php>
 </phpunit>

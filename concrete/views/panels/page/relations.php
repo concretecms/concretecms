@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $relatedPage = $relation->getPageObject();
             ?>
 
-            <li><a href="<?=$relatedPage->getCollectionLink()?>"><i class="fa fa-file-o"></i> <?=$formatter->getDisplayName()?></a></li>
+            <li><a href="<?=$relatedPage->getCollectionLink()?>"><i class="fas fa-file-o"></i> <?=$formatter->getDisplayName()?></a></li>
 
         <?php } ?>
         </ul>
@@ -37,7 +37,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     } else {
         ?>
                         <a href="#" class="ccm-panel-multilingual-section-no-mappings" data-launch-multilingual-menu="<?=$m->getCollectionID()?>"><?=$icon?> <span><?=t('None Created')?></span></a>
-                        <div class="ccm-popover-inverse popover fade" data-multilingual-menu="<?=$m->getCollectionID()?>">
+                        <div class="popover fade" data-multilingual-menu="<?=$m->getCollectionID()?>">
                             <div class="popover-inner">
                                 <ul class="dropdown-menu">
                                     <?php if ($cParentRelatedID || $c->isPageDraft()) { ?>

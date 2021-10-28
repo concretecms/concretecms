@@ -1,0 +1,101 @@
+@import "./welcome/site-activity";
+@import "./welcome/rss-displayer";
+@import "./welcome/latest-form";
+@import "./welcome/marketplace";
+@import "./welcome/draft-list";
+@import "./welcome/concrete-latest";
+
+body.ccm-dashboard-desktop {
+  background-color: #f8fafb;
+  -webkit-font-smoothing: antialiased;
+
+  div#ccm-dashboard-content {
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-color: rgba(76,79,86,0.70);
+      z-index: 1;
+      display: none;
+    }
+
+    div.ccm-dashboard-desktop-content {
+      margin-left: $dashboard-content-padding-l;
+      margin-right: $dashboard-content-padding-r;
+      position: relative;
+      z-index: 1;
+    }
+  }
+}
+
+div.ccm-dashboard-desktop-flex {
+  .row {
+    margin-bottom: 30px;
+
+    & > div[class*='col-'] {
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      flex: 1 1 auto;
+      color: #4c4f56;
+
+      & > div {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.ccm-ui {
+  nav.ccm-dashboard-desktop-navbar.navbar {
+    border-radius: 0px;
+    border-width: 0px;
+    background-color: #2e2e2f;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 45px;
+    padding-right: 50px;
+    font-size: $font-size-sm;
+    margin-bottom: 20px;
+    margin-left: -45px;
+    margin-right: -50px;
+
+    span.navbar-text {
+      color: $gray-200 !important;
+      line-height: 20px;
+      font-size: 1.25rem;
+      font-weight: 300;
+
+      strong {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+div.ccm-dashboard-welcome-customize {
+  margin: 20px 0;
+  text-align: right;
+}
+
+@include media-breakpoint-down(md) {
+  .ccm-ui {
+    nav.ccm-dashboard-desktop-navbar.navbar {
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+  }
+}

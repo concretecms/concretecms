@@ -4,9 +4,9 @@ namespace Concrete\Tests\Foundation;
 
 use Concrete\Core\Foundation\Repetition\BasicRepetition;
 use Concrete\Core\Foundation\Repetition\Comparator;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class RepetitionComparatorTest extends PHPUnit_Framework_TestCase
+class RepetitionComparatorTest extends TestCase
 {
     public function testNoRepeat()
     {

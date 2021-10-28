@@ -5,16 +5,16 @@ namespace Concrete\Tests\Foundation;
 use Concrete\Core\Foundation\Repetition\BasicRepetition;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Support\Facade\Facade;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class RepetitionTimezoneTest extends PHPUnit_Framework_TestCase
+class RepetitionTimezoneTest extends TestCase
 {
     /**
      * @var Date
      */
     protected $dateService;
 
-    protected function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->dateService = new Date();

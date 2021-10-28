@@ -88,8 +88,8 @@ class SvgProcessor implements ValidatorInterface, PreProcessorInterface
     {
         $this->setAction($config->get('concrete.file_manager.images.svg_sanitization.action'));
         $this->sanitizerOptions
-            ->setElementWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed_tags'))
-            ->setAttributeWhitelist($config->get('concrete.file_manager.images.svg_sanitization.allowed_attributes'))
+            ->setElementAllowlist($config->get('concrete.file_manager.images.svg_sanitization.allowed_tags'))
+            ->setAttributeAllowlist($config->get('concrete.file_manager.images.svg_sanitization.allowed_attributes'))
         ;
 
         return $this;
@@ -112,7 +112,7 @@ class SvgProcessor implements ValidatorInterface, PreProcessorInterface
      */
     public function shouldValidate(ImportingFile $file, ImportOptions $options)
     {
-        return $this->getAction() !== static::ACTION_DISABLED && $file->getFileType()->isSVG();
+        return $this->getAction() !== static::ACTION_DISABLED && ($file->getFileType()->isSVG() || $file->getMimeType() === "image/svg+xml");
     }
 
     /**
@@ -152,7 +152,7 @@ class SvgProcessor implements ValidatorInterface, PreProcessorInterface
      */
     public function shouldPreProcess(ImportingFile $file, ImportOptions $options)
     {
-        return $this->getAction() === static::ACTION_SANITIZE && $file->getFileType()->isSVG();
+        return $this->getAction() === static::ACTION_SANITIZE && ($file->getFileType()->isSVG() || $file->getMimeType() === "image/svg+xml");
     }
 
     /**

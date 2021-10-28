@@ -106,34 +106,6 @@ interface AssetInterface
     public function isAssetLocal();
 
     /**
-     * Does this asset support minification?
-     *
-     * @param bool $minify
-     */
-    public function setAssetSupportsMinification($minify);
-
-    /**
-     * Does this asset support minification?
-     *
-     * @return bool
-     */
-    public function assetSupportsMinification();
-
-    /**
-     * Can this asset be combined with other assets?
-     *
-     * @param bool $combine
-     */
-    public function setAssetSupportsCombination($combine);
-
-    /**
-     * Can this asset be combined with other assets?
-     *
-     * @return bool
-     */
-    public function assetSupportsCombination();
-
-    /**
      * Set the URL of this asset.
      *
      * @param string $url

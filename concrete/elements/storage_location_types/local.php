@@ -25,10 +25,10 @@ if (is_object($configuration)) {
             }
             echo $form->text('fslType[path]', $path, $fslTypeOptions);
         ?>
-        <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+        <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
     </div>
     <?php if ($locationHasFiles) { ?>
-        <span class="help-block"><?= t('You can not change the root path of this storage location because it contains files.') ?></span>
+        <span class="help-block form-text"><?= t('You can not change the root path of this storage location because it contains files.') ?></span>
     <?php } ?>
 </div>
 <div class="form-group">

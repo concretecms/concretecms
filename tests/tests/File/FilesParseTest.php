@@ -2,19 +2,27 @@
 
 namespace Concrete\Tests\File;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use RegexIterator;
+use Throwable;
 
-class FilesParseTest extends PHPUnit_Framework_TestCase
+class FilesParseTest extends TestCase
 {
+
     public function testFilesParse()
     {
         foreach ($this->getPhpFiles(DIR_BASE_CORE . '/src') as $file) {
-            $this->loadFile(array_shift($file));
+            try {
+                $this->loadFile(head($file));
+            } catch (Throwable $e) {
+                $this->fail(sprintf('Failed to parse file "%s": %s', $file[0], $e->getMessage()));
+            }
         }
+
+        $this->addToAssertionCount(1);
     }
 
     private function getPhpFiles($path)

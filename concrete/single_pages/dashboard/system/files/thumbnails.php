@@ -5,20 +5,20 @@ use Concrete\Core\Permission\Checker;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Core\Page\View\PageView $view */
-/* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Form\Service\Widget\Color $form_color */
-/* @var Concrete\Controller\SinglePage\Dashboard\System\Files\Thumbnails $controller */
+// @var Concrete\Core\Page\View\PageView $view
+// @var Concrete\Core\Form\Service\Form $form
+// @var Concrete\Core\Validation\CSRF\Token $token
+// @var Concrete\Core\Form\Service\Widget\Color $form_color
+// @var Concrete\Controller\SinglePage\Dashboard\System\Files\Thumbnails $controller
 
 if (isset($type)) {
-    /* @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type $type */
-    /* @var array $sizingModes */
-    /* @var array $sizingModeHelps */
-    /* @var bool $allowConditionalThumbnails */
-    /* @var array $fileSetOptions [if $allowConditionalThumbnails is true] */
-    /* @var array $fileSets [if $allowConditionalThumbnails is true] */
-    /* @var bool $manipulationLibrarySupportsAnimations */
+    // @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type $type
+    // @var array $sizingModes
+    // @var array $sizingModeHelps
+    // @var bool $allowConditionalThumbnails
+    // @var array $fileSetOptions [if $allowConditionalThumbnails is true]
+    // @var array $fileSets [if $allowConditionalThumbnails is true]
+    // @var bool $manipulationLibrarySupportsAnimations
     if ($type->getID() !== null && !$type->isRequired()) {
         ?>
         <div class="ccm-dashboard-header-buttons">
@@ -35,29 +35,29 @@ if (isset($type)) {
         <div class="form-group">
             <?= $form->label('ftTypeHandle', t('Handle')) ?>
             <div class="input-group">
-                <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : []) ) ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : [])) ?>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeName', t('Name')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeName', $type->getName(), ['required' => 'required', 'maxlength' => '255']) ?>
-                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeWidth', t('Width')) ?>
             <div class="input-group">
                 <?= $form->number('ftTypeWidth', $type->getWidth() ?: '', ['min' => '1']) ?>
-                <span class="input-group-addon"><?= t('px') ?></span>
+                <span class="input-group-text"><?= t('px') ?></span>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeHeight', t('Height')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeHeight', $type->getHeight() ?: '', ['min' => '1']) ?>
-                <span class="input-group-addon"><?= t('px') ?></span>
+                <span class="input-group-text"><?= t('px') ?></span>
             </div>
         </div>
         <div class="form-group">
@@ -67,19 +67,19 @@ if (isset($type)) {
         </div>
         <div class="form-group">
             <?= $form->label('', t('Options')) ?>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('ftUpscalingEnabled', '1', $type->isUpscalingEnabled()) ?>
+            <div class="form-check">
+                <?= $form->checkbox('ftUpscalingEnabled', '1', $type->isUpscalingEnabled()) ?>
+                <label for="ftUpscalingEnabled" class="form-check-label">
                     <?= t('Allow upscaling images smaller than the thumbnail size') ?>
                 </label>
             </div>
-            <div class="checkbox">
-                <label>
-                    <?= $form->checkbox('ftKeepAnimations', '1', $type->isKeepAnimations()) ?>
+            <div class="form-check">
+                <?= $form->checkbox('ftKeepAnimations', '1', $type->isKeepAnimations()) ?>
+                <label for="ftKeepAnimations" class="form-check-label">
                     <?= t('Create animated thumbnails for animated images') ?>
                     <span class="small text-muted" id="ftKeepAnimations-warning" <?= $type->isKeepAnimations() ? '' : ' style="display: none"' ?>>
                         <br />
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                        <i class="fas fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
                         <?php
                         if ($manipulationLibrarySupportsAnimations) {
                             ?>
@@ -96,7 +96,7 @@ if (isset($type)) {
                                 }
                             }
                             ?>
-                            <?= t('This requires that concrete5 is configured to use the ImageMagick manipulation library.') ?>
+                            <?= t('This requires that Concrete is configured to use the ImageMagick manipulation library.') ?>
                             <br />
                             <?= t(/*i18n: %s is the name of a page*/ 'You can configure it in the %s page.', $optionsPageName) ?>
                             <?php
@@ -146,7 +146,7 @@ if (isset($type)) {
                 <?= $form->label('fileSetOption', t('Conditional Thumbnails')) ?>
                 <?= $form->select('fileSetOption', $fileSetOptions, $fileSetOption, ['required' => 'required']) ?>
             </div>
-            <div class="form-group">
+            <div>
                 <?= $form->label('fileSets', 'File Sets') ?>
                 <div class="ccm-search-field-content">
                     <?= $form->selectMultiple('fileSets', $fileSets, $selectedFileSets, $fileSetAttributes) ?>
@@ -157,15 +157,15 @@ if (isset($type)) {
         ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= $view->action('') ?>" class="btn pull-left btn-default"><?= t('Back') ?></a>
+                <a href="<?= $view->action('') ?>" class="btn float-start btn-secondary"><?= t('Back') ?></a>
                 <?php
                 if ($type->getID() !== null) {
                     ?>
-                    <button type="submit" class="btn btn-primary pull-right"><?= t('Save') ?></button>
+                    <button type="submit" class="btn btn-primary float-end"><?= t('Save') ?></button>
                     <?php
                 } else {
                     ?>
-                    <button type="submit" class="btn btn-primary pull-right"><?= t('Add') ?></button>
+                    <button type="submit" class="btn btn-primary float-end"><?= t('Add') ?></button>
                     <?php
                 }
                 ?>
@@ -189,33 +189,36 @@ if (isset($type)) {
             .trigger('change')
         ;
         <?php
+
         if ($allowConditionalThumbnails) {
             ?>
             var $fileSets = $('#fileSets');
-            $fileSets.selectize({
-                plugins: ['remove_button']
+            $fileSets.selectpicker({
+                width: '100%'
             });
             $('#fileSetOption')
                 .on('change', function() {
                     if ($(this).val() === <?= json_encode($controller::FILESETOPTION_ALL) ?>) {
-                        $fileSets[0].selectize.disable();
+                        $fileSets.prop('disabled', true);
                     } else {
-                        $fileSets[0].selectize.enable();
+                        $fileSets.prop('disabled', false);
                     }
+                    $fileSets.selectpicker('refresh');
                 })
                 .trigger('change')
             ;
             <?php
         }
+
         ?>
     });
     </script>
     <?php
 } else {
-    /* @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type[] $types */
+    // @var Concrete\Core\Entity\File\Image\Thumbnail\Type\Type[] $types
     ?>
     <div class="ccm-dashboard-header-buttons btn-group">
-        <a href="<?= $view->action('options')?>" class="btn btn-default"><?= t('Options') ?></a>
+        <a href="<?= $view->action('options')?>" class="btn btn-secondary"><?= t('Options') ?></a>
         <a href="<?= $view->action('edit', 'new')?>" class="btn btn-primary"><?= t('Add Type') ?></a>
     </div>
     <table class="table">

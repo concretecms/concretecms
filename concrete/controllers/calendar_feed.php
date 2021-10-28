@@ -8,12 +8,13 @@ use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\EventOccurrence;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Calendar\CalendarServiceProvider;
+use Laminas\Feed\Writer\Feed as LaminasFeed;
 
 class CalendarFeed extends Controller
 {
-    public function view($calendar_id)
+    public function view($identifier)
     {
-        $calendar = Calendar::getByID($calendar_id);
+        $calendar = Calendar::getByID($identifier);
         if (is_object($calendar)) {
             $cp = new \Permissions($calendar);
             if ($cp->canAccessCalendarRssFeed()) {
@@ -31,7 +32,7 @@ class CalendarFeed extends Controller
                 $list->filterByStartTimeAfter($time);
                 $list->filterByCalendar($calendar);
 
-                $writer = new \Zend\Feed\Writer\Feed();
+                $writer = new LaminasFeed();
                 $writer->setTitle($calendar->getName());
                 $writer->setLink($calendarLink);
                 $writer->setDescription(t('Calendar Events for Calendar: %s', $calendar->getName()));

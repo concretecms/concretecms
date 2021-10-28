@@ -80,8 +80,8 @@ class ClientFactory
         }
 
         return $this->app->make(Credentials::class, [
-            $this->generateString($keyLength),
-            $this->generateString($secretLength)
+            'key' => $this->generateString($keyLength),
+            'secret' => $this->generateString($secretLength)
         ]);
     }
 

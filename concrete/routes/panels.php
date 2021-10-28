@@ -1,13 +1,24 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
+ */
+
+/*
  * Base path: /ccm/system/panels
  * Namespace: Concrete\Controller\Panel\
  */
+
 $router->all('/add', 'Add::view');
 $router->all('/add/get_stack_contents', 'Add::getStackContents');
+$router->all('/add/get_stack_folder_contents', 'Add::getStackFolderContents');
+$router->all('/add/remove_orphaned_blocks', 'Add::removeOrphanedBlocks');
+$router->all('/add/remove_orphaned_block', 'Add::removeOrphanedBlock');
+$router->all('/add/get_orphaned_block_contents', 'Add::getOrphanedBlockContents');
+$router->all('/add/get_clipboard_contents', 'Add::getClipboardContents');
 $router->all('/dashboard', 'Dashboard::view');
 $router->all('/dashboard/add_favorite', 'Dashboard::addFavorite');
 $router->all('/dashboard/remove_favorite', 'Dashboard::removeFavorite');
@@ -17,12 +28,6 @@ $router->all('/page/attributes', 'Page\Attributes::view');
 $router->all('/page/check_in', 'Page\CheckIn::__construct');
 $router->all('/page/check_in/submit', 'Page\CheckIn::submit');
 $router->all('/page/design', 'Page\Design::view');
-$router->all('/page/design/customize/reset_page_customizations', 'Page\Design\Customize::reset_page_customizations');
-$router->all('/page/design/customize/apply_to_page/{pThemeID}', 'Page\Design\Customize::apply_to_page');
-$router->all('/page/design/customize/apply_to_site/{pThemeID}', 'Page\Design\Customize::apply_to_site');
-$router->all('/page/design/customize/preview/{pThemeID}', 'Page\Design\Customize::preview');
-$router->all('/page/design/customize/reset_site_customizations/{pThemeID}', 'Page\Design\Customize::reset_site_customizations');
-$router->all('/page/design/customize/{pThemeID}', 'Page\Design\Customize::view');
 $router->all('/page/design/preview_contents', 'Page\Design::preview_contents');
 $router->all('/page/design/submit', 'Page\Design::submit');
 $router->all('/page/preview_as_user', 'Page\PreviewAsUser::view');
@@ -37,4 +42,12 @@ $router->all('/page/versions/approve', 'Page\Versions::approve');
 $router->all('/page/versions/unapprove', 'Page\Versions::unapprove');
 $router->all('/page/devices', 'Page\Devices::view');
 $router->all('/page/devices/preview', 'Page\Devices::preview');
-$router->get('/sitemap', 'Sitemap::view');
+$router->all('/theme/customize/theme/{pThemeID}/{previewPageID}', 'Theme\Customize::view');
+$router->all('/theme/customize/preset/{pThemeID}/{presetIdentifier}/{previewPageID}', 'Theme\CustomizePreset::view');
+$router->all('/theme/customize/skin/{pThemeID}/{skinIdentifier}/{previewPageID}', 'Theme\CustomizePreset::viewSkin');
+$router->post('/theme/customize/create_skin/{pThemeID}/{presetIdentifier}', 'Theme\CustomizePreset::createSkin');
+$router->post('/theme/customize/save_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizePreset::save');
+$router->post('/theme/customize/delete_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizePreset::delete');
+$router->post('/theme/customize/save_styles/{previewPageID}/{pThemeID}/{presetIdentifier}', 'Theme\CustomizePreset::saveStyles');
+$router->all('/sitemap', 'Sitemap::view');
+$router->all('/help', 'Help::view');

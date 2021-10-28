@@ -8,9 +8,7 @@ use Concrete\Core\User\Event\DeactivateUser;
 use Concrete\Core\User\Notification\UserNotificationEventHandler;
 use Concrete\Core\User\Password\PasswordChangeEventHandler;
 use Concrete\Core\User\Password\PasswordUsageTracker;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\User\LogSubscriber as UserLogSubscriber;
 use Concrete\Core\User\Group\LogSubscriber as GroupLogSubscriber;
 
@@ -34,7 +32,7 @@ class UserServiceProvider extends ServiceProvider
             });
         }
 
-
+        $this->app->singleton(User::class);
     }
 
     /**
@@ -68,7 +66,7 @@ class UserServiceProvider extends ServiceProvider
         });
     }
 
-    protected function bindEvents(EventDispatcherInterface $dispatcher, $subscribers)
+    protected function bindEvents(EventDispatcher $dispatcher, $subscribers)
     {
 
         $dispatcher->addListener('on_after_user_deactivate', function ($e) {
@@ -88,12 +86,12 @@ class UserServiceProvider extends ServiceProvider
     /**
      * Handle routing bound events
      *
-     * @param \Symfony\Component\EventDispatcher\Event $event
+     * @param object $event
      * @param \Concrete\Core\User\Notification\UserNotificationEventHandler $service
      *
      * @internal
      */
-    public function handleEvent(Event $event, UserNotificationEventHandler $service)
+    public function handleEvent($event, UserNotificationEventHandler $service)
     {
         // If our event is the wrong type, just do a null/void return
         if (!$event instanceof DeactivateUser) {

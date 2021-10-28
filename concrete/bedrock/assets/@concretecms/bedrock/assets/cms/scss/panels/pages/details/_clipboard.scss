@@ -1,0 +1,50 @@
+.ccm-panel-add-clipboard-block-item,
+.ccm-panel-add-orphaned-block-item {
+  border-bottom: 1px solid $gray-200;
+  margin: 5px 0;
+  padding-bottom: 5px;
+
+  &:first-of-type {
+    border-top: 1px solid $gray-200;
+    padding-top: 5px;
+  }
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+
+  .block-content {
+    .block {
+      clear: both;
+    }
+
+    .block-name {
+      span.handle {
+        font-size: 0.875rem;
+      }
+    }
+
+    .ccm-panel-add-block-draggable-block-type {
+      background-color: white;
+      border: 1px solid $gray-200;
+      cursor: grab;
+      margin: 5px 30px;
+      max-height: 120px;
+      min-height: 120px;
+      overflow: hidden;
+
+      .block-content-inner {
+        margin-right: -280px;
+        transform: scale(0.45);
+        transform-origin: top left;
+      }
+    }
+  }
+}
+
+.ccm-delete-clipboard-item,
+.ccm-delete-orphaned-block-item {
+  &:hover {
+    text-decoration: none !important;
+  }
+}

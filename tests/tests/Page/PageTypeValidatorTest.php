@@ -4,9 +4,9 @@ namespace Concrete\Tests\Page;
 
 use Concrete\TestHelpers\Page\SomethingCoolPageTypeValidator;
 use Core;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class PageTypeValidatorTest extends PHPUnit_Framework_TestCase
+class PageTypeValidatorTest extends TestCase
 {
     public function testPageTypeValidatorManagerLoading()
     {

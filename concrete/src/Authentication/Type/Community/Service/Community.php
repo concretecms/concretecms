@@ -62,7 +62,7 @@ class Community extends AbstractService
      */
     public function getAuthorizationEndpoint()
     {
-        return new Uri(\Config::get('concrete.urls.concrete5_secure') . '/api/v1/-/authorize');
+        return new Uri(\Config::get('concrete.urls.concrete_secure') . '/api/v1/-/authorize');
     }
 
     /**
@@ -72,7 +72,7 @@ class Community extends AbstractService
      */
     public function getAccessTokenEndpoint()
     {
-        return new Uri(\Config::get('concrete.urls.concrete5_secure') . '/api/v1/-/token');
+        return new Uri(\Config::get('concrete.urls.concrete_secure') . '/api/v1/-/token');
     }
 
     protected function getAuthorizationMethod()

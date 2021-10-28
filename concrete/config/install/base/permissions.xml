@@ -16,11 +16,11 @@
         <category handle="admin" package=""/>
         <category handle="notification" package=""/>
         <category handle="sitemap" package=""/>
-        <category handle="marketplace_newsflow" package=""/>
+        <category handle="marketplace" package=""/>
         <category handle="basic_workflow" package=""/>
         <category handle="page_type" package=""/>
-        <category handle="gathering" package=""/>
         <category handle="group_tree_node" package=""/>
+        <category handle="group_folder" package="" />
         <category handle="express_tree_node" package=""/>
         <category handle="category_tree_node" package=""/>
         <category handle="topic_tree_node" package=""/>
@@ -30,6 +30,9 @@
         <category handle="calendar_admin" package=""/>
         <category handle="calendar" package=""/>
         <category handle="express_entry" package=""/>
+        <category handle="board_admin" package=""/>
+        <category handle="board" package=""/>
+        <category handle="logs" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -93,7 +96,7 @@
         <permissionkey handle="edit_file_folder_file_contents" name="Edit File Contents" description="Can edit or replace files in folder." package="" category="file_folder"/>
         <permissionkey handle="copy_file_folder_files" name="Copy File" description="Can copy files in file folder." package="" category="file_folder"/>
         <permissionkey handle="edit_file_folder_permissions" name="Edit File Access" description="Can edit access to file folder." package="" category="file_folder"/>
-        <permissionkey handle="delete_file_folder" name="Delete File Set" description="Can delete file folder." package="" category="file_folder"/>
+        <permissionkey handle="delete_file_folder" name="Delete File Folder" description="Can delete file folder." package="" category="file_folder"/>
         <permissionkey handle="delete_file_folder_files" name="Delete File" description="Can delete files in folder." package="" category="file_folder"/>
         <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="Can add files to folder." package="" category="file_folder"/>
 
@@ -134,6 +137,23 @@
         <permissionkey handle="flag_conversation_message" name="Flag Message" description="" package="" category="conversation" />
         <permissionkey handle="approve_conversation_message" name="Approve Message" description="" package="" category="conversation" />
 
+        <!-- logs //-->
+        <permissionkey handle="view_log_entries" name="View Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_log_entries" name="Delete Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="export_log_entries" name="Export Log Entries" description="" package="" category="logs">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+
         <!-- users //-->
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
             <access>
@@ -156,7 +176,7 @@
         <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
 
-        <permissionkey handle="upgrade" name="Upgrade concrete5" package="" category="admin">
+        <permissionkey handle="upgrade" name="Upgrade Concrete" package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>
             </access>
@@ -218,16 +238,100 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="view_calendar" name="View Calendar" description="" package="" category="calendar"/>
-        <permissionkey handle="view_calendar_in_edit_interface" name="View in Edit Interface" description="" package="" category="calendar"/>
-        <permissionkey handle="edit_calendar_permissions" name="Edit Permissions" description="" package="" category="calendar"/>
-        <permissionkey handle="edit_calendar" name="Edit Calendar" description="" package="" category="calendar"/>
-        <permissionkey handle="add_calendar_event" name="Add Calendar Event" description="" package="" category="calendar"/>
-        <permissionkey handle="approve_calendar_event" name="Approve Calendar Event" can-trigger-workflow="true" description="" package="" category="calendar"/>
-        <permissionkey handle="edit_calendar_event_more_details_location" name="Modify More Details Location" description="" package="" category="calendar"/>
-        <permissionkey handle="edit_calendar_events" name="Edit Calendar Events" description="" package="" category="calendar"/>
-        <permissionkey handle="access_calendar_rss_feed" name="Access RSS Feed" description="" package="" category="calendar"/>
-        <permissionkey handle="delete_calendar" name="Delete Calendar" description="" package="" category="calendar"/>
+        <permissionkey handle="view_calendar" name="View Calendar" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="view_calendar_in_edit_interface" name="View in Edit Interface" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendar_permissions" name="Edit Permissions" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendar" name="Edit Calendar" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="add_calendar_event" name="Add Calendar Event" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="approve_calendar_event" name="Approve Calendar Event" can-trigger-workflow="true" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendar_event_more_details_location" name="Modify More Details Location" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_calendar_events" name="Edit Calendar Events" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="access_calendar_rss_feed" name="Access RSS Feed" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_calendar" name="Delete Calendar" description="" package="" category="calendar">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <!-- boards //-->
+        <permissionkey handle="add_board" name="Add Board" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="view_boards" name="View Boards" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Guest"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_settings" name="Edit Board Settings" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_contents" name="Edit Board Content" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_permissions" name="Edit Permissions" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_boards_locked_rules" name="Edit Locked Rules" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="delete_boards" name="Delete Boards" description="" package="" category="board_admin">
+            <access>
+                <entity type="group" name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="view_board" name="View Board" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_settings" name="Edit Settings" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_permissions" name="Edit Permissions" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_contents" name="Edit Contents" description="" package="" category="board"/>
+        <permissionkey handle="edit_board_locked_rules" name="Edit Locked Rules" description="" package="" category="board"/>
+        <permissionkey handle="delete_board" name="Delete Board" description="" package="" category="board"/>
 
         <!-- express //-->
 
@@ -247,6 +351,14 @@
         <permissionkey handle="delete_express_entry" name="Delete Entry" package="" category="express_entry">
         </permissionkey>
 
+        <!-- group folders //-->
+        <permissionkey handle="search_group_folder" name="Search Group Folder" description="See this group folder in the group search." package="" category="group_folder"/>
+        <permissionkey handle="edit_group_folder" name="Edit Group Folder" description="Edit a group folder." package="" category="group_folder"/>
+        <permissionkey handle="edit_group_folder_permissions" name="Edit Group Access" description="Can edit access to group folder." package="" category="group_folder"/>
+        <permissionkey handle="delete_group_folder" name="Delete Group Folder" description="Can delete group folder." package="" category="group_folder"/>
+        <permissionkey handle="add_group_folder" name="Add Group Folder" description="Can add folders." package="" category="group_folder"/>
+        <permissionkey handle="add_group" name="Add Group" description="Can add groups to folder." package="" category="group_folder"/>
+        <permissionkey handle="assign_groups" name="Assign Groups" description="Can assign the groups within this folder." package="" category="group_folder"/>
 
         <!-- groups //-->
 
@@ -318,25 +430,19 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="view_in_maintenance_mode" name="View Site in Maintenance Mode" description="Ability to see and use the website when concrete5 is in maintenance mode." package="" category="admin">
+        <permissionkey handle="view_in_maintenance_mode" name="View Site in Maintenance Mode" description="Ability to see and use the website when Concrete is in maintenance mode." package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
-        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
+        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace">
             <access>
                 <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
-        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace_newsflow">
-            <access>
-                <group name="Administrators" description=""/>
-            </access>
-        </permissionkey>
-
-        <permissionkey handle="view_newsflow" name="View Newsflow" package="" category="marketplace_newsflow">
+        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace">
             <access>
                 <group name="Administrators" description=""/>
             </access>
@@ -353,6 +459,10 @@
                 <group name="Administrators" description=""/>
             </access>
         </permissionkey>
+
+        <permissionkey handle="access_api" name="Access API" package="" category="admin">
+        </permissionkey>
+
 
         <permissionkey handle="edit_topic_tree" name="Edit Topic Tree" package="" category="admin">
             <access>
@@ -384,13 +494,13 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="group_tree_node" />
+                <category handle="group_folder" />
                 <category handle="category_tree_node" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
@@ -398,6 +508,8 @@
                 <category handle="multilingual_section" />
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
+                <category handle="board_admin" />
+                <category handle="board" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -412,20 +524,22 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="category_tree_node" />
+                <category handle="group_folder" />
                 <category handle="topic_tree_node" />
                 <category handle="conversation" />
                 <category handle="conversation_message" />
                 <category handle="multilingual_section" />
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
+                <category handle="board_admin" />
+                <category handle="board" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -440,11 +554,11 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
+                <category handle="group_folder" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="category_tree_node" />
@@ -453,6 +567,8 @@
                 <category handle="conversation_message" />
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
+                <category handle="board_admin" />
+                <category handle="board" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
@@ -467,11 +583,11 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
+                <category handle="group_folder" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="category_tree_node" />
@@ -481,6 +597,8 @@
                 <category handle="multilingual_section" />
                 <category handle="calendar_admin" />
                 <category handle="calendar" />
+                <category handle="board_admin" />
+                <category handle="board" />
 			</categories>
 
         </permissionaccessentitytype>

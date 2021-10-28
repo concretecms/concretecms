@@ -2,9 +2,9 @@
 
 namespace Concrete\Tests\Validator\String;
 
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class MaximumLengthValidatorTest extends PHPUnit_Framework_TestCase
+class MaximumLengthValidatorTest extends TestCase
 {
     public function testIsValid()
     {
@@ -29,9 +29,8 @@ class MaximumLengthValidatorTest extends PHPUnit_Framework_TestCase
 
     public function testInvalidInput()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $validator = new \Concrete\Core\Validator\String\MaximumLengthValidator(5);
-
-        $this->setExpectedException('InvalidArgumentException');
         $validator->isValid($validator);
     }
 }

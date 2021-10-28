@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Entity\Attribute\Type;
 use Concrete\Core\Entity\Package;
+use Concrete\Core\User\UserInfo;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserCategory extends AbstractStandardCategory
@@ -191,12 +192,15 @@ class UserCategory extends AbstractStandardCategory
      *
      * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeValues()
      *
-     * @param \Concrete\Core\Entity\User\User $user
+     * @param \Concrete\Core\Entity\User\User|UserInfo $user
      *
      * @return \Concrete\Core\Entity\Attribute\Value\UserValue[]
      */
     public function getAttributeValues($user)
     {
+        if ($user instanceof UserInfo) {
+            $user = $user->getEntityObject();
+        }
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
         $values = $r->findBy([
             'user' => $user,
@@ -211,12 +215,15 @@ class UserCategory extends AbstractStandardCategory
      * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeValue()
      *
      * @param \Concrete\Core\Entity\Attribute\Key\UserKey $key
-     * @param \Concrete\Core\Entity\User\User $user
+     * @param \Concrete\Core\Entity\User\User|UserInfo $user
      *
      * @return \Concrete\Core\Entity\Attribute\Value\UserValue|null
      */
     public function getAttributeValue(Key $key, $user)
     {
+        if ($user instanceof UserInfo) {
+            $user = $user->getEntityObject();
+        }
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
         $value = $r->findOneBy([
             'user' => $user,

@@ -4,16 +4,16 @@ namespace Concrete\Tests\File\Service;
 
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\Support\Facade\Application;
-use PHPUnit_Framework_TestCase;
+use Concrete\Tests\TestCase;
 
-class VolatileDirectoryTest extends PHPUnit_Framework_TestCase
+class VolatileDirectoryTest extends TestCase
 {
     /**
      * @var \Concrete\Core\Application\Application
      */
     private static $app;
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         self::$app = Application::getFacadeApplication();
     }

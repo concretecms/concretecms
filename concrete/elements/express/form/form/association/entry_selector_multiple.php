@@ -1,6 +1,5 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php
-\View::getInstance()->requireAsset('selectize');
 $options = [];
 $selectedIDs = [];
 if (isset($selectedEntities)) {
@@ -13,17 +12,17 @@ if (isset($selectedEntities)) {
     }
 }
 ?>
-<div class="form-group">
+<div class="mb-3">
     <?php if ($view->supportsLabel()) {
     ?>
-        <label class="control-label" for="<?=$view->getControlID(); ?>"><?=$label; ?></label>
+        <label class="form-label" for="<?=$view->getControlID(); ?>"><?=$label; ?></label>
     <?php
 } ?>
     <?php if ($view->isRequired()) { ?>
         <span class="text-muted small"><?=t('Required')?></span>
     <?php } ?>
 
-    <input type="hidden" data-select-and-add="<?= $control->getId(); ?>" style="width: 100%" name="express_association_<?= $control->getId(); ?>" value="" />
+    <input data-select-and-add="<?= $control->getId(); ?>" style="width: 100%;display: none" name="express_association_<?= $control->getId(); ?>" value="" />
 </div>
 
 <script type="text/javascript">
