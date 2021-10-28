@@ -42,7 +42,7 @@ $dh = $app->make(Date::class);
 
         <div class="form-group">
             <?php echo $form->label('file_set_name', t('Name')) ?>
-            <?php echo $form->text('file_set_name', $fs->fsName, ['class' => 'span5']); ?>
+            <?php echo $form->text('file_set_name', $fs->fsName); ?>
         </div>
 
         <?php echo $form->hidden('fsID', $fs->getFileSetID()); ?>
@@ -290,7 +290,7 @@ $dh = $app->make(Date::class);
             <div class="col-auto">
                 <?php echo $form->search('fsKeywords', [
                     'placeholder' => t('Search'),
-                    'class' => 'form-control-sm',
+                    'class' => 'form-control form-control-sm',
                     'autocomplete' => 'off']);
                 ?>
             </div>
@@ -304,7 +304,7 @@ $dh = $app->make(Date::class);
                     ],
                     $fsType == Set::TYPE_PRIVATE ? $fsType : Set::TYPE_PUBLIC,
                     [
-                        "class" => "ms-2 form-select-sm"
+                        "class" => "ms-2 form-control form-select-sm"
                     ]
                 ); ?>
             </div>

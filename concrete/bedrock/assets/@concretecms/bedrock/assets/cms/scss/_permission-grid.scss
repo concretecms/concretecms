@@ -1,7 +1,3 @@
-table.ccm-permission-grid {
-  border: 0;
-}
-
 table.ccm-permission-grid td.ccm-permission-grid-name {
   text-align: right;
   white-space: nowrap;
@@ -9,8 +5,7 @@ table.ccm-permission-grid td.ccm-permission-grid-name {
 }
 
 table.ccm-permission-grid td {
-  border-left: 0 !important;
-  border-right: 0 !important;
+  vertical-align: middle;
   width: 100%;
 }
 
