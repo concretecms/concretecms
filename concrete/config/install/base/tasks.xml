@@ -12,6 +12,7 @@
         <task handle="update_statistics" package=""/>
         <task handle="generate_thumbnails" package=""/>
         <task handle="remove_old_file_attachments" package=""/>
+        <task handle="remove_unvalidated_users" package=""/>
     </tasks>
     <tasksets>
         <taskset handle="maintenance" name="Maintenance" package="">
@@ -30,6 +31,7 @@
             <task handle="check_automated_groups"/>
             <task handle="deactivate_users"/>
             <task handle="process_email"/>
+            <task handle="remove_unvalidated_users"/>
         </taskset>
     </tasksets>
 

@@ -9,6 +9,7 @@ use Concrete\Core\Command\Task\Controller\GenerateSitemapController;
 use Concrete\Core\Command\Task\Controller\GenerateThumbnailsController;
 use Concrete\Core\Command\Task\Controller\ProcessEmailController;
 use Concrete\Core\Command\Task\Controller\ReindexContentController;
+use Concrete\Core\Command\Task\Controller\RemoveUnvalidatedUsersController;
 use Concrete\Core\Command\Task\Controller\RemoveOldFileAttachmentsController;
 use Concrete\Core\Command\Task\Controller\RemoveOldPageVersionsController;
 use Concrete\Core\Command\Task\Controller\RescanFilesController;
@@ -72,6 +73,11 @@ class Manager extends CoreManager
     public function createRemoveOldFileAttachmentsDriver()
     {
         return $this->container->make(RemoveOldFileAttachmentsController::class);
+    }
+
+    public function createRemoveUnvalidatedUsersDriver()
+    {
+        return $this->container->make(RemoveUnvalidatedUsersController::class);
     }
 
     public function __construct(Application $app)
