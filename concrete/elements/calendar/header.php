@@ -124,9 +124,15 @@ if (!isset($month)) {
         width: 100%;
     }
 
-    table.ccm-dashboard-calendar > thead > tr > td,
-    table.ccm-dashboard-calendar {
-        border-width: 0px !important;
+    table.ccm-dashboard-calendar > thead > tr  {
+        border-width: 0 0 0 0 !important;
+    }
+    table.ccm-dashboard-calendar > thead > tr > td {
+        border-width: 0 0 0 0 !important;
+    }
+
+    table.ccm-dashboard-calendar > thead > tr > td h4 {
+        text-align: center;
     }
 
     table.ccm-dashboard-calendar td {
