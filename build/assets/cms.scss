@@ -1,9 +1,16 @@
+// Bootstrap Core First
 @import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins';
 
+// Concrete Variables
 @import "@concretecms/bedrock/assets/cms/scss/variables";
 @import "@fortawesome/fontawesome-free/scss/variables";
+
+// Bootstrap Variables. Unless this is AFTER Concrete variables we override any Bootstrap defaults.
+// Attention future self: Do NOT try and move this to before our own custom bedrock CMS variables above.
+// You will want to, because it will be cleaner and it will let you use Bootstrap variables within our own variables.
+// But stay strong – without this being broken out AFTER our own variables we can't customizable Bootstrap colors, etc...
+@import 'bootstrap/scss/variables';
 
 // Import the subset of Bootstrap that is required in the CMS entry point.
 // Make sure to namespace it to .ccm-ui
