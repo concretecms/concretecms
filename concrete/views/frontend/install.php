@@ -409,7 +409,7 @@ if ($install_config) {
                                 <div class="form-check">
 
                                         <?= $form->radio('SAMPLE_CONTENT', $pkgHandle,
-                                            ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1)) ?>
+                                            ($pkgHandle == 'atomik_full' || count($availableSampleContent) == 1)) ?>
                                     <?=$form->label('SAMPLE_CONTENT' . $i,"<strong>".$spl->getPackageName()."</strong><br/>". $spl->getPackageDescription()) ?>
 
                                 </div>

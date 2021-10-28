@@ -15,7 +15,7 @@ $externalLink = $externalLink ?? '';
     <div class="form-group ccm-block-select-icon">
         <?php echo $form->label('icon', t('Icon'))?>
         <div id="ccm-icon-selector-<?= h($bID) ?>">
-            <icon-selector name="icon" selected="<?= h($icon) ?>" title="<? t('Choose Icon') ?>" />
+            <icon-selector name="icon" selected="<?= h($icon) ?>" title="<?= t('Choose Icon') ?>" />
         </div>
     </div>
 

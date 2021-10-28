@@ -16,7 +16,7 @@ class Controller extends StartingPointPackage
 
     public function getPackageName()
     {
-        return t('Atomik Theme');
+        return t('Full Site (Atomik)');
     }
 
     public function getPackageDescription()
