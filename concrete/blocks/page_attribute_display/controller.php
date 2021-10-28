@@ -116,9 +116,9 @@ class Controller extends BlockController implements UsesFeatureInterface
                                 $this->thumbnailWidth,
                                 $this->thumbnailHeight
                             ); //<-- set these 2 numbers to max width and height of thumbnails
-                            $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
+                            $content = "<img class=\"img-fluid\" src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
                         } else {
-                            $image = Core::make('html/image', [$content]);
+                            $image = Core::make('html/image', ['f' => $content]);
                             $content = (string) $image->getTag();
                         }
                     } elseif (is_object($content_alt)) {
@@ -286,7 +286,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->render('templates/' . $templateHandle);
         } else {
             // check if there is a template that matches the selected attribute
-            $template = \Core::make(BlockViewTemplate::class, [$this->getBlockObject()]);
+            $template = \Core::make(BlockViewTemplate::class, ['obj' => $this->getBlockObject()]);
             $template->setBlockCustomTemplate("templates/" . $this->attributeHandle . '.php');
             $info = pathinfo($template->getTemplate());
 

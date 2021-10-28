@@ -1,0 +1,28 @@
+/* stylelint-disable selector-class-pattern */
+.theme-atomik {
+  .ccm-page-user-directory {
+
+    a.card {
+      transition: background-color 0.1s linear;
+
+      &:hover {
+        background-color: rgba($blue-100, 0.5);
+      }
+    }
+
+    .ccm-profile-header {
+      background-color: rgba($primary, 0.1);
+    }
+
+    .ccm-profile-username {
+      h1 {
+        @include heading-display(1);
+        margin-bottom: 0;
+      }
+    }
+
+    .ccm-profile-statistics {
+      color: $dark;
+    }
+  }
+}

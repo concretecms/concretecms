@@ -37,12 +37,21 @@ class Controller extends AbstractController implements ControllerInterface
     {
         $a = new Link();
         $a->setValue('');
-        if ($this->menuItem->getIcon()) {
+        $icon_str = $this->menuItem->getIcon();
+        if ($icon_str) {
             $icon = new Element('i');
-            $icon->addClass('fa fa-' . $this->menuItem->getIcon());
+            /*
+             * Allows menu items to set icons with full FA spec such as fas,far...fab
+             * Defaults to prior behaviour of prefixing if full FA spec is not specified
+             */
+            if(preg_match("/\b(fa|fas|far|fal|fad|fab)\b/",$icon_str)){
+                $icon->addClass($icon_str);
+            } else {
+                $icon->addClass('fa fa-' . $icon_str);
+            }
             $a->appendChild($icon);
         }
-
+        
         if ($this->menuItem->getLink()) {
             $a->href($this->menuItem->getLink());
         }

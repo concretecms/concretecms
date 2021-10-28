@@ -20,7 +20,7 @@ class OfflineInspectorTest extends TestCase
      */
     private static $inspector;
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         self::$app = Application::getFacadeApplication();
         self::$inspector = self::$app->build(Inspector::class);

@@ -8,7 +8,7 @@
 </div>
 <div class="form-group">
     <a href="<?= \URL::to('/ccm/system/authentication/oauth2/facebook/attempt_attach'); ?>" class="btn btn-primary btn-facebook">
-        <i class="fa fa-facebook"></i>
+        <i class="fab fa-facebook"></i>
         <?= t('Attach a %s account', t('facebook')) ?>
     </a>
 </div>

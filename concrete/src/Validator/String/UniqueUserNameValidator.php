@@ -114,7 +114,7 @@ class UniqueUserNameValidator extends AbstractTranslatableValidator implements V
             $qb->andWhere($qb->expr()->neq('u.uID', $qb->createNamedParameter($uID)));
         }
 
-        if ($qb->execute()->fetchColumn() !== false) {
+        if ($qb->execute()->fetchOne() !== false) {
             if ($error) {
                 $message = $this->getErrorString($uID === 0 ? self::E_USERNAME_IN_USE : self::E_USERNAME_USED_BY_ANOTHER_USER, $mixed);
                 if ($message) {

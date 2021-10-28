@@ -7,11 +7,13 @@ use Concrete\Core\Site\InstallationService;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Data\Extractor\Driver\Traits\GetThumbnailTrait;
+use Concrete\Core\Summary\Data\Field\AuthorDataFieldData;
 use Concrete\Core\Summary\Data\Field\DataField;
 use Concrete\Core\Summary\Data\Field\DatetimeDataFieldData;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
 use Concrete\Core\Summary\Data\Field\LazyPageLinkDataFieldData;
 use Concrete\Core\Summary\Data\Field\LinkDataFieldData;
+use Concrete\Core\User\UserInfoRepository;
 
 class BasicPageDriver implements DriverInterface
 {
@@ -21,9 +23,15 @@ class BasicPageDriver implements DriverInterface
      */
     protected $installationService;
 
-    public function __construct(InstallationService $installationService)
+    /**
+     * @var UserInfoRepository
+     */
+    protected $userInfoRepository;
+
+    public function __construct(InstallationService $installationService, UserInfoRepository $userInfoRepository)
     {
         $this->installationService = $installationService;
+        $this->userInfoRepository = $userInfoRepository;
     }
 
     use GetThumbnailTrait;
@@ -71,6 +79,11 @@ class BasicPageDriver implements DriverInterface
         if ($thumbnail) {
             $collection->addField($thumbnail);
         }
+        $author = $this->userInfoRepository->getByID($mixed->getCollectionUserID());
+        if ($author) {
+            $collection->addField(new DataField(FieldInterface::FIELD_AUTHOR, new AuthorDataFieldData($author)));
+        }
+
         return $collection;
     }
 

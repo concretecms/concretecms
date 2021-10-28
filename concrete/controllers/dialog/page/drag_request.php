@@ -3,12 +3,9 @@
 namespace Concrete\Controller\Dialog\Page;
 
 use Concrete\Controller\Backend\UserInterface as UserInterfaceController;
-use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Command\CopyPageCommand;
@@ -86,17 +83,17 @@ class DragRequest extends UserInterfaceController
         if ($error !== '') {
             throw new UserMessageException($error);
         }
-        $q = $this->app->make(QueueService::class)->get('copy_page');
-        foreach ($dragRequestData->getOriginalPages as $oc) {
+        foreach ($dragRequestData->getOriginalPages() as $oc) {
             $pages = [];
             $pages = $oc->populateRecursivePages($pages, ['cID' => $oc->getCollectionID()], $oc->getCollectionParentID(), 0, !$dragRequestData->isCopyChildrenOnly());
             usort($pages, ['\Concrete\Core\Page\Page', 'queueForDuplicationSort']);
-            foreach ($pages as $page) {
-                $command = new CopyPageCommand($page['cID'], $dragRequestData->getDestinationPage(), $isMultilingual);
-                $this->queueCommand($command);
-            }
+            $batch = Batch::create(t('Copy Pages'), function() use ($pages, $dragRequestData, $isMultilingual) {
+                foreach ($pages as $page) {
+                    yield new CopyPageCommand($page['cID'], $dragRequestData->getDestinationPage()->getCollectionID(), $isMultilingual);
+                }
+            });
+            return $this->dispatchBatch($batch);
         }
-        return new EnqueueItemsResponse($q);
     }
 
     /**

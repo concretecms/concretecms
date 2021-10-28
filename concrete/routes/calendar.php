@@ -16,7 +16,6 @@ $router->all('/ccm/calendar/dialogs/event/edit', '\Concrete\Controller\Dialog\Ev
 $router->all('/ccm/calendar/dialogs/event/add', '\Concrete\Controller\Dialog\Event\Edit::add');
 $router->all('/ccm/calendar/dialogs/event/add/save', '\Concrete\Controller\Dialog\Event\Edit::addEvent');
 $router->all('/ccm/calendar/dialogs/event/edit/save', '\Concrete\Controller\Dialog\Event\Edit::updateEvent');
-$router->all('/ccm/calendar/dialogs/event/export', '\Concrete\Controller\Dialog\Event\Export::export');
 $router->all('/ccm/calendar/dialogs/event/duplicate', '\Concrete\Controller\Dialog\Event\Duplicate::view');
 $router->all('/ccm/calendar/dialogs/event/duplicate/submit', '\Concrete\Controller\Dialog\Event\Duplicate::submit');
 $router->all('/ccm/calendar/dialogs/event/delete', '\Concrete\Controller\Dialog\Event\Delete::view');
@@ -36,6 +35,7 @@ $router->all('/ccm/calendar/dialogs/event/occurrence', '\Concrete\Controller\Dia
 $router->all('/ccm/calendar/dialogs/choose_event', '\Concrete\Controller\Dialog\ChooseEvent::view');
 $router->all('/ccm/calendar/dialogs/choose_event/get_events', '\Concrete\Controller\Dialog\ChooseEvent::getEvents');
 $router->all('/ccm/calendar/event/get_json', '\Concrete\Controller\Event\Event::getJSON');
+$router->all('/ccm/calendar/event/export', '\Concrete\Controller\Event\Export::export');
 $router->post('/ccm/calendar/event_occurrence/get_json', '\Concrete\Controller\Event\Event::getOccurrence');
 $router->all('/ccm/calendar/dialogs/permissions/{pkCategoryHandle}', '\Concrete\Controller\Dialog\Calendar\Permissions::view');
 

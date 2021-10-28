@@ -25,7 +25,7 @@ class DependencyCheckerTest extends TestCase
      */
     private static $checker;
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         self::$app = Application::getFacadeApplication();
         self::$checker = self::$app->build(DependencyChecker::class);

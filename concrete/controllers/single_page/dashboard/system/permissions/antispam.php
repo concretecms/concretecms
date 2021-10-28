@@ -32,7 +32,7 @@ class Antispam extends DashboardPageController
         }
         $this->groups = $groups;
         $this->set('groups', $groups);
-        $this->set('whitelistGroup', Config::get('concrete.spam.whitelist_group'));
+        $this->set('allowlistGroup', Config::get('concrete.spam.allowist_group', Config::get('concrete.spam.whitelist_group')));
     }
 
     public function saved()
@@ -49,7 +49,7 @@ class Antispam extends DashboardPageController
 
             return;
         }
-        Config::save('concrete.spam.whitelist_group', $_POST['group_id']);
+        Config::save('concrete.spam.allowlist_group', $_POST['group_id']);
     }
 
     public function update_library()

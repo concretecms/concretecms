@@ -14,7 +14,8 @@ class GenerateIDESymbolsCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:ide-symbols')
             ->setDescription('Generate IDE symbols')
@@ -23,7 +24,7 @@ class GenerateIDESymbolsCommand extends Command
             ->addArgument('generate-what', InputArgument::IS_ARRAY, 'Elements to generate [all|ide-classes|phpstorm]', ['all'])
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-ide-symbols
@@ -34,7 +35,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rc = 0;
+        $rc = static::SUCCESS;
         $what = $input->getArgument('generate-what');
         $p = array_search('ide-classes', $what);
         if ($p !== false || in_array('all', $what)) {
@@ -43,8 +44,8 @@ EOT
             }
             $output->write('Generating fake PHP classes to help IDE... ');
             if (!Core::make('app')->isInstalled()) {
-                $output->writeln('<error>failed: concrete5 is not installed.</error>');
-                $rc = static::RETURN_CODE_ON_FAILURE;
+                $output->writeln('<error>failed: Concrete is not installed.</error>');
+                $rc = static::FAILURE;
             } else {
                 $this->generateIDEClasses();
                 $output->writeln('<info>done.</info>');

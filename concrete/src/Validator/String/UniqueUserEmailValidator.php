@@ -37,11 +37,11 @@ class UniqueUserEmailValidator extends EmailValidator implements ValidatorForSub
      * UniqueUserEmailValidator constructor.
      *
      *
+     * @param \Concrete\Core\Database\Connection\Connection $connection
      * @param bool $testMXRecord Should we test the MX record to see if the domain is valid?
      * @param bool $strict Should email address warnings be considered as errors?
-     * @param \Concrete\Core\Database\Connection\Connection $connection
      */
-    public function __construct($testMXRecord = false, $strict = false, Connection $connection)
+    public function __construct(Connection $connection, $testMXRecord = false, $strict = false)
     {
         parent::__construct($testMXRecord, $strict);
         $this->connection = $connection;

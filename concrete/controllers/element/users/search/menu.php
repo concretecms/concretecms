@@ -13,6 +13,7 @@ class Menu extends ElementController
 {
     protected $query;
     protected $searchProvider;
+    protected $exportURL;
 
     public function __construct(SearchProvider $searchProvider)
     {
@@ -30,6 +31,14 @@ class Menu extends ElementController
         $this->query = $query;
     }
 
+    /**
+     * @param mixed $exportURL
+     */
+    public function setExportURL($exportURL): void
+    {
+        $this->exportURL = $exportURL;
+    }
+
     public function view()
     {
         $itemsPerPage = (isset($this->query)) ? $this->query->getItemsPerPage() : $this->searchProvider->getItemsPerPage();
@@ -38,6 +47,7 @@ class Menu extends ElementController
         $this->set('form', $this->app->make(Form::class));
         $this->set('token', $this->app->make(Token::class));
         $this->set('urlHelper', $this->app->make(Url::class));
+        $this->set('exportURL', $this->exportURL);
     }
 
 }

@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <script type="text/template" class="attribute">
     <div class="form-group <% if (pending) { %>ccm-page-attribute-adding<% } %>" data-attribute-key-id="<%=akID%>">
-        <a href="javascript:void(0)" data-remove-attribute-key="<%=akID%>"><i class="fa fa-minus-circle"></i></a>
+        <a href="javascript:void(0)" data-remove-attribute-key="<%=akID%>"><i class="fas fa-minus-circle"></i></a>
         <label class="col-form-label" for="<%=controlID%>"><%=label%></label>
         <div>
             <%=content%>
@@ -77,9 +77,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         </form>
         <div class="ccm-panel-detail-form-actions dialog-buttons">
-            <button class="float-left btn btn-secondary" type="button" data-dialog-action="cancel"
+            <button class="float-start btn btn-secondary" type="button" data-dialog-action="cancel"
                     data-panel-detail-action="cancel"><?= t('Cancel') ?></button>
-            <button class="float-right btn btn-primary" type="button" data-dialog-action="submit"
+            <button class="float-end btn btn-primary" type="button" data-dialog-action="submit"
                     data-panel-detail-action="submit"><?= t('Save Changes') ?></button>
         </div>
 

@@ -9,13 +9,14 @@ use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 class RefreshEntitiesCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::FAILURE;
+        $errExitCode = static::FAILURE;
 
         $this
             ->setName('c5:entities:refresh')
@@ -25,7 +26,7 @@ class RefreshEntitiesCommand extends Command
             ->setHelp(<<<EOT
 This command will refresh the Doctrine database entities and set the following return codes
 
-  0 operation completed successfully
+  {$okExitCode} operation completed successfully
   {$errExitCode} errors occurred
 EOT
             )
@@ -37,8 +38,8 @@ EOT
         $app = Application::getFacadeApplication();
 
         $pev = new PackageEntities();
-        $app->make(EventDispatcherInterface::class)->dispatch('on_refresh_package_entities', $pev);
-        $entityManagers = array_merge([$app->make(EntityManagerInterface::class)], $pev->getEntityManagers());
+        $app->make(EventDispatcher::class)->dispatch('on_refresh_package_entities', $pev);
+        $entityManagers = array_merge([$app->make(EventDispatcher::class)], $pev->getEntityManagers());
         foreach ($entityManagers as $em) {
             $manager = new DatabaseStructureManager($em);
             $manager->refreshEntities();
@@ -48,6 +49,6 @@ EOT
             $output->writeln('Doctrine cache cleared, proxy classes regenerated, entity database table schema updated.');
         }
 
-        return 0;
+        return static::SUCCESS;
     }
 }

@@ -1,9 +1,8 @@
 <?php
 namespace Concrete\Core\Page;
 
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-class PagePathEvent extends AbstractEvent
+class PagePathEvent
 {
     protected $page;
     protected $path;

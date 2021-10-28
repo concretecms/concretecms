@@ -308,7 +308,7 @@ class Types extends DashboardPageController
         $skeleton = $this->get('skeleton');
 
         if ($skeleton !== null) {
-            $attributesView = $this->elementManager->get('attribute/editable_set_list', [$category, $skeleton]);
+            $attributesView = $this->elementManager->get('attribute/editable_set_list', ['categoryEntity' => $category, 'attributedObject' => $skeleton]);
             /** @var \Concrete\Controller\Element\Attribute\EditableSetList $controller */
             $controller = $attributesView->getElementController();
             $controller->setEditDialogURL(Url::to('/ccm/system/dialogs/site_type/attributes', $type->getSiteTypeID()));
@@ -378,7 +378,7 @@ class Types extends DashboardPageController
             $breadcrumb = $this->app->make(DashboardBreadcrumbFactory::class)->getBreadcrumb($this->getPageObject());
             $breadcrumb->add(new Item('', $type->getSiteTypeName()));
             $this->setBreadcrumb($breadcrumb);
-            $menu = new Element('dashboard/system/multisite/site_type/menu', '', $this->getPageObject(), [$type]);
+            $menu = new Element('dashboard/system/multisite/site_type/menu', '', $this->getPageObject(), ['type' => $type]);
         }
         $this->set('typeMenu', $menu);
     }

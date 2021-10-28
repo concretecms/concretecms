@@ -149,7 +149,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 "select cID from Pages where cParentID = ? order by cDisplayOrder asc",
                 [$c->getCollectionID()]);
         $pages = [];
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $pages[] = Page::getByID($row['cID'], 'ACTIVE');
         }
 
@@ -419,7 +419,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $q = "select Pages.cID from Pages where Pages.cID = '{$cParentID}' and cIsTemplate = 0";
                 $r = $db->query($q);
                 if ($r) {
-                    $row = $r->fetchRow();
+                    $row = $r->fetch();
                     $displayHeadPage = true;
                     if ($this->displayUnapproved) {
                         $tc1 = Page::getByID($row['cID'], "RECENT");
@@ -565,7 +565,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $q = "select Pages.cID from Pages where cIsTemplate = 0 and cIsActive = 1 and cParentID = '{$cParentID}' {$orderBy}";
         $r = $db->query($q);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 if ($this->displaySubPages != 'relevant_breadcrumb' || (in_array(
                             $row['cID'],
                             $this->cParentIDArray) || $row['cID'] == $this->cID)

@@ -14,7 +14,7 @@ class DatabaseServiceProviderTest extends TestCase
 {
     protected $app;
 
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
@@ -39,10 +39,10 @@ class DatabaseServiceProviderTest extends TestCase
     {
         return [
             ['Doctrine\ORM\Configuration', 'Doctrine\ORM\Configuration', 'This is not an instance of Doctrine\ORM\Configuration.'],
-            ['Doctrine\Common\Cache\ArrayCache', 'Doctrine\Common\Cache\ArrayCache', 'This is not an instance of Doctrine\Common\Cache\ArrayCache'],
+            ['Doctrine\Common\Cache\ArrayCache', 'Symfony\Component\Cache\DoctrineProvider', 'This is not an instance of Symfony\Component\Cache\DoctrineProvider'],
             ['Doctrine\Common\Annotations\AnnotationReader', 'Doctrine\Common\Annotations\AnnotationReader', 'This is not an instance of Doctrine\Common\Annotations\AnnotationReader'],
             ['Doctrine\Common\Annotations\SimpleAnnotationReader', 'Doctrine\Common\Annotations\SimpleAnnotationReader', 'This is not an instance of Doctrine\Common\Annotations\SimpleAnnotationReader'],
-            ['Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain', 'Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain', 'This is not an instance of Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain'],
+            ['Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain', 'Doctrine\Persistence\Mapping\Driver\MappingDriverChain', 'This is not an instance of Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain'],
             ['orm/cachedAnnotationReader', 'Doctrine\Common\Annotations\CachedReader', 'This is not an instance of Doctrine\Common\Annotations\CachedReader'],
             ['orm/cachedSimpleAnnotationReader', 'Doctrine\Common\Annotations\CachedReader', 'This is not an instance of Doctrine\Common\Annotations\CachedReader'],
         ];

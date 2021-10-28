@@ -86,7 +86,7 @@ class Category extends TreeNode
             } else {
                 $obj->checkbox = false;
             }
-            $obj->icon = 'fa fa-folder';
+            $obj->icon = 'fas fa-folder';
             $obj->canAddTopicTreeNode = $p->canAddTopicTreeNode();
             $obj->canAddCategoryTreeNode = $p->canAddCategoryTreeNode();
 

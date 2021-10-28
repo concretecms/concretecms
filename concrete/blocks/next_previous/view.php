@@ -6,7 +6,7 @@ if (!$previousLinkURL && !$nextLinkURL && !$parentLabel) {
 }
 ?>
 
-<div class="ccm-block-next-previous-wrapper">
+<div class="ccm-block-next-previous">
     <?php
     if ($previousLinkURL && $previousLabel) {
         ?>

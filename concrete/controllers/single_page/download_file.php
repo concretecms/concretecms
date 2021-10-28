@@ -173,9 +173,18 @@ class DownloadFile extends PageController
 
             if ($approvedVersion instanceof Version) {
                 $mimeType = $approvedVersion->getMimeType();
-                header("Content-type: $mimeType");
-                echo $approvedVersion->getFileContents();
-                $this->app->shutdown();
+                if (is_string($mimeType) &&
+                    (
+                        $mimeType === "text/plain" ||
+                        (strpos($mimeType, "/") > 0 && in_array(explode("/", $mimeType)[0], ["image", "video"]))
+                    )
+                ) {
+                    header("Content-type: $mimeType");
+                    echo $approvedVersion->getFileContents();
+                    $this->app->shutdown();
+                } else {
+                    return false;
+                }
             }
         }
     }

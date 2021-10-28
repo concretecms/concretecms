@@ -210,7 +210,7 @@ class PageResponse extends Response
             'select peID, pkID, pdID from PagePermissionAssignments ppa inner join PermissionAccessList pal on ppa.paID = pal.paID where cID = ?',
             [$this->object->getCollectionID()]
         );
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $pk = PagePermissionKey::getByID($row['pkID']);
             $pae = PermissionAccessEntity::getByID($row['peID']);
             $pd = PermissionDuration::getByID($row['pdID']);
@@ -224,12 +224,12 @@ class PageResponse extends Response
             'select arHandle from Areas where cID = ? and arOverrideCollectionPermissions = 1',
             [$this->object->getCollectionID()]
         );
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $r2 = $db->Execute(
                 'select peID, pdID, pkID from AreaPermissionAssignments apa inner join PermissionAccessList pal on apa.paID = pal.paID where cID = ? and arHandle = ?',
                 [$this->object->getCollectionID(), $row['arHandle']]
             );
-            while ($row2 = $r2->FetchRow()) {
+            while ($row2 = $r2->fetch()) {
                 $pk = AreaPermissionKey::getByID($row2['pkID']);
                 $pae = PermissionAccessEntity::getByID($row2['peID']);
                 $area = Area::get($this->getPermissionObject(), $row['arHandle']);
@@ -248,7 +248,7 @@ class PageResponse extends Response
                     where cvb.cID = ? and cvb.cvID = ? and cvb.cbOverrideAreaPermissions = 1',
             [$this->object->getCollectionID(), $this->object->getVersionID()]
         );
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $pk = BlockPermissionKey::getByID($row['pkID']);
             $pae = PermissionAccessEntity::getByID($row['peID']);
             $arHandle = $db->GetOne(

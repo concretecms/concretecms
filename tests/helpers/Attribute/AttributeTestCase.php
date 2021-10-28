@@ -22,11 +22,11 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
      * @see ConcreteDatabaseTestCase::$metadatas
      */
     protected $metadatas = [
+        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
-        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Key\Settings\TextSettings',
         'Concrete\Core\Entity\Attribute\Key\Settings\TextareaSettings',
@@ -41,6 +41,8 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
         'Concrete\Core\Entity\Attribute\Value\Value\BooleanValue',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
+        'Concrete\Core\Entity\User\User',
+        'Concrete\Core\Entity\User\UserSignup',
         'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Key\UserValue',
@@ -60,7 +62,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase
     /**
      * {@inheritdoc}
      *
-     * @see \PHPUnit_Framework_TestCase::setUp()
+     * @see \PHPUnit\Framework\TestCase::setUp()
      */
     public function setUp(): void
     {

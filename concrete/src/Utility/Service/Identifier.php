@@ -3,7 +3,6 @@ namespace Concrete\Core\Utility\Service;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Application;
-use Hautelook\Phpass\PasswordHash;
 
 /**
  * \@package Helpers
@@ -94,12 +93,7 @@ class Identifier
         $size = ceil($length / 2);
 
         try {
-            if (function_exists('random_bytes')) {
-                $bytes = random_bytes($size);
-            } else {
-                $hash = new PasswordHash(8, false);
-                $bytes = $hash->get_random_bytes($size);
-            }
+            $bytes = random_bytes($size);
         } catch (\Exception $e) {
             die('Could not generate a random string.');
         }

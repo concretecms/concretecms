@@ -22,11 +22,7 @@ class RenderedSlotCollectionFactory
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param array $ruleTypes All the InstanceSlotRule::CONSTANTS
-     * @return RenderedSlot[]
-     */
-    protected function getRenderedSlotsFromRules(Instance $instance, array $ruleTypes)
+    public function getCurrentRules(Instance $instance, array $ruleTypes = null)
     {
         $now = new \DateTime();
         $now->setTimezone(new \DateTimeZone($instance->getSite()->getTimezone()));
@@ -34,7 +30,6 @@ class RenderedSlotCollectionFactory
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('r')->from(InstanceSlotRule::class, 'r')
             ->where('r.instance = :instance')
-            ->andWhere($qb->expr()->in('r.ruleType', $ruleTypes))
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->lt('r.startDate', $now->getTimestamp()),
                 $qb->expr()->eq('r.startDate', 0)
@@ -43,9 +38,22 @@ class RenderedSlotCollectionFactory
                 $qb->expr()->gt('r.endDate', $now->getTimestamp()),
                 $qb->expr()->eq('r.endDate', 0)
             ));
+        if (!is_null($ruleTypes)) {
+            $qb->andWhere($qb->expr()->in('r.ruleType', $ruleTypes));
+        }
+        $qb->andWhere($qb->expr()->gt('r.slot', 0)); // Don't include draft rules
         $qb->setParameter('instance', $instance);
         $rules = $qb->getQuery()->execute();
+        return $rules;
+    }
 
+    /**
+     * @param array $ruleTypes All the InstanceSlotRule::CONSTANTS
+     * @return RenderedSlot[]
+     */
+    protected function getRenderedSlotsFromRules(Instance $instance, array $ruleTypes)
+    {
+        $rules = $this->getCurrentRules($instance, $ruleTypes);
         $renderedSlots = [];
         /**
          * @var $rule InstanceSlotRule

@@ -89,7 +89,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args = [];
         foreach ($blockNode->link as $link) {
             $link = Link::getByServiceHandle((string) $link['service']);
-            $args['slID'][] = $link->getID();
+            if ($link) {
+                $args['slID'][] = $link->getID();
+            }
         }
 
         return $args;

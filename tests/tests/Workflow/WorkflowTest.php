@@ -7,12 +7,10 @@ use Concrete\Core\Workflow\Request\Request;
 use Concrete\Core\Workflow\Type;
 use Concrete\Core\Workflow\Workflow;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 
 class WorkflowTest extends ConcreteDatabaseTestCase
 {
-    use MockeryPHPUnitIntegration;
 
     protected $tables = [
         'WorkflowTypes',
@@ -20,7 +18,7 @@ class WorkflowTest extends ConcreteDatabaseTestCase
         'WorkflowProgress',
     ];
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->connection()->exec('delete from Workflows');
@@ -41,13 +39,13 @@ class WorkflowTest extends ConcreteDatabaseTestCase
         $this->assertSame(['cancel', 'approve'], $wf->getAllowedTasks());
         $this->assertEquals($wt, $wf->getWorkflowTypeObject());
         $this->assertSame([], $wf->getRestrictedToPermissionKeyHandles());
-        $this->assertInternalType('string', $wf->getPermissionResponseClassName());
+        $this->assertIsString($wf->getPermissionResponseClassName());
         $this->assertNotEmpty($wf->getPermissionResponseClassName());
         //$this->assertTrue(class_exists($wf->getPermissionResponseClassName()), sprintf('Checking that class %s exists.', $wf->getPermissionResponseClassName()));
-        $this->assertInternalType('string', $wf->getPermissionAssignmentClassName());
+        $this->assertIsString($wf->getPermissionAssignmentClassName());
         $this->assertNotEmpty($wf->getPermissionAssignmentClassName());
         $this->assertTrue(class_exists($wf->getPermissionAssignmentClassName()), sprintf('Checking that class %s exists.', $wf->getPermissionAssignmentClassName()));
-        $this->assertInternalType('string', $wf->getPermissionObjectKeyCategoryHandle());
+        $this->assertIsString($wf->getPermissionObjectKeyCategoryHandle());
         $this->assertNotEmpty($wf->getPermissionObjectKeyCategoryHandle());
         $this->assertSame($wf->getWorkflowID(), $wf->getPermissionObjectIdentifier());
     }

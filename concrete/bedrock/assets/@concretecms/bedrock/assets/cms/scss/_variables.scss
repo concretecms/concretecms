@@ -1,0 +1,332 @@
+/* gradients and shadows */
+$enable-gradients: false;
+$enable-shadows: true;
+
+/* colors */
+$gray-100: #f7f7f7;
+$gray-300: #d8d8d8;
+$gray-400: #9b9b9b;
+$gray-500: #7c8088;
+$gray-600: #6a6f7b;
+$gray-700: #4c4f56;
+$gray-900: #2c2c2c;
+
+$cyan: #027893;
+$blue: #4a90e2;
+$secondary: $gray-500;
+$green: #28a745;
+$red: #c32a2a;
+$dark: $gray-700;
+$light-blue: #ebf5fb;
+$dark-blue: #005163;
+
+$primary: #4a90e2;
+
+/* typography */
+$body-color: $gray-700;
+$small-font-size: 0.9rem;
+$text-muted: $gray-500;
+
+/* borders */
+$border-radius: 3px;
+$border-radius-sm: 2px;
+
+/* buttons */
+$btn-font-weight: 600;
+$btn-padding-y: 9px;
+$btn-padding-x: 30px;
+$btn-font-size: 0.9rem;
+$btn-box-shadow: inset 0 0;
+
+/* forms */
+$input-focus-box-shadow: 0 0;
+$input-placeholder-color: #b2b3b4;
+$input-border-color: rgb(235, 235, 235);
+$form-select-border-color: rgb(235, 235, 235);
+$form-select-box-shadow: 0 0;
+$input-border-radius: 4px;
+//$input-border-width: 1px;
+$input-color: $dark-blue;
+$input-padding-y: 0.5rem;
+$label-margin-bottom: 0.4rem;
+$input-box-shadow: inset 0 0;
+$custom-select-box-shadow: inset 0 0;
+$form-label-color: $gray-700;
+$form-label-font-weight: 600;
+
+/* cards */
+$card-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12);
+$card-border-width: 0;
+
+/* transitions */
+$transition-base: all 0.25s ease-in-out;
+$transition-fade: opacity 0.1s ease-in-out;
+$btn-transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out, border-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+
+/* dialogs */
+$modal-xl: 940px;
+$modal-lg: 810px;
+$modal-md: 675px;
+$modal-sm: 420px;
+$modal-header-border-width: 0;
+$modal-content-border-width: 0;
+$modal-footer-border-width: 0;
+$modal-content-border-radius: 0;
+$modal-content-inner-border-radius: 0;
+$modal-header-padding-y: 1.25rem;
+$modal-header-padding-x: 1.8rem;
+$modal-title-line-height: 1.25em;
+$modal-inner-padding: 1.8rem;
+$modal-fade-transform: none;
+$modal-transition: 0.1s ease-in-out;
+$modal-content-box-shadow-sm-up: 0 2px 4px 2px rgba(0, 0, 0, 0.2);
+$modal-content-box-shadow-xs: 0 2px 4px 2px rgba(0, 0, 0, 0.2);
+
+/* breadcrumbs */
+$breadcrumb-bg: transparent;
+$breadcrumb-padding-x: 0;
+$breadcrumb-padding-y: 20px;
+$breadcrumb-font-size: 0.8rem;
+$breadcrumb-active-color: $gray-600;
+$breadcrumb-divider: quote('>');
+$breadcrumb-item-padding: 4px;
+
+/* tabs */
+$nav-tabs-border-width: 0;
+$nav-tabs-link-active-color: $gray-700;
+$nav-tabs-link-active-border-color: $blue;
+
+/* badges */
+$badge-border-radius: 2px;
+$badge-padding-y: 8px;
+$badge-padding-x: 11px;
+
+/* Dropdowns */
+$dropdown-divider-bg: $gray-300;
+$dropdown-divider-margin-y: 0.625rem; /* 10px @ 16px base */
+
+/* These variable names don't quite match up to their value */
+/* Usage: padding: $dropdown-item-padding-y $dropdown-item-padding-x; */
+$dropdown-item-padding-y: 0.625rem;
+$dropdown-item-padding-x: 10px;
+$dropdown-link-active-color: #fff;
+$dropdown-border-color: transparent;
+$dropdown-border-radius: 2px;
+$dropdown-border-width: 2px;
+$dropdown-min-width: 175px;
+$dropdown-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+
+/* popovers - these are used for in page menus, help menus */
+$popover-border-color: $gray-300;
+$popover-border-radius: 2px;
+$popover-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.1);
+
+/* Links */
+$link-decoration: none;
+
+/* panels */
+$panel-background-color: #fafbfc;
+$panel-background-color-accent: #e7e8eb;
+$panel-menu-item-color: $gray-600;
+$panel-menu-item-hover-bg-color: #d2eafa;
+$panel-menu-item-hover-color: #222;
+$panel-menu-item-parent-item-active-font-weight: 600;
+$panel-menu-item-parent-item-active-color: #222;
+$panel-menu-item-active-bg-color: $blue;
+$panel-menu-item-active-color: white;
+$panel-menu-item-active-font-weight: 600;
+$panel-menu-item-transition: all 0.1s ease-in;
+
+/* colors */
+$table-row-highlight-bg: #d2eafa;
+
+/* headings */
+$h1-font-size: 1rem * 3.5;
+$h2-font-size: 1rem * 2;
+$h3-font-size: 1rem * 1.5;
+$h4-font-size: 1rem * 1.375;
+$h5-font-size: 1rem * 1.25;
+$h6-font-size: 1rem * 0.8;
+
+/* special dialog variables */
+$modal-header-bg: $blue;
+$modal-title-font-size: 1.5rem;
+$modal-title-font-weight: 400;
+$modal-title-letter-spacing: auto;
+$modal-title-color: white;
+
+/* additional tab colors */
+$nav-tabs-link-color: $gray-500;
+
+/* selectize */
+$selectize-input-item-bg: $gray-100;
+$selectize-dropdown-option-color-active: $gray-900;
+$selectize-dropdown-option-bg-active: $gray-100;
+$selectize-dropdown-border-color: transparent;
+$selectize-dropdown-border-width: 2px;
+$selectize-dropdown-border-radius: 2px;
+
+/* file manager image cell */
+$image-cell-border-color: $gray-400;
+$image-cell-border-hover-color: $blue;
+$image-cell-border-radius: 2px;
+$image-cell-box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.2);
+
+/** --- Zindexes --- **/
+
+/* Base page */
+$index-level-base: 1;
+
+/* Dashboard form actions wrapper */
+$index-level-dashboard-form-actions-wrapper: 100;
+
+/* Menus In Page */
+$index-level-in-context-area-handle: 2;
+$index-level-in-context-menu-highlighter: 400;
+$index-level-in-context-click-proxy: 500;
+
+/* Checkboxes and stars in search results above menus */
+$index-level-search-results-checkboxes: 550;
+$index-level-search-results-stars: 550;
+$index-level-search-reset: 550;
+
+
+/* Inline Editing in Page */
+$index-level-inline-commands: 600;
+
+/* Inline Editing with Editable Fields */
+$index-level-editable-field: 600;
+$index-level-editable-field-proxy: 625;
+$index-level-editable-field-commands: 650;
+
+/* Dropdown Menus */
+$index-level-in-context-menu: 700;
+$index-level-inline-dropdowns: 700;
+
+/* Status Bar (below toolbar and panels) */
+$index-level-status-bar: 800;
+
+/* Page alert (blue boxes) –similar to dashboard help but at the page level. Should come below the dialog overlay and the intelligent search */
+$index-level-page-alert: 840;
+
+/* Panels */
+$index-level-panel-overlay: 850; /* this is the overlay over the main content. must come below the panel z-index */
+$index-level-panel-detail: 870;
+$index-level-panel-detail-form-actions: 880;
+$index-level-panel: 900;
+$index-level-panel-hover: 950;
+$index-level-panel-dialog: 950;
+$index-level-panel-select-widget: 950;
+$index-level-panel-alert: 980;
+
+/* Draggables */
+$index-level-draggable-content-item: 1000;
+
+/* Main toolbar */
+$index-level-main-bar: 1000;
+
+/* Disable Toolbar (over toolbar) */
+$index-level-toolbar-disabled: 1100;
+
+/* dashboard privacy policy */
+$index-level-dashboard-privacy-policy-bar: 910;
+
+/* Inline Editing Toolbar - has to come above disabled toolbar */
+$index-level-inline-toolbar: 1150;
+
+/* Main toolbar - has to come above dashboard help notifications because of stupid webkit compositing */
+$index-level-main-bar-loading: 1160;
+
+/* Intelligent Search */
+$index-level-intelligent-search: 1200;
+
+/* Dialogs */
+$index-level-modal-overlay: 1500;
+$index-level-dialog: 2000;
+
+/* Editor dropdown –can be either inline OR in a dialog box so we have to come above dialog. Hopefully this doesn't
+cause other problems */
+$index-level-editor-toolbar-dropdown: 2500;
+
+/* Dialog Content */
+$index-level-dialog-content: 3000;
+$index-level-dialog-content-click-proxy: 3200;
+
+/* Search Checkboxes */
+$index-level-search-checkbox: 3400;
+
+/* Dialog Chrome */
+$index-level-dialog-options: 3800;
+$index-level-dialog-title-bar: 3900;
+$index-level-dialog-footer-bar: 3900;
+$index-level-dialog-title-bar-search: 4000;
+
+/* Tooltips and hovers in dialogs */
+$index-level-tooltip-holder: 5000;
+$index-level-menu-panel-and-dialog: 5000;
+$index-level-dialog-hover: 5000;
+$index-level-editor-full-screen: 5000;
+$index-level-tooltip-in-menu: 5001; /* tooltips that live on the same plane as menus */
+
+/* Edit Response HUDs - should come above modal dialog stuff. */
+$index-level-hud-underlay: 5199;
+$index-level-hud: 5200;
+$index-level-nprogress: 10000;
+
+/* Dashboard panels */
+$panel-border-color: #101114;
+$panel-form-element-bg-color: #4c4e53;
+$panel-form-element-text-color: #bababa;
+$panel-normal-text-color: #676767;
+$panel-datepicker-highlight-day-color: #828282;
+
+/* Sitemap Icons */
+
+//does not work with colors containing alpha
+@function encodecolor($string) {
+  @if type-of($string) == 'color' {
+    $hex: str-slice(ie-hex-str($string), 4);
+    $string: unquote('#{$hex}');
+  }
+  $string: '%23' + $string;
+  @return $string;
+}
+
+$sitemap-font-size: 16px;
+$sitemap-icon-color-normal: $dark;
+$sitemap-icon-color-active: $blue;
+$sitemap-home-icon-b64: 'data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2026%2026%22%20style%3D%22enable-background%3Anew%200%200%2026%2026%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cstyle%20type%3D%22text%2Fcss%22%3E%0A%09.st0%7Bfill%3A#{encodecolor($sitemap-icon-color-normal)}%3B%7D%0A%3C%2Fstyle%3E%0A%3Cg%20id%3D%22Layer_2%22%3E%0A%09%3Cg%20id%3D%22Layer_1-2%22%3E%0A%09%09%3Cpath%20class%3D%22st0%22%20d%3D%22M23.4%2C10.9L13.3%2C3c-0.2-0.1-0.4-0.1-0.5%2C0L2.6%2C10.9c-0.2%2C0.1-0.2%2C0.4-0.1%2C0.6c0%2C0%2C0%2C0%2C0%2C0%0A%09%09%09c0.2%2C0.2%2C0.4%2C0.2%2C0.6%2C0.1c0%2C0%2C0%2C0%2C0%2C0l0.6-0.5v11.6c0%2C0.2%2C0.2%2C0.4%2C0.4%2C0.4c0%2C0%2C0%2C0%2C0%2C0h6.2v-7.9h5.3v7.9h6.2%0A%09%09%09c0.2%2C0%2C0.4-0.2%2C0.4-0.4c0%2C0%2C0%2C0%2C0%2C0V11.1l0.6%2C0.5c0.1%2C0.1%2C0.2%2C0.1%2C0.3%2C0.1c0.1%2C0%2C0.2-0.1%2C0.3-0.2C23.6%2C11.3%2C23.6%2C11.1%2C23.4%2C10.9z%22%0A%09%09%09%2F%3E%0A%09%09%3Cpolygon%20class%3D%22st0%22%20points%3D%2220%2C4.6%2017.4%2C4.6%2017.4%2C5.1%2020%2C7.2%20%09%09%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A';
+$sitemap-home-icon-active-b64: 'data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2026%2026%22%20style%3D%22enable-background%3Anew%200%200%2026%2026%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cstyle%20type%3D%22text%2Fcss%22%3E%0A%09.st0%7Bfill%3A#{encodecolor($sitemap-icon-color-active)}%3B%7D%0A%3C%2Fstyle%3E%0A%3Cg%20id%3D%22Layer_2%22%3E%0A%09%3Cg%20id%3D%22Layer_1-2%22%3E%0A%09%09%3Cpath%20class%3D%22st0%22%20d%3D%22M23.4%2C10.9L13.3%2C3c-0.2-0.1-0.4-0.1-0.5%2C0L2.6%2C10.9c-0.2%2C0.1-0.2%2C0.4-0.1%2C0.6c0%2C0%2C0%2C0%2C0%2C0%0A%09%09%09c0.2%2C0.2%2C0.4%2C0.2%2C0.6%2C0.1c0%2C0%2C0%2C0%2C0%2C0l0.6-0.5v11.6c0%2C0.2%2C0.2%2C0.4%2C0.4%2C0.4c0%2C0%2C0%2C0%2C0%2C0h6.2v-7.9h5.3v7.9h6.2%0A%09%09%09c0.2%2C0%2C0.4-0.2%2C0.4-0.4c0%2C0%2C0%2C0%2C0%2C0V11.1l0.6%2C0.5c0.1%2C0.1%2C0.2%2C0.1%2C0.3%2C0.1c0.1%2C0%2C0.2-0.1%2C0.3-0.2C23.6%2C11.3%2C23.6%2C11.1%2C23.4%2C10.9z%22%0A%09%09%09%2F%3E%0A%09%09%3Cpolygon%20class%3D%22st0%22%20points%3D%2220%2C4.6%2017.4%2C4.6%2017.4%2C5.1%2020%2C7.2%20%09%09%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A';
+$sitemap-home-icon-drag-b64: 'data:image/svg+xml,%3C%3Fxml%20version=\'1.0\'%20encoding=\'utf-8\'%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20\'-//W3C//DTD%20SVG%201.1//EN\'%20\'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\'%3E%3Csvg%20version=\'1.1\'%20id=\'Ebene_1\'%20xmlns=\'http://www.w3.org/2000/svg\'%20xmlns:xlink=\'http://www.w3.org/1999/xlink\'%20x=\'0px\'%20y=\'0px\'%20width=\'25px\'%20height=\'25px\'%20viewBox=\'0%200%2025%2025\'%20enable-background=\'new%200%200%2025%2025\'%20xml:space=\'preserve\'%3E%3Cg%20id=\'Layer_2\'%3E%3Cg%20id=\'Layer_1-2\'%3E%3Cpath%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20d=\'M22.5,10.481l-9.711-7.596c-0.192-0.096-0.385-0.096-0.481,0L2.5,10.481%20c-0.192,0.096-0.192,0.384-0.096,0.577l0,0c0.192,0.192,0.385,0.192,0.577,0.096l0,0l0.577-0.481v11.154%20c0,0.192,0.192,0.384,0.385,0.384l0,0h5.961v-7.596H15v7.596h5.961c0.193,0,0.385-0.191,0.385-0.384l0,0V10.673l0.577,0.481%20c0.097,0.096,0.192,0.096,0.288,0.096c0.097,0,0.193-0.096,0.289-0.192C22.692,10.865,22.692,10.673,22.5,10.481z\'/%3E%3Cpolygon%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20points=\'19.23,4.423%2016.73,4.423%2016.73,4.904%2019.23,6.923%20\'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Ccircle%20fill=\'%23FFFFFF\'%20cx=\'7.821\'%20cy=\'6.699\'%20r=\'4.705\'/%3E%3Ccircle%20fill=\'%234A90E2\'%20cx=\'7.821\'%20cy=\'6.699\'%20r=\'3.732\'/%3E%3Cg%3E%3Cpath%20fill=\'%23FFFFFF\'%20d=\'M7.254,7.266H5.443c-0.121,0-0.229-0.107-0.229-0.229V6.361c0-0.121,0.107-0.229,0.229-0.229h1.811V4.31%20c0-0.121,0.107-0.216,0.229-0.216h0.676c0.121,0,0.229,0.095,0.229,0.216v1.822h1.821c0.121,0,0.217,0.108,0.217,0.229v0.676%20c0,0.121-0.096,0.229-0.217,0.229H8.388v1.799c0,0.119-0.108,0.215-0.229,0.215H7.482c-0.121,0-0.229-0.096-0.229-0.215V7.266z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A';
+$sitemap-home-icon-drag-active-b64: 'data:image/svg+xml,%3C%3Fxml%20version=\'1.0\'%20encoding=\'utf-8\'%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20\'-//W3C//DTD%20SVG%201.1//EN\'%20\'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\'%3E%3Csvg%20version=\'1.1\'%20id=\'Ebene_1\'%20xmlns=\'http://www.w3.org/2000/svg\'%20xmlns:xlink=\'http://www.w3.org/1999/xlink\'%20x=\'0px\'%20y=\'0px\'%20width=\'25px\'%20height=\'25px\'%20viewBox=\'0%200%2025%2025\'%20enable-background=\'new%200%200%2025%2025\'%20xml:space=\'preserve\'%3E%3Cg%20id=\'Layer_2\'%3E%3Cg%20id=\'Layer_1-2\'%3E%3Cpath%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20d=\'M22.5,10.481l-9.711-7.596c-0.192-0.096-0.385-0.096-0.481,0L2.5,10.481%20c-0.192,0.096-0.192,0.384-0.096,0.577l0,0c0.192,0.192,0.385,0.192,0.577,0.096l0,0l0.577-0.481v11.154%20c0,0.192,0.192,0.384,0.385,0.384l0,0h5.961v-7.596H15v7.596h5.961c0.193,0,0.385-0.191,0.385-0.384l0,0V10.673l0.577,0.481%20c0.097,0.096,0.192,0.096,0.288,0.096c0.097,0,0.193-0.096,0.289-0.192C22.692,10.865,22.692,10.673,22.5,10.481z\'/%3E%3Cpolygon%20fill=\'#{encodecolor($sitemap-icon-color-active)}\'%20points=\'19.23,4.423%2016.73,4.423%2016.73,4.904%2019.23,6.923%20\'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Ccircle%20fill=\'%23FFFFFF\'%20cx=\'7.821\'%20cy=\'6.699\'%20r=\'4.705\'/%3E%3Ccircle%20fill=\'%234A90E2\'%20cx=\'7.821\'%20cy=\'6.699\'%20r=\'3.732\'/%3E%3Cg%3E%3Cpath%20fill=\'%23FFFFFF\'%20d=\'M7.254,7.266H5.443c-0.121,0-0.229-0.107-0.229-0.229V6.361c0-0.121,0.107-0.229,0.229-0.229h1.811V4.31%20c0-0.121,0.107-0.216,0.229-0.216h0.676c0.121,0,0.229,0.095,0.229,0.216v1.822h1.821c0.121,0,0.217,0.108,0.217,0.229v0.676%20c0,0.121-0.096,0.229-0.217,0.229H8.388v1.799c0,0.119-0.108,0.215-0.229,0.215H7.482c-0.121,0-0.229-0.096-0.229-0.215V7.266z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A';
+$sitemap-folder-icon-b64: 'data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2020%2020%22%20style%3D%22enable-background%3Anew%200%200%2020%2020%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cstyle%20type%3D%22text%2Fcss%22%3E%0A%09.st0%7Bfill%3Anone%3B%7D%0A%09.st1%7Bfill%3A#{encodecolor($sitemap-icon-color-normal)}%3B%7D%0A%3C%2Fstyle%3E%0A%3Cg%20id%3D%22Layer_2%22%3E%0A%09%3Cg%20id%3D%22Layer_1-2%22%3E%0A%09%09%3Cpolygon%20class%3D%22st0%22%20points%3D%2218%2C6%209.2%2C6%207.2%2C4%202%2C4%202%2C16%2018%2C16%20%09%09%22%2F%3E%0A%09%09%3Cpath%20class%3D%22st1%22%20d%3D%22M18%2C18c1.1%2C0%2C2-0.9%2C2-2V6c0-1.1-0.9-2-2-2h-8L8%2C2H2C0.9%2C2%2C0%2C2.9%2C0%2C4v12c0%2C1.1%2C0.9%2C2%2C2%2C2H18z%20M2%2C4h5.2l2%2C2H18%0A%09%09%09v10H2V4z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A';
+$sitemap-folder-icon-active-b64: 'data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2020%2020%22%20style%3D%22enable-background%3Anew%200%200%2020%2020%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cstyle%20type%3D%22text%2Fcss%22%3E%0A%09.st0%7Bfill%3Anone%3B%7D%0A%09.st1%7Bfill%3A#{encodecolor($sitemap-icon-color-active)}%3B%7D%0A%3C%2Fstyle%3E%0A%3Cg%20id%3D%22Layer_2%22%3E%0A%09%3Cg%20id%3D%22Layer_1-2%22%3E%0A%09%09%3Cpolygon%20class%3D%22st0%22%20points%3D%2218%2C6%209.2%2C6%207.2%2C4%202%2C4%202%2C16%2018%2C16%20%09%09%22%2F%3E%0A%09%09%3Cpath%20class%3D%22st1%22%20d%3D%22M18%2C18c1.1%2C0%2C2-0.9%2C2-2V6c0-1.1-0.9-2-2-2h-8L8%2C2H2C0.9%2C2%2C0%2C2.9%2C0%2C4v12c0%2C1.1%2C0.9%2C2%2C2%2C2H18z%20M2%2C4h5.2l2%2C2H18%0A%09%09%09v10H2V4z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A';
+$sitemap-folder-icon-drag-b64: 'data:image/svg+xml,%3C%3Fxml%20version=\'1.0\'%20encoding=\'utf-8\'%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20\'-//W3C//DTD%20SVG%201.1//EN\'%20\'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\'%3E%3Csvg%20version=\'1.1\'%20id=\'Ebene_1\'%20xmlns=\'http://www.w3.org/2000/svg\'%20xmlns:xlink=\'http://www.w3.org/1999/xlink\'%20x=\'0px\'%20y=\'0px\'%20width=\'25px\'%20height=\'25px\'%20viewBox=\'0%200%2025%2025\'%20enable-background=\'new%200%200%2025%2025\'%20xml:space=\'preserve\'%3E%3Cg%20id=\'Layer_2\'%3E%3Cg%20id=\'Layer_1-2\'%3E%3Cpolygon%20fill=\'none\'%20points=\'22.5,7.5%2011.5,7.5%209,5%202.5,5%202.5,20%2022.5,20%20\'/%3E%3Cpath%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20d=\'M22.5,22.5c1.375,0,2.5-1.125,2.5-2.5V7.5C25,6.125,23.875,5,22.5,5h-10L10,2.5H2.5C1.125,2.5,0,3.625,0,5%20v15c0,1.375,1.125,2.5,2.5,2.5H22.5z%20M2.5,5H9l2.5,2.5h11V20h-20V5z\'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Ccircle%20fill=\'%23FFFFFF\'%20cx=\'4.821\'%20cy=\'4.699\'%20r=\'4.705\'/%3E%3Ccircle%20fill=\'%234A90E2\'%20cx=\'4.821\'%20cy=\'4.699\'%20r=\'3.732\'/%3E%3Cg%3E%3Cpath%20fill=\'%23FFFFFF\'%20d=\'M4.254,5.266H2.443c-0.121,0-0.229-0.107-0.229-0.229V4.361c0-0.121,0.107-0.229,0.229-0.229h1.811V2.31%20c0-0.121,0.107-0.216,0.229-0.216h0.676c0.121,0,0.229,0.095,0.229,0.216v1.822h1.821c0.121,0,0.217,0.108,0.217,0.229v0.676%20c0,0.121-0.096,0.229-0.217,0.229H5.388v1.799c0,0.119-0.108,0.215-0.229,0.215H4.482c-0.121,0-0.229-0.096-0.229-0.215V5.266z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A';
+$sitemap-folder-icon-drag-active-b64: 'data:image/svg+xml,%3C%3Fxml%20version=\'1.0\'%20encoding=\'utf-8\'%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20\'-//W3C//DTD%20SVG%201.1//EN\'%20\'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\'%3E%3Csvg%20version=\'1.1\'%20id=\'Ebene_1\'%20xmlns=\'http://www.w3.org/2000/svg\'%20xmlns:xlink=\'http://www.w3.org/1999/xlink\'%20x=\'0px\'%20y=\'0px\'%20width=\'25px\'%20height=\'25px\'%20viewBox=\'0%200%2025%2025\'%20enable-background=\'new%200%200%2025%2025\'%20xml:space=\'preserve\'%3E%3Cg%20id=\'Layer_2\'%3E%3Cg%20id=\'Layer_1-2\'%3E%3Cpolygon%20fill=\'none\'%20points=\'22.5,7.5%2011.5,7.5%209,5%202.5,5%202.5,20%2022.5,20%20\'/%3E%3Cpath%20fill=\'#{encodecolor($sitemap-icon-color-active)}\'%20d=\'M22.5,22.5c1.375,0,2.5-1.125,2.5-2.5V7.5C25,6.125,23.875,5,22.5,5h-10L10,2.5H2.5C1.125,2.5,0,3.625,0,5%20v15c0,1.375,1.125,2.5,2.5,2.5H22.5z%20M2.5,5H9l2.5,2.5h11V20h-20V5z\'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Ccircle%20fill=\'%23FFFFFF\'%20cx=\'4.821\'%20cy=\'4.699\'%20r=\'4.705\'/%3E%3Ccircle%20fill=\'%234A90E2\'%20cx=\'4.821\'%20cy=\'4.699\'%20r=\'3.732\'/%3E%3Cg%3E%3Cpath%20fill=\'%23FFFFFF\'%20d=\'M4.254,5.266H2.443c-0.121,0-0.229-0.107-0.229-0.229V4.361c0-0.121,0.107-0.229,0.229-0.229h1.811V2.31%20c0-0.121,0.107-0.216,0.229-0.216h0.676c0.121,0,0.229,0.095,0.229,0.216v1.822h1.821c0.121,0,0.217,0.108,0.217,0.229v0.676%20c0,0.121-0.096,0.229-0.217,0.229H5.388v1.799c0,0.119-0.108,0.215-0.229,0.215H4.482c-0.121,0-0.229-0.096-0.229-0.215V5.266z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A';
+$sitemap-page-icon-b64: 'data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2020%2020%22%20style%3D%22enable-background%3Anew%200%200%2020%2020%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cstyle%20type%3D%22text%2Fcss%22%3E%0A%09.st0%7Bfill%3Anone%3B%7D%0A%09.st1%7Bfill%3A#{encodecolor($sitemap-icon-color-normal)}%3B%7D%0A%3C%2Fstyle%3E%0A%3Cg%20id%3D%22Layer_2%22%3E%0A%09%3Cg%20id%3D%22Layer_1-2%22%3E%0A%09%09%3Cpath%20class%3D%22st0%22%20d%3D%22M16%2C7h-5V2H4v16h12V7z%20M14%2C16H6v-2h8V16z%20M14%2C12H6v-2h8V12z%22%2F%3E%0A%09%09%3Cpath%20class%3D%22st1%22%20d%3D%22M16%2C20c1.1%2C0%2C2-0.9%2C2-2V6l-6-6H4C2.9%2C0%2C2%2C0.9%2C2%2C2v16c0%2C1.1%2C0.9%2C2%2C2%2C2H16z%20M4%2C2h7v5h5v11H4V2z%22%2F%3E%0A%09%09%3Crect%20x%3D%226%22%20y%3D%2214%22%20class%3D%22st1%22%20width%3D%228%22%20height%3D%222%22%2F%3E%0A%09%09%3Crect%20x%3D%226%22%20y%3D%2210%22%20class%3D%22st1%22%20width%3D%228%22%20height%3D%222%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A';
+$sitemap-page-icon-active-b64: 'data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2020%2020%22%20style%3D%22enable-background%3Anew%200%200%2020%2020%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cstyle%20type%3D%22text%2Fcss%22%3E%0A%09.st0%7Bfill%3Anone%3B%7D%0A%09.st1%7Bfill%3A#{encodecolor($sitemap-icon-color-active)}%3B%7D%0A%3C%2Fstyle%3E%0A%3Cg%20id%3D%22Layer_2%22%3E%0A%09%3Cg%20id%3D%22Layer_1-2%22%3E%0A%09%09%3Cpath%20class%3D%22st0%22%20d%3D%22M16%2C7h-5V2H4v16h12V7z%20M14%2C16H6v-2h8V16z%20M14%2C12H6v-2h8V12z%22%2F%3E%0A%09%09%3Cpath%20class%3D%22st1%22%20d%3D%22M16%2C20c1.1%2C0%2C2-0.9%2C2-2V6l-6-6H4C2.9%2C0%2C2%2C0.9%2C2%2C2v16c0%2C1.1%2C0.9%2C2%2C2%2C2H16z%20M4%2C2h7v5h5v11H4V2z%22%2F%3E%0A%09%09%3Crect%20x%3D%226%22%20y%3D%2214%22%20class%3D%22st1%22%20width%3D%228%22%20height%3D%222%22%2F%3E%0A%09%09%3Crect%20x%3D%226%22%20y%3D%2210%22%20class%3D%22st1%22%20width%3D%228%22%20height%3D%222%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A';
+$sitemap-page-icon-drag-b64: 'data:image/svg+xml,%3C%3Fxml%20version=\'1.0\'%20encoding=\'utf-8\'%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20\'-//W3C//DTD%20SVG%201.1//EN\'%20\'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\'%3E%3Csvg%20version=\'1.1\'%20id=\'Ebene_1\'%20xmlns=\'http://www.w3.org/2000/svg\'%20xmlns:xlink=\'http://www.w3.org/1999/xlink\'%20x=\'0px\'%20y=\'0px\'%20width=\'25px\'%20height=\'25px\'%20viewBox=\'0%200%2025%2025\'%20enable-background=\'new%200%200%2025%2025\'%20xml:space=\'preserve\'%3E%3Cg%20id=\'Layer_2\'%3E%3Cg%20id=\'Layer_1-2\'%3E%3Cpath%20fill=\'none\'%20d=\'M20,8.75h-6.25V2.5H5v20h15V8.75z%20M17.5,20h-10v-2.5h10V20z%20M17.5,15h-10v-2.5h10V15z\'/%3E%3Cpath%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20d=\'M20,25c1.375,0,2.5-1.125,2.5-2.5v-15L15,0H5C3.625,0,2.5,1.125,2.5,2.5v20C2.5,23.875,3.625,25,5,25H20z%20M5,2.5h8.75v6.25H20V22.5H5V2.5z\'/%3E%3Crect%20x=\'7.5\'%20y=\'17.5\'%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20width=\'10\'%20height=\'2.5\'/%3E%3Crect%20x=\'7.5\'%20y=\'12.5\'%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20width=\'10\'%20height=\'2.5\'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Ccircle%20fill=\'%23FFFFFF\'%20cx=\'4.821\'%20cy=\'4.699\'%20r=\'4.705\'/%3E%3Ccircle%20fill=\'%234A90E2\'%20cx=\'4.821\'%20cy=\'4.699\'%20r=\'3.732\'/%3E%3Cg%3E%3Cpath%20fill=\'%23FFFFFF\'%20d=\'M4.254,5.266H2.443c-0.121,0-0.229-0.107-0.229-0.229V4.361c0-0.121,0.107-0.229,0.229-0.229h1.811V2.31%20c0-0.121,0.107-0.216,0.229-0.216h0.676c0.121,0,0.229,0.095,0.229,0.216v1.822h1.821c0.121,0,0.217,0.108,0.217,0.229v0.676%20c0,0.121-0.096,0.229-0.217,0.229H5.388v1.799c0,0.119-0.108,0.215-0.229,0.215H4.482c-0.121,0-0.229-0.096-0.229-0.215V5.266z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A';
+$sitemap-page-icon-drag-active-b64: 'data:image/svg+xml,%3C%3Fxml%20version=\'1.0\'%20encoding=\'utf-8\'%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20\'-//W3C//DTD%20SVG%201.1//EN\'%20\'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\'%3E%3Csvg%20version=\'1.1\'%20id=\'Ebene_1\'%20xmlns=\'http://www.w3.org/2000/svg\'%20xmlns:xlink=\'http://www.w3.org/1999/xlink\'%20x=\'0px\'%20y=\'0px\'%20width=\'25px\'%20height=\'25px\'%20viewBox=\'0%200%2025%2025\'%20enable-background=\'new%200%200%2025%2025\'%20xml:space=\'preserve\'%3E%3Cg%20id=\'Layer_2\'%3E%3Cg%20id=\'Layer_1-2\'%3E%3Cpath%20fill=\'none\'%20d=\'M20,8.75h-6.25V2.5H5v20h15V8.75z%20M17.5,20h-10v-2.5h10V20z%20M17.5,15h-10v-2.5h10V15z\'/%3E%3Cpath%20fill=\'#{encodecolor($sitemap-icon-color-active)}\'%20d=\'M20,25c1.375,0,2.5-1.125,2.5-2.5v-15L15,0H5C3.625,0,2.5,1.125,2.5,2.5v20C2.5,23.875,3.625,25,5,25H20z%20M5,2.5h8.75v6.25H20V22.5H5V2.5z\'/%3E%3Crect%20x=\'7.5\'%20y=\'17.5\'%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20width=\'10\'%20height=\'2.5\'/%3E%3Crect%20x=\'7.5\'%20y=\'12.5\'%20fill=\'#{encodecolor($sitemap-icon-color-normal)}\'%20width=\'10\'%20height=\'2.5\'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3Ccircle%20fill=\'%23FFFFFF\'%20cx=\'4.821\'%20cy=\'4.699\'%20r=\'4.705\'/%3E%3Ccircle%20fill=\'%234A90E2\'%20cx=\'4.821\'%20cy=\'4.699\'%20r=\'3.732\'/%3E%3Cg%3E%3Cpath%20fill=\'%23FFFFFF\'%20d=\'M4.254,5.266H2.443c-0.121,0-0.229-0.107-0.229-0.229V4.361c0-0.121,0.107-0.229,0.229-0.229h1.811V2.31%20c0-0.121,0.107-0.216,0.229-0.216h0.676c0.121,0,0.229,0.095,0.229,0.216v1.822h1.821c0.121,0,0.217,0.108,0.217,0.229v0.676%20c0,0.121-0.096,0.229-0.217,0.229H5.388v1.799c0,0.119-0.108,0.215-0.229,0.215H4.482c-0.121,0-0.229-0.096-0.229-0.215V5.266z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A';
+$sitemap-expand-icon-b64: 'data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2018%2018%27%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3Anone%3B%7D.cls-2%7Bfill%3A#{encodecolor($sitemap-icon-color-normal)}%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%27Layer_2%27%20data-name%3D%27Layer%202%27%3E%3Cg%20id%3D%27Layer_1-2%27%20data-name%3D%27Layer%201%27%3E%3Cpath%20class%3D%27cls-1%27%20d%3D%27M16%2C2H2V16H16Zm-2%2C8H10v4H8V10H4V8H8V4h2V8h4Z%27%2F%3E%3Cpath%20class%3D%27cls-2%27%20d%3D%27M16%2C18a2%2C2%2C0%2C0%2C0%2C2-2V2a2%2C2%2C0%2C0%2C0-2-2H2A2%2C2%2C0%2C0%2C0%2C0%2C2V16a2%2C2%2C0%2C0%2C0%2C2%2C2ZM2%2C2H16V16H2Z%27%2F%3E%3Cpolygon%20class%3D%27cls-2%27%20points%3D%2710%204%208%204%208%208%204%208%204%2010%208%2010%208%2014%2010%2014%2010%2010%2014%2010%2014%208%2010%208%2010%204%27%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E%0A';
+$sitemap-collapsed-icon-b64: 'data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2018%2018%27%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3Anone%3B%7D.cls-2%7Bfill%3A#{encodecolor($sitemap-icon-color-normal)}%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%27Layer_2%27%20data-name%3D%27Layer%202%27%3E%3Cg%20id%3D%27Layer_1-2%27%20data-name%3D%27Layer%201%27%3E%3Cpath%20class%3D%27cls-1%27%20d%3D%27M2%2C16H16V2H2ZM4%2C8H14v2H4Z%27%2F%3E%3Cpath%20class%3D%27cls-2%27%20d%3D%27M16%2C0H2A2%2C2%2C0%2C0%2C0%2C0%2C2V16a2%2C2%2C0%2C0%2C0%2C2%2C2H16a2%2C2%2C0%2C0%2C0%2C2-2V2A2%2C2%2C0%2C0%2C0%2C16%2C0Zm0%2C16H2V2H16Z%27%2F%3E%3Crect%20class%3D%27cls-2%27%20x%3D%274%27%20y%3D%278%27%20width%3D%2710%27%20height%3D%272%27%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E%0A';
+$sitemap-loading-icon-b64: 'data:image/svg+xml,%3C%3Fxml%20version%3D%271.0%27%20encoding%3D%27utf-8%27%3F%3E%3Csvg%20version%3D%271.1%27%20id%3D%27L9%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20xmlns%3Axlink%3D%27http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%27%20x%3D%270px%27%20y%3D%270px%27%20viewBox%3D%270%200%2046%2046%27%20style%3D%27enable-background%3Anew%200%200%2046%2046%3B%27%20xml%3Aspace%3D%27preserve%27%3E%3Cpath%20fill%3D%22#{encodecolor($sitemap-icon-color-normal)}%22%20d%3D%27M46%2C22.9c0-12.7-10.3-23-23-23S0%2C10.2%2C0%2C22.9%20M3.9%2C22.9C3.9%2C12.4%2C12.4%2C3.8%2C23%2C3.8s19.1%2C8.6%2C19.1%2C19.1%27%2F%3E%3C%2Fsvg%3E%0A';
+$sitemap-container-background-color: transparent;
+$sitemap-normal-item-border-color: transparent;
+$sitemap-normal-item-background-color: transparent;
+$sitemap-normal-item-text-color: $dark;
+$sitemap-active-item-border-color: transparent;
+$sitemap-active-item-background-color: $blue;
+$sitemap-active-item-text-color: #fff;
+$sitemap-hover-item-border-color: transparent;
+$sitemap-hover-item-background-color: #ebf5fb; // the light-blue var is not available in this context (bug?)
+$sitemap-hover-item-text-color: $dark;
+$sitemap-hover-item-height: 30px;
+
+/* Help Tours */
+$help-tour-foreground-color: #fff;
+$help-tour-background-color: #4c4f56;
+$help-tour-padding: 15px;
+$help-tour-position-color: #fff;
+
+/* Form Group */
+$form-group-margin-bottom: 1.5rem;

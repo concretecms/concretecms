@@ -18,7 +18,7 @@ class TranslatorAdapterRepositoryTest extends TestCase
 {
     protected $repository;
 
-    public function setUp()
+    public function setUp():void
     {
         $factory = new DummyTranslatorAdapterFactory();
         $this->repository = new TranslatorAdapterRepository($factory);

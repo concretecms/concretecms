@@ -1,0 +1,38 @@
+div.blog-entry-list {
+
+  div.ccm-block-page-list-page-entry-horizontal {
+    .make-row();
+
+    div.ccm-block-page-list-page-entry-thumbnail {
+      .make-xs-column(2);
+      padding-top: 7px; // to counteract the h3 line height
+
+      img {
+        .img-responsive;
+      }
+    }
+    div.ccm-block-page-list-page-entry-text {
+      .make-xs-column(10);
+    }
+  }
+
+  div.ccm-block-page-list-date {
+    color: lighten(@body-type-color, 25%);
+    font-size: 0.8em;
+    margin-bottom: 10px;
+  }
+
+  div.ccm-block-page-list-title {
+    margin: 0px;
+    .make-heading(@h2-type-font-family, @h2-type-font-size, @h2-type-font-weight, @h2-type-color);
+
+    a {
+      color: @h2-type-color;
+      &:hover {
+        text-decoration: none;
+        color: @header-navigation-type-color;
+      }
+    }
+
+  }
+}

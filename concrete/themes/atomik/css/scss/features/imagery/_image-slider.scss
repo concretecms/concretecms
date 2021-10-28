@@ -1,0 +1,106 @@
+div.theme-atomik {
+  .ccm-image-slider {
+
+    .rslides_nav {
+      background: none;
+      height: auto;
+      opacity: 1;
+      width: auto;
+
+      &.prev {
+        &::after {
+          content: '\f0d9';
+          display: inline-block;
+          font-family: 'Font Awesome 5 Free';
+          font-size: 24px;
+          font-weight: 700;
+          text-decoration: inherit;
+          vertical-align: middle;
+          color: $image-slider-arrow-bg;
+          transition: all 0.4s ease-in-out;
+        }
+        left: 3rem;
+        &:hover {
+          &::after {
+            color: $primary;
+          }
+        }
+      }
+
+      &.next {
+        &::after {
+          content: '\f0da';
+          display: inline-block;
+          font-family: 'Font Awesome 5 Free';
+          font-size: 24px;
+          font-weight: 700;
+          text-decoration: inherit;
+          vertical-align: middle;
+          color: $image-slider-arrow-bg;
+          transition: all 0.4s ease-in-out;
+        }
+        right: 3rem;
+        &:hover {
+          &::after {
+            color: $primary;
+          }
+        }
+      }
+
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+    }
+
+    .rslides_tabs {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 0;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 0;
+      padding-bottom: 0;
+
+      li {
+        a {
+          margin: 0;
+          width: 30px;
+          background: transparent;
+          border-radius: 0;
+          border-bottom: 3px solid rgba($image-slider-cover-color, 0.5);
+          transition: all 0.4s ease-in-out;
+        }
+
+        &.rslides_here {
+          a {
+            border-bottom-color: $image-slider-cover-color;
+          }
+        }
+      }
+    }
+
+    .ccm-image-slider-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: $image-slider-cover-bg;
+      color: $image-slider-cover-color;
+      text-align: center;
+      padding-top: 2rem;
+
+      p {
+        margin-bottom: 3rem;
+      }
+
+      .ccm-image-slider-title {
+        @extend h4;
+        color: $image-slider-cover-color;
+        margin-bottom: 2rem;
+      }
+
+    }
+
+  }
+}

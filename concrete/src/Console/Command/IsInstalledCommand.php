@@ -6,25 +6,30 @@ use Concrete\Core\Console\Command;
 use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 class IsInstalledCommand extends Command
 {
-    const RETURN_CODE_ON_FAILURE = 2;
+    const CONCRETE_IS_INSTALLED = self::SUCCESS;
+    const CONCRETE_IS_NOT_INSTALLED = 1;
+    const FAILURE = 2;
 
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $installedExitCode = static::CONCRETE_IS_INSTALLED;
+        $notInstalledExitCode = static::CONCRETE_IS_NOT_INSTALLED;
+        $errExitCode = static::FAILURE;
 
         $this
             ->setName('c5:is-installed')
-            ->setDescription('Check if concrete5 is already installed')
+            ->setDescription('Check if Concrete is already installed')
             ->addEnvOption()
             ->setHelp(<<<EOT
-This command will print out if concrete5 is already installed (unless the --quiet option is specified),
+This command will print out if Concrete CMS is already installed (unless the --quiet option is specified),
 and set the following return codes
 
-  0 concrete5 is installed
-  1 concrete5 is not installed
+  $installedExitCode Concrete is installed
+  $notInstalledExitCode Concrete is not installed
   $errExitCode errors occurred
 EOT
             )
@@ -33,12 +38,17 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app = Application::getFacadeApplication();
-        $isInstalled = $app->isInstalled();
-        if ($output->getVerbosity() >= OutputInterface::OUTPUT_NORMAL) {
-            $output->writeln($isInstalled ? 'concrete5 is installed' : 'concrete5 is not installed');
-        }
+        try {
+            $app = Application::getFacadeApplication();
+            $isInstalled = $app->isInstalled();
+            if ($output->getVerbosity() >= OutputInterface::OUTPUT_NORMAL) {
+                $output->writeln($isInstalled ? 'Concrete is installed' : 'Concrete is not installed');
+            }
 
-        return $isInstalled ? 0 : 1;
+            return $isInstalled ? static::CONCRETE_IS_INSTALLED : static::CONCRETE_IS_NOT_INSTALLED;
+        } catch (Throwable $error) {
+            $this->writeError($output, $error);
+            return static::FAILURE;
+        }
     }
 }

@@ -12,7 +12,6 @@ use Mockery as M;
 
 class DeactivateUserTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
 
     public function testStaticFactory()
     {

@@ -11,7 +11,7 @@ foreach ($questionAnswerPairs as $questionAnswerPair) {
 $formDisplayUrl = URL::to('/dashboard/reports/forms') . '?qsid='.$questionSetId;
 
 $body = t("
-There has been a submission of the form %s through your concrete5 website.
+There has been a submission of the form %s through your Concrete website.
 
 %s
 

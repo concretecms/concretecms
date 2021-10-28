@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class AddContentToBoardInstanceCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class AddContentToBoardInstanceCommand extends Command
 {
 
     use BoardInstanceTrait;

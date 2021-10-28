@@ -1,0 +1,17 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+@import 'variables';
+
+@import 'magnific-popup';
+
+div.ccm-lightbox-popup-white {
+  background-color: white;
+  border-radius: 10px;
+  margin: 0 auto;
+
+  max-width: 600px;
+  padding: 20px 60px 20px 20px;
+  position: relative;
+
+}

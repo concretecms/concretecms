@@ -13,7 +13,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btVideo';
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
-    protected $btExportFileColumns = ['fID'];
+    protected $btExportFileColumns = ['webmfID', 'oggfID', 'posterfID', 'mp4fID'];
     protected $btWrapperClass = 'ccm-ui';
 
     public function getBlockTypeDescription()

@@ -8,17 +8,18 @@ import '@concretecms/bedrock/assets/bedrock/js/frontend';
 // Import the CMS components and the backend components
 // Note, this currently isn't technically necessary, but I'm putting here so we have some place to put components
 // as we create them.
-import BoardInstanceRule from './components/Board/InstanceRule'
+// ---
+// import BoardInstanceRule from './components/Board/InstanceRule'
+// ---
+// Note, we actually have no components that are in backend that aren't in cms, becauase we're moving InstanceRule into
+// the CMS namespace. But let's keep this here so we can remember it's an option.
 
 Concrete.Vue.createContext('backend', {
-    BoardInstanceRule
+//    BoardInstanceRule
 }, 'cms')
 
 // Desktops and waiting for me
 import '@concretecms/bedrock/assets/desktop/js/frontend';
-
-// Avatar picker
-import '@concretecms/bedrock/assets/account/js/frontend';
 
 // Calendar
 import '@concretecms/bedrock/assets/calendar/js/backend';
@@ -28,6 +29,7 @@ import './search/advanced-search-launcher';
 import './search/preset-selector';
 import './search/results-table';
 import './file-manager/file-manager';
+import './page-search/page-search';
 import './groups/group-manager';
 
 // Custom UI for Pages
@@ -120,7 +122,12 @@ var setupTooltips = function() {
     if ($("#ccm-tooltip-holder").length == 0) {
         $('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
     }
-    $('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('.launch-tooltip'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            container: '#ccm-tooltip-holder'
+        })
+    })
 };
 
 var setupDialogs = function() {
@@ -191,6 +198,30 @@ var setupSiteListMenuItem = function() {
         window.location.href = $(this).val()
     })
 };
+
+window.ConcreteEvent.subscribe("ConcreteServerEventThumbnailGenerated", function(e, data) {
+    e.preventDefault();
+
+    var $el = $(".ccm-image-wrapper[data-file-id='" + data.fileId + "'][data-file-version-id='" + data.fileVersionId + "'][data-thumbnail-type-handle='" + data.thumbnailTypeHandle + "']");
+
+    if ($el.length) {
+        if (data.thumbnailUrl.substr(0, CCM_REL.length) !== CCM_REL) {
+            // If the worker is executed in CLI mode the generated url doesn't contain the base path.
+            // So we manually prepend this to the image urls. (required if concrete is running within a sub directory)
+            data.thumbnailUrl = CCM_APPLICATION_URL + data.thumbnailUrl;
+        }
+
+        var $img = $("<img/>")
+            .attr("src", data.thumbnailUrl)
+            .attr("alt", data.fileName)
+            .attr("class", $el.attr("class"))
+            .removeClass("ccm-image-wrapper");
+
+        $el.replaceWith($img);
+    }
+
+    return false;
+});
 
 setupTooltips();
 setupResultMessages();

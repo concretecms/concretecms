@@ -1,0 +1,57 @@
+div.ccm-page {
+  main {
+
+    // ensure that what you're putting in here is large and in charge
+    .jumbo {
+      h1 {
+        .title-thin;
+        padding-top: 40px;
+        font-size: @title-thin-type-font-size * 1.5;
+        padding-bottom: 40px;
+      }
+
+      p {
+        font-size: @h2-type-font-size;
+        color: @h4-type-color;
+        font-weight: 200;
+      }
+
+      min-height: 300px;
+    }
+  }
+}
+
+/* comes outside of main because we want to show it in redactor */
+.title-thin {
+  color: @title-thin-type-color !important;
+  font-family: @title-thin-type-font-family !important;
+  font-size: @title-thin-type-font-size !important;
+  line-height: (@line-height-base * .8);
+  font-weight: 200 !important;
+  display: block
+}
+
+.title-caps-bold {
+  color: @title-caps-type-color !important;
+  font-family: @title-caps-type-font-family !important;
+  font-size: @title-caps-type-font-size !important;
+  line-height: @title-caps-type-font-size * @line-height-base !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
+.title-caps {
+  color: @title-caps-type-color !important;
+  font-family: @title-caps-type-font-family !important;
+  font-size: @title-caps-type-font-size !important;
+  line-height: @title-caps-type-font-size * @line-height-base !important;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.image-caption {
+  font-family: @image-caption-type-font-family;
+  color: @image-caption-type-color;
+  font-size: @image-caption-type-font-size;
+  @image-caption-type-font-style: 'italic';
+}

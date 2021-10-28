@@ -3,8 +3,9 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Board\InstanceSlotRule;
+use Concrete\Core\Foundation\Command\Command;
 
-class DeleteBoardInstanceSlotRuleCommand
+class DeleteBoardInstanceSlotRuleCommand extends Command
 {
 
     /**

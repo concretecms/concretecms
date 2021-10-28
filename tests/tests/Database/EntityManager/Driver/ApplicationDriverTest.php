@@ -33,7 +33,7 @@ class ApplicationDriverTest extends TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = Application::getFacadeApplication();
@@ -45,7 +45,7 @@ class ApplicationDriverTest extends TestCase
     /**
      * Clean up after each tests.
      */
-    public function tearDown()
+    public function TearDown():void
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();
@@ -318,7 +318,7 @@ class ApplicationDriverTest extends TestCase
      *
      * @param \Exception $e
      */
-    protected function onNotSuccessfulTest($e)
+    protected function onNotSuccessfulTest(\Throwable $e):void
     {
         $this->cleanupFolderSystem();
         $this->cleanupConfig();

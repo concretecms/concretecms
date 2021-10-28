@@ -8,14 +8,12 @@ use Concrete\Core\Entity\User\User;
 use Concrete\Core\Notification\View\UserDeactivatedListView;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Concrete\Tests\TestCase;
 use Mockery as M;
 
 class UserDeactivatedListViewTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
     public function testManualViewDetails()
     {
@@ -45,7 +43,7 @@ class UserDeactivatedListViewTest extends TestCase
         $view = new UserDeactivatedListView($notification);
         $view->setApplication($app);
 
-        $this->assertEquals('fa fa-user-times', $view->getIconClass());
+        $this->assertEquals('fas fa-user-times', $view->getIconClass());
         $this->assertEquals('User Deactivated', $view->getTitle());
         $this->assertStringMatchesFormat('%s has been manually deactivated by %s', $view->getActionDescription());
     }

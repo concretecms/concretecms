@@ -1,0 +1,33 @@
+/* stylelint-disable selector-class-pattern */
+.ccm-page-profile {
+  .ccm-profile-header {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+  }
+
+  .ccm-profile-header {
+    [class*='col'] {
+      align-items: center;
+      display: flex;
+    }
+
+    .ccm-profile-avatar {
+      img {
+        border-radius: 50%;
+        display: block;
+        margin-right: 2rem;
+        max-width: 120px;
+      }
+    }
+
+    .ccm-profile-buttons {
+      margin-left: auto;
+    }
+  }
+
+  .ccm-profile-detail {
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
+}

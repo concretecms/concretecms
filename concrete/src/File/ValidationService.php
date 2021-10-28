@@ -80,8 +80,8 @@ class ValidationService
         $config = app('config');
         $ext = strtolower($f->getExtension($filename));
         
-        $blacklist = array_map('strtolower', $cf->unSerializeUploadFileExtensions($config->get('concrete.upload.extensions_blacklist')));
-        if (in_array($ext, $blacklist, true)) {
+        $denylist = array_map('strtolower', $cf->unSerializeUploadFileExtensions($config->get('concrete.upload.extensions_denylist', $config->get('concrete.upload.extensions_blacklist'))));
+        if (in_array($ext, $denylist, true)) {
             return false;
         }
         if (is_array($extensions) && $extensions !== []) {

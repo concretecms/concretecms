@@ -18,7 +18,7 @@ class SetBoardCustomWeightingCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(SetBoardCustomWeightingCommand $command)
+    public function __invoke(SetBoardCustomWeightingCommand $command)
     {
         foreach($command->getWeightings() as $weighting) {
             [$configuredDataSource, $weight] = $weighting;

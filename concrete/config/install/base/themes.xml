@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <themes>
-
+        <theme handle="atomik" package="" />
+        <theme handle="elemental" package="" />
     </themes>
 </concrete5-cif>

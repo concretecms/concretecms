@@ -5,7 +5,7 @@ class CategoryListFormatter implements ListFormatterInterface
 {
     public function getIconElement()
     {
-        return '<i class="fa fa-folder"></i>';
+        return '<i class="fas fa-folder"></i>';
     }
 
     public function getSearchResultsClass()

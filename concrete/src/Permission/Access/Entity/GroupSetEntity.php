@@ -61,7 +61,7 @@ class GroupSetEntity extends Entity
         $instr = implode(',', $ingids);
         $r = $db->Execute('select uID from UserGroups where gID in (' . $instr . ')');
         $users = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $ui = UserInfo::getByID($row['uID']);
             if (is_object($ui)) {
                 $users[] = $ui;

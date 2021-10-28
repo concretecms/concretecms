@@ -38,6 +38,14 @@ class ImageDataFieldData implements DataFieldDataInterface
             return '';
         }
     }
+
+    public function getThumbnailURL(string $thumbnailType)
+    {
+        $file = File::getByID($this->fID);
+        if ($file) {
+            return $file->getThumbnailURL($thumbnailType);
+        }
+    }
     
     public function jsonSerialize()
     {

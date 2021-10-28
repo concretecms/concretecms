@@ -12,7 +12,7 @@ use Concrete\Core\User\Group\Command\Traits\ParentNodeRetrieverTrait;
 use Concrete\Core\User\Group\Event;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\User;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Tree\Node\Type\Group as GroupNode;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 
@@ -25,7 +25,7 @@ class AddGroupCommandHandler
     protected $connection;
 
     /**
-     * @var EventDispatcherInterface
+     * @var EventDispatcher
      */
     protected $dispatcher;
 
@@ -38,7 +38,7 @@ class AddGroupCommandHandler
     public function __construct(
         GroupRepository $groupRepository,
         Connection $connection,
-        EventDispatcherInterface $dispatcher
+        EventDispatcher $dispatcher
     )
     {
         $this->groupRepository = $groupRepository;
@@ -46,7 +46,7 @@ class AddGroupCommandHandler
         $this->dispatcher = $dispatcher;
     }
 
-    public function handle(AddGroupCommand $command)
+    public function __invoke(AddGroupCommand $command)
     {
         $user = new User();
 

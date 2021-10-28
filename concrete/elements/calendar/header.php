@@ -17,7 +17,7 @@ if (!isset($month)) {
     <div class="btn-group">
         <div class="btn-group">
             <button type="button" id="calendar_button" class="btn btn-secondary dropdown-toggle"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?= h($calendar->getName()) ?>
                 <span class="caret"></span>
             </button>
@@ -68,11 +68,11 @@ if (!isset($month)) {
         <a href="<?= URL::to('/dashboard/calendar/events', 'view',
             $calendar->getID()) ?>" class="btn btn-secondary <?php if ($mode != 'list') {
     ?>active<?php
-} ?>"><i class="fa fa-calendar"></i></a>
+} ?>"><i class="fas fa-calendar-alt"></i></a>
         <a href="<?= URL::to('/dashboard/calendar/event_list', 'view',
             $calendar->getID()) ?>" class="btn btn-secondary <?php if ($mode == 'list') {
     ?>active<?php
-} ?>"><i class="fa fa-list"></i></a>
+} ?>"><i class="fas fa-list"></i></a>
         <?php if ($calendarPermissions->canAddCalendarEvent()) {
     ?>
             <a class="dialog-launch btn btn-primary" dialog-width="1100" dialog-title="<?= t('Add Event') ?>"
@@ -93,8 +93,8 @@ if (!isset($month)) {
             <p><?= t('Are you sure? This action cannot be undone.') ?></p>
         </form>
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-            <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?= t(
+            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+            <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-calendar form').submit()"><?= t(
                     'Delete Calendar') ?></button>
         </div>
     </div>
@@ -124,9 +124,15 @@ if (!isset($month)) {
         width: 100%;
     }
 
-    table.ccm-dashboard-calendar > thead > tr > td,
-    table.ccm-dashboard-calendar {
-        border-width: 0px !important;
+    table.ccm-dashboard-calendar > thead > tr  {
+        border-width: 0 0 0 0 !important;
+    }
+    table.ccm-dashboard-calendar > thead > tr > td {
+        border-width: 0 0 0 0 !important;
+    }
+
+    table.ccm-dashboard-calendar > thead > tr > td h4 {
+        text-align: center;
     }
 
     table.ccm-dashboard-calendar td {

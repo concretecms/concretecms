@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<styles version="1.0">
+    <set name="Full Page">
+        <style name="Page Background" variable="page-background" type="color" />
+        <style name="Text" variable="body" type="type" />
+        <style name="Link" variable="body-link" type="color" />
+        <style name="Link Hover" variable="body-link-hover" type="color" />
+        <style name="Page Titles" variable="page-title" type="type" />
+    </set>
+    <set name="Header">
+        <style name="Background" variable="header-background" type="color" />
+        <style name="Site Title" variable="header-site-title" type="type" />
+        <style name="Search Field Icon Color" variable="header-search-input-icon" type="color" />
+        <style name="Search Field Border Color" variable="header-search-input-border" type="color" />
+        <style name="Search Field Background Color" variable="header-search-input-background" type="color" />
+        <style name="Navigation" variable="header-navigation" type="type" />
+        <style name="Navigation Hover" variable="header-navigation-hover" type="color" />
+        <style name="Navigation Menu Background" variable="header-navigation-menu-background" type="color" />
+        <style name="Navigation Menu Background Hover" variable="header-navigation-menu-background-hover" type="color" />
+        <style name="Navigation Menu Border" variable="header-navigation-menu-border" type="color" />
+        <style name="Navigation Menu Text" variable="header-navigation-menu-text" type="color" />
+        <style name="Navigation Menu Text Hover" variable="header-navigation-menu-text-hover" type="color" />
+    </set>
+    <set name="Headings">
+        <style name="Heading 1" variable="h1" type="type" />
+        <style name="Heading 2" variable="h2" type="type" />
+        <style name="Heading 3" variable="h3" type="type" />
+        <style name="Heading 4" variable="h4" type="type" />
+        <style name="Heading 5" variable="h5" type="type" />
+        <style name="Heading 6" variable="h6" type="type" />
+    </set>
+    <set name="Blockquote">
+        <style name="Text" variable="blockquote" type="type" />
+        <style name="Left Padding" variable="blockquote-left-padding" type="size" />
+        <style name="Border Color" variable="blockquote-border" type="color" />
+    </set>
+    <set name="Image Slider">
+        <style name="Background Image" variable="image-slider-background" type="image" />
+        <style name="Title" variable="image-slider-title" type="type" />
+        <style name="Paragraph" variable="image-slider-paragraph" type="type" />
+        <style name="Navigation" variable="image-slider-navigation" type="color" />
+        <style name="Active Navigation" variable="image-slider-navigation-active" type="color" />
+    </set>
+    <set name="Footer">
+        <style name="Site Title" variable="footer-site-title" type="type" />
+        <style name="Top Background Color" variable="footer-top-background" type="color" />
+        <style name="Bottom Background Color" variable="footer-bottom-background" type="color" />
+        <style name="Section Divider Color" variable="footer-section-divider" type="color" />
+        <style name="Social Icons" variable="footer-social-icon" type="color" />
+        <style name="Social Icons Hover" variable="footer-social-icon-hover" type="color" />
+        <style name="Link Color" variable="footer-link" type="color" />
+        <style name="Link Hover Color" variable="footer-link-hover" type="color" />
+    </set>
+    <set name="Miscellaneous">
+        <style name="Content Divider Color" variable="content-section-divider" type="color" />
+        <style name="Default Button Border" variable="default-button-border" type="color" />
+        <style name="Accent Background" variable="accent-background" type="color" />
+        <style name="Accent Header Color" variable="accent-header" type="color" />
+        <style name="Title Thin" variable="title-thin" type="type" />
+        <style name="Image Caption" variable="image-caption" type="type" />
+        <style name="Title Caps" variable="title-caps" type="type" />
+        <style name="Home Feature Title" variable="home-feature-title" type="color" />
+        <style name="Home Feature Icon" variable="home-feature-icon" type="color" />
+    </set>
+</styles>

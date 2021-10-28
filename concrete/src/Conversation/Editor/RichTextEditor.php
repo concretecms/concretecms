@@ -14,8 +14,7 @@ class RichTextEditor extends Editor
         \Core::make(EditorInterface::class);
         $list = AssetList::getInstance();
 
-        $r = $list->getAssetGroup('editor/ckeditor4');
-
+        $r = $list->getAssetGroup('ckeditor');
 
         return $r->getAssetPointers();
     }

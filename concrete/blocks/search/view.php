@@ -10,7 +10,7 @@ if (!isset($query) || !is_string($query)) {
 }
 
 ?>
-    <form action="<?= $view->url($resultTarget) ?>" method="get" class="ccm-search-block-form"><?php
+    <form class="hstack gap-3" action="<?= $view->url($resultTarget) ?>" method="get" class="ccm-search-block-form"><?php
 if (isset($title) && ($title !== '')) {
     ?><h3><?= h($title) ?></h3><?php
 
@@ -28,11 +28,11 @@ if ($query === '') {
         }
     }
 }
-?><input name="query" type="text" value="<?= htmlentities($query, ENT_COMPAT, APP_CHARSET) ?>"
+?><input name="query" class="form-control" type="text" value="<?= htmlentities($query, ENT_COMPAT, APP_CHARSET) ?>"
          class="ccm-search-block-text" /><?php
 if (isset($buttonText) && ($buttonText !== '')) {
     ?> <input name="submit" type="submit" value="<?= h($buttonText) ?>"
-              class="btn btn-default ccm-search-block-submit" /><?php
+              class="btn btn-secondary ccm-search-block-submit" /><?php
 
 } ?>
 
@@ -46,11 +46,15 @@ if (isset($buttonText) && ($buttonText !== '')) {
     </div>
 <?php } ?>
 
+</form>
+
 <?php
-if (isset($do_search) && $do_search) {
-    if (count($results) == 0) {
+if (isset($do_search) && $do_search) { ?>
+
+    <div class="mt-4">
+    <?php if (count($results) == 0) {
         ?>
-        <h4 style="margin-top:32px"><?= t('There were no results found. Please try another keyword or phrase.') ?></h4><?php
+        <h4><?= t('There were no results found. Please try another keyword or phrase.') ?></h4><?php
 
     } else {
         $tt = Core::make('helper/text');
@@ -80,6 +84,8 @@ if (isset($do_search) && $do_search) {
             $showPagination = true;
             echo $pagination->renderDefaultView();
         }
-    }
+    } ?>
+    </div>
+<?php
 }
-?></form><?php
+?>

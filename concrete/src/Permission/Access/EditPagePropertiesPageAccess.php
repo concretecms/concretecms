@@ -12,7 +12,7 @@ class EditPagePropertiesPageAccess extends PageAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery('select * from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array(
                 $row['peID'],
                 $newPA->getPermissionAccessID(),
@@ -26,7 +26,7 @@ class EditPagePropertiesPageAccess extends PageAccess
             $db->executeQuery('insert into PagePermissionPropertyAccessList (peID, paID, attributePermission, name, publicDateTime, uID, description, paths) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from PagePermissionPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['akID']);
             $db->executeQuery('insert into PagePermissionPropertyAttributeAccessListCustom  (peID, paID, akID) values (?, ?, ?)', $v);
         }

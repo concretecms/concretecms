@@ -1,0 +1,57 @@
+/**
+ * Page Design Side Panel
+ */
+#ccm-panel-page-design {
+  h5 {
+    font-size: 1.2rem;
+  }
+
+  .ccm-panel-content-inner {
+    border-top: 1px solid $gray-200;
+    margin-top: 16px;
+    padding: 0;
+
+    .ccm-panel-page-design-title {
+      color: $gray-700;
+      font-weight: bold;
+    }
+  }
+}
+
+.ccm-panel-page-design-page-group {
+  padding: 25px 10px 10px 34px;
+
+  .form-check {
+    margin: 22px 0;
+
+    label {
+      display: block;
+
+      img {
+        float: right !important;
+        height: auto;
+        width: 25px;
+      }
+    }
+  }
+}
+
+#ccm-panel-page-design-themes {
+  padding: 18px 10px 10px 34px;
+
+  .ccm-page-design-theme-thumbnail {
+    margin: 20px 0;
+
+    span > i > img {
+      border: 1px solid $gray-200;
+      height: auto;
+      width: 225px;
+    }
+
+    &.ccm-page-design-theme-thumbnail-selected {
+      img {
+        border: 1px solid $primary;
+      }
+    }
+  }
+}

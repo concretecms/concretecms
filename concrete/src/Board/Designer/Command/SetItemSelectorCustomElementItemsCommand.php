@@ -4,8 +4,9 @@ namespace Concrete\Core\Board\Designer\Command;
 
 use Concrete\Core\Entity\Board\Designer\CustomElement;
 use Concrete\Core\Entity\Board\Item;
+use Concrete\Core\Foundation\Command\Command;
 
-class SetItemSelectorCustomElementItemsCommand
+class SetItemSelectorCustomElementItemsCommand extends Command
 {
 
     /**

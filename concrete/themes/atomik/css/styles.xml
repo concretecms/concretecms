@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<styles version="2.0" lang="scss">
+    <webfonts>
+        <preset identifier="default">
+            <font type="google" name="Montserrat" />
+            <font type="google" name="Bebas Neue" />
+            <font type="google" name="Raleway" />
+        </preset>
+        <preset identifier="rustic-elegance">
+            <font type="google" name="Prata" />
+            <font type="google" name="Lato" />
+        </preset>
+    </webfonts>
+    <set name="Base Colors">
+        <style name="Primary" variable="primary" type="color"/>
+        <style name="Secondary" variable="secondary" type="color"/>
+        <style name="Light" variable="light" type="color"/>
+        <style name="Accent" variable="accent" type="color"/>
+        <style name="Dark Accent" variable="dark-accent" type="color"/>
+    </set>
+    <set name="Header">
+        <style name="Top Navigation Bar Color" variable="top-navbar-bg" type="color"/>
+    </set>
+    <set name="Typography">
+        <style name="Base Font Family" variable="font-family-base" type="font-family"/>
+    </set>
+    <set name="Hero Image">
+        <style name="Cover Background Color" variable="hero-image-cover-bg" type="color"/>
+        <style name="Title Color" variable="hero-image-title-color" type="color"/>
+        <style name="Title Font Size" variable="hero-image-title-font-size" type="size"/>
+    </set>
+    <set name="Image Slider">
+        <style name="Arrow Color" variable="image-slider-arrow-bg" type="color"/>
+        <style name="Cover Background Color" variable="image-slider-cover-bg" type="color"/>
+        <style name="Cover Text Color" variable="image-slider-cover-color" type="color"/>
+    </set>
+    <set name="Spacing">
+        <style name="Stripe Vertical Padding" variable="stripe-padding-y" type="size"/>
+    </set>
+    <set name="Footer">
+        <style name="Footer Background Color" variable="theme-footer-bg" type="color"/>
+        <style name="Footer Text Color" variable="theme-footer-color" type="color"/>
+        <style name="Footer Link Color" variable="theme-footer-link-color" type="color"/>
+    </set>
+</styles>

@@ -128,7 +128,7 @@ $identifier = $app->make(Identifier::class);
             <li class="ccm-inline-toolbar-select">
                 <div class="form-group">
                     <?php echo $form->label("bFilename", t('Block Template')); ?>
-                    <?php echo $form->select("bFilename", $customTemplateOptions, $bFilename, ["class" => "selectpicker"]); ?>
+                    <?php echo $form->select("bFilename", $customTemplateOptions, $bFilename, ['class' => '']); ?>
                 </div>
             </li>
         <?php } ?>
@@ -136,7 +136,7 @@ $identifier = $app->make(Identifier::class);
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                title="<?php echo h(t('Text Size and Color')); ?>">
-                <i class="fa fa-font"></i>
+                <i class="fas fa-font"></i>
             </a>
 
             <div class="ccm-dropdown-menu">
@@ -176,7 +176,7 @@ $identifier = $app->make(Identifier::class);
                                     'left' => t('Left'),
                                     'center' => t('Center'),
                                     'right' => t('Right'),
-                                ], $alignment, ["class" => "selectpicker"]); ?>
+                                ], $alignment, ["class" => "selectpicker form-control"]); ?>
                             </div>
                         </fieldset>
                     </div>
@@ -188,7 +188,7 @@ $identifier = $app->make(Identifier::class);
             <a href="javascript:void(0);"
                title="<?php echo h(t('Background Color and Image')); ?>">
 
-                <i class="fa fa-image"></i>
+                <i class="fas fa-image"></i>
             </a>
 
             <div class="ccm-dropdown-menu">
@@ -220,7 +220,7 @@ $identifier = $app->make(Identifier::class);
                                     'repeat-x' => t('Horizontally'),
                                     'repeat-y' => t('Vertically'),
                                     'repeat' => t('Horizontally & Vertically'),
-                                ], $backgroundRepeat, ["class" => "selectpicker"]); ?>
+                                ], $backgroundRepeat, ["class" => "selectpicker form-control"]); ?>
                             </div>
 
                             <hr/>
@@ -236,7 +236,7 @@ $identifier = $app->make(Identifier::class);
                                     '50%' => t('50%'),
                                     '75%' => t('75%'),
                                     '100%' => t('100%'),
-                                ], $backgroundSize, ["class" => "selectpicker"]); ?>
+                                ], $backgroundSize, ["class" => "selectpicker form-control"]); ?>
                             </div>
 
                             <hr/>
@@ -253,7 +253,7 @@ $identifier = $app->make(Identifier::class);
                                     'right top' => t('Right Top'),
                                     'right center' => t('Right Center'),
                                     'right bottom' => t('Right Bottom'),
-                                ], $backgroundPosition, ["class" => "selectpicker"]); ?>
+                                ], $backgroundPosition, ["class" => "selectpicker form-control"]); ?>
                             </div>
                         </fieldset>
                     </div>
@@ -294,7 +294,7 @@ $identifier = $app->make(Identifier::class);
                                     'ridge' => t('Ridge'),
                                     'inset' => t('Inset'),
                                     'outset' => t('Outset'),
-                                ], $borderStyle, ["class" => "selectpicker"]); ?>
+                                ], $borderStyle, ["class" => "selectpicker form-control"]); ?>
                             </div>
 
                             <hr/>
@@ -327,7 +327,7 @@ $identifier = $app->make(Identifier::class);
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                title="<?php echo h(t('Margin and Padding')); ?>">
-                <i class="fa fa-arrows-alt-h"></i>
+                <i class="fas fa-arrows-alt-h"></i>
             </a>
 
             <div class="ccm-dropdown-menu <?php echo $style instanceof CustomStyle ? "ccm-inline-design-dropdown-menu-doubled" : ""; ?>">
@@ -424,7 +424,7 @@ $identifier = $app->make(Identifier::class);
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                title="<?php echo h(t('Shadow and Rotation (CSS3)')); ?>">
-                <i class="fa fa-magic"></i>
+                <i class="fas fa-magic"></i>
             </a>
 
             <div class="ccm-dropdown-menu ccm-inline-design-dropdown-menu-doubled">
@@ -530,7 +530,7 @@ $identifier = $app->make(Identifier::class);
                                 <legend>
                                     <?php echo t('Device Visibility') ?>
 
-                                    <i class="fa fa-question-circle launch-tooltip"
+                                    <i class="fas fa-question-circle launch-tooltip"
                                        title="<?php echo h(t('Hide the current content on a particular type of device. Un-check a device below to hide the content.')) ?>"></i>
                                 </legend>
 
@@ -563,7 +563,7 @@ $identifier = $app->make(Identifier::class);
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                title="<?php echo t('Custom CSS Classes, Block Name, Block Templates and Reset Styles') ?>">
-                <i class="fa fa-cog"></i>
+                <i class="fas fa-cog"></i>
             </a>
 
             <div class="ccm-dropdown-menu">
@@ -619,14 +619,14 @@ $identifier = $app->make(Identifier::class);
                             <?php if ($displayBlockContainerSettings) { ?>
                                 <div class="form-group">
                                     <?php echo $form->label("enableBlockContainer", t('Block Container Class')) ?>
-                                    <?php echo $form->select("enableBlockContainer", $enableBlockContainerOptions, $enableBlockContainer, ["class" => "selectpicker"]); ?>
+                                    <?php echo $form->select("enableBlockContainer", $enableBlockContainerOptions, $enableBlockContainer); ?>
                                 </div>
 
                                 <hr/>
                             <?php } ?>
 
-                            <div>
-                                <?php echo $form->button("clearStyles", t('Clear Styles'), ["data-reset-action" => h($resetAction), "data-action" => "reset-design"], "btn-block btn-danger"); ?>
+                            <div class="d-grid">
+                                <?php echo $form->button("clearStyles", t('Clear Styles'), ["data-reset-action" => h($resetAction), "data-action" => "reset-design"], "btn-danger"); ?>
                             </div>
                         </fieldset>
                     </div>

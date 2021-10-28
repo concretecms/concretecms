@@ -66,8 +66,8 @@ if ($calendar !== null) {
                 <div class="ccm-dashboard-form-actions-wrapper">
                     <div class="ccm-dashboard-form-actions ">
                         <a href="<?= $view->url($preferences->getPreferredViewPath()) ?>"
-                           class="btn btn-secondary float-left"><?= t("Cancel") ?></a>
-                        <button type="submit" class="btn btn-primary float-right"><?= $buttonText ?></button>
+                           class="btn btn-secondary float-start"><?= t("Cancel") ?></a>
+                        <button type="submit" class="btn btn-primary float-end"><?= $buttonText ?></button>
                     </div>
                 </div>
             </fieldset>
@@ -79,7 +79,7 @@ if ($calendar !== null) {
                         '' => t('Do not link to a "More Details" page.'),
                         'create' => t('Create and link to a new "More Details" page.'),
                         'associate' => t('Link to an existing page')
-                    ], $enableMoreDetails, ["class" => "form-control"])
+                    ], $enableMoreDetails)
                     ?>
                 </div>
 

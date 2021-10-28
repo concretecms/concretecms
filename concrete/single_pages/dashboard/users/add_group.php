@@ -35,9 +35,7 @@ use Concrete\Core\User\Group\GroupType; ?>
         </div>
         <div class="form-group">
             <?=$form->label('gDescription', t('Description'))?>
-            <div class="controls">
-                <?=$form->textarea('gDescription', ['rows' => 6, 'class' => 'span6'])?>
-            </div>
+            <?=$form->textarea('gDescription', ['rows' => 6])?>
         </div>
 
         <div class="form-group">
@@ -74,7 +72,7 @@ use Concrete\Core\User\Group\GroupType; ?>
         </div>
 
         <div class="form-group">
-            <label class="control-label"><?=t('Create Group Beneath')?></label>
+            <label class="control-label form-label"><?=t('Create Group Beneath')?></label>
             <div class="controls">
                 <div class="groups-tree" style="width: 460px" data-groups-tree="<?=$tree->getTreeID()?>"></div>
                 <?=$form->hidden('gParentNodeID')?>
@@ -84,9 +82,6 @@ use Concrete\Core\User\Group\GroupType; ?>
                             'treeID': '<?=$tree->getTreeID()?>',
                             'chooseNodeInForm': 'single',
                             'enableDragAndDrop': false,
-                            ajaxData: {
-                                displayOnly: 'group_folder'
-                            },
                             <?php
                             if ($this->controller->isPost()) {
                                 ?>
@@ -126,44 +121,17 @@ use Concrete\Core\User\Group\GroupType; ?>
     </fieldset>
 
     <fieldset>
-        <div id="gUserBadgeOptions" style="display: none">
-            <div class="form-group">
-                <label class="control-label"><?=t('Image')?></label>
-                <div class="controls">
-                    <?php
-                    $af = $app->make('helper/concrete/asset_library');
-                    echo $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), isset($badgeImage) ? $badgeImage : null);
-                    ?>
-                </div>
-            </div>
-            <div class="form-group">
-                <?=$form->label('gBadgeDescription', t('Badge Description'))?>
-                <div class="controls">
-                    <?=$form->textarea('gBadgeDescription', ['rows' => 6, 'class' => 'span6'])?>
-                </div>
-            </div>
-            <div class="form-group">
-                <?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
-                <div class="controls">
-                    <?=$form->text('gBadgeCommunityPointValue', $app->make('config')->get('concrete.user.group.badge.default_point_value'), ['class' => 'span1'])?>
-                </div>
-            </div>
-        </div>
-
-    </fieldset>
-
-    <fieldset>
         <legend><?=t('Automation')?></legend>
         <div class="form-group">
             <div class="form-check">
                 <?=$form->checkbox('gIsAutomated', 1, false)?>
-                <?=$form->label('gIsAutomated',t('This group is automatically entered.') . '<i class="fa fa-question-circle launch-tooltip" title="'.t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.").'"></i>', ['class'=>'form-check-label'])?>
+                <?=$form->label('gIsAutomated',t('This group is automatically entered.') . '<i class="fas fa-question-circle launch-tooltip" title="'.t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.").'"></i>', ['class'=>'form-check-label'])?>
             </div>
         </div>
 
         <div id="gAutomationOptions" style="display: none">
             <div class="form-group">
-                <label><?=t('Check Group')?></label>
+                <label class="form-label"><?=t('Check Group')?></label>
                 <div class="form-check">
                     <?=$form->checkbox('gCheckAutomationOnRegister', 1)?>
                     <?=$form->label('gCheckAutomationOnRegister',t('When a user registers.'), ['class'=>'form-check-label'])?>
@@ -207,14 +175,14 @@ use Concrete\Core\User\Group\GroupType; ?>
 
         <div id="gUserExpirationSetTimeOptions" style="display: none">
             <div class="form-group">
-                <label for="gUserExpirationSetDateTime"><?=t('Expiration Date')?></label>
+                <label class="form-label" for="gUserExpirationSetDateTime"><?=t('Expiration Date')?></label>
                 <?=$date->datetime('gUserExpirationSetDateTime')?>
             </div>
         </div>
 
         <div id="gUserExpirationIntervalOptions" style="display: none">
             <div class="form-group">
-                <label><?=t('Accounts expire after')?></label>
+                <label class="form-label"><?=t('Accounts expire after')?></label>
                 <div class="controls">
                     <table class="table " style="width: auto">
                         <tr>
@@ -251,8 +219,8 @@ use Concrete\Core\User\Group\GroupType; ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=$app->make('url/manager')->resolve(['/dashboard/users/groups'])?>" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
-            <?=$form->submit('add', t('Add Group'), ['class' => 'btn btn-primary float-right'])?>
+            <a href="<?=$app->make('url/manager')->resolve(['/dashboard/users/groups'])?>" class="btn btn-secondary float-start"><?=t('Cancel')?></a>
+            <?=$form->submit('add', t('Add Group'), ['class' => 'btn btn-primary float-end'])?>
         </div>
     </div>
 
@@ -300,7 +268,10 @@ $(function() {
                 $('#gAutomationOptions').hide();
                 }
         }).triggerHandler('click');
-    $('.icon-question-sign').tooltip();
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('.icon-question-sign'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
     ccm_checkGroupExpirationOptions();
 
     $("#gOverrideGroupTypeSettings").change(function() {

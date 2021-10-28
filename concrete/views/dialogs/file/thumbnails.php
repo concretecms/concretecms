@@ -5,7 +5,9 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\File\Image\Thumbnail\ThumbnailPlaceholderService;
 use Concrete\Core\Legacy\FilePermissions;
+use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\File\Image\Thumbnail\Type\Version;
 use Concrete\Core\Entity\File\Version as FileVersion;
@@ -14,6 +16,9 @@ use Concrete\Core\Entity\File\Version as FileVersion;
 /** @var Version[] $types */
 /** @var FilePermissions $fp */
 
+$app = Application::getFacadeApplication();
+/** @var ThumbnailPlaceholderService $thumbnailPlaceholderService */
+$thumbnailPlaceholderService =$app->make(ThumbnailPlaceholderService::class);
 $file = $version->getFile();
 $imageWidth = (int)$version->getAttribute('width');
 $imageHeight = (int)$version->getAttribute('height');
@@ -77,7 +82,13 @@ $i = 1;
                                      src="<?php echo $configuration->getPublicURLToFile($type->getFilePath($version)) ?>"
                                 />
                             <?php elseif ($type->shouldExistFor($imageWidth, $imageHeight, $file)): ?>
-                                <?php echo t('Thumbnail not found.'); ?>
+                                <?php echo $thumbnailPlaceholderService->getThumbnailPlaceholder(
+                                        $version,
+                                        $type,
+                                        [
+                                                "class" => "ccm-file-manager-image-thumbnail-image"
+                                        ]
+                                ); ?>
                             <?php else: ?>
                                 <?php echo t('Thumbnail not to be generated for this file.'); ?>
                             <?php endif; ?>

@@ -113,7 +113,7 @@ final class MiddlewareStack implements StackInterface, ApplicationAwareInterface
     {
         $app = $this->app;
         return function($last, MiddlewareInterface $middleware) use ($app) {
-            return $app->make(DelegateInterface::class, [$middleware, $last]);
+            return $app->make(DelegateInterface::class, ['middleware' => $middleware, 'nextDelegate' => $last]);
         };
     }
 

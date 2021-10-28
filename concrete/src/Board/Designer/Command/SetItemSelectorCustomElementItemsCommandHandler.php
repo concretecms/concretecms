@@ -19,7 +19,7 @@ class SetItemSelectorCustomElementItemsCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(SetItemSelectorCustomElementItemsCommand $command)
+    public function __invoke(SetItemSelectorCustomElementItemsCommand $command)
     {
 
         $element = $command->getElement();

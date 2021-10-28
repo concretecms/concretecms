@@ -4,7 +4,7 @@ namespace Concrete\Core\StyleCustomizer;
 
 use Concrete\Core\StyleCustomizer\Style\Style;
 
-class Set
+class Set implements \JsonSerializable
 {
     /**
      * The name of the style customizer set.
@@ -79,5 +79,13 @@ class Set
     public function getStyles()
     {
         return $this->styles;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->getDisplayName('text'),
+            'styles' => $this->getStyles(),
+        ];
     }
 }

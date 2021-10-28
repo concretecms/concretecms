@@ -5,15 +5,24 @@ use Concrete\Controller\Element\Navigation\AccountMenu;
 use Concrete\Core\Attribute\Context\DashboardFormContext;
 use Concrete\Core\Attribute\Context\FrontendFormContext;
 use Concrete\Core\Attribute\Form\Renderer;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Desktop\DesktopList;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\User\User;
 use Loader;
 use Concrete\Core\Page\Controller\PageController as CorePageController;
 
-class AccountPageController extends CorePageController
+class AccountPageController extends CorePageController implements UsesFeatureInterface
 {
     public $helpers = array('html', 'form', 'text');
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::ACCOUNT
+        ];
+    }
 
     public function on_start()
     {
@@ -30,7 +39,7 @@ class AccountPageController extends CorePageController
         $theme = $collection->getThemeByRoute('/account');
 
         $profileFormRenderer = null;
-        if ($theme[0] === VIEW_CORE_THEME || !$theme[0]) {
+        if ($theme === false || $theme[0] === VIEW_CORE_THEME) {
             // We're using the default theme, so let's do our fancy dashboard overriding of the theme if we can.
             if ($dh->inDashboard($desktop) && $this->getPageObject()->getCollectionPath() != '/account/welcome') {
                 $this->setTheme('dashboard');

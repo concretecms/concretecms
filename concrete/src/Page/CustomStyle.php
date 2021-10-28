@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
+use Concrete\Core\StyleCustomizer\Style\StyleValueList;
 use Concrete\Core\StyleCustomizer\Style\ValueList;
 use Concrete\Core\StyleCustomizer\CustomCssRecord;
 use Concrete\Core\Page\Theme\Theme;
@@ -34,7 +35,14 @@ class CustomStyle
 
     public function getValueList()
     {
-        return ValueList::getByID($this->valueListID);
+        $db = \Database::connection();
+        $list = new StyleValueList();
+        $rows = $db->fetchAll('select * from StyleCustomizerValues where scvlID = ?', [$this->valueListID]);
+        foreach ($rows as $row) {
+            $value = unserialize($row['value']);
+            $list->add($value);
+        }
+        return $list;
     }
 
     public function getPresetHandle()

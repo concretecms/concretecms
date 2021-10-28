@@ -79,7 +79,7 @@ class DefaultServer implements ServerInterface, ApplicationAwareInterface
     {
         $stack = $this->stack;
         if ($stack instanceof MiddlewareStack) {
-            $stack = $stack->withDispatcher($this->app->make(DispatcherDelegate::class, [$this->dispatcher]));
+            $stack = $stack->withDispatcher($this->app->make(DispatcherDelegate::class, ['dispatcher' => $this->dispatcher]));
         }
 
         return $stack->process($request);

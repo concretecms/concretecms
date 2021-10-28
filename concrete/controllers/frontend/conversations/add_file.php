@@ -146,8 +146,8 @@ class AddFile extends FrontendController
             return;
         }
         $extensionIsValid = false;
-        $blacklistedExtensions = $this->getBlacklistedFileExtensions($conversation);
-        if (!in_array($incomingExtension, $blacklistedExtensions, true)) {
+        $denylistedExtensions = $this->getDenylistedFileExtensions($conversation);
+        if (!in_array($incomingExtension, $denylistedExtensions, true)) {
             $allowedExtensions = $this->getAllowedFileExtensions($conversation);
             $extensionIsValid = $allowedExtensions === [] || in_array($incomingExtension, $allowedExtensions, true);
         }
@@ -157,16 +157,16 @@ class AddFile extends FrontendController
     }
 
     /**
-     * Get the list of blacklisted file extensions (lower case).
+     * Get the list of denylisted file extensions (lower case).
      *
      * @return string[]
      */
-    protected function getBlacklistedFileExtensions(Conversation $conversation): array
+    protected function getDenylistedFileExtensions(Conversation $conversation): array
     {
         $config = $this->app->make('config');
         $extensions = $config->get('conversations.files.disallowed_types');
         if ($extensions === null) {
-            $extensions = $config->get('concrete.upload.extensions_blacklist');
+            $extensions = $config->get('concrete.upload.extensions_denylist', $config->get('concrete.upload.extensions_blacklist'));
         }
         $helperFile = $this->app->make('helper/concrete/file');
 

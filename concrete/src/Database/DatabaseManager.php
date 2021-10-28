@@ -4,8 +4,9 @@ namespace Concrete\Core\Database;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Config;
+use Doctrine\Persistence\ConnectionRegistry;
 
-class DatabaseManager
+class DatabaseManager implements ConnectionRegistry
 {
     /**
      * The application instance.
@@ -282,5 +283,20 @@ class DatabaseManager
     public function getFactory()
     {
         return $this->factory;
+    }
+
+    public function getConnection($name = null)
+    {
+        return $this->connection($name);
+    }
+
+    public function getConnectionNames()
+    {
+        return array_keys($this->connections);
+    }
+
+    public function getDefaultConnectionName()
+    {
+        return $this->getDefaultConnection();
     }
 }

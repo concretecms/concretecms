@@ -12,13 +12,6 @@ use Concrete\Core\Page\Page;
 
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
- *
- * @package Blocks
- * @subpackage Conversation
- *
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
  */
 class Controller extends BlockController implements UsesFeatureInterface
 {
@@ -111,16 +104,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('notificationUsers', $conversation->getConversationSubscribedUsers());
     }
 
-    /*
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('core/conversation');
-        $u = $this->app->make(User::class);
-        if (!$u->isRegistered()) {
-            $this->requireAsset('css', 'core/frontend/captcha');
-        }
     }
-    */
 
     public function view()
     {

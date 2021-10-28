@@ -8,7 +8,7 @@ class BasicFormViewContext extends ViewContext
 
     public function setLocation(TemplateLocator $locator)
     {
-        $locator->setTemplate('bootstrap3');
+        $locator->setTemplate('bootstrap5');
         return $locator;
     }
 

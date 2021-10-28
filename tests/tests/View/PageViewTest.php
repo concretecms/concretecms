@@ -17,7 +17,7 @@ use Concrete\Core\Page\Page;
 class PageViewTest extends PageTestCase
 {
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         Theme::add('elemental');

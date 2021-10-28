@@ -14,10 +14,10 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\Driver\PDOStatement;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\Command\ReindexPageCommand;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -423,90 +423,18 @@ class Collection extends ConcreteObject implements TrackableInterface
         return t('Version %d', $cvID + 1);
     }
 
-    /**
-     * (Re)Index the contents of this collection (or mark the collection as to be reindexed if $actuallyDoReindex is falsy and the concrete.page.search.always_reindex configuration key is falsy).
-     *
-     * @param \Concrete\Core\Page\Search\IndexedSearch|false $index the IndexedSearch instance that indexes the collection content (if falsy: we'll create a new instance of it)
-     * @param bool $actuallyDoReindex Set to true to always reindex the collection immediately (otherwise we'll look at the concrete.page.search.always_reindex configuration key)
-     *
-     * @return bool|null Return false if the collection can't be indexed, NULL otherwise
-     */
-    public function reindex($index = false, $actuallyDoReindex = true)
+    public function reindex()
     {
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
 
-        $app = Application::getFacadeApplication();
-        /** @var Connection $db */
-        $db = $app->make(Connection::class);
-
-        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
-            // Retrieve the attribute values for the current page
-            $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
-            $indexer = $category->getSearchIndexer();
-            $values = $category->getAttributeValues($this);
-            foreach ($values as $value) {
-                $indexer->indexEntry($category, $value, $this);
-            }
-
-            if ($index == false) {
-                $index = new IndexedSearch();
-            }
-
-            $index->reindexPage($this);
-
-            $qb = $db->createQueryBuilder();
-            $r = $qb->select('cID')
-                ->from('PageSearchIndex')
-                ->where('cID = :cID')
-                ->setParameter('cID', $this->getCollectionID())
-                ->execute()->fetch();
-
-            $qb2 = $db->createQueryBuilder();
-            if ($r !== false) {
-                $qb2->update('PageSearchIndex')
-                    ->set('cRequiresReindex', 0)
-                    ->where('cID = :cID');
-            } else {
-                $qb2->insert('PageSearchIndex')
-                    ->setValue('cID', ':cID')
-                    ->setValue('cRequiresReindex', 0);
-            }
-            $qb2->setParameter('cID', $this->getCollectionID())->execute();
-
-            $cache = PageCache::getLibrary();
-            $cache->purge($this);
-
-            $app = Facade::getFacadeApplication();
-            $populator = $app->make(Populator::class);
-            $populator->updateAvailableSummaryTemplates($this);
-
-        } else {
-            Config::save('concrete.misc.do_page_reindex_check', true);
-
-            $qb = $db->createQueryBuilder();
-            $r = $qb->select('cID')
-                ->from('PageSearchIndex')
-                ->where('cID = :cID')
-                ->setParameter('cID', $this->getCollectionID())
-                ->execute()->fetch();
-
-            $qb2 = $db->createQueryBuilder();
-            if ($r !== false) {
-                $qb2->update('PageSearchIndex')
-                    ->set('cRequiresReindex', 1)
-                    ->where('cID = :cID')
-                    ->setParameter('cID', $this->getCollectionID());
-            } else {
-                $qb2->insert('PageSearchIndex')
-                    ->setValue('cID', ':cID')
-                    ->setValue('cRequiresReindex', 1)
-                    ->setParameter('cID', $this->getCollectionID());
-            }
-            $qb2->execute();
-        }
+        $command = new ReindexPageCommand($this->getCollectionID());
+        $app = Facade::getFacadeApplication();
+        $app->executeCommand($command);
     }
+
+
 
     /**
      * Set the attribute value for the currently loaded collection version.
@@ -1188,7 +1116,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         if ($r) {
             if ($r->rowCount() > 0) {
                 // then we know we got a value; we increment it and return
-                $res = $r->fetchRow();
+                $res = $r->fetchAssociative();
                 $displayOrder = $res['cbdis'];
                 if ($displayOrder === null) {
                     return 0;

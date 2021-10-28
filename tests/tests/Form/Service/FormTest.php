@@ -18,7 +18,7 @@ class FormTest extends TestCase
      */
     protected static $request;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         self::$request = new Request();
         self::$formHelper = Core::make('helper/form', ['request' => self::$request]);
@@ -42,7 +42,7 @@ class FormTest extends TestCase
             [
                 'submit',
                 ['Key', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="submit" class="MY-CLASS btn ccm-input-submit" id="Key" name="Key" value="Value" />',
+                '<input type="submit" class="MY-CLASS" id="Key" name="Key" value="Value" />',
             ],
             [
                 'submit',
@@ -83,7 +83,7 @@ class FormTest extends TestCase
             [
                 'button',
                 ['Key', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="button" class="MY-CLASS btn ccm-input-button" id="Key" name="Key" value="Value" />',
+                '<input type="button" class="MY-CLASS" id="Key" name="Key" value="Value" />',
             ],
             [
                 'button',
@@ -104,17 +104,17 @@ class FormTest extends TestCase
             [
                 'label',
                 ['ForKey', '<b>label</b>'],
-                '<label for="ForKey"><b>label</b></label>',
+                '<label for="ForKey" class="form-label"><b>label</b></label>',
             ],
             [
                 'label',
                 ['ForKey[]', 'text'],
-                '<label for="ForKey[]">text</label>',
+                '<label for="ForKey[]" class="form-label">text</label>',
             ],
             [
                 'label',
                 ['ForKey', 'text', []],
-                '<label for="ForKey">text</label>',
+                '<label for="ForKey" class="form-label">text</label>',
             ],
             [
                 'label',
@@ -144,7 +144,7 @@ class FormTest extends TestCase
             ],
             [
                 'file',
-                ['Key', ['class' => 'MY-CLASS']],
+                ['Key', ['class' => 'MY-CLASS form-control']],
                 '<input type="file" id="Key" name="Key" value="" class="MY-CLASS form-control" />',
             ],
             [
@@ -423,17 +423,17 @@ class FormTest extends TestCase
             [
                 'textarea',
                 ['Key', ['class' => 'MY-CLASS']],
-                '<textarea id="Key" name="Key" class="MY-CLASS form-control"></textarea>',
+                '<textarea id="Key" name="Key" class="MY-CLASS"></textarea>',
             ],
             [
                 'textarea',
-                ['Key', '', ['class' => 'MY-CLASS']],
+                ['Key', '', ['class' => 'MY-CLASS form-control']],
                 '<textarea id="Key" name="Key" class="MY-CLASS form-control"></textarea>',
             ],
             [
                 'textarea',
                 ['Key', 'Value', ['class' => 'MY-CLASS']],
-                '<textarea id="Key" name="Key" class="MY-CLASS form-control">Value</textarea>',
+                '<textarea id="Key" name="Key" class="MY-CLASS">Value</textarea>',
             ],
             [
                 'textarea',
@@ -508,12 +508,12 @@ class FormTest extends TestCase
             [
                 'radio',
                 ['Key', 'Value', ['class' => 'MY-CLASS', 'data-custom' => 'My custom data']],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS form-check-input" data-custom="My custom data" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS" data-custom="My custom data" />',
             ],
             [
                 'radio',
                 ['Key', 'Value', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS form-check-input" checked="checked" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS" checked="checked" />',
             ],
             [
                 'radio',
@@ -617,12 +617,12 @@ class FormTest extends TestCase
             [
                 'text',
                 ['Key', ['data-mine' => 'MY DATA', 'class' => 'MY-CLASS']],
-                '<input type="text" id="Key" name="Key" value="" data-mine="MY DATA" class="MY-CLASS form-control ccm-input-text" />',
+                '<input type="text" id="Key" name="Key" value="" data-mine="MY DATA" class="MY-CLASS" />',
             ],
             [
                 'text',
                 ['Key', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="text" id="Key" name="Key" value="Value" class="MY-CLASS form-control ccm-input-text" />',
+                '<input type="text" id="Key" name="Key" value="Value" class="MY-CLASS" />',
             ],
             [
                 'text',
@@ -685,258 +685,258 @@ class FormTest extends TestCase
             [
                 'select',
                 ['Key', null],
-                '<select id="Key" name="Key" class="form-control"></select>',
+                '<select id="Key" name="Key" class="form-select"></select>',
             ],
             [
                 'select',
                 ['Key', false],
-                '<select id="Key" name="Key" class="form-control"></select>',
+                '<select id="Key" name="Key" class="form-select"></select>',
             ],
             [
                 'select',
                 ['Key', ''],
-                '<select id="Key" name="Key" class="form-control"></select>',
+                '<select id="Key" name="Key" class="form-select"></select>',
             ],
             [
                 'select',
                 ['Key', []],
-                '<select id="Key" name="Key" class="form-control"></select>',
+                '<select id="Key" name="Key" class="form-select"></select>',
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second']],
-                '<select id="Key" name="Key" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
             ],
             [
                 'select',
-                ['Key', ['One' => 'First', 'Two' => 'Second'], ['class' => 'MY-CLASS', 'data-mine' => 'MY DATA']],
-                '<select id="Key" name="Key" class="MY-CLASS form-control" data-mine="MY DATA"><option value="One">First</option><option value="Two">Second</option></select>',
+                ['Key', ['One' => 'First', 'Two' => 'Second'], ['class' => 'MY-CLASS form-select', 'data-mine' => 'MY DATA']],
+                '<select id="Key" name="Key" class="MY-CLASS form-select" data-mine="MY DATA"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two', ['class' => 'MY-CLASS', 'data-mine' => 'MY DATA']],
-                '<select id="Key" name="Key" class="MY-CLASS form-control" data-mine="MY DATA" ccm-passed-value="Two"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key" name="Key" class="MY-CLASS" data-mine="MY DATA" ccm-passed-value="Two"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Invalid'],
-                '<select id="Key" name="Key" ccm-passed-value="Invalid" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key" ccm-passed-value="Invalid" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['OtherField' => 'OtherValue'],
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['Key' => ''],
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => 'One'],
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key" ccm-passed-value="Two" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['Key' => 'Invalid'],
             ],
             [
                 'select',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['Key' => 'One'],
             ],
             [
                 'select',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['Key' => ['subkey1' => 'One']],
             ],
             [
                 'select',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => 'One']]],
             ],
             [
                 'select',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'One']]]],
             ],
             [
                 'select',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two', ['id' => '']],
-                '<select name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select name="Key[subkey1][subkey2]" ccm-passed-value="Two" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => 'One']]],
             ],
             [
                 'select',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two', ['name' => 'Key[subkey1override][subkey2]']],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1override][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1override][subkey2]" ccm-passed-value="Two" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => 'One']]],
             ],
             [
                 'select',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two', ['name' => 'Key[subkey1override][subkey2]']],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1override][subkey2]" ccm-passed-value="Two" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1override][subkey2]" ccm-passed-value="Two" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1override' => ['subkey2' => 'One']]],
             ],
             // selectMultiple
             [
                 'selectMultiple',
                 ['Key', null],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', []],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second']],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], false],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], null],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], []],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'selectMultiple',
-                ['Key', ['One' => 'First', 'Two' => 'Second'], false, ['data-mine' => 'MY DATA', 'class' => 'MY-CLASS']],
-                '<select id="Key" name="Key[]" multiple="multiple" data-mine="MY DATA" class="MY-CLASS form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                ['Key', ['One' => 'First', 'Two' => 'Second'], false, ['data-mine' => 'MY DATA', 'class' => 'MY-CLASS form-select']],
+                '<select id="Key" name="Key[]" multiple="multiple" data-mine="MY DATA" class="MY-CLASS form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], ['Two']],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], ['Invalid']],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], ['Two', 'One']],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second']],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => 'One'],
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second']],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['Key' => []],
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second']],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['One']],
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['One']],
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second']],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['Key' => ['One', 'Two']],
             ],
             [
                 'selectMultiple',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key" name="Key[]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key" name="Key[]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['Key' => ['One', 'Two']],
             ],
             [
                 'selectMultiple',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['Key' => ['One']],
             ],
             [
                 'selectMultiple',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['Key' => ['subkey1' => ['One']]],
             ],
             [
                 'selectMultiple',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['One']]]],
             ],
             [
                 'selectMultiple',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'One']]]],
             ],
             [
                 'selectMultiple',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two'],
-                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="Key[subkey1][subkey2][]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => ['One']]]]],
             ],
             [
                 'select',
                 ['Key', ['One' => 'First', 'Two' => 'Second'], '<Two\'">'],
-                '<select id="Key" name="Key" ccm-passed-value="&lt;Two&#039;&quot;&gt;" class="form-control"><option value="One">First</option><option value="Two">Second</option></select>',
+                '<select id="Key" name="Key" ccm-passed-value="&lt;Two&#039;&quot;&gt;" class="form-select"><option value="One">First</option><option value="Two">Second</option></select>',
                 ['OtherField' => 'OtherValue'],
             ],
             [
                 'selectMultiple',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two', ['id' => '']],
-                '<select name="Key[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select name="Key[subkey1][subkey2][]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'One']]]],
             ],
             [
                 'selectMultiple',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two', ['name' => 'KeyOverride[subkey1][subkey2][]']],
-                '<select id="Key[subkey1][subkey2]" name="KeyOverride[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="KeyOverride[subkey1][subkey2][]" multiple="multiple" class="form-select"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
                 ['Key' => ['subkey1' => ['subkey2' => ['subkey3' => 'One']]]],
             ],
             [
                 'selectMultiple',
                 ['Key[subkey1][subkey2]', ['One' => 'First', 'Two' => 'Second'], 'Two', ['name' => 'KeyOverride[subkey1][subkey2][]']],
-                '<select id="Key[subkey1][subkey2]" name="KeyOverride[subkey1][subkey2][]" multiple="multiple" class="form-control"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
+                '<select id="Key[subkey1][subkey2]" name="KeyOverride[subkey1][subkey2][]" multiple="multiple" class="form-select"><option value="One" selected="selected">First</option><option value="Two">Second</option></select>',
                 ['KeyOverride' => ['subkey1' => ['subkey2' => ['subkey3' => 'One']]]],
             ],
         ];

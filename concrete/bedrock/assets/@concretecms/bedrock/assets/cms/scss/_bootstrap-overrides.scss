@@ -1,0 +1,113 @@
+/* colors */
+$gray-300: #d8d8d8;
+$gray-400: #9b9b9b;
+$gray-500: #7c8088;
+$gray-600: #6a6f7b;
+$gray-700: #4c4f56;
+$gray-900: #2c2c2c;
+
+$cyan: #027893;
+$blue: #4a90e2;
+$secondary: $gray-500;
+$green: #28a745;
+$red: #c32a2a;
+$dark: $gray-700;
+$light-blue: #ebf5fb;
+$dark-blue: #005163;
+
+/* typography */
+$body-color: $gray-700;
+$small-font-size: 0.9rem;
+$text-muted: $gray-500;
+
+/* borders */
+$border-radius: 3px;
+$border-radius-sm: 2px;
+
+/* buttons */
+$btn-font-weight: 600;
+$btn-padding-y: 9px;
+$btn-padding-x: 30px;
+$btn-font-size: 0.9rem;
+$btn-box-shadow: inset 0 0;
+
+/* forms */
+$input-placeholder-color: #b2b3b4;
+$input-border-color: rgb(235, 235, 235);
+$input-border-radius: 4px;
+$input-border-width: 2px;
+$input-color: $dark-blue;
+$input-padding-y: 0.5rem;
+$label-margin-bottom: 0.4rem;
+$input-box-shadow: inset 0 0;
+$custom-select-box-shadow: inset 0 0;
+
+/* gradients and shadows */
+$enable-gradients: false;
+$enable-shadows: true;
+
+/* transitions */
+$transition-base: all 0.25s ease-in-out;
+$transition-fade: opacity 0.1s ease-in-out;
+$btn-transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out, border-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+
+/* dialogs */
+$modal-xl: 940px;
+$modal-lg: 810px;
+$modal-md: 675px;
+$modal-sm: 420px;
+$modal-header-border-width: 0;
+$modal-content-border-width: 0;
+$modal-footer-border-width: 0;
+$modal-content-border-radius: 0;
+$modal-content-inner-border-radius: 0;
+$modal-header-padding-y: 1.25rem;
+$modal-header-padding-x: 1.8rem;
+$modal-title-line-height: 1.25em;
+$modal-inner-padding: 1.8rem;
+$modal-fade-transform: none;
+$modal-transition: 0.1s ease-in-out;
+$modal-content-box-shadow-sm-up: 0 2px 4px 2px rgba(0, 0, 0, 0.2);
+$modal-content-box-shadow-xs: 0 2px 4px 2px rgba(0, 0, 0, 0.2);
+
+/* breadcrumbs */
+$breadcrumb-bg: transparent;
+$breadcrumb-padding-x: 0;
+$breadcrumb-padding-y: 20px;
+$breadcrumb-font-size: 0.8rem;
+$breadcrumb-active-color: $gray-600;
+$breadcrumb-divider: quote('>');
+$breadcrumb-item-padding: 4px;
+
+/* tabs */
+$nav-tabs-border-width: 0;
+$nav-tabs-link-active-color: $gray-700;
+$nav-tabs-link-active-border-color: $blue;
+
+/* badges */
+$badge-border-radius: 0;
+$badge-padding-y: 8px;
+$badge-padding-x: 11px;
+
+/* Dropdowns */
+$dropdown-divider-bg: $gray-300;
+$dropdown-divider-margin-y: 0.625rem; /* 10px @ 16px base */
+
+/* These variable names don't quite match up to their value */
+/* Usage: padding: $dropdown-item-padding-y $dropdown-item-padding-x; */
+$dropdown-item-padding-y: 0.625rem;
+$dropdown-item-padding-x: 10px;
+$dropdown-link-active-color: #fff;
+$dropdown-border-color: transparent;
+$dropdown-border-radius: 2px;
+$dropdown-border-width: 2px;
+$dropdown-min-width: 175px;
+$dropdown-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+
+/* popovers - these are used for in page menus, help menus */
+$popover-border-color: $gray-300;
+$popover-border-radius: 2px;
+$popover-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.1);
+
+/* Links */
+$link-decoration: none;

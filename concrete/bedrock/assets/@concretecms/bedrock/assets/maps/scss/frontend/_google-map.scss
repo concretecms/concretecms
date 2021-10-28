@@ -1,0 +1,10 @@
+/* stylelint-disable selector-class-pattern */
+.googleMapCanvas {
+  border: 0 none;
+  height: 400px;
+  width: 100%;
+}
+
+.googleMapCanvas img {
+  max-width: none !important;
+}

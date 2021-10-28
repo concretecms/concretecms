@@ -15,7 +15,7 @@ foreach ($attributes as $value) {
 }
 if ($dataSaveEnabled) {
     $body = t("
-There has been a submission of the form %s through your concrete5 website.
+There has been a submission of the form %s through your Concrete website.
 
 %s
 
@@ -24,7 +24,7 @@ To view all of this form's submissions, visit %s
 ", $formName, $submittedData, $formDisplayUrl);
 } else {
     $body = t("
-There has been a submission of the form %s through your concrete5 website.
+There has been a submission of the form %s through your Concrete website.
 
 %s
 ", $formName, $submittedData);

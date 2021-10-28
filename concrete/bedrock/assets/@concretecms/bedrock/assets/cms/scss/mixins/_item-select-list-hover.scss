@@ -1,0 +1,7 @@
+@mixin item-select-list-hover() {
+  background-color: #e7e7e7;
+  border-radius: 4px;
+  color: $body-color;
+  text-decoration: none;
+  transition: background-color 0.1s linear;
+}

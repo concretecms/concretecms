@@ -39,7 +39,7 @@ class CreateBoardInstanceCommandHandler
     }
 
 
-    public function handle(CreateBoardInstanceCommand $command)
+    public function __invoke(CreateBoardInstanceCommand $command)
     {
         $board = $command->getBoard();
         $instance = new Instance();

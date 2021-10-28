@@ -80,7 +80,7 @@ class EntityManagerConfigFactory implements ApplicationAwareInterface, EntityMan
 
     /**
      *
-     * @return \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain
+     * @return \Doctrine\Persistence\Mapping\Driver\MappingDriverChain
      */
     public function getMetadataDriverImpl()
     {

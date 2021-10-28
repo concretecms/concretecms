@@ -38,7 +38,7 @@ class ApproveTest extends PageTestCase
             $this->page->loadVersionObject($i + 1);
             if ($this->page->getVersionID() === null) {
                 $this->page->loadVersionObject('RECENT');
-                $cv = $this->page->cloneVersion('')->getVersionObject();
+                $cv = $this->page->cloneVersion('test')->getVersionObject();
             } else {
                 $cv = $this->page->getVersionObject();
             }

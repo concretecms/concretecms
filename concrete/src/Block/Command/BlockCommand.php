@@ -2,9 +2,9 @@
 
 namespace Concrete\Core\Block\Command;
 
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 
-abstract class BlockCommand implements CommandInterface
+abstract class BlockCommand extends Command
 {
     /**
      * @var int

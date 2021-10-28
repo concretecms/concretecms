@@ -11,10 +11,11 @@ class ExecCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:exec')
-            ->setDescription('Execute a PHP script within the concrete5 environment')
+            ->setDescription('Execute a PHP script within the Concrete environment')
             ->addEnvOption()
             ->addArgument('script', InputArgument::REQUIRED, 'The path of the script to be executed')
             ->addArgument('arguments', InputArgument::IS_ARRAY, 'The arguments to pass to the script')
@@ -27,7 +28,7 @@ In the included script you'll have these variables:
 To specify the command return code, define an int variable named '\$rc'.
 
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-exec
@@ -44,6 +45,6 @@ EOT
         $args = $input->getArgument('arguments');
         require $input->getArgument('script');
 
-        return isset($rc) ? $rc : 0;
+        return isset($rc) ? $rc : static::SUCCESS;
     }
 }

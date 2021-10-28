@@ -15,14 +15,22 @@ class Application extends SymfonyApplication
     public function __construct(CMSApplication $app)
     {
         $this->app = $app;
-        parent::__construct('concrete5', $this->app->make('config')->get('concrete.version'));
+        parent::__construct('concrete', $this->app->make('config')->get('concrete.version'));
+    }
+    
+    /**
+     * @deprecated
+     */
+    public function getConcrete5()
+    {
+        return $this->getConcrete();
     }
 
     /**
      * Get the concrete5 application instance
      * @return \Concrete\Core\Application\Application
      */
-    public function getConcrete5()
+    public function getConcrete()
     {
         return $this->app;
     }

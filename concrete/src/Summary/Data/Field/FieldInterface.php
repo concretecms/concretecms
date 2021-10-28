@@ -15,6 +15,7 @@ interface FieldInterface
     const FIELD_DATE_START = 'date_start';
     const FIELD_DATE_END = 'date_end';
     const FIELD_CATEGORIES = 'categories';
+    const FIELD_AUTHOR = 'author';
 
     public function getFieldIdentifier();
 

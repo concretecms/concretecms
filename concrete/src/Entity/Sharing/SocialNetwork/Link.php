@@ -101,4 +101,11 @@ class Link
         $em->remove($this);
         $em->flush();
     }
+
+    public function export(\SimpleXMLElement $node)
+    {
+        $link = $node->addChild('link');
+        $link->addAttribute('service', $this->getServiceHandle());
+        $link->addAttribute('url', $this->getURL());
+    }
 }

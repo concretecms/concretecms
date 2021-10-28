@@ -12,7 +12,7 @@ if (is_object($key)) {
 <fieldset>
     <legend><?=t('User Attribute Options')?></legend>
     <div class="form-group">
-    <label class="control-label"><?=t('Public Display')?></label>
+        <label class="control-label form-label"><?=t('Public Display')?></label>
         <div id="publicDisclosureAlert" class="alert alert-warning" role="alert" style="display: none">
             <?= t('Make a user attribute public means its content will be publicly accessible and indexed by a search engine.') ?>
         </div>
@@ -27,7 +27,7 @@ if (is_object($key)) {
     </div>
 
     <div class="form-group">
-        <label class="control-label"><?=t('Edit Mode')?></label>
+        <label class="control-label form-label"><?=t('Edit Mode')?></label>
         <div class="form-check">
             <?=$form->checkbox('uakProfileEdit', 1, !empty($uakProfileEdit))?>
             <?=$form->label('uakProfileEdit',t('Editable in Profile.'), ['class'=>'form-check-label']);?>
@@ -40,7 +40,7 @@ if (is_object($key)) {
 
 
     <div class="form-group">
-        <label class="control-label"><?=t('Registration')?></label>
+        <label class="control-label form-label"><?=t('Registration')?></label>
         <div class="form-check">
             <?=$form->checkbox('uakRegisterEdit', 1, !empty($uakRegisterEdit))?>
             <?=$form->label('uakRegisterEdit',t('Show on Registration Form.'), ['class'=>'form-check-label']);?>

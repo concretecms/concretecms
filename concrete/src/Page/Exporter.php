@@ -57,7 +57,7 @@ class Exporter implements ItemInterface
 
         $db = \Database::connection();
         $r = $db->executeQuery('select arHandle from Areas where cID = ? and arIsGlobal = 0 and arParentID = 0', [$mixed->getCollectionID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $ax = Area::get($mixed, $row['arHandle']);
             $ax->export($p, $mixed);
         }

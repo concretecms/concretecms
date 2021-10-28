@@ -30,7 +30,7 @@ class FileTest extends TestCase
         }
 
         if ($exceptionRegexp) {
-            $this->expectExceptionMessageRegExp($exceptionRegexp);
+            $this->expectExceptionMessageMatches($exceptionRegexp);
         }
 
         $closure((array)$urls);

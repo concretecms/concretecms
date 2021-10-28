@@ -21,7 +21,6 @@ $c = Page::getCurrentPage();
 $cp = false;
 $isEditMode = false;
 $isArrangeMode = false;
-$scc = false;
 if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
     $pageTitle = null;
 }
@@ -42,7 +41,6 @@ if (is_object($c)) {
     $cID = $c->getCollectionID();
     $isEditMode = $c->isEditMode();
     $isArrangeMode = $c->isArrangeMode();
-    $styleObject = false;
 
     /*
      * Handle page title
@@ -83,14 +81,6 @@ if (is_object($c)) {
     if (!$pageMetaKeywords) {
         $pageMetaKeywords = trim($c->getAttribute('meta_keywords'));
     }
-    if ($c->hasPageThemeCustomizations()) {
-        $styleObject = $c->getCustomStyleObject();
-    } elseif (($pt = $c->getCollectionThemeObject()) && is_object($pt)) {
-        $styleObject = $pt->getThemeCustomStyleObject();
-    }
-    if (isset($styleObject) && is_object($styleObject)) {
-        $scc = $styleObject->getCustomCssRecord();
-    }
 } else {
     $cID = 1;
     $c = null;
@@ -107,7 +97,7 @@ if ($c !== null && $c->getAttribute('exclude_search_index')) {
     $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
 }
 if ($appConfig->get('concrete.misc.generator_tag_display_in_header')) {
-    $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5');
+    $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'Concrete CMS');
 }
 if (($modernIconFID = (int) $config->get('misc.modern_tile_thumbnail_fid')) && ($modernIconFile = File::getByID($modernIconFID))) {
     $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
@@ -203,11 +193,6 @@ if ($cp) {
 $v->markHeaderAssetPosition();
 if (empty($disableTrackingCode)) {
     echo $config->get('seo.tracking.code.header');
-}
-if ($scc) {
-    ?>
-    <style type="text/css"><?php echo $scc->getValue(); ?></style>
-    <?php
 }
 if ($c !== null) {
     echo $c->getAttribute('header_extra_content');

@@ -18,7 +18,7 @@ foreach ($stacks as $stack):
                     <span class="stack-folder-name-inner"><?= h($stack->getCollectionName()) ?></span>
                 </div>
                 <a class="ccm-stack-folder-expander" href="javascript:void(0);">
-                    <i class="fa fa-angle-down"></i>
+                    <i class="fas fa-angle-down"></i>
                 </a>
             </div>
         </div>
@@ -45,7 +45,7 @@ foreach ($stacks as $stack):
                     <span class="stack-name-inner"><?= h($stack->getStackName()) ?></span>
                 </div>
                 <a class="ccm-stack-expander" href="javascript:void(0);">
-                    <i class="fa fa-angle-down"></i>
+                    <i class="fas fa-angle-down"></i>
                 </a>
             </div>
         </div>

@@ -58,7 +58,7 @@ class PhpCommentsPreserved implements PreconditionInterface
         if (!$reflectionProperty->getDocComment()) {
             $result
                 ->setState(PreconditionResult::STATE_FAILED)
-                ->setMessage(t('concrete5 is not compatible with opcode caches that strip PHP comments. Certain configurations of eAccelerator and Zend opcode caching may use this behavior, and it must be disabled.'))
+                ->setMessage(t('Concrete is not compatible with opcode caches that strip PHP comments. Certain configurations of eAccelerator and Zend opcode caching may use this behavior, and it must be disabled.'))
             ;
         }
 

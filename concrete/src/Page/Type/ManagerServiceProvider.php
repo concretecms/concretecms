@@ -9,10 +9,10 @@ class ManagerServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app['manager/page_type/validator'] = $this->app->share(function ($app) {
+        $this->app->singleton('manager/page_type/validator', function($app) {
             return new ValidatorManager($app);
         });
-        $this->app['manager/page_type/saver'] = $this->app->share(function ($app) {
+        $this->app->singleton('manager/page_type/saver', function($app) {
             return new SaverManager($app);
         });
     }

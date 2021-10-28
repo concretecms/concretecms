@@ -1,0 +1,59 @@
+div.ccm-ui {
+  div.process-progress {
+    height: 2px;
+  }
+
+  div.process-card {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+  }
+
+  div.running-process-name {
+    display: flex;
+
+    span {
+      display: inline-block;
+      margin-left: auto;
+    }
+  }
+
+  div.process-card-expandable {
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover {
+      border: 1px solid $blue;
+    }
+  }
+
+  .process-card-animation {
+    backface-visibility: hidden;
+    z-index: 1;
+  }
+
+  /* moving */
+  .process-card-animation-move {
+    transition: all 600ms ease-in-out 50ms;
+  }
+
+  /* appearing */
+  .process-card-animation-enter-active {
+    transition: all 400ms ease-out;
+  }
+
+  /* disappearing */
+  .process-card-animation-leave-active {
+    transition: all 200ms ease-in;
+    z-index: 0;
+  }
+
+  /* appear at / disappear to */
+  .process-card-animation-enter,
+  .process-card-animation-leave-to {
+    opacity: 0;
+
+    div.process-progress-wrapper {
+      opacity: 0;
+    }
+  }
+}

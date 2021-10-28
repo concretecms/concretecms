@@ -147,9 +147,9 @@ class AreaLayoutPresetTest extends PageTestCase
         $this->assertInstanceOf(Preset::class, $presets[0]);
 
         $columns = $presets[0]->getColumns();
-        $this->assertEquals('<div class="col-4"></div>', (string) $columns[0]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-2 offset-2"></div>', (string) $columns[1]->getColumnHtmlObject());
-        $this->assertEquals('<div class="col-6"></div>', (string) $columns[2]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-4"></div>', (string) $columns[0]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-2 col-sm-offset-2"></div>', (string) $columns[1]->getColumnHtmlObject());
+        $this->assertEquals('<div class="col-sm-6"></div>', (string) $columns[2]->getColumnHtmlObject());
 
         $req->clearCurrentPage();
     }

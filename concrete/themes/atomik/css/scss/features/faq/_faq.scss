@@ -1,0 +1,37 @@
+.ccm-faq-container {
+  @include make-row();
+}
+.ccm-faq-block-links {
+  @include make-col-ready();
+
+  margin-bottom: 2rem;
+
+  @include media-breakpoint-up(md) {
+    margin-bottom: 0;
+    @include make-col(3);
+  }
+
+
+  a {
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+
+.ccm-faq-block-entries {
+  h3 {
+    margin-top: 0px;
+  }
+
+  div.ccm-faq-entry-content {
+    margin-bottom: 50px;
+  }
+
+  @include make-col-ready();
+
+  @include media-breakpoint-up(md) {
+    @include make-col(8);
+    @include make-col-offset(1);
+  }
+
+}

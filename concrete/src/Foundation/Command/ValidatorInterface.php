@@ -7,9 +7,9 @@ interface ValidatorInterface
 {
 
     /**
-     * @param CommandInterface $command
+     * @param mixed $command
      * @return ErrorList
      */
-    public function validate(CommandInterface $command);
+    public function validate($command);
 
 }

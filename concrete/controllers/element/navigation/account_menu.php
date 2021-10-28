@@ -13,7 +13,7 @@ class AccountMenu extends Menu
     {
         $dashboard = \Page::getByPath('/account');
         $this->setTitle(t('My Account'));
-        $this->setWrapperClass('ccm-nav-wrapper');
+        $this->setWrapperClass('ccm-page-account-navigation');
         parent::__construct($dashboard, $currentPage);
     }
 

@@ -55,7 +55,9 @@ class UrlSlugCorePageProperty extends CorePageProperty
     public function getRequestValue($args = false)
     {
         $data = parent::getRequestValue($args);
-        $data['url_slug'] = Core::make('helper/security')->sanitizeString($data['url_slug']);
+        if(isset($data['url_slug'])) {
+            $data['url_slug'] = Core::make('helper/security')->sanitizeString($data['url_slug']);
+        }
 
         return $data;
     }

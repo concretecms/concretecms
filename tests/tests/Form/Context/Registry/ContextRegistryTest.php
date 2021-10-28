@@ -22,7 +22,7 @@ class ContextRegistryTest extends TestCase
 {
     private static $classLoader;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         static::$classLoader = new MapClassLoader([
             TestView::class => DIR_TESTS . '/assets/Express/Form/Control/View/TestView.php',

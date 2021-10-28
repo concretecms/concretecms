@@ -26,7 +26,7 @@ class RefreshBoardInstanceCommandHandler
         $this->app = $app;
     }
 
-    public function handle(RefreshBoardInstanceCommand $command)
+    public function __invoke(RefreshBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
         $rules = $instance->getRules();

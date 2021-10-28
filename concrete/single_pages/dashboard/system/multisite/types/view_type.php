@@ -50,7 +50,7 @@ if ($sites === []) {
         foreach ($sites as $site) {
             ?>
             <li>
-                <a href="<?= $urlResolver->resolve(['/dashboard/system/multisite/sites', 'view_site', $site->getSiteID()]) ?>"><i class="fa fa-link"></i> <?= h($site->getSiteName()) ?></a>
+                <a href="<?= $urlResolver->resolve(['/dashboard/system/multisite/sites', 'view_site', $site->getSiteID()]) ?>"><i class="fas fa-link"></i> <?= h($site->getSiteName()) ?></a>
             </li>
             <?php
         }
@@ -62,7 +62,7 @@ if (!$type->isDefault()) {
     ?>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-right">
+            <div class="float-end">
                 <a href="javascript:void(0)" class="btn btn-danger" data-dialog="delete-type" data-dialog-title="<?= t('Delete Site Type') ?>" data-dialog-width="400"><?= t('Delete Site Type') ?></a>            
             </div>
         </div>

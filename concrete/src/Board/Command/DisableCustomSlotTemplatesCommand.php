@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class DisableCustomSlotTemplatesCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class DisableCustomSlotTemplatesCommand extends Command
 {
     
     use BoardTrait;

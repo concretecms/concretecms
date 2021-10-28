@@ -10,7 +10,7 @@ use Concrete\Core\Support\Facade\Url;
 ?>
 
 <div class="ccm-header-search-form ccm-ui" data-header="file-manager">
-    <form method="get" class="form-inline" action="<?php echo $headerSearchAction ?>">
+    <form method="get" class="row row-cols-auto g-0 align-items-center" action="<?php echo $headerSearchAction ?>">
 
         <div class="ccm-header-search-form-input input-group">
             <?php if (isset($query)): ?>
@@ -39,18 +39,16 @@ use Concrete\Core\Support\Facade\Url;
             <?php
                 echo $form->search('keywords', [
                     'placeholder' => t('Search'),
-                    'class' => 'border-right-0',
+                    'class' => 'form-control border-end-0',
                     'autocomplete' => 'off'
                 ]);
             ?>
-            
-            <div class="input-group-append">
-                <button type="submit" class="input-group-icon">
-                    <svg width="16" height="16">
-                        <use xlink:href="#icon-search"/>
-                    </svg>
-                </button>
-            </div>
+
+            <button type="submit" class="input-group-icon">
+                <svg width="16" height="16">
+                    <use xlink:href="#icon-search"/>
+                </svg>
+            </button>
         </div>
     </form>
 </div>

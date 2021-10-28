@@ -245,8 +245,15 @@ trait DashboardExpressEntryListTrait
         ];
         $config = $this->app->make('config');
         $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
-        $datetime_format = $config->get('concrete.export.csv.datetime_format');
-
+        $datetime_format_constant = $config->get('concrete.export.csv.datetime_format');
+        if (!defined($datetime_format_constant)) {
+            $datetime_format_constant = sprintf('DATE_%s', $datetime_format_constant);
+        }
+        if (defined($datetime_format_constant)) {
+            $datetime_format = constant($datetime_format_constant);
+        } else {
+            $datetime_format = DATE_ATOM;
+        }
         if ($searchMethod == 'advanced_search') {
             $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
                 $this->getSearchProvider($entity),
@@ -261,9 +268,9 @@ trait DashboardExpressEntryListTrait
 
         return StreamedResponse::create(function () use ($entity, $entryList, $bom, $datetime_format) {
             $writer = $this->app->make(CsvWriter::class, [
-                $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
-                new Date(),
-                $datetime_format
+                'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                'dateFormatter' => new Date(),
+                'datetime_format' => $datetime_format
             ]);
             echo $bom;
             $writer->insertHeaders($entity);

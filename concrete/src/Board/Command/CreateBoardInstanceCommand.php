@@ -3,8 +3,9 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Foundation\Command\Command;
 
-class CreateBoardInstanceCommand
+class CreateBoardInstanceCommand extends Command
 {
 
     use BoardTrait;

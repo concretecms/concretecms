@@ -19,15 +19,8 @@ class Delete extends BackendInterfaceController
 
     protected function canAccess()
     {
-        $taskPermission = Key::getByHandle("delete_log_entries");
-        if (is_object($taskPermission)) {
-            return $taskPermission->validate();
-        } else {
-            // This is a previous concrete5 versions that don't have the new task permission installed
-            $app = Application::getFacadeApplication();
-            $u = $app->make(User::class);
-            return $u->isRegistered();
-        }
+        $key = Key::getByHandle("delete_log_entries");
+        return $key->validate();
     }
 
     public function view()
@@ -40,24 +33,27 @@ class Delete extends BackendInterfaceController
 
     public function submit()
     {
-        /** @var Request $request */
-        $request = $this->app->make(Request::class);
-        /** @var Connection $db */
-        $db = $this->app->make(Connection::class);
-        /** @var ResponseFactory $responseFactory */
-        $responseFactory = $this->app->make(ResponseFactory::class);
-        $logItems = (array)$request->request->get("logItem",[]);
+        if ($this->canAccess()) {
+            /** @var Request $request */
+            $request = $this->app->make(Request::class);
+            /** @var Connection $db */
+            $db = $this->app->make(Connection::class);
+            /** @var ResponseFactory $responseFactory */
+            $responseFactory = $this->app->make(ResponseFactory::class);
+            $logItems = (array)$request->request->get("logItem", []);
 
-        foreach($logItems as $logItem) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            /** @noinspection SqlDialectInspection */
-            /** @noinspection SqlNoDataSourceInspection */
-            $db->executeQuery("DELETE FROM Logs WHERE logID = ?", [$logItem]);
+            foreach ($logItems as $logItem) {
+                /** @noinspection PhpUnhandledExceptionInspection */
+                /** @noinspection SqlDialectInspection */
+                /** @noinspection SqlNoDataSourceInspection */
+                $db->executeQuery("DELETE FROM Logs WHERE logID = ?", [$logItem]);
+            }
+
+            $this->flash('success', t('Log entries successfully deleted.')); // It will be displayed on page reload
+
+            $editResponse = new EditResponse();
+            return $responseFactory->json($editResponse->getJSONObject());
         }
-
-        $editResponse = new EditResponse();
-        $editResponse->setMessage(t('Log entries successfully deleted.'));
-        return $responseFactory->json($editResponse->getJSONObject());
     }
 
 

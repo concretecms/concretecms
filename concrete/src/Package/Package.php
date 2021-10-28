@@ -2,6 +2,7 @@
 namespace Concrete\Core\Package;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Repository\Liaison;
 use Concrete\Core\Database\Connection\Connection;
@@ -14,8 +15,9 @@ use Concrete\Core\Package\Dependency\DependencyChecker;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
-use Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Common\Proxy\ProxyGenerator;
+use Doctrine\DBAL\Driver\PDOConnection;
 use Doctrine\DBAL\Schema\Comparator as SchemaComparator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,7 +43,7 @@ abstract class Package implements LocalizablePackageInterface
     const E_PACKAGE_INSTALLED = 2;
 
     /**
-     * Error code: This package requires concrete5 version %s or greater.
+     * Error code: This package requires Concrete version %s or greater.
      *
      * @var int
      */
@@ -55,7 +57,7 @@ abstract class Package implements LocalizablePackageInterface
     const E_PACKAGE_DOWNLOAD = 4;
 
     /**
-     * Error code: concrete5 was not able to save the package after download.
+     * Error code: Concrete was not able to save the package after download.
      *
      * @var int
      */
@@ -83,7 +85,7 @@ abstract class Package implements LocalizablePackageInterface
     const E_PACKAGE_MIGRATE_BACKUP = 8;
 
     /**
-     * Error code: This package isn't currently available for this version of concrete5.
+     * Error code: This package isn't currently available for this version of Concrete.
      *
      * @var int
      */
@@ -175,7 +177,7 @@ abstract class Package implements LocalizablePackageInterface
     protected $pkgAutoloaderRegistries = [];
 
     /**
-     * The minimum concrete5 version compatible with the package.
+     * The minimum Concrete version compatible with the package.
      * Override this value according to the minimum required version for your package.
      *
      * @var string
@@ -349,9 +351,9 @@ abstract class Package implements LocalizablePackageInterface
             return false;
         }
 
-        $concrete5 = '7.9.9';
+        $concrete = '7.9.9';
         $package = $this->getApplicationVersionRequired();
-        if (version_compare($package, $concrete5, '>')) {
+        if (version_compare($package, $concrete, '>')) {
             return false;
         }
 
@@ -451,7 +453,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Get the minimum concrete5 version compatible with the package.
+     * Get the minimum Concrete version compatible with the package.
      *
      * @return string
      */
@@ -545,7 +547,7 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Get the path to the package relative to the concrete5 installation folder.
+     * Get the path to the package relative to the Concrete installation folder.
      *
      * @return string
      */
@@ -599,6 +601,9 @@ abstract class Package implements LocalizablePackageInterface
 
         Localization::clearCache();
 
+        $navigationCache = $this->app->make(NavigationCache::class);
+        $navigationCache->clear();
+
         return $package;
     }
 
@@ -611,7 +616,7 @@ abstract class Package implements LocalizablePackageInterface
     public function uninstall()
     {
         /** @var Manager $manager */
-        $manager = $this->app->make(Manager::class, [$this->app]);
+        $manager = $this->app->make(Manager::class, ['application' => $this->app]);
         $categories = $manager->getPackageItemCategories();
         $package = $this->getPackageEntity();
         foreach ($categories as $category) {
@@ -633,6 +638,10 @@ abstract class Package implements LocalizablePackageInterface
         $em->flush();
 
         Localization::clearCache();
+
+        $navigationCache = $this->app->make(NavigationCache::class);
+        $navigationCache->clear();
+
     }
 
     /**
@@ -829,7 +838,7 @@ abstract class Package implements LocalizablePackageInterface
         $errors = $this->app->make('error');
 
         /** @var Manager $manager */
-        $manager = $this->app->make(Manager::class, [$this->app]);
+        $manager = $this->app->make(Manager::class, ['application' => $this->app]);
 
         $driver = $manager->driver('theme');
         $themes = $driver->getItems($this->getPackageEntity());
@@ -978,8 +987,9 @@ abstract class Package implements LocalizablePackageInterface
             foreach ($saveQueries as $query) {
                 $db->query($query);
             }
-
-            $db->commit();
+            if ($db->isTransactionActive() && !$db->isAutoCommit()) {
+                $db->commit();
+            }
 
             $result = new stdClass();
             $result->result = false;
@@ -1016,13 +1026,17 @@ abstract class Package implements LocalizablePackageInterface
         // now we refresh all blocks
 
         /** @var Manager $manager */
-        $manager = $this->app->make(Manager::class, [$this->app]);
+        $manager = $this->app->make(Manager::class, ['application' => $this->app]);
         $items = $manager->driver('block_type')->getItems($this->getPackageEntity());
         foreach ($items as $item) {
             $item->refresh();
         }
 
         Localization::clearCache();
+
+        $navigationCache = $this->app->make(NavigationCache::class);
+        $navigationCache->clear();
+
     }
 
     /**
@@ -1176,13 +1190,13 @@ abstract class Package implements LocalizablePackageInterface
             $dictionary = [
                 self::E_PACKAGE_INSTALLED => t("You've already installed that package."),
                 self::E_PACKAGE_NOT_FOUND => t('Invalid Package.'),
-                self::E_PACKAGE_VERSION => t('This package requires concrete5 version %s or greater.'),
+                self::E_PACKAGE_VERSION => t('This package requires Concrete version %s or greater.'),
                 self::E_PACKAGE_DOWNLOAD => t('An error occurred while downloading the package.'),
-                self::E_PACKAGE_SAVE => t('concrete5 was not able to save the package after download.'),
+                self::E_PACKAGE_SAVE => t('Concrete was not able to save the package after download.'),
                 self::E_PACKAGE_UNZIP => t('An error occurred while trying to unzip the package.'),
                 self::E_PACKAGE_INSTALL => t('An error occurred while trying to install the package.'),
                 self::E_PACKAGE_MIGRATE_BACKUP => t('Unable to backup old package directory to %s', $config->get('concrete.misc.package_backup_directory')),
-                self::E_PACKAGE_INVALID_APP_VERSION => t('This package isn\'t currently available for this version of concrete5. Please contact the maintainer of this package for assistance.'),
+                self::E_PACKAGE_INVALID_APP_VERSION => t('This package isn\'t currently available for this version of Concrete. Please contact the maintainer of this package for assistance.'),
                 self::E_PACKAGE_THEME_ACTIVE => t('This package contains the active site theme, please change the theme before uninstalling.'),
             ];
             if (isset($dictionary[$errorCode])) {

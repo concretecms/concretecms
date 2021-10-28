@@ -1,0 +1,38 @@
+#ccm-panel-help {
+  background-color: #e9f6fc;
+
+  div.ccm-panel-content {
+    padding: 35px 30px;
+  }
+
+  section {
+
+    margin-bottom: 1.5rem;
+
+    >div.ccm-panel-help-media {
+      display: flex;
+
+      >div {
+        flex: 1;
+      }
+    }
+
+  }
+
+  h1 {
+    // this is not ideal, but for backwards compatibility let's style the h1 here like it's really an h4
+    // in our core headings set
+    @include font-size($h3-font-size);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    margin-bottom: 1.5rem;
+  }
+
+  hr {
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+  }
+}

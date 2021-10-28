@@ -108,7 +108,7 @@ class AttributeKeyField extends AbstractField
     public function loadDataFromRequest(array $request)
     {
         if ($this->attributeKey !== null) {
-            // We need to do this because of the request whitelist + the weird request
+            // We need to do this because of the request allowlist + the weird request
             // namespacing we do with attribute forms.
             $this->data['akID'][$this->attributeKey->getAttributeKeyID()]
                 = $request['akID'][$this->attributeKey->getAttributeKeyID()];

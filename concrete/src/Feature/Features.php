@@ -53,6 +53,11 @@ class Features
     const BASICS = 'basics';
 
     /**
+     * Bedrock typography support: titles, display titles, buttons, colors, etc...
+     */
+    const TYPOGRAPHY = 'typography';
+
+    /**
      * Accessory feature: support for calendars
      */
     const CALENDAR = 'calendar';
@@ -138,5 +143,20 @@ class Features
      */
     const POLLS = 'polls';
 
-    
+    /**
+     * Accessory feature: support for accordions
+     */
+    const ACCORDIONS = 'accordions';
+
+    /**
+     * Accessory feature: support for My Account/Edit Profile
+     */
+    const ACCOUNT = 'account';
+
+    /**
+     * Accessory feature: support for frontend user profiles
+     */
+    const PROFILE = 'profile';
+
+
 }

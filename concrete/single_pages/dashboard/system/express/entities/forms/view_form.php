@@ -60,11 +60,11 @@ $token = $app->make(Token::class);
             </p>
 
             <div class="dialog-buttons">
-                <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()">
+                <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()">
                     <?php echo t('Cancel') ?>
                 </button>
 
-                <button class="btn btn-danger float-right" onclick="$('#ccm-dialog-delete-form form').submit()">
+                <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-form form').submit()">
                     <?php echo t('Delete Form') ?>
                 </button>
             </div>
@@ -82,11 +82,11 @@ $token = $app->make(Token::class);
         </form>
 
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()">
+            <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()">
                 <?php echo t('Cancel') ?>
             </button>
 
-            <button class="btn btn-primary float-right" onclick="$('#ccm-dialog-add-set form').submit()">
+            <button class="btn btn-primary float-end" onclick="$('#ccm-dialog-add-set form').submit()">
                 <?php echo t('Add Set') ?>
             </button>
         </div>
@@ -110,12 +110,12 @@ $token = $app->make(Token::class);
                     </p>
 
                     <div class="dialog-buttons">
-                        <button class="btn btn-secondary float-left"
+                        <button class="btn btn-secondary float-start"
                                 onclick="jQuery.fn.dialog.closeTop()">
                             <?php echo t('Cancel') ?>
                         </button>
 
-                        <button class="btn btn-danger float-right"
+                        <button class="btn btn-danger float-end"
                                 onclick="$('#ccm-dialog-delete-set-<?php echo $set->getId() ?> form').submit()">
                             <?php echo t('Delete Control') ?>
                         </button>
@@ -135,11 +135,11 @@ $token = $app->make(Token::class);
                 </form>
 
                 <div class="dialog-buttons">
-                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()">
+                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()">
                         <?php echo t('Cancel') ?>
                     </button>
 
-                    <button class="btn btn-primary float-right"
+                    <button class="btn btn-primary float-end"
                             onclick="$('#ccm-dialog-update-set-<?php echo $set->getID() ?> form').submit()">
                         <?php echo t('Update Set') ?>
                     </button>
@@ -160,13 +160,13 @@ $token = $app->make(Token::class);
                            dialog-width="640"
                            dialog-height="400"
                            data-command="add-form-set-control">
-                            <i class="fa fa-plus"></i>
+                            <i class="fas fa-plus"></i>
                         </a>
                     </li>
 
                     <li>
                         <a href="#" data-command="move-set" style="cursor: move">
-                            <i class="fa fa-arrows"></i>
+                            <i class="fas fa-arrows-alt"></i>
                         </a>
                     </li>
 
@@ -174,7 +174,7 @@ $token = $app->make(Token::class);
                         <a href="#"
                            data-dialog="update-set-<?php echo $set->getId() ?>"
                            data-dialog-title="<?php echo h(t('Update Set')) ?>">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fas fa-pencil-alt"></i>
                         </a>
                     </li>
 
@@ -182,7 +182,7 @@ $token = $app->make(Token::class);
                         <a href="#"
                            data-dialog="delete-set-<?php echo $set->getId() ?>"
                            data-dialog-title="<?php echo h(t('Delete Control')) ?>">
-                            <i class="fa fa-trash-o"></i>
+                            <i class="fas fa-trash"></i>
                         </a>
                     </li>
                 </ul>

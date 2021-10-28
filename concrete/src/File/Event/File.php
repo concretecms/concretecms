@@ -2,9 +2,8 @@
 namespace Concrete\Core\File\Event;
 
 use Concrete\Core\Entity\File\File as ConcreteFile;
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-class File extends AbstractEvent
+class File
 {
     protected $f;
 

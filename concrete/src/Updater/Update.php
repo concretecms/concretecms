@@ -3,7 +3,7 @@
 namespace Concrete\Core\Updater;
 
 use Concrete\Core\Cache\Cache;
-use Concrete\Core\Cache\CacheClearer;
+use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Foundation\Environment\FunctionInspector;
@@ -177,9 +177,9 @@ class Update
             }
         }
         $config = $app->make('config');
-        $clearer = $app->make(CacheClearer::class);
-        $clearer->setClearGlobalAreas(false);
-        $clearer->flush();
+        $command = new ClearCacheCommand();
+        $command->setClearGlobalAreas(false);
+        $app->executeCommand($command);
 
         $em = $app->make(EntityManagerInterface::class);
         $cmf = $em->getMetadataFactory();
@@ -240,6 +240,7 @@ class Update
         }
         try {
             $app->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
+            $app->make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete', 'all');
         } catch (Exception $x) {
         }
         $config->save('concrete.version_installed', $config->get('concrete.version'));

@@ -5,8 +5,9 @@ namespace Concrete\Core\Board\Designer\Command;
 use Concrete\Core\Entity\Board\Designer\CustomElement;
 use Concrete\Core\Entity\Board\Instance;
 use Concrete\Core\Entity\Board\Item;
+use Concrete\Core\Foundation\Command\Command;
 
-class ScheduleCustomElementCommand
+class ScheduleCustomElementCommand extends Command
 {
 
     const LOCK_TYPE_LOCKED = 'L';
@@ -25,12 +26,12 @@ class ScheduleCustomElementCommand
     /**
      * @var string
      */
-    protected $startDate;
+    protected $startDateTime;
 
     /**
      * @var string|null
      */
-    protected $endDate;
+    protected $endDateTime;
 
     /**
      * @var string
@@ -84,33 +85,33 @@ class ScheduleCustomElementCommand
     /**
      * @return string
      */
-    public function getStartDate(): string
+    public function getStartDateTime(): string
     {
-        return $this->startDate;
+        return $this->startDateTime;
     }
 
     /**
-     * @param string $startDate
+     * @param string $startDateTime
      */
-    public function setStartDate(string $startDate): void
+    public function setStartDateTime(string $startDateTime): void
     {
-        $this->startDate = $startDate;
+        $this->startDateTime = $startDateTime;
     }
 
     /**
      * @return string|null
      */
-    public function getEndDate(): ?string
+    public function getEndDateTime(): ?string
     {
-        return $this->endDate;
+        return $this->endDateTime;
     }
 
     /**
-     * @param string|null $endDate
+     * @param string|null $endDateTime
      */
-    public function setEndDate(?string $endDate): void
+    public function setEndDateTime(?string $endDateTime): void
     {
-        $this->endDate = $endDate;
+        $this->endDateTime = $endDateTime;
     }
 
     /**

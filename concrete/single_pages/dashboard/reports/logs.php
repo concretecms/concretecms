@@ -35,7 +35,7 @@ use Concrete\Core\Logging\Search\Result\Result;
                             disabled="disabled"
                             data-search-checkbox-button="dropdown"
                             class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
-                            data-toggle="dropdown"
+                            data-bs-toggle="dropdown"
                             data-reference="parent">
 
                             <span class="sr-only">
@@ -43,9 +43,7 @@ use Concrete\Core\Logging\Search\Result\Result;
                             </span>
                     </button>
 
-                    <div data-search-menu="dropdown">
-                        <?php echo $resultsBulkMenu->getMenuElement(); ?>
-                    </div>
+                    <?php echo $resultsBulkMenu->getMenuElement(); ?>
                 </div>
             </th>
 
@@ -85,7 +83,7 @@ use Concrete\Core\Logging\Search\Result\Result;
 
                 <?php foreach ($item->getColumns() as $column) { ?>
                     <?php /** @var ItemColumn $column */ ?>
-                    <td class="<?php echo $class; ?>">
+                    <td>
                         <?php echo $column->getColumnValue(); ?>
                     </td>
                 <?php } ?>
@@ -99,7 +97,7 @@ use Concrete\Core\Logging\Search\Result\Result;
                             <button class="btn btn-icon"
                                     data-boundary="viewport"
                                     type="button"
-                                    data-toggle="dropdown"
+                                    data-bs-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false">
 

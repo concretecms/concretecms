@@ -162,7 +162,7 @@ class Connection extends \Doctrine\DBAL\Connection
         if (!is_array($arguments)) {
             $arguments = [$arguments]; // adodb backward compatibility
         }
-        $r = $this->fetchAssoc($q, $arguments);
+        $r = $this->executeQuery($q, $arguments)->fetchAssociative();
         if (!is_array($r)) {
             $r = [];
         }

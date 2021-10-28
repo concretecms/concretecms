@@ -74,16 +74,17 @@ class StartingPointPackage extends Package
             new StartingPointInstallRoutine('install_blocktypes_calendar', 54, t('Adding Calendar block types.')),
             new StartingPointInstallRoutine('install_blocktypes_multimedia', 57, t('Adding Multimedia block types.')),
             new StartingPointInstallRoutine('install_blocktypes_core_desktop', 61, t('Adding Desktop block types.')),
-            new StartingPointInstallRoutine('install_blocktypes_other', 64, t('Adding other block types.')),
-            new StartingPointInstallRoutine('install_boards', 66, t('Adding boards.')),
-            new StartingPointInstallRoutine('install_page_types', 67, t('Page type basic setup.')),
-            new StartingPointInstallRoutine('install_themes', 68, t('Adding themes.')),
-            new StartingPointInstallRoutine('install_jobs', 69, t('Installing automated jobs.')),
-            new StartingPointInstallRoutine('install_dashboard', 78, t('Installing dashboard.')),
-            new StartingPointInstallRoutine('install_required_single_pages', 79, t('Installing login and registration pages.')),
-            new StartingPointInstallRoutine('install_config', 81, t('Configuring site.')),
+            new StartingPointInstallRoutine('install_blocktypes_other', 62, t('Adding other block types.')),
+            new StartingPointInstallRoutine('install_boards', 64, t('Adding boards.')),
+            new StartingPointInstallRoutine('install_page_types', 65, t('Page type basic setup.')),
+            new StartingPointInstallRoutine('install_tasks', 66, t('Installing tasks.')),
+            new StartingPointInstallRoutine('install_dashboard', 69, t('Installing dashboard.')),
+            new StartingPointInstallRoutine('install_required_single_pages', 75, t('Installing login and registration pages.')),
+            new StartingPointInstallRoutine('install_config', 78, t('Configuring site.')),
+            new StartingPointInstallRoutine('install_themes', 79, t('Adding themes.')),
+            new StartingPointInstallRoutine('install_file_manager', 80, t('Installing file manager.')),
             new StartingPointInstallRoutine('import_files', 82, t('Importing files.')),
-            new StartingPointInstallRoutine('install_content', 83, t('Adding pages and content.')),
+            new StartingPointInstallRoutine('install_content', 86, t('Adding pages and content.')),
             new StartingPointInstallRoutine('install_desktops', 92, t('Adding desktops.')),
             new StartingPointInstallRoutine('install_api', 93, t('Installing API.')),
             new StartingPointInstallRoutine('install_site_permissions', 94, t('Setting site permissions.')),
@@ -334,17 +335,16 @@ class StartingPointPackage extends Package
     {
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/summary.xml');
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/containers.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
         if (file_exists($this->getPackagePath() . '/themes.xml')) {
             $ci->importContentFile($this->getPackagePath() . '/themes.xml');
         }
     }
 
-    protected function install_jobs()
+    protected function install_tasks()
     {
         $ci = new ContentImporter();
-        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/jobs.xml');
+        $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/tasks.xml');
     }
 
     protected function install_config()
@@ -353,7 +353,7 @@ class StartingPointPackage extends Package
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/config.xml');
     }
 
-    protected function import_files()
+    protected function install_file_manager()
     {
         $type = \Concrete\Core\File\StorageLocation\Type\Type::add('default', t('Default'));
         \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
@@ -383,7 +383,10 @@ class StartingPointPackage extends Package
         $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_detail.height'));
         $thumbnailType->save();
+    }
 
+    protected function import_files()
+    {
         if (is_dir($this->getPackagePath() . '/files')) {
             $ch = new ContentImporter();
             $computeThumbnails = true;
@@ -424,7 +427,7 @@ class StartingPointPackage extends Package
         if (count($num) > 0) {
             throw new \Exception(
                 t(
-                    'There are already %s tables in this database. concrete5 must be installed in an empty database.',
+                    'There are already %s tables in this database. Concrete must be installed in an empty database.',
                     count($num)));
         }
         $installDirectory = DIR_BASE_CORE . '/config';
@@ -471,11 +474,11 @@ class StartingPointPackage extends Package
     {
         // Firstly, install the core authentication types
         $cba = AuthenticationType::add('concrete', 'Standard');
-        $coa = AuthenticationType::add('community', 'concrete5.org');
+        $coa = AuthenticationType::add('community', 'community.concretecms.com');
         $fba = AuthenticationType::add('facebook', 'Facebook');
         $twa = AuthenticationType::add('twitter', 'Twitter');
         $gat = AuthenticationType::add('google', 'Google');
-        $ext = AuthenticationType::add('external_concrete5', 'External concrete5');
+        $ext = AuthenticationType::add('external_concrete', 'External Concrete Site');
 
         $fba->disable();
         $twa->disable();
@@ -724,11 +727,13 @@ class StartingPointPackage extends Package
         $tree = GroupTree::get();
         $node = $tree->getRootTreeNodeObject();
         $permissions = [
-            'search_users_in_group',
-            'edit_group',
-            'assign_group',
-            'add_sub_group',
-            'edit_group_permissions',
+            'search_group_folder',
+            'edit_group_folder',
+            'edit_group_folder_permissions',
+            'delete_group_folder',
+            'add_group',
+            'assign_groups',
+            'add_group_folder',
         ];
         $adminGroupEntity = GroupPermissionAccessEntity::getOrCreate($g3);
         foreach ($permissions as $pkHandle) {
@@ -801,7 +806,7 @@ class StartingPointPackage extends Package
         $pt->assignPermissionAccess($pa);
 
         try {
-            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete5', 'all');
+            Core::make('helper/file')->makeExecutable(DIR_BASE_CORE . '/bin/concrete', 'all');
         } catch (\Exception $x) {
         }
     }

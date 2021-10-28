@@ -51,9 +51,10 @@ class RelationListController extends Controller
         $show_tooltips = (bool) \Config::get('concrete.accessibility.toolbar_tooltips');
         if ($show_tooltips) {
             $link->setAttribute('class', 'launch-tooltip');
-            $link->setAttribute('data-toggle', 'tooltip');
-            $link->setAttribute('data-placement', 'bottom');
-            $link->setAttribute('data-delay', '{ "show": 500, "hide": 0 }');
+            $link->setAttribute('data-bs-toggle', 'tooltip');
+            $link->setAttribute('data-bs-placement', 'bottom');
+            // data-bs-delay will throw a TypeError with current BS version
+            //$link->setAttribute('data-bs-delay', '{ "show": 500, "hide": 0 }');
         }
         
         if (is_object($this->multilingualSection)) {
@@ -66,7 +67,7 @@ class RelationListController extends Controller
             $link->appendChild($accessibility);
         } else {
             $icon = new Element('i', '');
-            $icon->addClass('fa fa-sitemap');
+            $icon->addClass('fas fa-sitemap');
 
             $accessibility = new Element('span', t('Related Pages'));
             $accessibility->addClass('ccm-toolbar-accessibility-title');

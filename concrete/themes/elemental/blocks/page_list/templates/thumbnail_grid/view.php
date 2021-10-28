@@ -34,9 +34,9 @@ $c = Page::getCurrentPage();
         <?php if (is_object($thumbnail)): ?>
             <div class="ccm-block-page-list-page-entry-grid-thumbnail">
                 <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php
-                $img = Core::make('html/image', [$thumbnail]);
+                $img = Core::make('html/image', ['f' => $thumbnail]);
                 $tag = $img->getTag();
-                $tag->addClass('img-fluid');
+                $tag->addClass('img-responsive');
                 echo $tag;
                 ?>
                     <div class="ccm-block-page-list-page-entry-grid-thumbnail-hover">

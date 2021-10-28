@@ -20,7 +20,7 @@ class SessionFactoryTest extends TestCase
     /** @var SessionFactoryInterface */
     protected $factory;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->app = clone \Concrete\Core\Support\Facade\Application::getFacadeApplication();
         $this->app['config'] = clone $this->app['config'];
@@ -29,7 +29,7 @@ class SessionFactoryTest extends TestCase
         $this->factory = new SessionFactory($this->app, $this->request);
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->app = $this->request = null;
     }
