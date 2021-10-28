@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.0RC5',
     'version_installed' => '9.0.0RC5',
-    'version_db' => '20211023155414', // the key of the latest database migration
+    'version_db' => '20211028000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -1103,6 +1103,14 @@ return [
              * @var bool
              */
             'validate_email' => false,
+
+            /**
+             * Threshold in seconds to delete unvalidated users
+             *
+             * @see \Concrete\Core\Command\Task\Controller\RemoveUnvalidatedUsersController
+             * @var int Seconds
+             */
+            'validate_email_threshold' => 5184000, // 60 days
 
             /*
              * Admins approve each registration
