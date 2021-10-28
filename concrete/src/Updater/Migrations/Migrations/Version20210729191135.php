@@ -18,5 +18,6 @@ final class Version20210729191135 extends AbstractMigration implements Repeatabl
         }
         $this->connection->executeStatement("update PermissionKeyCategories set pkCategoryHandle = 'marketplace' where pkCategoryHandle = 'marketplace_newsflow'");
         $db->executeStatement('update AuthenticationTypes set authTypeHandle = "external_concrete", authTypeName = "External Concrete" where authTypeHandle = "external_concrete5"');
+        $db->executeStatement('update OAuthUserMap set namespace = "external_concrete" where namespace="external_concrete5"');
     }
 }
