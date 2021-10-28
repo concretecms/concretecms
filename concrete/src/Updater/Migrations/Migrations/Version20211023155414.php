@@ -198,11 +198,17 @@ final class Version20211023155414 extends AbstractMigration implements Repeatabl
                     }
                     $style->setVariable($legacyValueValueData['variable']);
                     $styleValue = new StyleValue($style, $upgradedValue);
-                    $this->connection->insert('StyleCustomizerValues', [
-                        'scvID' => $legacyValue['scvID'],
-                        'scvlID' => $legacyValue['scvlID'],
-                        'value' => serialize($styleValue)
-                    ]);
+                    $existingID = $this->connection->fetchOne('select scvID from StyleCustomizerValues where scvID = ?', [$legacyValue['scvID']]);
+                    if ($existingID) {
+                        $this->output(t('Customizer style ID %s already found in StyleCustomizerValues. Skipping insert...', $legacyValue['scvID']));
+                    } else {
+                        $this->output(t('Inserting upgraded custom style %s...', $legacyValue['scvID']));
+                        $this->connection->insert('StyleCustomizerValues', [
+                            'scvID' => $legacyValue['scvID'],
+                            'scvlID' => $legacyValue['scvlID'],
+                            'value' => serialize($styleValue)
+                        ]);
+                    }
                 }
             } else {
                 $this->output(t('No legacy values requiring upgrade were found.'));
