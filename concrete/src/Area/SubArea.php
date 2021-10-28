@@ -51,20 +51,17 @@ class SubArea extends Area
         $db = Loader::db();
         $arParentID = $this->arParentID;
         if ($arParentID == 0) {
-            $a = false;
-        } else {
-            while ($arParentID > 0) {
-                $row = $db->GetRow('select arID, arHandle, arParentID, arOverrideCollectionPermissions from Areas where arID = ?', array($arParentID));
-                if (empty($row)) {
-                    break;
-                }
-                $arParentID = $row['arParentID'];
-                if ($row['arOverrideCollectionPermissions']) {
-                    break;
-                }
-            }
-            $a = empty($row) ? null : Area::get($this->c, $row['arHandle']);
+            return false;
         }
+
+        while ($arParentID > 0) {
+            $row = $db->GetRow('select arID, arHandle, arParentID, arOverrideCollectionPermissions from Areas where arID = ?', array($arParentID));
+            $arParentID = $row['arParentID'];
+            if ($row['arOverrideCollectionPermissions']) {
+                break;
+            }
+        }
+        $a = Area::get($this->c, $row['arHandle']);
         $cache->save($item->set($a));
 
         return $a;

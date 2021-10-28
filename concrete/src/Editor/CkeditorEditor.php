@@ -160,14 +160,8 @@ class CkeditorEditor implements EditorInterface
                 CKEDITOR.stylesSet.add('concretestyles', {$this->getStylesJson()});
             }
             var element = $(identifier),
-                destroyed = false,
                 form = element.closest('form'),
                 ckeditor = element.ckeditor({$options}).editor;
-            CKEDITOR.on('inline', function(e) {
-                if (destroyed === false && element.has(e.data.element.$)) {
-                    return false;
-                }
-            });
             function resetMode() {
                 if (ckeditor.mode === 'source' && ckeditor.setMode) {
                     ckeditor.setMode('wysiwyg');
@@ -179,7 +173,6 @@ class CkeditorEditor implements EditorInterface
             ckeditor.on('remove', function(){
                 form.off('submit', resetMode);
                 $(this).destroy();
-                destroyed = true;
             });
             form.on('submit', resetMode);
             if (CKEDITOR.env.ie) {

@@ -205,11 +205,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             } else {
                 $options = $this->getSelectedOptions();
                 foreach ($options as $opt) {
-                    $selectedOptions[] = [
-                        'id' => 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID(),
-                        'label' => $opt->getSelectAttributeOptionDisplayValue(),
-                        'text' => $opt->getSelectAttributeOptionValue()
-                    ];
+                    $selectedOptions[] = ['id' => 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID(), 'text' => $opt->getSelectAttributeOptionValue()];
                     $selectedOptionIDs[] = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
                 }
             }
@@ -948,12 +944,10 @@ EOT
                 $option = $r->findOneBy(['list' => $type->getOptionList(), 'avSelectOptionID' => $optionID]);
                 if (is_object($option)) {
                     $o->id = $value;
-                    $o->label = $option->getSelectAttributeOptionDisplayValue();
                     $o->text = $option->getSelectAttributeOptionValue();
                 }
             } else {
                 $o->id = $value;
-                $o->label = $value;
                 $o->text = $value;
             }
 

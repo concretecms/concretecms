@@ -258,9 +258,9 @@
             "authors": [
                 {
                     "name": "Michele Locati",
-                    "role": "author",
                     "email": "michele@locati.it",
-                    "homepage": "https://mlocati.github.io"
+                    "homepage": "https://mlocati.github.io",
+                    "role": "author"
                 }
             ],
             "description": "Patches required for concrete5 dependencies",

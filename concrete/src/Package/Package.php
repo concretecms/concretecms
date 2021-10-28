@@ -13,7 +13,6 @@ use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Entity\Package as PackageEntity;
 use Concrete\Core\Package\Dependency\DependencyChecker;
 use Concrete\Core\Package\ItemCategory\Manager;
-use Concrete\Core\Page\Theme\AvailableVariablesUpdater;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
@@ -1041,27 +1040,6 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
-     * Upgrade the values of the customizable styles of the themes provided by the package.
-     *
-     * @return \Concrete\Core\Page\Theme\AvailableVariablesUpdater\Result[] array keys are the theme handles
-     */
-    public function upgradePackageThemes()
-    {
-        $result = [];
-        $packageEntity = $this->getPackageEntity();
-        $flags = (int) $this->getStyleCustomizerUpdateFlags();
-        $updater = null;
-        foreach (Theme::getListByPackage($packageEntity) as $theme) {
-            if ($updater === null) {
-                $updater = $this->app->make(AvailableVariablesUpdater::class);
-            }
-            $result[$theme->getThemeHandle()] = $updater->fixTheme($theme, $flags);
-        }
-
-        return $result;
-    }
-
-    /**
      * Updates a package's database using entities and a db.xml.
      *
      * @throws \Doctrine\DBAL\ConnectionException
@@ -1253,15 +1231,5 @@ abstract class Package implements LocalizablePackageInterface
                 @unlink($proxyFileName);
             }
         }
-    }
-
-    /**
-     * Get the flags to be passed to AvailableVariablesUpdater when upgrading the package themes.
-     *
-     * @return int
-     */
-    protected function getStyleCustomizerUpdateFlags()
-    {
-        return AvailableVariablesUpdater::FLAG_ADD | AvailableVariablesUpdater::FLAG_UPDATE;
     }
 }

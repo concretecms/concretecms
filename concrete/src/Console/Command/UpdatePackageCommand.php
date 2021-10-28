@@ -127,7 +127,6 @@ EOT
             }
             $upPkg->upgradeCoreData();
             $upPkg->upgrade();
-            $upPkg->upgradePackageThemes();
             $output->writeln('<info>done.</info>');
         }
     }

@@ -154,7 +154,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $target = \Page::getCurrentPage();
         }
         if ($option) {
-            return \URL::page($target, 'tag', mb_strtolower(h($option->getSelectAttributeOptionValue())));
+            return \URL::page($target, 'tag', mb_strtolower($option->getSelectAttributeOptionDisplayValue()));
         } else {
             return \URL::page($target);
         }

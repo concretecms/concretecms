@@ -11,17 +11,17 @@
         <?php foreach ($options as $option) { ?>
             <?php if (isset($target) && $target) { ?>
                 <a href="<?=$controller->getTagLink($option) ?>">
-                    <?php if (isset($selectedTag) && mb_strtolower(h($option->getSelectAttributeOptionValue())) == mb_strtolower($selectedTag)) { ?>
-                        <span class="ccm-block-tags-tag ccm-block-tags-tag-selected label"><?=$option->getSelectAttributeOptionDisplayValue()?></span>
+                    <?php if (isset($selectedTag) && mb_strtolower($option->getSelectAttributeOptionValue()) == mb_strtolower($selectedTag)) { ?>
+                        <span class="ccm-block-tags-tag ccm-block-tags-tag-selected label"><?=$option->getSelectAttributeOptionValue()?></span>
                     <?php } else { ?>
-                        <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionDisplayValue()?></span>
+                        <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
                     <?php } ?>
                 </a>
             <?php } else { ?>
-                <?php if (isset($selectedTag) && mb_strtolower(h($option->getSelectAttributeOptionValue())) == mb_strtolower($selectedTag)) { ?>
-                    <span class="ccm-block-tags-tag ccm-block-tags-tag-selected label"><?=$option->getSelectAttributeOptionDisplayValue()?></span>
+                <?php if (isset($selectedTag) && mb_strtolower($option->getSelectAttributeOptionValue()) == mb_strtolower($selectedTag)) { ?>
+                    <span class="ccm-block-tags-tag ccm-block-tags-tag-selected label"><?=$option->getSelectAttributeOptionValue()?></span>
                 <?php } else { ?>
-                    <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionDisplayValue()?></span>
+                    <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
                 <?php } ?>
             <?php } ?>
         <?php } ?>

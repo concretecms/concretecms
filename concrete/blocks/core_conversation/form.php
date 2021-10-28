@@ -74,7 +74,7 @@ if ($controller->getAction() == 'add') {
     $maxFilesGuest = $config->get('conversations.files.guest.max');
     $maxFilesRegistered = $config->get('conversations.files.registered.max');
     $fileExtensions = implode(',', $fileAccessFileTypes);
-    $attachmentsEnabled = (int) ($config->get('conversations.attachments_enabled'));
+    $attachmentsEnabled = intval($config->get('conversations.attachments_enabled'));
     $notificationUsers = Conversation::getDefaultSubscribedUsers();
     $subscriptionEnabled = intval($config->get('conversations.subscription_enabled'));
 }

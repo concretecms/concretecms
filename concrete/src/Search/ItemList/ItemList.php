@@ -180,14 +180,6 @@ abstract class ItemList
         $this->paginationPageParameter = \Config::get('concrete.seo.paging_string');
     }
 
-    /**
-    * Get paging parameter from Concrete configuration
-    */
-    protected function loadQueryStringPagingVariable()
-    {
-        $this->paginationPageParameter = \Config::get('concrete.seo.paging_string');
-    }
-    
     public function getQuerySortDirectionParameter()
     {
         return $this->sortDirectionParameter;

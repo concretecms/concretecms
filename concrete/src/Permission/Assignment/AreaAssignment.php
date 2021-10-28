@@ -84,7 +84,7 @@ class AreaAssignment extends Assignment
         } else {
             $this->stackAssignment = null;
             if ($a instanceof SubArea && !$a->overrideCollectionPermissions()) {
-                $a = $a->getSubAreaParentPermissionsObject() ?: $a;
+                $a = $a->getSubAreaParentPermissionsObject();
             }
         }
 
