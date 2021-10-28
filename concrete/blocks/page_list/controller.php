@@ -18,7 +18,6 @@ use Concrete\Core\Url\SeoCanonical;
 use Database;
 use Page;
 use PageList;
-use phpDocumentor\Reflection\Types\Parent_;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
