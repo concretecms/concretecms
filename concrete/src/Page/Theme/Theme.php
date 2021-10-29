@@ -14,6 +14,7 @@ use Concrete\Core\Page\Theme\Documentation\Installer;
 use Concrete\Core\StyleCustomizer\Customizer\Customizer;
 use Concrete\Core\StyleCustomizer\Customizer\CustomizerFactory;
 use Concrete\Core\StyleCustomizer\Customizer\CustomizerInterface;
+use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
@@ -466,7 +467,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
             }
         }
 
-        if (!is_null($collection)) {
+        if (isset($collection) && $collection instanceof NormalizedVariableCollection) {
             $stylesheet->setVariableCollection($collection);
         }
         if (!$this->isThemePreviewRequest()) {
