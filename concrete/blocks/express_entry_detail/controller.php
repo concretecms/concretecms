@@ -115,15 +115,17 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         if ($form) {
             $express = \Core::make('express');
-            $controller = $express->getEntityController($entity);
-            $factory = new ContextFactory($controller);
-            $context = $factory->getContext(new FrontendViewContext());
-            $renderer = new Renderer(
-                $context,
-                $form
-            );
+            if(is_object($entity)){
+                $controller = $express->getEntityController($entity);
+                $factory = new ContextFactory($controller);
+                $context = $factory->getContext(new FrontendViewContext());
+                $renderer = new Renderer(
+                    $context,
+                    $form
+                );
 
-            $this->set('renderer', $renderer);
+                $this->set('renderer', $renderer);
+            }
         }
     }
 
