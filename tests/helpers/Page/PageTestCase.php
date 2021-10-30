@@ -2,12 +2,11 @@
 
 namespace Concrete\TestHelpers\Page;
 
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Type as PageType;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Core;
-use Page;
-use PageTemplate;
-use PageType;
 
 abstract class PageTestCase extends ConcreteDatabaseTestCase
 {
@@ -44,6 +43,9 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'PageTypeComposerFormLayoutSets',
         'BlockFeatureAssignments',
         'BlockPermissionAssignments',
+        'UserGroups',
+        'Groups',
+        'PermissionAccessEntities'
     ]; // so brutal
 
     protected $metadatas = [
@@ -62,18 +64,23 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Value\Value',
         'Concrete\Core\Entity\Attribute\Key\Key',
+        'Concrete\Core\Entity\User\User',
+        'Concrete\Core\Entity\User\UserSignup',
     ];
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
-        $service = Core::make('site/type');
+        $app = Application::getFacadeApplication();
+        $app->make('user/registration')->createSuperUser('test', 'andrew@concrete5.org');
+
+        $service = $app->make('site/type');
         if (!$service->getDefault()) {
             $service->installDefault();
         }
 
-        $service = Core::make('site');
+        $service = $app->make('site');
         if (!$service->getDefault()) {
             $service->installDefault();
         }
