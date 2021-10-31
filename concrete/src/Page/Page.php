@@ -178,6 +178,10 @@ class Page extends Collection implements CategoryMemberInterface,
      */
     protected $hasCustomSummaryTemplateCollection;
 
+    protected $cCacheFullPageContentOverrideLifetime;
+
+    protected $cCacheFullPageContentLifetimeCustom;
+
     /**
      * Initialize collection until we populate it.
      */
@@ -3669,19 +3673,20 @@ EOT
      */
     public function getCollectionFullPageCachingLifetimeValue()
     {
+        $app = Application::getFacadeApplication();
         if ($this->cCacheFullPageContentOverrideLifetime == 'default') {
-            $lifetime = Config::get('concrete.cache.lifetime');
+            $lifetime = $app['config']->get('concrete.cache.lifetime');
         } elseif ($this->cCacheFullPageContentOverrideLifetime == 'custom') {
             $lifetime = $this->cCacheFullPageContentLifetimeCustom * 60;
         } elseif ($this->cCacheFullPageContentOverrideLifetime == 'forever') {
             $lifetime = 31536000; // 1 year
         } else {
-            if (Config::get('concrete.cache.full_page_lifetime') == 'custom') {
-                $lifetime = Config::get('concrete.cache.full_page_lifetime_value') * 60;
-            } elseif (Config::get('concrete.cache.full_page_lifetime') == 'forever') {
+            if ($app['config']->get('concrete.cache.full_page_lifetime') == 'custom') {
+                $lifetime = $app['config']->get('concrete.cache.full_page_lifetime_value') * 60;
+            } elseif ($app['config']->get('concrete.cache.full_page_lifetime') == 'forever') {
                 $lifetime = 31536000; // 1 year
             } else {
-                $lifetime = Config::get('concrete.cache.lifetime');
+                $lifetime = $app['config']->get('concrete.cache.lifetime');
             }
         }
 
