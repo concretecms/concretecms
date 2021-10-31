@@ -6,6 +6,7 @@ use Concrete\Core\Area\Area;
 use Block;
 use CacheLocal;
 use Concrete\Core\Entity\Page\Summary\CustomPageTemplateCollection;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
@@ -3693,6 +3694,63 @@ EOT
         if (!$lifetime) {
             // we have no value, which means forever, but we need a numerical value for page caching
             $lifetime = 31536000;
+        }
+
+        /** @var Date $date */
+        $date = $app->make(Date::class);
+        $now = $date->getOverridableNow();
+        /** @var Connection $connection */
+        $connection = $app->make(Connection::class);
+
+        // Get upcoming publish date
+        $upcomingPublishDate = $connection->createQueryBuilder()
+            ->select('cv.cvPublishDate')
+            ->from('collectionVersions', 'cv')
+            ->where('cv.cID = :cID')
+            ->andWhere('cv.cvIsApproved = :cvIsApproved')
+            ->andWhere('cv.cvPublishDate > :now')
+            ->orderBy('cv.cvPublishDate', 'asc')
+            ->setParameter('cID', $this->getCollectionID())
+            ->setParameter('cvIsApproved', true)
+            ->setParameter('now', $now)
+            ->execute()->fetchOne();
+
+        // Get upcoming publish end date
+        $upcomingPublishEndDate = $connection->createQueryBuilder()
+            ->select('cv.cvPublishEndDate')
+            ->from('collectionVersions', 'cv')
+            ->where('cv.cID = :cID')
+            ->andWhere('cv.cvIsApproved = :cvIsApproved')
+            ->andWhere('cv.cvPublishEndDate > :now')
+            ->orderBy('cv.cvPublishEndDate', 'asc')
+            ->setParameter('cID', $this->getCollectionID())
+            ->setParameter('cvIsApproved', true)
+            ->setParameter('now', $now)
+            ->execute()->fetchOne();
+
+        // Get upcoming scheduled date (start or end)
+        $upcomingScheduledDate = false;
+        if ($upcomingPublishDate && $upcomingPublishEndDate) {
+            $upcomingPublishDateObject = new \DateTime($upcomingPublishDate);
+            $upcomingPublishEndDateObject = new \DateTime($upcomingPublishEndDate);
+            if ($upcomingPublishDateObject > $upcomingPublishEndDateObject) {
+                $upcomingScheduledDate = $upcomingPublishEndDate;
+            } else {
+                $upcomingScheduledDate = $upcomingPublishDate;
+            }
+        } elseif ($upcomingPublishDate) {
+            $upcomingScheduledDate = $upcomingPublishDate;
+        } elseif ($upcomingPublishEndDate) {
+            $upcomingScheduledDate = $upcomingPublishEndDate;
+        }
+
+        // Use the upcoming scheduled date if it will come earlier than the original lifetime
+        if ($upcomingScheduledDate) {
+            $upcomingScheduledDateObject = new \DateTime($upcomingScheduledDate);
+            $upcomingScheduledDateInSeconds = $upcomingScheduledDateObject->getTimestamp() - $date->getOverridableNow(true);
+            if ($lifetime > $upcomingScheduledDateInSeconds) {
+                $lifetime = $upcomingScheduledDateInSeconds;
+            }
         }
 
         return $lifetime;
