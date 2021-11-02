@@ -89,8 +89,8 @@ final class Version20211023155414 extends AbstractMigration implements Repeatabl
     {
         $value = new ImageValue();
         $value->setImageURL($legacyValueValueData['imageUrl']);
-        if ($legacyValueValueData['fID']) {
-            $value->setImageFileID($legacyValueValueData['fID']);
+        if (intval($legacyValueValueData['fID'])) {
+            $value->setImageFileID(intval($legacyValueValueData['fID']));
         }
         return $value;
     }
