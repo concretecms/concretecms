@@ -98,7 +98,7 @@ final class Version20211023155414 extends AbstractMigration implements Repeatabl
     protected function upgradeTypeValue(string $variable, array $legacyValueValueData)
     {
         $value = new TypeValue();
-        if (is_array($legacyValueValueData['fontSize'])) {
+        if (is_array($legacyValueValueData['color'])) {
             $colorStyle = new ColorStyle();
             $colorStyle->setVariable($variable . '-type');
             $colorValue = $this->upgradeColorValue($legacyValueValueData['color']);
