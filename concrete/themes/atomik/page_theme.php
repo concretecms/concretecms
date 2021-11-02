@@ -32,6 +32,7 @@ class PageTheme extends Theme
     {
         return [
             Features::ACCOUNT,
+            Features::DESKTOP,
             Features::BASICS,
             Features::TYPOGRAPHY,
             Features::DOCUMENTS,
