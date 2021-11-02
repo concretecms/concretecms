@@ -141,10 +141,11 @@ if ($key !== null) {
         if ($category->getCategoryEntity()->getPackageHandle()) {
             $element = Element::get(
                 'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
+                ['key' => $key],
                 $category->getCategoryEntity()->getPackageHandle()
             );
         } else {
-            $element = Element::get('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle());
+            $element = Element::get('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(), ['key' => $key]);
         }
         if ($element->exists()) {
             $element->render();
