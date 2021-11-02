@@ -98,23 +98,24 @@ final class Version20211023155414 extends AbstractMigration implements Repeatabl
     protected function upgradeTypeValue(string $variable, array $legacyValueValueData)
     {
         $value = new TypeValue();
-        $colorStyle = new ColorStyle();
-        $colorStyle->setVariable($variable . '-type');
-        $colorValue = $this->upgradeColorValue($legacyValueValueData['color']);
-        $sizeStyle = new SizeStyle();
-        $sizeStyle->setVariable($variable . '-type');
-        $sizeValue = $this->upgradeSizeValue($legacyValueValueData['fontSize']);
-
-        $value->addSubStyleValue(new StyleValue($colorStyle, $colorValue));
-        $value->addSubStyleValue(new StyleValue($sizeStyle, $sizeValue));
-
+        if (is_array($legacyValueValueData['fontSize'])) {
+            $colorStyle = new ColorStyle();
+            $colorStyle->setVariable($variable . '-type');
+            $colorValue = $this->upgradeColorValue($legacyValueValueData['color']);
+            $value->addSubStyleValue(new StyleValue($colorStyle, $colorValue));
+        }
+        if (is_array($legacyValueValueData['fontSize'])) {
+            $sizeStyle = new SizeStyle();
+            $sizeStyle->setVariable($variable . '-type');
+            $sizeValue = $this->upgradeSizeValue($legacyValueValueData['fontSize']);
+            $value->addSubStyleValue(new StyleValue($sizeStyle, $sizeValue));
+        }
         if (is_string($legacyValueValueData['fontFamily'])) {
             $fontFamilyStyle = new FontFamilyStyle();
             $fontFamilyStyle->setVariable($variable . '-type-font-family');
             $fontFamilyValue = new FontFamilyValue($legacyValueValueData['fontFamily']);
             $value->addSubStyleValue(new StyleValue($fontFamilyStyle, $fontFamilyValue));
         }
-
         if (is_string($legacyValueValueData['fontStyle'])) {
             $fontStyleStyle = new FontStyleStyle();
             $fontStyleStyle->setVariable($variable . '-type-font-style');
