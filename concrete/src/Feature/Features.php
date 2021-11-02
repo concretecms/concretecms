@@ -154,6 +154,11 @@ class Features
     const ACCOUNT = 'account';
 
     /**
+     * Accessory feature: support for desktop functionality, like "Waiting for Me", "Draft List", etc...
+     */
+    const DESKTOP = 'desktop';
+
+    /**
      * Accessory feature: support for frontend user profiles
      */
     const PROFILE = 'profile';

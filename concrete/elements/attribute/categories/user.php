@@ -1,5 +1,5 @@
 <?php
-if (is_object($key)) {
+if (isset($key) && is_object($key)) {
     $uakProfileDisplay = $key->isAttributeKeyDisplayedOnProfile();
     $uakProfileEdit = $key->isAttributeKeyEditableOnProfile();
     $uakProfileEditRequired = $key->isAttributeKeyRequiredOnProfile();
