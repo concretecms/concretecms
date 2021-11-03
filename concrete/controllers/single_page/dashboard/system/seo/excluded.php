@@ -41,7 +41,12 @@ class Excluded extends DashboardPageController
     public function reset()
     {
         $config = $this->app->make('config');
-        $config->save('concrete.seo.exclude_words', implode(', ', $this->getDefaultExcludedWords()));
+
+        $seoConfig = $config->get('concrete.seo');
+        if (isset($seoConfig['exclude_words'])) {
+            unset($seoConfig['exclude_words']);
+        }
+        $config->save('concrete.seo', $seoConfig);
 
         $this->flash('success', t('Reserved words reset.'));
 
@@ -53,6 +58,6 @@ class Excluded extends DashboardPageController
      */
     protected function getDefaultExcludedWords(): array
     {
-        return Urlify::$remove_list['en'];
+        return (array) Urlify::$remove_list['en'];
     }
 }
