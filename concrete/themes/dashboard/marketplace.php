@@ -47,7 +47,6 @@ $this->inc('elements/header.php'); ?>
 <?php if ($controller->getTask() != 'view_detail') {
     ?>
 <header class="ccm-marketplace-list">
-    <h1><?=$heading?></h1>
     <div class="ccm-marketplace-sort">
         <nav>
         <li><a href="<?=$list->getSortByURL('popularity')?>" <?php if ($sort == 'popularity') {

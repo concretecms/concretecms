@@ -92,7 +92,7 @@ if ($permissions->canInstallPackages()) { ?>
     } ?>
 
 
-            <fieldset>
+            <fieldset class="mb-3">
                 <legend><?= t('Step 1: Create a Project Page') ?></legend>
                 <?php if ($marketplace->isConnected()) { ?>
                     <?php View::element('dashboard/marketplace_project_page');?>

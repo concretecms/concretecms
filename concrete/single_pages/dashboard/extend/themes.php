@@ -34,8 +34,8 @@ if ($controller->getTask() == 'view_detail') {
 
             <div class="ccm-marketplace-detail-theme-buy">
                 <div class="btn-group">
-                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-price" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
-                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-description"><?php if ($item->purchaseRequired()) {
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-primary"><?=$item->getDisplayPrice()?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-secondary"><?php if ($item->purchaseRequired()) {
     ?><?=t('Purchase')?><?php 
 } else {
     ?><?=t('Download')?><?php 
@@ -151,8 +151,8 @@ if ($controller->getTask() == 'view_detail') {
             </div>
             <div class="ccm-marketplace-list-item-theme-price">
                 <div class="btn-group">
-                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-price" style="background-color: #1888d3"><?=$mi->getDisplayPrice()?></button>
-                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-description"><?php if ($mi->purchaseRequired()) { ?><?=t('Purchase')?><?php } else { ?><?=t('Download')?><?php } ?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-primary"><?=$mi->getDisplayPrice()?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-secondary"><?php if ($mi->purchaseRequired()) { ?><?=t('Purchase')?><?php } else { ?><?=t('Download')?><?php } ?></button>
                 </div>
             </div>
         </div>
@@ -161,7 +161,11 @@ if ($controller->getTask() == 'view_detail') {
 }
     ?>
 
-    <?=$list->displayPagingV2()?>
+    <?php if ($list->requiresPaging()) { ?>
+        <div class="ccm-pagination-wrapper">
+            <?=$list->displayPagingV2()?>
+        </div>
+    <?php } ?>
 
 <?php 
 } else {

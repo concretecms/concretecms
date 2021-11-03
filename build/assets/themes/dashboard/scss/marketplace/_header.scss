@@ -25,15 +25,11 @@ div#ccm-dashboard-content {
         @include clearfix();
       }
       background: #000;
-      padding: 33px 60px 34px 95px;
+      padding: 33px 0 34px 37px;
     }
 
-    padding: 0px 0px 0px 0px;
-    margin-left: -97px;
-    margin-right: -50px;
-
     div.ccm-marketplace-search {
-      padding: 0px 0px 0px 95px;
+      padding: 0px 0px 0px 37px;
       background-color: #fff;
       border-bottom: 1px solid #b7cadd;
       position: relative;
