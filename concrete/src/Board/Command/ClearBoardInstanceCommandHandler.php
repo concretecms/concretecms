@@ -19,7 +19,7 @@ class ClearBoardInstanceCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(ClearBoardInstanceCommand $command)
+    public function __invoke(ClearBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
 

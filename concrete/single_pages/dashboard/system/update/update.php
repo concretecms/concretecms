@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <fieldset>
     <legend><?= t('Current Version') ?></legend>
-    <?= t('You are currently running concrete5 version %s', '<strong>' . h($currentVersion) . '</strong>') ?>
+    <?= t('You are currently running Concrete version %s', '<strong>' . h($currentVersion) . '</strong>') ?>
 </fieldset>
 
 <?php
@@ -118,7 +118,7 @@ if ($remoteUpdate !== null) {
 
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
-        <div class="float-right">
+        <div class="float-end">
             <a href="<?= $controller->action('check_for_updates') ?>" class="btn btn-primary"><?= t('Check For Updates') ?></a>
             <?php
             if ($remoteUpdate !== null) {

@@ -33,8 +33,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
                                <?php if (in_array($key->getAttributeKeyID(), $selectedAttributeIDs)) {
                                ?>class="ccm-menu-page-attribute-selected" <?php
                             }
-                            ?> href="javascript:void(0)"><i class="fa fa-minus-circle"></i><i
-                                    class="fa fa-plus-circle"></i> <?= $key->getAttributeKeyDisplayName() ?></a></li>
+                            ?> href="javascript:void(0)"><i class="fas fa-minus-circle"></i><i
+                                    class="fas fa-plus-circle"></i> <?= $key->getAttributeKeyDisplayName() ?></a></li>
                         <?php
                     }
                     ?>

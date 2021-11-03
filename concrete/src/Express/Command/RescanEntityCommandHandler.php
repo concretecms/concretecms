@@ -42,7 +42,7 @@ class RescanEntityCommandHandler implements LoggerAwareInterface
      *
      * @param RescanEntityCommand $command
      */
-    public function handle(RescanEntityCommand $command)
+    public function __invoke(RescanEntityCommand $command)
     {
         $node = Node::getByID($command->getEntity()->getEntityResultsNodeId());
         if ($node instanceof ExpressEntryResults) {

@@ -1,0 +1,14 @@
+/* stylelint-disable selector-class-pattern */
+.ccm-page-user-directory {
+  .ccm-page-user-directory-entry {
+    align-items: center;
+    display: flex;
+    padding: 1rem;
+
+    .ccm-page-user-directory-avatar {
+      border-radius: 50%;
+      margin-right: 2rem;
+      max-width: 80px;
+    }
+  }
+}

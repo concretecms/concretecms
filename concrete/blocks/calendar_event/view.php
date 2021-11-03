@@ -73,7 +73,7 @@ use Concrete\Core\Support\Facade\Url;
 
         <?php if ($allowExport) { ?>
             <div class="ccm-block-calendar-event-export">
-                <a href="<?php echo Url::to("/ccm/calendar/dialogs/event/export")->setQuery(["eventID" => $event->getID()]); ?>"
+                <a href="<?php echo Url::to("/ccm/calendar/event/export")->setQuery(["eventID" => $event->getID()]); ?>"
                    title="<?php echo h(t("Export Event")); ?>" class="btn btn-secondary">
                     <?php echo t("Export Event"); ?>
                 </a>

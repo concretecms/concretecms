@@ -13,6 +13,7 @@ use Concrete\Core\Logging\Search\ColumnSet\Column\TimeColumn;
 use Concrete\Core\Logging\Search\ColumnSet\Column\UserIdentifierColumn;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\Utility\Service\Text as TextService;
 use Punic\Exception;
 use Punic\Exception\BadArgumentType;
 
@@ -58,6 +59,20 @@ class DefaultSet extends ColumnSet
     public function getCollectionLevel($logEntry)
     {
         return Levels::getLevelDisplayName($logEntry->getLevel());
+    }
+
+    /**
+     * @param $logEntry LogEntry
+     * @return string
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function getFormattedMessage($logEntry)
+    {
+        $app = Application::getFacadeApplication();
+        /** @var TextService $textHelper */
+        $textHelper  = $app->make(TextService::class);
+        return $textHelper->makenice($logEntry->getMessage());
+
     }
 
     public function __construct()

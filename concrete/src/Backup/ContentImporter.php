@@ -2,8 +2,11 @@
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\Backup\ContentImporter\Importer\Routine\SpecifiableHomePageRoutineInterface;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\File\File;
 use Concrete\Core\File\Importer;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
+use Concrete\Core\Tree\Node\Type\FileFolder;
 use Core;
 
 class ContentImporter
@@ -118,4 +121,57 @@ class ContentImporter
             }
         }
     }
+
+    /**
+     * Moves files with a particular filename to a particular folder.
+     *
+     * @param array $fileNames
+     * @param string|FileFolder $folderName
+     */
+    public function moveFilesByName(array $fileNames, $folder)
+    {
+        $app = app();
+        if (is_string($folder)) {
+            $folder = FileFolder::getNodeByName($folder);
+        }
+        if ($folder) {
+            $db = $app->make(Connection::class);
+            foreach ($fileNames as $name) {
+                $fID = $db->fetchOne('select fID from FileVersions where fvFilename = ?', [$name]);
+                if ($fID) {
+                    $file = File::getByID($fID);
+                    if ($file) {
+                        $fileNode = $file->getFileNodeObject();
+                        if ($fileNode) {
+                            $fileNode->move($folder);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Deletes files with a particular filename.
+     *
+     * Note: only use this in highly controlled environments, as in resetting sample content.
+     *
+     * @param array $fileNames
+     * @param string|FileFolder $folderName
+     */
+    public function deleteFilesByName(array $fileNames)
+    {
+        $app = app();
+        $db = $app->make(Connection::class);
+        foreach ($fileNames as $name) {
+            $fID = $db->fetchOne('select fID from FileVersions where fvFilename = ?', [$name]);
+            if ($fID) {
+                $file = File::getByID($fID);
+                if ($file) {
+                    $file->delete();
+                }
+            }
+        }
+    }
+
 }

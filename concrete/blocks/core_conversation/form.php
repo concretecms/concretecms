@@ -78,13 +78,13 @@ if ($controller->getAction() == 'add') {
     $notificationUsers = Conversation::getDefaultSubscribedUsers();
     $subscriptionEnabled = intval($config->get('conversations.subscription_enabled'));
 }
-$fileAccessFileTypesBlacklist = $config->get('conversations.files.disallowed_types');
+$fileAccessFileTypesDenylist = $config->get('conversations.files.disallowed_types');
 
-if ($fileAccessFileTypesBlacklist === null) {
-    $fileAccessFileTypesBlacklist = $config->get('concrete.upload.extensions_blacklist');    
+if ($fileAccessFileTypesDenylist === null) {
+    $fileAccessFileTypesDenylist = $config->get('concrete.upload.extensions_denylist', $config->get('concrete.upload.extensions_blacklist'));
 }
 
-$fileAccessFileTypesBlacklist = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesBlacklist);
+$fileAccessFileTypesDenylist = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesDenylist);
 
 if (!$dateFormat) {
     $dateFormat = 'default';
@@ -308,9 +308,9 @@ if (!$dateFormat) {
         <div class="controls">
             <?php echo $form->textarea('fileExtensions', $fileExtensions) ?>
 
-            <?php if (isset($fileAccessFileTypesBlacklist) && is_array($fileAccessFileTypesBlacklist) && count($fileAccessFileTypesBlacklist) > 0) { ?>
+            <?php if (isset($fileAccessFileTypesDenylist) && is_array($fileAccessFileTypesDenylist) && count($fileAccessFileTypesDenylist) > 0) { ?>
                 <div class="text-muted small">
-                    <?php echo t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $fileAccessFileTypesBlacklist) . '</code>') ?>
+                    <?php echo t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $fileAccessFileTypesDenylist) . '</code>') ?>
                     <br/>
                     <?php echo t('If you want to unblock these extensions, you have to manually set the %s configuration key.', '<code>conversations.files.disallowed_types</code>') ?>
                 </div>

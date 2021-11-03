@@ -22,7 +22,8 @@ class InstallPackageCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:package:install')
             ->setAliases([
@@ -31,14 +32,14 @@ class InstallPackageCommand extends Command
             ])
             ->addOption('full-content-swap', null, InputOption::VALUE_NONE, 'If this option is specified a full content swap will be performed (if the package supports it)')
             ->addOption('languages', 'l', InputOption::VALUE_REQUIRED, 'Force to install ("yes") or to not install ("no") language files. If "auto", language files will be installed if the package is connected to the project ("auto" requires that the canonical URL is set)', 'auto')
-            ->setDescription('Install a concrete5 package')
+            ->setDescription('Install a package')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addArgument('package', InputArgument::REQUIRED, 'The handle of the package to be installed')
             ->addArgument('package-options', InputArgument::IS_ARRAY, 'List of key-value pairs to pass to the package install routine (example: foo=bar baz=foo)')
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-package-install
@@ -181,5 +182,7 @@ EOT
             }
             $output->writeln('<info>done.</info>');
         }
+
+        return static::SUCCESS;
     }
 }

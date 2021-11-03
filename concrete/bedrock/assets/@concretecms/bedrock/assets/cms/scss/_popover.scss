@@ -1,0 +1,25 @@
+#ccm-popover-menu-container {
+  .popover {
+    z-index: 2001;
+
+    &.bs-popover-top,
+    &.bs-popover-bottom {
+      .popover-arrow {
+        left: 50%;
+        margin-left: -0.5rem;
+      }
+    }
+
+    &.bs-popover-left,
+    &.bs-popover-right {
+      .popover-arrow {
+        margin-top: -0.5rem;
+        top: 50%;
+      }
+    }
+  }
+
+  .bootstrap-select {
+    z-index: 2001;
+  }
+}

@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             $relatedPage = $relation->getPageObject();
             ?>
 
-            <li><a href="<?=$relatedPage->getCollectionLink()?>"><i class="fa fa-file-o"></i> <?=$formatter->getDisplayName()?></a></li>
+            <li><a href="<?=$relatedPage->getCollectionLink()?>"><i class="fas fa-file-o"></i> <?=$formatter->getDisplayName()?></a></li>
 
         <?php } ?>
         </ul>

@@ -10,10 +10,10 @@ module.exports = function(grunt, config, parameters, done) {
         buildParameters = parameters;
         buildParameters.destination = workFolder;
         if(!parameters.ctEntryPoint) {
-        	parameters.ctEntryPoint = 'https://translate.concrete5.org/api';
+        	parameters.ctEntryPoint = 'https://translate.concretecms.org/api';
         }
         if(!parameters.ctPackage) {
-            parameters.ctPackage = 'concrete5';
+            parameters.ctPackage = 'concrete';
         }
         if(!parameters.ctPackageVersion) {
             parameters.ctPackageVersion = 'dev-8';

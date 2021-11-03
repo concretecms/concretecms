@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Panel\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Http\Request;
 use Concrete\Core\View\View;
 
 class Devices extends BackendInterfacePageController
@@ -32,7 +33,7 @@ class Devices extends BackendInterfacePageController
         if ($cp->canViewPageVersions()) {
             $c->loadVersionObject(\Core::make('helper/security')->sanitizeInt($_REQUEST['cvID']));
 
-            $spoofed_request = \Request::createFromGlobals();
+            $spoofed_request = Request::getInstance();
 
             if ($device_handle = $request->headers->get('x-device-handle')) {
                 if ($device = \Core::make('device/manager')->get($device_handle)) {

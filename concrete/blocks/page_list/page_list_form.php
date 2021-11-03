@@ -42,6 +42,7 @@ use Concrete\Core\Form\Service\Widget\DateTime;
 /** @var bool $includeDescription */
 /** @var bool $includeAllDescendents */
 /** @var bool $paginate */
+/** @var bool $displaySystemPages */
 /** @var bool $displayAliases */
 /** @var bool $ignorePermissions */
 /** @var bool $enableExternalFiltering */
@@ -98,8 +99,7 @@ echo $userInterface->tabs([
 
 <div class="tab-content">
     <div class="tab-pane show active pagelist-form" id="page-list-settings" role="tabpanel">
-        <input type="hidden" name="pageListToolsDir"
-               value="<?php /* echo $urlService->getBlockTypeToolsURL($bt) */ ?>/"/>
+        <input type="hidden" name="pageListPreviewPane" value="<?= h($controller->getActionURL('preview_pane')) ?>"/>
 
         <fieldset>
             <div class="form-group">
@@ -109,7 +109,7 @@ echo $userInterface->tabs([
 
             <div class="form-group">
                 <?php
-                $pageTypes = [];
+                $pageTypes = ['0' => t('** All')];
                 /** @noinspection PhpUndefinedClassInspection */
                 foreach (PageType::getList(false, $siteType) as $pageType) {
                     /** @var Type $pageType */
@@ -143,7 +143,7 @@ echo $userInterface->tabs([
 
                 <div data-row="custom-topic">
                     <!--suppress HtmlFormInputWithoutLabel -->
-                    <select class="form-control" name="customTopicAttributeKeyHandle"
+                    <select class="form-select" name="customTopicAttributeKeyHandle"
                             id="customTopicAttributeKeyHandle">
 
                         <option value="">
@@ -194,7 +194,7 @@ echo $userInterface->tabs([
 
         <fieldset>
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Filter by Public Date') ?>
                 </label>
 
@@ -213,16 +213,16 @@ echo $userInterface->tabs([
 
                     <div class="form-check">
                         <?php $id = "filterDateOption" . $i++; ?>
-                        <?php echo $form->radio("filterDateOption", $filterDateOptionHandle, $filterDateOption, ["id" => $id, "name" => "filterDateOption", "class" => "filterDateOption"]); ?>
+                        <?php echo $form->radio("filterDateOption", $filterDateOptionHandle, $filterDateOption, ["id" => $id, "name" => "filterDateOption", "class" => "form-check-input filterDateOption"]); ?>
                         <?php echo $form->label($id, $filterDateOptionLabel, ["class" => "form-check-label"]); ?>
                     </div>
                 <?php } ?>
 
                 <div class="filterDateOptionDetail" data-filterDateOption="past">
                     <div class="form-group">
-                        <label class="control-label">
+                        <label class="control-label form-label">
                             <?php echo t('Days in the Past') ?>
-                            <i class="launch-tooltip fa fa-question-circle"
+                            <i class="launch-tooltip fas fa-question-circle"
                                title="<?php echo t('Leave 0 to show all past dated pages') ?>"></i>
                         </label>
 
@@ -232,9 +232,9 @@ echo $userInterface->tabs([
 
                 <div class="filterDateOptionDetail" data-filterDateOption="future">
                     <div class="form-group">
-                        <label class="control-label">
+                        <label class="control-label form-label">
                             <?php echo t('Days in the Future') ?>
-                            <i class="launch-tooltip fa fa-question-circle"
+                            <i class="launch-tooltip fas fa-question-circle"
                                title="<?php echo t('Leave 0 to show all future dated pages') ?>"></i>
                         </label>
 
@@ -290,6 +290,11 @@ echo $userInterface->tabs([
                 </div>
 
                 <div class="form-check">
+                    <?php echo $form->checkbox("displaySystemPages", "1", $displaySystemPages); ?>
+                    <?php echo $form->label("displaySystemPages", t("Display system pages."), ["class" => "form-check-label"]); ?>
+                </div>
+
+                <div class="form-check">
                     <?php echo $form->checkbox("ignorePermissions", "1", $ignorePermissions); ?>
                     <?php echo $form->label("ignorePermissions", t("Ignore page permissions."), ["class" => "form-check-label"]); ?>
                 </div>
@@ -340,7 +345,7 @@ echo $userInterface->tabs([
                     ?> style="display: none" <?php
                 } ?>>
 
-                    <?php echo $pageSelector->selectPage('cParentIDValue', $isOtherPage ? $cParentID : false); ?>
+                    <?php echo $pageSelector->selectPage('cParentIDValue', $isOtherPage ? $cParentID : false, ['askIncludeSystemPages' => true]); ?>
                 </div>
 
                 <div class="ccm-page-list-all-descendents"
@@ -378,17 +383,17 @@ echo $userInterface->tabs([
             </legend>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Provide RSS Feed') ?>
                 </label>
 
                 <div class="form-check">
-                    <?php echo $form->radio("rss", "0", is_object($rssFeed) ? '1' : '0', ["id" => "disableRssFeed", "name" => "rss", "class" => "rssSelector"]); ?>
+                    <?php echo $form->radio("rss", "0", is_object($rssFeed) ? '1' : '0', ["id" => "disableRssFeed", "name" => "rss", "class" => "form-check-input rssSelector"]); ?>
                     <?php echo $form->label("disableRssFeed", t("No"), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("rss", "1", is_object($rssFeed) ? '1' : '0', ["id" => "enableRssFeed", "name" => "rss", "class" => "rssSelector"]); ?>
+                    <?php echo $form->radio("rss", "1", is_object($rssFeed) ? '1' : '0', ["id" => "enableRssFeed", "name" => "rss", "class" => "form-check-input rssSelector"]); ?>
                     <?php echo $form->label("enableRssFeed", t("Yes"), ["class" => "form-check-label"]); ?>
                 </div>
 
@@ -410,11 +415,9 @@ echo $userInterface->tabs([
                             <?php echo $form->label('', t('RSS Feed Location')); ?>
 
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <?php echo (string)Url::to('/rss') ?>/
-                                    </span>
-                                </div>
+                                <span class="input-group-text">
+                                    <?php echo (string)Url::to('/rss') ?>/
+                                </span>
 
                                 <?php echo $form->text("rssHandle"); ?>
                             </div>
@@ -424,7 +427,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Include Page Name') ?>
                 </label>
 
@@ -440,7 +443,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Include Page Description') ?>
                 </label>
 
@@ -455,18 +458,16 @@ echo $userInterface->tabs([
                 </div>
 
                 <div class="ccm-page-list-truncate-description" <?php echo($includeDescription ? '' : 'style="display:none;"') ?>>
-                    <label class="control-label">
+                    <label class="control-label form-label">
                         <?php echo t('Display Truncated Description') ?>
                     </label>
 
                     <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <!--suppress HtmlFormInputWithoutLabel -->
-                                <input id="ccm-pagelist-truncateSummariesOn" name="truncateSummaries" type="checkbox"
-                                       value="1" <?php echo($truncateSummaries ? 'checked="checked"' : '') ?> />
-                            </span>
-                        </div>
+                        <span class="input-group-text">
+                            <!--suppress HtmlFormInputWithoutLabel -->
+                            <input id="ccm-pagelist-truncateSummariesOn" name="truncateSummaries" type="checkbox"
+                                   value="1" <?php echo($truncateSummaries ? 'checked="checked"' : '') ?> />
+                        </span>
 
                         <?php
                         $miscFields = ["id" => "ccm-pagelist-truncateChars", "name" => "truncateChars", "step" => 1, "min" => 0];
@@ -478,11 +479,9 @@ echo $userInterface->tabs([
                         echo $form->number("truncateChars", (int)$truncateChars, $miscFields);
                         ?>
 
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <?php echo t('characters') ?>
-                            </span>
-                        </div>
+                        <span class="input-group-text">
+                            <?php echo t('characters') ?>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -506,7 +505,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Display Thumbnail Image') ?>
                 </label>
 
@@ -528,7 +527,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="form-group">
-                <label class="control-label">
+                <label class="control-label form-label">
                     <?php echo t('Use Different Link than Page Name') ?>
                 </label>
 
@@ -554,7 +553,7 @@ echo $userInterface->tabs([
                 <?php echo $form->label('pageListTitle', t('Title of Page List')); ?>
 			    <div class="input-group">
                 	<?php echo $form->text("pageListTitle", $pageListTitle); ?>
-					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 				</div>
 			</div>
 
@@ -564,7 +563,7 @@ echo $userInterface->tabs([
             </div>
 
             <div class="loader">
-                <i class="fa fa-cog fa-spin"></i>
+                <i class="fas fa-cog fa-spin"></i>
             </div>
         </fieldset>
     </div>

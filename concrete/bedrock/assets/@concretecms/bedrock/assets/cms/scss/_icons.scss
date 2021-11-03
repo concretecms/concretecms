@@ -1,0 +1,36 @@
+a.icon-link {
+  i {
+    color: $gray-600 !important;
+    text-decoration: none;
+  }
+}
+
+a.icon-link.launch-tooltip {
+  border-bottom: 0;
+}
+
+a.icon-link:hover {
+  text-decoration: none;
+}
+
+a.ccm-hover-icon {
+  i {
+    color: $gray-600 !important;
+    transition: color 0.25s ease-in-out;
+  }
+
+  svg {
+    fill: $gray-600 !important;
+    transition: fill 0.25s ease-in-out;
+  }
+
+  &:hover {
+    i {
+      color: $primary !important;
+    }
+
+    svg {
+      fill: $primary !important;
+    }
+  }
+}

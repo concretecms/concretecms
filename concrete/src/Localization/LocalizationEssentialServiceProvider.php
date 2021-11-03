@@ -4,13 +4,13 @@ namespace Concrete\Core\Localization;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Localization\Translator\Adapter\Core\TranslatorAdapterFactory as CoreTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory as LaminasTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Loader\Gettext as GettextLoader;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository;
 use Concrete\Core\Localization\Translator\TranslatorAdapterFactoryInterface;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
-use Zend\I18n\Translator\LoaderPluginManager;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\I18n\Translator\LoaderPluginManager;
+use Laminas\ServiceManager\ServiceManager;
 
 class LocalizationEssentialServiceProvider extends ServiceProvider
 {
@@ -23,11 +23,11 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
         if (!$this->app->bound(TranslatorAdapterFactoryInterface::class)) {
             $this->app->bind(TranslatorAdapterFactoryInterface::class, function ($app, $params) {
                 $config = $app->make('config');
-                $loaders = $config->get('i18n.adapters.zend.loaders', []);
+                $loaders = $config->get('i18n.adapters.laminas.loaders', []);
 
                 $loaderRepository = new TranslationLoaderRepository();
                 foreach ($loaders as $key => $class) {
-                    $loader = $app->build($class, [$app]);
+                    $loader = $app->make($class);
                     $loaderRepository->registerTranslationLoader($key, $loader);
                 }
 
@@ -37,7 +37,7 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
                     [
                         'factories' => [
                             GettextLoader::class => function($creationContext, $resolvedName, $options) {
-                                return $this->app->build(GettextLoader::class, ['webrootDirectory' => DIR_BASE]);
+                                return $this->app->make(GettextLoader::class, ['webrootDirectory' => DIR_BASE]);
                             }
                         ],
                         'aliases' => [
@@ -45,10 +45,10 @@ class LocalizationEssentialServiceProvider extends ServiceProvider
                         ],
                     ]
                 );
-                $zendFactory = new ZendTranslatorAdapterFactory($loaderRepository, $loaderPluginManager);
+                $laminasFactory = new LaminasTranslatorAdapterFactory($loaderRepository, $loaderPluginManager);
                 $plainFactory = new PlainTranslatorAdapterFactory();
 
-                return new CoreTranslatorAdapterFactory($config, $plainFactory, $zendFactory);
+                return new CoreTranslatorAdapterFactory($config, $plainFactory, $laminasFactory);
             });
         }
 

@@ -26,6 +26,8 @@
 *.svg text eol=lf
 /concrete/bin/concrete5 text eol=lf
 /concrete/bin/concrete5.bat text eol=crlf
+/concrete/bin/concrete text eol=lf
+/concrete/bin/concrete.bat text eol=crlf
 
 #
 # Binary files

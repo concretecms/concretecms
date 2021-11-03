@@ -10,6 +10,7 @@ use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Data\Extractor\Driver\Traits\GetCategoriesTrait;
 use Concrete\Core\Summary\Data\Extractor\Driver\Traits\GetThumbnailTrait;
+use Concrete\Core\Summary\Data\Field\AuthorDataFieldData;
 use Concrete\Core\Summary\Data\Field\DataField;
 use Concrete\Core\Summary\Data\Field\DatetimeDataFieldData;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
@@ -95,6 +96,11 @@ class BasicCalendarEventDriver implements DriverInterface
             $description = $version->getDescription();
             if ($description) {
                 $collection->addField(new DataField(FieldInterface::FIELD_DESCRIPTION, $description));
+            }
+
+            $author = $version->getAuthor();
+            if ($author) {
+                $collection->addField(new DataField(FieldInterface::FIELD_AUTHOR, new AuthorDataFieldData($author->getUserInfoObject())));
             }
 
             $collection->addField(new DataField(FieldInterface::FIELD_LINK, new LazyEventOccurrenceLinkDataFieldData()));

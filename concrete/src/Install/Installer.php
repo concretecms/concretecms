@@ -20,7 +20,7 @@ class Installer
      *
      * @var string
      */
-    const DEFAULT_STARTING_POINT = 'elemental_full';
+    const DEFAULT_STARTING_POINT = 'atomik_full';
 
     /**
      * The application instance.

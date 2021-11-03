@@ -1,0 +1,56 @@
+div.theme-atomik {
+  footer {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+
+    // Logo
+    div.atomik-logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+
+      picture, img {
+        width: 44px;
+        height: 44px;
+        margin-right: 0.25rem;
+      }
+
+      span {
+        @extend .display-4;
+        font-family: $display-font-family;
+        color: $gray-900;
+      }
+    }
+
+    // Social Links
+    .ccm-block-social-links {
+      margin-bottom: 2rem;
+      a {
+        color: $dark;
+      }
+      i {
+        font-size: 27px;
+      }
+    }
+
+
+    background-color: $theme-footer-bg;
+    color: $theme-footer-color;
+
+    a {
+      text-decoration: none;
+      color: $theme-footer-link-color;
+
+      &:hover {
+        color: $primary;
+      }
+    }
+
+    section.concrete-branding {
+      font-size: $font-size-sm;
+      a {
+        text-decoration: underline;
+      }
+    }
+  }
+}

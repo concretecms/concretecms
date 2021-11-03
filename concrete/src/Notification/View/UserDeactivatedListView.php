@@ -26,7 +26,7 @@ class UserDeactivatedListView extends StandardListView implements ApplicationAwa
 
     public function getIconClass()
     {
-        return 'fa fa-user-times';
+        return 'fas fa-user-times';
     }
 
     public function getTitle()

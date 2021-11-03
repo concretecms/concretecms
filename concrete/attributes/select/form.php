@@ -6,6 +6,7 @@ use HtmlObject\Element;
 $app = Application::getFacadeApplication();
 /** @var Form $form */
 $form = $app->make(Form::class);
+$options = [];
 
 // Checkbox list.
 if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
@@ -49,7 +50,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMul
         ?>
         <div class="form-check">
                 <?= $form->radio($view->field('atSelectOptionValue'), '', empty($selectedOptionIDs) ? '' : $selectedOptionIDs[0]) ?>
-                <?= $form->label($view->field('atSelectOptionValue').$index,  t('None') )?>
+                <?= $form->label($view->field('atSelectOptionValue').$index,  t('None'), ['class' => 'form-check-label'] )?>
 
         </div>
 
@@ -62,7 +63,7 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMul
         <div class="form-check">
                 <?=$form->radio($view->field('atSelectOptionValue'), $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
                 ?>
-                <?= $form->label($view->field('atSelectOptionValue').$index,  $opt->getSelectAttributeOptionDisplayValue() )?>
+                <?= $form->label($view->field('atSelectOptionValue').$index,  $opt->getSelectAttributeOptionDisplayValue(), ['class' => 'form-check-label'])?>
         </div>
 
     <?php
@@ -82,9 +83,14 @@ if ($akSelectAllowOtherValues) {
         }
     }
 
+
+    /*
+       Note: the form-control on here is NOT ideal, that's bootstrap 4 markup,
+       but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here
+    */
     echo (string) new Element(
         'span',
-        $form->selectMultiple($view->field('atSelectOptionValue'), $options, count($selectedOptionIDs) ? $selectedOptionIDs : '', ['data-select-and-add' => $akID]),
+        $form->selectMultiple($view->field('atSelectOptionValue'), $options, count($selectedOptionIDs) ? $selectedOptionIDs : '', ['class' => 'form-control', 'data-select-and-add' => $akID]),
         [
             'class' => 'ccm-select-values-selector',
             'id' => 'ccm-select-values-selector-' . $akID,

@@ -22,9 +22,9 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     * @see \Doctrine\Migrations\AbstractMigration::getDescription()
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return '5.7.4';
     }
@@ -156,7 +156,7 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
         $db = \Database::get();
         if ($this->updateSectionPlurals) {
             $rs = $db->Execute('select cID, msLanguage, msCountry from MultilingualSections');
-            while ($row = $rs->FetchRow()) {
+            while ($row = $rs->fetch()) {
                 $locale = $row['msLanguage'];
                 if ($row['msCountry']) {
                     $locale .= '_' . $row['msCountry'];
@@ -188,7 +188,7 @@ class Version20150504000000 extends AbstractMigration implements RepeatableMigra
     {
         $db = \Database::get();
         $r = $db->Execute('select pdID from PermissionDurationObjects order by pdID asc');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $pd = Duration::getByID($row['pdID']);
             if (isset($pd->error)) {
                 // this is a legacy object. It was serialized from 5.7.3.1 and earlier and used to extend Object.

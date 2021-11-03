@@ -4,13 +4,8 @@ namespace Concrete\Core\Board\Instance\Slot\Rule;
 
 use Concrete\Core\Entity\Board\InstanceSlotRule;
 
-class CustomSlotContentFormatter implements FormatterInterface
+class CustomSlotContentFormatter extends AbstractFormatter
 {
-
-    public function getRuleName(InstanceSlotRule $rule) : string
-    {
-        return t('Custom slot created for slot %s.', $rule->getSlot());
-    }
 
     public function getRuleActionDescription(InstanceSlotRule $rule): string
     {
@@ -20,7 +15,7 @@ class CustomSlotContentFormatter implements FormatterInterface
             $user = t('(Unknown User)');
         }
         $date = new \DateTime('@' . $rule->getDateCreated(), new \DateTimeZone($rule->getTimezone()));
-        return t('Created by %s on %s', $user, $date->format('n/j/Y'));
+        return t('Custom slot created by %s on %s', $user, $date->format('n/j/Y'));
     }
 
 }

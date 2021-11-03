@@ -12,7 +12,7 @@ t('Initial Version');
 // To translate the names of the autentication types
 // @see \Concrete\Core\Package\StartingPointPackage::add_users
 tc('AuthenticationType', 'Standard');
-tc('AuthenticationType', 'concrete5.org');
+tc('AuthenticationType', 'community.concretecms.com');
 tc('AuthenticationType', 'Facebook');
 tc('AuthenticationType', 'Twitter');
 tc('AuthenticationType', 'Google');

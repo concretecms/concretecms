@@ -86,7 +86,7 @@ class GroupList extends DatabaseItemList implements PagerProviderInterface, Pagi
             /** @noinspection PhpUnhandledExceptionInspection */
             /** @noinspection SqlNoDataSourceInspection */
             $r = $db->executeQuery('select gID from ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' where gID > ?', [REGISTERED_GROUP_ID]);
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $g = $this->getGroupRepository()->getGroupById($row['gID']);
                 $gp = new Checker($g);
                 /** @noinspection PhpUndefinedMethodInspection */

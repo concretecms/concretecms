@@ -37,7 +37,7 @@ use Concrete\Core\User\Group\Menu;
                             disabled="disabled"
                             data-search-checkbox-button="dropdown"
                             class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
-                            data-toggle="dropdown"
+                            data-bs-toggle="dropdown"
                             data-reference="parent">
 
                             <span class="sr-only">
@@ -45,9 +45,7 @@ use Concrete\Core\User\Group\Menu;
                             </span>
                     </button>
 
-                    <div data-search-menu="dropdown">
-                        <?php echo $resultsBulkMenu->getMenuElement(); ?>
-                    </div>
+                    <?php echo $resultsBulkMenu->getMenuElement(); ?>
                 </div>
             </th>
 
@@ -109,7 +107,7 @@ use Concrete\Core\User\Group\Menu;
                             </a>
                         </td>
                     <?php } else { ?>
-                        <td class="<?php echo $class ?>">
+                        <td class="<?=$class?? '' ?>">
                             <?php echo $column->getColumnValue(); ?>
                         </td>
                     <?php } ?>
@@ -124,7 +122,7 @@ use Concrete\Core\User\Group\Menu;
                             <button class="btn btn-icon"
                                     data-boundary="viewport"
                                     type="button"
-                                    data-toggle="dropdown"
+                                    data-bs-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false">
 

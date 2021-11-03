@@ -17,7 +17,7 @@ if ($u->isRegistered()) {
 
 if (is_object($conversation)) { ?>
     <div class="ccm-conversation-wrapper" data-conversation-id="<?=$conversation->getConversationID()?>">
-        <?=t('Loading Conversation')?> <i class="fa fa-spin fa-circle-o-notch"></i>
+        <?=t('Loading Conversation')?> <i class="fas fa-spin fa-circle-o-notch"></i>
     </div>
 
     <script>

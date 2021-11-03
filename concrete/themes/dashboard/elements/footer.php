@@ -6,15 +6,19 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
             <div class="row">
                 <div class="col-sm-12">
                     <p>
-                    <?=t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.')?></p>
+                    <?=t('Concrete CMS collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.')?></p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6">
-                    <a target="_blank" href="<?=Config::get('concrete.urls.privacy_policy')?>" class="btn-block btn btn-default"><?=t('View Privacy Policy')?></a>
+                    <div class="d-grid">
+                        <a target="_blank" href="<?=Config::get('concrete.urls.privacy_policy')?>" class="btn btn-default"><?=t('View Privacy Policy')?></a>
+                    </div>
                 </div>
                 <div class="col-sm-6">
-                    <button data-action="agree-privacy-policy" data-token="<?=Core::make('token')->generate('accept_privacy_policy')?>" class="btn-block btn btn-primary"><?=t('Accept and Close')?></button>
+                    <div class="d-grid">
+                        <button data-action="agree-privacy-policy" data-token="<?=Core::make('token')->generate('accept_privacy_policy')?>" class="btn btn-primary"><?=t('Accept and Close')?></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,11 +67,6 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
         });
     });
 })();
-<?php
-$config = Core::make('config');
-if ($config->get('concrete.misc.enable_progressive_page_reindex') && $config->get('concrete.misc.do_page_reindex_check')) { ?>
-    ConcretePageIndexer.reindexPendingPages();
-<?php } ?>
 </script>
 </body>
 </html>

@@ -10,6 +10,7 @@ jobs:
     env:
       LC_ALL: en_US.UTF-8
       CODE_COVERAGE: n
+    continue-on-error: ${{ matrix.php-version == '8.1' }}
 
     runs-on: ${{ matrix.operating-system }}
     services:
@@ -25,23 +26,28 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.2"
           - "7.3"
           - "7.4"
-#          - "8.0"
+          - "8.0"
         dependencies:
           - "locked"
         operating-system:
           - "ubuntu-latest"
+        composer:
+          - "composer:v2"
 
         include:
-          - php-version: 7.4
+          - php-version: 8.0
             operating-system: "ubuntu-latest"
             dependencies: "highest"
-# Lowest doesn't work at the moment. Revisit once we have dependencies updated.
-#          - php-version: 7.4
-#            operating-system: "ubuntu-latest"
-#            dependencies: "lowest"
+          # Lowest doesn't work at the moment. Test with composer version 1 on 7.3 only.
+          - php-version: 7.3
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
+            composer: "composer:v1, prestissimo"
+          - php-version: 8.1
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
 
     steps:
       - name: "Checkout"
@@ -56,7 +62,7 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
           coverage: pcov
           ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
-          tools: composer:v1, prestissimo
+          tools: ${{matrix.composer}}
 
       - name: "Prepare mysql user"
         run: |
@@ -78,23 +84,22 @@ jobs:
         if: ${{ matrix.dependencies == 'highest' }}
         run: |
           composer update --no-interaction --no-progress --no-suggest
-          # Run twice for mediawiki merge
-          composer update --no-interaction --no-progress --no-suggest
 
       - name: "Install locked dependencies"
         if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress --no-suggest"
-
-      # PCOV is a fast code coverage driver
-      - name: Setup PCOV
-        if: env.CODE_COVERAGE == 'y'
         run: |
-          composer require pcov/clobber
-          cd concrete && vendor/bin/pcov clobber
+          composer install --no-interaction --no-progress --no-suggest
+        # Since continue on error still marks a job as failed.
+        # We also have to add continue-on-error here so it doesnt X the whole build
+        # See https://github.com/actions/toolkit/issues/399
+        continue-on-error: ${{ matrix.php-version == '8.1' }}
+
 
       - name: "Tests"
         if: env.CODE_COVERAGE == 'n'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit
+        # Same as above
+        continue-on-error: ${{ matrix.php-version == '8.1' }}
 
       - name: "Tests with coverage"
         if: env.CODE_COVERAGE == 'y'

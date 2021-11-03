@@ -7,9 +7,19 @@ use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Site\Service;
 use Concrete\Core\User\UserInfo;
 use Concrete\Core\User\UserInfoRepository;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\{
+    Builder,
+    Encoding\ChainedFormatter,
+    Encoding\JoseEncoder,
+    Token,
+    Token\Builder as TokenBuilder,
+    Token\RegisteredClaims
+};
+use Lcobucci\JWT\Signer\{
+    Key,
+    Key\InMemory,
+    Rsa\Sha256
+};
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\ResponseTypes\BearerTokenResponse;
 use League\OpenIdConnectClaims\ClaimsSet;
@@ -82,23 +92,67 @@ class IdTokenResponse extends BearerTokenResponse
         $issuer = $this->site->getSite();
 
         // Initialize the builder
-        $builder = (new Builder())
-            ->setAudience($accessToken->getClient()->getIdentifier())
-            ->setIssuer($issuer->getSiteCanonicalURL())
-            ->setIssuedAt(time())
-            ->setNotBefore(time())
-            ->setExpiration($accessToken->getExpiryDateTime()->getTimestamp())
-            ->setSubject($accessToken->getUserIdentifier());
+        $now = new \DateTimeImmutable();
+
+        if (class_exists(TokenBuilder::class)) {
+            $builder = new TokenBuilder(new JoseEncoder(), ChainedFormatter::default());
+        } else {
+            $builder = new Builder();
+        }
+
+        $builder = $builder
+            ->permittedFor($accessToken->getClient()->getIdentifier())
+            ->issuedBy($issuer ? $issuer->getSiteCanonicalURL() : 'concrete5')
+            ->issuedAt($now)
+            ->canOnlyBeUsedAfter($now)
+            ->expiresAt($accessToken->getExpiryDateTime())
+            ->relatedTo($accessToken->getUserIdentifier());
 
         // Apply claims
         foreach ($claims->jsonSerialize() as $key => $claim) {
-            $builder->set($key, $claim);
+            // Avoid calling `withClaim` for registered claims
+            switch ($key) {
+                case RegisteredClaims::ID:
+                    $builder = $builder->identifiedBy($claim);
+                    break;
+                case RegisteredClaims::EXPIRATION_TIME:
+                    $builder = $builder->expiresAt($claim);
+                    break;
+                case RegisteredClaims::NOT_BEFORE:
+                    $builder = $builder->canOnlyBeUsedAfter($claim);
+                    break;
+                case RegisteredClaims::ISSUED_AT:
+                    $builder = $builder->issuedAt($claim);
+                    break;
+                case RegisteredClaims::ISSUER:
+                    $builder = $builder->issuedBy($claim);
+                    break;
+                case RegisteredClaims::AUDIENCE:
+                    $builder = $builder->permittedFor($claim);
+                    break;
+                case RegisteredClaims::SUBJECT:
+                    $builder = $builder->relatedTo($claim);
+                    break;
+                default:
+                    $builder = $builder->withClaim($key, $claim);
+                    break;
+            }
         }
 
         // Return the newly signed token
-        return $builder
-            ->sign(new Sha256(), new Key($this->privateKey->getKeyPath(), $this->privateKey->getPassPhrase()))
-            ->getToken();
+        if (class_exists(InMemory::class)) {
+            $key = InMemory::plainText($this->privateKey->getKeyContents(), (string) $this->privateKey->getPassPhrase());
+        } else {
+            $key = new Key($this->privateKey->getKeyContents(), $this->privateKey->getPassPhrase());
+        }
+
+        $token = $builder->getToken(new Sha256(), $key);
+
+        if ($token instanceof Token) {
+            return $token->toString();
+        }
+
+        return $token;
     }
 
     /**

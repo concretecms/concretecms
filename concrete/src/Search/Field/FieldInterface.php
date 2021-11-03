@@ -40,4 +40,19 @@ interface FieldInterface extends \JsonSerializable, DenormalizableInterface
      * @param array $request
      */
     public function loadDataFromRequest(array $request);
+
+    /**
+     * Exports the data to CIF
+     *
+     * @param \SimpleXMLElement $element
+     * @return mixed
+     */
+    public function export(\SimpleXMLElement $element);
+
+    /**
+     * @param \SimpleXMLElement $element
+     * @return void
+     */
+    public function loadDataFromImport(\SimpleXMLElement $element);
+
 }

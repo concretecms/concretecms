@@ -13,7 +13,7 @@ class OrderEntries extends DashboardPageController
             $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $id);
         }
         if (isset($entity) && is_object($entity) && $entity->supportsCustomDisplayOrder()) {
-            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array($entity, $entity->getAttributeKeyCategory()));
+            $provider = $this->app->make('Concrete\Core\Express\Search\SearchProvider', array('entity' => $entity, 'category' => $entity->getAttributeKeyCategory()));
             $this->set('entity', $entity);
             $list = new EntryList($entity);
             $list->sortByDisplayOrderAscending();

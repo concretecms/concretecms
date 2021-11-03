@@ -8,6 +8,8 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Command\RescanFileAsyncCommand;
+use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\Rescanner;
 use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -72,7 +74,8 @@ class Details extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
 
-        $this->app->make(Rescanner::class)->rescanFileVersion($fileVersion);
+        $rescanFileCommand = new RescanFileAsyncCommand($fID);
+        $this->app->executeCommand($rescanFileCommand);
 
         $this->flash('success', t('The file has been rescanned.'));
 
@@ -86,7 +89,7 @@ class Details extends DashboardPageController
      *
      * @return \Concrete\Core\Entity\File\Version
      */
-    protected function getFileVersion(?int $fID, ?int $fvID): Version
+    protected function getFileVersion(int $fID = null, int $fvID = null): Version
     {
         $file = $fID === null ? null : $this->app->make(EntityManagerInterface::class)->find(File::class, $fID);
         if ($file === null) {

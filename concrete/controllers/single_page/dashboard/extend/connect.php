@@ -15,7 +15,7 @@ class Connect extends DashboardPageController
         $this->set('marketplace', Marketplace::getInstance());
         $this->set('dbConfig', $this->app->make('config/database'));
         $this->set('config', $config);
-        $this->set('projectPageURL', $config->get('concrete.urls.concrete5') . $config->get('concrete.urls.paths.marketplace.projects'));
+        $this->set('projectPageURL', $config->get('concrete.urls.concrete') . $config->get('concrete.urls.paths.marketplace.projects'));
     }
 
     public function do_connect()

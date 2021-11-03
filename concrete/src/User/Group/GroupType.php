@@ -219,7 +219,7 @@ class GroupType extends ConcreteObject implements JsonSerializable
 
         try {
             $db->executeQuery('delete from GroupTypes where gtID = ?', [$this->getId()]);
-            $db->executeQuery("update Groups set gtID = ? where gtID = ?", [DEFAULT_GROUP_TYPE_ID, $this->getId()]);
+            $db->executeQuery("update `Groups` set gtID = ? where gtID = ?", [DEFAULT_GROUP_TYPE_ID, $this->getId()]);
             $db->executeQuery("update UserGroups set gtID = ? where gtID = ?", [DEFAULT_GROUP_TYPE_ID, $this->getId()]);
         } catch (Exception $e) {
             return false;

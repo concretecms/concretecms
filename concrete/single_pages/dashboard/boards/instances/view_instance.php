@@ -11,10 +11,12 @@ $renderer->render($instance);
 <div id="ccm-page-controls-wrapper" class="ccm-ui">
     <div id="ccm-toolbar">
         <ul>
-            <li class="ccm-logo float-left"><span><?= $ui->getToolbarLogoSRC() ?></span></li>
-            <li class="float-left">
+            <li class="ccm-logo float-start"><span><?= $ui->getToolbarLogoSRC() ?></span></li>
+            <li class="float-start">
                 <a href="<?=URL::to('/dashboard/boards/instances', 'view', $instance->getBoard()->getBoardID())?>">
-                    <i class="fa fa-arrow-left"></i></span>
+                    <svg>
+                        <use xlink:href="#icon-arrow-left"/>
+                    </svg>
                 </a>
             </li>
         </ul>

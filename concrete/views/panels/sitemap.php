@@ -20,7 +20,7 @@
                 <?php if (count($frequentPageTypes) && count($otherPageTypes)) { ?>
                     <li class="ccm-panel-sitemap-more-page-types">
                         <a href="#" data-sitemap="show-more">
-                            <i class="fa fa-caret-down"></i> <?= t('More') ?>
+                            <i class="fas fa-caret-down"></i> <?= t('More') ?>
                         </a>
                     </li>
                 <?php } ?>

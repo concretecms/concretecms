@@ -23,7 +23,7 @@
     <div class="row">
         <div class="col-md-6">
             <fieldset>
-                <legend><?= t('concrete5 Extensions') ?></legend>
+                <legend><?= t('Concrete Extensions') ?></legend>
                 <div class="form-group">
                     <div class="form-check">
                         <?= $form->checkbox('enable_filemanager', 1, $filemanager, ['class' => 'form-check-input']) ?>
@@ -83,8 +83,8 @@
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="float-left btn btn-secondary" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
-            <button class="float-right btn btn-primary" type="submit"><?= t('Save') ?></button>
+            <button class="float-start btn btn-secondary" id="ccm-editor-preview-toggle"><?= t('Preview') ?></button>
+            <button class="float-end btn btn-primary" type="submit"><?= t('Save') ?></button>
         </div>
     </div>
 </form>
@@ -140,7 +140,7 @@ function updatePreview() {
         url: <?= json_encode((string) URL::to('/ccm/system/dialogs/editor/settings/preview')) ?>,
         data: data,
         beforeSend: function() {
-            $previewContent.html('<p><?= t("Loading") ?>&nbsp;<i class="fa fa-circle-notch fa-spin fa-sm"></i></p>');
+            $previewContent.html('<p><?= t("Loading") ?>&nbsp;<i class="fas fa-circle-notch fa-spin fa-sm"></i></p>');
             $preview.show();
         }
     })
@@ -177,7 +177,7 @@ $togglePreview.on('click', function(e) {
 var debounced_updatePreview = _.debounce(updatePreview, 1500);
 
 $('#ccm-editor-config input').on('change', function() {
-    $previewContent.html('<p><?= t("Loading") ?>&nbsp;<i class="fa fa-circle-notch fa-spin fa-sm"></i></p>');
+    $previewContent.html('<p><?= t("Loading") ?>&nbsp;<i class="fas fa-circle-notch fa-spin fa-sm"></i></p>');
     debounced_updatePreview.cancel();
     debounced_updatePreview();
 });

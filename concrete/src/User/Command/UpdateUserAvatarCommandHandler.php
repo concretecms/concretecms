@@ -32,7 +32,7 @@ class UpdateUserAvatarCommandHandler implements LoggerAwareInterface
         $this->app = $app;
     }
 
-    public function handle(UpdateUserAvatarCommand $command)
+    public function __invoke(UpdateUserAvatarCommand $command)
     {
         /** @var ImageInterface $imagine */
         $imagine = $this->app->make(ImagineInterface::class);

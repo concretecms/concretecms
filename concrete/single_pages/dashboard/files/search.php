@@ -44,7 +44,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                                 disabled="disabled"
                                 data-search-checkbox-button="dropdown"
                                 class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
-                                data-toggle="dropdown"
+                                data-bs-toggle="dropdown"
                                 data-reference="parent">
 
                                 <span class="sr-only">
@@ -53,10 +53,8 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                                 </span>
                         </button>
 
-                        <div data-search-menu="dropdown">
-                            <?php
-                            echo $resultsBulkMenu->getMenuElement(); ?>
-                        </div>
+                        <?php
+                        echo $resultsBulkMenu->getMenuElement(); ?>
                     </div>
                 </th>
 
@@ -118,6 +116,14 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                             <label class="ccm-fancy-checkbox">
                                 <?php echo $form->checkbox("", $item->getItem()->getTreeNodeId(), $item->isFavoredItem(), ["class" => "ccm-favorite-folder-switch"]); ?>
                                 <i class="fas fa-star checked"></i>
+                                <?php
+                                /* This was changed back because someone said that Font Awesome Regular icons require the pro license.
+                                 * That may be true for some icons, but this icon explicitly is listed in the free icons on fontawesome.com,
+                                 * and does not have a pro badge beneath the regular listing. Therefore I am going to use the regular icon in order
+                                 * to have an outline only star, and begin the process of moving away from a less restrictive and byzantine
+                                 * icon system
+                                 */
+                                 ?>
                                 <i class="far fa-star unchecked"></i>
                             </label>
                         <?php }?>
@@ -138,8 +144,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                                 </a>
                             </td>
                         <?php } else { ?>
-                            <td class="<?php
-                            echo $class ?>">
+                            <td class="<?=$class?? '' ?>">
                                 <?php
                                 echo $column->getColumnValue($item); ?>
                             </td>
@@ -159,7 +164,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                                 <button class="btn btn-icon"
                                         data-boundary="viewport"
                                         type="button"
-                                        data-toggle="dropdown"
+                                        data-bs-toggle="dropdown"
                                         aria-haspopup="true"
                                         aria-expanded="false">
 

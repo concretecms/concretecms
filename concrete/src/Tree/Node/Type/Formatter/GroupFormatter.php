@@ -5,7 +5,7 @@ class GroupFormatter implements ListFormatterInterface
 {
     public function getIconElement()
     {
-        return '<i class="fa fa-users"></i>';
+        return '<i class="fas fa-users"></i>';
     }
 
     public function getSearchResultsClass()

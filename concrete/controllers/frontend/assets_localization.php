@@ -75,36 +75,35 @@ var ccmi18n = ' . json_encode([
             'setBlockAlias' => t('Setup on Child Pages'),
             'setBlockComposerSettings' => t('Composer Settings'),
             'themeBrowserTitle' => t('Get More Themes'),
-            'themeBrowserLoading' => t('Retrieving theme data from concrete5.org marketplace.'),
-            'addonBrowserLoading' => t('Retrieving add-on data from concrete5.org marketplace.'),
+            'themeBrowserLoading' => t('Retrieving theme data from the marketplace.'),
+            'addonBrowserLoading' => t('Retrieving add-on data from the marketplace.'),
             'clear' => t('Clear'),
             'requestTimeout' => t('This request took too long.'),
             'generalRequestError' => t('An unexpected error occurred.'),
             'helpPopup' => t('Help'),
-            'community' => t('concrete5 Marketplace'),
-            'communityCheckout' => t('concrete5 Marketplace - Purchase & Checkout'),
-            'communityDownload' => t('concrete5 Marketplace - Download'),
-            'noIE6' => t('concrete5 does not support Internet Explorer 6 in edit mode.'),
-            'helpPopupLoginMsg' => t('Get more help on your question by posting it to the concrete5 help center on concrete5.org'),
+            'community' => t('Marketplace'),
+            'communityCheckout' => t('Marketplace - Purchase & Checkout'),
+            'communityDownload' => t('Marketplace - Download'),
+            'noIE6' => t('Concrete does not support Internet Explorer 6 in edit mode.'),
             'marketplaceErrorMsg' => t('<p>You package could not be installed.  An unknown error occurred.</p>'),
             'marketplaceInstallMsg' => t('<p>Your package will now be downloaded and installed.</p>'),
-            'marketplaceLoadingMsg' => t('<p>Retrieving information from the concrete5 Marketplace.</p>'),
-            'marketplaceLoginMsg' => t('<p>You must be logged into the concrete5 Marketplace to install add-ons and themes.  Please log in.</p>'),
-            'marketplaceLoginSuccessMsg' => t('<p>You have successfully logged into the concrete5 Marketplace.</p>'),
-            'marketplaceLogoutSuccessMsg' => t('<p>You are now logged out of concrete5 Marketplace.</p>'),
+            'marketplaceLoadingMsg' => t('<p>Retrieving information from the Concrete Marketplace.</p>'),
+            'marketplaceLoginMsg' => t('<p>You must be logged into the Concrete Marketplace to install add-ons and themes.  Please log in.</p>'),
+            'marketplaceLoginSuccessMsg' => t('<p>You have successfully logged into the Concrete Marketplace.</p>'),
+            'marketplaceLogoutSuccessMsg' => t('<p>You are now logged out of Concrete Marketplace.</p>'),
             'deleteAttributeValue' => t('Are you sure you want to remove this value?'),
             'search' => t('Search'),
             'advanced' => t('Advanced'),
             'advancedSearch' => t('Advanced Search'),
             'customizeSearch' => t('Customize Search'),
             'properties' => t('Page Saved'),
+             'siteActivity' => t('Activity'),
             'savePropertiesMsg' => t('Page Properties saved.'),
             'saveSpeedSettingsMsg' => t('Full page caching settings saved.'),
             'saveUserSettingsMsg' => t('User Settings saved.'),
             'ok' => t('Ok'),
             'scheduleGuestAccess' => t('Schedule Guest Access'),
             'scheduleGuestAccessSuccess' => t('Timed Access for Guest Users Updated Successfully.'),
-            'newsflowLoading' => t('Checking for updates.'),
             'x' => t('x'),
             'user_activate' => t('Activate Users'),
             'user_deactivate' => t('Deactivate Users'),
@@ -295,14 +294,14 @@ var ccmi18n_tree = ' . json_encode([
 var ccmi18n_tourist = ' . json_encode([
             'template' => implode('', [
                 '<div class="popover ccm-help-tour" role="tooltip">',
-                '<div class="arrow"></div>',
+                '<div class="popover-arrow"></div>',
                 '<a class="ccm-help-tour-close fas fa-times" href="#" data-role="end"></a>',
                 '<div class="popover-body"></div>',
                 '<div class="ccm-help-tour-footer d-flex justify-content-between">',
                 '<div class="ccm-help-tour-position">',
                 t(/*i18n: %1$s and %2$s are two numbers*/'%1$s of %2$s', '<span class="ccm-help-tour-position-index"></span>', '<span class="ccm-help-tour-position-count"></span>'),
                 '</div>',
-                '<div class="popover-navigation text-right">',
+                '<div class="popover-navigation text-end">',
                 '<div class="btn-group">',
                 '<a href="#" data-role="prev">&lt; ' . t('Prev') . '</a>',
                 '<a href="#" data-role="next">' . t('Next') . ' &gt;</a>',
@@ -486,7 +485,7 @@ var ccmi18n_helpGuides = ' . json_encode([
                 'anchor' => t('Anchor'),
                 'open_link' => t('Open Link'),
                 'link_new_tab' => t('Open link in new tab'),
-                // concrete5
+                // concrete
                 'link_same_window' => t('Open link in same window'),
                 'in_lightbox' => t('Open link in Lightbox'),
                 'lightbox_link_type' => t('Link Type'),
@@ -505,7 +504,7 @@ var ccmi18n_helpGuides = ' . json_encode([
                 'remove_font_family' => t('Remove Font Family'),
                 'remove_font_size' => t('Remove Font Size'),
                 'change_font_size' => t('Change Font Size'),
-                // end concrete5
+                // end concrete
                 'underline' => t('Underline'),
                 'alignment' => t('Alignment'),
                 'filename' => t('Name (optional)'),
@@ -662,11 +661,18 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
             'dictCancelUploadConfirmation' => t('Are you sure you want to cancel this upload?'),
             'dictRemoveFile' => t('Remove file'),
             'dictMaxFilesExceeded' => t('You can not upload any more files.'),
-            'resizeQuality' => $this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100,
-            'chunking' => (bool) $config->get('concrete.upload.chunking.enabled'),
-            'chunkSize' => $this->getDropzoneChunkSize(),
-            'timeout' => 1000 * $timeout,
+            // See below - this is not the right place for anything except multilingual strings.
+            //'resizeQuality' => $this->app->make(BitmapFormat::class)->getDefaultJpegQuality() / 100,
+            //'chunking' => (bool) $config->get('concrete.upload.chunking.enabled'),
+            //'chunkSize' => $this->getDropzoneChunkSize(),
+            //'timeout' => 1000 * $timeout,
         ];
+
+        // Note - this entire method is not really used anymore. We should probably bring back the previous snippets
+        // because we need the ability to have dropzone be translated. HOWEVER, the snippets below are problematic
+        // (specifically including the ccm_token in here), so we're not going to bring those back as is. This is not
+        // the appropriate place for these config values and settings anyway.
+        /*
         $maxWidth = (int) $config->get('concrete.file_manager.restrict_max_width');
         if ($maxWidth > 0) {
             $options['resizeWidth'] = $maxWidth;
@@ -674,11 +680,13 @@ jQuery.ui.fancytree.prototype.options.strings.loadError = ' . json_encode(t('Loa
         $maxHeight = (int) $config->get('concrete.file_manager.restrict_max_height');
         if ($maxHeight > 0) {
             $options['resizeHeight'] = $maxHeight;
-        }
+        }*/
+
         $content = '';
         foreach ($options as $optionKey => $optionValue) {
             $content .= 'Dropzone.prototype.defaultOptions[' . json_encode($optionKey) . '] = ' . json_encode($optionValue) . ";\n";
         }
+        /*
         if ($maxWidth > 0 || $maxHeight > 0) {
             $content .= <<<'EOT'
 Dropzone.prototype.defaultOptions.accept = function(file, done) {
@@ -716,7 +724,7 @@ Dropzone.prototype.defaultOptions.params = function(files, xhr, chunk) {
 };
 EOT
         ;
-
+*/
         return $this->createJavascriptResponse($content);
     }
 

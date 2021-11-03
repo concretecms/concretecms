@@ -3,9 +3,9 @@
 namespace Concrete\Core\Express\Command;
 
 use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Foundation\Command\CommandInterface;
+use Concrete\Core\Foundation\Command\Command;
 
-abstract class AbstractEntityCommand implements CommandInterface
+abstract class AbstractEntityCommand extends Command
 {
     /**
      * @var \Concrete\Core\Entity\Express\Entity

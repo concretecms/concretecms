@@ -4,17 +4,4 @@
         <datasource handle="page" name="Page" package=""/>
         <datasource handle="calendar_event" name="Calendar Event" package=""/>
     </boarddatasources>
-    <boardtemplates>
-        <template handle="three_by_three" name="3x3 Grid"
-                  icon="blank.png" package="">
-        </template>
-    </boardtemplates>
-    <boardslottemplates>
-        <template handle="stripe" form-factor="stripe" name="Stripe"
-                  icon="blank.png" package="">
-        </template>
-        <template handle="card" form-factor="card" name="Card"
-                  icon="blank.png" package="">
-        </template>
-    </boardslottemplates>
 </concrete5-cif>

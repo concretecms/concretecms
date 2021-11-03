@@ -31,11 +31,6 @@ class Instance
      */
     protected $instanceAreas;
 
-    /**
-     * @ORM\Column(type="boolean")
-     **/
-    protected $areasAreComputed = false;
-
     public function __construct()
     {
         $this->instanceAreas = new ArrayCollection();
@@ -63,22 +58,6 @@ class Instance
     public function setContainer($container): void
     {
         $this->container = $container;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function areaAreasComputed()
-    {
-        return $this->areasAreComputed;
-    }
-
-    /**
-     * @param mixed $areasAreComputed
-     */
-    public function setAreasAreComputed($areasAreComputed): void
-    {
-        $this->areasAreComputed = $areasAreComputed;
     }
 
     /**

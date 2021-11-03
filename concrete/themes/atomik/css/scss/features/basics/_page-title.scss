@@ -1,0 +1,28 @@
+div.theme-atomik {
+
+  h1.ccm-block-page-title {
+    @include heading-display(1);
+  }
+
+  h2.ccm-block-page-title {
+    @include heading-display(2);
+  }
+
+  h3.ccm-block-page-title {
+    @include heading-display(3);
+  }
+
+  h4.ccm-block-page-title {
+    @include heading-display(4);
+  }
+
+  h5.ccm-block-page-title {
+    @include heading-display(5);
+  }
+
+  h6.ccm-block-page-title {
+    @include heading-display(6);
+  }
+
+}
+

@@ -4,8 +4,7 @@ namespace Concrete\Core\Updater\Migrations;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Support\Facade\Application;
-use Doctrine\DBAL\Migrations\Configuration\Configuration as DoctrineMigrationConfiguration;
-use Doctrine\DBAL\Migrations\Version;
+use Doctrine\Migrations\Configuration\Configuration as DoctrineMigrationConfiguration;
 use Exception;
 
 class Configuration extends DoctrineMigrationConfiguration
@@ -42,7 +41,7 @@ class Configuration extends DoctrineMigrationConfiguration
         $db = $app->make(Connection::class);
         parent::__construct($db);
         $directory = DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Updater/Migrations/Migrations';
-        $this->setName(t('concrete5 Migrations'));
+        $this->setName(t('Concrete Migrations'));
         $this->setMigrationsNamespace('Concrete\Core\Updater\Migrations\Migrations');
         $this->setMigrationsDirectory($directory);
         if ($registerMigrations) {
@@ -58,7 +57,7 @@ class Configuration extends DoctrineMigrationConfiguration
     {
         $forcedInitialMigration = null;
         foreach (array_reverse($this->getMigrations()) as $migration) {
-            /* @var \Doctrine\DBAL\Migrations\Version $migration */
+            /* @var \Doctrine\Migrations\Version $migration */
             if ($migration->isMigrated() && !$migration->getMigration() instanceof RepeatableMigrationInterface) {
                 break;
             }
@@ -70,7 +69,7 @@ class Configuration extends DoctrineMigrationConfiguration
     /**
      * Force the initial migration, using a specific point.
      *
-     * @param string $reference A concrete5 version (eg. '8.3.1') or a migration identifier (eg '20171218000000')
+     * @param string $reference A Concrete version (eg. '8.3.1') or a migration identifier (eg '20171218000000')
      * @param string $criteria One of the FORCEDMIGRATION_... constants
      */
     public function forceInitialMigration($reference, $criteria = self::FORCEDMIGRATION_INCLUSIVE)
@@ -132,7 +131,7 @@ class Configuration extends DoctrineMigrationConfiguration
         $keys = array_keys($migrations);
 
         if ($keys[0] == $minimum) {
-            // This is the first migration in concrete5. That means we have already populated this table.
+            // This is the first migration in Concrete. That means we have already populated this table.
             return;
         } else {
             // We have to populate this table with all the migrations from the very first migration up to
@@ -148,13 +147,13 @@ class Configuration extends DoctrineMigrationConfiguration
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\Configuration\Configuration::getMigrationsToExecute()
+     * @see \Doctrine\Migrations\Configuration\Configuration::getMigrationsToExecute()
      */
-    public function getMigrationsToExecute($direction, $to)
+    public function getMigrationsToExecute(string $direction, string $to): array
     {
         $result = parent::getMigrationsToExecute($direction, $to);
         $forcedInitialMigration = $this->getForcedInitialMigration();
-        if ($forcedInitialMigration !== null && $direction === Version::DIRECTION_UP) {
+        if ($forcedInitialMigration !== null && $direction === 'up') {
             $allMigrations = $this->getMigrations();
             $allMigrationKeys = array_keys($allMigrations);
             $forcedInitialMigrationIndex = array_search($forcedInitialMigration->getVersion(), $allMigrationKeys, false);

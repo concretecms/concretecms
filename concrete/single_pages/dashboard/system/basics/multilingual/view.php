@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 if (empty($interfacelocales)) {
     ?>
     <fieldset>
-	   <?= t("You don't have any interface languages installed. You must run concrete5 in English.") ?>
+	   <?= t("You don't have any interface languages installed. You must run Concrete in English.") ?>
     </fieldset>
     <?php
 } else {
@@ -42,7 +42,7 @@ if (empty($interfacelocales)) {
 
 if (isset($mlLink)) {
     ?>
-    <div class="ml-3 alert alert-info small">
+    <div class="ms-3 alert alert-info small">
         <?= t(
             'You can configure the site languages in the %s dashboard page.',
             sprintf('<a href="%s">%s</a>', h($mlLink[1]), h($mlLink[0]))

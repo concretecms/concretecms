@@ -15,7 +15,7 @@ class DefaultSharedFolderAssignment implements AssignmentInterface
 
     public function getEntry()
     {
-        return new FileFolder('/Shared Files');
+        return new FileFolder('/' . t('Shared Files'));
     }
 
 

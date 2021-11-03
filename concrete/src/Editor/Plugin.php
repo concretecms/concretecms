@@ -6,7 +6,7 @@ use AssetList;
 use Concrete\Core\Asset\AssetGroup;
 use Concrete\Core\Asset\AssetInterface;
 use Concrete\Core\Asset\AssetPointer;
-use Exception;
+use Monolog\Logger;
 
 class Plugin
 {
@@ -77,7 +77,10 @@ class Plugin
             if (isset($r)) {
                 $this->requiredAssetGroup->addGroup($r);
             } else {
-                throw new Exception(t('"%s" is not a valid asset group handle', $assetType));
+                core_log(
+                    t('Editor\Plugin::requireAsset required "%s" but "%s" is not a valid asset group handle', $assetType, $assetType),
+                    Logger::NOTICE
+                );
             }
         }
     }

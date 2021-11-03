@@ -36,36 +36,28 @@ if (isset($type)) {
             <?= $form->label('ftTypeHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('ftTypeHandle', $type->getHandle(), ['required' => 'required', 'maxlength' => '255'] + ($type->getID() !== null && $type->isRequired() ? ['readonly' => 'readonly'] : [])) ?>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
-                </div>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeName', t('Name')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeName', $type->getName(), ['required' => 'required', 'maxlength' => '255']) ?>
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
-                </div>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeWidth', t('Width')) ?>
             <div class="input-group">
                 <?= $form->number('ftTypeWidth', $type->getWidth() ?: '', ['min' => '1']) ?>
-                <div class="input-group-append">
-                    <span class="input-group-text"><?= t('px') ?></span>
-                </div>
+                <span class="input-group-text"><?= t('px') ?></span>
             </div>
         </div>
         <div class="form-group">
             <?= $form->label('ftTypeHeight', t('Height')) ?>
             <div class="input-group">
                 <?=$form->text('ftTypeHeight', $type->getHeight() ?: '', ['min' => '1']) ?>
-                <div class="input-group-append">
-                    <span class="input-group-text"><?= t('px') ?></span>
-                </div>
+                <span class="input-group-text"><?= t('px') ?></span>
             </div>
         </div>
         <div class="form-group">
@@ -87,7 +79,7 @@ if (isset($type)) {
                     <?= t('Create animated thumbnails for animated images') ?>
                     <span class="small text-muted" id="ftKeepAnimations-warning" <?= $type->isKeepAnimations() ? '' : ' style="display: none"' ?>>
                         <br />
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                        <i class="fas fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
                         <?php
                         if ($manipulationLibrarySupportsAnimations) {
                             ?>
@@ -104,7 +96,7 @@ if (isset($type)) {
                                 }
                             }
                             ?>
-                            <?= t('This requires that concrete5 is configured to use the ImageMagick manipulation library.') ?>
+                            <?= t('This requires that Concrete is configured to use the ImageMagick manipulation library.') ?>
                             <br />
                             <?= t(/*i18n: %s is the name of a page*/ 'You can configure it in the %s page.', $optionsPageName) ?>
                             <?php
@@ -165,15 +157,15 @@ if (isset($type)) {
         ?>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?= $view->action('') ?>" class="btn float-left btn-secondary"><?= t('Back') ?></a>
+                <a href="<?= $view->action('') ?>" class="btn float-start btn-secondary"><?= t('Back') ?></a>
                 <?php
                 if ($type->getID() !== null) {
                     ?>
-                    <button type="submit" class="btn btn-primary float-right"><?= t('Save') ?></button>
+                    <button type="submit" class="btn btn-primary float-end"><?= t('Save') ?></button>
                     <?php
                 } else {
                     ?>
-                    <button type="submit" class="btn btn-primary float-right"><?= t('Add') ?></button>
+                    <button type="submit" class="btn btn-primary float-end"><?= t('Add') ?></button>
                     <?php
                 }
                 ?>

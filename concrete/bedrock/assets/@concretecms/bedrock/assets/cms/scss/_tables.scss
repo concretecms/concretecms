@@ -1,0 +1,156 @@
+div.ccm-ui {
+  .ccm-search-results-table {
+
+    background-color: $table-bg; // Reset for nesting within parents with `background-color`.
+    color: $table-color;
+    margin-bottom: $spacer;
+    width: 100%;
+
+    thead {
+      th {
+        border-bottom-width: 1px;
+        font-size: 0.75rem;
+
+        > a {
+          color: $gray-700;
+
+          &:hover {
+            color: black;
+            text-decoration: none;
+          }
+        }
+
+        &.ccm-results-list-active-sort-asc,
+        &.ccm-results-list-active-sort-desc {
+          a {
+            color: $blue;
+            white-space: nowrap;
+
+            &:hover {
+              color: black;
+            }
+
+            &::after {
+              content: '';
+              display: inline-block;
+              font-family: 'Font Awesome 5 Free';
+              font-size: 9px;
+              font-style: normal;
+              margin-left: 5px;
+              text-decoration: inherit;
+              vertical-align: middle;
+            }
+
+          }
+        }
+
+        &.ccm-results-list-active-sort-desc a::after {
+          content: '\f078';
+        }
+
+        &.ccm-results-list-active-sort-asc a::after {
+          content: '\f077';
+        }
+
+      }
+    }
+
+    th,
+    td {
+      border-top: $table-border-width solid $table-border-color;
+      padding: $table-cell-padding-y $table-cell-padding-x;
+    }
+
+    thead th {
+      border-bottom: $table-border-width solid $table-border-color;
+      border-top: 0;
+    }
+
+    tbody {
+      td {
+        color: $gray-400;
+        font-size: $font-size-sm;
+        transition: $transition-base;
+
+        &.ccm-search-results-checkbox {
+          width: 1px;
+        }
+
+        &.ccm-search-results-icon {
+          width: 1px;
+
+          i {
+            // folders, stacks icons
+            font-size: 41px;
+          }
+
+          img {
+            // file manager, other image based icons
+            height: 41px;
+            width: 41px;
+          }
+        }
+
+        &.ccm-search-results-favorite-switcher {
+          width: 1px;
+
+          i {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    tbody + tbody {
+      border-top: (2 * $table-border-width) solid $table-border-color;
+    }
+
+    .ccm-search-results-em,
+    .ccm-search-results-name {
+      color: $gray-700;
+      font-size: 1rem;
+
+      a {
+        color: $gray-700;
+        text-decoration: none;
+        transition: $transition-base;
+
+        &:hover {
+          color: $blue;
+        }
+      }
+    }
+
+    .ccm-search-results-menu-launcher {
+      transition: $transition-base;
+
+      button {
+        visibility: hidden;
+      }
+    }
+
+    tr.ccm-search-results-hoverable:hover,
+    tr.ccm-menu-item-active,
+    tr.ccm-parent-menu-item-active,
+    tr.ccm-search-select-hover,
+    tr.ccm-parent-menu-item-hover,
+    tr.ccm-search-select-selected {
+      td {
+        background-color: $gray-200;
+        color: #000;
+        cursor: pointer;
+      }
+
+      .ccm-search-results-em,
+      .ccm-search-results-name {
+        color: $gray-800;
+      }
+
+      .ccm-search-results-menu-launcher {
+        button {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}

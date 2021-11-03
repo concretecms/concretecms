@@ -61,7 +61,7 @@ class CalendarEventProgress extends Progress implements SiteProgressInterface
         $filter .= ' order by ' . $sortBy;
         $r = $db->Execute('select wp.wpID from PageWorkflowProgress pwp inner join WorkflowProgress wp on pwp.wpID = wp.wpID where cID = ? ' . $filter, array($c->getCollectionID()));
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $wp = static::getByID($row['wpID']);
             if (is_object($wp)) {
                 $list[] = $wp;

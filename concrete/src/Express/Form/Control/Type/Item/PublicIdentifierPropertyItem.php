@@ -10,7 +10,7 @@ class PublicIdentifierPropertyItem implements ItemInterface
 
     public function getIcon()
     {
-        return '<i class="fa fa-barcode"></i>';
+        return '<i class="fas fa-barcode"></i>';
     }
 
     public function getItemIdentifier()

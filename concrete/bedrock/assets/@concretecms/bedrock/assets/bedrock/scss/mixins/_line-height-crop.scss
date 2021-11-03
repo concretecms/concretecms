@@ -1,0 +1,11 @@
+// Removes leading at the top of an element to keep elements with white space from adding too much padding
+// between them
+@mixin line-height-crop($line-height) {
+  &::before {
+    content: '';
+    display: block;
+    height: 0;
+    margin-top: calc((1 - #{$line-height}) * 0.5em);
+    width: 0;
+  }
+}

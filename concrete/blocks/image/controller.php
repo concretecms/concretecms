@@ -34,9 +34,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     protected $tracker;
 
-    public function __construct($blockType = null, AggregateTracker $tracker = null)
+    public function __construct($obj = null, AggregateTracker $tracker = null)
     {
-        parent::__construct($blockType);
+        parent::__construct($obj); // it has to be named $obj because we use laravel's container for this.
         $this->tracker = $tracker;
     }
 
@@ -99,6 +99,43 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('c', Page::getCurrentPage());
     }
 
+    public function importAdditionalData($b, $blockNode)
+    {
+        parent::importAdditionalData($b, $blockNode);
+        if (isset($blockNode->thumbnails)) {
+            $db = $this->app->make(Connection::class);
+            foreach ($blockNode->thumbnails->thumbnail as $thumbnailNode) {
+                $ftTypeHandle = (string) $thumbnailNode['handle'];
+                $breakpointHandle = (string) $thumbnailNode['breakpointHandle'];
+                if ($ftTypeHandle && $breakpointHandle) {
+                    $type = Type::getByHandle($ftTypeHandle);
+                    if ($type) {
+                        $db->insert('btContentImageBreakpoints', ['bID' => $b->getBlockID(), 'breakpointHandle' => $breakpointHandle, 'ftTypeID' => $type->getID()]);
+                    }
+                }
+            }
+        }
+    }
+
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+
+        $thumbnailTypes = $this->getSelectedThumbnailTypes();
+        if (count($thumbnailTypes)) {
+            $thumbnails = $blockNode->addChild('thumbnails');
+            foreach ($thumbnailTypes as $breakpointHandle => $thumbnailTypeID) {
+                $thumbnailType = Type::getByID($thumbnailTypeID);
+                if ($thumbnailType) {
+                    $thumbnail = $thumbnails->addChild('thumbnail');
+                    $thumbnail['breakpointHandle'] = $breakpointHandle;
+                    $thumbnail['handle'] = $thumbnailType->getHandle();
+                }
+            }
+        }
+    }
+
+
     /**
      * @return array
      */
@@ -110,7 +147,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         if ($activeTheme instanceof Theme) {
             $activeThemeResponsiveImageMap = $activeTheme->getThemeResponsiveImageMap();
-            asort($activeThemeResponsiveImageMap);
         }
 
         return $activeThemeResponsiveImageMap;
@@ -475,7 +511,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $args['maxHeight'] = 0;
         }
 
+        // @TODO - this is not working on install. fix it.
         list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+
         $args['internalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['fileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
         $args['externalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
@@ -488,7 +526,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         parent::save($args);
 
-        if (is_array($args["selectedThumbnailTypes"])) {
+        if (isset($args["selectedThumbnailTypes"]) && is_array($args["selectedThumbnailTypes"])) {
             foreach ($args["selectedThumbnailTypes"] as $breakpointHandle => $ftTypeID) {
                 /** @noinspection PhpUnhandledExceptionInspection */
                 /** @noinspection SqlDialectInspection */

@@ -17,13 +17,11 @@ class Menu extends PopoverMenu
 
     public function __construct(RenderedSlot $slot)
     {
-        $board = $slot->getInstance()->getBoard();
-        $permissions = new Checker($board);
+        $instance = $slot->getInstance();
+        $permissions = new Checker($instance);
         parent::__construct();
         $this->setAttribute('data-menu-board-instance-slot-id', $slot->getSlot());
-        if (($slot->isLocked() && $permissions->canEditBoardLockedRules())
-            || (!$slot->isLocked() && $permissions->canEditBoardContents())) {
-
+        if ($permissions->canEditBoardInstanceSlot($slot->getSlot())) {
             $this->addItem(new LinkItem('javascript:void(0)', t('Pin To Board'), [
                 'data-menu-action' => 'pin-item',
             ]));

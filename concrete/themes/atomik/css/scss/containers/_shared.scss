@@ -1,0 +1,12 @@
+.theme-atomik {
+  .stripe {
+    padding-bottom: $stripe-padding-y;
+    padding-top: $stripe-padding-y;
+  }
+
+  .stripe + div.container {
+    // Our stripe is followed by a container, which is likely automatically put there block a block. Let's give it
+    // some padding
+
+  }
+}

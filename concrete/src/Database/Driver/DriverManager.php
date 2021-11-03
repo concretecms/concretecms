@@ -46,6 +46,6 @@ class DriverManager extends Manager
 
     public function getDefaultDriver()
     {
-        return 'c5_pdo_mysql';
+        return 'concrete_pdo_mysql';
     }
 }

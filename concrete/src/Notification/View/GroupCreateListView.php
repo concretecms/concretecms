@@ -22,7 +22,7 @@ class GroupCreateListView extends StandardListView
 
     public function getIconClass()
     {
-        return 'fa fa-user';
+        return 'fas fa-user';
     }
 
     public function getActionDescription()

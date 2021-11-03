@@ -31,7 +31,7 @@ class SessionValidatorTest extends TestCase
     /** @var Session */
     protected $session;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->app = clone Application::getFacadeApplication();
         $this->app->singleton(AddressInterface::class, function () {
@@ -41,7 +41,7 @@ class SessionValidatorTest extends TestCase
 
         $this->request = Request::create('http://url.com/');
         $config = $this->app->make('config');
-        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request, $this->app->build(IPService::class, ['config' => $config, 'request' => $this->request]));
+        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request, $this->app->make(IPService::class, ['config' => $config, 'request' => $this->request]));
 
         $store = [];
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
@@ -71,7 +71,7 @@ class SessionValidatorTest extends TestCase
         $this->session = $mock;
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->session = $this->app = $this->validator = $this->request = null;
     }

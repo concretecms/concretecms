@@ -1,4 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * Note – this came from a half-completed pull request, and no routes actually reference this controller anymore.
+ * I'm keeping it around in case we decide to finish the functionality at some point.
+ */
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 <div class="ccm-ui">

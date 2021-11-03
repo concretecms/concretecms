@@ -1,8 +1,11 @@
 <?php
 namespace Concrete\Tests\Multilingual;
 
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Multilingual\Service\Detector;
 use Concrete\TestHelpers\Page\PageTestCase;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SectionTest extends PageTestCase
 {
@@ -13,14 +16,22 @@ class SectionTest extends PageTestCase
         $this->app->make('cache/request')->disable();
 
         // get entity manager from database connection
-        $em = $this->connection()->getEntityManager();
+        $em = $this->app->make(EntityManagerInterface::class);
+        // gotta do this for php8
+        $this->app->bind('multilingual/detector', function () {
+            $detector = new Detector();
+            $detector->setApplication($this->app);
+            return $detector;
+        });
 
         // initialize locale service
         $service = new \Concrete\Core\Localization\Locale\Service($em);
 
         // get current site
         $site = $this->app->make('site')->getSite();
-
+        if (!$em->contains($site)) {
+            $site = $em->getRepository(Site::class)->find($site->getSiteID());
+        };
         // get page template "full"
         $template = \Concrete\Core\Page\Template::getByHandle('full');
 

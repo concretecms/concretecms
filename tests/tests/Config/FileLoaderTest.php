@@ -43,8 +43,7 @@ class FileLoaderTest extends TestCase
     /** @var array */
     protected $to_remove = [];
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $this->loader = new FileLoader($this->files = new Filesystem());
         $this->group = md5(time() . uniqid());
         $this->namespace = md5(time() . uniqid());
@@ -109,7 +108,7 @@ class FileLoaderTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $remove = array_reverse($this->to_remove);
         foreach ($remove as $path) {

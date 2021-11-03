@@ -13,7 +13,7 @@ class SiteListItem extends Item
 
         $page = \Page::getCurrentPage();
         $app = \Core::make('app');
-        $controller = $app->make(SiteListController::class, array($page));
+        $controller = $app->make(SiteListController::class, array('page' => $page));
         $this->setController($controller);
         $this->setPosition('left');
     }

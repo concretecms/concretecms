@@ -127,7 +127,15 @@ class CustomSlot extends \Concrete\Core\Controller\Controller
         $command->setBlockID($block->getBlockID());
         $command->setSlot($slot);
         $command->setInstance($instance);
-        $this->app->executeCommand($command);
+        $rule = $this->app->executeCommand($command);
+        return new JsonResponse($rule);
+
+
+
+
+
+
+
 
         \Cache::disableAll(); // This is required to make block output rendering work. This is not ideal.
         $block = Block::getByID($block->getBlockID()); // need to make sure everything is refreshed.

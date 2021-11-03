@@ -47,9 +47,9 @@ class UserInterface
     public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' float-right';
+            $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' float-left';
+            $innerClass .= ' float-start';
         }
 
         if (!$formID) {
@@ -77,9 +77,9 @@ class UserInterface
     public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' float-right';
+            $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' float-left';
+            $innerClass .= ' float-start';
         }
         $argsstr = '';
         foreach ($args as $k => $v) {
@@ -103,9 +103,9 @@ class UserInterface
     public function buttonJs($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = [])
     {
         if ('right' == $buttonAlign) {
-            $innerClass .= ' float-right';
+            $innerClass .= ' float-end';
         } elseif ('left' == $buttonAlign) {
-            $innerClass .= ' float-left';
+            $innerClass .= ' float-start';
         }
         $argsstr = '';
         foreach ($args as $k => $v) {
@@ -181,7 +181,7 @@ class UserInterface
             $alt = Config::get('concrete.white_label.name');
         }
         if (!$alt) {
-            $alt = 'concrete5';
+            $alt = 'Concrete';
         }
         if (Config::get('concrete.white_label.logo')) {
             $src = Config::get('concrete.white_label.logo');
@@ -198,16 +198,6 @@ class UserInterface
         }
 
         return '<img id="ccm-logo" src="' . $src . '" alt="' . $alt . '" title="' . $alt . '">';
-    }
-
-    /**
-     * @return bool
-     * @deprecated The Newsflow Overlay feature has been removed
-     *
-     */
-    public function showNewsflowOverlay()
-    {
-        return false;
     }
 
     /**
@@ -317,7 +307,7 @@ class UserInterface
                 $a->setAttribute("href", $tab[0]);
             } else {
                 $a->setAttribute("href", "#" . $tab[0]);
-                $a->setAttribute("data-toggle", "tab");
+                $a->setAttribute("data-bs-toggle", "tab");
             }
 
             $a->setAttribute("id", $tab[0] . "-tab");
@@ -377,7 +367,7 @@ class UserInterface
     {
         $defaults = [
             'type' => 'success',
-            'icon' => 'fa fa-check-mark',
+            'icon' => 'fas fa-check-square',
             'title' => false,
             'text' => false,
             'form' => false,
@@ -405,7 +395,7 @@ class UserInterface
                 }
                 $text .= '<div>' . $singleButton . '</div>';
             } else {
-                $text .= '<div class="dropup"><button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . '</button><div class="dropdown-menu">';
+                $text .= '<div class="dropup"><button type="button" class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . t('Action') . '</button><div class="dropdown-menu">';
                 foreach ($arguments['buttons'] as $button) {
                     if ($button instanceof Tag) {
                         $button->addClass('dropdown-item');

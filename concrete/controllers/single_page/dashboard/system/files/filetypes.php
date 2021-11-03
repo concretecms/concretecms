@@ -18,8 +18,8 @@ class Filetypes extends DashboardPageController
         $file_access_file_types = implode(', ', $file_access_file_types);
         $this->set('file_access_file_types', $file_access_file_types);
 
-        $file_access_file_types_blacklist = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions_blacklist'));
-        $this->set('file_access_file_types_blacklist', $file_access_file_types_blacklist);
+        $file_access_file_types_denylist = $helper_file->unserializeUploadFileExtensions($config->get('concrete.upload.extensions_denylist', $config->get('concrete.upload.extensions_blacklist')));
+        $this->set('file_access_file_types_denylist', $file_access_file_types_denylist);
     }
 
     public function saved()

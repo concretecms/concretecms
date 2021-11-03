@@ -3,7 +3,7 @@
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Block\BlockType\BlockType;
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -16,7 +16,7 @@ class Version20140908071333 extends AbstractMigration
         return 'Version5701';
     }
 
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $schema->getTable('Logs')->addColumn('testcolumn', 'string');
@@ -24,7 +24,7 @@ class Version20140908071333 extends AbstractMigration
         BlockType::installBlockType('file');
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->getTable('Logs')->dropColumn('testcolumn');

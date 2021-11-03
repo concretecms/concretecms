@@ -23,7 +23,7 @@ use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\BannedWord\Service as BannedWordService;
 use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -164,7 +164,10 @@ class AddMessage extends FrontendController
                 $errors[] = t('You must enter a valid email address to post this message.');
             }
             $website = $this->request->request->get('cnvMessageAuthorWebsite', '');
-            if ($vs->notempty($website) !== false) {
+
+            if ($vs->notempty($website) !== false &&
+                filter_var($website, FILTER_VALIDATE_URL) &&
+                in_array(parse_url($website, PHP_URL_SCHEME), ["http", "https"])) {
                 $author->setWebsite(trim($website));
             }
         }
@@ -262,7 +265,7 @@ class AddMessage extends FrontendController
         } else {
             $blockController = $this->getBlockController();
             $parentMessage = $this->getParentMessage();
-            $canReview = $blockController()->enableTopCommentReviews && $parentMessage === null;
+            $canReview = $blockController->enableTopCommentReviews && $parentMessage === null;
             if ($canReview !== true) {
                 $errors[] = t('Reviews have not been enabled for this discussion.');
                 $review = null;
@@ -308,7 +311,7 @@ class AddMessage extends FrontendController
     protected function dispatchEvent(ConversationMessage $message): void
     {
         $event = new MessageEvent($message);
-        $dispatcher = $this->app->make(EventDispatcherInterface::class);
+        $dispatcher = $this->app->make(EventDispatcher::class);
         $dispatcher->dispatch('on_conversations_message_add', $event);
     }
 

@@ -50,6 +50,7 @@ abstract class Configuration
         $this->data_source = $data_source;
     }
 
+    abstract public function export(\SimpleXMLElement $element);
     
     
 

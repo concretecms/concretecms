@@ -378,12 +378,12 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
 
     public function sortByNodeName()
     {
-        $this->sortBy('folderItemName', 'asc');
+        $this->sortBy('name', 'asc');
     }
 
     public function sortByNodeType()
     {
-        $this->sortBy('folderItemType', 'asc');
+        $this->sortBy('type', 'asc');
     }
 
     protected function getAttributeKeyClassName()

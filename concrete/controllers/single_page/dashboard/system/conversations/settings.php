@@ -19,11 +19,11 @@ class Settings extends DashboardPageController
             $fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypes);
         }
         $this->set('file_access_file_types', $fileAccessFileTypes);
-        $fileAccessFileTypesBlacklist = $config->get('conversations.files.disallowed_types');
-        if ($fileAccessFileTypesBlacklist === null) {
-            $fileAccessFileTypesBlacklist = $config->get('concrete.upload.extensions_blacklist');
+        $fileAccessFileTypesDenylist = $config->get('conversations.files.disallowed_types');
+        if ($fileAccessFileTypesDenylist === null) {
+            $fileAccessFileTypesDenylist = $config->get('concrete.upload.extensions_denylist', $config->get('concrete.upload.extensions_blacklist'));
         }
-        $this->set('file_access_file_types_blacklist', $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesBlacklist));
+        $this->set('file_access_file_types_denylist', $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesDenylist));
         $this->set('maxFileSizeGuest', $config->get('conversations.files.guest.max_size'));
         $this->set('maxFileSizeRegistered', $config->get('conversations.files.registered.max_size'));
         $this->set('maxFilesGuest', $config->get('conversations.files.guest.max'));

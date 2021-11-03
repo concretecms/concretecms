@@ -13,49 +13,42 @@ if ($tableName) { ?>
 if ($entity) { ?>
     <?php if ($enableSearch) { ?>
         <form method="get" action="<?=$c->getCollectionLink()?>">
+
             <?php if ($enableKeywordSearch) { ?>
-                <div class="form-inline">
-                    <div class="form-group">
-                        <?=$form->label('keywords', t('Keyword Search'))?>
-                        <?=$form->text('keywords')?>
-                    </div>
-                    <button type="submit" class="btn btn-primary" name="search" value="search"><?=t('Search')?></button>
-                    <?php if (count($tableSearchProperties)) { ?>
+            <div class="row g-3 align-items-center mb-4">
+                <div class="col-md-6">
+                    <?=$form->text('keywords', ['class' => 'form-control col-4', 'placeholder' => t('Search')])?>
+                </div>
+                <div class="col-md-6">
+                    <?php if (count($tableSearchProperties) || count($tableSearchAssociations)) { ?>
                         <a href="#" data-express-entry-list-advanced-search="<?=$bID?>"
-                        class="ccm-block-express-entry-list-advanced-search"><?=t('Advanced Search')?></a>
+                           class="ccm-block-express-entry-list-advanced-search"><?=t('Advanced Search')?></a>
                     <?php } ?>
                 </div>
-                <br>
+            </div>
             <?php } ?>
 
             <?php if (count($tableSearchProperties) || count($tableSearchAssociations)) { ?>
                 <div data-express-entry-list-advanced-search-fields="<?=$bID?>" class="ccm-block-express-entry-list-advanced-search-fields">
-                    <h3><?=t('Search Entries')?></h3>
-                    <input type="hidden" name="advancedSearchDisplayed" value="<?php echo $app->request->request('advancedSearchDisplayed') ? 1 : ''; ?>">
+                    <input type="hidden" name="advancedSearchDisplayed" value="<?php echo $app->request->request('advancedSearchDisplayed') || !$enableKeywordSearch ? 1 : ''; ?>">
                     <?php foreach ($tableSearchProperties as $ak) { ?>
                         <h4><?=$ak->getAttributeKeyDisplayName()?></h4>
-                        <div>
-                            <?=$ak->render(new \Concrete\Core\Attribute\Context\BasicSearchContext(), null, true)?>
-                        </div>
+                        <?=$ak->render(new \Concrete\Core\Attribute\Context\BasicSearchContext(), null, true)?>
                     <?php } ?>
                     <?php foreach ($tableSearchAssociations as $association) { ?>
-                        <h4><?= $association->getTargetEntity()->getEntityDisplayName() ?></h4>
-                        <div>
-                            <?php
-                            $field = new \Concrete\Core\Express\Search\Field\AssociationField($association);
-                            $field->loadDataFromRequest($controller->getRequest()->query->all());
-                            echo $field->renderSearchField();
-                            ?>
-                        </div>
+                        <h5><?= $association->getTargetEntity()->getEntityDisplayName() ?></h5>
+                        <?php
+                        $field = new \Concrete\Core\Express\Search\Field\AssociationField($association);
+                        $field->loadDataFromRequest($controller->getRequest()->query->all());
+                        echo $field->renderSearchField();
+                        ?>
                     <?php } ?>
                 </div>
             <?php } ?>
 
-            <?php if (!$enableKeywordSearch) { ?>
-                <div class="form-group clearfix">
-                    <button type="submit" class="btn btn-primary pull-right" name="search"><?=t('Search')?></button>
-                </div>
-            <?php } ?>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary pull-right" name="search"><?=t('Search')?></button>
+            </div>
         </form>
     <?php }
 
@@ -64,19 +57,23 @@ if ($entity) { ?>
 
         <?php if ($enableItemsPerPageSelection) { ?>
             <div class="mt-3 mb-3">
-                <div class="form-inline">
-                <b><?=t('Items Per Page')?></b>
-                <select class="ml-3 form-control" data-express-entry-list-select-items-per-page="<?=$bID?>">
-                    <?php foreach($itemsPerPageOptions as $itemsPerPage) {
-                        $url = \League\Url\Url::createFromServer($_SERVER);
-                        $query = $url->getQuery();
-                        $query->modify(['itemsPerPage' => $itemsPerPage]);
-                        $url->setQuery($query);
-                        $itemsPerPageOptionUrl = (string) $url;
-                        ?>
-                        <option data-location="<?=$itemsPerPageOptionUrl?>" <?php if ($itemsPerPage == $itemsPerPageSelected) { ?>selected<?php } ?>><?=$itemsPerPage?></option>
-                    <?php } ?>
-                </select>
+                <div class="row row-cols-auto align-items-center">
+                    <div class="col-auto">
+                        <b><?=t('Items Per Page')?></b>
+                    </div>
+                    <div class="col-auto">
+                        <select class="ms-3 form-select" data-express-entry-list-select-items-per-page="<?=$bID?>">
+                            <?php foreach($itemsPerPageOptions as $itemsPerPage) {
+                                $url = \League\Url\Url::createFromServer($_SERVER);
+                                $query = $url->getQuery();
+                                $query->modify(['itemsPerPage' => $itemsPerPage]);
+                                $url->setQuery($query);
+                                $itemsPerPageOptionUrl = (string) $url;
+                                ?>
+                                <option data-location="<?=$itemsPerPageOptionUrl?>" <?php if ($itemsPerPage == $itemsPerPageSelected) { ?>selected<?php } ?>><?=$itemsPerPage?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
                 </div>
             </div>
         <?php } ?>
@@ -154,7 +151,7 @@ if ($entity) { ?>
         $(function() {
             $.concreteExpressEntryList({
                 'bID': '<?=$bID?>',
-                'hideFields': <?php echo !$app->request->request('advancedSearchDisplayed') ? 'true' : 'false'; ?>
+                'hideFields': <?php echo $app->request->request('advancedSearchDisplayed') || !$enableKeywordSearch ? 'false' : 'true'; ?>
             });
         });
     </script>

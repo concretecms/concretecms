@@ -21,7 +21,7 @@ class NewFormSubmissionListView extends StandardListView
 
     public function getIconClass()
     {
-        return 'fa fa-pencil-square-o';
+        return 'fas fa-edit';
     }
 
     public function getActionDescription()

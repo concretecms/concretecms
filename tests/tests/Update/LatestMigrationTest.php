@@ -3,7 +3,7 @@
 namespace Concrete\Tests\Update;
 
 use Concrete\Core\Updater\Migrations\Configuration;
-use Doctrine\DBAL\Migrations\Version;
+use Doctrine\Migrations\Version\Version;
 use PHPUnit\Framework\TestCase;
 
 class LatestMigrationTest extends TestCase

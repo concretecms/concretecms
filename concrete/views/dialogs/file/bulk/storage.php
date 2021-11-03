@@ -34,7 +34,7 @@ $idHelper = $app->make(Identifier::class);
         }
     ?>
 
-    <form data-dialog-form="bulk-file-storage" method="post" action="<?php echo $controller->action('submit'); ?>">
+    <form data-dialog-form="bulk-file-storage" data-dialog-form-processing="progressive" data-dialog-form-processing-title="<?=t('Update Storage Location')?>" method="post" action="<?php echo $controller->action('submit'); ?>">
         <?php foreach ($files as $file): ?>
             <input type="hidden" name="fID[]" value="<?php echo $file->getFileID(); ?>"/>
         <?php endforeach; ?>
@@ -52,40 +52,15 @@ $idHelper = $app->make(Identifier::class);
         </div>
 
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-left" data-dialog-action="cancel">
+            <button class="btn btn-secondary float-start" data-dialog-action="cancel">
                 <?php echo t('Cancel'); ?>
             </button>
 
-            <button type="button" data-dialog-action="submit" class="btn btn-primary float-right">
+            <button type="button" data-dialog-action="submit" class="btn btn-primary float-end">
                 <?php echo t('Move Location'); ?>
             </button>
         </div>
     </form>
 
     <!--suppress JSUnresolvedFunction -->
-    <script>
-        $(function () {
-            $('form[data-dialog-form=bulk-file-storage]').on('submit', function () {
-                let params = $('form[data-dialog-form=bulk-file-storage]').formToArray(true);
-                $.concreteAjax({
-                    url: '<?php echo $controller->action('submit'); ?>',
-                    data: params,
-                    success: function () {
-                        jQuery.fn.dialog.closeTop();
-
-                        ccm_triggerProgressiveOperation(
-                            '<?php echo $controller->action('change_files_storage_location'); ?>',
-                            params,
-                            <?php echo json_encode(t('Change files storage location')); ?>,
-                            function (result) {
-                                ConcreteEvent.publish('FileManagerBulkFileStorageComplete', {files: result.files});
-                                ConcreteAlert.notify({message: <?php echo json_encode(t('File storage locations updated successfully.')); ?>});
-                            }
-                        );
-                    }
-                });
-                return false;
-            });
-        });
-    </script>
 <?php endif; ?>

@@ -1,0 +1,13 @@
+div.theme-atomik {
+  .ccm-block-gallery {
+    .ccm-block-gallery-image-overlay {
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    .ccm-block-gallery-image-overlay-text {
+      color: white;
+      font-family: $display-font-family;
+      @extend .display-4;
+    }
+  }
+}

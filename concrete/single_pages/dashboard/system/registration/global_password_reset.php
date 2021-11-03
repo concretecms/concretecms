@@ -23,7 +23,7 @@ $readonlyAttr = $disableForm ? ['readonly' => 'readonly'] : [];
             <?= t('Global Password Reset allows Administrators to force reset all user passwords.') ?>
             <?= t('The system signs out all users, resets their passwords and forces them to choose a new one.') ?>
         </p>
-        <strong><?= t('Note:') ?></strong> <?= t('If you have overridden the standard concrete5 authentication system or you have created your own, you may not need to reset all passwords.') ?>
+        <strong><?= t('Note:') ?></strong> <?= t('If you have overridden the standard authentication system or you have created your own, you may not need to reset all passwords.') ?>
     </div>
 
     <div class="form-group">
@@ -40,7 +40,7 @@ $readonlyAttr = $disableForm ? ['readonly' => 'readonly'] : [];
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button type="submit" class="btn btn-danger float-right"><?= t('Reset all passwords') ?></button>
+            <button type="submit" class="btn btn-danger float-end"><?= t('Reset all passwords') ?></button>
         </div>
     </div>
 

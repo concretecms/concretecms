@@ -153,22 +153,6 @@ class ConfiguredDataSource
     /**
      * @return int
      */
-    public function getPopulationIntervalFuture(): int
-    {
-        return $this->populationIntervalFuture;
-    }
-
-    /**
-     * @param int $populationIntervalFuture
-     */
-    public function setPopulationIntervalFuture(int $populationIntervalFuture): void
-    {
-        $this->populationIntervalFuture = $populationIntervalFuture;
-    }
-
-    /**
-     * @return int
-     */
     public function getPopulationDayIntervalFuture(): int
     {
         return $this->populationDayIntervalFuture;

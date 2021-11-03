@@ -22,13 +22,13 @@ class AggregateTrackerTest extends TestCase
     /** @var AggregateTracker */
     private $tracker;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->app = new Application();
         $this->tracker = $this->app->build(AggregateTracker::class);
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->app = $this->tracker = null;
     }
@@ -193,11 +193,9 @@ class AggregateTrackerTest extends TestCase
         $this->assertEquals($tracker2, $this->tracker->tracker('test'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testErrorOnMiss()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->tracker->tracker('test');
     }
 

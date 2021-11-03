@@ -1,74 +1,70 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
 
-<div class="row">
-<div class="span10 offset1">
+defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="page-header"><h1><?=t('Members')?></div>
+<div class="ccm-page-user-directory">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="display-1"><?= $c->getCollectionName() ?></h1>
+            </div>
+        </div>
+    </div>
 
-<div class="navbar">
-<div class="navbar-inner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <form method="get" action="<?= $view->action('search_members') ?>">
+                    <div class="hstack gap-3">
+                        <input class="form-control me-auto" name="keywords" value="<?= $keywords ?>" type="text"
+                               placeholder="<?= t('Name or keywords') ?>">
+                        <button type="submit" name="submit" class="btn btn-outline-primary"><i
+                                    class="fas fa-search"></i></button>
+                    </div>
+                </form>
 
-<form method="get" action="<?=$view->action('search_members')?>" class="navbar-form">
-	<input name="keywords" type="text" value="<?=$keywords?>" size="20" class="" placeholder="<?=t('Search')?>" />
-	<input name="submit" type="submit" value="<?=t('Search')?>" class="btn btn-default" />
-</form>
+            </div>
+        </div>
+    </div>
 
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-12">
+
+                <?php
+                if ($total == 0) {
+                    ?>
+
+                    <p class="card-text lead text-secondary"><?= t('No users found.') ?></p>
+
+                    <?php
+                } else {
+                    foreach ($users as $user) { ?>
+
+                        <a href="<?=$user->getUserPublicProfileURL()?>" class="card mb-3">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="ccm-page-user-directory-entry">
+                                        <img class="ccm-page-user-directory-avatar" src="<?=$user->getUserAvatar()->getPath()?>">
+                                        <div>
+                                            <?=ucfirst($user->getUserName())?>
+                                            <?php
+                                            foreach ($attribs as $ak) { ?>
+                                                <div class="text-secondary small"><?=$user->getAttribute($ak, 'displaySanitized', 'display'); ?></div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                </div>
+                             </div>
+                        </a>
+                    <?php
+                    }
+                } ?>
+
+            </div>
+        </div>
+    </div>
 </div>
-</div>
 
-<?php if ($total == 0) {
-    ?>
-
-		<div><?=t('No users found.')?></div>
-
-	<?php 
-} else {
-    ?>
-
-		<table class="table table-striped" id="ccm-members-directory">
-
-
-		<?php
-        $av = Loader::helper('concrete/avatar');
-
-    foreach ($users as $user) {
-        ?>
-
-		<tr>
-			<td class="ccm-members-directory-avatar"><a href="<?=$user->getUserPublicProfileURL()?>"><?=$user->getUserAvatar()->output()?></a></td>
-			<td class="ccm-members-directory-name"><a href="<?=$user->getUserPublicProfileURL()?>"><?=ucfirst($user->getUserName())?></a></td>
-			<?php
-            foreach ($attribs as $ak) {
-                ?>
-				<td>
-					<?=$user->getAttribute($ak, 'displaySanitized', 'display');
-                ?>
-				</td>
-			<?php 
-            }
-        ?>
-		</tr>
-
-		<?php 
-    }
-    ?>
-
-		</table>
-
-        <?php if ($pagination->haveToPaginate()) {
-    ?>
-
-            <?=$pagination->renderView('dashboard');
-    ?>
-
-        <?php 
-}
-    ?>
-
-	<?php
-
-} ?>
-
-
-</div>
-</div>

@@ -12,7 +12,7 @@ $form = $app->make('helper/form');
     <?php if (Config::get('concrete.permissions.model') != 'simple'):?>
     <div>
         <p>
-            <?=t('Your concrete5 site does not use the simple permissions model. You must change your permissions for each specific page and content area.')?>
+            <?=t('Your site does not use the simple permissions model. You must change your permissions for each specific page and content area.')?>
         </p>
     </div>
     <?php else:?>

@@ -61,9 +61,7 @@ if ($key !== null) {
             <?= $form->label('akHandle', t('Handle')) ?>
             <div class="input-group">
                 <?= $form->text('akHandle', $akHandle, ['autofocus' => 'autofocus']) ?>
-                <span class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
-                </span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
 
@@ -71,11 +69,7 @@ if ($key !== null) {
             <?= $form->label('akName', t('Name')) ?>
             <div class="input-group">
                 <?= $form->text('akName', $key === null ? '' : $key->getAttributeKeyName()) ?>
-                <span class="input-group-append">
-                    <span class="input-group-append">
-                        <span class="input-group-text"><i class="fa fa-asterisk"></i></span>
-                    </span>
-                </span>
+                <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
         </div>
 
@@ -100,7 +94,7 @@ if ($key !== null) {
         ?>
 
         <div class="form-group">
-            <label class="control-label"><?= t('Searchable') ?></label>
+            <label class="control-label form-label"><?= t('Searchable') ?></label>
             <div class="form-check">
                 <?= $form->checkbox('akIsSearchableIndexed', 1, $key !== null && $key->isAttributeKeyContentIndexed(), ['class' => 'form-check-input']) ?>
                 <label class="form-check-label" for="akIsSearchableIndexed">
@@ -144,17 +138,17 @@ if ($key !== null) {
 
         echo $form->hidden('akCategoryID', $category->getCategoryEntity()->getAttributeKeyCategoryID());
 
-        try {
-            View::element(
+        if ($category->getCategoryEntity()->getPackageHandle()) {
+            $element = Element::get(
                 'attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(),
                 ['key' => $key],
-                $category->getCategoryEntity()->getPackageID() ? $category->getCategoryEntity()->getPackageHandle() : null
+                $category->getCategoryEntity()->getPackageHandle()
             );
-        } catch (ErrorException $e) {
-            if (strpos($e->getMessage(), 'No such file or directory') === false) {
-                // This isn't the error we expected to catch
-                throw $e;
-            }
+        } else {
+            $element = Element::get('attribute/categories/' . $category->getCategoryEntity()->getAttributeKeyCategoryHandle(), ['key' => $key]);
+        }
+        if ($element->exists()) {
+            $element->render();
         }
     }
 
@@ -164,8 +158,8 @@ if ($key !== null) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?= $back ?>" class="btn float-left btn-secondary"><?= t('Back') ?></a>
-            <button type="submit" class="btn btn-primary float-right"><?= $key === null ? t('Add') : t('Save') ?></button>
+            <a href="<?= $back ?>" class="btn float-start btn-secondary"><?= t('Back') ?></a>
+            <button type="submit" class="btn btn-primary float-end"><?= $key === null ? t('Add') : t('Save') ?></button>
         </div>
     </div>
 

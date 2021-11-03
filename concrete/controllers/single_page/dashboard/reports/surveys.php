@@ -80,7 +80,7 @@ class Surveys extends DashboardPageController
             $q = 'SELECT question FROM btSurvey WHERE bID = ?';
             $v = [$bID];
             $r = $db->query($q, $v);
-            if ($row = $r->fetchRow()) {
+            if ($row = $r->fetch()) {
                 $current_survey = $row['question'];
             }
         }
@@ -115,7 +115,7 @@ class Surveys extends DashboardPageController
             $q = 'SELECT count(*) FROM btSurveyResults WHERE optionID = ? AND bID = ? AND cID = ?';
             $r = $db->executeQuery($q, $v);
 
-            if ($row = $r->fetchRow()) {
+            if ($row = $r->fetch()) {
                 $options[$i]['amount'] = $row['count(*)'];
                 $total_results += $row['count(*)'];
             }

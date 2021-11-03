@@ -54,7 +54,7 @@ $resolverManager = app(ResolverManagerInterface::class);
                     </td>
                     <td>
                         <div class="ccm-popover ccm-conversation-message-popover popover fade" data-menu="<?=$msg->getConversationMessageID()?>">
-                            <div class="arrow"></div><div class="popover-inner">
+                            <div class="popover-arrow"></div><div class="popover-inner">
                                 <ul class="dropdown-menu">
                                 <?php if (is_object($page)) { ?>
                                     <li><a href="<?=$page->getCollectionLink()?>#cnv<?=$cnv->getConversationID()?>Message<?=$msg->getConversationMessageID()?>" class="dropdown-item"><?=t('View Conversation')?></a></li>
@@ -126,14 +126,20 @@ $resolverManager = app(ResolverManagerInterface::class);
 </div>
 
 <div class="ccm-dashboard-header-buttons">
-    <form class="form-inline" role="form" action="<?=$controller->action('view')?>">
-        <input type="text" class="ml-2 form-control-sm form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
-        <select class="ml-2 custom-select custom-select-sm" name="cmpMessageFilter">
-            <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
-                <option value="<?= $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?= $optionText; ?></option>
-            <?php } ?>
-        </select>
-        <button class="ml-2 btn btn-secondary btn-sm" type="submit"><i class="fas fa-search"></i></button>
+    <form class="row row-cols-auto g-0 align-items-center" role="form" action="<?=$controller->action('view')?>">
+        <div class="col-auto">
+            <input type="text" class="ms-2 form-control-sm form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
+        </div>
+        <div class="col-auto">
+            <select class="ms-2 form-select form-select-sm" name="cmpMessageFilter">
+                <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
+                    <option value="<?= $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?= $optionText; ?></option>
+                <?php } ?>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button class="ms-2 btn btn-secondary btn-sm" type="submit"><i class="fas fa-search"></i></button>
+        </div>
     </form>
 </div>
 

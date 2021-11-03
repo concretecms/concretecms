@@ -81,7 +81,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $r = $db->query($q, $v);
             $this->options = [];
             if ($r) {
-                while ($row = $r->fetchRow()) {
+                while ($row = $r->fetch()) {
                     $opt = new Option();
                     $opt->optionID = $row['optionID'];
                     $opt->cID = $this->cID;

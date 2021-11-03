@@ -1,0 +1,77 @@
+div.ccm-page {
+  font-family: @body-type-font-family;
+  font-weight: @body-type-font-weight;
+  font-size: @body-type-font-size;
+  line-height: @line-height-base;
+  -webkit-font-smoothing:antialiased;
+
+  blockquote {
+    padding-left: @blockquote-left-padding-size;
+    font-size: @blockquote-type-font-size;
+    font-weight: @blockquote-type-font-weight;
+    border-color: @blockquote-border-color;
+    color: @blockquote-type-color;
+    line-height: @line-height-base;
+  }
+
+  h1 {.make-heading(@h1-type-font-family, @h1-type-font-size, @h1-type-font-weight, @h1-type-color);}
+  h2 {.make-heading(@h2-type-font-family, @h2-type-font-size, @h2-type-font-weight, @h2-type-color);}
+  h3 {.make-heading(@h3-type-font-family, @h3-type-font-size, @h3-type-font-weight, @h3-type-color);}
+  h4 {.make-heading(@h4-type-font-family, @h4-type-font-size, @h4-type-font-weight, @h4-type-color);}
+  h5 {.make-heading(@h5-type-font-family, @h5-type-font-size, @h5-type-font-weight, @h5-type-color, @h5-type-text-transform);}
+  h6 {.make-heading(@h6-type-font-family, @h6-type-font-size, @h6-type-font-weight, @h6-type-color, @h6-type-text-transform);}
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  hr {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    border-top: 1px solid @content-section-divider-color;
+  }
+
+  main {
+    background-color: @page-background-color;
+    padding-bottom: 80px;
+
+    /*
+    div.container:last-child {
+      padding-bottom: 80px;
+    }
+    */
+  }
+
+  main, footer {
+    a:not(.fa):not(.btn) {
+      color: @body-link-color;
+
+      &:hover {
+        color: @body-link-hover-color;
+        text-decoration: none;
+      }
+    }
+  }
+
+  div[data-container=block] {
+    div.container:last-child {
+      padding-bottom: 0px;
+    }
+  }
+
+  // Special styles for blog entry page type, making sure the sidebar contents get pushed down
+  &.page-type-blog-entry {
+    div.col-sidebar {
+      padding-top: 40px;
+    }
+  }
+
+  div.col-sidebar {
+    hr {
+      margin-top: @line-height-computed;
+      margin-bottom: @line-height-computed;
+    }
+  }
+
+}

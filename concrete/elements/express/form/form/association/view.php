@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="form-group">
+<div class="mb-3">
     <div>
-    <label class="control-label"><?=$label?></label>
+    <label class="form-label"><?=$label?></label>
     </div>
     <?php
     if (count($selectedEntries)) {

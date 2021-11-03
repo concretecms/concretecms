@@ -18,7 +18,7 @@ class FilesParseTest extends TestCase
             try {
                 $this->loadFile(head($file));
             } catch (Throwable $e) {
-                $this->fail(sprintf('Failed to parse file "%s": %s', $file, $e->getMessage()));
+                $this->fail(sprintf('Failed to parse file "%s": %s', $file[0], $e->getMessage()));
             }
         }
 

@@ -51,7 +51,7 @@ use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
 use League\URL\URLInterface;
 use stdClass;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Concrete\Core\Events\EventDispatcher;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
@@ -586,6 +586,19 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         }
 
         return $result;
+    }
+
+    /**
+     * Checks the uPassword record for the current user and returns true if the hashed version of the
+     * passed password matches.
+     *
+     * @param $uPassword
+     * @return bool
+     */
+    public function passwordMatches(string $uPassword): bool
+    {
+        $hasher = $this->application->make(PasswordHasher::class);
+        return $hasher->CheckPassword($uPassword, $this->getUserPassword());
     }
 
     /**

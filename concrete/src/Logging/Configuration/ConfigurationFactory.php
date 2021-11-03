@@ -3,6 +3,8 @@ namespace Concrete\Core\Logging\Configuration;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Logging\Channels;
+use Monolog\Logger;
 
 class ConfigurationFactory
 {
@@ -31,14 +33,17 @@ class ConfigurationFactory
         if ($configuration['mode'] == 'advanced' && isset($configuration['advanced']['configuration']['loggers'])) {
             return new AdvancedConfiguration($configuration['advanced']['configuration']);
         } else {
+            $levelText = array_get($configuration, 'simple.core_logging_level');
+            $levels = Logger::getLevels();
+            $coreLevel = $levels[$levelText];
             if (isset($configuration['simple']['handler']) && $configuration['simple']['handler'] == 'file') {
                 return $this->app->make(SimpleFileConfiguration::class, [
                     'filename' => array_get($configuration, 'simple.file.file'),
-                    'coreLevel' => array_get($configuration, 'simple.core_logging_level')
+                    'coreLevel' => $coreLevel
                 ]);
             } else {
                 return $this->app->make(SimpleDatabaseConfiguration::class, [
-                    'coreLevel' => array_get($configuration, 'simple.core_logging_level')
+                    'coreLevel' => $coreLevel
                 ]);
             }
         }

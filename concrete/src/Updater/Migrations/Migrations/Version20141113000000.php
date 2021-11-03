@@ -12,9 +12,9 @@ class Version20141113000000 extends AbstractMigration implements RepeatableMigra
     /**
      * {@inheritdoc}
      *
-     * @see \Doctrine\DBAL\Migrations\AbstractMigration::getDescription()
+     * @see \Doctrine\Migrations\AbstractMigration::getDescription()
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return '5.7.2.1';
     }
@@ -55,7 +55,7 @@ class Version20141113000000 extends AbstractMigration implements RepeatableMigra
 
         // Clean up File stupidity
         $r = $db->Execute('select Files.fID from Files left join FileVersions on (Files.fID = FileVersions.fID) where FileVersions.fID is null');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $db->Execute('delete from Files where fID = ?', [$row['fID']]);
         }
     }

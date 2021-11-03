@@ -20,6 +20,7 @@ use Concrete\Core\Localization\Locale\Service as LocaleService;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Statistics as PageStatistics;
@@ -37,6 +38,7 @@ use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
@@ -55,7 +57,7 @@ use PageType;
 use Queue;
 use Request;
 use Session;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 use UserInfo;
 
 /**
@@ -90,6 +92,13 @@ class Page extends Collection implements CategoryMemberInterface,
      * @var int[]|null
      */
     protected $blocksAliasedFromMasterCollection = null;
+
+    /**
+     * The user id of the user that has checked out the page.
+     *
+     * @var int|null
+     */
+    public $cCheckedOutUID = null;
 
     /**
      * The original cID of a page (if it's a page alias).
@@ -375,9 +384,9 @@ class Page extends Collection implements CategoryMemberInterface,
             }
 
             if (isset($class) && class_exists($class)) {
-                $this->controller = Core::make($class, [$this]);
+                $this->controller = Core::make($class, ['c' => $this]);
             } else {
-                $this->controller = Core::make('\PageController', [$this]);
+                $this->controller = Core::make(PageController::class, ['c' => $this]);
             }
         }
 
@@ -603,23 +612,23 @@ class Page extends Collection implements CategoryMemberInterface,
     public function isCheckedOut()
     {
         // function to inform us as to whether the current collection is checked out
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = Database::connection();
         if (isset($this->isCheckedOutCache)) {
             return $this->isCheckedOutCache;
         }
-
         $q = "select cIsCheckedOut, cCheckedOutDatetimeLastEdit from Pages where cID = '{$this->cID}'";
         $r = $db->executeQuery($q);
 
         if ($r) {
-            $row = $r->fetchRow();
+            $row = $r->fetchAssociative();
             // If cCheckedOutDatetimeLastEdit is present, get the time span in seconds since it's last edit.
             if (!empty($row['cCheckedOutDatetimeLastEdit'])) {
                 $dh = Core::make('helper/date');
                 $timeSinceCheckout = ($dh->getOverridableNow(true) - strtotime($row['cCheckedOutDatetimeLastEdit']));
             }
 
-            if ($row['cIsCheckedOut'] == 0) {
+            if (isset($row['cIsCheckedOut']) && $row['cIsCheckedOut'] == 0) {
                 return false;
             }
             if (isset($timeSinceCheckout) && $timeSinceCheckout > CHECKOUT_TIMEOUT) {
@@ -771,7 +780,7 @@ class Page extends Collection implements CategoryMemberInterface,
         $nc = self::getDraftsParentPage($site);
         $r = $db->executeQuery('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where cParentID = ? order by cDateAdded desc', [$nc->getCollectionID()]);
         $pages = [];
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $entry = self::getByID($row['cID']);
             if (is_object($entry)) {
                 $pages[] = $entry;
@@ -998,7 +1007,7 @@ class Page extends Collection implements CategoryMemberInterface,
             $this->rescanCollectionPath();
         }
         $pe = new Event($this);
-        $eventDispatcher = $app->make(EventDispatcherInterface::class);
+        $eventDispatcher = $app->make(EventDispatcher::class);
         $eventDispatcher->dispatch('on_page_alias_edit', $pe);
     }
 
@@ -1937,6 +1946,17 @@ class Page extends Collection implements CategoryMemberInterface,
     }
 
     /**
+     * Set the theme skin of this page.
+     *
+     * @param SkinInterface $skin
+     */
+    public function setThemeSkin(SkinInterface $skin)
+    {
+        $db = Database::connection();
+        $db->executeQuery('update CollectionVersions set pThemeSkinIdentifier = ? where cID = ? and cvID = ?', [$skin->getIdentifier(), $this->cID, $this->vObj->getVersionID()]);
+    }
+
+    /**
      * Set the theme for a page using the page object.
      *
      * @param \Concrete\Core\Page\Type\Type|null $type
@@ -2148,7 +2168,7 @@ EOT
         $q = 'select cID from Pages where cParentID = ? and cIsTemplate = 0 order by cDisplayOrder asc';
         $r = $db->executeQuery($q, [$this->getCollectionID()]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 if ($row['cID'] > 0) {
                     $c = self::getByID($row['cID']);
                     $children[] = $c;
@@ -2216,60 +2236,6 @@ EOT
     }
 
     /**
-     * Clears the custom theme styles for this page.
-     */
-    public function resetCustomThemeStyles()
-    {
-        $db = Database::connection();
-        $db->executeQuery('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', [$this->getCollectionID(), $this->getVersionID()]);
-        $this->writePageThemeCustomizations();
-    }
-
-    /**
-     * Set the custom style for this page for a specific theme.
-     *
-     * @param \Concrete\Core\Page\Theme\Theme $theme
-     * @param \Concrete\Core\StyleCustomizer\Style\ValueList $valueList
-     * @param \Concrete\Core\StyleCustomizer\Preset|null|false $selectedPreset
-     * @param \Concrete\Core\Entity\StyleCustomizer\CustomCssRecord $customCssRecord
-     * @param \Concrete\Core\Page\Theme\Theme $pt
-     *
-     * @return \Concrete\Core\Page\CustomStyle
-     */
-    public function setCustomStyleObject(\Concrete\Core\Page\Theme\Theme $pt, \Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, CustomCssRecord $customCssRecord = null)
-    {
-        $db = Database::connection();
-        $db->delete('CollectionVersionThemeCustomStyles', ['cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()]);
-        $preset = false;
-        if ($selectedPreset) {
-            $preset = $selectedPreset->getPresetHandle();
-        }
-        $sccRecordID = 0;
-        if ($customCssRecord !== null) {
-            $sccRecordID = $customCssRecord->getRecordID();
-        }
-        $db->insert(
-            'CollectionVersionThemeCustomStyles',
-            [
-                'cID' => $this->getCollectionID(),
-                'cvID' => $this->getVersionID(),
-                'pThemeID' => $pt->getThemeID(),
-                'sccRecordID' => $sccRecordID,
-                'preset' => $preset,
-                'scvlID' => $valueList->getValueListID(),
-            ]
-        );
-
-        $scc = new \Concrete\Core\Page\CustomStyle();
-        $scc->setThemeID($pt->getThemeID());
-        $scc->setValueListID($valueList->getValueListID());
-        $scc->setPresetHandle($preset);
-        $scc->setCustomCssRecordID($sccRecordID);
-
-        return $scc;
-    }
-
-    /**
      * Get the CSS class to be used to wrap the whole page contents.
      *
      * @return string
@@ -2294,40 +2260,6 @@ EOT
         }
 
         return implode(' ', $classes);
-    }
-
-    /**
-     * Write the page theme customization CSS files to the cache directory.
-     */
-    public function writePageThemeCustomizations()
-    {
-        $theme = $this->getCollectionThemeObject();
-        if (is_object($theme) && $theme->isThemeCustomizable()) {
-            $style = $this->getCustomStyleObject();
-            $scl = is_object($style) ? $style->getValueList() : null;
-
-            $theme->setStylesheetCachePath(Config::get('concrete.cache.directory') . '/pages/' . $this->getCollectionID());
-            $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
-            $sheets = $theme->getThemeCustomizableStyleSheets();
-            foreach ($sheets as $sheet) {
-                if (is_object($scl)) {
-                    $sheet->setValueList($scl);
-                    $sheet->output();
-                } else {
-                    $sheet->clearOutputFile();
-                }
-            }
-        }
-    }
-
-    /**
-     * Clears the custom theme styles for every page.
-     */
-    public static function resetAllCustomStyles()
-    {
-        $db = Database::connection();
-        $db->delete('CollectionVersionThemeCustomStyles', ['1' => 1]);
-        Core::make('app')->clearCaches();
     }
 
     /**
@@ -2569,7 +2501,7 @@ EOT
     {
         $db = Database::connection();
         $r = $db->executeQuery('select arHandle, arIsGlobal from Areas where cID = ?', [$this->getCollectionID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $a = Area::getOrCreate($this, $row['arHandle'], $row['arIsGlobal']);
             $a->rescanAreaPermissionsChain();
         }
@@ -2604,7 +2536,7 @@ EOT
         $q = "select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFromCID = {$pcID}";
         $r = $db->query($q);
         $cList = [];
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $cList[] = $row['cID'];
         }
         if (count($cList) > 0) {
@@ -2631,7 +2563,7 @@ EOT
         $v = [$permissionsCollectionID];
         $q = 'select cID, arHandle, paID, pkID from AreaPermissionAssignments where cID = ?';
         $r = $db->executeQuery($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$this->cID, $row['arHandle'], $row['paID'], $row['pkID']];
             $q = 'insert into AreaPermissionAssignments (cID, arHandle, paID, pkID) values (?, ?, ?, ?)';
             $db->executeQuery($q, $v);
@@ -2642,7 +2574,7 @@ EOT
         $v = [$permissionsCollectionID];
         $q = 'select * from Areas where cID = ? and arOverrideCollectionPermissions';
         $r = $db->executeQuery($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$this->cID, $row['arHandle'], $row['arOverrideCollectionPermissions'], $row['arInheritPermissionsFromAreaOnCID'], $row['arIsGlobal']];
             $q = 'insert into Areas (cID, arHandle, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal) values (?, ?, ?, ?, ?)';
             $db->executeQuery($q, $v);
@@ -2664,7 +2596,7 @@ EOT
         $v = [$permissionsCollectionID];
         $q = 'select cID, paID, pkID from PagePermissionAssignments where cID = ?';
         $r = $db->executeQuery($q, $v);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$this->cID, $row['paID'], $row['pkID']];
             $q = 'insert into PagePermissionAssignments (cID, paID, pkID) values (?, ?, ?)';
             $db->executeQuery($q, $v);
@@ -2684,7 +2616,7 @@ EOT
         $q = "select cID from Pages where cParentID in ({$cParentIDString}) and cInheritPermissionsFrom = 'PARENT'";
         $r = $db->query($q);
         $cList = [];
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $cList[] = $row['cID'];
         }
         if (count($cList) > 0) {
@@ -2942,7 +2874,7 @@ EOT
 
         // remove all pages where the pointer is this cID
         $r = $db->executeQuery('select cID from Pages where cPointerID = ?', [$cID]);
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             PageStatistics::decrementParents($row['cID']);
             $db->executeQuery('DELETE FROM PagePaths WHERE cID=?', [$row['cID']]);
         }
@@ -2966,7 +2898,7 @@ EOT
 
         $r = $db->executeQuery('select cID from Pages where cParentID = ?', [$cID]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 if ($row['cID'] > 0) {
                     $nc = self::getByID($row['cID']);
                     $nc->delete();
@@ -3603,7 +3535,9 @@ EOT
                 $mc1 = $pt->getPageTypePageTemplateDefaultPageObject($template);
                 $mc2 = $pt->getPageTypePageTemplateDefaultPageObject();
                 $masterCIDBlocks = $mc1->getCollectionID();
-                $masterCID = $mc2->getCollectionID();
+                if ($mc2) {
+                    $masterCID = $mc2->getCollectionID();
+                }
             }
         }
 
@@ -3929,7 +3863,7 @@ EOT
         $q = "select cID from Pages where cParentID = {$cID} and cIsTemplate = 0 order by {$sortColumn}";
         $r = $db->query($q);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 if ($row['cID'] > 0) {
                     $this->childrenCIDArray[] = $row['cID'];
                     if (!$oneLevelOnly) {
@@ -3957,7 +3891,7 @@ EOT
         $q = 'select cID, ptHandle from Pages p left join PageTypes pt on p.ptID = pt.ptID where cParentID = ? order by cDisplayOrder asc';
         $r = $db->executeQuery($q, [$cID]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 // This is a terrible hack.
                 if ($row['ptHandle'] === STACKS_PAGE_TYPE) {
                     $tc = Stack::getByID($row['cID']);
@@ -3968,6 +3902,28 @@ EOT
                 $tc->_duplicateAll($tc, $nc, $preserveUserID, $site);
             }
         }
+    }
+
+    public function getPageSkin()
+    {
+        $skinIdentifier = null;
+        if (isset($this->vObj->pThemeSkinIdentifier)) {
+            $skinIdentifier = $this->vObj->pThemeSkinIdentifier;
+        } else {
+            $site = $this->getSite();
+            if (!$site) {
+                $site = Core::make('site')->getSite();
+            }
+            if ($site->getThemeSkinIdentifier()) {
+                $skinIdentifier = $site->getThemeSkinIdentifier();
+            }
+        }
+        if (!$skinIdentifier) {
+            $skinIdentifier = SkinInterface::SKIN_DEFAULT;
+        }
+        $theme = $this->getCollectionThemeObject();
+        $skin = $theme->getSkinByIdentifier($skinIdentifier);
+        return $skin;
     }
 
     /**
@@ -4034,7 +3990,7 @@ EOT
         $r = $db->query($q);
 
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $b = Block::getByID($row['bID'], $mc, $row['arHandle']);
                 if ($cAcquireComposerOutputControls || !in_array($b->getBlockTypeHandle(), ['core_page_type_composer_control_output'])) {
                     if ($row['btCopyWhenPropagate']) {
@@ -4087,7 +4043,7 @@ EOT
             // now we acquire
             $q = 'select issID, arHandle from CollectionVersionAreaStyles where cID = ?';
             $r = $db->executeQuery($q, [$mc->getCollectionID()]);
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $db->executeQuery(
                     'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
                     [

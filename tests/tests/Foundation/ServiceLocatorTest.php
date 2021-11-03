@@ -10,7 +10,7 @@ class ServiceLocatorTest extends TestCase
 {
     protected $sl;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->sl = new ServiceLocator();
     }
