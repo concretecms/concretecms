@@ -18,7 +18,7 @@ use Concrete\Core\Support\Facade\Url;
 </script>
 
 <script type="text/template" class="version">
-    <tr <% if (cvIsApproved) { %> class="ccm-panel-page-version-approved" <% } else if (cvIsScheduled == 1) { %> class="ccm-panel-page-version-scheduled" <% } %>>
+    <tr <% if (cvIsApprovedNow) { %> class="ccm-panel-page-version-approved" <% } else if (cvIsScheduled == 1) { %> class="ccm-panel-page-version-scheduled" <% } %>>
         <td>
             <!--suppress HtmlFormInputWithoutLabel -->
             <input class="ccm-flat-checkbox" type="checkbox" name="cvID[]" value="<%-cvID%>"
@@ -49,11 +49,21 @@ use Concrete\Core\Support\Facade\Url;
 
             <div class="ccm-panel-page-versions-status">
                 <% if (cvIsApproved) { %>
-                    <p>
+                <p>
+                    <% if (cvIsApprovedNow) { %>
                         <span class="badge bg-dark">
                             <?php echo t('Live') ?>
                         </span>
-                    </p>
+                    <% } else if (cvIsScheduled) { %>
+                        <span class="badge bg-info">
+                            <?php echo t('Scheduled') ?>
+                        </span>
+                    <% } else { %>
+                        <span class="badge bg-info">
+                            <?php echo t('Approved') ?>
+                        </span>
+                    <% } %>
+                </p>
                 <% } %>
             </div>
 
@@ -100,10 +110,14 @@ use Concrete\Core\Support\Facade\Url;
                 <% } %>
 
                 <% if (cvIsScheduled) { %>
-                    <p>
-                        <?php echo t('Scheduled by') ?>
-                        <%-cvApproverUserName%> <?php echo tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/
-                            'ScheduledByFor', ' for ') ?> <%-cvPublishDate%>
+                    <p><?= t('Scheduled by') ?> <%-cvApproverUserName%>
+                        <% if (cvPublishDate && cvPublishEndDate) { %>
+                        <?= tc(/*i18n: In the sentence Scheduled by USERNAME between DATE/TIME and DATE/TIME*/'ScheduledDate', 'between %s and %s', '<%-cvPublishDate%>', '<%-cvPublishEndDate%>') ?>
+                        <% } else if (cvPublishDate) { %>
+                        <?= tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledDate', 'for %s', '<%-cvPublishDate%>') ?>
+                        <% } else if (cvPublishEndDate) { %>
+                        <?= tc(/*i18n: In the sentence Scheduled by USERNAME to close on DATE/TIME*/'ScheduledDate', 'to close on %s', '<%-cvPublishEndDate%>') ?>
+                        <% } %>
                     </p>
                 <% } %>
             </div>
@@ -111,7 +125,7 @@ use Concrete\Core\Support\Facade\Url;
             <div class="popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
                 <div class="dropdown-menu">
                     <% if (cvIsApproved) { %>
-                        <span class="dropdown-item">
+                        <span class="dropdown-item ui-state-disabled">
                             <?php echo t('Approve') ?>
                         </span>
                     <% } else { %>
@@ -133,7 +147,7 @@ use Concrete\Core\Support\Facade\Url;
                     <% } %>
 
                     <% if (!cvIsApproved) { %>
-                        <span class="dropdown-item">
+                        <span class="dropdown-item ui-state-disabled">
                             <?php echo t('Unapprove') ?>
                         </span>
                     <% } else { %>
@@ -143,7 +157,7 @@ use Concrete\Core\Support\Facade\Url;
                     <% } %>
 
                     <% if (cpCanDeletePageVersions) { %>
-                        <span <% if (!cvIsApproved) { %>style="display:none"<% } %> class="dropdown-item">
+                        <span <% if (!cvIsApprovedNow) { %>style="display:none"<% } %> class="dropdown-item ui-state-disabled">
                             <?php echo t('Delete') ?>
                         </span>
 

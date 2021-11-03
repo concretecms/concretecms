@@ -1407,6 +1407,16 @@
     <index name="pTemplateID">
       <col>pTemplateID</col>
     </index>
+    <index name="cvDatePublic">
+      <col>cvDatePublic</col>
+    </index>
+    <index name="idxPublishDate">
+      <col>cID</col>
+      <col>cvID</col>
+      <col>cvIsApproved</col>
+      <col>cvPublishDate</col>
+      <col>cvPublishEndDate</col>
+    </index>
   </table>
 
   <table name="Collections">
@@ -2872,6 +2882,13 @@
     <index name="cParentMaxDisplay">
       <col>cParentID</col>
       <col>cDisplayOrder</col>
+    </index>
+    <index name="idxPageList">
+      <col>cIsTemplate</col>
+      <col>cIsActive</col>
+      <col>siteTreeID</col>
+      <col>cIsSystemPage</col>
+      <col>cPointerID</col>
     </index>
   </table>
 
