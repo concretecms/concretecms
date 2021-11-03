@@ -16,7 +16,7 @@ $favoritesMenu = Element::get('dashboard/navigation/panel/favorites');
 $section = null;
 if ($dashboard->inDashboard($c)) {
     $parents = array_reverse(app(\Concrete\Core\Html\Service\Navigation::class)->getTrailToCollection($c));
-    if (count($parents) == 0) {
+    if (count($parents) === 0) {
         $section = $c;
     } else {
         $section = $parents[0];
