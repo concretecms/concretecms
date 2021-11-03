@@ -19,6 +19,10 @@ $form = $app->make(Form::class);
 $config = $app->make(Repository::class);
 $min = $config->get('concrete.limits.style_customizer.size_min', -50);
 $max = $config->get('concrete.limits.style_customizer.size_max', 200);
+
+if (!isset($default)) {
+    $default = 0;
+}
 ?>
 <div>
     <span class="ccm-inline-style-slider-heading">
