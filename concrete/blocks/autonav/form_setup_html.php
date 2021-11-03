@@ -32,7 +32,7 @@ $info += [
 )); ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="autonav-settings">
+    <div class="tab-pane active" id="autonav-settings">
         <div class="autonav-form">
             <input type="hidden" name="autonavCurrentCID" value="<?= $c->getCollectionID() ?>"/>
             <input type="hidden" name="autonavPreviewPane" value="<?= h($controller->getActionURL('preview_pane')) ?>"/>
