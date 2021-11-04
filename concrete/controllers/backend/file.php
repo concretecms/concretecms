@@ -323,7 +323,7 @@ class File extends Controller
             foreach ($urls as $url) {
                 try {
                     $host = (string) \League\Url\Url::createFromUrl($url)->getHost();
-                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validIps[$host] ?? null);
+                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), isset($validIps[$host]) ? $validIps[$host] : null);
                     $fileVersion = $fi->import($downloadedFile, false, $replacingFile ?: $this->getDestinationFolder());
                     if (!$fileVersion instanceof FileVersionEntity) {
                         $errors->add($url . ': ' . $fi->getErrorMessage($fileVersion));
