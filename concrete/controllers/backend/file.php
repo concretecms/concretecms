@@ -765,16 +765,6 @@ class File extends Controller
         $request = $client->getRequest()->setUri($url);
         $response = $client->sendWithoutRedirects();
 
-        if ($ip) {
-            $host = parse_url($url, PHP_URL_HOST);
-            $scheme = parse_url($url, PHP_URL_SCHEME);
-            $port = parse_url($url, PHP_URL_PORT) ?: ($scheme === 'http' ? 80 : 443);
-
-            // Specify IP if one is provided.
-            $config['curl'] = [CURLOPT_RESOLVE => ["{$host}:{$port}:{$ip}"]];
-        }
-
-
         if (!$response->isSuccess()) {
             throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
         }
