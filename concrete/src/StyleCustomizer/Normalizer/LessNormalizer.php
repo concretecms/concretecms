@@ -61,21 +61,22 @@ class LessNormalizer implements NormalizerInterface
                             } else if ($expressionValue instanceof \Less_Tree_Call) {
 
                                 $color = TreeCallColor::fromTreeCall($expressionValue);
-                                $args = $color->getArguments();
-
-                                $rgbaValue = null;
-                                if ($color->getName() == 'rgba') {
-                                    $rgbaValue = $args[3]->value[0]->value;
+                                if ($color->getName() === 'rgb' || $color->getName() === 'rgba') {
+                                    $args = $color->getArguments();
+                                    $rgbaValue = null;
+                                    if ($color->getName() == 'rgba') {
+                                        $rgbaValue = $args[3]->value[0]->value;
+                                    }
+                                    $collection->add(
+                                        new ColorVariable(
+                                            $variableName,
+                                            $args[0]->value[0]->value,
+                                            $args[1]->value[0]->value,
+                                            $args[2]->value[0]->value,
+                                            $rgbaValue
+                                        )
+                                    );
                                 }
-                                $collection->add(
-                                    new ColorVariable(
-                                        $variableName,
-                                        $args[0]->value[0]->value,
-                                        $args[1]->value[0]->value,
-                                        $args[2]->value[0]->value,
-                                        $rgbaValue
-                                    )
-                                );
 
                             } else if ($expressionValue instanceof \Less_Tree_Dimension) {
                                 $value = $expressionValue->value;
