@@ -44,7 +44,7 @@ class Service implements JsonSerializable
         if ($this->customHTML) {
             return $this->customHTML;
         } else {
-            return '<i class="fab fa-' . $this->getIcon() . '" aria-hidden="true" title="' . $this->getDisplayName() . '"></i>';
+            return '<i class="' . $this->getIcon() . '" aria-hidden="true" title="' . $this->getDisplayName() . '"></i>';
         }
     }
 
