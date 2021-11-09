@@ -1,3 +1,90 @@
+# 8.5.7
+
+## Bug Fixes
+
+* Fixed issue where remote updater would read the entire update into memory, leading to potential out of memory errors when updating the core.
+* Fixed error when setting global calendar permissions in the Dashboard.
+* Fixed issue where reset users weren’t properly notified when logging in that their passwords needed to be changed (thanks hissy)
+* Fixed: reCAPTCHA timout after 2min (thanks JeffPaetkau)
+* Fixed: fatal error on upgrade french version 8.5.5 to 8.5.6, "2 plural forms instead of 3" (thanks mlocati)
+* Fixed error with rich text conversation editor not working (Thanks hissy)
+* Fixed issue with URLs being case sensitive in some internationalization cases (thanks dimger)
+* Fixes to topic attribute search index content (thanks hissy)
+* Maintenance mode now returns the 503 HTTP error code when running (thanks hissy)
+* Fix Call to a member function isDefault() on null" error on the site upgraded from 5.7 when using the migration tool (thanks hissy)
+* Fixed issue where rich text attribute type wasn’t showing a full toolbar (note: in the future we want to make this an option, and strongly recommend users use this smaller, sanitized toolbar – but it should be an option, not the default.)
+* If a file has a password in the file manager, you will not be able to view it inline in the rich text editor.
+* Fixed: Changing database charset in dashboard throws error: call to a member function add() on null (thanks myq)
+
+## Library Updates
+
+* Bump CKEditor from 4.16.1 to 4.16.2 (thanks hissy)
+
+## Security Fixes
+
+* Fixed  CVE-2021-22966 - Privilege escalation from Editor to Admin using Groups in Concrete CMS versions 8.5.6 and below.  If a group is granted "view" permissions on the bulkupdate page, then users in that group can escalate to being an administrator with a specially crafted curl.  Fixed by adding a bulk update permission security check. Concrete CMS Security team CVSS scoring: 7.1 AV:N/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H  Credit for discovery: "Adrian Tiron from FORTBRIDGE ( https://www.fortbridge.co.uk/ )" This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-40101: Admin users must now provide their password when changing another user’s password from the Dashboard.Concrete CMS security team CVSS scoring is 6.4 AV:N/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:H. Credit for discovery: "S1lky”. This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22968: A bypass of adding remote files in Concrete CMS File manager lead to remote code execution. We added a check for the allowed file extensions before downloading files to a tmp directory. Concrete CMS Security Team gave this a CVSS v3.1 score of 5.4 AV:N/AC:H/PR:H/UI:R/S:C/C:N/I:H/A:N Thanks Joe for reporting! This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22951: “Unauthorized individuals could view password protected files using view_inline”. Concrete CMS now checks to see if a file has a password in view_inline and if it does we don’t render the file. Concrete CMS security team CVSS scoring is 5.3  AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N  Credit for discovery: "Solar Security Research Team". This fix is also in Concrete version 9.0.0
+* Follow up fix for CVE-2021-40107: Stored XSS in comment section/FileManger via "view_inline" option.  We were informed the fix put into version 8.5.6 was not sufficient. Thanks "Solar Security Research Team". We now check to see if a file has a password in view_inline and, if it does, we don’t render the file. Concrete CMS security team CVSS scoring is 5.3:  AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22967: insecure indirect object reference (IDOR); an unauthenticated user was able to access restricted files by attaching them to a message in a conversation. To remediate this, we added a check to see if a user has permissions to view files before attaching the files to a message in "add / edit message”. The Concrete CMS security team gave this a CVSS v3.1 score of 4.3 AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N  Thanks Adrian H for reporting! This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22969 : SSRF mitigation bypass using DNS Rebind attack giving an attacker the ability to fetch cloud IAAS (ex AWS) IAM keys. To fix this, Concrete CMS no longer allows downloads from the local network and specifies the validated IP when downloading  rather than relying on DNS. The Concrete CMS team gave this a CVSS v3.1 score of 3.5 AV:N/AC:H/PR:L/UI:N/S:C/C:L/I:N/A:N . Discoverer: Adrian Tiron from FORTBRIDGE (https://www.fortbridge.co.uk/ ) Please note that Cloud IAAS provider mis-configurations are not Concrete CMS vulnerabilities. A mitigation for this vulnerability is to make sure that the IMDS configurations are according to a cloud provider's best practices. This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22970: Concrete allowed local IP importing causing the system to be vulnerable to a. SSRF attacks on the private LAN servers and b. SSRF Mitigation Bypass through DNS Rebinding. Concrete now disabes all local IPs through the remote file uploading interface. Concrete CMS security team gave this a CVSS v3.1  score of 3.5 AV:N/AC:H/PR:L/UI:N/S:C/C:L/I:N/A:N This CVE is shared with HackerOne Reports #1364797 (Thanks Adrian Tiron from FORTBRIDGE (https://www.fortbridge.co.uk/ ) and #1360016 (Thanks Bipul Jaiswal) This fix is also in Concrete v 9.0.1
+
+# 8.5.6
+
+## New Features
+
+* Added Session Options Dashboard page that will allow administrators to configure many aspects of the session cookie.
+
+## Behavioral Improvements
+
+* Added support for translation placeholders (thanks shahroq)
+* Re-enabled connect to community for the marketplace; reworked to sidestep issues with browser cookie compatibility
+* Add autocomplete=off to various password fields.
+* "Index Search Engine - Updates" job should not re-index all entries (thanks hissy)
+* Fix default formatting of datetime exports in express export csv (thanks deek87)
+* Improvements to IP parsing for actions like allowlist/blocklist (thanks mlocati)
+
+## Bug Fixes
+
+* Fixed error when pages weren’t getting accurately set in the full page cache.
+* Fixes for errors/warning occurring with PHP 7.3 and 7.4 when "Consider warnings as errors" is set (thanks arielkamoyedji)
+* Additional dialogs within CKEditor link dialog (Sitemap, Browse Server) prevent further page scrolling even after being closed (thanks hissy)
+* Fix error attaching a Facebook account to a user profile (thanks biplobice)
+* Fixed disappearing survey and calendar event dialogs in some cases (thanks hissy)
+* Bug fixes on switching language using the Switch Language block (thanks biplobice)
+* Fixed inability to save channel logging settings on the Dashboard page (thanks Hmone23)
+* Fixed bug where layouts can’t be moved above blocks (thanks Haeflimi)
+* Fixed bug in the 8.5 file manager when selecting on single file in multi-file selector (thanks deek87)
+* Fix to show page drafts created by the current user (thanks hissy)
+* Fix user selector attribute being un-searchable (Note: you will have to recreate your attributes before they are properly searchable).
+* Bug fixes to search popup with pagination (thanks deek87, katz, hissy)
+
+* Fixed 403 Error in Page Defaults when using REDIS for Caching (thanks deek87)
+
+## Security Fixes
+
+(Special thanks to Solar Security Research Team and Concrete CMS Japan)
+
+* Fixed Hackerone report 1102067, CVE-2021-40097: Authenticated path traversal to RCE by adding a regular expression
+* Fixed Hackerone report 1102080, CVE-2021-40098: Path Traversal leading to RCE via external form by adding a regular expression
+* Fixed Hackerone report 982130, CVE-2021-40099: RCE Vulnerability by making fetching the update json scheme from concrete5 to be over HTTPS (instead of HTTP)
+* Fixed Hackerone report 616770, CVE-2021-40100: Stored XSS in Conversations (both client and admin) when Active Conversation Editor is set to "Rich Text"
+* Fixed Hackerone report 921288, CVE-2021-40102: Arbitrary File delete via PHAR deserialization
+* Fixed Hackerone report 1063039, CVE-2021-36766: Security issues when allowing phar:// within the directory input field. (thanks deek87)
+* Fixed Hackerone report 1102211, CVE-2021-40103: Path Traversal to Arbitrary File Reading and SSRF
+* Fixed Hackerone report 1102088, CVE-2021-40104: SVG sanitizer bypass by swapping out the  SVG sanitizer in the core with this third party library darylldoyle/svg-sanitizer
+* Fixed Hackerone report 1102054, CVE-2021-40105: Fixed XSS vulnerability in the Markdown Editor class in the conversation options
+* Fixed Hackerone report 1102042, CVE-2021-40106: Unauth stored xss in blog comments (website field)
+* Fixed Hackerone report 1102020, CVE-2021-40107: Stored XSS in comment section/FileManger via "view_inline" option
+* Fixed Hackerone report 1102018, CVE-2021-40108:  Adjusted core so that ccm_token is verified on  "/index.php/ccm/calendar/dialogs/event/add/save" endpoint
+* Fixed Hackerone report 1102225 which was split into two CVEs: An attacker could duplicate topics and files which could possibly lead to UI inconvenience, and exhaustion of disk space.
+* For CVE-2021-22949: Added checking CSRF token when duplicating files in the File Manager.
+* For CVE-2021-22953: Added checking CSRF token when cloning topics in the sitemap.
+* Fixed Hackerone report 1102177, CVE-2021-22950: To fix CSRF in conversation attachment delete action, updated core to verify ccm_token when conversation attachments are deleted.
+* Fixed Hackerone report 1102105, CVE-2021-40109:  To fix a reported SSRF vulnerability, the core was updated to disable redirects on upload, add an http client method to send request without following redirects, and put in a number of url/IP protections (examples: blocked big Endian urls, blocked IP variants from importing, prevented importing from hexadecimal/octal/long IPs)
+
 # 8.5.5
 
 ## New Features
