@@ -93,7 +93,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                                 but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here */
                             ?>
                             <select name="<%=options.namespace%>_pdStartDateSelectTime_<%=repetition.setID%>"  class="form-control"
-                                    data-container="#ccm-popover-menu-container" data-select="start-time">
+                                    data-select="start-time">
                                 <?php foreach ($values as $value) { ?>
                                     <option value="<?= $value ?>" <% if (repetition.pdStartDateSelectTime == '<?=$value?>') { %>selected<% } %>><?= $value ?></option>
                                 <?php } ?>
@@ -117,7 +117,7 @@ $weekDays = \Punic\Calendar::getSortedWeekdays('wide');
                                 Note: the form-control on here is NOT ideal, that's bootstrap 4 markup,
                                 but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here */
                             ?>
-                            <select name="<%=options.namespace%>_pdEndDateSelectTime_<%=repetition.setID%>" class="form-control" data-container="#ccm-popover-menu-container"
+                            <select name="<%=options.namespace%>_pdEndDateSelectTime_<%=repetition.setID%>" class="form-control"
                                     data-select="end-time">
                                 <?php foreach ($values as $value) { ?>
                                     <option value="<?= $value ?>" <% if (repetition.pdEndDateSelectTime == '<?=$value?>') { %>selected<% } %>><?= $value ?></option>

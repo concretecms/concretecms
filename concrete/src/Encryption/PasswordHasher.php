@@ -3,24 +3,24 @@
 namespace Concrete\Core\Encryption;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Legacy\PasswordHash;
 
 class PasswordHasher
 {
-
-    /** @var int|null */
-    private $cost = null;
-
-    private const ALGORITHM = PASSWORD_BCRYPT;
+    /**
+     * @var \Concrete\Core\Legacy\PasswordHash
+     */
+    private $phpassPasswordHash;
 
     /**
      * @param \Concrete\Core\Config\Repository\Repository $config
      */
     public function __construct(Repository $config)
     {
-        $cost = $config->get('concrete.user.password.hash_cost_log2', null);
-        if ($cost !== null) {
-            $this->cost = (int) $cost;
-        }
+        $this->phpassPasswordHash = new PasswordHash(
+            $config->get('concrete.user.password.hash_cost_log2'),
+            $config->get('concrete.user.password.hash_portable')
+        );
     }
 
     /**
@@ -32,9 +32,7 @@ class PasswordHasher
      */
     public function hashPassword($password)
     {
-        return password_hash($password, self::ALGORITHM, [
-            'cost' => $this->cost ?: PASSWORD_BCRYPT_DEFAULT_COST
-        ]);
+        return $this->phpassPasswordHash->HashPassword($password);
     }
 
     /**
@@ -45,11 +43,6 @@ class PasswordHasher
      */
     public function checkPassword($password, $storedHash)
     {
-        return password_verify($password, $storedHash);
-    }
-
-    public function needsRehash($hash): bool
-    {
-        return password_needs_rehash($hash, self::ALGORITHM);
+        return $this->phpassPasswordHash->CheckPassword($password, $storedHash);
     }
 }

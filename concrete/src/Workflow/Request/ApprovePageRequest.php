@@ -21,6 +21,7 @@ class ApprovePageRequest extends PageRequest
     private $isScheduled = false;
     private $cvPublishDate;
     private $cvPublishEndDate;
+    private $keepOtherScheduling = false;
 
     public function __construct()
     {
@@ -156,7 +157,7 @@ class ApprovePageRequest extends PageRequest
     {
         $c = Page::getByID($this->getRequestedPageID());
         $v = CollectionVersion::get($c, $this->cvID);
-        $v->approve(false, $this->cvPublishDate, $this->cvPublishEndDate);
+        $v->approve(false, $this->cvPublishDate, $this->cvPublishEndDate, $this->keepOtherScheduling);
 
         $ev = new \Concrete\Core\Page\Collection\Version\Event($c);
         $ev->setCollectionVersionObject($v);
@@ -190,6 +191,30 @@ class ApprovePageRequest extends PageRequest
     public function getPublishEndDate()
     {
         return $this->cvPublishEndDate;
-    } 
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldKeepOtherScheduling(): bool
+    {
+        return $this->keepOtherScheduling;
+    }
+
+    /**
+     * @param bool $keepOtherScheduling
+     */
+    public function setKeepOtherScheduling(bool $keepOtherScheduling): void
+    {
+        $this->keepOtherScheduling = $keepOtherScheduling;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isScheduled(): bool
+    {
+        return $this->isScheduled;
+    }
 
 }

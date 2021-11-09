@@ -52,6 +52,15 @@ class View extends AbstractView
     {
         return $this->viewPath;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getThemeObject()
+    {
+        return $this->themeObject;
+    }
+
     /**
      * gets the relative theme path for use in templates.
      *

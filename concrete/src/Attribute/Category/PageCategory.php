@@ -68,6 +68,7 @@ class PageCategory extends AbstractStandardCategory
                     'onDelete' => 'CASCADE',
                 ],
             ],
+            'index' => ['exclude_page_list', 'is_featured']
         ];
     }
 

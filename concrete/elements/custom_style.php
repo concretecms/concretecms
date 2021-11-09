@@ -126,9 +126,9 @@ $identifier = $app->make(Identifier::class);
     <ul class="ccm-style-customizer-toolbar ccm-ui">
         <?php if ($style instanceof CustomStyle && $canEditCustomTemplate) { ?>
             <li class="ccm-inline-toolbar-select">
-                <div class="form-group">
+                <div class="form-group d-flex text-nowrap">
                     <?php echo $form->label("bFilename", t('Block Template')); ?>
-                    <?php echo $form->select("bFilename", $customTemplateOptions, $bFilename, ['class' => '']); ?>
+                    <?php echo $form->select("bFilename", $customTemplateOptions, $bFilename, ['class' => 'form-select form-select-sm']); ?>
                 </div>
             </li>
         <?php } ?>
@@ -176,7 +176,7 @@ $identifier = $app->make(Identifier::class);
                                     'left' => t('Left'),
                                     'center' => t('Center'),
                                     'right' => t('Right'),
-                                ], $alignment, ["class" => "selectpicker form-control"]); ?>
+                                ], $alignment); ?>
                             </div>
                         </fieldset>
                     </div>
@@ -220,7 +220,7 @@ $identifier = $app->make(Identifier::class);
                                     'repeat-x' => t('Horizontally'),
                                     'repeat-y' => t('Vertically'),
                                     'repeat' => t('Horizontally & Vertically'),
-                                ], $backgroundRepeat, ["class" => "selectpicker form-control"]); ?>
+                                ], $backgroundRepeat); ?>
                             </div>
 
                             <hr/>
@@ -236,7 +236,7 @@ $identifier = $app->make(Identifier::class);
                                     '50%' => t('50%'),
                                     '75%' => t('75%'),
                                     '100%' => t('100%'),
-                                ], $backgroundSize, ["class" => "selectpicker form-control"]); ?>
+                                ], $backgroundSize); ?>
                             </div>
 
                             <hr/>
@@ -253,7 +253,7 @@ $identifier = $app->make(Identifier::class);
                                     'right top' => t('Right Top'),
                                     'right center' => t('Right Center'),
                                     'right bottom' => t('Right Bottom'),
-                                ], $backgroundPosition, ["class" => "selectpicker form-control"]); ?>
+                                ], $backgroundPosition); ?>
                             </div>
                         </fieldset>
                     </div>
@@ -294,7 +294,7 @@ $identifier = $app->make(Identifier::class);
                                     'ridge' => t('Ridge'),
                                     'inset' => t('Inset'),
                                     'outset' => t('Outset'),
-                                ], $borderStyle, ["class" => "selectpicker form-control"]); ?>
+                                ], $borderStyle); ?>
                             </div>
 
                             <hr/>
@@ -596,7 +596,7 @@ $identifier = $app->make(Identifier::class);
                                     }
                                 }
 
-                                echo $form->selectMultiple('customClass', $customClassesSelect, $customClassesSelected);
+                                echo $form->selectMultiple('customClass', $customClassesSelect, $customClassesSelected, ['class' => 'form-control']);
                                 ?>
                             </div>
 

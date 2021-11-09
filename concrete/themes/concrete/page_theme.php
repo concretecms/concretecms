@@ -12,7 +12,8 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme
     public function getThemeSupportedFeatures()
     {
         return [
-            Features::ACCOUNT
+            Features::ACCOUNT,
+            Features::DESKTOP,
         ];
     }
 

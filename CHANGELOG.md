@@ -1,3 +1,42 @@
+# 9.0.1
+
+## Behavioral Improvements
+
+* Improvements to scheduled page version publishing (thanks hissy).
+* Fixed login welcome back/desktop in Atomik theme (previously had JavaScript errors.)
+* Performance improvements when retrieving access entities for users (thanks hissy)
+* Updated translation library to 1.7.0 to allow 9.0 to be fully translated (thanks mlocati)
+
+## Bug Fixes
+
+* Fixed error when installing Elemental on PHP 8 (https://github.com/concrete5/concrete5/issues/10003)
+* Many display issues fixed when browsing marketplace from within your 9.0 site.
+* Fixed issue where updating from 8.5.6 would disable concrete extensions in rich text editor.
+* Fixed Unknown column 'folderItemName' in 'field list’ in folder item list custom code used by add-ons.
+* Fixed time dropdowns not working when editing a calendar event.
+* Fixed inability to install 9.0 with Composer.
+* Fixed some missing social icons for social link types.
+* Fixed inability for legacy LESS themes to support rgb and rgba colors.
+* Fixed broken Dashboard page: Excluded URL Word List
+* Fixed inability to see proper options selected when editing user attribute key.
+* Fixed ImageValue::setImageFileID() must be of the type int, string given when updating some legacy theme customizer values (thanks martinkouba)
+* Fixed page summary templates link not working in page design panel.
+* Fixed inability to open block custom design toolbar in PHP 8.
+* Bug fixes to theme updates that use the text type customizer in certain situations (thanks martinkouba)
+* Fixed: Non super admin cannot move a block pasted from clipboard (thanks jaromirdalecky)
+* Bug fixes to legacy theme customizer with themes that used the same variable for different variable types.
+* Fixed error Base table or view not found: 1146 Tablemessengerscheduledtasks' doesn't exist when upgrading from 8.5.x to 9.0.
+* Fixed: Country select menu has the `form-control` class instead of `form-select`.
+
+## Developer Updates
+
+* Banned Words validation service classes completely refactored and modernized (thanks hissy)
+* Make it so users can disable core middlewares (thanks mlocati)
+
+## Security Fixes
+
+* Fixed CVE-2021-22970: Concrete allowed local IP importing causing the system to be vulnerable to a. SSRF attacks on the private LAN servers and b. SSRF Mitigation Bypass through DNS Rebinding. Concrete now disabes all local IPs through the remote file uploading interface. Concrete CMS security team gave this a CVSS v3.1  score of 3.5 AV:N/AC:H/PR:L/UI:N/S:C/C:L/I:N/A:N This CVE is shared with HackerOne Reports #1364797 (Thanks Adrian Tiron from FORTBRIDGE (https://www.fortbridge.co.uk/ ) and #1360016 (Thanks Bipul Jaiswal) This fix is also in Concrete v 8.5.7
+
 # 9.0.0
 
 ## Major New Features
@@ -78,6 +117,39 @@
 * If you register custom help for specific pages in your package, make sure to do so from within your package’s `on_start` method rather than from within the Dashboard page. Our new help panel requires this. See https://github.com/concrete5/concrete5/issues/9869#issuecomment-927136592 for more information.
 * Console command `c5:blacklist:clear` has been renamed `c5:denylist:clear`
 * If you work with Concrete cookies directly in your server configurations, be aware that they have been renamed. The default session cookie has been changed from CONCRETE5 to CONCRETE; the default is-logged-in cookie has been changed from CONCRETE5_LOGIN to CONCRETE_LOGIN.
+
+# 8.5.7
+
+## Bug Fixes
+
+* Fixed issue where remote updater would read the entire update into memory, leading to potential out of memory errors when updating the core.
+* Fixed error when setting global calendar permissions in the Dashboard.
+* Fixed issue where reset users weren’t properly notified when logging in that their passwords needed to be changed (thanks hissy)
+* Fixed: reCAPTCHA timout after 2min (thanks JeffPaetkau)
+* Fixed: fatal error on upgrade french version 8.5.5 to 8.5.6, "2 plural forms instead of 3" (thanks mlocati)
+* Fixed error with rich text conversation editor not working (Thanks hissy)
+* Fixed issue with URLs being case sensitive in some internationalization cases (thanks dimger)
+* Fixes to topic attribute search index content (thanks hissy)
+* Maintenance mode now returns the 503 HTTP error code when running (thanks hissy)
+* Fix Call to a member function isDefault() on null" error on the site upgraded from 5.7 when using the migration tool (thanks hissy)
+* Fixed issue where rich text attribute type wasn’t showing a full toolbar (note: in the future we want to make this an option, and strongly recommend users use this smaller, sanitized toolbar – but it should be an option, not the default.)
+* If a file has a password in the file manager, you will not be able to view it inline in the rich text editor.
+* Fixed: Changing database charset in dashboard throws error: call to a member function add() on null (thanks myq)
+
+## Library Updates
+
+* Bump CKEditor from 4.16.1 to 4.16.2 (thanks hissy)
+
+## Security Fixes
+
+* Fixed  CVE-2021-22966 - Privilege escalation from Editor to Admin using Groups in Concrete CMS versions 8.5.6 and below.  If a group is granted "view" permissions on the bulkupdate page, then users in that group can escalate to being an administrator with a specially crafted curl.  Fixed by adding a bulk update permission security check. Concrete CMS Security team CVSS scoring: 7.1 AV:N/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H  Credit for discovery: "Adrian Tiron from FORTBRIDGE ( https://www.fortbridge.co.uk/ )" This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-40101: Admin users must now provide their password when changing another user’s password from the Dashboard.Concrete CMS security team CVSS scoring is 6.4 AV:N/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:H. Credit for discovery: "S1lky”. This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22968: A bypass of adding remote files in Concrete CMS File manager lead to remote code execution. We added a check for the allowed file extensions before downloading files to a tmp directory. Concrete CMS Security Team gave this a CVSS v3.1 score of 5.4 AV:N/AC:H/PR:H/UI:R/S:C/C:N/I:H/A:N Thanks Joe for reporting! This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22951: “Unauthorized individuals could view password protected files using view_inline”. Concrete CMS now checks to see if a file has a password in view_inline and if it does we don’t render the file. Concrete CMS security team CVSS scoring is 5.3  AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N  Credit for discovery: "Solar Security Research Team". This fix is also in Concrete version 9.0.0
+* Follow up fix for CVE-2021-40107: Stored XSS in comment section/FileManger via "view_inline" option.  We were informed the fix put into version 8.5.6 was not sufficient. Thanks "Solar Security Research Team". We now check to see if a file has a password in view_inline and, if it does, we don’t render the file. Concrete CMS security team CVSS scoring is 5.3:  AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22967: insecure indirect object reference (IDOR); an unauthenticated user was able to access restricted files by attaching them to a message in a conversation. To remediate this, we added a check to see if a user has permissions to view files before attaching the files to a message in "add / edit message”. The Concrete CMS security team gave this a CVSS v3.1 score of 4.3 AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N  Thanks Adrian H for reporting! This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22969 : SSRF mitigation bypass using DNS Rebind attack giving an attacker the ability to fetch cloud IAAS (ex AWS) IAM keys. To fix this, Concrete CMS no longer allows downloads from the local network and specifies the validated IP when downloading  rather than relying on DNS. The Concrete CMS team gave this a CVSS v3.1 score of 3.5 AV:N/AC:H/PR:L/UI:N/S:C/C:L/I:N/A:N . Discoverer: Adrian Tiron from FORTBRIDGE (https://www.fortbridge.co.uk/ ) Please note that Cloud IAAS provider mis-configurations are not Concrete CMS vulnerabilities. A mitigation for this vulnerability is to make sure that the IMDS configurations are according to a cloud provider's best practices. This fix is also in Concrete version 9.0.0
+* Fixed CVE-2021-22970: Concrete allowed local IP importing causing the system to be vulnerable to a. SSRF attacks on the private LAN servers and b. SSRF Mitigation Bypass through DNS Rebinding. Concrete now disabes all local IPs through the remote file uploading interface. Concrete CMS security team gave this a CVSS v3.1  score of 3.5 AV:N/AC:H/PR:L/UI:N/S:C/C:L/I:N/A:N This CVE is shared with HackerOne Reports #1364797 (Thanks Adrian Tiron from FORTBRIDGE (https://www.fortbridge.co.uk/ ) and #1360016 (Thanks Bipul Jaiswal) This fix is also in Concrete v 9.0.1
 
 # 8.5.6
 

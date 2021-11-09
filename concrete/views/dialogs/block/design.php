@@ -8,7 +8,7 @@ if ($btHandle == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
         $btHandle = $bx->getBlockTypeHandle();
     }
 }
-if (is_object($set)) {
+if (is_object($set) && isset($styleHeader)) { ?>
     ?>
     <script type="text/javascript">
         $('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');

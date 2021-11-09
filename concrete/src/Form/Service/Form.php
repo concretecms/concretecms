@@ -573,7 +573,7 @@ class Form
             $miscFields['ccm-passed-value'] = $selectedCountryCode;
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             $str .= '<option value="' . h($k) . '"';
             if ((string) $k === (string) $selectedOption) {

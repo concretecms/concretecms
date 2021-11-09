@@ -157,6 +157,17 @@ mix
             ]
         }
     })
+mix
+    .sass('node_modules/@concretecms/bedrock/assets/desktop/scss/frontend.scss', 'css/features/desktop/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('node_modules/@concretecms/bedrock/assets/desktop/js/frontend.js', 'js/features/desktop/frontend.js');
+
+
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/boards/scss/frontend.scss', 'css/features/boards/frontend.css', {

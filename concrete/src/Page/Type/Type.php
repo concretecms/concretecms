@@ -180,7 +180,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
     }
 
-    public function publish(Page $c, $requestOrDateTime = null, $cvPublishEndDate = null)
+    public function publish(Page $c, $requestOrDateTime = null, $cvPublishEndDate = null, bool $keepOtherScheduling = false)
     {
         $app = Application::getFacadeApplication();
         $this->stripEmptyPageTypeComposerControls($c);
@@ -213,6 +213,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                 // That means it's a date time
                 $pkr->scheduleVersion($requestOrDateTime, $cvPublishEndDate);
             }
+            $pkr->setKeepOtherScheduling($keepOtherScheduling);
         } else {
             $pkr = $requestOrDateTime;
         }
