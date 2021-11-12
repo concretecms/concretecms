@@ -159,6 +159,12 @@ class Form
             $result .= ' for="' . $forFieldID . '"';
         }
 
+        // BS5 hack – form-label and form-check-label cannot coexist. So if someone is passing in
+        // 'form-check-label' hoping it will replace 'form-label', 'we reapply it to the new 9.0.2+ 'classes'
+        // key, so it will completely replace it.
+        if (isset($miscFields['class']) && !isset($miscFields['classes']) && strpos($miscFields['class'], 'form-check-label') > -1) {
+            $miscFields['classes'] = $miscFields['class'];
+        }
         return $result . $this->serializeMiscFields('form-label', $miscFields, []) . '>' . $innerHTML . '</label>';
     }
 
@@ -791,7 +797,7 @@ EOT;
     
     /**
      * @param string $defaultClass Default CSS class name
-     * @param array $attributes a key/value array of attributes (name => value), possibly including 'class'
+     * @param array $attributes a key/value array of attributes (name => value), possibly including 'class' or 'classes'
      * @param array $skipFields names of fields not to be serialized
      *
      * @return string
@@ -799,20 +805,26 @@ EOT;
     protected function serializeMiscFields($defaultClass, $attributes, array $skipFields = ['name', 'id']): string
     {
         $attributes = (array) $attributes;
+        // Ok, so here's the new behavior with CSS classes here. This should help us handle various BS5 use cases,
+        // preserve backward compatibility, and still offer some flexibility. A quick summary.
+        // 1. Previous behavior had any 'class' that was passed being appended to defaultClass.
+        // 2. In 9.0 and 9.0.1, we changed it so that the 'class' => '..' would completely override. Why? Well,
+        // semantically it seems better to me but it does result in more code. Really, the result is because the
+        // previous implementation would result in classes like `form-label form-check-label` being applied to <label>
+        // tags, which would cause BS5 to add strangely.
+        // 3. People have concerns about this, and it does require a lot of duplicate code in some situations. So
+        // let's back up off that and change it to work in this way:
+        // a. If you don't have a default class none of this matters – we just use whatever 'class' you pass in.
+        // b. If there is a default class used by the method, we use that class.
+        // c. If you also pass in a 'class' in your array, we append, just like the old days.
+        // d. If you pass in a 'classes' key instead of class, we completely replace, like the 9.0, 9.0.1 version.
         $defaultClass = trim((string) $defaultClass);
         if ($defaultClass !== '') {
-            // Previous behavior had any 'class' that was passed being appended to defaultClass. This is WRONG.
-            // Any class that is passed here should completely override the class. If you want to append, just
-            // Add in the class you want to append to. So if you want to turn "form-label" into "form-label my-label"
-            // You will NO LONGER be able to just pass in ['class' => 'my-label']. Instead, pass in ['class => 'my-label form-label']
-            // Why exactly was this changed, you ask? Because the previous implementation would result in classes like
-            // `form-label form-check-label` being applied to <label> tags, which would cause BS5 to add strangely. We could
-            // potentially solve this by making form-check-label take precedence over form-label with some hacky custom CSS
-            // but that seems like a bad rabbit hole to go down. Better to make the classes explicit. If you want to override
-            // the default class with your own but you still want the original class? Be explicit and pass both classes.
-            if (!isset($attributes['class'])) {
-                $attributes['class'] = $defaultClass;
-            }
+            $attributes['class'] = trim(($attributes['class'] ?? '') . ' ' . $defaultClass);
+        }
+        if (isset($attributes['classes'])) {
+            $attributes['class'] = $attributes['classes'];
+            unset($attributes['classes']);
         }
         $attr = '';
         foreach ($attributes as $k => $v) {

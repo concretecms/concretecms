@@ -42,7 +42,7 @@ class FormTest extends TestCase
             [
                 'submit',
                 ['Key', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="submit" class="MY-CLASS" id="Key" name="Key" value="Value" />',
+                '<input type="submit" class="MY-CLASS btn ccm-input-submit" id="Key" name="Key" value="Value" />',
             ],
             [
                 'submit',
@@ -83,7 +83,7 @@ class FormTest extends TestCase
             [
                 'button',
                 ['Key', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="button" class="MY-CLASS" id="Key" name="Key" value="Value" />',
+                '<input type="button" class="MY-CLASS btn ccm-input-button" id="Key" name="Key" value="Value" />',
             ],
             [
                 'button',
@@ -119,12 +119,23 @@ class FormTest extends TestCase
             [
                 'label',
                 ['ForKey', 'text', ['class' => 'MY-CLASS']],
-                '<label for="ForKey" class="MY-CLASS">text</label>',
+                '<label for="ForKey" class="MY-CLASS form-label">text</label>',
             ],
             [
                 'label',
                 ['ForKey', 'text', ['class' => 'MY-CLASS', 'id' => 'my-id']],
-                '<label for="ForKey" class="MY-CLASS" id="my-id">text</label>',
+                '<label for="ForKey" class="MY-CLASS form-label" id="my-id">text</label>',
+            ],
+            // new label functionality 9.0.2+
+            [
+                'label',
+                ['ForKey', 'text', ['classes' => 'MY-CLASS']],
+                '<label for="ForKey" class="MY-CLASS">text</label>',
+            ],
+            [
+                'label',
+                ['ForKey', 'text', ['classes' => 'form-check-label']], // operates differently – completely replaces form-label
+                '<label for="ForKey" class="form-check-label">text</label>',
             ],
             // file
             [
@@ -144,7 +155,12 @@ class FormTest extends TestCase
             ],
             [
                 'file',
-                ['Key', ['class' => 'MY-CLASS form-control']],
+                ['Key', ['classes' => 'custom-file']],
+                '<input type="file" id="Key" name="Key" value="" class="custom-file" />',
+            ],
+            [
+                'file',
+                ['Key', ['class' => 'MY-CLASS']],
                 '<input type="file" id="Key" name="Key" value="" class="MY-CLASS form-control" />',
             ],
             [
@@ -423,17 +439,17 @@ class FormTest extends TestCase
             [
                 'textarea',
                 ['Key', ['class' => 'MY-CLASS']],
-                '<textarea id="Key" name="Key" class="MY-CLASS"></textarea>',
+                '<textarea id="Key" name="Key" class="MY-CLASS form-control"></textarea>',
             ],
             [
                 'textarea',
-                ['Key', '', ['class' => 'MY-CLASS form-control']],
+                ['Key', '', ['classes' => 'MY-CLASS form-control']],
                 '<textarea id="Key" name="Key" class="MY-CLASS form-control"></textarea>',
             ],
             [
                 'textarea',
                 ['Key', 'Value', ['class' => 'MY-CLASS']],
-                '<textarea id="Key" name="Key" class="MY-CLASS">Value</textarea>',
+                '<textarea id="Key" name="Key" class="MY-CLASS form-control">Value</textarea>',
             ],
             [
                 'textarea',
@@ -508,12 +524,12 @@ class FormTest extends TestCase
             [
                 'radio',
                 ['Key', 'Value', ['class' => 'MY-CLASS', 'data-custom' => 'My custom data']],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS" data-custom="My custom data" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS form-check-input" data-custom="My custom data" />',
             ],
             [
                 'radio',
                 ['Key', 'Value', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS" checked="checked" />',
+                '<input type="radio" id="Key**UNIQUENUMBER**" name="Key" value="Value" class="MY-CLASS form-check-input" checked="checked" />',
             ],
             [
                 'radio',
@@ -617,12 +633,12 @@ class FormTest extends TestCase
             [
                 'text',
                 ['Key', ['data-mine' => 'MY DATA', 'class' => 'MY-CLASS']],
-                '<input type="text" id="Key" name="Key" value="" data-mine="MY DATA" class="MY-CLASS" />',
+                '<input type="text" id="Key" name="Key" value="" data-mine="MY DATA" class="MY-CLASS form-control ccm-input-text" />',
             ],
             [
                 'text',
                 ['Key', 'Value', ['class' => 'MY-CLASS']],
-                '<input type="text" id="Key" name="Key" value="Value" class="MY-CLASS" />',
+                '<input type="text" id="Key" name="Key" value="Value" class="MY-CLASS form-control ccm-input-text" />',
             ],
             [
                 'text',
@@ -714,13 +730,13 @@ class FormTest extends TestCase
             ],
             [
                 'select',
-                ['Key', ['One' => 'First', 'Two' => 'Second'], ['class' => 'MY-CLASS form-select', 'data-mine' => 'MY DATA']],
+                ['Key', ['One' => 'First', 'Two' => 'Second'], ['class' => 'MY-CLASS', 'data-mine' => 'MY DATA']],
                 '<select id="Key" name="Key" class="MY-CLASS form-select" data-mine="MY DATA"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
                 'select',
-                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two', ['class' => 'MY-CLASS', 'data-mine' => 'MY DATA']],
-                '<select id="Key" name="Key" class="MY-CLASS" data-mine="MY DATA" ccm-passed-value="Two"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
+                ['Key', ['One' => 'First', 'Two' => 'Second'], 'Two', ['classes' => 'MY-CLASS', 'data-mine' => 'MY DATA']],
+                '<select id="Key" name="Key" data-mine="MY DATA" ccm-passed-value="Two" class="MY-CLASS"><option value="One">First</option><option value="Two" selected="selected">Second</option></select>',
             ],
             [
                 'select',
@@ -826,7 +842,7 @@ class FormTest extends TestCase
             ],
             [
                 'selectMultiple',
-                ['Key', ['One' => 'First', 'Two' => 'Second'], false, ['data-mine' => 'MY DATA', 'class' => 'MY-CLASS form-select']],
+                ['Key', ['One' => 'First', 'Two' => 'Second'], false, ['data-mine' => 'MY DATA', 'class' => 'MY-CLASS']],
                 '<select id="Key" name="Key[]" multiple="multiple" data-mine="MY DATA" class="MY-CLASS form-select"><option value="One">First</option><option value="Two">Second</option></select>',
             ],
             [
