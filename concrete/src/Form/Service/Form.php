@@ -160,7 +160,7 @@ class Form
         }
 
         // BS5 hack – form-label and form-check-label cannot coexist. So if someone is passing in
-        // 'form-check-label' hoping it will replace 'form-label', 'we reapply it to the new 9.0.2+ 'classes'
+        // 'form-check-label' hoping it will replace 'form-label', we reapply it to the new 9.0.2+ 'classes'
         // key, so it will completely replace it.
         if (isset($miscFields['class']) && !isset($miscFields['classes']) && strpos($miscFields['class'], 'form-check-label') > -1) {
             $miscFields['classes'] = $miscFields['class'];
