@@ -5,6 +5,8 @@ namespace Concrete\Core\Entity\File;
 use Carbon\Carbon;
 use Concrete\Core\Attribute\ObjectInterface as AttributeObjectInterface;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Board\InstanceItem;
+use Concrete\Core\Entity\Board\Item;
 use Concrete\Core\File\Event\DeleteFile;
 use Concrete\Core\File\Event\FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
@@ -758,6 +760,16 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
             foreach ($versions as $fv) {
                 $fv->delete(true);
             }
+
+            $items = $em->getRepository(Item::class)->findByRelevantThumbnail($this);
+            $instanceItemRepository = $em->getRepository(InstanceItem::class);
+            foreach ($items as $item) {
+                $instanceItems = $instanceItemRepository->findByItem($item);
+                foreach ($instanceItems as $instanceItem) {
+                    $em->remove($instanceItem);
+                }
+            }
+            $em->flush();
 
             $db->executeQuery('DELETE FROM FileSetFiles WHERE fID = ?', [$this->fID]);
             $db->executeQuery('DELETE FROM FileSearchIndexAttributes WHERE fID = ?', [$this->fID]);
