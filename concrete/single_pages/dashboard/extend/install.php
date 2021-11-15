@@ -52,12 +52,12 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             <div class="form-group">
                 <label class="control-label form-label"><?=t("Swap Site Contents")?></label>
                 <div class="form-check">
-                    <?=$form->radio('pkgDoFullContentSwap',0, true, $disabled)?>
-                    <?=$form->label('pkgDoFullContentSwap1',t('No. Do <strong>not</strong> remove any content or files from this website.'))?>
+                    <?=$form->radio('pkgDoFullContentSwap',0, 0, $disabled)?>
+                    <?=$form->label('pkgDoFullContentSwap1',t('No. Do <strong>not</strong> remove any content or files from this website.'), ['class' => 'form-check-label'])?>
                 </div>
                 <div class="form-check">
-                    <?=$form->radio('pkgDoFullContentSwap',1, false, $disabled)?>
-                    <?=$form->label('pkgDoFullContentSwap2',t('Yes. Reset site content with the content found in this package'))?>
+                    <?=$form->radio('pkgDoFullContentSwap',1, 0, $disabled)?>
+                    <?=$form->label('pkgDoFullContentSwap2',t('Yes. Reset site content with the content found in this package'), ['class' => 'form-check-label'])?>
                 </div>
 
             </div>

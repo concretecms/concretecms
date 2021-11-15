@@ -5,6 +5,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 $images = $images ?? [];
 
+if (!isset($bID)) {
+    $bID = 0;
+}
+
 // Strip out any file instances before serializing
 // A better way to do this would be to use an actual class for entries
 $images = array_map(function($image) {

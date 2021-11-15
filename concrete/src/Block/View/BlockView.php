@@ -185,8 +185,8 @@ class BlockView extends AbstractView
                 }
                 $page = $this->controller->getCollectionObject();
                 if ($page) {
-                    $view = View::getInstance();
-                    $theme = $view->getThemeObject();
+                    $pageViewInstance = View::getInstance();
+                    $theme = $pageViewInstance->getThemeObject();
                     if (!$theme) {
                         $theme = $page->getCollectionThemeObject();
                     }

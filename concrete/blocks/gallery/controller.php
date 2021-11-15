@@ -371,31 +371,40 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         // Resolve the file
         $file = ConcreteFile::getByID($entry['fID']);
-        $version = $file->getVersion();
-        $resource = $version->getFileResource();
+        if ($file) {
+            $version = $file->getVersion();
+            if ($version) {
+                $resource = $version->getFileResource();
 
-        $attributes = [];
-        foreach ($version->getAttributes() as $value) {
-            $attributes[] = [$value->getAttributeKey()->getAttributeKeyDisplayName(), $value->getDisplayValue()];
+                $attributes = [];
+                foreach ($version->getAttributes() as $value) {
+                    $attributes[] = [
+                        $value->getAttributeKey()->getAttributeKeyDisplayName(),
+                        $value->getDisplayValue()
+                    ];
+                }
+
+                return [
+                    'eID' => $entry['eID'],
+                    'id' => $entry['fID'],
+                    'title' => $version->getTitle(),
+                    'description' => $version->getDescription(),
+                    'extension' => $resource->getMimetype(),
+                    'attributes' => $attributes,
+                    'fileSize' => $this->numbersHelper()->formatSize($version->getFullSize()),
+                    'imageUrl' => $version->getThumbnailURL('file_manager_detail'),
+                    'thumbUrl' => $version->getThumbnailURL('file_manager_listing'),
+                    'file' => $file,
+                    'detailUrl' => (string)$this->urlResolver()->resolve(
+                        [
+                            '/dashboard/files/details',
+                            'view',
+                            $file->getFileID()
+                        ]
+                    )
+                ];
+            }
         }
-
-        return [
-            'eID' => $entry['eID'],
-            'id' => $entry['fID'],
-            'title' => $version->getTitle(),
-            'description' => $version->getDescription(),
-            'extension' => $resource->getMimetype(),
-            'attributes' => $attributes,
-            'fileSize' => $this->numbersHelper()->formatSize($version->getFullSize()),
-            'imageUrl' => $version->getThumbnailURL('file_manager_detail'),
-            'thumbUrl' => $version->getThumbnailURL('file_manager_listing'),
-            'file' => $file,
-            'detailUrl' => (string)$this->urlResolver()->resolve([
-                '/dashboard/files/details',
-                'view',
-                $file->getFileID()
-            ])
-        ];
     }
 
     /**
