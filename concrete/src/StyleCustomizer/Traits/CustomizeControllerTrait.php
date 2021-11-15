@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Traits;
 
+use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Page\CustomStyle;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
@@ -61,23 +62,30 @@ trait CustomizeControllerTrait
         $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
         $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
         $customizerVariableCollectionFactory = $this->app->make(CustomizerVariableCollectionFactory::class);
-        if ($mixed instanceof SkinInterface) {
+        $customCss = null;
+        if ($mixed instanceof CustomSkin) {
             $variableCollection = $variableCollectionFactory->createFromCustomSkin($mixed);
+            $customCss = $mixed->getCustomCss();
         } else if ($mixed instanceof CustomStyle) {
             // legacy page customizer support.
             $valueList = $mixed->getValueList();
             if ($valueList) {
                 $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
             }
+            $customCssRecord = $mixed->getCustomCssRecord();
+            if ($customCssRecord) {
+                $customCss = $customCssRecord->getValue();
+            }
         } else {
             $variableCollection = $variableCollectionFactory->createFromPreset($customizer, $preset);
         }
         $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
         $groupedStyleValueList = $valueList->createGroupedStyleValueList($styleList);
+        $this->requireAsset('ace');
         $this->set('styleList', $groupedStyleValueList);
         $this->set('styles', $customizerVariableCollectionFactory->createFromStyleValueList($valueList));
         $this->set('preset', $preset);
         $this->set('customizer', $customizer);
-
+        $this->set('customCss', $customCss);
     }
 }

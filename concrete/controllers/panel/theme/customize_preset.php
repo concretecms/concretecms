@@ -32,7 +32,6 @@ class CustomizePreset extends BackendInterfaceController
             $this->loadCustomizer($customizer, $preset);
             $this->set('presetIdentifier', $presetIdentifier);
             $this->set('customizer', $customizer);
-            $this->requireAsset('ace');
         } else {
             throw new \RuntimeException(t('Invalid preset: %s', h($presetIdentifier)));
         }
@@ -47,7 +46,6 @@ class CustomizePreset extends BackendInterfaceController
             $preset = $customizer->getPresetByIdentifier($skin->getPresetStartingPoint());
             $this->loadCustomizer($customizer, $preset, $skin);
             $this->set('skinIdentifier', $skinIdentifier);
-            $this->requireAsset('ace');
         } else {
             throw new \RuntimeException(t('Invalid skin: %s', h($skinIdentifier)));
         }
