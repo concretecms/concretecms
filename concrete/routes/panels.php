@@ -45,6 +45,7 @@ $router->all('/page/devices/preview', 'Page\Devices::preview');
 $router->all('/theme/customize/theme/{pThemeID}/{previewPageID}', 'Theme\Customize::view');
 $router->all('/theme/customize/preset/{pThemeID}/{presetIdentifier}/{previewPageID}', 'Theme\CustomizePreset::view');
 $router->all('/theme/customize/skin/{pThemeID}/{skinIdentifier}/{previewPageID}', 'Theme\CustomizePreset::viewSkin');
+$router->all('/theme/customize/legacy/{pThemeID}/{previewPageID}', 'Theme\CustomizeLegacy::view');
 $router->post('/theme/customize/create_skin/{pThemeID}/{presetIdentifier}', 'Theme\CustomizePreset::createSkin');
 $router->post('/theme/customize/save_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizePreset::save');
 $router->post('/theme/customize/delete_skin/{pThemeID}/{skinIdentifier}', 'Theme\CustomizePreset::delete');

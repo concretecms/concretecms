@@ -12,6 +12,29 @@ if ($customizer->supportsCustomSkins()) {
     $customSkins = $theme->getCustomSkins();
 }
 
+$type = $customizer->getType();
+$customStyle = null;
+if ($type instanceof \Concrete\Core\StyleCustomizer\Customizer\Type\LegacyCustomizerType) {
+    $legacyCustomizerPresetStartingPoint = null;
+    // The legacy customizer type allows the ability to save customizations against a page, but has no skin-level
+    // saving. This functionality is not supported going forward, it's only on the legacy customizer. If you want this
+    // in the future, just make a custom skin and apply it to the page. Way more performant and easier to deal with
+    // and stay organized.
+    if (isset($previewPage)) {
+        $manager = $type->getCustomizationsManager();
+        if ($manager instanceof \Concrete\Core\StyleCustomizer\Customizations\LegacyCustomizationsManager) {
+            $customStyle = $manager->getCustomStyleObjectForPage($previewPage, $theme);
+            if ($customStyle) {
+                foreach ($presets as $preset) {
+                    if ($preset->getIdentifier() == $customStyle->getPresetHandle()) {
+                        $legacyCustomizerPresetStartingPoint = $preset;
+                    }
+                }
+            }
+        }
+    }
+}
+
 ?>
 
 <section>
@@ -48,6 +71,28 @@ if ($customizer->supportsCustomSkins()) {
                 </li>
             <?php } ?>
         </menu>
+    <?php } ?>
+
+    <?php if ($customStyle instanceof \Concrete\Core\Page\CustomStyle) {
+        // This is a page and theme using the legacy customizer, so we give an option to load the customizations
+        // into the customizer. This will never happen alongside the custom skins above.
+        ?>
+        <header><h5><?= t('Customizations') ?></h5></header>
+        <menu>
+            <li>
+                <a href="#" class="ccm-panel-menu-parent-item-active" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/theme/customize/legacy', $theme->getThemeID(), $previewPage->getCollectionID()) ?>"
+                    data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/theme/preview_page_legacy', $theme->getThemeID(), $previewPage->getCollectionID())?>"
+                   data-launch-panel-detail="customize-legacy-customizations"
+                   data-panel-transition="fade">
+                    <?php if ($legacyCustomizerPresetStartingPoint) { ?>
+                        <?=t('%s (Modified)', $legacyCustomizerPresetStartingPoint->getName())?>
+                    <?php } else { ?>
+                        <?=t('Page Customizations')?>
+                    <?php } ?>
+                </a>
+            </li>
+        </menu>
+
     <?php } ?>
 </section>
 

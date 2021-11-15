@@ -8,9 +8,9 @@ use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 
-class PreviewPreset extends BackendInterfaceController
+class PreviewPageLegacy extends BackendInterfaceController
 {
-    protected $viewPath = '/panels/details/theme/preview_preset';
+    protected $viewPath = '/panels/details/theme/preview_page_legacy';
 
     public function canAccess()
     {
@@ -18,7 +18,7 @@ class PreviewPreset extends BackendInterfaceController
         return $pk->validate();
     }
 
-    public function view($pThemeID, $presetIdentifier, $pageID)
+    public function view($pThemeID, $pageID)
     {
         $theme = Theme::getByID($pThemeID);
         if (!$theme->isThemeCustomizable()) {
@@ -27,12 +27,11 @@ class PreviewPreset extends BackendInterfaceController
         $page = Page::getByID($pageID);
         $this->set('previewPage', $page);
         $this->set('pThemeID', $pThemeID);
-        $this->set('presetIdentifier', $presetIdentifier);
         $this->set('token', $this->app->make('token'));
         $this->set('customizer', $theme->getThemeCustomizer());
     }
 
-    public function viewIframe($pThemeID, $presetIdentifier, $pageID)
+    public function viewIframe($pThemeID, $pageID)
     {
         if ($this->app->make('token')->validate()) {
             $page = Page::getByID($pageID);
@@ -40,14 +39,18 @@ class PreviewPreset extends BackendInterfaceController
             if ($checker->canViewPage()) {
                 $theme = Theme::getByID($pThemeID);
                 $customizer = $theme->getThemeCustomizer();
-                $preset = $customizer->getPresetByIdentifier($presetIdentifier);
                 $previewHandler = $customizer->getType()->getPreviewHandler();
+                $type = $customizer->getType();
+                $manager = $type->getCustomizationsManager();
                 if ($this->request->request->has('styles')) {
-                    // This is a preview request with custom, changed style data. Let's parse
-                    // that data and compile it into a temporary CSS file.
-                    $response = $previewHandler->getCustomPreviewResponse($customizer, $page, $preset, $this->request->request->all());
+
+                    // Nothing here yet. Maybe never?
+
                 } else {
-                    $response = $previewHandler->getPresetPreviewResponse($customizer, $page, $preset);
+                    $customStyle = $manager->getCustomStyleObjectForPage($page, $theme);
+                    if ($customStyle) {
+                        $response = $previewHandler->getCustomStylePreviewResponse($customizer, $page, $customStyle);
+                    }
                 }
                 return $response;
             }

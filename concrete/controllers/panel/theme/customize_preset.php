@@ -2,11 +2,9 @@
 namespace Concrete\Controller\Panel\Theme;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Entity\Page\Theme\CustomSkin;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\EditResponse;
-use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Command\ApplyCustomizationsToPageCommand;
 use Concrete\Core\Page\Theme\Command\ApplyCustomizationsToSiteCommand;
 use Concrete\Core\Page\Theme\Command\CreateCustomSkinCommand;
@@ -14,50 +12,16 @@ use Concrete\Core\Page\Theme\Command\DeleteCustomSkinCommand;
 use Concrete\Core\Page\Theme\Command\SkinCommandValidator;
 use Concrete\Core\Page\Theme\Command\UpdateCustomSkinCommand;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Permission\Checker;
-use Concrete\Core\Permission\Key\Key as PermissionKey;
-use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
-use Concrete\Core\StyleCustomizer\Style\CustomizerVariableCollectionFactory;
-use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
+use Concrete\Core\StyleCustomizer\Traits\CustomizeControllerTrait;
 use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CustomizePreset extends BackendInterfaceController
 {
+    use CustomizeControllerTrait;
+
     protected $viewPath = '/panels/theme/customize';
     protected $controllerActionPath = '/panels/theme/customize';
-
-    public function canAccess()
-    {
-        $pk = PermissionKey::getByHandle('customize_themes');
-        return $pk->validate();
-    }
-
-    protected function loadPreviewPage($previewPageID)
-    {
-        $previewPage = Page::getByID($previewPageID);
-        $checker = new Checker($previewPage);
-        if ($checker->canEditPageTheme()) {
-            $this->set('previewPage', $previewPage);
-        } else {
-            throw new \RuntimeException(t('Unable to customize theme for page: %s', $previewPage->getCollectionID()));
-        }
-    }
-
-    protected function getCustomizer($pThemeID)
-    {
-        $theme = Theme::getByID($pThemeID);
-        if ($theme) {
-            $customizer = $theme->getThemeCustomizer();
-            if ($customizer) {
-                return $customizer;
-            } else {
-                throw new \RuntimeException(t('Theme %s cannot be customized', $theme->getThemeHandle()));
-            }
-        } else {
-            throw new \RuntimeException(t('Invalid theme: %s', h($pThemeID)));
-        }
-    }
 
     public function view($pThemeID, $presetIdentifier, $previewPageID)
     {
@@ -65,17 +29,7 @@ class CustomizePreset extends BackendInterfaceController
         $customizer = $this->getCustomizer($pThemeID);
         $preset = $customizer->getPresetByIdentifier($presetIdentifier);
         if ($preset) {
-            $styleList = $customizer->getThemeCustomizableStyleList($preset);
-            $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
-            $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
-            $customizerVariableCollectionFactory = $this->app->make(CustomizerVariableCollectionFactory::class);
-            $variableCollection = $variableCollectionFactory->createFromPreset($customizer, $preset);
-            $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
-            $groupedStyleValueList = $valueList->createGroupedStyleValueList($styleList);
-            $this->set('styleList', $groupedStyleValueList);
-            $this->set('styles', $customizerVariableCollectionFactory->createFromStyleValueList($valueList));
-            $this->set('preset', $preset);
-            $this->set('pThemeID', $pThemeID);
+            $this->loadCustomizer($customizer, $preset);
             $this->set('presetIdentifier', $presetIdentifier);
             $this->set('customizer', $customizer);
             $this->requireAsset('ace');
@@ -90,21 +44,8 @@ class CustomizePreset extends BackendInterfaceController
         $customizer = $this->getCustomizer($pThemeID);
         $skin = $customizer->getTheme()->getSkinByIdentifier($skinIdentifier);
         if ($skin) {
-            /**
-             * @var $skin CustomSkin
-             */
             $preset = $customizer->getPresetByIdentifier($skin->getPresetStartingPoint());
-            $styleList = $customizer->getThemeCustomizableStyleList($preset);
-            $styleValueListFactory = $this->app->make(StyleValueListFactory::class);
-            $variableCollectionFactory = $this->app->make(NormalizedVariableCollectionFactory::class);
-            $customizerVariableCollectionFactory = $this->app->make(CustomizerVariableCollectionFactory::class);
-            $variableCollection = $variableCollectionFactory->createFromCustomSkin($skin);
-            $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
-            $groupedStyleValueList = $valueList->createGroupedStyleValueList($styleList);
-            $this->set('styleList', $groupedStyleValueList);
-            $this->set('styles', $customizerVariableCollectionFactory->createFromStyleValueList($valueList));
-            $this->set('preset', $preset);
-            $this->set('pThemeID', $pThemeID);
+            $this->loadCustomizer($customizer, $preset, $skin);
             $this->set('skinIdentifier', $skinIdentifier);
             $this->requireAsset('ace');
         } else {
