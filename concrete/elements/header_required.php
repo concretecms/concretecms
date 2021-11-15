@@ -35,6 +35,7 @@ $app = Application::getFacadeApplication();
 $site = $app->make('site')->getSite();
 $config = $site->getConfigRepository();
 $appConfig = $app->make('config');
+$scc = null;
 
 if (is_object($c)) {
     $cp = new Permissions($c);
