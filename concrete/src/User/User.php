@@ -191,41 +191,49 @@ class User extends ConcreteObject
             $r = $db->query($q, $v);
             if ($r) {
                 $row = $r->fetch();
-                $pw_is_valid_legacy = is_array($row) && ($config->get('concrete.user.password.legacy_salt') && self::legacyEncryptPassword($password) == $row['uPassword']);
-                $pw_is_valid = $pw_is_valid_legacy || is_array($row) && $hasher->checkPassword($password, $row['uPassword']);
-                if (is_array($row) && $row['uID'] && $row['uIsValidated'] === '0' && $config->get('concrete.user.registration.validate_email')) {
-                    $this->loadError(USER_NON_VALIDATED);
-                } elseif (is_array($row) && $row['uID'] && $row['uIsActive'] && $pw_is_valid) {
-                    if ($row['uIsPasswordReset']) {
-                        $this->loadError(USER_PASSWORD_RESET);
-                    } else {
-                        $this->uID = $row['uID'];
-                        $this->uName = $row['uName'];
-                        $this->uIsActive = $row['uIsActive'];
-                        $this->uTimezone = $row['uTimezone'];
-                        $this->uDefaultLanguage = $row['uDefaultLanguage'];
-                        $this->uLastPasswordChange = $row['uLastPasswordChange'];
-                        $this->uGroups = $this->_getUserGroups($disableLogin);
-                        if ($row['uID'] == USER_SUPER_ID) {
-                            $this->superUser = true;
+                if ($row) {
+                    $pw_is_valid_legacy = ($config->get(
+                            'concrete.user.password.legacy_salt'
+                        ) && self::legacyEncryptPassword($password) == $row['uPassword']);
+                    $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
+                    if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get(
+                            'concrete.user.registration.validate_email'
+                        )) {
+                        $this->loadError(USER_NON_VALIDATED);
+                    } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
+                        if ($row['uIsPasswordReset']) {
+                            $this->loadError(USER_PASSWORD_RESET);
                         } else {
-                            $this->superUser = false;
+                            $this->uID = $row['uID'];
+                            $this->uName = $row['uName'];
+                            $this->uIsActive = $row['uIsActive'];
+                            $this->uTimezone = $row['uTimezone'];
+                            $this->uDefaultLanguage = $row['uDefaultLanguage'];
+                            $this->uLastPasswordChange = $row['uLastPasswordChange'];
+                            $this->uGroups = $this->_getUserGroups($disableLogin);
+                            if ($row['uID'] == USER_SUPER_ID) {
+                                $this->superUser = true;
+                            } else {
+                                $this->superUser = false;
+                            }
+                            $this->recordLogin();
+                            if (!$disableLogin) {
+                                $this->persist();
+                            }
                         }
-                        $this->recordLogin();
-                        if (!$disableLogin) {
-                            $this->persist();
-                        }
+                    } elseif ($row['uID'] && !$row['uIsActive']) {
+                        $this->loadError(USER_INACTIVE);
+                    } else {
+                        $this->loadError(USER_INVALID);
                     }
-                } elseif (is_array($row) && $row['uID'] && !$row['uIsActive']) {
-                    $this->loadError(USER_INACTIVE);
+                    if ($pw_is_valid_legacy) {
+                        // this password was generated on a previous version of Concrete5.
+                        // We re-hash it to make it more secure.
+                        $v = [$hasher->hashPassword($password), $this->uID];
+                        $db->execute($db->prepare('update Users set uPassword = ? where uID = ?'), $v);
+                    }
                 } else {
                     $this->loadError(USER_INVALID);
-                }
-                if ($pw_is_valid_legacy) {
-                    // this password was generated on a previous version of Concrete5.
-                    // We re-hash it to make it more secure.
-                    $v = [$hasher->hashPassword($password), $this->uID];
-                    $db->execute($db->prepare('update Users set uPassword = ? where uID = ?'), $v);
                 }
             } else {
                 $hasher->hashPassword($password); // HashPassword and CheckPassword are slow functions.
