@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-if ($calendar) {
+if (isset($calendar)) {
     $pagination = $list->getPagination();
     $pagination->setMaxPerPage($totalToRetrieve);
     $events = $pagination->getCurrentPageResults();
