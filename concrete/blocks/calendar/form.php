@@ -55,8 +55,8 @@ $color = $app->make(Color::class);
             <?php if ($viewTypes) { ?>
                 <?php foreach ($viewTypes as $key => $name) { ?>
                     <div class="form-check">
-                        <?php echo $form->checkbox('viewTypes[]', $key, in_array($key, $viewTypesSelected), ["name" => "viewTypes[]", "id" => "viewTypes" . $key]); ?>
-                        <?php echo $form->label("viewTypes" . $key, $name, ["class" => "form-check-label"]); ?>
+                        <?php echo $form->checkbox('viewTypes[]', $key, in_array($key, $viewTypesSelected), ["name" => "viewTypes[]", "id" => "viewTypes_" . $key]); ?>
+                        <?php echo $form->label("viewTypes_" . $key, $name, ["class" => "form-check-label"]); ?>
                     </div>
                 <?php } ?>
             <?php } ?>
@@ -202,7 +202,7 @@ $color = $app->make(Color::class);
         var sortList = form.find('ul[data-sort-list=view-types]');
 
         form.on('click', 'input[type=checkbox]', function () {
-            var label = $(this).parent().find('span').html();
+            var label = $(this).parent().find('label').html();
             var id = $(this).attr('id');
             var splitID = id.split('_');
             var value = splitID[1];
