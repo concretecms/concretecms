@@ -135,7 +135,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $content = '';
         $db = $this->app->make('database')->connection();
         $v = [$this->bID];
-        $q = 'SELECT * FROM btAccordionEntries WHERE bID = ? order by sortOrde';
+        $q = 'SELECT * FROM btAccordionEntries WHERE bID = ? order by sortOrder';
         $r = $db->executeQuery($q, $v);
         foreach ($r as $row) {
             $content .= $row['title'] . ' ' . $row['description'];
