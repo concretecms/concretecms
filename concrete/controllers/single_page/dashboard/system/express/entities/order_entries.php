@@ -35,9 +35,11 @@ class OrderEntries extends DashboardPageController
             $displayOrder = 0;
             foreach($this->request->request->get('entry') as $entryID) {
                 $entry = $this->entityManager->find('Concrete\Core\Entity\Express\Entry', $entryID);
-                $entry->setEntryDisplayOrder($displayOrder);
-                $this->entityManager->persist($entry);
-                $displayOrder++;
+                if ($entry) {
+                    $entry->setEntryDisplayOrder($displayOrder);
+                    $this->entityManager->persist($entry);
+                    $displayOrder++;
+                }
             }
             $this->entityManager->flush();
             $this->flash('success', t('Display order updated successfully.'));
