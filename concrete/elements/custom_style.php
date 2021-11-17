@@ -123,7 +123,7 @@ $identifier = $app->make(Identifier::class);
 <form method="post" action="<?php echo h($saveAction) ?>" id="ccm-inline-design-form"
       data-target-element="<?php echo ($style instanceof CustomStyle) ? "block" : "area"; ?>">
 
-    <ul class="ccm-style-customizer-toolbar ccm-ui">
+    <ul class="ccm-inline-toolbar ccm-ui">
         <?php if ($style instanceof CustomStyle && $canEditCustomTemplate) { ?>
             <li class="ccm-inline-toolbar-select">
                 <div class="form-group d-flex text-nowrap">
