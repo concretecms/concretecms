@@ -134,7 +134,7 @@ if (isset($type)) {
                     $selectedFileSets[] = $fileSetID;
                 }
             }
-            $fileSetAttributes = [];
+            $fileSetAttributes = ['classes' => 'form-control'];
             if (empty($selectedFileSets)) {
                 $fileSetOption = $controller::FILESETOPTION_ALL;
                 $fileSetAttributes['disabled'] = 'disabled';
