@@ -973,7 +973,6 @@ abstract class Package implements LocalizablePackageInterface
             $app = ApplicationFacade::getFacadeApplication();
             $db = $app->make(Connection::class);
             /* @var Connection $db */
-            $db->beginTransaction();
 
             $parser = Schema::getSchemaParser(simplexml_load_file($xmlFile));
             $parser->setIgnoreExistingTables(false);
@@ -984,11 +983,14 @@ abstract class Package implements LocalizablePackageInterface
             $schemaDiff = $comparator->compare($fromSchema, $toSchema);
             $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
 
-            foreach ($saveQueries as $query) {
-                $db->query($query);
-            }
-            if ($db->isTransactionActive() && !$db->isAutoCommit()) {
-                $db->commit();
+            if (count($saveQueries)) {
+                $db->beginTransaction();
+                foreach ($saveQueries as $query) {
+                    $db->query($query);
+                }
+                if ($db->isTransactionActive() && !$db->isAutoCommit()) {
+                    $db->commit();
+                }
             }
 
             $result = new stdClass();
