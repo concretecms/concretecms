@@ -60,17 +60,7 @@ $fileSetService = new SetList();
 $fileSetList = ['0' => t('None')];
 
 foreach ($fileSetService->get() as $fileSet) {
-    $filePermissionChecker = new Checker($fileSet);
-    $responseObject = $filePermissionChecker->getResponseObject();
-
-    if ($responseObject instanceof Response) {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        if ($responseObject->validate("add_files") &&
-            $responseObject->validate("search_files")) {
-
-            $fileSetList[$fileSet->getFileSetID()] = $fileSet->getFileSetName();
-        }
-    }
+    $fileSetList[$fileSet->getFileSetID()] = $fileSet->getFileSetName();
 }
 
 /** @noinspection PhpParamsInspection */
