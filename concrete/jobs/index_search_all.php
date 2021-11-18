@@ -2,6 +2,9 @@
 
 namespace Concrete\Job;
 
+use Concrete\Core\Attribute\Category\FileCategory;
+use Concrete\Core\Attribute\Category\SiteCategory;
+use Concrete\Core\Attribute\Category\UserCategory;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Express\Entry;
@@ -12,8 +15,10 @@ use Concrete\Core\File\File;
 use Concrete\Core\Job\QueueableJob;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Search\Index\IndexManagerInterface;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfo;
 use Punic\Misc as PunicMisc;
 use ZendQueue\Message as ZendQueueMessage;
 use ZendQueue\Queue as ZendQueue;
@@ -141,8 +146,35 @@ class IndexSearchAll extends QueueableJob
                 'E' => Entry::class,
             ];
 
+            $categoryToIndex = null;
+            $subject = null;
             if (isset($map[$type])) {
-                $index->index($map[$type], $message);
+                switch ($type) {
+                    case 'P':
+                    case 'E':
+                        $index->index($map[$type], $message);
+                        break;
+                    case 'U':
+                        $categoryToIndex = app(UserCategory::class);
+                        $subject = UserInfo::getByID($message)->getEntityObject();
+                        break;
+                    case 'F':
+                        $categoryToIndex = app(FileCategory::class);
+                        $subject = File::getByID($message);
+                        break;
+                    case 'S':
+                        $categoryToIndex = app(SiteCategory::class);
+                        $subject = app(Service::class)->getByID($message);
+                        break;
+                }
+
+                if ($categoryToIndex) {
+                    $indexer = $categoryToIndex->getSearchIndexer();
+                    $values = $categoryToIndex->getAttributeValues($subject);
+                    foreach ($values as $value) {
+                        $indexer->indexEntry($categoryToIndex, $value, $subject);
+                    }
+                }
             } elseif ($type === 'R') {
                 // Store this result, this is likely the last item.
                 $this->result = json_decode($message);
@@ -188,9 +220,13 @@ class IndexSearchAll extends QueueableJob
     protected function clearIndex($index)
     {
         $index->clear(Page::class);
+        // Note, I'm commenting out the following because they don't do anything anyway because they were never
+        // bound to an index in the SearchServiceProvider.
+        /*
         $index->clear(User::class);
         $index->clear(File::class);
         $index->clear(Site::class);
+        */
     }
 
     /**
