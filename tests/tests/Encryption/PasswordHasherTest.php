@@ -13,7 +13,7 @@ class PasswordHasherTest extends TestCase
 {
 
     private function hasher(
-        string $algorithm = PASSWORD_BCRYPT,
+        $algorithm = PASSWORD_BCRYPT,
         ?int $cost = null,
         array $hashOptions = [],
         bool $portable = false
