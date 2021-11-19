@@ -1156,8 +1156,29 @@ return [
             'required_upper_case' => 0,
             'reuse' => 0,
             'custom_regex' => [],
+
+            /**
+             * Using PASSWORD_DEFAULT means that we will automatically switch to better algorithms when they are available.
+             * Keep in mind hash_options are different depending on the algorithm specified
+             * @see https://www.php.net/manual/en/password.constants.php
+             */
+            'hash_algorithm' => PASSWORD_DEFAULT,
+            'hash_options' => [
+                // 'cost' => '12', // Bcrypt cost
+                // 'memory_cost' => '1024', // Argon2 memory cost in bytes
+                // 'time_cost' => '10', // Argon2 time cost in milliseconds
+            ],
+
+            /**
+             * @deprecated This setting is no longer used by the core.
+             */
             'hash_portable' => false,
+
+            /**
+             * @deprecated This setting is no longer used by the core, use hash_options instead.
+             */
             'hash_cost_log2' => 12,
+
             'legacy_salt' => '',
         ],
         'email' => [
