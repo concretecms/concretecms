@@ -52,6 +52,10 @@ class PasswordHasherTest extends TestCase
      */
     public function testArgon2IHashesSucceed(string $password, string $hash)
     {
+        if (!defined('PASSWORD_ARGON2I')) {
+            $this->markTestSkipped('Argon2i is not available.');
+        }
+
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
@@ -60,6 +64,10 @@ class PasswordHasherTest extends TestCase
      */
     public function testArgon2IDHashesSucceed(string $password, string $hash)
     {
+        if (!defined('PASSWORD_ARGON2ID')) {
+            $this->markTestSkipped('Argon2id is not available.');
+        }
+
         $this->assertTrue($this->hasher()->checkPassword($password, $hash));
     }
 
