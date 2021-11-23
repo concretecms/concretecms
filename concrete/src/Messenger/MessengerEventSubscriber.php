@@ -1,9 +1,11 @@
 <?php
 namespace Concrete\Core\Messenger;
 
+use Concrete\Core\Cache\Cache;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
+use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 
 class MessengerEventSubscriber implements EventSubscriberInterface
 {
@@ -21,8 +23,14 @@ class MessengerEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            WorkerStartedEvent::class => 'handleWorkerStartedEvent',
             WorkerMessageFailedEvent::class => 'handleWorkerMessageFailedEvent',
         ];
+    }
+
+    public function handleWorkerStartedEvent(WorkerStartedEvent $event)
+    {
+        Cache::disableAll(); // If caches aren't disabled on the worker you get some conditions where pages, page versions get stale
     }
 
     public function handleWorkerMessageFailedEvent(WorkerMessageFailedEvent $event)

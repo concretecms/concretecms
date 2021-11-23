@@ -61,6 +61,25 @@ use Concrete\Core\Form\Service\Widget\DateTime;
 /** @var bool $isOtherPage */
 /** @var Feed $rssFeed */
 
+if (!isset($filterDateDays)) {
+    $filterDateDays = false;
+}
+if (!isset($filterDateStart)) {
+    $filterDateStart = false;
+}
+if (!isset($filterDateEnd)) {
+    $filterDateEnd = false;
+}
+if (!isset($ignorePermissions)) {
+    $ignorePermissions = false;
+}
+if (!isset($isOtherPage)) {
+    $isOtherPage = false;
+}
+if (!isset($rssFeed)) {
+    $rssFeed = false;
+}
+
 $c = Page::getCurrentPage();
 
 $siteType = null;

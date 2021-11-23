@@ -35,7 +35,7 @@ class ReindexPageCommandHandler
 
     public function __invoke($command)
     {
-        $c = Page::getByID($command->getPageID());
+        $c = Page::getByID($command->getPageID(), 'ACTIVE');
         if ($c && !$c->isError()) {
             // reindex page attributes
             $indexer = $this->pageCategory->getSearchIndexer();
