@@ -23,6 +23,8 @@ use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\Group\GroupRole;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Encryption\PasswordHasher;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class User extends ConcreteObject
 {
@@ -195,7 +197,29 @@ class User extends ConcreteObject
                     $pw_is_valid_legacy = ($config->get(
                             'concrete.user.password.legacy_salt'
                         ) && self::legacyEncryptPassword($password) == $row['uPassword']);
+
                     $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
+                    if ($pw_is_valid && $hasher->needsRehash($row['uPassword'])) {
+                        $em = $app->make(EntityManagerInterface::class);
+
+                        try {
+                            $em->transactional(function (EntityManagerInterface $em) use ($hasher, $password, $row) {
+                                $user = $em->find(\Concrete\Core\Entity\User\User::class, $row['uID']);
+                                if (!$user) {
+                                    throw new \RuntimeException('User not found.');
+                                }
+
+                                $user->setUserPassword($hasher->hashPassword($password));
+                            });
+                        } catch (\Throwable $e) {
+                            $app->make(LoggerInterface::class)->emergency('Unable to rehash password for user {user} ({id}): {message}', [
+                                'user' => $row['uName'],
+                                'id' => $row['uID'],
+                                'message' => $e->getMessage(),
+                            ]);
+                        }
+                    }
+
                     if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get(
                             'concrete.user.registration.validate_email'
                         )) {
@@ -225,12 +249,6 @@ class User extends ConcreteObject
                         $this->loadError(USER_INACTIVE);
                     } else {
                         $this->loadError(USER_INVALID);
-                    }
-                    if ($pw_is_valid_legacy) {
-                        // this password was generated on a previous version of Concrete5.
-                        // We re-hash it to make it more secure.
-                        $v = [$hasher->hashPassword($password), $this->uID];
-                        $db->execute($db->prepare('update Users set uPassword = ? where uID = ?'), $v);
                     }
                 } else {
                     $this->loadError(USER_INVALID);

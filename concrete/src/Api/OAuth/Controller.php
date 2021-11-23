@@ -186,6 +186,21 @@ final class Controller implements LoggerAwareInterface
 
             // User successfully logged in
             if ($user && $user->getUserID() && $hasher->checkPassword($password, $user->getUserPassword())) {
+                if ($hasher->needsRehash($user->getUserPassword())) {
+                    $em = $app->make(EntityManagerInterface::class);
+
+                    try {
+                        $em->transactional(function () use ($user, $hasher, $password) {
+                            $user->setUserPassword($hasher->hashPassword($password));
+                        });
+                    } catch (\Throwable $e) {
+                        $this->logger->emergency('Unable to rehash password for user {user} ({id}): {message}', [
+                            'user' => $user->getUserName(),
+                            'id' => $user->getUserID(),
+                            'message' => $e->getMessage(),
+                        ]);
+                    }
+                }
 
                 $userInfo = $this->entityManager->find(User::class, $user->getUserID());
                 $request->setUser($userInfo);
