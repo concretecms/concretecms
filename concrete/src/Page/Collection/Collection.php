@@ -441,12 +441,12 @@ class Collection extends ConcreteObject implements TrackableInterface
      *
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak the attribute key (or its handle)
      * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|mixed $value an attribute value object, or the data needed by the attribute controller to create the attribute value object
-     *
+     * @param bool $doReindexImmediately
      * @return \Concrete\Core\Entity\Attribute\Value\PageValue
      */
-    public function setAttribute($ak, $value)
+    public function setAttribute($ak, $value, $doReindexImmediately = true)
     {
-        return $this->vObj->setAttribute($ak, $value);
+        return $this->vObj->setAttribute($ak, $value, $doReindexImmediately);
     }
 
     /**

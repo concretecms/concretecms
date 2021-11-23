@@ -63,9 +63,10 @@ trait ObjectTrait
      *
      * @param AttributeKeyInterface | string $ak
      * @param mixed $value
+     * @param bool $doReindexImmediately
      * @return \Concrete\Core\Entity\Attribute\Value\Value
      */
-    public function setAttribute($ak, $value)
+    public function setAttribute($ak, $value, $doReindexImmediately = true)
     {
         $orm = \Database::connection()->getEntityManager();
 
@@ -112,10 +113,12 @@ trait ObjectTrait
             $orm->flush();
         }
 
-        $category = $this->getObjectAttributeCategory();
-        $indexer = $category->getSearchIndexer();
-        if ($indexer) {
-            $indexer->indexEntry($category, $attributeValue, $this);
+        if ($doReindexImmediately) {
+            $category = $this->getObjectAttributeCategory();
+            $indexer = $category->getSearchIndexer();
+            if ($indexer) {
+                $indexer->indexEntry($category, $attributeValue, $this);
+            }
         }
 
         return $attributeValue;
