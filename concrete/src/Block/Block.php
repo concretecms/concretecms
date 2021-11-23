@@ -1717,6 +1717,43 @@ EOT
         } else {
             $bc->duplicate($newBID);
         }
+
+        // we duplicate block-specific cache settings
+        if ($this->overrideBlockTypeCacheSettings()) {
+            $cacheSetting = $connection->createQueryBuilder()
+                ->select('btCacheBlockOutput', 'btCacheBlockOutputOnPost', 'btCacheBlockOutputForRegisteredUsers', 'btCacheBlockOutputLifetime')
+                ->from('CollectionVersionBlocksCacheSettings')
+                ->where('cID = :cID')
+                ->andWhere('cvID = :cvID')
+                ->andWhere('bID = :bID')
+                ->andWhere('arHandle = :arHandle')
+                ->setParameter('cID', $ocID)
+                ->setParameter('cvID', $ovID)
+                ->setParameter('bID', $this->getBlockID())
+                ->setParameter('arHandle', $this->getAreaHandle())
+                ->execute()->fetchAssociative();
+            if ($cacheSetting) {
+                $connection->createQueryBuilder()
+                    ->insert('CollectionVersionBlocksCacheSettings')
+                    ->setValue('cID', ':cID')
+                    ->setValue('cvID', ':cvID')
+                    ->setValue('bID', ':bID')
+                    ->setValue('arHandle', ':arHandle')
+                    ->setValue('btCacheBlockOutput', ':btCacheBlockOutput')
+                    ->setValue('btCacheBlockOutputOnPost', ':btCacheBlockOutputOnPost')
+                    ->setValue('btCacheBlockOutputForRegisteredUsers', ':btCacheBlockOutputForRegisteredUsers')
+                    ->setValue('btCacheBlockOutputLifetime', ':btCacheBlockOutputLifetime')
+                    ->setParameter('cID', $ncID)
+                    ->setParameter('cvID', $nvID)
+                    ->setParameter('bID', $newBID)
+                    ->setParameter('arHandle', $this->getAreaHandle())
+                    ->setParameter('btCacheBlockOutput', $cacheSetting['btCacheBlockOutput'])
+                    ->setParameter('btCacheBlockOutputOnPost', $cacheSetting['btCacheBlockOutputOnPost'])
+                    ->setParameter('btCacheBlockOutputForRegisteredUsers', $cacheSetting['btCacheBlockOutputForRegisteredUsers'])
+                    ->setParameter('btCacheBlockOutputLifetime', $cacheSetting['btCacheBlockOutputLifetime'])
+                    ->execute();
+            }
+        }
         
         // finally, we insert into the CollectionVersionBlocks table
         $cbDisplayOrder = $this->getBlockDisplayOrder();
