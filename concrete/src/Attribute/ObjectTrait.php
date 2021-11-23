@@ -43,17 +43,20 @@ trait ObjectTrait
 
     /**
      * @param AttributeKeyInterface | string $ak
+     * @param bool $doReindexImmediately
      */
-    public function clearAttribute($ak)
+    public function clearAttribute($ak, bool $doReindexImmediately = true)
     {
         $value = $this->getAttributeValueObject($ak);
         if (is_object($value)) {
             $controller = $this->getObjectAttributeCategory();
             $controller->deleteValue($value);
-            $category = $this->getObjectAttributeCategory();
-            $indexer = $category->getSearchIndexer();
-            if ($indexer) {
-                $indexer->clearIndexEntry($category, $value, $this);
+            if ($doReindexImmediately) {
+                $category = $this->getObjectAttributeCategory();
+                $indexer = $category->getSearchIndexer();
+                if ($indexer) {
+                    $indexer->clearIndexEntry($category, $value, $this);
+                }
             }
         }
     }
@@ -70,7 +73,7 @@ trait ObjectTrait
     {
         $orm = \Database::connection()->getEntityManager();
 
-        $this->clearAttribute($ak);
+        $this->clearAttribute($ak, $doReindexImmediately);
 
         // Create the attribute category value.
         $attributeValue = $this->getAttributeValueObject($ak, true);

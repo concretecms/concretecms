@@ -529,10 +529,11 @@ class Collection extends ConcreteObject implements TrackableInterface
      * Delete the value of a specific attribute key associated to the currently loaded collection version.
      *
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak the attribute key (or its handle)
+     * @param bool $doReindexImmediately
      */
-    public function clearAttribute($ak)
+    public function clearAttribute($ak, bool $doReindexImmediately = true)
     {
-        $this->vObj->clearAttribute($ak);
+        $this->vObj->clearAttribute($ak, $doReindexImmediately);
     }
 
     /**
