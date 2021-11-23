@@ -9,7 +9,7 @@
             Concrete.event.unbind(event);
             $('#ccm-permissions-access-entity-form .btn-group').removeClass('open');
             $.getJSON('<?=$url?>', {
-                'uID': data.uID
+                'uID': data.users[0].id
             }, function(r) {
                 $.fn.dialog.closeTop();
                 $('#ccm-permissions-access-entity-form input[name=peID]').val(r.peID);
