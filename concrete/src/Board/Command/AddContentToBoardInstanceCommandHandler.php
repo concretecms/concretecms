@@ -25,13 +25,12 @@ class AddContentToBoardInstanceCommandHandler
         $this->app = $app;
     }
 
-    public function handle(AddContentToBoardInstanceCommand $command)
+    public function __invoke(AddContentToBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
 
         $populate = new PopulateBoardInstanceDataPoolCommand();
         $populate->setInstance($instance);
-        $populate->setRetrieveDataObjectsAfter($instance->getDateDataPoolLastUpdated());
         $this->app->executeCommand($populate);
 
         $generate = new GenerateBoardInstanceCommand();

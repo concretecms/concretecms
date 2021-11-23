@@ -8,6 +8,10 @@
             <unsigned/>
             <key/>
         </field>
+        <field name="includeDownloadLink" type="boolean">
+            <default value="0" />
+            <notnull/>
+        </field>
     </table>
     <table name="btGalleryEntries">
         <field name="eID" type="integer">

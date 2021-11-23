@@ -5,19 +5,19 @@ namespace Concrete\Tests\Localization;
 use Concrete\Core\Cache\CacheServiceProvider;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Localization\Translator\Adapter\Plain\TranslatorAdapterFactory as PlainTranslatorAdapterFactory;
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapterFactory as ZendTranslatorAdapterFactory;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapterFactory as LaminasTranslatorAdapterFactory;
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\Core\Support\Facade\Events;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\TestHelpers\Localization\Adapter\Zend\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
+use Concrete\TestHelpers\Localization\Adapter\Laminas\Translation\Loader\Gettext\Fixtures\MultilingualDetector;
 use Concrete\TestHelpers\Localization\Fixtures\TestTranslationLoader;
 use Concrete\TestHelpers\Localization\Fixtures\TestUpdatedTranslationLoader;
 use Concrete\TestHelpers\Localization\LocalizationTestsBase;
 use Illuminate\Filesystem\Filesystem;
 use Punic\Language as PunicLanguage;
 use ReflectionClass;
-use Zend\I18n\Translator\Translator as ZendTranslator;
+use Laminas\I18n\Translator\Translator as LaminasTranslator;
 
 /**
  * Tests for:
@@ -29,7 +29,7 @@ class Localization2Test extends LocalizationTestsBase
 {
     protected $loc;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         // Move language directories to the application
@@ -39,7 +39,7 @@ class Localization2Test extends LocalizationTestsBase
         $filesystem->copyDirectory($source, $target);
     }
 
-    public function setUp()
+    public function setUp():void
     {
         $this->loc = new Localization();
 
@@ -48,7 +48,7 @@ class Localization2Test extends LocalizationTestsBase
         $this->loc->setTranslatorAdapterRepository($repository);
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         // Some of the tests might be rewriting some core components through
         // the IoC container which we revert back here. Also, the localization
@@ -66,11 +66,9 @@ class Localization2Test extends LocalizationTestsBase
         $loc->setActiveContext(Localization::CONTEXT_SYSTEM);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testTranslatorAdapterRepositoryRequired()
     {
+        $this->expectException(\Exception::class);
         $loc = new Localization();
         $loc->getTranslatorAdapterRepository();
     }
@@ -129,11 +127,9 @@ class Localization2Test extends LocalizationTestsBase
         $this->assertInstanceOf('Concrete\Core\Localization\Translator\TranslatorAdapterInterface', $this->loc->getTranslatorAdapter('test'));
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testGetUnexistingContextTranslatorAdapter()
     {
+        $this->expectException(\Exception::class);
         $this->loc->getTranslatorAdapter('test');
     }
 
@@ -143,11 +139,9 @@ class Localization2Test extends LocalizationTestsBase
         $this->assertInstanceOf('Concrete\Core\Localization\Translator\TranslatorAdapterInterface', $this->loc->getActiveTranslatorAdapter());
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testGetUnexistingActiveTranslatorAdapter()
     {
+        $this->expectException(\Exception::class);
         $this->loc->getActiveTranslatorAdapter();
     }
 
@@ -186,8 +180,9 @@ class Localization2Test extends LocalizationTestsBase
         $app = Facade::getFacadeApplication();
         $origDirector = $app->make('director');
 
-        $director = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
-            ->setMethods(['dispatch'])
+        $director = $this->getMockBuilder('Concrete\Core\Events\EventDispatcher')
+            ->setMethods(['dispatch', 'addListener'])
+            ->disableOriginalConstructor()
             ->getMock();
 
         // Force the events to use the new director to be bound.
@@ -344,7 +339,7 @@ class Localization2Test extends LocalizationTestsBase
 
         // Fill the translations cache with the translations from the first
         // loader.
-        $adapterFactory = new ZendTranslatorAdapterFactory($loaderRep);
+        $adapterFactory = new LaminasTranslatorAdapterFactory($loaderRep);
         $adapter = $adapterFactory->createTranslatorAdapter('fi_FI');
         $adapter->translate('Hello Translator!');
 
@@ -359,13 +354,13 @@ class Localization2Test extends LocalizationTestsBase
         // string loaded in the cache.
         $loaderRep->registerTranslationLoader('updated', new TestUpdatedTranslationLoader($app));
 
-        $translatorAdapterFactory = new ZendTranslatorAdapterFactory($loaderRep);
+        $translatorAdapterFactory = new LaminasTranslatorAdapterFactory($loaderRep);
         $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
         $loc->setTranslatorAdapterRepository($repository);
 
         // Now, even as we have added the new translations to the adapter it
         // should still be using the old translation as it should be coming
-        // from the cache (with the Zend adapter).
+        // from the cache (with the Laminas adapter).
         $adapter = $loc->getTranslatorAdapter('test');
         $this->assertEquals('Original String!', $adapter->translate('Hello Translator!'));
 
@@ -428,7 +423,7 @@ class Localization2Test extends LocalizationTestsBase
         $this->markTestSkipped('Skipped');
 
         // Move translation files
-        $langDir = DIR_TESTS . '/assets/Localization/Adapter/Zend/Translation/Loader/Gettext/languages/site';
+        $langDir = DIR_TESTS . '/assets/Localization/Adapter/Laminas/Translation/Loader/Gettext/languages/site';
         $appLangDir = static::getTranslationsFolder() . '/site';
 
         $filesystem = new Filesystem();
@@ -440,7 +435,7 @@ class Localization2Test extends LocalizationTestsBase
         // Custom Localization instance for these tests
         $loc = new Localization();
 
-        $translatorAdapterFactory = new ZendTranslatorAdapterFactory();
+        $translatorAdapterFactory = new LaminasTranslatorAdapterFactory();
         $repository = new TranslatorAdapterRepository($translatorAdapterFactory);
         $loc->setTranslatorAdapterRepository($repository);
 
@@ -461,7 +456,7 @@ class Localization2Test extends LocalizationTestsBase
         $this->assertEquals('Tervehdys sivustolta!', $translator->translate('Hello from site!'));
 
         // Test setting setup site localization for custom translator
-        $translator = new ZendTranslator();
+        $translator = new LaminasTranslator();
         $translator->setLocale('fi_FI');
         Localization::setupSiteLocalization($translator);
         $this->assertEquals('Tervehdys sivustolta!', $translator->translate('Hello from site!'));

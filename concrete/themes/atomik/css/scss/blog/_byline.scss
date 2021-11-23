@@ -1,0 +1,24 @@
+div.theme-atomik {
+
+  div.blog-author-byline {
+    display: flex;
+    font-size: $font-size-sm;
+    align-items: center;
+    color: $secondary;
+
+    div.blog-author-byline-avatar {
+      margin-right: 0.75rem;
+      img {
+        max-width: 32px;
+        height: auto;
+        border-radius: 50% !important;
+      }
+    }
+
+    div.blog-author-byline-author {
+      margin-right: 0.75rem;
+    }
+
+  }
+
+}

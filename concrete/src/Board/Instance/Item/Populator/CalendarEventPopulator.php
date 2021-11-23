@@ -23,11 +23,10 @@ class CalendarEventPopulator extends AbstractPopulator
     /**
      * @param Instance $instance
      * @param CalendarEventConfiguration $configuration
-     * @param int $mode
      * @return array
      * @throws \Exception
      */
-    public function getDataObjects(Instance $instance, ConfiguredDataSource $dataSource, int $mode): array
+    public function getDataObjects(Instance $instance, ConfiguredDataSource $dataSource): array
     {
         $configuration = $dataSource->getConfiguration();
         // @TODO We need to fix this: if our configuration has no calendar, we need to get the calendar

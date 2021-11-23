@@ -5,6 +5,9 @@ use Concrete\Controller\Backend\UserInterface;
 
 abstract class Node extends UserInterface
 {
+    /**
+     * @return \Concrete\Core\Tree\Node\Node
+     */
     protected function getNode()
     {
         if (!isset($this->node)) {

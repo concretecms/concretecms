@@ -1,0 +1,41 @@
+div.theme-atomik {
+  div.ccm-block-document-library-icon-grid {
+
+    margin-top: 3rem;
+
+    a {
+      text-decoration: none;
+      color: $body-color;
+    }
+
+    .ccm-block-document-library-icon-grid-image {
+
+      height: 255px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img.ccm-image-thumbnail {
+        max-width: 200px;
+        max-height: 200px;
+      }
+
+      img.ccm-file-type-icon {
+        max-width: 110px;
+        max-height: 110px;
+      }
+    }
+
+    .ccm-block-document-library-icon-grid-title {
+      margin-top: 1rem;
+      text-align: center;
+      color: $body-color;
+    }
+
+    a:hover {
+      .ccm-block-document-library-icon-grid-title {
+        color: $primary;
+      }
+    }
+  }
+}

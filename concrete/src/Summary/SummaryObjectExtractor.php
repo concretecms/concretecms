@@ -43,11 +43,18 @@ class SummaryObjectExtractor
             $object = $category->getDriver()->getCategoryMemberFromIdentifier($summaryObject->getIdentifier());
             $resolvedFields = [];
             foreach ($fields as $identifier => $field) {
+                $resolvedField = null;
                 if ($field instanceof LazyDataFieldDataInterface) {
                     // Replace this proxy field with the real one
-                    $field = $field->loadDataFieldDataFromCategoryMember($object);
+                    if ($object) {
+                        $resolvedField = $field->loadDataFieldDataFromCategoryMember($object);
+                    }
+                } else {
+                    $resolvedField = $field;
                 }
-                $resolvedFields[$identifier] = $field;
+                if ($resolvedField) {
+                    $resolvedFields[$identifier] = $resolvedField;
+                }
             }
         }
         return $resolvedFields;

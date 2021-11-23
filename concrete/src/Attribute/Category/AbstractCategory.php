@@ -401,9 +401,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
 
         $genericValue = $attributeValue->getGenericValue();
         if ($genericValue !== null) {
-            $genericValues = $this->getAttributeValueRepository()->findBy(['generic_value' => $genericValue]);
-            if (count($genericValues) == 1) {
-
+            $genericValues = $this->getAttributeValueRepository()->count(['generic_value' => $genericValue]);
+            if ($genericValues == 1) {
                 // Handle legacy attributes with these three lines.
                 $controller = $attributeValue->getAttributeKey()->getController();
                 $controller->setAttributeValue($attributeValue);

@@ -27,7 +27,7 @@ if ($paID > 0) {
 
 <div class="ccm-ui" id="ccm-permission-detail">
     <form id="ccm-permissions-detail-form" onsubmit="return ccm_submitPermissionsDetailForm()" method="post"
-          action="<?= $permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL() ?>">
+          action="<?= h($permissionKey->getPermissionAssignmentObject()->getPermissionKeyTaskURL()) ?>">
 
         <input type="hidden" name="paID" value="<?= $pa->getPermissionAccessID() ?>"/>
 
@@ -111,8 +111,8 @@ if ($paID > 0) {
         </div>
 
         <div class="dialog-buttons">
-            <button href="javascript:void(0)" class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-            <button type="submit" class="btn btn-primary float-right" onclick="$('#ccm-permissions-detail-form').submit()"><?= t('Save') ?></button>
+            <button href="javascript:void(0)" class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+            <button type="submit" class="btn btn-primary float-end" onclick="$('#ccm-permissions-detail-form').submit()"><?= t('Save') ?></button>
         </div>
     </form>
 </div>
@@ -135,7 +135,7 @@ if ($paID > 0) {
 
             var qs = (ccm_permissionDialogURL.indexOf('?') > 0) ? '&' : '?';
 
-            $.get('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL('add_access_entity')?>&paID=<?=$pa->getPermissionAccessID()?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function (r) {
+            $.get(<?= json_encode($permissionKey->getPermissionAssignmentObject()->getPermissionKeyTaskURL('add_access_entity', ['paID' => $pa->getPermissionAccessID()])) ?> + '&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function (r) {
                 $.get(ccm_permissionDialogURL + qs + 'paID=<?=$pa->getPermissionAccessID()?>&message=entity_added&pkID=<?=$permissionKey->getPermissionKeyID()?>', function (r) {
                     jQuery.fn.dialog.replaceTop(r);
                     jQuery.fn.dialog.hideLoader();
@@ -148,7 +148,7 @@ if ($paID > 0) {
 
             var qs = (ccm_permissionDialogURL.indexOf('?') > 0) ? '&' : '?';
 
-            $.get('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL('remove_access_entity')?>&paID=<?=$pa->getPermissionAccessID()?>&peID=' + peID, function () {
+            $.get(<?= json_encode($permissionKey->getPermissionAssignmentObject()->getPermissionKeyTaskURL('remove_access_entity', ['paID' => $pa->getPermissionAccessID()])) ?> + '&peID=' + peID, function () {
                 $.get(ccm_permissionDialogURL + qs + 'paID=<?=$pa->getPermissionAccessID()?>&message=entity_removed&pkID=<?=$permissionKey->getPermissionKeyID()?>', function (r) {
                     jQuery.fn.dialog.replaceTop(r);
                     jQuery.fn.dialog.hideLoader();
@@ -164,7 +164,7 @@ if ($paID > 0) {
                 // now we reload the permission key to use the new permission assignment
                 var gc = $('#ccm-permission-grid-cell-<?=$permissionKey->getPermissionKeyID()?>');
                 if (gc.length > 0) {
-                    gc.load('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL('display_access_cell')?>&paID=<?=$pa->getPermissionAccessID()?>', function () {
+                    gc.load(<?= json_encode($permissionKey->getPermissionAssignmentObject()->getPermissionKeyTaskURL('display_access_cell', ['paID' => $pa->getPermissionAccessID()])) ?>, function () {
                         $('#ccm-permission-grid-name-<?=$permissionKey->getPermissionKeyID()?> a').attr('data-paID', '<?=$pa->getPermissionAccessID()?>');
                         if (typeof (ccm_submitPermissionsDetailFormPost) != 'undefined') {
                             ccm_submitPermissionsDetailFormPost();

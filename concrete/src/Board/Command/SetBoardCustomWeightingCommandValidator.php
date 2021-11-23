@@ -3,7 +3,6 @@
 namespace Concrete\Core\Board\Command;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Concrete\Core\Foundation\Command\ValidatorInterface;
 
 class SetBoardCustomWeightingCommandValidator implements ValidatorInterface
@@ -24,7 +23,7 @@ class SetBoardCustomWeightingCommandValidator implements ValidatorInterface
      * @param SetBoardCustomWeightingCommand $command
      * @return ErrorList
      */
-    public function validate(CommandInterface $command)
+    public function validate($command)
     {
         $total = 0;
         foreach($command->getWeightings() as $weighting) {

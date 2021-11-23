@@ -3,6 +3,8 @@ namespace Concrete\Block\DesktopDraftList;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\User\UserInfo;
@@ -11,11 +13,16 @@ use URL;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = ['form'];
     protected $btTable = 'btDesktopDraftList';
     protected $defaultDraftsPerPage = 10;
+
+    public function getRequiredFeatures(): array
+    {
+        return [Features::DESKTOP];
+    }
 
     public function getBlockTypeDescription()
     {

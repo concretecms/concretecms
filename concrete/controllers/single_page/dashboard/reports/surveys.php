@@ -13,6 +13,7 @@ class Surveys extends DashboardPageController
             return '';
         }
         $dh = $this->app->make('helper/date'); // @var $dh \Concrete\Core\Localization\Service\Date
+
         return $dh->formatPrettyDateTime($inputTime);
     }
 
@@ -79,7 +80,7 @@ class Surveys extends DashboardPageController
             $q = 'SELECT question FROM btSurvey WHERE bID = ?';
             $v = [$bID];
             $r = $db->query($q, $v);
-            if ($row = $r->fetchRow()) {
+            if ($row = $r->fetch()) {
                 $current_survey = $row['question'];
             }
         }
@@ -114,7 +115,7 @@ class Surveys extends DashboardPageController
             $q = 'SELECT count(*) FROM btSurveyResults WHERE optionID = ? AND bID = ? AND cID = ?';
             $r = $db->executeQuery($q, $v);
 
-            if ($row = $r->fetchRow()) {
+            if ($row = $r->fetch()) {
                 $options[$i]['amount'] = $row['count(*)'];
                 $total_results += $row['count(*)'];
             }
@@ -176,7 +177,7 @@ class Surveys extends DashboardPageController
         foreach ($options as $option) {
             $chart_options .= '<tr>';
             $chart_options .= '<td>';
-            $chart_options .= '<strong>' . trim($options[$i - 1]['name']) . '</strong>';
+            $chart_options .= '<strong>' . trim(h($options[$i - 1]['name'])) . '</strong>';
             $chart_options .= '</td>';
             $chart_options .= '<td style="text-align:right; white-space: nowrap">';
             $chart_options .= ($option['amount'] > 0) ? round($option['amount'] / $total_results * 100) : 0;

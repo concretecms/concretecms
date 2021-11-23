@@ -4,7 +4,6 @@ namespace Concrete\Core\Job;
 
 use Config;
 use Job as AbstractJob;
-use Concrete\Core\Foundation\Queue\QueueService;
 
 abstract class QueueableJob extends AbstractJob
 {
@@ -75,20 +74,10 @@ abstract class QueueableJob extends AbstractJob
     public function getQueueObject()
     {
         if ($this->jQueueObject === null) {
-            $service = \Core::make(QueueService::class);
-            $this->jQueueObject = $service->getJobQueue($this);
+            $this->jQueueObject = new JobQueue($this);
         }
 
         return $this->jQueueObject;
-    }
-
-    /**
-     * Delete the queue
-     */
-    public function reset()
-    {
-        parent::reset();
-        $this->getQueueObject()->deleteQueue();
     }
 
     /**
@@ -101,24 +90,6 @@ abstract class QueueableJob extends AbstractJob
     }
 
     /**
-     * Mark the queue as having completed
-     *
-     * @param int $code 0 for success, otherwise the exception error code
-     * @param bool $message The message to show
-     * @return \Concrete\Core\Job\JobResult
-     */
-    public function markCompleted($code = 0, $message = false)
-    {
-        $obj = parent::markCompleted($code, $message);
-        $queue = $this->getQueueObject();
-        if (!$this->didFail()) {
-            $queue->deleteQueue();
-        }
-
-        return $obj;
-    }
-
-    /**
      * Executejob for queueable jobs actually starts the queue, runs, and ends all in one function. This happens if we run a job in legacy mode.
      */
     public function executeJob()
@@ -126,7 +97,6 @@ abstract class QueueableJob extends AbstractJob
         try {
             if ($this->getJobStatus() !== 'RUNNING') {
                 $queue = $this->markStarted();
-                $queue->setIsAsynchronous(false);
                 $this->start($queue);
             } else {
                 $queue = $this->getQueueObject();

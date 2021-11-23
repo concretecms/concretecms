@@ -22,16 +22,16 @@ class Info extends DashboardPageController
         $phpExtensions = ($info->getPhpExtensions() === false) ? 'Unable to determine' : $info->getPhpExtensions();
 
         $content = <<<EOL
-# concrete5 Version
+# Concrete Version
 {$info->getCoreVersions()}
 {$dbInfos}
-# concrete5 Packages
+# Concrete Packages
 {$packages}
 
-# concrete5 Overrides
+# Concrete Overrides
 {$overrides}
 
-# concrete5 Cache Settings
+# Concrete Cache Settings
 {$info->getCache()}
 
 # Server Software

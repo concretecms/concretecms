@@ -4,6 +4,8 @@ namespace Concrete\Core\StyleCustomizer\Style\Value;
 
 class SizeValue extends Value
 {
+
+
     /**
      * The numeric amount of the size.
      *
@@ -17,6 +19,17 @@ class SizeValue extends Value
      * @var string
      */
     protected $unit = 'px';
+
+    /**
+     * SizeValue constructor.
+     * @param mixed $size
+     * @param string $unit
+     */
+    public function __construct($size, string $unit)
+    {
+        $this->size = $size;
+        $this->unit = $unit;
+    }
 
     /**
      * Set the numeric amount of the size.
@@ -66,45 +79,11 @@ class SizeValue extends Value
         return $this->unit;
     }
 
-    /**
-     * @deprecated Use getUnit()
-     *
-     * @return string
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Value\SizeValue::getUnit()
-     */
-    public function getUnits()
+    public function jsonSerialize()
     {
-        return $this->getUnit();
-    }
-
-    /**
-     * Does this value has the numeric amount of the size?
-     *
-     * @return bool
-     */
-    public function hasSize()
-    {
-        return (string) $this->getSize() !== '';
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Value\Value::toStyleString()
-     */
-    public function toStyleString()
-    {
-        return $this->hasSize() ? $this->getSize() . $this->getUnit() : '';
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\StyleCustomizer\Style\Value\Value::toLessVariablesArray()
-     */
-    public function toLessVariablesArray()
-    {
-        return [$this->getVariable() . '-size' => $this->toStyleString()];
+        return [
+            'size' => $this->getSize(),
+            'unit' => $this->getUnit(),
+        ];
     }
 }

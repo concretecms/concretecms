@@ -28,7 +28,7 @@ class PageValueTest extends AttributeValueTestCase
         ]);
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         require_once DIR_TESTS . '/assets/Attribute/Value/RelatedPageController.php';

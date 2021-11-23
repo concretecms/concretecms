@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator;
+namespace Concrete\Tests\Localization\Translator;
 
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepository;
 use Concrete\TestHelpers\Localization\Translator\Fixtures\DummyTranslatorAdapter;
@@ -18,7 +18,7 @@ class TranslatorAdapterRepositoryTest extends TestCase
 {
     protected $repository;
 
-    public function setUp()
+    public function setUp():void
     {
         $factory = new DummyTranslatorAdapterFactory();
         $this->repository = new TranslatorAdapterRepository($factory);

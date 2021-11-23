@@ -18,7 +18,7 @@ class ResolverManagerTest extends TestCase
 
     protected $defaultResponse = 'DEFAULT';
 
-    public function setUp()
+    public function setUp():void
     {
         $obj = $this;
 

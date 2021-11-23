@@ -27,14 +27,22 @@ class DialogView extends ConcreteView
         return null;
     }
 
+    public function renderViewContents($scopeItems)
+    {
+        $contents = '<!--ccm:assets:'.Asset::ASSET_POSITION_HEADER.'//-->';
+        $contents .= '<!--ccm:assets:'.Asset::ASSET_POSITION_FOOTER.'//-->';
+        $contents .= parent::renderViewContents($scopeItems);
+
+        return $contents;
+    }
 
     public function outputAssetIntoView($item)
     {
         if ($item instanceof Asset) {
             $formatter = new JavascriptFormatter();
-            print $formatter->output($item);
+            return $formatter->output($item);
         } else {
-            print $item . "\n";
+            return $item . "\n";
         }
     }
 

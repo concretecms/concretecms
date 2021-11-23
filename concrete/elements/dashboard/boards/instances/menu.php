@@ -6,7 +6,7 @@ $board = $instance->getBoard();
 
 <div class="mb-3">
     <a href="<?=URL::to('/dashboard/boards/details', $board->getBoardID())?>">
-        <i class="fa fa-arrow-up"></i> <?=t('Back to Board')?>
+        <i class="fas fa-arrow-up"></i> <?=t('Back to Board')?>
     </a>
 </div>
 
@@ -17,8 +17,6 @@ $board = $instance->getBoard();
     >
         <?=t('Details')?>
     </a>
-</div>
-<div class="list-group">
     <a
             class="list-group-item <?=($action === 'rules') ? ' active' : ''?>"
             href="<?=URL::to('/dashboard/boards/instances/rules', $instance->getBoardInstanceID())?>"

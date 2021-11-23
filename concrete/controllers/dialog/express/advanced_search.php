@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Search\SavedExpressSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\Express\Search\SearchProvider;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManager;
 use League\Url\Url;
@@ -19,6 +20,11 @@ class AdvancedSearch extends AdvancedSearchController
      * @var Entity
      */
     protected $entity;
+
+    /**
+     * @var string
+     */
+    protected $pagePath = '/dashboard/express/entries';
 
     /**
      * @var ObjectManager
@@ -39,6 +45,12 @@ class AdvancedSearch extends AdvancedSearchController
                 $this->entity = $entity;
             } else {
                 throw new \Exception(t('Access Denied.'));
+            }
+        }
+        if ($this->request->query->has('cID')) {
+            $page = Page::getByID($this->request->query->get('cID'));
+            if ($page && !$page->isError()) {
+                $this->pagePath = $page->getCollectionPath();
             }
         }
     }
@@ -72,11 +84,11 @@ class AdvancedSearch extends AdvancedSearchController
         return $provider;
     }
 
-    public function getSavedSearchEntity()
+    public function getSearchPresets()
     {
         $em = $this->app->make(EntityManager::class);
         if (is_object($em)) {
-            return $em->getRepository(SavedExpressSearch::class);
+            return $em->getRepository(SavedExpressSearch::class)->findByEntity($this->entity);
         }
 
         return null;
@@ -89,7 +101,7 @@ class AdvancedSearch extends AdvancedSearchController
 
     public function getSubmitAction()
     {
-        return $this->app->make('url')->to('/dashboard/express/entries/', 'advanced_search', $this->entity->getId());
+        return $this->app->make('url')->to($this->pagePath, 'advanced_search', $this->entity->getId());
     }
 
     public function getFieldManager()
@@ -99,10 +111,9 @@ class AdvancedSearch extends AdvancedSearchController
         return $provider->getFieldManager();
     }
 
-
     public function getSavedSearchBaseURL(SavedSearch $search)
     {
-        return $this->app->make('url')->to('/dashboard/express/entries', 'preset', $search->getId());
+        return $this->app->make('url')->to($this->pagePath, 'preset', $search->getId());
     }
 
     public function getAddFieldAction()
@@ -116,14 +127,6 @@ class AdvancedSearch extends AdvancedSearchController
     public function getSavePresetAction()
     {
         $action = parent::getSavePresetAction();
-        $url = Url::createFromUrl($action);
-        $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
-        return (string) $url;
-    }
-
-    public function getEditSearchPresetAction()
-    {
-        $action = parent::getEditSearchPresetAction();
         $url = Url::createFromUrl($action);
         $url->getQuery()->modify(['exEntityID' => $this->entity->getID()]);
         return (string) $url;

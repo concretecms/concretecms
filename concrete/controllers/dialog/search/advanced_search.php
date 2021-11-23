@@ -24,9 +24,9 @@ abstract class AdvancedSearch extends BackendInterfaceController
 
     abstract public function getFieldManager();
 
-    abstract public function getSavedSearchBaseURL(SavedSearch $search);
+    abstract public function getSearchPresets();
 
-    abstract public function getSavedSearchEntity();
+    abstract public function getSavedSearchBaseURL(SavedSearch $search);
 
     public function getAddFieldAction()
     {
@@ -91,18 +91,6 @@ abstract class AdvancedSearch extends BackendInterfaceController
         $provider = $this->getSearchProvider();
         $element = new CustomizeResults($provider, $query);
         return $element;
-    }
-
-    protected function getSearchPresets()
-    {
-        $searchPresets = [];
-        $app = Application::getFacadeApplication();
-        $searchEntity = $this->getSavedSearchEntity();
-        if (!empty($searchEntity)) {
-            $searchPresets = $searchEntity->findAll();
-        }
-
-        return $searchPresets;
     }
 
     public function view()

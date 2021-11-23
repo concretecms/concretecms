@@ -34,8 +34,8 @@ class IncludePageAliasesField extends AbstractField
     {
         $form = \Core::make('helper/form');
         $html = '<div>';
-        $html .= '<div class="radio"><label>' . $form->radio('includeAliases', 0, $this->data['includeAliases']) . ' ' . t('No') . '</label></div>';
-        $html .= '<div class="radio"><label>' . $form->radio('includeAliases', 1, $this->data['includeAliases']) . ' ' . t('Yes') . '</label></div>';
+        $html .= '<div class="form-check">' . $form->radio('includeAliases', 0, $this->data['includeAliases']) . $form->label('includeAliases'.'1',t('No'), ['class'=>'form-check-label']) . '</div>';
+        $html .= '<div class="form-check">' . $form->radio('includeAliases', 1, $this->data['includeAliases']) . $form->label('includeAliases'.'2',t('Yes'), ['class'=>'form-check-label']) . '</div>';
         $html .= '</div>';
         return $html;
     }

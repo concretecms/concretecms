@@ -18,10 +18,9 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
         'TreeTypes',
     ];
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass():void
     {
         parent::setUpBeforeClass();
-        \Core::make('cache/request')->disable();
     }
 
     public function testExpressHandleGenerator()
@@ -78,9 +77,9 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
         $em->persist($key3);
         $em->flush();
 
-        $this->assertEquals('attribute_key', $handle1);
-        $this->assertEquals('attribute_key_2', $handle2);
-        $this->assertEquals('attribute_key_3', $handle3);
+        $this->assertEquals('konkurito', $handle1);
+        $this->assertEquals('kontentsu', $handle2);
+        $this->assertEquals('kontentsu_2', $handle3);
     }
 
     public function testHandle()
@@ -161,6 +160,6 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
         $generator = new \Concrete\Core\Express\Attribute\AttributeKeyHandleGenerator($category);
 
         $handle = $generator->generate($key);
-        $this->assertEquals('yes_i_fully_and_100_and_completely_and_ine', $handle);
+        $this->assertEquals('yes_i_fully_and_100_percent_and_completely', $handle);
     }
 }

@@ -1,0 +1,13 @@
+div.theme-atomik {
+  &.page-template-resource-detail {
+
+    @include media-breakpoint-down(md) {
+      .ccm-block-page-attribute-display-wrapper {
+        img {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
+
+}

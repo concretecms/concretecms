@@ -6,4 +6,6 @@ use Concrete\Core\Page\Command\PageCommand;
 
 class DisableCustomPageSummaryTemplatesCommand extends PageCommand
 {
+
+
 }

@@ -18,11 +18,13 @@ class SearchServiceProvider extends Provider
      */
     public function register()
     {
-        $this->app->bindIf(IndexManagerInterface::class, DefaultManager::class);
-        $this->app->resolving(DefaultManager::class, function(DefaultManager $manager) {
+        $this->app->singleton(DefaultManager::class, function($app) {
+            $manager = new DefaultManager();
             $manager->addIndex(Page::class, PageIndex::class);
             $manager->addIndex(Entry::class, EntityIndex::class);
+            return $manager;
         });
+        $this->app->bindIf(IndexManagerInterface::class, DefaultManager::class);
     }
 
 }

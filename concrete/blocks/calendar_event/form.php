@@ -19,6 +19,7 @@ use Concrete\Core\Support\Facade\Application;
 /** @var EventKey[] $eventKeys */
 /** @var array $calendars */
 /** @var array $displayEventAttributes */
+/** @var bool $allowExport */
 
 $app = Application::getFacadeApplication();
 /** @var Form $form */
@@ -81,6 +82,11 @@ $form = $app->make(Form::class);
         <div class="form-check">
             <?php echo $form->checkbox('displayEventDescription', 1, $displayEventDescription) ?>
             <?php echo $form->label("displayEventDescription", t('Description'), ["class" => "form-check-label"]) ?>
+        </div>
+
+        <div class="form-check">
+            <?php echo $form->checkbox('allowExport', 1, $allowExport) ?>
+            <?php echo $form->label("allowExport", t('Allow event export'), ["class" => "form-check-label"]) ?>
         </div>
     </div>
 

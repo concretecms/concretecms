@@ -55,7 +55,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             </div>
             <p class="help-block">
                 <span class="text-danger">
-                    <i class="fa fa-exclamation-triangle"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                     <?= t('This option should only be enabled by developers: it could brick your site.'); ?><br/>
                     <?= t('In this case you\'ll have to manually delete the %s configuration key.', '<code>concrete.debug.error_reporting</code>'); ?>
                 </span>

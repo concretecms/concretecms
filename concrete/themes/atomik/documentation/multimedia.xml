@@ -1,0 +1,607 @@
+<concrete5-cif version="1.0">
+    <area name="Main">
+        <blocks>
+            <block type="core_theme_documentation_breadcrumb" name="">
+                <style>
+                    <backgroundColor/>
+                    <backgroundRepeat/>
+                    <backgroundSize/>
+                    <backgroundPosition/>
+                    <borderWidth/>
+                    <borderColor/>
+                    <borderStyle/>
+                    <borderRadius/>
+                    <baseFontSize/>
+                    <alignment/>
+                    <textColor/>
+                    <linkColor/>
+                    <paddingTop/>
+                    <paddingBottom/>
+                    <paddingLeft/>
+                    <paddingRight/>
+                    <marginTop/>
+                    <marginBottom/>
+                    <marginLeft/>
+                    <marginRight/>
+                    <rotate/>
+                    <boxShadowHorizontal/>
+                    <boxShadowVertical/>
+                    <boxShadowBlur/>
+                    <boxShadowSpread/>
+                    <boxShadowColor/>
+                    <customClass>mt-5</customClass>
+                    <customID/>
+                    <customElementAttribute/>
+                    <hideOnExtraSmallDevice/>
+                    <hideOnSmallDevice/>
+                    <hideOnMediumDevice/>
+                    <hideOnLargeDevice/>
+                </style>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h1>Multimedia</h1>
+
+<p class="lead">Make your site come alive with video, audio, rich media and more into your site.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Board</h2>
+
+<p class="text-secondary small">Note: if you don&#39;t have the &quot;Blog&quot; board installed nothing will display here.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="board" name="">
+                <data>
+                    <board>Blog</board>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Page Attribute Display</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="page_attribute_display" name="">
+                <data table="btPageAttributeDisplay">
+                    <record>
+                        <attributeHandle><![CDATA[rpv_pageName]]></attributeHandle>
+                        <attributeTitleText><![CDATA[Page Name]]></attributeTitleText>
+                        <displayTag><![CDATA[h3]]></displayTag>
+                        <dateFormat><![CDATA[n/j/y, g:i A]]></dateFormat>
+                        <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                        <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                        <delimiter><![CDATA[comma]]></delimiter>
+                    </record>
+                </data>
+            </block>
+            <block type="page_attribute_display" name="">
+                <data table="btPageAttributeDisplay">
+                    <record>
+                        <attributeHandle><![CDATA[rpv_pageDatePublic]]></attributeHandle>
+                        <attributeTitleText><![CDATA[Page Date Published]]></attributeTitleText>
+                        <displayTag><![CDATA[h3]]></displayTag>
+                        <dateFormat><![CDATA[n/j/y, g:i A]]></dateFormat>
+                        <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                        <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                        <delimiter><![CDATA[comma]]></delimiter>
+                    </record>
+                </data>
+            </block>
+            <block type="page_attribute_display" name="">
+                <data table="btPageAttributeDisplay">
+                    <record>
+                        <attributeHandle><![CDATA[is_featured]]></attributeHandle>
+                        <attributeTitleText><![CDATA[Is Featured]]></attributeTitleText>
+                        <displayTag><![CDATA[p]]></displayTag>
+                        <dateFormat><![CDATA[n/j/y, g:i A]]></dateFormat>
+                        <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                        <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                        <delimiter><![CDATA[comma]]></delimiter>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Image Slider</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="image_slider" name="">
+                <data table="btImageSlider">
+                    <record>
+                        <navigationType><![CDATA[2]]></navigationType>
+                        <timeout><![CDATA[4000]]></timeout>
+                        <speed><![CDATA[500]]></speed>
+                        <noAnimate><![CDATA[0]]></noAnimate>
+                        <pause><![CDATA[0]]></pause>
+                        <maxWidth><![CDATA[0]]></maxWidth>
+                    </record>
+                </data>
+                <data table="btImageSliderEntries">
+                    <record>
+                        <cID><![CDATA[0]]></cID>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <linkURL><![CDATA[]]></linkURL>
+                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                        <title><![CDATA[Collaboratively administrate complex websites with ease.]]></title>
+                        <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+]]></description>
+                        <sortOrder><![CDATA[0]]></sortOrder>
+                    </record>
+                    <record>
+                        <cID><![CDATA[0]]></cID>
+                        <fID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</fID>
+                        <linkURL><![CDATA[]]></linkURL>
+                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                        <title><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit.]]></title>
+                        <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+]]></description>
+                        <sortOrder><![CDATA[1]]></sortOrder>
+                    </record>
+                    <record>
+                        <cID><![CDATA[0]]></cID>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <linkURL><![CDATA[]]></linkURL>
+                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                        <title><![CDATA[Vestibulum ante ipsum primis.]]></title>
+                        <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+]]></description>
+                        <sortOrder><![CDATA[2]]></sortOrder>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Hero Slider</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="image_slider" name="" custom-template="hero_slider.php">
+                <data table="btImageSlider">
+                    <record>
+                        <navigationType><![CDATA[2]]></navigationType>
+                        <timeout><![CDATA[4000]]></timeout>
+                        <speed><![CDATA[500]]></speed>
+                        <noAnimate><![CDATA[0]]></noAnimate>
+                        <pause><![CDATA[0]]></pause>
+                        <maxWidth><![CDATA[0]]></maxWidth>
+                    </record>
+                </data>
+                <data table="btImageSliderEntries">
+                    <record>
+                        <cID><![CDATA[0]]></cID>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <linkURL><![CDATA[]]></linkURL>
+                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                        <title><![CDATA[Collaboratively administrate complex websites with ease.]]></title>
+                        <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+]]></description>
+                        <sortOrder><![CDATA[0]]></sortOrder>
+                    </record>
+                    <record>
+                        <cID><![CDATA[0]]></cID>
+                        <fID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</fID>
+                        <linkURL><![CDATA[]]></linkURL>
+                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                        <title><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit.]]></title>
+                        <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+]]></description>
+                        <sortOrder><![CDATA[1]]></sortOrder>
+                    </record>
+                    <record>
+                        <cID><![CDATA[0]]></cID>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <linkURL><![CDATA[]]></linkURL>
+                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                        <title><![CDATA[Vestibulum ante ipsum primis.]]></title>
+                        <description><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt turpis at odio fermentum posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</p>
+]]></description>
+                        <sortOrder><![CDATA[2]]></sortOrder>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Video Player</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="video" name="">
+                <data table="btVideo">
+                    <record>
+                        <webmfID/>
+                        <oggfID/>
+                        <posterfID/>
+                        <mp4fID>{ccm:export:file:atomik-documentation-video.mp4}</mp4fID>
+                        <videoSize>0</videoSize>
+                        <width>0</width>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Document Library</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="document_library" name="">
+                <data table="btDocumentLibrary">
+                    <record>
+                        <setIds><![CDATA[[]]]></setIds>
+                        <folderID>{ccm:export:filefolder:/Documents}</folderID>
+                        <setMode><![CDATA[any]]></setMode>
+                        <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
+                        <tags><![CDATA[]]></tags>
+                        <viewProperties>
+                            <![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
+                        <expandableProperties><![CDATA[[]]]></expandableProperties>
+                        <searchProperties></searchProperties>
+                        <orderBy><![CDATA[title]]></orderBy>
+                        <displayLimit><![CDATA[20]]></displayLimit>
+                        <displayOrderDesc><![CDATA[0]]></displayOrderDesc>
+                        <addFilesToSetID><![CDATA[0]]></addFilesToSetID>
+                        <maxThumbWidth><![CDATA[0]]></maxThumbWidth>
+                        <maxThumbHeight><![CDATA[0]]></maxThumbHeight>
+                        <enableSearch><![CDATA[1]]></enableSearch>
+                        <heightMode><![CDATA[auto]]></heightMode>
+                        <downloadFileMethod><![CDATA[browser]]></downloadFileMethod>
+                        <fixedHeightSize><![CDATA[0]]></fixedHeightSize>
+                        <headerBackgroundColor><![CDATA[]]></headerBackgroundColor>
+                        <headerBackgroundColorActiveSort><![CDATA[]]></headerBackgroundColorActiveSort>
+                        <headerTextColor><![CDATA[]]></headerTextColor>
+                        <allowFileUploading><![CDATA[0]]></allowFileUploading>
+                        <allowInPageFileManagement><![CDATA[0]]></allowInPageFileManagement>
+                        <tableName><![CDATA[]]></tableName>
+                        <tableDescription><![CDATA[]]></tableDescription>
+                        <tableStriped><![CDATA[0]]></tableStriped>
+                        <rowBackgroundColorAlternate><![CDATA[]]></rowBackgroundColorAlternate>
+                        <hideFolders><![CDATA[0]]></hideFolders>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Icon Grid</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="document_library" name="" custom-template="icon_grid.php">
+                <data table="btDocumentLibrary">
+                    <record>
+                        <setIds><![CDATA[[]]]></setIds>
+                        <folderID>{ccm:export:filefolder:/Documents}</folderID>
+                        <setMode><![CDATA[any]]></setMode>
+                        <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
+                        <tags><![CDATA[]]></tags>
+                        <viewProperties>
+                            <![CDATA[{"thumbnail":"1","filename":"5","tags":"-1","date":"5","extension":"-1","size":"5","description":"-1","ak_16":"-1","ak_17":"-1","ak_19":"-1"}]]></viewProperties>
+                        <expandableProperties><![CDATA[[]]]></expandableProperties>
+                        <searchProperties></searchProperties>
+                        <orderBy><![CDATA[title]]></orderBy>
+                        <displayLimit><![CDATA[20]]></displayLimit>
+                        <displayOrderDesc><![CDATA[0]]></displayOrderDesc>
+                        <addFilesToSetID><![CDATA[0]]></addFilesToSetID>
+                        <maxThumbWidth><![CDATA[0]]></maxThumbWidth>
+                        <maxThumbHeight><![CDATA[0]]></maxThumbHeight>
+                        <enableSearch><![CDATA[1]]></enableSearch>
+                        <heightMode><![CDATA[auto]]></heightMode>
+                        <downloadFileMethod><![CDATA[browser]]></downloadFileMethod>
+                        <fixedHeightSize><![CDATA[0]]></fixedHeightSize>
+                        <headerBackgroundColor><![CDATA[]]></headerBackgroundColor>
+                        <headerBackgroundColorActiveSort><![CDATA[]]></headerBackgroundColorActiveSort>
+                        <headerTextColor><![CDATA[]]></headerTextColor>
+                        <allowFileUploading><![CDATA[0]]></allowFileUploading>
+                        <allowInPageFileManagement><![CDATA[0]]></allowInPageFileManagement>
+                        <tableName><![CDATA[]]></tableName>
+                        <tableDescription><![CDATA[]]></tableDescription>
+                        <tableStriped><![CDATA[0]]></tableStriped>
+                        <rowBackgroundColorAlternate><![CDATA[]]></rowBackgroundColorAlternate>
+                        <hideFolders><![CDATA[0]]></hideFolders>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">YouTube Video</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="youtube" name="">
+                <data table="btYouTube">
+                    <record>
+                        <title><![CDATA[]]></title>
+                        <videoURL><![CDATA[https://www.youtube.com/watch?v=vp5HvfP_YfE]]></videoURL>
+                        <vHeight><![CDATA[]]></vHeight>
+                        <vWidth><![CDATA[]]></vWidth>
+                        <sizing><![CDATA[16:9]]></sizing>
+                        <startTimeEnabled><![CDATA[0]]></startTimeEnabled>
+                        <startTime><![CDATA[]]></startTime>
+                        <noCookie><![CDATA[0]]></noCookie>
+                        <autoplay><![CDATA[0]]></autoplay>
+                        <color><![CDATA[red]]></color>
+                        <controls><![CDATA[1]]></controls>
+                        <iv_load_policy><![CDATA[1]]></iv_load_policy>
+                        <loopEnd><![CDATA[0]]></loopEnd>
+                        <modestbranding><![CDATA[1]]></modestbranding>
+                        <lazyLoad><![CDATA[0]]></lazyLoad>
+                        <rel><![CDATA[0]]></rel>
+                        <showCaptions><![CDATA[0]]></showCaptions>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Google Map</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="google_map" name="">
+                <data table="btGoogleMap">
+                    <record>
+                        <title><![CDATA[]]></title>
+                        <location>
+                            <![CDATA[701 Southwest 6th Avenue, Portland, OR, USA]]></location>
+                        <latitude><![CDATA[45.5191045]]></latitude>
+                        <longitude><![CDATA[-122.6795024]]></longitude>
+                        <zoom><![CDATA[14]]></zoom>
+                        <width><![CDATA[100%]]></width>
+                        <height><![CDATA[400px]]></height>
+                        <scrollwheel><![CDATA[0]]></scrollwheel>
+                        <titleFormat><![CDATA[h3]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Gallery</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="gallery" name="" custom-container-settings="0">
+                <entries>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[Gallery Caption 1]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[Hover Caption 1]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[Gallery Caption 2]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[Hover Caption 2]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[Gallery Caption 3]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[Hover Caption 3]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[Gallery Caption 4]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[Hover Caption 4]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[Gallery Caption 5]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[Hover Caption 5]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[Gallery Caption 6]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[Hover Caption 6]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                </entries>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Logos</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="gallery" name="" custom-template="logos.php">
+                <entries>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-logo-01.png}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-logo-02.png}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-logo-03.png}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                    <entry>
+                        <fID>{ccm:export:file:atomik-documentation-image-logo-04.png}</fID>
+                        <displaychoices>
+                            <choice>
+                                <dckey>caption</dckey>
+                                <value><![CDATA[]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>hover_caption</dckey>
+                                <value><![CDATA[]]></value>
+                            </choice>
+                            <choice>
+                                <dckey>size</dckey>
+                                <value><![CDATA[standard]]></value>
+                            </choice>
+                        </displaychoices>
+                    </entry>
+                </entries>
+            </block>
+
+        </blocks>
+    </area>
+</concrete5-cif>

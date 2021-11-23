@@ -14,7 +14,7 @@ class RepetitionTimezoneTest extends TestCase
      */
     protected $dateService;
 
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->dateService = new Date();

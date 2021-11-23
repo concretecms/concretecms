@@ -3,16 +3,15 @@
 namespace Concrete\TestHelpers\Database;
 
 use CacheLocal;
+use Concrete\Core\Cache\Cache;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Database\Schema\Schema;
+use Concrete\Tests\TestCase;
 use Core;
-use Doctrine\DBAL\Driver\PDOConnection;
+use Doctrine\DBAL\Driver\Connection as PDOConnection;
 use Doctrine\ORM\EntityManagerInterface;
 use ORM;
-use PHPUnit\DbUnit\DataSet\CompositeDataSet;
-use PHPUnit\DbUnit\TestCase;
-use PHPUnit_Extensions_Database_TestCase;
 use RuntimeException;
 use SimpleXMLElement;
 
@@ -70,22 +69,29 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     /**
      * Set up before any tests run.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
+        Cache::disableAll();
         // Make sure tables are imported
         $testCase = new static();
         $testCase->importTables();
         $testCase->importMetadatas();
-
         // Call parent setup
         parent::setUpBeforeClass();
+    }
+
+    public function setUp():void
+    {
+        $this->importFixtures();
+        parent::setUp();
     }
 
     /**
      * Tear down after class has completed.
      */
-    public static function tearDownAfterClass()
+    public static function TearDownAfterClass():void
     {
+        Cache::enableAll();
         // Make sure tables are removed
         $testCase = new static();
         $testCase->removeTables();
@@ -98,7 +104,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     {
         parent::tearDown();
         ORM::entityManager('core')->clear();
-        CacheLocal::flush();
+        Core::make('cache/request')->flush();
     }
 
     /**
@@ -111,7 +117,6 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         if (!static::$connection) {
             static::$connection = Core::make('database')->connection('travis');
         }
-
         return static::$connection;
     }
 
@@ -120,7 +125,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
      *
      * @throws \RuntimeException
      *
-     * @return \PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     * @return PDOConnection
      */
     protected function getConnection()
     {
@@ -129,21 +134,10 @@ abstract class ConcreteDatabaseTestCase extends TestCase
             throw new RuntimeException('Invalid connection type.');
         }
 
-        return $this->createDefaultDBConnection($connection, 'test');
+        return $this->connection()->getWrappedConnection();
     }
 
-    /**
-     * Returns the test dataset.
-     *
-     * @return \PHPUnit_Extensions_Database_DataSet_IDataSet
-     */
-    protected function getDataSet()
-    {
-        $dataSet = new CompositeDataSet();
-        $this->importFixtures($dataSet);
 
-        return $dataSet;
-    }
 
     /**
      * Get the names of the tables to be imported from the xml files.
@@ -168,8 +162,9 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         });
 
         if ($tables) {
+            $xml = $this->extractTableData($tables);
             // Try to extract the tables
-            if (!$xml = $this->extractTableData($tables)) {
+            if (!$xml) {
                 throw new RuntimeException('Invalid tables: ' . json_encode($tables));
             }
 
@@ -192,19 +187,21 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         $connection = $this->connection();
 
         // Get all existing tables
-        $tables = $connection->query('show tables')->fetchAll();
-        $tables = array_map('array_shift', $tables);
+        $tables = $connection->query('show tables')->fetchAllAssociative();
+        $tables = array_map(function($tableSet) {
+            return array_shift($tableSet);
+        }, $tables);
 
         // Turn off foreign key checks
-        $connection->exec('SET FOREIGN_KEY_CHECKS = 0');
+        $connection->query('SET FOREIGN_KEY_CHECKS = 0');
 
         foreach ($tables as $table) {
             // Drop tables
-            $connection->exec("DROP TABLE `{$table}`");
+            $connection->query("DROP TABLE `{$table}`");
         }
 
         // Reset foreign key checks on
-        $connection->exec('SET FOREIGN_KEY_CHECKS = 1');
+        $connection->query('SET FOREIGN_KEY_CHECKS = 1');
 
         // Clear exists cache
         static::$existingTables = [];
@@ -280,10 +277,8 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         }
     }
 
-    /**
-     * @param CompositeDataSet $dataSet
-     */
-    protected function importFixtures(CompositeDataSet $dataSet)
+
+    protected function importFixtures()
     {
         $fixtures = $this->fixtures;
         if (!empty($fixtures)) {
@@ -293,12 +288,36 @@ abstract class ConcreteDatabaseTestCase extends TestCase
             }
             $namespaceChunks = explode('\\', $testClass);
             $fixturePath = DIR_TESTS . '/assets/' . $namespaceChunks[2];
+
             foreach ((array) $fixtures as $fixture) {
                 $path = $fixturePath . "/$fixture.xml";
-                $ds = $this->createMySQLXMLDataSet($path);
-                $dataSet->addDataSet($ds);
+                $xml = simplexml_load_file($path);
+                if ($xml) {
+                    $this->importTableDataXML($xml, $this->connection());
+                }
             }
         }
+    }
+
+    protected function importTableDataXml(\SimpleXMLElement $xml, Connection $connection)
+    {
+        if ($xml->database && $xml->database->table_data) {
+            foreach ($xml->database->table_data as $tableData) {
+                $name = $tableData['name']->__toString();
+                $connection->executeQuery("DELETE FROM " .$connection->quoteIdentifier($name));
+                foreach ($tableData->row as $rowData) {
+                    $queryBuilder = $connection->createQueryBuilder();
+                    $queryBuilder->insert($name);
+                    foreach ($rowData->field as $field) {
+                        $queryBuilder->setValue($field['name']->__toString(), ':'.$field['name']->__toString());
+                        $queryBuilder->setParameter(':'.$field['name']->__toString(),$field->__toString());
+                    }
+                    $queryBuilder->execute();
+                }
+            }
+        }
+
+
     }
 
     /**
@@ -307,8 +326,8 @@ abstract class ConcreteDatabaseTestCase extends TestCase
     protected function importMetadatas()
     {
         $sm = Core::make(DatabaseStructureManager::class);
-
-        if ($metadatas = $this->getMetadatas()) {
+        $metadatas = $this->getMetadatas();
+        if ($metadatas) {
             $sm->installDatabaseFor($metadatas);
         }
     }
@@ -388,7 +407,7 @@ abstract class ConcreteDatabaseTestCase extends TestCase
 
         if ($tables === null) {
             // Get all existing tables
-            $tables = $connection->query('show tables')->fetchAll();
+            $tables = $connection->query('show tables')->fetchAllAssociative();
             $tables = array_map(function ($table) {
                 return array_shift($table);
             }, $tables);

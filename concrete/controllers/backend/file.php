@@ -3,13 +3,14 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Command\Batch\Batch as BatchBuilder;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
-use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
+use Concrete\Core\Entity\File\Folder\FavoriteFolder;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
+use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\File\Command\RescanFileBatchProcessFactory;
 use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;
@@ -19,10 +20,6 @@ use Concrete\Core\File\Rescanner;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\File\ValidationService;
-use Concrete\Core\Foundation\Queue\Batch\BatchDispatcher;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
@@ -32,20 +29,19 @@ use Concrete\Core\Url\Url;
 use Concrete\Core\Utility\Service\Number;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\CSRF\Token;
-use Concrete\Core\View\View;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use FileSet;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\RequestOptions;
 use IPLib\Factory as IPFactory;
+use IPLib\ParseStringFlag as IPParseStringFlag;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
 use RuntimeException;
-use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use ZipArchive;
 
 class File extends Controller
@@ -91,7 +87,7 @@ class File extends Controller
 
     public function rescan()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
+        $files = $this->getRequestFiles('edit_file_contents');
         $r = new FileEditResponse();
         $r->setFiles($files);
         $error = $this->app->make('error');
@@ -110,15 +106,18 @@ class File extends Controller
 
     public function rescanMultiple()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
-        $factory = new RescanFileBatchProcessFactory();
-        $processor = $this->app->make(Processor::class);
-        return $processor->process($factory, $files);
+        $files = $this->getRequestFiles('edit_file_contents');
+        $batch = BatchBuilder::create(t('Rescan Files'), function() use ($files) {
+            foreach ($files as $file) {
+                yield new RescanFileCommand($file->getFileID());
+            }
+        });
+        return $this->dispatchBatch($batch);
     }
 
     public function approveVersion()
     {
-        $files = $this->getRequestFiles('canEditFileContents');
+        $files = $this->getRequestFiles('edit_file_contents');
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
         $fv = $files[0]->getVersion($fvID);
@@ -135,7 +134,7 @@ class File extends Controller
     {
         $token = $this->app->make('token');
         if (!$token->validate('delete-version')) {
-            $files = $this->getRequestFiles('canEditFileContents');
+            $files = $this->getRequestFiles('edit_file_contents');
         }
         $fvID = $this->request->request->get('fvID', $this->request->query->get('fvID'));
         $fvID = $this->app->make('helper/security')->sanitizeInt($fvID);
@@ -206,6 +205,125 @@ class File extends Controller
         }
 
         return $this->buildImportResponse($importedFileVersions, $errors, $replacingFile !== null);
+    }
+
+    public function getFavoriteFolders()
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+
+        if (!$userEntity instanceof User) {
+            $errors->add(t("You are not logged in."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $favoriteFolderList = [];
+
+            /** @var FavoriteFolder[] $favoriteFolderEntries */
+            $favoriteFolderEntries = $favoriteFolderRepository->findBy(["owner" => $userEntity]);
+
+            foreach ($favoriteFolderEntries as $favoriteFolderEntry) {
+                $favoriteFolderTreeNode = Node::getByID($favoriteFolderEntry->getTreeNodeFolderId());
+
+                if ($favoriteFolderTreeNode instanceof FileFolder) {
+                    $favoriteFolderList[$favoriteFolderTreeNode->getTreeNodeID()] = $favoriteFolderTreeNode->getTreeNodeName();
+                }
+            }
+
+            $editResponse->setAdditionalDataAttribute("favoriteFolders", $favoriteFolderList);
+        }
+
+        return $responseFactory->json($editResponse);
+    }
+
+    public function addFavoriteFolder($folderId)
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        $treeNode = Node::getByID($folderId);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+        $favoriteFolderItem = $favoriteFolderRepository->findOneBy(["owner" => $userEntity, "treeNodeFolderId" => $folderId]);
+
+        if (!$userEntity instanceof User) {
+            $errors->add(t("You are not logged in."));
+        }
+
+        if (!(is_object($treeNode) && $treeNode instanceof FileFolder)) {
+            $errors->add(t("The given folder is invalid."));
+        }
+
+        if ($favoriteFolderItem instanceof FavoriteFolder) {
+            $errors->add(t("The folder is already part of the favorite list."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $favoriteFolderItem = new FavoriteFolder();
+            $favoriteFolderItem->setOwner($userEntity);
+            $favoriteFolderItem->setTreeNodeFolderId($folderId);
+
+            $entityManager->persist($favoriteFolderItem);;
+            $entityManager->flush();
+
+            $editResponse->setTitle(t("Folder successfully added"));
+            $editResponse->setMessage(t("The folder has been successfully added to your favorite list."));
+        }
+
+        return $responseFactory->json($editResponse);
+    }
+
+    /** @noinspection DuplicatedCode */
+    public function removeFavoriteFolder($folderId)
+    {
+        $editResponse = new EditResponse();
+        $errors = new ErrorList();
+        $user = new \Concrete\Core\User\User();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->app->make(EntityManagerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $favoriteFolderRepository = $entityManager->getRepository(FavoriteFolder::class);
+        $userRepository = $entityManager->getRepository(User::class);
+        $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
+        $favoriteFolderItem = $favoriteFolderRepository->findOneBy(["owner" => $userEntity, "treeNodeFolderId" => $folderId]);
+
+        if (!$favoriteFolderItem instanceof FavoriteFolder) {
+            $errors->add(t("The given folder is not part of your favorite list."));
+        }
+
+        if ($errors->has()) {
+            $editResponse->setError($errors);
+        } else {
+            $entityManager->remove($favoriteFolderItem);;
+            $entityManager->flush();
+
+            $editResponse->setTitle(t("Folder successfully removed"));
+            $editResponse->setMessage(t("The folder has been successfully removed from the your favorite list."));
+        }
+
+        return $responseFactory->json($editResponse);
     }
 
     /**
@@ -297,13 +415,16 @@ class File extends Controller
                     }
                     break;
             }
-            $this->checkRemoteURlsToImport($urls);
+
+            $validIps = (array) $this->checkRemoteURlsToImport($urls);
+
             $originalPage = $this->getImportOriginalPage();
             $fi = $this->app->make(Importer::class);
             $volatileDirectory = $this->app->make(VolatileDirectory::class);
             foreach ($urls as $url) {
                 try {
-                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath());
+                    $host = (string) \League\Url\Url::createFromUrl($url)->getHost();
+                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validIps[$host] ?? null);
                     $fileVersion = $fi->import($downloadedFile, false, $replacingFile ?: $this->getDestinationFolder());
                     if (!$fileVersion instanceof FileVersionEntity) {
                         $errors->add($url . ': ' . $fi->getErrorMessage($fileVersion));
@@ -326,12 +447,24 @@ class File extends Controller
 
     public function duplicate()
     {
-        $files = $this->getRequestFiles('canCopyFile');
         $r = new FileEditResponse();
-        $newFiles = [];
-        foreach ($files as $f) {
-            $nf = $f->duplicate();
-            $newFiles[] = $nf;
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var \Concrete\Core\Http\Request $request */
+        $request = $this->app->make(\Concrete\Core\Http\Request::class);
+
+        if ($token->validate("", $request->request->get("token"))) {
+            $files = $this->getRequestFiles('copy_file');
+            $newFiles = [];
+            foreach ($files as $f) {
+                $nf = $f->duplicate();
+                $newFiles[] = $nf;
+            }
+            $r->setFiles($newFiles);
+        } else {
+            $errorList = new ErrorList();
+            $errorList->add($token->getErrorMessage());
+            $r->setError($errorList);
         }
         $r->setFiles($newFiles);
         $r->outputJSON();
@@ -347,7 +480,7 @@ class File extends Controller
 
     public function download()
     {
-        $files = $this->getRequestFiles('canViewFileInFileManager');
+        $files = $this->getRequestFiles("view_file_in_file_manager", true);
         if (count($files) > 1) {
             $fh = $this->app->make('helper/file');
             $vh = $this->app->make('helper/validation/identifier');
@@ -398,7 +531,7 @@ class File extends Controller
         $rescanner->rescanFileVersion($fv);
     }
 
-    protected function getRequestFiles($permission = 'canViewFileInFileManager')
+    protected function getRequestFiles($permissionKey = 'view_file_in_file_manager', $checkUUID = false)
     {
         $files = [];
         $fID = $this->request->request->get('fID', $this->request->query->get('fID'));
@@ -407,13 +540,28 @@ class File extends Controller
         } else {
             $fileIDs = [$fID];
         }
-        $em = $this->app->make(EntityManagerInterface::class);
         foreach ($fileIDs as $fID) {
-            $f = $fID ? $em->find(FileEntity::class, $fID) : null;
-            if ($f !== null) {
-                $fp = new ConcretePermissions($f);
-                if ($fp->$permission()) {
-                    $files[] = $f;
+            $fUUID = null;
+
+            if (is_string($fID) && uuid_is_valid($fID)) {
+                $f = \Concrete\Core\File\File::getByUUID($fID);
+                $fUUID = $fID;
+            } else {
+                $f = \Concrete\Core\File\File::getByID($fID);
+            }
+
+            if ($f instanceof \Concrete\Core\Entity\File\File) {
+                if (!$checkUUID || !$f->hasFileUUID() || $f->getFileUUID() === $fUUID) {
+                    $permissionChecker = new Checker($f);
+                    $responseObject = $permissionChecker->getResponseObject();
+
+                    try {
+                        if ($responseObject->validate($permissionKey)) {
+                            $files[] = $f;
+                        }
+                    } catch (Exception $e) {
+                        // Do Nothing
+                    }
                 }
             }
         }
@@ -548,7 +696,7 @@ class File extends Controller
             if ($replacingFile === null) {
                 $fp = new Checker($folder);
                 if (!$fp->canAddFiles()) {
-                    throw new UserMessageException(t('Unable to add files.'), 400);
+                    throw new UserMessageException(t("You don't have the permission to upload to %s", $folder->getTreeNodeDisplayName()), 400);
                 }
             }
             $this->destinationFolder = $folder;
@@ -617,6 +765,7 @@ class File extends Controller
      * Check that a list of strings are valid "incoming" file names.
      *
      * @param string $urls
+     * @return array<string, string> An array of domains and their validated IPs
      *
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified URLs are not valid
      *
@@ -624,6 +773,7 @@ class File extends Controller
      */
     protected function checkRemoteURlsToImport(array $urls)
     {
+        $validIps = [];
         foreach ($urls as $u) {
             try {
                 $url = Url::createFromUrl($u);
@@ -638,18 +788,41 @@ class File extends Controller
             if (in_array(strtolower($host), ['', '0', 'localhost'], true)) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
-            $ip = IPFactory::addressFromString($host);
+
+            // If we've already validated this hostname just skip it.
+            if (array_key_exists($host, $validIps)) {
+                continue;
+            }
+
+            $ipFormatBlocks = [
+                '/^\d+$/', // No fully integer / octal hostnames http://2130706433 http://017700000001
+                '/^0x[0-9a-f]+$/i', // No Hexadecimal hostnames http://0x07f000001
+            ];
+
+            foreach ($ipFormatBlocks as $block) {
+                if (preg_match($block, $host) !== 0) {
+                    throw new UserMessageException(t('The URL "%s" is not valid.', $u));
+                }
+            }
+
+            $ipFlags = IPParseStringFlag::IPV4_MAYBE_NON_DECIMAL | IPParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | IPParseStringFlag::MAY_INCLUDE_PORT | IPParseStringFlag::MAY_INCLUDE_ZONEID;
+            $ip = IPFactory::parseAddressString($host, $ipFlags);
             if ($ip === null) {
                 $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
                 while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
                     $dns = array_shift($dnsList);
-                    $ip = IPFactory::addressFromString($dns['ip']);
+                    $ip = IPFactory::parseAddressString($dns['ip']);
                 }
             }
-            if ($ip !== null && !in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {
+
+            if ($ip !== null && $ip->getRangeType() !== IPRangeType::T_PUBLIC) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
+
+            $validIps[$host] = $ip->toString();
         }
+
+        return $validIps;
     }
 
     /**
@@ -662,12 +835,26 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
      */
-    protected function downloadRemoteURL($url, $temporaryDirectory)
+    protected function downloadRemoteURL($url, $temporaryDirectory, string $ip = null)
     {
         /** @var Client $client */
         $client = $this->app->make(Client::class);
         $request = new Request('GET', $url);
-        $response = $client->send($request);
+
+        $config = [
+            RequestOptions::ALLOW_REDIRECTS => false,
+        ];
+
+        if ($ip) {
+            $host = parse_url($url, PHP_URL_HOST);
+            $scheme = parse_url($url, PHP_URL_SCHEME);
+            $port = parse_url($url, PHP_URL_PORT) ?: ($scheme === 'http' ? 80 : 443);
+
+            // Specify IP if one is provided.
+            $config['curl'] = [CURLOPT_RESOLVE => ["{$host}:{$port}:{$ip}"]];
+        }
+
+        $response = $client->send($request, $config);
 
         if ($response->getStatusCode() !== 200) {
             throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
@@ -679,9 +866,9 @@ class File extends Controller
             // got a filename (with extension)... use it
             $filename = $matches[1];
         } else {
-            foreach($response->getHeader('Content-Type') as $contentType) {
+            foreach ($response->getHeader('Content-Type') as $contentType) {
                 if (!empty($contentType)) {
-                    list($mimeType) = explode(';', $contentType, 2);
+                    [$mimeType] = explode(';', $contentType, 2);
                     $mimeType = trim($mimeType);
                     // use mimetype from http response
                     $extension = $this->app->make('helper/mime')->mimeToExtension($mimeType);
@@ -695,6 +882,14 @@ class File extends Controller
                 }
             }
         }
+
+        $fileValidationService = $this->app->make('helper/validation/file');
+
+        if (!$fileValidationService->extension($filename)) {
+            $fileHelper = $this->app->make('helper/file');
+            throw new UserMessageException(t('The file extension "%s" is not valid.', $fileHelper->getExtension($filename)));
+        }
+
         $fullFilename = $temporaryDirectory . '/' . $filename;
         // write the downloaded file to a temporary location on disk
         $handle = fopen($fullFilename, 'wb');
@@ -833,12 +1028,14 @@ class File extends Controller
                     foreach ($nodes as $node) {
                         /** @var FileFolder $treeNodeObject */
                         $treeNodeObject = $node["treeNodeObject"];
-
-                        $directories[] = [
-                            "directoryId" => $treeNodeObject->getTreeNodeID(),
-                            "directoryName" => $treeNodeObject->getTreeNodeName(),
-                            "directoryLevel" => $node["level"]
-                        ];
+                        $nodePermissions = new Checker($treeNodeObject);
+                        if ($nodePermissions->canAddFiles()) {
+                            $directories[] = [
+                                "directoryId" => $treeNodeObject->getTreeNodeID(),
+                                "directoryName" => $treeNodeObject->getTreeNodeName(),
+                                "directoryLevel" => $node["level"]
+                            ];
+                        }
                     }
                 }
             } else {
@@ -852,6 +1049,49 @@ class File extends Controller
         $editResponse->setError($errors);
         $editResponse->setAdditionalDataAttribute("directories", $directories);
 
+        return $responseFactory->json($editResponse);
+    }
+
+    public function uploadComplete()
+    {
+        $files = $this->getRequestFiles();
+        $editResponse = new EditResponse();
+        $token = $this->app->make(Token::class);
+        $responseFactory = $this->app->make(ResponseFactoryInterface::class);
+        $errors = $this->app->make(ErrorList::class);
+
+        if (!$files[0]) {
+            $errors->add(t('Unable to retrieve file object from uploaded completion.'));
+        }
+
+        try {
+            if ($token->validate()) {
+
+                $nodes = [];
+                foreach ($files as $file) {
+                    $node = $file->getFileNodeObject();
+                    if ($node) {
+                        $nodes[] = $node->getTreeNodeID();
+                    }
+                }
+
+                $this->app->make('session')->getFlashBag()->set('file_manager.updated_nodes', $nodes);
+
+                $folder = $files[0]->getFileFolderObject();
+                $redirectURL = (string)\Concrete\Core\Support\Facade\Url::to(
+                    '/dashboard/files/search/', 'folder', $folder->getTreeNodeID()
+                )->setQuery(['ccm_order_by' => 'dateModified', 'ccm_order_by_direction' => 'desc']);
+                $editResponse->setRedirectURL($redirectURL);
+
+            } else {
+                throw new UserMessageException($token->getErrorMessage(), 401);
+            }
+
+        } catch (UserMessageException $x) {
+            $errors->add($x);
+        }
+
+        $editResponse->setError($errors);
         return $responseFactory->json($editResponse);
     }
 
@@ -879,7 +1119,18 @@ class File extends Controller
 
                 $filesystem = new Filesystem();
 
-                $folder = $filesystem->getRootFolder();
+                $folder = null;
+                if ($this->request->request->has('currentFolder')) {
+                    $folder = $filesystem->getFolder($this->request->request->get('currentFolder'));
+                }
+                if (!$folder) {
+                    $folder = $filesystem->getRootFolder();
+                }
+
+                $permissions = new Checker($folder);
+                if (!$permissions->canAddTreeSubNode()) {
+                    throw new UserMessageException(t('You are not allowed to create folders at this location.'), 401);
+                }
 
                 // the storage location of the root folder is used.
                 $directory = $filesystem->addFolder($folder, $directoryName, $folder->getTreeNodeStorageLocationID());

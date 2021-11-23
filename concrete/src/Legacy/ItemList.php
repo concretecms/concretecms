@@ -253,26 +253,28 @@ class ItemList
     }
 
     /**
-     * Gets paging that works in our new format */
+     * Gets paging that works in our new format
+     * @deprecated - this all has to go.
+     */
     public function displayPagingV2($script = false, $return = false, $additionalVars = array())
     {
         $summary = $this->getSummary();
         $paginator = $this->getPagination($script, $additionalVars);
         if ($summary->pages > 1) {
             $html = '';
-            $html .= '<div class="ccm-search-results-pagination"><ul class="pagination">';
-            $prevClass = 'prev';
-            $nextClass = 'next';
+            $html .= '<nav class="ccm-search-results-pagination"><ul class="pagination">';
+            $prevClass = 'page-item prev';
+            $nextClass = 'page-item next';
             if (!$paginator->hasPreviousPage()) {
-                $prevClass = 'prev disabled';
+                $prevClass = 'page-item prev disabled';
             }
             if (!$paginator->hasNextPage()) {
-                $nextClass = 'next disabled';
+                $nextClass = 'page-item next disabled';
             }
             $html .= '<li class="' . $prevClass . '">' . $paginator->getPrevious(false, 'a') . '</li>';
             $html .= $paginator->getPages('li');
             $html .= '<li class="' . $nextClass . '">' . $paginator->getNext(false, 'a') . '</li>';
-            $html .= '</ul></div>';
+            $html .= '</ul></nav>';
         }
         if (isset($html)) {
             if ($return) {

@@ -8,9 +8,8 @@ class AttributeServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app['manager/attribute/category'] = $this->app->share(function ($app) {
+        $this->app->singleton('manager/attribute/category', function($app) {
             return new Manager($app);
         });
-
     }
 }

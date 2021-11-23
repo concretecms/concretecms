@@ -12,8 +12,6 @@ use Concrete\Tests\TestCase;
 class RedisSaverTest extends TestCase
 {
 
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @dataProvider namespacesToTest
      */

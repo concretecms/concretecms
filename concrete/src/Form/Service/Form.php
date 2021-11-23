@@ -159,7 +159,13 @@ class Form
             $result .= ' for="' . $forFieldID . '"';
         }
 
-        return $result . $this->serializeMiscFields('', $miscFields, []) . '>' . $innerHTML . '</label>';
+        // BS5 hack – form-label and form-check-label cannot coexist. So if someone is passing in
+        // 'form-check-label' hoping it will replace 'form-label', we reapply it to the new 9.0.2+ 'classes'
+        // key, so it will completely replace it.
+        if (isset($miscFields['class']) && !isset($miscFields['classes']) && strpos($miscFields['class'], 'form-check-label') > -1) {
+            $miscFields['classes'] = $miscFields['class'];
+        }
+        return $result . $this->serializeMiscFields('form-label', $miscFields, []) . '>' . $innerHTML . '</label>';
     }
 
     /**
@@ -416,6 +422,26 @@ class Form
         return $this->inputType($key, 'search', $valueOrMiscFields, $miscFields);
     }
 
+     /**
+     * Renders any previously unspecified input field type. Allows for adaptive update to any new HTML input types
+     * that are not covered by explicit methods. Browsers will either handle the specific input type or fallback
+     * to a text input.
+     *
+     * @param string $key the name/id of the element
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     *
+     * @return string
+     */
+    public function __call($name, $args)
+    {
+        $key = $args[0];
+        $valueOrMiscFields = $args[1];
+        $miscFields = array_slice($args,2);
+        return $this->inputType($key, $name, $valueOrMiscFields, $miscFields);
+    }
+    
+    
     /**
      * Renders a select field.
      *
@@ -458,7 +484,7 @@ class Form
             $this->selectIndex++;
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 $str .= '<optgroup label="' . h($k) . '">';
@@ -475,7 +501,7 @@ class Form
                 if ((string) $k === (string) $selectedValue) {
                     $str .= ' selected="selected"';
                 }
-                $str .= '>' . $text . '</option>';
+                $str .= '>' . h($text) . '</option>';
             }
         }
         $str .= '</select>';
@@ -553,7 +579,7 @@ class Form
             $miscFields['ccm-passed-value'] = $selectedCountryCode;
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             $str .= '<option value="' . h($k) . '"';
             if ((string) $k === (string) $selectedOption) {
@@ -619,7 +645,7 @@ class Form
             $optionValues = [];
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 if (count($text) > 0) {
@@ -657,7 +683,7 @@ class Form
      */
     public function password($key, $valueOrMiscFields = '', $miscFields = [])
     {
-        return $this->inputType($key, 'password', $valueOrMiscFields, $miscFields);
+        return $this->inputType($key, 'password', $valueOrMiscFields, array_merge(["autocomplete" => "off"], $miscFields));
     }
 
     /**
@@ -671,7 +697,7 @@ class Form
         $result = <<<EOT
 <div id="{$id}" style="position: absolute; top: -1000px; opacity: 0">
     <input type="text" id="{$id}_username" tabindex="-1" />
-    <input type="password" id="{$id}_password" tabindex="-1" />
+    <input type="password" id="{$id}_password" autocomplete="off" tabindex="-1" />
     <script>
     (function() {
         function removeFake() {
@@ -771,7 +797,7 @@ EOT;
     
     /**
      * @param string $defaultClass Default CSS class name
-     * @param array $attributes a key/value array of attributes (name => value), possibly including 'class'
+     * @param array $attributes a key/value array of attributes (name => value), possibly including 'class' or 'classes'
      * @param array $skipFields names of fields not to be serialized
      *
      * @return string
@@ -779,9 +805,26 @@ EOT;
     protected function serializeMiscFields($defaultClass, $attributes, array $skipFields = ['name', 'id']): string
     {
         $attributes = (array) $attributes;
+        // Ok, so here's the new behavior with CSS classes here. This should help us handle various BS5 use cases,
+        // preserve backward compatibility, and still offer some flexibility. A quick summary.
+        // 1. Previous behavior had any 'class' that was passed being appended to defaultClass.
+        // 2. In 9.0 and 9.0.1, we changed it so that the 'class' => '..' would completely override. Why? Well,
+        // semantically it seems better to me but it does result in more code. Really, the result is because the
+        // previous implementation would result in classes like `form-label form-check-label` being applied to <label>
+        // tags, which would cause BS5 to add strangely.
+        // 3. People have concerns about this, and it does require a lot of duplicate code in some situations. So
+        // let's back up off that and change it to work in this way:
+        // a. If you don't have a default class none of this matters – we just use whatever 'class' you pass in.
+        // b. If there is a default class used by the method, we use that class.
+        // c. If you also pass in a 'class' in your array, we append, just like the old days.
+        // d. If you pass in a 'classes' key instead of class, we completely replace, like the 9.0, 9.0.1 version.
         $defaultClass = trim((string) $defaultClass);
         if ($defaultClass !== '') {
             $attributes['class'] = trim(($attributes['class'] ?? '') . ' ' . $defaultClass);
+        }
+        if (isset($attributes['classes'])) {
+            $attributes['class'] = $attributes['classes'];
+            unset($attributes['classes']);
         }
         $attr = '';
         foreach ($attributes as $k => $v) {

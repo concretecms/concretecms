@@ -22,7 +22,6 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'PageTypes',
         'Collections',
         'CollectionVersions',
-        'CollectionVersionFeatureAssignments',
         'CollectionVersionBlockStyles',
         'CollectionVersionThemeCustomStyles',
         'CollectionVersionRelatedEdits',
@@ -35,13 +34,11 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Groups',
         'PageSearchIndex',
         'ConfigStore',
-        'GatheringDataSources',
         'Logs',
         'PageTypePublishTargetTypes',
         'AttributeKeyCategories',
         'PageTypeComposerOutputBlocks',
         'PageTypeComposerFormLayoutSets',
-        'BlockFeatureAssignments',
         'BlockPermissionAssignments',
         'UserGroups',
         'Groups',
@@ -49,9 +46,10 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
     ]; // so brutal
 
     protected $metadatas = [
+        'Concrete\Core\Entity\Site\Type',
         'Concrete\Core\Entity\Site\Site',
         'Concrete\Core\Entity\Site\Locale',
-        'Concrete\Core\Entity\Site\Type',
+        'Concrete\Core\Entity\Site\SkeletonTree',
         'Concrete\Core\Entity\Site\Tree',
         'Concrete\Core\Entity\Site\SiteTree',
         'Concrete\Core\Entity\Page\Relation\MultilingualRelation',
@@ -60,6 +58,8 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Summary\Category',
         'Concrete\Core\Entity\Page\Template',
         'Concrete\Core\Entity\Page\Summary\PageTemplate',
+        'Concrete\Core\Entity\User\User',
+        'Concrete\Core\Entity\User\UserSignup',
         'Concrete\Core\Entity\Attribute\Key\PageKey',
         'Concrete\Core\Entity\Attribute\Value\PageValue',
         'Concrete\Core\Entity\Attribute\Value\Value',
@@ -68,7 +68,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\User\UserSignup',
     ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
 
@@ -79,18 +79,23 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase
         if (!$service->getDefault()) {
             $service->installDefault();
         }
-
         $service = $app->make('site');
+        // PhP unit and laravel containers mean the request cache is somehow enabled? but only after soo many test runs
+        // So we force the cache to be disabled
+        $requestCache = $app->make('cache/request');
+        $requestCache->disable();
+        $service->setCache($requestCache);
         if (!$service->getDefault()) {
             $service->installDefault();
         }
-
-        Page::addHomePage();
+        $site = $service->getDefault();
+        Page::addHomePage($site->getSiteTreeObject());
         PageTemplate::add('full', 'Full');
         PageType::add([
             'handle' => 'basic',
             'name' => 'Basic',
         ]);
+
     }
 
     public function setUp(): void

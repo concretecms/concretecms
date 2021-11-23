@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Core\Localization\Translator\Translation;
+namespace Concrete\Tests\Localization\Translator\Translation;
 
 use Concrete\Core\Localization\Translator\Translation\TranslationLoaderRepository;
 use Concrete\TestHelpers\Localization\Translator\Translation\Fixtures\DummyTranslationLoader;
@@ -16,7 +16,7 @@ class TranslationLoaderRepositoryTest extends TestCase
 {
     protected $repository;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->repository = new TranslationLoaderRepository();
     }

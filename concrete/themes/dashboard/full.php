@@ -6,6 +6,7 @@ $view->inc('elements/title.php');
 
     <div id="ccm-dashboard-content-full">
         <?php
+        $view->inc('elements/result_messages.php');
         print $innerContent;
         ?>
     </div>

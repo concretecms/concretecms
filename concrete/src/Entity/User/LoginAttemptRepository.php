@@ -78,7 +78,7 @@ class LoginAttemptRepository extends EntityRepository
             $qb->select();
         }
 
-        $qb->where('a.utcDate > :after')->setParameter('after', $after);
+        $qb->where('a.utcDate > :after')->setParameter('after', $after->getTimestamp());
 
         // Pivot on user id if needed
         if ($user) {

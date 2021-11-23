@@ -6,6 +6,7 @@ use Concrete\Core\Application\UserInterface\Icon\IconFormatterInterface;
 use Concrete\Core\Board\DataSource\Saver\PageSaver;
 use Concrete\Core\Board\DataSource\Saver\SaverInterface;
 use Concrete\Core\Board\Instance\Item\Populator\PagePopulator as PageItemPopulator;
+use Concrete\Core\Board\Instance\Item\Filterer\FiltererInterface as ItemFiltererInterface;
 use Concrete\Core\Board\Instance\Slot\Content\Populator\PagePopulator as PageContentPopulator;
 use Concrete\Core\Board\Instance\Item\Populator\PopulatorInterface as ItemPopulatorInterface;
 use Concrete\Core\Board\Instance\Slot\Content\Populator\PopulatorInterface as ContentPopulatorInterface;
@@ -40,6 +41,11 @@ class PageDriver extends AbstractDriver
     public function getContentPopulator(): ContentPopulatorInterface
     {
         return $this->app->make(PageContentPopulator::class);
+    }
+
+    public function getItemFilterer(): ?ItemFiltererInterface
+    {
+        return null;
     }
 
 

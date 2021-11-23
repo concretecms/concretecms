@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 
+use Concrete\Core\Entity\Design\DesignTag;
 use Concrete\Core\Entity\Page\Container;
 use Concrete\Core\Entity\Summary\Category;
 use Concrete\Core\Entity\Summary\Field;
@@ -19,6 +20,7 @@ class ImportSummaryTemplatesRoutine extends AbstractRoutine
         $em = \Database::connection()->getEntityManager();
         $categoryRepository = $em->getRepository(Category::class);
         $fieldRepository = $em->getRepository(Field::class);
+        $tagRepository = $em->getRepository(DesignTag::class);
         if (isset($sx->summarytemplates)) {
             foreach ($sx->summarytemplates->template as $pt) {
                 $pkg = static::getPackageObject($pt['package']);
@@ -46,6 +48,20 @@ class ImportSummaryTemplatesRoutine extends AbstractRoutine
                             $em->persist($template);
                         }
                     }
+
+                    if (isset($pt->tags)) {
+                        foreach ($pt->tags->children() as $summaryTag) {
+                            $summaryTagValue = (string) $summaryTag['value'];
+                            if ($summaryTagValue !== null) {
+                                $tag = $tagRepository->findOneByValue($summaryTagValue);
+                                if ($tag) {
+                                    $template->getTags()->add($tag);
+                                }
+                            }
+                            $em->persist($template);
+                        }
+                    }
+
 
                     if (isset($pt->fields)) {
                         foreach ($pt->fields->children() as $summaryTemplateField) {

@@ -17,7 +17,7 @@ return [
     'files' => [
         'allowed_types' => '*.jpg;*.gif;*.jpeg;*.png;*.doc;*.docx;*.zip',
         // Black list of semi-colon separated list of blacklisted file extensions (takes the precedence over allowed_types)
-        // Set to NULL to use the value of the concrete.upload.extensions_blacklist configuration key
+        // Set to NULL to use the value of the concrete.upload.extensions_denylist configuration key
         'disallowed_types' => null,
         'guest' => [
             'max_size' => 1,

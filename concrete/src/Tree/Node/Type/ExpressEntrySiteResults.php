@@ -3,6 +3,7 @@ namespace Concrete\Core\Tree\Node\Type;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Concrete\Core\Tree\Node\Type\Formatter\ExpressEntryResultsListFormatter;
 use Concrete\Core\Tree\Node\Type\Menu\ExpressEntryResultsFolderMenu;
@@ -25,6 +26,26 @@ class ExpressEntrySiteResults extends ExpressEntryResults
         if (!empty($row)) {
             $this->siteID = $row['siteID'];
         }
+    }
+
+    /**
+     * @deprecated Use the siteservice to resolve the site object using ->getByResultsNode(...)
+     *
+     * @return Site|null
+     */
+    public function getSite()
+    {
+        return app(Service::class)->getByID($this->getSiteID());
+    }
+
+    /**
+     * Get the ID of the site this node belongs to
+     *
+     * @return int|null
+     */
+    public function getSiteID(): ?int
+    {
+        return $this->siteID;
     }
 
     public static function add($treeNodeCategoryName = '', $parent = false, Site $site = null)

@@ -5,9 +5,10 @@ namespace Concrete\Core\Database;
 use Concrete\Core\Database\Driver\DriverManager;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
-use Concrete\Core\Package\PackageList;
-use Doctrine\ORM\EntityManagerInterface;
 use Predis\Client;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\DoctrineAdapter;
+use Symfony\Component\Cache\DoctrineProvider;
 
 class DatabaseServiceProvider extends ServiceProvider
 {
@@ -32,7 +33,7 @@ class DatabaseServiceProvider extends ServiceProvider
             return $manager;
         });
 
-        $this->app->singleton('redis',
+        $this->app->singleton('database/redis',
             function ($app) {
                 $predis = new Client(
                     $app->make('config')->get('database.redis.parameters'),
@@ -41,7 +42,6 @@ class DatabaseServiceProvider extends ServiceProvider
                 return $predis;
             }
         );
-        $this->app->bind(Client::class, 'redis');
 
         // Bind default connection resolver
         $this->app->bind('Concrete\Core\Database\Connection\Connection',
@@ -86,7 +86,7 @@ class DatabaseServiceProvider extends ServiceProvider
         // Bind Doctrine EntityManager setup classes
         $this->app->bind('Doctrine\Common\Cache\ArrayCache',
             function() {
-            return new \Doctrine\Common\Cache\ArrayCache();
+            return new DoctrineProvider((new ArrayAdapter()));
         });
         $this->app->bind('Doctrine\Common\Annotations\AnnotationReader',
             function() {
@@ -96,10 +96,11 @@ class DatabaseServiceProvider extends ServiceProvider
             function() {
             return new \Doctrine\Common\Annotations\SimpleAnnotationReader();
         });
-        $this->app->bind('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
+        $this->app->bind('Doctrine\Persistence\Mapping\Driver\MappingDriverChain',
             function() {
-            return new \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain();
+            return new \Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
         });
+        $this->app->alias('Doctrine\Persistence\Mapping\Driver\MappingDriverChain','Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain');
         // ORM Cache
         $this->app->bind('orm/cache',
             function($app) {
@@ -109,6 +110,7 @@ class DatabaseServiceProvider extends ServiceProvider
                 $cache = $this->app->make('Doctrine\Common\Cache\ArrayCache');
             } else {
                 $cache = new \Concrete\Core\Cache\Adapter\DoctrineCacheDriver('cache/expensive');
+
             }
             return $cache;
         });
@@ -121,9 +123,11 @@ class DatabaseServiceProvider extends ServiceProvider
             $cache     = $app->make('orm/cache');
             $config    = \Doctrine\ORM\Tools\Setup::createConfiguration(
                 $isDevMode, $proxyDir, $cache);
+                $config->setMetadataCache(new DoctrineAdapter($cache));
 
             foreach($app->make('config')->get('app.entity_namespaces') as $namespace => $class) {
                 $config->addEntityNamespace($namespace, $class);
+
             }
             return $config;
         });

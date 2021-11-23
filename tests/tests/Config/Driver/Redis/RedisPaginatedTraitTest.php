@@ -2,35 +2,34 @@
 
 namespace Concrete\Tests\Config\Driver\Redis;
 
-use Concrete\Core\Config\Driver\Redis\RedisPaginatedTrait;
 use Concrete\Tests\Config\Driver\Redis\Fixtures\RedisPaginatedTraitFixture;
 use Concrete\Tests\Config\Driver\Redis\Fixtures\RedisPaginatedTraitValuesFixture;
-use Illuminate\Support\Arr;
 use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Redis;
 use Concrete\Tests\TestCase;
 
 class RedisPaginatedTraitTest extends TestCase
 {
 
-    use MockeryPHPUnitIntegration;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         require_once __DIR__ . '/Fixtures/Redis.php';
     }
 
     public function testPaginatedScan()
     {
-        M::getConfiguration()->setInternalClassMethodParamMap('Redis', 'scan', [
-            '&$iterator',
-            '$pattern = null',
-            '$count = 0'
-        ]);
+        if (\PHP_MAJOR_VERSION < 8) {
+            M::getConfiguration()->setInternalClassMethodParamMap('Redis', 'scan', [
+                '&$iterator',
+                '$pattern = null',
+                '$count = 0'
+            ]);
+        }
+
 
         $redis = M::mock('Redis');
-        $expectedIterators = [null, 127, 135, 205];
+        $expectedIterators = [0, 127, 135, 205];
         $returnValues = [['cfg=foo', 'cfg=bar'], ['cfg=baz'], false];
 
         $redis->shouldReceive('scan')->times(3)->with(

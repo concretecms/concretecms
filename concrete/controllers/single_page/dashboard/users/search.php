@@ -6,6 +6,7 @@ use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\Csv\WriterFactory;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Search\SavedUserSearch;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Localization;
@@ -13,6 +14,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Url\Url;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\User\User;
@@ -99,6 +101,15 @@ class Search extends DashboardPageController
         $headerSearch = $this->getHeaderSearch();
         $headerMenu->getElementController()->setQuery($result->getQuery());
         $headerSearch->getElementController()->setQuery($result->getQuery());
+
+        $exportArgs = [$this->getPageObject()->getCollectionPath(), 'csv_export'];
+        if ($this->getAction() == 'advanced_search') {
+            $exportArgs[] = 'advanced_search';
+        }
+        $exportURL = $this->app->make('url/resolver/path')->resolve($exportArgs);
+        $query = Url::createFromServer($_SERVER)->getQuery();
+        $exportURL = $exportURL->setQuery($query);
+        $headerMenu->getElementController()->setExportURL($exportURL);
 
         $this->set('resultsBulkMenu', $this->app->make(MenuFactory::class)->createBulkMenu());
         $this->set('result', $result);
@@ -250,6 +261,7 @@ class Search extends DashboardPageController
                 $this->setupUser($uID);
                 if ($this->canActivateUser && $this->app->make('helper/validation/token')->validate('', $token)) {
                     $this->user->markValidated();
+                    $this->user->triggerActivate('register_activate', USER_SUPER_ID);
                     $this->redirect('/dashboard/users/search', 'edit', $this->user->getUserID(), 'email_validated');
                 }
                 break;
@@ -323,15 +335,34 @@ class Search extends DashboardPageController
                 $language = $this->request->request->get('uDefaultLanguage');
                 $data['uDefaultLanguage'] = $language;
             }
-            if ($this->canEditPassword && !empty($this->request->request->get('uPassword'))) {
-                $password = $this->request->request->get('uPassword');
-                $passwordConfirm = $this->request->request->get('uPasswordConfirm');
-                $this->app->make('validator/password')->isValidFor($password, $this->user, $error);
-                if ($password != $passwordConfirm) {
-                    $error->add(t('The two passwords provided do not match.'));
+            if ($this->canEditHomeFileManagerFolderID) {
+                $uHomeFileManagerFolderID = $this->request->request->get('uHomeFileManagerFolderID');
+                if ($uHomeFileManagerFolderID == 0) {
+                    $uHomeFileManagerFolderID = '';
                 }
-                $data['uPassword'] = $password;
-                $data['uPasswordConfirm'] = $passwordConfirm;
+
+                $data['uHomeFileManagerFolderID'] = $uHomeFileManagerFolderID;
+            }
+
+            if ($this->canEditPassword && !empty($this->request->request->get('uPasswordNew'))) {
+                $passwordMine = (string) $this->request->request->get('uPasswordMine');
+                $passwordNew = $this->request->request->get('uPasswordNew');
+                $passwordNewConfirm = $this->request->request->get('uPasswordNewConfirm');
+
+                $this->app->make('validator/password')->isValidFor($passwordNew, $this->user, $error);
+
+                if ($passwordNew) {
+
+                    $me = $this->app->make(User::class)->getUserInfoObject();
+                    if (!$me->passwordMatches($passwordMine)) {
+                        $error->add(t('Your password is invalid.'));
+                    }
+                    if ($passwordNew != $passwordNewConfirm) {
+                        $error->add(t('The two passwords provided do not match.'));
+                    }
+                }
+                $data['uPasswordConfirm'] = $passwordNew;
+                $data['uPassword'] = $passwordNew;
             }
 
             $userMessage->setError($error);
@@ -509,8 +540,13 @@ class Search extends DashboardPageController
 
     }
 
-    public function view()
+    public function view($uID = null, $status = false)
     {
+        if (isset($uID)) {
+            $this->edit($uID, $status);
+            return;
+        }
+
         $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
             $this->getSearchKeywordsField()
         ]);
@@ -525,22 +561,33 @@ class Search extends DashboardPageController
     /**
      * Export Users using the current search filters into a CSV.
      */
-    public function csv_export()
+    public function csv_export($searchMethod = null)
     {
-        $search = $this->app->make('Concrete\Controller\Search\Users');
-        $result = $search->getCurrentSearchObject();
-
         $headers = [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=concrete5_users.csv',
+            'Content-Disposition' => 'attachment; filename=concrete_users.csv',
         ];
         $app = $this->app;
         $config = $this->app->make('config');
         $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
+        if ($searchMethod === 'advanced_search') {
+            $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
+                $this->getSearchProvider(),
+                $this->request,
+                Request::METHOD_GET
+            );
+        } else {
+            $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
+                $this->getSearchKeywordsField()
+            ]);
+        }
+
+        $result = $this->createSearchResult($query);
+
         return StreamedResponse::create(
             function () use ($app, $result, $bom) {
-                $writer = $app->build(
+                $writer = $app->make(
                     UserExporter::class,
                     [
                         'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
@@ -553,6 +600,23 @@ class Search extends DashboardPageController
             },
             200,
             $headers);
+    }
+
+    private function getFolderList()
+    {
+        $folderList = [];
+
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+
+        // fetch all folders from database
+        $rows = $db->fetchAll("SELECT tn.treeNodeId, tn.treeNodeName FROM TreeNodes AS tn LEFT JOIN TreeNodeTypes AS tnt ON (tn.treeNodeTypeID = tnt.treeNodeTypeID) WHERE tnt.treeNodeTypeHandle = 'file_folder' AND tn.treeNodeName != ''");
+
+        foreach ($rows as $row) {
+            $folderList[$row["treeNodeId"]] = $row["treeNodeName"];
+        }
+
+        return $folderList;
     }
 
     protected function setupUser($uID)
@@ -576,6 +640,7 @@ class Search extends DashboardPageController
             $this->canEditTimezone = $this->canEdit && $this->assignment->allowEditTimezone();
             $this->canEditEmail = $this->canEdit && $this->assignment->allowEditEmail();
             $this->canEditPassword = $this->canEdit && $this->assignment->allowEditPassword();
+            $this->canEditHomeFileManagerFolderID = $this->canEdit && $this->assignment->allowEditHomeFileManagerFolderID();
             $this->canSignInAsUser = $this->canEdit && $tp->canSudo() && $me->getUserID() != $ui->getUserID();
             $this->canDeleteUser = $this->canEdit && $tp->canDeleteUser() && $me->getUserID() != $ui->getUserID();
             $this->canAddGroup = $this->canEdit && $tp->canAccessGroupSearch();
@@ -583,11 +648,14 @@ class Search extends DashboardPageController
             if ($this->canEdit) {
                 $this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
             }
+            $folderList = ['' => t("** None")] + $this->getFolderList();
             $this->set('user', $ui);
+            $this->set('folderList', $folderList);
             $this->set('canEditAvatar', $this->canEditAvatar);
             $this->set('canEditUserName', $this->canEditUserName);
             $this->set('canEditEmail', $this->canEditEmail);
             $this->set('canEditPassword', $this->canEditPassword);
+            $this->set('canEditHomeFileManagerFolderID', $this->canEditHomeFileManagerFolderID);
             $this->set('canEditTimezone', $this->canEditTimezone);
             $this->set('canEditLanguage', $this->canEditLanguage);
             $this->set('canActivateUser', $this->canActivateUser);

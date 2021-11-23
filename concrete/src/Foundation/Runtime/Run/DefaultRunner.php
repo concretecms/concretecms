@@ -20,7 +20,7 @@ use Concrete\Core\Url\Resolver\CanonicalUrlResolver;
 use Concrete\Core\Url\Resolver\UrlResolverInterface;
 use Concrete\Core\User\User;
 use Exception;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 /**
  * Default HTTP Runner.
@@ -43,7 +43,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
     /** @var SiteService */
     protected $siteService;
 
-    /** @var EventDispatcherInterface */
+    /** @var EventDispatcher */
     protected $eventDispatcher;
 
     /** @var ServerInterface */
@@ -103,9 +103,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
 
                 // Define legacy urls, this may be the first thing that loads the entity manager
                 'initializeLegacyUrlDefinitions',
-
-                // Register legacy tools routes
-                'registerLegacyRoutes',
 
                 // Register legacy config values
                 'registerLegacyConfigValues',
@@ -210,31 +207,6 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
         $name = $this->getSiteService()->getSite()->getSiteName();
 
         $config->set('concrete.site', $name);
-    }
-
-    /**
-     * Register routes that power legacy functionality
-     * This includes `/tools/tool_handle` and `/tools/blocks/block_handle/tool_handle`.
-     *
-     * @deprecated In a future major version this will be part of HTTP middleware
-     *
-     * @return Response|void Returns a response if an error occurs
-     */
-    protected function registerLegacyRoutes()
-    {
-        $router = $this->getRouter();
-        $router->register(
-            '/tools/blocks/{btHandle}/{tool}',
-            '\Concrete\Core\Legacy\Controller\ToolController::displayBlock',
-            'blockTool',
-            ['tool' => '[A-Za-z0-9_/.]+']
-        );
-        $router->register(
-            '/tools/{tool}',
-            '\Concrete\Core\Legacy\Controller\ToolController::display',
-            'tool',
-            ['tool' => '[A-Za-z0-9_/.]+']
-        );
     }
 
     /**
@@ -534,7 +506,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      *
      * @deprecated In a future major version this will be part of HTTP middleware
      *
-     * @return EventDispatcherInterface
+     * @return EventDispatcher
      */
     protected function getEventDispatcher()
     {
@@ -550,7 +522,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      *
      * @deprecated In a future major version this will be part of HTTP middleware
      *
-     * @return EventDispatcherInterface
+     * @return EventDispatcher
      */
     private function getDefaultEventDispatcher()
     {
@@ -562,11 +534,11 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
      *
      * @deprecated In a future major version this will be part of HTTP middleware
      *
-     * @param EventDispatcherInterface $urlResolver
+     * @param EventDispatcher $urlResolver
      *
      * @return $this
      */
-    public function setEventDispatcher(EventDispatcherInterface $urlResolver)
+    public function setEventDispatcher(EventDispatcher $urlResolver)
     {
         $this->eventDispatcher = $urlResolver;
 

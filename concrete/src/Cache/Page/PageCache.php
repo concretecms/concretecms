@@ -237,9 +237,8 @@ abstract class PageCache implements FlushableInterface
             if ($collectionPath !== '') {
                 return urlencode($host . '/' . $collectionPath);
             }
-            $cID = $mixed->getCollectionID();
-            if ($cID && $cID == ConcretePage::getHomePageID()) {
-                return urlencode($host) . '!' . $cID;
+            if ($mixed->isHomePage()) {
+                return urlencode($host);
             }
         } elseif ($mixed instanceof Request) {
             $host = $this->getCacheHost($mixed);
@@ -248,7 +247,7 @@ abstract class PageCache implements FlushableInterface
                 return urlencode($host . '/' . $path);
             }
 
-            return urlencode($host) . '!' . ConcretePage::getHomePageID();
+            return urlencode($host);
         } elseif ($mixed instanceof PageCacheRecord) {
             return $mixed->getCacheRecordKey();
         }
@@ -269,7 +268,7 @@ abstract class PageCache implements FlushableInterface
                 $host = $site->getSiteCanonicalURL();
                 if (!empty($host)) {
                     $host = preg_replace('#^https?://#', '', $host);
-
+                    $host = trim($host, '/'); // Do not want trailing slashes in the host.
                     return $host;
                 }
             }

@@ -17,8 +17,6 @@ use Concrete\Tests\TestCase;
 class PostLoginLocationTest extends TestCase
 {
 
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /** @var \Illuminate\Contracts\Config\Repository|\Mockery\MockInterface */
     protected $config;
 

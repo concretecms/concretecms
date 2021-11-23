@@ -2,12 +2,16 @@
 
 namespace Concrete\Core\Board\Command;
 
-class PopulateBoardInstanceDataPoolCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class PopulateBoardInstanceDataPoolCommand extends Command
 {
 
     use BoardInstanceTrait;
 
     /**
+     * CURRENTLY NOT USED
+     *
      * The unix timestamp to get all data since. Used to update progressively.
      * If set to -1 then we dynamically determine this at runtime.
      *

@@ -10,6 +10,8 @@ echo 'Configuring PHP'
 phpenv config-add "$SCRIPT_DIR/php.ini"
 phpenv config-rm xdebug.ini || true
 
+composer self-update --1
+
 composer global show hirak/prestissimo -q || composer global require --no-interaction --no-progress --optimize-autoloader hirak/prestissimo || echo 'Failed to install hirak/prestissimo' 
 
 echo 'Installing Composer packages - Magento''s composer merger'

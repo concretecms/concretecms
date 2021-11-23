@@ -56,11 +56,16 @@ class BoardAssignment extends Assignment
         return false;
     }
 
-    public function getPermissionKeyToolsURL($task = false)
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Permission\Assignment\Assignment::getPermissionKeyTaskURL()
+     */
+    public function getPermissionKeyTaskURL(string $task = '', array $options = []): string
     {
         $board = $this->getPermissionObject();
-
-        return parent::getPermissionKeyToolsURL($task) . '&boardID=' . $board->getBoardID();
+        
+        return parent::getPermissionKeyTaskURL($task, $options + ['boardID' => $board->getBoardID()]);
     }
 
     public function clearPermissionAssignment()

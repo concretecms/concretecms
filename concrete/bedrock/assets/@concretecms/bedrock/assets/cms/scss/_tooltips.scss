@@ -1,0 +1,36 @@
+.ccm-ui {
+  i.fa.launch-tooltip {
+    border-bottom: 0;
+    text-decoration: none;
+  }
+
+  fieldset {
+    legend {
+      i.launch-tooltip {
+        color: #ccc;
+        left: -26px;
+        position: absolute;
+        top: 4px;
+      }
+    }
+  }
+}
+/**
+ * Tooltips
+ */
+div#ccm-tooltip-holder {
+  &,
+  .tooltip,
+  .popover {
+    z-index: $index-level-tooltip-holder;
+  }
+}
+
+div.tooltip-inner {
+  font-size: $font-size-sm;
+  font-weight: 300;
+  line-height: $line-height-sm;
+  max-width: 250px;
+  padding: 7px 10px;
+}
+

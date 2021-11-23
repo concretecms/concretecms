@@ -1,9 +1,9 @@
 {
   "name": "concrete5/concrete5",
   "license": "MIT",
-  "description": "concrete5 open source CMS",
+  "description": "Concrete – an open source content management system.",
   "type": "project",
-  "keywords": [ "concrete5", "CMS", "concreteCMS" ],
+  "keywords": [ "concrete5", "CMS", "concreteCMS", "concrete" ],
   "minimum-stability": "stable",
   "prefer-stable": true,
   "archive": {
@@ -12,25 +12,38 @@
     ]
   },
   "require": {
-    "wikimedia/composer-merge-plugin": "~1.3",
-    "concrete5/dependency-patches": "^1.5.0"
+    "wikimedia/composer-merge-plugin": "~1.3|~2.0.1",
+    "concrete5/dependency-patches": "^1.6.0"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "2.16.1",
-    "phpunit/phpunit": "^7.5.9",
-    "phpunit/dbunit": "^4.0",
-    "mockery/mockery": "^0.9.9",
+    "friendsofphp/php-cs-fixer": "2.19.2",
+    "phpunit/phpunit": "^8.5.20",
+    "mockery/mockery": "^1.3.4",
     "mlocati/ci-info": "^1"
   },
   "config": {
     "process-timeout": 0,
     "vendor-dir": "./concrete/vendor",
     "platform": {
-      "php": "7.2"
+      "php": "7.3"
     }
   },
   "replace": {
-    "concrete5/core": "self.version"
+    "concrete5/core": "self.version",
+    "laminas/laminas-cache-storage-adapter-apc": "*",
+    "laminas/laminas-cache-storage-adapter-apcu": "*",
+    "laminas/laminas-cache-storage-adapter-blackhole": "*",
+    "laminas/laminas-cache-storage-adapter-dba": "*",
+    "laminas/laminas-cache-storage-adapter-ext-mongodb": "*",
+    "laminas/laminas-cache-storage-adapter-filesystem": "*",
+    "laminas/laminas-cache-storage-adapter-memcache": "*",
+    "laminas/laminas-cache-storage-adapter-memcached": "*",
+    "laminas/laminas-cache-storage-adapter-mongodb": "*",
+    "laminas/laminas-cache-storage-adapter-redis": "*",
+    "laminas/laminas-cache-storage-adapter-session": "*",
+    "laminas/laminas-cache-storage-adapter-wincache": "*",
+    "laminas/laminas-cache-storage-adapter-xcache": "*",
+    "laminas/laminas-cache-storage-adapter-zend-server": "*"
   },
   "extra": {
     "r1": "This is using the wikimedia plugin to merge our core/composer.json file.",

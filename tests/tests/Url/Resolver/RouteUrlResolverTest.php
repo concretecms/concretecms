@@ -11,7 +11,7 @@ class RouteUrlResolverTest extends ResolverTestCase
      */
     protected $routeList;
 
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
 
@@ -20,10 +20,10 @@ class RouteUrlResolverTest extends ResolverTestCase
         $path_url_resolver = $app->make('Concrete\Core\Url\Resolver\PathUrlResolver');
         $routes = $app->make('Symfony\Component\Routing\RouteCollection');
         $context = $app->make('Symfony\Component\Routing\RequestContext');
-        $generator = $app->make('Symfony\Component\Routing\Generator\UrlGenerator', [$routes, $context]);
+        $generator = $app->make('Symfony\Component\Routing\Generator\UrlGenerator', ['routes' => $routes, 'context' => $context]);
 
         $this->urlResolver = $app->make('Concrete\Core\Url\Resolver\RouteUrlResolver',
-            [$path_url_resolver, $generator, $routes]);
+            ['path_url_resolver' => $path_url_resolver, 'generator' => $generator, 'route_list' => $routes]);
 
         $this->routeList = $routes;
     }

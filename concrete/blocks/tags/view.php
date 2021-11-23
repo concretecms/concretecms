@@ -4,7 +4,7 @@
     <div class="ccm-block-tags-wrapper">
         <?php if ($title) { ?>
             <div class="ccm-block-tags-header">
-                <h5><?=$title?></h5>
+				<<?php echo $titleFormat; ?>><?=$title?></<?php echo $titleFormat; ?>>
             </div>
         <?php } ?>
 

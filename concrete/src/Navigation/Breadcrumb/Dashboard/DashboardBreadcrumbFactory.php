@@ -24,9 +24,9 @@ class DashboardBreadcrumbFactory
         $pages = array_reverse($this->navigation->getTrailToCollection($dashboardPage));
         $breadcrumb = new DashboardBreadcrumb();
         foreach($pages as $page) {
-            $breadcrumb->add(new Item($page->getCollectionLink(), $page->getCollectionName()));
+            $breadcrumb->add(new Item($page->getCollectionLink(), t($page->getCollectionName())));
         }
-        $breadcrumb->add(new Item($dashboardPage->getCollectionLink(), $dashboardPage->getCollectionName()));
+        $breadcrumb->add(new Item($dashboardPage->getCollectionLink(), t($dashboardPage->getCollectionName())));
         return $breadcrumb;
     }
 }

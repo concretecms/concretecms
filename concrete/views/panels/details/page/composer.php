@@ -1,4 +1,7 @@
 <?php
+
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var Concrete\Controller\Panel\Detail\Page\Composer $controller */
@@ -37,6 +40,7 @@ var ConcretePageComposerDetail = {
     saving: false,
     saver: null,
     $form: $('form[data-panel-detail-form=compose]'),
+    confirmClose: false,
 
     saveDraft: function(onComplete) {
         var my = this;
@@ -59,12 +63,14 @@ var ConcretePageComposerDetail = {
         if (this.saver) {
             this.saver.resetIdleTimer();
         }
+        this.confirmClose = true;
     },
 
     disableAutosave: function() {
         if (this.saver) {
             this.saver.disableIdleTimer();
         }
+        this.confirmClose = false;
     },
 
     updateWatchers: function() {
@@ -129,7 +135,7 @@ var ConcretePageComposerDetail = {
         $('button[data-page-type-composer-form-btn=preview]').on('click', function() {
             my.disableAutosave();
             function redirect() {
-                window.location.href = CCM_DISPATCHER_FILENAME + <?= json_encode('?cID=' . $cID . '&ctask=check-out&' . $token->getParameter()); ?>;
+                window.location.href = <?= json_encode((string) app(ResolverManagerInterface::class)->resolve(["/ccm/system/page/checkout/{$cID}/-/" . $token->generate()])) ?>;
             }
             if (!my.saving) {
                 my.saveDraft(redirect);
@@ -173,6 +179,7 @@ var ConcretePageComposerDetail = {
             // otherwise lead to an extra version being created for the page
             // after the publish action has been already called.
             my.saver.disable();
+            my.confirmClose = false;
             var submitSuccess = false;
             $.concreteAjax({
                 data: data.data,
@@ -191,7 +198,7 @@ var ConcretePageComposerDetail = {
         });
 
         ConcreteEvent.subscribe('AjaxRequestError',function(r) {
-            if (this.saver) {
+            if (my.saver) {
                 my.saver.disable();
             }
         });
@@ -200,8 +207,16 @@ var ConcretePageComposerDetail = {
             this.saver.enable();
         }
         my.enableAutosave();
-    }
 
+        // #7692
+        window.addEventListener('beforeunload', function (event) {
+            if (my.confirmClose) {
+                // @see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload#example
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        });
+    }
 };
 
 $(function() {

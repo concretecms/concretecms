@@ -52,12 +52,12 @@ EOT
             function () {
                 return (bool) \Config::get('concrete.seo.url_rewriting');
             },
-            '# -- concrete5 urls start --',
-            '# -- concrete5 urls end --'
+            '# -- concrete urls start --',
+            '# -- concrete urls end --'
         );
 
         $option = new RuleOption(
-            t('concrete5 path relative to website root'),
+            t('Concrete path relative to website root'),
             function () {
                 return \Core::make('app')->isRunThroughCommandLineInterface();
             }

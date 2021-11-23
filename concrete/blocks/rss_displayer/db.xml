@@ -23,6 +23,10 @@
       <default value="1"/>
       <notnull/>
     </field>
+    <field name="titleFormat" type="string" size="20">
+        <default value="h5" />
+		<notnull/>
+    </field>
   </table>
 
 </schema>

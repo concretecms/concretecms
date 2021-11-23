@@ -16,7 +16,7 @@ class StringsTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    public function setUp()
+    public function setUp():void
     {
         $this->object = \Core::make(\Concrete\Core\Utility\Service\Validation\Strings::class);
     }
@@ -25,7 +25,7 @@ class StringsTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    public function tearDown()
+    public function TearDown():void
     {
         unset($this->object);
         parent::tearDown();

@@ -5,3 +5,11 @@ div.ccm-system-errors {
     margin: 0px;
   }
 }
+
+div#ccm-dashboard-content-full {
+  div#ccm-dashboard-result-message {
+    padding-left: $dashboard-content-padding-l;
+    padding-right: $dashboard-content-padding-r;
+    padding-top: $dashboard-content-padding-t;
+  }
+}

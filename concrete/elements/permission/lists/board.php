@@ -46,7 +46,7 @@
 
 		jQuery.fn.dialog.open({
 			title: $(link).attr('dialog-title'),
-			href: '<?=URL::to("/ccm/system/dialogs/boards/permissions", "board")?>?caID=<?=$board->getBoardID()?>&duplicate=' + dupe + '&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+			href: '<?=URL::to("/ccm/system/dialogs/boards/permissions", "board")?>?boardID=<?=$board->getBoardID()?>&duplicate=' + dupe + '&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
 			width: 500,
 			height: 380
 		});

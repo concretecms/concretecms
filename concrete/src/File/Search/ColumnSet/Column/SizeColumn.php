@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
@@ -8,6 +9,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class SizeColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -38,7 +41,7 @@ class SizeColumn extends Column implements PagerColumnInterface
         }
         $query->setParameter('sortSize', $size);
         $query->setParameter('sortID', $mixed->getTreeNodeID());
-        $query->andWhere($where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }

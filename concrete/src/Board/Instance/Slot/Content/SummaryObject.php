@@ -2,12 +2,15 @@
 namespace Concrete\Core\Board\Instance\Slot\Content;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Design\Tag\Tag;
+use Concrete\Core\Design\Tag\TagCollection;
 use Concrete\Core\Entity\Summary\Category;
 use Concrete\Core\Entity\Summary\Template;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverManager;
 use Concrete\Core\Summary\Template\Renderer;
 use Doctrine\ORM\EntityManager;
+use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Concrete\Core\Summary\SummaryObjectInterface;
 use Concrete\Core\Summary\SummaryObject as BaseSummaryObject;
@@ -38,9 +41,18 @@ class SummaryObject implements ObjectInterface
             'class' => self::class,
             'templateID' => $this->summaryObject->getTemplate()->getId(),
             'dataSourceCategoryHandle' => $this->summaryObject->getDataSourceCategoryHandle(),
+            'title' => $this->getSlotContentObjectTitle(),
             'identifier' => $this->summaryObject->getIdentifier(),
-            'data' => $this->summaryObject->getData()
+            'data' => $this->summaryObject->getData(),
         ];
+    }
+
+    public function getSlotContentObjectTitle(): ?string
+    {
+        if ($this->summaryObject && $this->summaryObject->getTemplate()) {
+            return $this->summaryObject->getTemplate()->getName();
+        }
+        return null;
     }
 
     public function refresh(Application $app): void
@@ -56,6 +68,11 @@ class SummaryObject implements ObjectInterface
                 $this->summaryObject->setData($data);
             }
         }
+    }
+
+    public function getDesignTags(): array
+    {
+        return $this->summaryObject->getTemplate()->getTags()->toArray();
     }
 
     public function display(Application $app): void

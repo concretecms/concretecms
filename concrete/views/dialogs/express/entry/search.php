@@ -1,43 +1,29 @@
 <?php
+
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Utility\Service\Identifier;
+
+/** @var Entity $entity */
+
+$app = Application::getFacadeApplication();
+/** @var Identifier $idHelper */
+$idHelper = $app->make(Identifier::class);
+$containerId = "ccm-express-entry-selector-" . $idHelper->getString();
 ?>
 
-<div class="ccm-express-entry-search-dialog">
-    <?php
-    /*
-    ?><?php $headerMenu->render(); ?>
-*/ ?>
-
-  <div data-search="express_entries" class="ccm-ui">
-      <?php View::element('express/entries/search', array('controller' => $searchController, 'selectMode' => true)) ?>
-  </div>
+<div id="<?php echo $containerId; ?>" class="h-100">
+    <!--suppress HtmlUnknownTag -->
+    <concrete-express-entry-selector entity-id='<?php echo $entity->getId(); ?>'></concrete-express-entry-selector>
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        $('.ccm-express-entry-search-dialog').concreteAjaxSearch({
-            result: <?=$result?>,
-            onUpdateResults: function(concreteSearch) {
-                concreteSearch.$element.on('mouseover', 'tr[data-entity-id]', function(e) {
-                    e.stopPropagation();
-                    $(this).addClass('ccm-search-select-hover');
-                });
-                concreteSearch.$element.on('mouseout', 'tr[data-entity-id]', function(e) {
-                    e.stopPropagation();
-                    $(this).removeClass('ccm-search-select-hover');
-                });
-
-                concreteSearch.$element.unbind('click.expressEntries');
-                concreteSearch.$element.on('click.expressEntries', 'tr[data-entity-id]', function(e) {
-                    e.stopPropagation();
-                    ConcreteEvent.publish('SelectExpressEntry', {
-                        exEntryID: $(this).attr('data-entity-id'),
-                        event: e
-                    });
-                    return false;
-                });
-            }
-
-        });
-    });
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: '#<?php echo $containerId;?>',
+            components: config.components
+        })
+    })
 </script>

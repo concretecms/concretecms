@@ -44,16 +44,27 @@ class FiveSeven extends Parser
     protected function getPackageHandleFromClassName(array $tokens, $className, $classStart)
     {
         $namespaceIndex = $this->findTypedToken($tokens, [T_NAMESPACE], 0, $classStart - 1);
-        $namespaceNameIndex = $this->findTypedToken($tokens, [T_STRING, T_NS_SEPARATOR], $namespaceIndex + 1, $classStart - 1);
+        // PHP 8 changed namespace tokens
+        if (\PHP_MAJOR_VERSION > 7) {
+            $namespaceNameIndex = $this->findTypedToken($tokens, [T_NAME_QUALIFIED], $namespaceIndex + 1, $classStart - 1);
+        } else {
+            $namespaceNameIndex = $this->findTypedToken($tokens, [T_STRING, T_NS_SEPARATOR], $namespaceIndex + 1, $classStart - 1);
+        }
+
         if ($namespaceNameIndex === null) {
             throw Exception::create(Exception::ERRORCODE_MISSING_NAMESPACENAME, t('Unable to find the namespace name'));
         }
         $namespaceName = '';
-        while (is_array($tokens[$namespaceNameIndex]) && in_array($tokens[$namespaceNameIndex][0], [T_STRING, T_NS_SEPARATOR])) {
-            $namespaceName .= $tokens[$namespaceNameIndex][1];
-            ++$namespaceNameIndex;
+        if (\PHP_MAJOR_VERSION < 8) {
+            while (is_array($tokens[$namespaceNameIndex]) && in_array($tokens[$namespaceNameIndex][0], [T_STRING, T_NS_SEPARATOR])) {
+                $namespaceName .= $tokens[$namespaceNameIndex][1];
+                ++$namespaceNameIndex;
+            }
+            $namespaceName = trim($namespaceName, '\\');
+        } else {
+            $namespaceName = $tokens[$namespaceNameIndex][1];
         }
-        $namespaceName = trim($namespaceName, '\\');
+
         $matches = null;
         if (!preg_match('/^Concrete\\\\Package\\\\(\w+)$/', $namespaceName, $matches)) {
             throw Exception::create(Exception::ERRORCODE_INVALID_NAMESPACENAME, t('The namespace "%s" is not valid', $namespaceName));

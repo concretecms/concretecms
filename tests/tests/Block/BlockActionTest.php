@@ -76,7 +76,7 @@ class BlockActionTest extends TestCase
         $this->assertEquals('http://www.dummyco.com/path/to/server/index.php/ccm/system/block/action/add/123/Main/4/delete_form/token', (string)$url);
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         $req = Request::getInstance();
         $req->clearcurrentPage();

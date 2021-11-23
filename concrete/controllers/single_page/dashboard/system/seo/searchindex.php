@@ -66,8 +66,8 @@ class Searchindex extends DashboardPageController
     protected function getAvailableAreaIndexMethods(): array
     {
         return [
-            'whitelist' => t('Whitelist - only use the selected areas below when searching content.'),
-            'blacklist' => t('Blacklist - skip the selected areas below when searching content.'),
+            'allowlist' => t('Allowlist - only use the selected areas below when searching content.'),
+            'denylist' => t('Denylist - skip the selected areas below when searching content.'),
         ];
     }
 }

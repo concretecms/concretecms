@@ -54,6 +54,7 @@ class Test extends DashboardPageController
                                     $body .= "\n- " . t('SMTP Server: %s', $config->get('concrete.mail.methods.smtp.server'));
                                     $body .= "\n- " . t('SMTP Port: %s', $config->get('concrete.mail.methods.smtp.port', tc('SMTP Port', 'default')));
                                     $body .= "\n- " . t('SMTP Encryption: %s', $config->get('concrete.mail.methods.smtp.encryption', tc('SMTP Encryption', 'none')));
+                                    $body .= "\n- " . t(/*i18n: %1%s is HELO, %2$s is the domain*/'SMTP %1$s Domain: %2$s', 'HELO', $config->get('concrete.mail.methods.smtp.helo_domain'));
                                     if (!$config->get('concrete.mail.methods.smtp.username')) {
                                         $body .= "\n- " . t('SMTP Authentication: none');
                                     } else {

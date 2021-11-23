@@ -10,5 +10,5 @@ $pk = Key::getByID($_REQUEST['pkID'] ?? null);
 View::element('permission/detail', ['permissionKey' => $pk]);
 ?>
 <script>
-var ccm_permissionDialogURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/miscellaneous'; 
+var ccm_permissionDialogURL = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/miscellaneous'; 
 </script>

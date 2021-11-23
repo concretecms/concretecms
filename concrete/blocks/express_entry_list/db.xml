@@ -26,6 +26,12 @@
     <field name="displayLimit" type="integer">
       <default value="20"/>
     </field>
+    <field name="enableItemsPerPageSelection" type="integer">
+      <default value="0"/>
+    </field>
+    <field name="enablePagination" type="integer">
+      <default value="0"/>
+    </field>
     <field name="enableSearch" type="integer">
       <default value="0"/>
     </field>
@@ -52,6 +58,10 @@
     </field>
     <field name="rowBackgroundColorAlternate" type="string" size="32">
       <default value=""/>
+    </field>
+    <field name="titleFormat" type="string" size="20">
+      <default value="h2" />
+	  <notnull/>
     </field>
   </table>
 

@@ -16,7 +16,7 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
     {
         if (!isset($this->from)) {
             $config = $this->app->make('config');
-            if ($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address') && strstr($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address'), '@')) {
+            if ($entry && $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address') && strstr($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address'), '@')) {
                 $this->from = $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address');
             }
             else{
@@ -98,7 +98,8 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
             $mh->addParameter('entity', $entry->getEntity());
             $mh->addParameter('formName', $this->getFormName($entry));
             $mh->addParameter("dataSaveEnabled", $this->blockController->storeFormSubmission);
-            if (!$this->blockController->storeFormSubmission) {//if save submitted data is not active we send also files as attachments in email becuase it will be removed after entry remove
+            if (!$this->blockController->storeFormSubmission) {
+                //if save submitted data is not active we send also files as attachments in email becuase it will be removed after entry remove
                 foreach ($this->getAttributeValues($entry) as $attributeValue) {
                     if ($attributeValue->getAttributeTypeObject()->getAttributeTypeHandle() == "image_file") {
                         $file = $attributeValue->getValue();

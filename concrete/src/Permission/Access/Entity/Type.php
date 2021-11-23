@@ -86,11 +86,11 @@ class Type extends ConcreteObject
             $r = $db->Execute('select petID from PermissionAccessEntityTypes order by petID asc');
         }
 
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['petID']);
         }
 
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -138,10 +138,10 @@ class Type extends ConcreteObject
         $list = array();
         $r = $db->Execute('select petID from PermissionAccessEntityTypes where pkgID = ? order by petID asc',
             array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['petID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -193,24 +193,4 @@ class Type extends ConcreteObject
         $url .= '?' . $token->getParameter($action);
         return $url;
     }
-
-    /**
-     * @deprecated
-     * This will be removed in version 9 and you will need to use getControllerUrL instead.
-     * @param bool $task
-     * @return string
-     */
-    public function getAccessEntityTypeToolsURL($task = false)
-    {
-        if (!$task) {
-            $task = 'process';
-        }
-        $uh = Loader::helper('concrete/urls');
-        $url = $uh->getToolsURL('permissions/access/entity/types/' . $this->petHandle, $this->getPackageHandle());
-        $token = Loader::helper('validation/token')->getParameter($task);
-        $url .= '?' . $token . '&task=' . $task;
-
-        return $url;
-    }
-
 }

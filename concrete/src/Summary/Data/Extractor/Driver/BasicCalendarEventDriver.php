@@ -5,10 +5,12 @@ use Carbon\Carbon;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Summary\Category\CategoryMemberInterface;
 use Concrete\Core\Summary\Data\Collection;
 use Concrete\Core\Summary\Data\Extractor\Driver\Traits\GetCategoriesTrait;
 use Concrete\Core\Summary\Data\Extractor\Driver\Traits\GetThumbnailTrait;
+use Concrete\Core\Summary\Data\Field\AuthorDataFieldData;
 use Concrete\Core\Summary\Data\Field\DataField;
 use Concrete\Core\Summary\Data\Field\DatetimeDataFieldData;
 use Concrete\Core\Summary\Data\Field\FieldInterface;
@@ -52,7 +54,7 @@ class BasicCalendarEventDriver implements DriverInterface
 
     public function isValidForObject($mixed): bool
     {
-        return $mixed instanceof CalendarEvent;
+        return $mixed instanceof CalendarEvent || $mixed instanceof CalendarEventVersionOccurrence;
     }
 
     public function getThumbnailAttributeKeyHandle()
@@ -71,17 +73,23 @@ class BasicCalendarEventDriver implements DriverInterface
 
 
     /**
-     * @param $mixed CalendarEvent
+     * @param $mixed CalendarEvent|CalendarEventVersionOccurrence
      * @return Collection
      */
     public function extractData(CategoryMemberInterface $mixed): Collection
     {
         $collection = new Collection();
-        $version = $mixed->getApprovedVersion();
+        if ($mixed instanceof CalendarEvent) {
+            $version = $mixed->getApprovedVersion();
+            $event = $mixed;
+        } else {
+            $version = $mixed->getVersion();
+            $event = $version->getEvent();
+        }
         if ($version) {
             $this->entityManager->refresh($version);
             $collection->addField(new DataField(FieldInterface::FIELD_TITLE, $version->getName()));
-            $link = $this->linkFormatter->getEventFrontendViewLink($mixed);
+            $link = $this->linkFormatter->getEventFrontendViewLink($event);
             if ($link) {
                 $collection->addField(new DataField(FieldInterface::FIELD_LINK, $link));
             }
@@ -90,16 +98,21 @@ class BasicCalendarEventDriver implements DriverInterface
                 $collection->addField(new DataField(FieldInterface::FIELD_DESCRIPTION, $description));
             }
 
+            $author = $version->getAuthor();
+            if ($author) {
+                $collection->addField(new DataField(FieldInterface::FIELD_AUTHOR, new AuthorDataFieldData($author->getUserInfoObject())));
+            }
+
             $collection->addField(new DataField(FieldInterface::FIELD_LINK, new LazyEventOccurrenceLinkDataFieldData()));
             $collection->addField(new DataField(FieldInterface::FIELD_DATE, new LazyEventOccurrenceStartDatetimeDataFieldData()));
             $collection->addField(new DataField(FieldInterface::FIELD_DATE_START, new LazyEventOccurrenceStartDatetimeDataFieldData()));
             $collection->addField(new DataField(FieldInterface::FIELD_DATE_END, new LazyEventOccurrenceEndDatetimeDataFieldData()));
 
-            $thumbnail = $this->getThumbnailDataField($mixed);
+            $thumbnail = $this->getThumbnailDataField($event);
             if ($thumbnail) {
                 $collection->addField($thumbnail);
             }
-            $categories = $this->getCategoriesDataField($mixed);
+            $categories = $this->getCategoriesDataField($event);
             if ($categories) {
                 $collection->addField($categories);
             }

@@ -20,7 +20,7 @@ div#ccm-dashboard-content {
   div#ccm-dashboard-content-regular {
     margin-left: $dashboard-content-padding-l;
     margin-right: $dashboard-content-padding-r;
-    padding-top: 1rem;
+    padding-top: $dashboard-content-padding-t;
     border-top: 1px solid $gray-200;
   }
 
@@ -34,7 +34,7 @@ div#ccm-dashboard-content {
   div.ccm-dashboard-content-container {
     margin-left: $dashboard-content-padding-l;
     margin-right: $dashboard-content-padding-r;
-    padding-top: 1rem;
+    padding-top: $dashboard-content-padding-t;
   }
 
   section {

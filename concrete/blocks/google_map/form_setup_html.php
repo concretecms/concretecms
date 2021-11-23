@@ -16,27 +16,28 @@
 <div class="ccm-google-map-block-container row">
     <div class="col-12">
         <div class="form-group">
-            <?= $form->label('apiKey', t('API Key') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('The API Key must be enabled for Google Maps and Google Places.') . "\n" . t('API keys can be obtained in the Google Developers Console.') . '"></i>') ?>
+            <?= $form->label('apiKey', t('API Key') . ' <i class="fas fa-question-circle launch-tooltip" title="' . t('The API Key must be enabled for Google Maps and Google Places.') . "\n" . t('API keys can be obtained in the Google Developers Console.') . '"></i>') ?>
             <div class="input-group">
                 <?= $form->text('apiKey', Config::get('app.api_keys.google.maps')) ?>
-                <div class="input-group-append">
-                    <span class="input-group-text btn btn-secondary" id="ccm-google-map-check-key">
-                        <?= t('Check') ?>
-                        &nbsp;
-                        <i id="ccm-google-map-check-key-spinner" class="fas fa-play"></i>
-                    </span>
-                </div>
+                <span class="input-group-text btn btn-secondary" id="ccm-google-map-check-key">
+                    <?= t('Check') ?>
+                    &nbsp;
+                    <i id="ccm-google-map-check-key-spinner" class="fas fa-play"></i>
+                </span>
             </div>
             <div id="block_note" class="alert alert-info" role="alert"><?= t('Checking API Key...') ?></div>
         </div>
 
         <div class="form-group">
             <?= $form->label('title', t('Map Title (optional)')) ?>
-            <?= $form->text('title', $title) ?>
-        </div>
+		    <div class="input-group">
+            	<?= $form->text('title', $title) ?>
+				<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+			</div>
+		</div>
 
         <div id="ccm-google-map-block-location" class="form-group">
-            <?= $form->label('location', t('Location') . ' <i class="fa fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>') ?>
+            <?= $form->label('location', t('Location') . ' <i class="fas fa-question-circle launch-tooltip" title="' . t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.') . '"></i>') ?>
             <?= $form->text('location', $location) ?>
             <?= $form->hidden('latitude', $latitude) ?>
             <?= $form->hidden('longitude', $longitude) ?>
@@ -59,9 +60,7 @@
         <div class="form-group">
             <?= $form->label('width', t('Map Width')) ?>
             <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-arrows-alt-h"></i></span>
-                </div>
+                <span class="input-group-text"><i class="fas fa-arrows-alt-h"></i></span>
                 <?= $form->text('width', $width) ?>
             </div>
         </div>
@@ -71,9 +70,7 @@
         <div class="form-group">
             <?= $form->label('height', t('Map Height')) ?>
             <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-arrows-alt-v"></i></span>
-                </div>
+                <span class="input-group-text"><i class="fas fa-arrows-alt-v"></i></span>
                 <?= $form->text('height', $height) ?>
             </div>
         </div>
@@ -226,7 +223,7 @@
                         },
                         function (place, status) {
                             if (status === 'REQUEST_DENIED') {
-                                placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places.')) ?>);
+                                placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places or not linked to billing account.')) ?>);
                             } else {
                                 placesLoaded(null, places);
                             }

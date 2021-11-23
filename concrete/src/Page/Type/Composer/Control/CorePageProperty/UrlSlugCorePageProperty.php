@@ -12,7 +12,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('url_slug');
-        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-text'));
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-alt'));
     }
 
     public function getPageTypeComposerControlName()
@@ -35,16 +35,31 @@ class UrlSlugCorePageProperty extends CorePageProperty
     public function validate()
     {
         $e = Loader::helper('validation/error');
-        $handle = $this->getPageTypeComposerControlDraftValue();
+        $val = $this->getRequestValue();
+        if ($val['url_slug']) {
+            $urlSlug = $val['url_slug'];
+        } else {
+            $urlSlug = $this->getPageTypeComposerControlDraftValue();
+        }
 
         /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
         $stringValidator = Core::make('helper/validation/strings');
-        if (!$stringValidator->notempty($handle)) {
+        if (!$stringValidator->notempty($urlSlug)) {
             $control = $this->getPageTypeComposerFormLayoutSetControlObject();
             $e->add(t('You haven\'t chosen a valid %s', $control->getPageTypeComposerControlDisplayLabel()));
 
             return $e;
         }
+    }
+
+    public function getRequestValue($args = false)
+    {
+        $data = parent::getRequestValue($args);
+        if(isset($data['url_slug'])) {
+            $data['url_slug'] = Core::make('helper/security')->sanitizeString($data['url_slug']);
+        }
+
+        return $data;
     }
 
     public function getPageTypeComposerControlDraftValue()

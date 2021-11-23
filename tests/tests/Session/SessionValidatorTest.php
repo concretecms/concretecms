@@ -7,6 +7,9 @@ use Concrete\Core\Permission\IPService;
 use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Tests\TestCase;
+use IPLib\Address\AddressInterface;
+use IPLib\Factory;
+use IPLib\ParseStringFlag;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -28,14 +31,17 @@ class SessionValidatorTest extends TestCase
     /** @var Session */
     protected $session;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->app = clone Application::getFacadeApplication();
+        $this->app->singleton(AddressInterface::class, function () {
+            return Factory::parseAddressString($this->request->getClientIp(), ParseStringFlag::IPV4_MAYBE_NON_DECIMAL | ParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | ParseStringFlag::MAY_INCLUDE_PORT | ParseStringFlag::MAY_INCLUDE_ZONEID);
+        });
         $this->app['config'] = clone $this->app['config'];
 
         $this->request = Request::create('http://url.com/');
         $config = $this->app->make('config');
-        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request, $this->app->build(IPService::class, ['config' => $config, 'request' => $this->request]));
+        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request, $this->app->make(IPService::class, ['config' => $config, 'request' => $this->request]));
 
         $store = [];
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
@@ -65,7 +71,7 @@ class SessionValidatorTest extends TestCase
         $this->session = $mock;
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->session = $this->app = $this->validator = $this->request = null;
     }

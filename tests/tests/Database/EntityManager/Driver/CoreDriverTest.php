@@ -32,7 +32,7 @@ class CoreDriverTest extends TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = Application::getFacadeApplication();
@@ -66,7 +66,7 @@ class CoreDriverTest extends TestCase
      */
     public function testGetNamespace()
     {
-        $this->assertInstanceOf('Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain',
+        $this->assertInstanceOf('Doctrine\Persistence\Mapping\Driver\MappingDriverChain',
             $this->driverChain, 'Is not a Doctrine ORM MappingDriverChain');
         $drivers = $this->driverChain->getDrivers();
 

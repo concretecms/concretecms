@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Attribute;
 
 /**
@@ -23,7 +24,7 @@ interface SetManagerInterface
     /**
      * Get the attribute keys that are not in any set.
      *
-     * @return \Concrete\Core\Attribute\AttributeKeyInterface
+     * @return \Concrete\Core\Attribute\AttributeKeyInterface[]
      */
     public function getUnassignedAttributeKeys();
 

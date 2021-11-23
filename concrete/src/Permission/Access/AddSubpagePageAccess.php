@@ -13,12 +13,12 @@ class AddSubpagePageAccess extends PageAccess
         $newPA = parent::duplicate($newPA);
         $db = Database::connection();
         $r = $db->executeQuery('select * from PagePermissionPageTypeAccessList where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['permission'], $row['externalLink']];
             $db->executeQuery('insert into PagePermissionPageTypeAccessList (peID, paID, permission, externalLink) values (?, ?, ?, ?)', $v);
         }
         $r = $db->executeQuery('select * from PagePermissionPageTypeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = [$row['peID'], $newPA->getPermissionAccessID(), $row['ptID']];
             $db->executeQuery('insert into PagePermissionPageTypeAccessListCustom  (peID, paID, ptID) values (?, ?, ?)', $v);
         }

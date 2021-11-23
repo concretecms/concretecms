@@ -49,6 +49,7 @@ class User implements UserEntityInterface, \JsonSerializable
     protected $uEmail;
 
     /**
+     * 255 is the recommended width according to https://www.php.net/manual/en/password.constants.php
      * @ORM\Column(type="string", length=255)
      */
     protected $uPassword;
@@ -77,6 +78,11 @@ class User implements UserEntityInterface, \JsonSerializable
      * @ORM\Column(type="datetime")
      */
     protected $uLastPasswordChange = null;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $uDateLastUpdated = null;
 
     /**
      * @ORM\Column(type="boolean")
@@ -128,10 +134,16 @@ class User implements UserEntityInterface, \JsonSerializable
      */
     protected $uIsPasswordReset = false;
 
+    /**
+     * @var int
+     * @ORM\Column(type="integer", options={"unsigned": true}, nullable=true)
+     */
+    protected $uHomeFileManagerFolderID = null;
 
     public function __construct()
     {
         $this->uLastPasswordChange = new \DateTime();
+        $this->uDateLastUpdated = new \DateTime();
         $this->uDateAdded = new \DateTime();
     }
 
@@ -209,6 +221,14 @@ class User implements UserEntityInterface, \JsonSerializable
     public function getUserLastPasswordChange()
     {
         return $this->uLastPasswordChange;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUserDateLastUpdated()
+    {
+        return $this->uDateLastUpdated;
     }
 
     /**
@@ -364,6 +384,14 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
+     * @param \DateTime $uDateLastUpdated
+     */
+    public function setUserDateLastUpdated($uDateLastUpdated)
+    {
+        $this->uDateLastUpdated = $uDateLastUpdated;
+    }
+
+    /**
      * @param bool $uHasAvatar
      */
     public function setUserHasAvatar($uHasAvatar)
@@ -441,6 +469,22 @@ class User implements UserEntityInterface, \JsonSerializable
     public function setUserIsPasswordReset($uIsPasswordReset)
     {
         $this->uIsPasswordReset = $uIsPasswordReset;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHomeFileManagerFolderID()
+    {
+        return $this->uHomeFileManagerFolderID;
+    }
+
+    /**
+     * @param int $uHomeFileManagerFolderID
+     */
+    public function setHomeFileManagerFolderID($uHomeFileManagerFolderID)
+    {
+        $this->uHomeFileManagerFolderID = $uHomeFileManagerFolderID;
     }
 
     /**

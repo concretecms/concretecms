@@ -1,19 +1,16 @@
 <?php
+
 namespace Concrete\Core\User\Search\Field\Field;
 
-use Concrete\Core\File\FileList;
-use Concrete\Core\File\Type\Type;
 use Concrete\Core\Search\Field\AbstractField;
-use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\ItemList\ItemList;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\User\UserList;
 
 class UserGroupField extends AbstractField
 {
-
     protected $requestVariables = [
-        'gID', 'uGroupIn'
+        'gID', 'uGroupIn',
     ];
 
     public function getKey()
@@ -32,7 +29,7 @@ class UserGroupField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $filterGroups = array();
+        $filterGroups = [];
         if (isset($this->data['gID']) && is_array($this->data['gID'])) {
             foreach ($this->data['gID'] as $gID) {
                 $g = \Group::getByID($gID);
@@ -55,7 +52,7 @@ class UserGroupField extends AbstractField
     {
         $gl = new GroupList();
         $g1 = $gl->getResults();
-        $html = '<div class="form-group"><select multiple name="gID[]" class="selectize-select">';
+        $html = '<div class="form-group"><select multiple name="gID[]" class="ccm-enhanced-select">';
         foreach ($g1 as $g) {
             $gp = new \Permissions($g);
             if ($gp->canSearchUsersInGroup($g)) {
@@ -68,13 +65,11 @@ class UserGroupField extends AbstractField
         }
         $html .= '</select></div><br/>';
 
-        $html .= '<div class="form-group"><select name="uGroupIn" class="form-control">';
+        $html .= '<div class="form-group"><select name="uGroupIn" class="form-select">';
         $html .= '<option value="in"' . ($this->data['uGroupIn'] == 'in' ? ' selected' : '') . '>' . t('Search for users in group(s)') . '</option>';
         $html .= '<option value="not"' . ($this->data['uGroupIn'] == 'not' ? ' selected' : '') . '>' . t('Search for users not included in group(s)') . '</option>';
         $html .= '</select></div>';
 
         return $html;
     }
-
-
 }

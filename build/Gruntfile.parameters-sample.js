@@ -2,8 +2,8 @@
 // Set your values and save this file as Gruntfile.parameters.js
 module.exports = {
 
-	// If concrete5 is installed in a subfolder and if you want to use javascript sourcemap you should change this variable.
-	// For instance if your concrete5 installation is at http://www.domain.com/c5subfolder, you should change it to:
+	// If Concrete is installed in a subfolder and if you want to use javascript sourcemap you should change this variable.
+	// For instance if your Concrete installation is at http://www.domain.com/c5subfolder, you should change it to:
 	// config.DIR_REL = '/c5subfolder';
 	DIR_REL: '',
 	// The path to the web folder, relative to this Gruntfile
@@ -13,13 +13,13 @@ module.exports = {
 
 	// The entry point URI of the API of the Community Translation server containing the translations.
 	// It's needed only if you have to run tasks that interact with a Community Translation server.
-	ctEntryPoint: 'https://translate.concrete5.org/api',
+	ctEntryPoint: 'https://translate.concretecms.org/api',
 	// The API Token to be used to authenticate yourself on a Community Translation server (may not be required).
 	// It's needed only if you have to run tasks that interact with a Community Translation server.
 	ctAPIToken: '',
 	// The handle of the package on the Community Translation server.
 	// It's needed only if you have to run tasks that interact with Transifex.
-	ctPackage: 'concrete5',
+	ctPackage: 'concrete',
 	// The version of the package on the Community Translation server
     // It's needed only if you have to run tasks that interact with Transifex.
 	ctPackageVersion: 'dev-8',

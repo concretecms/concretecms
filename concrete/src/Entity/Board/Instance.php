@@ -4,6 +4,7 @@ namespace Concrete\Core\Entity\Board;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Permission\Assignment\BoardAssignment;
 use Concrete\Core\Permission\ObjectInterface;
+use Concrete\Core\Permission\Response\BoardInstanceResponse;
 use Concrete\Core\Permission\Response\BoardResponse;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="InstanceRepository")
  * @ORM\Table(name="BoardInstances")
  */
-class Instance implements \JsonSerializable
+class Instance implements \JsonSerializable, ObjectInterface
 {
 
     /**
@@ -34,6 +35,16 @@ class Instance implements \JsonSerializable
 
     /**
      * @ORM\OneToMany(targetEntity="InstanceSlotRule", cascade={"remove"}, mappedBy="instance", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"ruleType" = "DESC", "slot" = "ASC"})
+     *
+     * What's the story with ruleType here? We have three rule types as of this comment,
+     * RULE_TYPE_AUTOMATIC_SLOT_PINNED = EP
+     * RULE_TYPE_DESIGNER_CUSTOM_CONTENT = ES
+     * and RULE_TYPE_DESIGNER_CUSTOM_CONTENT = AS
+     *
+     * A requirement is that the admin created slots (those that match RULE_TYPE_DESIGNER_CUSTOM_CONTENT) come at the
+     * END of any lists. So in order to achieve that, we have to order rules by ruleType descending first, so that
+     * items with AS come at the end.
      */
     protected $rules;
 
@@ -256,4 +267,23 @@ class Instance implements \JsonSerializable
         return (string) $this->getBoardInstanceID();
     }
 
+    public function getPermissionAssignmentClassName()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return false;
+    }
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->getBoardInstanceID();
+    }
+
+    public function getPermissionResponseClassName()
+    {
+        return BoardInstanceResponse::class;
+    }
 }

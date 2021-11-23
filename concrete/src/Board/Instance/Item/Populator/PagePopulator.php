@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Board\Instance\Item\Populator;
 
 use Concrete\Core\Board\Instance\Item\Data\DataInterface;
@@ -15,7 +16,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class PagePopulator extends AbstractPopulator
 {
 
-    public function getDataObjects(Instance $instance, ConfiguredDataSource $dataSource, int $mode) : array
+    public function getDataObjects(Instance $instance, ConfiguredDataSource $dataSource): array
     {
         $configuration = $dataSource->getConfiguration();
         $list = new PageList();
@@ -23,7 +24,7 @@ class PagePopulator extends AbstractPopulator
         $list->ignorePermissions();
         $containsSitefield = false;
         if ($query) {
-            foreach($query->getFields() as $field) {
+            foreach ($query->getFields() as $field) {
                 if ($field instanceof SiteField) {
                     // If we have a site field we handle it manually here, because we have to use the instance's
                     // site.
@@ -31,8 +32,10 @@ class PagePopulator extends AbstractPopulator
                     if ($field->isSetToCurrent()) {
                         // we filter by the instance's site
                         $list->setSiteTreeObject($instance->getSite()->getSiteTreeObject());
-                    } else if ($field->isSetToAll()) {
-                        $list->setSiteTreeToAll();
+                    } else {
+                        if ($field->isSetToAll()) {
+                            $list->setSiteTreeToAll();
+                        }
                     }
                 } else {
                     $field->filterList($list);
@@ -53,7 +56,6 @@ class PagePopulator extends AbstractPopulator
         $pagination = $list->getPagination();
         $pagination->setMaxPerPage(1000);
         return $pagination->getCurrentPageResults();
-
         /* this is old logic, remove once we're sure this works
         if ($mode == PopulatorInterface::RETRIEVE_FIRST_RUN) {
             // the first time we run we start today and go into the past.
@@ -67,8 +69,6 @@ class PagePopulator extends AbstractPopulator
         $pagination->setMaxPerPage(100);
         return $pagination->getCurrentPageResults();
         */
-
-
     }
 
     /**
@@ -117,13 +117,14 @@ class PagePopulator extends AbstractPopulator
     {
         $categories = [];
         $attributes = $mixed->getSetCollectionAttributes();
-        foreach($attributes as $key) {
+        foreach ($attributes as $key) {
             if ($key->getAttributeType()->getAttributeTypeHandle() == 'topics') {
                 $topics = $mixed->getAttribute($key);
-                foreach($topics as $topic) {
-                    $categories[] = $topic;
+                if ($topics) {
+                    foreach ($topics as $topic) {
+                        $categories[] = $topic;
+                    }
                 }
-
             }
         }
         return $categories;

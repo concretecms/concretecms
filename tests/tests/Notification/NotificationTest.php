@@ -30,7 +30,7 @@ class NotificationTest extends TestCase
         $this->assertInstanceOf('Concrete\Core\Notification\View\ListViewInterface', $view);
 
         $icon = (string) $view->renderIcon();
-        $this->assertEquals('<i class="fa fa-user"></i>', $icon);
+        $this->assertEquals('<i class="fas fa-user"></i>', $icon);
     }
 
     public function testNotificationTypeManager()
@@ -45,7 +45,7 @@ class NotificationTest extends TestCase
          * @var \Concrete\Core\Notification\Subscription\Manager
          */
         $subscriptions = $manager->getSubscriptions();
-        $this->assertEquals(7, count($subscriptions));
+        $this->assertEquals(13, count($subscriptions));
     }
 
     protected function getUserSignup()

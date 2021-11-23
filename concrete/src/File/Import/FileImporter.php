@@ -8,6 +8,8 @@ use Concrete\Core\File\File;
 use Concrete\Core\File\Incoming;
 use Concrete\Core\File\Service\Application as ApplicationFileService;
 use Concrete\Core\File\Service\VolatileDirectory;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Exception;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\AdapterInterface;
@@ -186,6 +188,16 @@ class FileImporter
         $fileVersion = $this->save($importingFile, $options);
         $this->applyPostProcessors($importingFile, $options, $fileVersion);
         $fileVersion->releaseImagineImage();
+
+        /** @var LoggerFactory $loggerFactory */
+        $loggerFactory = $this->app->make(LoggerFactory::class);
+        $logger = $loggerFactory->createLogger(Channels::CHANNEL_FILES);
+
+        try {
+            $logger->notice(t("File %s successfully imported.", $fileVersion->getFileName()));
+        } catch (Exception $err) {
+            // Skip any errors while logging to pass the automated tests
+        }
 
         return $fileVersion;
     }

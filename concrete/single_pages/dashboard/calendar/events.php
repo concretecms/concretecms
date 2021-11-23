@@ -20,15 +20,15 @@ Loader::element('calendar/header', array(
     <h3 id="calendar-month-name"><?= $monthText ?> <?= $year ?></h3>
 
     <div class="btn-group">
-        <a href="<?= $previousLink ?>" class="btn btn-sm btn-secondary"><i class="fa fa-angle-double-left"></i></a>
-        <a data-nav="month" href="javascript:void(0)" class="btn btn-sm btn-secondary"><i class="fa fa-calendar-o"></i></a>
-        <a href="<?= $nextLink ?>" class="btn btn-sm btn-secondary"><i class="fa fa-angle-double-right"></i></a>
+        <a href="<?= $previousLink ?>" class="btn btn-sm btn-secondary"><i class="fas fa-angle-double-left"></i></a>
+        <a data-nav="month" href="javascript:void(0)" class="btn btn-sm btn-secondary"><i class="fas fa-calendar"></i></a>
+        <a href="<?= $nextLink ?>" class="btn btn-sm btn-secondary"><i class="fas fa-angle-double-right"></i></a>
     </div>
 
     <?php if (isset($topics) && is_array($topics)) {
         ?>
         <div class="btn-group" id="calendar-topics">
-            <button type="button" id="topics_button" class="btn btn-secondary btn-sm" data-toggle="dropdown">
+            <button type="button" id="topics_button" class="btn btn-secondary btn-sm" data-bs-toggle="dropdown">
                 <?= $topic ? h($topic->getTreeNodeDisplayName('html')) : t('All Categories') ?>
                 <span class="caret"></span>
             </button>

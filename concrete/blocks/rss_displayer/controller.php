@@ -183,6 +183,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'title' => '',
             'standardDateFormat' => '',
             'customDateFormat' => '',
+            'titleFormat' => '',
         ];
         $args = [
             'url' => $data['url'],
@@ -190,6 +191,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'showSummary' => $data['showSummary'] ? 1 : 0,
             'launchInNewWindow' => $data['launchInNewWindow'] ? 1 : 0,
             'title' => $data['title'],
+            'titleFormat' => $data['titleFormat'],
         ];
         switch ($data['standardDateFormat']) {
             case ':custom:':

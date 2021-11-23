@@ -1,10 +1,13 @@
 <?php
 namespace Concrete\Core\Search\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class FileAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnValue($node)
     {
@@ -33,6 +36,6 @@ class FileAttributeKeyColumn extends AttributeKeyColumn implements PagerColumnIn
         $where = sprintf('(' . $this->getColumnKey() . ', f.fID) %s (:sortColumn, :sortID)', $sort);
         $query->setParameter('sortColumn', $value);
         $query->setParameter('sortID', $mixed->getFileID());
-        $query->andWhere($where);
+        $this->andWhereNotExists($query, $where);
     }
 }

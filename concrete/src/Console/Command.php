@@ -8,38 +8,83 @@ use Concrete\Core\Support\Facade\Application as ApplicationFacade;
 use Exception;
 use LogicException;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Input\ArrayInput;
 use Throwable;
 
 /**
- * Concrete5 base command class
+ * base command class
  * Large swaths of this class have been copied from illuminate/config 5.2 and 5.5
  * so you may refer to their documentation for some things.
  */
 abstract class Command extends SymfonyCommand
 {
+    /**
+     * @deprecated Use SUCCESS
+     *
+     * @var int
+     */
+    public const RETURN_CODE_ON_SUCCESS = self::SUCCESS;
 
-    /** @var InputInterface */
+    /**
+     * @deprecated Use FAILURE
+     *
+     * @var int
+     */
+    public const RETURN_CODE_ON_FAILURE = self::FAILURE;
+
+    /**
+     * Concrete requires symfony/console ^5.2, and the INVALID constant has been introduced in symfony/console 5.3.0
+     *
+     * @var int
+     */
+    public const INVALID = 2;
+
+    /**
+     * The name of the CLI option that allows running CLI commands as root without confirmation.
+     *
+     * @var string
+     */
+    public const ALLOWASROOT_OPTION = 'allow-as-root';
+
+    /**
+     * The name of the environment variable that allows running CLI commands as root without confirmation.
+     *
+     * @var string
+     */
+    public const ALLOWASROOT_ENV = 'C5_CLI_ALLOW_AS_ROOT';
+
+    /**
+     * @var InputInterface
+     */
     protected $input;
 
-    /** @var \Concrete\Core\Console\OutputStyle */
+    /**
+     * @var \Concrete\Core\Console\OutputStyle
+     */
     protected $output;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $name = '';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $description = '';
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $hidden = false;
 
     /**
-     * The command signature
+     * The command signature.
+     *
      * @see https://laravel.com/docs/5.5/artisan#defining-input-expectations
      * ex: `config:set {item} {value} {--quiet}`
      *
@@ -61,11 +106,16 @@ abstract class Command extends SymfonyCommand
     protected $signature;
 
     /**
-     * The return code we should return when an exception is thrown while running the command.
+     * Can this command be executed as root?
+     * If set to false, the command can be executed if one of these conditions is satisfied:
+     * - the users is not root
+     * - the --allow-as-root option is set
+     * - the C5_CLI_ALLOW_AS_ROOT environment variable is set
+     * - the console is interactive and the user explicitly confirm the operation.
      *
-     * @var int
+     * @var bool
      */
-    const RETURN_CODE_ON_FAILURE = 1;
+    protected $canRunAsRoot = true;
 
     public function __construct($name = null)
     {
@@ -82,9 +132,230 @@ abstract class Command extends SymfonyCommand
             $this->setDescription($this->description);
         }
         $this->setHidden($this->hidden);
-        if (! isset($this->signature)) {
+        if (!isset($this->signature)) {
             $this->specifyParameters();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function run(InputInterface $input, OutputInterface $output)
+    {
+        // Store the input and output
+        $this->input = $input;
+        $this->output = new OutputStyle($input, $output);
+
+        // Run the command
+        return parent::run($this->input, $this->output);
+    }
+
+    /**
+     * Call another console command.
+     *
+     * @param string $command
+     * @param array $arguments
+     *
+     * @return int
+     */
+    public function call($command, array $arguments = [])
+    {
+        $arguments['command'] = $command;
+
+        return $this->getApplication()->find($command)->run(
+            new ArrayInput($arguments),
+            $this->output
+        );
+    }
+
+    /**
+     * Call another console command silently.
+     *
+     * @param string $command
+     * @param array $arguments
+     *
+     * @return int
+     */
+    public function callSilent($command, array $arguments = [])
+    {
+        $arguments['command'] = $command;
+
+        return $this->getApplication()->find($command)->run(
+            new ArrayInput($arguments),
+            new NullOutput()
+        );
+    }
+
+    /**
+     * Determine if the given argument is present.
+     *
+     * @param string|int $name
+     *
+     * @return bool
+     */
+    public function hasArgument($name)
+    {
+        return $this->input->hasArgument($name);
+    }
+
+    /**
+     * Get the value of a command argument.
+     *
+     * @param string|null $key
+     *
+     * @return string|array
+     */
+    public function argument($key = null)
+    {
+        if ($key === null) {
+            return $this->input->getArguments();
+        }
+
+        return $this->input->getArgument($key);
+    }
+
+    /**
+     * Get all of the arguments passed to the command.
+     *
+     * @return array
+     */
+    public function arguments()
+    {
+        return $this->argument();
+    }
+
+    /**
+     * Determine if the given option is present.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasOption($name)
+    {
+        return $this->input->hasOption($name);
+    }
+
+    /**
+     * Get the value of a command option.
+     *
+     * @param string $key
+     *
+     * @return string|array
+     */
+    public function option($key = null)
+    {
+        if ($key === null) {
+            return $this->input->getOptions();
+        }
+
+        return $this->input->getOption($key);
+    }
+
+    /**
+     * Get all of the options passed to the command.
+     *
+     * @return array
+     */
+    public function options()
+    {
+        return $this->option();
+    }
+
+    /**
+     * Confirm a question with the user.
+     *
+     * @param string $question
+     * @param bool $default
+     *
+     * @return bool
+     */
+    public function confirm($question, $default = false)
+    {
+        return $this->output->confirm($question, $default);
+    }
+
+    /**
+     * Prompt the user for input.
+     *
+     * @param string $question
+     * @param string $default
+     *
+     * @return string
+     */
+    public function ask($question, $default = null)
+    {
+        return $this->output->ask($question, $default);
+    }
+
+    /**
+     * Prompt the user for input with auto completion.
+     *
+     * @param string $question
+     * @param array $choices
+     * @param string $default
+     * @param null $attempts
+     * @param null $strict
+     *
+     * @return string
+     */
+    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = null)
+    {
+        return $this->output->askWithCompletion($question, $choices, $default, $attempts, $strict);
+    }
+
+    /**
+     * Prompt the user for input but hide the answer from the console.
+     *
+     * @param string $question
+     * @param bool $fallback
+     *
+     * @return string
+     */
+    public function secret($question, $fallback = true)
+    {
+        return $this->output->secret($question, $fallback);
+    }
+
+    /**
+     * Give the user a single choice from an array of answers.
+     *
+     * @param string $question
+     * @param array $choices
+     * @param string $default
+     * @param mixed $attempts
+     * @param bool $multiple
+     *
+     * @return string
+     */
+    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
+    {
+        return $this->output->choice($question, $choices, $default, $attempts, $multiple);
+    }
+
+    /**
+     * Format input to textual table.
+     *
+     * @param array $headers
+     * @param \Illuminate\Contracts\Support\Arrayable|array $rows
+     * @param string $tableStyle
+     * @param array $columnStyles
+     *
+     * @return void
+     */
+    public function table(array $headers, array $rows, $tableStyle = 'default', array $columnStyles = [])
+    {
+        $this->output->table($headers, $rows, $tableStyle, $columnStyles);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Symfony\Component\Console\Application|\Concrete\Core\Console\Application
+     */
+    public function getApplication()
+    {
+        return parent::getApplication();
     }
 
     /**
@@ -126,9 +397,10 @@ abstract class Command extends SymfonyCommand
     }
 
     /**
-     * Get the arguments for this command
+     * Get the arguments for this command.
      *
      * If $this->signature is specified, this method has no effect.
+     *
      * @return array [[$name, $mode = null, $description = '', $default = null], ...]
      */
     protected function getArguments()
@@ -137,53 +409,15 @@ abstract class Command extends SymfonyCommand
     }
 
     /**
-     * Get the options for this command
+     * Get the options for this command.
      *
      * If $this->signature is specified, this method has no effect.
+     *
      * @return array [[$name, $shortcut = null, $mode = null, $description = '', $default = null], ...]
      */
     protected function getOptions()
     {
         return [];
-    }
-
-    /**
-     * The name of the CLI option that allows running CLI commands as root without confirmation.
-     *
-     * @var string
-     */
-    const ALLOWASROOT_OPTION = 'allow-as-root';
-
-    /**
-     * The name of the environment variable that allows running CLI commands as root without confirmation.
-     *
-     * @var string
-     */
-    const ALLOWASROOT_ENV = 'C5_CLI_ALLOW_AS_ROOT';
-
-    /**
-     * Can this command be executed as root?
-     * If set to false, the command can be executed if one of these conditions is satisfied:
-     * - the users is not root
-     * - the --allow-as-root option is set
-     * - the C5_CLI_ALLOW_AS_ROOT environment variable is set
-     * - the console is interactive and the user explicitly confirm the operation.
-     *
-     * @var bool
-     */
-    protected $canRunAsRoot = true;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function run(InputInterface $input, OutputInterface $output)
-    {
-        // Store the input and output
-        $this->input = $input;
-        $this->output = new OutputStyle($input, $output);
-
-        // Run the command
-        return parent::run($this->input, $this->output);
     }
 
     /**
@@ -203,6 +437,7 @@ abstract class Command extends SymfonyCommand
      *
      * @param OutputInterface $output
      * @param Exception|Throwable $error
+     *
      * @deprecated Use $this->output to manage your output
      * @see OutputStyle::error()
      */
@@ -239,7 +474,8 @@ abstract class Command extends SymfonyCommand
             'env',
             null,
             InputOption::VALUE_REQUIRED,
-            'The environment (if not specified, we\'ll work with the configuration item valid for all environments)');
+            'The environment (if not specified, we\'ll work with the configuration item valid for all environments)'
+        );
 
         return $this;
     }
@@ -248,10 +484,10 @@ abstract class Command extends SymfonyCommand
      * Allow/disallow running this command as root without confirmation.
      *
      * @param bool $canRunAsRoot if false the command can be executed if one of these conditions is satisfied:
-     * - the users is not root
-     * - the --allow-as-root option is set
-     * - the C5_CLI_ALLOW_AS_ROOT environment variable is set
-     * - the console is interactive and the user explicitly confirm the operation
+     *                           - the users is not root
+     *                           - the --allow-as-root option is set
+     *                           - the C5_CLI_ALLOW_AS_ROOT environment variable is set
+     *                           - the console is interactive and the user explicitly confirm the operation
      *
      * @return $this
      */
@@ -313,208 +549,32 @@ abstract class Command extends SymfonyCommand
     }
 
     /**
-     * This method is overridden to pipe execution to the handle method hiding input and output
+     * This method is overridden to pipe execution to the handle method hiding input and output.
      *
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @return mixed
+     *
+     * @return int
+     *
+     * @see \Symfony\Component\Console\Command\Command::execute()
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (!method_exists($this, 'handle')) {
             throw new LogicException('You must define the public handle() method in the command implementation.');
         }
-
-        return $this->getApplication()->getConcrete5()->call([$this, 'handle']);
-    }
-
-    /**
-     * Call another console command.
-     *
-     * @param  string  $command
-     * @param  array   $arguments
-     * @return int
-     */
-    public function call($command, array $arguments = [])
-    {
-        $arguments['command'] = $command;
-        return $this->getApplication()->find($command)->run(
-            new ArrayInput($arguments), $this->output
-        );
-    }
-
-    /**
-     * Call another console command silently.
-     *
-     * @param  string  $command
-     * @param  array   $arguments
-     * @return int
-     */
-    public function callSilent($command, array $arguments = [])
-    {
-        $arguments['command'] = $command;
-        return $this->getApplication()->find($command)->run(
-            new ArrayInput($arguments), new NullOutput
-        );
-    }
-
-    /**
-     * Determine if the given argument is present.
-     *
-     * @param  string|int  $name
-     * @return bool
-     */
-    public function hasArgument($name)
-    {
-        return $this->input->hasArgument($name);
-    }
-
-    /**
-     * Get the value of a command argument.
-     *
-     * @param  string|null  $key
-     * @return string|array
-     */
-    public function argument($key = null)
-    {
-        if (is_null($key)) {
-            return $this->input->getArguments();
+        $result = $this->getApplication()->getConcrete()->call([$this, 'handle']);
+        switch (gettype($result)) {
+            case 'integer':
+                return $result;
+            case 'boolean':
+                return $result ? static::SUCCESS : static::FAILURE;
+            case 'double':
+                return (int) $result;
+            case 'string':
+                return is_numeric($result) ? (int) $result : static::SUCCESS;
+            default:
+                return static::SUCCESS;
         }
-        return $this->input->getArgument($key);
     }
-
-    /**
-     * Get all of the arguments passed to the command.
-     *
-     * @return array
-     */
-    public function arguments()
-    {
-        return $this->argument();
-    }
-
-    /**
-     * Determine if the given option is present.
-     *
-     * @param  string  $name
-     * @return bool
-     */
-    public function hasOption($name)
-    {
-        return $this->input->hasOption($name);
-    }
-
-    /**
-     * Get the value of a command option.
-     *
-     * @param  string  $key
-     * @return string|array
-     */
-    public function option($key = null)
-    {
-        if (is_null($key)) {
-            return $this->input->getOptions();
-        }
-        return $this->input->getOption($key);
-    }
-
-    /**
-     * Get all of the options passed to the command.
-     *
-     * @return array
-     */
-    public function options()
-    {
-        return $this->option();
-    }
-
-    /**
-     * Confirm a question with the user.
-     *
-     * @param  string $question
-     * @param  bool $default
-     * @return bool
-     */
-    public function confirm($question, $default = false)
-    {
-        return $this->output->confirm($question, $default);
-    }
-
-    /**
-     * Prompt the user for input.
-     *
-     * @param  string $question
-     * @param  string $default
-     * @return string
-     */
-    public function ask($question, $default = null)
-    {
-        return $this->output->ask($question, $default);
-    }
-
-    /**
-     * Prompt the user for input with auto completion.
-     *
-     * @param string $question
-     * @param array $choices
-     * @param string $default
-     * @param null $attempts
-     * @param null $strict
-     * @return string
-     */
-    public function askWithCompletion($question, array $choices, $default = null, $attempts = null, $strict = null)
-    {
-        return $this->output->askWithCompletion($question, $choices, $default, $attempts, $strict);
-    }
-
-    /**
-     * Prompt the user for input but hide the answer from the console.
-     *
-     * @param  string $question
-     * @param  bool $fallback
-     * @return string
-     */
-    public function secret($question, $fallback = true)
-    {
-        return $this->output->secret($question, $fallback);
-    }
-
-    /**
-     * Give the user a single choice from an array of answers.
-     *
-     * @param  string $question
-     * @param  array $choices
-     * @param  string $default
-     * @param  mixed $attempts
-     * @param  bool $multiple
-     * @return string
-     */
-    public function choice($question, array $choices, $default = null, $attempts = null, $multiple = null)
-    {
-        return $this->output->choice($question, $choices, $default, $attempts, $multiple);
-    }
-
-    /**
-     * Format input to textual table.
-     *
-     * @param  array $headers
-     * @param  \Illuminate\Contracts\Support\Arrayable|array $rows
-     * @param  string $tableStyle
-     * @param  array $columnStyles
-     * @return void
-     */
-    public function table(array $headers, array $rows, $tableStyle = 'default', array $columnStyles = [])
-    {
-        $this->output->table($headers, $rows, $tableStyle, $columnStyles);
-    }
-
-    /**
-     * @inheritdoc
-     * @return \Symfony\Component\Console\Application|\Concrete\Core\Console\Application
-     */
-    public function getApplication()
-    {
-        return parent::getApplication();
-    }
-
 }

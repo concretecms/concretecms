@@ -29,7 +29,7 @@ class Single
         $db = Loader::db();
         $r = $db->Execute("select cID from Pages where cFilename is not null and pkgID = ?", array($pkg->getPackageID()));
         $singlePages = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $singlePages[] = CorePage::getByID($row['cID']);
         }
 
@@ -255,7 +255,7 @@ class Single
         $db = Loader::db();
         $r = $db->query("select Pages.cID from Pages inner join Collections on Pages.cID = Collections.cID where cFilename is not null order by cDateModified desc");
         $pages = array();
-        while ($row = $r->fetchRow()) {
+        while ($row = $r->fetch()) {
             $c = Page::getByID($row['cID']);
             $pages[] = $c;
         }

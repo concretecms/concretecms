@@ -40,13 +40,6 @@ class ClonerOptions
     private $copyAttributes = true;
 
     /**
-     * Should the feature assignments be copied?
-     *
-     * @var bool
-     */
-    private $copyFeatureAssignments = true;
-
-    /**
      * Should the page type composer output block records be copied?
      *
      * @var bool
@@ -184,31 +177,6 @@ class ClonerOptions
     public function setCopyPageTypeComposerOutputBlocks($copyPageTypeComposerOutputBlocks)
     {
         $this->copyPageTypeComposerOutputBlocks = (bool) $copyPageTypeComposerOutputBlocks;
-    }
-
-
-    /**
-     * Should the feature assignments be copied?
-     *
-     * @return bool
-     */
-    public function copyFeatureAssignments()
-    {
-        return $this->copyFeatureAssignments;
-    }
-
-    /**
-     * Should the feature assignments be copied?
-     *
-     * @param bool $value
-     *
-     * @return $this
-     */
-    public function setCopyFeatureAssignments($value)
-    {
-        $this->copyFeatureAssignments = (bool) $value;
-
-        return $this;
     }
 
     /**

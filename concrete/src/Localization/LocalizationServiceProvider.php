@@ -2,6 +2,7 @@
 namespace Concrete\Core\Localization;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Http\Client\Factory;
 use Concrete\Core\Localization\Service\AddressFormat;
 use Concrete\Core\Localization\Translation\Local\Factory as LocalTranslationsFactory;
 use Concrete\Core\Localization\Translation\Local\FactoryInterface as LocalTranslationsFactoryInterface;
@@ -41,19 +42,16 @@ class LocalizationServiceProvider extends ServiceProvider
             }
         }
 
-        if (!$this->app->bound(LocalTranslationsFactoryInterface::class)) {
-            $this->app->alias(LocalTranslationsFactory::class, LocalTranslationsFactoryInterface::class);
-        }
-        $this->app->bind(LocalTranslationsFactory::class, function ($app) {
-            return $app->build(LocalTranslationsFactory::class, ['cache' => $app->make('cache/expensive')]);
+        $this->app->bindIf(LocalTranslationsFactoryInterface::class, function($app) {
+            return $app->make(LocalTranslationsFactory::class, ['cache' => $app->make('cache/expensive')]);
         });
-        if (!$this->app->bound(RemoteTranslationsProviderInterface::class)) {
-            $this->app->alias(CommunityStoreTranslationProvider::class, RemoteTranslationsProviderInterface::class);
-        }
-        $this->app->bind(CommunityStoreTranslationProvider::class, function ($app) {
-            return $app->build(CommunityStoreTranslationProvider::class, ['cache' => $app->make('cache/expensive')]);
+        $this->app->bindIf(RemoteTranslationsProviderInterface::class, function($app) {
+            return new CommunityStoreTranslationProvider(
+                $app->make('config'),
+                $app->make('cache'),
+                $app->make(Factory::class)
+            );
         });
-
         $this->app->singleton(AddressFormat::class);
     }
 }

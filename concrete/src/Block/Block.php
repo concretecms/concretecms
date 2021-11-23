@@ -11,7 +11,6 @@ use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Foundation\Queue\Queue;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
@@ -180,7 +179,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             }
 
             $app = Facade::getFacadeApplication();
-            $b->instance = $app->build($class, [$b]);
+            $b->instance = $app->make($class, ['obj' => $b]);
 
             if ($c != null || $a != null) {
                 CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
@@ -495,10 +494,9 @@ EOT
             $q = 'select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?';
             $r = $db->query($q, [$bID]);
             if ($r) {
-                while ($row = $r->fetchRow()) {
+                while ($row = $r->fetch()) {
                     $cArray[] = Page::getByID($row['cID'], 'RECENT');
                 }
-                $r->free();
             }
         }
 
@@ -701,6 +699,13 @@ EOT
      */
     public function isEditable()
     {
+        if ($this->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+            $controller = $this->getController();
+            $originalBlockID = $controller->getOriginalBlockID();
+            $originalBlock = self::getByID($originalBlockID);
+
+            return $originalBlock && $originalBlock->isEditable();
+        }
         $bv = new BlockView($this);
         $path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
         if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
@@ -767,7 +772,7 @@ EOT
             $q = 'select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?';
             $r = $db->query($q, [$this->getBlockID(), $cID, $cvID]);
             if ($r) {
-                return $r->numRows() > 0;
+                return $r->rowCount() > 0;
             }
         } else {
             return isset($this->isOriginal) ? (!$this->isOriginal) : false;
@@ -1008,7 +1013,7 @@ EOT
     }
 
     /**
-     * Reset the cache settings, so that concrete5 will use the values of the block type controller.
+     * Reset the cache settings, so that Concrete will use the values of the block type controller.
      */
     public function resetCustomCacheSettings()
     {
@@ -1103,6 +1108,11 @@ EOT
      */
     public function setBlockCachedOutput($content, $lifetime, $area)
     {
+        // We shouldn't create a cache for stack proxy
+        if ($this->getBlockTypeHandle() === BLOCK_HANDLE_STACK_PROXY) {
+            return false;
+        }
+
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();
 
@@ -1152,6 +1162,11 @@ EOT
      */
     public function getBlockCachedOutput($area)
     {
+        // We shouldn't get a cache for stack proxy
+        if ($this->getBlockTypeHandle() === BLOCK_HANDLE_STACK_PROXY) {
+            return false;
+        }
+
         $db = Loader::db();
 
         $arHandle = $this->getAreaHandle();
@@ -1423,7 +1438,7 @@ EOT
             $bt = $this->getBlockTypeObject();
             $class = $bt->getBlockTypeClass();
             $app = Facade::getFacadeApplication();
-            $this->instance = $app->build($class, [$this]);
+            $this->instance = $app->make($class, ['obj' => $this]);
         }
         $this->instance->setBlockObject($this);
         $this->instance->setAreaObject($this->getBlockAreaObject());
@@ -1483,7 +1498,7 @@ EOT
         $bt = BlockType::getByID($btID);
         $class = $bt->getBlockTypeClass();
         $app = Facade::getFacadeApplication();
-        $bc = $app->build($class, [$this]);
+        $bc = $app->make($class, ['obj' => $this]);
         $bc->save($data);
     }
 
@@ -1507,8 +1522,26 @@ EOT
             $bName = $data['bName'];
         }
         if (isset($data['bFilename'])) {
+            // Check bFilename for valid Block filename. Must contain only alpha numeric and slashes/dashes, but it MAY
+            // end in ".php"
             $bFilename = $data['bFilename'];
+            if (!empty($bFilename)) {
+                if (substr($bFilename, -4) === '.php') {
+                    // Let's run our regular expression check on everything BEFORE ".php"
+                    $bFilenameToCheck = substr($bFilename, 0, -4);
+                } else {
+                    $bFilenameToCheck = $bFilename; // We just check the entirety of what's passed in.
+                }
+
+                if (!preg_match('/^[A-Za-z0-9_-]+$/i', $bFilenameToCheck)) {
+                    $bFilename = null;
+                    throw new \RuntimeException(
+                        t('Custom templates may only contain letters, numbers, dashes and underscores.')
+                    );
+                }
+            }
         }
+
 
         $v = [$bName, $bFilename, $dt, $this->getBlockID()];
         $q = 'update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?';
@@ -1572,7 +1605,7 @@ EOT
             return false;
         }
         $app = Facade::getFacadeApplication();
-        $bc = $app->build($blockTypeClass, [$this]);
+        $bc = $app->make($blockTypeClass, ['obj' => $this]);
 
         $bDate = $dh->getOverridableNow();
         $v = [$this->getBlockName(), $bDate, $bDate, $this->getBlockFilename(), $this->getBlockTypeID(), $this->getBlockUserID()];
@@ -1611,7 +1644,7 @@ EOT
         $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
         $r = $db->query($q, [$this->getBlockID(), $ovID]);
         if ($r) {
-            while ($row = $r->fetchRow()) {
+            while ($row = $r->fetch()) {
                 $db->Replace(
                     'BlockPermissionAssignments',
                     [
@@ -1631,7 +1664,6 @@ EOT
                     true
                     );
             }
-            $r->free();
         }
 
         // we duplicate block-specific sub-content
@@ -1753,7 +1785,7 @@ EOT
             if ($bt && method_exists($bt, 'getBlockTypeClass')) {
                 $class = $bt->getBlockTypeClass();
                 $app = Facade::getFacadeApplication();
-                $bc = $app->build($class, [$this]);
+                $bc = $app->make($class, ['obj' => $this]);
                 $bc->delete();
             }
 
@@ -1766,7 +1798,7 @@ EOT
                 'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
                 [$bID]
                 );
-            while ($row = $r->FetchRow()) {
+            while ($row = $r->fetch()) {
                 $c = Page::getByID($row['cID'], $row['cvID']);
                 $b = self::getByID($row['bID'], $c, $row['arHandle']);
                 $b->delete();
@@ -1828,7 +1860,7 @@ EOT
      * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
      * @param bool $updateForkedBlocks
      *
-     * @return \ZendQueue\Queue
+     * @return array
      */
     public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks)
     {
@@ -1897,10 +1929,7 @@ EOT
 
      *
      * @param mixed $data Custom data to be added to the queue messages
-     * @param \ZendQueue\Queue $queue The queue to add the messages too (it will be emptied before adding the new messages)
      * @param bool $includeThisBlock Include this block instance in the queue?
-     *
-     * @return \ZendQueue\Queue
      */
     public function queueForDefaultsUpdate($data, $includeThisBlock = true)
     {

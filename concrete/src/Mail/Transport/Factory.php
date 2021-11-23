@@ -3,9 +3,9 @@ namespace Concrete\Core\Mail\Transport;
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Mail\Transport\LimitedSmtp as LimitedSmtpTransport;
-use Zend\Mail\Transport\Sendmail as SendmailTransport;
-use Zend\Mail\Transport\Smtp as SmtpTransport;
-use Zend\Mail\Transport\SmtpOptions;
+use Laminas\Mail\Transport\Sendmail as SendmailTransport;
+use Laminas\Mail\Transport\Smtp as SmtpTransport;
+use Laminas\Mail\Transport\SmtpOptions;
 
 class Factory
 {
@@ -14,7 +14,7 @@ class Factory
      *
      * @param Repository $config
      *
-     * @return \Zend\Mail\Transport\TransportInterface
+     * @return \Laminas\Mail\Transport\TransportInterface
      */
     public function createTransportFromConfig(Repository $config)
     {
@@ -26,7 +26,7 @@ class Factory
      *
      * @param array $array
      *
-     * @return \Zend\Mail\Transport\TransportInterface
+     * @return \Laminas\Mail\Transport\TransportInterface
      */
     public function createTransportFromArray(array $array)
     {
@@ -42,7 +42,7 @@ class Factory
     /**
      * @param array $array
      *
-     * @return \Zend\Mail\Transport\Sendmail
+     * @return \Laminas\Mail\Transport\Sendmail
      */
     public function createPhpMailTransportFromArray(array $array)
     {
@@ -76,6 +76,10 @@ class Factory
         $encryption = array_get($array, 'encryption');
         if ($encryption) {
             $options['connection_config']['ssl'] = (string) $encryption;
+        }
+        $heloDomain = (string) array_get($array, 'helo_domain');
+        if ($heloDomain !== '') {
+            $options['name'] = $heloDomain;
         }
         $mpc = array_get($array, 'messages_per_connection');
         $messagesPerConnection = $mpc ? (int) $mpc : 0;

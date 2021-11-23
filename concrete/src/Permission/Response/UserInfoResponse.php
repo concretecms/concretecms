@@ -22,17 +22,18 @@ class UserInfoResponse extends Response
         // note, this will require users to have access to search
         // "registered users" explicitly
 
+        $canSearchUsersInGroup = true;
         foreach ($groups as $gID => $gName) {
             $g = Group::getByID($gID);
             if (is_object($g)) {
                 $gp = new Permissions($g);
-                if ($gp->canSearchUsersInGroup()) {
-                    return true;
+                if (!$gp->canSearchUsersInGroup()) {
+                    $canSearchUsersInGroup = false;
                 }
             }
         }
 
-        return false;
+        return $canSearchUsersInGroup;
     }
 
     public function canEditUser()

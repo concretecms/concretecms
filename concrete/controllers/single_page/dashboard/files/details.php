@@ -8,6 +8,8 @@ use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRecord;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\File\Command\RescanFileAsyncCommand;
+use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\Rescanner;
 use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -19,15 +21,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Details extends DashboardPageController
 {
-    public function view($fID = '')
-    {
-        try {
-            $fileVersion = $this->getFileVersion($fID ? (int) $fID : null);
-        } catch (UserMessageException $x) {
-            $this->flash('error', $x->getMessage());
 
-            return $this->buildRedirect('/dashboard/files/search');
-        }
+    protected function setupPage(?Version $fileVersion)
+    {
         $this->set('date', $this->app->make('date'));
         $this->set('number', $this->app->make('helper/number'));
         $this->set('resolverManager', $this->app->make(ResolverManagerInterface::class));
@@ -39,6 +35,28 @@ class Details extends DashboardPageController
         $this->set('attributeKeys', $this->app->make(FileCategory::class)->getList());
         $this->set('usageRecords', $this->getUsageRecords($fileVersion->getFile()));
         $this->set('recentDownloads', $this->getRecentDownloads($fileVersion->getFile()));
+    }
+
+    public function view($fID = '')
+    {
+        try {
+            $fileVersion = $this->getFileVersion($fID, null);
+            $this->setupPage($fileVersion);
+        } catch (UserMessageException $x) {
+            $this->flash('error', $x->getMessage());
+            return $this->buildRedirect('/dashboard/files/search');
+        }
+    }
+
+    public function preview_version($fID = null, $fvID = null)
+    {
+        try {
+            $fileVersion = $this->getFileVersion($fID, $fvID);
+            $this->setupPage($fileVersion);
+        } catch (UserMessageException $x) {
+            $this->flash('error', $x->getMessage());
+            return $this->buildRedirect('/dashboard/files/search');
+        }
     }
 
     public function rescan($fID = '')
@@ -56,7 +74,8 @@ class Details extends DashboardPageController
             return $this->buildRedirect($this->action());
         }
 
-        $this->app->make(Rescanner::class)->rescanFileVersion($fileVersion);
+        $rescanFileCommand = new RescanFileAsyncCommand($fID);
+        $this->app->executeCommand($rescanFileCommand);
 
         $this->flash('success', t('The file has been rescanned.'));
 
@@ -70,7 +89,7 @@ class Details extends DashboardPageController
      *
      * @return \Concrete\Core\Entity\File\Version
      */
-    protected function getFileVersion(?int $fID): Version
+    protected function getFileVersion(int $fID = null, int $fvID = null): Version
     {
         $file = $fID === null ? null : $this->app->make(EntityManagerInterface::class)->find(File::class, $fID);
         if ($file === null) {
@@ -80,7 +99,12 @@ class Details extends DashboardPageController
         if (!$permissionChecker->canViewFileInFileManager()) {
             throw new UserMessageException(t('Access denied to the requested file.'));
         }
-        $fileVersion = $file->getApprovedVersion() ?: $file->getRecentVersion();
+        if ($fvID) {
+            $fileVersion = $file->getVersion($fvID);
+        }
+        if (!isset($fileVersion)) {
+            $fileVersion = $file->getApprovedVersion() ?: $file->getRecentVersion();
+        }
         if ($fileVersion === null) {
             throw new UserMessageException(t('The file does not have any version.'));
         }
@@ -108,7 +132,7 @@ class Details extends DashboardPageController
 
     protected function configurePageTitle(Version $fileVersion): void
     {
-        $this->set('pageTitle', $fileVersion->getFileName());
+        $this->set('pageTitle', $fileVersion->getTitle());
     }
 
     /**

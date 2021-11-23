@@ -16,7 +16,7 @@ trait RedisPaginatedTrait
      */
     protected function paginatedScan(Redis $redis, $pattern)
     {
-        $i = null;
+        $i = 0;
         do {
             $keys = $redis->scan($i, 'cfg=' . $pattern, 100);
 

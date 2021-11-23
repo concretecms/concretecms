@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup\ContentImporter;
 
+use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\FileFolderRoutine;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\FileRoutine;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\ImageRoutine;
 use Concrete\Core\Backup\ContentImporter\ValueInspector\InspectionRoutine\PageFeedRoutine;
@@ -37,6 +38,7 @@ class ContentImporterServiceProvider extends ServiceProvider
                 $inspector->registerInspectionRoutine(new FileRoutine());
                 $inspector->registerInspectionRoutine(new PageFeedRoutine());
                 $inspector->registerInspectionRoutine(new PageTypeRoutine());
+                $inspector->registerInspectionRoutine(new FileFolderRoutine());
                 $inspector->registerInspectionRoutine(new ImageRoutine());
 
                 return $inspector;

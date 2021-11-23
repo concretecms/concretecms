@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Controller\Element\Express\Search;
 
 use Concrete\Core\Controller\ElementController;
@@ -65,7 +66,10 @@ class Search extends ElementController
         if (isset($this->headerSearchAction)) {
             $this->set('headerSearchAction', $this->headerSearchAction);
         } else {
-            $this->set('headerSearchAction', $this->app->make('url')->to('/dashboard/express/entries/', 'view', $this->entity->getId()));
+            $this->set(
+                'headerSearchAction',
+                $this->app->make('url')->to('/dashboard/express/entries/', 'view', $this->entity->getId())
+            );
         }
         if (isset($this->query)) {
             $this->set('query', $this->app->make(JsonSerializer::class)->serialize($this->query, 'json'));

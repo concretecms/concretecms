@@ -1,10 +1,21 @@
 <?php
 
-use Concrete\Core\Localization\Localization;
-
 defined('C5_EXECUTE') or die('Access Denied.');
-$dh = Core::make('helper/date');
-/* @var $dh \Concrete\Core\Localization\Service\Date */
+
+use Concrete\Core\Form\Service\Widget\FileFolderSelector;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Support\Facade\Application;
+
+/**
+ * @var Concrete\Core\User\UserInfo $user
+ */
+
+$app = Application::getFacadeApplication();
+/** @var FileFolderSelector $fileFolderSelector */
+$fileFolderSelector = $app->make(FileFolderSelector::class);
+
+$dh = $app->make('helper/date');
+// @var $dh \Concrete\Core\Localization\Service\Date
 $languages = Localization::getAvailableInterfaceLanguages();
 $locales = [];
 if (count($languages) > 0) {
@@ -45,10 +56,14 @@ if (count($languages) > 0) {
 
 <hr class="mt-2 mb-4"/>
 
+<div id="folderSelectorSourceContainer" class="d-none">
+    <?php echo $fileFolderSelector->selectFileFolder('uHomeFileManagerFolderID', $user->getUserHomeFolderId()); ?>
+</div>
+
 <section data-section="account">
     <?php if ($canViewAccountModal) { ?>
         <button
-                data-toggle="modal" data-target="#edit-account-modal"
+                data-bs-toggle="modal" data-bs-target="#edit-account-modal"
                 class="btn-section btn btn-secondary"><?= t('Edit') ?></button>
     <?php } ?>
     <h3><?= t('Account') ?></h3>
@@ -92,6 +107,14 @@ if (count($languages) > 0) {
             <?php
         }
         ?>
+        <dt>
+            <?php echo t('Home Folder') ?>
+        </dt>
+        <dd>
+            <div>
+                <?php echo isset($folderList[$user->getUserHomeFolderId()]) && $user->getUserHomeFolderId() !== null ? $folderList[$user->getUserHomeFolderId()] : t('None') ?>
+            </div>
+        </dd>
 
         <?php
         if (Config::get('concrete.user.registration.validate_email')) {
@@ -132,11 +155,7 @@ if (count($languages) > 0) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title"><?= t('Edit Account') ?></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <svg>
-                                    <use xlink:href="#icon-dialog-close"/>
-                                </svg>
-                            </button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                         </div>
                         <div class="modal-body">
                             <fieldset>
@@ -169,28 +188,39 @@ if (count($languages) > 0) {
                                         </div>
                                     <?php } ?>
                                 <?php } ?>
+                                <?php if ($canEditHomeFileManagerFolderID) { ?>
+                                    <div class="form-group">
+                                        <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
+                                        <div id="folderSelectorDestinationContainer"></div>
+                                    </div>
+                                <?php } ?>
                             </fieldset>
                             <?php if ($canEditPassword) { ?>
                                 <fieldset>
-                                    <legend><?= t('Change Password'); ?></legend>
+                                    <legend>
+                                        <?php echo t('Change Password'); ?>
+                                    </legend>
+
                                     <div class="form-group">
-                                        <?= $form->label('uPassword', t('New Password')); ?>
-                                        <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
-                                        <a href="javascript:void(0)" title="<?= t('Leave blank to keep current password.'); ?>"><i
-                                                    class="icon-question-sign"></i></a>
+                                        <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
+                                        <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
                                     </div>
 
                                     <div class="form-group">
-                                        <?= $form->label('uPasswordConfirm', t('Confirm New Password')); ?>
-                                        <div class="controls">
-                                            <?= $form->password('uPasswordConfirm', ['autocomplete' => 'off']); ?>
-                                        </div>
+                                        <?php echo $form->label('uPasswordNew', t('New Password')); ?>
+                                        <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
                                     </div>
+
+                                    <div class="form-group">
+                                        <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
+                                        <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
+                                    </div>
+                                    <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
                                 </fieldset>
                             <?php } ?>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= t('Close') ?></button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= t('Close') ?></button>
                             <button type="submit" class="btn btn-primary"><?= t('Save') ?></button>
                         </div>
                     </div>
@@ -208,7 +238,7 @@ if (count($languages) > 0) {
     if ($canAddGroup) {
     ?>
     <button class="btn-section btn btn-secondary"
-            data-toggle="modal" data-target="#edit-groups-modal"
+            data-bs-toggle="modal" data-bs-target="#edit-groups-modal"
     ><?= t('Edit') ?></button>
     <?php } ?>
 
@@ -227,19 +257,15 @@ if (count($languages) > 0) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><?= t('Edit Groups') ?></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg>
-                            <use xlink:href="#icon-dialog-close"/>
-                        </svg>
-                    </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                 </div>
                 <div class="modal-body">
                     <h4><?= t('Selected Groups') ?></h4>
                     <div class="mb-3" v-if="groups.length > 0">
                         <div class="d-flex" v-for="group in groups">
-                            <div class="mr-auto"><span v-html="group.gDisplayName"></span></div>
+                            <div class="me-auto"><span v-html="group.gDisplayName"></span></div>
                             <div><a class="ccm-hover-icon" href="#" @click.prevent="removeGroup(group.gID)"><i
-                                            class="fa fa-minus-circle"></i></a></div>
+                                            class="fas fa-minus-circle"></i></a></div>
                         </div>
                     </div>
                     <div v-if="groups.length === 0" class="mb-3"><?= t('None') ?></div>
@@ -249,7 +275,7 @@ if (count($languages) > 0) {
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?= t('Close') ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= t('Close') ?></button>
                 </div>
             </div>
         </div>
@@ -277,7 +303,7 @@ if (count($languages) > 0) {
             <?php foreach ($set->getAttributeKeys() as $key) { ?>
                 <dt><?= $key->getAttributeKeyDisplayName() ?></dt>
                 <dd><?php
-                    $value = $user->getAttribute($key);
+                    $value = $user->getAttributeValueObject($key);
                     if ($value) {
                         echo $value->getDisplayValue();
                     }
@@ -392,5 +418,15 @@ if (count($languages) > 0) {
             });
         })
 
+        /*
+         * Small hack to get the folder selector running within a vue context.
+         * The folder selector contains a script tag which is not allowed within a vue context.
+         * So we render the component outside and swap the containers.
+         *
+         * Not a nice way - but it works.
+         *
+         * @todo: Create a vue version of file folder selector and replace this hacky workaround with the vue component
+         */
+        $("#folderSelectorDestinationContainer").before($("#folderSelectorSourceContainer").removeClass("d-none"));
     });
 </script>

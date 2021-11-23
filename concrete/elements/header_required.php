@@ -1,4 +1,5 @@
 <?php
+use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Url\SeoCanonical;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
@@ -20,7 +21,6 @@ $c = Page::getCurrentPage();
 $cp = false;
 $isEditMode = false;
 $isArrangeMode = false;
-$scc = false;
 if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
     $pageTitle = null;
 }
@@ -35,13 +35,13 @@ $app = Application::getFacadeApplication();
 $site = $app->make('site')->getSite();
 $config = $site->getConfigRepository();
 $appConfig = $app->make('config');
+$scc = null;
 
 if (is_object($c)) {
     $cp = new Permissions($c);
     $cID = $c->getCollectionID();
     $isEditMode = $c->isEditMode();
     $isArrangeMode = $c->isArrangeMode();
-    $styleObject = false;
 
     /*
      * Handle page title
@@ -82,6 +82,9 @@ if (is_object($c)) {
     if (!$pageMetaKeywords) {
         $pageMetaKeywords = trim($c->getAttribute('meta_keywords'));
     }
+
+    // @deprecated – this is support for page level customizations custom CSS records, which are only available to
+    // legacy customizer themes.
     if ($c->hasPageThemeCustomizations()) {
         $styleObject = $c->getCustomStyleObject();
     } elseif (($pt = $c->getCollectionThemeObject()) && is_object($pt)) {
@@ -90,6 +93,8 @@ if (is_object($c)) {
     if (isset($styleObject) && is_object($styleObject)) {
         $scc = $styleObject->getCustomCssRecord();
     }
+
+
 } else {
     $cID = 1;
     $c = null;
@@ -106,7 +111,7 @@ if ($c !== null && $c->getAttribute('exclude_search_index')) {
     $metaTags['robots'] = sprintf('<meta name="robots" content="%s"/>', 'noindex');
 }
 if ($appConfig->get('concrete.misc.generator_tag_display_in_header')) {
-    $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'concrete5');
+    $metaTags['generator'] = sprintf('<meta name="generator" content="%s"/>', 'Concrete CMS');
 }
 if (($modernIconFID = (int) $config->get('misc.modern_tile_thumbnail_fid')) && ($modernIconFile = File::getByID($modernIconFID))) {
     $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
@@ -182,7 +187,6 @@ if (!empty($alternateHreflangTags)) {
     var CCM_EDIT_MODE = <?php echo $isEditMode ? 'true' : 'false'; ?>;
     var CCM_ARRANGE_MODE = <?php echo $isArrangeMode ? 'true' : 'false'; ?>;
     var CCM_IMAGE_PATH = "<?php echo ASSETS_URL_IMAGES; ?>";
-    var CCM_TOOLS_PATH = "<?php echo REL_DIR_FILES_TOOLS_REQUIRED; ?>";
     var CCM_APPLICATION_URL = "<?php echo rtrim((string) $app->make('url/canonical'), '/'); ?>";
     var CCM_REL = "<?php echo $app->make('app_relative_path'); ?>";
     var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale()) ?>;
@@ -196,7 +200,7 @@ if ($cp) {
         $cookie = $app->make('cookie');
         if ($cookie->get('ccmLoadAddBlockWindow')) {
             $v->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>');
-            $cookie->clear('ccmLoadAddBlockWindow');
+            $app->make(ResponseCookieJar::class)->clear('ccmLoadAddBlockWindow');
         }
     }
 }

@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class ClearBoardInstanceDataPoolCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class ClearBoardInstanceDataPoolCommand extends Command
 {
 
     use BoardInstanceTrait;

@@ -114,6 +114,27 @@ class Channels
     const CHANNEL_API = 'api';
 
     /**
+     * Channel identifier: messenger. Used for queue/command/messenger events (not private messages).
+     *
+     * @var string
+     */
+    const CHANNEL_MESSENGER = 'messenger';
+
+    /**
+     * Channel identifier: board.
+     *
+     * @var string
+     */
+    const CHANNEL_BOARD = 'board';
+
+    /**
+     * Channel identifier: files.
+     *
+     * @var string
+     */
+    const CHANNEL_FILES = 'files';
+
+    /**
      * Channel identifier: all – Do NOT use this to log to. This is a separate system channel that tells configuration
      * that you want to apply all configuration options to all channels, and listen to all of them.
      *
@@ -141,6 +162,10 @@ class Channels
             self::CHANNEL_USERS,
             self::CHANNEL_OPERATIONS,
             self::CHANNEL_API,
+            self::CHANNEL_FILES,
+            self::CHANNEL_CONTENT,
+            self::CHANNEL_MESSENGER,
+            self::CHANNEL_BOARD,
         ];
     }
 
@@ -192,6 +217,10 @@ class Channels
                 return tc('Log channel', 'Users');
             case self::CHANNEL_API:
                 return tc('Log channel', 'API');
+            case self::CHANNEL_BOARD:
+                return tc('Log channel', 'BOARD');
+            case self::CHANNEL_FILES:
+                return tc('Log channel', 'Files');
             default:
                 return tc('Log channel', $text->unhandle($channel));
         }

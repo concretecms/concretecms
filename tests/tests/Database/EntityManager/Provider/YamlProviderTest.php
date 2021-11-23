@@ -28,7 +28,7 @@ class YamlProviderTest extends TestCase
     /**
      * Setup.
      */
-    public function setUp()
+    public function setUp():void
     {
         $this->app = Application::getFacadeApplication();
         $this->packageStub = new PackageControllerYaml($this->app);

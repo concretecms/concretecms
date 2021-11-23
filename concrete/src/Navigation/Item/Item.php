@@ -35,12 +35,13 @@ class Item implements ItemInterface, \JsonSerializable
      * @param string $name
      * @param bool $isActive
      */
-    public function __construct(string $url, string $name, bool $isActive = false, $isActiveParent = false)
+    public function __construct(string $url, string $name, bool $isActive = false, $isActiveParent = false, $children = [])
     {
         $this->url = $url;
         $this->name = $name;
         $this->isActive = $isActive;
         $this->isActiveParent = $isActiveParent;
+        $this->children = $children;
     }
 
     /**

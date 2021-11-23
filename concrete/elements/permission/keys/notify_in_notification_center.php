@@ -1,6 +1,7 @@
 <?php
 
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -12,14 +13,15 @@ $included = $permissionAccess->getAccessListItems();
 $excluded = $permissionAccess->getAccessListItems(Key::ACCESS_TYPE_EXCLUDE);
 $subscriptions = app('manager/notification/subscriptions')->getSubscriptions();
 $form = app('helper/form');
+$resolverManager = app(ResolverManagerInterface::class);
 ?>
 
 <fieldset>
     <legend>
         <?= t('Users/Groups Receiving Notifications') ?>
         <a
-            class="dialog-launch btn btn-sm btn-secondary float-right"
-            href="<?= REL_DIR_FILES_TOOLS_REQUIRED ?>/permissions/access_entity?disableDuration=1&accessType=<?= Key::ACCESS_TYPE_INCLUDE ?>&pkCategoryHandle=notification"
+            class="dialog-launch btn btn-sm btn-secondary float-end"
+            href="<?= h($resolverManager->resolve(['/ccm/system/permissions/access/entity']) . '?disableDuration=1&accessType=' . Key::ACCESS_TYPE_INCLUDE . '&pkCategoryHandle=notification') ?>"
             dialog-width="500"
             dialog-height="350"
             dialog-title="<?= t('Add Access Entity') ?>"
@@ -39,11 +41,9 @@ $form = app('helper/form');
                 <?= $form->label('', $entity->getAccessEntityLabel()) ?>
                 <div class="input-group">
                     <?= $form->select('subscriptionsIncluded[' . $entity->getAccessEntityID() . ']', ['A' => t('All Subscriptions'), 'C' => t('Custom')], $assignment->getSubscriptionsAllowedPermission()) ?>
-                    <div class="input-group-append">
-                        <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </div>
+                    <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </div>
                 <div class="subscription-list<?= $assignment->getSubscriptionsAllowedPermission() != 'C' ? ' d-none"' : '' ?>">
                     <?php
@@ -74,11 +74,11 @@ $form = app('helper/form');
     <legend>
         <?= t('Users/Groups Excluded from Notifications') ?>
         <a
-            href="<?= REL_DIR_FILES_TOOLS_REQUIRED ?>/permissions/access_entity?disableDuration=1&accessType=<?= Key::ACCESS_TYPE_EXCLUDE ?>&pkCategoryHandle=notification"
+            href="<?= h($resolverManager->resolve(['/ccm/system/permissions/access/entity']) . '?disableDuration=1&accessType=' . Key::ACCESS_TYPE_EXCLUDE . '&pkCategoryHandle=notification') ?>"
             dialog-width="500"
             dialog-height="350"
             dialog-title="<?= t('Add Access Entity') ?>"
-            class="dialog-launch btn btn-sm btn-secondary float-right"
+            class="dialog-launch btn btn-sm btn-secondary float-end"
         ><?= t('Add') ?></a>
     </legend>
     <?php
@@ -95,11 +95,9 @@ $form = app('helper/form');
                 <?= $form->label('', $entity->getAccessEntityLabel()) ?>
                 <div class="input-group">
                     <?= $form->select('subscriptionsExcluded[' . $entity->getAccessEntityID() . ']', ['N' => t('No Subscriptions'), 'C' => t('Custom')], $assignment->getSubscriptionsAllowedPermission()) ?>
-                    <div class="input-group-append">
-                        <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </div>
+                    <a class="btn btn-outline-danger" href="javascript:void(0)" onclick="ccm_deleteAccessEntityAssignment(<?= $entity->getAccessEntityID() ?>)">
+                        <i class="fas fa-trash"></i>
+                    </a>
                     
                 </div>
                 <div class="subscription-list<?= $assignment->getSubscriptionsAllowedPermission() != 'C' ? ' d-none"' : '' ?>">

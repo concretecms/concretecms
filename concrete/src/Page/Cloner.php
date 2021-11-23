@@ -17,7 +17,7 @@ use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PDO;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 /**
  * A class to copy pages and page versions.
@@ -47,11 +47,11 @@ class Cloner
     protected $dateHelper;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var \Concrete\Core\Events\EventDispatcher
      */
     protected $eventDispatcher;
 
-    public function __construct(EntityManagerInterface $entityManager, SiteService $siteService, DateHelper $dateHelper, EventDispatcherInterface $eventDispatcher)
+    public function __construct(EntityManagerInterface $entityManager, SiteService $siteService, DateHelper $dateHelper, EventDispatcher $eventDispatcher)
     {
         $this->connection = $entityManager->getConnection();
         $this->entityManager = $entityManager;
@@ -418,9 +418,6 @@ class Cloner
         if ($options->copyAttributes()) {
             $this->copyAttributes($cIDs, $cvIDs);
         }
-        if ($options->copyFeatureAssignments()) {
-            $this->copyFeatureAssignments($cIDs, $cvIDs);
-        }
         if ($options->copyPageTypeComposerOutputBlocks()) {
             $this->copyPageTypeComposerOutputBlocks($cIDs, $cvIDs);
         }
@@ -455,17 +452,6 @@ class Cloner
             $this->entityManager->persist($newPageValue);
         }
         $this->entityManager->flush();
-    }
-
-    /**
-     * Copy the feature assignments from one collection version (or all versions of a collection) to another collection version (or all versions of a collection).
-     *
-     * @param int[] $cIDs An array with the ID of the source and destination collections
-     * @param int[]|null $cvIDs An array with the source and destination collection versions, or NULL to copy the data of all the collection versions
-     */
-    protected function copyFeatureAssignments(array $cIDs, array $cvIDs = null)
-    {
-        $this->directCopy('CollectionVersionFeatureAssignments', 'faID', ['cID' => $cIDs, 'cvID' => $cvIDs]);
     }
 
     /**
@@ -531,15 +517,6 @@ class Cloner
         $this->directCopy(
             'CollectionVersionBlocksCacheSettings',
             'arHandle, btCacheBlockOutput, btCacheBlockOutputOnPost, btCacheBlockOutputForRegisteredUsers, btCacheBlockOutputLifetime',
-            [
-                'cID' => $cIDs,
-                'cvID' => $cvIDs,
-                'bID' => $bIDs,
-            ]
-        );
-        $this->directCopy(
-            'BlockFeatureAssignments',
-            'faID',
             [
                 'cID' => $cIDs,
                 'cvID' => $cvIDs,

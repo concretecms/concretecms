@@ -11,7 +11,7 @@
         my.$element = $element
         my.$selectAll = my.$element.find('input[data-search-checkbox=select-all]')
         my.$selectAllDropdownButton = my.$element.find('[data-search-checkbox-button=dropdown]');
-        my.$selectAllDropdownMenu = my.$element.find('[data-search-menu=dropdown]');
+        my.$selectAllDropdownMenu = my.$element.find('.dropdown-menu');
         my.$searchResultMenu = my.$element.find('[data-menu=search-result]');
         my.checkedCheckboxes = '[data-search-checkbox=individual]:checked';
         my.options = options

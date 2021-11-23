@@ -16,7 +16,8 @@
     ]); ?>
 </p>
 
-<input type="hidden" name="miniSurveyServices" value="<?php echo REL_DIR_FILES_TOOLS_BLOCKS . '/' . $bt->getBlockTypeHandle() ?>/services"/>
+<input type="hidden" name="miniSurveyServices" value="<?= h($controller->getActionURL('services')) ?>"/>
+<input type="hidden" name="miniSurveyServicesToken" value="<?= h(app('token')->generate('ccm-bt-form-service')) ?>" />
 <?php /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
 <input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value=""/>
 <input type="hidden" id="ccm-pendingDeleteIDs" name="pendingDeleteIDs" value=""/>
@@ -40,7 +41,7 @@
             </div>
             <div class="form-group">
                 <?= $form->label('answerType', t('Answer Type')) ?>
-                <select class="form-control" name="answerType" id="answerType">
+                <select class="form-select" name="answerType" id="answerType">
                     <option value="field"><?= t('Text Field') ?></option>
                     <option value="text"><?= t('Text Area') ?></option>
                     <option value="radios"><?= t('Radio Buttons') ?></option>
@@ -89,7 +90,7 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label"><?= t('Required') ?></label>
+                <label class="control-label form-label"><?= t('Required') ?></label>
 
                 <div class="form-check">
                     <?= $form->radio('required', 1) ?>
@@ -139,7 +140,7 @@
                 </div>
                 <div class="form-group">
                     <?= $form->label('answerTypeEdit', t('Answer Type')) ?>
-                    <select class="form-control" name="answerTypeEdit" id="answerTypeEdit">
+                    <select class="form-select" name="answerTypeEdit" id="answerTypeEdit">
                         <option value="field"><?= t('Text Field') ?></option>
                         <option value="text"><?= t('Text Area') ?></option>
                         <option value="radios"><?= t('Radio Buttons') ?></option>
@@ -189,7 +190,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label"><?= t('Required') ?></label>
+                    <label class="control-label form-label"><?= t('Required') ?></label>
                     <div class="form-check">
                         <?= $form->radio('requiredEdit', 1) ?>
                         <label class="form-check-label" for="requiredEdit1">
@@ -253,19 +254,20 @@
                 <?= $form->textarea('thankyouMsg', $this->controller->thankyouMsg, ['rows' => 3]) ?>
             </div>
             <div class="form-group">
-                <div class="input-group-append">
-                    <span class="input-group-text btn btn-secondary">
-                        <div class="form-check">
+
+                <span class="input-group-text btn btn-secondary">
+                    <div class="form-check">
                         <?= $form->checkbox('notifyMeOnSubmission', 1, isset($miniSurveyInfo['notifyMeOnSubmission']) && $miniSurveyInfo['notifyMeOnSubmission'] == 1, ['onclick' => "$('input[name=recipientEmail]').focus()"]) ?>
-                    <label class="form-check-label" for="notifyMeOnSubmission"></label>
-                </div>
-                    </span>
-                    <?= $form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], ['style' => 'z-index:2000;']) ?>
-                </div>
+                        <label class="form-check-label" for="notifyMeOnSubmission"></label>
+                    </div>
+                </span>
+
+                <?= $form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], ['style' => 'z-index:2000;']) ?>
+
                 <span class="help-block"><?= t('(Separate multiple emails with a comma)') ?></span>
             </div>
             <div class="form-group">
-                <label class="control-label"><?= t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')) ?></label>
+                <label class="control-label form-label"><?= t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', t('http://en.wikipedia.org/wiki/Captcha')) ?></label>
                 <div class="form-check">
                     <?= $form->radio('displayCaptcha', 1, empty($miniSurveyInfo['displayCaptcha']) ? 0 : (int) $miniSurveyInfo['displayCaptcha']) ?>
                     <label class="form-check-label" for="displayCaptcha1">
@@ -280,7 +282,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label"
+                <label class="control-label form-label"
                        for="ccm-form-redirect"><?= t('Redirect to another page after form submission?') ?></label>
                 <div id="ccm-form-redirect-page">
                     <?php
@@ -293,7 +295,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label" for="ccm-form-fileset"><?= t('Add uploaded files to a set?') ?></label>
+                <label class="control-label form-label" for="ccm-form-fileset"><?= t('Add uploaded files to a set?') ?></label>
                 <div id="ccm-form-fileset">
                     <?php
 

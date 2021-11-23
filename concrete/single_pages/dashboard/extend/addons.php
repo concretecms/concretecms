@@ -32,8 +32,8 @@ if ($controller->getTask() == 'view_detail') {
     <div class="ccm-marketplace-detail-add-on-nav">
         <div class="ccm-marketplace-detail-add-on-buy">
             <div class="btn-group">
-                <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-price" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
-                <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-description"><?php if ($item->purchaseRequired()) {
+                <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-primary" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
+                <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-secondary"><?php if ($item->purchaseRequired()) {
     ?><?=t('Purchase')?><?php 
 } else {
     ?><?=t('Download')?><?php 
@@ -42,7 +42,7 @@ if ($controller->getTask() == 'view_detail') {
             </div>
         </div>
         <nav>
-            <li><a href="#" data-launch="marketplace-gallery"><i class="fa fa-image"></i> <?=t('Screenshots')?></a></li>
+            <li><a href="#" data-launch="marketplace-gallery"><i class="fas fa-image"></i> <?=t('Screenshots')?></a></li>
         </nav>
     </div>
 
@@ -73,7 +73,7 @@ if ($controller->getTask() == 'view_detail') {
                     <?php 
 }
     ?>
-                    <li class="list-group-item"><a href="<?=$item->getRemoteHelpURL()?>" target="_blank"><i class="fa fa-comment"></i> <?=t('Get Help')?></a></li>
+                    <li class="list-group-item"><a href="<?=$item->getRemoteHelpURL()?>" target="_blank"><i class="fas fa-comment"></i> <?=t('Get Help')?></a></li>
                 </ul>
             </div>
             <div class="col-md-7 col-md-offset-1">
@@ -137,8 +137,8 @@ if ($controller->getTask() == 'view_detail') {
             </div>
             <div class="ccm-marketplace-list-item-add-on-price">
                 <div class="btn-group">
-                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-price" style="background-color: #1888d3"><?=$mi->getDisplayPrice()?></button>
-                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-description"><?php if ($mi->purchaseRequired()) { ?><?=t('Purchase')?><?php } else { ?><?=t('Download')?><?php } ?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-primary"><?=$mi->getDisplayPrice()?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$mi->getMarketplaceItemID()?>})" class="btn btn-secondary"><?php if ($mi->purchaseRequired()) { ?><?=t('Purchase')?><?php } else { ?><?=t('Download')?><?php } ?></button>
                 </div>
             </div>
         </div>
@@ -147,8 +147,11 @@ if ($controller->getTask() == 'view_detail') {
 }
     ?>
 
-    <?=$list->displayPagingV2()?>
-
+    <?php if ($list->requiresPaging()) { ?>
+        <div class="ccm-pagination-wrapper">
+            <?=$list->displayPagingV2()?>
+        </div>
+    <?php } ?>
 <?php 
 } else {
     ?>

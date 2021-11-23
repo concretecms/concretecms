@@ -7,8 +7,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<form method="post" data-form="delete-block" data-action-delete-all="<?=$deleteAllAction?>" data-action="<?=$deleteAction?>">
 
 		<div class="dialog-buttons">
-		<button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-		<button type="button" data-submit="delete-block-form" class="btn btn-danger float-right"><?=t('Delete')?></button>
+		<button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+		<button type="button" data-submit="delete-block-form" class="btn btn-danger float-end"><?=t('Delete')?></button>
 		</div>
 
 		<p><?=$message?></p>
@@ -18,9 +18,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<div class="alert alert-danger"><?=$defaultsMessage?></div>
 
 			<div class="form-group">
-				<label class="control-label"><?=t('Instances on Child Pages')?></label>
-				<div class="radio"><label><input type="radio" name="deleteAll" value="0" checked> <?=t('Delete only unforked instances on child pages.')?></label></div>
-				<div class="radio"><label><input type="radio" name="deleteAll" value="1"> <?=t('Delete even forked instances on child pages.')?></label></div>
+				<label class="control-label form-label"><?=t('Instances on Child Pages')?></label>
+				<div class="form-check">
+                    <input type="radio" class="form-check-input" id="deleteAll1" name="deleteAll" value="0" checked>
+                    <label class="form-check-label" for="deleteAll1"><?=t('Delete only unforked instances on child pages.')?></label>
+                </div>
+				<div class="form-check">
+                    <input type="radio" class="form-check-input" id="deleteAll2" name="deleteAll" value="1">
+                    <label class="form-check-label" for="deleteAll2"><?=t('Delete even forked instances on child pages.')?></label>
+                </div>
 			</div>
 
 		<?php

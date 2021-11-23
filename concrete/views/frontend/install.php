@@ -23,6 +23,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var int $installStep */
 
+$locale = $locale ?? Localization::BASE_LOCALE;
+
 $install_config = Config::get('install_overrides');
 $uh = Core::make('helper/concrete/urls');
 if ($install_config) {
@@ -33,11 +35,11 @@ if ($install_config) {
 
 <div id="ccm-page-install">
     <div class="ccm-install-version">
-        <span class="badge badge-info"><?= t('Version %s', $concreteVersion) ?></span>
+        <span class="badge bg-info"><?= t('Version %s', $concreteVersion) ?></span>
     </div>
     <div class="ccm-install-title">
         <ul class="breadcrumb">
-            <li class="breadcrumb-item"><?= t('Install concrete5') ?></li>
+            <li class="breadcrumb-item"><?= t('Install Concrete CMS') ?></li>
             <?php switch ($installStep) {
                 case $controller::STEP_CHOOSELOCALE: ?>
                     <li class="breadcrumb-item active"><?= t('Choose Language') ?></li>
@@ -75,13 +77,11 @@ if ($install_config) {
                     }
                     ?>
                     <?= $form->select('wantedLocale', $selectOptions, Localization::BASE_LOCALE, [
-                        'class' => 'custom-select'
+                        'class' => 'form-select'
                     ]); ?>
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </form>
@@ -132,17 +132,17 @@ if ($install_config) {
                                         <td>
                                             <?php
                                             if ($preconditionState === null) {
-                                                echo '<i class="precondition-state fa fa-spinner fa-spin"></i>';
+                                                echo '<i class="precondition-state fas fa-spinner fa-spin"></i>';
                                             } else {
                                                 switch ($preconditionState) {
                                                     case PreconditionResult::STATE_PASSED:
-                                                        echo '<i class="precondition-state fa fa-check"></i>';
+                                                        echo '<i class="precondition-state fas fa-check"></i>';
                                                         break;
                                                     case PreconditionResult::STATE_WARNING:
                                                         if (!$precondition instanceof WebPreconditionInterface) {
                                                             $showRerunTests = true;
                                                         }
-                                                        echo '<i class="precondition-state fa fa-warning"></i>';
+                                                        echo '<i class="precondition-state fas fa-exclamation-triangle"></i>';
                                                         break;
                                                     case PreconditionResult::STATE_SKIPPED:
                                                         break;
@@ -154,7 +154,7 @@ if ($install_config) {
                                                                 $requiredPreconditionFailed = true;
                                                             }
                                                         }
-                                                        echo '<i class="precondition-state fa fa-exclamation-circle"></i>';
+                                                        echo '<i class="precondition-state fas fa-exclamation-circle"></i>';
                                                         break;
                                                 }
                                             }
@@ -167,7 +167,7 @@ if ($install_config) {
                                             <?php
                                             if ($preconditionMessage !== '') {
                                                 ?>
-                                                <i class="fa fa-question-circle launch-tooltip"
+                                                <i class="fas fa-question-circle launch-tooltip"
                                                    title="<?= h($preconditionMessage) ?>"></i>
                                                 <?php
                                             }
@@ -227,11 +227,9 @@ if ($install_config) {
                         .addClass(success ? 'fa-check' : 'fa-exclamation-circle');
                     $message.empty();
                     if (message) {
-                        $message.append(
-                            $('<i class="fa fa-question-circle launch-tooltip" />')
-                                .attr('title', message)
-                                .tooltip()
-                        );
+                        const $icon = $('<i class="fas fa-question-circle launch-tooltip" />').attr('title', message)
+                        const tooltip = new bootstrap.Tooltip($icon)
+                        $message.append($icon);
                     }
                     checkDone();
                 };
@@ -263,7 +261,7 @@ if ($install_config) {
         <div class="alert alert-danger" id="install-errors">
             <?= t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.') ?>
             <?= t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.',
-                'http://www.concrete5.org/community/forums', 'http://www.concrete5.org/services/hosting') ?>
+                'https://forums.concretecms.org', 'https://www.concretecms.com/') ?>
         </div>
         <div class="ccm-install-actions">
             <form method="post" action="<?= $urlResolver->resolve(['install']) ?>" id="rerun-tests"
@@ -271,17 +269,17 @@ if ($install_config) {
                 <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
                 <button class="btn btn-danger" type="submit">
                     <?= t('Run Tests Again') ?>
-                    <i class="fa fa-refresh"></i>
+                    <i class="fas fa-sync"></i>
                 </button>
             </form>
             <form method="post" action="<?= $urlResolver->resolve(['install', 'setup']) ?>"
                   id="continue-to-installation" style="visibility: hidden" class="pull-right">
                 <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
-                <a class="float-left btn btn-secondary btn-sm" href="<?=URL::to('/')?>">
+                <a class="float-start btn btn-secondary btn-sm" href="<?=URL::to('/')?>">
                     <?= t('Back') ?>
                 </a>
 
-                <button class="float-right btn btn-primary btn-sm" onclick="$(this).parent().submit()">
+                <button class="float-end btn btn-primary btn-sm" onclick="$(this).parent().submit()">
                     <?= t('Continue to Installation') ?>
                 </button>
             </form>
@@ -348,11 +346,9 @@ if ($install_config) {
                                 <?php
                             }
                             ?>
-                            <div class="checkbox">
-                                <label>
-                                    <?= $form->checkbox('ignore-warnings', '1') ?>
-                                    <?= t('Ignore warnings') ?>
-                                </label>
+                            <div class="form-check">
+                                <?= $form->checkbox('ignore-warnings', '1') ?>
+                                <?=$form->label('ignore-warnings', t('Ignore warnings')) ?>
                             </div>
                         </div>
                     </div>
@@ -368,7 +364,7 @@ if ($install_config) {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="SITE" class="control-label"><?= t('Name') ?></label>
+                                    <label for="SITE" class="control-label form-label"><?= t('Name') ?></label>
                                     <?= $form->text('SITE',
                                         ['autofocus' => 'autofocus', 'required' => 'required']) ?>
                                 </div>
@@ -377,21 +373,21 @@ if ($install_config) {
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="uEmail"
-                                           class="control-label"><?= t('Administrator Email Address') ?></label>
+                                           class="control-label form-label"><?= t('Administrator Email Address') ?></label>
                                     <?= $form->email('uEmail', ['required' => 'required']) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="uPassword"
-                                           class="control-label"><?= t('Administrator Password') ?></label>
+                                           class="control-label form-label"><?= t('Administrator Password') ?></label>
                                     <?= $form->password('uPassword', $passwordAttributes) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="uPassword"
-                                           class="control-label"><?= t('Confirm Password') ?></label>
+                                           class="control-label form-label"><?= t('Confirm Password') ?></label>
                                     <?= $form->password('uPasswordConfirm', $passwordAttributes) ?>
                                 </div>
                             </div>
@@ -405,20 +401,21 @@ if ($install_config) {
                     <div class="card-body row">
                         <?php
                         $availableSampleContent = StartingPointPackage::getAvailableList();
+                        $i = 1;
                         foreach ($availableSampleContent as $spl) {
                             $pkgHandle = $spl->getPackageHandle();
                             ?>
                             <div class="col-md-6">
-                                <div class="radio">
-                                    <label>
+                                <div class="form-check">
+
                                         <?= $form->radio('SAMPLE_CONTENT', $pkgHandle,
-                                            ($pkgHandle == 'elemental_full' || count($availableSampleContent) == 1)) ?>
-                                        <strong><?= $spl->getPackageName() ?></strong><br/>
-                                        <?= $spl->getPackageDescription() ?>
-                                    </label>
+                                            ($pkgHandle == 'atomik_full' || count($availableSampleContent) == 1)) ?>
+                                    <?=$form->label('SAMPLE_CONTENT' . $i,"<strong>".$spl->getPackageName()."</strong><br/>". $spl->getPackageDescription()) ?>
+
                                 </div>
                             </div>
                             <?php
+                            $i++;
                         }
                         ?>
                     </div>
@@ -433,27 +430,27 @@ if ($install_config) {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label" for="DB_SERVER"><?= t('Server') ?></label>
+                                    <label class="control-label form-label" for="DB_SERVER"><?= t('Server') ?></label>
                                     <?= $form->text('DB_SERVER', ['required' => 'required']) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="DB_USERNAME"><?= t('MySQL Username') ?></label>
                                     <?= $form->text('DB_USERNAME') ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="DB_PASSWORD"><?= t('MySQL Password') ?></label>
                                     <?= $form->password('DB_PASSWORD', ['autocomplete' => 'off']) ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="DB_DATABASE"><?= t('Database Name') ?></label>
                                     <?= $form->text('DB_DATABASE', ['required' => 'required']) ?>
                                 </div>
@@ -467,7 +464,7 @@ if ($install_config) {
                     <?= t('Privacy Policy') ?>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted"><?= t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
+                    <p class="text-muted"><?= t('Concrete CMS collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.') ?></p>
                     <div class="form-check">
                         <?= $form->checkbox('privacy', 1, false, ['required' => 'required']) ?>
                         <label class="form-check-label" for="privacy">
@@ -479,7 +476,7 @@ if ($install_config) {
             </div>
             <div class="card card-default">
                 <div class="card-header" role="tab" id="headingThree">
-                    <a class="collapsed" role="button" data-toggle="collapse"
+                    <a class="collapsed" role="button" data-bs-toggle="collapse"
                        href="#advanced"><?= t('Advanced Options') ?>
                     </a>
                 </div>
@@ -493,7 +490,7 @@ if ($install_config) {
                                 <h4><?= t('URLs & Session') ?></h4>
 
                                 <div class="form-group">
-                                    <label class="control-label">
+                                    <label class="control-label form-label">
                                         <div class="form-check">
                                             <?= $form->checkbox('canonicalUrlChecked', '1') ?>
                                             <label class="form-check-label" for="canonicalUrlChecked">
@@ -508,7 +505,7 @@ if ($install_config) {
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label">
+                                    <label class="control-label form-label">
                                         <div class="form-check">
                                             <?= $form->checkbox('canonicalUrlAlternativeChecked', '1') ?>
                                             <label class="form-check-label" for="canonicalUrlAlternativeChecked">
@@ -522,7 +519,7 @@ if ($install_config) {
                                     ]) ?>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="sessionHandler"><?= t('Session Handler') ?></label>
                                     <?= $form->select('sessionHandler', [
                                         '' => t('Default Handler (Recommended)'),
@@ -535,21 +532,21 @@ if ($install_config) {
                                 <h4><?= t('Locale') ?></h4>
 
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="sessionHandler"><?= t('Language') ?></label>
                                     <?= $form->select('siteLocaleLanguage', $languages,
                                         $computedSiteLocaleLanguage) ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="sessionHandler"><?= t('Country') ?></label>
                                     <?= $form->select('siteLocaleCountry', $countries,
                                         $computedSiteLocaleCountry) ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label"
+                                    <label class="control-label form-label"
                                            for="SERVER_TIMEZONE"><?= t('System Time Zone') ?></label>
                                     <?= $form->select('SERVER_TIMEZONE', $availableTimezones,
                                         $SERVER_TIMEZONE,
@@ -580,8 +577,8 @@ if ($install_config) {
             <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
             <div class="ccm-install-actions">
                 <div class="w-100">
-                    <button type="submit" class="btn btn-primary btn-sm float-right">
-                        <?= t('Install concrete5') ?>
+                    <button type="submit" class="btn btn-primary btn-sm float-end">
+                        <?= t('Install Concrete CMS') ?>
                     </button>
                 </div>
             </div>
@@ -609,7 +606,7 @@ if ($install_config) {
 
             window.onbeforeunload = function () {
                 if (inviteToStayHere) {
-                    return <?=json_encode(t("concrete5 installation is still in progress: you shouldn't close this page at the moment"))?>;
+                    return <?=json_encode(t("Concrete installation is still in progress: you shouldn't close this page at the moment"))?>;
                 }
             };
             NProgress.configure({showSpinner: false});
@@ -654,7 +651,7 @@ if ($install_config) {
                             inviteToStayHere = false;
                             $("#install-progress-summary").html(<?= json_encode(t('All Done.')) ?>);
                             NProgress.done();
-                            $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site') . ' <i class="fa fa-thumbs-up"></i>')?>);
+                            $('button[data-button=installation-complete]').prop('disabled', false).html(<?=json_encode(t('Edit Your Site') . ' <i class="fas fa-thumbs-up"></i>')?>);
                             $('div.ccm-install-title ul.breadcrumb li.active').text(<?= json_encode(t('Installation Complete.')) ?>);
                             setTimeout(function () {
                                 $("#interstitial-message").hide();
@@ -681,31 +678,25 @@ if ($install_config) {
             <div class="card-body">
                 <h4 class=""><?= t('Forums') ?></h4>
                 <p>
-                <?= t('<a href="%s" target="_blank">The forum</a> on concrete5.org is full of helpful community members that make concrete5 so great.',
+                <?= t('<a href="%s" target="_blank">The forums</a> on concretecms.org are full of helpful community members that make Concrete so great.',
                     Config::get('concrete.urls.help.forum')) ?>
-                </p>
-
-                <h4 class=""><?= t('Slack') ?></h4>
-                <p>
-                <?= t('In the <a href="%s" target="_blank">concrete5 Slack channels</a> you can get in touch with a lot of concrete5 lovers and developers.',
-                    Config::get('concrete.urls.help.slack')) ?>
                 </p>
 
                 <h4 class=""><?= t('User Documentation') ?></h4>
                 <p>
-                <?= t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with concrete5.',
+                <?= t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with Concrete CMS.',
                     Config::get('concrete.urls.help.user')) ?>
                 </p>
 
                 <h4 class=""><?= t('Screencasts') ?></h4>
                 <p>
-                <?= t('The concrete5 <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use concrete5.',
+                <?= t('The Concrete <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use Concrete CMS.',
                     Config::get('concrete.urls.videos')) ?>
                 </p>
 
                 <h4 class=""><?= t('Developer Documentation') ?></h4>
                 <p>
-                <?= t('The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom concrete5 development.',
+                <?= t('The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom Concrete development.',
                     Config::get('concrete.urls.help.developer')) ?>
                 </p>
 
@@ -731,9 +722,9 @@ if ($install_config) {
         <div class="w-100">
             <div id="install-progress-summary"><?= t('Beginning Installation') ?></div>
             <button type="submit" disabled="disabled" onclick="window.location.href='<?= URL::to('/') ?>'"
-                    data-button="installation-complete" class="float-right btn btn-sm btn-primary">
+                    data-button="installation-complete" class="float-end btn btn-sm btn-primary">
                 <?= t('Installing...') ?>
-                <i class="fa fa-spinner fa-spin"></i>
+                <i class="fas fa-spinner fa-spin"></i>
             </button>
         </div>
     </div>

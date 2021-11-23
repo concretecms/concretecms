@@ -118,9 +118,9 @@ class UserTest extends UserTestCase
         $this->assertTrue($ui->hasAvatar());
         $avatar = $ui->getUserAvatar();
         $this->assertEquals('http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg',
-            $avatar->getPath());
+            preg_replace('/\?.*/', '', $avatar->getPath()));
         $this->assertEquals(
-            '<img src="http://www.dummyco.com/path/to/server/application/files/avatars/1.jpg" alt="andrew" class="u-avatar">',
+            sprintf('<img src="%s" alt="andrew" class="u-avatar">', $avatar->getPath()),
             $avatar->output());
 
         $service = Core::make('user/avatar');

@@ -3,6 +3,7 @@ namespace Concrete\Controller\Dialog\Event;
 
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
 use Concrete\Core\Entity\Search\SavedSearch;
+use Concrete\Core\Entity\Search\SavedUserSearch;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Search\Field\ManagerFactory;
@@ -25,7 +26,7 @@ class AdvancedSearch extends AdvancedSearchController
         return false; // not implemented yet
     }
 
-    public function getSavedSearchEntity()
+    public function getSearchPresets()
     {
         return false; // not implemented yet
     }

@@ -13,6 +13,7 @@ use Concrete\Core\Page\Sitemap\Element\SitemapPage;
 use Concrete\Core\Page\Sitemap\Element\SitemapPageAlternativeLanguage;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use DateTime;
+use League\Url\Url;
 
 /**
  * Class to be used to generate the elements to be included in a sitemap.xml file.
@@ -139,7 +140,7 @@ class SitemapGenerator
         try {
             Cache::disableAll();
             $multilingualEnabled = $pageListGenerator->isMultilingualEnabled();
-            yield $this->app->make(SitemapHeader::class, [$multilingualEnabled]);
+            yield $this->app->make(SitemapHeader::class, ['isMultilingual' => $multilingualEnabled]);
             foreach ($pageListGenerator->generatePageList() as $page) {
                 yield $this->createSitemapPage($page, $multilingualEnabled);
             }
@@ -200,11 +201,19 @@ class SitemapGenerator
      *
      * @return \League\URL\URLInterface
      */
-    public function resolveUrl(array $args)
+    public function resolveUrl(string $sitemapFile)
     {
-        return $this->withCustomCanonicalUrl(function () use ($args) {
-            return $this->getResolverManager()->resolve($args);
-        });
+        $siteConfig = $this->getPageListGenerator()->getSite()->getConfigRepository();
+        $canonicalUrl = $this->getCustomSiteCanonicalUrl();
+        if (!$canonicalUrl) {
+            $canonicalUrl = $siteConfig->get('seo.canonical_url');
+        }
+
+        if ($canonicalUrl) {
+            return rtrim($canonicalUrl, '/') . $sitemapFile;
+        } else {
+            return $sitemapFile;
+        }
     }
 
     /**
@@ -359,25 +368,4 @@ class SitemapGenerator
         }
     }
 
-    /**
-     * Don't use with generators!
-     *
-     * @param callable $run
-     */
-    protected function withCustomCanonicalUrl(callable $run)
-    {
-        $customCanonicalUrl = $this->getCustomSiteCanonicalUrl();
-        if ($customCanonicalUrl !== '') {
-            $siteConfig = $this->getPageListGenerator()->getSite()->getConfigRepository();
-            $originalSiteCanonicalUrl = $siteConfig->get('seo.canonical_url');
-            $siteConfig->set('seo.canonical_url', $customCanonicalUrl);
-        }
-        try {
-            return $run();
-        } finally {
-            if ($customCanonicalUrl !== '') {
-                $siteConfig->set('seo.canonical_url', $originalSiteCanonicalUrl);
-            }
-        }
-    }
 }

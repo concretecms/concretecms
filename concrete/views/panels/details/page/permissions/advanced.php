@@ -55,7 +55,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <div>
         <div class="form-group">
             <label class="col-form-label" for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
-            <select id="ccm-page-permissions-inherit" class="form-control">
+            <select id="ccm-page-permissions-inherit" class="form-select">
                 <?php
                 if ($c->getCollectionID() > 1) {
                     ?>
@@ -76,7 +76,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             ?>
             <div class="form-group">
                 <label class="col-form-label" for="ccm-page-permissions-subpages-override-template-permissions"><?=t('Subpage Permissions')?></label>
-                <select id="ccm-page-permissions-subpages-override-template-permissions" class="form-control">
+                <select id="ccm-page-permissions-subpages-override-template-permissions" class="form-select">
                     <option value="0"<?php if (!$c->overrideTemplatePermissions()) {
                     ?>selected<?php
 
@@ -98,7 +98,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <label class="col-form-label"><?=t('Current Permission Set')?></label>
 
         <?php $cat = PermissionKeyCategory::getByHandle('page');?>
-        <form method="post" id="ccm-permission-list-form" data-dialog-form="permissions" data-panel-detail-form="permissions" action="<?=$cat->getToolsURL('save_permission_assignments')?>&cID=<?=$c->getCollectionID()?>">
+        <form method="post" id="ccm-permission-list-form" data-dialog-form="permissions" data-panel-detail-form="permissions" action="<?= h($cat->getTaskURL('save_permission_assignments', ['cID' => $c->getCollectionID()])) ?>">
             <?php Loader::element('permission/lists/page', array(
                 'page' => $c, 'editPermissions' => $editPermissions,
             ))?>
@@ -109,7 +109,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <div id="ccm-page-permissions-confirm-dialog" style="display: none">
     <?=t('Changing this setting will affect this page immediately. Are you sure?')?>
     <div id="dialog-buttons-start">
-        <input type="button" class="btn btn-secondary mr-2" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
+        <input type="button" class="btn btn-secondary me-2" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
         <input type="button" class="btn btn-primary" value="Ok" onclick="ccm_pagePermissionsConfirmInheritanceChange()" />
     </div>
 </div>
@@ -117,7 +117,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <?php if ($editPermissions) {
     ?>
     <div class="ccm-panel-detail-form-actions dialog-buttons d-flex justify-content-end">
-        <button class="btn btn-secondary mr-2" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+        <button class="btn btn-secondary me-2" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
         <button class="btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
     </div>
     <?php
@@ -134,7 +134,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     ccm_pagePermissionsConfirmInheritanceChange = function() {
         jQuery.fn.dialog.showLoader();
-        $.getJSON('<?=$cat->getToolsURL('change_permission_inheritance')?>&cID=<?=$c->getCollectionID()?>&mode=' + $('#ccm-page-permissions-inherit').val(), function(r) {
+        $.getJSON(<?= json_encode($cat->getTaskURL('change_permission_inheritance', ['cID' => $c->getCollectionID()])) ?> + '&mode=' + $('#ccm-page-permissions-inherit').val(), function(r) {
             if (r.deferred) {
                 jQuery.fn.dialog.closeAll();
                 jQuery.fn.dialog.hideLoader();
@@ -193,7 +193,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
         $('#ccm-page-permissions-subpages-override-template-permissions').change(function() {
             jQuery.fn.dialog.showLoader();
-            $.getJSON('<?=$cat->getToolsURL('change_subpage_defaults_inheritance')?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function(r) {
+            $.getJSON(<?= json_encode($cat->getTaskURL('change_subpage_defaults_inheritance', ['cID' => $c->getCollectionID()])) ?> + '&inherit=' + $(this).val(), function(r) {
                 if (r.deferred) {
                     ConcretePanelManager.exitPanelMode();
                     jQuery.fn.dialog.hideLoader();

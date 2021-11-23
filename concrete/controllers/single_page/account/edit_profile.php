@@ -117,12 +117,17 @@ class EditProfile extends AccountPageController
 
         // password
         if (strlen($data['uPasswordNew'])) {
+            $passwordCurrent = (string) $data['uPasswordCurrent'];
             $passwordNew = $data['uPasswordNew'];
             $passwordNewConfirm = $data['uPasswordNewConfirm'];
 
             $app->make('validator/password')->isValidFor($passwordNew, $ui, $this->error);
 
             if ($passwordNew) {
+
+                if (!$ui->passwordMatches($passwordCurrent)) {
+                    $this->error->add(t('Invalid existing password provided.'));
+                }
                 if ($passwordNew != $passwordNewConfirm) {
                     $this->error->add(t('The two passwords provided do not match.'));
                 }

@@ -2,11 +2,13 @@
 namespace Concrete\Controller\Backend\Board;
 
 use Concrete\Core\Board\Command\ClearSlotFromBoardCommand;
+use Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommand;
 use Concrete\Core\Board\Command\PinSlotToBoardCommand;
-use Concrete\Core\Board\Command\UnpinSlotFromBoardCommand;
 use Concrete\Core\Board\Instance\Slot\RenderedSlotCollectionFactory;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManager;
@@ -16,29 +18,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class Instance extends AbstractController
 {
 
-    protected function canDeleteRule(InstanceSlotRule $rule)
-    {
-        $board = $rule->getInstance()->getBoard();
-        if ($board) {
-            $permissions = new Checker($board);
-            if ($rule->isLocked()) {
-                $canDeleteRule = $permissions->canEditBoardLockedRules();
-            } else {
-                $canDeleteRule = $permissions->canEditBoardContents();
-            }
-            return $canDeleteRule;
-        }
-        return false;
-    }
-
     public function deleteRule()
     {
         $entityManager = $this->app->make(EntityManager::class);
         $rule = $entityManager->find(InstanceSlotRule::class, $this->request->request->get('boardInstanceSlotRuleID'));
-        if ($rule && $this->canDeleteRule($rule)) {
-            $entityManager->remove($rule);
-            $entityManager->flush();
-            return new JsonResponse($rule);
+        if ($rule) {
+            $checker = new Checker($rule);
+            if ($checker->canDeleteBoardInstanceSlotRule()) {
+                $command = new DeleteBoardInstanceSlotRuleCommand($rule);
+                $this->app->executeCommand($command);
+                return new JsonResponse($rule);
+            }
         }
         throw new \Exception(t('Access Denied.'));
     }
@@ -64,22 +54,22 @@ class Instance extends AbstractController
             if ($rules) {
                 $canProceed = true;
                 foreach($rules as $rule) {
-                    if (!$this->canDeleteRule($rule)) {
+                    $checker = new Checker($rule);
+                    if (!$checker->canDeleteBoardInstanceSlotRule()) {
                         $canProceed = false;
                     }
                 }
             }
             if ($canProceed) {
                 foreach($rules as $rule) {
-                    $entityManager->remove($rule);
+                    $command = new DeleteBoardInstanceSlotRuleCommand($rule);
+                    $this->app->executeCommand($command);
                 }
-                $entityManager->flush();
                 return new JsonResponse([]);
             }
             throw new \Exception(t('Access Denied.'));
         }
     }
-
 
     public function pinSlot()
     {
@@ -89,39 +79,23 @@ class Instance extends AbstractController
             $instance = $entityManager->find(InstanceEntity::class, $boardInstanceID);
         }
 
-        if ($instance && $this->canEditSlot($instance, $this->request->request->get('slot'))) {
-            $command = new PinSlotToBoardCommand();
-            $command->setBlockID($this->request->request->get('bID'));
-            $command->setInstance($instance);
-            $command->setSlot($this->request->request->get('slot'));
-            $this->app->executeCommand($command);
+        if ($instance) {
+            $checker = new Checker($instance);
+            if ($checker->canEditBoardInstanceSlot((int) $this->request->request->get('slot'))) {
+                $command = new PinSlotToBoardCommand();
+                $command->setBlockID($this->request->request->get('bID'));
+                $command->setInstance($instance);
+                $command->setSlot($this->request->request->get('slot'));
+                $this->app->executeCommand($command);
 
-            $renderedSlotCollectionFactory = $this->app->make(RenderedSlotCollectionFactory::class);
-            $renderedSlotCollection = $renderedSlotCollectionFactory->createCollection($instance);
+                $renderedSlotCollectionFactory = $this->app->make(RenderedSlotCollectionFactory::class);
+                $renderedSlotCollection = $renderedSlotCollectionFactory->createCollection($instance);
 
-            return new JsonResponse($renderedSlotCollection->getRenderedSlot($this->request->request->get('slot')));
+                return new JsonResponse($renderedSlotCollection->getRenderedSlot($this->request->request->get('slot')));
+            }
         }
 
         throw new Exception(t('Access Denied.'));
-    }
-
-    protected function canEditSlot(InstanceEntity $instance, $slot)
-    {
-        $board = $instance->getBoard();
-        $checker = new Checker($board);
-        $entityManager = $this->app->make(EntityManager::class);
-        $qb = $entityManager->createQueryBuilder();
-        $qb->select('count(r)')->from(InstanceSlotRule::class, 'r')
-            ->where('r.instance = :instance')
-            ->andWhere('r.isLocked = true')
-            ->andWhere('r.slot = :slot');
-        $qb->setParameter('slot', $slot);
-        $qb->setParameter('instance', $instance);
-        $numLockedRules = $qb->getQuery()->getSingleScalarResult();
-        if ($numLockedRules > 0) {
-            return $checker->canEditBoardLockedRules();
-        }
-        return $checker->canEditBoardContents();
     }
 
     public function clearSlot()
@@ -132,16 +106,18 @@ class Instance extends AbstractController
             $instance = $entityManager->find(InstanceEntity::class, $boardInstanceID);
         }
 
-        if ($instance && $this->canEditSlot($instance, $this->request->request->get('slot'))) {
-            $command = new ClearSlotFromBoardCommand();
-            $command->setInstance($instance);
-            $command->setSlot($this->request->request->get('slot'));
-            $this->app->executeCommand($command);
+        $rule = $entityManager->find(InstanceSlotRule::class, $this->request->request->get('boardInstanceSlotRuleID'));
+        if ($instance && $rule) {
+            $checker = new Checker($rule);
+            if ($checker->canDeleteBoardInstanceSlotRule()) {
+                $command = new DeleteBoardInstanceSlotRuleCommand($rule);
+                $this->app->executeCommand($command);
 
-            $renderedSlotCollectionFactory = $this->app->make(RenderedSlotCollectionFactory::class);
-            $renderedSlotCollection = $renderedSlotCollectionFactory->createCollection($instance);
+                $renderedSlotCollectionFactory = $this->app->make(RenderedSlotCollectionFactory::class);
+                $renderedSlotCollection = $renderedSlotCollectionFactory->createCollection($instance);
 
-            return new JsonResponse($renderedSlotCollection->getRenderedSlot($this->request->request->get('slot')));
+                return new JsonResponse($renderedSlotCollection->getRenderedSlot($rule->getSlot()));
+            }
         }
 
         throw new Exception(t('Access Denied.'));

@@ -13,6 +13,11 @@ abstract class Edit extends UserInterface
     protected $validationToken = 'edit_search_preset';
     public $objectID = null;
 
+    public function getEditSearchPresetAction()
+    {
+        return $this->action('edit_search_preset');
+    }
+
     public function view()
     {
         $app = Application::getFacadeApplication();
@@ -60,10 +65,5 @@ abstract class Edit extends UserInterface
         $this->error->add(t('You can\'t edit this search preset.'));
 
         return new JsonResponse($this->error);
-    }
-
-    public function getObjectID()
-    {
-        return (string) $this->objectID;
     }
 }

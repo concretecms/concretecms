@@ -60,14 +60,7 @@ class ContainerBlockInstance
      */
     public function endRender()
     {
-        if (!$this->instance->areaAreasComputed()) {
-            // Since this happens at the end, presumably we HAVE recomputed the areas at this point, because
-            // that happens within the individual ContainerArea::display() methods. So let's flip this to
-            // true so that we don't perpetually have to recompute the areas.
-            $this->instance->setAreasAreComputed(true);
-            $this->entityManager->persist($this->instance);
-            $this->entityManager->flush();
-        }
+        return;
     }
     
 }

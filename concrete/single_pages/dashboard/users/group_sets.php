@@ -42,7 +42,7 @@ $form = $app->make(Form::class);
         </div>
 
         <div class="form-group">
-            <label class="control-label"><?php echo t('Groups'); ?></label>
+            <label class="control-label form-label"><?php echo t('Groups'); ?></label>
             <?php $list = $set->getGroups(); ?>
             <?php if (count($groups) > 0) { ?>
                 <?php foreach ($groups as $g) { ?>
@@ -61,11 +61,11 @@ $form = $app->make(Form::class);
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?php echo (string)Url::to('/dashboard/users/group_sets') ?>"
-                   class="btn float-left btn-secondary">
+                   class="btn float-start btn-secondary">
                     <?php echo t('Cancel') ?>
                 </a>
 
-                <button type="submit" class="btn btn-primary float-right">
+                <button type="submit" class="btn btn-primary float-end">
                     <?php echo t('Update Set') ?>
                 </button>
             </div>
@@ -84,11 +84,11 @@ $form = $app->make(Form::class);
                 </p>
 
                 <div class="dialog-buttons">
-                    <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()">
+                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()">
                         <?php echo t('Cancel') ?>
                     </button>
 
-                    <button class="btn btn-danger float-right" onclick="$('div[data-dialog=delete-set] form').submit()">
+                    <button class="btn btn-danger float-end" onclick="$('div[data-dialog=delete-set] form').submit()">
                         <?php echo t('Delete Set') ?>
                     </button>
                 </div>
@@ -106,7 +106,7 @@ $form = $app->make(Form::class);
                 <?php foreach ($groupSets as $gs) { ?>
                     <li>
                         <a href="<?php echo (string)Url::to('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID()); ?>">
-                            <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName(); ?>
+                            <i class="fas fa-users"></i> <?php echo $gs->getGroupSetDisplayName(); ?>
                         </a>
                     </li>
                 <?php } ?>
@@ -135,7 +135,7 @@ $form = $app->make(Form::class);
                         </div>
 
                         <div class="form-group" style="margin-top: 10px;">
-                            <label class="control-label">
+                            <label class="control-label form-label">
                                 <?php echo t('Groups'); ?>
                             </label>
 
@@ -148,7 +148,7 @@ $form = $app->make(Form::class);
                         </div>
 
                         <div class="control-group">
-                            <?php echo $form->submit('submit', t('Add Set'), ['class' => 'btn btn-primary float-right']); ?>
+                            <?php echo $form->submit('submit', t('Add Set'), ['class' => 'btn btn-primary float-end']); ?>
                         </div>
                     </fieldset>
                 </form>

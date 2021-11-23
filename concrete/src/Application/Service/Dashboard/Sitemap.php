@@ -34,9 +34,9 @@ class Sitemap
     protected $isSitemapOverlay = false;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    protected $includeSystemPages;
+    protected $includeSystemPages = false;
 
     /**
      * Sitemap constructor.
@@ -61,11 +61,6 @@ class Sitemap
      */
     public function includeSystemPages()
     {
-        if (!isset($this->includeSystemPages)) {
-            $cookie = $this->app->make('cookie');
-            $this->includeSystemPages = $cookie->get('includeSystemPages');
-        }
-
         return $this->includeSystemPages;
     }
 
@@ -74,9 +69,7 @@ class Sitemap
      */
     public function setIncludeSystemPages($systemPages)
     {
-        $this->includeSystemPages = $systemPages;
-        $cookie = $this->app->make('cookie');
-        $cookie->set('includeSystemPages', $systemPages);
+        $this->includeSystemPages = (bool) $systemPages;
     }
 
     /**
@@ -248,11 +241,11 @@ class Sitemap
         $cPointerID = $c->getCollectionPointerID();
         if ($cAlias) {
             if ($cPointerID > 0) {
-                $cIconClass = 'fa fa-sign-in';
+                $cIconClass = 'fas fa-sign-out-alt';
                 $cAlias = 'POINTER';
                 $cID = $c->getCollectionPointerOriginalID();
             } else {
-                $cIconClass = 'fa fa-external-link';
+                $cIconClass = 'fas fa-external-link-alt';
                 $cAlias = 'LINK';
             }
         }

@@ -10,6 +10,7 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\View\View;
+use Concrete\Core\Permission\Category;
 
 /** @var Block $b */
 /** @var int $rcID */
@@ -45,15 +46,12 @@ foreach ($list as $pa) {
         }
     }
 }
-
 ?>
 
 <div class="ccm-ui" id="ccm-permissions-access-entity-wrapper">
     <!--suppress HtmlUnknownTarget -->
     <form id="ccm-permissions-timed-guest-access-form" class="form-stacked" method="post"
-          action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED ?>/permissions/categories/block">
-
-        <?php echo $token->output('set_timed_guest_access'); ?>
+          action="<?= h(Category::getByHandle('block')->getTaskURL()) ?>">
 
         <?php echo $form->hidden('task', 'set_timed_guest_access'); ?>
         <?php echo $form->hidden('cID', $c->getCollectionID()); ?>
@@ -69,10 +67,10 @@ foreach ($list as $pa) {
 
         <div class="dialog-buttons">
             <input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?php echo h(t('Cancel')) ?>"
-                   class="btn btn-secondary float-left"/>
+                   class="btn btn-secondary float-start"/>
 
             <input type="submit" onclick="$('#ccm-permissions-timed-guest-access-form').submit()"
-                   value="<?php echo h(t('Save')) ?>" class="btn btn-primary float-right"/>
+                   value="<?php echo h(t('Save')) ?>" class="btn btn-primary float-end"/>
         </div>
     </form>
 </div>

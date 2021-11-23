@@ -38,6 +38,6 @@ EOT
         });
         $foreignKeyFixer->fixForeignKeys($tableNames, $errors);
 
-        return $errors->count() === 0;
+        return $errors->count() === 0 ? static::SUCCESS : static::FAILURE;
     }
 }

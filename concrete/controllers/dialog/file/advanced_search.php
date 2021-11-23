@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Dialog\File;
 
 use Concrete\Controller\Dialog\Search\AdvancedSearch as AdvancedSearchController;
+use Concrete\Core\Entity\Search\SavedFileSearch;
 use Concrete\Core\Entity\Search\SavedSearch;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\Search\Field\ManagerFactory;
@@ -26,11 +27,11 @@ class AdvancedSearch extends AdvancedSearchController
         return $this->app->make('Concrete\Core\File\Search\SearchProvider');
     }
 
-    public function getSavedSearchEntity()
+    public function getSearchPresets()
     {
         $em = $this->app->make(EntityManager::class);
         if (is_object($em)) {
-            return $em->getRepository('Concrete\Core\Entity\Search\SavedFileSearch');
+            return $em->getRepository(SavedFileSearch::class)->findAll();
         }
 
         return null;

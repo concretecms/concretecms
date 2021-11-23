@@ -6,6 +6,7 @@ use Concrete\Core\Geolocator\GeolocationResult;
 use Concrete\Core\Geolocator\GeolocatorController;
 use Concrete\Core\Http\Client\Client as HttpClient;
 use Exception;
+use GuzzleHttp\Psr7\Response;
 use IPLib\Address\AddressInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -66,15 +67,14 @@ class Controller extends GeolocatorController
         $configuration = $this->geolocator->getGeolocatorConfiguration();
         $uri = str_replace('[[IP]]', rawurlencode((string) $address), $configuration['url']);
         $httpClient = $this->app->make(HttpClient::class);
-        $httpClient->setUri($uri);
         $result = new GeolocationResult();
         try {
-            $response = $httpClient->send();
+            $response = $httpClient->get($uri);
         } catch (Exception $x) {
             $result->setError(GeolocationResult::ERR_NETWORK, t('Request to geoPlugin failed: %s', $x->getMessage()), $x);
         }
         if ($result->hasError() === false) {
-            if (!$response->isSuccess()) {
+            if (!$response->getStatusCode() == 200) {
                 $result->setError(GeolocationResult::ERR_NETWORK, t('Request to geoPlugin failed with return code %s', sprintf('%s (%s)', $response->getStatusCode(), $response->getReasonPhrase())));
             } else {
                 $responseBody = $response->getBody();

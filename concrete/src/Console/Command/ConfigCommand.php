@@ -3,8 +3,8 @@
 namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Config\DirectFileSaver;
-use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
+use Concrete\Core\Config\LoaderInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Console\Command;
 use Exception;
@@ -12,7 +12,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class ConfigCommand extends Command
 {
-
     protected $description = 'Set or get configuration parameters.';
 
     protected $signature = 'c5:config 
@@ -21,24 +20,10 @@ class ConfigCommand extends Command
         {value? : The value to set}
         {--g|generated-overrides : Save to generated overrides}';
 
-    /** @var Repository */
+    /**
+     * @var Repository
+     */
     protected $repository;
-
-    protected function configure()
-    {
-        $this
-            ->addEnvOption()
-            ->setHelp(<<<EOT
-When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
-For instance, with
-concrete5 %command.name% set concrete.test_item 1
-The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
-concrete5 %command.name% set concrete.test_item '1'
-
-More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
-EOT
-        );
-    }
 
     public function handle(Repository $config, Filesystem $filesystem)
     {
@@ -47,25 +32,39 @@ EOT
         $item = $this->argument('item');
         switch ($this->argument('action')) {
             case 'get':
-                $this->doGetAction($repository, $item);
-                break;
-
+                return $this->doGetAction($repository, $item);
             case 'set':
-                $this->doSetAction($repository, $item);
-                break;
-
+                return $this->doSetAction($repository, $item);
             default:
                 $this->output->error('Invalid action specified, please specify either "set" or "get"');
-                break;
+                return static::FAILURE;
         }
+    }
+
+    protected function configure()
+    {
+        $this
+            ->addEnvOption()
+            ->setHelp(
+                <<<'EOT'
+When setting values that may be evaluated as boolean (true/false), null or numbers, but you want to store them as strings, you can enclose those values in single or double quotes.
+For instance, with
+concrete %command.name% set concrete.test_item 1
+The new configuration item will have a numeric value of 1. If you want to save the string "1" you have to write
+concrete %command.name% set concrete.test_item '1'
+
+More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-config
+EOT
+            )
+        ;
     }
 
     /**
      * @param mixed $value
      *
-     * @return string
-     *
      * @throws Exception
+     *
+     * @return string
      */
     protected function serialize($value)
     {
@@ -79,20 +78,16 @@ EOT
             case 'array':
                 $result = json_encode($value, $jsonOptions);
                 break;
-
             case 'boolean':
                 $result = $value ? 'true' : 'false';
                 break;
-
             case 'NULL':
                 $result = 'null';
                 break;
-
             case 'integer':
             case 'double':
-                $result = (string)$value;
+                $result = (string) $value;
                 break;
-
             case 'string':
                 $enquote = false;
                 switch ($value) {
@@ -101,18 +96,17 @@ EOT
                     case 'null':
                         $enquote = true;
                         break;
-
                     default:
                         if (preg_match('/^-?\d+(\.\d*)?$/', $value)) {
                             $enquote = true;
                         }
                         break;
                 }
-                $result = $enquote ? "\"$value\"" : $value;
+                $result = $enquote ? "\"{$value}\"" : $value;
                 break;
         }
         if (!isset($result)) {
-            throw new Exception("Unable to represent variable of type '$type'");
+            throw new Exception("Unable to represent variable of type '{$type}'");
         }
 
         return $result;
@@ -121,50 +115,57 @@ EOT
     /**
      * @param string $value
      *
-     * @return mixed
-     *
      * @throws Exception
+     *
+     * @return mixed
      */
     protected function unserialize($value)
     {
         $result = json_decode($value, true);
-        if (is_null($result) && trim(strtolower($value)) !== 'null') {
-            return (string)$value;
+        if ($result === null && trim(strtolower($value)) !== 'null') {
+            return (string) $value;
         }
 
         return $result;
     }
 
     /**
-     * Complete a requested get action
+     * Complete a requested get action.
      *
      * @param $repository
      * @param $item
      */
-    private function doGetAction($repository, $item)
+    private function doGetAction($repository, $item): int
     {
         $this->output->writeln($this->serialize($repository->get($item)));
+
+        return static::SUCCESS;
     }
 
     /**
-     * Complete a requested set action
+     * Complete a requested set action.
      *
      * @param Repository $repository
      * @param string $item
      */
-    private function doSetAction(Repository $repository, $item)
+    private function doSetAction(Repository $repository, $item): int
     {
         if (!$this->hasArgument('value')) {
             $this->output->error('A value must be provided when using the "set" action.');
+
+            return static::FAILURE;
         }
 
         $value = $this->argument('value');
         $repository->save($item, $this->unserialize($value));
+
+        return static::SUCCESS;
     }
 
     /**
      * @param \Concrete\Core\Config\Repository\Repository $config
      * @param \Illuminate\Filesystem\Filesystem $filesystem
+     *
      * @return \Concrete\Core\Config\Repository\Repository
      */
     private function getRepository(Repository $config, Filesystem $filesystem)
@@ -173,7 +174,8 @@ EOT
 
         $environment = $this->option('env') ?: $default_environment;
 
-        $file_loader = new FileLoader($filesystem);
+        $app = $this->getApplication()->getConcrete5();
+        $file_loader = $app->make(LoaderInterface::class);
         if ($this->option('generated-overrides')) {
             $file_saver = new FileSaver($filesystem);
         } else {

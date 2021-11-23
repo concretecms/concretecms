@@ -13,6 +13,11 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
         <a href="<?= $view->action('view'); ?>" class="btn btn-secondary"><?= t('Go back'); ?></a>
     </div>
     <div>
+        <h2 class="text-center">
+        <?=h($current_survey)?>
+        </h2>
+    </div>
+    <div>
         <div class="text-center">
             <?= $pie_chart; ?>
         </div>
@@ -31,7 +36,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
             <tbody>
             <?php foreach ($survey_details as $detail) { ?>
                 <tr>
-                    <td><?= $detail['option']; ?></td>
+                    <td><?= h($detail['option']); ?></td>
                     <td><?= $detail['ipAddress']; ?></td>
                     <td><?= $detail['date']; ?></td>
                     <td><?= $detail['user']; ?></td>
@@ -76,7 +81,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
                         <td>
                             <strong>
                                 <a href="<?= $view->action('viewDetail', $survey['bID'], $survey['cID']); ?>">
-                                    <?= $survey['question']; ?>
+                                    <?= h($survey['question']); ?>
                                 </a>
                             </strong>
                         </td>

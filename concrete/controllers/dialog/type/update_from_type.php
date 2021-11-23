@@ -3,13 +3,11 @@ namespace Concrete\Controller\Dialog\Type;
 
 use Block;
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Page\PageList;
-use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsBatchProcessFactory;
 use Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand;
 use Page;
 use PageTemplate;
@@ -17,12 +15,19 @@ use PageType;
 use Permissions;
 use View;
 
+/**
+ * Note – this came from a half-completed pull request, and no routes actually reference this controller anymore.
+ * I'm keeping it around in case we decide to finish the functionality at some point.
+ */
 class UpdateFromType extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/type/update_from_type';
 
     public function on_start()
     {
+
+        throw new UserMessageException(t('This feature is not implemented yet.'));
+
         parent::on_start();
 
         $request = $this->request;
@@ -156,12 +161,18 @@ class UpdateFromType extends BackendInterfaceController
             ];
         }
 
-
-        $factory = new UpdatePageTypeDefaultsBatchProcessFactory($pageTypeDefaultPage);
-        $processor = $this->app->make(Processor::class);
-        return $processor->process($factory, $records, [
-            'message' => t('All child pages updated successfully')
-        ]);
+        $batch = Batch::create(t('Update Page Type Defaults'), function() use ($records, $pageTypeDefaultPage) {
+            foreach ($records as $record) {
+                yield new UpdatePageTypeDefaultsCommand(
+                    $pageTypeDefaultPage->getCollectionID(),
+                    $record['cID'],
+                    $record['cvID'],
+                    $record['blocksToUpdate'],
+                    $record['blocksToAdd']
+                );
+            }
+        });
+        return $this->dispatchBatch($batch);
     }
 
     public function submit($ptID, $pTemplateID)

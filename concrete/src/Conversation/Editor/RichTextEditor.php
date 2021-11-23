@@ -14,8 +14,7 @@ class RichTextEditor extends Editor
         \Core::make(EditorInterface::class);
         $list = AssetList::getInstance();
 
-        $r = $list->getAssetGroup('editor/ckeditor4');
-
+        $r = $list->getAssetGroup('ckeditor');
 
         return $r->getAssetPointers();
     }
@@ -27,6 +26,7 @@ class RichTextEditor extends Editor
 
     public function formatConversationMessageBody($cnv, $cnvMessageBody, $config = array())
     {
+        $config = array_merge(['htmlawed' => true], $config);
         return parent::formatConversationMessageBody($cnv, $cnvMessageBody, $config);
     }
 }

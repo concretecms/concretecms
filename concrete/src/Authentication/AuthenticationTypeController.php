@@ -38,7 +38,7 @@ abstract class AuthenticationTypeController extends Controller implements Logger
 
     public function getAuthenticationType()
     {
-        if (!$this->authenticationType) {
+        if (!$this->authenticationType || !$this->authenticationType->getAuthenticationTypeID()) {
             $this->authenticationType = AuthenticationType::getByHandle($this->getHandle());
         }
 

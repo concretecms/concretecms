@@ -22,7 +22,10 @@ class StandardAvatar implements AvatarInterface
         $fsl = StorageLocation::getDefault();
         $configuration = $fsl->getConfigurationObject();
         $src = $configuration->getPublicURLToFile(REL_DIR_FILES_AVATARS . '/' . $this->userInfo->getUserID() . '.jpg');
-
+        $lastUpdated = $this->userInfo->getUserDateLastUpdated();
+        if ($lastUpdated instanceof \DateTime) {
+            $src .= sprintf("?%s", http_build_query(["s" => $lastUpdated->getTimestamp()]));
+        }
         return $src;
     }
 

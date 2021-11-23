@@ -21,7 +21,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btPageAttributeDisplay';
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "365";
-    public $dateFormat = "m/d/y h:i:a";
+    public $dateFormat;
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
@@ -49,6 +49,26 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function add()
     {
         $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
+        $this->set('dateFormat', $this->dateFormat);
+        $this->set('thumbnailWidth', $this->thumbnailWidth);
+        $this->set('thumbnailHeight', $this->thumbnailHeight);
+    }
+    
+    public function validate($args)
+    {
+        $error = $this->app->make('helper/validation/error');
+
+        if (!is_numeric($args['thumbnailHeight'])) {
+            $error->add(t('Thumbnail Height must be a number.'));
+        }
+        
+        if (!is_numeric($args['thumbnailWidth'])) {
+            $error->add(t('Thumbnail Width must be a number.'));
+        }
+
+        if ($error->has()) {
+            return $error;
+        }
     }
 
     public function getRequiredFeatures(): array
@@ -96,9 +116,9 @@ class Controller extends BlockController implements UsesFeatureInterface
                                 $this->thumbnailWidth,
                                 $this->thumbnailHeight
                             ); //<-- set these 2 numbers to max width and height of thumbnails
-                            $content = "<img src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
+                            $content = "<img class=\"img-fluid\" src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
                         } else {
-                            $image = Core::make('html/image', [$content]);
+                            $image = Core::make('html/image', ['f' => $content]);
                             $content = (string) $image->getTag();
                         }
                     } elseif (is_object($content_alt)) {
@@ -266,7 +286,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->render('templates/' . $templateHandle);
         } else {
             // check if there is a template that matches the selected attribute
-            $template = \Core::make(BlockViewTemplate::class, [$this->getBlockObject()]);
+            $template = \Core::make(BlockViewTemplate::class, ['obj' => $this->getBlockObject()]);
             $template->setBlockCustomTemplate("templates/" . $this->attributeHandle . '.php');
             $info = pathinfo($template->getTemplate());
 

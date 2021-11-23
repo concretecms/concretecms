@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 
+use Concrete\Core\Cache\Level\RequestCache;
+use Concrete\Core\Support\Facade\Application;
 use HtmlObject\Element;
 use Loader;
 
@@ -18,15 +20,32 @@ class CustomColumn extends Column
      */
     public static function getByID($arLayoutColumnID)
     {
+        $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $key = '/Area/LayoutColumn/CustomColumn/' . $arLayoutColumnID;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
+        $al = null;
         $db = Loader::db();
         $row = $db->GetRow('select * from AreaLayoutCustomColumns where arLayoutColumnID = ?', array($arLayoutColumnID));
         if (is_array($row) && $row['arLayoutColumnID']) {
             $al = new static();
             $al->loadBasicInformation($arLayoutColumnID);
             $al->setPropertiesFromArray($row);
-
-            return $al;
         }
+
+        if (is_object($al) && isset($item) && $item->isMiss()) {
+            $item->set($al);
+            $cache->save($item);
+        }
+
+        return $al;
     }
 
     /**

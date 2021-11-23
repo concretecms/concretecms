@@ -20,7 +20,7 @@ class AddDesignerSlotToBoardCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(AddDesignerSlotToBoardCommand $command)
+    public function __invoke(AddDesignerSlotToBoardCommand $command)
     {
         $dateCreated = new \DateTime();
         $dateCreated->setTimezone(new \DateTimeZone($command->getTimezone()));

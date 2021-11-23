@@ -5,23 +5,26 @@ use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Key\FileKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\Entity\File\Version;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FolderItemList;
-use Concrete\Core\File\Importer;
+use Concrete\Core\File\Import\FileImporter;
+use Concrete\Core\File\Import\ImportException;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\File\Set\SetList;
 use Concrete\Core\File\Type\Type;
 use Concrete\Core\Http\ResponseFactory;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\File;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\UrlImmutable;
 use Concrete\Core\User\User;
-use Core;
+use Doctrine\DBAL\Connection;
 use FileAttributeKey;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
@@ -29,6 +32,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceHeight = '400';
     protected $btTable = 'btDocumentLibrary';
     protected $fileAttributes = [];
+    protected $btExportFileFolderColumns = ['folderID'];
 
     /** @var FileFolder|null */
     protected $rootNode = null;
@@ -53,49 +57,49 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
-    public function action_navigate($blockID, $folderID = 0)
+    public function action_navigate($folderID = 0)
     {
-        if ($blockID != $this->bID) {
-            return;
-        }
-
-        $parentID = intval($this->folderID);
-        /** @var Node $parentFolder */
-        if ($parentID && !$parentFolder = FileFolder::getByID($parentID)) {
-            return $this->app->make(ResponseFactory::class)->error('Invalid parent folder.');
-        }
-
-        /** @var Node $subFolder */
-        if (!$subFolder = FileFolder::getByID($folderID)) {
-            return $this->app->make(ResponseFactory::class)->error('Invalid folder ID.');
-        }
-
-        $breadcrumbs = [$subFolder];
-
-        if ($parentID) {
-            // Make sure this folder is a subfolder of the main folder.
-            $subsParent = $subFolder->getTreeNodeParentID();
-            while ($subsParent && $subsParent != $parentID) {
-                if (!$subsParent = FileFolder::getByID($subsParent)) {
-                    break;
-                }
-                $breadcrumbs[] = $subsParent;
-
-                $subsParent = $subsParent->getTreeNodeParentID();
+        if (!$this->hideFolders) {
+            $parentID = intval($this->folderID);
+            /** @var Node $parentFolder */
+            if ($parentID && !$parentFolder = FileFolder::getByID($parentID)) {
+                return $this->app->make(ResponseFactory::class)->error('Invalid parent folder.');
             }
 
-            if (!$subsParent) {
+            /** @var Node $subFolder */
+            if (!$subFolder = FileFolder::getByID($folderID)) {
                 return $this->app->make(ResponseFactory::class)->error('Invalid folder ID.');
             }
+
+            $breadcrumbs = [$subFolder];
+
+            if ($parentID) {
+                // Make sure this folder is a subfolder of the main folder.
+                $subsParent = $subFolder->getTreeNodeParentID();
+                while ($subsParent && $subsParent != $parentID) {
+                    if (!$subsParent = FileFolder::getByID($subsParent)) {
+                        break;
+                    }
+                    $breadcrumbs[] = $subsParent;
+
+                    $subsParent = $subsParent->getTreeNodeParentID();
+                }
+
+                if (!$subsParent) {
+                    return $this->app->make(ResponseFactory::class)->error('Invalid folder ID.');
+                }
+            } else {
+                $parentFolder = $this->getRootFolder(true);
+            }
+
+            $breadcrumbs[] = $parentFolder;
+
+            $this->rootNode = $subFolder;
+            $this->view();
+            $this->set('breadcrumbs', $this->formatBreadcrumbs(array_reverse($breadcrumbs)));
         } else {
-            $parentFolder = $this->getRootFolder(true);
+            return $this->view();
         }
-
-        $breadcrumbs[] = $parentFolder;
-
-        $this->rootNode = $subFolder;
-        $this->view();
-        $this->set('breadcrumbs', $this->formatBreadcrumbs(array_reverse($breadcrumbs)));
     }
 
     public function on_start()
@@ -105,7 +109,12 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function loadData()
     {
-        $this->set('folders', $this->getFileFolders($this->getRootFolder(true)));
+        $folderNodes = Node::getNodesOfType('file_folder');
+        $folders = [];
+        foreach($folderNodes as $folderNode) {
+            $folders[$folderNode->getTreeNodeID()] = $folderNode->getTreeNodeDisplayPath();
+        }
+        $this->set('folders', $folders);
 
         $fsl = new SetList();
         $fsl->filterByType(Set::TYPE_PUBLIC);
@@ -263,23 +272,35 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         if (count($sets)) {
             $query = $list->getQueryObject();
-            $query->leftJoin('tf', 'FileSetFiles', 'fsf', 'tf.fID = fsf.fID');
 
             switch ($this->setMode) {
                 case 'all':
                     // Show files in ALL sets
-                    $query->andWhere(
-                        $query->expr()->orX(
-                            'nt.treeNodeTypeHandle = "file_folder"',
-                            $query->expr()->in('fsf.fsID', $sets)
-                        )
-                    );
+                    asort($sets);
+                    $sets = array_unique(array_map('intval', $sets));
+
+                    // Set up a subselect that we can join to get file set files
+                    $subselect = $query->getConnection()->createQueryBuilder();
+                    $subselect
+                        ->select('count(distinct fsf.fsID) as sets')
+                        ->addSelect('fsf.fID')
+                        ->from('FileSetFiles', 'fsf')
+                        ->where('fsf.fsID in (:sets)')
+                        ->groupBy('fsf.fID');
+
+                    $query
+                        ->leftJoin('tf', sprintf('(%s)', $subselect->getSQL()), 'fsf', 'tf.fID = fsf.fID')
+                        ->where($query->expr()->andX('fsf.sets=:count', 'fsf.sets > 0'))
+                        ->setParameter('sets', $sets, Connection::PARAM_INT_ARRAY)
+                        ->setParameter('count', count($sets));
+
                     break;
                 case 'any':
                 default:
-                    // Show files in ANY of the sets
-                    $expr = $query->expr()->orX('nt.treeNodeTypeHandle = "file_folder"');
+                    $query->leftJoin('tf', 'FileSetFiles', 'fsf', 'tf.fID = fsf.fID');
 
+                    // Show files in ANY of the sets
+                    $expr = $query->expr()->orX($this->hideFolders ? '1=0' : 'nt.treeNodeTypeHandle = "file_folder"');
                     foreach ($sets as $set) {
                         $expr->add($query->expr()->eq('fsf.fsID', $set));
                     }
@@ -290,23 +311,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return $list;
-    }
-
-    protected function getFileFolders(FileFolder $rootFolder)
-    {
-        /** @var \Concrete\Core\File\FolderItemList $list */
-        $list = $rootFolder->getFolderItemList($this->app->make(User::class), $this->app->make('request'));
-
-        foreach ($list->getResults() as $folder) {
-            if ($folder instanceof FileFolder) {
-                yield $folder->getTreeNodeID() => $folder->getTreeNodeDisplayPath();
-
-                // yield from $this->getFileFolders($folder); // PHP 7.0+ :'(
-                foreach ($this->getFileFolders($folder) as $key => $value) {
-                    yield $key => $value;
-                }
-            }
-        }
     }
 
     protected function getTableColumns($results)
@@ -459,7 +463,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         switch ($key) {
             case 'type':
-                $form = \Core::make('helper/form');
+                $form = $this->app->make('helper/form');
                 $t1 = Type::getTypeList();
                 $types = ['' => t('** File type')];
                 foreach ($t1 as $value) {
@@ -468,7 +472,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                 return $form->select('type', $types, ['style' => 'width: 120px']);
             case 'extension':
-                $form = \Core::make('helper/form');
+                $form = $this->app->make('helper/form');
                 $ext1 = Type::getUsedExtensionList();
                 $extensions = ['' => t('** File Extension')];
                 foreach ($ext1 as $value) {
@@ -477,11 +481,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                 return $form->select('extension', $extensions, ['style' => 'width: 120px']);
             case 'date':
-                $wdt = \Core::make('helper/form/date_time');
-                echo $wdt->translate($_REQUEST['date_from']);
-
-                return $wdt->datetime('date_from', $wdt->translate('date_from', $_REQUEST),
-                        true) . t('to') . $wdt->datetime('date_to', $wdt->translate('date_to', $_REQUEST), true);
+                /** @var \Concrete\Core\Form\Service\Widget\DateTime $wdt */
+                $wdt = $this->app->make('helper/form/date_time');
+                $allQueries = $this->request->query->all();
+                return $wdt->datetime('date_from', $wdt->translate('date_from', $allQueries),
+                        true) . t('to') . $wdt->datetime('date_to', $wdt->translate('date_to', $allQueries), true);
             default:
                 $akID = substr($key, 3);
                 $ak = FileKey::getByID($akID);
@@ -501,30 +505,34 @@ class Controller extends BlockController implements UsesFeatureInterface
         $query->leftJoin('fv', $table, 'fis', 'fv.fID = fis.fID');
 
         $searchProperties = (array) json_decode($this->searchProperties);
+        $type = $this->request->query->get('type');
+        $extension = $this->request->query->get('extension');
+        $allQueries = $this->request->query->all();
         foreach ($searchProperties as $column) {
             switch ($column) {
                 case 'type':
-                    if ($_REQUEST['type']) {
+                    if ($type) {
                         $this->enableSubFolderSearch($list);
-                        $list->filterByType($_REQUEST['type']);
+                        $list->filterByType($type);
                     }
                     break;
                 case 'extension':
-                    if ($extension = $this->request('extension')) {
+                    if ($extension) {
                         $this->enableSubFolderSearch($list);
                         $query->andWhere('fv.fvExtension = :fvExtension');
                         $query->setParameter('fvExtension', $extension);
                     }
                     break;
                 case 'date':
-                    $wdt = \Core::make('helper/form/date_time');
-                    $dateFrom = $wdt->translate('date_from', $_REQUEST);
+                    /** @var \Concrete\Core\Form\Service\Widget\DateTime $wdt */
+                    $wdt = $this->app->make('helper/form/date_time');
+                    $dateFrom = $wdt->translate('date_from', $allQueries);
                     if ($dateFrom) {
                         $this->enableSubFolderSearch($list);
                         $query->andWhere('fv.fvDateAdded >= :dateFrom');
                         $query->setParameter('dateFrom', $dateFrom);
                     }
-                    $dateTo = $wdt->translate('date_to', $_REQUEST);
+                    $dateTo = $wdt->translate('date_to', $allQueries);
                     if ($dateTo) {
                         $this->enableSubFolderSearch($list);
                         if (preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
@@ -541,7 +549,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                         $this->enableSubFolderSearch($list);
                         $type = $ak->getAttributeType();
                         $cnt = $type->getController();
-                        $cnt->setRequestArray($_REQUEST);
+                        $cnt->setRequestArray($allQueries);
                         $cnt->setAttributeKey($ak);
                         $cnt->searchForm($list);
                     }
@@ -565,7 +573,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         switch ($key) {
             case 'thumbnail':
 
-                $im = Core::make('helper/image');
+                $im = $this->app->make('helper/image');
                 if ($file->getTypeObject()->getGenericType() == Type::T_IMAGE && $this->maxThumbWidth && $this->maxThumbHeight) {
                     $thumb = $im->getThumbnail(
                         $file,
@@ -579,7 +587,6 @@ class Controller extends BlockController implements UsesFeatureInterface
                 }
 
                 return $thumbnail;
-                break;
             case 'image':
                 if ($file->getTypeObject()->getGenericType() == Type::T_IMAGE) {
                     return sprintf('<img src="%s" class="img-fluid" />', $file->getRelativePath());
@@ -588,7 +595,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             case 'edit_properties':
                 $fp = new \Permissions($file);
                 if ($fp->canEditFileProperties()) {
-                    return sprintf('<a href="#" data-document-library-edit-properties="%s" class="ccm-block-document-library-icon"><i class="fa fa-pencil"></i></a>',
+                    return sprintf('<a href="#" data-document-library-edit-properties="%s" class="ccm-block-document-library-icon"><i class="fas fa-pencil-alt"></i></a>',
                         $file->getFileID());
                 }
                 break;
@@ -601,25 +608,18 @@ class Controller extends BlockController implements UsesFeatureInterface
                 } else {
                     return sprintf('<a href="%s">%s</a>', $file->getDownloadURL(), $file->getTitle());
                 }
-                break;
             case 'filename':
                 return $file->getFileName();
-                break;
             case 'description':
                 return $file->getDescription();
-                break;
             case 'tags':
                 return $file->getTags();
-                break;
             case 'date':
-                return Core::make('date')->formatDate($file->getDateAdded(), false);
-                break;
+                return $this->app->make('date')->formatDate($file->getDateAdded(), false);
             case 'extension':
                 return $file->getExtension();
-                break;
             case 'size':
                 return $file->getSize();
-                break;
             default:
                 $akID = substr($key, 3);
                 $ak = FileKey::getByID($akID);
@@ -631,24 +631,39 @@ class Controller extends BlockController implements UsesFeatureInterface
                 }
                 break;
         }
+        return false;
     }
 
+    /**
+     * @param int |false $bID BlockID
+     * @return Symfony\Component\HttpFoundation\Response | void
+     * @throws UserMessageException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function action_upload($bID = false)
     {
         $files = [];
+        $r = new \Concrete\Core\File\EditResponse();
         if ($this->bID == $bID) {
             $fp = \FilePermissions::getGlobal();
-            $cf = \Loader::helper('file');
-            if (\Core::make('token')->validate()) {
-                if (isset($_FILES['file']) && (is_uploaded_file($_FILES['file']['tmp_name']))) {
-                    if (!$fp->canAddFileType($cf->getExtension($_FILES['file']['name']))) {
-                        throw new \Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
+            /** @var \Concrete\Core\File\Service\File $cf */
+            $cf = $this->app->make('helper/file');
+
+            if ($this->app->make('token')->validate()) {
+                /** @var UploadedFile $file */
+                $file = $this->request->files->get('file');
+                if ($file && $file->isValid()) {
+                    if (!$fp->canAddFileType($cf->getExtension($file->getFilename()))) {
+                        throw new UserMessageException(ImportException::describeErrorCode(ImportException::E_FILE_INVALID_EXTENSION));
                     } else {
-                        $ih = new Importer();
-                        $response = $ih->import($_FILES['file']['tmp_name'], $_FILES['file']['name'], $this->getRootFolder());
-                        if (!($response instanceof \Concrete\Core\File\Version) && !($response instanceof Version)) {
-                            throw new \Exception(Importer::getErrorMessage($response));
-                        } else {
+
+                        /** @var \Concrete\Core\File\Import\FileImporter $importer */
+                        $importer = $this->app->make(FileImporter::class);
+                        try {
+                                $response = $importer->importUploadedFile($file);
+                            } catch (ImportException $x) {
+                                throw new UserMessageException($x->getMessage());
+                            }
                             $file = $response->getFile();
                             if ($this->addFilesToSetID) {
                                 $fs = \FileSet::getByID($this->addFilesToSetID);
@@ -658,30 +673,47 @@ class Controller extends BlockController implements UsesFeatureInterface
                             }
                             /* @var \Concrete\Core\Entity\File\File $file */
                             $files[] = $file;
-                        }
+                            if (!$this->allowInPageFileManagement) {
+                                // We're going to set a message to display the next time the page loads.
+                                $this->app->make('session')->getFlashBag()->add('document_library_success_message',
+                                    t2('File added successfully', 'Files added successfully', count($files)));
+                            }
+
+                            $r->setFiles($files);
                     }
+                } else {
+                    throw new UserMessageException(ImportException::describeErrorCode(ImportException::E_PHP_NO_FILE));
                 }
+            } else {
+                $r->setError(new UserMessageException(t('Invalid Token.')));
             }
+            $r->setFiles($files);
+
+            return $this->app->make(ResponseFactoryInterface::class)->json($r);
         }
 
-        if (!$this->allowInPageFileManagement) {
-            // We're going to set a message to display the next time the page loads.
-            Core::make('session')->getFlashBag()->add('document_library_success_message',
-                t2('File added successfully', 'Files added successfully', count($files)));
-        }
 
-        $r = new \Concrete\Core\File\EditResponse();
-        $r->setFiles($files);
-        $r->outputJSON();
+
+
+
     }
 
     protected function setupFolderFileFolderFilter(FolderItemList $list)
     {
         if ($this->rootNode) {
             $list->filterByParentFolder($this->rootNode);
-        } else {
+        } elseif ((int) $this->folderID !== 0 || !$this->hideFolders) {
+            // If we have a subfolder selected, or if hidefolders is disabled
             $list->filterByParentFolder($this->getRootFolder());
+        } elseif ((int) $this->folderID === 0 && $this->hideFolders) {
+            // If we have the top level folder selected and hidefolders is enabled
+            $list->enableSubFolderSearch();
         }
+
+        if ($this->hideFolders) {
+            $list->getQueryObject()->andWhere('nt.treeNodeTypeHandle <> "file_folder"');
+        }
+
 
         return $list;
     }
@@ -705,12 +737,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         if ($keywords = $this->request('keywords')) {
             $list = $this->setupKeywordSearch($list, $keywords);
         }
-
-        if (isset($_REQUEST['sort'])) {
-            $getSort = $this->getSortColumnKey($_REQUEST['sort']);
+        $getSort = $this->request->query->get('sort');
+        if ($getSort) {
+            $getSort = $this->getSortColumnKey($getSort);
             if ($getSort) {
-                if (isset($_REQUEST['dir'])) {
-                    $list->sortBy($getSort, $_REQUEST['dir']);
+                $list->getQueryObject()->addSelect($getSort);
+                $sortDir = $this->request->query->get('dir');
+                if ($sortDir) {
+                    $list->sortBy($getSort, $sortDir);
                 } else {
                     $list->sortBy($getSort);
                 }
@@ -758,21 +792,17 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('tableSearchProperties', $this->getTableSearchProperties());
         $this->set('list', $list);
         $this->set('results', $results);
+        $this->set('hideFolders', $this->hideFolders);
 
         $this->requireAsset('css', 'font-awesome');
-        if ($this->enableSearch) {
-        }
         $this->set('canAddFiles', false);
         $fp = \FilePermissions::getGlobal();
-        if ($this->allowInPageFileManagement) {
-
-        }
 
         if ($this->allowFileUploading && $fp->canAddFile()) {
             $this->set('canAddFiles', true);
         }
 
-        $bag = \Core::make('session')->getFlashBag();
+        $bag = $this->app->make('session')->getFlashBag();
         if ($bag->has('document_library_success_message')) {
             $success = $bag->get('document_library_success_message');
             $success = $success[0];
@@ -834,6 +864,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'tableDescription' => $args['tableDescription'],
             'tableStriped' => empty($args['tableStriped']) ? 0 : 1,
             'rowBackgroundColorAlternate' => empty($args['tableStriped']) ? '' : $args['rowBackgroundColorAlternate'],
+            'hideFolders' => (int) !filter_var(array_get($args, 'showFolders'), FILTER_VALIDATE_BOOLEAN),
         ];
         if ((int) $args['addFilesToSetID'] > 0) {
             $fs = \FileSet::getByID($args['addFilesToSetID']);
@@ -858,7 +889,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($folder = FileFolder::getByID($folderID)) {
                 return $folder;
             } else {
-                throw new \RuntimeException('Invalid Folder ID');
+                return new FileFolder();
             }
         }
 
@@ -873,7 +904,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             case 'thumbnail':
             case 'image':
                 return sprintf(
-                    '<i class="fa fa-folder ccm-block-document-library-icon-folder" aria-hidden="true"></i><span class="sr-only">%s</span>',
+                    '<i class="fas fa-folder ccm-block-document-library-icon-folder" aria-hidden="true"></i><span class="sr-only">%s</span>',
                     t('folder icon')
                 );
             case 'title':
@@ -907,6 +938,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $view = new BlockView($this->getBlockObject());
 
         /** @var FileFolder $crumb */
+        $return = [];
         foreach ($breadcrumbs as $crumb) {
             if ($crumb->getTreeNodeID() == $this->getRootFolder()->getTreeNodeID()) {
                 $action = $this->getBlockObject()->getBlockCollectionObject()->getCollectionLink();
@@ -917,8 +949,12 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $action = $action->setPath($actionPath);
             }
 
-            yield $action => $crumb->getTreeNodeDisplayName();
+            $return[] = [
+                'url' => $action,
+                'name' => $crumb->getTreeNodeDisplayName()
+            ];
         }
+        return $return;
     }
 
     protected function enableSubFolderSearch(FolderItemList $list)

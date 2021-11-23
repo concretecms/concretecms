@@ -77,6 +77,29 @@ class Manager
     }
 
     /**
+     * Re-apply the configured character set and collation to all the database tables.
+     */
+    public function reapply(Connection $connection, callable $messageCallback = null, ErrorList $warnings = null)
+    {
+        if ($messageCallback === null) {
+            $messageCallback = static function ($message) { };
+        }
+        $params = $connection->getParams();
+        $characterSet = (string) array_get($params, 'character_set');
+        $collation = (string) array_get($params, 'collation');
+        if ($characterSet === '' && $collation === '') {
+            $characterSet = (string) array_get($params, 'charset');
+        }
+        list($characterSet, $collation) = $this->resolver
+            ->setCharacterSet($characterSet)
+            ->setCollation($collation)
+            ->resolveCharacterSetAndCollation($connection)
+        ;
+        $messageCallback(t('Setting character set "%1$s" and collation "%2$s"', $characterSet, $collation));
+        $this->convertTables($connection, $characterSet, $collation, $messageCallback, $warnings);
+    }
+
+    /**
      * Convert all the database tables a specific character set/collation combination.
      *
      * @param \Concrete\Core\Database\Connection\Connection $connection

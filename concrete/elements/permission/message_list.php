@@ -35,7 +35,7 @@ if ($_REQUEST['message'] == 'custom_options_saved') {
 $(function() {
 	$("#ccm-permissions-message-list").show('highlight', {'color': '#fff'}, function() {
 		setTimeout(function() {
-			$("#ccm-permissions-message-list").fadeOut(300, 'easeInExpo');
+			$("#ccm-permissions-message-list").fadeOut(300, 'swing');
 		}, 1200);
 	});
 });

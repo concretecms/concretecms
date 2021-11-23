@@ -88,7 +88,7 @@ if (!$tp->canInstallPackages()) {
     ?>
 				<tr>
 					<td colspan="2" style="border-top: 0px">
-						<div class="block-message alert-message error"><p><?=t('Unable to locate this add-on on concrete5.org')?></p></div>
+						<div class="block-message alert-message error"><p><?=t('Unable to locate this add-on on marketplace.concretecms.com')?></p></div>
 					</td>
 				</tr>
 				<?php
@@ -138,13 +138,11 @@ if (!$tp->canInstallPackages()) {
 } ?>
 
 		<?php
-        if (is_object($mi) && $mi->isConnected()) {
+        if (is_object($mi) && $mi->isConnected()) { ?>
+                <hr>
+            <?php
+            View::element('dashboard/marketplace_project_page');
             ?>
-
-			<h3><?=t("Project Page")?></h3>
-			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
-			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
-
 		<?php
         } elseif (is_object($mi) && $mi->hasConnectionError()) {
             ?>
@@ -158,8 +156,8 @@ if (!$tp->canInstallPackages()) {
 
 			<div class="well" style="padding:10px 20px;">
 				<h3><?=t('Connect to Community')?></h3>
-				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons. Connecting enables automatic updates.')?></p>
-				<p><a class="btn btn-primary" href="<?=$view->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
+				<p><?=t('Your site is not connected to the Concrete community. Connecting lets you easily extend a site with themes and add-ons. Connecting enables automatic updates.')?></p>
+				<p><a class="btn btn-primary" href="<?=$view->url('/dashboard/extend/connect')?>"><?=t("Connect to Community")?></a></p>
 			</div>
 
 		<?php

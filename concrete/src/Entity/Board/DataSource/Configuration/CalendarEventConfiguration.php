@@ -21,6 +21,11 @@ class CalendarEventConfiguration extends Configuration
     protected $query;
 
     /**
+     * @ORM\Column(type="integer", options={"unsigned": true})
+     */
+    protected $maxOccurrencesOfSameEvent = 0;
+
+    /**
      * @return \Concrete\Core\Entity\Search\Query
      */
     public function getQuery()
@@ -52,10 +57,38 @@ class CalendarEventConfiguration extends Configuration
         $this->calendar = $calendar;
     }
 
+    /**
+     * @return int
+     */
+    public function getMaxOccurrencesOfSameEvent(): int
+    {
+        return $this->maxOccurrencesOfSameEvent;
+    }
 
+    /**
+     * @param int $maxOccurrencesOfSameEvent
+     */
+    public function setMaxOccurrencesOfSameEvent(int $maxOccurrencesOfSameEvent): void
+    {
+        $this->maxOccurrencesOfSameEvent = $maxOccurrencesOfSameEvent;
+    }
 
+    public function export(\SimpleXMLElement $element)
+    {
+        $element->addAttribute('max-occurrences-of-event', $this->getMaxOccurrencesOfSameEvent());
+        $element->addAttribute('calendar', $this->getCalendar()->getName());
 
+        if ($this->query) {
+            $fields = $this->query->getFields();
+            if (count($fields)) {
+                $fieldsNode = $element->addChild('fields');
+                foreach ($fields as $field) {
+                    $field->export($fieldsNode);
+                }
+            }
+        }
 
+    }
 
 
 

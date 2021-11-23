@@ -28,6 +28,7 @@ class ExecutableFilesTest extends TestCase
         });
         sort($actual);
         $expected = [
+            'concrete/bin/concrete',
             'concrete/bin/concrete5',
             'tests/assets/Docker/run-install.sh',
             'tests/assets/Docker/run-update.sh',

@@ -48,7 +48,6 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             $topics = [$value];
         }
 
-        $i = 1;
         $expressions = [];
         $qb = $list->getQueryObject();
         foreach ($topics as $value) {
@@ -61,10 +60,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                     $topic instanceof \Concrete\Core\Tree\Node\Type\Topic ||
                     $topic instanceof Category)) {
                 $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
-                $expressions[] = $qb->expr()->like($column, ':topicPath' . $i);
-                $qb->setParameter('topicPath' . $i, '%||' . $topic->getTreeNodeDisplayPath() . '%||');
+                $expressions[] = $qb->expr()->like($column, $qb->createNamedParameter('%||' . $topic->getTreeNodeDisplayPath() . '%||'));
             }
-            ++$i;
         }
 
         $expr = $qb->expr();
@@ -207,21 +204,24 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->load();
         if (is_object($this->attributeValue)) {
             $valueIDs = [];
-            foreach ($this->attributeValue->getValueObject()->getSelectedTopics() as $value) {
-                $valueID = $value->getTreeNodeID();
-                $withinParentScope = false;
-                $nodeObj = TreeNode::getByID($value->getTreeNodeID());
-                if (is_object($nodeObj)) {
-                    $parentNodeArray = $nodeObj->getTreeNodeParentArray();
-                    // check to see if selected node is still within parent scope, in case it has been changed.
-                    foreach ($parentNodeArray as $parent) {
-                        if ($parent->treeNodeID == $this->akTopicParentNodeID) {
-                            $withinParentScope = true;
-                            break;
+            $valueObject = $this->attributeValue->getValueObject();
+            if ($valueObject) {
+                foreach ($valueObject->getSelectedTopics() as $value) {
+                    $valueID = $value->getTreeNodeID();
+                    $withinParentScope = false;
+                    $nodeObj = TreeNode::getByID($value->getTreeNodeID());
+                    if (is_object($nodeObj)) {
+                        $parentNodeArray = $nodeObj->getTreeNodeParentArray();
+                        // check to see if selected node is still within parent scope, in case it has been changed.
+                        foreach ($parentNodeArray as $parent) {
+                            if ($parent->treeNodeID == $this->akTopicParentNodeID) {
+                                $withinParentScope = true;
+                                break;
+                            }
                         }
-                    }
-                    if ($withinParentScope) {
-                        $valueIDs[] = $valueID;
+                        if ($withinParentScope) {
+                            $valueIDs[] = $valueID;
+                        }
                     }
                 }
             }
@@ -249,12 +249,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $str = '||';
         $nodeKeys = $this->attributeValue->getValue();
-        foreach ($nodeKeys as $nodeObj) {
-            $str .= $nodeObj->getTreeNodeDisplayPath() . '||';
+        if ($nodeKeys) {
+            foreach ($nodeKeys as $nodeObj) {
+                $str .= $nodeObj->getTreeNodeDisplayPath() . '||';
+            }
         }
 
-        // remove line break for empty list
-        if ($str == "\n") {
+        if ($str == "||") {
             return '';
         }
 

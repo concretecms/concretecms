@@ -29,15 +29,6 @@ class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement
 
     /**
      * @deprecated
-     * alias to old ADODB method
-     */
-    public function free()
-    {
-        return $this->closeCursor();
-    }
-
-    /**
-     * @deprecated
      * alias to old ADODB result method
      */
     public function numRows()

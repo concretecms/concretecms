@@ -3,12 +3,17 @@ namespace Concrete\Core\View;
 
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\Output\StandardFormatter;
+use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
+use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
+use Concrete\Core\Site\Service;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Environment;
 use Events;
 use Concrete\Core\Support\Facade\Facade;
+use HtmlObject\Element;
 use PageTheme;
 use Page;
 use Config;
@@ -25,6 +30,8 @@ class View extends AbstractView
     protected $viewPkgHandle;
     protected $themePkgHandle;
     protected $viewRootDirectoryName = DIRNAME_VIEWS;
+
+    use HandleRequiredFeaturesTrait;
 
     protected function constructView($path = false)
     {
@@ -45,6 +52,15 @@ class View extends AbstractView
     {
         return $this->viewPath;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getThemeObject()
+    {
+        return $this->themeObject;
+    }
+
     /**
      * gets the relative theme path for use in templates.
      *
@@ -195,6 +211,11 @@ class View extends AbstractView
             }
             $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
             $this->themeRelativePath = $env->getURL(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
+
+            if ($this->themeObject) {
+                $this->handleRequiredFeatures($this->controller, $this->themeObject);
+            }
+
         }
     }
 
@@ -224,6 +245,7 @@ class View extends AbstractView
             }
             $this->setViewTemplate($env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$templateFile, $this->themePkgHandle));
         }
+
     }
 
     public function startRender()
@@ -236,10 +258,10 @@ class View extends AbstractView
 
     protected function onBeforeGetContents()
     {
+        $this->themeObject->registerAssets();
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
         $event->setArgument('view', $this);
         Events::dispatch('on_before_render', $event);
-        $this->themeObject->registerAssets();
     }
 
     public function renderViewContents($scopeItems)
@@ -382,6 +404,21 @@ class View extends AbstractView
             return $item . "\n";
         }
     }
+
+    public function getThemeStyles()
+    {
+        $site = app(Service::class)->getSite();
+        $skinIdentifier = SkinInterface::SKIN_DEFAULT;
+        if ($site) {
+            if ($site->getThemeSkinIdentifier()) {
+                $skinIdentifier = $site->getThemeSkinIdentifier();
+            }
+        }
+        $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+        $stylesheet = $skin->getStylesheet();
+        return $stylesheet;
+    }
+
 
     public static function element($_file, $args = null, $_pkgHandle = null)
     {

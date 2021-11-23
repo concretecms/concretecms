@@ -1,0 +1,36 @@
+// Removes leading at the top of an element to keep elements with white space from adding too much padding
+// between them
+@mixin heading-display($heading-num) {
+  font-family: $display-font-family;
+  text-transform: uppercase;
+  font-size: map-get($display-font-sizes, $heading-num);
+  font-weight: $display-font-weight;
+}
+
+@mixin make-display-headings() {
+
+  h1 {
+    @include heading-display(1);
+  }
+
+  h2 {
+    @include heading-display(2);
+  }
+
+  h3 {
+    @include heading-display(3);
+  }
+
+  h4 {
+    @include heading-display(4);
+  }
+
+  h5 {
+    @include heading-display(5);
+  }
+
+  h6 {
+    @include heading-display(6);
+  }
+
+}

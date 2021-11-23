@@ -13,6 +13,11 @@ abstract class Delete extends UserInterface
     protected $validationToken = 'remove_search_preset';
     public $objectID = null;
 
+    public function getDeleteSearchPresetAction()
+    {
+        return $this->action('remove_search_preset');
+    }
+
     public function view()
     {
         $app = Application::getFacadeApplication();

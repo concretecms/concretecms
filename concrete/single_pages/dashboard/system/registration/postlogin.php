@@ -28,14 +28,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <?= $form->radio('login_redirect', 'CUSTOM', $loginRedirect, ['id' => 'login_redirect_CUSTOM']) ?>
             <label class="form-check-label" for="login_redirect_CUSTOM"><?= t('Redirect to a specific page') ?></label>
             <div id="login_redirect_cid_wrap"<?= $loginRedirect === 'CUSTOM' ? '' : ' class="d-none"' ?>>
-                <?= $pageSelector->selectPage('login_redirect_cid', $loginRedirectCID) ?>
+                <?= $pageSelector->selectPage('login_redirect_cid', $loginRedirectCID, ['askIncludeSystemPages' => true]) ?>
             </div>
         </div>
     </div>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="float-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+            <button class="float-end btn btn-primary" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 

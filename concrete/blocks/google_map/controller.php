@@ -47,6 +47,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('width', '100%');
         $this->set('height', '400px');
         $this->set('scrollwheel', 1);
+        $this->set('titleFormat', 'h3');
     }
 
     public function validate($args)
@@ -96,6 +97,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'height' => null,
             'scrollwheel' => 0,
             'apiKey' => '',
+            'titleFormat' => 'h3',
         ];
 
         Config::save('app.api_keys.google.maps', trim($data['apiKey']));
@@ -108,6 +110,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['width'] = $data['width'];
         $args['height'] = $data['height'];
         $args['scrollwheel'] = $data['scrollwheel'] ? 1 : 0;
+        $args['titleFormat'] = $data['titleFormat'];
 
         parent::save($args);
     }

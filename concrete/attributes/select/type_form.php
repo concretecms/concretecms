@@ -53,18 +53,18 @@ function getAttributeOptionHTML($v)
 
 <div class="form-group">
     <label><?=t("Multiple Values")?></label>
-    <div class="checkbox">
-        <label>
-            <?=$form->checkbox('akSelectAllowMultipleValues', 1, $akSelectAllowMultipleValues)?> <span><?=t('Allow multiple options to be chosen.')?></span>
-        </label>
+    <div class="form-check">
+        <?=$form->checkbox('akSelectAllowMultipleValues', 1, $akSelectAllowMultipleValues ?? false)?>
+        <label for="akSelectAllowMultipleValues" class="form-check-label"><?=t('Allow multiple options to be chosen.')?></label>
     </div>
 </div>
 
 <div class="form-group" data-group="single-value">
 	<label><?=t("Single Value")?></label>
-	<div class="checkbox">
-		<label>
-			<?=$form->checkbox('akDisplayMultipleValuesOnSelect', 1, $akDisplayMultipleValuesOnSelect)?> <span><?=t('Display full option list when selecting.')?></span>
+	<div class="form-check">
+        <?=$form->checkbox('akDisplayMultipleValuesOnSelect', 1, $akDisplayMultipleValuesOnSelect ?? false)?>
+        <label for="akDisplayMultipleValuesOnSelect" class="form-check-label">
+			<?=t('Display full option list when selecting.')?>
 		</label>
 	</div>
 	<div class="help-block"><?=t('Enabling this will typically display the list with radio buttons.')?></div>
@@ -72,18 +72,20 @@ function getAttributeOptionHTML($v)
 
 <div class="form-group" data-group="single-value">
     <label><?=t("Hide None Option")?></label>
-    <div class="checkbox">
-        <label>
-            <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption)?> <span><?=t('Hide none option from the list.')?></span>
+    <div class="form-check">
+        <?=$form->checkbox('akHideNoneOption', 1, $akHideNoneOption ?? false)?>
+        <label for="akHideNoneOption" class="form-check-label">
+            <?=t('Hide none option from the list.')?>
         </label>
     </div>
 </div>
 
 <div class="form-group">
     <label><?=t("User Submissions")?></label>
-    <div class="checkbox">
-        <label>
-            <?=$form->checkbox('akSelectAllowOtherValues', 1, $akSelectAllowOtherValues)?> <span><?=t('Allow users to add to this list.')?></span>
+    <div class="form-check">
+        <?=$form->checkbox('akSelectAllowOtherValues', 1, $akSelectAllowOtherValues ?? false)?>
+        <label for="akSelectAllowOtherValues" class="form-check-label">
+             <?=t('Allow users to add to this list.')?>
         </label>
     </div>
 </div>
@@ -98,7 +100,7 @@ function getAttributeOptionHTML($v)
     );
     ?>
 
-	<?=$form->select('akSelectOptionDisplayOrder', $displayOrderOptions, $akSelectOptionDisplayOrder)?>
+	<?=$form->select('akSelectOptionDisplayOrder', $displayOrderOptions, $akSelectOptionDisplayOrder ?? 'display_asc')?>
 </div>
 
 <div class="clearfix">
@@ -126,13 +128,17 @@ function getAttributeOptionHTML($v)
 		<?=getAttributeOptionHTML('TEMPLATE') ?>
 	</div>
 	
-	<div id="addAttributeValueWrap" class="form-inline">
-		<input id="akSelectValueFieldNew" name="akSelectValueNew" type="text" value="<?=$defaultNewOptionNm ?>" size="40"  class="form-control"
-		onfocus="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',0)" 
-		onblur="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',1)"
-		onkeypress="ccmAttributesHelper.keydownHandler(event);"
-		 /> 
-		<input class="btn btn-primary" type="button" onClick="ccmAttributesHelper.saveNewOption(); $('#ccm-attribute-key-form').unbind()" value="<?=t('Add') ?>" />
+	<div id="addAttributeValueWrap" class="row row-cols-auto g-0 align-items-center">
+        <div class="col-auto">
+            <input id="akSelectValueFieldNew" name="akSelectValueNew" type="text" value="<?=$defaultNewOptionNm ?>" size="40"  class="form-control"
+                   onfocus="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',0)"
+                   onblur="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',1)"
+                   onkeypress="ccmAttributesHelper.keydownHandler(event);"
+            />
+        </div>
+        <div class="col-auto">
+            <input class="btn btn-primary" type="button" onClick="ccmAttributesHelper.saveNewOption(); $('#ccm-attribute-key-form').unbind()" value="<?=t('Add') ?>" />
+        </div>
 	</div>
 	</div>
 
@@ -255,6 +261,9 @@ function getAttributeOptionHTML($v)
 		$('input[name=akSelectAllowMultipleValues]').on('change', function() {
 			if ($(this).is(':checked')) {
 				$('div[data-group=single-value]').hide();
+				if ($('div[data-group=single-value] input').is(':checked')) {
+                    $('div[data-group=single-value] input').prop('checked', false);
+                }
 			} else {
 				$('div[data-group=single-value]').show();
 			}

@@ -27,7 +27,7 @@ class AddConversationMessageConversationAccess extends ConversationAccess
         $db = Database::connection();
         $r = $db->executeQuery('select * from ConversationPermissionAddMessageAccessList where paID = ?',
             array($this->getPermissionAccessID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
             $db->executeQuery('insert into ConversationPermissionAddMessageAccessList (peID, paID, permission) values (?, ?, ?)',
                 $v);

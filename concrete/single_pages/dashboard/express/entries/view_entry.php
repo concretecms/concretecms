@@ -1,16 +1,18 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-dashboard-header-buttons btn-group">
-    <a href="<?=$backURL?>" class="btn btn-default"><?=t("Back")?></a>
-    <?php if (isset($editURL) && $editURL) { ?>
-        <a href="<?=$editURL?>" class="btn btn-default"><?=t("Edit")?></a>
-    <?php } ?>
-    <?php foreach($subEntities as $entity) { ?>
-        <a href="<?=URL::to($c->getCollectionPath(), 'create_entry', $entity->getID(), $entry->getID())?>" class="btn btn-default"><?=t('Add %s', $entity->getEntityDisplayName())?></a>
-    <?php } ?>
-    <?php if ($allowDelete) { ?>
-        <button type="button" class="btn btn-danger" data-dialog="delete-entry"><?= t('Delete') ?></button>
-    <?php } ?>
+<div class="ccm-dashboard-header-buttons">
+    <div class="btn-group">
+        <a href="<?=$backURL?>" class="btn btn-secondary"><?=t("Back")?></a>
+        <?php if (isset($editURL) && $editURL) { ?>
+            <a href="<?=$editURL?>" class="btn btn-secondary"><?=t("Edit")?></a>
+        <?php } ?>
+        <?php foreach($subEntities as $entity) { ?>
+            <a href="<?=URL::to($c->getCollectionPath(), 'create_entry', $entity->getID(), $entry->getID())?>" class="btn btn-secondary"><?=t('Add %s', $entity->getEntityDisplayName())?></a>
+        <?php } ?>
+        <?php if ($allowDelete) { ?>
+            <button type="button" class="btn btn-danger" data-dialog="delete-entry"><?= t('Delete') ?></button>
+        <?php } ?>
+    </div>
 </div>
 
 <?php if ($allowDelete) { ?>

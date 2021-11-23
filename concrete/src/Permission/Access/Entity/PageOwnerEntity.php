@@ -51,7 +51,7 @@ class PageOwnerEntity extends Entity
 
     public function getAccessEntityTypeLinkHTML()
     {
-        $html = '<a href="javascript:void(0)" onclick="ccm_choosePermissionAccessEntityPageOwner()">' . tc('PermissionAccessEntityTypeName',
+        $html = '<a href="javascript:void(0)" class="dropdown-item " onclick="ccm_choosePermissionAccessEntityPageOwner()">' . tc('PermissionAccessEntityTypeName',
                 'Page Owner') . '</a>';
 
         return $html;

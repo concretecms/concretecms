@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Tests\Error;
+namespace Concrete\Tests\Cookie;
 
 use Concrete\Core\Cookie\CookieJar;
 use Concrete\Core\Cookie\ResponseCookieJar;

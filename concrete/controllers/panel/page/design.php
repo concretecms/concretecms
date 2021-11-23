@@ -3,18 +3,15 @@ namespace Concrete\Controller\Panel\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendUIPageController;
 use Concrete\Core\Page\Collection\Version\Version;
+use Concrete\Core\Page\Template;
+use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\Type\Type;
-use Permissions;
-use PageTemplate;
-use PageTheme;
-use Request;
-use PageEditResponse;
-use Loader;
-use Response;
-use View;
+use Concrete\Core\Page\View\Preview\PageDesignPreviewRequest;
+use Concrete\Core\Http\Request;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\View\View;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
-use Config;
 
 class Design extends BackendUIPageController
 {
@@ -33,13 +30,13 @@ class Design extends BackendUIPageController
         if (is_object($pagetype)) {
             $_templates = $pagetype->getPageTypePageTemplateObjects();
         } else {
-            $_templates = PageTemplate::getList();
+            $_templates = Template::getList();
         }
 
         $pTemplateID = $c->getPageTemplateID();
         $templates = array();
         if ($pTemplateID) {
-            $selectedTemplate = PageTemplate::getByID($pTemplateID);
+            $selectedTemplate = Template::getByID($pTemplateID);
             $templates[] = $selectedTemplate;
         }
 
@@ -49,7 +46,7 @@ class Design extends BackendUIPageController
             }
         }
 
-        $tArrayTmp = array_merge(PageTheme::getGlobalList(), PageTheme::getLocalList());
+        $tArrayTmp = array_merge(Theme::getGlobalList(), Theme::getLocalList());
         $_themes = array();
         foreach ($tArrayTmp as $pt) {
             if ($cp->canEditPageTheme($pt)) {
@@ -59,9 +56,9 @@ class Design extends BackendUIPageController
 
         $pThemeID = $c->getCollectionThemeID();
         if ($pThemeID) {
-            $selectedTheme = PageTheme::getByID($pThemeID);
+            $selectedTheme = Theme::getByID($pThemeID);
         } else {
-            $selectedTheme = PageTheme::getSiteTheme();
+            $selectedTheme = Theme::getSiteTheme();
         }
 
         $themes = array($selectedTheme);
@@ -112,23 +109,36 @@ class Design extends BackendUIPageController
         $req->setCurrentPage($this->page);
         $controller = $this->page->getPageController();
         $view = $controller->getViewObject();
-        if ($_REQUEST['pTemplateID']) {
-            $pt = PageTemplate::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pTemplateID']));
-            if (is_object($pt)) {
-                $view->setCustomPageTemplate($pt);
+
+        $previewRequest = new PageDesignPreviewRequest();
+        if ($this->request->query->has('pTemplateID')) {
+            $pt = Template::getByID(h($this->request->query->get('pTemplateID')));
+            if ($pt) {
+                $previewRequest->setPageTemplate($pt);
             }
         }
-        if ($_REQUEST['pThemeID']) {
-            $pt = PageTheme::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pThemeID']));
-            if (is_object($pt)) {
-                $view->setCustomPageTheme($pt);
+        if ($this->request->query->has('pThemeID')) {
+            $pt = Theme::getByID(h($this->request->query->get('pThemeID')));
+        } else {
+            $pt = $this->page->getCollectionThemeObject();
+        }
+        if ($pt) {
+            $previewRequest->setTheme($pt);
+            if ($this->request->query->has('skinIdentifier')) {
+                $skin = $pt->getSkinByIdentifier(h($this->request->query->get('skinIdentifier')));
+            } else {
+                $skin = $this->page->getPageSkin();
+            }
+            if ($skin) {
+                $previewRequest->setSkin($skin);
             }
         }
+
+        $view->setCustomPreviewRequest($previewRequest);
         $req->setCustomRequestUser(-1);
-        $response = new Response();
+        $response = new \Symfony\Component\HttpFoundation\Response();
         $content = $view->render();
         $response->setContent($content);
-
         return $response;
     }
 
@@ -142,12 +152,17 @@ class Design extends BackendUIPageController
 
             if ($this->permissions->canEditPageTheme()) {
                 $pl = false;
-                if ($_POST['pThemeID']) {
-                    $pl = PageTheme::getByID($_POST['pThemeID']);
+                if ($this->request->request->has('pThemeID')) {
+                    $pl = Theme::getByID($_POST['pThemeID']);
                 }
                 $data = array();
                 if (is_object($pl)) {
                     $nvc->setTheme($pl);
+                    if ($this->request->request->has('skinIdentifier')) {
+                        if ($pl->hasSkins() && ($skin = $pl->getSkinByIdentifier(h($this->request->request->get('skinIdentifier'))))) {
+                            $nvc->setThemeSkin($skin);
+                        }
+                    }
                 }
             }
 
@@ -157,7 +172,7 @@ class Design extends BackendUIPageController
                     // We do this by checking to see whether the PARENT page allows you to add this page type here.
                     // if this is the home page then we assume you are good
 
-                    $template = PageTemplate::getByID($_POST['pTemplateID']);
+                    $template = Template::getByID($_POST['pTemplateID']);
                     $proceed = true;
                     $pagetype = $c->getPageTypeObject();
                     if (is_object($pagetype)) {
@@ -192,7 +207,8 @@ class Design extends BackendUIPageController
             $r->setPage($c);
             if ($this->request->request->get('sitemap')) {
                 $r->setMessage(t('Page updated successfully.'));
-                if ($this->permissions->canApprovePageVersions() && Config::get('concrete.misc.sitemap_approve_immediately')) {
+                $config = $this->app->make('config');
+                if ($this->permissions->canApprovePageVersions() && $config->get('concrete.misc.sitemap_approve_immediately')) {
                     $pkr = new ApprovePageRequest();
                     $u = $this->app->make(User::class);
                     $pkr->setRequestedPage($this->page);

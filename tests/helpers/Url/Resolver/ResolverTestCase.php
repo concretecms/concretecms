@@ -16,13 +16,12 @@ abstract class ResolverTestCase extends TestCase
      */
     protected $urlResolver;
 
-    public function setUp()
-    {
+    public function setUp():void    {
         $url = \Concrete\Core\Url\UrlImmutable::createFromUrl(\Core::make('url/canonical'));
         $this->canonicalUrl = $url;
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         \Core::forgetInstance('url/canonical');
     }

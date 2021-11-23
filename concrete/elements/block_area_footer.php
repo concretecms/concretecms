@@ -24,9 +24,9 @@ $class = 'ccm-area-footer';
 ?>
     </div>
     <div class="<?=$class?> ccm-ui">
-        <div class="ccm-area-footer-handle" data-area-menu-handle="<?=$a->getAreaID()?>" id="area-menu-footer-<?=$a->getAreaID()?>"><span><i class="fa fa-share-alt"></i> <?=$a->getAreaDisplayName()?></span></div>
+        <div class="ccm-area-footer-handle" data-area-menu-handle="<?=$a->getAreaID()?>" id="area-menu-footer-<?=$a->getAreaID()?>"><span><i class="fas fa-share-alt"></i> <?=$a->getAreaDisplayName()?></span></div>
         <div class="popover fade" data-area-menu="area-menu-a<?=$a->getAreaID()?>">
-            <div class="arrow"></div>
+            <div class="popover-arrow"></div>
             <div class="popover-inner">
                 <div class="dropdown-menu">
                     <?php
@@ -76,12 +76,16 @@ $class = 'ccm-area-footer';
                                     if ($pk->validate()) {
                                         $btc = $bx->getController();
                                         $arLayout = $btc->getAreaLayoutObject();
-                                        ?>
+
+                                        if ($arLayout instanceof \Concrete\Core\Area\Layout\PresetLayout) { ?>
+                                            <a href="#" class="dropdown-item disabled"><?=t('Save Layout as Preset')?></a>
+                                        <?php } else { ?>
                                         <a class="dropdown-item dialog-launch"
                                                href="<?= URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID()) ?>"
                                                dialog-title="<?= t('Save Layout as Preset') ?>" dialog-width="360"
                                                dialog-height="300"
                                                dialog-modal="true"><?= t("Save Layout as Preset") ?></a>
+                                        <?php } ?>
                                         <a class="dropdown-item dialog-launch"
                                                href="<?= URL::to('/ccm/system/dialogs/area/layout/presets/manage') ?>"
                                                dialog-title="<?= t('Manage Presets') ?>" dialog-width="360"

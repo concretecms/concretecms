@@ -1,0 +1,44 @@
+.ccm-ui {
+  fieldset {
+    legend {
+      color: $gray-500;
+    }
+  }
+
+  .form-group {
+    // bootstrap 5 doesn't have .form-group classes anymore. But we need some kind of nice default sizing.
+    margin-bottom: $form-group-margin-bottom;
+  }
+
+}
+
+.form-control {
+  &::placeholder {
+    font-style: italic;
+  }
+}
+
+.input-group > .input-group-icon {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.input-group-icon {
+  align-items: center;
+  background-color: white;
+  border: 2px solid #ebebeb;
+  border-radius: 4px;
+  color: $gray-500;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 0;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  white-space: nowrap;
+
+  &.disabled {
+    background-color: $gray-200;
+  }
+}

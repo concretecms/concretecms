@@ -1,9 +1,17 @@
 <?php
 
 defined('C5_EXECUTE') or die('Access Denied.');
+
 /**
- * @var \Concrete\Core\Routing\Router
+ * @var Concrete\Core\Application\Application $app
+ * @var Concrete\Core\Routing\Router $router
  */
+
+/*
+ * Base path: <none>
+ * Namespace: <none>
+ */
+
 $router->all('/ccm/system/tree/load', '\Concrete\Controller\Backend\Tree::load');
 $router->all('/ccm/system/tree/node/load', '\Concrete\Controller\Backend\Tree\Node::load');
 $router->all('/ccm/system/tree/node/load_starting', '\Concrete\Controller\Backend\Tree\Node::load_starting');
@@ -27,6 +35,11 @@ $router->all('/ccm/system/dialogs/tree/node/add/file_folder', '\Concrete\Control
 $router->all('/ccm/system/dialogs/tree/node/add/file_folder/add_file_folder_node', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Add::add_file_folder_node');
 $router->all('/ccm/system/dialogs/tree/node/edit/file_folder', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Edit::view');
 $router->all('/ccm/system/dialogs/tree/node/edit/file_folder/update_file_folder_node', '\Concrete\Controller\Dialog\Tree\Node\FileFolder\Edit::update_file_folder_node');
+
+$router->all('/ccm/system/dialogs/tree/node/add/group_folder', '\Concrete\Controller\Dialog\Tree\Node\GroupFolder\Add::view');
+$router->all('/ccm/system/dialogs/tree/node/add/group_folder/add_group_folder_node', '\Concrete\Controller\Dialog\Tree\Node\GroupFolder\Add::add_group_folder_node');
+$router->all('/ccm/system/dialogs/tree/node/edit/group_folder', '\Concrete\Controller\Dialog\Tree\Node\GroupFolder\Edit::view');
+$router->all('/ccm/system/dialogs/tree/node/edit/group_folder/update_group_folder_node', '\Concrete\Controller\Dialog\Tree\Node\GroupFolder\Edit::update_group_folder_node');
 
 $router->all('/ccm/system/dialogs/tree/node/delete', '\Concrete\Controller\Dialog\Tree\Node\Delete::view');
 $router->all('/ccm/system/dialogs/tree/node/delete/remove_tree_node', '\Concrete\Controller\Dialog\Tree\Node\Delete::remove_tree_node');

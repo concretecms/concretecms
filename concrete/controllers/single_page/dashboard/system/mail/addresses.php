@@ -30,7 +30,7 @@ class Addresses extends DashboardPageController
         } else {
             $config = $this->app->make('config');
             $config->save('concrete.email.default.name', $this->request->post('defaultName'));
-            $config->save('concrete.email.default.address', $this->request->post('defaultAddress') ? $this->request->post('defaultAddress') : 'concrete5-noreply@concrete5');
+            $config->save('concrete.email.default.address', $this->request->post('defaultAddress') ? $this->request->post('defaultAddress') : 'concrete-cms-noreply@concretecms');
             $config->save('concrete.email.forgot_password.name', $this->request->post('forgotPasswordName'));
             $config->save('concrete.email.forgot_password.address', $this->request->post('forgotPasswordAddress'));
             $config->save('concrete.email.form_block.address', $this->request->post('formBlockAddress'));

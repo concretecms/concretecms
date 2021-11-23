@@ -1,12 +1,14 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-use Concrete\Core\Entity\File\Version;
-use Concrete\Core\ImageEditor\ImageEditor;
+use Concrete\Core\ImageEditor\ImageEditorService;
 
-/** @var Version $fv */
-/** @var ImageEditor $editor */
-$editor = $app->make('editor/image/core');
+/**
+ * @var Concrete\Core\Entity\File\Version $fv
+ * @var Concrete\Core\Application\Application $app
+ */
 
-echo $editor->getView($fv)->render();
+/** @var ImageEditorService $editorService */
+$editorService = $app->make(ImageEditorService::class);
+$editorService->renderActiveEditor($fv);

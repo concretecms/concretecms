@@ -22,7 +22,6 @@ use Psr\Log\LoggerInterface;
 
 class LogAssignmentTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     public function testShouldLogPermissionAssignment()
     {

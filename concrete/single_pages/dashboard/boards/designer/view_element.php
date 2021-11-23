@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="mb-3">
     <a href="<?=URL::to('/dashboard/boards/designer')?>">
-        <i class="fa fa-arrow-up"></i> <?=t('Back to Library')?>
+        <i class="fas fa-arrow-up"></i> <?=t('Back to Library')?>
     </a>
 </div>
 
@@ -14,7 +14,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <h5><?=t('Template')?></h5>
 <div class="mb-3">
-    <?=$element->getSlotTemplate()->getName()?>
+    <?php if ($element->getSlotTemplate()) { ?>
+        <?=$element->getSlotTemplate()->getName()?>
+    <?php } else { ?>
+        <?=t('(Unknown Template)')?>
+    <<?php } ?>
 </div>
 
 <h5><?=t('Preview')?></h5>
@@ -26,9 +30,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <div class="ccm-dashboard-form-actions">
         <a href="#"
            class="btn btn-danger"
-           data-toggle="modal" data-target="#delete-element"><?=t('Delete')?></a>
+           data-bs-toggle="modal" data-bs-target="#delete-element"><?=t('Delete')?></a>
         <a href="<?=URL::to('/dashboard/boards/scheduler', 'view', $element->getID())?>"
-           class="btn btn-secondary float-right "><?=t('Schedule')?></a>
+           class="btn btn-secondary float-end "><?=t('Schedule')?></a>
     </div>
 </div>
 
@@ -39,15 +43,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><?=t('Delete Element')?></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <svg><use xlink:href="#icon-dialog-close" /></svg>
-                    </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                 </div>
                 <div class="modal-body">
                     <?=t('Remove this element from your library?')?>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger float-left"><?=t('Delete Element')?></button>
+                    <button type="submit" class="btn btn-danger float-start"><?=t('Delete Element')?></button>
                 </div>
             </div>
         </form>

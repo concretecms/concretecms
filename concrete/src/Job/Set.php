@@ -28,7 +28,7 @@ class Set extends ConcreteObject
         }
         $r = $db->Execute($q);
         $list = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $js = new JobSet();
             $js->setPropertiesFromArray($row);
             $list[] = $js;
@@ -66,10 +66,10 @@ class Set extends ConcreteObject
         $db = Loader::db();
         $list = array();
         $r = $db->Execute('select jsID from JobSets where pkgID = ? order by jsID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = JobSet::getByID($row['jsID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -159,7 +159,7 @@ class Set extends ConcreteObject
         $db = Loader::db();
         $r = $db->Execute('select jID from JobSetJobs where jsID = ? order by jID asc', $this->getJobSetId());
         $jobs = array();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $j = Job::getByID($row['jID']);
             if (is_object($j)) {
                 $jobs[] = $j;

@@ -1,17 +1,16 @@
 <?php
-namespace Concrete\Core\Application\UserInterface\Dashboard\Navigation;
 
-use Concrete\Core\Navigation\Navigation as BaseNavigation;
-use Symfony\Component\HttpFoundation\Session\Session;
+namespace Concrete\Core\Application\UserInterface\Dashboard\Navigation;
 
 class NavigationCache extends AbstractNavigationCache
 {
-
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Application\UserInterface\Dashboard\Navigation\AbstractNavigationCache::getIdentifier()
+     */
     public function getIdentifier(): string
     {
         return 'dashboard_menu';
     }
-
-
-
 }

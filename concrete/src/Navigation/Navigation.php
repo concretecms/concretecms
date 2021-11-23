@@ -40,7 +40,7 @@ class Navigation implements NavigationInterface, JsonSerializable
      */
     public function getItems(): array
     {
-        return $this->items;
+        return (array) $this->items;
     }
 
     /**

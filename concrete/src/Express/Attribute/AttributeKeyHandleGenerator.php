@@ -8,7 +8,8 @@ use Concrete\Core\Entity\Attribute\Key\Key;
 
 class AttributeKeyHandleGenerator implements AttributeKeyHandleGeneratorInterface
 {
-
+    /** @var string[] */
+    protected $requestHandles = [];
     protected $category;
 
     public function __construct(ExpressCategory $category)
@@ -18,14 +19,20 @@ class AttributeKeyHandleGenerator implements AttributeKeyHandleGeneratorInterfac
 
     protected function handleIsAvailable($handleToTest, Key $existingKey)
     {
+        if (in_array($handleToTest, $this->requestHandles, true)) {
+            return false;
+        }
+
         $key = $this->category->getByHandle($handleToTest);
         if (is_object($key)) {
             if ($key->getAttributeKeyID() != $existingKey->getAttributeKeyID()) {
                 return false;
             } else {
+                $this->requestHandles[] = $handleToTest;
                 return true;
             }
         } else {
+            $this->requestHandles[] = $handleToTest;
             return true;
         }
     }

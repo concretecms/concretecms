@@ -49,8 +49,8 @@ if (count($pageAttributeKeys)) {
     <?php /** @noinspection PhpUnhandledExceptionInspection */
     View::element('calendar/block/data_source', [
         'multiple' => true,
-        'caID' => $caID,
-        'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle
+        'caID' => $caID ?? null,
+        'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle ?? null,
     ]); ?>
 </fieldset>
 
@@ -80,7 +80,7 @@ if (count($pageAttributeKeys)) {
 
             <div data-row="page-attribute">
                 <div class="form-group">
-                    <?php echo $form->text('filterByPageTopicAttributeKeyHandle', $pageTopicAttributeKeyHandles, $filterByPageTopicAttributeKeyHandle); ?>
+                    <?php echo $form->text('filterByPageTopicAttributeKeyHandle', $pageTopicAttributeKeyHandles, $filterByPageTopicAttributeKeyHandle ?? null); ?>
                 </div>
             </div>
         <?php } ?>
@@ -88,7 +88,7 @@ if (count($pageAttributeKeys)) {
         <div data-row="specific-topic">
             <div class="form-group">
                 <!--suppress HtmlFormInputWithoutLabel -->
-                <select class="form-control" name="filterByTopicAttributeKeyID">
+                <select class="form-select" name="filterByTopicAttributeKeyID">
                     <option value="">
                         <?php echo t('** Select Topic Attribute') ?>
                     </option>
@@ -104,7 +104,7 @@ if (count($pageAttributeKeys)) {
                     <?php } ?>
                 </select>
 
-                <?php echo $form->hidden("filterByTopicID", $filterByTopicID); ?>
+                <?php echo $form->hidden("filterByTopicID", $filterByTopicID ?? null); ?>
 
                 <div id="ccm-block-event-list-topic-tree-wrapper"></div>
             </div>
@@ -116,15 +116,13 @@ if (count($pageAttributeKeys)) {
 
         <div class="form-check">
             <?php
-            $checkboxAttributes = [
-                "style" => "vertical-align: middle"
-            ];
 
+            $checkboxAttributes = [];
             if (!is_object($featuredAttribute)) {
                 $checkboxAttributes["disabled"] = "disabled";
             }
 
-            echo $form->checkbox('filterByFeatured', $eventListTitle, ($filterByFeatured == 1), $checkboxAttributes);
+            echo $form->checkbox('filterByFeatured', 1, $filterByFeatured ?? null, $checkboxAttributes);
             echo $form->label('filterByFeatured', t('Display featured events only.'), ["class" => "form-check-label"]);
             ?>
         </div>
@@ -144,8 +142,11 @@ if (count($pageAttributeKeys)) {
 
     <div class="form-group">
         <?php echo $form->label('eventListTitle', t('Title')); ?>
-        <?php echo $form->text('eventListTitle', $eventListTitle) ?>
-    </div>
+	    <div class="input-group">
+        	<?php echo $form->text('eventListTitle', $eventListTitle) ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+		</div>
+	</div>
 
     <div class="form-group">
         <?php echo $form->label('totalToRetrieve', t('Total Number of Events to Retrieve')); ?>
@@ -159,7 +160,7 @@ if (count($pageAttributeKeys)) {
 
     <div class="form-group">
         <?php echo $form->label('linkToPage', t('Link To More Events Calendar/Page')); ?>
-        <?php echo $pageSelector->selectPage('linkToPage', $linkToPage) ?>
+        <?php echo $pageSelector->selectPage('linkToPage', $linkToPage ?? null) ?>
     </div>
 </fieldset>
 
@@ -196,7 +197,7 @@ if (count($pageAttributeKeys)) {
             $tree.concreteTree({
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
-                <?php if ($filterByTopicID) { ?>
+                <?php if (isset($filterByTopicID)) { ?>
                 'selectNodesByKey': [<?php echo intval($filterByTopicID) ?>],
                 <?php } ?>
                 'onSelect': function (nodes) {

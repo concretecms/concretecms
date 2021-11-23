@@ -74,33 +74,25 @@
                 <p class="entry-collapse-text"><?php echo $row['linkTitle'] ? $row['linkTitle'] : ''; ?></p>
 
                 <div class="form-group">
-                    <label class="control-label"><?php echo t('Navigation Link Text'); ?></label>
+                    <label class="control-label form-label"><?php echo t('Navigation Link Text'); ?></label>
                     <input class="form-control ccm-input-text" type="text" name="linkTitle[]" value="<?php echo h($row['linkTitle']); ?>">
                 </div>
                 <div class="form-group">
-                    <label class="control-label"><?php echo t('Title Text'); ?></label>
+                    <label class="control-label form-label"><?php echo t('Title Text'); ?></label>
                     <input class="form-control ccm-input-text" type="text" name="title[]" value="<?php echo h($row['title']); ?>">
                 </div>
                 <div class="form-group">
-                    <label class="control-label"><?php echo t('Description'); ?></label>
+                    <label class="control-label form-label"><?php echo t('Description'); ?></label>
                     <textarea class='editor-content' name="description[]"><?php echo $row['description']; ?></textarea>
                 </div>
-                <button type="button" class="btn btn-sm btn-default ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
+                <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
                 <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>
-                <i class="fa fa-arrows"></i>
+                <i class="fas fa-trash-alt"></i>
 
                 <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="<?php echo $row['sortOrder']; ?>">
             </div>
         <?php
         }
-    } else {
-    ?>
-        <script>
-        _.defer(function() {
-            $('.ccm-add-faq-entry').click();
-        });
-        </script>
-    <?php
     }
     ?>
 
@@ -108,20 +100,20 @@
         <p class="entry-collapse-text"></p>
 
         <div class="form-group">
-            <label class="control-label"><?php echo t('Navigation Link Text'); ?></label>
+            <label class="control-label form-label"><?php echo t('Navigation Link Text'); ?></label>
             <input class="form-control ccm-input-text" type="text" name="linkTitle[]" value="">
         </div>
         <div class="form-group">
-            <label class="control-label"><?php echo t('Title Text'); ?></label>
+            <label class="control-label form-label"><?php echo t('Title Text'); ?></label>
             <input class="form-control ccm-input-text" type="text" name="title[]" value="">
         </div>
         <div class="form-group">
-            <label class="control-label"><?php echo t('Description'); ?></label>
+            <label class="control-label form-label"><?php echo t('Description'); ?></label>
             <textarea class='editor-content' name="description[]"></textarea>
         </div>
-        <button type="button" class="btn btn-sm btn-default ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
+        <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
         <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>
-        <i class="fa fa-arrows"></i>
+        <i class="fas fa-trash-alt"></i>
 
         <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="">
     </div>
@@ -225,5 +217,13 @@ $(document).ready(function() {
             doSortCount();
         }
     });
+
+    <?php
+    if ($controller->getAction() == 'add') { ?>
+        $(function() {
+            $('.ccm-add-faq-entry').trigger('click');
+        });
+    <?php }
+    ?>
 });
 </script>

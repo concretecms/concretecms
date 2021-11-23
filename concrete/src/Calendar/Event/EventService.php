@@ -16,7 +16,7 @@ use Concrete\Core\Entity\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Concrete\Core\Events\EventDispatcher;
 
 class EventService implements ApplicationAwareInterface
 {
@@ -92,6 +92,7 @@ class EventService implements ApplicationAwareInterface
             $return = clone $recent;
             $return->setAuthor($u->getUserInfoObject()->getEntityObject());
             $return->setIsApproved(false);
+            $return->setDateActivated(null);
 
             // Persist the cloned version
             $this->entityManager->persist($return);

@@ -1,8 +1,15 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
-    $set = \Concrete\Core\Permission\Set::getSavedPermissionSetFromSession();
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Validation\CSRF\Token;
 
-    $uid = uniqid();
+defined('C5_EXECUTE') or die("Access Denied.");
+
+$set = \Concrete\Core\Permission\Set::getSavedPermissionSetFromSession();
+
+$uid = uniqid();
+
+$resolverManager = app(ResolverManagerInterface::class);
+$valt = app(Token::class);
 ?>
 <button class="btn btn-xs btn-secondary" type="button" id="ccm-permissions-list-copy-permissions-<?= $uid ?>"><?=t('Copy')?></button>
 <?php if (is_object($set) && $set->getPermissionKeyCategory() == $pkCategory->getPermissionKeyCategoryHandle()) {
@@ -27,7 +34,7 @@ $(function() {
 			dataType: 'json',
 			type: 'post',
 			data: data,
-			url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/set?task=copy_permission_set&<?=Loader::helper('validation/token')->getParameter('copy_permission_set')?>',
+			url: <?= json_encode($resolverManager->resolve(['/ccm/system/permissions/set/copy']) . '?' . $valt->getParameter('copy_permission_set')) ?>,
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
 			}
@@ -42,7 +49,7 @@ $(function() {
 			dataType: 'json',
 			type: 'post',
 			data: data,
-			url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/set?task=paste_permission_set&<?=Loader::helper('validation/token')->getParameter('paste_permission_set')?>',
+			url: <?= json_encode($resolverManager->resolve(['/ccm/system/permissions/set/paste']) . '?' . $valt->getParameter('paste_permission_set')) ?>,
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
 				for (i = 0; i < r.length; i++) {

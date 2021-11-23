@@ -11,14 +11,15 @@ class InfoCommand extends Command
 {
     protected function configure()
     {
-        $errExitCode = static::RETURN_CODE_ON_FAILURE;
+        $okExitCode = static::SUCCESS;
+        $errExitCode = static::FAILURE;
         $this
             ->setName('c5:info')
-            ->setDescription('Get server and concrete5 detailed informations.')
+            ->setDescription('Get detailed information about this installation.')
             ->addEnvOption()
             ->setHelp(<<<EOT
 Returns codes:
-  0 operation completed successfully
+  $okExitCode operation completed successfully
   $errExitCode errors occurred
 
 More info at http://documentation.concrete5.org/developers/appendix/cli-commands#c5-info
@@ -32,7 +33,7 @@ EOT
         $info = Facade::getFacadeApplication()->make(Info::class);
         /* @var Info $info */
 
-        $output->writeln('<info># concrete5 Version</info>');
+        $output->writeln('<info># Version</info>');
         $output->writeln('Installed - ' . ($info->isInstalled() ? 'Yes' : 'No'));
         $output->writeln($info->getCoreVersions());
 
@@ -49,15 +50,15 @@ EOT
         $output->writeln('Core root - ' . $info->getCoreRootDirectory());
 
         $output->writeln('');
-        $output->writeln('<info># concrete5 Packages</info>');
+        $output->writeln('<info># Packages</info>');
         $output->writeln($info->getPackages() ?: 'None');
 
         $output->writeln('');
-        $output->writeln('<info># concrete5 Overrides</info>');
+        $output->writeln('<info># Overrides</info>');
         $output->writeln($info->getOverrides() ?: 'None');
 
         $output->writeln('');
-        $output->writeln('<info># concrete5 Cache Settings</info>');
+        $output->writeln('<info># Cache Settings</info>');
         $output->writeln($info->getCache());
 
         $output->writeln('');
@@ -75,5 +76,7 @@ EOT
         $output->writeln('');
         $output->writeln('<info># PHP Settings</info>');
         $output->writeln($info->getPhpSettings());
+
+        return static::SUCCESS;
     }
 }

@@ -33,4 +33,20 @@ div#ccm-dashboard-content {
       }
     }
   }
+
+  // add style for fancy checkboxes within search tables
+  .ccm-fancy-checkbox input[type="checkbox"],
+  .ccm-fancy-checkbox .checked {
+    display: none;
+  }
+
+  .ccm-fancy-checkbox input[type="checkbox"]:checked ~ .checked
+  {
+    display: inline-block;
+  }
+
+  .ccm-fancy-checkbox input[type="checkbox"]:checked ~ .unchecked
+  {
+    display: none;
+  }
 }

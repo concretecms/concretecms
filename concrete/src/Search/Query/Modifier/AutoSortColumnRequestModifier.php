@@ -19,7 +19,7 @@ class AutoSortColumnRequestModifier extends AbstractRequestModifier
                 $columnSet = $query->getColumns();
                 foreach($columnSet->getColumns() as $column) {
                     if ($column->getColumnKey() === $sortBy) {
-                        $columnSet->setDefaultSortcolumn($column, $sortByDirection);
+                        $columnSet->setDefaultSortColumn($column, $sortByDirection);
                     }
                 }
             }

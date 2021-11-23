@@ -46,6 +46,7 @@ use Concrete\Core\Support\Facade\Url;
 /** @var string $tableDescription */
 /** @var bool $tableStriped */
 /** @var string $rowBackgroundColorAlternate */
+/** @var bool $hideFolders */
 
 $app = Application::getFacadeApplication();
 /** @var Color $color */
@@ -59,21 +60,11 @@ $fileSetService = new SetList();
 $fileSetList = ['0' => t('None')];
 
 foreach ($fileSetService->get() as $fileSet) {
-    $filePermissionChecker = new Checker($fileSet);
-    $responseObject = $filePermissionChecker->getResponseObject();
-
-    if ($responseObject instanceof Response) {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        if ($responseObject->validate("add_files") &&
-            $responseObject->validate("search_files")) {
-
-            $fileSetList[$fileSet->getFileSetID()] = $fileSet->getFileSetName();
-        }
-    }
+    $fileSetList[$fileSet->getFileSetID()] = $fileSet->getFileSetName();
 }
 
 /** @noinspection PhpParamsInspection */
-$folders = [0 => '* Any folder'] + iterator_to_array($folders);
+$folders = [0 => '* Any folder'] + (array) $folders;
 
 echo $userInterface->tabs([
     ['sources', t('Sources'), true],
@@ -81,6 +72,7 @@ echo $userInterface->tabs([
     ['results', t('Results')]
 ]);
 
+$hideFolders = isset($hideFolders) ? $hideFolders : false;
 ?>
 
 <div class="tab-content">
@@ -124,6 +116,17 @@ echo $userInterface->tabs([
 
             <br/>
         <?php } ?>
+
+        <div class="form-group">
+            <?= $form->label('showFolders', t('Show Folders')) ?>
+
+            <div class="form-check">
+                <label>
+                    <?= $form->checkbox('showFolders', '1', !$hideFolders) ?>
+                    <?= t('Show Folders') ?>
+                </label>
+            </div>
+        </div>
 
         <div class="form-group">
             <?php echo $form->label('tags', t('Filter By Tag (optional)')) ?>
@@ -181,12 +184,15 @@ echo $userInterface->tabs([
         <div class="form-group">
             <?php echo $form->label('orderBy', t('Sort By')) ?>
 
-            <div class="form-inline">
-                <?php echo $form->select('orderBy', $orderByOptions, isset($orderBy) ? $orderBy : null); ?>
-
-                <div class="form-check form-check-inline">
-                    <?php echo $form->checkbox('displayOrderDesc', 1, !empty($displayOrderDesc)) ?>
-                    <?php echo $form->label("displayOrderDesc", t('Descending'), ["class" => "form-check-label"]); ?>
+            <div class="row row-cols-lg-auto align-items-center">
+                <div class="col-auto">
+                    <?php echo $form->select('orderBy', $orderByOptions, isset($orderBy) ? $orderBy : null); ?>
+                </div>
+                <div class="col-auto">
+                    <div class="form-check form-check-inline">
+                        <?php echo $form->checkbox('displayOrderDesc', 1, !empty($displayOrderDesc)) ?>
+                        <?php echo $form->label("displayOrderDesc", t('Descending'), ["class" => "form-check-label"]); ?>
+                    </div>
                 </div>
             </div>
         </div>

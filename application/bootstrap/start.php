@@ -4,7 +4,7 @@ use Concrete\Core\Application\Application;
 
 /*
  * ----------------------------------------------------------------------------
- * Instantiate concrete5
+ * Instantiate Concrete
  * ----------------------------------------------------------------------------
  */
 $app = new Application();

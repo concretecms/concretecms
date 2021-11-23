@@ -36,7 +36,7 @@ if (!$b->overrideAreaPermissions()) {
 <?=Loader::element('permission/help');?>
 
 <?php $cat = PermissionKeyCategory::getByHandle('block');?>
-<form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>">
+<form method="post" id="ccm-permission-list-form" action="<?= h($cat->getTaskURL('save_permission_assignments', ['cID' => $c->getCollectionID(), 'arHandle' => $b->getAreaHandle(), 'cvID' => $c->getVersionID(), 'bID' => $b->getBlockID()])) ?>">
 
 <table class="ccm-permission-grid table table-striped">
 
@@ -78,8 +78,8 @@ foreach ($permissions as $pk) {
 <?php if ($enablePermissions) {
     ?>
 <div class="dialog-buttons">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary float-left"><?=t('Cancel')?></a>
-	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary float-start"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-end"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 </div>
 <?php 
 } ?>
@@ -118,7 +118,7 @@ $(function() {
 
 ccm_revertToAreaPermissions = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("revert_to_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() {
+	$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('revert_to_area_permissions', ['bID' => $b->getBlockID(), 'cvID' => $c->getVersionID(), 'arHandle' => $b->getAreaHandle(), 'cID' => $c->getCollectionID()])) ?>, function() {
         ConcreteToolbar.disableDirectExit();
 		ccm_refreshBlockPermissions();
 	});
@@ -126,7 +126,7 @@ ccm_revertToAreaPermissions = function() {
 
 ccm_setBlockPermissionsToOverride = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("override_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() {
+	$.get(<?= json_encode($pk->getPermissionAssignmentObject()->getPermissionKeyTaskURL('override_area_permissions', ['bID' => $b->getBlockID(), 'cvID' => $c->getVersionID(), 'arHandle' => $b->getAreaHandle(), 'cID' => $c->getCollectionID()])) ?>, function() {
         ConcreteToolbar.disableDirectExit();
 		ccm_refreshBlockPermissions();
 	});

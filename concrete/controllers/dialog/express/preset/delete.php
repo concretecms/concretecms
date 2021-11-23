@@ -15,14 +15,11 @@ class Delete extends PresetDelete
         $entity = null;
         $em = $this->app->make(EntityManager::class);
         if (is_object($em)) {
-            $entityID = $this->request->query->get('objectID'); 
-            if (empty($entityID) && !empty($this->request->request->get('objectID'))) {
-                $entityID = $this->request->request->get('objectID');
+            $entityID = $this->request->query->get('exEntityID');
+            if (empty($entityID) && !empty($this->request->request->get('exEntityID'))) {
+                $entityID = $this->request->request->get('exEntityID');
             }
             $entity = $em->getRepository('Concrete\Core\Entity\Express\Entity')->findOneById($entityID);
-            if (is_object($entity)) {
-                $this->objectID = $entityID;
-            }
         }
 
         return $entity;
@@ -38,6 +35,15 @@ class Delete extends PresetDelete
         }
 
         return false;
+    }
+
+    public function getDeleteSearchPresetAction()
+    {
+        $entityID = $this->request->query->get('exEntityID');
+        $action = parent::getDeleteSearchPresetAction();
+        $url = \League\Url\Url::createFromUrl($action);
+        $url->getQuery()->modify(['exEntityID' => $entityID]);
+        return (string) $url;
     }
 
     public function getSavedSearchEntity()

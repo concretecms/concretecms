@@ -11,7 +11,6 @@ use Concrete\TestHelpers\Database\EntityManager\Provider\Fixtures\PackageControl
 use Concrete\TestHelpers\Database\Traits\DirectoryHelpers;
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Tests\TestCase;
-use function var_dump_safe;
 
 /**
  * PackageProviderFactoryTest.
@@ -29,9 +28,14 @@ class DefaultPackageProviderTest extends TestCase
     protected $app;
 
     /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    /**
      * Set up.
      */
-    public function setUp()
+    public function setUp():void
     {
         parent::setUp();
         $this->app = Application::getFacadeApplication();
@@ -48,11 +52,11 @@ class DefaultPackageProviderTest extends TestCase
         $package = new PackageControllerWithgetPackageEntityPath($this->app);
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
-        $this->assertInternalType('array', $drivers);
+        self::assertIsArray($drivers);
         $c5Driver = $drivers[0];
-        $this->assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
-        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
-        $this->assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
+        self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
+        self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
+        self::assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
     }
 
     /**
@@ -65,8 +69,8 @@ class DefaultPackageProviderTest extends TestCase
         $package = new PackageControllerDefault($this->app);
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
-        $this->assertInternalType('array', $drivers);
-        $this->assertEquals(0, count($drivers));
+        self::assertIsArray($drivers);
+        self::assertCount(0, $drivers);
     }
 
     /**
@@ -77,15 +81,14 @@ class DefaultPackageProviderTest extends TestCase
     public function testGetDriversWithPackageWithLegacyNamespaceAndLegacyAnnotationReader()
     {
         $this->createPackageFolderOfTestMetadataDriverLegacy();
-
         $package = new PackageControllerLegacy($this->app);
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
-        $this->assertInternalType('array', $drivers);
+        self::assertIsArray($drivers);
         $c5Driver = $drivers[0];
-        $this->assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
-        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
-        $this->assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
+        self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
+        self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
+        self::assertEquals($package->getNamespace() . '\Src', $c5Driver->getNamespace());
 
         $this->removePackageFolderOfTestMetadataDriverLegacy();
     }
@@ -102,11 +105,11 @@ class DefaultPackageProviderTest extends TestCase
         $package = new PackageControllerDefault($this->app);
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
-        $this->assertInternalType('array', $drivers);
+        self::assertIsArray($drivers);
         $c5Driver = $drivers[0];
-        $this->assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
-        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
-        $this->assertEquals($package->getNamespace() . '\Entity', $c5Driver->getNamespace());
+        self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver);
+        self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $c5Driver->getDriver());
+        self::assertEquals($package->getNamespace() . '\Entity', $c5Driver->getNamespace());
 
         $this->removePackageFolderOfTestMetadataDriverDefault();
     }
@@ -123,16 +126,16 @@ class DefaultPackageProviderTest extends TestCase
         $package = new PackageControllerDefaultWithAdditionalNamespaces($this->app);
         $dpp = new DefaultPackageProvider($this->app, $package);
         $drivers = $dpp->getDrivers();
-        $this->assertInternalType('array', $drivers);
-        $this->assertEquals(3, count($drivers), 'Not all MappingDrivers have bin loaded');
+        self::assertIsArray($drivers);
+        self::assertCount(3, $drivers, 'Not all MappingDrivers have bin loaded');
         $c5Driver1 = $drivers[1];
         $driver1 = $c5Driver1->getDriver();
-        $this->assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver1);
-        $this->assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $driver1);
-        $this->assertEquals('PortlandLabs\Concrete5\MigrationTool', $c5Driver1->getNamespace());
+        self::assertInstanceOf('Concrete\Core\Database\EntityManager\Driver\Driver', $c5Driver1);
+        self::assertInstanceOf('Doctrine\ORM\Mapping\Driver\AnnotationDriver', $driver1);
+        self::assertEquals('PortlandLabs\Concrete5\MigrationTool', $c5Driver1->getNamespace());
 
         $pathsOfDriver1 = $driver1->getPaths();
-        $this->assertEquals('src/PortlandLabs/Concrete5/MigrationTool', $this->folderPathCleaner($pathsOfDriver1[0], 4));
+        self::assertEquals('src/PortlandLabs/Concrete5/MigrationTool', $this->folderPathCleaner($pathsOfDriver1[0], 4));
 
         $this->removePackageFolderOfTestMetadataDriverAdditionalNamespace();
     }
@@ -142,7 +145,7 @@ class DefaultPackageProviderTest extends TestCase
      *
      * @param \Exception $e
      */
-    protected function onNotSuccessfulTest($e)
+    protected function onNotSuccessfulTest(\Throwable $e):void
     {
         $this->removePackageFolderOfTestMetadataDriverDefault();
         $this->removePackageFolderOfTestMetadataDriverDefault();
@@ -151,7 +154,7 @@ class DefaultPackageProviderTest extends TestCase
 
     private function createPackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
-        $base = DIR_BASE . '/' . DIRNAME_PACKAGES . '/test_metadatadriver_additional_namespace';
+        $base = DIR_BASE . '/' . DIRNAME_PACKAGES . '/test_metadatadriver_additional_namespace/';
         $this->filesystem->makeDirectory($base, 0755, false, true);
         $this->filesystem->makeDirectory($base . DIRNAME_CLASSES, 0755, false, true);
         $this->filesystem->makeDirectory($base . DIRNAME_CLASSES . '/Concrete', 0755, false, true);
@@ -160,9 +163,13 @@ class DefaultPackageProviderTest extends TestCase
 
     private function removePackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
-        $this->filesystem->deleteDirectory(DIR_BASE .
+        $packagePath = DIR_BASE . '/' .
+            DIRNAME_PACKAGES .'/test_metadatadriver_additional_namespace';
+        if ($this->filesystem->isDirectory($packagePath)) {
+            $this->filesystem->deleteDirectory(DIR_BASE . '/' .
                 DIRNAME_PACKAGES .
                 '/test_metadatadriver_additional_namespace');
+        }
     }
 
     private function createPackageFolderOfTestMetadatadriverDefault()

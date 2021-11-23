@@ -61,7 +61,7 @@ class ViewTest extends TestCase
     public function testLegacyToolsUrlDoesNotMatchDashboardTheme()
     {
         $view = new DialogView('/dashboard/get_image_data');
-        $view->setViewRootDirectoryName(DIRNAME_TOOLS);
+        $view->setViewRootDirectoryName('tools');
         $view->setupRender();
         $template = $view->getViewTemplate();
         $file = $view->getInnerContentFile();

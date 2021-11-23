@@ -11,7 +11,6 @@ use Concrete\Core\Summary\Data\Extractor\Driver\DriverInterface;
 use Concrete\Core\Summary\Data\Extractor\Driver\DriverManager;
 use Concrete\Core\Summary\Data\Extractor\Driver\RegisteredDriver;
 use Concrete\Tests\TestCase;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 
 class MockPageDriver implements DriverInterface
@@ -75,8 +74,6 @@ class MockCustomDriver implements DriverInterface
 
 class DriverManagerTest extends TestCase
 {
-    
-    use MockeryPHPUnitIntegration;
     
     public function testRegister()
     {

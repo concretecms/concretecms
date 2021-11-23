@@ -1,6 +1,5 @@
 <?php
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Controller\Element\Navigation\DashboardMobileMenu;
 use Concrete\Controller\Panel\Dashboard as DashboardPanel;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -35,7 +34,7 @@ $show_tooltips = (bool) $config->get('concrete.accessibility.toolbar_tooltips');
 $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
 
 ?><!DOCTYPE html>
-<html<?= $hideDashboardPanel ? '' : ' class="ccm-panel-open ccm-panel-right"'; ?>>
+<html<?= $hideDashboardPanel ? '' : ' class="ccm-panel-open ccm-panel-right"'; ?> lang="<?php echo Localization::activeLanguage() ?>">
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath(); ?>/main.css" />
     <?php View::element('header_required', ['disableTrackingCode' => true, 'pageTitle' => isset($pageTitle) ? $pageTitle : null]); ?>
@@ -46,36 +45,20 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
     <div id="ccm-dashboard-page" class="<?php if ($view->section('/account')) {
         ?>ccm-dashboard-my-account<?php
     } ?> ccm-ui">
-
-        <?php
-        /*
-        ?><div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard d-none d-sm-block d-md-none" style="height: calc(100vh - 48px);">
-            <div class="ccm-mobile-menu-main">
-                <ul class="ccm-mobile-menu-entries">
-                    <li>
-                        <?php
-                        //$dashboardMenu = $app->make(DashboardMobileMenu::class, [$c]);
-                        //$dashboardMenu->render();
-                        ?>
-                    </li>
-                    <li>
-                        <i class="fa fa-sign-out mobile-leading-icon"></i><a href="<?= URL::to('/login', 'do_logout', $valt->generate('do_logout')); ?>"><?= t('Sign Out'); ?></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <?php */ ?>
         <?=View::element('icons'); ?>
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : ''; ?> <?= $large_font ? 'large-font' : ''; ?>">
             <ul>
-                <li class="ccm-logo float-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC(); ?></span></li>
-                <li class="float-left ccm-toolbar-button-with-text">
+                <li class="ccm-logo float-start"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC(); ?></span></li>
+                <li class="float-start ccm-toolbar-button-with-text">
                     <a href="<?=$backLink; ?>">
                         <svg><use xlink:href="#icon-arrow-left" /></svg>
                         <span><?=t('To My Website'); ?></span>
                     </a>
                 </li>
                 <?php
+                $mobileMenu = Element::get('dashboard/navigation/mobile');
+                $mobileMenu->render();
+                
                 $ihm = $app->make('helper/concrete/ui/menu');
                 $cih = $app->make('helper/concrete/ui');
                 $items = $ihm->getPageHeaderMenuItems('left');
@@ -83,17 +66,13 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     $cnt = $ih->getController();
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets(); ?>
-                        <li class="float-left"><?= $cnt->getMenuItemLinkElement(); ?></li>
+                        <li class="float-start"><?= $cnt->getMenuItemLinkElement(); ?></li>
                         <?php
                     }
                 }
-                if ($cih->showWhiteLabelMessage()) {
-                    ?>
-                    <li class="float-left visible-xs visible-lg" id="ccm-white-label-message"><?= t('Powered by <a href="%s">concrete5</a>.', $config->get('concrete.urls.concrete5')); ?></li>
-                    <?php
-                }
+		    
                 ?>
-                <li class="float-right d-none d-sm-none d-md-block">
+                <li class="float-end d-none d-sm-none d-md-block">
                     <?php
                     $dashboardPanelClasses = [];
                     if ($show_tooltips) {
@@ -104,7 +83,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     }
                     $dashboardPanelClass = implode(' ', $dashboardPanelClasses);
                     ?>
-                    <a class="<?=$dashboardPanelClass; ?>" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="<?= URL::to('/dashboard'); ?>" title="<?= t('Dashboard – Change Site-wide Settings'); ?>"
+                    <a class="<?=$dashboardPanelClass; ?>" data-bs-placement="bottom" href="<?= URL::to('/dashboard'); ?>" title="<?= t('Dashboard – Change Site-wide Settings'); ?>"
                         data-launch-panel="dashboard"
                         data-panel-url="<?=URL::to('/system/panels/dashboard'); ?>"
                     >
@@ -112,30 +91,13 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings"><?= tc('toolbar', 'Dashboard'); ?></span>
                     </a>
                 </li>
-                <li class="float-right d-none d-sm-none d-md-block">
+                <li class="float-end d-none d-sm-none d-md-block">
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php
-                    } ?>  data-toggle="tooltip" data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap'); ?>" title="<?= t('Add Pages and Navigate Your Site'); ?>" data-launch-panel="sitemap">
+                    } ?>  data-bs-toggle="tooltip" data-bs-placement="bottom" href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap'); ?>" title="<?= t('Add Pages and Navigate Your Site'); ?>" data-launch-panel="sitemap">
                         <svg><use xlink:href="#icon-sitemap" /></svg>
                         <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Pages'); ?></span>
                     </a>
-                </li>
-                <li data-guide-toolbar-action="help" class="float-right hidden-xs">
-                    <a <?php if ($show_tooltips) {
-                        ?>class="launch-tooltip"<?php
-                    } ?> data-toggle="tooltip"
-                       data-placement="bottom" data-delay='{ "show": 500, "hide": 0 }' href="#"
-                       data-panel-url="<?= URL::to('/ccm/system/panels/help'); ?>"
-                       title="<?= t('View help about the CMS.'); ?>" data-launch-panel="help">
-                        <svg><use xlink:href="#icon-help" /></svg><span
-                                class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help'); ?></span>
-                    </a>
-                </li>
-                <li class="ccm-toolbar-search float-right d-none d-sm-none d-md-block">
-                    <?php
-                    $menu = Element::get('navigation/intelligent_search');
-                    $menu->render();
-                    ?>
                 </li>
                 <?php
                 $items = $ihm->getPageHeaderMenuItems('right');
@@ -143,18 +105,35 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
                     $cnt = $ih->getController();
                     if ($cnt->displayItem()) {
                         $cnt->registerViewAssets(); ?>
-                        <li class="float-right"><?= $cnt->getMenuItemLinkElement(); ?></li>
+                        <li class="float-end"><?= $cnt->getMenuItemLinkElement(); ?></li>
                         <?php
                     }
                 }
                 ?>
+                <li data-guide-toolbar-action="help" class="float-end d-none d-sm-block">
+                    <a <?php if ($show_tooltips) {
+                        ?>class="launch-tooltip"<?php
+                    } ?> data-bs-toggle="tooltip"
+                       data-bs-placement="bottom" href="#"
+                       data-panel-url="<?= URL::to('/ccm/system/panels/help'); ?>"
+                       title="<?= t('View help about the CMS.'); ?>" data-launch-panel="help">
+                        <svg><use xlink:href="#icon-help" /></svg><span
+                                class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help'); ?></span>
+                    </a>
+                </li>
+                <li class="ccm-toolbar-search float-end d-none d-sm-none d-lg-block">
+                    <?php
+                    $menu = Element::get('navigation/intelligent_search');
+                    $menu->render();
+                    ?>
+                </li>
             </ul>
         </div>
         <?php
         $dh = $app->make('helper/concrete/dashboard');
         if (!$hideDashboardPanel) {
             ?>
-            <div id="ccm-panel-dashboard" class="hidden-xs hidden-sm ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
+            <div id="ccm-panel-dashboard" class="d-none d-md-block ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
                 <div class="ccm-panel-content-wrapper ccm-ui">
                     <div class="ccm-panel-content ccm-panel-content-visible">
                       <?php

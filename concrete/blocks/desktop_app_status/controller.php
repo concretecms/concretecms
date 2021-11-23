@@ -17,12 +17,12 @@ class Controller extends BlockController
 
     public function getBlockTypeDescription()
     {
-        return t("Displays alerts about your concrete5 site and package updates.");
+        return t("Displays alerts about your Concrete site and package updates.");
     }
 
     public function getBlockTypeName()
     {
-        return t("concrete5 Status Messages");
+        return t("Concrete Status Messages");
     }
 
     public function view()

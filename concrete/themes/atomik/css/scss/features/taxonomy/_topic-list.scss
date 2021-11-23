@@ -1,0 +1,20 @@
+div.theme-atomik {
+  .ccm-block-topic-list {
+
+    @include make-display-headings();
+
+    ul.ccm-block-topic-list-page-topics,
+    ul.ccm-block-topic-list-list {
+      @extend .list-group;
+
+      li {
+        @extend .list-group-item;
+
+        a {
+          display: block;
+        }
+      }
+    }
+  }
+
+}

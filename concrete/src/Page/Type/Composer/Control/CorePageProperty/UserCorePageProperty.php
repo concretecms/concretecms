@@ -12,7 +12,7 @@ class UserCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('user');
-        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('file-text'));
+        $this->setPageTypeComposerControlIconFormatter(new FontAwesomeIconFormatter('user'));
     }
 
     public function getPageTypeComposerControlName()

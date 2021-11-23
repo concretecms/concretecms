@@ -21,6 +21,7 @@ class Delete extends BackendInterfacePageController
 
     public function view()
     {
+        $this->set('sitemap', false);
         $this->set('numChildren', $this->page->getNumChildren());
     }
 

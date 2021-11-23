@@ -60,7 +60,9 @@ class SearchProvider extends AbstractSearchProvider
 
     public function getItemList()
     {
-        return new UserList();
+        $list = new UserList();
+        $list->setupAutomaticSorting();
+        return $list;
     }
 
     public function getDefaultColumnSet()

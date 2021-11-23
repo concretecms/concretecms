@@ -1,9 +1,9 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 <?php $entrySelector = \Concrete\Core\Support\Facade\Application::getFacadeApplication()->make('form/express/entry_selector'); ?>
-<div class="form-group">
+<div class="mb-3">
     <?php if ($view->supportsLabel()) {
     ?>
-        <label class="control-label" for="<?=$view->getControlID(); ?>"><?=$label; ?></label>
+        <label class="form-label" for="<?=$view->getControlID(); ?>"><?=$label; ?></label>
     <?php
 } ?>
     <?php if ($view->isRequired()) { ?>

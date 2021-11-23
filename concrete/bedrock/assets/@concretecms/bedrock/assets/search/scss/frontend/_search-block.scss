@@ -1,0 +1,22 @@
+/* stylelint-disable selector-class-pattern */
+#searchResults .pageLink {
+  color: #999;
+  display: block;
+  font-size: 12px;
+  margin: 2px 0 8px;
+  padding: 0;
+}
+
+#searchResults .searchResult {
+  margin-bottom: 16px;
+  margin-top: 24px;
+}
+
+#searchResults .searchResult h3 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+#searchResults .searchResult p {
+  margin-top: 4px;
+}

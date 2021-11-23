@@ -1,0 +1,23 @@
+// Custom home page page list block for recent blog entry
+div.recent-blog-entry {
+  div.ccm-block-page-list-title {
+    margin-top: 0px;
+    margin-bottom: (@line-height-computed / 2);
+    .make-heading(@h2-type-font-family, @h2-type-font-size, @h2-type-font-weight, @h4-type-color);
+
+    a {
+      color: @h4-type-color;
+      &:hover {
+        color: @link-color;
+        text-decoration: none;
+      }
+    }
+  }
+
+  div.ccm-block-page-list-page-entry {
+    border-bottom: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
+
+}

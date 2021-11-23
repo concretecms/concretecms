@@ -35,6 +35,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $this->edit();
         $this->set('title', t('Topics'));
+        $this->set('titleFormat', 'h5');
     }
     
     public function getRequiredFeatures(): array
@@ -142,8 +143,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['cParentID'] = 0;
         $args['title'] = (string) $blockNode->data->title;
         $args['mode'] = (string) $blockNode->data->mode;
+        $args['titleFormat'] = (string) $blockNode->data->titleFormat;
         if (!$args['mode']) {
             $args['mode'] = 'S';
+        }
+        if (!$args['titleFormat']) {
+            $args['titleFormat'] = 'h5';
         }
         $args['topicAttributeKeyHandle'] = (string) $blockNode->data->topicAttributeKeyHandle;
         if ($page) {

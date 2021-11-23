@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet\Column;
 
+use Concrete\Core\Database\Query\AndWhereNotExistsTrait;
 use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Search\Column\ColumnInterface;
 use Concrete\Core\Search\Column\PagerColumnInterface;
@@ -8,6 +9,8 @@ use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 
 class SitemapDisplayOrderColumn extends Column implements PagerColumnInterface
 {
+
+    use AndWhereNotExistsTrait;
 
     public function getColumnKey()
     {
@@ -31,7 +34,7 @@ class SitemapDisplayOrderColumn extends Column implements PagerColumnInterface
         $where = sprintf('(p.cDisplayOrder, p.cID) %s (:sortOrder, :sortID)', $sort);
         $query->setParameter('sortOrder', $mixed->getCollectionDisplayOrder());
         $query->setParameter('sortID', $mixed->getCollectionID());
-        $query->andWhere($where);
+        $this->andWhereNotExists($query, $where);
     }
 
 }

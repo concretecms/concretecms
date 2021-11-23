@@ -11,8 +11,7 @@ use Concrete\Core\User\User as LegacyUser;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 /**
  * A service for tracking and acting upon login attempts
@@ -40,7 +39,7 @@ class LoginAttemptService
     /**
      * The event dispatcher we use to send out events
      *
-     * @var EventDispatcherInterface
+     * @var EventDispatcher
      */
     protected $director;
 
@@ -58,7 +57,7 @@ class LoginAttemptService
      */
     protected $knownUsers = [];
 
-    public function __construct(EntityManagerInterface $entityManager, Repository $config, EventDispatcherInterface $director)
+    public function __construct(EntityManagerInterface $entityManager, Repository $config, EventDispatcher $director)
     {
         $this->entityManager = $entityManager;
         $this->config = $config;

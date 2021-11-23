@@ -4,6 +4,8 @@ namespace Concrete\Core\Board\Designer\Command;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Board\InstanceSlotRule;
+use Concrete\Core\Logging\Channels;
+use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Id\UuidGenerator;
@@ -31,22 +33,28 @@ class ScheduleCustomElementCommandHandler
      */
     protected $uuidGenerator;
 
-    public function __construct(UuidGenerator $uuidGenerator, User $user, Application $app, EntityManager $entityManager)
+    /**
+     * @var LoggerFactory
+     */
+    protected $loggerFactory;
+
+    public function __construct(UuidGenerator $uuidGenerator, LoggerFactory $loggerFactory, User $user, Application $app, EntityManager $entityManager)
     {
         $this->uuidGenerator = $uuidGenerator;
         $this->app = $app;
         $this->user = $user;
         $this->entityManager = $entityManager;
+        $this->loggerFactory = $loggerFactory;
     }
 
-    public function handle(ScheduleCustomElementCommand $command)
+    public function __invoke(ScheduleCustomElementCommand $command)
     {
         $element = $command->getElement();
         $batchIdentifier = $this->uuidGenerator->generate($this->entityManager, $element);
         foreach($command->getInstances() as $instance) {
-            $startDate = new \DateTime($command->getStartDate(), new \DateTimeZone($command->getTimezone()));
-            if ($command->getEndDate()) {
-                $endDate = new \DateTime($command->getEndDate(), new \DateTimeZone($command->getTimezone()));
+            $startDate = new \DateTime($command->getStartDateTime(), new \DateTimeZone($command->getTimezone()));
+            if ($command->getEndDateTime()) {
+                $endDate = new \DateTime($command->getEndDateTime(), new \DateTimeZone($command->getTimezone()));
             }
             $block = $element->createBlock();
             $boardCommand = new AddDesignerSlotToBoardCommand();
@@ -68,8 +76,18 @@ class ScheduleCustomElementCommandHandler
                 $boardCommand->setEndDate($endDate->getTimestamp());
             }
             $this->app->executeCommand($boardCommand);
+
+            $logger = $this->loggerFactory->createLogger(Channels::CHANNEL_BOARD);
+            $logger->info(t('Element {elementName} scheduled for {slot} in instance {instanceID} successfully with start date {startDate} and lock type {lockType}'), [
+                'slot' => $command->getSlot(),
+                'instanceID' => $instance->getBoardInstanceID(),
+                'startDate' => $command->getStartDateTime(),
+                'elementName' => $element->getElementName(),
+                'lockType' => $command->getLockType()
+            ]);
         }
         $this->entityManager->flush();
+
     }
 
     

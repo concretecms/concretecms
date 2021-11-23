@@ -87,7 +87,7 @@ class PasswordValidatorServiceProvider extends Provider
     {
         $maximumLength = $this->config->get('concrete.user.password.maximum');
 
-        return $maximumLength ? $this->app->make(MaximumLengthValidator::class, [$maximumLength]) : null;
+        return $maximumLength ? $this->app->make(MaximumLengthValidator::class, ['maximum_length' => $maximumLength]) : null;
     }
 
     /**
@@ -98,7 +98,7 @@ class PasswordValidatorServiceProvider extends Provider
     protected function getMinimumRequirement()
     {
         $minimumLength = $this->config->get('concrete.user.password.minimum', 8);
-        return $minimumLength ? $this->app->make(MinimumLengthValidator::class, [$minimumLength]) : null;
+        return $minimumLength ? $this->app->make(MinimumLengthValidator::class, ['minimum_length' => $minimumLength]) : null;
     }
 
     /**
@@ -128,8 +128,10 @@ class PasswordValidatorServiceProvider extends Provider
         $minimum->setRequirementString($minimum::E_TOO_SHORT, $requirementHandler);
         $minimum->setErrorString($minimum::E_TOO_SHORT, $errorHandler);
 
-        $maximum->setRequirementString($maximum::E_TOO_LONG, $requirementHandler);
-        $maximum->setErrorString($maximum::E_TOO_LONG, $errorHandler);
+        if (is_object($maximum)) {
+            $maximum->setRequirementString($maximum::E_TOO_LONG, $requirementHandler);
+            $maximum->setErrorString($maximum::E_TOO_LONG, $errorHandler);
+        }
     }
 
     /**
@@ -175,7 +177,7 @@ class PasswordValidatorServiceProvider extends Provider
      */
     protected function regexValidator($regex, $requirement)
     {
-        $validator = $this->app->make(RegexValidator::class, [$regex]);
+        $validator = $this->app->make(RegexValidator::class, ['pattern' => $regex]);
         $validator->setRequirementString(RegexValidator::E_DOES_NOT_MATCH, $requirement);
         $validator->setErrorString(RegexValidator::E_DOES_NOT_MATCH, $requirement);
 
@@ -207,7 +209,7 @@ class PasswordValidatorServiceProvider extends Provider
     protected function wrappedRegexValidator($regex, $requirementString)
     {
         $regexValidator = $this->regexValidator($regex, $requirementString);
-        $validator = $this->app->make(ClosureValidator::class, [
+        $validator = $this->app->make(ClosureValidator::class, ['validator_closure' =>
             function (ClosureValidator $validator, $string, ArrayAccess $error = null) use ($regexValidator) {
                 try {
                     $regexValidator->isValid($string, $error);

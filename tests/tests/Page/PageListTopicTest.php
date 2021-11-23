@@ -24,7 +24,7 @@ class PageListTopicTest extends PageTestCase
             'PermissionAccessEntities',
             'PermissionAccessEntityGroups',
             'Groups',
-            'TreeNodePermissionAssignments',
+            'TreeNodePermissionAssignments'
         ]);
         $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Type',

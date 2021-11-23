@@ -55,6 +55,7 @@ class ArrangeBlocks extends Page
         }
 
         $movingBlockID = (int) $post->get('block');
+
         if ($movingBlockID === 0) {
             $e->add(t('Unable to find the block to be moved.'));
         }
@@ -68,11 +69,9 @@ class ArrangeBlocks extends Page
         if (!in_array($movingBlockID, $sortedBlockIDs, true)) {
             $e->add(t('Unable to find the block to be moved.'));
         }
-
         if ($e->has()) {
             return;
         }
-
         if ($this->app->make('config')->get('concrete.permissions.model') == 'advanced') {
             // first, we check to see if we have permissions to edit the area contents for the source area.
             $ap = new Checker($sourceArea);
@@ -93,6 +92,10 @@ class ArrangeBlocks extends Page
                     $block = Block::getByID($movingBlockID, $sourceStack, STACKS_AREA_NAME);
                 } else {
                     $block = Block::getByID($movingBlockID, $nvc, $sourceAreaHandle);
+                }
+                // we need to check permissions of the original block in case of a scrapbook proxy
+                if ($block && $block->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+                    $block = Block::getByID($block->getController()->getOriginalBlockID());
                 }
                 if (!$block) {
                     $e->add(t('Unable to find the block to be moved.'));

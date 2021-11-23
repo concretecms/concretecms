@@ -9,7 +9,7 @@ use Concrete\Core\Page\Page;
 class UpdateForkedAliasDefaultsBlockCommandHandler
 {
 
-    public function handle(UpdateForkedAliasDefaultsBlockCommand $command)
+    public function __invoke(UpdateForkedAliasDefaultsBlockCommand $command)
     {
         $page = Page::getByID($command->getPageID(), $command->getCollectionVersionID());
         if ($page && !$page->isError()) {

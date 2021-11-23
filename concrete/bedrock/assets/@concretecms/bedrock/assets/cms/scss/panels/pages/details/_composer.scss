@@ -1,0 +1,12 @@
+#ccm-panel-detail-page-composer {
+  fieldset {
+    border-bottom: 1px solid $gray-200;
+    padding-bottom: 35px;
+  }
+
+  fieldset:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+}

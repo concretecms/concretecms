@@ -3,8 +3,10 @@ namespace Concrete\Core\Entity\Board;
 
 use Concrete\Core\Board\Template\Slot\Driver\DriverInterface;
 use Concrete\Core\Board\Template\Slot\Driver\Manager;
+use Concrete\Core\Design\Tag\ProvidesTagsInterface;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Support\Facade\Facade;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use HtmlObject\Image;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     name="BoardSlotTemplates"
  * )
  */
-class SlotTemplate implements \JsonSerializable
+class SlotTemplate implements \JsonSerializable, ProvidesTagsInterface
 {
     use PackageTrait;
 
@@ -34,17 +36,23 @@ class SlotTemplate implements \JsonSerializable
     /**
      * @ORM\Column(type="string")
      */
-    protected $formFactor = '';
-
-    /**
-     * @ORM\Column(type="string")
-     */
     protected $name = '';
 
     /**
      * @ORM\Column(type="string")
      */
     protected $handle = '';
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Concrete\Core\Entity\Design\DesignTag")
+     * @ORM\JoinTable(name="BoardSlotTemplateTags")
+     */
+    protected $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,21 +98,6 @@ class SlotTemplate implements \JsonSerializable
     {
         return tc('BoardSlotTemplateName', $this->getName());
     }
-    
-    public function getFormFactor(): string
-    {
-        return $this->formFactor;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setFormFactor(string $formFactor): self
-    {
-        $this->formFactor = $formFactor;
-
-        return $this;
-    }
 
     /**
      * @return $this
@@ -114,6 +107,14 @@ class SlotTemplate implements \JsonSerializable
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 
     /**
@@ -130,6 +131,11 @@ class SlotTemplate implements \JsonSerializable
         }
     }
 
+    public function getDesignTags(): array
+    {
+        return $this->getTags()->toArray();
+    }
+
     public function getDriver() : DriverInterface
     {
         $app = Facade::getFacadeApplication();
@@ -141,7 +147,6 @@ class SlotTemplate implements \JsonSerializable
     {
         $template = $node->addChild('template');
         $template->addAttribute('handle', $this->getHandle());
-        $template->addAttribute('form-factor', $this->getFormFactor());
         $template->addAttribute('name', h($this->getName()));
         $template->addAttribute('icon', h($this->getIcon()));
         $template->addAttribute('package', $this->getPackageHandle());
@@ -155,7 +160,6 @@ class SlotTemplate implements \JsonSerializable
             'handle' => $this->getHandle(),
             'name' => $this->getName(),
             'contentSlots' => $this->getDriver()->getTotalContentSlots(),
-            'formFactor' => $this->getFormFactor(),
         ];
     }
 

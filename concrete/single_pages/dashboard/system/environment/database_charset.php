@@ -14,8 +14,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 if (isset($set_connection_collation_warnings)) {
     ?>
-    <div class="alert alert-warning alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div class="alert alert-warning alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <?= t('The character set and the collation of the connection and have been updated, but the following warnings occurred while updating the database tables'); ?>
         <ul>
         <?php
@@ -47,7 +47,7 @@ if (isset($set_connection_collation_warnings)) {
             <?= $form->select('collation', $charsetsAndCollations, $collation, ['required' => 'required']); ?>
         </div>
     </div>
-    
+
     <div class="alert alert-danger">
         <?= t('Warning: changing the character set may result in data loss!'); ?>
     </div>
@@ -55,10 +55,10 @@ if (isset($set_connection_collation_warnings)) {
     <div class="alert alert-info">
         <?= t('Changing the character set may require a lot of time. If the operation times out, you can re-apply the setting more times.'); ?>
     </div>
-    
+
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="float-right btn btn-primary" type="submit" ><?= t('Save'); ?></button>
+            <button class="float-end btn btn-primary" type="submit" ><?= t('Save'); ?></button>
         </div>
     </div>
 
@@ -68,9 +68,7 @@ if (isset($set_connection_collation_warnings)) {
 $(document).ready(function() {
     var submitted = false;
     $('#collation')
-        .selectize({
-    	   allowEmptyOption: false
-        })
+        .selectpicker()
         .closest('form')
             .on('submit', function(e) {
                 if (submitted) {

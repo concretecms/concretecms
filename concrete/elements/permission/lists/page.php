@@ -6,7 +6,13 @@
     <?php
     $permissions = PermissionKey::getList('page');
     foreach ($permissions as $pk) {
-        $pk->setPermissionObject($page);
+        if (isset($pages)) {
+            $page = $pages[0];
+            $pk->setPermissionObject($page);
+            $pk->setMultiplePageArray($pages);
+        } else {
+            $pk->setPermissionObject($page);
+        }
         ?>
         <tr>
             <td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><?php if ($editPermissions) {
@@ -45,7 +51,7 @@
             }
             jQuery.fn.dialog.open({
                 title: $(link).attr('dialog-title'),
-                href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?cID=<?=$page->getCollectionID()?>&ctask=set_advanced_permissions&duplicate=' + dupe + '&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/permissions/collection?cID=<?= $page->getCollectionID() ?>&duplicate=' + dupe + '&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
                 modal: true,
                 width: 500,
                 height: 380

@@ -1,0 +1,97 @@
+div.theme-atomik {
+  .ccm-block-testimonial-hero {
+
+    padding-bottom: 5rem;
+    padding-top: 7rem;
+    position: relative;
+
+    .ccm-block-testimonial-hero-cover {
+      background-color: rgba($dark, 0.5);
+      height: 100%;
+      z-index: 2;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .ccm-block-testimonial-hero-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background-size: cover;
+    }
+
+    .ccm-block-testimonial-hero-text {
+      position: relative;
+      z-index: 3;
+
+      .ccm-block-testimonial-hero-quote {
+        position: relative;
+        h4 {
+          text-align: center;
+          color: $white;
+          margin: 0;
+        }
+
+        .quote-start,
+        .quote-end {
+          position: absolute;
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          height: 30px;
+          width: 35px;
+        }
+
+        .quote-start {
+          top: -50px;
+          left: 0;
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABACAYAAAC5vjEqAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAASKADAAQAAAABAAAAQAAAAACgQQ0uAAAEUUlEQVR4Ae1aTYhOYRSeb9BIYyz8NEqMYiHURMnGYoqUkr+lDAskrAZNNlJG2bIziTJlaDQ2sxg12flbKCzEBpkSFqIYxBjPM9zpzsx37znvOfc2C++pt+/97jnPec593vN+9373+yo1ThsZGVmDFNsNaR5XKpVeAy4YghoPArQoGFhTc8mAGQ8B+QCGxVrHZyrnHQpbjjFsKPATMHWuqpBgrYGYkG8Ys13kSjB4OklosMtKiuwwkPYYiAnpyc5anAc8jRjfSWiwTa5KQLgMw9K6rHWHi1wJBs85khnsHTDTlDTVw5DgooGYEP/erl7SuKPgafjHRc5QO58kq00mIa9ga0T83hBMKrYXV68fqfdlTQ8h8Rxj8m4j7i8MAllblyu50UWuAIOjDuMtyQz2UkGRHQJCT+v693Z2aWMe1HjAIEwCOTuWCBPLFvO07g1sr+F0AUXPcZY8p+OOvPbtBXJP63KF1jsKV0HBsYtERns6kSS0g/YgwcKJSZTvX6F7HihjPWHtDvA1MxYrUovxwrgyhHWYyZVAcLQ46iO0SUk1OQxgT+uSfOXkrMUeAcdtEhntrqsakD40EhP2xEWuAIOj2VEfoUeq0ag+gwBuAXhdtQTKY/Yrg5IAYZ7PHl5Z7d8PIVA/JTbab+Ca9OcZHon8SzF+GesjrD+LVewggJsB3pyVQHH8Pq5erxVxnhDe93i+XNo7HAJ1U2KHVd3bHjXSWNQ1H2PIUR+fTTWkc6rnAHpbl22/QE1oCET+DgyP3cyjlbaYt3UHsL0+5BXg8UGVeuAPe3IAa7s5BLm3dbmqrc7ic+HI30YSh30GdmYuSZYTwDMOYkLtezurqNRx5J+BMUgih11JpdRPQViP8dFBTKj9vkJRKvLvc9ZHuO25M4De1iX5TsV5mkKQu4LxjCQOsz2bAmERrVvqc2fUuM0hTAK9oFmdalex3QBafoVM893C1avM586erxVJneE3h5C2iNblCtn2dlJ6zitybyCB09TPnSd20FbUtiKnPo3rPYLuaAKNMUV0z3UTN1blnnNlCFftbUuByL0ag19+vbYqmB+MRbQuCy/tuTNyd5HAaZOeO6vEAmmfk5hw9d5WFZUKQu4lGD8xvHYylVacjn4GgZEtt0WMlgPCrwxyziSiDZPpyRvHa1CNFRJBoKt44S8WXutDgkFFkhO4DfiqiBsNQX1zMXmDMUuLyYj7guNdGb70Yf65q3P0AMgXYxTRukijtnnpaqQ5sp5WZy4mcOyfb9xixzCKaF3pPE1+nC+75qgJXACIAu0vIE+ZKfhfIm6xKTEK5N3XZRc+pfVRoGg5CkSBcsShKwoUBRIUENyxg6JAggKCO3ZQFEhQQHDHDooCCQoI7thBUSBBAcEdOygKJCgguGMHRYEEBQR37KAokKCA4I4dFAUSFBDcsYOiQIICgjt2UBRIUEBw8yfnU0JMGe6hgKSPpqDG5wH1/d+hfwAXyUHEZ/sR0wAAAABJRU5ErkJggg==");
+        }
+
+        .quote-end {
+          right: 0;
+          bottom: -50px;
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABCCAYAAAD0dpAhAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAASKADAAQAAAABAAAAQgAAAADagV5OAAAEbUlEQVR4Ae2bz0tUURTHndSsRAohCCrSooSCVkG7imgREUVCUS1atGjRfyKVktUihBZFhZsWZejChUFBm4IsiRaSmP2mkCgLLafPMYeG+fHuvee8VxH3wmFmPOd7zvd+73lv3rvzrKmJI1GBnHjz+XwLL9vl/R8el3O5XN6nJhxbidvmE5tmTEGgQyTtTTOxZ646BPrhE4tAR4m76hObZsyCNJP9j7miQI5VjQJFgRwKONyxg6JADgUc7thBUSCHAg537KAokEMBhzt2UBTIoYDDHTsoCuRQwOGOHRQFcijgcMcOigI5FHC4YwdFgRwKONyxg6JADgUc7thBUSCHAg537KB/WKAh319VHXPI0j34NzuoI8uZpZS7o24+kTxA8N0jqfyWX+sR5woZpnsGXEEl/lk++3CURU9j4R/CcbCEQ/JHHiDoxNIY8iBCJgNy3WkQJIc80FEz93SHD1MAsirj2Eqf+ISYMXzrWR2fbkhIU+6Co3T3BLai3Bv0l1Gi2+QcGdKK8vyQVRxheToLcSQxYydmFUfynBJx5I33YHV6MOt4T4LF3kUDA8l9yUoQ/BtsUaG0VwcBqAfQXgAZXrtZma8GfFUoHBtwpsHxLBy/VS1UyUHxfZh1fCZBc6X8afyN3O1WguA/YcuK+Xh1EIAjxSDl+x5W5qMS6wNLg+NFOE4WF3N+i6FoI4B32JJiYOD7GeLXUfxFIM4rHI5NBL7FLOe3afCtcHxVXNSng/YDsIgj9a5lJc78ZA7wahFH0lwpFWc+d/ILq9OHWcYs4E3JVWxe8g9YCIIVjm3BLAA1Y9OYZdwMLhwAgNhybMZCEOyNaiVdh9hBgPIVbxkdFrAHVm4JCveUHuEVQ3QcUfaOcWXuVqST4h/hd8/IcUhFh6KrMDk2LWOvqrgnCGJrMCvH3Unlkg6xwwCdlwEJyUfw3U7wp+GSax8LR822yy/erMwDzDKOpaFAUg7IPbIQBKvbdgHYZiw8Dt56ck/SRv5DaaOR43PwzpN7tUPMetneyUWXXD1nOXSr/5vRGTjq9qRQ9plhdT6AlduTTAc1Rg0cvbddyjqIoluY2QbD7M6zMl8MeCcUjlsJWusMrB7gve1SJhA5LYfXFPhz1Xml5rEcXrJ4F1RMWJkF2ASmHZmLA7Fa7LWWILgulTgCArzDUFjuh1rUxT2B1Nhl4Cj3las9S82FlR5iltbt5dwzFlJcGWvheB2Ouj0plK3H5BtIOzYrJ+wNg1gDNqkkqNp2Ke4guSfR7hn3szLD3jPVB+4BulQJ74PjSCi2WCDLt5duuyCUre0bVs+Rlm3E5FcHzbgfPs9wBMSasCkNQTDqbZdCB8m+s/bqV78yYTpZ9p1tHFH4lnJlnoKzbDd4S0SdfiXHJyaOgC37zse9Z2gIhKNl39m27ULxE5hmvAS00DBvbyh1TmoIgjFvu8g5SHvh1cXX5rT3LG2BWo7mbZccKsvde+FkHTKNxwiUyYMIpSQMHGVLNexBhNLi8XOyAj8BRpN5vEyiYO4AAAAASUVORK5CYII=");
+        }
+      }
+    }
+
+    .ccm-block-testimonial-hero-avatar {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+
+      img {
+        margin-top: 3rem;
+        width: 114px;
+        height: 114px;
+        border: 1px solid $white;
+        border-radius: 84px;
+      }
+    }
+
+    .ccm-block-testimonial-hero-name {
+      margin-top: 1rem;
+      color: $white;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .ccm-block-testimonial-hero-position {
+      color: $white;
+      text-align: center;
+      font-size: $font-size-sm;
+
+      a {
+        color: $white;
+        text-decoration: underline;
+      }
+    }
+
+
+  }
+}

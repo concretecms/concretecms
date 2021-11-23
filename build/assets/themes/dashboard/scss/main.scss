@@ -1,5 +1,11 @@
-@import "~@concretecms/bedrock/assets/bedrock/scss/frontend";
-@import "~@concretecms/bedrock/assets/cms/scss/base";
+@import "shared-variables";
+
+@import "@concretecms/bedrock/assets/bedrock/scss/frontend";
+
+// Feature support - comes outside div.ccm-page
+@import "./features/desktop/desktop";
+
+@import "@concretecms/bedrock/assets/cms/scss/base";
 @import "mixins/concrete-data-row-dl";
 @import "account";
 @import "toolbar";

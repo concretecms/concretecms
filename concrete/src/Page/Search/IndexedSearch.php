@@ -32,7 +32,7 @@ class IndexedSearch
     {
         $action = Config::get('concrete.misc.search_index_area_method');
         if (!strlen($action)) {
-            $action = 'blacklist';
+            $action = 'denylist';
         }
 
         return $action;
@@ -59,7 +59,7 @@ class IndexedSearch
     {
         if (!isset($this->searchableAreaNames)) {
             $searchableAreaNamesInitial = $this->getSavedSearchableAreas();
-            if ('blacklist' == $this->getSearchableAreaAction()) {
+            if ('denylist' == $this->getSearchableAreaAction()) {
                 $areas = Area::getHandleList();
                 foreach ($areas as $blArHandle) {
                     if (!in_array($blArHandle, $searchableAreaNamesInitial)) {
@@ -127,11 +127,11 @@ class IndexedSearch
         $blarray = [];
         $db = Loader::db();
         $r = $db->Execute(
-            'select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?',
+            'SELECT `bID`, `arHandle` FROM `CollectionVersionBlocks` WHERE `cID` = ? AND `cvID` = ? ORDER BY `arHandle` ASC, `cbDisplayOrder` ASC',
             [$c->getCollectionID(), $c->getVersionID()]
         );
         $th = Loader::helper('text');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             if ($this->matchesArea($row['arHandle'])) {
                 $b = Block::getByID($row['bID'], $c, $row['arHandle']);
                 if (!is_object($b)) {
@@ -169,45 +169,4 @@ class IndexedSearch
         return $text;
     }
 
-    /**
-     * Reindexes the search engine.
-     */
-    public function reindexAll($fullReindex = false)
-    {
-        Cache::disableAll();
-
-        /** @var IndexManagerInterface $indexStack */
-        $indexStack = Application::getFacadeApplication()->make(IndexManagerInterface::class);
-
-        $db = Loader::db();
-
-        if ($fullReindex) {
-            $db->Execute("truncate table PageSearchIndex");
-        }
-
-        $pl = new PageList();
-        $pl->ignoreAliases();
-        $pl->ignorePermissions();
-        $pl->sortByCollectionIDAscending();
-        $pl->filter(
-            false,
-            '(c.cDateModified > psi.cDateLastIndexed or UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(psi.cDateLastIndexed) > ' . $this->searchReindexTimeout . ' or psi.cID is null or psi.cDateLastIndexed is null)'
-        );
-        $pl->filter(false, '(ak_exclude_search_index is null or ak_exclude_search_index = 0)');
-        $pages = $pl->get($this->searchBatchSize);
-
-        $num = 0;
-        foreach ($pages as $c) {
-            $indexStack->index(Page::class, $c);
-        }
-
-        $pnum = Collection::reindexPendingPages();
-        $num = $num + $pnum;
-
-        Cache::enableAll();
-        $result = new stdClass();
-        $result->count = $num;
-
-        return $result;
-    }
 }

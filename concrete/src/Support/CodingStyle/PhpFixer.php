@@ -157,7 +157,7 @@ class PhpFixer
         }
         $relativePath = substr($fullPath, strlen($this->options->getWebRoot()));
         if ($isExtensionOk === false && !in_array($relativePath, $this->options->getFilterIncludeFiles())) {
-            // Let's skip this file, since it doesn't have the allowed file extensions and it's not in the whitelist
+            // Let's skip this file, since it doesn't have the allowed file extensions and it's not in the allowlist
             return [];
         }
         foreach ($this->options->getIgnoredDirectoriesByPath() as $check) {

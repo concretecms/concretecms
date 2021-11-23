@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
             foreach ($result->getItems() as $item) {
                 $entry = $item->getItem();
                 ?>
-                <tr data-details-url="<?=$view->url('/dashboard/express/entries', 'view_entry', $entry->getId())?>">
+                <tr data-details-url="<?=$view->action('view_entry', $entry->getId())?>">
                     <?php
                     $i = 0;
                     foreach ($item->getColumns() as $column) {
@@ -49,7 +49,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         ?>
                         <td class="ccm-search-results-menu-launcher">
                             <div class="dropdown" data-menu="search-result">
-                                <button class="btn btn-icon" data-boundary="viewport" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-icon" data-boundary="viewport" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <svg width="16" height="4"><use xlink:href="#icon-menu-launcher" /></svg>
                                 </button>
                                 <?php

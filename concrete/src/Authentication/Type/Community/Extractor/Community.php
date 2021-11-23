@@ -62,7 +62,7 @@ class Community extends LazyExtractor
 
     public function profileLoader()
     {
-        $uri = new Uri(\Config::get('concrete.urls.concrete5_secure') . self::USER_PATH);
+        $uri = new Uri(\Config::get('concrete.urls.concrete_secure') . self::USER_PATH);
 
         return json_decode($this->service->request($uri), true);
     }

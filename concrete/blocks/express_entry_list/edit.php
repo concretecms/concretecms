@@ -72,10 +72,13 @@ echo $userInterface->tabs([
             <?php echo $form->label('enableSearch', t('Enable Search'), ["class" => "form-check-label"]) ?>
         </div>
 
-        <fieldset data-options="search">
-            <div class="form-check">
-                <?php echo $form->checkbox('enableKeywordSearch', 1, $enableKeywordSearch) ?>
-                <?php echo $form->label('enableKeywordSearch', t('Search by Keywords'), ["class" => "form-check-label"]) ?>
+        <div data-options="search">
+            <hr>
+            <div class="form-group">
+                <div class="form-check">
+                    <?php echo $form->checkbox('enableKeywordSearch', 1, $enableKeywordSearch) ?>
+                    <?php echo $form->label('enableKeywordSearch', t('Search by Keywords'), ["class" => "form-check-label"]) ?>
+                </div>
             </div>
 
             <div class="form-group">
@@ -89,7 +92,7 @@ echo $userInterface->tabs([
 
                 <div data-container="search-associations"></div>
             </div>
-        </fieldset>
+        </div>
     </div>
 
     <div class="tab-pane" id="filtering" role="tabpanel">
@@ -109,6 +112,17 @@ echo $userInterface->tabs([
         </div>
 
         <div class="form-group">
+            <div class="form-check">
+                <?php echo $form->checkbox('enablePagination', 1, $enablePagination) ?>
+                <?php echo $form->label('enablePagination', t('Display pagination interface in results.'), ["class" => "form-check-label"]) ?>
+            </div>
+            <div class="form-check">
+                <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection) ?>
+                <?php echo $form->label('enableItemsPerPageSelection', t('Allow users to select items per page.'), ["class" => "form-check-label"]) ?>
+            </div>
+        </div>
+
+        <div class="form-group">
             <?php echo $form->label('detailPage', t('Link to Detail Page')) ?>
             <?php echo $pageSelector->selectPage('detailPage', $detailPage) ?>
 
@@ -125,19 +139,22 @@ echo $userInterface->tabs([
     </div>
 
     <div class="tab-pane" id="design" role="tabpanel">
-        <fieldset>
+        <div>
             <div class="form-group">
                 <?php echo $form->label('tableName', t('Name')) ?>
-                <?php echo $form->text('tableName', $tableName, array('maxlength' => '128')) ?>
-            </div>
+			    <div class="input-group">
+                	<?php echo $form->text('tableName', $tableName, array('maxlength' => '128')) ?>
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+				</div>
+			</div>
 
             <div class="form-group">
                 <?php echo $form->label('tableDescription', t('Description')) ?>
                 <?php echo $form->text('tableDescription', $tableDescription, array('maxlength' => '128')) ?>
             </div>
-        </fieldset>
+        </div>
 
-        <fieldset>
+        <div>
             <legend>
                 <?php echo t('Design') ?>
             </legend>
@@ -187,7 +204,7 @@ echo $userInterface->tabs([
                     <?php $color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate) ?>
                 </div>
             </div>
-        </fieldset>
+        </div>
     </div>
 </div>
 

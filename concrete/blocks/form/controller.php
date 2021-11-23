@@ -5,8 +5,10 @@ namespace Concrete\Block\Form;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Config;
 use Concrete\Core\Support\Facade\Events;
@@ -46,9 +48,9 @@ class Controller extends BlockController
 
     protected $btCopyWhenPropagate = true;
 
-    public function __construct($b = null)
+    public function __construct($obj = null)
     {
-        parent::__construct($b);
+        parent::__construct($obj);
         //$this->bID = intval($this->_bID);
         if (is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)) {
             $this->thankyouMsg = $this->getDefaultThankYouMsg();
@@ -263,7 +265,7 @@ class Controller extends BlockController
         $v = [$this->bID];
         $q = "select * from {$this->btTable} where bID = ? LIMIT 1";
         $r = $db->query($q, $v);
-        $row = $r->fetchRow();
+        $row = $r->fetch();
 
         //if the same block exists in multiple collections with the same questionSetID
         if (count($row) > 0) {
@@ -290,7 +292,7 @@ class Controller extends BlockController
             $result = $db->executeQuery($q, $v);
 
             $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId={$oldQuestionSetId} AND bID=" . (int) ($this->bID));
-            while ($row = $rs->fetchRow()) {
+            while ($row = $rs->fetch()) {
                 $v = [$newQuestionSetId, (int) ($row['msqID']), (int) $newBID, $row['question'], $row['inputType'], $row['options'], $row['position'], $row['width'], $row['height'], $row['required'], $row['defaultDate']];
                 $sql = "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                 $db->executeQuery($sql, $v);
@@ -316,7 +318,7 @@ class Controller extends BlockController
         $ip = $this->app->make('failed_login');
         $this->view();
 
-        if ($ip->isBlacklisted()) {
+        if ($ip->isDenylisted()) {
             $this->set('invalidIP', $ip->getErrorMessage());
 
             return;
@@ -605,6 +607,55 @@ class Controller extends BlockController
                 $response->send();
                 exit;
             }
+        }
+    }
+
+    public function action_services()
+    {
+        $token = $this->app->make('token');
+        if (!$token->validate('ccm-bt-form-service')) {
+            throw new UserMessageException($token->getErrorMessage());
+        }
+        $miniSurvey = new MiniSurvey();
+        $rf = $this->app->make(ResponseFactoryInterface::class);
+        switch ($this->request->query->get('mode')) {
+            case 'addQuestion':
+                ob_start();
+                try {
+                    $miniSurvey->addEditQuestion($this->request->request->all());
+
+                    return $rf->create(ob_get_contents(), 200, ['Content-Type' => 'text/plain; charset=' . APP_CHARSET]);
+                } finally {
+                    ob_end_clean();
+                }
+            case 'getQuestion':
+                ob_start();
+                try {
+                    $miniSurvey->getQuestionInfo((int) $this->request->query->get('qsID'), (int) $this->request->query->get('qID'));
+
+                    return $rf->create(ob_get_contents(), 200, ['Content-Type' => 'text/plain; charset=' . APP_CHARSET]);
+                } finally {
+                    ob_end_clean();
+                }
+            case 'delQuestion':
+                $miniSurvey->deleteQuestion((int) $this->request->query->get('qsID'), (int) $this->request->query->get('msqID'));
+
+                return $rf->json(true);
+            case 'reorderQuestions':
+                $miniSurvey->reorderQuestions((int) $this->request->request->get('qsID'), $this->request->request->get('qIDs'));
+
+                return $rf->json(true);
+            case 'refreshSurvey':
+            default:
+                $showEdit = (int) $this->request->request->get('showEdit', $this->request->query->get('showEdit')) === 1;
+                ob_start();
+                try {
+                    $miniSurvey->loadSurvey((int) $this->request->query->get('qsID'), $showEdit, (int) $this->bID, explode(',', $this->request->query->get('hide')), 1, 1);
+
+                    return $rf->create(ob_get_contents());
+                } finally {
+                    ob_end_clean();
+                }
         }
     }
 

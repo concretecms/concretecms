@@ -3,11 +3,13 @@ namespace Concrete\Block\DateNavigation;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Type;
 use Loader;
 
-class Controller extends BlockController
+class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = ['form'];
 
@@ -16,6 +18,13 @@ class Controller extends BlockController
     protected $btExportPageColumns = ['cParentID', 'cTargetID'];
     protected $btExportPageTypeColumns = ['ptID'];
     protected $btTable = 'btDateNavigation';
+
+    public function getRequiredFeatures(): array
+    {
+        return [
+            Features::NAVIGATION
+        ];
+    }
 
     public function getBlockTypeDescription()
     {
@@ -32,6 +41,7 @@ class Controller extends BlockController
         $this->edit();
         $this->set('maxResults', 3);
         $this->set('title', t('Archives'));
+        $this->set('titleFormat', 'h5');
     }
 
     public function edit()

@@ -11,8 +11,8 @@ class Designer extends DashboardPageController
     public function view()
     {
         $r = $this->entityManager->getRepository(CustomElement::class);
-        $elements = $r->findBy(['isDraft' => false], ['dateCreated' => 'desc']);
-        $drafts = $r->findBy(['isDraft' => true], ['dateCreated' => 'desc']);
+        $elements = $r->findBy(['status' => CustomElement::STATUS_READY_TO_PUBLISH], ['dateCreated' => 'desc']);
+        $drafts = $r->findBy(['status' => CustomElement::STATUS_DRAFT], ['dateCreated' => 'desc']);
         $this->set('elements', $elements);
         $this->set('drafts', $drafts);
     }
@@ -20,7 +20,7 @@ class Designer extends DashboardPageController
     public function view_element($id = null)
     {
         $element = $this->entityManager->find(CustomElement::class, $id);
-        if ($element && !$element->isDraft()) {
+        if ($element && $element->getStatus() == CustomElement::STATUS_READY_TO_PUBLISH) {
             $this->set('element', $element);
             $this->render('/dashboard/boards/designer/view_element');
         }
@@ -50,6 +50,7 @@ class Designer extends DashboardPageController
     public function getContinueURL(CustomElement $element)
     {
         $url = $this->app->make('url');
+        /*
         $items = $element->getItems();
         if (count($items)) {
             if ($element->getSlotTemplate()) {
@@ -59,7 +60,9 @@ class Designer extends DashboardPageController
             }
         } else {
             return $url->to('/dashboard/boards/designer/choose_items', $element->getID());
-        }
+        }*/
+        // The logic above is nice but it's also nice to be able to change the selected items.
+        return $url->to('/dashboard/boards/designer/choose_items', $element->getID());
     }
 
     public function add_element()
