@@ -8,6 +8,8 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Table;
@@ -201,6 +203,12 @@ class StandardSearchIndexer implements SearchIndexerInterface
             } else {
                 $this->connection->insert($category->getIndexedSearchTable(), $primaries + $columnValues);
             }
+        }
+
+        $controller = $value->getController();
+        if ($controller instanceof TrackableInterface && $subject instanceof Collection) {
+            $tracker = app('statistics/tracker');
+            $tracker->track($subject);
         }
     }
 
