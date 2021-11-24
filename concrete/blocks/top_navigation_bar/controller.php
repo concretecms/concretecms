@@ -54,7 +54,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
      */
     public function getBlockTypeDescription()
     {
-        return t('Adds a responsive navigation bar with a logo, menu and search..');
+        return t('Adds a responsive navigation bar with a logo, menu and search.');
     }
 
     /**
