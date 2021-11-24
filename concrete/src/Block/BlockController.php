@@ -637,6 +637,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             return false;
         }
 
+        // This block is new for 9.0.2 – we need this because we're passing around blocks with page objects in them
+        // for file trackability, but without this code we lose the reference to the proper collection + collection version
+        $blockPage = $this->block->getBlockCollectionObject();
+        if ($blockPage) {
+            return $blockPage;
+        }
+
         if (!isset($this->bActionCID)) {
             $this->bActionCID = $this->block->getBlockActionCollectionID();
         }

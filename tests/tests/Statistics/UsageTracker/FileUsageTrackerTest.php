@@ -134,7 +134,7 @@ class FileUsageTrackerTest extends TestCase
             $item->getCollectionVersionID(),
             $item->getBlockID(), ]);
     }
-    
+
     /**
      * @param $usedFiles
      * @param $collectionID

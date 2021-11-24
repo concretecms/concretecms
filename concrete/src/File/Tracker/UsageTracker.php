@@ -44,7 +44,6 @@ class UsageTracker implements TrackerInterface
      */
     public function track(TrackableInterface $trackable)
     {
-        $tracked = false;
         if ($trackable instanceof Collection) {
             $this->trackCollection($trackable);
         }
