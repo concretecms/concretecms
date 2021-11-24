@@ -3,6 +3,7 @@
 namespace Concrete\Core\File\Tracker;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
+use Concrete\Core\Attribute\AttributeValueInterface;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -46,23 +47,16 @@ class UsageTracker implements TrackerInterface
         $tracked = false;
         if ($trackable instanceof Collection) {
             $this->trackCollection($trackable);
-            $tracked = true;
         }
 
         if ($trackable instanceof PageController) {
             $this->trackCollection($trackable->getPageObject());
-            $tracked = true;
         }
 
         if ($trackable instanceof BlockController) {
             if ($collection = $trackable->getCollectionObject()) {
                 $this->trackBlocks($trackable->getCollectionObject(), [$trackable]);
-                $tracked = true;
             }
-        }
-
-        if (!$tracked && $trackable instanceof FileTrackableInterface) {
-            $this->trackFileTrackable($trackable);
         }
     }
 
@@ -101,8 +95,10 @@ class UsageTracker implements TrackerInterface
         $blocks = $collection->getBlocks();
         $this->trackBlocks($collection, $blocks);
 
-        $attributes = $collection->getSetCollectionAttributes();
-        $this->trackAttributes($collection, $attributes);
+        $version = $collection->getVersionObject();
+        $category = $version->getObjectAttributeCategory();
+        $values = $category->getAttributeValues($version);
+        $this->trackAttributes($collection, $values);
     }
 
     /**
@@ -119,33 +115,16 @@ class UsageTracker implements TrackerInterface
             ->getQuery()->execute();
     }
 
-    private function trackFileTrackable(FileTrackableInterface $trackable)
-    {
-        if ($collection = $trackable->getUsedCollection()) {
-            $this->trackTrackables(
-                $collection,
-                [$trackable],
-                function (Collection $collection, FileTrackableInterface $trackable, $fileId) {
-                    $this->persist(
-                        $fileId,
-                        $collection->getCollectionID(),
-                        $collection->getVersionID(),
-                        0);
-                    return true;
-                });
-        }
-    }
-
     /**
      * @param \Concrete\Core\Page\Collection\Collection $collection
-     * @param AttributeKeyInterface[] $attributes
+     * @param AttributeValueInterface[] $attributes
      */
     private function trackAttributes(Collection $collection, array $attributes)
     {
         $this->trackTrackables(
             $collection,
-            $this->getTrackables($attributes, function (Key $block) {
-                return $block->getController();
+            $this->getTrackables($attributes, function (AttributeValueInterface $value) {
+                return $value->getController();
             }),
             function (Collection $collection, \Concrete\Core\Attribute\Controller $attribute, $fileId) {
                 $this->persist(

@@ -10,6 +10,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File as ConcreteFile;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Utility\Service\Number;
@@ -18,7 +19,7 @@ use Generator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     protected $btTable = 'btGallery';
     protected $btInterfaceWidth = '750';
@@ -572,4 +573,14 @@ class Controller extends BlockController implements UsesFeatureInterface
             $errors->add(t('Invalid choice provided: %s %s', $key, $value ?? ''));
         }
     }
+
+    public function getUsedFiles()
+    {
+        $ids = [];
+        foreach ($this->getEntries() as $entry) {
+            $ids[] = $entry['id'];
+        }
+        return $ids;
+    }
+
 }

@@ -3,9 +3,10 @@ namespace Concrete\Block\Testimonial;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Core;
 
-class Controller extends BlockController
+class Controller extends BlockController implements FileTrackableInterface
 {
     public $helpers = array('form');
 
@@ -59,4 +60,13 @@ class Controller extends BlockController
         $args['awardImageID'] = (isset($args['awardImageID']) && $args['awardImageID'] != '') ? $args['awardImageID'] : 0;
         parent::save($args);
     }
+
+    public function getUsedFiles()
+    {
+        if (isset($this->fID) && $this->fID) {
+            return [$this->fID];
+        }
+        return [];
+    }
+
 }

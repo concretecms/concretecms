@@ -292,13 +292,6 @@ class Controller extends BlockController implements TrackableInterface
     {
         parent::save($args);
         $this->stID = $args['stID'];
-        Application::getFacadeApplication()->make('statistics/tracker')->track($this);
-    }
-
-    public function delete()
-    {
-        Application::getFacadeApplication()->make('statistics/tracker')->forget($this);
-        parent::delete();
     }
 
 }
