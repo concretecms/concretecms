@@ -14,19 +14,19 @@
 
             <?php if ($position && $company && $companyURL): ?>
                 <div class="ccm-block-testimonial-position">
-                    <?=t('%s, <a href="%s">%s</a>', h($position), $companyURL, h($company))?>
+                    <?=sprintf('%s, <a href="%s">%s</a>', h($position), $companyURL, h($company))?>
                 </div>
             <?php endif; ?>
 
             <?php if ($position && !$company && $companyURL): ?>
                 <div class="ccm-block-testimonial-position">
-                    <?=t('<a href="%s">%s</a>', $companyURL, h($position))?>
+                    <?=sprintf('<a href="%s">%s</a>', $companyURL, h($position))?>
                 </div>
             <?php endif; ?>
 
             <?php if ($position && $company && !$companyURL): ?>
                 <div class="ccm-block-testimonial-position">
-                    <?=t('%s, %s', h($position), h($company))?>
+                    <?=sprintf('%s, %s', h($position), h($company))?>
                 </div>
             <?php endif; ?>
 
