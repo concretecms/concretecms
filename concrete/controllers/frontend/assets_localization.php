@@ -250,6 +250,7 @@ var ccmi18n_fileuploader = ' . json_encode([
 ]) . ';
 
 var ccmi18n_filemanager = ' . json_encode([
+    'add' => t('Add'),
     'addFiles' => t('Add Files'),
     'cancel' => t('Cancel'),
     'choose' => t('Choose'),
@@ -257,6 +258,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'chooseNew' => t('Choose New File'),
     'chosenTooMany' => t('You may only select a single file.'),
     'clear' => t('Clear'),
+    'createNewFolder' => t('Create New Folder'),
     'deleteFile' => t('Delete'),
     'download' => t('Download'),
     'duplicate' => t('Copy'),
@@ -291,6 +293,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'selectFileSet' => t('Select a Set'),
     'selectPreset' => t('Select a Preset'),
     'sets' => t('Sets'),
+    'specifyName' => t('Please enter a name...'),
     'thumbnailImages' => t('Thumbnail Images'),
     'title' => t('File Manager'),
     'upload' => t('Upload'),
