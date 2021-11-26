@@ -144,6 +144,7 @@ var ccmi18n_editor = ' . json_encode([
     'sitemap' => t('Sitemap'),
     'lightboxFeatures' => t('Lightbox Features'),
     'imageLink' => t('Linking to an image'),
+    'snippets' => t('Snippets'),
 ]) . ';
 
 var ccmi18n_express = ' . json_encode([
