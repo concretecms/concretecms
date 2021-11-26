@@ -449,8 +449,12 @@ var ccmi18n_helpGuides = ' . json_encode([
 
 var ccmi18n_gallery = ' . json_encode([
     'addImages' => t('Add Images'),
+    'customAttributes' => t('Custom Attributes'),
+    'displayOptions' => t('Display Options'),
+    'editAttributes' => t('Edit Attributes'),
     'images' => t('Images'),
     'includeOriginalDownloadLink' => t('Include link to download original'),
+    'removeFromGallery' => t('Remove from Gallery'),
     'settings' => t('Settings'),
 ]) . ';
         ';
