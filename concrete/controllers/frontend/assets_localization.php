@@ -338,6 +338,14 @@ var ccmi18n_tourist = ' . json_encode([
 var ccmi18n_styleCustomizer = ' . json_encode([
     'chooseImageText' => t('Choose Image'),
     'currentlyUsingText' => t('Currently using %s'),
+    'textTransform' => [
+        'none' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'None'),
+        'uppercase' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'Uppercase'),
+        'lowercase' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'Lowercase'),
+        'capitalize' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'Capitalize'),
+        'full-width' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'Full Width'),
+        'full-width-kana' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'Full Width Kana'),
+    ],
 ]) . ';
 
 var ccmi18n_helpGuides = ' . json_encode([
