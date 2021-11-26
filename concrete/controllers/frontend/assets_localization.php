@@ -351,6 +351,12 @@ var ccmi18n_styleCustomizer = ' . json_encode([
     'fontSize' => t('Size'),
     'fontStyle' => t('Font Style'),
     'fontWeight' => t('Font Weight'),
+    'fontWeights' => [
+        'normal' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight*/'FontWeight', 'Normal'),
+        'bold' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight*/'FontWeight', 'Bold'),
+        'bolder' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight*/'FontWeight', 'Bolder'),
+        'light' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight*/'FontWeight', 'Light'),
+    ], 
     'loading' => t('Loading...'),
     'save' => t('Save'),
     'skinName' => t('Skin Name'),
