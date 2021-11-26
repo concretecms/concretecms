@@ -220,6 +220,10 @@ var ccmi18n_spellchecker = ' . json_encode([
 var ccmi18n_groups = ' . json_encode([
     'editGroup' => t('Edit Group'),
     'editPermissions' => t('Edit Permissions'),
+    'id' => t('ID'),
+    'name' => t('Name'),
+    'noResults' => t('No results found.'),
+    'search' => t('Search'),
 ]) . ';
 
 var ccmi18n_fileuploader = ' . json_encode([
