@@ -347,6 +347,7 @@ var ccmi18n_styleCustomizer = ' . json_encode([
     'delete' => t('Delete'),
     'editCSS' => t('Edit CSS'),
     'entireSite' => t('Entire Site'),
+    'loading' => t('Loading...'),
     'save' => t('Save'),
     'skinName' => t('Skin Name'),
     'textTransform' => [
