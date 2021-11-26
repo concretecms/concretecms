@@ -141,6 +141,9 @@ var ccmi18n_editor = ' . json_encode([
     'insertLinkToFile' => t('Insert Link to File'),
     'insertImage' => t('Insert Image'),
     'insertLinkToPage' => t('Link to Page'),
+    'sitemap' => t('Sitemap'),
+    'lightboxFeatures' => t('Lightbox Features'),
+    'imageLink' => t('Linking to an image'),
 ]) . ';
 
 var ccmi18n_express = ' . json_encode([
