@@ -335,6 +335,11 @@ var ccmi18n_tourist = ' . json_encode([
     ],
 ]) . ';
 
+var ccmi18n_styleCustomizer = ' . json_encode([
+    'chooseImageText' => t('Choose Image'),
+    'currentlyUsingText' => t('Currently using %s'),
+]) . ';
+
 var ccmi18n_helpGuides = ' . json_encode([
     'add-page' => [
         ['title' => t('Pages Panel'), 'text' => t('The pages is where you go to add a new page to your site, or jump between existing pages. To open the pages panel, click the icon.')],
