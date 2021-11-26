@@ -148,8 +148,14 @@ var ccmi18n_editor = ' . json_encode([
 ]) . ';
 
 var ccmi18n_express = ' . json_encode([
+    'cancel' => t('Cancel'),
     'chooseEntry' => t('Choose Entry'),
+    'dateAdded' => t('Date Added'),
+    'dateModified' => t('Date Modified'),
     'entriesTitle' => t('Entries'),
+    'name' => t('Name'),
+    'search' => t('Search'),
+    'select' => t('Select'),
 ]) . ';
 
 var ccmi18n_sitemap = ' . json_encode([
