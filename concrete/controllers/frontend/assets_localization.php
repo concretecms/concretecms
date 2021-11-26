@@ -446,6 +446,13 @@ var ccmi18n_helpGuides = ' . json_encode([
         ['title' => t('Dashboard'), 'text' => t('Anything that isn\'t specific to this page happens here. Manage users, files, reporting data, and site-wide settings.')],
     ],
 ]) . ';
+
+var ccmi18n_gallery = ' . json_encode([
+    'addImages' => t('Add Images'),
+    'images' => t('Images'),
+    'includeOriginalDownloadLink' => t('Include link to download original'),
+    'settings' => t('Settings'),
+]) . ';
         ';
 
         return $this->createJavascriptResponse($content);
