@@ -336,8 +336,19 @@ var ccmi18n_tourist = ' . json_encode([
 ]) . ';
 
 var ccmi18n_styleCustomizer = ' . json_encode([
+    'addCustomCSS' => t('Add Custom CSS'),
+    'applyCustomizations' => t('Apply customizations to:'),
     'chooseImageText' => t('Choose Image'),
+    'confirm' => t('Confirm'),
+    'confirmSkinDeletion' => t('Are you sure you want to delete this custom skin? This cannot be undone.'),
+    'create' => t('Create'),
     'currentlyUsingText' => t('Currently using %s'),
+    'customCSS' => t('Custom CSS'),
+    'delete' => t('Delete'),
+    'editCSS' => t('Edit CSS'),
+    'entireSite' => t('Entire Site'),
+    'save' => t('Save'),
+    'skinName' => t('Skin Name'),
     'textTransform' => [
         'none' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'None'),
         'uppercase' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'Uppercase'),
@@ -346,6 +357,7 @@ var ccmi18n_styleCustomizer = ' . json_encode([
         'full-width' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'Full Width'),
         'full-width-kana' => tc(/*i18n: see https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform*/'TextTransform', 'Full Width Kana'),
     ],
+    'thisPage' => t('This Page'),
 ]) . ';
 
 var ccmi18n_helpGuides = ' . json_encode([
