@@ -273,6 +273,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'id' => t('ID'),
     'import' => t('Import'),
     'initialExternalFileProviderChooserTip' => t("Let's get some info on what you're looking for."),
+    'initialSearchChooserTip' => t("Let's get some info on what you're looking for."),
     'jumpToFolder' => t('Jump to Folder'),
     'name' => t('Name'),
     'pending' => t('Pending'),
