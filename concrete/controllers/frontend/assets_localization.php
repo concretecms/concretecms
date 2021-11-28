@@ -487,6 +487,17 @@ var ccmi18n_boards = ' . json_encode([
     'slot' => t('Slot'),
     'unpublishedRules' => t('Unpublished Rules'),
 ]) . ';
+
+var ccmi18n_processes = ' . json_encode([
+    'name' => t('Name'),
+    'dateStarted' => t('Date Started'),
+    'dateCompleted' => t('Date Completed'),
+    'loading' => t('Loading...'),
+    'deleteProcess' => t('Delete Process'),
+    'confirmDeletion' => t('Delete this process log entry? The record of the process along with any logs will be removed.'),
+    'close' => t('Close'),
+    'delete' => t('Delete'),
+]) . ';
         ';
 
         return $this->createJavascriptResponse($content);
