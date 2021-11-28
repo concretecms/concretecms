@@ -466,7 +466,7 @@ var ccmi18n_gallery = ' . json_encode([
     'removeFromGallery' => t('Remove from Gallery'),
     'settings' => t('Settings'),
 ]) . ';
-    
+
 var ccmi18n_users = ' . json_encode([
     'cancel' => t('Cancel'),
     'choose' => t('Choose'),
@@ -477,6 +477,11 @@ var ccmi18n_users = ' . json_encode([
     'search' => t('Search'),
     'status' => t('Status'),
     'username' => t('Username'),
+]) . ';
+
+var ccmi18n_boards = ' . json_encode([
+    'noStartDate' => t('No Start Date'),
+    'preview' => t('Preview'),
 ]) . ';
         ';
 
