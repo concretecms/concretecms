@@ -480,8 +480,12 @@ var ccmi18n_users = ' . json_encode([
 ]) . ';
 
 var ccmi18n_boards = ' . json_encode([
+    'dateAndTime' => t('Date & Time'),
+    'name' => t('Name'),
     'noStartDate' => t('No Start Date'),
     'preview' => t('Preview'),
+    'slot' => t('Slot'),
+    'unpublishedRules' => t('Unpublished Rules'),
 ]) . ';
         ';
 
