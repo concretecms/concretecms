@@ -83,6 +83,7 @@ var ccmi18n = ' . json_encode([
     'go' => t('Go'),
     'helpPopup' => t('Help'),
     'image' => t('Image'),
+    'invalidIconType' => t('Invalid icon type.'),
     'italic' => t('Italic'),
     'letterSpacing' => t('Letter spacing'),
     'lineHeight' => t('Line Height'),
