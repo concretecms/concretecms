@@ -466,6 +466,11 @@ var ccmi18n_gallery = ' . json_encode([
     'removeFromGallery' => t('Remove from Gallery'),
     'settings' => t('Settings'),
 ]) . ';
+    
+var ccmi18n_users = ' . json_encode([
+    'search' => t('Search'),
+    'initialUserSearchChooserTip' => t("Let's get some info on what you're looking for."),
+]) . ';
         ';
 
         return $this->createJavascriptResponse($content);
