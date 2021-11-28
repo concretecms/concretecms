@@ -468,8 +468,13 @@ var ccmi18n_gallery = ' . json_encode([
 ]) . ';
     
 var ccmi18n_users = ' . json_encode([
-    'search' => t('Search'),
+    'date' => t('Date'),
+    'email' => t('Email'),
     'initialUserSearchChooserTip' => t("Let's get some info on what you're looking for."),
+    'numLogins' => t('# Logins'),
+    'search' => t('Search'),
+    'status' => t('Status'),
+    'username' => t('Username'),
 ]) . ';
         ';
 
