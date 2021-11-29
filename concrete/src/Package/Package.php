@@ -629,8 +629,10 @@ abstract class Package implements LocalizablePackageInterface
         $this->app->make('config/database')->clearNamespace($this->getPackageHandle());
 
         $em = $this->getPackageEntityManager();
+        $dbm = null;
         if ($em !== null) {
-            $this->destroyProxyClasses($em);
+            $dbm = new DatabaseStructureManager($em);
+            $dbm->destroyProxyClasses();
         }
 
         $em = $this->app->make(EntityManagerInterface::class);
@@ -638,6 +640,10 @@ abstract class Package implements LocalizablePackageInterface
         $em->flush();
 
         Localization::clearCache();
+
+        if ($dbm) {
+            $dbm->generateProxyClasses();
+        }
 
         $navigationCache = $this->app->make(NavigationCache::class);
         $navigationCache->clear();
