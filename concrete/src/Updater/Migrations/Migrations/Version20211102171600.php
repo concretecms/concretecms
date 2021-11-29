@@ -23,32 +23,32 @@ final class Version20211102171600 extends AbstractMigration implements Repeatabl
             if ($editorConfig && is_array($editorConfig)) {
                 $this->output(t('Editor config found.'));
                 if (($key = array_search('concrete5link', $editorConfig)) !== false) {
-                    $this->output(t('Found `concrete5link` plugin in editor config. Updating to `concretelink`'));
+                    $this->output(t(/*i18n: both %s are plugin names*/'Found `%s` plugin in editor config. Updating to `%s`', 'concrete5link', 'concretelink'));
                     unset($editorConfig[$key]);
                     $editorConfig[] = 'concretelink';
                     $changed = true;
                 }
 
                 if (($key = array_search('concrete5filemanager', $editorConfig)) !== false) {
-                    $this->output(t('Found `concrete5filemanager` plugin in editor config. Updating to `concretefilemanager`'));
+                    $this->output(t(/*i18n: both %s are plugin names*/'Found `%s` plugin in editor config. Updating to `%s`', 'concrete5filemanager', 'concretefilemanager'));
                     unset($editorConfig[$key]);
                     $editorConfig[] = 'concretefilemanager';
                     $changed = true;
                 }
                 if (($key = array_search('concrete5inline', $editorConfig)) !== false) {
-                    $this->output(t('Found `concrete5inline` plugin in editor config. Updating to `concreteinline`'));
+                    $this->output(t(/*i18n: both %s are plugin names*/'Found `%s` plugin in editor config. Updating to `%s`', 'concrete5inline', 'concreteinline'));
                     unset($editorConfig[$key]);
                     $editorConfig[] = 'concreteinline';
                     $changed = true;
                 }
                 if (($key = array_search('concrete5styles', $editorConfig)) !== false) {
-                    $this->output(t('Found `concrete5styles` plugin in editor config. Updating to `concretestyles`'));
+                    $this->output(t(/*i18n: both %s are plugin names*/'Found `%s` plugin in editor config. Updating to `%s`', 'concrete5styles', 'concretestyles'));
                     unset($editorConfig[$key]);
                     $editorConfig[] = 'concretestyles';
                     $changed = true;
                 }
                 if (($key = array_search('concrete5uploadimage', $editorConfig)) !== false) {
-                    $this->output(t('Found `concrete5uploadimage` plugin in editor config. Updating to `concreteuploadimage`'));
+                    $this->output(t(/*i18n: both %s are plugin names*/'Found `%s` plugin in editor config. Updating to `%s`', 'concrete5uploadimage', 'concreteuploadimage'));
                     unset($editorConfig[$key]);
                     $editorConfig[] = 'concreteuploadimage';
                     $changed = true;
