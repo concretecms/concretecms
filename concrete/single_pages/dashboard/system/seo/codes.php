@@ -38,13 +38,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <script>
     document.addEventListener('DOMContentLoaded', function(event) {
-        var trackingCodeForm = document.getElementById("tracking-code-form-button");
+        var trackingCodeForm = document.getElementById("tracking-code-form");
         var trackingCodeHeaderInput = document.getElementById("tracking_code_header_input");
         var trackingCodeFooterInput = document.getElementById("tracking_code_footer_input");
         var trackingCodeHeader = document.getElementById("tracking_code_header");
         var trackingCodeFooter = document.getElementById("tracking_code_footer");
 
-        trackingCodeForm.addEventListener("click", function(e) {
+        trackingCodeForm.addEventListener("submit", function(e) {
             trackingCodeHeader.value = b64EncodeUnicode(trackingCodeHeaderInput.value);
             trackingCodeHeaderInput.setAttribute("disabled", "disabled");
             trackingCodeFooter.value = b64EncodeUnicode(trackingCodeFooterInput.value);
