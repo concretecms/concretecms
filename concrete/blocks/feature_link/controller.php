@@ -25,6 +25,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $buttonText;
     public $buttonSize;
     public $buttonStyle;
+    public $buttonColor;
 
     protected $btDefaultSet = 'basic';
     protected $btInterfaceWidth = 640;
@@ -113,16 +114,16 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function getLinkURL()
     {
         $linkUrl = '';
-        if (!empty($this->externalLink)) {
+        if (!empty($this->buttonExternalLink)) {
             $sec = $this->app->make('helper/security');
-            $linkUrl = $sec->sanitizeURL($this->externalLink);
-        } elseif (!empty($this->internalLinkCID)) {
-            $linkToC = Page::getByID($this->internalLinkCID);
+            $linkUrl = $sec->sanitizeURL($this->buttonExternalLink);
+        } elseif (!empty($this->buttonInternalLinkCID)) {
+            $linkToC = Page::getByID($this->buttonInternalLinkCID);
             if (is_object($linkToC) && !$linkToC->isError()) {
                 $linkUrl = $linkToC->getCollectionLink();
             }
-        } elseif (!empty($this->fileLinkID)) {
-            $fileLinkObject = File::getByID($this->fileLinkID);
+        } elseif (!empty($this->buttonFileLinkID)) {
+            $fileLinkObject = File::getByID($this->buttonFileLinkID);
             if (is_object($fileLinkObject)) {
                 $linkUrl = $fileLinkObject->getRelativePath();
             }

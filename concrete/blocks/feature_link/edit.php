@@ -14,14 +14,14 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
     <div class="mb-3">
         <?php echo $form->label("title", t('Title')); ?>
         <div class="input-group">
-            <?php echo $form->text('title', $title); ?>
+            <?php echo $form->text('title', $title ?? null); ?>
             <?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
         </div>
     </div>
     <div class="mb-3">
         <label class="form-label" for="body"><?=t('Body')?></label>
         <?php
-        echo $editor->outputBlockEditModeEditor('body', LinkAbstractor::translateFromEditMode($body));
+        echo $editor->outputBlockEditModeEditor('body', isset($body) ? LinkAbstractor::translateFromEditMode($body) : null);
         ?>
     </div>
 </fieldset>
@@ -30,7 +30,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
     <legend><?=t('Button')?></legend>
     <div class="mb-3">
         <label class="form-label" for="buttonText"><?=t('Button Text')?></label>
-        <input type="text" name="buttonText" class="form-control" value="<?=$buttonText?>">
+        <input type="text" name="buttonText" class="form-control" value="<?=$buttonText ?? null?>">
         <div class="help-block">
             <?=t('Leave blank to omit the button.')?>
         </div>
@@ -41,7 +41,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
                 '' => t('Regular'),
                 'lg' => t('Large'),
                 'sm' => t('Small')
-            ], $buttonSize);
+            ], $buttonSize ?? null);
         ?>
     </div>
     <div class="form-group">
@@ -49,7 +49,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
         <?php echo $form->select("buttonStyle", [
             '' => t('Regular'),
             'outline' => t('Outline'),
-        ], $buttonStyle);
+        ], $buttonStyle ?? null);
         ?>
     </div>
     <?php if ($themeColorCollection) { ?>
@@ -57,7 +57,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
         <div data-vue="feature-link">
             <concrete-theme-color-input
                 :color-collection='<?=json_encode($themeColorCollection)?>'
-                <?php if ($buttonColor) { ?> color="<?=$buttonColor?>"<?php } ?>
+                <?php if (isset($buttonColor)) { ?> color="<?=$buttonColor?>"<?php } ?>
                 input-name="buttonColor">
             </concrete-theme-color-input>
         </div>
