@@ -33,6 +33,25 @@ class GroupedStyleValueListSet implements \JsonSerializable
     }
 
     /**
+     * Get the display name for this style set (localized and escaped accordingly to $format).
+     *
+     * @param string $format = 'html'
+     *   Escape the result in html format (if $format is 'html').
+     *   If $format is 'text' or any other value, the display name won't be escaped.
+     */
+    public function getDisplayName(string $format = 'html'): string
+    {
+        $value = tc('StyleSetName', $this->getName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
+    /**
      * @param mixed $name
      */
     public function setName($name): void
@@ -42,7 +61,7 @@ class GroupedStyleValueListSet implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return ['name' => $this->name, 'styles' => $this->values];
+        return ['name' => $this->getDisplayName('text'), 'styles' => $this->values];
     }
 
     public function addValue(StyleValue $value)
