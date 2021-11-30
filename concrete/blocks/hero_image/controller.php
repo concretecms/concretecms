@@ -26,6 +26,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public $buttonText;
     public $buttonSize;
     public $buttonStyle;
+    public $buttonColor;
 
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 500;
@@ -117,16 +118,16 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function getLinkURL()
     {
         $linkUrl = '';
-        if (!empty($this->externalLink)) {
+        if (!empty($this->buttonExternalLink)) {
             $sec = $this->app->make('helper/security');
-            $linkUrl = $sec->sanitizeURL($this->externalLink);
-        } elseif (!empty($this->internalLinkCID)) {
-            $linkToC = Page::getByID($this->internalLinkCID);
+            $linkUrl = $sec->sanitizeURL($this->buttonExternalLink);
+        } elseif (!empty($this->buttonInternalLinkCID)) {
+            $linkToC = Page::getByID($this->buttonInternalLinkCID);
             if (is_object($linkToC) && !$linkToC->isError()) {
                 $linkUrl = $linkToC->getCollectionLink();
             }
-        } elseif (!empty($this->fileLinkID)) {
-            $fileLinkObject = File::getByID($this->fileLinkID);
+        } elseif (!empty($this->buttonFileLinkID)) {
+            $fileLinkObject = File::getByID($this->buttonFileLinkID);
             if (is_object($fileLinkObject)) {
                 $linkUrl = $fileLinkObject->getRelativePath();
             }
@@ -189,7 +190,10 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
     public function getUsedFiles()
     {
-        return [$this->image];
+        if (isset($this->image)) {
+            return [$this->image];
+        }
+        return [];
     }
 
 }
