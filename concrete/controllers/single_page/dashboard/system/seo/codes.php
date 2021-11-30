@@ -24,8 +24,8 @@ class Codes extends DashboardSitePageController
             return $this->view();
         }
         $config = $this->getSite()->getConfigRepository();
-        $config->save('seo.tracking.code.header', (string) $post->get('tracking_code_header'));
-        $config->save('seo.tracking.code.footer', (string) $post->get('tracking_code_footer'));
+        $config->save('seo.tracking.code.header', (string) base64_decode($post->get('tracking_code_header')));
+        $config->save('seo.tracking.code.footer', (string) base64_decode($post->get('tracking_code_footer')));
         PageCache::getLibrary()->flush();
         $this->flash('success', t('Tracking code settings updated successfully.') . "\n" . t('Cached files removed.'));
 
