@@ -312,7 +312,7 @@ $identifier = $app->make(Identifier::class);
                             <?php
                             /** @noinspection PhpUnhandledExceptionInspection */
                             echo View::element("slider", [
-                                "name" => "borderWidth",
+                                "name" => "borderRadius",
                                 "label" => t("Radius"),
                                 "value" => $borderRadius,
                                 "valueFormat" => "px"
