@@ -1611,21 +1611,14 @@ EOT
         $bc = $app->make($blockTypeClass, ['obj' => $this]);
 
         $bDate = $dh->getOverridableNow();
-        $connection->createQueryBuilder()
-            ->insert('Blocks')
-            ->setValue('bName', ':bName')
-            ->setValue('bDateAdded', ':bDateAdded')
-            ->setValue('bDateModified', ':bDateModified')
-            ->setValue('bFilename', ':bFilename')
-            ->setValue('btID', ':btID')
-            ->setValue('uID', ':uID')
-            ->setParameter('bName', $this->getBlockName())
-            ->setParameter('bDateAdded', $bDate)
-            ->setParameter('bDateModified', $bDate)
-            ->setParameter('bFilename', $this->getBlockFilename())
-            ->setParameter('btID', $this->getBlockTypeID())
-            ->setParameter('uID', $this->getBlockUserID())
-            ->execute();
+        $connection->insert('Blocks', [
+            'bName' => $this->getBlockName(),
+            'bDateAdded' => $bDate,
+            'bDateModified' => $bDate,
+            'bFilename' => $this->getBlockFilename(),
+            'btID' => $this->getBlockTypeID(),
+            'uID' => $this->getBlockUserID()
+        ]);
         $newBID = $connection->lastInsertId(); // this is the latest inserted block ID
 
         // now, we duplicate the block-specific permissions
@@ -1650,21 +1643,14 @@ EOT
             ->setParameter('arHandle', $this->getAreaHandle())
             ->execute()->fetchAssociative();
         if ($row && is_array($row) && $row['cID']) {
-            $connection->createQueryBuilder()
-                ->insert('PageTypeComposerOutputBlocks')
-                ->setValue('cID', ':cID')
-                ->setValue('cvID', ':cvID')
-                ->setValue('arHandle', ':arHandle')
-                ->setValue('cbDisplayOrder', ':cbDisplayOrder')
-                ->setValue('ptComposerFormLayoutSetControlID', ':ptComposerFormLayoutSetControlID')
-                ->setValue('bID', ':bID')
-                ->setParameter('cID', $ncID)
-                ->setParameter('cvID', $nvID)
-                ->setParameter('arHandle', $this->getAreaHandle())
-                ->setParameter('cbDisplayOrder', $row['cbDisplayOrder'])
-                ->setParameter('ptComposerFormLayoutSetControlID', $row['ptComposerFormLayoutSetControlID'])
-                ->setParameter('bID', $newBID)
-                ->execute();
+            $connection->insert('PageTypeComposerOutputBlocks', [
+                'cID' => $ncID,
+                'cvID' => $nvID,
+                'arHandle' => $this->getAreaHandle(),
+                'cbDisplayOrder' => $row['cbDisplayOrder'],
+                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+                'bID' => $newBID
+            ]);
         }
 
         $r = $connection->createQueryBuilder()
@@ -1694,19 +1680,13 @@ EOT
                     ->setParameter('paID', $row['paID'])
                     ->execute()->fetchOne();
                 if ($assignment === false) {
-                    $connection->createQueryBuilder()
-                        ->insert('BlockPermissionAssignments')
-                        ->setValue('cID', ':cID')
-                        ->setValue('cvID', ':cvID')
-                        ->setValue('bID', ':bID')
-                        ->setValue('pkID', ':pkID')
-                        ->setValue('paID', ':paID')
-                        ->setParameter('cID', $ncID)
-                        ->setParameter('cvID', $nvID)
-                        ->setParameter('bID', $newBID)
-                        ->setParameter('pkID', $row['pkID'])
-                        ->setParameter('paID', $row['paID'])
-                        ->execute();
+                    $connection->insert('BlockPermissionAssignments', [
+                        'cID' => $ncID,
+                        'cvID' => $nvID,
+                        'bID' => $newBID,
+                        'pkID' => $row['pkID'],
+                        'paID' => $row['paID']
+                    ]);
                 }
             }
         }
@@ -1733,25 +1713,16 @@ EOT
                 ->setParameter('arHandle', $this->getAreaHandle())
                 ->execute()->fetchAssociative();
             if ($cacheSetting) {
-                $connection->createQueryBuilder()
-                    ->insert('CollectionVersionBlocksCacheSettings')
-                    ->setValue('cID', ':cID')
-                    ->setValue('cvID', ':cvID')
-                    ->setValue('bID', ':bID')
-                    ->setValue('arHandle', ':arHandle')
-                    ->setValue('btCacheBlockOutput', ':btCacheBlockOutput')
-                    ->setValue('btCacheBlockOutputOnPost', ':btCacheBlockOutputOnPost')
-                    ->setValue('btCacheBlockOutputForRegisteredUsers', ':btCacheBlockOutputForRegisteredUsers')
-                    ->setValue('btCacheBlockOutputLifetime', ':btCacheBlockOutputLifetime')
-                    ->setParameter('cID', $ncID)
-                    ->setParameter('cvID', $nvID)
-                    ->setParameter('bID', $newBID)
-                    ->setParameter('arHandle', $this->getAreaHandle())
-                    ->setParameter('btCacheBlockOutput', $cacheSetting['btCacheBlockOutput'])
-                    ->setParameter('btCacheBlockOutputOnPost', $cacheSetting['btCacheBlockOutputOnPost'])
-                    ->setParameter('btCacheBlockOutputForRegisteredUsers', $cacheSetting['btCacheBlockOutputForRegisteredUsers'])
-                    ->setParameter('btCacheBlockOutputLifetime', $cacheSetting['btCacheBlockOutputLifetime'])
-                    ->execute();
+                $connection->insert('CollectionVersionBlocksCacheSettings', [
+                    'cID' => $ncID,
+                    'cvID' => $nvID,
+                    'bID' => $newBID,
+                    'arHandle' => $this->getAreaHandle(),
+                    'btCacheBlockOutput' => $cacheSetting['btCacheBlockOutput'],
+                    'btCacheBlockOutputOnPost' => $cacheSetting['btCacheBlockOutputOnPost'],
+                    'btCacheBlockOutputForRegisteredUsers' => $cacheSetting['btCacheBlockOutputForRegisteredUsers'],
+                    'btCacheBlockOutputLifetime' => $cacheSetting['btCacheBlockOutputLifetime']
+                ]);
             }
         }
         
@@ -1762,49 +1733,31 @@ EOT
         } else {
             $newBlockDisplayOrder = $cbDisplayOrder;
         }
-        $connection->createQueryBuilder()
-            ->insert('CollectionVersionBlocks')
-            ->setValue('cID', ':cID')
-            ->setValue('cvID', ':cvID')
-            ->setValue('bID', ':bID')
-            ->setValue('arHandle', ':arHandle')
-            ->setValue('cbRelationID', ':cbRelationID')
-            ->setValue('cbDisplayOrder', ':cbDisplayOrder')
-            ->setValue('isOriginal', ':isOriginal')
-            ->setValue('cbOverrideAreaPermissions', ':cbOverrideAreaPermissions')
-            ->setValue('cbOverrideBlockTypeCacheSettings', ':cbOverrideBlockTypeCacheSettings')
-            ->setValue('cbOverrideBlockTypeContainerSettings', ':cbOverrideBlockTypeContainerSettings')
-            ->setValue('cbEnableBlockContainer', ':cbEnableBlockContainer')
-            ->setParameter('cID', $ncID)
-            ->setParameter('cvID', $nvID)
-            ->setParameter('bID', $newBID)
-            ->setParameter('arHandle', $this->getAreaHandle())
-            ->setParameter('cbRelationID', $this->getBlockRelationID())
-            ->setParameter('cbDisplayOrder', $newBlockDisplayOrder)
-            ->setParameter('isOriginal', 1)
-            ->setParameter('cbOverrideAreaPermissions', $this->overrideAreaPermissions())
-            ->setParameter('cbOverrideBlockTypeCacheSettings', $this->overrideBlockTypeCacheSettings())
-            ->setParameter('cbOverrideBlockTypeContainerSettings', $this->overrideBlockTypeContainerSettings())
-            ->setParameter('cbEnableBlockContainer', $this->enableBlockContainer() ? 1 : 0)
-            ->execute();
+        $connection->insert('CollectionVersionBlocks', [
+            'cID' => $ncID,
+            'cvID' => $nvID,
+            'bID' => $newBID,
+            'arHandle' => $this->getAreaHandle(),
+            'cbRelationID' => $this->getBlockRelationID(),
+            'cbDisplayOrder' => $newBlockDisplayOrder,
+            'isOriginal' => 1,
+            'cbOverrideAreaPermissions' => $this->overrideAreaPermissions(),
+            'cbOverrideBlockTypeCacheSettings' => $this->overrideBlockTypeCacheSettings(),
+            'cbOverrideBlockTypeContainerSettings' => $this->overrideBlockTypeContainerSettings(),
+            'cbEnableBlockContainer' => $this->enableBlockContainer() ? 1 : 0
+        ]);
 
         $nb = self::getByID($newBID, $nc, $this->getAreaHandle());
 
         $issID = $this->getCustomStyleSetID();
         if ($issID > 0) {
-            $connection->createQueryBuilder()
-                ->insert('CollectionVersionBlockStyles')
-                ->setValue('cID', ':cID')
-                ->setValue('cvID', ':cvID')
-                ->setValue('bID', ':bID')
-                ->setValue('arHandle', ':arHandle')
-                ->setValue('issID', ':issID')
-                ->setParameter('cID', $ncID)
-                ->setParameter('cvID', $nvID)
-                ->setParameter('bID', $newBID)
-                ->setParameter('arHandle', $this->getAreaHandle())
-                ->setParameter('issID', $issID)
-                ->execute();
+            $connection->insert('CollectionVersionBlockStyles', [
+                'cID' => $ncID,
+                'cvID' => $nvID,
+                'bID' => $newBID,
+                'arHandle' => $this->getAreaHandle(),
+                'issID' => $issID
+            ]);
         }
 
         $event = new BlockDuplicate($nb);
