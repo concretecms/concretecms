@@ -14,5 +14,10 @@ interface ChooserConfigurationInterface
      */
     public function getChoosers(): array;
 
+    /**
+     * @return FilterCollectionInterface|null
+     */
+    public function getFilters(): ?FilterCollectionInterface;
+
 
 }
