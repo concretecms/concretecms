@@ -45,7 +45,12 @@ class Aliasing extends BackendInterfaceBlockController
 
                             $page = \Page::getByID($record['cID'], $record['cvID']);
                             if ($record['action'] == 'add_alias') {
-                                $this->block->alias($page);
+                                $bt = $b->getBlockTypeObject();
+                                if ($bt->isCopiedWhenPropagated()) {
+                                    $this->block->duplicate($page, true);
+                                } else {
+                                    $this->block->alias($page);
+                                }
                             } else if ($record['action'] == 'update_forked_alias') {
                                 $forked = \Block::getByID($record['bID'], $page, $record['arHandle']);
                                 if (is_object($forked) && !$forked->isError()) {
