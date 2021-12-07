@@ -78,19 +78,15 @@ class FileManager
             $fID = (int) $preselectedFile->getFileID();
         }
 
-        /*
-         *later
-        */
-        /*
+        $filters = null;
         if (isset($args['filters']) && is_array($args['filters'])) {
-            $fileSelectorArguments['filters'] = $args['filters'];
+            $filters = ':filters=\'' . json_encode($args['filters']) . '\'';
         }
-        */
 
         $uniqid = uniqid();
         $html = <<<EOL
 <div data-concrete-file-input="{$uniqid}">
-    <concrete-file-input :file-id="{$fID}" choose-text="{$chooseText}" input-name="{$inputName}"></concrete-file-input>
+    <concrete-file-input {$filters} :file-id="{$fID}" choose-text="{$chooseText}" input-name="{$inputName}"></concrete-file-input>
 </div>
 <script type="text/javascript">
 $(function() {

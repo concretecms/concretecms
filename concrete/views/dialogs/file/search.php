@@ -7,12 +7,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 $uploaders = $configuration->getUploaders();
 $choosers = $configuration->getChoosers();
+$filters = $configuration->getFilters();
 ?>
 
 <div data-choose="file-manager" class="h-100">
     <concrete-file-chooser
             :uploaders='<?= json_encode($uploaders)?>'
             :choosers='<?= json_encode($choosers)?>'
+            <?php if ($filters) { ?> :filters='<?= json_encode($filters)?>'<?php } ?>
             :multiple-selection="<?= json_encode($multipleSelection); ?>">
 
     </concrete-file-chooser>
