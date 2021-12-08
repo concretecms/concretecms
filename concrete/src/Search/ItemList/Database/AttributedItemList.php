@@ -1,32 +1,18 @@
 <?php
+
 namespace Concrete\Core\Search\ItemList\Database;
 
 use Concrete\Core\Attribute\Exception\InvalidAttributeException;
 use Concrete\Core\Search\StickyRequest;
-use Database;
 
-abstract class  AttributedItemList extends ItemList
+abstract class AttributedItemList extends ItemList
 {
-
-    abstract protected function getAttributeKeyClassName();
-
-    /**
-     * Filters by an attribute.
-     * @throws InvalidAttributeException
-     */
-    public function filterByAttribute($handle, $value, $comparison = '=')
-    {
-        $ak = call_user_func_array(array($this->getAttributeKeyClassName(), 'getByHandle'), array($handle));
-        if (!is_object($ak)) {
-            throw new InvalidAttributeException(t('Unable to find attribute %s', $handle));
-        }
-        $ak->getController()->filterByAttribute($this, $value, $comparison);
-    }
-
     /**
      * Magic method for setting up additional filtering by attributes.
+     *
      * @param $nm
      * @param $a
+     *
      * @throws \Exception
      */
     public function __call($nm, $a)
@@ -53,18 +39,37 @@ abstract class  AttributedItemList extends ItemList
     }
 
     /**
+     * Filters by an attribute.
+     *
+     * @param mixed $handle
+     * @param mixed $value
+     * @param mixed $comparison
+     *
+     * @throws InvalidAttributeException
+     */
+    public function filterByAttribute($handle, $value, $comparison = '=')
+    {
+        $ak = call_user_func_array([$this->getAttributeKeyClassName(), 'getByHandle'], [$handle]);
+        if (!is_object($ak)) {
+            throw new InvalidAttributeException(t('Unable to find attribute %s', $handle));
+        }
+        $ak->getController()->filterByAttribute($this, $value, $comparison);
+    }
+
+    /**
      * @param StickyRequest $request
      */
     public function setupAutomaticSorting(StickyRequest $request = null)
     {
         // First, we check to see if there are any sortable attributes we can add to the
         // auto sort columns.
-        if (is_callable(array($this->getAttributeKeyClassName(), 'getList'))) {
-            $l = call_user_func(array($this->getAttributeKeyClassName(), 'getList'));
+        if (is_callable([$this->getAttributeKeyClassName(), 'getList'])) {
+            $l = call_user_func([$this->getAttributeKeyClassName(), 'getList']);
             foreach($l as $ak) {
                 $this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
             }
         }
     }
 
+    abstract protected function getAttributeKeyClassName();
 }
