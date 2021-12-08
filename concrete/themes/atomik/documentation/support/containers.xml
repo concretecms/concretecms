@@ -1,8 +1,8 @@
 <concrete5-cif version="1.0">
     <containers>
-        <container handle="light_stripe" name="Light Stripe"
+        <container handle="light_stripe" name="Highlight Stripe"
                    icon="full.png" package=""/>
-        <container handle="two_column_light" name="Two Column Light"
+        <container handle="two_column_light" name="Two Column Highlight"
                    icon="two_column.png" package=""/>
         <container handle="two_column_condensed" name="Two Column Condensed"
                    icon="two_column.png" package=""/>
