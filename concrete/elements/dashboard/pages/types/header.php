@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </button>
         <ul class="dropdown-menu">
             <?php foreach($siteTypes as $type) { ?>
-                <li><a href="<?=$view->action('view', $type->getSiteTypeID())?>"><?=$type->getSiteTypeName()?></a></li>
+                <li><a class="dropdown-item" href="<?=$view->action('view', $type->getSiteTypeID())?>"><?=$type->getSiteTypeName()?></a></li>
             <?php } ?>
         </ul>
     </div>
