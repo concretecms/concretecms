@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
 use Concrete\Core\Entity\Page\Container;
-use Doctrine\DBAL\Schema\Schema;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
+use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20211208145933 extends AbstractMigration
+final class Version20211208145933 extends AbstractMigration implements RepeatableMigrationInterface
 {
 
     public function upgradeDatabase()
