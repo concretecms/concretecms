@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\Search\ItemList\Database;
+
+use Concrete\Core\Attribute\Exception\InvalidAttributeException;
 use Concrete\Core\Search\StickyRequest;
 use Database;
+
 abstract class  AttributedItemList extends ItemList
 {
 
@@ -9,12 +12,13 @@ abstract class  AttributedItemList extends ItemList
 
     /**
      * Filters by a attribute.
+     * @throws InvalidAttributeException
      */
     public function filterByAttribute($handle, $value, $comparison = '=')
     {
         $ak = call_user_func_array(array($this->getAttributeKeyClassName(), 'getByHandle'), array($handle));
         if (!is_object($ak)) {
-            throw new \Exception(t('Unable to find attribute %s', $handle));
+            throw new InvalidAttributeException(t('Unable to find attribute %s', $handle));
         }
         $ak->getController()->filterByAttribute($this, $value, $comparison);
     }
