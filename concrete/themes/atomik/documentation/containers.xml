@@ -25,7 +25,7 @@
             <data table="btContentLocal">
                 <record>
                     <content><![CDATA[
-                            <h3 class="text-primary">1. Two Column Light</h3>
+                            <h3 class="text-primary">1. Two Column Highlight</h3>
                             <p>A light background with two columns. Useful for two column layouts that need to stand out, or alternating image layouts.</p>
                             ]]>
                     </content>
@@ -87,7 +87,7 @@
             <data table="btContentLocal">
                 <record>
                     <content><![CDATA[
-                            <h3 class="text-primary">2. Light Stripe</h3>
+                            <h3 class="text-primary">2. Highlight Stripe</h3>
                             <p>A single column with an optional header area.</p>
                             ]]>
                     </content>
@@ -100,7 +100,7 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<h4 class="display-4" style="text-align: center;">Light Stripe Title</h4>
+                                <content><![CDATA[<h4 class="display-4" style="text-align: center;">Stripe Title</h4>
 ]]></content>
                             </record>
                         </data>
