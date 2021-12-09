@@ -197,10 +197,12 @@ class Process implements \JsonSerializable
             $hasDetails = $logger->logExists();
         }
 
-        $progress = 0;
-        if ($this->getBatch()) {
-            $remaining = $this->getBatch()->getTotalJobs() - $this->getBatch()->getPendingJobs();
-            $progress = round($remaining / $this->getBatch()->getTotalJobs(), 2) * 100;
+        $progress = 100;
+        $totalJobs = $this->getBatch()->getTotalJobs();
+        $pendingJobs = $this->getBatch()->getPendingJobs();
+        if ($this->getBatch() && $totalJobs > 0) {
+            $remaining = $totalJobs - $pendingJobs;
+            $progress = round($remaining / $totalJobs, 2) * 100;
         }
         $data = [
             'id' => $this->getID(),
