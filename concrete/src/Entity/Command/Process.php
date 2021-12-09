@@ -198,11 +198,14 @@ class Process implements \JsonSerializable
         }
 
         $progress = 100;
-        $totalJobs = $this->getBatch()->getTotalJobs();
-        $pendingJobs = $this->getBatch()->getPendingJobs();
-        if ($this->getBatch() && $totalJobs > 0) {
-            $remaining = $totalJobs - $pendingJobs;
-            $progress = round($remaining / $totalJobs, 2) * 100;
+        $batch = $this->getBatch();
+        if ($batch) {
+            $totalJobs = $batch->getTotalJobs();
+            $pendingJobs = $batch->getPendingJobs();
+            if ($totalJobs > 0) {
+                $remaining = $totalJobs - $pendingJobs;
+                $progress = round($remaining / $totalJobs, 2) * 100;
+            }
         }
         $data = [
             'id' => $this->getID(),
@@ -212,7 +215,7 @@ class Process implements \JsonSerializable
             'dateStartedString' => $dateStartedString,
             'dateCompletedString' => $dateCompletedString,
             'user' => $this->getUser(),
-            'batch' => $this->getBatch(),
+            'batch' => $batch,
             'hasDetails' => $hasDetails,
             'details' => [],
             'progress' => $progress
