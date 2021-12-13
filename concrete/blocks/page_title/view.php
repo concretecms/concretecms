@@ -1,18 +1,28 @@
 <?php  defined('C5_EXECUTE') or die('Access Denied.');
 
-if ($useFilterTitle) {
-    if (is_object($currentTopic) && $useFilterTopic) {
-        $title = $controller->formatPageTitle($currentTopic->getTreeNodeDisplayName(), $topicTextFormat);
-    }
-    if ($tag && $useFilterTag) {
-        $title = $controller->formatPageTitle($tag, $tagTextFormat);
-    }
-    if ($year && $month && $useFilterDate) {
-        $srv = Core::make('helper/date');
-        $date = strtotime("$year-$month-01");
-        $title = $srv->date($filterDateFormat ? $filterDateFormat : 'F Y', $date);
+/** @var bool $useFilterTitle  */
+/** @var bool $useFilterTopic */
+/** @var bool $useFilterDate */
+/** @var bool $useFilterTag */
+/** @var bool $formatting */
+/** @var Concrete\Block\PageTitle\Controller $controller */
+/** @var string $title */
+/** @var \Concrete\Core\Tree\Node\Type\Topic | null $currentTopic */
 
-        $title = $controller->formatPageTitle($title, $dateTextFormat);
+if ($useFilterTitle) {
+    $currentTopic = $currentTopic ?? null;
+    if (is_object($currentTopic) && $useFilterTopic) {
+        $title = $controller->formatPageTitle($currentTopic->getTreeNodeDisplayName(), $topicTextFormat ?? false);
+    }
+    if (isset($tag) && $useFilterTag) {
+        $title = $controller->formatPageTitle($tag, $tagTextFormat ?? false);
+    }
+    if (isset($year) && isset($month) && $useFilterDate) {
+        $srv = app('helper/date');
+        $date = strtotime("$year-$month-01");
+        $title = $srv->date($filterDateFormat ?? 'F Y', $date);
+
+        $title = $controller->formatPageTitle($title, $dateTextFormat ?? false);
     }
 }
 

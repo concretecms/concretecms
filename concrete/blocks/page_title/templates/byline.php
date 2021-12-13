@@ -1,8 +1,13 @@
-<?php  defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-$page = Page::getCurrentPage();
+<?php use Concrete\Core\User\UserInfoRepository;
+
+defined('C5_EXECUTE') or die("Access Denied.");
+$dh = app('helper/date');
+/* @var $dh \Concrete\Core\Localization\Service\Date */
+$page = \Concrete\Core\Page\Page::getCurrentPage();
 $date = $dh->formatDate($page->getCollectionDatePublic(), true);
-$user = UserInfo::getByID($page->getCollectionUserID());
+/** @var \Concrete\Core\User\UserInfo $user */
+$user = app(UserInfoRepository::class)->getByID($page->getCollectionUserID());
+$title = $title ?? null;
 ?>
 <div class="ccm-block-page-title-byline">
     <h1 class="page-title"><?=h($title)?></h1>

@@ -3,36 +3,70 @@ namespace Concrete\Block\PageTitle;
 
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
-use Page;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Tree\Node\Type\Topic;
-use Core;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+
+    /** @var  string | int  */
     protected $btInterfaceWidth = 470;
+    /** @var  string | int  */
     protected $btInterfaceHeight = 500;
+    /** @var  bool  */
     protected $btCacheBlockOutput = true;
+    /** @var  bool  */
     protected $btCacheBlockOutputOnPost = true;
+    /** @var  bool  */
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    /** @var  string  */
     protected $btTable = 'btPageTitle';
+    /** @var  string  */
     protected $btWrapperClass = 'ccm-ui';
 
+    /**  @var string */
+    public $titleText = '';
+    /**  @var bool */
+    public $useCustomTitle = false;
+    /** @var bool  */
+    public $useFilterTitle = false;
+    /** @var bool  */
+    public $useFilterTopic = false;
+    /** @var bool  */
+    public $useFilterTag = false;
+    /** @var bool  */
+    public $useFilterDate = false;
+
+    /**
+     * @inheritDoc
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
         return t("Displays a Page's Title");
     }
 
+    /**
+     * @inheritDoc
+     * @return string
+     */
     public function getBlockTypeName()
     {
         return t("Page Title");
     }
 
+    /**
+     * @return string
+     */
     public function getSearchableContent()
     {
         return $this->getTitleText();
     }
 
+    /**
+     * @return string
+     */
     public function getTitleText()
     {
         if ($this->useCustomTitle && strlen($this->titleText)) {
@@ -44,14 +78,16 @@ class Controller extends BlockController implements UsesFeatureInterface
                 if (!strlen($title) && $p->isMasterCollection()) {
                     $title = '[' . t('Page Title') . ']';
                 }
-            } else {
-                $title = '';
             }
         }
 
-        return $title;
+        return $title ?? '';
     }
 
+    /**
+     * @inheritDoc
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [
@@ -59,6 +95,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
+    /**
+     * @return void
+     */
     public function view()
     {
         if (!(isset($this->formatting) && $this->formatting)) {
@@ -67,6 +106,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('title', $this->getTitleText());
     }
 
+    /**
+     * @return void
+     */
     public function on_start()
     {
         if ($this->useFilterTitle) {
@@ -75,8 +117,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
     }
 
+    /**
+     * @inheritDoc
+     * @param array<string, mixed> $data
+     * @return void
+     */
     public function save($data)
     {
+        if (!is_array($data)) $data = [];
         $data['useCustomTitle'] = isset($data['useCustomTitle']) && $data['useCustomTitle'] ? 1 : 0;
         $data['useFilterTitle'] = isset($data['useFilterTitle']) && $data['useFilterTitle'] ? 1 : 0;
         $data['useFilterTopic'] = isset($data['useFilterTopic']) && $data['useFilterTopic'] ? 1 : 0;
@@ -86,6 +134,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($data);
     }
 
+    /**
+     * @param string|int|false $treeNodeID
+     * @param false $topic
+     * @return void
+     */
     public function action_topic($treeNodeID = false, $topic = false)
     {
         if ($treeNodeID) {
@@ -97,6 +150,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->view();
     }
 
+    /**
+     * @param bool|string|null $tag
+     * @return void
+     */
     public function action_tag($tag = false)
     {
         if ($tag) {
@@ -106,6 +163,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->view();
     }
 
+    /**
+     * @param int|false $year
+     * @param int|false $month
+     * @return void
+     */
     public function action_date($year = false, $month = false)
     {
         if ($year) {
@@ -117,6 +179,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->view();
     }
 
+    /**
+     * @param string[] $parameters
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return array<int,mixed>
+     */
     public function getPassThruActionAndParameters($parameters)
     {
         if ($parameters[0] == 'topic') {
@@ -125,7 +192,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         } elseif ($parameters[0] == 'tag') {
             $method = 'action_tag';
             $parameters = array_slice($parameters, 1);
-        } elseif (Core::make('helper/validation/numbers')->integer($parameters[0])) {
+        } elseif ($this->app->make('helper/validation/numbers')->integer($parameters[0])) {
             $method = 'action_date';
             $parameters[0] = intval($parameters[0]);
             if (isset($parameters[1])) {
@@ -135,9 +202,14 @@ class Controller extends BlockController implements UsesFeatureInterface
             $parameters = $method = null;
         }
 
-        return array($method, $parameters);
+        return [$method, $parameters];
     }
 
+    /**
+     * @param string $title
+     * @param bool $case
+     * @return string
+     */
     public function formatPageTitle($title, $case = false)
     {
         switch ($case) {
@@ -158,6 +230,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $title;
     }
 
+    /**
+     * @param string $method
+     * @param array<int,mixed> $parameters
+     * @return bool
+     */
     public function isValidControllerTask($method, $parameters = [])
     {
         if (!$this->useFilterTitle) {
