@@ -37,6 +37,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $useFilterTag = false;
     /** @var bool  */
     public $useFilterDate = false;
+    /** @var string */
+    public $formatting = "h1";
 
     /**
      * @inheritDoc
