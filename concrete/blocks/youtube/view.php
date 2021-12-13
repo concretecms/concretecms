@@ -1,14 +1,21 @@
 <?php
-
-use League\Url\Url;
-
 defined('C5_EXECUTE') or die('Access Denied.');
+
+use Concrete\Core\Url\Url;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+
+/** @var string $youtubeDomain */
 
 $responsiveClass = 'youtubeBlockResponsive16by9';
 $sizeDisabled = '';
 $lazyLoadAttribute = '';
 $sizeargs = null;
-if ($vWidth && $vHeight) {
+$sizing = $sizing ?? null;
+$videoID = $videoID ?? '';
+$bID = $bID ?? 0; // This should always be set but just incase
+$c = Page::getCurrentPage();
+if (isset($vWidth) && isset($vHeight)) {
     $sizeargs = 'width="' . $vWidth . '" height="' . $vHeight . '"';
     $sizeDisabled = 'style="width:' . $vWidth . 'px; height:' . $vHeight . 'px"';
     $responsiveClass = '';
@@ -27,7 +34,7 @@ if (isset($playlist)) {
     $videoID = '';
 }
 
-if ($playListID) {
+if (isset($playListID) && !empty($playListID)) {
     $params['listType'] = 'playlist';
     $params['list'] = $playListID;
 }
@@ -83,7 +90,7 @@ $source->getPath()->set(['embed', $videoID]);
 // Get rid of the `http:` at the beginning of the url
 $source = substr((string) $source, 5);
 
-if (Page::getCurrentPage()->isEditMode()) {
+if (is_object($c) && $c->isEditMode()) {
     $loc = Localization::getInstance();
     $loc->pushActiveContext(Localization::CONTEXT_UI); ?>
     <div class="ccm-edit-mode-disabled-item youtubeBlock <?php echo $responsiveClass; ?>" <?php echo $sizeDisabled; ?>>

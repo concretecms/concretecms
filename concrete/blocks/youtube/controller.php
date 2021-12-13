@@ -9,33 +9,56 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 class Controller extends BlockController implements UsesFeatureInterface
 {
     protected $btTable = 'btYouTube';
+    /** @var string | int */
     protected $btInterfaceWidth = '400';
+    /** @var string | int */
     protected $btInterfaceHeight = '490';
+    /** @var bool */
     protected $btCacheBlockRecord = true;
+    /** @var bool */
     protected $btCacheBlockOutput = true;
+    /** @var bool */
     protected $btCacheBlockOutputOnPost = true;
+    /** @var bool */
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    /** @var string | null */
+    public $videoURL;
+    /** @var string | null */
+    public $vWidth;
+    /** @var string | null */
+    public $vHeight;
+
 
     /**
-     * Used for localization. If we want to localize the name/description we have to include this.
+     * @inheritDoc
      */
     public function getBlockTypeDescription()
     {
         return t('Embeds a YouTube Video in your web page.');
     }
 
+    /**
+     * @inheritDoc
+     * @return string
+     */
     public function getBlockTypeName()
     {
         return t('YouTube Video');
     }
 
+    /**
+     * @return void
+     */
     public function edit()
     {
-        if ($this->vWidth || $this->vWidth) {
+        if ($this->vWidth || $this->vHeight) {
             $this->set('sizing', 'fixed');
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getRequiredFeatures(): array
     {
         return [
@@ -43,45 +66,58 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
+    /**
+     * @return void
+     */
     public function view()
     {
-        $url = parse_url($this->videoURL);
-        $pathParts = explode('/', rtrim($url['path'], '/'));
-        $videoID = end($pathParts);
         $playListID = '';
+        $videoID = '';
+        $query=[];
 
-        if (isset($url['query']) === true) {
-            parse_str($url['query'], $query);
-            
-            if (isset($query['list']) === true) {
-                $playListID = $query['list'];
-                $videoID = '';
-            } else {
-                $videoID = isset($query['v']) ? $query['v'] : $videoID;
-                $videoID = strtok($videoID, '?');
+        $url = parse_url($this->videoURL ?? '');
+        if (is_array($url) && isset($url['path'])) {
+            $pathParts = explode('/', rtrim($url['path'], '/'));
+            $videoID = end($pathParts);
+            if (isset($url['query']) === true) {
+                parse_str($url['query'], $query);
+
+                if (isset($query['list']) === true) {
+                    $playListID = $query['list'];
+                    $videoID = '';
+                } else {
+                    $videoID = $query['v'] ?? $videoID;
+                    $videoID = strtok($videoID, '?');
+                }
             }
         }
 
-        if ($this->noCookie) {
+
+
+        if (isset($this->noCookie)) {
             $this->set('youtubeDomain', 'www.youtube-nocookie.com');
         } else {
             $this->set('youtubeDomain', 'www.youtube.com');
         }
 
-        if (strpos($videoID, ',') !== false) {
+        if (is_string($videoID) && strpos($videoID, ',') !== false) {
             $this->set('playlist', $videoID);
         }
 
-        if ($this->startTimeEnabled == 1 && ($this->startTime === '0' || $this->startTime)) {
+        if (isset($this->startTimeEnabled) && $this->startTimeEnabled == 1 && isset($this->startTime)) {
             $this->set('startSeconds', $this->convertStringToSeconds($this->startTime));
-        } elseif (isset($query['t']) === true && empty($query['t']) === false) {
+        } elseif (!empty($query) && isset($query['t']) === true && empty($query['t']) === false) {
             $this->set('startSeconds', $this->convertStringToSeconds($query['t']));
         }
 
-        $this->set('videoID', $videoID);
+        $this->set('videoID', (string) $videoID);
         $this->set('playListID', $playListID);
     }
 
+    /**
+     * @param string $string
+     * @return false|float|int
+     */
     public function convertStringToSeconds($string)
     {
         if (preg_match_all('/(\d+)(h|m|s)/i', $string, $matches)) {
@@ -106,6 +142,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         return false;
     }
 
+    /**
+     * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
+     *
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function save($data)
     {
         $data += [
