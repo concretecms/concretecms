@@ -8,29 +8,55 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    protected $btTable = 'btYouTube';
-    /** @var string | int */
-    protected $btInterfaceWidth = '400';
-    /** @var string | int */
-    protected $btInterfaceHeight = '490';
-    /** @var bool */
-    protected $btCacheBlockRecord = true;
-    /** @var bool */
-    protected $btCacheBlockOutput = true;
-    /** @var bool */
-    protected $btCacheBlockOutputOnPost = true;
-    /** @var bool */
-    protected $btCacheBlockOutputForRegisteredUsers = false;
-    /** @var string | null */
+    /**
+     * @var string|null
+     */
     public $videoURL;
-    /** @var string | null */
-    public $vWidth;
-    /** @var string | null */
-    public $vHeight;
-
 
     /**
-     * @inheritDoc
+     * @var string|null
+     */
+    public $vWidth;
+
+    /**
+     * @var string|null
+     */
+    public $vHeight;
+
+    protected $btTable = 'btYouTube';
+
+    /**
+     * @var string|int
+     */
+    protected $btInterfaceWidth = '400';
+
+    /**
+     * @var string|int
+     */
+    protected $btInterfaceHeight = '490';
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockRecord = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutput = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputOnPost = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputForRegisteredUsers = false;
+
+    /**
+     * {@inheritdoc}
      */
     public function getBlockTypeDescription()
     {
@@ -38,7 +64,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @return string
      */
     public function getBlockTypeName()
@@ -57,12 +84,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::VIDEO
+            Features::VIDEO,
         ];
     }
 
@@ -73,7 +100,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $playListID = '';
         $videoID = '';
-        $query=[];
+        $query = [];
 
         $url = parse_url($this->videoURL ?? '');
         if (is_array($url) && isset($url['path'])) {
@@ -92,9 +119,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
 
-
-
-        if (isset($this->noCookie)) {
+        if (isset($this->noCookie) && $this->noCookie) {
             $this->set('youtubeDomain', 'www.youtube-nocookie.com');
         } else {
             $this->set('youtubeDomain', 'www.youtube.com');
@@ -116,6 +141,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * @param string $string
+     *
      * @return false|float|int
      */
     public function convertStringToSeconds($string)
@@ -146,6 +172,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
      *
      * @param array<string,mixed> $data
+     *
      * @return void
      */
     public function save($data)
@@ -174,7 +201,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             'noCookie' => false,
 
-            'lazyLoad' => false
+            'lazyLoad' => false,
         ];
 
         $args = [
@@ -200,7 +227,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             'noCookie' => $data['noCookie'] ? 1 : 0,
 
-            'lazyLoad' => $data['lazyLoad'] ? 1 : 0
+            'lazyLoad' => $data['lazyLoad'] ? 1 : 0,
         ];
         if ($args['sizing'] === 'fixed') {
             $args += [

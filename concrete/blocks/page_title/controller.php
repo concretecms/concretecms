@@ -1,47 +1,88 @@
 <?php
+
 namespace Concrete\Block\PageTitle;
 
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
-use Concrete\Core\Block\BlockController;
 use Concrete\Core\Tree\Node\Type\Topic;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-
-    /** @var  string | int  */
-    protected $btInterfaceWidth = 470;
-    /** @var  string | int  */
-    protected $btInterfaceHeight = 500;
-    /** @var  bool  */
-    protected $btCacheBlockOutput = true;
-    /** @var  bool  */
-    protected $btCacheBlockOutputOnPost = true;
-    /** @var  bool  */
-    protected $btCacheBlockOutputForRegisteredUsers = false;
-    /** @var  string  */
-    protected $btTable = 'btPageTitle';
-    /** @var  string  */
-    protected $btWrapperClass = 'ccm-ui';
-
-    /**  @var string */
+    /**
+     * @var string
+     */
     public $titleText = '';
-    /**  @var bool */
-    public $useCustomTitle = false;
-    /** @var bool  */
-    public $useFilterTitle = false;
-    /** @var bool  */
-    public $useFilterTopic = false;
-    /** @var bool  */
-    public $useFilterTag = false;
-    /** @var bool  */
-    public $useFilterDate = false;
-    /** @var string */
-    public $formatting = "h1";
 
     /**
-     * @inheritDoc
+     * @var bool
+     */
+    public $useCustomTitle = false;
+
+    /**
+     * @var bool
+     */
+    public $useFilterTitle = false;
+
+    /**
+     * @var bool
+     */
+    public $useFilterTopic = false;
+
+    /**
+     * @var bool
+     */
+    public $useFilterTag = false;
+
+    /**
+     * @var bool
+     */
+    public $useFilterDate = false;
+
+    /**
+     * @var string
+     */
+    public $formatting = 'h1';
+
+    /**
+     * @var string|int
+     */
+    protected $btInterfaceWidth = 470;
+
+    /**
+     * @var string|int
+     */
+    protected $btInterfaceHeight = 500;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutput = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputOnPost = true;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputForRegisteredUsers = false;
+
+    /**
+     * @var string
+     */
+    protected $btTable = 'btPageTitle';
+
+    /**
+     * @var string
+     */
+    protected $btWrapperClass = 'ccm-ui';
+
+    /**
+     * {@inheritdoc}
+     *
      * @return string
      */
     public function getBlockTypeDescription()
@@ -50,12 +91,13 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @return string
      */
     public function getBlockTypeName()
     {
-        return t("Page Title");
+        return t('Page Title');
     }
 
     /**
@@ -87,13 +129,14 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @return string[]
      */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::BASICS
+            Features::BASICS,
         ];
     }
 
@@ -102,9 +145,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function view()
     {
-        if (!(isset($this->formatting) && $this->formatting)) {
-            $this->set('formatting', 'h1');
-        }
         $this->set('title', $this->getTitleText());
     }
 
@@ -120,13 +160,17 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @param array<string, mixed> $data
+     *
      * @return void
      */
     public function save($data)
     {
-        if (!is_array($data)) $data = [];
+        if (!is_array($data)) {
+            $data = [];
+        }
         $data['useCustomTitle'] = isset($data['useCustomTitle']) && $data['useCustomTitle'] ? 1 : 0;
         $data['useFilterTitle'] = isset($data['useFilterTitle']) && $data['useFilterTitle'] ? 1 : 0;
         $data['useFilterTopic'] = isset($data['useFilterTopic']) && $data['useFilterTopic'] ? 1 : 0;
@@ -139,12 +183,13 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @param string|int|false $treeNodeID
      * @param false $topic
+     *
      * @return void
      */
     public function action_topic($treeNodeID = false, $topic = false)
     {
         if ($treeNodeID) {
-            $topicObj = Topic::getByID(intval($treeNodeID));
+            $topicObj = Topic::getByID((int) $treeNodeID);
             if ($topicObj instanceof Topic) {
                 $this->set('currentTopic', $topicObj);
             }
@@ -154,6 +199,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * @param bool|string|null $tag
+     *
      * @return void
      */
     public function action_tag($tag = false)
@@ -168,6 +214,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @param int|false $year
      * @param int|false $month
+     *
      * @return void
      */
     public function action_date($year = false, $month = false)
@@ -183,7 +230,9 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * @param string[] $parameters
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
      * @return array<int,mixed>
      */
     public function getPassThruActionAndParameters($parameters)
@@ -196,9 +245,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             $parameters = array_slice($parameters, 1);
         } elseif ($this->app->make('helper/validation/numbers')->integer($parameters[0])) {
             $method = 'action_date';
-            $parameters[0] = intval($parameters[0]);
+            $parameters[0] = (int) ($parameters[0]);
             if (isset($parameters[1])) {
-                $parameters[1] = intval($parameters[1]);
+                $parameters[1] = (int) ($parameters[1]);
             }
         } else {
             $parameters = $method = null;
@@ -210,6 +259,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @param string $title
      * @param bool $case
+     *
      * @return string
      */
     public function formatPageTitle($title, $case = false)
@@ -235,6 +285,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @param string $method
      * @param array<int,mixed> $parameters
+     *
      * @return bool
      */
     public function isValidControllerTask($method, $parameters = [])
