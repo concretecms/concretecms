@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\Block;
 
-use CacheLocal;
-use Collection;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\BlockType\BlockType;
@@ -15,14 +13,14 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
-use Config;
-use Loader;
-use Page;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Collection\Collection;
 
-class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
+class Block extends ConcreteObject implements ObjectInterface
 {
     /**
      * @deprecated use the getBlockAreaObject() method (what's deprecated is the "public" part, it should be protected)
@@ -101,6 +99,35 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      */
     protected $bFilename;
 
+    /** @var bool | int | null */
+    protected $isOriginal;
+    /** @var string | null */
+    public $bName;
+    /** @var int | null */
+    public $btID;
+    /** @var string | null */
+    protected $btHandle;
+    /** @var string | null */
+    protected $btName;
+    /** @var int | null */
+    protected $uID;
+    /** @var string | null */
+    protected $bDateAdded;
+    /** @var string | null */
+    protected $bDateModified;
+    /** @var int | null */
+    protected $bIsActive;
+    /** @var int | null */
+    protected $cbIncludeAll;
+    protected $cbOverrideBlockTypeContainerSettings;
+    /** @var bool | int | null */
+    protected $cbEnableBlockContainer;
+    /** @var int | null */
+    protected $cbOverrideAreaPermissions;
+    /** @var string | null */
+    protected $btCachedBlockRecord;
+    /** @var \Concrete\Core\Block\BlockController | null */
+    public $instance;
     /**
      * Destruct the class instance.
      */
@@ -119,14 +146,18 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
      * @param \Concrete\Core\Area\Area|string|null $a the area containing the block (or its handle)
      *
      * @return \Concrete\Core\Block\Block|null|false Return NULL if the block wasn't found; false if the block type class wasn't found; a Block instance otherwise
+     * @throws \Doctrine\DBAL\Exception|\Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function getByID($bID, $c = null, $a = null)
     {
+        $app = Facade::getFacadeApplication();
+        /** @var \Concrete\Core\Cache\Level\RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $cID = 0;
+        $arHandle = '';
+        $cvID = 0;
         if ($c == null && $a == null) {
-            $cID = 0;
-            $arHandle = '';
-            $cvID = 0;
-            $b = CacheLocal::getEntry('block', $bID);
+            $b = $cache->getItem('/block/'. $bID);
         } else {
             if (is_object($a)) {
                 $arHandle = $a->getAreaHandle();
@@ -138,26 +169,27 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             }
             $cID = $c->getCollectionID();
             $cvID = $c->getVersionID();
-            $b = CacheLocal::getEntry('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
+            $b = $cache->getItem('/block/' . $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
         }
 
         if ($b instanceof self) {
             return $b;
         }
 
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
 
         $b = new self();
         if ($c == null && $a == null) {
             // just grab really specific block stuff
             $q = 'select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?';
-            $b->isOriginal = 1;
+            $b->setOriginal(true);
             $v = [$bID];
         } else {
             $b->arHandle = $arHandle;
             $b->a = $a;
             $b->cID = $cID;
-            $b->c = ($c) ? $c : '';
+            $b->c = ($c) ?: '';
 
             $vo = $c->getVersionObject();
             $cvID = $vo->getVersionID();
@@ -167,7 +199,7 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
  CollectionVersionBlocks.cbOverrideBlockTypeContainerSettings, CollectionVersionBlocks.cbEnableBlockContainer, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?';
         }
 
-        $row = $db->fetchAssoc($q, $v);
+        $row = $db->fetchAssociative($q, $v);
 
         if ($row !== false) {
             $b->setPropertiesFromArray($row);
@@ -179,17 +211,19 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 return false;
             }
 
-            $app = Facade::getFacadeApplication();
+
             $b->instance = $app->make($class, ['obj' => $b]);
 
             if ($c != null || $a != null) {
-                CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
+                $identifier = '/block/'. $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle;
             } else {
-                CacheLocal::set('block', $bID, $b);
+                $identifier = '/block/'. $bID;
             }
+            $cache->save($cache->getItem($identifier)->set($b));
 
             return $b;
         }
+        return null;
     }
 
     /**
@@ -202,11 +236,11 @@ class Block extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public static function getByName($blockName)
     {
         if (!$blockName) {
-            return;
+            return null;
         }
         $app = Application::getFacadeApplication();
         $now = $app->make('date')->getOverridableNow();
-        $db = Loader::db();
+        $db = $app->make(Connection::class);
         $sql = <<<'EOT'
 SELECT
     b.bID,
@@ -306,7 +340,7 @@ EOT
      */
     public function getBlockName()
     {
-        return isset($this->bName) ? $this->bName : null;
+        return $this->bName ?? null;
     }
 
     /**
@@ -348,13 +382,13 @@ EOT
      */
     public function getBlockTypeID()
     {
-        return isset($this->btID) ? $this->btID : null;
+        return $this->btID ?? null;
     }
 
     /**
      * Get the block type instance.
      *
-     * @return \Concrete\Core\Block\BlockType\BlockType|null
+     * @return \Concrete\Core\Entity\Block\BlockType\BlockType|null
      */
     public function getBlockTypeObject()
     {
@@ -370,7 +404,7 @@ EOT
      */
     public function getBlockTypeHandle()
     {
-        return isset($this->btHandle) ? $this->btHandle : null;
+        return $this->btHandle ?? null;
     }
 
     /**
@@ -380,7 +414,7 @@ EOT
      */
     public function getBlockTypeName()
     {
-        return isset($this->btName) ? $this->btName : null;
+        return $this->btName ?? null;
     }
 
     /**
@@ -390,7 +424,7 @@ EOT
      */
     public function getBlockUserID()
     {
-        return isset($this->uID) ? $this->uID : null;
+        return $this->uID ?? null;
     }
 
     /**
@@ -400,7 +434,7 @@ EOT
      */
     public function getBlockDateAdded()
     {
-        return isset($this->bDateAdded) ? $this->bDateAdded : null;
+        return $this->bDateAdded ?? null;
     }
 
     /**
@@ -410,7 +444,7 @@ EOT
      */
     public function getBlockDateLastModified()
     {
-        return isset($this->bDateModified) ? $this->bDateModified : null;
+        return $this->bDateModified ?? null;
     }
 
     /**
@@ -448,7 +482,7 @@ EOT
     /**
      * Get the collection instance containing the block.
      *
-     * @return \Concrete\Core\Page\Collection\Collection|null
+     * @return \Concrete\Core\Page\Page|\Concrete\Core\Page\Collection\Collection|null
      */
     public function getBlockCollectionObject()
     {
@@ -468,7 +502,7 @@ EOT
     {
         $bID = $this->getBlockID();
         if ($bID) {
-            $db = Loader::db();
+            $db = app(Connection::class);
             $q = 'select Pages.cID, cIsTemplate from Pages inner join CollectionVersionBlocks on (CollectionVersionBlocks.cID = Pages.cID) where CollectionVersionBlocks.bID = ? and CollectionVersionBlocks.isOriginal = 1';
             $row = $db->fetchAssoc($q, [$bID]);
             if ($row !== false) {
@@ -479,25 +513,26 @@ EOT
                 }
             }
         }
+        return null;
     }
 
     /**
      * Gets a list of pages that include this block, along with area name, etc...
      *
      * @return \Concrete\Core\Page\Page[]
+     * @throws \Doctrine\DBAL\Exception
      */
     public function getPageList()
     {
         $cArray = [];
         $bID = $this->getBlockID();
         if ($bID) {
-            $db = Loader::db();
+            /** @var Connection $db */
+            $db = app(Connection::class);
             $q = 'select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?';
-            $r = $db->query($q, [$bID]);
-            if ($r) {
-                while ($row = $r->fetch()) {
-                    $cArray[] = Page::getByID($row['cID'], 'RECENT');
-                }
+            $r = $db->executeQuery($q, [$bID]);
+            while ($row = $r->fetchAssociative()) {
+                $cArray[] = Page::getByID($row['cID']);
             }
         }
 
@@ -508,6 +543,7 @@ EOT
      * Set the collection instance containing the block.
      *
      * @param \Concrete\Core\Page\Collection\Collection $c
+     * @return void
      */
     public function setBlockCollectionObject($c)
     {
@@ -535,12 +571,14 @@ EOT
         if (is_object($this->a)) {
             return $this->a;
         }
+        return null;
     }
 
     /**
      * Set the area containing the block.
      *
      * @param \Concrete\Core\Area\Area $a
+     * @return void
      */
     public function setBlockAreaObject(&$a)
     {
@@ -566,7 +604,7 @@ EOT
     public function moveBlockToDisplayOrderPosition($afterBlock)
     {
         // first, we increase the display order of all blocks found after this one.
-        $db = Loader::db();
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
         if ($afterBlock instanceof self) {
             $block = self::getByID(
@@ -603,10 +641,12 @@ EOT
      * Set the absolute position of this block, regardless other blocks in the same page & area.
      *
      * @param int $do the new absolute position of the block (starting from 0)
+     * @throws \Doctrine\DBAL\Exception
      */
     public function setAbsoluteBlockDisplayOrder($do)
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
 
         $cID = $this->getBlockCollectionID();
         $bID = $this->getBlockID();
@@ -615,18 +655,8 @@ EOT
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
 
-        $q = 'update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?';
-        $r = $db->query($q, [$do, $bID, $cID, $cvID, $arHandle]);
-    }
 
-    /**
-     * Get the original block ID.
-     *
-     * @param int|null $originalBID
-     */
-    public function setOriginalBlockID($originalBID)
-    {
-        $this->originalBID = $originalBID;
+        $db->executeStatement('update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?', [$do, $bID, $cID, $cvID, $arHandle]);
     }
 
     /**
@@ -697,10 +727,12 @@ EOT
      * Does this block have an edit user interface?
      *
      * @return bool
+     * @throws \Doctrine\DBAL\Exception
      */
     public function isEditable()
     {
         if ($this->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+            /** @var \Concrete\Block\CoreScrapbookDisplay\Controller $controller */
             $controller = $this->getController();
             $originalBlockID = $controller->getOriginalBlockID();
             $originalBlock = self::getByID($originalBlockID);
@@ -723,7 +755,7 @@ EOT
      */
     public function isActive()
     {
-        return isset($this->bIsActive) ? $this->bIsActive : null;
+        return $this->bIsActive ?? 0;
     }
 
     /**
@@ -731,9 +763,8 @@ EOT
      */
     public function deactivate()
     {
-        $db = Loader::db();
-        $q = 'update Blocks set bIsActive = 0 where bID = ?';
-        $db->query($q, [$this->getBlockID()]);
+        app(Connection::class)->update('Blocks',['bIsActive'=>0],['bID'=>$this->getBlockID()]);
+        $this->bIsActive = 0;
     }
 
     /**
@@ -741,9 +772,8 @@ EOT
      */
     public function activate()
     {
-        $db = Loader::db();
-        $q = 'update Blocks set bIsActive = 1 where bID = ?';
-        $db->query($q, [$this->getBlockID()]);
+        app(Connection::class)->update('Blocks',['bIsActive'=>1],['bID'=>$this->getBlockID()]);
+        $this->bIsActive = 1;
     }
 
     /**
@@ -753,7 +783,7 @@ EOT
      */
     public function disableBlockVersioning()
     {
-        return isset($this->cbIncludeAll) ? $this->cbIncludeAll : null;
+        return $this->cbIncludeAll ?? 0;
     }
 
     /**
@@ -762,22 +792,33 @@ EOT
      * @param \Concrete\Core\Page\Collection\Collection|null $c if specified, check if the block with the ID of this instance is an alias in that page (otherwise the check is done agains this specific block instance)
      *
      * @return bool|null return NULL if $c is specified but there's no block with the same ID in that page
+     * @throws \Doctrine\DBAL\Exception
      */
     public function isAlias($c = null)
     {
         if ($c) {
-            $db = Loader::db();
+            /** @var Connection $db */
+            $db = app(Connection::class);
             $cID = $c->getCollectionID();
             $vo = $c->getVersionObject();
             $cvID = $vo->getVersionID();
             $q = 'select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?';
-            $r = $db->query($q, [$this->getBlockID(), $cID, $cvID]);
-            if ($r) {
-                return $r->rowCount() > 0;
-            }
+
+            $r = $db->executeQuery($q, [$this->getBlockID(), $cID, $cvID]);
+            return $r->rowCount() > 0;
         } else {
-            return isset($this->isOriginal) ? (!$this->isOriginal) : false;
+            return $this->isOriginal();
         }
+    }
+
+    public function setOriginal(bool $isOrignal): void
+    {
+        $this->isOriginal = $isOrignal;
+    }
+
+    public function isOriginal():bool
+    {
+        return isset($this->isOriginal) && !$this->isOriginal;
     }
 
     /**
@@ -794,12 +835,14 @@ EOT
      * Get the number of alias of this block.
      *
      * @return int
+     * @throws \Doctrine\DBAL\Exception
      */
     public function getNumChildren()
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $q = 'select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0';
-        $total = $db->getOne($q, [$this->getBlockID()]);
+        $total = $db->fetchOne($q, [$this->getBlockID()]);
 
         return $total;
     }
@@ -828,7 +871,8 @@ EOT
      */
     public function getCustomStyleSetID()
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         if (!isset($this->issID)) {
             $co = $this->getBlockCollectionObject();
 
@@ -847,7 +891,7 @@ EOT
                     $this->getBlockID(),
                 ];
 
-                $this->issID = (int) $db->GetOne(
+                $this->issID = (int) $db->fetchOne(
                     'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
                     $v
                 );
@@ -882,6 +926,7 @@ EOT
 
             return $bs;
         }
+        return null;
     }
 
     /**
@@ -891,10 +936,11 @@ EOT
      */
     public function setCustomStyleSet(\Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet $set)
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
-        $db->Replace(
+        $db->replace(
             'CollectionVersionBlockStyles',
             [
                 'cID' => $this->getBlockCollectionID(),
@@ -919,10 +965,11 @@ EOT
      */
     public function resetCustomStyle()
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
-        $db->Execute(
+        $db->executeStatement(
             'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
             [
                 $this->getBlockCollectionID(),
@@ -951,7 +998,7 @@ EOT
     /**
      * Override cache settings?
      *
-     * @var int|null 1 for true; 0/null for false
+     * @return int|null 1 for true; 0/null for false
      */
     public function overrideBlockTypeCacheSettings()
     {
@@ -972,7 +1019,8 @@ EOT
      */
     public function setCustomCacheSettings($enabled, $enabledOnPost, $enabledForRegistered, $lifetime)
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
 
@@ -981,7 +1029,7 @@ EOT
         $enabledForRegistered = (bool) $enabledForRegistered;
         $lifetime = (int) $lifetime;
 
-        $db->Replace(
+        $db->replace(
             'CollectionVersionBlocksCacheSettings',
             [
                 'cID' => $this->getBlockCollectionID(),
@@ -1018,7 +1066,8 @@ EOT
      */
     public function resetCustomCacheSettings()
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
         $db->update(
@@ -1049,7 +1098,7 @@ EOT
      */
     public function getBlockCachedRecord()
     {
-        return isset($this->btCachedBlockRecord) ? $this->btCachedBlockRecord : null;
+        return $this->btCachedBlockRecord ?? null;
     }
 
     /**
@@ -1114,7 +1163,8 @@ EOT
             return false;
         }
 
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
 
         $btCachedBlockOutputExpires = strtotime('+5 years');
@@ -1133,7 +1183,7 @@ EOT
         }
 
         if ($arHandle && $cID && $cvID) {
-            $db->Replace(
+            $db->replace(
                 'CollectionVersionBlocksOutputCache',
                 [
                     'cID' => $cID,
@@ -1160,6 +1210,7 @@ EOT
      * @param \Concrete\Core\Area\Area|null $area
      *
      * @return string|false
+     * @throws \Doctrine\DBAL\Exception
      */
     public function getBlockCachedOutput($area)
     {
@@ -1168,7 +1219,8 @@ EOT
             return false;
         }
 
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
 
         $arHandle = $this->getAreaHandle();
         if ($this->isBlockInStack() && is_object($area)) {
@@ -1182,7 +1234,7 @@ EOT
             $cvID = $c->getVersionID();
         }
 
-        $r = $db->GetRow(
+        $r = $db->fetchAssociative(
             'select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ',
             [
                 $cID,
@@ -1191,7 +1243,7 @@ EOT
                 $arHandle,
             ]
             );
-
+        if (!is_array($r)) return false;
         if (array_get($r, 'btCachedBlockOutputExpires') < time()) {
             return false;
         }
@@ -1201,18 +1253,14 @@ EOT
 
     /**
      * Mark the output cache as expired.
+     * @throws \Doctrine\DBAL\Exception
      */
     public function refreshBlockOutputCache()
     {
-        $db = Loader::db();
-        $cID = $this->getBlockCollectionID();
-        $bID = $this->getBlockID();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
-        $v = [$c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID];
-        $db->Execute(
-            'update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-            $v
-            );
+        $db->update('CollectionVersionBlocksOutputCache',['btCachedBlockOutputExpires' => 0], ['cID'=>$c->getCollectionID(),'cvID'=> $c->getVersionID(), 'arHandle'=>$this->getAreaHandle(), 'bID'=>$this->getBlockID()]);
     }
 
     /**
@@ -1224,18 +1272,13 @@ EOT
      */
     public function refreshBlockRecordCache()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app->make(Connection::class);
-
-        $db->executeQuery('UPDATE Blocks SET btCachedBlockRecord = NULL WHERE bID = ?', [
-            $this->getBlockID(),
-        ]);
+        app(Connection::class)->update('Blocks',['btCachedBlockRecord' => NULL],['bID'=> $this->getBlockID()]);
     }
 
     /**
      * Area permissions are overridden?
      *
-     * @var int|null 1 for true; 0/null for false
+     * @return  int|null 1 for true; 0/null for false
      */
     public function overrideAreaPermissions()
     {
@@ -1249,17 +1292,19 @@ EOT
     /**
      * Mark the block as having permissions that override the ones of the area.
      * Initial permissions are copied from the page/area.
+     * @throws \Doctrine\DBAL\Exception
      */
     public function doOverrideAreaPermissions()
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
         $v = [$c->getCollectionID(), $c->getVersionID(), $this->getBlockID(), $this->getAreaHandle()];
-        $db->query(
+        $db->executeStatement(
             'update CollectionVersionBlocks set cbOverrideAreaPermissions = 1 where cID = ? and (cvID = ? or cbIncludeAll = 1) and bID = ? and arHandle = ?',
             $v);
         $v = [$c->getCollectionID(), $c->getVersionID(), $this->getBlockID()];
-        $db->query('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
+        $db->executeStatement('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
 
         // copy permissions from the page to the area
         $permissions = PermissionKey::getList('block');
@@ -1276,12 +1321,13 @@ EOT
     {
         $c = $this->getBlockCollectionObject();
 
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $v = [$c->getCollectionID(), $c->getVersionID(), $this->getBlockID()];
 
-        $db->query('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
+        $db->executeStatement('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
         $v[] = $this->getAreaHandle();
-        $db->query(
+        $db->executeStatement(
             'update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?',
             $v
             );
@@ -1294,7 +1340,7 @@ EOT
      */
     public function enableBlockContainer()
     {
-        return isset($this->cbEnableBlockContainer) ? (bool) $this->cbEnableBlockContainer : false;
+        return isset($this->cbEnableBlockContainer) && $this->cbEnableBlockContainer;
     }
 
     /**
@@ -1330,13 +1376,14 @@ EOT
      * Set the custom settings related to the grid container (overriding the block type default values).
      *
      * @param bool $enableBlockContainer Is the block grid container enabled?
+     * @throws \Doctrine\DBAL\Exception
      */
     public function setCustomContainerSettings($enableBlockContainer)
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
-        $bt = $this->getBlockTypeObject();
         $db->update(
             'CollectionVersionBlocks',
             ['cbOverrideBlockTypeContainerSettings' => 1, 'cbEnableBlockContainer' => $enableBlockContainer ? 1 : 0],
@@ -1351,10 +1398,12 @@ EOT
 
     /**
      * Reset the settings related to the grid container to the block type default values.
+     * @throws \Doctrine\DBAL\Exception
      */
     public function resetBlockContainerSettings()
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
         $bt = $this->getBlockTypeObject();
@@ -1428,8 +1477,9 @@ EOT
      */
     public function getController()
     {
+        $app = Facade::getFacadeApplication();
         if (
-            Config::get('concrete.cache.blocks')
+            $app->make('config')->get('concrete.cache.blocks')
             && isset($this->instance)
             && $this->instance->cacheBlockRecord()
             && is_object($this->instance->getBlockControllerData())
@@ -1438,7 +1488,7 @@ EOT
         } else {
             $bt = $this->getBlockTypeObject();
             $class = $bt->getBlockTypeClass();
-            $app = Facade::getFacadeApplication();
+
             $this->instance = $app->make($class, ['obj' => $this]);
         }
         $this->instance->setBlockObject($this);
@@ -1479,11 +1529,14 @@ EOT
      * Updates fields common to every block.
      *
      * @param array $data the block type-specific data to be saved
+     * @throws \Doctrine\DBAL\Exception
      */
     public function update($data)
     {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $app = Facade::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $dh = $app->make('helper/date');
         $bDateModified = $dh->getOverridableNow();
         $bID = $this->getBlockID();
 
@@ -1491,7 +1544,7 @@ EOT
         $q = 'update Blocks set bDateModified = ? where bID = ?';
 
         $r = $db->prepare($q);
-        $res = $db->execute($r, $v);
+        $r->executeStatement($v);
 
         $this->refreshBlockOutputCache();
 
@@ -1509,12 +1562,15 @@ EOT
      * @param array $data Valid keys:
      * - 'bName' to update the block name
      * - 'bFilename' to update the block custom template
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
      */
     public function updateBlockInformation($data)
     {
-        // this is the function that
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $app = Facade::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $dh = $app->make('helper/date');
         $dt = $dh->getOverridableNow();
 
         $bName = $this->getBlockName();
@@ -1547,7 +1603,7 @@ EOT
         $v = [$bName, $bFilename, $dt, $this->getBlockID()];
         $q = 'update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?';
         $r = $db->prepare($q);
-        $res = $db->execute($r, $v);
+        $r->executeStatement($v);
 
         $this->refreshBlockOutputCache();
     }
@@ -1571,7 +1627,7 @@ EOT
         $old_area_handle = $this->getAreaHandle();
         $new_area_handle = $area->getAreaHandle();
 
-        return (bool) \Database::connection()->update(
+        return (bool) app(Connection::class)->update(
             'CollectionVersionBlocks',
             [
                 'cID' => $new_collection,
@@ -1594,6 +1650,7 @@ EOT
      * @param bool $isCopyFromMasterCollectionPropagation
      *
      * @return \Concrete\Core\Block\Block|false returns false if the block type can't be found; the new block instance otherwise
+     * @throws \Doctrine\DBAL\Exception|\Doctrine\DBAL\Driver\Exception|\Illuminate\Contracts\Container\BindingResolutionException
      */
     public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
     {
@@ -1619,7 +1676,7 @@ EOT
             'btID' => $this->getBlockTypeID(),
             'uID' => $this->getBlockUserID()
         ]);
-        $newBID = $connection->lastInsertId(); // this is the latest inserted block ID
+        $newBID = (int) $connection->lastInsertId(); // this is the latest inserted block ID
 
         // now, we duplicate the block-specific permissions
         $oc = $this->getBlockCollectionObject();
@@ -1663,31 +1720,30 @@ EOT
             ->setParameter('bID', $this->getBlockID())
             ->setParameter('cvID', $ovID)
             ->execute();
-        if ($r) {
-            while ($row = $r->fetch()) {
-                $assignment = $connection->createQueryBuilder()
-                    ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
-                    ->from('BlockPermissionAssignments')
-                    ->where('cID = :cID')
-                    ->andWhere('cvID = :cvID')
-                    ->andWhere('bID = :bID')
-                    ->andWhere('pkID = :pkID')
-                    ->andWhere('paID = :paID')
-                    ->setParameter('cID', $ncID)
-                    ->setParameter('cvID', $nvID)
-                    ->setParameter('bID', $newBID)
-                    ->setParameter('pkID', $row['pkID'])
-                    ->setParameter('paID', $row['paID'])
-                    ->execute()->fetchOne();
-                if ($assignment === false) {
-                    $connection->insert('BlockPermissionAssignments', [
-                        'cID' => $ncID,
-                        'cvID' => $nvID,
-                        'bID' => $newBID,
-                        'pkID' => $row['pkID'],
-                        'paID' => $row['paID']
-                    ]);
-                }
+
+        while ($row = $r->fetchAssociative()) {
+            $assignment = $connection->createQueryBuilder()
+                ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
+                ->from('BlockPermissionAssignments')
+                ->where('cID = :cID')
+                ->andWhere('cvID = :cvID')
+                ->andWhere('bID = :bID')
+                ->andWhere('pkID = :pkID')
+                ->andWhere('paID = :paID')
+                ->setParameter('cID', $ncID)
+                ->setParameter('cvID', $nvID)
+                ->setParameter('bID', $newBID)
+                ->setParameter('pkID', $row['pkID'])
+                ->setParameter('paID', $row['paID'])
+                ->execute()->fetchOne();
+            if ($assignment === false) {
+                $connection->insert('BlockPermissionAssignments', [
+                    'cID' => $ncID,
+                    'cvID' => $nvID,
+                    'bID' => $newBID,
+                    'pkID' => $row['pkID'],
+                    'paID' => $row['paID']
+                ]);
             }
         }
 
@@ -1786,11 +1842,14 @@ EOT
      *
      * @param bool $forceDelete If this is an alias block, should we delete all the block instances in addition to the alias?
      *
-     * @return bool|null Returns false if the block is not valid
+     * @return bool|void Returns false if the block is not valid
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function deleteBlock($forceDelete = false)
     {
-        $db = Loader::db();
+        /** @var Connection $db */
+        $db = app(Connection::class);
 
         $bID = $this->getBlockID();
         if ($bID < 1) {
@@ -1804,39 +1863,25 @@ EOT
 
         // if this block is located in a master collection, we're going to delete all the instances of the block,
         // regardless
-        if (($c instanceof \Concrete\Core\Page\Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
+        if (($c instanceof Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
             // forceDelete is used by the administration console
 
             // this is an original. We're deleting it, and everything else having to do with it
-            $q = 'delete from CollectionVersionBlocks where bID = ?';
-            $r = $db->query($q, [$bID]);
-
-            $q = 'delete from BlockPermissionAssignments where bID = ?';
-            $r = $db->query($q, [$bID]);
-
-            $q = 'delete from CollectionVersionBlockStyles where bID = ?';
-            $r = $db->query($q, [$bID]);
-
-            $q = 'delete from CollectionVersionBlocksCacheSettings where bID = ?';
-            $r = $db->query($q, [$bID]);
+            $db->executeStatement('delete from CollectionVersionBlocks where bID = ?', [$bID]);
+            $db->executeStatement('delete from BlockPermissionAssignments where bID = ?', [$bID]);
+            $db->executeStatement('delete from CollectionVersionBlockStyles where bID = ?', [$bID]);
+            $db->executeStatement('delete from CollectionVersionBlocksCacheSettings where bID = ?', [$bID]);
         } else {
-            $q = 'delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?';
-            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
-
+            $db->executeStatement('delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?', [$cID, $cvID, $bID, $arHandle]);
             // next, we delete the groups instance of this block
-            $q = 'delete from BlockPermissionAssignments where bID = ? and cvID = ? and cID = ?';
-            $r = $db->query($q, [$bID, $cvID, $cID]);
-
-            $q = 'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?';
-            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
-
-            $q = 'delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?';
-            $r = $db->query($q, [$cID, $cvID, $bID, $arHandle]);
+            $db->executeStatement('delete from BlockPermissionAssignments where bID = ? and cvID = ? and cID = ?', [$bID, $cvID, $cID]);
+            $db->executeStatement('delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?', [$cID, $cvID, $bID, $arHandle]);
+            $db->executeStatement('delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?', [$cID, $cvID, $bID, $arHandle]);
         }
         
         //then, we see whether or not this block is aliased to anything else
-        $totalBlocks = $db->GetOne('select count(*) from CollectionVersionBlocks where bID = ?', [$bID]);
-        $totalBlocks += $db->GetOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', [$bID]);
+        $totalBlocks = (int) $db->fetchOne('select count(*) from CollectionVersionBlocks where bID = ?', [$bID]);
+        $totalBlocks += (int) $db->fetchOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', [$bID]);
         if ($totalBlocks < 1) {
             // this block is not referenced in the system any longer, so we delete the entry in the blocks table, as well as the entries in the corresponding
             // sub-blocks table
@@ -1853,18 +1898,17 @@ EOT
             }
 
             // now that the block's subcontent delete() method has been run, we delete the block from the Blocks table
-            $q = 'delete from Blocks where bID = ?';
-            $r = $db->query($q, $v);
+            $db->executeStatement('delete from Blocks where bID = ?', $v);
 
             // Aaaand then we delete all scrapbooked blocks to this entry
-            $r = $db->Execute(
+            $r = $db->executeQuery(
                 'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
                 [$bID]
                 );
-            while ($row = $r->fetch()) {
+            while ($row = $r->fetchAssociative()) {
                 $c = Page::getByID($row['cID'], $row['cvID']);
                 $b = self::getByID($row['bID'], $c, $row['arHandle']);
-                $b->delete();
+                $b->deleteBlock();
             }
         }
     }
@@ -1887,10 +1931,10 @@ EOT
                 $blockNode->addAttribute('custom-template', $this->getBlockFilename());
             }
             if ($this->overrideBlockTypeContainerSettings()) {
-                $blockNode->addAttribute('custom-container-settings', $this->enableBlockContainer() ? 1 : 0);
+                $blockNode->addAttribute('custom-container-settings', $this->enableBlockContainer() ? '1' : '0');
             }
             if (($this->c instanceof Page) && $this->c->isMasterCollection()) {
-                $mcBlockID = Loader::helper('validation/identifier')->getString(8);
+                $mcBlockID = app('helper/validation/identifier')->getString(8);
                 ContentExporter::addMasterCollectionBlockID($this, $mcBlockID);
                 $blockNode->addAttribute('mc-block-id', $mcBlockID);
             }
@@ -1924,14 +1968,16 @@ EOT
      * @param bool $updateForkedBlocks
      *
      * @return array
+     * @throws \Doctrine\DBAL\Exception
      */
     public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks)
     {
+        $app = Facade::getFacadeApplication();
         $records = [];
-        $db = \Database::connection();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
         $oc = $this->getBlockCollectionObject();
-        $site = \Core::make('site')->getSite();
-        $siteTreeID = $site->getSiteTreeID();
+        $site = $app->make('site')->getSite();
         $cbRelationID = $this->getBlockRelationID();
         $treeIDs = [0];
         foreach($site->getLocales() as $locale) {
@@ -1942,25 +1988,25 @@ EOT
         }
         $treeIDs = implode(',', $treeIDs);
 
-        $rows = $db->GetAll('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where pTemplateID = ? and ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID in (' . $treeIDs . ') group by cID order by cID', [$oc->getPageTemplateID(), $oc->getPageTypeID()]);
+        $rows = $db->fetchAllAssociative('select p.cID, max(cvID) as cvID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where pTemplateID = ? and ptID = ? and cIsTemplate = 0 and cIsActive = 1 and siteTreeID in (' . $treeIDs . ') group by cID order by cID', [$oc->getPageTemplateID(), $oc->getPageTypeID()]);
 
         // now we have a list of all pages of this type in the site.
         foreach ($rows as $row) {
             // Ok, first check. Does this block already exist with the SAME block ID on this page? If so, we don't need to do
             // anything, because the block has already been updated, because it's in an unforked state
 
-            $r1 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', [
+            $r1 = $db->fetchAssociative('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', [
                 $row['cID'], $row['cvID'], $this->getBlockID(),
             ]);
 
-            if (!$r1['bID']) {
+            if (!is_array($r1)) {
                 // Ok, no block found. So let's see if a block with the same relationID exists on the page instead.
 
                 $r2 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', [
                     $row['cID'], $row['cvID'], $cbRelationID,
                 ]);
 
-                if (($r2['bID'] && $updateForkedBlocks) || (!$r2['bID'] && $addBlock)) {
+                if ((is_array($r2) && $r2['bID'] && $updateForkedBlocks) || (!is_array($r2['bID']) && $addBlock)) {
                     // Ok, so either this block doesn't appear on the page at all, but addBlock set to true,
                     // or, the block appears on the page and it is forked. Either way we're going to add it to the page.
 
@@ -1970,7 +2016,7 @@ EOT
                         'bID' => $this->getBlockID(),
                     ];
 
-                    if ($r2['bID']) {
+                    if (is_array($r2)) {
                         $record['action'] = 'update_forked_alias';
                         $record['arHandle'] = $r2['arHandle'];
                         $record['bID'] = $r2['bID'];
@@ -1989,23 +2035,24 @@ EOT
 
     /**
      * Populate the queue to be used to work on the block and it aliases.
-
      *
      * @param mixed $data Custom data to be added to the queue messages
      * @param bool $includeThisBlock Include this block instance in the queue?
+     * @throws \Doctrine\DBAL\Exception
      */
     public function queueForDefaultsUpdate($data, $includeThisBlock = true)
     {
         $blocks = [];
-        $db = \Database::connection();
-        $rows = $db->GetAll('select cID, max(cvID) as cvID, cbRelationID from CollectionVersionBlocks where cbRelationID = ? group by cID order by cID', [$this->getBlockRelationID()]);
+        /** @var Connection $db */
+        $db = app(Connection::class);
+        $rows = $db->fetchAllAssociative('select cID, max(cvID) as cvID, cbRelationID from CollectionVersionBlocks where cbRelationID = ? group by cID order by cID', [$this->getBlockRelationID()]);
 
         $oc = $this->getBlockCollectionObject();
         $ocID = $oc->getCollectionID();
         $ocvID = $oc->getVersionID();
 
         foreach ($rows as $row) {
-            $row2 = $db->GetRow('select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', [
+            $row2 = $db->fetchAssociative('select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', [
                 $row['cID'], $row['cvID'], $row['cbRelationID'],
                 ]);
 
@@ -2044,7 +2091,7 @@ EOT
         $cID = $this->getBlockActionCollectionID();
         $bID = $this->getBlockID();
         $arHandle = urlencode($this->getAreaHandle());
-        $valt = Loader::helper('validation/token');
+        $valt = app('helper/validation/token');
         $token = $valt->generate();
         $str = DIR_REL . '/' . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}&amp;ccm_token={$token}";
 
