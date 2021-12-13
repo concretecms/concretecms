@@ -12,13 +12,13 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Cloner;
+use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Support\Facade\Facade;
-use Concrete\Core\Page\Page;
-use Concrete\Core\Page\Collection\Collection;
 
 class Block extends ConcreteObject implements ObjectInterface
 {
@@ -28,6 +28,21 @@ class Block extends ConcreteObject implements ObjectInterface
      * @var \Concrete\Core\Area\Area|null
      */
     public $a;
+
+    /**
+     * @var string|null
+     */
+    public $bName;
+
+    /**
+     * @var int|null
+     */
+    public $btID;
+
+    /**
+     * @var \Concrete\Core\Block\BlockController|null
+     */
+    public $instance;
 
     /**
      * The ID of the collection containing the block.
@@ -99,43 +114,69 @@ class Block extends ConcreteObject implements ObjectInterface
      */
     protected $bFilename;
 
-    /** @var bool | int | null */
+    /**
+     * @var bool|int|null
+     */
     protected $isOriginal;
-    /** @var string | null */
-    public $bName;
-    /** @var int | null */
-    public $btID;
-    /** @var string | null */
+
+    /**
+     * @var string|null
+     */
     protected $btHandle;
-    /** @var string | null */
+
+    /**
+     * @var string|null
+     */
     protected $btName;
-    /** @var int | null */
+
+    /**
+     * @var int|null
+     */
     protected $uID;
-    /** @var string | null */
+
+    /**
+     * @var string|null
+     */
     protected $bDateAdded;
-    /** @var string | null */
+
+    /**
+     * @var string|null
+     */
     protected $bDateModified;
-    /** @var int | null */
+
+    /**
+     * @var int|null
+     */
     protected $bIsActive;
-    /** @var int | null */
+
+    /**
+     * @var int|null
+     */
     protected $cbIncludeAll;
+
     protected $cbOverrideBlockTypeContainerSettings;
-    /** @var bool | int | null */
+
+    /**
+     * @var bool|int|null
+     */
     protected $cbEnableBlockContainer;
-    /** @var int | null */
+
+    /**
+     * @var int|null
+     */
     protected $cbOverrideAreaPermissions;
-    /** @var string | null */
+
+    /**
+     * @var string|null
+     */
     protected $btCachedBlockRecord;
-    /** @var \Concrete\Core\Block\BlockController | null */
-    public $instance;
+
     /**
      * Destruct the class instance.
      */
     public function __destruct()
     {
-        unset($this->c);
-        unset($this->a);
-        unset($this->instance);
+        unset($this->c, $this->a, $this->instance);
     }
 
     /**
@@ -145,8 +186,9 @@ class Block extends ConcreteObject implements ObjectInterface
      * @param \Concrete\Core\Page\Collection\Collection|null $c the collection instance containing the block
      * @param \Concrete\Core\Area\Area|string|null $a the area containing the block (or its handle)
      *
-     * @return \Concrete\Core\Block\Block|null|false Return NULL if the block wasn't found; false if the block type class wasn't found; a Block instance otherwise
      * @throws \Doctrine\DBAL\Exception|\Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return \Concrete\Core\Block\Block|false|null Return NULL if the block wasn't found; false if the block type class wasn't found; a Block instance otherwise
      */
     public static function getByID($bID, $c = null, $a = null)
     {
@@ -157,7 +199,7 @@ class Block extends ConcreteObject implements ObjectInterface
         $arHandle = '';
         $cvID = 0;
         if ($c == null && $a == null) {
-            $b = $cache->getItem('/block/'. $bID);
+            $b = $cache->getItem('/block/' . $bID);
         } else {
             if (is_object($a)) {
                 $arHandle = $a->getAreaHandle();
@@ -211,18 +253,18 @@ class Block extends ConcreteObject implements ObjectInterface
                 return false;
             }
 
-
             $b->instance = $app->make($class, ['obj' => $b]);
 
             if ($c != null || $a != null) {
-                $identifier = '/block/'. $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle;
+                $identifier = '/block/' . $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle;
             } else {
-                $identifier = '/block/'. $bID;
+                $identifier = '/block/' . $bID;
             }
             $cache->save($cache->getItem($identifier)->set($b));
 
             return $b;
         }
+
         return null;
     }
 
@@ -264,9 +306,9 @@ EOT
         $row = $db->getRow($sql, $vals);
         if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
             return self::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
-        } else {
-            return new self();
         }
+
+        return new self();
     }
 
     /**
@@ -454,7 +496,7 @@ EOT
      */
     public function getPackageID()
     {
-        return isset($this->pkgID) ? $this->pkgID : null;
+        return $this->pkgID ?? null;
     }
 
     /**
@@ -488,9 +530,9 @@ EOT
     {
         if (is_object($this->c)) {
             return $this->c;
-        } else {
-            return $this->getOriginalCollection();
         }
+
+        return $this->getOriginalCollection();
     }
 
     /**
@@ -513,14 +555,16 @@ EOT
                 }
             }
         }
+
         return null;
     }
 
     /**
      * Gets a list of pages that include this block, along with area name, etc...
      *
-     * @return \Concrete\Core\Page\Page[]
      * @throws \Doctrine\DBAL\Exception
+     *
+     * @return \Concrete\Core\Page\Page[]
      */
     public function getPageList()
     {
@@ -543,6 +587,7 @@ EOT
      * Set the collection instance containing the block.
      *
      * @param \Concrete\Core\Page\Collection\Collection $c
+     *
      * @return void
      */
     public function setBlockCollectionObject($c)
@@ -571,6 +616,7 @@ EOT
         if (is_object($this->a)) {
             return $this->a;
         }
+
         return null;
     }
 
@@ -578,6 +624,7 @@ EOT
      * Set the area containing the block.
      *
      * @param \Concrete\Core\Area\Area $a
+     *
      * @return void
      */
     public function setBlockAreaObject(&$a)
@@ -611,7 +658,7 @@ EOT
                 $afterBlock->getBlockID(),
                 $this->getBlockCollectionObject(),
                 $this->getBlockAreaObject()
-                );
+            );
             $q = 'update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ? and cbDisplayOrder > ?';
             $v = [$c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $block->getBlockDisplayOrder()];
             $db->Execute($q, $v);
@@ -641,6 +688,7 @@ EOT
      * Set the absolute position of this block, regardless other blocks in the same page & area.
      *
      * @param int $do the new absolute position of the block (starting from 0)
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function setAbsoluteBlockDisplayOrder($do)
@@ -654,7 +702,6 @@ EOT
 
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
-
 
         $db->executeStatement('update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?', [$do, $bID, $cID, $cvID, $arHandle]);
     }
@@ -726,8 +773,9 @@ EOT
     /**
      * Does this block have an edit user interface?
      *
-     * @return bool
      * @throws \Doctrine\DBAL\Exception
+     *
+     * @return bool
      */
     public function isEditable()
     {
@@ -763,7 +811,7 @@ EOT
      */
     public function deactivate()
     {
-        app(Connection::class)->update('Blocks',['bIsActive'=>0],['bID'=>$this->getBlockID()]);
+        app(Connection::class)->update('Blocks', ['bIsActive' => 0], ['bID' => $this->getBlockID()]);
         $this->bIsActive = 0;
     }
 
@@ -772,7 +820,7 @@ EOT
      */
     public function activate()
     {
-        app(Connection::class)->update('Blocks',['bIsActive'=>1],['bID'=>$this->getBlockID()]);
+        app(Connection::class)->update('Blocks', ['bIsActive' => 1], ['bID' => $this->getBlockID()]);
         $this->bIsActive = 1;
     }
 
@@ -791,8 +839,9 @@ EOT
      *
      * @param \Concrete\Core\Page\Collection\Collection|null $c if specified, check if the block with the ID of this instance is an alias in that page (otherwise the check is done agains this specific block instance)
      *
-     * @return bool|null return NULL if $c is specified but there's no block with the same ID in that page
      * @throws \Doctrine\DBAL\Exception
+     *
+     * @return bool|null return NULL if $c is specified but there's no block with the same ID in that page
      */
     public function isAlias($c = null)
     {
@@ -805,10 +854,11 @@ EOT
             $q = 'select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?';
 
             $r = $db->executeQuery($q, [$this->getBlockID(), $cID, $cvID]);
+
             return $r->rowCount() > 0;
-        } else {
-            return $this->isOriginal();
         }
+
+        return $this->isOriginal();
     }
 
     public function setOriginal(bool $isOrignal): void
@@ -816,7 +866,7 @@ EOT
         $this->isOriginal = $isOrignal;
     }
 
-    public function isOriginal():bool
+    public function isOriginal(): bool
     {
         return isset($this->isOriginal) && !$this->isOriginal;
     }
@@ -834,17 +884,17 @@ EOT
     /**
      * Get the number of alias of this block.
      *
-     * @return int
      * @throws \Doctrine\DBAL\Exception
+     *
+     * @return int
      */
     public function getNumChildren()
     {
         /** @var Connection $db */
         $db = app(Connection::class);
         $q = 'select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0';
-        $total = $db->fetchOne($q, [$this->getBlockID()]);
 
-        return $total;
+        return $db->fetchOne($q, [$this->getBlockID()]);
     }
 
     /**
@@ -926,6 +976,7 @@ EOT
 
             return $bs;
         }
+
         return null;
     }
 
@@ -1048,7 +1099,7 @@ EOT
                 'arHandle',
             ],
             true
-            );
+        );
         $db->update(
             'CollectionVersionBlocks',
             ['cbOverrideBlockTypeCacheSettings' => 1],
@@ -1058,7 +1109,7 @@ EOT
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->getBlockID(),
             ]
-            );
+        );
     }
 
     /**
@@ -1079,7 +1130,7 @@ EOT
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->getBlockID(),
             ]
-            );
+        );
         $db->delete(
             'CollectionVersionBlocksCacheSettings',
             [
@@ -1088,7 +1139,7 @@ EOT
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->getBlockID(),
             ]
-            );
+        );
     }
 
     /**
@@ -1200,7 +1251,7 @@ EOT
                     'bID',
                 ],
                 true
-                );
+            );
         }
     }
 
@@ -1209,8 +1260,9 @@ EOT
      *
      * @param \Concrete\Core\Area\Area|null $area
      *
-     * @return string|false
      * @throws \Doctrine\DBAL\Exception
+     *
+     * @return string|false
      */
     public function getBlockCachedOutput($area)
     {
@@ -1242,8 +1294,10 @@ EOT
                 $this->getBlockID(),
                 $arHandle,
             ]
-            );
-        if (!is_array($r)) return false;
+        );
+        if (!is_array($r)) {
+            return false;
+        }
         if (array_get($r, 'btCachedBlockOutputExpires') < time()) {
             return false;
         }
@@ -1253,6 +1307,7 @@ EOT
 
     /**
      * Mark the output cache as expired.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function refreshBlockOutputCache()
@@ -1260,11 +1315,11 @@ EOT
         /** @var Connection $db */
         $db = app(Connection::class);
         $c = $this->getBlockCollectionObject();
-        $db->update('CollectionVersionBlocksOutputCache',['btCachedBlockOutputExpires' => 0], ['cID'=>$c->getCollectionID(),'cvID'=> $c->getVersionID(), 'arHandle'=>$this->getAreaHandle(), 'bID'=>$this->getBlockID()]);
+        $db->update('CollectionVersionBlocksOutputCache', ['btCachedBlockOutputExpires' => 0], ['cID' => $c->getCollectionID(), 'cvID' => $c->getVersionID(), 'arHandle' => $this->getAreaHandle(), 'bID' => $this->getBlockID()]);
     }
 
     /**
-     * Refreshes the block record cache
+     * Refreshes the block record cache.
      *
      * The block record contains information from the block's $btTable.
      *
@@ -1272,13 +1327,13 @@ EOT
      */
     public function refreshBlockRecordCache()
     {
-        app(Connection::class)->update('Blocks',['btCachedBlockRecord' => NULL],['bID'=> $this->getBlockID()]);
+        app(Connection::class)->update('Blocks', ['btCachedBlockRecord' => null], ['bID' => $this->getBlockID()]);
     }
 
     /**
      * Area permissions are overridden?
      *
-     * @return  int|null 1 for true; 0/null for false
+     * @return int|null 1 for true; 0/null for false
      */
     public function overrideAreaPermissions()
     {
@@ -1292,6 +1347,7 @@ EOT
     /**
      * Mark the block as having permissions that override the ones of the area.
      * Initial permissions are copied from the page/area.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function doOverrideAreaPermissions()
@@ -1302,7 +1358,8 @@ EOT
         $v = [$c->getCollectionID(), $c->getVersionID(), $this->getBlockID(), $this->getAreaHandle()];
         $db->executeStatement(
             'update CollectionVersionBlocks set cbOverrideAreaPermissions = 1 where cID = ? and (cvID = ? or cbIncludeAll = 1) and bID = ? and arHandle = ?',
-            $v);
+            $v
+        );
         $v = [$c->getCollectionID(), $c->getVersionID(), $this->getBlockID()];
         $db->executeStatement('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?', $v);
 
@@ -1330,7 +1387,7 @@ EOT
         $db->executeStatement(
             'update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?',
             $v
-            );
+        );
     }
 
     /**
@@ -1376,6 +1433,7 @@ EOT
      * Set the custom settings related to the grid container (overriding the block type default values).
      *
      * @param bool $enableBlockContainer Is the block grid container enabled?
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function setCustomContainerSettings($enableBlockContainer)
@@ -1393,11 +1451,12 @@ EOT
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->getBlockID(),
             ]
-            );
+        );
     }
 
     /**
      * Reset the settings related to the grid container to the block type default values.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function resetBlockContainerSettings()
@@ -1417,7 +1476,7 @@ EOT
                 'arHandle' => $this->getAreaHandle(),
                 'bID' => $this->getBlockID(),
             ]
-            );
+        );
     }
 
     /**
@@ -1493,7 +1552,7 @@ EOT
         }
         $this->instance->setBlockObject($this);
         $this->instance->setAreaObject($this->getBlockAreaObject());
-        
+
         return $this->instance;
     }
 
@@ -1529,6 +1588,7 @@ EOT
      * Updates fields common to every block.
      *
      * @param array $data the block type-specific data to be saved
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function update($data)
@@ -1560,8 +1620,9 @@ EOT
      * Update the block information, like its block filename, and block name.
      *
      * @param array $data Valid keys:
-     * - 'bName' to update the block name
-     * - 'bFilename' to update the block custom template
+     *                    - 'bName' to update the block name
+     *                    - 'bFilename' to update the block custom template
+     *
      * @throws \Doctrine\DBAL\Driver\Exception
      * @throws \Doctrine\DBAL\Exception
      */
@@ -1598,7 +1659,6 @@ EOT
                 }
             }
         }
-
 
         $v = [$bName, $bFilename, $dt, $this->getBlockID()];
         $q = 'update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?';
@@ -1640,7 +1700,7 @@ EOT
                 'arHandle' => $old_area_handle,
                 'bID' => $this->getBlockID(),
             ]
-            );
+        );
     }
 
     /**
@@ -1649,8 +1709,9 @@ EOT
      * @param \Concrete\Core\Page\Collection\Collection $nc The destination collection
      * @param bool $isCopyFromMasterCollectionPropagation
      *
-     * @return \Concrete\Core\Block\Block|false returns false if the block type can't be found; the new block instance otherwise
      * @throws \Doctrine\DBAL\Exception|\Doctrine\DBAL\Driver\Exception|\Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return \Concrete\Core\Block\Block|false returns false if the block type can't be found; the new block instance otherwise
      */
     public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
     {
@@ -1674,7 +1735,7 @@ EOT
             'bDateModified' => $bDate,
             'bFilename' => $this->getBlockFilename(),
             'btID' => $this->getBlockTypeID(),
-            'uID' => $this->getBlockUserID()
+            'uID' => $this->getBlockUserID(),
         ]);
         $newBID = (int) $connection->lastInsertId(); // this is the latest inserted block ID
 
@@ -1706,7 +1767,7 @@ EOT
                 'arHandle' => $this->getAreaHandle(),
                 'cbDisplayOrder' => $row['cbDisplayOrder'],
                 'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                'bID' => $newBID
+                'bID' => $newBID,
             ]);
         }
 
@@ -1719,7 +1780,8 @@ EOT
             ->setParameter('cID', $ocID)
             ->setParameter('bID', $this->getBlockID())
             ->setParameter('cvID', $ovID)
-            ->execute();
+            ->execute()
+        ;
 
         while ($row = $r->fetchAssociative()) {
             $assignment = $connection->createQueryBuilder()
@@ -1742,7 +1804,7 @@ EOT
                     'cvID' => $nvID,
                     'bID' => $newBID,
                     'pkID' => $row['pkID'],
-                    'paID' => $row['paID']
+                    'paID' => $row['paID'],
                 ]);
             }
         }
@@ -1777,11 +1839,11 @@ EOT
                     'btCacheBlockOutput' => $cacheSetting['btCacheBlockOutput'],
                     'btCacheBlockOutputOnPost' => $cacheSetting['btCacheBlockOutputOnPost'],
                     'btCacheBlockOutputForRegisteredUsers' => $cacheSetting['btCacheBlockOutputForRegisteredUsers'],
-                    'btCacheBlockOutputLifetime' => $cacheSetting['btCacheBlockOutputLifetime']
+                    'btCacheBlockOutputLifetime' => $cacheSetting['btCacheBlockOutputLifetime'],
                 ]);
             }
         }
-        
+
         // finally, we insert into the CollectionVersionBlocks table
         $cbDisplayOrder = $this->getBlockDisplayOrder();
         if ($cbDisplayOrder === null) {
@@ -1800,7 +1862,7 @@ EOT
             'cbOverrideAreaPermissions' => $this->overrideAreaPermissions(),
             'cbOverrideBlockTypeCacheSettings' => $this->overrideBlockTypeCacheSettings(),
             'cbOverrideBlockTypeContainerSettings' => $this->overrideBlockTypeContainerSettings(),
-            'cbEnableBlockContainer' => $this->enableBlockContainer() ? 1 : 0
+            'cbEnableBlockContainer' => $this->enableBlockContainer() ? 1 : 0,
         ]);
 
         $nb = self::getByID($newBID, $nc, $this->getAreaHandle());
@@ -1812,7 +1874,7 @@ EOT
                 'cvID' => $nvID,
                 'bID' => $newBID,
                 'arHandle' => $this->getAreaHandle(),
-                'issID' => $issID
+                'issID' => $issID,
             ]);
         }
 
@@ -1842,9 +1904,10 @@ EOT
      *
      * @param bool $forceDelete If this is an alias block, should we delete all the block instances in addition to the alias?
      *
-     * @return bool|void Returns false if the block is not valid
      * @throws \Doctrine\DBAL\Exception
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return bool|void Returns false if the block is not valid
      */
     public function deleteBlock($forceDelete = false)
     {
@@ -1878,7 +1941,7 @@ EOT
             $db->executeStatement('delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?', [$cID, $cvID, $bID, $arHandle]);
             $db->executeStatement('delete from CollectionVersionBlocksCacheSettings where cID = ? and cvID = ? and bID = ? and arHandle = ?', [$cID, $cvID, $bID, $arHandle]);
         }
-        
+
         //then, we see whether or not this block is aliased to anything else
         $totalBlocks = (int) $db->fetchOne('select count(*) from CollectionVersionBlocks where bID = ?', [$bID]);
         $totalBlocks += (int) $db->fetchOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', [$bID]);
@@ -1904,7 +1967,7 @@ EOT
             $r = $db->executeQuery(
                 'select cID, cvID, CollectionVersionBlocks.bID, arHandle from CollectionVersionBlocks inner join btCoreScrapbookDisplay on CollectionVersionBlocks.bID = btCoreScrapbookDisplay.bID where bOriginalID = ?',
                 [$bID]
-                );
+            );
             while ($row = $r->fetchAssociative()) {
                 $c = Page::getByID($row['cID'], $row['cvID']);
                 $b = self::getByID($row['bID'], $c, $row['arHandle']);
@@ -1967,8 +2030,9 @@ EOT
      * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
      * @param bool $updateForkedBlocks
      *
-     * @return array
      * @throws \Doctrine\DBAL\Exception
+     *
+     * @return array
      */
     public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks)
     {
@@ -1980,7 +2044,7 @@ EOT
         $site = $app->make('site')->getSite();
         $cbRelationID = $this->getBlockRelationID();
         $treeIDs = [0];
-        foreach($site->getLocales() as $locale) {
+        foreach ($site->getLocales() as $locale) {
             $tree = $locale->getSiteTree();
             if (is_object($tree)) {
                 $treeIDs[] = $tree->getSiteTreeID();
@@ -2038,6 +2102,7 @@ EOT
      *
      * @param mixed $data Custom data to be added to the queue messages
      * @param bool $includeThisBlock Include this block instance in the queue?
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function queueForDefaultsUpdate($data, $includeThisBlock = true)
@@ -2054,7 +2119,7 @@ EOT
         foreach ($rows as $row) {
             $row2 = $db->fetchAssociative('select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', [
                 $row['cID'], $row['cvID'], $row['cbRelationID'],
-                ]);
+            ]);
 
             if ($includeThisBlock || ($row['cID'] != $ocID || $row['cvID'] != $ocvID || $row2['arHandle'] != $this->getAreaHandle() || $row2['bID'] != $this->getBlockID())) {
                 $blocks[] = [
@@ -2093,9 +2158,8 @@ EOT
         $arHandle = urlencode($this->getAreaHandle());
         $valt = app('helper/validation/token');
         $token = $valt->generate();
-        $str = DIR_REL . '/' . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}&amp;ccm_token={$token}";
 
-        return $str;
+        return DIR_REL . '/' . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}&amp;ccm_token={$token}";
     }
 
     /**
@@ -2199,7 +2263,7 @@ EOT
                 }
             }
         }
-        */
+         */
     }
 
     /**
@@ -2216,6 +2280,6 @@ EOT
             Cache::delete('collection_blocks', $row['cID'] . ':' . $row['cvID']);
             Cache::delete('block', $this->getBlockID());
         }
-        */
+         */
     }
 }
