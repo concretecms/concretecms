@@ -35,7 +35,7 @@ class DescriptionCorePageProperty extends CorePageProperty
     {
         $e = Core::make('helper/validation/error');
         $val = $this->getRequestValue();
-        if ($val['description']) {
+        if (isset($val['description'])) {
             $description = $val['description'];
         } else {
             $description = $this->getPageTypeComposerControlDraftValue();
@@ -54,7 +54,7 @@ class DescriptionCorePageProperty extends CorePageProperty
     public function getRequestValue($args = false)
     {
         $data = parent::getRequestValue($args);
-        $data['description'] = Core::make('helper/security')->sanitizeString($data['description']);
+        $data['description'] = Core::make('helper/security')->sanitizeString($data['description'] ?? '');
 
         return $data;
     }
