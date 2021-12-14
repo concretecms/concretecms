@@ -210,7 +210,7 @@ class Form
      *
      * @param string $key The name/id of the element. It should end with '[]' if it's to return an array on submit.
      * @param string $value String value sent to server, if checkbox is checked, on submit
-     * @param string $isChecked "Checked" value (subject to be overridden by $_REQUEST). Checkbox is checked if value is true (string). Note that 'false' (string) evaluates to true (boolean)!
+     * @param string | bool $isChecked "Checked" value (subject to be overridden by $_REQUEST). Checkbox is checked if value is true (string). Note that 'false' (string) evaluates to true (boolean)!
      * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string

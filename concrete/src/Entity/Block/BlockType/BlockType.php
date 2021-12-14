@@ -21,6 +21,7 @@ use Page;
 use Concrete\Core\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Block\BlockController as BlockTypeController;
 
 /**
  * @ORM\Entity
