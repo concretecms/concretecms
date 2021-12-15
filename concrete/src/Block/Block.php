@@ -2066,11 +2066,11 @@ EOT
             if (!is_array($r1)) {
                 // Ok, no block found. So let's see if a block with the same relationID exists on the page instead.
 
-                $r2 = $db->fetchAssoc('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', [
+                $r2 = $db->fetchAssociative('select arHandle, bID from CollectionVersionBlocks where cID = ? and cvID = ? and cbRelationID = ?', [
                     $row['cID'], $row['cvID'], $cbRelationID,
                 ]);
 
-                if ((is_array($r2) && $r2['bID'] && $updateForkedBlocks) || (!is_array($r2['bID']) && $addBlock)) {
+                if ((is_array($r2) && $r2['bID'] && $updateForkedBlocks) || (!is_array($r2) && $addBlock)) {
                     // Ok, so either this block doesn't appear on the page at all, but addBlock set to true,
                     // or, the block appears on the page and it is forked. Either way we're going to add it to the page.
 
