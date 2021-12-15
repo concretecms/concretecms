@@ -7,14 +7,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Validation\CSRF\Token $token
  * @var Concrete\Core\Entity\Page\Container[] $containers
- * @var Concrete\Core\Entity\Page\Container $container
+ * @var Concrete\Core\Entity\Page\Container|null $container
+ * @var \Concrete\Core\Page\View\PageView $view
  * @var string $tokenMessage
  */
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $icons = $app->make(\Concrete\Core\Page\Container\IconRepository::class)->getIcons();
-
-if (isset($container) && $container) {
+$container = $container ?? null;
+if ($container) {
     $action = URL::to('/dashboard/pages/containers/update_container', $container->getContainerID());
     $buttonText = t('Save');
     $containerName = $container->getContainerName();
