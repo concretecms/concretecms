@@ -356,8 +356,8 @@ class Form
      * Renders a number input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param int|string|array<string,mixed> $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array<string,mixed> $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
