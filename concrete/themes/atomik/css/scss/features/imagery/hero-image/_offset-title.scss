@@ -1,24 +1,14 @@
 div.theme-atomik {
   div.ccm-block-hero-image-offset-title {
+    height: 0;
+    overflow: hidden;
 
-    @include media-breakpoint-up(lg) {
-      margin-top: 2rem;
-      margin-bottom: 4rem;
-
-    }
-
-    img {
-      // Standard responsive behaviors by default.
-      max-width: 100%;
-      height: auto;
-
-      @include media-breakpoint-down(lg) {
-        // Once the screen gets smaller let's change how this works.
-        height: 400px;
-        object-fit: cover;
+    .ccm-block-hero-image-offset-image-container {
+      overflow: hidden;
+      img {
+        width: 100%;
       }
     }
-
 
     div.ccm-block-hero-image-text {
 
@@ -53,4 +43,18 @@ div.theme-atomik {
     }
 
   }
+
+  @include media-breakpoint-up(lg) {
+    // If a container is around, let's add some extra padding
+
+    div.container {
+      div.ccm-block-hero-image-offset-title {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+
 }
+
+
