@@ -19,4 +19,7 @@ $(function() {
     $(window).on('resize', function() {
         computeOffsetTitleHeroImages()
     })
+    $(window).on('offsetTitleBlockLoaded', function() {
+        computeOffsetTitleHeroImages()
+    })
 })

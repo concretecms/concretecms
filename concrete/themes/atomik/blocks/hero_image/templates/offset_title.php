@@ -8,7 +8,7 @@ if (isset($height)) {
 ?>
 <?php if ($image) { ?>
 
-<div class="ccm-block-hero-image-offset-title">
+<div class="ccm-block-hero-image-offset-title" data-block-id="<?=$bID?>">
 
     <div class="ccm-block-hero-image-offset-image-container">
         <img src="<?=$image->getURL()?>" data-height-ratio="<?=$heightRatio?>">
@@ -36,3 +36,8 @@ if (isset($height)) {
 
 <?php } ?>
 
+<script type="text/javascript">
+    $(function() {
+        $(window).trigger('offsetTitleBlockLoaded')
+    })
+</script>
