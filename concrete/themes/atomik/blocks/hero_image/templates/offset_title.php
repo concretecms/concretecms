@@ -1,10 +1,18 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
+<?php
+$heightRatio = '1.0';
+if (isset($height)) {
+    $heightRatio = $height / 100;
+}
+?>
 <?php if ($image) { ?>
 
-<div class="ccm-block-hero-image-offset-title">
+<div class="ccm-block-hero-image-offset-title" data-block-id="<?=$bID?>">
 
-    <img src="<?=$image->getURL()?>" class="img-fluid">
+    <div class="ccm-block-hero-image-offset-image-container">
+        <img src="<?=$image->getURL()?>" data-height-ratio="<?=$heightRatio?>">
+    </div>
 
     <div class="ccm-block-hero-image-text">
 
@@ -27,3 +35,9 @@
 </div>
 
 <?php } ?>
+
+<script type="text/javascript">
+    $(function() {
+        $(window).trigger('offsetTitleBlockLoaded')
+    })
+</script>
