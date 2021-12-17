@@ -22,6 +22,7 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase
         'CollectionVersionBlocks',
         'Collections',
         'Config',
+        'SiteTrees',
     ];
 
     protected $metadatas = [
