@@ -298,7 +298,7 @@ echo $userInterface->tabs([
         $('.ccm-image-slider-entries-<?php echo $bID; ?>').sortable({
             placeholder: "ui-state-highlight",
             axis: "y",
-            handle: "i.fa-arrows",
+            handle: "i.fa-arrows-alt",
             cursor: "move",
             update: function () {
                 doSortCount();
@@ -401,7 +401,7 @@ echo $userInterface->tabs([
         color: #428bca;
     }
 
-    .ccm-image-slider-block-container i.fa-arrows {
+    .ccm-image-slider-block-container i.fa-arrows-alt {
         position: absolute;
         top: 6px;
         right: 5px;
