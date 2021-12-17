@@ -1,38 +1,60 @@
 <?php
+
 namespace Concrete\Block\TopicList;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
-use Concrete\Core\Page\Page;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = ['form','form/page_selector'];
-
-    protected $btInterfaceWidth = 400;
-    protected $btInterfaceHeight = 400;
-    protected $btTable = 'btTopicList';
-    /** @var string[] */
-    protected $btExportPageColumns = ['cParentID'];
-    /** @var int|null */
-    public $topicTreeID;
-    /** @var string|null */
-    public $mode;
-    /** @var string|null */
-    public $topicAttributeKeyHandle;
-    /** @var int|null */
-    public $cParentID;
-    /** @var string|null */
-    public $title;
+    public $helpers = ['form', 'form/page_selector'];
 
     /**
-     * {@inheritDoc}
+     * @var int|null
+     */
+    public $topicTreeID;
+
+    /**
+     * @var string|null
+     */
+    public $mode;
+
+    /**
+     * @var string|null
+     */
+    public $topicAttributeKeyHandle;
+
+    /**
+     * @var int|null
+     */
+    public $cParentID;
+
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    protected $btInterfaceWidth = 400;
+
+    protected $btInterfaceHeight = 400;
+
+    protected $btTable = 'btTopicList';
+
+    /**
+     * @var string[]
+     */
+    protected $btExportPageColumns = ['cParentID'];
+
+    /**
+     * {@inheritdoc}
+     *
      * @return string
      */
     public function getBlockTypeDescription()
@@ -41,16 +63,18 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @return string
      */
     public function getBlockTypeName()
     {
-        return t("Topic List");
+        return t('Topic List');
     }
 
     /**
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
      * @return void
      */
     public function add()
@@ -61,18 +85,20 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @return string[]
      */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::TAXONOMY
+            Features::TAXONOMY,
         ];
     }
 
     /**
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
      * @return void
      */
     public function edit()
@@ -83,7 +109,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             $tree = $defaultTree;
         }
         $trees = TopicTree::getList();
-
 
         $categoryService = $this->app->make('\Concrete\Core\Attribute\Category\PageCategory');
         /** @var \Concrete\Core\Entity\Attribute\Key\PageKey[] */
@@ -100,9 +125,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @return void
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
+     * @return void
      */
     public function view()
     {
@@ -121,21 +146,25 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @param int|false $treeNodeID
      * @param string|false $topic
-     * @return void
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
      */
     public function action_topic($treeNodeID = false, $topic = false)
     {
-        $this->set('selectedTopicID', intval($treeNodeID));
+        $this->set('selectedTopicID', (int) $treeNodeID);
         $this->view();
     }
 
     /**
      * @param \Concrete\Core\Tree\Node\Node|null $topic
-     * @return \League\Url\UrlInterface
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return \League\Url\UrlInterface
      */
-    public function getTopicLink(\Concrete\Core\Tree\Node\Node $topic = null)
+    public function getTopicLink(?\Concrete\Core\Tree\Node\Node $topic = null)
     {
         if ($this->cParentID) {
             $c = Page::getByID($this->cParentID);
@@ -147,14 +176,16 @@ class Controller extends BlockController implements UsesFeatureInterface
             $nodeName = strtolower($nodeName); // convert to lowercase
             $nodeName = preg_replace('/[[:space:]]+/', '-', $nodeName);
             $nodeName = $this->app->make('helper/text')->encodePath($nodeName); // urlencode
+
             return Url::to($c, 'topic', $topic->getTreeNodeID(), $nodeName);
-        } else {
-            return Url::to($c);
         }
+
+            return Url::to($c);
     }
 
     /**
      * @param int $treeID
+     *
      * @return string|null
      */
     public static function replaceTreeWithPlaceHolder($treeID)
@@ -165,11 +196,13 @@ class Controller extends BlockController implements UsesFeatureInterface
                 return '{ccm:export:tree:' . $tree->getTreeName() . '}';
             }
         }
+
         return null;
     }
 
     /**
      * @param \SimpleXMLElement $blockNode
+     *
      * @return void
      */
     public function export(\SimpleXMLElement $blockNode)
@@ -177,7 +210,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $tree = Tree::getByID($this->topicTreeID);
         $data = $blockNode->addChild('data');
         $data->addChild('mode', $this->mode);
-        $data->addChild("title", $this->title);
+        $data->addChild('title', $this->title);
         $data->addChild('topicAttributeKeyHandle', $this->topicAttributeKeyHandle);
         if (is_object($tree)) {
             $data->addChild('tree', $tree->getTreeName());
@@ -193,11 +226,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @param \SimpleXMLElement $blockNode The block node to import
      * @param Page|mixed $page This is ignored
+     *
      * @return array<string, mixed>
      */
     public function getImportData($blockNode, $page)
     {
-        $args = array();
+        $args = [];
         $treeName = (string) $blockNode->data->tree;
         $page = (string) $blockNode->data->cParentID;
         $tree = TopicTree::getByName($treeName);
@@ -226,18 +260,19 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * @param array<string,mixed> $data
+     *
      * @return void
      */
     public function save($data)
     {
-        $data += array(
+        $data += [
             'externalTarget' => 0,
-        );
-        $externalTarget = intval($data['externalTarget']);
+        ];
+        $externalTarget = (int) ($data['externalTarget']);
         if ($externalTarget === 0) {
             $data['cParentID'] = 0;
         } else {
-            $data['cParentID'] = intval($data['cParentID']);
+            $data['cParentID'] = (int) ($data['cParentID']);
         }
 
         parent::save($data);

@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 $topics = $topics ?? [];
 $title = $title ?? t('Topics');
 $titleFormat = $titleFormat ?? 'h5';
@@ -9,7 +9,7 @@ $topicAttributeKeyHandle = $topicAttributeKeyHandle ?? null;
 /** @var \Concrete\Core\Tree\Type\Topic[] $trees */
 /** @var \Concrete\Core\Form\Service\Form $form */
 /** @var \Concrete\Core\Form\Service\Widget\PageSelector $form_page_selector */
-/** @var \Concrete\Block\TopicList\Controller $controller  */
+/** @var \Concrete\Block\TopicList\Controller $controller */
 /** @var \Concrete\Core\Entity\Attribute\Key\PageKey[] $attributeKeys */
 ?>
 <fieldset>
@@ -17,10 +17,10 @@ $topicAttributeKeyHandle = $topicAttributeKeyHandle ?? null;
         <label class="control-label form-label" for="modeSelect"><?=t('Mode')?></label>
         <select class="form-select" name="mode" id="modeSelect">
             <option value="S" <?php if ($mode == 'S') {
-    ?>selected<?php 
+    ?>selected<?php
 } ?>><?=t('Search – Display a list of all topics for use on a search sidebar.')?></option>
             <option value="P" <?php if ($mode == 'P') {
-    ?>selected<?php 
+    ?>selected<?php
 } ?>><?=t('Page – Display a list of topics for the current page.')?></option>
         </select>
     </div>
@@ -30,10 +30,10 @@ $topicAttributeKeyHandle = $topicAttributeKeyHandle ?? null;
             <?php foreach ($trees as $stree) {
     ?>
                 <option value="<?=$stree->getTreeID()?>" <?php if ($tree->getTreeID() == $stree->getTreeID()) {
-    ?>selected<?php 
+    ?>selected<?php
 }
     ?>><?=$stree->getTreeDisplayName()?></option>
-            <?php 
+            <?php
 } ?>
         </select>
     </div>
@@ -44,10 +44,10 @@ $topicAttributeKeyHandle = $topicAttributeKeyHandle ?? null;
             <?php foreach ($attributeKeys as $attributeKey) {
     ?>
                 <option value="<?=$attributeKey->getAttributeKeyHandle()?>" <?php if ($attributeKey->getAttributeKeyHandle() == $topicAttributeKeyHandle) {
-    ?>selected<?php 
+    ?>selected<?php
 }
     ?>><?=$attributeKey->getAttributeKeyDisplayName()?></option>
-            <?php 
+            <?php
 } ?>
         </select>
     </div>
@@ -55,8 +55,8 @@ $topicAttributeKeyHandle = $topicAttributeKeyHandle ?? null;
     <div class='form-group'>
         <label for='title' class="control-label form-label"><?=t('Results Page')?>:</label>
         <div class="form-check">
-            <input class="form-check-input" id="ccm-search-block-external-target" <?php if (intval($cParentID) > 0) {
-    ?>checked<?php 
+            <input class="form-check-input" id="ccm-search-block-external-target" <?php if ((int) $cParentID > 0) {
+    ?>checked<?php
 } ?> name="externalTarget" type="checkbox" value="1" />
             <label for="ccm-search-block-external-target" class="form-check-label">
                 <?=t('Post Results to a Different Page')?>
@@ -70,10 +70,10 @@ $topicAttributeKeyHandle = $topicAttributeKeyHandle ?? null;
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("title", t('Title')); ?>
+        <?php echo $form->label('title', t('Title')); ?>
 	    <div class="input-group">
 		    <?php echo $form->text('title', $title); ?>
-			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, ['style' => 'width:105px;flex-grow:0;', 'class' => 'form-select']); ?>
 		</div>
 	</div>
 

@@ -1,10 +1,10 @@
-<?php  defined('C5_EXECUTE') or die("Access Denied.");
+<?php  defined('C5_EXECUTE') or die('Access Denied.');
 $topics = $topics ?? [];
 $title = $title ?? t('Topics');
 $titleFormat = $titleFormat ?? 'h5';
 $mode = $mode ?? 'S';
 $tree = $tree ?? null;
-/** @var \Concrete\Block\TopicList\Controller $controller  */
+/** @var \Concrete\Block\TopicList\Controller $controller */
 /** @var \Concrete\Core\Block\View\BlockView $view */
 if (!isset($selectedTopicID)) {
     $selectedTopicID = null;
@@ -21,7 +21,7 @@ if (is_object($tree)) {
         <ol class="breadcrumb">
             <li><a href="<?=$view->controller->getTopicLink()?>"
                 <?php if (!$selectedTopicID) {
-    ?>class="ccm-block-topic-list-topic-selected active"<?php 
+    ?>class="ccm-block-topic-list-topic-selected active"<?php
 }
         ?>><?=t('All')?></a></li>
 
@@ -31,16 +31,16 @@ if (is_object($tree)) {
                     <?php if (isset($selectedTopicID) && $selectedTopicID == $child->getTreeNodeID()) {
     ?>
                         class="ccm-block-topic-list-topic-selected active"
-                    <?php 
+                    <?php
 }
     ?> ><?=$child->getTreeNodeDisplayName()?></a></li>
-        <?php 
+        <?php
 }
         ?>
         </ol>
-    <?php 
+    <?php
     }
     ?>
     </div>
-<?php 
+<?php
 } ?>

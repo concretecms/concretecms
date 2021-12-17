@@ -1,11 +1,11 @@
-<?php  defined('C5_EXECUTE') or die("Access Denied.");
+<?php  defined('C5_EXECUTE') or die('Access Denied.');
 
 $topics = $topics ?? [];
 $title = $title ?? t('Topics');
 $titleFormat = $titleFormat ?? 'h5';
 $mode = $mode ?? 'S';
 $tree = $tree ?? null;
-/** @var \Concrete\Block\TopicList\Controller $controller  */
+/** @var \Concrete\Block\TopicList\Controller $controller */
 ?>
 
 <div class="ccm-block-topic-list">
