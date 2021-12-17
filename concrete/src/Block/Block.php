@@ -1891,14 +1891,13 @@ EOT
      * Additionally, this command grabs the permissions from the original record in the CollectionVersionBlocks table, and attaches them to the new one.
      *
      * @param \Concrete\Core\Page\Collection\Collection $c The collection to add the block alias to
-     * @param int|null $displayOrder The number to display this block at. (optional)
      */
-    public function alias($c, int $displayOrder = null)
+    public function alias($c)
     {
         $app = Application::getFacadeApplication();
         /** @var Cloner $cloner */
         $cloner = $app->make(Cloner::class);
-        $cloner->cloneBlock($this, $c, $displayOrder);
+        $cloner->cloneBlock($this, $c);
     }
 
     /**

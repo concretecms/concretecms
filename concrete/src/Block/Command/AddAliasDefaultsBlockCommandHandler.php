@@ -18,15 +18,11 @@ class AddAliasDefaultsBlockCommandHandler
                 $b = Block::getByID($command->getOriginalBlockID(), $mc, $command->getOriginalAreaHandle());
                 if ($b) {
                     $bt = $b->getBlockTypeObject();
-                    $displayOrder = $b->getBlockDisplayOrder();
                     if ($bt->isCopiedWhenPropagated()) {
-                        $b = $b->duplicate($page, true);
-                        $b->setAbsoluteBlockDisplayOrder($displayOrder);
+                        $b->duplicate($page, true);
                     } else {
-                        $b->alias($page, $displayOrder);
+                        $b->alias($page);
                     }
-
-                    $page->rescanDisplayOrder($command->getAreaHandle());
                 }
             }
         }
