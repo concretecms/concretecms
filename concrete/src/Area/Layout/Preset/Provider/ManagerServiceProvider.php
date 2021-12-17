@@ -13,8 +13,8 @@ class ManagerServiceProvider extends ServiceProvider
             Manager::class,
             static function(Application $app): Manager {
                 $manager = new Manager($app);
-                $manager->register(new UserProvider());
-                $manager->register(new ActiveThemeProvider());
+                $manager->register($app->make(UserProvider::class));
+                $manager->register($app->make(ActiveThemeProvider::class));
                 return $manager;
             }
         );
