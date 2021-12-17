@@ -40,7 +40,7 @@ abstract class Layout extends ConcreteObject
     /**
      * @param int $arLayoutID
      *
-     * @return CustomLayout|ThemeGridLayout|null
+     * @return \Concrete\Core\Area\Layout\PresetLayout|CustomLayout|ThemeGridLayout|null
      */
     public static function getByID($arLayoutID)
     {

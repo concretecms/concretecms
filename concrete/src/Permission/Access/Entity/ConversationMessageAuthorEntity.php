@@ -1,27 +1,47 @@
 <?php
+
 namespace Concrete\Core\Permission\Access\Entity;
 
-use Concrete\Core\Support\Facade\Application;
-use Loader;
-use Concrete\Core\Permission\Access\Access as PermissionAccess;
-use Config;
-use UserInfo;
-use Concrete\Core\User\User;
 use Concrete\Core\Conversation\Message\Message;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\ConversationAccess;
+use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfoRepository;
 
 class ConversationMessageAuthorEntity extends Entity
 {
+    /**
+     * @var string|null
+     */
+    protected $label;
+
+    /**
+     * @param PermissionAccess $pa
+     *
+     * @return \Concrete\Core\User\UserInfo[]
+     */
     public function getAccessEntityUsers(PermissionAccess $pa)
     {
         $message = $pa->getPermissionObject();
         if (is_object($message) && ($message instanceof Message)) {
-            return UserInfo::getByID($message->getConversationMessageUserID());
+            return app(UserInfoRepository::class)->getByID($message->getConversationMessageUserID());
         }
+
+        return [];
     }
 
+    /**
+     * @param PermissionAccess $pae
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return bool
+     */
     public function validate(PermissionAccess $pae)
     {
+        $message = null;
         if ($pae instanceof ConversationAccess) {
             $message = $pae->getPermissionObject();
         }
@@ -36,23 +56,32 @@ class ConversationMessageAuthorEntity extends Entity
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function getAccessEntityTypeLinkHTML()
     {
-        $html = '<a href="javascript:void(0)" class="dropdown-item" onclick="ccm_choosePermissionAccessEntityConversationMessageAuthor()">' . tc(
-                'PermissionAccessEntityTypeName',
-                'Message Author'
-            ) . '</a>';
-
-        return $html;
+        return '<a href="javascript:void(0)" class="dropdown-item" onclick="ccm_choosePermissionAccessEntityConversationMessageAuthor()">' . tc(
+            'PermissionAccessEntityTypeName',
+            'Message Author'
+        ) . '</a>';
     }
 
+    /**
+     * @param User|\Concrete\Core\Entity\User\User $user
+     *
+     * @throws \Doctrine\DBAL\Exception
+     *
+     * @return Entity[]
+     */
     public static function getAccessEntitiesForUser($user)
     {
-        $entities = array();
-        $db = Loader::db();
-        if ($user->isRegistered()) {
+        $entities = [];
+        /** @var Connection $db */
+        $db = app(Connection::class);
+        if (is_object($user) && $user->isRegistered()) {
             $pae = static::getOrCreate();
-            $r = $db->GetOne('select cnvMessageID from ConversationMessages where uID = ?', array($user->getUserID()));
+            $r = $db->fetchOne('select cnvMessageID from ConversationMessages where uID = ?', [$user->getUserID()]);
             if ($r > 0) {
                 $entities[] = $pae;
             }
@@ -61,26 +90,34 @@ class ConversationMessageAuthorEntity extends Entity
         return $entities;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     *
+     * @return Entity|false
+     */
     public static function getOrCreate()
     {
-        $db = Loader::db();
-        $petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'conversation_message_author\'');
-        $peID = $db->GetOne(
+        /** @var Connection $db */
+        $db = app(Connection::class);
+        $petID = $db->fetchOne('select petID from PermissionAccessEntityTypes where petHandle = \'conversation_message_author\'');
+        $peID = $db->fetchOne(
             'select peID from PermissionAccessEntities where petID = ?',
-            array($petID)
+            [$petID]
         );
         if (!$peID) {
-            $db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
-            $peID = $db->Insert_ID();
-            Config::save('concrete.misc.access_entity_updated', time());
+            $db->executeStatement('insert into PermissionAccessEntities (petID) values(?)', [$petID]);
+            $peID = $db->lastInsertId();
+            app('config')->save('concrete.misc.access_entity_updated', time());
         }
 
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
     }
 
+    /**
+     * @return void
+     */
     public function load()
     {
-        $db = Loader::db();
         $this->label = t('Message Author');
     }
 }

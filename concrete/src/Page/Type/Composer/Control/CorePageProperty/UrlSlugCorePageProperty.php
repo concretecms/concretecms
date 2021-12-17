@@ -36,7 +36,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
     {
         $e = Loader::helper('validation/error');
         $val = $this->getRequestValue();
-        if ($val['url_slug']) {
+        if (isset($val['url_slug'])) {
             $urlSlug = $val['url_slug'];
         } else {
             $urlSlug = $this->getPageTypeComposerControlDraftValue();

@@ -6,6 +6,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Controller\SinglePage\Dashboard\Pages\Templates $controller
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var \Concrete\Core\View\View $view
+ * @var array $icons
+ * @var \Concrete\Core\Entity\Page\Template[] $templates
  */
 
 if (isset($template) && is_object($template) && ($controller->getAction() == 'edit' || $controller->getAction() == 'update')) {
@@ -93,7 +96,7 @@ if (isset($template) && is_object($template) && ($controller->getAction() == 'ed
     }
 }
 
-if ($template) {
+if (isset($template)) {
         ?>
     <div class="modal fade" id="delete-template" tabindex="-1">
         <form method="post" action="<?=$view->action('delete', $template->getPageTemplateID(), $token->generate('delete_page_template')); ?>">

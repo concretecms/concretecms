@@ -150,7 +150,7 @@ class PhpFixerRunner
             $finder,
             $fixers,
             new Differ(),
-            $this->eventDispatcher,
+            $this->eventDispatcher->getEventDispatcher(),
             $this->errorManager,
             $linter,
             $dryRun,

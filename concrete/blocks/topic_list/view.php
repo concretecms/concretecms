@@ -1,4 +1,12 @@
-<?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php  defined('C5_EXECUTE') or die('Access Denied.');
+
+$topics = $topics ?? [];
+$title = $title ?? t('Topics');
+$titleFormat = $titleFormat ?? 'h5';
+$mode = $mode ?? 'S';
+$tree = $tree ?? null;
+/** @var \Concrete\Block\TopicList\Controller $controller */
+?>
 
 <div class="ccm-block-topic-list">
 
@@ -14,14 +22,14 @@
             if (!isset($selectedTopicID)) {
                 $selectedTopicID = null;
             }
-            $walk = function ($node) use (&$walk, &$view, $selectedTopicID) {
+            $walk = function ($node) use (&$walk, &$controller, $selectedTopicID) {
                 ?><ul class="ccm-block-topic-list-list"><?php
                 foreach ($node->getChildNodes() as $topic) {
                     if ($topic instanceof \Concrete\Core\Tree\Node\Type\Category) {
                         ?><li><?php echo $topic->getTreeNodeDisplayName(); ?>
                         <?php
                     } else {
-                        ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>" <?php
+                        ?><li><a href="<?php echo $controller->getTopicLink($topic); ?>" <?php
                         if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) {
                             ?> class="ccm-block-topic-list-topic-selected"<?php
                         }
@@ -43,7 +51,7 @@
         if (isset($topics) && count($topics)) {
             ?><ul class="ccm-block-topic-list-page-topics"><?php
             foreach ($topics as $topic) {
-                ?><li><a href="<?php echo $view->controller->getTopicLink($topic); ?>"><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php
+                ?><li><a href="<?php echo $controller->getTopicLink($topic); ?>"><?php echo $topic->getTreeNodeDisplayName(); ?></a></li><?php
             }
             ?></ul><?php
         } else {

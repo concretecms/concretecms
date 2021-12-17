@@ -8,13 +8,18 @@ use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Support\Facade\Application;
 
 /** @var Controller $controller */
-/** @var string $displayTag */
-/** @var string $dateFormat */
-/** @var string $delimiter */
+/** @var string|null $displayTag */
+/** @var string|null $dateFormat */
+/** @var string|null $delimiter */
 /** @var int $thumbnailWidth */
 /** @var int $thumbnailHeight */
-/** @var string $attributeTitleText */
-/** @var string $attributeHandle */
+/** @var string|null $attributeTitleText */
+/** @var string|null $attributeHandle */
+$attributeTitleText = $attributeTitleText ?? null;
+$attributeHandle = $attributeHandle ?? null;
+$delimiter = $delimiter ?? null;
+$displayTag = $displayTag ?? null;
+
 
 $app = Application::getFacadeApplication();
 

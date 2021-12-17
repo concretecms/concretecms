@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Asset;
 
 use Concrete\Core\Foundation\ConcreteObject;
@@ -6,20 +7,23 @@ use Concrete\Core\Foundation\ConcreteObject;
 class AssetList
 {
     /**
-     * @var null|self
+     * @var array<string, array<string, Asset>> map<assetType, map<handle, Asset>> Array of assets with type, version, and handle
      */
-    private static $loc = null;
-
-    /**
-     * @var array Array of assets with type, version, and handle
-     */
-    public $assets = array();
+    public $assets = [];
 
     /**
      * @var AssetGroup[] map<handle, AssetGroup>
      */
-    public $assetGroups = array();
+    public $assetGroups = [];
 
+    /**
+     * @var self|null
+     */
+    private static $loc;
+
+    /**
+     * @return array<string, array<string, Asset>> map<assetType, map<handle, Asset>> Array of assets with type, version, and handle
+     */
     public function getRegisteredAssets()
     {
         return $this->assets;
@@ -38,7 +42,7 @@ class AssetList
      */
     public static function getInstance()
     {
-        if (null === self::$loc) {
+        if (self::$loc === null) {
             self::$loc = new self();
         }
 
@@ -49,20 +53,20 @@ class AssetList
      * @param string $assetType
      * @param string $assetHandle
      * @param string $filename
-     * @param array $args
+     * @param array<string,mixed> $args
      * @param bool $pkg
      *
      * @return Asset
      */
-    public function register($assetType, $assetHandle, $filename, $args = array(), $pkg = false)
+    public function register($assetType, $assetHandle, $filename, $args = [], $pkg = false)
     {
-        $defaults = array(
+        $defaults = [
             'position' => false,
             'local' => true,
             'version' => false,
             'combine' => -1,
             'minify' => -1, // use the asset default
-        );
+        ];
         // overwrite all the defaults with the arguments
         $args = array_merge($defaults, $args);
 
@@ -75,20 +79,24 @@ class AssetList
     }
 
     /**
-     * @param array $assets
+     * @param array<string,mixed> $assets
+     *
+     * @return void
      */
     public function registerMultiple(array $assets)
     {
         foreach ($assets as $asset_handle => $asset_types) {
-            foreach ($asset_types as $asset_type => $asset_settings) {
+            foreach ($asset_types as $asset_settings) {
                 array_splice($asset_settings, 1, 0, $asset_handle);
-                call_user_func_array(array($this, 'register'), $asset_settings);
+                call_user_func_array([$this, 'register'], $asset_settings);
             }
         }
     }
 
     /**
      * @param Asset $asset
+     *
+     * @return void
      */
     public function registerAsset(Asset $asset)
     {
@@ -108,10 +116,12 @@ class AssetList
 
     /**
      * @param string $assetGroupHandle
-     * @param array $assetHandles
+     * @param array<string,mixed> $assetHandles
      * @param bool $customClass
+     *
+     * @return void
      */
-    public function registerGroup($assetGroupHandle, $assetHandles, $customClass = false)
+    public function registerGroup(string $assetGroupHandle, array $assetHandles, bool $customClass = false)
     {
         if ($customClass) {
             $class = '\\Concrete\\Core\\Asset\\Group\\' . ConcreteObject::camelcase($assetGroupHandle) . 'AssetGroup';
@@ -127,13 +137,15 @@ class AssetList
     }
 
     /**
-     * @param array $asset_groups
+     * @param array<string, mixed> $asset_groups
+     *
+     * @return void
      */
     public function registerGroupMultiple(array $asset_groups)
     {
         foreach ($asset_groups as $group_handle => $group_setting) {
             array_unshift($group_setting, $group_handle);
-            call_user_func_array(array($this, 'registerGroup'), $group_setting);
+            call_user_func_array([$this, 'registerGroup'], $group_setting);
         }
     }
 
@@ -141,20 +153,20 @@ class AssetList
      * @param string $assetType
      * @param string $assetHandle
      *
-     * @return Asset
+     * @return Asset|null
      */
-    public function getAsset($assetType, $assetHandle)
+    public function getAsset(string $assetType, string $assetHandle)
     {
-        return isset($this->assets[$assetType][$assetHandle]) ? $this->assets[$assetType][$assetHandle] : null;
+        return $this->assets[$assetType][$assetHandle] ?? null;
     }
 
     /**
      * @param string $assetGroupHandle
      *
-     * @return \Concrete\Core\Asset\AssetGroup
+     * @return \Concrete\Core\Asset\AssetGroup|null
      */
     public function getAssetGroup($assetGroupHandle)
     {
-        return $this->assetGroups[$assetGroupHandle];
+        return $this->assetGroups[$assetGroupHandle] ?? null;
     }
 }
