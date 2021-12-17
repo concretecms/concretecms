@@ -1,4 +1,11 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied.");
+$topics = $topics ?? [];
+$title = $title ?? t('Topics');
+$titleFormat = $titleFormat ?? 'h5';
+$mode = $mode ?? 'S';
+$tree = $tree ?? null;
+/** @var \Concrete\Block\TopicList\Controller $controller  */
+/** @var \Concrete\Core\Block\View\BlockView $view */
 if (!isset($selectedTopicID)) {
     $selectedTopicID = null;
 }

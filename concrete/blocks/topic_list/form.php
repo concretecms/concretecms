@@ -1,4 +1,17 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+$topics = $topics ?? [];
+$title = $title ?? t('Topics');
+$titleFormat = $titleFormat ?? 'h5';
+$mode = $mode ?? 'S';
+$tree = $tree ?? null;
+$cParentID = $cParentID ?? null;
+$topicAttributeKeyHandle = $topicAttributeKeyHandle ?? null;
+/** @var \Concrete\Core\Tree\Type\Topic[] $trees */
+/** @var \Concrete\Core\Form\Service\Form $form */
+/** @var \Concrete\Core\Form\Service\Widget\PageSelector $form_page_selector */
+/** @var \Concrete\Block\TopicList\Controller $controller  */
+/** @var \Concrete\Core\Entity\Attribute\Key\PageKey[] $attributeKeys */
+?>
 <fieldset>
     <div class="form-group">
         <label class="control-label form-label" for="modeSelect"><?=t('Mode')?></label>
@@ -51,7 +64,7 @@
         </div>
         <div id="ccm-search-block-external-target-page">
         <?php
-        echo Loader::helper('form/page_selector')->selectPage('cParentID', $cParentID);
+        echo $form_page_selector->selectPage('cParentID', $cParentID);
         ?>
         </div>
     </div>
