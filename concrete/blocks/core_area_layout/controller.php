@@ -7,6 +7,10 @@ use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
 use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
+use Concrete\Core\Area\Layout\Preset\Provider\ActiveThemeProvider;
+use Concrete\Core\Area\Layout\Preset\Provider\Manager as AreaLayoutPresetProvider;
+use Concrete\Core\Area\Layout\Preset\Provider\ThemeProvider;
+use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
 use Concrete\Core\Area\Layout\PresetLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
@@ -283,41 +287,72 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function getImportData($blockNode, $page)
     {
+        if (!isset($blockNode->arealayout)) {
+            return [];
+        }
+        $node = $blockNode->arealayout;
+        $type = (string) $node['type'];
         $args = [];
-        if (isset($blockNode->arealayout)) {
-            $type = (string) $blockNode->arealayout['type'];
-            $node = $blockNode->arealayout;
-            switch ($type) {
-                case 'theme-grid':
-                    $args['gridType'] = 'TG';
-                    $args['arLayoutMaxColumns'] = (string) $node['columns'];
-                    $args['themeGridColumns'] = (int) (count($node->columns->column));
-                    $args['offset'] = [];
-                    $args['span'] = [];
-                    $i = 0;
-                    foreach ($node->columns->column as $column) {
-                        $args['span'][$i] = (int) ($column['span']);
-                        $args['offset'][$i] = (int) ($column['offset']);
-                        $i++;
+        switch ($type) {
+            case 'theme-grid':
+                $args += [
+                    'gridType' => 'TG',
+                    'arLayoutMaxColumns' => (string) $node['columns'],
+                    'themeGridColumns' => count($node->columns->column),
+                    'offset' => [],
+                    'span' => [],
+                ];
+                foreach ($node->columns->column as $column) {
+                    $args['span'][] = (int) $column['span'];
+                    $args['offset'][] = (int) $column['offset'];
+                }
+                break;
+            case 'custom':
+                $presetIdentififer = isset($node['preset']) ? (string) $node['preset'] : '';
+                if ($presetIdentififer !== '') {
+                    $presetProvider = $this->app->make(AreaLayoutPresetProvider::class);
+                    if ($page instanceof \Concrete\Core\Page\Page) {
+                        $theme = $page->getCollectionThemeObject();
+                        if ($theme instanceof ThemeProviderInterface) {
+                            $shouldRegisterProvider = true;
+                            foreach ($presetProvider->getProviders() as $provider) {
+                                if ($provider instanceof ActiveThemeProvider || $provider instanceof ThemeProvider) {
+                                    if ($provider->getThemeHandle() === $theme->getThemeHandle()) {
+                                        $shouldRegisterProvider = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if ($shouldRegisterProvider) {
+                                $presetProvider->register(new ThemeProvider($theme));
+                            }
+                        }
                     }
-                    break;
-                case 'custom':
-                    $args['gridType'] = 'FF';
-                    $args['isautomated'] = true;
-                    $args['spacing'] = (int) ($node['spacing']);
-                    $args['columns'] = (int) (count($node->columns->column));
-                    $customWidths = (int) ($node['custom-widths']);
-                    if ($customWidths == 1) {
-                        $args['isautomated'] = false;
-                    }
-                    $args['width'] = [];
-                    $i = 0;
-                    foreach ($node->columns->column as $column) {
-                        $args['width'][$i] = (int) ($column['width']);
-                        $i++;
-                    }
-                    break;
-            }
+                    $preset = $presetProvider->getPresetByIdentifier($presetIdentififer);
+                } else {
+                    $preset = null;
+                }
+                if ($preset === null) {
+                    $args += [
+                        'gridType' => 'FF',
+                        'isautomated' => (int) $node['custom-widths'] !== 1,
+                    ];
+                } else {
+                    $args += [
+                        'gridType' => $preset->getIdentifier(),
+                        'arLayoutPresetID' => $preset->getIdentifier(),
+                        'isautomated' => true,
+                    ];
+                }
+                $args += [
+                    'spacing' => (int) $node['spacing'],
+                    'columns' => count($node->columns->column),
+                    'width' => [],
+                ];
+                foreach ($node->columns->column as $column) {
+                    $args['width'][] = (int) $column['width'];
+                }
+                break;
         }
 
         return $args;
