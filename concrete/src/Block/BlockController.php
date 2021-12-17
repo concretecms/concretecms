@@ -399,7 +399,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     public function import($page, $arHandle, \SimpleXMLElement $blockNode)
     {
-        $db = Database::connection();
         // handle the adodb stuff
         $args = $this->getImportData($blockNode, $page);
         $blockData = [];
