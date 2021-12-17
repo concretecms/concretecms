@@ -21,6 +21,13 @@ class ActiveThemeProvider implements ProviderInterface
      */
     protected $presets;
 
+    /**
+     * The theme that provides the presets.
+     *
+     * @var \Concrete\Core\Page\Theme\Theme|null
+     */
+    protected $theme;
+
     public function __construct(Request $request, SiteService $siteService)
     {
         $theme = null;
@@ -35,11 +42,17 @@ class ActiveThemeProvider implements ProviderInterface
                 $theme = $themeID ? Theme::getByID($themeID) : null;
             }
         }
-        if ($theme instanceof ThemeProviderInterface) {
-            $provider = new ThemeProvider($theme);
-            $this->name = $provider->getName();
-            $this->presets = $provider->getPresets();
+        if ($theme instanceof Theme) {
+            $this->theme = $theme;
+            $this->name = $theme->getThemeDisplayName();
+            if ($theme instanceof ThemeProviderInterface) {
+                $provider = new ThemeProvider($theme);
+                $this->presets = $provider->getPresets();
+            } else {
+                $this->presets = [];
+            }
         } else {
+            $this->theme = null;
             $this->name = t('Active Theme');
             $this->presets = [];
         }
@@ -63,5 +76,23 @@ class ActiveThemeProvider implements ProviderInterface
     public function getPresets()
     {
         return $this->presets;
+    }
+
+    /**
+     * Get the theme that provides the presets.
+     */
+    public function getTheme(): ?Theme
+    {
+        return $this->theme;
+    }
+
+    /**
+     * Get the handle of the theme that provides the presets.
+     */
+    public function getThemeHandle(): string
+    {
+        $theme = $this->getTheme();
+
+        return $theme === null ? '' : $theme->getThemeHandle();
     }
 }
