@@ -131,7 +131,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $db = Database::get();
         $db->delete('btImageSliderEntries', ['bID' => $this->bID]);
         parent::delete();
-        $this->getTracker()->forget($this);
     }
 
     public function validate($args)
@@ -208,7 +207,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 ++$i;
             }
         }
-        $this->getTracker()->track($this);
     }
 
     public function getUsedFiles()
@@ -218,20 +216,4 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         }, $this->getEntries());
     }
 
-    public function getUsedCollection()
-    {
-        return $this->getCollectionObject();
-    }
-
-    /**
-     * @return \Concrete\Core\Statistics\UsageTracker\AggregateTracker
-     */
-    protected function getTracker()
-    {
-        if ($this->tracker === null) {
-            $this->tracker = $this->app->make(AggregateTracker::class);
-        }
-
-        return $this->tracker;
-    }
 }

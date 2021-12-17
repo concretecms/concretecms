@@ -102,7 +102,7 @@ class Details extends DashboardPageController
         if ($fvID) {
             $fileVersion = $file->getVersion($fvID);
         }
-        if (!$fileVersion) {
+        if (!isset($fileVersion)) {
             $fileVersion = $file->getApprovedVersion() ?: $file->getRecentVersion();
         }
         if ($fileVersion === null) {

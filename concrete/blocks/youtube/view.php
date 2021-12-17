@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $responsiveClass = 'youtubeBlockResponsive16by9';
 $sizeDisabled = '';
 $lazyLoadAttribute = '';
-
+$sizeargs = null;
 if ($vWidth && $vHeight) {
     $sizeargs = 'width="' . $vWidth . '" height="' . $vHeight . '"';
     $sizeDisabled = 'style="width:' . $vWidth . 'px; height:' . $vHeight . 'px"';

@@ -35,6 +35,7 @@ $app = Application::getFacadeApplication();
 $site = $app->make('site')->getSite();
 $config = $site->getConfigRepository();
 $appConfig = $app->make('config');
+$scc = null;
 
 if (is_object($c)) {
     $cp = new Permissions($c);
@@ -81,6 +82,19 @@ if (is_object($c)) {
     if (!$pageMetaKeywords) {
         $pageMetaKeywords = trim($c->getAttribute('meta_keywords'));
     }
+
+    // @deprecated – this is support for page level customizations custom CSS records, which are only available to
+    // legacy customizer themes.
+    if ($c->hasPageThemeCustomizations()) {
+        $styleObject = $c->getCustomStyleObject();
+    } elseif (($pt = $c->getCollectionThemeObject()) && is_object($pt)) {
+        $styleObject = $pt->getThemeCustomStyleObject();
+    }
+    if (isset($styleObject) && is_object($styleObject)) {
+        $scc = $styleObject->getCustomCssRecord();
+    }
+
+
 } else {
     $cID = 1;
     $c = null;
@@ -193,6 +207,11 @@ if ($cp) {
 $v->markHeaderAssetPosition();
 if (empty($disableTrackingCode)) {
     echo $config->get('seo.tracking.code.header');
+}
+if ($scc) {
+    ?>
+    <style type="text/css"><?php echo $scc->getValue(); ?></style>
+    <?php
 }
 if ($c !== null) {
     echo $c->getAttribute('header_extra_content');

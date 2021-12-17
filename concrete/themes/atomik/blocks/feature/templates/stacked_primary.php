@@ -1,24 +1,29 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?php
 $title = h($title);
-if ($linkURL) {
-    $title = '<a href="' . $linkURL . '">' . $title . '</a>';
-}
 $iconTag = $iconTag ?? '';
+
+$opener = '<div class="ccm-block-feature-stacked">';
+$closer = '</div>';
+if ($linkURL) {
+    $opener = '<a href="' . $linkURL . '" class="ccm-block-feature-stacked">';
+    $closer = '</a>';
+}
+
 ?>
-<div class="ccm-block-feature-stacked">
-    <?php if ($title) {
+<?=$opener?>
+<?php if ($title) {
     ?>
 
-        <?=$iconTag?>
+    <?=$iconTag?>
 
-        <<?php echo $titleFormat; ?> class="text-primary"><?=$title?></<?php echo $titleFormat; ?>>
-        
-    <?php 
-} ?>
+    <<?php echo $titleFormat; ?>><span class="text-primary"><?=$title?></span></<?php echo $titleFormat; ?>>
+
     <?php
-    if ($paragraph) {
-        echo $paragraph;
-    }
-    ?>
-</div>
+} ?>
+<?php
+if ($paragraph) {
+    echo $paragraph;
+}
+?>
+<?=$closer?>

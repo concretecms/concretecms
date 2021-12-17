@@ -44,7 +44,7 @@
                             <div class="input-group">
                                 <input class="form-control border-end-0 border" type="search" name="query" placeholder="<?=t('Search')?>" aria-label="<?=t('Search')?>">
                                 <span class="input-group-append">
-                                    <button class="btn bg-white border-start-0 border" type="button">
+                                    <button class="btn bg-white border-start-0 border" type="submit">
                                         <i class="fas fa-search text-secondary"></i>
                                     </button>
                                 </span>

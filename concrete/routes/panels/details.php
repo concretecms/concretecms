@@ -36,3 +36,5 @@ $router->all('/ccm/system/panels/details/theme/preview_preset/{pThemeID}/{preset
 $router->all('/ccm/system/panels/details/theme/preview_preset_iframe/{pThemeID}/{presetIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewPreset::viewIframe');
 $router->all('/ccm/system/panels/details/theme/preview_skin/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewSkin::view');
 $router->all('/ccm/system/panels/details/theme/preview_skin_iframe/{pThemeID}/{skinIdentifier}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewSkin::viewIframe');
+$router->all('/ccm/system/panels/details/theme/preview_page_legacy/{pThemeID}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewPageLegacy::view');
+$router->all('/ccm/system/panels/details/theme/preview_page_legacy_iframe/{pThemeID}/{pageID}', '\Concrete\Controller\Panel\Detail\Theme\PreviewPageLegacy::viewIframe');

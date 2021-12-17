@@ -61,6 +61,7 @@
                 <data table="btCalendar">
                     <record>
                         <caID><![CDATA[0]]></caID>
+                        <chooseCalendar><![CDATA[]]></chooseCalendar>
                         <calendarAttributeKeyHandle><![CDATA[]]></calendarAttributeKeyHandle>
                         <filterByTopicAttributeKeyID><![CDATA[0]]></filterByTopicAttributeKeyID>
                         <filterByTopicID><![CDATA[0]]></filterByTopicID>
@@ -86,10 +87,12 @@
                 <data table="btEventList">
                     <record>
                         <caID><![CDATA[0]]></caID>
+                        <chooseCalendar><![CDATA[]]></chooseCalendar>
                         <calendarAttributeKeyHandle><![CDATA[]]></calendarAttributeKeyHandle>
                         <totalToRetrieve><![CDATA[9]]></totalToRetrieve>
                         <totalPerPage><![CDATA[3]]></totalPerPage>
                         <filterByTopicAttributeKeyID><![CDATA[0]]></filterByTopicAttributeKeyID>
+                        <filterByTopic>none</filterByTopic>
                         <filterByTopicID><![CDATA[0]]></filterByTopicID>
                         <filterByPageTopicAttributeKeyHandle><![CDATA[]]></filterByPageTopicAttributeKeyHandle>
                         <filterByFeatured><![CDATA[0]]></filterByFeatured>

@@ -2,15 +2,16 @@
 
 namespace Concrete\Core\Block;
 
-use BlockType;
 use CacheLocal;
 use Collection;
 use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\Events\BlockDuplicate;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Foundation\ConcreteObject;
+use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
@@ -1596,23 +1597,29 @@ EOT
      */
     public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
     {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
+        $app = Facade::getFacadeApplication();
+        /** @var Connection $connection */
+        $connection = $app->make(Connection::class);
+        /** @var Date $dh */
+        $dh = $app->make('helper/date');
 
         $bt = BlockType::getByID($this->getBlockTypeID());
         $blockTypeClass = $bt->getBlockTypeClass();
         if (!$blockTypeClass) {
             return false;
         }
-        $app = Facade::getFacadeApplication();
         $bc = $app->make($blockTypeClass, ['obj' => $this]);
 
         $bDate = $dh->getOverridableNow();
-        $v = [$this->getBlockName(), $bDate, $bDate, $this->getBlockFilename(), $this->getBlockTypeID(), $this->getBlockUserID()];
-        $q = 'insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)';
-        $r = $db->prepare($q);
-        $res = $db->execute($r, $v);
-        $newBID = $db->Insert_ID(); // this is the latest inserted block ID
+        $connection->insert('Blocks', [
+            'bName' => $this->getBlockName(),
+            'bDateAdded' => $bDate,
+            'bDateModified' => $bDate,
+            'bFilename' => $this->getBlockFilename(),
+            'btID' => $this->getBlockTypeID(),
+            'uID' => $this->getBlockUserID()
+        ]);
+        $newBID = $connection->lastInsertId(); // this is the latest inserted block ID
 
         // now, we duplicate the block-specific permissions
         $oc = $this->getBlockCollectionObject();
@@ -1623,46 +1630,64 @@ EOT
         $nvID = $nc->getVersionID();
 
         // Composer specific
-        $row = $db->GetRow(
-            'select cID, cvID, arHandle, cbDisplayOrder, ptComposerFormLayoutSetControlID from PageTypeComposerOutputBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?',
-            [$ocID, $ovID, $this->getBlockID(), $this->getAreaHandle()]
-            );
+        $row = $connection->createQueryBuilder()
+            ->select('cID', 'cvID', 'arHandle', 'cbDisplayOrder', 'ptComposerFormLayoutSetControlID')
+            ->from('PageTypeComposerOutputBlocks')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('bID = :bID')
+            ->andWhere('arHandle = :arHandle')
+            ->setParameter('cID', $ocID)
+            ->setParameter('cvID', $ovID)
+            ->setParameter('bID', $this->getBlockID())
+            ->setParameter('arHandle', $this->getAreaHandle())
+            ->execute()->fetchAssociative();
         if ($row && is_array($row) && $row['cID']) {
-            $db->insert(
-                'PageTypeComposerOutputBlocks',
-                [
-                    'cID' => $ncID,
-                    'cvID' => $nvID,
-                    'arHandle' => $this->getAreaHandle(),
-                    'cbDisplayOrder' => $row['cbDisplayOrder'],
-                    'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
-                    'bID' => $newBID,
-                ]
-                );
+            $connection->insert('PageTypeComposerOutputBlocks', [
+                'cID' => $ncID,
+                'cvID' => $nvID,
+                'arHandle' => $this->getAreaHandle(),
+                'cbDisplayOrder' => $row['cbDisplayOrder'],
+                'ptComposerFormLayoutSetControlID' => $row['ptComposerFormLayoutSetControlID'],
+                'bID' => $newBID
+            ]);
         }
 
-        $q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
-        $r = $db->query($q, [$this->getBlockID(), $ovID]);
+        $r = $connection->createQueryBuilder()
+            ->select('paID', 'pkID')
+            ->from('BlockPermissionAssignments')
+            ->where('cID = :cID')
+            ->andWhere('bID = :bID')
+            ->andWhere('cvID = :cvID')
+            ->setParameter('cID', $ocID)
+            ->setParameter('bID', $this->getBlockID())
+            ->setParameter('cvID', $ovID)
+            ->execute();
         if ($r) {
             while ($row = $r->fetch()) {
-                $db->Replace(
-                    'BlockPermissionAssignments',
-                    [
+                $assignment = $connection->createQueryBuilder()
+                    ->select('cID', 'cvID', 'bID', 'pkID', 'paID')
+                    ->from('BlockPermissionAssignments')
+                    ->where('cID = :cID')
+                    ->andWhere('cvID = :cvID')
+                    ->andWhere('bID = :bID')
+                    ->andWhere('pkID = :pkID')
+                    ->andWhere('paID = :paID')
+                    ->setParameter('cID', $ncID)
+                    ->setParameter('cvID', $nvID)
+                    ->setParameter('bID', $newBID)
+                    ->setParameter('pkID', $row['pkID'])
+                    ->setParameter('paID', $row['paID'])
+                    ->execute()->fetchOne();
+                if ($assignment === false) {
+                    $connection->insert('BlockPermissionAssignments', [
                         'cID' => $ncID,
                         'cvID' => $nvID,
                         'bID' => $newBID,
-                        'paID' => $row['paID'],
                         'pkID' => $row['pkID'],
-                    ],
-                    [
-                        'cID',
-                        'cvID',
-                        'bID',
-                        'paID',
-                        'pkID',
-                    ],
-                    true
-                    );
+                        'paID' => $row['paID']
+                    ]);
+                }
             }
         }
 
@@ -1672,6 +1697,34 @@ EOT
         } else {
             $bc->duplicate($newBID);
         }
+
+        // we duplicate block-specific cache settings
+        if ($this->overrideBlockTypeCacheSettings()) {
+            $cacheSetting = $connection->createQueryBuilder()
+                ->select('btCacheBlockOutput', 'btCacheBlockOutputOnPost', 'btCacheBlockOutputForRegisteredUsers', 'btCacheBlockOutputLifetime')
+                ->from('CollectionVersionBlocksCacheSettings')
+                ->where('cID = :cID')
+                ->andWhere('cvID = :cvID')
+                ->andWhere('bID = :bID')
+                ->andWhere('arHandle = :arHandle')
+                ->setParameter('cID', $ocID)
+                ->setParameter('cvID', $ovID)
+                ->setParameter('bID', $this->getBlockID())
+                ->setParameter('arHandle', $this->getAreaHandle())
+                ->execute()->fetchAssociative();
+            if ($cacheSetting) {
+                $connection->insert('CollectionVersionBlocksCacheSettings', [
+                    'cID' => $ncID,
+                    'cvID' => $nvID,
+                    'bID' => $newBID,
+                    'arHandle' => $this->getAreaHandle(),
+                    'btCacheBlockOutput' => $cacheSetting['btCacheBlockOutput'],
+                    'btCacheBlockOutputOnPost' => $cacheSetting['btCacheBlockOutputOnPost'],
+                    'btCacheBlockOutputForRegisteredUsers' => $cacheSetting['btCacheBlockOutputForRegisteredUsers'],
+                    'btCacheBlockOutputLifetime' => $cacheSetting['btCacheBlockOutputLifetime']
+                ]);
+            }
+        }
         
         // finally, we insert into the CollectionVersionBlocks table
         $cbDisplayOrder = $this->getBlockDisplayOrder();
@@ -1680,21 +1733,31 @@ EOT
         } else {
             $newBlockDisplayOrder = $cbDisplayOrder;
         }
-        //$v = array($ncID, $nvID, $newBID, $this->areaName, $newBlockDisplayOrder, 1);
-        $v = [$ncID, $nvID, $newBID, $this->getAreaHandle(), $this->getBlockRelationID(), $newBlockDisplayOrder, 1, $this->overrideAreaPermissions(), $this->overrideBlockTypeCacheSettings(), $this->overrideBlockTypeContainerSettings(), $this->enableBlockContainer() ? 1 : 0];
-        $q = 'insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbOverrideBlockTypeCacheSettings,cbOverrideBlockTypeContainerSettings, cbEnableBlockContainer) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $r = $db->prepare($q);
-        $db->execute($r, $v);
+        $connection->insert('CollectionVersionBlocks', [
+            'cID' => $ncID,
+            'cvID' => $nvID,
+            'bID' => $newBID,
+            'arHandle' => $this->getAreaHandle(),
+            'cbRelationID' => $this->getBlockRelationID(),
+            'cbDisplayOrder' => $newBlockDisplayOrder,
+            'isOriginal' => 1,
+            'cbOverrideAreaPermissions' => $this->overrideAreaPermissions(),
+            'cbOverrideBlockTypeCacheSettings' => $this->overrideBlockTypeCacheSettings(),
+            'cbOverrideBlockTypeContainerSettings' => $this->overrideBlockTypeContainerSettings(),
+            'cbEnableBlockContainer' => $this->enableBlockContainer() ? 1 : 0
+        ]);
 
         $nb = self::getByID($newBID, $nc, $this->getAreaHandle());
 
         $issID = $this->getCustomStyleSetID();
         if ($issID > 0) {
-            $v = [$ncID, $nvID, $newBID, $this->getAreaHandle(), $issID];
-            $db->Execute(
-                'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
-                $v
-                );
+            $connection->insert('CollectionVersionBlockStyles', [
+                'cID' => $ncID,
+                'cvID' => $nvID,
+                'bID' => $newBID,
+                'arHandle' => $this->getAreaHandle(),
+                'issID' => $issID
+            ]);
         }
 
         $event = new BlockDuplicate($nb);

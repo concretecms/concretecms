@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\File\Component\Chooser\ChooserConfiguration;
 use Concrete\Core\File\Component\Chooser\ChooserConfigurationInterface;
 use Concrete\Core\File\Component\Chooser\DefaultConfiguration;
+use Concrete\Core\File\Component\Chooser\DefaultConfigurationFactory;
 use Concrete\Core\File\Component\Chooser\Option\FileSetsOption;
 use Concrete\Core\File\Component\Chooser\Option\FileUploadOption;
 use Concrete\Core\File\Component\Chooser\Option\FileManagerOption;
@@ -82,8 +83,7 @@ class FileServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(ChooserConfigurationInterface::class, function($app) {
-            $configuration = $this->app->make(DefaultConfiguration::class);
-            return $configuration;
+            return $this->app->make(DefaultConfigurationFactory::class)->createConfiguration();
         });
     }
 }

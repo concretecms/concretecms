@@ -8,6 +8,8 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\SearchIndexer\StandardSearchIndexerInterface;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Table;
@@ -102,6 +104,9 @@ class StandardSearchIndexer implements SearchIndexerInterface
         array_walk(
             $dropColumns,
             function ($columnName) use ($toTable) {
+                if ($toTable->hasIndex($columnName)) {
+                    $toTable->dropIndex($columnName);
+                }
                 if ($toTable->hasColumn($columnName)) {
                     $toTable->dropColumn($columnName);
                 }
@@ -124,6 +129,22 @@ class StandardSearchIndexer implements SearchIndexerInterface
                         $column['type'],
                         isset($column['options']) ? $column['options'] : []
                     );
+                }
+            }
+        }
+
+        // If attribute category has index definition
+        if ($category instanceof StandardSearchIndexerInterface) {
+            $categorySearchIndexFieldDefinition = $category->getSearchIndexFieldDefinition();
+            if (
+                is_array($categorySearchIndexFieldDefinition)
+                && isset($categorySearchIndexFieldDefinition['index'])
+                && is_array($categorySearchIndexFieldDefinition['index'])
+                && in_array($key->getAttributeKeyHandle(), $categorySearchIndexFieldDefinition['index'])
+            ) {
+                $indexName = $this->getIndexEntryColumnName($key->getAttributeKeyHandle());
+                if ($toTable->hasColumn($indexName) && !$toTable->hasIndex($indexName)) {
+                    $toTable->addIndex([$indexName, 'cID'], $indexName);
                 }
             }
         }
@@ -182,6 +203,12 @@ class StandardSearchIndexer implements SearchIndexerInterface
             } else {
                 $this->connection->insert($category->getIndexedSearchTable(), $primaries + $columnValues);
             }
+        }
+
+        $controller = $value->getController();
+        if ($controller instanceof TrackableInterface && $subject instanceof Collection) {
+            $tracker = app('statistics/tracker');
+            $tracker->track($subject);
         }
     }
 

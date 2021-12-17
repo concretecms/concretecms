@@ -40,7 +40,7 @@ class Controller extends AttributeTypeController
         $cID = $this->getAttributeValue()->getValue();
         $page = Page::getByID($cID, 'ACTIVE');
         if (is_object($page) && !$page->isError()) {
-            return t('<a href="%s">%s</a>', $page->getCollectionLink(), $page->getCollectionName());
+            return sprintf('<a href="%s">%s</a>', $page->getCollectionLink(), $page->getCollectionName());
         }
     }
 

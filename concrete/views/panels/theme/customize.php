@@ -35,8 +35,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
             :styles='<?=h(json_encode($styles))?>'
             :style-list='<?=h(json_encode($styleList))?>'
 
-            <?php if (isset($skin) && $skin instanceof \Concrete\Core\Entity\Page\Theme\CustomSkin) { ?>
-                :custom-css='<?=h(json_encode($skin->getCustomCss()))?>'
+            <?php if (isset($customCss)) { ?>
+                :custom-css='<?=h(json_encode($customCss))?>'
             <?php } ?>
     >
 

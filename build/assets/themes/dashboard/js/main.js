@@ -37,6 +37,8 @@ import './translator';
 
 // Marketplace support
 import './remote-marketplace';
+import 'magnific-popup'
+import '@concretecms/bedrock/assets/imagery/js/frontend/responsive-slides';
 import components from "@concretecms/bedrock/assets/cms/components/index";
 
 var setupResultMessages = function() {

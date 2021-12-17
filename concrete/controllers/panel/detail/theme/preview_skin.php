@@ -7,6 +7,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\StyleCustomizer\Compiler\Compiler;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
@@ -20,9 +21,8 @@ class PreviewSkin extends BackendInterfaceController
 
     public function canAccess()
     {
-        $page = Page::getByPath('/dashboard/pages/themes');
-        $checker = new Checker($page);
-        return $checker->canViewPage();
+        $pk = PermissionKey::getByHandle('customize_themes');
+        return $pk->validate();
     }
 
     public function view($pThemeID, $skinIdentifier, $pageID)

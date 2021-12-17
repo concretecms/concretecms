@@ -2001,6 +2001,9 @@ class Version implements ObjectInterface
         $r->urlDetail = (string) $urlResolver->resolve(['/dashboard/files/details', 'view', $this->getFileID()]);
         $r->title = $this->getTitle();
         $r->genericTypeText = $this->getGenericTypeText();
+        $r->type = $this->getType();
+        $r->genericType = $this->getTypeObject()->getGenericType();
+        $r->extension = $this->getExtension();
         $r->description = $this->getDescription();
         $r->fileName = $this->getFileName();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();

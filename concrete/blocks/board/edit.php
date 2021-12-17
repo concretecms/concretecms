@@ -42,7 +42,7 @@ $checker = new Permissions($instance->getBoard());
         </li>
     <?php } ?>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save">
-        <button type="button" data-toolbar-button-action="exit-board"><?= t("Done") ?></button>
+        <button type="button" data-toolbar-button-action="exit-board" class="btn btn-primary"><?= t("Done") ?></button>
     </li>
 </ul>
 

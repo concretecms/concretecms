@@ -32,7 +32,22 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputLifetime = 300;
     protected $list;
-    
+
+    public $orderBy;
+    public $filterDateOption;
+    public $displayFeaturedOnly;
+    public $displayAliases;
+    public $displaySystemPages;
+    public $ptID;
+    public $filterByRelated;
+    public $filterByCustomTopic;
+    public $cParentID;
+    public $num;
+    public $pfID;
+    public $truncateSummaries;
+    public $displayThumbnail;
+    public $includeName;
+
     public function getRequiredFeatures(): array
     {
         return [
@@ -90,27 +105,27 @@ class Controller extends BlockController implements UsesFeatureInterface
         $controller->orderBy = $_REQUEST['orderBy'];
         $controller->ptID = $_REQUEST['ptID'];
         $controller->rss = $_REQUEST['rss'];
-        $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'];
-        $controller->displayAliases = $_REQUEST['displayAliases'];
-        $controller->paginate = (bool) $_REQUEST['paginate'];
-        $controller->enableExternalFiltering = $_REQUEST['enableExternalFiltering'];
-        $controller->filterByRelated = $_REQUEST['filterByRelated'];
+        $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'] ?? false;
+        $controller->displayAliases = $_REQUEST['displayAliases'] ?? false;
+        $controller->paginate = $_REQUEST['paginate'] ?? false;
+        $controller->enableExternalFiltering = $_REQUEST['enableExternalFiltering'] ?? false;
+        $controller->filterByRelated = $_REQUEST['filterByRelated'] ?? false;
         $controller->relatedTopicAttributeKeyHandle = $_REQUEST['relatedTopicAttributeKeyHandle'];
         $controller->filterByCustomTopic = ($_REQUEST['topicFilter'] == 'custom') ? '1' : '0';
         $controller->customTopicAttributeKeyHandle = $_REQUEST['customTopicAttributeKeyHandle'];
         $controller->customTopicTreeNodeID = $_REQUEST['customTopicTreeNodeID'];
-        $controller->includeAllDescendents = $_REQUEST['includeAllDescendents'];
-        $controller->includeDate = $_REQUEST['includeDate'];
-        $controller->displayThumbnail = $_REQUEST['displayThumbnail'];
-        $controller->includeDescription = $_REQUEST['includeDescription'];
-        $controller->useButtonForLink = $_REQUEST['useButtonForLink'];
+        $controller->includeAllDescendents = $_REQUEST['includeAllDescendents'] ?? false;
+        $controller->includeDate = $_REQUEST['includeDate'] ?? false;
+        $controller->displayThumbnail = $_REQUEST['displayThumbnail'] ?? false;
+        $controller->includeDescription = $_REQUEST['includeDescription'] ?? false;
+        $controller->useButtonForLink = $_REQUEST['useButtonForLink'] ?? false;
         $controller->filterDateOption = $_REQUEST['filterDateOption'];
         $controller->filterDateStart = $_REQUEST['filterDateStart'];
         $controller->filterDateEnd = $_REQUEST['filterDateEnd'];
         $controller->filterDateDays = $_REQUEST['filterDateDays'];
         $controller->set('includeEntryText', true);
         $controller->set('includeName', true);
-
+        $controller->set('displayThumbnail', $controller->displayThumbnail);
         $bv = new BlockView($bt);
         ob_start();
         $bv->render('view');
@@ -317,6 +332,35 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('titleFormat', 'h5');
         $this->set('topicFilter', '');
         $this->set('filterDateOption', 'all');
+        $this->set('num', 10);
+        $this->set('ptID', 0);
+        $this->set('customTopicAttributeKeyHandle', null);
+        $this->set('relatedTopicAttributeKeyHandle', null);
+        $this->set('customTopicTreeNodeID', 0);
+        $this->set('filterDateDays', 0);
+        $this->set('filterDateStart', null);
+        $this->set('filterDateEnd', null);
+        $this->set('displayFeaturedOnly', false);
+        $this->set('displayAliases', false);
+        $this->set('displaySystemPages', false);
+        $this->set('ignorePermissions', false);
+        $this->set('enableExternalFiltering', false);
+        $this->set('paginate', false);
+        $this->set('cParentID', 0);
+        $this->set('cThis', false);
+        $this->set('cThisParent', false);
+        $this->set('isOtherPage', false);
+        $this->set('includeAllDescendents', false);
+        $this->set('orderBy', $this->orderBy);
+        $this->set('rssFeed', false);
+        $this->set('truncateSummaries', false);
+        $this->set('truncateChars', 0);
+        $this->set('includeDate', false);
+        $this->set('displayThumbnail', false);
+        $this->set('useButtonForLink', false);
+        $this->set('buttonLinkText', null);
+        $this->set('pageListTitle', false);
+        $this->set('noResultsMessage', false);
         $this->loadKeys();
     }
 

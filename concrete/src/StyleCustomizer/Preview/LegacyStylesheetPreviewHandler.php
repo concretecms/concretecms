@@ -4,6 +4,7 @@ namespace Concrete\Core\StyleCustomizer\Preview;
 
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\Response;
+use Concrete\Core\Page\CustomStyle;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\StyleCustomizer\Customizer\Customizer;
@@ -16,7 +17,7 @@ use Concrete\Core\StyleCustomizer\Traits\ExtractPresetFontsFileStyleFromLegacyPr
 /**
  * Used by the legacy customizer, this preview handler loops through all customizable style sheets in the theme's root
  * and saves them into the cache, which is then used by the getStylesheet method in the page.
- *
+ * @deprecated
  */
 class LegacyStylesheetPreviewHandler implements PreviewHandlerInterface
 {
@@ -84,6 +85,15 @@ class LegacyStylesheetPreviewHandler implements PreviewHandlerInterface
     public function getPresetPreviewResponse(Customizer $customizer, Page $page, PresetInterface $preset): Response
     {
         $collection = $this->variableCollectionFactory->createFromPreset($customizer, $preset);
+        return $this->deliverResponse($customizer, $page, $collection);
+    }
+
+    /**
+     * Used when a page level or custom theme customizer set has been saved and now needs to be re-previewed.
+     */
+    public function getCustomStylePreviewResponse(Customizer $customizer, Page $page, CustomStyle $customStyle): Response
+    {
+        $collection = $this->variableCollectionFactory->createFromStyleValueList($customStyle->getValueList());
         return $this->deliverResponse($customizer, $page, $collection);
     }
 

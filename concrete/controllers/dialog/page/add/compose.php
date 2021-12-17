@@ -88,13 +88,17 @@ class Compose extends Controller
             || $this->request->request('addPageComposeAction') == 'schedule') {
                 $publishDateTime = false;
                 $publishEndDateTime = false;
+                $keepOtherScheduling = false;
                 if ($this->request->request->get('addPageComposeAction') == 'schedule') {
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
                     $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
+                    if ($this->request->request->get('keepOtherScheduling')) {
+                        $keepOtherScheduling = true;
+                    }
                 }
 
-                $pagetype->publish($d, $publishDateTime, $publishEndDateTime);
+                $pagetype->publish($d, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
 
                 $pr->setAdditionalDataAttribute('cParentID', $cParentID);
                 $pr->setMessage(t('Page Added Successfully.'));

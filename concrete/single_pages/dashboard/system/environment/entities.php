@@ -46,9 +46,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     <div class="col-md-1"><span class="text-muted"><?= t('Paths'); ?></span></div>
                     <div class="col-md-11">
                         <?php
-                            if ($driver instanceof Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver) {
+                            if ($driver instanceof \Doctrine\ORM\Mapping\Driver\AnnotationDriver) {
                                 $paths = $driver->getPaths();
-                            } elseif ($driver instanceof Doctrine\Common\Persistence\Mapping\Driver\FileDriver) {
+                            } elseif ($driver instanceof \Doctrine\Persistence\Mapping\Driver\FileDriver) {
                                 $paths = $driver->getLocator()->getPaths();
                             } else {
                                 $paths = [];

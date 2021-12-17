@@ -9,21 +9,17 @@
     }
     .ccm-faq-entry {
         position: relative;
+        margin-bottom: 1rem;
+        padding: 15px;
     }
-    .ccm-faq-entry.well {
-        margin-bottom: 10px;
-        padding: 28px 10px 10px;
-    }
-    .ccm-faq-entry.well.entry-closed {
+    .ccm-faq-entry.entry-closed {
         height: 57px;
-        padding: 0 0 0 15px;
     }
     .ccm-faq-entry .entry-collapse-text {
         display: none;
     }
     .ccm-faq-entry.entry-closed .entry-collapse-text {
         display: block;
-        line-height: 57px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -48,7 +44,7 @@
     .ccm-faq-block-container i:hover {
         color: #428bca;
     }
-    .ccm-faq-block-container i.fa-arrows {
+    .ccm-faq-block-container i.fa-arrows-alt {
         cursor: move;
         font-size: 20px;
         padding: 5px;
@@ -70,7 +66,7 @@
     <?php
     if ($rows) {
         foreach ($rows as $row) { ?>
-            <div class="ccm-faq-entry well entry-closed">
+            <div class="ccm-faq-entry border bg-light entry-closed">
                 <p class="entry-collapse-text"><?php echo $row['linkTitle'] ? $row['linkTitle'] : ''; ?></p>
 
                 <div class="form-group">
@@ -87,7 +83,7 @@
                 </div>
                 <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
                 <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>
-                <i class="fas fa-trash-alt"></i>
+                <i class="fas fa-arrows-alt"></i>
 
                 <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="<?php echo $row['sortOrder']; ?>">
             </div>
@@ -96,7 +92,7 @@
     }
     ?>
 
-    <div class="ccm-faq-entry well ccm-faq-entry-template" style="display: none;">
+    <div class="ccm-faq-entry bg-light border ccm-faq-entry-template" style="display: none;">
         <p class="entry-collapse-text"></p>
 
         <div class="form-group">
@@ -113,7 +109,7 @@
         </div>
         <button type="button" class="btn btn-sm btn-secondary ccm-edit-entry" data-entry-close-text="<?php echo t('Collapse Entry'); ?>" data-entry-edit-text="<?php echo t('Edit Entry'); ?>"><?php echo t('Edit Entry'); ?></button>
         <button type="button" class="btn btn-sm btn-danger ccm-delete-faq-entry"><?php echo t('Remove'); ?></button>
-        <i class="fas fa-trash-alt"></i>
+        <i class="fas fa-arrows-alt"></i>
 
         <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="">
     </div>
@@ -211,7 +207,7 @@ $(document).ready(function() {
         placeholder: 'ui-state-highlight',
         axis: 'y',
         items: '.ccm-faq-entry',
-        handle: 'i.fa-arrows',
+        handle: 'i.fa-arrows-alt',
         cursor: 'move',
         update: function() {
             doSortCount();

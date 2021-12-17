@@ -17,7 +17,12 @@ class AddAliasDefaultsBlockCommandHandler
             if ($mc && !$mc->isError()) {
                 $b = Block::getByID($command->getOriginalBlockID(), $mc, $command->getOriginalAreaHandle());
                 if ($b) {
-                    $b->alias($page);
+                    $bt = $b->getBlockTypeObject();
+                    if ($bt->isCopiedWhenPropagated()) {
+                        $b->duplicate($page, true);
+                    } else {
+                        $b->alias($page);
+                    }
                 }
             }
         }

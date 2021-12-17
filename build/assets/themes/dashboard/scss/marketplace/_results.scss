@@ -4,18 +4,11 @@ div#ccm-dashboard-content {
 
     header.ccm-marketplace-list {
 
-      margin-bottom: 0px;
-      padding-bottom: 40px;
+      padding-bottom: 20px;
       background-color: #f7f7f7;
-      margin-left: -97px;
-      margin-right: -50px;
       border-bottom: 1px solid #dfdfdf;
-      padding-top: 40px;
-      padding-left: 97px;
-
-      h1 {
-        font-weight: lighter;
-      }
+      padding-top: 20px;
+      padding-left: 37px;
 
       div.ccm-marketplace-sort {
         nav {
@@ -52,8 +45,7 @@ div#ccm-dashboard-content {
       }
 
       border-bottom: 1px solid #dfdfdf;
-      margin: 0px -50px 0px -97px;
-      padding: 60px 0px 60px 97px;
+      padding: 60px 0px 60px 37px;
       @include clearfix();
 
       &:nth-child(odd) {
