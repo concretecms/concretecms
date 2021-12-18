@@ -290,10 +290,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $node = $blockNode->arealayout;
         $type = (string) $node['type'];
-        $args = [];
         switch ($type) {
             case 'theme-grid':
-                $args += [
+                $args = [
                     'gridType' => 'TG',
                     'arLayoutMaxColumns' => (string) $node['columns'],
                     'themeGridColumns' => count($node->columns->column),
@@ -304,27 +303,27 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $args['span'][] = (int) $column['span'];
                     $args['offset'][] = (int) $column['offset'];
                 }
-                break;
-            case 'custom':
-                $preset = $this->resolveLayoutPreset(isset($node['preset']) ? (string) $node['preset'] : '', $page);
+                return $args;
+            case 'preset':
+                $preset = $this->resolveLayoutPreset(isset($node['preset-id']) ? (string) $node['preset-id'] : '', $page);
                 if ($preset !== null) {
-                    $args += [
+                    return [
                         'gridType' => $preset->getIdentifier(),
                         'arLayoutPresetID' => $preset->getIdentifier(),
                     ];
-                } else {
-                    $args += [
-                        'gridType' => 'FF',
-                        'isautomated' => (int) $node['custom-widths'] !== 1,
-                        'spacing' => (int) $node['spacing'],
-                        'columns' => count($node->columns->column),
-                        'width' => [],
-                    ];
-                    foreach ($node->columns->column as $column) {
-                        $args['width'][] = (int) $column['width'];
-                    }
                 }
                 break;
+        }
+        // Custom type, or fallback when the preset could not be found
+        $args = [
+            'gridType' => 'FF',
+            'isautomated' => (int) $node['custom-widths'] !== 1,
+            'spacing' => (int) $node['spacing'],
+            'columns' => count($node->columns->column),
+            'width' => [],
+        ];
+        foreach ($node->columns->column as $column) {
+            $args['width'][] = (int) $column['width'];
         }
 
         return $args;
