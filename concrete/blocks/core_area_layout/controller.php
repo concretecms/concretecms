@@ -6,6 +6,7 @@ use Concrete\Core\Area\Area;
 use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
 use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
+use Concrete\Core\Area\Layout\Preset\PresetInterface as AreaLayoutPresetInterface;
 use Concrete\Core\Area\Layout\Preset\Provider\ActiveThemeProvider;
 use Concrete\Core\Area\Layout\Preset\Provider\Manager as AreaLayoutPresetProvider;
 use Concrete\Core\Area\Layout\Preset\Provider\ThemeProvider;
@@ -278,10 +279,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @param \SimpleXMLElement $blockNode
-     * @param mixed $page
+     * {@inheritdoc}
      *
-     * @return array<string,mixed>
+     * @see \Concrete\Core\Block\BlockController::getImportData()
      */
     public function getImportData($blockNode, $page)
     {
@@ -306,49 +306,23 @@ class Controller extends BlockController implements UsesFeatureInterface
                 }
                 break;
             case 'custom':
-                $presetIdentififer = isset($node['preset']) ? (string) $node['preset'] : '';
-                if ($presetIdentififer !== '') {
-                    $presetProvider = $this->app->make(AreaLayoutPresetProvider::class);
-                    if ($page instanceof \Concrete\Core\Page\Page) {
-                        $theme = $page->getCollectionThemeObject();
-                        if ($theme instanceof ThemeProviderInterface) {
-                            $shouldRegisterProvider = true;
-                            foreach ($presetProvider->getProviders() as $provider) {
-                                if ($provider instanceof ActiveThemeProvider || $provider instanceof ThemeProvider) {
-                                    if ($provider->getThemeHandle() === $theme->getThemeHandle()) {
-                                        $shouldRegisterProvider = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            if ($shouldRegisterProvider) {
-                                $presetProvider->register(new ThemeProvider($theme));
-                            }
-                        }
-                    }
-                    $preset = $presetProvider->getPresetByIdentifier($presetIdentififer);
-                } else {
-                    $preset = null;
-                }
-                if ($preset === null) {
-                    $args += [
-                        'gridType' => 'FF',
-                        'isautomated' => (int) $node['custom-widths'] !== 1,
-                    ];
-                } else {
+                $preset = $this->resolveLayoutPreset(isset($node['preset']) ? (string) $node['preset'] : '', $page);
+                if ($preset !== null) {
                     $args += [
                         'gridType' => $preset->getIdentifier(),
                         'arLayoutPresetID' => $preset->getIdentifier(),
-                        'isautomated' => true,
                     ];
-                }
-                $args += [
-                    'spacing' => (int) $node['spacing'],
-                    'columns' => count($node->columns->column),
-                    'width' => [],
-                ];
-                foreach ($node->columns->column as $column) {
-                    $args['width'][] = (int) $column['width'];
+                } else {
+                    $args += [
+                        'gridType' => 'FF',
+                        'isautomated' => (int) $node['custom-widths'] !== 1,
+                        'spacing' => (int) $node['spacing'],
+                        'columns' => count($node->columns->column),
+                        'width' => [],
+                    ];
+                    foreach ($node->columns->column as $column) {
+                        $args['width'][] = (int) $column['width'];
+                    }
                 }
                 break;
         }
@@ -621,5 +595,45 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
             $i++;
         }
+    }
+
+    /**
+     * @param \Concrete\Core\Page\Page|mixed $page
+     */
+    private function resolveLayoutPreset(string $presetIdentififer, $page): ?AreaLayoutPresetInterface
+    {
+        if ($presetIdentififer === '') {
+            return null;
+        }
+        $presetProvider = $this->app->make(AreaLayoutPresetProvider::class);
+        $preset = $presetProvider->getPresetByIdentifier($presetIdentififer);
+        if ($preset !== null) {
+            return $preset;
+        }
+        if (!($page instanceof Page)) {
+            return null;
+        }
+        /*
+         * By default, the preset provider only provides presets for the currently active theme
+         * But we may be importing a page that doesn't use the site theme, so let's load
+         * the page theme too
+         */
+        $theme = $page->getCollectionThemeObject();
+        if (!($theme instanceof ThemeProviderInterface)) {
+            // The page theme does not provide presets
+            return null;
+        }
+        // Add to the preset provider the page theme
+        foreach ($presetProvider->getProviders() as $provider) {
+            if ($provider instanceof ActiveThemeProvider || $provider instanceof ThemeProvider) {
+                if ($provider->getThemeHandle() === $theme->getThemeHandle()) {
+                    // The page theme is already listed in the provider
+                    return null;
+                }
+            }
+        }
+        $presetProvider->register(new ThemeProvider($theme));
+
+        return $presetProvider->getPresetByIdentifier($presetIdentififer);
     }
 }
