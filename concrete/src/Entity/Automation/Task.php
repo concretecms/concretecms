@@ -48,6 +48,11 @@ class Task implements \JsonSerializable, TaskInterface
     protected $lastRunBy;
 
     /**
+     * @ORM\OneToMany(targetEntity="TaskSetTask", mappedBy="task", cascade={"remove"})
+     */
+    protected $set_tasks;
+
+    /**
      * @return mixed
      */
     public function getID()
