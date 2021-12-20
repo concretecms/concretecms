@@ -185,6 +185,16 @@ class Manager extends CoreManager
         return $this->app->make(IpAccessControlCategory::class);
     }
 
+    public function createTaskSetDriver()
+    {
+        return $this->app->make(TaskSet::class);
+    }
+
+    public function createTaskDriver()
+    {
+        return $this->app->make(Task::class);
+    }
+
     public function getPackageItems(Package $package)
     {
         $items = [];
