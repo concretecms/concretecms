@@ -216,7 +216,9 @@ return [
         'workflow_progress_category',
         'workflow_type',
         'external_file_provider_type',
-        'image_editor'
+        'image_editor',
+        'task',
+        'task_set',
     ],
 
     'importer_routines' => [

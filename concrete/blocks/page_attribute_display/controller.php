@@ -7,8 +7,7 @@ use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
-use Database;
-use Core;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Localization\Service\Date;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -21,9 +20,13 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btPageAttributeDisplay';
     protected $btInterfaceWidth = "500";
     protected $btInterfaceHeight = "365";
+    /** @var string|null */
     public $dateFormat;
+    /** @var bool */
     protected $btCacheBlockOutput = true;
+    /** @var bool */
     protected $btCacheBlockOutputOnPost = true;
+    /** @var bool */
     protected $btCacheBlockOutputForRegisteredUsers = false;
 
     /**
@@ -35,6 +38,12 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var int thumbnail width
      */
     public $thumbnailWidth = 250;
+    /** @var string|null */
+    public $attributeHandle;
+    /** @var string|null */
+    public $attributeTitleText;
+    /** @var string|null */
+    public $displayTag;
 
     public function getBlockTypeDescription()
     {
@@ -46,6 +55,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         return t("Page Attribute Display");
     }
 
+    /**
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function add()
     {
         $this->dateFormat = $this->app->make('date')->getPHPDateTimePattern();
@@ -53,7 +66,18 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('thumbnailWidth', $this->thumbnailWidth);
         $this->set('thumbnailHeight', $this->thumbnailHeight);
     }
-    
+
+    /**
+     * Used to validate a blocks data before saving to the database
+     * Generally should return an empty ErrorList if valid
+     * Custom Packages may return a boolean value
+     *
+     * @param array<string,mixed>|string|null $args
+     * @return \Concrete\Core\Error\ErrorList\ErrorList|boolean
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @version <= 8.4.3 Method returns ErrorList|boolean
+     * @version 8.5.0a3 Method returns ErrorList
+     */
     public function validate($args)
     {
         $error = $this->app->make('helper/validation/error');
@@ -66,11 +90,13 @@ class Controller extends BlockController implements UsesFeatureInterface
             $error->add(t('Thumbnail Width must be a number.'));
         }
 
-        if ($error->has()) {
-            return $error;
-        }
+        return $error;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [
@@ -84,7 +110,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function getContent()
     {
-        $c = \Page::getCurrentPage();
+        $c = Page::getCurrentPage();
         $content = "";
         switch ($this->attributeHandle) {
             case "rpv_pageName":
@@ -110,7 +136,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $content_alt = $c->getAttributeValue($this->attributeHandle);
                     if (is_object($content) && $content instanceof \Concrete\Core\Entity\File\File) {
                         if ($this->thumbnailWidth > 0 || $this->thumbnailHeight > 0) {
-                            $im = Core::make('helper/image');
+                            $im = $this->app->make('helper/image');
                             $thumb = $im->getThumbnail(
                                 $content,
                                 $this->thumbnailWidth,
@@ -118,7 +144,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                             ); //<-- set these 2 numbers to max width and height of thumbnails
                             $content = "<img class=\"img-fluid\" src=\"{$thumb->src}\" width=\"{$thumb->width}\" height=\"{$thumb->height}\" alt=\"\" />";
                         } else {
-                            $image = Core::make('html/image', ['f' => $content]);
+                            $image = $this->app->make('html/image', ['f' => $content]);
                             $content = (string) $image->getTag();
                         }
                     } elseif (is_object($content_alt)) {
@@ -184,6 +210,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function getPlaceHolderText($handle)
     {
+        $placeHolder = 'Unknown Attribute'; // incase our attribute doesnt exist
         $pageValues = $this->getAvailablePageValues();
         if (in_array($handle, array_keys($pageValues))) {
             $placeHolder = $pageValues[$handle];
@@ -207,6 +234,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         return strlen($this->attributeTitleText) ? $this->attributeTitleText . " " : "";
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getAvailablePageValues()
     {
         return [
@@ -218,13 +248,21 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
+    /**
+     * @return \Concrete\Core\Entity\Attribute\Key\PageKey[]
+     */
     public function getAvailableAttributes()
     {
-        return \Concrete\Core\Attribute\Key\CollectionKey::getList();
+        $categoryService = $this->app->make('\Concrete\Core\Attribute\Category\PageCategory');
+        return $categoryService->getList();
     }
 
+    /**
+     * @return string|null
+     */
     protected function getTemplateHandle()
     {
+        $templateHandle = null;
         if (in_array($this->attributeHandle, array_keys($this->getAvailablePageValues()))) {
             switch ($this->attributeHandle) {
                 case "rpv_pageDateCreated":
@@ -274,6 +312,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $tag;
     }
 
+    /**
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function view()
     {
       // only use the type specific template if there is NOT a custom template defined
@@ -286,7 +328,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->render('templates/' . $templateHandle);
         } else {
             // check if there is a template that matches the selected attribute
-            $template = \Core::make(BlockViewTemplate::class, ['obj' => $this->getBlockObject()]);
+            /** @var BlockViewTemplate $template */
+            $template = $this->app->make(BlockViewTemplate::class, ['obj' => $this->getBlockObject()]);
             $template->setBlockCustomTemplate("templates/" . $this->attributeHandle . '.php');
             $info = pathinfo($template->getTemplate());
 

@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Block;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockViewTemplate;
-use Concrete\Core\Controller;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Legacy\BlockRecord;
 use Concrete\Core\Page\Controller\PageController;
@@ -37,7 +37,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btSupportsInlineEdit = false;
     protected $btCopyWhenPropagate = 0;
     protected $btIncludeAll = 0;
+    /** @var string | int  */
     protected $btInterfaceWidth = "400";
+    /** @var string | int  */
     protected $btInterfaceHeight = "400";
     protected $btHasRendered = false;
     protected $btCacheBlockRecord = true;
@@ -54,6 +56,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btWrapperClass = '';
     protected $btDefaultSet;
     protected $identifier;
+    /** @var null|string  */
     protected $btTable = null;
     protected $btID;
 
@@ -253,7 +256,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      *
      * @param int $newBlockID
      *
-     * @return BlockRecord $newInstance
+     * @return BlockRecord | null $newInstance
      */
     public function duplicate($newBID)
     {

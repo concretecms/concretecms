@@ -31,7 +31,7 @@ class DateTimeCorePageProperty extends CorePageProperty
         
         $val = $this->getRequestValue();
         
-        if ($val['date_time_dt'] && $val['date_time_h'] && $val['date_time_m']) {
+        if (isset($val['date_time_dt']) && isset($val['date_time_h']) && isset($val['date_time_m'])) {
             $datetime = $val['date_time_dt'] . ' ' . $val['date_time_h'] . ':' . $val['date_time_m'] . ':00';
         } else {
             $datetime = $this->getPageTypeComposerControlDraftValue();

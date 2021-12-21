@@ -12,12 +12,14 @@ use Doctrine\ORM\Mapping as ORM;
 class TaskSetTask
 {
     /**
-     * @ORM\Id @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Automation\Task", inversedBy="set_tasks")
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Automation\Task", inversedBy="set_tasks")
      */
     protected $task;
 
     /**
-     * @ORM\Id @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Automation\TaskSet", inversedBy="tasks")
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Automation\TaskSet", inversedBy="tasks")
      */
     protected $set;
 

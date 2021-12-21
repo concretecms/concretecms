@@ -1,6 +1,17 @@
 <?php
     defined('C5_EXECUTE') or die('Access Denied.');
 
+$minColumns = 1;
+$columnsNum = $columnsNum ?? 1;
+$maxColumns = $maxColumns ?? 12;
+$enableThemeGrid = $enableThemeGrid ?? false;
+$columns = $columns ?? [];
+$iscustom = $iscustom ?? false;
+    /** @var \Concrete\Block\CoreAreaLayout\Controller $controller */
+    /** @var \Concrete\Core\Block\Block $b */
+    /** @var \Concrete\Core\Block\View\BlockView $view */
+    /** @var \Concrete\Core\Area\Area $a */
+    /** @var \Concrete\Core\Page\Theme\GridFramework\GridFramework $themeGridFramework */
     $this->inc('form.php', ['b' => $b, 'a' => $a]);
 
 ?>
@@ -16,7 +27,7 @@
 	<?php $i = $col->getAreaLayoutColumnIndex();
     ?>
 	<div class="<?=$col->getAreaLayoutColumnClass()?>" id="ccm-edit-layout-column-<?=$i?>" <?php if ($iscustom) {
-    ?>data-width="<?=$col->getAreaLayoutColumnWidth()?>" <?php 
+    ?>data-width="<?=$col->getAreaLayoutColumnWidth()?>" <?php
 }
     ?>>
 		<div class="ccm-layout-column-inner ccm-layout-column-highlight">
@@ -26,7 +37,7 @@
     ?>
 		</div>
 	</div>
-<?php 
+<?php
 } ?>
 
 </div>
