@@ -3,7 +3,6 @@
 namespace Concrete\Core\Block\Command;
 
 use Concrete\Core\Block\Block;
-use Concrete\Core\Block\Command\DeleteBlockCommand;
 use Concrete\Core\Page\Page;
 
 class AddAliasDefaultsBlockCommandHandler
@@ -18,11 +17,17 @@ class AddAliasDefaultsBlockCommandHandler
                 $b = Block::getByID($command->getOriginalBlockID(), $mc, $command->getOriginalAreaHandle());
                 if ($b) {
                     $bt = $b->getBlockTypeObject();
-                    if ($bt->isCopiedWhenPropagated()) {
-                        $b->duplicate($page, true);
-                    } else {
-                        $b->alias($page);
+                    $displayOrder = null;
+                    if ($command->getForceDisplayOrder()) {
+                        $displayOrder = $b->getBlockDisplayOrder();
                     }
+                    if ($bt->isCopiedWhenPropagated()) {
+                        $b = $b->duplicate($page, true);
+                        if ($displayOrder) $b->setAbsoluteBlockDisplayOrder($displayOrder);
+                    } else {
+                        $b->alias($page, $displayOrder);
+                    }
+                    if ($displayOrder) $page->rescanDisplayOrderFromBlock($b, $command->getAreaHandle(), 0);
                 }
             }
         }
