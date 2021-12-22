@@ -704,6 +704,7 @@ EOT
         $cvID = $c->getVersionID();
 
         $db->executeStatement('update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?', [$do, $bID, $cID, $cvID, $arHandle]);
+        $this->cbDisplayOrder = (int) $do;
     }
 
     /**
@@ -1891,13 +1892,14 @@ EOT
      * Additionally, this command grabs the permissions from the original record in the CollectionVersionBlocks table, and attaches them to the new one.
      *
      * @param \Concrete\Core\Page\Collection\Collection $c The collection to add the block alias to
+     * @param int|null $displayOrder The number to display this block at. (optional)
      */
-    public function alias($c)
+    public function alias($c, int $displayOrder = null)
     {
         $app = Application::getFacadeApplication();
         /** @var Cloner $cloner */
         $cloner = $app->make(Cloner::class);
-        $cloner->cloneBlock($this, $c);
+        $cloner->cloneBlock($this, $c, $displayOrder);
     }
 
     /**
@@ -2030,12 +2032,13 @@ EOT
      *
      * @param bool $addBlock add this block to the pages where this block does not exist? If false, we'll only update blocks that already exist
      * @param bool $updateForkedBlocks
+     * @param bool $forceDisplayOrder
      *
      * @throws \Doctrine\DBAL\Exception
      *
      * @return array
      */
-    public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks)
+    public function queueForDefaultsAliasing($addBlock, $updateForkedBlocks, bool $forceDisplayOrder = false)
     {
         $app = Facade::getFacadeApplication();
         $records = [];
@@ -2092,7 +2095,20 @@ EOT
 
                     $records[] = $record;
                 }
+            } elseif ($forceDisplayOrder) {
+                $record = [
+                    'cID' => $row['cID'],
+                    'cvID' => $row['cvID'],
+                    'bID' => $this->getBlockID(),
+                ];
+                $record['action'] = 'force_display_order';
+                $record['arHandle'] = $this->getAreaHandle();
+                $records[] = $record;
             }
+
+
+
+
         }
 
         return $records;

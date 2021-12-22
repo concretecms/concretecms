@@ -3,9 +3,10 @@
 namespace Concrete\Core\Page\Collection;
 
 use Concrete\Core\Area\Area;
-use Block;
+
 use CacheLocal;
 use CollectionVersion;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -1161,6 +1162,72 @@ class Collection extends ConcreteObject implements TrackableInterface
         if ($r) {
             $displayOrder = 0;
             while ($row = $r->fetch()) {
+                $qb2 = $db->createQueryBuilder();
+                $qb2->update('CollectionVersionBlocks')
+                    ->set('cbDisplayOrder', ':cbDisplayOrder')
+                    ->where('cID = :cID')
+                    ->andWhere('cvID = :cvID')
+                    ->andWhere('arHandle = :arHandle')
+                    ->andWhere('bID = :bID')
+                    ->setParameter('cbDisplayOrder', $displayOrder)
+                    ->setParameter('cID', $cID)
+                    ->setParameter('cvID', $cvID)
+                    ->setParameter('arHandle', $arHandle)
+                    ->setParameter('bID', $row['bID'])
+                    ->execute();
+                ++$displayOrder;
+            }
+        }
+    }
+
+
+    /**
+     * Fix the display order properties for all the blocks after this block in this area.
+     * This is useful for forcing a certain block order.
+     * @param Block $block the block to begin the display order rescan from
+     * @param string $arHandle the handle of the area to be processed
+     * @param int|null $fromDisplay an optional integer to override the starting number,
+     *                              i.e start from 0 even though our block is 8
+     * @return void
+     * @throws \Doctrine\DBAL\Driver\Exception|\Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function rescanDisplayOrderFromBlock(Block $block, string $arHandle, int $fromDisplay = null)
+    {
+        /** This block doesnt have a display order */
+        if ($block->getBlockDisplayOrder() === null) {
+            return $this->rescanDisplayOrder($arHandle);
+        }
+        $fromDisplay = $fromDisplay ?? $block->getBlockDisplayOrder();
+        $cID = $this->cID;
+        $cvID = $this->vObj->cvID;
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $r =$qb->select('bID')
+            ->from('CollectionVersionBlocks')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('bID != :bID')
+            ->andWhere('cbDisplayOrder >= :cbDisplay')
+            ->andWhere('arHandle = :arHandle')
+            ->orderBy('cbDisplayOrder', 'asc')
+            ->setParameter('cbDisplay', $fromDisplay)
+            ->setParameter('bID', $block->getBlockID())
+            ->setParameter('cID', $cID)
+            ->setParameter('cvID', $cvID)
+            ->setParameter('arHandle', $arHandle)
+            ->execute();
+
+        if ($r) {
+            $currentDisplayOrder = $block->getBlockDisplayOrder();
+            $displayOrder = $fromDisplay;
+            while ($row = $r->fetchAssociative()) {
+                if ($displayOrder === $currentDisplayOrder) {
+                    // Skip our blocks display order
+                    $displayOrder++;
+                }
                 $qb2 = $db->createQueryBuilder();
                 $qb2->update('CollectionVersionBlocks')
                     ->set('cbDisplayOrder', ':cbDisplayOrder')

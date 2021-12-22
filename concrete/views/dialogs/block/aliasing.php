@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+/* @var $dh \Concrete\Core\Localization\Service\Date */
+$dh = app('helper/date');
+/** @var \Concrete\Controller\Dialog\Block\Aliasing $controller */
+$total = $total ?? 0;
 ?>
 <div class="ccm-ui">
 
@@ -23,6 +26,12 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
             <label class="control-label form-label"><?=t('Would you like to update forked blocks?')?></label>
             <div class="form-check"><input class="form-check-input" type="radio" name="updateForkedBlocks" id="updateForkedBlocks1" value="1"><label class="form-check-label" for="updateForkedBlocks1"> <?=t('Yes')?></label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="updateForkedBlocks" id="updateForkedBlocks2" value="0" checked><label class="form-check-label" for="updateForkedBlocks2"> <?=t('No')?></label></div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label form-label"><?=t('Would you like to force the display order of this block?')?></label>
+            <div class="form-check"><input class="form-check-input" type="radio" name="forceDisplayOrder" id="forceDisplayOrder1" value="1"><label class="form-check-label" for="forceDisplayOrder1"> <?=t('Yes')?></label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="forceDisplayOrder" id="forceDisplayOrder2" value="0" checked><label class="form-check-label" for="forceDisplayOrder2"> <?=t('No')?></label></div>
         </div>
 
         <div data-dialog-form-element="progress-bar"></div>
