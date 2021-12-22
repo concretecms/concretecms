@@ -3,21 +3,40 @@
 /**
 * @var $entries \Concrete\Block\Accordion\AccordionEntry[]
  */
+
+$i =0;
+
 ?>
 
-<div class="accordion ccm-block-accordion" id="accordion<?=$bID?>">
-    <?php foreach ($entries as $entry) { ?>
+<div class="accordion ccm-block-accordion<?php if($flush){echo ' accordion-flush';}?>" id="accordion<?=$bID?>">
+
+    <?php
+
+
+    echo "Today is " . date("Ymdhit") . "<br>";
+
+
+
+    foreach ($entries as $entry) {
+      $i ++;
+      $entryClass = '';
+      if(($initialState == 'openfirst' && $i == 1) || $initialState == 'open') {
+        $entryClass .= ' show';
+      }
+      ?>
         <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getID()?>">
+            <<?php echo $itemHeadingFormat; ?> class="accordion-header">
+                <button class="accordion-button <?php if($i != 1){echo 'collapsed';}?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getID()?>">
                     <?=$entry->getTitle()?>
                 </button>
-            </h2>
-            <div id="collapse<?=$entry->getID()?>" class="accordion-collapse collapse" <?php /* data-bs-parent="#accordion<?=$bID?>" */ ?>>
+            </<?php echo $itemHeadingFormat; ?>>
+
+            <div id="collapse<?=$entry->getID()?>" class="accordion-collapse collapse <?php echo $entryClass;?>" <?php if(!$alwaysOpen){ echo 'data-bs-parent="#accordion<?=$bID?>"';}?>>
                 <div class="accordion-body">
                     <?=$entry->getDescription()?>
                 </div>
             </div>
+
         </div>
     <?php } ?>
 </div>
