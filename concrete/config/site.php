@@ -142,30 +142,8 @@ return [
                 'canonical_tag' => [
                     // Add a <meta rel="canonical" href="..."> tag to pages?
                     'enabled' => true,
-                    // List of querystring parameters to be removed from SEO canonical URLs
-                    'excluded_querystring_parameters' => [
-                        'cID',
-                        'ccm_token',
-                        // calendar block
-                        'start',
-                        'end',
-                        // express_entry_list block
-                        'keywords',
-                        'itemsPerPage',
-                        'search',
-                        // search block
-                        'query',
-                        'search_paths',
-                        'options',
-                        // Facebook
-                        'fbclid',
-                        // Google Analytics & Ads
-                        'utm_source',
-                        'utm_medium',
-                        'utm_campaign',
-                        'utm_content',
-                        'utm_term',
-                        'gclid',
+                    // List of querystring parameters to be included in SEO canonical URLs
+                    'included_querystring_parameters' => [
                     ],
                 ],
                 'tracking' => [
