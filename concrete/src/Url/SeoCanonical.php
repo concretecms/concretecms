@@ -28,11 +28,11 @@ class SeoCanonical
     protected $valn;
 
     /**
-     * The list of query string parameters to be excluded from generated canonical URLs.
+     * The list of query string parameters to be included from generated canonical URLs.
      *
      * @var string[]|\Traversable
      */
-    protected $excludedQuerystringParameters;
+    protected $includedQuerystringParameters;
 
     /**
      * The list of path arguments to be included in canonical URLs.
@@ -46,13 +46,13 @@ class SeoCanonical
      *
      * @param ResolverManagerInterface $resolver the instance of the class that builds page URLs
      * @param Numbers $valn the instance of the numbers validator
-     * @param string[]|\Traversable $excludedQuerystringParameters the list of query string parameters to be excluded from generated canonical URLs
+     * @param string[]|\Traversable $includedQuerystringParameters the list of query string parameters to be included from generated canonical URLs
      */
-    public function __construct(ResolverManagerInterface $resolver, Numbers $valn, $excludedQuerystringParameters)
+    public function __construct(ResolverManagerInterface $resolver, Numbers $valn, $includedQuerystringParameters)
     {
         $this->resolver = $resolver;
         $this->valn = $valn;
-        $this->excludedQuerystringParameters = $excludedQuerystringParameters ?: [];
+        $this->includedQuerystringParameters = $includedQuerystringParameters ?: [];
     }
 
     /**
@@ -96,8 +96,10 @@ class SeoCanonical
                         }
                     }
                     if ($query !== null && $query->count() > 0) {
-                        foreach ($this->excludedQuerystringParameters as $qp) {
-                            $query->offsetUnset($qp);
+                        foreach ($query as $key => $value) {
+                            if (!in_array($key, $this->includedQuerystringParameters)) {
+                                $query->offsetUnset($key);
+                            }
                         }
                         $result = $result->setQuery($query);
                     }
