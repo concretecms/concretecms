@@ -1,36 +1,63 @@
 <?php
+
 namespace Concrete\Block\Testimonial;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 
 class Controller extends BlockController implements FileTrackableInterface
 {
-    public $helpers = array('form');
+    public $helpers = ['form'];
 
     protected $btInterfaceWidth = 450;
+
     protected $btCacheBlockOutput = true;
+
     protected $btCacheBlockOutputOnPost = true;
+
     protected $btCacheBlockOutputForRegisteredUsers = true;
+
     protected $btInterfaceHeight = 560;
-    protected $btExportFileColumns = array('fID', 'awardImageID');
+
+    protected $btExportFileColumns = ['fID', 'awardImageID'];
+
     protected $btTable = 'btTestimonial';
 
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $fID;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $name;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $position;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $company;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $companyURL;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $paragraph;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     protected $awardImageID;
 
     public function getBlockTypeDescription()
@@ -40,7 +67,7 @@ class Controller extends BlockController implements FileTrackableInterface
 
     public function getBlockTypeName()
     {
-        return t("Testimonial");
+        return t('Testimonial');
     }
 
     public function getSearchableContent()
@@ -54,7 +81,7 @@ class Controller extends BlockController implements FileTrackableInterface
         if ($this->fID) {
             $f = File::getByID($this->fID);
             if (is_object($f)) {
-                $image = $this->app->make('html/image', array('f' => $f))->getTag();
+                $image = $this->app->make('html/image', ['f' => $f])->getTag();
                 $image->alt($this->name);
             }
         }
@@ -63,7 +90,7 @@ class Controller extends BlockController implements FileTrackableInterface
         if ($this->awardImageID) {
             $f = File::getByID($this->awardImageID);
             if (is_object($f)) {
-                $awardImage = $this->app->make('html/image', array('f' => $f))->getTag();
+                $awardImage = $this->app->make('html/image', ['f' => $f])->getTag();
             }
         }
         $this->set('awardImage', $awardImage);
@@ -81,7 +108,7 @@ class Controller extends BlockController implements FileTrackableInterface
         if (isset($this->fID) && $this->fID) {
             return [$this->fID];
         }
+
         return [];
     }
-
 }
