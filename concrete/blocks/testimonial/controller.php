@@ -3,8 +3,8 @@ namespace Concrete\Block\Testimonial;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
-use Core;
 
 class Controller extends BlockController implements FileTrackableInterface
 {
@@ -17,6 +17,21 @@ class Controller extends BlockController implements FileTrackableInterface
     protected $btInterfaceHeight = 560;
     protected $btExportFileColumns = array('fID', 'awardImageID');
     protected $btTable = 'btTestimonial';
+
+    /** @var int */
+    protected $fID;
+    /** @var string */
+    protected $name;
+    /** @var string */
+    protected $position;
+    /** @var string */
+    protected $company;
+    /** @var string */
+    protected $companyURL;
+    /** @var string */
+    protected $paragraph;
+    /** @var int */
+    protected $awardImageID;
 
     public function getBlockTypeDescription()
     {
@@ -37,21 +52,21 @@ class Controller extends BlockController implements FileTrackableInterface
     {
         $image = false;
         if ($this->fID) {
-            $f = \File::getByID($this->fID);
+            $f = File::getByID($this->fID);
             if (is_object($f)) {
-                $image = Core::make('html/image', array('f' => $f))->getTag();
+                $image = $this->app->make('html/image', array('f' => $f))->getTag();
                 $image->alt($this->name);
-                $this->set('image', $image);
             }
         }
+        $this->set('image', $image);
         $awardImage = false;
         if ($this->awardImageID) {
-            $f = \File::getByID($this->awardImageID);
+            $f = File::getByID($this->awardImageID);
             if (is_object($f)) {
-                $awardImage = Core::make('html/image', array('f' => $f))->getTag();
-                $this->set('awardImage', $awardImage);
+                $awardImage = $this->app->make('html/image', array('f' => $f))->getTag();
             }
         }
+        $this->set('awardImage', $awardImage);
     }
 
     public function save($args)
