@@ -80,6 +80,7 @@ class Marketplace implements ApplicationAwareInterface
 
         if ($csToken != '') {
             $fh = $this->app->make('helper/file');
+            $ms = '';
             $installationService = $this->app->make(InstallationService::class);
             if ($installationService->isMultisiteEnabled()) {
                 $ms = '&ms=1';
