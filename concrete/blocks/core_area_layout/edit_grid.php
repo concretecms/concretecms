@@ -20,11 +20,11 @@ $columns = $columns ?? [];
 
 <div id="ccm-layouts-edit-mode" class="ccm-layouts-edit-mode-edit">
 
-<?=$themeGridFramework->getPageThemeGridFrameworkRowStartHTML()?>
-
 <div id="ccm-theme-grid-edit-mode-row-wrapper">
 
-<?php foreach ($columns as $col) {
+<?=$themeGridFramework->getPageThemeGridFrameworkRowStartHTML()?>
+
+    <?php foreach ($columns as $col) {
     ?>
 	<?php $i = $col->getAreaLayoutColumnIndex();
     ?>
@@ -47,8 +47,8 @@ $columns = $columns ?? [];
 <?php
 } ?>
 
-</div>
+    <?=$themeGridFramework->getPageThemeGridFrameworkRowEndHTML()?>
 
-<?=$themeGridFramework->getPageThemeGridFrameworkRowEndHTML()?>
+</div>
 
 </div>
