@@ -422,6 +422,7 @@ class Marketplace implements ApplicationAwareInterface
                 return '<div class="alert-message block-message error">' . t(
                     'Unable to get information about this product.') . '</div>';
             }
+            $url = '';
             if ($this->isConnected()) {
                 $url = $this->config->get('concrete.urls.concrete_secure') . $this->config->get('concrete.urls.paths.marketplace.checkout');
                 $csiURL = urlencode($this->getSiteURL());
