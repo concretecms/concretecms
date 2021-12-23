@@ -183,11 +183,6 @@ abstract class Layout extends ConcreteObject
     public function export($node)
     {
         $layout = $node->addChild('arealayout');
-        if ($this->isAreaLayoutUsingThemeGridFramework()) {
-            $layout->addAttribute('type', 'theme-grid');
-        } else {
-            $layout->addAttribute('type', 'custom');
-        }
         $this->exportDetails($layout);
         $columns = $layout->addChild('columns');
         foreach ($this->getAreaLayoutColumns() as $column) {

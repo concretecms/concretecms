@@ -67,7 +67,8 @@ class PresetLayout extends Layout
      */
     public function exportDetails($node)
     {
-        $node->addAttribute('preset', $this->preset);
+        $node->addAttribute('type', 'preset');
+        $node->addAttribute('preset-id', $this->preset);
     }
 
     /**

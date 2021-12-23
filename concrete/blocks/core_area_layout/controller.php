@@ -3,12 +3,15 @@
 namespace Concrete\Block\CoreAreaLayout;
 
 use Concrete\Core\Area\Area;
-use Concrete\Core\Area\Layout\CustomLayout;
 use Concrete\Core\Area\Layout\CustomLayout as CustomAreaLayout;
 use Concrete\Core\Area\Layout\Layout as AreaLayout;
 use Concrete\Core\Area\Layout\Preset\Preset as AreaLayoutPreset;
+use Concrete\Core\Area\Layout\Preset\PresetInterface as AreaLayoutPresetInterface;
+use Concrete\Core\Area\Layout\Preset\Provider\ActiveThemeProvider;
+use Concrete\Core\Area\Layout\Preset\Provider\Manager as AreaLayoutPresetProvider;
+use Concrete\Core\Area\Layout\Preset\Provider\ThemeProvider;
+use Concrete\Core\Area\Layout\Preset\Provider\ThemeProviderInterface;
 use Concrete\Core\Area\Layout\PresetLayout;
-use Concrete\Core\Area\Layout\ThemeGridLayout;
 use Concrete\Core\Area\Layout\ThemeGridLayout as ThemeGridAreaLayout;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Asset\CssAsset;
@@ -138,7 +141,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $arLayout = $this->getAreaLayoutObject();
         if (is_object($arLayout)) {
-            if ($arLayout instanceof CustomLayout) {
+            if ($arLayout instanceof CustomAreaLayout) {
                 $asset = new CssAsset();
                 $asset->setAssetURL((string) Url::to('/ccm/system/css/layout', $arLayout->getAreaLayoutID()));
                 $this->requireAsset($asset);
@@ -276,48 +279,51 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @param \SimpleXMLElement $blockNode
-     * @param mixed $page
+     * {@inheritdoc}
      *
-     * @return array<string,mixed>
+     * @see \Concrete\Core\Block\BlockController::getImportData()
      */
     public function getImportData($blockNode, $page)
     {
-        $args = [];
-        if (isset($blockNode->arealayout)) {
-            $type = (string) $blockNode->arealayout['type'];
-            $node = $blockNode->arealayout;
-            switch ($type) {
-                case 'theme-grid':
-                    $args['gridType'] = 'TG';
-                    $args['arLayoutMaxColumns'] = (string) $node['columns'];
-                    $args['themeGridColumns'] = (int) (count($node->columns->column));
-                    $args['offset'] = [];
-                    $args['span'] = [];
-                    $i = 0;
-                    foreach ($node->columns->column as $column) {
-                        $args['span'][$i] = (int) ($column['span']);
-                        $args['offset'][$i] = (int) ($column['offset']);
-                        $i++;
-                    }
-                    break;
-                case 'custom':
-                    $args['gridType'] = 'FF';
-                    $args['isautomated'] = true;
-                    $args['spacing'] = (int) ($node['spacing']);
-                    $args['columns'] = (int) (count($node->columns->column));
-                    $customWidths = (int) ($node['custom-widths']);
-                    if ($customWidths == 1) {
-                        $args['isautomated'] = false;
-                    }
-                    $args['width'] = [];
-                    $i = 0;
-                    foreach ($node->columns->column as $column) {
-                        $args['width'][$i] = (int) ($column['width']);
-                        $i++;
-                    }
-                    break;
-            }
+        if (!isset($blockNode->arealayout)) {
+            return [];
+        }
+        $node = $blockNode->arealayout;
+        $type = (string) $node['type'];
+        switch ($type) {
+            case 'theme-grid':
+                $args = [
+                    'gridType' => 'TG',
+                    'arLayoutMaxColumns' => (string) $node['columns'],
+                    'themeGridColumns' => count($node->columns->column),
+                    'offset' => [],
+                    'span' => [],
+                ];
+                foreach ($node->columns->column as $column) {
+                    $args['span'][] = (int) $column['span'];
+                    $args['offset'][] = (int) $column['offset'];
+                }
+                return $args;
+            case 'preset':
+                $preset = $this->resolveLayoutPreset(isset($node['preset-id']) ? (string) $node['preset-id'] : '', $page);
+                if ($preset !== null) {
+                    return [
+                        'gridType' => $preset->getIdentifier(),
+                        'arLayoutPresetID' => $preset->getIdentifier(),
+                    ];
+                }
+                break;
+        }
+        // Custom type, or fallback when the preset could not be found
+        $args = [
+            'gridType' => 'FF',
+            'isautomated' => (int) $node['custom-widths'] !== 1,
+            'spacing' => (int) $node['spacing'],
+            'columns' => count($node->columns->column),
+            'width' => [],
+        ];
+        foreach ($node->columns->column as $column) {
+            $args['width'][] = (int) $column['width'];
         }
 
         return $args;
@@ -333,7 +339,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         // we are adding a new layout
         switch ($post['gridType']) {
             case 'TG':
-                /** @var ThemeGridLayout $arLayout */
+                /** @var ThemeGridAreaLayout $arLayout */
                 $arLayout = ThemeGridAreaLayout::add();
                 $arLayout->setAreaLayoutMaxColumns($post['arLayoutMaxColumns']);
                 for ($i = 0; $i < $post['themeGridColumns']; $i++) {
@@ -416,13 +422,13 @@ class Controller extends BlockController implements UsesFeatureInterface
             $pt = $c->getCollectionThemeObject();
             $gf = $pt->getThemeGridFrameworkObject();
         }
-        if ($this->arLayout instanceof ThemeGridLayout) {
+        if ($this->arLayout instanceof ThemeGridAreaLayout) {
             $this->set('enableThemeGrid', true);
             $this->set('themeGridFramework', $gf);
             $this->set('themeGridMaxColumns', $this->arLayout->getAreaLayoutMaxColumns());
             $this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
             $this->render('edit_grid');
-        } elseif ($this->arLayout instanceof CustomLayout) {
+        } elseif ($this->arLayout instanceof CustomAreaLayout) {
             $this->set('enableThemeGrid', false);
             $this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
             $this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
@@ -588,5 +594,45 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
             $i++;
         }
+    }
+
+    /**
+     * @param \Concrete\Core\Page\Page|mixed $page
+     */
+    private function resolveLayoutPreset(string $presetIdentififer, $page): ?AreaLayoutPresetInterface
+    {
+        if ($presetIdentififer === '') {
+            return null;
+        }
+        $presetProvider = $this->app->make(AreaLayoutPresetProvider::class);
+        $preset = $presetProvider->getPresetByIdentifier($presetIdentififer);
+        if ($preset !== null) {
+            return $preset;
+        }
+        if (!($page instanceof Page)) {
+            return null;
+        }
+        /*
+         * By default, the preset provider only provides presets for the currently active theme
+         * But we may be importing a page that doesn't use the site theme, so let's load
+         * the page theme too
+         */
+        $theme = $page->getCollectionThemeObject();
+        if (!($theme instanceof ThemeProviderInterface)) {
+            // The page theme does not provide presets
+            return null;
+        }
+        // Add to the preset provider the page theme
+        foreach ($presetProvider->getProviders() as $provider) {
+            if ($provider instanceof ActiveThemeProvider || $provider instanceof ThemeProvider) {
+                if ($provider->getThemeHandle() === $theme->getThemeHandle()) {
+                    // The page theme is already listed in the provider
+                    return null;
+                }
+            }
+        }
+        $presetProvider->register(new ThemeProvider($theme));
+
+        return $presetProvider->getPresetByIdentifier($presetIdentififer);
     }
 }

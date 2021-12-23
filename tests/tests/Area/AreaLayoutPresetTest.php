@@ -244,7 +244,7 @@ class AreaLayoutPresetTest extends PageTestCase
         $req->setCurrentPage($c);
 
         $manager = Core::make('manager/area_layout_preset_provider');
-        $manager->register(new \Concrete\Core\Area\Layout\Preset\Provider\ActiveThemeProvider());
+        $manager->register(app(\Concrete\Core\Area\Layout\Preset\Provider\ActiveThemeProvider::class));
         $presets = $manager->getPresets();
         $this->assertEquals(2, count($presets));
         $preset = $presets[0];
