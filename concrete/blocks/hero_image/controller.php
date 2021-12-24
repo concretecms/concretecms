@@ -140,7 +140,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     {
         $this->set('image', File::getByID($this->image));
 
-        if ($this->buttonText) {
+        if ((string) $this->buttonText === '') {
+            $button = null;
+        } else {
             $button = new Link($this->getLinkURL(), $this->buttonText);
 
             $theme = Theme::getSiteTheme();
@@ -156,8 +158,8 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                     $button->addClass('btn-' . $this->buttonSize);
                 }
             }
-            $this->set('button', $button);
         }
+        $this->set('button', $button);
     }
 
     public function validate($args)
