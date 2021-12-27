@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$topicTreeName = $topicTreeName ?? null;
+
 $form = Core::make('helper/form');
 ?>
 

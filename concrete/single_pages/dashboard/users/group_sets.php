@@ -13,6 +13,8 @@ use Concrete\Core\Validation\CSRF\Token;
 /** @var Group[] $groups */
 /** @var GroupSet[] $groupSets */
 
+$categoryID = $categoryID ?? null;
+
 $app = Application::getFacadeApplication();
 /** @var Token $token */
 $token = $app->make(Token::class);
