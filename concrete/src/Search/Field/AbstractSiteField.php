@@ -25,7 +25,7 @@ abstract class AbstractSiteField extends AbstractField
      */
     public function isSetToCurrent(): bool
     {
-        return $this->data['siteID'] === 'current';
+        return $this->getData('siteID') === 'current';
     }
 
     /**
@@ -33,13 +33,13 @@ abstract class AbstractSiteField extends AbstractField
      */
     public function isSetToAll(): bool
     {
-        return $this->data['siteID'] === 'all';
+        return $this->getData('siteID') === 'all';
     }
 
     public function renderSearchField()
     {
         $selector = new SiteSelector();
-        return $selector->selectSite('siteID', $this->data['siteID'], true, true);
+        return $selector->selectSite('siteID', $this->getData('siteID'), true, true);
     }
 
 

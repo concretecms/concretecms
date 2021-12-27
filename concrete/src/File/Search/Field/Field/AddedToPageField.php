@@ -24,7 +24,7 @@ class AddedToPageField extends AbstractField
     public function renderSearchField()
     {
         $ps = \Core::make("helper/form/page_selector");
-        return $ps->selectPage('ocIDSearchField', $this->data['ocIDSearchField']);
+        return $ps->selectPage('ocIDSearchField', $this->getData('ocIDSearchField'));
     }
 
     /**
@@ -33,7 +33,7 @@ class AddedToPageField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $ocID = $this->data['ocIDSearchField'];
+        $ocID = $this->getData('ocIDSearchField');
         if ($ocID > 0) {
             $list->filterByOriginalPageID($ocID);
         }

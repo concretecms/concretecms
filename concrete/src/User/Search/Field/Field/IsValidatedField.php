@@ -36,9 +36,9 @@ class IsValidatedField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        if ($this->data['validated'] === '0') {
+        if ($this->getData('validated') === '0') {
             $list->filterByIsValidated(0);
-        } elseif ($this->data['validated'] === '1') {
+        } elseif ($this->getData('validated') === '1') {
             $list->filterByIsValidated(1);
         }
     }

@@ -31,7 +31,7 @@ class FileSetField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $ids = $this->data['fsID'];
+        $ids = $this->getData('fsID');
         if (is_array($ids)) {
             foreach($ids as $fsID) {
                 $set = Set::getByID($fsID);
@@ -53,6 +53,6 @@ class FileSetField extends AbstractField
             $sets[$set->getFileSetID()] = $set->getFileSetName();
         }
 
-        return $form->selectMultiple('fsID', $sets, $this->data['fsID'], ['class' => 'ccm-enhanced-select']);
+        return $form->selectMultiple('fsID', $sets, $this->getData('fsID'), ['class' => 'ccm-enhanced-select']);
     }
 }

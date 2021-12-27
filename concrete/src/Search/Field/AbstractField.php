@@ -94,11 +94,7 @@ abstract class AbstractField implements FieldInterface
      */
     public function getData(string $key)
     {
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
-        }
-
-        return null;
+        return $this->data[$key] ?? null;
     }
 
     /**
