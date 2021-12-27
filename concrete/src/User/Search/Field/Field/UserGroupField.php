@@ -57,7 +57,7 @@ class UserGroupField extends AbstractField
             $gp = new \Permissions($g);
             if ($gp->canSearchUsersInGroup($g)) {
                 $html .= '<option value="' . $g->getGroupID() . '" ';
-                if (is_array($this->getData('gID') && in_array($g->getGroupID(), $this->getData('gID'))) {
+                if (is_array($this->getData('gID') && in_array($g->getGroupID(), $this->getData('gID')))) {
                     $html .= 'selected="selected" ';
                 }
                 $html .= '>' . $g->getGroupDisplayName() . '</option>';
