@@ -30,7 +30,7 @@ class PageOwnerField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $owner = $this->data['owner'];
+        $owner = $this->getData('owner');
         $ui = \UserInfo::getByUserName($owner);
         if (is_object($ui)) {
             $list->filterByUserID($ui->getUserID());
@@ -42,7 +42,7 @@ class PageOwnerField extends AbstractField
     public function renderSearchField()
     {
         $form = \Core::make('helper/form');
-        return $form->text('owner', $this->data['owner']);
+        return $form->text('owner', $this->getData('owner'));
     }
 
 

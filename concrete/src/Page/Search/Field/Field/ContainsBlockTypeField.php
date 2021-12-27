@@ -30,7 +30,7 @@ class ContainsBlockTypeField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $bt = BlockType::getByID($this->data['btID']);
+        $bt = BlockType::getByID($this->getData('btID'));
         $list->filterByBlockType($bt);
     }
 
@@ -44,7 +44,7 @@ class ContainsBlockTypeField extends AbstractField
 
             return $types;
         }
-        ), $this->data['btID']);
+        ), $this->getData('btID'));
         return $html;
     }
 
