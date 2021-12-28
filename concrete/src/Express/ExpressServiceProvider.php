@@ -1,30 +1,31 @@
 <?php
+
 namespace Concrete\Core\Express;
 
-use Concrete\Core\Express\Entry\Formatter\EntryFormatterInterface;
-use Concrete\Core\Express\Entry\Formatter\LabelFormatter as EntryLabelFormatter;
-use Concrete\Core\Express\Formatter\FormatterInterface;
-use Concrete\Core\Express\Formatter\LabelFormatter;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
 class ExpressServiceProvider extends ServiceProvider
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Foundation\Service\Provider::register()
+     */
     public function register()
     {
-        $app = $this->app;
-        $this->app->bindShared('express/builder/association', function () use ($app) {
-            return $app->make('Concrete\Core\Express\ObjectAssociationBuilder');
-        });
-        $this->app->bindShared('express/control/type/manager', function () use ($app) {
-            return $app->make('Concrete\Core\Express\Form\Control\Type\Manager');
-        });
-        $this->app->singleton('Concrete\Core\Express\Association\Applier');
-        $this->app->singleton('express', function() use ($app) {
-           return $app->make('Concrete\Core\Express\ObjectManager');
-        });
-        $this->app->singleton('Concrete\Core\Express\Controller\Manager');
-
-        $this->app->bind(FormatterInterface::class, LabelFormatter::class);
-        $this->app->bind(EntryFormatterInterface::class, EntryLabelFormatter::class);
+        foreach([
+            Association\Applier::class => '',
+            Controller\Manager::class => '',
+            Form\Control\Type\Manager::class => 'express/control/type/manager',
+            ObjectAssociationBuilder::class => 'express/builder/association',
+            ObjectManager::class => 'express',
+        ] as $class => $alias) {
+            $this->app->singleton($class);
+            if ($alias !== '') {
+                $this->app->alias($class, $alias);
+            }
+        }
+        $this->app->bind(Formatter\FormatterInterface::class, Formatter\LabelFormatter::class);
+        $this->app->bind(Entry\Formatter\EntryFormatterInterface::class, Entry\Formatter\LabelFormatter::class);
     }
 }
