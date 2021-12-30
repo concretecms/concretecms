@@ -175,7 +175,11 @@ class DownloadFile extends PageController
                 $mimeType = $approvedVersion->getMimeType();
                 if (is_string($mimeType) &&
                     (
+                        $mimeType === "text/css" ||
+                        $mimeType === "text/csv" ||
+                        $mimeType === "text/javascript" ||
                         $mimeType === "text/plain" ||
+                        $mimeType === "text/html" ||
                         (strpos($mimeType, "/") > 0 && in_array(explode("/", $mimeType)[0], ["image", "video"]))
                     )
                 ) {
