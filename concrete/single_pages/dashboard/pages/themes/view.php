@@ -163,10 +163,9 @@ if (count($tArray2) > 0) {
 
                         </div>
                     </div>
-
-                </div>
-            </div>
         <?php } ?>
+            </div>
+        </div>
 <?php } ?>
 
 <?php if ($hasThemeCustomizations) { ?>
@@ -228,4 +227,3 @@ if (Config::get('concrete.marketplace.enabled') == true) {
     </div>
     <?php
 }
-
