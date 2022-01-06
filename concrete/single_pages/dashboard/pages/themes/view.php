@@ -12,7 +12,7 @@
                 $thumbnail->class('card-img-top')->width(null)->height(null);
                 ?>
 
-                <div class="col">
+                <div class="col mb-4">
                     <div class="card h-100 <?php if ($activeTheme->getThemeID() == $t->getThemeID()) { ?>border-primary border<?php } ?>">
                         <?=$thumbnail ?>
                         <div class="card-body">
@@ -142,7 +142,7 @@ if (count($tArray2) > 0) {
                 $thumbnail->class('card-img-top')->width(null)->height(null);
                 ?>
 
-                    <div class="col">
+                    <div class="col mb-4">
                         <div class="card h-100">
                             <?=$thumbnail ?>
                             <div class="card-body">
@@ -151,16 +151,12 @@ if (count($tArray2) > 0) {
                                 </div>
 
                                 <p class="card-text text-secondary small"><?=$t->getThemeDisplayDescription(); ?></p>
-
-                                <p class="card-text">
-                                <form method="post" action="<?=$view->action('install')?>">
-                                    <?=$token->output('install_theme')?>
-                                    <input type="hidden" name="theme" value="<?=$t->getThemeHandle()?>">
-                                    <button type="submit" class="btn w-100 btn-block btn-secondary"><?=t('Install')?></button>
-                                </form>
-                                </p>
                             </div>
-
+                            <form class="m-3" method="post" action="<?=$view->action('install')?>">
+                                <?=$token->output('install_theme')?>
+                                <input type="hidden" name="theme" value="<?=$t->getThemeHandle()?>">
+                                <button type="submit" class="btn w-100 btn-block btn-secondary"><?=t('Install')?></button>
+                            </form>
                         </div>
                     </div>
         <?php } ?>
