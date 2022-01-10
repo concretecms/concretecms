@@ -178,7 +178,7 @@ class GeolocationResult implements JsonSerializable
                         $this->errorMessage = t('An unspecified error occurred in the geolocation library');
                         break;
                     default:
-                        $this->errorMessage = t('An unexpected error occurred in the geolocation library');
+                        $this->errorMessage = t('An unexpected error occurred in the geolocation library: %s', $this->errorCode);
                 }
             } else {
                 $this->errorMessage = $message;
