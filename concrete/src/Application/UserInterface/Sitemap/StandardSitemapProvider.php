@@ -176,6 +176,7 @@ class StandardSitemapProvider implements ProviderInterface
             if ($siteTreeID) {
                 // update $cookieKey to use a valid site id
                 $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $siteTreeID);
+                return $this->siteService->getSiteTreeByID($siteTreeID);
             }
         }
     }
