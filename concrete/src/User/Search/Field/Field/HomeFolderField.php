@@ -38,7 +38,7 @@ class HomeFolderField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $list->filterByHomeFolderID($this->data['home_folder']);
+        $list->filterByHomeFolderID($this->getData('home_folder'));
     }
 
 

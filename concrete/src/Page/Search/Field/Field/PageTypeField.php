@@ -31,7 +31,7 @@ class PageTypeField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $list->filterByPageTypeID($this->data['ptID']);
+        $list->filterByPageTypeID($this->getData('ptID'));
     }
 
     public function renderSearchField()
@@ -45,14 +45,14 @@ class PageTypeField extends AbstractField
                 $types[$type->getPageTypeID()] = $type->getPageTypeDisplayName();
                 return $types;
             }
-            ), $this->data['ptID']);
+            ), $this->getData('ptID'));
         } else {
             $html = '<select name="ptID" class="form-select">';
             foreach($types as $type) {
                 $html .= '<optgroup label="' . $type->getSiteTypeName() . '">';
                 $types = \PageType::getList(false, $type);
                 foreach($types as $pageType) {
-                    $selected = $pageType->getPageTypeID() == $this->data['ptID'] ? ' selected ' : '';
+                    $selected = $pageType->getPageTypeID() == $this->getData('ptID') ? ' selected ' : '';
                     $html .= '<option value="' . $pageType->getPageTypeID() . '" ' . $selected . '>' . $pageType->getPageTypeDisplayName() . '</option>';
                 }
                 $html .= '</optgroup>';
@@ -66,7 +66,7 @@ class PageTypeField extends AbstractField
     {
         $fieldNode = $element->addChild('field');
         $fieldNode->addAttribute('key', $this->getKey());
-        $fieldNode->addChild('pagetype', ContentExporter::replacePageTypeWithPlaceHolder($this->data['ptID']));
+        $fieldNode->addChild('pagetype', ContentExporter::replacePageTypeWithPlaceHolder($this->getData('ptID')));
     }
 
     public function loadDataFromImport(\SimpleXMLElement $element)

@@ -31,7 +31,7 @@ class ChannelField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $list->filterByChannel($this->data['channel']);
+        $list->filterByChannel($this->getData('channel'));
     }
 
     public function renderSearchField()
@@ -43,6 +43,6 @@ class ChannelField extends AbstractField
         foreach (Channels::getChannels() as $channel) {
             $channels[$channel] = Channels::getChannelDisplayName($channel);
         }
-        return $form->select('channel', $channels, $this->data['channel']);
+        return $form->select('channel', $channels, $this->getData('channel'));
     }
 }

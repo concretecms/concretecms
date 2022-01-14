@@ -38,9 +38,9 @@ class IsActiveField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        if ($this->data['active'] === '0') {
+        if ($this->getData('active') === '0') {
             $list->filterByIsActive(0);
-        } elseif ($this->data['active'] === '1') {
+        } elseif ($this->getData('active') === '1') {
             $list->filterByIsActive(1);
         }
     }

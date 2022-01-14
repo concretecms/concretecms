@@ -89,7 +89,7 @@ class AssociationField extends AbstractField
             foreach($results as $result) {
                 $entries[$result->getId()] = $result->getLabel();
             }
-            return $form->select($name, $entries, $this->data['express_association_' . $this->associationID]);
+            return $form->select($name, $entries, $this->getData('express_association_' . $this->associationID));
         }
     }
 

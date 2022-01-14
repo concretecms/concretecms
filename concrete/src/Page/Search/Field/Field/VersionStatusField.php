@@ -27,8 +27,8 @@ class VersionStatusField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        if (isset($this->data['versionToRetrieve']) && $this->data['versionToRetrieve']) {
-            $versionToRetrieve = $this->data['versionToRetrieve'];
+        if (isset($this->data['versionToRetrieve']) && $this->getData('versionToRetrieve')) {
+            $versionToRetrieve = $this->getData('versionToRetrieve');
         } else {
             $versionToRetrieve = PageList::PAGE_VERSION_ACTIVE;
         }
@@ -39,8 +39,8 @@ class VersionStatusField extends AbstractField
     {
         $app = Application::getFacadeApplication();
 
-        if (isset($this->data['versionToRetrieve']) && $this->data['versionToRetrieve']) {
-            $versionToRetrieve = $this->data['versionToRetrieve'];
+        if (isset($this->data['versionToRetrieve']) && $this->getData('versionToRetrieve')) {
+            $versionToRetrieve = $this->getData('versionToRetrieve');
         } else {
             $versionToRetrieve = PageList::PAGE_VERSION_RECENT;
         }

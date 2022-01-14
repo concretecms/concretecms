@@ -30,7 +30,7 @@ class ExtensionField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $extension = $this->data['extension'];
+        $extension = $this->getData('extension');
         $list->filterByExtension($extension);
     }
 
@@ -42,7 +42,7 @@ class ExtensionField extends AbstractField
         foreach ($ext1 as $value) {
             $extensions[$value] = $value;
         }
-        return $form->select('extension', $extensions, $this->data['extension']);
+        return $form->select('extension', $extensions, $this->getData('extension'));
     }
 
 
