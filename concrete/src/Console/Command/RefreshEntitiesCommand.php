@@ -39,7 +39,7 @@ EOT
 
         $pev = new PackageEntities();
         $app->make(EventDispatcher::class)->dispatch('on_refresh_package_entities', $pev);
-        $entityManagers = array_merge([$app->make(EventDispatcher::class)], $pev->getEntityManagers());
+        $entityManagers = array_merge([$app->make(EntityManagerInterface::class)], $pev->getEntityManagers());
         foreach ($entityManagers as $em) {
             $manager = new DatabaseStructureManager($em);
             $manager->refreshEntities();
