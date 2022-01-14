@@ -155,21 +155,27 @@ class StandardSitemapProvider implements ProviderInterface
 
             // the site id is not valid, let's get the default site
             $site = $this->siteService->getActiveSiteForEditing();
+            $siteTreeID = null;
 
-            // update $cookieKey to use a valid site id
-            $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $site->getSiteTreeID());
             $locale = $site->getDefaultLocale();
             if ($locale && $this->checkPermissions($locale)) {
-                return $locale->getSiteTreeObject();
+                $siteTreeID = $locale->getSiteTreeObject()->getSiteTreeID();
             }
 
-            // This means we don't have permission to view the default locale.
-            // So instead we just grab the first we can find that we DO have permission
-            // to view.
-            foreach ($site->getLocales() as $locale) {
-                if ($this->checkPermissions($locale)) {
-                    return $locale->getSiteTreeObject();
+            if (!$siteTreeID) {
+                // This means we don't have permission to view the default locale.
+                // So instead we just grab the first we can find that we DO have permission
+                // to view.
+                foreach ($site->getLocales() as $locale) {
+                    if ($this->checkPermissions($locale)) {
+                        $siteTreeID = $locale->getSiteTreeObject()->getSiteTreeID();
+                    }
                 }
+            }
+
+            if ($siteTreeID) {
+                // update $cookieKey to use a valid site id
+                $this->cookieJar->getResponseCookies()->addCookie($cookieKey, $siteTreeID);
             }
         }
     }

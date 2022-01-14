@@ -510,6 +510,10 @@ class User extends ConcreteObject
             $cookie->clear($config->get('concrete.session.name'));
         }
 
+        if ($cookie->has('ConcreteSitemapTreeID')) {
+            $cookie->clear('ConcreteSitemapTreeID');
+        }
+
         $app->make(PersistentAuthentication\CookieService::class)->deleteCookie();
 
         $loginCookie = sprintf('%s_LOGIN', $app['config']->get('concrete.session.name'));
