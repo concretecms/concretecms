@@ -29,7 +29,7 @@ class Header extends ElementController
     public function view()
     {
         $db = \Database::connection();
-        if ($this->entity) {
+        if (is_object($this->entity) && $this->entity->getId()) {
             $this->set('entity', $this->entity);
             $this->set('exportURL', \URL::to('/dashboard/reports/forms', 'csv_export', $this->nodeId));
             $managePage = \Page::getByPath('/dashboard/system/express/entities');
