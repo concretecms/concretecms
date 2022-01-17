@@ -93,6 +93,6 @@ class ActiveThemeProvider implements ProviderInterface
     {
         $theme = $this->getTheme();
 
-        return $theme === null ? '' : $theme->getThemeHandle();
+        return $theme === null ? '' : (string) $theme->getThemeHandle();
     }
 }
