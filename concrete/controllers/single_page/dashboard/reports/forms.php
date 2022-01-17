@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 use Concrete\Block\ExpressForm\Controller;
 use Concrete\Core\Controller\Traits\DashboardExpressEntryDetailsTrait;
 use Concrete\Core\Controller\Traits\DashboardSelectableExpressEntryListTrait;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
