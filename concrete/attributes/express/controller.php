@@ -5,6 +5,9 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\ExpressSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\ExpressValue;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Doctrine\ORM\Query\Expr;
 
 class Controller extends AttributeTypeController
@@ -147,6 +150,24 @@ class Controller extends AttributeTypeController
     public function getAttributeKeySettingsClass()
     {
         return ExpressSettings::class;
+    }
+
+    public function validateForm($p)
+    {
+        return $p['value'] != false;
+    }
+
+    public function validateValue()
+    {
+        /** @var ExpressValue $val */
+        $val = $this->getAttributeValue()->getValue();
+        /** @var ErrorList $error */
+        $error = $this->app->make('helper/validation/error');
+        if (count($val->getSelectedEntries()) === 0) {
+            $error->add(new FieldNotPresentError(new AttributeField($this->getAttributeKey())));
+        }
+
+        return $error;
     }
 
 }

@@ -4,6 +4,9 @@ namespace Concrete\Attribute\PageSelector;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Page\Page;
 
 class Controller extends AttributeTypeController
@@ -87,5 +90,23 @@ class Controller extends AttributeTypeController
             $page = Page::getByID($cID, 'ACTIVE');
             $avn = $akn->addChild('value', $page->getCollectionPath());
         }
+    }
+
+    public function validateForm($p)
+    {
+        return $p['value'] != false;
+    }
+
+    public function validateValue()
+    {
+        $val = $this->getAttributeValue()->getValue();
+        /** @var ErrorList $error */
+        $error = $this->app->make('helper/validation/error');
+        $page = Page::getByID($val);
+        if (!$page || $page->isError()) {
+            $error->add(new FieldNotPresentError(new AttributeField($this->getAttributeKey())));
+        }
+
+        return $error;
     }
 }

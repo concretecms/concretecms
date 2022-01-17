@@ -4,8 +4,12 @@ namespace Concrete\Attribute\UserSelector;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
+use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\UserInfoRepository;
 
 class Controller extends AttributeTypeController
 {
@@ -99,5 +103,26 @@ class Controller extends AttributeTypeController
             $user = User::getByUserID($uID);
             $avn = $akn->addChild('value', $user->getUserID());
         }
+    }
+
+    public function validateForm($p)
+    {
+        return $p['value'] != false;
+    }
+
+    public function validateValue()
+    {
+        /** @var NumberValue $val */
+        $val = $this->getAttributeValue()->getValue();
+        /** @var ErrorList $error */
+        $error = $this->app->make('helper/validation/error');
+        /** @var UserInfoRepository $repository */
+        $repository = $this->app->make(UserInfoRepository::class);
+        $user = $repository->getByID($val);
+        if (!$user) {
+            $error->add(new FieldNotPresentError(new AttributeField($this->getAttributeKey())));
+        }
+
+        return $error;
     }
 }
