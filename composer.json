@@ -26,6 +26,11 @@
     "vendor-dir": "./concrete/vendor",
     "platform": {
       "php": "7.3"
+    },
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "mlocati/composer-patcher": true,
+      "wikimedia/composer-merge-plugin": true
     }
   },
   "replace": {
