@@ -56,7 +56,7 @@ if ($calendar !== null) {
 
                 <div class="form-group">
                     <?= $form->label('calendarName', t('Calendar Name')) ?>
-                    <?= $form->text('calendarName', $calendarName, ['placeholder' => t('Choose a descriptive name for your calendar.'), ["class" => "form-control"]]) ?>
+                    <?= $form->text('calendarName', $calendarName, ['placeholder' => t('Choose a descriptive name for your calendar.')]) ?>
 
                     <div class="form-text text-muted">
                         <?= t('Each separate calendar gets a complete separate list of events. Each front-end block can display content from one or multiple calendars.') ?>
