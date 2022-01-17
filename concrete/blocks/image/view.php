@@ -2,7 +2,6 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Html\Image;
@@ -13,18 +12,31 @@ use HtmlObject\Image as HtmlImage;
 
 $app = Application::getFacadeApplication();
 
-/** @var array $themeResponsiveImageMap */
-/** @var array $selectedThumbnailTypes */
-/** @var string $altText */
-/** @var bool $openLinkInNewWindow */
-/** @var string $linkURL */
-/** @var bool $cropImage */
-/** @var int $maxWidth */
-/** @var int $maxHeight */
-/** @var Version $f */
-/** @var Version $foS */
-/** @var string $sizingOption */
-/** @var array $imgPaths */
+/**
+ * @var Concrete\Core\Block\View\BlockView $this
+ * @var Concrete\Core\Block\View\BlockView $view
+ * @var Concrete\Core\Area\SubArea $a
+ * @var Concrete\Core\Entity\Block\BlockType\BlockType $bt
+ * @var Concrete\Core\Block\Block $b
+ * @var Concrete\Block\Image\Controller $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var int $bID
+ *
+ * @var bool $cropImage
+ * @var int $maxWidth
+ * @var int $maxHeight
+ * @var string $sizingOption
+ * @var Concrete\Core\Entity\File\File|null $f
+ * @var Concrete\Core\Entity\File\File|null $foS
+ * @var array $imgPaths May be empty, or may contain two strings (with keys 'default' and 'hover')
+ * @var string $altText
+ * @var string|null $title
+ * @var string $linkURL
+ * @var bool $openLinkInNewWindow
+ * @var array $selectedThumbnailTypes Array keys are the breakpoint handles, array values are the breakpoint IDs
+ * @var array $themeResponsiveImageMap Array keys are the responsive breakpoint names, array values are the widths.
+ * @var Concrete\Core\Page\Page $c
+ */
 
 if (is_object($f) && $f->getFileID()) {
     $imageTag = new HtmlImage();
