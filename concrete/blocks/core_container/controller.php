@@ -119,12 +119,8 @@ class Controller extends BlockController
             // out to various child pages.
             $count = $db->executeQuery('select count(*) from btCoreContainer where containerInstanceID = ?', [$containerInstanceID])
                 ->fetchOne();
-            \Log::info('found container instance total for instance ID ' . $containerInstanceID . ':' . $count);
             if ($count < 1) {
                 // This container instance is no longer in use. So let's remove the data associated with it.
-
-                \Log::info('deleting');
-
                 foreach($instance->getInstanceAreas() as $instanceArea) {
                     $containerBlockInstance = new ContainerBlockInstance(
                         $this->getBlockObject(),
