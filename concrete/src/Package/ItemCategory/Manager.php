@@ -195,6 +195,11 @@ class Manager extends CoreManager
         return $this->app->make(Task::class);
     }
 
+    public function createContainerDriver()
+    {
+        return $this->app->make(Container::class);
+    }
+
     public function getPackageItems(Package $package)
     {
         $items = [];
