@@ -133,8 +133,8 @@ class Controller extends BlockController
                         $subBlock->delete();
                     }
                 }
-                $this->app->make(EntityManager::class)->remove($instance);
-                $this->app->make(EntityManager::class)->flush();
+                $entityManager->remove($instance);
+                $entityManager->flush();
             }
         }
     }
