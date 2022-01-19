@@ -142,7 +142,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 </form>
 <script>
-$(window).load(function() {
+$(window).on('load', function() {
     function checked($container, ok) {
         $container.html(
             ok ? '<i class="fas fa-check" style="color: green"></i>' : '<i class="fas fa-times" style="color: red"></i>'
