@@ -32,6 +32,9 @@ class ImportContainersRoutine extends AbstractRoutine
                     $container->setContainerIcon($icon);
                     $container->setContainerHandle($handle);
                     $container->setContainerName($name);
+                    if ($pkg) {
+                        $container->setPackage($pkg);
+                    }
                     $em->persist($container);
                     $em->flush();
                 }

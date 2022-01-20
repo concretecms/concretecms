@@ -193,6 +193,7 @@ return [
         'block_type_set',
         'express_entity',
         'captcha_library',
+        'container',
         'content_editor_snippet',
         'conversation_rating_type',
         'geolocator_library',

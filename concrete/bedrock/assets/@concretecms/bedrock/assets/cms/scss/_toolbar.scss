@@ -201,6 +201,7 @@ div#ccm-toolbar {
     li.ccm-toolbar-page-edit-mode-active {
       > a {
         background-color: $green;
+        color: #fff;
 
         svg {
           fill: white;

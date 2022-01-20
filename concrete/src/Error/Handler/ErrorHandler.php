@@ -97,6 +97,13 @@ class ErrorHandler extends PrettyPageHandler
             ]
         );
 
+        $this->addDataTable(
+            'PHP',
+            [
+                'Version' => PHP_VERSION,
+            ]
+        );
+        
         /*
          * Config
          */
