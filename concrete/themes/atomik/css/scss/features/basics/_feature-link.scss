@@ -1,5 +1,6 @@
 div.theme-atomik {
   div.ccm-block-feature-link {
+    margin-bottom: 2rem;
 
     div.ccm-block-feature-link-text {
       font-size: 1.25rem;
@@ -11,11 +12,17 @@ div.theme-atomik {
 
     @include make-display-headings();
 
+    @include media-breakpoint-up(md) {
+      margin-bottom: 0;
+    }
   }
 
-  // Handle image blocks butting up right next to feature link blocks
-  picture + .ccm-block-feature-link {
-    margin-top: 2rem;
+  .row {
+    > div:last-child {
+      > div.ccm-block-feature-link {
+        margin-bottom: 0; // If the feature link comes at the of a container we don't want to add extra margin
+      }
+    }
   }
 
 }
