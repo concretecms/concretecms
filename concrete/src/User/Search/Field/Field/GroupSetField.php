@@ -43,7 +43,7 @@ class GroupSetField extends AbstractField
     public function filterList(ItemList $list)
     {
         $accessibleGroups = [];
-        $groupSetID = isset($this->data['gsID']) ? $this->data['gsID'] : null;
+        $groupSetID = $this->getData('gsID');
         $groupSet = $groupSetID ? GroupSet::getByID($groupSetID) : null;
         if ($groupSet) {
             foreach ($groupSet->getGroups() as $group) {

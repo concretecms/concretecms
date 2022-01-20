@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 use Concrete\Block\ExpressForm\Controller;
 use Concrete\Core\Controller\Traits\DashboardExpressEntryDetailsTrait;
 use Concrete\Core\Controller\Traits\DashboardSelectableExpressEntryListTrait;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
@@ -40,6 +41,11 @@ class Forms extends DashboardPageController
         if ($folder) {
             $factory = $this->createBreadcrumbFactory();
             $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $parent));
+        } else {
+            if (!isset($this->headerMenu)) {
+                $this->headerMenu = $this->app->make(ElementManager::class)->get('dashboard/reports/forms/header', ['nodeId' => null, 'entity' => null]);
+            }
+            $this->set('headerMenu', $this->headerMenu);
         }
 
         $this->setThemeViewTemplate('full.php');

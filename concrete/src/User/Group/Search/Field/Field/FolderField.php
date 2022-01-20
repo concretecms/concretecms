@@ -46,12 +46,12 @@ class FolderField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $folderID = $this->data['folderID'];
+        $folderID = $this->getData('folderID');
         if ($folderID) {
             $folder = Node::getByID($folderID);
             if ($folder && $folder instanceof GroupFolder) {
                 $list->filterByParentFolder($folder);
-                if ($this->data['searchSubFolder']) {
+                if ($this->getData('searchSubFolder')) {
                     $list->enableSubFolderSearch();
                 }
             } elseif ($folder && $folder instanceof Group) {
@@ -59,7 +59,7 @@ class FolderField extends AbstractField
                 $group = $folder->getTreeNodeGroupObject();
                 if (count($group->getChildGroups()) > 0) {
                     $list->filterByParentFolder($folder);
-                    if ($this->data['searchSubFolder']) {
+                    if ($this->getData('searchSubFolder')) {
                         $list->enableSubFolderSearch();
                     }
                 }
@@ -71,7 +71,7 @@ class FolderField extends AbstractField
     {
         ob_start();
         /** @noinspection PhpUnhandledExceptionInspection */
-        View::element('groups/folder_selector', ['rootTreeNodeID' => $this->data['folderID'], 'inputName' => 'folderID']);
+        View::element('groups/folder_selector', ['rootTreeNodeID' => $this->getData('folderID'), 'inputName' => 'folderID']);
         $html = ob_get_contents();
         ob_end_clean();
         return $html;

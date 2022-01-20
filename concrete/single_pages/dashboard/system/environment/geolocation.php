@@ -208,6 +208,7 @@ if (isset($geolocator)) {
         }
         $('button.geolocator-test-launcher').on('click', function(e) {
             e.stopPropagation();
+            testGeolocator.busy = false;
             var $tr = $(this).closest('tr'),
                 geolocatorId = $tr.data('geolocator-id'),
                 $dialog = $('#ccm-geolocation-test-dialog'),

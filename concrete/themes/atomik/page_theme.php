@@ -25,7 +25,7 @@ class PageTheme extends Theme
 
     public function getThemeDescription()
     {
-        return t('A Concrete CMS theme built for 2021.');
+        return t('A Concrete CMS theme built for version 9.');
     }
 
     public function getThemeSupportedFeatures()

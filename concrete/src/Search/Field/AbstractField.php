@@ -89,6 +89,15 @@ abstract class AbstractField implements FieldInterface
     }
 
     /**
+     * @param string $key
+     * @return mixed|null
+     */
+    public function getData(string $key)
+    {
+        return $this->data[$key] ?? null;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see FieldInterface::loadDataFromRequest()

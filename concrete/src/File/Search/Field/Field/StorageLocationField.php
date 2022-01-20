@@ -39,7 +39,7 @@ class StorageLocationField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $storageLocation = $this->data['fslID'];
+        $storageLocation = $this->getData('fslID');
         $list->filterByStorageLocationID($storageLocation);
     }
 
@@ -60,6 +60,6 @@ class StorageLocationField extends AbstractField
             }
         }
 
-        return $form->select('fslID', $storageLocations, $this->data['fslID']);
+        return $form->select('fslID', $storageLocations, $this->getData('fslID'));
     }
 }

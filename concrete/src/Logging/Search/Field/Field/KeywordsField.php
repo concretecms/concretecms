@@ -30,7 +30,7 @@ class KeywordsField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $list->filterByKeywords($this->data['keywords']);
+        $list->filterByKeywords($this->getData('keywords'));
     }
 
     public function renderSearchField()
@@ -38,6 +38,6 @@ class KeywordsField extends AbstractField
         $app = Application::getFacadeApplication();
         /** @var Form $form */
         $form = $app->make(Form::class);
-        return $form->text('keywords' , $this->data['keywords']);
+        return $form->text('keywords' , $this->getData('keywords'));
     }
 }
