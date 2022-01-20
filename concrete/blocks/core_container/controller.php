@@ -1,13 +1,12 @@
 <?php
+
 namespace Concrete\Block\CoreContainer;
 
 use Concrete\Core\Area\ContainerArea;
-use Concrete\Core\Area\SubArea;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Container;
-use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Page\Container\ContainerBlockInstance;
 use Concrete\Core\Page\Container\ContainerExporter;
 use Concrete\Core\Page\Container\TemplateLocator;
@@ -16,50 +15,90 @@ use Doctrine\ORM\EntityManager;
 
 class Controller extends BlockController
 {
-    protected $btTable = 'btCoreContainer';
-    protected $btIsInternal = true;
-    protected $btIgnorePageThemeGridFrameworkContainer = true;
-    
+    /**
+     * @var int|null
+     */
     public $containerInstanceID;
-    
+
+    /**
+     * @var string
+     */
+    protected $btTable = 'btCoreContainer';
+
+    /**
+     * @var bool
+     */
+    protected $btIsInternal = true;
+
+    /**
+     * @var bool
+     */
+    protected $btIgnorePageThemeGridFrameworkContainer = true;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
-        return t("Proxy block for theme containers added through the UI.");
+        return t('Proxy block for theme containers added through the UI.');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getBlockTypeName()
     {
-        return t("Container");
+        return t('Container');
     }
-    
-    public function getContainerInstanceObject() :? Container\Instance
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return Container\Instance|null
+     */
+    public function getContainerInstanceObject(): ?Container\Instance
     {
         $entityManager = $this->app->make(EntityManager::class);
         if ($this->containerInstanceID) {
-            $instance = $entityManager->find(Container\Instance::class, $this->containerInstanceID);
-            return $instance;
+            return $entityManager->find(Container\Instance::class, $this->containerInstanceID);
         }
+
         return null;
     }
-    
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function view()
     {
-        $template = null;
         $instance = $this->getContainerInstanceObject();
         if ($instance) {
             $container = $instance->getContainer();
-            if ($container) {
-                $containerBlockInstance = $this->app->make(ContainerBlockInstance::class, 
-                    ['block' => $this->getBlockObject(), 'instance' => $instance]);
-                $locator = $this->app->make(TemplateLocator::class);
-                // no this is not a typo. Aesthetically it looks nice to pass $container to the container area
-                // constructor, but we need the instance object, not just the outer container object.
-                $this->set('container', $containerBlockInstance);
-                $this->set('fileToRender', $locator->getFileToRender($this->getCollectionObject(), $container));
-            }
+            $containerBlockInstance = $this->app->make(
+                ContainerBlockInstance::class,
+                ['block' => $this->getBlockObject(), 'instance' => $instance]
+            );
+            $locator = $this->app->make(TemplateLocator::class);
+            // no this is not a typo. Aesthetically it looks nice to pass $container to the container area
+            // constructor, but we need the instance object, not just the outer container object.
+            $this->set('container', $containerBlockInstance);
+            $this->set('fileToRender', $locator->getFileToRender($this->getCollectionObject(), $container));
         }
     }
-    
+
+    /**
+     * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
+     *
+     * @param array<string,mixed> $data
+     *
+     * @return void
+     */
     public function save($data)
     {
         $entityManager = $this->app->make(EntityManager::class);
@@ -75,6 +114,13 @@ class Controller extends BlockController
         parent::save($data);
     }
 
+    /**
+     * @param \SimpleXMLElement $blockNode
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function export(\SimpleXMLElement $blockNode)
     {
         $instance = $this->getContainerInstanceObject();
@@ -85,6 +131,14 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @param \SimpleXMLElement $blockNode
+     * @param \Concrete\Core\Page\Page $page
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return array<string, mixed>
+     */
     public function getImportData($blockNode, $page)
     {
         $args = [];
@@ -92,21 +146,30 @@ class Controller extends BlockController
         if (isset($blockNode->container)) {
             $handle = (string) $blockNode->container['handle'];
             $container = $entityManager->getRepository(Container::class)
-                ->findOneByContainerHandle($handle);
+                ->findOneByContainerHandle($handle)
+            ;
             if ($container) {
                 $args['containerID'] = $container->getContainerID();
             }
         }
+
         return $args;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function delete()
     {
         $entityManager = $this->app->make(EntityManager::class);
         // Remove all the blocks within this container's areas.
         $instance = $this->getContainerInstanceObject();
         if ($instance) {
-            foreach($instance->getInstanceAreas() as $instanceArea) {
+            foreach ($instance->getInstanceAreas() as $instanceArea) {
                 $containerBlockInstance = new ContainerBlockInstance(
                     $this->getBlockObject(),
                     $instance,
@@ -114,7 +177,7 @@ class Controller extends BlockController
                 );
                 $containerArea = new ContainerArea($containerBlockInstance, $instanceArea->getContainerAreaName());
                 $subBlocks = $containerArea->getAreaBlocksArray($this->getCollectionObject());
-                foreach($subBlocks as $subBlock) {
+                foreach ($subBlocks as $subBlock) {
                     $subBlock->delete();
                 }
             }
@@ -124,27 +187,33 @@ class Controller extends BlockController
         parent::delete();
     }
 
-
+    /**
+     * Import additional data about this block.
+     *
+     * @param \Concrete\Core\Block\Block $b
+     * @param \SimpleXMLElement $blockNode
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     protected function importAdditionalData($b, $blockNode)
     {
         $db = $this->app->make(Connection::class);
         // such a pain
         $this->containerInstanceID = $db->fetchColumn('select containerInstanceID from btCoreContainer where bID = ?', [$b->getBlockID()]);
-
-
-        $parentArea = $b->getBlockAreaObject();
         $page = $b->getBlockCollectionObject();
 
         $instance = $this->getContainerInstanceObject();
 
-        $containerBlockInstance = $this->app->make(ContainerBlockInstance::class,
-           ['block' => $b, 'instance' => $instance]
+        $containerBlockInstance = $this->app->make(
+            ContainerBlockInstance::class,
+            ['block' => $b, 'instance' => $instance]
         );
 
         // go through all areas found under this node, and create the corresponding sub area.
         foreach ($blockNode->container->containerarea as $containerAreaNode) {
-
-            $areaDisplayName = (string)$containerAreaNode['name'];
+            $areaDisplayName = (string) $containerAreaNode['name'];
             $containerArea = new ContainerArea($containerBlockInstance, $areaDisplayName);
 
             $subArea = $containerArea->getSubAreaObject($page);
@@ -154,14 +223,13 @@ class Controller extends BlockController
                 $page->setCustomStyleSet($subArea, $set);
             }
             foreach ($containerAreaNode->block as $bx) {
-                $bt = BlockType::getByHandle((string)$bx['type']);
+                $bt = BlockType::getByHandle((string) $bx['type']);
                 if (!is_object($bt)) {
-                    throw new \Exception(t('Invalid block type handle: %s', (string)($bx['type'])));
+                    throw new \Exception(t('Invalid block type handle: %s', (string) ($bx['type'])));
                 }
                 $btc = $bt->getController();
                 $btc->import($page, $subArea->getAreaHandle(), $bx);
             }
         }
     }
-    
 }
