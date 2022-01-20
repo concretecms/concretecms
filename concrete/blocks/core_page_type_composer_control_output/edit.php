@@ -1,14 +1,22 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
-use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+defined('C5_EXECUTE') or die('Access Denied.');
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Template as PageTemplate;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
+use Concrete\Core\Page\Type\Type as PageType;
+
+/** @var string|int|null $ptComposerOutputControlID */
+/** @var \Concrete\Core\Form\Service\Form $form */
+
+$ptComposerOutputControlID = $ptComposerOutputControlID ?? null;
 
 $c = Page::getCurrentPage();
     // retrieve all block controls attached to this page template.
     $pt = PageTemplate::getByID($c->getPageTemplateID());
     $ptt = PageType::getByDefaultsPage($c);
     $controls = PageTypeComposerOutputControl::getList($ptt, $pt);
-    $values = array();
+    $values = [];
     foreach ($controls as $control) {
         $fls = PageTypeComposerFormLayoutSetControl::getByID($control->getPageTypeComposerFormLayoutSetControlID());
         if ($fls->getPageTypeComposerFormLayoutSetControlCustomLabel()) {
@@ -19,9 +27,8 @@ $c = Page::getCurrentPage();
         }
         $values[$control->getPageTypeComposerOutputControlID()] = $displayname;
     }
-    $form = Loader::helper('form');
 ?>
 <div class="form-group">
 	<label for="ptComposerOutputControlID" class="control-label form-label"><?=t('Control')?></label>
-	<?=$form->select('ptComposerOutputControlID', $values, $ptComposerOutputControlID)?>
+	<?=$form->select('ptComposerOutputControlID', $values, $ptComposerOutputControlID ?? '')?>
 </div>
