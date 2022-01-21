@@ -166,25 +166,40 @@ class Controller extends BlockController
     public function delete()
     {
         $entityManager = $this->app->make(EntityManager::class);
-        // Remove all the blocks within this container's areas.
+        $db = $entityManager->getConnection();
+
+        // Store the containerInstanceID that's currently bound to this block instance. We're going to need it
+        // momentarily
         $instance = $this->getContainerInstanceObject();
         if ($instance) {
-            foreach ($instance->getInstanceAreas() as $instanceArea) {
-                $containerBlockInstance = new ContainerBlockInstance(
-                    $this->getBlockObject(),
-                    $instance,
-                    $entityManager
-                );
-                $containerArea = new ContainerArea($containerBlockInstance, $instanceArea->getContainerAreaName());
-                $subBlocks = $containerArea->getAreaBlocksArray($this->getCollectionObject());
-                foreach ($subBlocks as $subBlock) {
-                    $subBlock->delete();
+            $containerInstanceID = $instance->getContainerInstanceID();
+
+            // Delete the data record, which joins the block to its current containerInstanceID.
+            parent::delete();
+
+            // Now, check to see if there are any other instances of this block out there joined to the current
+            // containerInstanceID. This might happen if a container was placed on a master page and aliased
+            // out to various child pages.
+            $count = $db->executeQuery('select count(*) from btCoreContainer where containerInstanceID = ?', [$containerInstanceID])
+                ->fetchOne();
+            if ($count < 1) {
+                // This container instance is no longer in use. So let's remove the data associated with it.
+                foreach($instance->getInstanceAreas() as $instanceArea) {
+                    $containerBlockInstance = new ContainerBlockInstance(
+                        $this->getBlockObject(),
+                        $instance,
+                        $entityManager
+                    );
+                    $containerArea = new ContainerArea($containerBlockInstance, $instanceArea->getContainerAreaName());
+                    $subBlocks = $containerArea->getAreaBlocksArray($this->getCollectionObject());
+                    foreach($subBlocks as $subBlock) {
+                        $subBlock->delete();
+                    }
                 }
+                $entityManager->remove($instance);
+                $entityManager->flush();
             }
-            $this->app->make(EntityManager::class)->remove($instance);
-            $this->app->make(EntityManager::class)->flush();
         }
-        parent::delete();
     }
 
     /**

@@ -910,10 +910,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             case 'title':
                 $view = new BlockView($this->getBlockObject());
                 /** @var UrlImmutable $action */
-                $action = $this->getActionURL('navigate');
-                $actionPath = $action->getPath();
-                $actionPath->append($folder->getTreeNodeID());
-                $action = $action->setPath($actionPath);
+                $action = $this->getActionURL('navigate', $folder->getTreeNodeID());
 
                 return sprintf('<a href="%s">%s</a>', h($action), $folder->getTreeNodeDisplayName());
             case 'filename':
@@ -943,10 +940,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($crumb->getTreeNodeID() == $this->getRootFolder()->getTreeNodeID()) {
                 $action = $this->getBlockObject()->getBlockCollectionObject()->getCollectionLink();
             } else {
-                $action = $this->getActionURL('navigate');
-                $actionPath = $action->getPath();
-                $actionPath->append($crumb->getTreeNodeID());
-                $action = $action->setPath($actionPath);
+                $action = $this->getActionURL('navigate', $crumb->getTreeNodeID());
             }
 
             $return[] = [

@@ -47,7 +47,7 @@ $class = 'ccm-area-footer';
                             ?><a class="dropdown-item" dialog-title="<?=t('Add Layout')?>" data-block-type-handle="<?= $areabt->getBlockTypeHandle() ?>" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a><?php
                         }
                         if ($canEditAreaPermissions) {
-                            ?><li><div class="dropdown-divider"></div></li><?php
+                            ?><div class="dropdown-divider"></div><?php
                         }
                     }
                     if ($canEditAreaPermissions) {

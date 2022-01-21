@@ -45,6 +45,7 @@
     "symfony/serializer": "^5.2",
     "symfony/yaml":"^4",
     "scssphp/scssphp": "^1.4",
+    "doctrine/annotations": "^1.13.2",
     "doctrine/dbal": "^2.13.2",
     "doctrine/orm": "^2.8.5",
     "doctrine/common": "^3.1.2",

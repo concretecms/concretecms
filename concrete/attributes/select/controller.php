@@ -275,12 +275,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             if (isset($data['atSelectOptionValue'])) {
                 if (preg_match(
                     '/SelectAttributeOption\:(.+)/i',
-                    $data['atSelectOptionValue'],
+                    $data['atSelectOptionValue'][0],
                     $matches
                 )) {
                     $option = $this->getOptionByID($matches[1]);
                 } else {
-                    $option = $this->getOptionByValue(trim($data['atSelectOptionValue']), $this->attributeKey);
+                    $option = $this->getOptionByValue(trim($data['atSelectOptionValue'][0]), $this->attributeKey);
                     if (!is_object($option)) {
                         $displayOrder = 0;
                         if ($optionList) {
@@ -290,7 +290,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         $option->setOptionList($optionList);
                         $option->setIsEndUserAdded(true);
                         $option->setDisplayOrder($displayOrder);
-                        $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue']));
+                        $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue'][0]));
                     }
                 }
             }

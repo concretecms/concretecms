@@ -166,7 +166,12 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $thumbnailTypes = [];
 
         foreach(Type::getList() as $thumbnailTypeEntity) {
-            $thumbnailTypes[$thumbnailTypeEntity->getID()] = $thumbnailTypeEntity->getName();
+            if (!$thumbnailTypeEntity->isRequired()) {
+                // We don't want to include core thumbnail types like file manager listing and detail, so let's
+                // not show "required" thumbnails. It would probably be better if we had a different boolean
+                // to track required vs internal, but we don't, so let's use required as internal.
+                $thumbnailTypes[$thumbnailTypeEntity->getID()] = $thumbnailTypeEntity->getName();
+            }
         }
 
         return $thumbnailTypes;
