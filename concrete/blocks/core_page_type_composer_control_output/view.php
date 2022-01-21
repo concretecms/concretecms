@@ -1,7 +1,9 @@
 <?php
-    defined('C5_EXECUTE') or die("Access Denied.");
-    use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
-    use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+    defined('C5_EXECUTE') or die('Access Denied.');
+    /** @var int|null $ptComposerOutputControlID */
+    /** @var \Concrete\Core\Block\Block $b */
+    use Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+    use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 
     $control = PageTypeComposerOutputControl::getByID($ptComposerOutputControlID);
     if (is_object($control)) {
@@ -20,8 +22,8 @@
             ?>
 		</div>
 	</div>
-	<?php 
+	<?php
         }
         ?>
-<?php 
+<?php
     } ?>
