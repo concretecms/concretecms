@@ -3,15 +3,10 @@ namespace Concrete\Controller\Panel\Detail\Theme;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\StyleCustomizer\Compiler\Compiler;
-use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
-use Concrete\Core\StyleCustomizer\Style\StyleValueListFactory;
-use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 
 class PreviewPreset extends BackendInterfaceController
 {
@@ -19,9 +14,8 @@ class PreviewPreset extends BackendInterfaceController
 
     public function canAccess()
     {
-        $page = Page::getByPath('/dashboard/pages/themes');
-        $checker = new Checker($page);
-        return $checker->canViewPage();
+        $pk = PermissionKey::getByHandle('customize_themes');
+        return $pk->validate();
     }
 
     public function view($pThemeID, $presetIdentifier, $pageID)

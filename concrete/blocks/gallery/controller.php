@@ -10,6 +10,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File as ConcreteFile;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Utility\Service\Number;
@@ -18,7 +19,7 @@ use Generator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     protected $btTable = 'btGallery';
     protected $btInterfaceWidth = '750';
@@ -371,31 +372,40 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         // Resolve the file
         $file = ConcreteFile::getByID($entry['fID']);
-        $version = $file->getVersion();
-        $resource = $version->getFileResource();
+        if ($file) {
+            $version = $file->getVersion();
+            if ($version) {
+                $resource = $version->getFileResource();
 
-        $attributes = [];
-        foreach ($version->getAttributes() as $value) {
-            $attributes[] = [$value->getAttributeKey()->getAttributeKeyDisplayName(), $value->getDisplayValue()];
+                $attributes = [];
+                foreach ($version->getAttributes() as $value) {
+                    $attributes[] = [
+                        $value->getAttributeKey()->getAttributeKeyDisplayName(),
+                        $value->getDisplayValue()
+                    ];
+                }
+
+                return [
+                    'eID' => $entry['eID'],
+                    'id' => $entry['fID'],
+                    'title' => $version->getTitle(),
+                    'description' => $version->getDescription(),
+                    'extension' => $resource->getMimetype(),
+                    'attributes' => $attributes,
+                    'fileSize' => $this->numbersHelper()->formatSize($version->getFullSize()),
+                    'imageUrl' => $version->getThumbnailURL('file_manager_detail'),
+                    'thumbUrl' => $version->getThumbnailURL('file_manager_listing'),
+                    'file' => $file,
+                    'detailUrl' => (string)$this->urlResolver()->resolve(
+                        [
+                            '/dashboard/files/details',
+                            'view',
+                            $file->getFileID()
+                        ]
+                    )
+                ];
+            }
         }
-
-        return [
-            'eID' => $entry['eID'],
-            'id' => $entry['fID'],
-            'title' => $version->getTitle(),
-            'description' => $version->getDescription(),
-            'extension' => $resource->getMimetype(),
-            'attributes' => $attributes,
-            'fileSize' => $this->numbersHelper()->formatSize($version->getFullSize()),
-            'imageUrl' => $version->getThumbnailURL('file_manager_detail'),
-            'thumbUrl' => $version->getThumbnailURL('file_manager_listing'),
-            'file' => $file,
-            'detailUrl' => (string)$this->urlResolver()->resolve([
-                '/dashboard/files/details',
-                'view',
-                $file->getFileID()
-            ])
-        ];
     }
 
     /**
@@ -424,11 +434,11 @@ class Controller extends BlockController implements UsesFeatureInterface
             ],
             "size" => [
                 "value" => 'standard',
-                "title" => 'Size',
+                "title" => t('Size'),
                 "type" => 'select',
                 "options" => [
-                    "wide" => 'Wide',
-                    "standard" => 'Standard',
+                    "wide" => t('Wide'),
+                    "standard" => t('Standard'),
                 ]
             ]
         ];
@@ -563,4 +573,14 @@ class Controller extends BlockController implements UsesFeatureInterface
             $errors->add(t('Invalid choice provided: %s %s', $key, $value ?? ''));
         }
     }
+
+    public function getUsedFiles()
+    {
+        $ids = [];
+        foreach ($this->getEntries() as $entry) {
+            $ids[] = $entry['id'];
+        }
+        return $ids;
+    }
+
 }

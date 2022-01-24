@@ -25,10 +25,10 @@ $view->element('dashboard/system/permissions/denylist/menu', ['category' => $cat
             <?php
             echo t(
             /* i18n: %1$s is the number of events, %2$s is the number of seconds/minutes/hours/days, %3$s is "seconds", "minutes", "hours" or "days" */
-                'Lock IP after <div class="col-auto">%1$s</div> events in <div class="col-auto">%2$s</div> <div class="col-auto">%3$s</div>',
-                $form->number('maxEvents', $category->getMaxEvents(), ['style' => 'width:90px', 'required' => 'required', 'min' => 1]),
-                $form->number('timeWindowValue', $unitValue, ['style' => 'width:90px', 'min' => 1]),
-                $form->select('timeWindowUnit', $units, $selectedUnit)
+                'Lock IP after %1$s events in %2$s %3$s',
+                sprintf('<div class="col-auto">%s</div>', $form->number('maxEvents', $category->getMaxEvents(), ['style' => 'width:90px', 'required' => 'required', 'min' => 1])),
+                sprintf('<div class="col-auto">%s</div>', $form->number('timeWindowValue', $unitValue, ['style' => 'width:90px', 'min' => 1])),
+                sprintf('<div class="col-auto">%s</div>', $form->select('timeWindowUnit', $units, $selectedUnit))
             );
             ?>
         </div>
@@ -44,9 +44,9 @@ $view->element('dashboard/system/permissions/denylist/menu', ['category' => $cat
             list($selectedUnit, $unitValue) = $controller->splitSeconds($category->getBanDuration() === null ? 300 : $category->getBanDuration());
             echo t(
                 /* i18n: %1$s is the number of seconds/minutes/hours/days, %2$s is "seconds", "minutes", "hours" or "days" */
-                'Ban IP for <div class="col-auto">%1$s</div> <div class="col-auto">%2$s</div>',
-                $form->number('banDurationValue', $unitValue, ['style' => 'width:90px', 'min' => 1]),
-                $form->select('banDurationUnit', $units, $selectedUnit)
+                'Ban IP for %1$s %2$s',
+                sprintf('<div class="col-auto">%s</div>', $form->number('banDurationValue', $unitValue, ['style' => 'width:90px', 'min' => 1])),
+                sprintf('<div class="col-auto">%s</div>', $form->select('banDurationUnit', $units, $selectedUnit))
             );
             ?>
             <div class="col-auto" style="margin: 0 9px;"><?=t('or')?></div>

@@ -10,3 +10,6 @@ import '@concretecms/bedrock/assets/navigation/js/frontend';
 import '@concretecms/bedrock/assets/conversations/js/frontend';
 import '@concretecms/bedrock/assets/imagery/js/frontend';
 import '@concretecms/bedrock/assets/documents/js/frontend';
+
+// Custom feature support
+import './features/imagery/hero-image/offset-title';

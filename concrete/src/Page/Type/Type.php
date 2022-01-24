@@ -874,7 +874,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $templates = $data['templates'];
         }
         $ptIsInternal = $this->isPageTypeInternal();
-        if ($data['internal']) {
+        if (isset($data['internal']) && $data['internal']) {
             $ptIsInternal = 1;
         }
         $db = Loader::db();

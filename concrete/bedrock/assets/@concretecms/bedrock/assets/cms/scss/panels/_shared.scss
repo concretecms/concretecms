@@ -14,12 +14,12 @@ html.ccm-panel-detail-open {
 div.ccm-panel {
   background-color: $panel-background-color;
   height: 100%;
-  /* overflow: hidden; */ /* This causes problems with floating palettes inside the panels. So let's only apply this during transitions */
   position: fixed;
   top: 0;
   user-select: none;
   width: 320px;
   z-index: $index-level-panel; // has to come above the detail actions wrapper
+  /* overflow: hidden; */ /* This causes problems with floating palettes inside the panels. So let's only apply this during transitions */
   div.ccm-panel-close {
     position: absolute;
     right: 17px;

@@ -9,6 +9,7 @@ use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Navigation\Breadcrumb\PageBreadcrumbFactory;
 use Concrete\Core\Navigation\Item\PageItem;
 use Concrete\Core\Navigation\Navigation;
@@ -18,7 +19,7 @@ use HtmlObject\Image;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements UsesFeatureInterface, FileTrackableInterface
 {
     public $helpers = ['form'];
 
@@ -53,7 +54,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function getBlockTypeDescription()
     {
-        return t('Adds a responsive navigation bar with a logo, menu and search..');
+        return t('Adds a responsive navigation bar with a logo, menu and search.');
     }
 
     /**
@@ -170,11 +171,11 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function save($args)
     {
         $data = [];
-        $data['includeNavigation'] = $args['includeNavigation'] ? 1 : 0;
-        $data['includeNavigationDropdowns'] = $args['includeNavigationDropdowns'] ? 1 : 0;
-        $data['includeTransparency'] = $args['includeTransparency'] ? 1 : 0;
-        $data['includeSearchInput'] = $args['includeSearchInput'] ? 1 : 0;
-        $data['includeStickyNav'] = $args['includeStickyNav'] ? 1 : 0;
+        $data['includeNavigation'] = !empty($args['includeNavigation']) ? 1 : 0;
+        $data['includeNavigationDropdowns'] = !empty($args['includeNavigationDropdowns']) ? 1 : 0;
+        $data['includeTransparency'] = !empty($args['includeTransparency']) ? 1 : 0;
+        $data['includeSearchInput'] = !empty($args['includeSearchInput']) ? 1 : 0;
+        $data['includeStickyNav'] = !empty($args['includeStickyNav']) ? 1 : 0;
 
         $data['includeBrandLogo'] = 0;
         $data['includeBrandText'] = 0;
@@ -240,6 +241,18 @@ class Controller extends BlockController implements UsesFeatureInterface
             $data['searchInputFormActionPageID'] = $searchInputFormActionPageID;
         }
         parent::save($data);
+    }
+
+    public function getUsedFiles()
+    {
+        $files = [];
+        if (isset($this->brandingLogo) && $this->brandingLogo) {
+            $files[] = $this->brandingLogo;
+        }
+        if (isset($this->brandingTransparentLogo) && $this->brandingTransparentLogo) {
+            $files[] = $this->brandingTransparentLogo;
+        }
+        return $files;
     }
 
 }

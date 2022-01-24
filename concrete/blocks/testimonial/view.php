@@ -1,9 +1,17 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var string|null $image */
+/** @var string|null $name */
+/** @var string|null $position */
+/** @var string|null $company */
+/** @var string|null $companyURL */
+/** @var string|null $paragraph */
+/** @var string|null $awardImage */
+?>
 <div class="ccm-block-testimonial-wrapper">
     <div class="ccm-block-testimonial">
-        <?php if ($image): ?>
+        <?php if ($image) { ?>
             <div class="ccm-block-testimonial-image"><?=$image?></div>
-        <?php endif; ?>
+        <?php } ?>
 
         <div class="ccm-block-testimonial-quote">
             <div class="ccm-block-testimonial-text">
@@ -12,40 +20,40 @@
                     <?=h($name)?>
                 </div>
 
-            <?php if ($position && $company && $companyURL): ?>
+            <?php if ($position && $company && $companyURL) { ?>
                 <div class="ccm-block-testimonial-position">
-                    <?=t('%s, <a href="%s">%s</a>', h($position), $companyURL, h($company))?>
+                    <?=sprintf('%s, <a href="%s">%s</a>', h($position), $companyURL, h($company))?>
                 </div>
-            <?php endif; ?>
+            <?php } ?>
 
-            <?php if ($position && !$company && $companyURL): ?>
+            <?php if ($position && !$company && $companyURL) { ?>
                 <div class="ccm-block-testimonial-position">
-                    <?=t('<a href="%s">%s</a>', $companyURL, h($position))?>
+                    <?=sprintf('<a href="%s">%s</a>', $companyURL, h($position))?>
                 </div>
-            <?php endif; ?>
+            <?php } ?>
 
-            <?php if ($position && $company && !$companyURL): ?>
+            <?php if ($position && $company && !$companyURL) { ?>
                 <div class="ccm-block-testimonial-position">
-                    <?=t('%s, %s', h($position), h($company))?>
+                    <?=sprintf('%s, %s', h($position), h($company))?>
                 </div>
-            <?php endif; ?>
+            <?php } ?>
 
-            <?php if ($position && !$company && !$companyURL): ?>
+            <?php if ($position && !$company && !$companyURL) { ?>
                 <div class="ccm-block-testimonial-position">
                     <?=h($position)?>
                 </div>
-            <?php endif; ?>
+            <?php } ?>
 
-            <?php if ($paragraph): ?>
+            <?php if ($paragraph) { ?>
                 <div class="ccm-block-testimonial-paragraph"><?=h($paragraph)?></div>
-            <?php endif; ?>
+            <?php } ?>
 
             </div>
         </div>
 
-        <?php if ($awardImage): ?>
+        <?php if ($awardImage) { ?>
             <div class="ccm-block-testimonial-award-image"><?php echo $awardImage ?></div>
-        <?php endif; ?>
+        <?php } ?>
 
     </div>
 </div>

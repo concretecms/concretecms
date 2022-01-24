@@ -5,28 +5,29 @@ defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Application\Service\UserInterface;
 use Concrete\Core\Support\Facade\Application;
 
-/** @var string $title */
-/** @var string $videoURL */
-/** @var string $vHeight */
-/** @var string $vWidth */
-/** @var string $sizing */
-/** @var bool $startTimeEnabled */
-/** @var string $startTime */
-/** @var bool $noCookie */
-/** @var bool $autoplay */
-/** @var string $color */
-/** @var int $iv_load_policy */
-/** @var bool $loopEnd */
-/** @var bool $lazyLoad */
-/** @var bool $rel */
-/** @var bool $showCaptions */
+/** @var string | null $title */
+/** @var string | null $videoURL */
+/** @var string | null $vHeight */
+/** @var string | null $vWidth */
+/** @var string | null $sizing */
+/** @var bool | null $startTimeEnabled */
+/** @var string | null $startTime */
+/** @var bool | null $noCookie */
+/** @var bool | null $autoplay */
+/** @var string | null $color  */
+/** @var int | null $iv_load_policy */
+/** @var bool | null $loopEnd */
+/** @var bool | null $lazyLoad */
+/** @var bool | null $rel */
+/** @var bool | null $showCaptions */
+/** @var Concrete\Core\Form\Service\Form $form */
 
 if (empty($vWidth)) {
-    $vWidth = 640;
+    $vWidth = '640';
 }
 
 if (empty($vHeight)) {
-    $vHeight = 360;
+    $vHeight = '360';
 }
 
 if (empty($sizing)) {
@@ -48,7 +49,7 @@ echo $ui->tabs([
     <div class="tab-pane show active" id="video" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('videoURL', t("YouTube URL")); ?>
-            <?php echo $form->text('videoURL', isset($videoURL) ? $videoURL : '', ['required' => 'required']); ?>
+            <?php echo $form->text('videoURL', $videoURL ?? '', ['required' => 'required']); ?>
         </div>
 
         <div class="form-group">
@@ -109,7 +110,7 @@ echo $ui->tabs([
                 <div class="col-xs-6">
                     <div class="form-group">
                         <div class="form-check">
-                            <?php echo $form->checkbox('controls', 1, (isset($controls) ? $controls : true)); ?>
+                            <?php echo $form->checkbox('controls', '1', ($controls ?? true)); ?>
                             <?php echo $form->label("controls", t('Show controls')); ?>
                         </div>
 
@@ -121,7 +122,7 @@ echo $ui->tabs([
                                 $additionalAttributes['disabled'] = 'disabled';
                             }
 
-                            echo $form->checkbox('modestbranding', 1, (isset($modestbranding) ? $modestbranding : true), $additionalAttributes); ?>
+                            echo $form->checkbox('modestbranding', '1', ($modestbranding ?? true), $additionalAttributes); ?>
 
                             <?php echo $form->label("modestbranding", t('Hide YouTube Logo')); ?>
                         </div>
@@ -144,37 +145,37 @@ echo $ui->tabs([
 
             <div class="form-group">
                 <div class="form-check">
-                    <?php echo $form->checkbox('rel', 1, !empty($rel)); ?>
+                    <?php echo $form->checkbox('rel', '1', !empty($rel)); ?>
                     <?php echo $form->label('rel', t('Show related videos from different channels when playback ends')); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->checkbox('iv_load_policy', 1, isset($iv_load_polict) && $iv_load_policy == 3); ?>
+                    <?php echo $form->checkbox('iv_load_policy', '1', isset($iv_load_polict) && $iv_load_policy == 3); ?>
                     <?php echo $form->label("iv_load_policy", t('Hide annotations by default')); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->checkbox('autoplay', 1, !empty($autoplay)); ?>
+                    <?php echo $form->checkbox('autoplay', '1', !empty($autoplay)); ?>
                     <?php echo $form->label("autoplay", t('Automatically play')); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->checkbox('loopEnd', 1, !empty($loopEnd)); ?>
+                    <?php echo $form->checkbox('loopEnd', '1', !empty($loopEnd)); ?>
                     <?php echo $form->label("loopEnd", t('Loop video')); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->checkbox('showCaptions', 1, !empty($showCaptions)); ?>
+                    <?php echo $form->checkbox('showCaptions', '1', !empty($showCaptions)); ?>
                     <?php echo $form->label("showCaptions", t('Show captions')); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->checkbox('startTimeEnabled', 1, !empty($startTimeEnabled)); ?>
+                    <?php echo $form->checkbox('startTimeEnabled', '1', !empty($startTimeEnabled)); ?>
                     <?php echo $form->label("startTimeEnabled", t('Start video at:')); ?>
                 </div>
 
                 <div class="form-group">
-                    <?php echo $form->text('startTime', isset($startTime) ? $startTime : null); ?>
+                    <?php echo $form->text('startTime', $startTime ?? null); ?>
                 </div>
             </div>
         </fieldset>
@@ -185,7 +186,7 @@ echo $ui->tabs([
             </legend>
 
             <div class="form-check">
-                <?php echo $form->checkbox('noCookie', 1, (isset($noCookie) ? $noCookie : false)); ?>
+                <?php echo $form->checkbox('noCookie', '1', ($noCookie ?? false)); ?>
                 <?php echo $form->label("noCookie", t('No cookie')); ?>
             </div>
         </fieldset>
@@ -196,7 +197,7 @@ echo $ui->tabs([
             </legend>
 
             <div class="form-check">
-                <?php echo $form->checkbox('lazyLoad', 1, (isset($lazyLoad) ? $lazyLoad : false)); ?>
+                <?php echo $form->checkbox('lazyLoad', '1', ($lazyLoad ?? false)); ?>
                 <?php echo $form->label("lazyLoad", t('Lazy load video')) ?>
             </div>
         </fieldset>
@@ -225,7 +226,7 @@ echo $ui->tabs([
             if ($(this).val() === 'white') {
                 $('#modestbranding').prop('disabled', 'disabled').prop('checked', false);
             } else {
-                $('#modestbranding').removeProp('disabled');
+                $('#modestbranding').removeAttr('disabled')
             }
         });
 

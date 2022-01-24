@@ -1,181 +1,7 @@
-.ccm-inline-toolbar {
-  border-radius: 3px;
-  box-shadow: 0 0 6px rgba(200, 200, 200, 0.5);
-  font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
-  height: 31px;
-  line-height: 0;
-  list-style: none;
-  margin: 0 !important;
-  opacity: 0;
-  padding: 0 !important;
-  position: relative;
-  z-index: $index-level-inline-toolbar;
-
-  /* stylelint-disable selector-class-pattern */
-  &.redactor_toolbar {
-    background: transparent;
-  }
-
-  /* stylelint-enable selector-class-pattern */
-
-  > li {
-    background: #fff;
-    border-bottom: 1px solid #c4c4c4;
-    border-right: 1px solid #e1e1e1;
-    border-top: 1px solid #c4c4c4;
-    display: table-cell;
-    font-size: $font-size-base !important;
-    list-style: none;
-    outline: none;
-    padding: 3px 8px;
-    vertical-align: middle;
-
-    label {
-      display: inline;
-      font-size: $font-size-sm;
-      margin: 0 0 8px;
-    }
-
-    &.ccm-inline-toolbar-inverse-cell {
-      background-color: #555;
-
-      a {
-        color: #fff;
-      }
-    }
-
-
-  }
-
-  > li:first-child {
-    border-bottom-left-radius: 3px;
-    border-left: 1px solid #c4c4c4;
-    border-top-left-radius: 3px;
-  }
-
-  > li:last-child {
-    border-bottom-right-radius: 3px;
-    border-right: 0;
-    border-top-right-radius: 3px;
-  }
-
-  > li.ccm-inline-toolbar-icon-cell {
-    @include gradient-y(#fff, #f1f1f1);
-    padding: 0;
-    position: relative;
-    text-align: center;
-    width: 30px;
-  }
-
-  > li.ccm-inline-toolbar-icon-cell > a {
-    color: #333;
-    cursor: pointer;
-    display: block;
-    height: 100%;
-    opacity: 0.7;
-    text-decoration: none;
-
-    i {
-      display: inline-block;
-      font-size: $font-size-sm;
-      line-height: 33px;
-    }
-  }
-
-  > li.ccm-inline-toolbar-icon-cell.ccm-inline-toolbar-icon-selected {
-    @include gradient-y(#e1e1e1, #cbcbcb);
-    border-right: 1px solid #c5c5c5;
-  }
-
-  > li.ccm-inline-toolbar-icon-cell.ccm-inline-toolbar-icon-selected > a {
-    opacity: 1;
-  }
-
-  > li.ccm-inline-toolbar-icon-cell > a:hover {
-    opacity: 1;
-  }
-
-  > li.ccm-inline-toolbar-button {
-    background: transparent;
-
-    padding: 0;
-
-    button {
-      background: #f3f3f3;
-      border: 0;
-      border-radius: 0;
-      color: #333;
-      display: inline-block;
-      font-size: $font-size-sm;
-      height: 33px;
-      padding: 0 20px;
-      text-align: center;
-      width: 100%;
-    }
-  }
-
-  > li.ccm-inline-toolbar-select {
-    select {
-      background-position: right 5px top 5px;
-      border: 0;
-      height: 27px;
-      padding: 2px 28px 2px 2px;
-    }
-  }
-
-  > li.ccm-inline-toolbar-button-cancel button {
-    @include gradient-y(#f3f3f3, #eaeaea);
-  }
-
-  > li.ccm-inline-toolbar-button-cancel button:hover {
-    background-color: #fff;
-    background-image: none;
-  }
-
-  > li.ccm-inline-toolbar-button-save {
-    border: 1px solid #007cce !important;
-  }
-
-  > li.ccm-inline-toolbar-button-save button {
-    @include gradient-y(#09f, #0094f6);
-    background: #09f;
-    color: #fff;
-  }
-
-  > li.ccm-inline-toolbar-button-save button:hover {
-    background-color: #007cce;
-    background-image: none;
-  }
-
-  li.ccm-inline-toolbar-icon-cell > div.ccm-dropdown-menu {
-    display: none;
-
-    &::before {
-      border-color: transparent transparent #000;
-      border-style: solid;
-      border-width: 0 5px 5px;
-      content: ' ';
-      height: 0;
-      left: 11px;
-      position: absolute;
-      top: -5px;
-      width: 0;
-    }
-
-    &.active {
-      box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.43);
-      display: block;
-      margin-top: 1px;
-      position: absolute;
-    }
-  }
-}
-
 #ccm-inline-toolbar-container {
   box-sizing: border-box;
   left: 0;
   opacity: 0;
-  padding: 10px 20px 0;
   position: absolute;
   top: 0;
   transition: opacity 0.3s ease-in;
@@ -185,10 +11,15 @@
 
 #ccm-inline-toolbar-container.ccm-inline-toolbar-affixed {
   background-color: rgba(0, 0, 0, 0.4);
+  padding: 10px 0;
   position: fixed;
   top: 0 !important;
 }
 
+/*
+ old customizer. delete.
+ */
+/*
 .ccm-panel-left {
   .sp-container {
     background-color: rgba(0, 0, 0, 0.95);
@@ -309,6 +140,7 @@
   }
 
 }
+ */
 
 .ccm-ui {
   div.dropdown-menu.ccm-inline-design-dropdown-menu,
@@ -470,15 +302,13 @@
 }
 
 /* new styles for new the area and block style customizer toolbar */
-.ccm-style-customizer-toolbar {
-  border-radius: 3px;
-  box-shadow: 0 0 6px rgba(200, 200, 200, 0.5);
-  font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
+.ccm-inline-toolbar {
+  border-radius: 2px;
+  display: table;
   height: 31px;
   line-height: 0;
   list-style: none;
   margin: 0 !important;
-  min-width: 600px;
   padding: 0 !important;
   position: relative;
   z-index: $index-level-inline-toolbar;
@@ -580,6 +410,7 @@
     display: table-cell;
     font-size: $font-size-base !important;
     list-style: none;
+    margin: 0;
     outline: none;
     padding: 3px 8px;
     vertical-align: middle;

@@ -1,78 +1,178 @@
 <?php
+
 namespace Concrete\Block\Video;
 
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
-use File;
+use Concrete\Core\File\File;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 450;
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 440;
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btVideo';
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutput = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputOnPost = true;
+
+    /**
+     * @var string[]
+     */
     protected $btExportFileColumns = ['webmfID', 'oggfID', 'posterfID', 'mp4fID'];
+
+    /**
+     * @var string
+     */
     protected $btWrapperClass = 'ccm-ui';
 
+    /**
+     * @var int|null
+     */
+    protected $mp4fID;
+
+    /**
+     * @var int|null
+     */
+    protected $webmfID;
+
+    /**
+     * @var int|null
+     */
+    protected $oggfID;
+
+    /**
+     * @var int|null
+     */
+    protected $posterfID;
+
+    /**
+     * @var int|null
+     */
+    protected $videoSize;
+
+    /**
+     * @var int|null
+     */
+    protected $width;
+
+    /**
+     * @var string[]
+     */
+    protected $helpers = ['form'];
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
         return t('Embeds uploaded video into a web page. Supports WebM, Ogg, and Quicktime/MPEG4 formats.');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getBlockTypeName()
     {
         return t('Video Player');
     }
 
-    public function getMp4FileID()
+    /**
+     * Get the file id for the mp4 file.
+     *
+     * @return int
+     */
+    public function getMp4FileID(): int
     {
-        return isset($this->mp4fID) ? (int) $this->mp4fID : 0;
+        return $this->mp4fID ?? 0;
     }
 
-    public function getWebmFileID()
+    /**
+     * Get the file id for the webm file.
+     *
+     * @return int
+     */
+    public function getWebmFileID(): int
     {
-        return isset($this->webmfID) ? (int) $this->webmfID : 0;
+        return $this->webmfID ?? 0;
     }
 
-    public function getOggFileID()
+    /**
+     * Get the file id for the webm file.
+     *
+     * @return int
+     */
+    public function getOggFileID(): int
     {
-        return isset($this->oggfID) ? (int) $this->oggfID : 0;
+        return $this->oggfID ?? 0;
     }
 
-    public function getPosterFileID()
+    public function getPosterFileID(): int
     {
-        return isset($this->posterfID) ? (int) $this->posterfID : 0;
+        return $this->posterfID ?? 0;
     }
 
-    public function getMp4FileObject()
+    public function getMp4FileObject(): ?\Concrete\Core\Entity\File\File
     {
-        return ($id = $this->getMp4FileID()) ? File::getByID($id) : null;
+        return File::getByID($this->getMp4FileID());
     }
 
-    public function getOggFileObject()
+    public function getOggFileObject(): ?\Concrete\Core\Entity\File\File
     {
-        return ($id = $this->getOggFileID()) ? File::getByID($id) : null;
+        return File::getByID($this->getOggFileID());
     }
 
-    public function getWebmFileObject()
+    public function getWebmFileObject(): ?\Concrete\Core\Entity\File\File
     {
-        return ($id = $this->getWebmFileID()) ? File::getByID($id) : null;
+        return File::getByID($this->getWebmFileID());
     }
 
-    public function getPosterFileObject()
+    public function getPosterFileObject(): ?\Concrete\Core\Entity\File\File
     {
-        return ($id = $this->getPosterFileID()) ? File::getByID($id) : null;
+        return File::getByID($this->getPosterFileID());
     }
-    
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::VIDEO
+            Features::VIDEO,
         ];
     }
 
+    /**
+     * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
+     *
+     * @param array<string,mixed> $data
+     *
+     * @return void
+     */
     public function save($data)
     {
         $data += [
@@ -95,6 +195,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($args);
     }
 
+    /**
+     * The view function called when ever a block is viewed on a page.
+     *
+     * @return void
+     */
     public function view()
     {
         $mp4File = $this->getMp4FileObject();
@@ -102,9 +207,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $posterFile = $this->getPosterFileObject();
         $oggFile = $this->getOggFileObject();
 
-        $this->set('posterURL', $posterFile === null ? '' : $posterFile->getURL());
-        $this->set('mp4URL', $mp4File === null ? '' : $mp4File->getURL());
-        $this->set('webmURL', $webmFile === null ? '' : $webmFile->getURL());
-        $this->set('oggURL', $oggFile === null ? '' : $oggFile->getURL());
+        $this->set('posterURL', ($posterFile === null || $posterFile->getApprovedVersion() === null) ? '' : $posterFile->getApprovedVersion()->getURL());
+        $this->set('mp4URL', ($mp4File === null || $mp4File->getApprovedVersion() === null) ? '' : $mp4File->getApprovedVersion()->getURL());
+        $this->set('webmURL', ($webmFile === null || $webmFile->getApprovedVersion() === null) ? '' : $webmFile->getApprovedVersion()->getURL());
+        $this->set('oggURL', ($oggFile === null || $oggFile->getApprovedVersion() === null) ? '' : $oggFile->getApprovedVersion()->getURL());
     }
 }

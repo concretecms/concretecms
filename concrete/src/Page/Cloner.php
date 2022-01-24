@@ -307,10 +307,11 @@ class Cloner
      *
      * @param \Concrete\Core\Block\Block $block
      * @param \Concrete\Core\Page\Collection\Collection $destinationCollection
+     * @param int|null $displayOrder The forced display order
      *
      * @return bool returns FALSE if $block is not cloned because it's already present in $destinationCollection, TRUE otherwise
      */
-    public function cloneBlock(Block $block, Collection $destinationCollection)
+    public function cloneBlock(Block $block, Collection $destinationCollection, int $displayOrder = null)
     {
         $bID = $block->getBlockID();
         $aHandle = $block->getAreaHandle();
@@ -323,7 +324,7 @@ class Cloner
         if ($already !== false) {
             return false;
         }
-        $newBlockDisplayOrder = (int) $destinationCollection->getCollectionAreaDisplayOrder($aHandle);
+        $newBlockDisplayOrder = $displayOrder ?? (int) $destinationCollection->getCollectionAreaDisplayOrder($aHandle);
         $sourceCollection = $block->getBlockCollectionID() ? $block->getBlockCollectionObject() : null;
         if ($sourceCollection) {
             $this->copyBlocks(

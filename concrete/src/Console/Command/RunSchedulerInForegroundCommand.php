@@ -21,7 +21,7 @@ class RunSchedulerInForegroundCommand extends Command
 
     public function handle()
     {
-        $this->output->writeln(t('Running the worker every minute...'));
+        $this->output->writeln('Running the worker every minute...');
         $command = $this->getApplication()->find('concrete:scheduler:run');
         while (true) {
             if (Carbon::now()->second === 0) {

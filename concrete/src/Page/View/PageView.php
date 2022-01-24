@@ -7,6 +7,7 @@ use Concrete\Core\Page\View\Preview\PreviewRequestInterface;
 use Concrete\Core\Page\View\Preview\SkinPreviewRequest;
 use Concrete\Core\Page\View\Preview\ThemeCustomizerRequest;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollectionFactory;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\View\View;
@@ -264,6 +265,12 @@ class PageView extends View
             }
         } else {
             $skin = $this->c->getPageSkin();
+            if (!$skin) {
+                // This shouldn't happen during normal run, but in some cases like we're previewing a board
+                // in the dashboard we might have a page that has no skin (because it's a dashboard page)
+                // but rendering in a theme that does, so we should default to the theme's default skin in that case
+                $skin = $this->themeObject->getSkinByIdentifier(SkinInterface::SKIN_DEFAULT);
+            }
             $stylesheet = $skin->getStylesheet();
         }
         if ($customStyles) {

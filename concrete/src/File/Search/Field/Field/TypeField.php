@@ -28,7 +28,7 @@ class TypeField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $type = $this->data['fileType'];
+        $type = $this->getData('fileType');
         $list->filterByType($type);
     }
 
@@ -41,7 +41,7 @@ class TypeField extends AbstractField
         foreach ($t1 as $value) {
             $types[$value] = Type::getGenericTypeText($value);
         }
-        $html .= $form->select('fileType', $types, $this->data['fileType']);
+        $html .= $form->select('fileType', $types, $this->getData('fileType'));
         return $html;
     }
 

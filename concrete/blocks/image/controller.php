@@ -13,7 +13,6 @@ use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Concrete\Core\View\View;
 
 class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
@@ -28,17 +27,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = ['fID', 'fOnstateID', 'fileLinkID'];
     protected $btExportPageColumns = ['internalLinkCID'];
-
-    /**
-     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
-     */
-    protected $tracker;
-
-    public function __construct($obj = null, AggregateTracker $tracker = null)
-    {
-        parent::__construct($obj); // it has to be named $obj because we use laravel's container for this.
-        $this->tracker = $tracker;
-    }
 
     public function getBlockTypeName()
     {
@@ -178,7 +166,12 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $thumbnailTypes = [];
 
         foreach(Type::getList() as $thumbnailTypeEntity) {
-            $thumbnailTypes[$thumbnailTypeEntity->getID()] = $thumbnailTypeEntity->getName();
+            if (!$thumbnailTypeEntity->isRequired()) {
+                // We don't want to include core thumbnail types like file manager listing and detail, so let's
+                // not show "required" thumbnails. It would probably be better if we had a different boolean
+                // to track required vs internal, but we don't, so let's use required as internal.
+                $thumbnailTypes[$thumbnailTypeEntity->getID()] = $thumbnailTypeEntity->getName();
+            }
         }
 
         return $thumbnailTypes;
@@ -478,7 +471,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         /** @noinspection PhpUnhandledExceptionInspection */
         $db->delete('btContentImageBreakpoints', ['bID' => $this->bID]);
 
-        $this->getTracker()->forget($this);
         parent::delete();
     }
 
@@ -540,30 +532,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 );
             }
         }
-
-        $this->getTracker()->track($this);
     }
 
     public function getUsedFiles()
     {
         return [$this->getFileID()];
-    }
-
-    public function getUsedCollection()
-    {
-        return $this->getCollectionObject();
-    }
-
-    /**
-     * @return \Concrete\Core\Statistics\UsageTracker\AggregateTracker
-     */
-    protected function getTracker()
-    {
-        if ($this->tracker === null) {
-            $this->tracker = $this->app->make(AggregateTracker::class);
-        }
-
-        return $this->tracker;
     }
 
     /**

@@ -86,7 +86,7 @@ if ($fileAccessFileTypesDenylist === null) {
 
 $fileAccessFileTypesDenylist = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesDenylist);
 
-if (!$dateFormat) {
+if (empty($dateFormat)) {
     $dateFormat = 'default';
 }
 
@@ -113,7 +113,7 @@ if (!$dateFormat) {
 
     <div class="form-group">
         <?php echo $form->label("orderBy", t('Ordering')); ?>
-        <?php echo $form->select('orderBy', array('date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')), $orderBy) ?>
+        <?php echo $form->select('orderBy', array('date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')), $orderBy ?? '') ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('enableOrdering', 1, $enableOrdering) ?>
@@ -237,7 +237,7 @@ if (!$dateFormat) {
         </div>
 
         <div class="form-group" data-row="customDateFormat">
-            <?php echo $form->text('customDateFormat', $customDateFormat) ?>
+            <?php echo $form->text('customDateFormat', $customDateFormat ?? '') ?>
 
             <div class="help-block">
                 <?php echo sprintf(t('See the formatting options for date at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?>
@@ -326,7 +326,7 @@ if (!$dateFormat) {
 
     <div class="form-group">
         <div class="form-check">
-            <?php echo $form->checkbox('notificationOverridesEnabled', 1, $notificationOverridesEnabled) ?>
+            <?php echo $form->checkbox('notificationOverridesEnabled', 1, $notificationOverridesEnabled ?? false) ?>
             <?php echo $form->label("notificationOverridesEnabled", t('Override Global Settings'), ["class" => "form-check-label"]) ?>
         </div>
     </div>

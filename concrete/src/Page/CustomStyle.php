@@ -6,6 +6,11 @@ use Concrete\Core\StyleCustomizer\Style\ValueList;
 use Concrete\Core\StyleCustomizer\CustomCssRecord;
 use Concrete\Core\Page\Theme\Theme;
 
+/**
+ * @deprecated
+ * Class CustomStyle
+ * @package Concrete\Core\Page
+ */
 class CustomStyle
 {
     protected $pThemeID;

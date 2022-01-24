@@ -15,11 +15,12 @@ use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\File\Importer;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Core;
 use File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface, FileTrackableInterface
 {
     protected $searchIndexFieldDefinition = ['type' => 'integer', 'options' => ['default' => 0, 'notnull' => false]];
 
@@ -324,4 +325,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
         return $value;
     }
+
+    public function getUsedFiles()
+    {
+        $files = [];
+        if (is_object($this->attributeValue)) {
+            $bf = $this->getAttributeValue()->getValue();
+            if ($bf) {
+                $files[] = $bf;
+            }
+        }
+        return $files;
+    }
+
 }

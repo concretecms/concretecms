@@ -28,7 +28,7 @@ class PageItem extends Item
         if ($page) {
             $this->pageID = $page->getCollectionID();
             $this->keywords = (string)$page->getAttribute("meta_keywords");
-            parent::__construct($page->getCollectionLink(), t($page->getCollectionName()), $isActive);
+            parent::__construct($page->getCollectionLink(), $page->getCollectionName(), $isActive);
         }
         if ($this->keywords === null) {
             $this->keywords = '';
@@ -69,12 +69,24 @@ class PageItem extends Item
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Navigation\Item\Item::getName()
+     */
+    public function getName(): string
+    {
+        return t(parent::getName());
+    }
+
     public function jsonSerialize()
     {
-        $data = parent::jsonSerialize();
-        $data['pageID'] = $this->getPageID();
-        $data['keywords'] = $this->getKeywords();
-        return $data;
+        return [
+            // We need to use the parent's getName method (it's in English)
+            'name' => parent::getName(),
+            'pageID' => $this->getPageID(),
+            'keywords' => $this->getKeywords(),
+        ] + parent::jsonSerialize();
     }
 
 

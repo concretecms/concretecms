@@ -26,6 +26,8 @@ $app = Application::getFacadeApplication();
 $pageSelector = $app->make(PageSelector::class);
 /** @var FileManager $fileManager */
 $fileManager = $app->make(FileManager::class);
+
+$thumbnailTypes['0'] = t('Full Size');
 ?>
 
 <fieldset>

@@ -70,6 +70,7 @@ class ContextFactory
     {
         $processLogger = $this->loggerFactory->createFromRunner($runner);
         $pushOutput = $this->getPushOutput($runner);
+        $outputs = [];
         if ($processLogger) {
             $outputs[] = $processLogger;
         }

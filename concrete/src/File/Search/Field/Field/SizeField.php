@@ -24,9 +24,9 @@ class SizeField extends AbstractField
     {
         $form = \Core::make('helper/form');
         $html = '';
-        $html .= $form->number('size_from', $this->data['size_from'], array('min' => 0));
+        $html .= $form->number('size_from', $this->getData('size_from'), array('min' => 0));
         $html .= t('to');
-        $html .= $form->number('size_to', $this->data['size_to'], array('min' => 1));
+        $html .= $form->number('size_to', $this->getData('size_to'), array('min' => 1));
         $html .= t('KB');
         return $html;
     }
@@ -39,11 +39,11 @@ class SizeField extends AbstractField
     {
         $from = 0;
         $to = 0;
-        if (!empty($this->data['size_from'])) {
-            $from = $this->data['size_from'];
+        if (!empty($this->getData('size_from'))) {
+            $from = $this->getData('size_from');
         }
-        if (!empty($this->data['size_to'])) {
-            $to = $this->data['size_to'];
+        if (!empty($this->getData('size_to'))) {
+            $to = $this->getData('size_to');
         }
         $list->filterBySize($from, $to);
     }

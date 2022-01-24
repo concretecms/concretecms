@@ -5,19 +5,20 @@ use Concrete\Block\PageTitle\Controller;
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /** @var Controller $controller */
-/** @var bool $useCustomTitle */
-/** @var bool $useFilterTitle */
-/** @var bool $useFilterTopic */
-/** @var bool $useFilterTag */
-/** @var bool $useFilterDate */
-/** @var string $topicTextFormat */
-/** @var string $tagTextFormat */
-/** @var string $dateTextFormat */
-/** @var string $filterDateFormat */
-/** @var string $titleText */
-/** @var string $formatting */
+/** @var bool|null $useCustomTitle */
+/** @var bool|null $useFilterTitle */
+/** @var bool|null $useFilterTopic */
+/** @var bool|null $useFilterTag */
+/** @var bool|null $useFilterDate */
+/** @var string|null $topicTextFormat */
+/** @var string|null $tagTextFormat */
+/** @var string|null $dateTextFormat */
+/** @var string|null $filterDateFormat */
+/** @var string|null $titleText */
+/** @var string|null $formatting */
+/** @var \Concrete\Core\Form\Service\Form $form */
 
-if (!strlen($titleText)) {
+if (!strlen($titleText ?? '')) {
     $titleText = $controller->getTitleText();
 }
 
@@ -30,7 +31,7 @@ if (!strlen($titleText)) {
 
     <div class="form-check">
         <label for="useCustomTitle" class="form-check-label">
-            <?php echo $form->checkbox('useCustomTitle', 1, $useCustomTitle); ?>
+            <?php echo $form->checkbox('useCustomTitle', '1', $useCustomTitle ?? false); ?>
             <?php echo t('Override page name with custom title?'); ?>
         </label>
     </div>
@@ -38,7 +39,7 @@ if (!strlen($titleText)) {
 
 <div class="form-group">
     <?php echo $form->label('titleText', t('Custom Title Text')); ?>
-    <?php echo $form->text('titleText', $titleText ? $titleText : $controller->getTitleText()); ?>
+    <?php echo $form->text('titleText', $titleText); ?>
 </div>
 
 <div class="form-group">
@@ -61,7 +62,7 @@ if (!strlen($titleText)) {
 
     <div class="form-check">
         <label for="useFilterTitle" class="form-check-label">
-            <?php echo $form->checkbox('useFilterTitle', 1, $useFilterTitle); ?>
+            <?php echo $form->checkbox('useFilterTitle', '1', $useFilterTitle ?? false); ?>
             <?php echo t('Enable other blocks to filter this page title'); ?>
         </label>
     </div>
@@ -69,21 +70,21 @@ if (!strlen($titleText)) {
     <div class="well filterTitleOptions">
         <div class="form-check">
             <label for="useFilterTopic" class="form-check-label">
-                <?php echo $form->checkbox('useFilterTopic', 1, $useFilterTopic); ?>
+                <?php echo $form->checkbox('useFilterTopic', '1', $useFilterTopic ?? false); ?>
                 <?php echo t('Topic'); ?>
             </label>
         </div>
 
         <div class="form-check">
             <label for="useFilterTag" class="form-check-label">
-                <?php echo $form->checkbox('useFilterTag', 1, $useFilterTag); ?>
+                <?php echo $form->checkbox('useFilterTag', '1', $useFilterTag ?? false); ?>
                 <?php echo t('Tag'); ?>
             </label>
         </div>
 
         <div class="form-check">
             <label for="useFilterDate" class="form-check-label">
-                <?php echo $form->checkbox('useFilterDate', 1, $useFilterDate); ?>
+                <?php echo $form->checkbox('useFilterDate', '1', $useFilterDate ?? false); ?>
                 <?php echo t('Date'); ?>
             </label>
         </div>
@@ -98,7 +99,7 @@ if (!strlen($titleText)) {
                         'upperFirst' => t('Capitalize first word'),
                         'lowercase' => t('Lowercase'),
                         'uppercase' => t('Uppercase')
-                    ], $topicTextFormat); ?>
+                    ], $topicTextFormat ?? 0); ?>
             </div>
         </div>
 
@@ -111,7 +112,7 @@ if (!strlen($titleText)) {
                         'upperFirst' => t('Capitalize first word'),
                         'lowercase' => t('Lowercase'),
                         'uppercase' => t('Uppercase')
-                    ], $tagTextFormat); ?>
+                    ], $tagTextFormat ?? null); ?>
             </div>
         </div>
 
@@ -125,12 +126,12 @@ if (!strlen($titleText)) {
                         'upperFirst' => t('Capitalize first word'),
                         'lowercase' => t('Lowercase'),
                         'uppercase' => t('Uppercase')
-                    ], $dateTextFormat); ?>
+                    ], $dateTextFormat ?? 0); ?>
             </div>
 
             <div class="form-group">
                 <?php echo $form->label('filterDateFormat', t('Date Year and Month Format')); ?>
-                <?php echo $form->text('filterDateFormat', $filterDateFormat ? $filterDateFormat : t('F Y')); ?>
+                <?php echo $form->text('filterDateFormat', $filterDateFormat ?? t('F Y')); ?>
             </div>
 
             <div class="help-block">

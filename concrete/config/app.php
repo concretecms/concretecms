@@ -193,6 +193,7 @@ return [
         'block_type_set',
         'express_entity',
         'captcha_library',
+        'container',
         'content_editor_snippet',
         'conversation_rating_type',
         'geolocator_library',
@@ -216,7 +217,9 @@ return [
         'workflow_progress_category',
         'workflow_type',
         'external_file_provider_type',
-        'image_editor'
+        'image_editor',
+        'task',
+        'task_set',
     ],
 
     'importer_routines' => [

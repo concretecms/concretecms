@@ -14,7 +14,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
     <legend><?=t('Basics')?></legend>
     <div class="mb-3">
         <label class="form-label" for="image"><?=t('Image')?></label>
-        <?php echo $fileManager->image('image', 'image', t('Choose Image'), $image); ?>
+        <?php echo $fileManager->image('image', 'image', t('Choose Image'), $image ?? null); ?>
     </div>
     <div class="mb-3">
         <label class="form-label" for="image"><?=t('Height')?></label>
@@ -29,12 +29,12 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
     <legend><?=t('Text')?></legend>
     <div class="mb-3">
         <label class="form-label" for="title"><?=t('Title')?></label>
-        <input type="text" name="title" class="form-control" value="<?=$title?>">
+        <input type="text" name="title" class="form-control" value="<?=$title ?? null?>">
     </div>
     <div class="mb-3">
         <label class="form-label" for="body"><?=t('Body')?></label>
         <?php
-        echo $editor->outputBlockEditModeEditor('body', LinkAbstractor::translateFromEditMode($body));
+        echo $editor->outputBlockEditModeEditor('body', isset($body) ? LinkAbstractor::translateFromEditMode($body) : null);
         ?>
     </div>
 </fieldset>
@@ -43,7 +43,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
     <legend><?=t('Button')?></legend>
     <div class="mb-3">
         <label class="form-label" for="buttonText"><?=t('Button Text')?></label>
-        <input type="text" name="buttonText" class="form-control" value="<?=$buttonText?>">
+        <input type="text" name="buttonText" class="form-control" value="<?=$buttonText ?? null ?>">
         <div class="help-block">
             <?=t('Leave blank to omit the button.')?>
         </div>
@@ -54,7 +54,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
                 '' => t('Regular'),
                 'lg' => t('Large'),
                 'sm' => t('Small')
-            ], $buttonSize);
+            ], $buttonSize ?? null);
         ?>
     </div>
     <div class="form-group">
@@ -62,7 +62,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
         <?php echo $form->select("buttonStyle", [
             '' => t('Regular'),
             'outline' => t('Outline'),
-        ], $buttonStyle);
+        ], $buttonStyle ?? null);
         ?>
     </div>
     <?php if ($themeColorCollection) { ?>
@@ -70,7 +70,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
         <div data-vue="hero-image">
             <concrete-theme-color-input
                 :color-collection='<?=json_encode($themeColorCollection)?>'
-                <?php if ($buttonColor) { ?> color="<?=$buttonColor?>"<?php } ?>
+                <?php if ($buttonColor) { ?> color="<?=$buttonColor ?? null?>"<?php } ?>
                 input-name="buttonColor">
             </concrete-theme-color-input>
         </div>

@@ -174,11 +174,16 @@
     ConcreteFileManagerTable.prototype.activateSearchResultMenus = function() {
         var my = this;
         my.$searchResultMenu.find('a[data-file-manager-action=download]').on('click', function(e) {
-            var fID = $(this).data('file-id');
             e.preventDefault()
+            var fID = $(this).data('file-id');
             var fUUID = $("input[data-item-id=" +fID + "]").data("item-uuid")
-            window.frames['ccm-file-manager-download-target'].location =
-                CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + fUUID ? fUUID : fID
+            var downloadIdentifier
+            if (fUUID) {
+                downloadIdentifier = fUUID
+            } else {
+                downloadIdentifier = fID
+            }
+            my.$downloadTarget.get(0).src = CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + downloadIdentifier
         })
         my.$searchResultMenu.find('a[data-file-manager-action=duplicate]').on('click', function() {
             var fID = $(this).data('file-id');

@@ -6,14 +6,14 @@
             <a class="navbar-brand" href="<?=$home->getCollectionLink()?>">
                 <?php if ($logo && ($includeBrandLogo && $includeBrandText)) { ?>
                     <img src="<?=$logo->getURL()?>" class="logo align-text-center">
-                    <?php if ($transparentLogo) { ?>
+                    <?php if (isset($transparentLogo)) { ?>
                         <img src="<?=$transparentLogo->getURL()?>" class="logo-transparent align-text-center">
                     <?php } ?>
                     <?=$brandingText?>
                 <?php } ?>
                 <?php if ($logo && ($includeBrandLogo && !$includeBrandText)) { ?>
                     <img src="<?=$logo->getURL()?>" class="logo">
-                    <?php if ($transparentLogo) { ?>
+                    <?php if (isset($transparentLogo)) { ?>
                         <img src="<?=$transparentLogo->getURL()?>" class="logo-transparent">
                     <?php } ?>
                 <?php } ?>
@@ -44,7 +44,7 @@
                             <div class="input-group">
                                 <input class="form-control border-end-0 border" type="search" name="query" placeholder="<?=t('Search')?>" aria-label="<?=t('Search')?>">
                                 <span class="input-group-append">
-                                    <button class="btn bg-white border-start-0 border" type="button">
+                                    <button class="btn bg-white border-start-0 border" type="submit">
                                         <i class="fas fa-search text-secondary"></i>
                                     </button>
                                 </span>

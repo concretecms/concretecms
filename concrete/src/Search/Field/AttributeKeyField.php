@@ -111,7 +111,7 @@ class AttributeKeyField extends AbstractField
             // We need to do this because of the request allowlist + the weird request
             // namespacing we do with attribute forms.
             $this->data['akID'][$this->attributeKey->getAttributeKeyID()]
-                = $request['akID'][$this->attributeKey->getAttributeKeyID()];
+                = $request['akID'][$this->attributeKey->getAttributeKeyID()] ?? null;
         }
     }
 

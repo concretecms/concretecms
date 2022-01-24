@@ -116,7 +116,7 @@ class Attributes extends BackendInterfacePageController
                     if (in_array($ak->getAttributeKeyID(), $selected)) {
                         $controller = $ak->getController();
                         $value = $controller->createAttributeValueFromRequest();
-                        $nvc->setAttribute($ak, $value);
+                        $nvc->setAttribute($ak, $value, false);
                     } else {
                         // it is being removed
                         $nvc->clearAttribute($ak);
@@ -130,7 +130,7 @@ class Attributes extends BackendInterfacePageController
                     $ak = CollectionAttributeKey::getByID($akID);
                     $controller = $ak->getController();
                     $value = $controller->createAttributeValueFromRequest();
-                    $nvc->setAttribute($ak, $value);
+                    $nvc->setAttribute($ak, $value, false);
                 }
             }
 

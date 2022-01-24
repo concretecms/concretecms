@@ -56,9 +56,11 @@ if (count($languages) > 0) {
 
 <hr class="mt-2 mb-4"/>
 
+<?php if ($canViewAccountModal) { ?>
 <div id="folderSelectorSourceContainer" class="d-none">
     <?php echo $fileFolderSelector->selectFileFolder('uHomeFileManagerFolderID', $user->getUserHomeFolderId()); ?>
 </div>
+<?php } ?>
 
 <section data-section="account">
     <?php if ($canViewAccountModal) { ?>
@@ -252,6 +254,7 @@ if (count($languages) > 0) {
         </template>
     </dl>
 
+    <?php if ($canAddGroup) { ?>
     <div class="modal fade" tabindex="-1" role="dialog" id="edit-groups-modal">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
             <div class="modal-content">
@@ -280,7 +283,7 @@ if (count($languages) > 0) {
             </div>
         </div>
     </div>
-
+    <?php } ?>
 </section>
 
 <hr class="mt-5 mb-4"/>

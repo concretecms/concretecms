@@ -15,12 +15,12 @@ class SiteField extends AbstractSiteField
      */
     public function filterList(ItemList $list)
     {
-        if (!isset($this->data['siteID']) || $this->data['siteID'] === 'current') {
+        if (!isset($this->data['siteID']) || $this->getData('siteID') === 'current') {
             $site = \Core::make('site')->getActiveSiteForEditing();
-        } else if ($this->data['siteID'] === 'all') {
+        } else if ($this->getData('siteID') === 'all') {
             $list->setSiteTreeToAll();
         } else {
-            $site = \Core::make('site')->getByID($this->data['siteID']);
+            $site = \Core::make('site')->getByID($this->getData('siteID'));
         }
 
         if ($site) {

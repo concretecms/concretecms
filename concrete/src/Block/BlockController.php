@@ -1,15 +1,17 @@
 <?php
 namespace Concrete\Core\Block;
 
+use Concrete\Core\Area\Area;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Block\View\BlockViewTemplate;
-use Concrete\Core\Controller;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Legacy\BlockRecord;
 use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Config;
 use Database;
@@ -35,7 +37,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btSupportsInlineEdit = false;
     protected $btCopyWhenPropagate = 0;
     protected $btIncludeAll = 0;
+    /** @var string | int  */
     protected $btInterfaceWidth = "400";
+    /** @var string | int  */
     protected $btInterfaceHeight = "400";
     protected $btHasRendered = false;
     protected $btCacheBlockRecord = true;
@@ -52,6 +56,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btWrapperClass = '';
     protected $btDefaultSet;
     protected $identifier;
+    /** @var null|string  */
     protected $btTable = null;
     protected $btID;
 
@@ -202,12 +207,17 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', [$record, $this->bID]);
             }
         }
+
+        if ($this instanceof FileTrackableInterface) {
+            $this->app->make(AggregateTracker::class)->track($this);
+        }
     }
 
     /**
      * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
      *
-     * @param array $args
+     * @param array<string,mixed> $args
+     * @return void
      */
     public function save($args)
     {
@@ -247,7 +257,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      *
      * @param int $newBlockID
      *
-     * @return BlockRecord $newInstance
+     * @return BlockRecord | null $newInstance
      */
     public function duplicate($newBID)
     {
@@ -390,7 +400,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     public function import($page, $arHandle, \SimpleXMLElement $blockNode)
     {
-        $db = Database::connection();
         // handle the adodb stuff
         $args = $this->getImportData($blockNode, $page);
         $blockData = [];
@@ -434,6 +443,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         if ($cache) {
             $b->setCustomCacheSettings(true, $blockNode['cache-output-on-post'], $blockNode['cache-output-for-registered-users'],
                 $blockNode['cache-output-lifetime']);
+        }
+
+        if ($this instanceof FileTrackableInterface) {
+            $blockController = $b->getController(); // We have to do this because we need it loaded with the right block object, data.
+            $this->app->make(AggregateTracker::class)->track($blockController);
         }
     }
 
@@ -626,6 +640,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             return false;
         }
 
+        // This block is new for 9.0.2 – we need this because we're passing around blocks with page objects in them
+        // for file trackability, but without this code we lose the reference to the proper collection + collection version
+        $blockPage = $this->block->getBlockCollectionObject();
+        if ($blockPage) {
+            return $blockPage;
+        }
+
         if (!isset($this->bActionCID)) {
             $this->bActionCID = $this->block->getBlockActionCollectionID();
         }
@@ -694,7 +715,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.
      *
-     * @return $void
+     * @return void
      */
     public function delete()
     {
@@ -705,6 +726,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 $ni->Load('bID=' . $this->bID);
                 $ni->delete();
             }
+        }
+        if ($this instanceof FileTrackableInterface) {
+            $this->app->make(AggregateTracker::class)->forget($this);
         }
     }
 

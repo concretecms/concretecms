@@ -7,12 +7,12 @@ class ServiceList
     protected static function getServices()
     {
         return array(
-            array('facebook', 'Facebook', 'facebook'),
-            array('twitter', 'Twitter', 'twitter'),
-            array('linkedin', 'LinkedIn', 'linkedin-in'),
-            array('reddit', 'Reddit', 'reddit'),
-            array('pinterest', 'Pinterest', 'pinterest'),
-            array('google_plus', 'Google Plus', 'google-plus'),
+            array('facebook', 'Facebook', 'fab fa-facebook'),
+            array('twitter', 'Twitter', 'fab fa-twitter'),
+            array('linkedin', 'LinkedIn', 'fab fa-linkedin'),
+            array('reddit', 'Reddit', 'fab fa-reddit'),
+            array('pinterest', 'Pinterest', 'fab fa-pinterest'),
+            array('google_plus', 'Google Plus', 'fab fa-google-plus-square'),
             array('print', t('Print'), 'print', '<i class="fas fa-print" aria-hidden="true" title="' . h(t("Print")) . '"></i>'),
             array('email', 'Email', 'envelope', '<i class="fas fa-envelope" aria-hidden="true" title="' . h(t("Email")) . '"></i>'),
         );

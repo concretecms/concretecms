@@ -9,6 +9,10 @@ use Concrete\Core\View\View;
 /** @var View $view */
 /** @var array $groups */
 
+$subject = $subject ?? null;
+$group = $group ?? null;
+$message = $message ?? null;
+
 $app = Application::getFacadeApplication();
 /** @var Form $form */
 $form = $app->make(Form::class);

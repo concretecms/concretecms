@@ -25,7 +25,7 @@ class PageTheme extends Theme
 
     public function getThemeDescription()
     {
-        return t('A Concrete CMS theme built for 2021.');
+        return t('A Concrete CMS theme built for version 9.');
     }
 
     public function getThemeSupportedFeatures()
@@ -54,13 +54,68 @@ class PageTheme extends Theme
     public function getThemeResponsiveImageMap()
     {
         return [
-            'xs' => '0',
-            'sm' => '576px',
-            'md' => '768px',
-            'lg' => '992px',
             'xl' => '1200px',
+            'lg' => '992px',
+            'md' => '768px',
+            'sm' => '576px',
+            'xs' => '0',
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getThemeEditorClasses()
+    {
+        return [
+            [
+                'title' => t('Display 1'),
+                'element' => array('h1','p','div'),
+                'attributes' => array('class' => 'display-1')
+            ],
+            [
+                'title' => t('Display 2'),
+                'element' => array('h2','p','div'),
+                'attributes' => array('class' => 'display-2')
+            ],
+            [
+                'title' => t('Display 3'),
+                'element' => array('h3','p','div'),
+                'attributes' => array('class' => 'display-3')
+            ],
+            [
+                'title' => t('Display 4'),
+                'element' => array('h4','p','div'),
+                'attributes' => array('class' => 'display-4')
+            ],
+            [
+                'title' => t('Display 5'),
+                'element' => array('h5','p','div'),
+                'attributes' => array('class' => 'display-5')
+            ],
+            [
+                'title' => t('Display 6'),
+                'element' => array('h6','p','div'),
+                'attributes' => array('class' => 'display-6')
+            ],
+            [
+                'title' => t('Lead'),
+                'element' => array('p'),
+                'attributes' => array('class' => 'lead')
+            ],
+            [
+                'title' => t('Basic Table'),
+                'element' => array('table'),
+                'attributes' => array('class' => 'table')
+            ],
+            [
+                'title' => t('Striped Table'),
+                'element' => array('table'),
+                'attributes' => array('class' => 'table table-striped')
+            ],
+        ];
+    }
+
 
     public function getDocumentationProvider(): ?DocumentationProviderInterface
     {

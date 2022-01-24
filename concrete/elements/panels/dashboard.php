@@ -18,7 +18,7 @@ if ($dashboard->inDashboard($c)) {
     $parents = array_reverse(app(\Concrete\Core\Html\Service\Navigation::class)->getTrailToCollection($c));
     if (count($parents) == 1) {
         $section = $c;
-    } else {
+    } else if (isset($parents[1])) {
         $section = $parents[1];
     }
 } else if ($account->inMyAccount($c)) {

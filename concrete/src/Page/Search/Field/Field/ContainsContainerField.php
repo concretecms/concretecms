@@ -31,8 +31,8 @@ class ContainsContainerField extends AbstractField
     public function filterList(ItemList $list)
     {
         $em = app(EntityManager::class);
-        if (isset($this->data['containerID'])) {
-            $container = $em->find(Container::class, $this->data['containerID']);
+        if ($this->getData('containerID')) {
+            $container = $em->find(Container::class, $this->getData('containerID'));
             if ($container) {
                 $list->filterByContainer($container);
             }
@@ -47,7 +47,7 @@ class ContainsContainerField extends AbstractField
         foreach ($em->getRepository(Container::class)->findBy([], ['containerName' => 'asc']) as $container) {
             $containerSelect[$container->getContainerID()] = $container->getContainerName();
         }
-        $html = $form->select('containerID', $containerSelect, $this->data['containerID']);
+        $html = $form->select('containerID', $containerSelect, $this->getData('containerID'));
         return $html;
     }
 

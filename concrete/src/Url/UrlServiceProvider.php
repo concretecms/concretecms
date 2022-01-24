@@ -46,11 +46,11 @@ class UrlServiceProvider extends Provider
 
         $this->app
             ->when(SeoCanonical::class)
-            ->needs('$excludedQuerystringParameters')
+            ->needs('$includedQuerystringParameters')
             ->give(function($app) {
                 $site = $app->make('site')->getSite();
                 $config = $site->getConfigRepository();
-                return $config->get('seo.canonical_tag.excluded_querystring_parameters');
+                return $config->get('seo.canonical_tag.included_querystring_parameters');
             });
         $this->app->singleton(SeoCanonical::class, SeoCanonical::class);
     }

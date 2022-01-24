@@ -7,6 +7,7 @@ use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use InvalidArgumentException;
+use Core;
 
 class AccordionEntry implements \JsonSerializable
 {
@@ -122,7 +123,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         return t('Collapsible content block.');
     }
-    
+
     public function getRequiredFeatures(): array
     {
         return [
@@ -135,7 +136,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $content = '';
         $db = $this->app->make('database')->connection();
         $v = [$this->bID];
-        $q = 'SELECT * FROM btAccordionEntries WHERE bID = ? order by sortOrde';
+        $q = 'SELECT * FROM btAccordionEntries WHERE bID = ? order by sortOrder';
         $r = $db->executeQuery($q, $v);
         foreach ($r as $row) {
             $content .= $row['title'] . ' ' . $row['description'];
@@ -170,6 +171,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         $this->set('entries', $entries);
+        
     }
 
     public function duplicate($newBID)
@@ -188,6 +190,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function add()
     {
         $this->set('entries', []);
+        $this->set('itemHeadingFormat', 'h2');
+
     }
 
     public function delete()

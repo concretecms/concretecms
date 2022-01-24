@@ -7,7 +7,6 @@ use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
-use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 
 /**
  * The controller for the content block.
@@ -32,23 +31,12 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btSupportsInlineAdd = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
-    
+
     public function getRequiredFeatures(): array
     {
         return [
             Features::IMAGERY
         ];
-    }
-
-    /**
-     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
-     */
-    protected $tracker;
-
-    public function __construct($obj = null, AggregateTracker $tracker = null)
-    {
-        parent::__construct($obj);
-        $this->tracker = $tracker;
     }
 
     public function getBlockTypeDescription()
@@ -78,7 +66,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         return $str;
     }
-    
+
     public function view()
     {
         $this->set('content', $this->getContent());
@@ -117,16 +105,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $args['content'] = LinkAbstractor::translateTo($args['content']);
         }
         parent::save($args);
-        $this->getTracker()->track($this);
-    }
-
-    /**
-     * Tell the tracker to forget us when we are deleted.
-     */
-    public function delete()
-    {
-        parent::delete();
-        $this->getTracker()->forget($this);
     }
 
     public function getUsedFiles()
@@ -137,11 +115,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         );
     }
 
-    public function getUsedCollection()
-    {
-        return $this->getCollectionObject();
-    }
-
     protected function getUsedFilesImages()
     {
         $files = [];
@@ -149,7 +122,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         if (preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
             list(, $ids) = $matches;
             foreach ($ids as $id) {
-                $files[] = (int) $id;
+                $files[] = $id;
             }
         }
 
@@ -162,21 +135,10 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         return array_map(
             function ($match) {
-                return (int) (explode('_', $match)[2]);
+                return (explode('_', $match)[2]);
             },
             $matches[0]
         );
     }
 
-    /**
-     * @return \Concrete\Core\Statistics\UsageTracker\AggregateTracker
-     */
-    protected function getTracker()
-    {
-        if ($this->tracker === null) {
-            $this->tracker = $this->app->make(AggregateTracker::class);
-        }
-
-        return $this->tracker;
-    }
 }

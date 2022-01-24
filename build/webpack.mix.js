@@ -53,6 +53,7 @@ mix.copy('node_modules/jquery/dist/jquery.min.js', '../concrete/js/jquery.js');
 mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css/webfonts');
 mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
 mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', '../concrete/js/bootstrap.js');
+mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js.map', '../concrete/js/bootstrap.bundle.min.js.map');
 mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
 mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
 

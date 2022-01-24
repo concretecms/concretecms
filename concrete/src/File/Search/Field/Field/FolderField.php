@@ -45,12 +45,12 @@ class FolderField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $folderID = $this->data['folderID'];
+        $folderID = $this->getData('folderID');
         if ($folderID) {
             $folder = Node::getByID($folderID);
             if ($folder && $folder instanceof FileFolder) {
                 $list->filterByParentFolder($folder);
-                if ($this->data['searchSubFolder']) {
+                if ($this->getData('searchSubFolder')) {
                     $list->enableSubFolderSearch();
                 }
             }
@@ -60,9 +60,7 @@ class FolderField extends AbstractField
     public function renderSearchField()
     {
         $selector = new \Concrete\Core\Form\Service\Widget\FileFolderSelector();
-        return $selector->selectFileFolder('folderID', isset($this->data['folderID']) ?
-            $this->data['folderID'] : null, false
-        );
+        return $selector->selectFileFolder('folderID', $this->getData('folderID'), false);
     }
 
 
