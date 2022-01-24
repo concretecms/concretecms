@@ -31,7 +31,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btSupportsInlineAdd = true;
     protected $btCacheBlockOutputForRegisteredUsers = false;
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
-    
+
     public function getRequiredFeatures(): array
     {
         return [
@@ -66,7 +66,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         return $str;
     }
-    
+
     public function view()
     {
         $this->set('content', $this->getContent());
@@ -122,7 +122,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         if (preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
             list(, $ids) = $matches;
             foreach ($ids as $id) {
-                $files[] = (int) $id;
+                $files[] = $id;
             }
         }
 
@@ -135,7 +135,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         return array_map(
             function ($match) {
-                return (int) (explode('_', $match)[2]);
+                return (explode('_', $match)[2]);
             },
             $matches[0]
         );
