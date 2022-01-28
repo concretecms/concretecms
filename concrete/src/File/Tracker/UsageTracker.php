@@ -193,9 +193,12 @@ class UsageTracker implements TrackerInterface
             foreach ($trackable->getUsedFiles() as $file) {
                 if ($file instanceof File) {
                     $file = $file->getFileID();
+                } elseif (uuid_is_valid($file)) {
+                    $fo = \Concrete\Core\File\File::getByUUID($file);
+                    $file = $fo->getFileID();
                 }
 
-                if ($file && $persist($collection, $trackable, $file)) {
+                if ($file && $persist($collection, $trackable, (int) $file)) {
                     $buffer++;
                 }
 

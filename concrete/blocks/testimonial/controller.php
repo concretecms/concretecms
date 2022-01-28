@@ -9,20 +9,44 @@ use Concrete\Core\File\Tracker\FileTrackableInterface;
 
 class Controller extends BlockController implements FileTrackableInterface
 {
+    /**
+     * @var string[]
+     */
     public $helpers = ['form'];
 
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 450;
 
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutput = true;
 
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputOnPost = true;
 
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputForRegisteredUsers = true;
 
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 560;
 
+    /**
+     * @var string[]
+     */
     protected $btExportFileColumns = ['fID', 'awardImageID'];
 
+    /**
+     * @var string
+     */
     protected $btTable = 'btTestimonial';
 
     /**
@@ -60,21 +84,39 @@ class Controller extends BlockController implements FileTrackableInterface
      */
     protected $awardImageID;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
         return t("Displays a quote or paragraph next to biographical information and a person's picture.");
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getBlockTypeName()
     {
         return t('Testimonial');
     }
 
+    /**
+     * @return string
+     */
     public function getSearchableContent()
     {
         return $this->name . "\n" . $this->position . "\n" . $this->company . "\n" . $this->paragraph;
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function view()
     {
         $image = false;
@@ -96,6 +138,11 @@ class Controller extends BlockController implements FileTrackableInterface
         $this->set('awardImage', $awardImage);
     }
 
+    /**
+     * @param array<string,mixed> $args
+     *
+     * @return void
+     */
     public function save($args)
     {
         $args['fID'] = (isset($args['fID']) && $args['fID'] != '') ? $args['fID'] : 0;
@@ -103,9 +150,12 @@ class Controller extends BlockController implements FileTrackableInterface
         parent::save($args);
     }
 
+    /**
+     * @return int[]
+     */
     public function getUsedFiles()
     {
-        if (isset($this->fID) && $this->fID) {
+        if ($this->fID) {
             return [$this->fID];
         }
 

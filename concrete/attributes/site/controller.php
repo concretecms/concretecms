@@ -15,6 +15,24 @@ class Controller extends CoreAttributeController
         return new FontAwesomeIconFormatter('globe');
     }
 
+    public function getAttributeValueClass()
+    {
+        return SiteValue::class;
+    }
+
+    public function getValue()
+    {
+        if ($this->attributeValue) {
+            $value = $this->attributeValue->getValueObject();
+            if ($value) {
+                /**
+                 * @var $value SiteValue
+                 */
+                return $value->getSite();
+            }
+        }
+    }
+
     public function form()
     {
         $siteID = null;

@@ -3,20 +3,24 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var $c Concrete\Core\Page\Page
- * @var $fileToRender string The file containing the container template.
+ * @var Concrete\Core\Page\Page|null $c
+ * @var string|null $fileToRender The file containing the container template
  */
+$container = $container ?? null;
+$fileToRender = $fileToRender ?? null;
+$c = $c ?? \Concrete\Core\Page\Page::getCurrentPage();
 if ($container) {
     $container->startRender();
 
-    $c = Page::getCurrentPage();
     if ($fileToRender) {
-        include($fileToRender);
+        include $fileToRender;
     } else {
-        if ($c->isEditMode()) { ?>
+        if (is_object($c) && $c->isEditMode()) { ?>
             <div class="ccm-edit-mode-disabled-item">
-               <?php echo t('Container: %s – no container template file found.', 
-                   $container->getInstance()->getContainer()->getContainerDisplayName()); ?>
+               <?php echo t(
+            'Container: %s – no container template file found.',
+            $container->getInstance()->getContainer()->getContainerDisplayName()
+        ); ?>
             </div>
         <?php }
     }

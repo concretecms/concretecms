@@ -216,7 +216,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Run when a block is added or edited. Automatically saves block data against the block's database table. If a block needs to do more than this (save to multiple tables, upload files, etc... it should override this.
      *
-     * @param array $args
+     * @param array<string,mixed> $args
+     * @return void
      */
     public function save($args)
     {
@@ -714,7 +715,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /**
      * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.
      *
-     * @return $void
+     * @return void
      */
     public function delete()
     {
