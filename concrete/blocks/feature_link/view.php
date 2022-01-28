@@ -30,7 +30,7 @@ if (isset($button)) {
 
 <div class="ccm-block-feature-link">
 
-    <div class="ccm-block-feature-link-text<?php if (isset($buttonColor)) { ?> border-top pt-5 border-5 border-<?=$buttonColor?><?php } ?>">
+  <div class="ccm-block-feature-link-text<?php if (isset($buttonColor)) { ?> border-top pt-5 border-5 border-<?=$buttonColor?><?php } ?>">
 
         <?php if ($title) { ?>
             <<?=$titleFormat?>><?=$title?></<?=$titleFormat?>>
