@@ -35,9 +35,6 @@ $icon = $icon ?? '';
     <div class="mb-3">
         <label class="form-label" for="buttonText"><?=t('Button Text')?></label>
         <input type="text" name="buttonText" class="form-control" value="<?=$buttonText ?? null?>">
-        <div class="help-block">
-            <?=t('Leave blank to omit the button.')?>
-        </div>
     </div>
     <div class="form-group">
         <?php echo $form->label("buttonSize", t("Button Size")); ?>
@@ -84,6 +81,9 @@ $icon = $icon ?? '';
             $imageLinkValue
         )
         ?>
+        <div class="help-block">
+            <?=t('Set to None to omit the button.')?>
+        </div>
     </div>
 </fieldset>
 
