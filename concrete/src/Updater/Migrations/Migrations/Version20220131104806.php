@@ -13,7 +13,7 @@ final class Version20220131104806 extends AbstractMigration implements Repeatabl
 
     public function upgradeDatabase()
     {
-        $this->refreshBlockType('accordion');
+        $this->refreshBlockType('feature_link');
     }
 
 }
