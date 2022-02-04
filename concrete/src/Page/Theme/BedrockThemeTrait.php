@@ -2,9 +2,9 @@
 
 namespace Concrete\Core\Page\Theme;
 
+use Concrete\Core\Feature\Features;
 use Concrete\Core\Page\Theme\Color\ColorCollection;
 use Concrete\Core\Page\Theme\Color\ColorCollectionFactory;
-use Concrete\Core\Page\Theme\Documentation\BedrockDocumentationPage;
 
 /**
  * This is a trait you can add to your theme's PageTheme class if it is built with the Concrete bedrock. That means
@@ -13,6 +13,14 @@ use Concrete\Core\Page\Theme\Documentation\BedrockDocumentationPage;
  */
 trait BedrockThemeTrait
 {
+
+    public function getThemeSupportedFeatures()
+    {
+        return [
+            Features::BASICS,
+            Features::TYPOGRAPHY
+        ];
+    }
 
     public function registerAssets()
     {
