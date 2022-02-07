@@ -166,6 +166,10 @@ var ConcretePageComposerDetail = {
         ConcreteEvent.subscribe('PanelCloseDetail',function(e, panelDetail) {
             if (panelDetail && panelDetail.identifier == 'page-composer') {
                 my.disableAutosave();
+                $('button[data-page-type-composer-form-btn]').off('click');
+                ConcreteEvent.unsubscribe('PanelComposerPublish');
+                ConcreteEvent.unsubscribe('AjaxRequestError');
+                ConcreteEvent.unsubscribe('PanelCloseDetail');
             }
         });
 
