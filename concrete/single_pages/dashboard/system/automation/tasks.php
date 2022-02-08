@@ -33,33 +33,45 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             </tbody>
         </table>
 
-        <div v-if="selectedTask !== null && selectedTask.inputDefinition !== null">
-            <div class="row">
-                <div class="col-md-8">
-                    <h4 class="mt-2"><?= t('Task Options') ?></h4>
-                    <div class="form-group" v-for="field in selectedTask.inputDefinition.fields">
-                        <label class="control-label">{{field.label}}</label>
-                        <select v-if="field.type === 'select'" :name="field.key" class="form-control">
-                            <option value="" v-if="!field.isRequired"><?=t('** None')?></option>
-                            <option v-for="(option, optionValue) in field.options" :value="optionValue">{{option}}</option>
-                        </select>
-                        <div v-else-if="field.type === 'boolean'">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '1'" value="" checked>
-                                <label class="form-check-label" :for="field.key + '1'">
-                                    <?=t('No')?>
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '2'" value="1">
-                                <label class="form-check-label" :for="field.key + '2'">
-                                    <?=t('Yes')?>
-                                </label>
-                            </div>
-                        </div>
-                        <input v-else :name="field.key" class="form-control"/>
-                        <div class="help-block" v-if="field.description">{{field.description}}</div>
+        <div v-if="selectedTask !== null && selectedTask.inputDefinition !== null" class="modal fade" role="dialog" tabindex="-1" id="task-options">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="mt-2 modal-title"><?= t('Task Options') ?></h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                     </div>
+                    <div class="modal-body">
+                        <div class="form-group" v-for="field in selectedTask.inputDefinition.fields">
+                            <label class="control-label">{{field.label}}</label>
+                            <select v-if="field.type === 'select'" :name="field.key" class="form-control">
+                                <option value="" v-if="!field.isRequired"><?=t('** None')?></option>
+                                <option v-for="(option, optionValue) in field.options" :value="optionValue">{{option}}</option>
+                            </select>
+                            <div v-else-if="field.type === 'boolean'">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '1'" value="" checked>
+                                    <label class="form-check-label" :for="field.key + '1'">
+                                        <?=t('No')?>
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" :name="field.key" :id="field.key + '2'" value="1">
+                                    <label class="form-check-label" :for="field.key + '2'">
+                                        <?=t('Yes')?>
+                                    </label>
+                                </div>
+                            </div>
+                            <input v-else :name="field.key" class="form-control"/>
+                            <div class="help-block" v-if="field.description">{{field.description}}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="modal-footer d-flex justify-content-between w-100">
+                            <button type="button" data-bs-dismiss="modal" class="btn btn-default border float-start"><?php echo t('Cancel') ?></button>
+                            <button type="button" @click="runTask(true)" class="btn btn-primary float-end"><?php echo t('Run Task') ?></button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -104,8 +116,11 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
+                <button v-if="selectedTask !== null && selectedTask.inputDefinition !== null" data-bs-toggle="modal" data-bs-target="#task-options" type="button" class="btn btn-outline-primary float-end">
+                    <?=t('Set Task Options')?>
+                </button>
                 <button @click="runTask" type="button" class="btn btn-primary float-end"
-                        v-if="selectedTask !== null"><?= t('Run Task') ?></button>
+                        v-else-if="selectedTask !== null"><?= t('Run Task') ?></button>
             </div>
         </div>
 
@@ -116,6 +131,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 <script type="text/javascript">
     $(function () {
         Concrete.Vue.activateContext('backend', function (Vue, config) {
+            Vue.config.devtools = true;
             new Vue({
                 el: 'div[data-view=automated-tasks]',
                 components: config.components,
@@ -137,6 +153,14 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     runTask() {
                         const my = this;
                         if (this.selectedTask) {
+                            if (this.selectedTask.inputDefinition !== null) {
+                                const optionsModal = document.getElementById('task-options');
+                                const modal = bootstrap.Modal.getOrCreateInstance(optionsModal);
+                                if (modal) {
+                                    modal.hide();
+                                }
+                            }
+
                             var $form = $('div[data-view=automated-tasks] form')
                             var data = $form.serializeArray()
                             data.push({'name': 'id', 'value': my.selectedTask.id})
