@@ -81,7 +81,7 @@ class CustomizePreset extends BackendInterfaceController
                         $command->setPresetStartingPoint($presetIdentifier);
                         $command->setSkinName($this->request->request->get('skinName'));
                         $command->setCustomCss($this->request->request->get('customCss'));
-                        $command->setStyles($this->request->request->get('styles'));
+                        $command->setStyles(json_decode($this->request->request->get('styles'), true));
                         $skin = $this->app->executeCommand($command);
 
                         return $responseFactory->json(
@@ -171,7 +171,7 @@ class CustomizePreset extends BackendInterfaceController
 
                     $command = new UpdateCustomSkinCommand();
                     $command->setCustomSkin($skin);
-                    $command->setStyles($this->request->request->get('styles'));
+                    $command->setStyles(json_decode($this->request->request->get('styles'), true));
                     $command->setCustomCss($this->request->request->get('customCss'));
 
                     $skin = $this->app->executeCommand($command);
