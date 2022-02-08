@@ -131,7 +131,6 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 <script type="text/javascript">
     $(function () {
         Concrete.Vue.activateContext('backend', function (Vue, config) {
-            Vue.config.devtools = true;
             new Vue({
                 el: 'div[data-view=automated-tasks]',
                 components: config.components,
