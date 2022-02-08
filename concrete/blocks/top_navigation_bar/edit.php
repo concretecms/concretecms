@@ -89,6 +89,7 @@ if ($includeBrandText && $includeBrandLogo) {
                 includeTransparency: <?=$includeTransparency ? 'true' : 'false'?>,
                 includeNavigation: <?=$includeNavigation ? 'true' : 'false'?>,
                 includeNavigationDropdowns: <?=$includeNavigationDropdowns ? 'true' : 'false'?>,
+                includeStickyNav: <?=$includeStickyNav ? 'true' : 'false'?>,
                 includeSearchInput: <?=$includeSearchInput ? 'true' : 'false'?>,
                 brandingLogo: <?=(int) $brandingLogo?>,
                 brandingTransparentLogo: <?=(int) $brandingTransparentLogo?>,
