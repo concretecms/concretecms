@@ -28,8 +28,8 @@ $expressEntrySelector = $app->make(ExpressEntrySelector::class);
 $exForms = [];
 
 if (is_object($entity)) {
-    foreach ($entity->getForms() as $form) {
-        $exForms[$form->getID()] = $form->getName();
+    foreach ($entity->getForms() as $formEntity) {
+        $exForms[$formEntity->getID()] = $formEntity->getName();
     }
 }
 ?>
