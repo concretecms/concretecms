@@ -9,7 +9,7 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Support\Facade\Url;
 
 /** @var DateFormatter $formatter */
-/** @var CalendarEventVersion $event */
+/** @var CalendarEventVersion|null $event */
 /** @var CalendarEventVersionOccurrence $occurrence */
 /** @var string $mode */
 /** @var string $eventOccurrenceLink */

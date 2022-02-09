@@ -8,19 +8,34 @@ use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventOccurrence;
 use Concrete\Core\Calendar\CalendarServiceProvider;
+use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Entity\Calendar\CalendarEventVersion;
+use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Page\Page;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = array('form');
-
+    public $helpers = ['form'];
+    /** @var int  */
     protected $btInterfaceWidth = 550;
+    /** @var int  */
     protected $btInterfaceHeight = 400;
+    /** @var string */
     protected $btTable = 'btCalendarEvent';
+    /** @var string */
+    protected $mode = 'S';
+    /** @var string */
+    protected $calendarEventAttributeKeyHandle;
+    /** @var int|null */
+    protected $eventID;
 
+    /**
+     * {@inheritdoc}
+     */
     public function getRequiredFeatures(): array
     {
         return [
@@ -28,37 +43,52 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getBlockTypeDescription()
     {
         return t("Displays a calendar event on a page.");
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getBlockTypeName()
     {
         return t("Calendar Event");
     }
 
+    /**
+     * @return void
+     */
     public function add()
     {
         $this->edit();
     }
 
+    /**
+     * @return void
+     */
     public function edit()
     {
+        /** @var \Concrete\Core\Entity\Attribute\Key\EventKey[] $eventKeys */
+        /** @phpstan-ignore-next-line */
         $eventKeys = EventKey::getList();
         $calendars = ['' => t('** Choose a Calendar')];
         $calendarEventPageKeys = ['' => t('** Choose an Event')];
-
+        /** @phpstan-ignore-next-line */
         foreach (CollectionKey::getList() as $ak) {
             if ($ak->getAttributeTypeHandle() == 'calendar_event') {
                 $calendarEventPageKeys[$ak->getAttributeKeyHandle()] = $ak->getAttributeKeyDisplayName();
             }
         }
+        /** @phpstan-ignore-next-line */
         foreach (Calendar::getList() as $calendar) {
             $calendars[$calendar->getID()] = $calendar->getName();
         }
 
-        $displayEventAttributes = array();
+        $displayEventAttributes = [];
         if (isset($this->displayEventAttributes)) {
             $displayEventAttributes = json_decode($this->displayEventAttributes);
         }
@@ -69,6 +99,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('displayEventAttributes', $displayEventAttributes);
     }
 
+    /**
+     * @param array<string,mixed> $data
+     * @return void
+     */
     public function save($data)
     {
         $data['calendarID'] = isset($data['calendarID']) ? intval($data['calendarID']) : 0;
@@ -80,7 +114,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $data['displayEventDescription'] = isset($data['displayEventDescription']) && $data['displayEventDescription'] ? 1 : 0;
         $data['enableLinkToPage'] = isset($data['enableLinkToPage']) && $data['enableLinkToPage'] ? 1 : 0;
 
-        $attributes = array();
+        $attributes = [];
         if (isset($data['displayEventAttributes']) && is_array($data['displayEventAttributes'])) {
             $attributes = $data['displayEventAttributes'];
         }
@@ -88,14 +122,18 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($data);
     }
 
+    /**
+     * @return CalendarEvent|null
+     */
     protected function getEvent()
     {
         $event = null;
         if ($this->mode == 'P') {
-            $page = \Page::getCurrentPage();
+            $page = Page::getCurrentPage();
             $event = $page->getAttribute($this->calendarEventAttributeKeyHandle);
         } else {
             if ($this->eventID) {
+                /** @phpstan-ignore-next-line */
                 $event = Event::getByID($this->eventID);
             }
         }
@@ -103,26 +141,36 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $event;
     }
 
+    /**
+     * @return CalendarEventVersionOccurrence|null
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function getOccurrence()
     {
         $event = $this->getEvent();
         if (is_object($event)) {
             if ($this->request->query->has("occurrenceID")) {
+                /** @var CalendarEventVersionOccurrence|null $occurrence */
+                /** @phpstan-ignore-next-line */
                 $occurrence = EventOccurrence::getByID($this->request->query->get('occurrenceID'));
                 if ($occurrence) {
+
                     if ($occurrence->getEvent() && $occurrence->getEvent()->getID() == $event->getID()) {
+                        /** @phpstan-ignore-next-line */
                         if ($event->isApproved()) {
+
                             return $occurrence;
                         }
                     }
 
-
+                    /** @phpstan-ignore-next-line */
                     if ($occurrence->getEvent() && Event::isRelatedTo($occurrence->getEvent(), $event)) {
 
                         // this is a temporary hack. We need to ultimately make this make sure that
                         // the event matches –but sometimes our events don't match because we imported them as series
                         // events and not as  occurrences of one event.
                         // @TODO delete this code when we no longer need it and all related events are migrated into multidate events.
+                        /** @phpstan-ignore-next-line */
                         if ($event->isApproved()) {
                             return $occurrence;
                         }
@@ -143,6 +191,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             return $results[0];
         } else if ($this->request->query->has('occurrenceID') && $this->mode == 'R') {
             // request mode
+            /** @phpstan-ignore-next-line */
             $occurrence = EventOccurrence::getByID($this->request->query->get('occurrenceID'));
             if ($occurrence) {
                 $event = $occurrence->getEvent();
@@ -151,8 +200,13 @@ class Controller extends BlockController implements UsesFeatureInterface
                 }
             }
         }
+        return null;
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return void
+     */
     public function view()
     {
         $this->set('event', $this->getEvent());

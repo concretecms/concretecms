@@ -6,20 +6,20 @@ use Concrete\Core\Entity\Attribute\Key\EventKey;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Support\Facade\Application;
 
-/** @var string $mode */
-/** @var string $calendarEventAttributeKeyHandle */
-/** @var int $calendarID */
-/** @var int $eventID */
-/** @var string $displayEventAttributes */
-/** @var bool $enableLinkToPage */
-/** @var bool $displayEventName */
-/** @var bool $displayEventDate */
-/** @var bool $displayEventDescription */
-/** @var array $calendarEventPageKeys */
+/** @var string|null $mode */
+/** @var string|null $calendarEventAttributeKeyHandle */
+/** @var int|null $calendarID */
+/** @var int|null $eventID */
+/** @var string|null $displayEventAttributes */
+/** @var bool|null  $enableLinkToPage */
+/** @var bool|null  $displayEventName */
+/** @var bool|null  $displayEventDate */
+/** @var bool|null  $displayEventDescription */
+/** @var array<string,string> $calendarEventPageKeys */
 /** @var EventKey[] $eventKeys */
-/** @var array $calendars */
-/** @var array $displayEventAttributes */
-/** @var bool $allowExport */
+/** @var array<string,string> $calendars */
+/** @var mixed[] $displayEventAttributes */
+/** @var bool|null $allowExport */
 
 $app = Application::getFacadeApplication();
 /** @var Form $form */
@@ -38,13 +38,13 @@ $form = $app->make(Form::class);
             "S" => t('Specific – Display details about a specific calendar event.'),
             "P" => t('Page – Display details about the event attached to a custom attribute.'),
             "R" => t('Request – Display details about an event occurrence passed through the URL request.')
-        ], $mode, ["data-select" => "mode"]); ?>
+        ], $mode ?? 'S', ["data-select" => "mode"]); ?>
     </div>
 
     <div data-group="specific">
         <div class="form-group">
             <?php echo $form->label('calendarID', t('Calendar')) ?>
-            <?php echo $form->select('calendarID', $calendars, $calendarID, ['data-select' => 'calendar']) ?>
+            <?php echo $form->select('calendarID', $calendars, $calendarID ?? '0', ['data-select' => 'calendar']) ?>
         </div>
 
         <div class="form-group">
@@ -56,7 +56,7 @@ $form = $app->make(Form::class);
     <div data-group="page">
         <div class="form-group">
             <?php echo $form->label('calendarEventAttributeKeyHandle', t('Retrieve Event from Attribute')) ?>
-            <?php echo $form->select('calendarEventAttributeKeyHandle', $calendarEventPageKeys, $calendarEventAttributeKeyHandle) ?>
+            <?php echo $form->select('calendarEventAttributeKeyHandle', $calendarEventPageKeys, $calendarEventAttributeKeyHandle ?? null) ?>
         </div>
     </div>
 </fieldset>
@@ -70,22 +70,22 @@ $form = $app->make(Form::class);
         <?php echo $form->label('', t('Core Properties')) ?>
 
         <div class="form-check">
-            <?php echo $form->checkbox('displayEventName', 1, $displayEventName) ?>
+            <?php echo $form->checkbox('displayEventName', '1', $displayEventName ?? false) ?>
             <?php echo $form->label("displayEventName", t('Name'), ["class" => "form-check-label"]) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->checkbox('displayEventDate', 1, $displayEventDate) ?>
+            <?php echo $form->checkbox('displayEventDate', '1', $displayEventDate ?? false) ?>
             <?php echo $form->label("displayEventDate", t('Occurrence Date and Time'), ["class" => "form-check-label"]) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->checkbox('displayEventDescription', 1, $displayEventDescription) ?>
+            <?php echo $form->checkbox('displayEventDescription', '1', $displayEventDescription ?? false) ?>
             <?php echo $form->label("displayEventDescription", t('Description'), ["class" => "form-check-label"]) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->checkbox('allowExport', 1, $allowExport) ?>
+            <?php echo $form->checkbox('allowExport', '1', $allowExport ?? false) ?>
             <?php echo $form->label("allowExport", t('Allow event export'), ["class" => "form-check-label"]) ?>
         </div>
     </div>
@@ -106,7 +106,7 @@ $form = $app->make(Form::class);
             <?php echo $form->label('', t('Linking')) ?>
 
             <div class="form-check">
-                <?php echo $form->checkbox('enableLinkToPage', 1, $enableLinkToPage) ?>
+                <?php echo $form->checkbox('enableLinkToPage', '1', $enableLinkToPage ?? false) ?>
                 <?php echo $form->label("enableLinkToPage", t('Link Event Name to Detail Page'), ["class" => "form-check-label"]) ?>
             </div>
         </div>
