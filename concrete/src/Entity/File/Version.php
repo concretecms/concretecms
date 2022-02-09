@@ -2010,6 +2010,7 @@ class Version implements ObjectInterface
         $r->fID = $this->getFileID();
         $r->fvDateAdded = $this->getDateAdded()->format('F d, Y g:i a');
         $r->treeNodeMenu = new Menu($this->getfile());
+        $r->size = $this->getSize();
 
         return $r;
     }
