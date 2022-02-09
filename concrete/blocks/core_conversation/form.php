@@ -4,17 +4,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\File\Service\Application as FileApplication;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\UserSelector;
 use Concrete\Core\Support\Facade\Application;
-use \Concrete\Core\File\Service\Application as FileApplication;
 
+/** @var \Concrete\Block\CoreConversation\Controller $controller */
 /** @var int $cnvID */
 /** @var int $enablePosting */
 /** @var bool $paginate */
 /** @var int $itemsPerPage */
 /** @var string $displayMode */
-/** @var string $orderBy */
+/** @var string|null $orderBy */
 /** @var bool $enableOrdering */
 /** @var bool $enableCommentRating */
 /** @var bool $enableTopCommentReviews */
@@ -23,9 +24,9 @@ use \Concrete\Core\File\Service\Application as FileApplication;
 /** @var string $displayPostingForm */
 /** @var string $addMessageLabel */
 /** @var string $dateFormat */
-/** @var string $customDateFormat */
+/** @var string|null $customDateFormat */
 
-/** @var array $reviewAttributeKeys */
+/** @var array<string|int,string>|null $reviewAttributeKeys */
 /** @var int $maxFilesGuest */
 /** @var int $maxFilesRegistered */
 /** @var int $maxFileSizeGuest */
@@ -33,9 +34,9 @@ use \Concrete\Core\File\Service\Application as FileApplication;
 /** @var string $fileExtensions */
 /** @var bool $attachmentsEnabled */
 /** @var bool $attachmentOverridesEnabled */
-/** @var bool $notificationOverridesEnabled */
+/** @var bool|null $notificationOverridesEnabled */
 /** @var bool $subscriptionEnabled */
-/** @var array $notificationUsers */
+/** @var \Concrete\Core\User\UserInfo[] $notificationUsers */
 
 $app = Application::getFacadeApplication();
 /** @var Repository $config */
@@ -74,17 +75,17 @@ if ($controller->getAction() == 'add') {
     $maxFilesGuest = $config->get('conversations.files.guest.max');
     $maxFilesRegistered = $config->get('conversations.files.registered.max');
     $fileExtensions = implode(',', $fileAccessFileTypes);
-    $attachmentsEnabled = intval($config->get('conversations.attachments_enabled'));
+    $attachmentsEnabled = (int) ($config->get('conversations.attachments_enabled'));
     $notificationUsers = Conversation::getDefaultSubscribedUsers();
-    $subscriptionEnabled = intval($config->get('conversations.subscription_enabled'));
+    $subscriptionEnabled = (int) ($config->get('conversations.subscription_enabled'));
 }
 $fileAccessFileTypesDenylist = $config->get('conversations.files.disallowed_types');
 
 if ($fileAccessFileTypesDenylist === null) {
     $fileAccessFileTypesDenylist = $config->get('concrete.upload.extensions_denylist', $config->get('concrete.upload.extensions_blacklist'));
 }
-
-$fileAccessFileTypesDenylist = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypesDenylist);
+/** @var string[]|string|false|null $fileAccessFileTypesDenylist All of the possible returns from preg_* methods */
+$fileAccessFileTypesDenylist = $helperFile->unSerializeUploadFileExtensions($fileAccessFileTypesDenylist);
 
 if (empty($dateFormat)) {
     $dateFormat = 'default';
@@ -98,46 +99,46 @@ if (empty($dateFormat)) {
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label("displayMode", t('Display Mode')); ?>
+        <?php echo $form->label('displayMode', t('Display Mode')); ?>
 
         <div class="form-check">
-            <?php echo $form->radio('displayMode', 'threaded', $displayMode, ["name" => "displayMode", "id" => "displayModeThreaded"]) ?>
-            <?php echo $form->label("displayModeThreaded", t('Threaded'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('displayMode', 'threaded', $displayMode, ['name' => 'displayMode', 'id' => 'displayModeThreaded']) ?>
+            <?php echo $form->label('displayModeThreaded', t('Threaded'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->radio('displayMode', 'flat', $displayMode, ["name" => "displayMode", "id" => "displayModeFlat"]) ?>
-            <?php echo $form->label("displayModeFlat", t('Flat'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('displayMode', 'flat', $displayMode, ['name' => 'displayMode', 'id' => 'displayModeFlat']) ?>
+            <?php echo $form->label('displayModeFlat', t('Flat'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("orderBy", t('Ordering')); ?>
-        <?php echo $form->select('orderBy', array('date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')), $orderBy ?? '') ?>
+        <?php echo $form->label('orderBy', t('Ordering')); ?>
+        <?php echo $form->select('orderBy', ['date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')], $orderBy ?? '') ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('enableOrdering', 1, $enableOrdering) ?>
-            <?php echo $form->label("enableOrdering", t('Display Ordering Option in Page'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->label('enableOrdering', t('Display Ordering Option in Page'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("", t('Rating')); ?>
+        <?php echo $form->label('', t('Rating')); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('enableCommentRating', 1, $enableCommentRating) ?>
-            <?php echo $form->label("enableCommentRating", t('Enable Comment Rating'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->label('enableCommentRating', t('Enable Comment Rating'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="form-check">
             <?php echo $form->checkbox('enableTopCommentReviews', 1, $enableTopCommentReviews) ?>
-            <?php echo $form->label("enableTopCommentReviews", t('Turn Top-Level Posts into Reviews'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->label('enableTopCommentReviews', t('Turn Top-Level Posts into Reviews'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 
     <?php if (isset($reviewAttributeKeys)) { ?>
         <div class="form-group" data-unhide="[name=enableTopCommentReviews]">
-            <?php echo $form->label("reviewAggregateAttributeKey", t('Aggregate Ratings by Attribute')); ?>
+            <?php echo $form->label('reviewAggregateAttributeKey', t('Aggregate Ratings by Attribute')); ?>
 
             <?php if (count($reviewAttributeKeys) > 0) { ?>
                 <?php echo $form->select('reviewAggregateAttributeKey', $reviewAttributeKeys, $reviewAggregateAttributeKey); ?>
@@ -150,31 +151,31 @@ if (empty($dateFormat)) {
     <?php } ?>
 
     <div class="form-group">
-        <?php echo $form->label("displaySocialLinks", t('Social Sharing Links')); ?>
+        <?php echo $form->label('displaySocialLinks', t('Social Sharing Links')); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('displaySocialLinks', 1, $displaySocialLinks) ?>
-            <?php echo $form->label("displaySocialLinks", t('Display social sharing links'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->label('displaySocialLinks', t('Display social sharing links'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("paginate", t('Paginate Message List')); ?>
+        <?php echo $form->label('paginate', t('Paginate Message List')); ?>
 
         <div class="form-check">
-            <?php echo $form->radio('paginate', 0, $paginate, ["name" => "paginate", "id" => "paginateNo"]) ?>
-            <?php echo $form->label("paginateNo", t('No, display all messages.'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('paginate', 0, $paginate, ['name' => 'paginate', 'id' => 'paginateNo']) ?>
+            <?php echo $form->label('paginateNo', t('No, display all messages.'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->radio('paginate', 1, $paginate, ["name" => "paginate", "id" => "paginateYes"]) ?>
-            <?php echo $form->label("paginateYes", t('Yes, display only a sub-set of messages at a time.'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('paginate', 1, $paginate, ['name' => 'paginate', 'id' => 'paginateYes']) ?>
+            <?php echo $form->label('paginateYes', t('Yes, display only a sub-set of messages at a time.'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 
     <div class="form-group" data-row="itemsPerPage">
-        <?php echo $form->label("itemsPerPage", t('Messages Per Page')); ?>
-        <?php echo $form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1')) ?>
+        <?php echo $form->label('itemsPerPage', t('Messages Per Page')); ?>
+        <?php echo $form->text('itemsPerPage', (string) $itemsPerPage, ['class' => 'span1']) ?>
     </div>
 </fieldset>
 
@@ -189,51 +190,51 @@ if (empty($dateFormat)) {
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("", t('Enable Posting')); ?>
+        <?php echo $form->label('', t('Enable Posting')); ?>
 
         <div class="form-check">
-            <?php echo $form->radio('enablePosting', 1, $enablePosting, ["name" => "enablePosting", "id" => "enablePostingYes"]) ?>
-            <?php echo $form->label("enablePostingYes", t('Yes, this conversation accepts messages and replies.'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('enablePosting', 1, $enablePosting, ['name' => 'enablePosting', 'id' => 'enablePostingYes']) ?>
+            <?php echo $form->label('enablePostingYes', t('Yes, this conversation accepts messages and replies.'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->radio('enablePosting', 0, $enablePosting, ["name" => "enablePosting", "id" => "enablePostingNo"]) ?>
-            <?php echo $form->label("enablePostingNo", t('No, posting is disabled.'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('enablePosting', 0, $enablePosting, ['name' => 'enablePosting', 'id' => 'enablePostingNo']) ?>
+            <?php echo $form->label('enablePostingNo', t('No, posting is disabled.'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("", t('Display Posting Form')); ?>
+        <?php echo $form->label('', t('Display Posting Form')); ?>
 
         <div class="form-check">
-            <?php echo $form->radio('displayPostingForm', 'top', $displayPostingForm, ["name" => "displayPostingForm", "id" => "displayPostingFormTop"]) ?>
-            <?php echo $form->label("displayPostingFormTop", t('Top'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('displayPostingForm', 'top', $displayPostingForm, ['name' => 'displayPostingForm', 'id' => 'displayPostingFormTop']) ?>
+            <?php echo $form->label('displayPostingFormTop', t('Top'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->radio('displayPostingForm', 'bottom', $displayPostingForm, ["name" => "displayPostingForm", "id" => "displayPostingFormBottom"]) ?>
-            <?php echo $form->label("displayPostingFormBottom", t('Bottom'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('displayPostingForm', 'bottom', $displayPostingForm, ['name' => 'displayPostingForm', 'id' => 'displayPostingFormBottom']) ?>
+            <?php echo $form->label('displayPostingFormBottom', t('Bottom'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 </fieldset>
 
 <fieldset>
     <div class="form-group">
-        <?php echo $form->label("", t('Date Format')); ?>
+        <?php echo $form->label('', t('Date Format')); ?>
 
         <div class="form-check">
-            <?php echo $form->radio('dateFormat', 'default', $dateFormat, ["name" => "dateFormat", "id" => "dateFormatDefault"]) ?>
-            <?php echo $form->label("dateFormatDefault", t('Use Site Default.'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('dateFormat', 'default', $dateFormat, ['name' => 'dateFormat', 'id' => 'dateFormatDefault']) ?>
+            <?php echo $form->label('dateFormatDefault', t('Use Site Default.'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->radio('dateFormat', 'elapsed', $dateFormat, ["name" => "dateFormat", "id" => "dateFormatElapsed"]) ?>
-            <?php echo $form->label("dateFormatElapsed", t('Time elapsed since post.'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('dateFormat', 'elapsed', $dateFormat, ['name' => 'dateFormat', 'id' => 'dateFormatElapsed']) ?>
+            <?php echo $form->label('dateFormatElapsed', t('Time elapsed since post.'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->radio('dateFormat', 'custom', $dateFormat, ["name" => "dateFormat", "id" => "dateFormatCustom"]) ?>
-            <?php echo $form->label("dateFormatCustom", t('Custom Date Format'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->radio('dateFormat', 'custom', $dateFormat, ['name' => 'dateFormat', 'id' => 'dateFormatCustom']) ?>
+            <?php echo $form->label('dateFormatCustom', t('Custom Date Format'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="form-group" data-row="customDateFormat">
@@ -259,19 +260,19 @@ if (empty($dateFormat)) {
 
         <div class="form-check">
             <?php echo $form->checkbox('attachmentOverridesEnabled', 1, $attachmentOverridesEnabled) ?>
-            <?php echo $form->label("attachmentOverridesEnabled", t('Enable Attachment Overrides'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->label('attachmentOverridesEnabled', t('Enable Attachment Overrides'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div class="attachment-overrides">
             <div class="form-check">
                 <?php echo $form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled) ?>
-                <?php echo $form->label("attachmentsEnabled", t('Enable Attachments'), ["class" => "form-check-label"]) ?>
+                <?php echo $form->label('attachmentsEnabled', t('Enable Attachments'), ['class' => 'form-check-label']) ?>
             </div>
         </div>
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("maxFileSizeGuest", t('Max Attachment Size for Guest Users. (MB)')); ?>
+        <?php echo $form->label('maxFileSizeGuest', t('Max Attachment Size for Guest Users. (MB)')); ?>
 
         <div class="controls">
             <?php echo $form->text('maxFileSizeGuest', $maxFileSizeGuest > 0 ? $maxFileSizeGuest : '') ?>
@@ -279,7 +280,7 @@ if (empty($dateFormat)) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("maxFileSizeRegistered", t('Max Attachment Size for Registered Users. (MB)')); ?>
+        <?php echo $form->label('maxFileSizeRegistered', t('Max Attachment Size for Registered Users. (MB)')); ?>
 
         <div class="controls">
             <?php echo $form->text('maxFileSizeRegistered', $maxFileSizeRegistered > 0 ? $maxFileSizeRegistered : '') ?>
@@ -287,7 +288,7 @@ if (empty($dateFormat)) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("maxFilesGuest", t('Max Attachments Per Message for Guest Users.')); ?>
+        <?php echo $form->label('maxFilesGuest', t('Max Attachments Per Message for Guest Users.')); ?>
 
         <div class="controls">
             <?php echo $form->text('maxFilesGuest', $maxFilesGuest > 0 ? $maxFilesGuest : '') ?>
@@ -295,7 +296,7 @@ if (empty($dateFormat)) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("maxFilesRegistered", t('Max Attachments Per Message for Registered Users.')); ?>
+        <?php echo $form->label('maxFilesRegistered', t('Max Attachments Per Message for Registered Users.')); ?>
 
         <div class="controls">
             <?php echo $form->text('maxFilesRegistered', $maxFilesRegistered > 0 ? $maxFilesRegistered : '') ?>
@@ -303,12 +304,12 @@ if (empty($dateFormat)) {
     </div>
 
     <div class="form-group attachment-overrides">
-        <?php echo $form->label("fileExtensions", t('Allowed File Extensions (Comma separated, no periods).')); ?>
+        <?php echo $form->label('fileExtensions', t('Allowed File Extensions (Comma separated, no periods).')); ?>
 
         <div class="controls">
             <?php echo $form->textarea('fileExtensions', $fileExtensions) ?>
 
-            <?php if (isset($fileAccessFileTypesDenylist) && is_array($fileAccessFileTypesDenylist) && count($fileAccessFileTypesDenylist) > 0) { ?>
+            <?php if (is_array($fileAccessFileTypesDenylist) && count($fileAccessFileTypesDenylist) > 0) { ?>
                 <div class="text-muted small">
                     <?php echo t('These file extensions will always be blocked: %s', '<code>' . implode('</code>, <code>', $fileAccessFileTypesDenylist) . '</code>') ?>
                     <br/>
@@ -327,21 +328,21 @@ if (empty($dateFormat)) {
     <div class="form-group">
         <div class="form-check">
             <?php echo $form->checkbox('notificationOverridesEnabled', 1, $notificationOverridesEnabled ?? false) ?>
-            <?php echo $form->label("notificationOverridesEnabled", t('Override Global Settings'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->label('notificationOverridesEnabled', t('Override Global Settings'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 
     <div class="form-group notification-overrides">
-        <?php echo $form->label("notificationUsers", t('Users To Receive Conversation Notifications')); ?>
+        <?php echo $form->label('notificationUsers', t('Users To Receive Conversation Notifications')); ?>
         <?php echo $userSelector->selectMultipleUsers('notificationUsers', $notificationUsers) ?>
     </div>
 
     <div class="form-group notification-overrides">
-        <?php echo $form->label("", t('Subscribe Option')); ?>
+        <?php echo $form->label('', t('Subscribe Option')); ?>
 
         <div class="form-check">
             <?php echo $form->checkbox('subscriptionEnabled', 1, $subscriptionEnabled) ?>
-            <?php echo $form->label("subscriptionEnabled", t('Yes, allow registered users to choose to subscribe to conversations.'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->label('subscriptionEnabled', t('Yes, allow registered users to choose to subscribe to conversations.'), ['class' => 'form-check-label']) ?>
         </div>
     </div>
 </fieldset>

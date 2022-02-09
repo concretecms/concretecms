@@ -1,12 +1,20 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-
-$paginate = ($paginate) ? 'true' : 'false';
-$itemsPerPage = ($paginate) ? $itemsPerPage : -1;
+/** @var bool|string $paginate */
+$paginate = ($paginate ?? null) ? 'true' : 'false';
+/** @var int $itemsPerPage */
+$itemsPerPage = ($paginate === 'true') ? $itemsPerPage ?? 50 : -1;
 $blockAreaHandle = $this->block->getAreaHandle();
+/** @var int $maxFileSizeRegistered */
+/** @var int $maxFileSizeGuest */
+/** @var int $maxFilesRegistered */
+/** @var int $maxFilesGuest */
+/** @var int $bID */
+/** @var int $cID */
 
-$u = Core::make(Concrete\Core\User\User::class);
+/** @var \Concrete\Core\User\User $u */
+$u = app(Concrete\Core\User\User::class);
 if ($u->isRegistered()) {
     $maxFileSize = $maxFileSizeRegistered;
     $maxFiles = $maxFilesRegistered;
@@ -15,7 +23,30 @@ if ($u->isRegistered()) {
     $maxFiles = $maxFilesGuest;
 }
 
-if (is_object($conversation)) { ?>
+/** @var string $addMessageToken */
+/** @var string $editMessageToken */
+/** @var string $deleteMessageToken */
+/** @var string $flagMessageToken */
+/** @var string $displayMode */
+/** @var string $addMessageLabel */
+/** @var string $orderBy */
+/** @var string $enableOrderin */
+/** @var string $displayPostingForm */
+/** @var int $enableOrdering */
+/** @var int $enableCommentRating */
+/** @var string $dateFormat */
+/** @var string $customDateFormat */
+/** @var string $blockAreaHandle */
+/** @var string $fileExtensions */
+
+/** @var int $attachmentsEnabled */
+/** @var int $attachmentOverridesEnabled */
+/** @var int $enableTopCommentReviews */
+/** @var int $displaySocialLinks */
+/** @var string $users */
+
+/** @var \Concrete\Core\Conversation\Conversation|null $conversation */
+if (isset($conversation) && is_object($conversation)) { ?>
     <div class="ccm-conversation-wrapper" data-conversation-id="<?=$conversation->getConversationID()?>">
         <?=t('Loading Conversation')?> <i class="fas fa-spin fa-circle-o-notch"></i>
     </div>

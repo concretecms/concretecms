@@ -31,8 +31,15 @@ class MessagePage extends FrontendController
         $this->set('pageIndex', $this->getPageIndex());
         $this->set('displayMode', $this->getDisplayMode());
         $this->set('enablePosting', $this->isPostingEnabled());
+        $this->set('enableCommentRating', $this->isCommentRatingEnabled());
+        $this->set('displaySocialLinks', $this->shouldDisplaySocialLinks());
 
         return null;
+    }
+
+    protected function shouldDisplaySocialLinks():bool
+    {
+        return (bool) $this->request->request->get('displaySocialLinks');
     }
 
     protected function getConversationID(): ?int
@@ -87,6 +94,11 @@ class MessagePage extends FrontendController
         $itemsPerPage = $this->request->request->get('itemsPerPage');
 
         return $this->app->make(Numbers::class)->integer($itemsPerPage, 1) ? (int) $itemsPerPage : null;
+    }
+
+    protected function isCommentRatingEnabled(): bool
+    {
+        return (bool) $this->request->request->get('enableCommentRating');
     }
 
     protected function getPageIndex(): int
