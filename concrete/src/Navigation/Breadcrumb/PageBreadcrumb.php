@@ -16,6 +16,7 @@ class PageBreadcrumb implements BreadcrumbInterface, \Iterator
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Navigation\NavigationInterface::add()
+     * @return self
      */
     public function add(ItemInterface $item): NavigationInterface
     {
@@ -38,6 +39,7 @@ class PageBreadcrumb implements BreadcrumbInterface, \Iterator
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Navigation\NavigationInterface::setItems()
+     * @return self
      */
     public function setItems(array $items): NavigationInterface
     {
@@ -49,27 +51,42 @@ class PageBreadcrumb implements BreadcrumbInterface, \Iterator
         return $this;
     }
 
+    /**
+     * @return void
+     */
     public function rewind()
     {
         reset($this->items);
     }
 
+    /**
+     * @return \Concrete\Core\Navigation\Item\ItemInterface|false
+     */
     public function current()
     {
         return current($this->items);
     }
 
+    /**
+     * @return int|string
+     */
     public function key()
     {
         return key($this->items);
     }
 
+    /**
+     * @return void
+     */
     public function next()
     {
         next($this->items);
     }
 
-    public function valid()
+    /**
+     * @return bool
+     */
+    public function valid():bool
     {
         return $this->current() !== false;
     }

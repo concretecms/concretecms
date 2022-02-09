@@ -12,17 +12,29 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = ['form'];
+    /** @var string[]  */
+    protected $helpers = ['form'];
+    /** @var bool */
     public $includeCurrent;
+    /** @var bool */
     public $ignoreExcludeNav;
+    /** @var bool */
     public $ignorePermission;
+    /** @var int  */
     protected $btInterfaceWidth = 500;
+    /** @var int  */
     protected $btInterfaceHeight = 300;
+    /** @var string  */
     protected $btTable = 'btBreadcrumbs';
+    /** @var bool  */
     protected $btCacheBlockRecord = true;
+    /** @var bool  */
     protected $btCacheBlockOutput = true;
+    /** @var bool  */
     protected $btCacheBlockOutputOnPost = true;
+    /** @var bool  */
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    /** @var int  */
     protected $btCacheBlockOutputLifetime = 300;
 
     /**
@@ -51,6 +63,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
+    /**
+     * @return void
+     */
     public function add()
     {
         $this->set('includeCurrent', 1);
@@ -59,6 +74,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * {@inheritdoc}
+     * @return void
      */
     public function save($args)
     {
@@ -68,6 +84,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($args);
     }
 
+    /**
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function view()
     {
         $page = Page::getCurrentPage();
