@@ -3,11 +3,12 @@ namespace Concrete\Controller\Dialog\Event;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\ApproveCalendarEventRequest;
-use Core;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionRepetition;
@@ -16,7 +17,6 @@ use Concrete\Core\Calendar\Event\EventOccurrenceService;
 use Concrete\Core\Calendar\Event\EventRepetitionService;
 use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Calendar\Utility\Preferences;
-use RedirectResponse;
 
 class Edit extends BackendInterfaceController
 {
@@ -31,6 +31,14 @@ class Edit extends BackendInterfaceController
      * @var EventService
      */
     protected $eventService;
+    /**
+     * @var EventRepetitionService
+     */
+    protected $eventRepetitionService;
+    /**
+     * @var EventOccurrenceService
+     */
+    protected $eventOccurrenceService;
 
     public function __construct()
     {
@@ -74,7 +82,7 @@ class Edit extends BackendInterfaceController
         }
         $calendar = $caID ? Calendar::getByID($caID) : null;
         if (is_object($calendar)) {
-            $cp = new \Permissions($calendar);
+            $cp = new Checker($calendar);
 
             return $cp->canAddCalendarEvent();
         } else {
@@ -86,7 +94,7 @@ class Edit extends BackendInterfaceController
             if (is_object($occurrence)) {
                 $calendar = $occurrence->getEvent()->getCalendar();
                 if (is_object($calendar)) {
-                    $cp = new \Permissions($calendar);
+                    $cp = new Checker($calendar);
 
                     return $cp->canEditCalendarEvents();
                 }
@@ -101,13 +109,12 @@ class Edit extends BackendInterfaceController
      */
     protected function validateRequest($calendar, $repetitions)
     {
-        $e = \Core::make('error');
+        $e = $this->app->make('error');
         if ($this->canAccess()) {
             if (!is_object($calendar)) {
                 $e->add(t('Invalid calendar.'));
             }
 
-            $datetime = \Core::make('helper/form/date_time');
             if (!count($repetitions)) {
                 $e->add(t('You must specify a valid date for this event.'));
             }
@@ -138,14 +145,14 @@ class Edit extends BackendInterfaceController
                 $eventVersionRepetitions[] = new CalendarEventVersionRepetition($eventVersion, $repetition);
             }
 
-            $permissions = new \Permissions($calendar);
+            $permissions = new Checker($calendar);
             if ($permissions->canEditCalendarEventMoreDetailsLocation()) {
                 if ($this->request->request->get('cID') !== null) {
                     $cID = intval($this->request->request->get('cID'));
                     if ($cID) {
-                        $eventPage = \Page::getByID($cID);
+                        $eventPage = Page::getByID($cID);
                         if (is_object($eventPage) && !$eventPage->isError()) {
-                            $cp = new \Permissions($eventPage);
+                            $cp = new Checker($eventPage);
                             if ($cp->canViewPage()) {
                                 $eventVersion->setRelatedPageRelationType(null);
                                 $eventVersion->setPageObject($eventPage);

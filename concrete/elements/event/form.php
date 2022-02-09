@@ -8,12 +8,14 @@ use Concrete\Core\Calendar\Event\EventOccurrence;
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
 $version = null;
+/** @var \Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence|null $occurrence */
+$occurrence = $occurrence ?? null;
 if ($occurrence) {
     $version = $occurrence->getEvent()->getRecentVersion();
     $calendar = $version->getEvent()->getCalendar();
 }
 
-$permissions = new Permissions($calendar);
+$permissions = new \Concrete\Core\Permission\Checker($calendar);
 
 $timezone = $calendar->getTimezone();
 
@@ -28,14 +30,14 @@ if (is_object($category) && $category->allowAttributeSets()) {
 }
 
 $summarySet = false;
-$tabs[] = array('event-summary', t('Summary'), true);
-$tabs[] = array('event-dates', t('Dates'));
+$tabs[] = ['event-summary', t('Summary'), true];
+$tabs[] = ['event-dates', t('Dates'), false];
 foreach ($sets as $set) {
     if ($set->getAttributeSetHandle() == 'calendar_summary') {
         $summarySet = $set;
         continue;
     }
-    $tabs[] = array('event-tab-' . $set->getAttributeSetHandle(), $set->getAttributeSetDisplayName());
+    $tabs[] = ['event-tab-' . $set->getAttributeSetHandle(), $set->getAttributeSetDisplayName(), false];
 }
 
 $repetitions = null;
@@ -63,8 +65,9 @@ if ($version) {
             <div class="tab-pane active" id="event-summary">
 
             <?php
-            /** @var EventOccurrence $occurrence */
+
             if ($occurrence) {
+
                 if ($occurrence->getRepetition()->repeats()) {
                     ?>
                     <div>
@@ -104,7 +107,7 @@ if ($version) {
                         <?= t('Description') ?>
                     </label>
 
-                    <?=Core::make('editor')->outputStandardEditor('description', $version ? $version->getDescription() : '')?>
+                    <?=app('editor')->outputStandardEditor('description', $version ? $version->getDescription() : '')?>
                 </div>
 
                 <?php if ($permissions->canEditCalendarEventMoreDetailsLocation()) { ?>
@@ -120,7 +123,7 @@ if ($version) {
                             }
                         }
                         ?>
-                        <?=Core::make("helper/form/page_selector")->selectPage('cID', $cID)?>
+                        <?=app("helper/form/page_selector")->selectPage('cID', $cID)?>
                     </div>
 
                 <?php } ?>
@@ -149,8 +152,8 @@ if ($version) {
                     ?>
                     <div class="single-occurrence-date-time" style="display:none">
                         <?php
-                        $form = \Core::make('helper/form');
-                        $dt = \Core::make('helper/form/date_time');
+                        $form = app('helper/form');
+                        $dt = app('helper/form/date_time');
 
                         $pdStartDateDateTime = new DateTime();
                         $pdStartDateDateTime->setTimestamp($occurrence->getStart());
