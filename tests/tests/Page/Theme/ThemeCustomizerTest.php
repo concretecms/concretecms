@@ -166,7 +166,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
             '_customizable-variables.scss';
         $variableCollection = $scssNormalizer->createVariableCollectionFromFile($variablesFile);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(17, $variableCollection);
+        $this->assertCount(18, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 
@@ -244,7 +244,7 @@ class ThemeCustomizerTest extends ConcreteDatabaseTestCase
         $variableCollectionFactory = new NormalizedVariableCollectionFactory($serializer);
         $variableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
         $this->assertInstanceOf(NormalizedVariableCollection::class, $variableCollection);
-        $this->assertCount(16, $variableCollection);
+        $this->assertCount(17, $variableCollection);
         $variable = $variableCollection->getValues()[0];
         $this->assertInstanceOf(Variable::class, $variable);
 
@@ -290,7 +290,7 @@ EOL;
         $variableCollection = $variableCollectionFactory->createFromPreset($customizer, $defaultPreset);
         $valueList = $styleValueListFactory->createFromVariableCollection($styleList, $variableCollection);
         $this->assertInstanceOf(StyleValueList::class, $valueList);
-        $this->assertCount(16, $valueList->getValues());
+        $this->assertCount(17, $valueList->getValues());
 
         $styleValue = $valueList->getValues()[2];
         $this->assertInstanceOf(StyleValue::class, $styleValue);
@@ -303,7 +303,7 @@ EOL;
 
         $variableCollectionFactory = new CustomizerVariableCollectionFactory();
         $customizerVariableCollection = $variableCollectionFactory->createFromStyleValueList($valueList);
-        $this->assertCount(16, $customizerVariableCollection->getValues());
+        $this->assertCount(17, $customizerVariableCollection->getValues());
     }
 
 
