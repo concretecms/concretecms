@@ -983,6 +983,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[pencil-alt]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Easy to Edit]]></title>
                                                 <paragraph>
                                                     <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
@@ -1022,6 +1023,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[eye]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Pixel Perfect]]></title>
                                                 <paragraph>
                                                     <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
@@ -1061,6 +1063,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[youtube]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Media Rich]]></title>
                                                 <paragraph>
                                                     <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna.]]></paragraph>
@@ -1247,6 +1250,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[star]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Quality]]></title>
                                                 <paragraph>
                                                     <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
@@ -1259,6 +1263,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[tint]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Design]]></title>
                                                 <paragraph>
                                                     <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
@@ -1271,6 +1276,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[cog]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Development]]></title>
                                                 <paragraph>
                                                     <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
@@ -1283,6 +1289,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[lock]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Security]]></title>
                                                 <paragraph>
                                                     <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
@@ -2787,6 +2794,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[home]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Welcome Home]]></title>
                                                 <paragraph>
                                                     <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -2797,6 +2805,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[user]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Great Workers]]></title>
                                                 <paragraph>
                                                     <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -2809,6 +2818,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[flag]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Amazing Location]]></title>
                                                 <paragraph>
                                                     <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -2819,6 +2829,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[clock-o]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Paid Time Off]]></title>
                                                 <paragraph>
                                                     <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -2831,6 +2842,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[star]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[No Meetings]]></title>
                                                 <paragraph>
                                                     <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -2841,6 +2853,7 @@
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[beer]]></icon>
+                                                <titleFormat><![CDATA[h4]]></titleFormat>
                                                 <title><![CDATA[Free Drinks]]></title>
                                                 <paragraph>
                                                     <![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
