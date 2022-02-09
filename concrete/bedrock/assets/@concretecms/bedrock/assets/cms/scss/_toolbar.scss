@@ -518,3 +518,11 @@ ul.ccm-mobile-menu {
     }
   }
 }
+
+html.ccm-toolbar-visible {
+  .ccm-page {
+    // This used to be dynamically included in the theme. Now we're moving it here.
+    // The purpose of this code is to push the content of the page down if the toolbar appears at the top.
+    margin-top: 48px;
+  }
+}
