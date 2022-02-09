@@ -279,9 +279,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param \SimpleXMLElement $blockNode
+     * @param \Concrete\Core\Page\Page $page
      *
-     * @see \Concrete\Core\Block\BlockController::getImportData()
+     * @return array<string,mixed>
      */
     public function getImportData($blockNode, $page)
     {
@@ -303,6 +304,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $args['span'][] = (int) $column['span'];
                     $args['offset'][] = (int) $column['offset'];
                 }
+
                 return $args;
             case 'preset':
                 $preset = $this->resolveLayoutPreset(isset($node['preset-id']) ? (string) $node['preset-id'] : '', $page);
