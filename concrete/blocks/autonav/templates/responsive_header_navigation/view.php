@@ -1,7 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-
-<?php View::getInstance()->requireAsset('javascript', 'jquery');
-
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var \Concrete\Core\Block\View\BlockView $view */
+$view->requireAsset('javascript', 'jquery');
+/** @var \Concrete\Block\Autonav\Controller $controller */
 $navItems = $controller->getNavItems();
 
 /**
@@ -48,9 +48,9 @@ $navItems = $controller->getNavItems();
  *    Functionality: Whatever is entered into this textbox will be outputted as an additional CSS class for that page's nav item (NOTE: you must un-comment the "$ni->attrClass" code block in the CSS section below for this to work).
  */
 
-/*** STEP 1 of 2: Determine all CSS classes (only 2 are enabled by default, but you can un-comment other ones or add your own) ***/
+// STEP 1 of 2: Determine all CSS classes (only 2 are enabled by default, but you can un-comment other ones or add your own)
 foreach ($navItems as $ni) {
-    $classes = array();
+    $classes = [];
 
     if ($ni->isCurrent) {
         //class for the page currently being viewed
@@ -67,43 +67,43 @@ foreach ($navItems as $ni) {
         //class for the first item in each menu section (first top-level item, and first item of each dropdown sub-menu)
         $classes[] = 'nav-first';
     }
-    */
+     */
 
     /*
     if ($ni->isLast) {
         //class for the last item in each menu section (last top-level item, and last item of each dropdown sub-menu)
         $classes[] = 'nav-last';
     }
-    */
+     */
 
     /*
     if ($ni->hasSubmenu) {
         //class for items that have dropdown sub-menus
         $classes[] = 'nav-dropdown';
     }
-    */
+     */
 
     /*
     if (!empty($ni->attrClass)) {
         //class that can be set by end-user via the 'nav_item_class' custom page attribute
         $classes[] = $ni->attrClass;
     }
-    */
+     */
 
     /*
     if ($ni->isHome) {
         //home page
         $classes[] = 'nav-home';
     }
-    */
+     */
 
     /*
     //unique class for every single menu item
     $classes[] = 'nav-item-' . $ni->cID;
-    */
+     */
 
     //Put all classes together into one space-separated string
-    $ni->classes = implode(" ", $classes);
+    $ni->classes = implode(' ', $classes);
 }
 
 //*** Step 2 of 2: Output menu HTML ***/
@@ -125,4 +125,3 @@ foreach ($navItems as $ni) {
 
 echo '</ul></nav>'; //closes the top-level menu
 echo '<div class="ccm-responsive-menu-launch"><i></i></div>'; // empty i tag for attaching :after or :before psuedos for things like FontAwesome icons.
-
