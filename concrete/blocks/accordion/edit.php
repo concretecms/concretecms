@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
-
+/** @var \Concrete\Core\Block\View\BlockView $view */
+/** @var \Concrete\Core\Form\Service\Form $form */
 use Concrete\Core\Application\Service\UserInterface;
 use Concrete\Core\Support\Facade\Application;
 
@@ -59,12 +60,12 @@ echo $userInterface->tabs([
 
   		<div class="form-group">
   			<?php echo $form->label('initialState', t('Initial State'))?>
-  		  <?php echo $form->select('initialState', array('openfirst' => t('First Item Open'),'closed' => t('All Items Closed'),'open' => t('All Items Open')), $initialState); ?>
+  		  <?php echo $form->select('initialState', ['openfirst' => t('First Item Open'), 'closed' => t('All Items Closed'), 'open' => t('All Items Open')], $initialState ?? 'openfirst'); ?>
   	  </div>
 
   	  <div class="form-group">
   			<?php echo $form->label('itemHeadingFormat', t('Item Heading Format'))?>
-  		  <?php echo $form->select('itemHeadingFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $itemHeadingFormat); ?>
+  		  <?php echo $form->select('itemHeadingFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $itemHeadingFormat ?? 'h2'); ?>
   	  </div>
 
       <div class="form-group">
@@ -72,13 +73,13 @@ echo $userInterface->tabs([
         <?php echo $form->label('options', t('Options'))?>
 
         <div class="form-check">
-            <?php echo $form->checkbox("alwaysOpen", "1", $alwaysOpen);?>
-            <?php echo $form->label("alwaysOpen", t("Always Open (make accordion items stay open when another item is opened)"), ["class" => "form-check-label"]); ?>
+            <?php echo $form->checkbox('alwaysOpen', '1', $alwaysOpen ?? false); ?>
+            <?php echo $form->label('alwaysOpen', t('Always Open (make accordion items stay open when another item is opened)'), ['class' => 'form-check-label']); ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->checkbox("flush", "1", $flush);?>
-            <?php echo $form->label("flush", t("Flush (render accordion edge-to-edge)"), ["class" => "form-check-label"]); ?>
+            <?php echo $form->checkbox('flush', '1', $flush ?? false); ?>
+            <?php echo $form->label('flush', t('Flush (render accordion edge-to-edge)'), ['class' => 'form-check-label']); ?>
         </div>
       </div>
 
@@ -96,7 +97,7 @@ echo $userInterface->tabs([
                 el: 'div[data-vue=accordion-block]',
                 components: config.components,
                 data: {
-                    entries: <?=json_encode($entries)?>
+                    entries: <?=json_encode($entries ?? [])?>
                 },
                 methods: {
                     addEntry() {
