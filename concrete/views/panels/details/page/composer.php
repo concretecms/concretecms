@@ -170,6 +170,7 @@ var ConcretePageComposerDetail = {
                 ConcreteEvent.unsubscribe('PanelComposerPublish');
                 ConcreteEvent.unsubscribe('AjaxRequestError');
                 ConcreteEvent.unsubscribe('PanelCloseDetail');
+                $('div[data-dialog=schedule-page]').remove();
             }
         });
 
