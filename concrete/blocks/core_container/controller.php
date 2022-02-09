@@ -125,6 +125,7 @@ class Controller extends BlockController
     {
         $instance = $this->getContainerInstanceObject();
         if ($instance) {
+            /** @var \Concrete\Core\Page\Page $page */
             $page = $this->getBlockObject()->getBlockCollectionObject();
             $exporter = new ContainerExporter($page);
             $exporter->export($instance, $blockNode);
@@ -217,6 +218,7 @@ class Controller extends BlockController
         $db = $this->app->make(Connection::class);
         // such a pain
         $this->containerInstanceID = $db->fetchColumn('select containerInstanceID from btCoreContainer where bID = ?', [$b->getBlockID()]);
+        /** @var \Concrete\Core\Page\Page $page */
         $page = $b->getBlockCollectionObject();
 
         $instance = $this->getContainerInstanceObject();
