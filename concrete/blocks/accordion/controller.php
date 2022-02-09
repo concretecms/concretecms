@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Accordion;
 
 use Concrete\Core\Block\BlockController;
@@ -7,13 +8,9 @@ use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use InvalidArgumentException;
-use Core;
 
 class AccordionEntry implements \JsonSerializable
 {
-
-
-
     /**
      * @var int
      */
@@ -31,6 +28,7 @@ class AccordionEntry implements \JsonSerializable
 
     /**
      * AccordionEntry constructor.
+     *
      * @param int $id
      * @param string $title
      * @param string $description
@@ -99,19 +97,58 @@ class AccordionEntry implements \JsonSerializable
             'expanded' => false,
         ];
     }
-
 }
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 720;
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 580;
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btAccordion';
+
+    /**
+     * @var string[]
+     */
+    protected $helpers = ['form'];
+
+    /**
+     * @var string[]
+     */
     protected $btExportTables = ['btAccordion', 'btAccordionEntries'];
+
+    /**
+     * @var string
+     */
     protected $btWrapperClass = 'ccm-ui';
+
+    /**
+     * @var string
+     */
     protected $btDefaultSet = 'navigation';
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutput = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputOnPost = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputForRegisteredUsers = true;
 
     public function getBlockTypeName()
@@ -131,10 +168,17 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Doctrine\DBAL\Exception
+     *
+     * @return string
+     */
     public function getSearchableContent()
     {
         $content = '';
-        $db = $this->app->make('database')->connection();
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
         $v = [$this->bID];
         $q = 'SELECT * FROM btAccordionEntries WHERE bID = ? order by sortOrder';
         $r = $db->executeQuery($q, $v);
@@ -145,10 +189,17 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $content;
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Doctrine\DBAL\Exception
+     *
+     * @return void
+     */
     public function edit()
     {
-        $db = $this->app->make('database')->connection();
-        $query = $db->fetchAll('SELECT * FROM btAccordionEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        $query = $db->fetchAllAssociative('SELECT * FROM btAccordionEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
 
         $entries = [];
         foreach ($query as $row) {
@@ -159,10 +210,17 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('entries', $entries);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function view()
     {
-        $db = $this->app->make('database')->connection();
-        $query = $db->fetchAll('SELECT * FROM btAccordionEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        $query = $db->fetchAllAssociative('SELECT * FROM btAccordionEntries WHERE bID = ? ORDER BY sortOrder', [$this->bID]);
 
         $entries = [];
         foreach ($query as $row) {
@@ -171,44 +229,92 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         $this->set('entries', $entries);
-        
     }
 
+    /**
+     * @param int $newBID
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Doctrine\DBAL\Exception
+     *
+     * @return null
+     */
     public function duplicate($newBID)
     {
+        /** @var Connection $db */
         $db = $this->app->make(Connection::class);
         $copyFields = 'title, description, sortOrder';
-        $db->executeUpdate(
+        $db->executeStatement(
             "INSERT INTO btAccordionEntries (bID, {$copyFields}) SELECT ?, {$copyFields} FROM btAccordionEntries WHERE bID = ?",
             [
                 $newBID,
                 $this->bID,
             ]
         );
+
+        return null;
     }
 
+    /**
+     * @return void
+     */
     public function add()
     {
         $this->set('entries', []);
         $this->set('itemHeadingFormat', 'h2');
-
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function delete()
     {
-        $db = $this->app->make('database')->connection();
-        $db->executeQuery('DELETE FROM btAccordionEntries WHERE bID = ?', [$this->bID]);
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        $db->executeStatement('DELETE FROM btAccordionEntries WHERE bID = ?', [$this->bID]);
         parent::delete();
     }
 
     /**
-     * Process an inputted json into a proper json object
+     * @param mixed[] $args
      *
-     * @param array $args The equivalent to the $_POST submitted
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
+    public function save($args)
+    {
+        parent::save($args);
+
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        $db->executeStatement('DELETE FROM btAccordionEntries WHERE bID = ?', [$this->bID]);
+        $entries = $this->processJson($args);
+
+        if ($entries) {
+            $sortOrder = 0;
+            foreach ($entries as $entry) {
+                // Add the entry row
+                $db->executeStatement(
+                    'INSERT INTO btAccordionEntries (bID, sortOrder, title, description) VALUES (?, ?, ?, ?)',
+                    [(int) $this->bID, $sortOrder++, $entry['title'], $entry['description']]
+                );
+            }
+        }
+    }
+
+    /**
+     * Process an inputted json into a proper json object.
+     *
+     * @param array<string,mixed> $args The equivalent to the $_POST submitted
      *
      * @throws InvalidArgumentException If the $args or the json are invalid
      *
-     * @return array
+     * @return array<string,mixed>
      */
     protected function processJson(array $args): array
     {
@@ -225,25 +331,4 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         return $data;
     }
-
-
-    public function save($args)
-    {
-        parent::save($args);
-
-        /** @var Connection $db */
-        $db = $this->app->make(Connection::class);
-        $db->executeStatement("DELETE FROM btAccordionEntries WHERE bID = ?", [$this->bID]);
-        $entries = $this->processJson($args);
-
-        if ($entries) {
-            $sortOrder = 0;
-            foreach ($entries as $entry) {
-                // Add the entry row
-                $db->executeStatement("INSERT INTO btAccordionEntries (bID, sortOrder, title, description) VALUES (?, ?, ?, ?)",
-                                   [(int)$this->bID, $sortOrder++, $entry['title'], $entry['description']]);
-            }
-        }
-    }
-
 }
