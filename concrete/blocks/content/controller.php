@@ -21,50 +21,68 @@ use Concrete\Core\Page\Page;
  */
 class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
-    /** @var string */
+    /**
+     * @var string
+     */
     public $content;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btContentLocal';
-    /** @var int */
+
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 600;
-    /** @var int  */
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 465;
+
     /**
      * @var bool
      */
     protected $btCacheBlockRecord = true;
+
     /**
      * @var bool
      */
     protected $btCacheBlockOutput = true;
+
     /**
      * @var bool
      */
     protected $btCacheBlockOutputOnPost = true;
+
     /**
      * @var bool
      */
     protected $btSupportsInlineEdit = true;
+
     /**
      * @var bool
      */
     protected $btSupportsInlineAdd = true;
+
     /**
      * @var bool
      */
     protected $btCacheBlockOutputForRegisteredUsers = false;
+
     /**
      * @var int
      */
     protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 
     /**
-     * {@inhertdoc}
+     * {@inhertdoc}.
      */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::IMAGERY
+            Features::IMAGERY,
         ];
     }
 
@@ -102,14 +120,14 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
     /**
      * @param string $str
+     *
      * @return array|string|string[]
      */
     public function br2nl($str)
     {
         $str = str_replace("\r\n", "\n", $str);
-        $str = str_replace("<br />\n", "\n", $str);
 
-        return $str;
+        return str_replace("<br />\n", "\n", $str);
     }
 
     /**
@@ -131,19 +149,20 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     /**
      * @param \SimpleXMLElement $blockNode
      * @param Page $page
+     *
      * @return array<string, string>
      */
     public function getImportData($blockNode, $page)
     {
         $content = $blockNode->data->record->content;
         $content = LinkAbstractor::import($content);
-        $args = ['content' => $content];
 
-        return $args;
+        return ['content' => $content];
     }
 
     /**
      * @param \SimpleXMLElement $blockNode
+     *
      * @return void
      */
     public function export(\SimpleXMLElement $blockNode)
@@ -207,10 +226,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         return array_map(
             function ($match) {
-                return (explode('_', $match)[2]);
+                return explode('_', $match)[2];
             },
             $matches[0]
         );
     }
-
 }

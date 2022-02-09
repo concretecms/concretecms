@@ -1,6 +1,6 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Attribute\Key\EventKey;
 use Concrete\Core\Calendar\Event\Formatter\DateFormatter;
@@ -73,9 +73,9 @@ use Concrete\Core\Support\Facade\Url;
 
         <?php if ($allowExport) { ?>
             <div class="ccm-block-calendar-event-export">
-                <a href="<?php echo Url::to("/ccm/calendar/event/export")->setQuery(["eventID" => $event->getID()]); ?>"
-                   title="<?php echo h(t("Export Event")); ?>" class="btn btn-secondary">
-                    <?php echo t("Export Event"); ?>
+                <a href="<?php echo Url::to('/ccm/calendar/event/export')->setQuery(['eventID' => $event->getID()]); ?>"
+                   title="<?php echo h(t('Export Event')); ?>" class="btn btn-secondary">
+                    <?php echo t('Export Event'); ?>
                 </a>
             </div>
         <?php } ?>

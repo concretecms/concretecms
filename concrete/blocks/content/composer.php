@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /** @var string $label */
 /** @var string $description */
 /** @var \Concrete\Block\Content\Controller $controller */
@@ -8,9 +8,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="form-group">
 	<label class="form-label" for=""><?=$label?></label>
-	<?php if ($description): ?>
+	<?php if ($description) { ?>
 	<i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
-	<?php endif; ?>
+	<?php } ?>
 	<?php
     $content = $controller->getContentEditMode();
     if ($controller->getRequest()->isPost()) {

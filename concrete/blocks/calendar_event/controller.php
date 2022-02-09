@@ -1,36 +1,54 @@
 <?php
+
 namespace Concrete\Block\CalendarEvent;
 
 use Concrete\Core\Attribute\Key\CollectionKey;
-use Concrete\Core\Block\BlockController;
 use Concrete\Core\Attribute\Key\EventKey;
+use Concrete\Core\Block\BlockController;
 use Concrete\Core\Calendar\Calendar;
+use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Calendar\Event\EventOccurrence;
-use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
-use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
     public $helpers = ['form'];
-    /** @var int  */
+
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 550;
-    /** @var int  */
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 400;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btCalendarEvent';
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $mode = 'S';
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $calendarEventAttributeKeyHandle;
-    /** @var int|null */
+
+    /**
+     * @var int|null
+     */
     protected $eventID;
 
     /**
@@ -39,7 +57,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function getRequiredFeatures(): array
     {
         return [
-            Features::CALENDAR
+            Features::CALENDAR,
         ];
     }
 
@@ -48,7 +66,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function getBlockTypeDescription()
     {
-        return t("Displays a calendar event on a page.");
+        return t('Displays a calendar event on a page.');
     }
 
     /**
@@ -56,7 +74,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function getBlockTypeName()
     {
-        return t("Calendar Event");
+        return t('Calendar Event');
     }
 
     /**
@@ -101,12 +119,13 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * @param array<string,mixed> $data
+     *
      * @return void
      */
     public function save($data)
     {
-        $data['calendarID'] = isset($data['calendarID']) ? intval($data['calendarID']) : 0;
-        $data['eventID'] = isset($data['eventID']) ? intval($data['eventID']) : 0;
+        $data['calendarID'] = isset($data['calendarID']) ? (int) ($data['calendarID']) : 0;
+        $data['eventID'] = isset($data['eventID']) ? (int) ($data['eventID']) : 0;
 
         $data['allowExport'] = isset($data['allowExport']) && $data['allowExport'] ? 1 : 0;
         $data['displayEventName'] = isset($data['displayEventName']) && $data['displayEventName'] ? 1 : 0;
@@ -123,49 +142,28 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @return CalendarEvent|null
-     */
-    protected function getEvent()
-    {
-        $event = null;
-        if ($this->mode == 'P') {
-            $page = Page::getCurrentPage();
-            $event = $page->getAttribute($this->calendarEventAttributeKeyHandle);
-        } else {
-            if ($this->eventID) {
-                /** @phpstan-ignore-next-line */
-                $event = Event::getByID($this->eventID);
-            }
-        }
-
-        return $event;
-    }
-
-    /**
-     * @return CalendarEventVersionOccurrence|null
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return CalendarEventVersionOccurrence|null
      */
     public function getOccurrence()
     {
         $event = $this->getEvent();
         if (is_object($event)) {
-            if ($this->request->query->has("occurrenceID")) {
+            if ($this->request->query->has('occurrenceID')) {
                 /** @var CalendarEventVersionOccurrence|null $occurrence */
                 /** @phpstan-ignore-next-line */
                 $occurrence = EventOccurrence::getByID($this->request->query->get('occurrenceID'));
                 if ($occurrence) {
-
                     if ($occurrence->getEvent() && $occurrence->getEvent()->getID() == $event->getID()) {
                         /** @phpstan-ignore-next-line */
                         if ($event->isApproved()) {
-
                             return $occurrence;
                         }
                     }
 
                     /** @phpstan-ignore-next-line */
                     if ($occurrence->getEvent() && Event::isRelatedTo($occurrence->getEvent(), $event)) {
-
                         // this is a temporary hack. We need to ultimately make this make sure that
                         // the event matches –but sometimes our events don't match because we imported them as series
                         // events and not as  occurrences of one event.
@@ -188,8 +186,10 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $list->sortBy('startTime', 'desc');
                 $results = $list->getResults();
             }
+
             return $results[0];
-        } else if ($this->request->query->has('occurrenceID') && $this->mode == 'R') {
+        }
+        if ($this->request->query->has('occurrenceID') && $this->mode == 'R') {
             // request mode
             /** @phpstan-ignore-next-line */
             $occurrence = EventOccurrence::getByID($this->request->query->get('occurrenceID'));
@@ -200,18 +200,20 @@ class Controller extends BlockController implements UsesFeatureInterface
                 }
             }
         }
+
         return null;
     }
 
     /**
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
      * @return void
      */
     public function view()
     {
         $this->set('event', $this->getEvent());
 
-        $displayEventAttributes = array();
+        $displayEventAttributes = [];
         if (isset($this->displayEventAttributes)) {
             $displayEventAttributes = json_decode($this->displayEventAttributes);
         }
@@ -230,4 +232,22 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('formatter', $formatter);
     }
 
+    /**
+     * @return CalendarEvent|null
+     */
+    protected function getEvent()
+    {
+        $event = null;
+        if ($this->mode == 'P') {
+            $page = Page::getCurrentPage();
+            $event = $page->getAttribute($this->calendarEventAttributeKeyHandle);
+        } else {
+            if ($this->eventID) {
+                /** @phpstan-ignore-next-line */
+                $event = Event::getByID($this->eventID);
+            }
+        }
+
+        return $event;
+    }
 }
