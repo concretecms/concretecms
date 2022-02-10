@@ -209,3 +209,13 @@ div.theme-atomik {
   }
 
 }
+
+html.ccm-toolbar-visible {
+  div.ccm-page {
+    div.ccm-block-top-navigation-bar {
+      .fixed-top {
+        top: 48px; // https://github.com/concrete5/concrete5/issues/10275
+      }
+    }
+  }
+}

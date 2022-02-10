@@ -63,7 +63,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $links = [];
         $db = Database::get();
-        $slIDs = $db->GetCol('select slID from btSocialLinks where bID = ? order by displayOrder asc',
+        $slIDs = (array) $db->GetCol('select slID from btSocialLinks where bID = ? order by displayOrder asc',
             [$this->bID]
         );
         foreach ($slIDs as $slID) {
@@ -119,7 +119,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $db = Database::get();
         $db->delete('btSocialLinks', ['bID' => $this->bID]);
-        $slIDs = $args['slID'];
+        $slIDs = (array) $args['slID'];
 
         $statement = $db->prepare('insert into btSocialLinks (bID, slID, displayOrder) values (?, ?, ?)');
         $displayOrder = 0;
