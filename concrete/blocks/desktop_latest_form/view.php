@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
 
 <div
     <?php if (isset($link) && $link) { ?>data-link="<?=$link?>"<?php } ?>
@@ -14,7 +14,7 @@
         <?php if (isset($formName) && $formName) { ?>
 
             <span class="ccm-block-desktop-latest-form-name"><?=$formName?></span>
-            <span class="ccm-block-desktop-latest-form-date"><?=$date?></span>
+            <span class="ccm-block-desktop-latest-form-date"><?=$date ?? ''?></span>
 
         <?php } else { ?>
             <span class="ccm-block-desktop-latest-form-name"><?=t('None')?></span>
