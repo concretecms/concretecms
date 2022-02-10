@@ -1,7 +1,11 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var array<string, mixed> $drafts */
+/** @var Concrete\Core\Search\Pagination\Pagination<\Concrete\Core\Page\Page>|null $pagination */
+?>
 
 <div class="ccm-block-desktop-draft-list">
-    <h3><?= t('Page Drafts'); ?>
+    <h3><?= t('Page Drafts') ?>
         <i class="ccm-block-desktop-draft-list-for-me-loader fas fa-sync fa-spin pull-right invisible"></i>
     </h3>
     <?php if (!empty($drafts)) {
@@ -10,13 +14,13 @@
             <?php foreach ($drafts as $draft) {
         ?>
                 <div class="draft-list-item">
-                    <a href="<?= $draft['link']; ?>">
-                        <?= t('%s created by %s on %s', $draft['name'], $draft['user'], $draft['dateAdded']); ?>
+                    <a href="<?= $draft['link']?>">
+                        <?= t('%s created by %s on %s', $draft['name'], $draft['user'], $draft['dateAdded'])?>
                     </a>
                     <?php if (!empty($draft['deleteLink'])) {
             ?>
-                        <a class="dialog-launch btn btn-danger btn-xs" href="<?= $draft['deleteLink']; ?>" dialog-modal="true" dialog-title="<?= t('Delete Draft'); ?>" dialog-width="400" dialog-height="250">
-                            <?= t('Delete Draft'); ?>
+                        <a class="dialog-launch btn btn-danger btn-xs" href="<?= $draft['deleteLink'] ?>" dialog-modal="true" dialog-title="<?= t('Delete Draft')?>" dialog-width="400" dialog-height="250">
+                            <?= t('Delete Draft')?>
                         </a>
                     <?php
         } ?>
@@ -27,7 +31,7 @@
             if ($pagination && $pagination->haveToPaginate()) {
                 $pagination->setBaseURL($view->action('reload_drafts')); ?>
                 <div class="ccm-search-results-pagination">
-                    <?= $pagination->renderDefaultView(); ?>
+                    <?= $pagination->renderDefaultView()?>
                 </div>
                 <?php
             } ?>
@@ -35,7 +39,7 @@
     <?php
 } else {
                 ?>
-        <p><?= t('There are no drafts.'); ?></p>
+        <p><?= t('There are no drafts.')?></p>
     <?php
             } ?>
 </div>
