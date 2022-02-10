@@ -1,41 +1,97 @@
 <?php
+
 namespace Concrete\Block\DateNavigation;
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Type;
-use Loader;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = ['form'];
-
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 400;
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 450;
+
+    /**
+     * @var string[]
+     */
     protected $btExportPageColumns = ['cParentID', 'cTargetID'];
+
+    /**
+     * @var string[]
+     */
     protected $btExportPageTypeColumns = ['ptID'];
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btDateNavigation';
 
+    /**
+     * @var int|null
+     */
+    protected $cTargetID;
+
+    /**
+     * @var int|null
+     */
+    protected $ptID;
+
+    /**
+     * @var string|int|null
+     */
+    protected $selectedYear;
+
+    /**
+     * @var string|int|null
+     */
+    protected $selectedMonth;
+
+    /**
+     * @var int|null
+     */
+    protected $cParentID;
+
+    /**
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::NAVIGATION
+            Features::NAVIGATION,
         ];
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
-        return t("Displays a list of months to filter a page list by.");
+        return t('Displays a list of months to filter a page list by.');
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
-        return t("Date Navigation");
+        return t('Date Navigation');
     }
 
+    /**
+     * @return void
+     */
     public function add()
     {
         $this->edit();
@@ -44,39 +100,64 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('titleFormat', 'h5');
     }
 
+    /**
+     * @return void
+     */
     public function edit()
     {
         $types = Type::getList();
         $this->set('pagetypes', $types);
     }
 
+    /**
+     * @param array<string,mixed>$dateArray
+     *
+     * @return string
+     */
     public function getDateLink($dateArray = null)
     {
         if ($this->cTargetID) {
-            $c = \Page::getByID($this->cTargetID);
+            $c = Page::getByID($this->cTargetID);
         } else {
-            $c = \Page::getCurrentPage();
+            $c = Page::getCurrentPage();
         }
+
         if ($dateArray) {
-            return \URL::page($c, $dateArray['year'], $dateArray['month']);
+            $resolve = [$c, $dateArray['year'], $dateArray['month']];
         } else {
-            return \URL::page($c);
+            $resolve = [$c];
         }
+
+        return  $this->app->make(ResolverManagerInterface::class)->resolve($resolve);
     }
 
+    /**
+     * @param array<string,mixed> $dateArray
+     *
+     * @throws \Punic\Exception
+     * @throws \Punic\Exception\BadArgumentType
+     * @throws \Punic\Exception\ValueNotInList
+     *
+     * @return string
+     */
     public function getDateLabel($dateArray)
     {
-        return \Punic\Calendar::getMonthName($dateArray['month'], 'wide', '', true).' '.$dateArray['year'];
+        return \Punic\Calendar::getMonthName($dateArray['month'], 'wide', '', true) . ' ' . $dateArray['year'];
     }
 
+    /**
+     * @param array<int,mixed> $parameters
+     *
+     * @return mixed[]
+     */
     public function getPassThruActionAndParameters($parameters)
     {
-        if (Loader::helper("validation/numbers")->integer($parameters[0])) {
+        if (app('helper/validation/numbers')->integer($parameters[0])) {
             // then we're going to treat this as a year.
             $method = 'action_filter_by_date';
-            $parameters[0] = intval($parameters[0]);
+            $parameters[0] = (int) $parameters[0];
             if (isset($parameters[1])) {
-                $parameters[1] = intval($parameters[1]);
+                $parameters[1] = (int) $parameters[1];
             }
         } else {
             $parameters = $method = null;
@@ -85,6 +166,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         return [$method, $parameters];
     }
 
+    /**
+     * @param int|bool|null $year
+     * @param int|bool|null $month
+     *
+     * @throws \Doctrine\DBAL\Exception
+     *
+     * @return void
+     */
     public function action_filter_by_date($year = false, $month = false)
     {
         $this->selectedYear = $year;
@@ -92,13 +181,25 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->view();
     }
 
+    /**
+     * @param array<string, mixed> $dateArray
+     *
+     * @return bool
+     */
     public function isSelectedDate($dateArray)
     {
-        if (isset($this->selectedYear) && isset($this->selectedMonth)) {
+        if (isset($this->selectedYear, $this->selectedMonth)) {
             return $dateArray['year'] == $this->selectedYear && $dateArray['month'] == $this->selectedMonth;
         }
+
+        return false;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     *
+     * @return void
+     */
     public function view()
     {
         $pl = new PageList();
@@ -114,12 +215,18 @@ class Controller extends BlockController implements UsesFeatureInterface
         $query->orderBy('navYear', 'desc')->addOrderBy('navMonth', 'desc');
         $r = $query->execute();
         $dates = [];
-        while ($row = $r->fetch()) {
+        $results = $r->fetchAllAssociative();
+        foreach ($results as $row) {
             $dates[] = ['year' => $row['navYear'], 'month' => $row['navMonth']];
         }
         $this->set('dates', $dates);
     }
 
+    /**
+     * @param array<string,mixed> $data
+     *
+     * @return void
+     */
     public function save($data)
     {
         $data += [
@@ -130,16 +237,16 @@ class Controller extends BlockController implements UsesFeatureInterface
             'ptID' => 0,
         ];
         if ($data['redirectToResults']) {
-            $data['cTargetID'] = intval($data['cTargetID']);
+            $data['cTargetID'] = (int) ($data['cTargetID']);
         } else {
             $data['cTargetID'] = 0;
         }
         if ($data['filterByParent']) {
-            $data['cParentID'] = intval($data['cParentID']);
+            $data['cParentID'] = (int) ($data['cParentID']);
         } else {
             $data['cParentID'] = 0;
         }
-        $data['ptID'] = intval($data['ptID']);
+        $data['ptID'] = (int) ($data['ptID']);
         parent::save($data);
     }
 }
