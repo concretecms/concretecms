@@ -1,13 +1,13 @@
 <?php
+
 namespace Concrete\Block\CoreStackDisplay;
 
-use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
-use Concrete\Core\Support\Facade\Application;
-use Stack;
-use Permissions;
-use Page;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Statistics\UsageTracker\TrackableInterface;
 
 /**
  * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
@@ -15,59 +15,75 @@ use Concrete\Core\Multilingual\Page\Section\Section;
  * @package Blocks
  * @subpackage Core Stack Display
  *
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
+ * @author Andrew Embler <andrew@concretecms.org>
+ * @copyright  Copyright (c) 2003-2022 concretecms. (http://www.concretecms.org)
+ * @license    http://www.concretecms.org/license/     MIT License
  */
 class Controller extends BlockController implements TrackableInterface
 {
+    /**
+     * @var int|null
+     */
+    public $stID;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockRecord = true;
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btCoreStackDisplay';
+
+    /**
+     * @var bool
+     */
     protected $btIsInternal = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheSettingsInitialized = false;
 
-    public $stID = null;
-    protected $stIDNeutral = null;
+    /**
+     * @var int|null
+     */
+    protected $stIDNeutral;
 
-    protected function load()
-    {
-        parent::load();
-        $this->set('stIDNeutral', null);
-        $stack = Stack::getByID($this->stID);
-        if ($stack && $stack->isNeutralStack()) {
-            $detector = isset($this->app) ? $this->app->make('multilingual/detector') : \Core::make('multilingual/detector');
-            /* @var \Concrete\Core\Multilingual\Service\Detector $detector */
-            if ($detector->isEnabled()) {
-                $section = Section::getCurrentSection();
-                if ($section) {
-                    $localized = $stack->getLocalizedStack($section);
-                    if ($localized) {
-                        $this->stIDNeutral = $this->stID;
-                        $this->stID = $localized->getCollectionID();
-                        $this->set('stIDNeutral', $this->stIDNeutral);
-                        $this->set('stID', $this->stID);
-                    }
-                }
-            }
-        }
-    }
+    /**
+     * @var int|null
+     */
+    protected $bOriginalID;
 
+    /**
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
-        return t("Proxy block for stacks added through the UI.");
+        return t('Proxy block for stacks added through the UI.');
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
-        return t("Stack Display");
+        return t('Stack Display');
     }
 
+    /**
+     * @return int
+     */
     public function getOriginalBlockID()
     {
         return $this->bOriginalID;
     }
 
-    public function getSearchableContent() 
+    /**
+     * @return string
+     */
+    public function getSearchableContent()
     {
         $searchableContent = '';
         $stack = Stack::getByID($this->stID);
@@ -81,12 +97,19 @@ class Controller extends BlockController implements TrackableInterface
                 }
             }
         }
+
         return $searchableContent;
     }
 
+    /**
+     * @param \SimpleXMLElement $blockNode
+     * @param Page $page
+     *
+     * @return array<string, mixed>
+     */
     public function getImportData($blockNode, $page)
     {
-        $args = array();
+        $args = [];
         $content = (string) $blockNode->stack;
         $stack = Stack::getByName($content);
         $args['stID'] = 0;
@@ -97,14 +120,26 @@ class Controller extends BlockController implements TrackableInterface
         return $args;
     }
 
-    public function isValidControllerTask($method, $parameters = array())
+    /**
+     * @param string $method
+     * @param mixed[] $parameters
+     *
+     * @return bool
+     */
+    public function isValidControllerTask($method, $parameters = [])
     {
         $b = $this->findBlockForAction($method, $parameters);
 
         return !empty($b);
     }
 
-    public function runAction($action, $parameters = array())
+    /**
+     * @param string $action
+     * @param mixed[] $parameters
+     *
+     * @return mixed|void
+     */
+    public function runAction($action, $parameters = [])
     {
         parent::runAction($action, $parameters); // handles on_page_view
 
@@ -118,42 +153,35 @@ class Controller extends BlockController implements TrackableInterface
         return $controller->runAction($action, $parameters);
     }
 
+    /**
+     * @param string $outputContent
+     *
+     * @return void
+     */
     public function registerViewAssets($outputContent = '')
     {
         $stack = $this->getStack(true);
         if ($stack === null) {
-            return null;
+            return;
         }
 
         $blocks = $stack->getBlocks();
         foreach ($blocks as $b) {
+            /** @var BlockController|null $controller */
             $controller = $b->getController();
             if ($controller) {
-                $outputContent = $controller->registerViewAssets($outputContent);
+                /** this always returns void */
+                $controller->registerViewAssets($outputContent);
             }
         }
-        return $outputContent;
     }
 
     /**
-     * Returns the Stack instance (if found).
+     * @param string $method
+     * @param array<string, mixed> $parameters
      *
-     * @param bool $localized Set to true to look for a localized version of the stack (if not found return the neutral version).
-     *
-     * @return Stack|null
+     * @return \Concrete\Core\Block\Block|null
      */
-    protected function getStack($localized)
-    {
-
-        if ($this->stIDNeutral === null || $localized) {
-            $result = Stack::getByID($this->stID);
-        } else {
-            $result = Stack::getByID($this->stIDNeutral);
-        }
-
-        return $result;
-    }
-
     public function findBlockForAction($method, $parameters)
     {
         $stack = $this->getStack(true);
@@ -171,6 +199,11 @@ class Controller extends BlockController implements TrackableInterface
         return null;
     }
 
+    /**
+     * @param \SimpleXMLElement $blockNode
+     *
+     * @return void
+     */
     public function export(\SimpleXMLElement $blockNode)
     {
         $stack = $this->getStack(false);
@@ -182,20 +215,27 @@ class Controller extends BlockController implements TrackableInterface
         }
     }
 
+    /**
+     * @param Page $page
+     *
+     * @return mixed|void
+     */
     public function on_page_view($page)
     {
         $stack = $this->getStack(true);
         if ($stack === null) {
-            return false;
+            return;
         }
-        $p = new Permissions($stack);
+        $p = new Checker($stack);
+        /** @phpstan-ignore-next-line */
         if ($p->canViewPage()) {
             $blocks = $stack->getBlocks();
             foreach ($blocks as $b) {
-                $bp = new Permissions($b);
+                $bp = new Checker($b);
+                /** @phpstan-ignore-next-line */
                 if ($bp->canViewBlock()) {
                     $btc = $b->getInstance();
-                    if ('Controller' != get_class($btc)) {
+                    if (get_class($btc) != 'Controller') {
                         $btc->outputAutoHeaderItems();
                     }
                     $csr = $b->getCustomStyle();
@@ -206,12 +246,111 @@ class Controller extends BlockController implements TrackableInterface
                             $btc->addHeaderItem($styleHeader);
                         }
                     }
-                    $btc->runTask('on_page_view', array($page));
+                    $btc->runAction('on_page_view', [$page]);
                 }
             }
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function cacheBlockOutput()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutput;
+    }
+
+    /**
+     * @return bool
+     */
+    public function cacheBlockOutputOnPost()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputOnPost;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBlockTypeCacheOutputLifetime()
+    {
+        $this->setupCacheSettings();
+
+        return $this->btCacheBlockOutputLifetime;
+    }
+
+    /**
+     * @return null
+     */
+    public function getStackID()
+    {
+        return $this->stID;
+    }
+
+    /**
+     * @param mixed[] $args
+     */
+    public function save($args)
+    {
+        parent::save($args);
+        $this->stID = $args['stID'];
+    }
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
+    protected function load()
+    {
+        parent::load();
+        $this->set('stIDNeutral', null);
+        /** @var Stack|false $stack */
+        $stack = Stack::getByID($this->stID);
+        if ($stack && $stack->isNeutralStack()) {
+            $detector = isset($this->app) ? $this->app->make('multilingual/detector'):app('multilingual/detector');
+            // @var \Concrete\Core\Multilingual\Service\Detector $detector
+            if ($detector->isEnabled()) {
+                /** @var Section|false $section */
+                $section = Section::getCurrentSection();
+                if ($section) {
+                    $localized = $stack->getLocalizedStack($section);
+                    if ($localized) {
+                        $this->stIDNeutral = $this->stID;
+                        $this->stID = $localized->getCollectionID();
+                        $this->set('stIDNeutral', $this->stIDNeutral);
+                        $this->set('stID', $this->stID);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the Stack instance (if found).
+     *
+     * @param bool $localized set to true to look for a localized version of the stack (if not found return the neutral version)
+     *
+     * @return Stack|null
+     */
+    protected function getStack($localized)
+    {
+        if ($this->stIDNeutral === null || $localized) {
+            $result = Stack::getByID($this->stID);
+        } else {
+            $result = Stack::getByID($this->stIDNeutral);
+        }
+        /** @var Stack|null $result */
+
+        return $result;
+    }
+
+    /**
+     * @return void
+     */
     protected function setupCacheSettings()
     {
         if ($this->btCacheSettingsInitialized || Page::getCurrentPage()->isEditMode()) {
@@ -227,10 +366,11 @@ class Controller extends BlockController implements TrackableInterface
 
         $stack = $this->getStack(true);
         if ($stack === null) {
-            return false;
+            return;
         }
 
-        $p = new Permissions($stack);
+        $p = new Checker($stack);
+        /** @phpstan-ignore-next-line */
         if ($p->canViewPage()) {
             $blocks = $stack->getBlocks();
             foreach ($blocks as $b) {
@@ -240,7 +380,6 @@ class Controller extends BlockController implements TrackableInterface
                     $btCacheBlockOutputLifetime = 0;
                     break;
                 }
-
                 $btCacheBlockOutput = $btCacheBlockOutput && $b->cacheBlockOutput();
                 $btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost && $b->cacheBlockOutputOnPost();
 
@@ -261,37 +400,4 @@ class Controller extends BlockController implements TrackableInterface
         $this->btCacheBlockOutputOnPost = $btCacheBlockOutputOnPost;
         $this->btCacheBlockOutputLifetime = $btCacheBlockOutputLifetime;
     }
-
-    public function cacheBlockOutput()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutput;
-    }
-
-    public function cacheBlockOutputOnPost()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutputOnPost;
-    }
-
-    public function getBlockTypeCacheOutputLifetime()
-    {
-        $this->setupCacheSettings();
-
-        return $this->btCacheBlockOutputLifetime;
-    }
-
-    public function getStackID()
-    {
-        return $this->stID;
-    }
-
-    public function save($args)
-    {
-        parent::save($args);
-        $this->stID = $args['stID'];
-    }
-
 }

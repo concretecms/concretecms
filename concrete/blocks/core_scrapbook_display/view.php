@@ -1,9 +1,8 @@
-<?php
-    defined('C5_EXECUTE') or die('Access Denied.');
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 /** @var \Concrete\Core\Block\Block $bo */
 /** @var int $bOriginalID */
 /** @var \Concrete\Core\Block\Block $b */
-/** @var BlockView $view */
+/** @var \Concrete\Core\Block\View\BlockView $view */
 /** @var \Concrete\Block\CoreScrapbookDisplay\Controller $controller */
 $area = $b->getBlockAreaObject();
 $_bx = \Concrete\Core\Block\Block::getByID($bOriginalID);
