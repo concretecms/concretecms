@@ -3,10 +3,13 @@
 /**
  * @var Concrete\Block\File\Controller $controller
  * @var Concrete\Core\Form\Service\Form $form
- * @var Concrete\Core\File\File $bf
+ * @var Concrete\Core\Entity\File\File $bf
+ * @var Concrete\Core\Block\View\BlockView $view
+ * @var Concrete\Core\Application\Service\FileManager $al
  * @var string $fileLinkText
- * @var bool $forceDownload
+ * @var bool|null $forceDownload
  */
+$forceDownload = $forceDownload ?? false;
 ?>
 <div class="form-group">
     <?= $form->label('fID', t('File')) ?>

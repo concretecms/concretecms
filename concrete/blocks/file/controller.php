@@ -3,6 +3,7 @@
 namespace Concrete\Block\File;
 
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
@@ -10,40 +11,80 @@ use Concrete\Core\File\Tracker\FileTrackableInterface;
 
 class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 300;
 
-    protected $btCacheBlockRecord = true;
-
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutput = true;
 
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputOnPost = true;
 
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputForRegisteredUsers = true;
 
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 320;
 
+    /**
+     * @var string
+     */
     protected $btTable = 'btContentFile';
 
+    /**
+     * @var string[]
+     */
     protected $btExportFileColumns = ['fID'];
 
     /**
+     * @var string
+     */
+    protected $fileLinkText;
+
+    /**
+     * @var int|null
+     */
+    protected $fID;
+
+    /**
      * Used for localization. If we want to localize the name/description we have to include this.
+     *
+     * @return string
      */
     public function getBlockTypeDescription()
     {
         return t('Link to files stored in the asset library.');
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
         return t('File');
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getJavaScriptStrings()
     {
         return ['file-required' => t('You must select a file.')];
     }
 
+    /**
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [
@@ -51,11 +92,19 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         ];
     }
 
+    /**
+     * @return string|null
+     */
     public function getSearchableContent()
     {
         return $this->fileLinkText;
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function add()
     {
         $this->set('bf', null);
@@ -65,6 +114,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('al', $this->app->make('helper/concrete/file_manager'));
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function edit()
     {
         $this->set('al', $this->app->make('helper/concrete/file_manager'));
@@ -72,14 +126,25 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('fileLinkText', $this->getLinkText());
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function composer()
     {
         $this->edit();
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return ErrorList
+     */
     public function validate_composer()
     {
         $f = $this->getFileObject();
+        /** @var ErrorList $e */
         $e = $this->app->make('helper/validation/error');
         if (!is_object($f) || !$f->getFileID()) {
             $e->add(t('You must specify a valid file.'));
@@ -88,6 +153,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         return $e;
     }
 
+    /**
+     * @return bool
+     */
     public function isComposerControlDraftValueEmpty()
     {
         $f = $this->getFileObject();
@@ -98,6 +166,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         return true;
     }
 
+    /**
+     * @param array<string, mixed> $args
+     *
+     * @return void
+     */
     public function save($args)
     {
         if (is_array($args) && isset($args['forceDownload'])) {
@@ -107,8 +180,16 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         parent::save($args);
     }
 
+    /**
+     * @param array<string, mixed> $args
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return ErrorList
+     */
     public function validate($args)
     {
+        /** @var ErrorList $e */
         $e = $this->app->make('helper/validation/error');
         if ($args['fID'] < 1) {
             $e->add(t('You must select a file.'));
@@ -120,6 +201,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         return $e;
     }
 
+    /**
+     * @return int|null
+     */
     public function getFileID()
     {
         return $this->fID;
@@ -137,16 +221,22 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         return null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getLinkText()
     {
         if ($this->fileLinkText) {
             return $this->fileLinkText;
         }
         $f = $this->getFileObject();
-
+        /** @phpstan-ignore-next-line */
         return $f->getTitle();
     }
 
+    /**
+     * @return int[]
+     */
     public function getUsedFiles()
     {
         return [$this->fID];

@@ -4,7 +4,9 @@
  * @var Concrete\Core\Page\Type\Composer\Control\Control $control
  * @var string $label
  * @var string $description
- * @var Concrete\Core\File\File $bf
+ * @var Concrete\Core\Entity\File\File $bf
+ * @var \Concrete\Core\Attribute\View $view
+ * @var \Concrete\Core\Application\Service\FileManager $al
  */
 
 $setcontrol = $control->getPageTypeComposerFormLayoutSetControlObject();
