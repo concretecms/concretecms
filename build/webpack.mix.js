@@ -129,6 +129,8 @@ mix
         }
     });
 
+// Version Compare
+mix.sass('assets/htmldiff.scss', '../concrete/css/htmldiff.css');
 
 /**
  * Build Block Components
