@@ -1,6 +1,17 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<?php
-$c = Page::getCurrentPage();
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var Concrete\Block\DocumentLibrary\Controller $controller */
+/** @var Concrete\Core\Form\Service\Form $form */
+/** @var string|null $tableName */
+/** @var string|null $tableDescription */
+/** @var bool $enableSearch */
+/** @var bool $canAddFiles */
+/** @var bool $allowFileUploading */
+/** @var bool $allowInPageFileManagement */
+/** @var string[] $tableSearchProperties */
+/** @var int $bID */
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var Concrete\Core\Page\Page $c */
+$c = \Concrete\Core\Page\Page::getCurrentPage();
 ?>
 
 <?php if (isset($success) && $success) { ?>
@@ -36,8 +47,20 @@ $c = Page::getCurrentPage();
                 <?php } ?>
             </div>
         </div>
+        <?php if (count($tableSearchProperties)) { ?>
+            <div data-document-library-advanced-search-fields="<?=$bID?>" class="row"
+                 class="ccm-block-document-library-advanced-search-fields">
+                <input type="hidden" name="advancedSearchDisplayed" value="">
+                <?php foreach($tableSearchProperties as $column) { ?>
+                    <div class="col-md-6">
+                        <h4><?=$controller->getColumnTitle($column)?></h4>
+                        <div><?=$controller->getSearchValue($column)?></div>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
     </form>
-<?php } else if ($canAddFiles) { ?>
+<?php } elseif ($canAddFiles) { ?>
     <div class="mb-5 text-right">
         <a href="#" data-document-library-add-files="<?=$bID?>"
            class="btn btn-secondary ccm-block-document-library-add-files"><?=t('Add Files')?></a>
@@ -49,7 +72,7 @@ $c = Page::getCurrentPage();
         <div class="ccm-block-document-library-add-files-pending"><?=t('Upload Files')?></div>
         <div class="ccm-block-document-library-add-files-uploading"><?=t('Uploading')?> <i class="fas fa-spin fa-spinner"></i></div>
         <input type="file" name="file" />
-        <?=Core::make('token')->output()?>
+        <?=app('token')->output()?>
     </div>
 <?php } ?>
 

@@ -1,6 +1,23 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<?php
-$c = Page::getCurrentPage();
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var array<Concrete\Core\Tree\Node\Type\File|Concrete\Core\Tree\Node\Type\FileFolder> $results */
+/** @var Concrete\Block\DocumentLibrary\Controller $controller */
+/** @var Concrete\Core\Form\Service\Form $form */
+/** @var string $tableStriped */
+/** @var string $heightMode */
+/** @var string $tableStriped */
+/** @var string[] $tableColumns */
+/** @var \Concrete\Core\File\FolderItemList $list */
+/** @var int $bID */
+/** @var string[] $tableExpandableProperties */
+/** @var string $headerBackgroundColor */
+/** @var string $headerTextColor */
+/** @var string $headerBackgroundColorActiveSort */
+/** @var string $rowBackgroundColorAlternate */
+/** @var int $fixedHeightSize */
+
+/** @var Concrete\Core\Page\Page $c */
+$c = \Concrete\Core\Page\Page::getCurrentPage();
 ?>
 
 <?php
@@ -18,7 +35,8 @@ $view->inc('view_header.php');
         class="table ccm-block-document-library-table <?php if ($tableStriped) { ?><?php } ?>">
     <thead>
     <tr>
-        <?php foreach($tableColumns as $column) { ?>
+        <?php
+        foreach($tableColumns as $column) { ?>
             <th class="<?=$controller->getColumnClass($list, $column)?>">
                 <?php if ($controller->isColumnSortable($column)) { ?>
                     <a href="<?=$controller->getSortAction($c, $list, $column)?>"><?=$controller->getColumnTitle($column)?></a>
@@ -34,7 +52,10 @@ $view->inc('view_header.php');
     $rowClass = 'ccm-block-document-library-row-a';
     foreach($results as $f) { ?>
         <tr class="<?=$rowClass?>">
-        <?php foreach($tableColumns as $column) { ?>
+        <?php
+
+        foreach($tableColumns as $column) {
+            ?>
             <td><?=$controller->getColumnValue($column, $f)?></td>
         <?php } ?>
         </tr>
@@ -48,7 +69,10 @@ $view->inc('view_header.php');
             ?>
             <tr class="ccm-block-document-library-table-expanded-properties" data-document-library-details="<?=$fileID?>">
                 <td colspan="<?=count($tableColumns)?>">
-                    <?php foreach($tableExpandableProperties as $column) { ?>
+
+                    <?php
+
+                    foreach($tableExpandableProperties as $column) { ?>
                         <h4><?=$controller->getColumnTitle($column)?></h4>
                         <?=$controller->getColumnValue($column, $f)?>
                     <?php } ?>
@@ -56,7 +80,7 @@ $view->inc('view_header.php');
             </tr>
         <?php } ?>
     <?php
-        $rowClass = ($rowClass == 'ccm-block-document-library-row-a') ? 'ccm-block-document-library-row-b' : 'ccm-block-document-library-row-a';
+        $rowClass = ($rowClass === 'ccm-block-document-library-row-a') ? 'ccm-block-document-library-row-b' : 'ccm-block-document-library-row-a';
     } ?>
     </tbody>
     </table>
@@ -101,7 +125,7 @@ $view->inc('view_header.php');
     }
 <?php } ?>
 
-<?php if ($heightMode == 'fixed') { ?>
+<?php if ($heightMode === 'fixed') { ?>
     #ccm-block-document-library-wrapper-<?=$bID?>  {
         height: <?=$fixedHeightSize?>px;
         overflow: scroll;
