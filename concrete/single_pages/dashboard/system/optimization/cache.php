@@ -9,6 +9,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Localization\Service\Date $dateService
  * @var bool $enableBlockCache
  * @var bool $enableThemeCssCache
+ * @var bool $enableAssetCache
  * @var bool $compressThemePreprocessorOutput
  * @var bool $generateLessSourcemap
  * @var bool $enableOverrideCache
@@ -35,6 +36,20 @@ defined('C5_EXECUTE') or die('Access Denied.');
             <div class="form-check">
                 <?= $form->radio('ENABLE_BLOCK_CACHE', '1', $enableBlockCache ? '1' : '0', ['id' => 'ENABLE_BLOCK_CACHE-1']) ?>
                 <label class="form-check-label" for="ENABLE_BLOCK_CACHE-1"><?= t('On - Helps speed up a live site.') ?></label>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend><?=t('CSS and JavaScript Cache')?> <i class="fa fa-question-circle launch-tooltip" data-placement="right" title="<?=t('Stores the generation of CSS and JavaScript assets.')?>"></i></legend>
+        <div class="form-group">
+            <div class="form-check">
+                <?= $form->radio('ENABLE_ASSET_CACHE', '0', $enableAssetCache ? '1' : '0', ['id' => 'ENABLE_ASSET_CACHE-0']) ?>
+                <label class="form-check-label" for="ENABLE_ASSET_CACHE-0"><?= t('Off - Good for active block and site development.') ?></label>
+            </div>
+            <div class="form-check">
+                <?= $form->radio('ENABLE_ASSET_CACHE', '1', $enableAssetCache ? '1' : '0', ['id' => 'ENABLE_ASSET_CACHE-1']) ?>
+                <label class="form-check-label" for="ENABLE_ASSET_CACHE-1"><?= t('On - Helps speed up a live site.') ?></label>
             </div>
         </div>
     </fieldset>
