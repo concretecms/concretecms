@@ -1,39 +1,39 @@
 <?php /** @noinspection PhpDeprecationInspection */
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\PageSelector;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\View;
 
-/** @var array $attributeKeys */
+/** @var Concrete\Core\Entity\Attribute\Key\Key[] $attributeKeys */
 /** @var PageKey[] $pageAttributeKeys */
 /** @var Calendar[] $calendars */
 /** @var object|null $featuredAttribute */
 /** @var string $filterByTopic */
-/** @var array $caID */
+/** @var array|null $caID */
 
-/** @var string $calendarAttributeKeyHandle */
+/** @var string|null $calendarAttributeKeyHandle */
 /** @var int $totalToRetrieve */
 /** @var int $totalPerPage */
 /** @var int $filterByTopicAttributeKeyID */
-/** @var int $filterByTopicID */
-/** @var string $filterByPageTopicAttributeKeyHandle */
-/** @var bool $filterByFeatured */
+/** @var int|null $filterByTopicID */
+/** @var string|null $filterByPageTopicAttributeKeyHandle */
+/** @var bool|null $filterByFeatured */
 /** @var string $eventListTitle */
-/** @var int $linkToPage */
-
-$app = Application::getFacadeApplication();
-/** @var PageSelector $pageSelector */
-$pageSelector = $app->make(PageSelector::class);
+/** @var int|null $linkToPage */
+/** @var string $titleFormat */
 /** @var Form $form */
-$form = $app->make(Form::class);
+$titleFormat = $titleFormat ?? 'h5';
+
+/** @var PageSelector $pageSelector */
+$pageSelector = app(PageSelector::class);
+$pageTopicAttributeKeyHandles = null;
 
 if (count($pageAttributeKeys)) {
-    $pageTopicAttributeKeyHandles = ["" => t('** Select Page Attribute')];
+    $pageTopicAttributeKeyHandles = ['' => t('** Select Page Attribute')];
 
     foreach ($pageAttributeKeys as $attributeKey) {
         $pageTopicAttributeKeyHandles[$attributeKey->getAttributeKeyHandle()] = $attributeKey->getAttributeKeyDisplayName();
@@ -61,26 +61,26 @@ if (count($pageAttributeKeys)) {
 
     <div class="form-group">
         <?php echo $form->label('filterByTopic', t('Filter By Topic')); ?>
-
+        <?=$filterByTopic?>
         <div class="form-check">
-            <?php echo $form->radio('filterByTopic', 'none', $filterByTopic, ["id" => 'filterByTopicNone', 'name' => 'filterByTopic']); ?>
-            <?php echo $form->label('filterByTopicNone', t('No topic filtering'), ["class" => "form-check-label"]); ?>
+            <?php echo $form->radio('filterByTopic', 'none', $filterByTopic, ['id' => 'filterByTopicNone', 'name' => 'filterByTopic']); ?>
+            <?php echo $form->label('filterByTopicNone', t('No topic filtering'), ['class' => 'form-check-label']); ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->radio('filterByTopic', 'specific', $filterByTopic, ["id" => 'filterByTopicSpecific', 'name' => 'filterByTopic']); ?>
-            <?php echo $form->label('filterByTopicSpecific', t('Specific Topic'), ["class" => "form-check-label"]); ?>
+            <?php echo $form->radio('filterByTopic', 'specific', $filterByTopic, ['id' => 'filterByTopicSpecific', 'name' => 'filterByTopic']); ?>
+            <?php echo $form->label('filterByTopicSpecific', t('Specific Topic'), ['class' => 'form-check-label']); ?>
         </div>
 
         <?php if (count($pageAttributeKeys)) { ?>
             <div class="form-check">
-                <?php echo $form->radio('filterByTopic', 'page_attribute', $filterByTopic, ["id" => 'filterByTopicPageAttribute', 'name' => 'filterByTopic']); ?>
-                <?php echo $form->label('filterByTopicPageAttribute', t('Current Page'), ["class" => "form-check-label"]); ?>
+                <?php echo $form->radio('filterByTopic', 'page_attribute', $filterByTopic, ['id' => 'filterByTopicPageAttribute', 'name' => 'filterByTopic']); ?>
+                <?php echo $form->label('filterByTopicPageAttribute', t('Current Page'), ['class' => 'form-check-label']); ?>
             </div>
 
             <div data-row="page-attribute">
                 <div class="form-group">
-                    <?php echo $form->text('filterByPageTopicAttributeKeyHandle', $pageTopicAttributeKeyHandles, $filterByPageTopicAttributeKeyHandle ?? null); ?>
+                    <?php echo $form->select('filterByPageTopicAttributeKeyHandle', $pageTopicAttributeKeyHandles, $filterByPageTopicAttributeKeyHandle ?? null); ?>
                 </div>
             </div>
         <?php } ?>
@@ -94,7 +94,9 @@ if (count($pageAttributeKeys)) {
                     </option>
 
                     <?php foreach ($attributeKeys as $ak) { ?>
-                        <?php $attributeController = $ak->getController(); ?>
+                        <?php
+                        /** @var \Concrete\Attribute\Topics\Controller $attributeController */
+                        $attributeController = $ak->getController(); ?>
 
                         <option value="<?php echo h($ak->getAttributeKeyID()) ?>"
                                 <?php if ($ak->getAttributeKeyID() == $filterByTopicAttributeKeyID) { ?>selected<?php } ?>
@@ -104,7 +106,7 @@ if (count($pageAttributeKeys)) {
                     <?php } ?>
                 </select>
 
-                <?php echo $form->hidden("filterByTopicID", $filterByTopicID ?? null); ?>
+                <?php echo $form->hidden('filterByTopicID', (string) ($filterByTopicID ?? null)); ?>
 
                 <div id="ccm-block-event-list-topic-tree-wrapper"></div>
             </div>
@@ -119,11 +121,11 @@ if (count($pageAttributeKeys)) {
 
             $checkboxAttributes = [];
             if (!is_object($featuredAttribute)) {
-                $checkboxAttributes["disabled"] = "disabled";
+                $checkboxAttributes['disabled'] = 'disabled';
             }
 
-            echo $form->checkbox('filterByFeatured', 1, $filterByFeatured ?? null, $checkboxAttributes);
-            echo $form->label('filterByFeatured', t('Display featured events only.'), ["class" => "form-check-label"]);
+            echo $form->checkbox('filterByFeatured', '1', $filterByFeatured ?? null, $checkboxAttributes);
+            echo $form->label('filterByFeatured', t('Display featured events only.'), ['class' => 'form-check-label']);
             ?>
         </div>
 
@@ -144,18 +146,18 @@ if (count($pageAttributeKeys)) {
         <?php echo $form->label('eventListTitle', t('Title')); ?>
 	    <div class="input-group">
         	<?php echo $form->text('eventListTitle', $eventListTitle) ?>
-			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, ['style' => 'width:105px;flex-grow:0;', 'class' => 'form-select']); ?>
 		</div>
 	</div>
 
     <div class="form-group">
         <?php echo $form->label('totalToRetrieve', t('Total Number of Events to Retrieve')); ?>
-        <?php echo $form->text('totalToRetrieve', $totalToRetrieve); ?>
+        <?php echo $form->text('totalToRetrieve', (string) $totalToRetrieve); ?>
     </div>
 
     <div class="form-group">
         <?php echo $form->label('totalPerPage', t('Events to Display Per Page')); ?>
-        <?php echo $form->text('totalPerPage', $totalPerPage); ?>
+        <?php echo $form->text('totalPerPage', (string) $totalPerPage); ?>
     </div>
 
     <div class="form-group">
@@ -198,7 +200,7 @@ if (count($pageAttributeKeys)) {
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
                 <?php if (isset($filterByTopicID)) { ?>
-                'selectNodesByKey': [<?php echo intval($filterByTopicID) ?>],
+                'selectNodesByKey': [<?php echo (int) $filterByTopicID ?>],
                 <?php } ?>
                 'onSelect': function (nodes) {
                     if (nodes.length) {

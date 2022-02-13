@@ -1,6 +1,15 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
+
+/** @var \Concrete\Core\Entity\Calendar\Calendar|null $calendar */
+/** @var int $totalToRetrieve */
+/** @var int $totalPerPage */
+/** @var Concrete\Core\Calendar\Event\EventOccurrenceList $list */
+/** @var bool $canViewCalendar */
+/** @var Concrete\Core\Calendar\Event\Formatter\LinkFormatter $linkFormatter */
+/** @var Concrete\Core\Calendar\Event\Formatter\DateFormatter $formatter */
+/** @var \Concrete\Core\Page\Page|null $linkToPage */
 
 if (isset($calendar)) {
     $pagination = $list->getPagination();
@@ -8,15 +17,16 @@ if (isset($calendar)) {
     $events = $pagination->getCurrentPageResults();
 
     if ($canViewCalendar) {
-        $service = Core::make('helper/date');
-        $c = Page::getCurrentPage();
+        /** @var Concrete\Core\Localization\Service\Date $service */
+        $service = app('helper/date');
+        $c = \Concrete\Core\Page\Page::getCurrentPage();
         $cID = $c->getCollectionID();
         $numEvents = count($events);
         ?>
     <div class="ccm-block-calendar-event-list-wrapper widget-featured-events unbound" data-page="<?= $totalPerPage ?: 3 ?>">
-    <?php if ($eventListTitle) {
+    <?php if (!empty($eventListTitle)) {
     ?>
-        <<?php echo $titleFormat; ?>><?=$eventListTitle?></<?php echo $titleFormat; ?>>
+        <<?php echo $titleFormat ?? 'h5'; ?>><?=$eventListTitle?></<?php echo $titleFormat ?? 'h5'; ?>>
 
     <?php
 
@@ -28,7 +38,8 @@ if (isset($calendar)) {
         ?>>
 
     <?php
-    if ($total = count($events)) {
+    $total = count($events);
+    if ($total) {
         foreach ($events as $occurrence) {
             $event = $occurrence->getEvent();
             $description = $event->getDescription();
@@ -43,6 +54,7 @@ if (isset($calendar)) {
                 </div>
                 <div class="ccm-block-calendar-event-list-event-title">
                     <?php
+
                     $url = $linkFormatter->getEventOccurrenceFrontendViewLink($occurrence);
                     if ($url) {
     ?>
@@ -109,7 +121,6 @@ if (isset($calendar)) {
 
     </div>
     <?php
-
 
     }
     ?>
