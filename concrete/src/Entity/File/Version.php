@@ -1789,7 +1789,7 @@ class Version implements ObjectInterface
                 $type = ThumbnailType::getByHandle($config->get('concrete.icons.file_manager_detail.handle'));
 
                 if ($filesystem->has($type->getBaseVersion()->getFilePath($this))) {
-                    $result = '<img src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
+                    $result = '<img class="ccm-file-manager-detail-thumbnail" src="' . $this->getThumbnailURL($type->getBaseVersion()) . '"';
                     if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
                         $result .= ' srcset="' . $this->getThumbnailURL($type->getDoubledVersion()) . ' 2x"';
                     }
@@ -1835,19 +1835,6 @@ class Version implements ObjectInterface
                     $result = '<img class="ccm-file-manager-list-thumbnail ccm-thumbnail-' . $config->get('concrete.file_manager.images.preview_image_size') . '" src="' . $this->getThumbnailURL($listingType->getBaseVersion()) . '"';
                     if ($config->get('concrete.file_manager.images.create_high_dpi_thumbnails')) {
                         $result .= ' srcset="' . $this->getThumbnailURL($listingType->getDoubledVersion()) . ' 2x"';
-                    }
-                    if ($config->get('concrete.file_manager.images.preview_image_popover')) {
-                        $result .= ' data-hover-image="' . $this->getThumbnailURL($detailType->getBaseVersion()) . '"';
-                    }
-                    if ($this->getTypeObject()->isSVG()) {
-                        $maxWidth = $detailType->getWidth();
-                        if ($maxWidth) {
-                            $result .= ' data-hover-maxwidth="' . $maxWidth . 'px"';
-                        }
-                        $maxHeight = $detailType->getHeight();
-                        if ($maxHeight) {
-                            $result .= ' data-hover-maxheight="' . $maxHeight . 'px"';
-                        }
                     }
                     $result .= ' />';
                 } else {
@@ -1977,6 +1964,7 @@ class Version implements ObjectInterface
     public function getJSONObject()
     {
         $app = Application::getFacadeApplication();
+        $config = $app->make('config');
         $urlResolver = $app->make(ResolverManagerInterface::class);
         $r = new stdClass();
         $fp = new Permissions($this->getFile());
@@ -2007,9 +1995,14 @@ class Version implements ObjectInterface
         $r->description = $this->getDescription();
         $r->fileName = $this->getFileName();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
+        if ($config->get('concrete.file_manager.images.preview_image_popover') && $this->fvHasDetailThumbnail) {
+            $r->resultsThumbnailDetailImg = $this->getDetailThumbnailImage();
+        }
         $r->fID = $this->getFileID();
         $r->fvDateAdded = $this->getDateAdded()->format('F d, Y g:i a');
         $r->treeNodeMenu = new Menu($this->getfile());
+        $r->size = $this->getSize();
+        $r->attributes = ['width' => $this->getAttribute('width'), 'height' => $this->getAttribute('height')];
 
         return $r;
     }
