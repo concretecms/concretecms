@@ -26,6 +26,7 @@ class RemoveOldPageVersions extends AbstractJob
 
         $pl = new PageList();
         $pl->ignorePermissions();
+        $pl->setSiteTreeToAll();
         $pl->setItemsPerPage(3);
         $pl->filter('p.cID', $pNum, '>=');
         $pl->sortByCollectionIDAscending();
