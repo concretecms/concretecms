@@ -12,6 +12,13 @@ div.ccm-block-hero-image {
     width: 100%;
   }
 
+  div.ccm-block-hero-image-text {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   div.ccm-block-hero-image-cover {
     z-index: 2;
   }

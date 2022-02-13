@@ -1,7 +1,9 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+$c = Page::getCurrentPage();
+?>
 
 <div class="ccm-block-top-navigation-bar" <?php if ($includeTransparency) { ?>style="display: none" data-transparency="navbar"<?php } ?>>
-    <nav class="navbar navbar-expand-lg navbar-light <?php if ($includeStickyNav) { ?>fixed-top<?php } ?>">
+    <nav class="navbar navbar-expand-lg navbar-light <?php if ($includeStickyNav && !$c->isEditMode()) { ?>fixed-top<?php } ?>">
         <div class="container-fluid">
             <a class="navbar-brand" href="<?=$home->getCollectionLink()?>">
                 <?php if ($logo && ($includeBrandLogo && $includeBrandText)) { ?>

@@ -1,0 +1,17 @@
+// What is the purpose of this file, you ask?
+// In our theme color input selector, we use CSS variables to display colors.
+// e.g. var(--bs-primary)
+// However, since .ccm-ui has the CMS variables attached to it, and the ::root has the
+// theme bootstrap variables attached to it, the primary color shown in the color input
+// Will come from .ccm-ui instead of ::root, since .ccm-ui is inside ::root.
+// So instead, let's ALSO define the theme colors against the .ccm-context-theme
+// class, and then wrap any controls that need to have access to theme specific variables
+// within the .ccm-context-theme class.
+
+.ccm-context-theme {
+
+  @each $color, $value in $theme-colors {
+    --#{$variable-prefix}#{$color}: #{$value};
+  }
+
+}
