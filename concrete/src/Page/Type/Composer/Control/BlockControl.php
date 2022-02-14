@@ -78,7 +78,7 @@ class BlockControl extends Control
                     $cm = $c->getPageTypeObject();
                     $mc = $cm->getPageTypePageTemplateDefaultPageObject($pt);
                     $r = $db->fetchAssoc(
-                        'select bco.bID, cvb.arHandle from btCorePageTypeComposerControlOutput bco inner join CollectionVersionBlocks cvb on cvb.bID = bco.bID where ptComposerOutputControlID = ? and cvb.cID = ?',
+                        'select bco.bID, cvb.arHandle from btCorePageTypeComposerControlOutput bco inner join CollectionVersionBlocks cvb on cvb.bID = bco.bID where ptComposerOutputControlID = ? and cvb.cID = ? ORDER BY bco.bID DESC;',
                         [
                             $outputControl->getPageTypeComposerOutputControlID(),
                             $mc->getCollectionID(),
