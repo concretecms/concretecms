@@ -26,10 +26,10 @@ class Column implements ColumnInterface
         $callback = $this->getColumnCallback();
         if (is_array($callback)) {
             // PHP 8.0 only allows static functions with call_user_func
-            // So institate the callback if its not callable
+            // So institate the callback if it's not callable
             // (php 8 will return false on is_callable, < less than php 8 will return true)
             if (is_string($callback[0]) && !is_callable($callback)) {
-                return call_user_func([new $callback[0],$callback[1]], $obj);
+                return call_user_func([app($callback[0]),$callback[1]], $obj);
             }
             return call_user_func($callback, $obj);
         }
