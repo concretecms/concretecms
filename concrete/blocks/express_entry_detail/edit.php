@@ -1,31 +1,35 @@
 <?php
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Entity\Express\Entity;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\ExpressEntrySelector;
 use Concrete\Core\Support\Facade\Application;
-use Concrete\Core\Entity\Express\Entity;
-use Concrete\Core\Entity\Express\Entry;
 
+/** @var Concrete\Core\Block\View\BlockView $view */
 /** @var array $entities */
 /** @var Key[] $expressAttributes */
 /** @var Entry|null $entry */
 /** @var Entity|null $entity */
-/** @var string $exEntityID */
+/** @var string|null $exEntityID */
 /** @var int $exSpecificEntryID */
 /** @var string $exEntryAttributeKeyHandle */
-/** @var string $exFormID */
-/** @var string $entryMode */
+/** @var string|null $exFormID */
+/** @var string|null $entryMode */
 
 $app = Application::getFacadeApplication();
 /** @var Form $form */
-$form = $app->make(Form::class);
 /** @var ExpressEntrySelector $expressEntrySelector */
 $expressEntrySelector = $app->make(ExpressEntrySelector::class);
 
 $exForms = [];
+$entity = $entity ?? null;
+$entryMode = $entryMode ?? 'S';
+$exEntityID = $exEntityID ?? null;
+$exFormID = $exFormID ?? '';
 
 if (is_object($entity)) {
     foreach ($entity->getForms() as $formEntity) {
@@ -48,13 +52,13 @@ if (is_object($entity)) {
     <div class="form-group" data-container="express-entity">
         <?php echo $form->label('exEntityID', t('Entity')) ?>
         <?php echo $form->select('exEntityID', $entities, $exEntityID, [
-            'data-action' => $view->action('load_entity_data')
+            'data-action' => $view->action('load_entity_data'),
         ]); ?>
     </div>
 
     <div class="form-group" data-container="express-entry-specific-entry">
         <?php if (is_object($entity)) { ?>
-            <?php print $expressEntrySelector->selectEntry($entity, 'exSpecificEntryID', $entry); ?>
+            <?php echo $expressEntrySelector->selectEntry($entity, 'exSpecificEntryID', $entry); ?>
         <?php } else { ?>
             <p>
                 <?php echo t('You must select an entity before you can choose a specific entry from it.') ?>

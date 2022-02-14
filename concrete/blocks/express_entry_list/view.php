@@ -1,15 +1,44 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
-$c = Page::getCurrentPage();
+/** @var int|null $itemsPerPageSelected */
+/** @var \Concrete\Core\Search\ItemList\EntityItemList $list */
+/** @var \Concrete\Core\Express\Entry\Search\Result\Result $result */
+/** @var array $tableSearchProperties */
+/** @var array $tableSearchAssociations */
+/** @var \Concrete\Core\Page\Page|null $detailPage */
+/** @var string|null $columns */
+/** @var string|null $filterFields */
+/** @var int $displayLimit */
+/** @var int|null $enableSearch */
+/** @var int|null $enableKeywordSearch */
+/** @var string|null $headerBackgroundColor */
+/** @var string|null $headerBackgroundColorActiveSort */
+/** @var string|null $headerTextColor */
+/** @var string|null $tableName */
+/** @var string|null $tableDescription */
+/** @var bool|null $tableStriped */
+/** @var string|null $rowBackgroundColorAlternate */
+/** @var \Concrete\Block\ExpressEntryList\Controller $controller */
+/** @var \Concrete\Core\Form\Service\Form $form */
+/** @var Concrete\Core\Entity\Express\Entity|null $entity */
+/** @var int[] $itemsPerPageOptions */
+/** @var int $bID */
+$entity = $entity ?? null;
+$titleFormat = $titleFormat ?? 'h2';
+$c = \Concrete\Core\Page\Page::getCurrentPage();
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
+$pagination = $pagination ?? null;
+$enablePagination = $enablePagination ?? false;
+
+$enableItemsPerPageSelection = $enableItemsPerPageSelection ?? false;
 if ($tableName) { ?>
     <<?php echo $titleFormat; ?>><?=$tableName?></<?php echo $titleFormat; ?>>
 <?php } ?>
 <?php if ($tableDescription) { ?>
     <p><?=$tableDescription?></p>
-<?php } 
-	
+<?php }
+
 if ($entity) { ?>
     <?php if ($enableSearch) { ?>
         <form method="get" action="<?=$c->getCollectionLink()?>">
@@ -30,7 +59,7 @@ if ($entity) { ?>
 
             <?php if (count($tableSearchProperties) || count($tableSearchAssociations)) { ?>
                 <div data-express-entry-list-advanced-search-fields="<?=$bID?>" class="ccm-block-express-entry-list-advanced-search-fields">
-                    <input type="hidden" name="advancedSearchDisplayed" value="<?php echo $app->request->request('advancedSearchDisplayed') || !$enableKeywordSearch ? 1 : ''; ?>">
+                    <input type="hidden" name="advancedSearchDisplayed" value="<?php echo $controller->getRequest()->get('advancedSearchDisplayed') || !$enableKeywordSearch ? 1 : ''; ?>">
                     <?php foreach ($tableSearchProperties as $ak) { ?>
                         <h4><?=$ak->getAttributeKeyDisplayName()?></h4>
                         <?=$ak->render(new \Concrete\Core\Attribute\Context\BasicSearchContext(), null, true)?>
@@ -63,7 +92,9 @@ if ($entity) { ?>
                     </div>
                     <div class="col-auto">
                         <select class="ms-3 form-select" data-express-entry-list-select-items-per-page="<?=$bID?>">
-                            <?php foreach($itemsPerPageOptions as $itemsPerPage) {
+                            <?php
+
+                            foreach($itemsPerPageOptions as $itemsPerPage) {
                                 $url = \League\Url\Url::createFromServer($_SERVER);
                                 $query = $url->getQuery();
                                 $query->modify(['itemsPerPage' => $itemsPerPage]);
@@ -94,15 +125,15 @@ if ($entity) { ?>
                 <tr class="<?=$rowClass?>">
                 <?php foreach ($item->getColumns() as $column) {
                     if ($controller->linkThisColumn($column)) { ?>
-                        <td><a href="<?=URL::to($detailPage, 'view_express_entity', $item->getEntry()->getId())?>"><?=$column->getColumnValue($item);?></a></td>
+                        <td><a href="<?=\Concrete\Core\Support\Facade\Url::to($detailPage, 'view_express_entity', $item->getEntry()->getId())?>"><?=$column->getColumnValue($item); ?></a></td>
                     <?php
                     } else { ?>
-                        <td><?=$column->getColumnValue($item);?></td>
+                        <td><?=$column->getColumnValue($item); ?></td>
                     <?php
                     } ?>
                 <?php
                 }
-                $rowClass = ($rowClass == 'ccm-block-express-entry-list-row-a') ? 'ccm-block-express-entry-list-row-b' : 'ccm-block-express-entry-list-row-a';
+                $rowClass = ($rowClass === 'ccm-block-express-entry-list-row-a') ? 'ccm-block-express-entry-list-row-b' : 'ccm-block-express-entry-list-row-a';
                 ?>
                 </tr>
             <?php } ?>
@@ -151,7 +182,7 @@ if ($entity) { ?>
         $(function() {
             $.concreteExpressEntryList({
                 'bID': '<?=$bID?>',
-                'hideFields': <?php echo $app->request->request('advancedSearchDisplayed') || !$enableKeywordSearch ? 'false' : 'true'; ?>
+                'hideFields': <?php echo $controller->getRequest()->get('advancedSearchDisplayed') || !$enableKeywordSearch ? 'false' : 'true'; ?>
             });
         });
     </script>

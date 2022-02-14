@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpDeprecationInspection */
 /** @noinspection PhpComposerExtensionStubsInspection */
 
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Controller\Element\Search\CustomizeResults;
 use Concrete\Controller\Element\Search\SearchFieldSelector;
@@ -10,50 +10,48 @@ use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\Color;
 use Concrete\Core\Form\Service\Widget\PageSelector;
-use Concrete\Core\Support\Facade\Application;
 
-/** @var CustomizeResults $customizeElement */
-/** @var SearchFieldSelector $searchFieldSelectorElement */
-/** @var array $linkedPropertiesSelected */
-/** @var array $searchPropertiesSelected */
-/** @var array $searchProperties */
-/** @var array $searchAssociationsSelected */
-/** @var array $searchAssociations */
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var CustomizeResults|null $customizeElement */
+/** @var SearchFieldSelector|null $searchFieldSelectorElement */
+/** @var array|null $linkedPropertiesSelected */
+/** @var array|null $searchPropertiesSelected */
+/** @var array|null $searchProperties */
+/** @var array|null $searchAssociationsSelected */
+/** @var array|null $searchAssociations */
 
 /** @var Entity[] $entities */
-/** @var string $exEntityID */
-/** @var int $detailPage */
-/** @var string $linkedProperties */
-/** @var string $searchProperties */
-/** @var string $searchAssociations */
-/** @var string $columns */
-/** @var string $filterFields */
+/** @var string|null $exEntityID */
+/** @var int|null $detailPage */
+/** @var string|null $linkedProperties */
+/** @var string|null $searchProperties */
+/** @var string|null $searchAssociations */
+/** @var string|null $columns */
+/** @var string|null $filterFields */
 /** @var int $displayLimit */
-/** @var int $enableSearch */
-/** @var int $enableKeywordSearch */
-/** @var string $headerBackgroundColor */
-/** @var string $headerBackgroundColorActiveSort */
-/** @var string $headerTextColor */
-/** @var string $tableName */
-/** @var string $tableDescription */
-/** @var bool $tableStriped */
-/** @var string $rowBackgroundColorAlternate */
-
-$app = Application::getFacadeApplication();
-/** @var Color $color */
-$color = $app->make(Color::class);
+/** @var int|null $enableSearch */
+/** @var int|null $enableKeywordSearch */
+/** @var string|null $headerBackgroundColor */
+/** @var string|null $headerBackgroundColorActiveSort */
+/** @var string|null $headerTextColor */
+/** @var string|null $tableName */
+/** @var string|null $tableDescription */
+/** @var bool|null $tableStriped */
+/** @var string|null $rowBackgroundColorAlternate */
 /** @var Form $form */
-$form = $app->make(Form::class);
+
+/** @var Color $color */
+$color = app(Color::class);
 /** @var UserInterface $userInterface */
-$userInterface = $app->make(UserInterface::class);
+$userInterface = app(UserInterface::class);
 /** @var PageSelector $pageSelector */
-$pageSelector = $app->make(PageSelector::class);
+$pageSelector = app(PageSelector::class);
 
 echo $userInterface->tabs([
     ['search', t('Source & Search'), true],
     ['filtering', t('Filtering')],
     ['results', t('Results')],
-    ['design', t('Design')]
+    ['design', t('Design')],
 ]);
 
 ?>
@@ -62,33 +60,33 @@ echo $userInterface->tabs([
     <div class="tab-pane show active" id="search" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('exEntityID', t('Entity')) ?>
-            <?php echo $form->select('exEntityID', $entities, $exEntityID, [
-                'data-action' => $view->action('load_entity_data')
+            <?php echo $form->select('exEntityID', $entities, $exEntityID ?? null, [
+                'data-action' => $view->action('load_entity_data'),
             ]); ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->checkbox('enableSearch', 1, $enableSearch, ['data-options-toggle' => 'search']) ?>
-            <?php echo $form->label('enableSearch', t('Enable Search'), ["class" => "form-check-label"]) ?>
+            <?php echo $form->checkbox('enableSearch', 1, $enableSearch ?? 0, ['data-options-toggle' => 'search']) ?>
+            <?php echo $form->label('enableSearch', t('Enable Search'), ['class' => 'form-check-label']) ?>
         </div>
 
         <div data-options="search">
             <hr>
             <div class="form-group">
                 <div class="form-check">
-                    <?php echo $form->checkbox('enableKeywordSearch', 1, $enableKeywordSearch) ?>
-                    <?php echo $form->label('enableKeywordSearch', t('Search by Keywords'), ["class" => "form-check-label"]) ?>
+                    <?php echo $form->checkbox('enableKeywordSearch', 1, $enableKeywordSearch ?? 0) ?>
+                    <?php echo $form->label('enableKeywordSearch', t('Search by Keywords'), ['class' => 'form-check-label']) ?>
                 </div>
             </div>
 
             <div class="form-group">
-                <?php echo $form->label("", t("Enable Searching by Attributes")); ?>
+                <?php echo $form->label('', t('Enable Searching by Attributes')); ?>
 
                 <div data-container="advanced-search"></div>
             </div>
 
             <div class="form-group">
-                <?php echo $form->label("", t("Enable Searching by Associations")); ?>
+                <?php echo $form->label('', t('Enable Searching by Associations')); ?>
 
                 <div data-container="search-associations"></div>
             </div>
@@ -97,7 +95,7 @@ echo $userInterface->tabs([
 
     <div class="tab-pane" id="filtering" role="tabpanel">
         <div data-container="search-field-selector">
-            <?php if ($searchFieldSelectorElement) { ?>
+            <?php if (isset($searchFieldSelectorElement)) { ?>
                 <?php $searchFieldSelectorElement->render() ?>
             <?php } else { ?>
                 <?php echo t('You must choose an entity before you can customize its filtering.') ?>
@@ -108,29 +106,29 @@ echo $userInterface->tabs([
     <div class="tab-pane" id="results" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('displayLimit', t('Items Per Page')) ?>
-            <?php echo $form->text('displayLimit', $displayLimit) ?>
+            <?php echo $form->number('displayLimit', $displayLimit, ['min' => 0]) ?>
         </div>
 
         <div class="form-group">
             <div class="form-check">
-                <?php echo $form->checkbox('enablePagination', 1, $enablePagination) ?>
-                <?php echo $form->label('enablePagination', t('Display pagination interface in results.'), ["class" => "form-check-label"]) ?>
+                <?php echo $form->checkbox('enablePagination', 1, $enablePagination ?? 0) ?>
+                <?php echo $form->label('enablePagination', t('Display pagination interface in results.'), ['class' => 'form-check-label']) ?>
             </div>
             <div class="form-check">
-                <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection) ?>
-                <?php echo $form->label('enableItemsPerPageSelection', t('Allow users to select items per page.'), ["class" => "form-check-label"]) ?>
+                <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection ?? 0) ?>
+                <?php echo $form->label('enableItemsPerPageSelection', t('Allow users to select items per page.'), ['class' => 'form-check-label']) ?>
             </div>
         </div>
 
         <div class="form-group">
             <?php echo $form->label('detailPage', t('Link to Detail Page')) ?>
-            <?php echo $pageSelector->selectPage('detailPage', $detailPage) ?>
+            <?php echo $pageSelector->selectPage('detailPage', $detailPage ?? 0) ?>
 
             <div data-container="linked-attributes"></div>
         </div>
 
         <div data-container="customize-results">
-            <?php if ($customizeElement) { ?>
+            <?php if (isset($customizeElement)) { ?>
                 <?php $customizeElement->render() ?>
             <?php } else { ?>
                 <?php echo t('You must choose an entity before you can customize its search results.') ?>
@@ -143,14 +141,14 @@ echo $userInterface->tabs([
             <div class="form-group">
                 <?php echo $form->label('tableName', t('Name')) ?>
 			    <div class="input-group">
-                	<?php echo $form->text('tableName', $tableName, array('maxlength' => '128')) ?>
-					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+                	<?php echo $form->text('tableName', $tableName ?? '', ['maxlength' => '128']) ?>
+					<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? 'h5', ['style' => 'width:105px;flex-grow:0;', 'class' => 'form-select']); ?>
 				</div>
 			</div>
 
             <div class="form-group">
                 <?php echo $form->label('tableDescription', t('Description')) ?>
-                <?php echo $form->text('tableDescription', $tableDescription, array('maxlength' => '128')) ?>
+                <?php echo $form->text('tableDescription', $tableDescription ?? '', ['maxlength' => '128']) ?>
             </div>
         </div>
 
@@ -163,7 +161,7 @@ echo $userInterface->tabs([
                 <?php echo $form->label('headerBackgroundColor', t('Header Background')) ?>
 
                 <div>
-                    <?php $color->output('headerBackgroundColor', $headerBackgroundColor) ?>
+                    <?php $color->output('headerBackgroundColor', $headerBackgroundColor ?? null) ?>
                 </div>
             </div>
 
@@ -171,7 +169,7 @@ echo $userInterface->tabs([
                 <?php echo $form->label('headerBackgroundColorActiveSort', t('Header Background (Active Sort)')) ?>
 
                 <div>
-                    <?php $color->output('headerBackgroundColorActiveSort', $headerBackgroundColorActiveSort) ?>
+                    <?php $color->output('headerBackgroundColorActiveSort', $headerBackgroundColorActiveSort ?? null) ?>
                 </div>
             </div>
 
@@ -179,7 +177,7 @@ echo $userInterface->tabs([
                 <?php echo $form->label('headerTextColor', t('Header Text Color')) ?>
 
                 <div>
-                    <?php $color->output('headerTextColor', $headerTextColor) ?>
+                    <?php $color->output('headerTextColor', $headerTextColor ?? null) ?>
                 </div>
             </div>
 
@@ -187,13 +185,13 @@ echo $userInterface->tabs([
                 <?php echo $form->label('', t('Table Striping')) ?>
 
                 <div class="form-check">
-                    <?php echo $form->radio('tableStriped', 0, $tableStriped, ["name" => "tableStriped", "id" => "tableStripedOff"]) ?>
-                    <?php echo $form->label('tableStripedOff', t('Off (all rows the same color)'), ["class" => "form-check-label"]) ?>
+                    <?php echo $form->radio('tableStriped', 0, $tableStriped ?? 0, ['name' => 'tableStriped', 'id' => 'tableStripedOff']) ?>
+                    <?php echo $form->label('tableStripedOff', t('Off (all rows the same color)'), ['class' => 'form-check-label']) ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio('tableStriped', 1, $tableStriped, ["name" => "tableStriped", "id" => "tableStripedOn"]) ?>
-                    <?php echo $form->label('tableStripedOn', t('On (change color of alternate rows)'), ["class" => "form-check-label"]) ?>
+                    <?php echo $form->radio('tableStriped', 1, $tableStriped ?? 0, ['name' => 'tableStriped', 'id' => 'tableStripedOn']) ?>
+                    <?php echo $form->label('tableStripedOn', t('On (change color of alternate rows)'), ['class' => 'form-check-label']) ?>
                 </div>
             </div>
 
@@ -201,7 +199,7 @@ echo $userInterface->tabs([
                 <?php echo $form->label('rowBackgroundColorAlternate', t('Alternate Row Background Color')) ?>
 
                 <div>
-                    <?php $color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate) ?>
+                    <?php $color->output('rowBackgroundColorAlternate', $rowBackgroundColorAlternate ?? null) ?>
                 </div>
             </div>
         </div>
@@ -253,11 +251,11 @@ echo $userInterface->tabs([
 <script>
     $(function(){
         Concrete.event.publish('block.express_entry_list.open', {
-            'searchProperties': <?php echo json_encode($searchProperties)?>,
-            'searchPropertiesSelected': <?php echo json_encode($searchPropertiesSelected)?>,
-            'searchAssociations': <?php echo json_encode($searchAssociations)?>,
-            'searchAssociationsSelected': <?php echo json_encode($searchAssociationsSelected)?>,
-            'linkedPropertiesSelected': <?php echo json_encode($linkedPropertiesSelected)?>
+            'searchProperties': <?php echo json_encode($searchProperties ?? [])?>,
+            'searchPropertiesSelected': <?php echo json_encode($searchPropertiesSelected ?? [])?>,
+            'searchAssociations': <?php echo json_encode($searchAssociations ?? [])?>,
+            'searchAssociationsSelected': <?php echo json_encode($searchAssociationsSelected ?? [])?>,
+            'linkedPropertiesSelected': <?php echo json_encode($linkedPropertiesSelected ?? [])?>
         });
     });
 </script>
