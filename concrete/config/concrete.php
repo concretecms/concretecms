@@ -268,6 +268,13 @@ return [
         'blocks' => true,
 
         /*
+         * Cache Assets
+         *
+         * @var bool
+         */
+        'assets' => false,
+
+        /*
          * Cache Theme CSS/JS
          *
          * @var bool

@@ -197,6 +197,35 @@ interface AssetInterface
     public function setCombinedAssetSourceFiles($paths);
 
     /**
+     * Does this asset support minification?
+     *
+     * @param bool $minify
+     */
+    public function setAssetSupportsMinification($minify);
+
+    /**
+     * Does this asset support minification?
+     *
+     * @return bool
+     */
+    public function assetSupportsMinification();
+
+    /**
+     * Can this asset be combined with other assets?
+     *
+     * @param bool $combine
+     */
+    public function setAssetSupportsCombination($combine);
+
+    /**
+     * Can this asset be combined with other assets?
+     *
+     * @return bool
+     */
+    public function assetSupportsCombination();
+
+
+    /**
      * Register the asset properties.
      *
      * @param string $filename the location of the asset
