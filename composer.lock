@@ -2416,16 +2416,16 @@
         },
         {
             "name": "htmlawed/htmlawed",
-            "version": "1.1.22",
+            "version": "1.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kesar/HTMLawed.git",
-                "reference": "b270453ba016ee4c6dae585f047d1e4f3cc456a1"
+                "reference": "c733124f21c0330be18d7b0f7f0944a19be6791f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/b270453ba016ee4c6dae585f047d1e4f3cc456a1",
-                "reference": "b270453ba016ee4c6dae585f047d1e4f3cc456a1",
+                "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/c733124f21c0330be18d7b0f7f0944a19be6791f",
+                "reference": "c733124f21c0330be18d7b0f7f0944a19be6791f",
                 "shasum": ""
             },
             "require": {
@@ -2460,9 +2460,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kesar/HTMLawed/issues",
-                "source": "https://github.com/kesar/HTMLawed/tree/master"
+                "source": "https://github.com/kesar/HTMLawed/tree/1.2.6"
             },
-            "time": "2016-08-27T18:53:27+00:00"
+            "time": "2022-02-14T20:32:51+00:00"
         },
         {
             "name": "illuminate/collections",
