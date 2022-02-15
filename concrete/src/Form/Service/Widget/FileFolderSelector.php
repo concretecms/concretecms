@@ -19,12 +19,12 @@ class FileFolderSelector
         $args = new \stdClass();
         $selected = 0;
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && $updateSelectionOnPost) {
+        if ($folder) {
+            $selected = is_object($folder) ? $folder->getTreeNodeID() : $folder;
+        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && $updateSelectionOnPost) {
             if (isset($_POST[$field])) {
                 $selected = intval($_POST[$field]);
             }
-        } elseif ($folder) {
-            $selected = is_object($folder) ? $folder->getTreeNodeID() : $folder;
         }
 
         $rootTreeNodeID = $filesystem->getRootFolder()->getTreeNodeID();

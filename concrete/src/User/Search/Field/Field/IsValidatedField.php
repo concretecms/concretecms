@@ -26,7 +26,7 @@ class IsValidatedField extends AbstractField
     public function renderSearchField()
     {
         $form = \Core::make('helper/form');
-        $html = $form->select('validated', array('0' => t('Unvalidated Users'), '1' => t('Validated Users')), array('style' => 'vertical-align: middle'));
+        $html = $form->select('validated', array('0' => t('Unvalidated Users'), '1' => t('Validated Users')), $this->getData('validated'), array('style' => 'vertical-align: middle'));
         return $html;
     }
 
