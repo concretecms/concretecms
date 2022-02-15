@@ -6,15 +6,20 @@ use Exception;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Permission\Category as PermissionKeyCategory;
-use Core;
 
 class Response
 {
+    protected $app;
     /** @var \Concrete\Core\Permission\ObjectInterface */
     protected $object;
     /** @var PermissionKeyCategory */
     protected $category;
     public static $cache = array();
+
+    public function __construct()
+    {
+        $this->app = Application::getFacadeApplication();
+    }
 
     /**
      * Sets the current permission object to the object provided, this object should implement the Permission ObjectInterface.
@@ -63,7 +68,8 @@ class Response
      */
     public static function getResponse($object)
     {
-        $cache = Core::make('cache/request');
+        $app = Application::getFacadeApplication();
+        $cache = $app->make('cache/request');
         $identifier = sprintf('permission/response/%s/%s', get_class($object), $object->getPermissionObjectIdentifier());
         $item = $cache->getItem($identifier);
         if (!$item->isMiss()) {
@@ -72,7 +78,7 @@ class Response
 
         $className = $object->getPermissionResponseClassName();
         /** @var \Concrete\Core\Permission\Response\Response $pr */
-        $pr = Core::make($className);
+        $pr = $app->make($className);
         if ($object->getPermissionObjectKeyCategoryHandle()) {
             $category = PermissionKeyCategory::getByHandle($object->getPermissionObjectKeyCategoryHandle());
             $pr->setPermissionCategoryObject($category);
@@ -95,12 +101,10 @@ class Response
      */
     public function validate($permissionHandle, $args = array())
     {
-        $app = Application::getFacadeApplication();
-
         // If arguments is empty, we can cache result
         if (empty($args) && is_object($this->category) && is_object($this->object)) {
             /** @var RequestCache $cache */
-            $cache = $app->make('cache/request');
+            $cache = $this->app->make('cache/request');
             $identifier = sprintf(
                 'permission/validate/%s/%s/%s',
                 $this->category->getPermissionKeyCategoryHandle(),
@@ -113,7 +117,7 @@ class Response
             }
         }
 
-        $u = $app->make(User::class);
+        $u = $this->app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
         }
@@ -138,7 +142,7 @@ class Response
     {
         $permission = substr($f, 3);
         /** @var \Concrete\Core\Utility\Service\Text $textHelper */
-        $textHelper = Core::make('helper/text');
+        $textHelper = $this->app->make('helper/text');
         $permission = $textHelper->uncamelcase($permission);
 
         return $this->validate($permission, $a);
