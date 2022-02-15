@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Response;
 
 use Block;
 use Concrete\Core\Area\Area;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Assignment\PageTimedAssignment as PageContentPermissionTimedAssignment;
@@ -144,17 +145,27 @@ class PageResponse extends Response
     public function canViewToolbar()
     {
         $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $identifier = 'permission/response/canviewtoolbar';
+        $cacheItem = $cache->getItem($identifier);
+        if ($cacheItem->isHit()) {
+            return $cacheItem->get();
+        }
+
         $u = $app->make(User::class);
         if (!$u->isRegistered()) {
+            $cache->save($cacheItem->set(false));
             return false;
         }
         if ($u->isSuperUser()) {
+            $cache->save($cacheItem->set(true));
             return true;
         }
 
-        $app = Application::getFacadeApplication();
         $sh = $app->make('helper/concrete/dashboard/sitemap');
         if ($sh->canViewSitemapPanel()) {
+            $cache->save($cacheItem->set(true));
             return true;
         }
 
@@ -171,13 +182,16 @@ class PageResponse extends Response
             $this->canEditPagePermissions() ||
             $this->canMoveOrCopyPage()
         ) {
+            $cache->save($cacheItem->set(true));
             return true;
         }
         $c = Page::getCurrentPage();
         if ($c && $c->getCollectionPath() == STACKS_LISTING_PAGE_PATH) {
+            $cache->save($cacheItem->set(true));
             return true;
         }
 
+        $cache->save($cacheItem->set(false));
         return false;
     }
 
