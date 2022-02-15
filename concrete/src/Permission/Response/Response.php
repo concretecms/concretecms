@@ -1,10 +1,11 @@
 <?php
 namespace Concrete\Core\Permission\Response;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Exception;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
-use PermissionKeyCategory;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
 use Core;
 
 class Response
@@ -95,6 +96,23 @@ class Response
     public function validate($permissionHandle, $args = array())
     {
         $app = Application::getFacadeApplication();
+
+        // If arguments is empty, we can cache result
+        if (empty($args) && is_object($this->category) && is_object($this->object)) {
+            /** @var RequestCache $cache */
+            $cache = $app->make('cache/request');
+            $identifier = sprintf(
+                'permission/validate/%s/%s/%s',
+                $this->category->getPermissionKeyCategoryHandle(),
+                $this->object->getPermissionObjectIdentifier(),
+                $permissionHandle
+            );
+            $cacheItem = $cache->getItem($identifier);
+            if ($cacheItem->isHit()) {
+                return $cacheItem->get();
+            }
+        }
+
         $u = $app->make(User::class);
         if ($u->isSuperUser()) {
             return true;
@@ -108,7 +126,12 @@ class Response
         }
         $pk->setPermissionObject($this->object);
 
-        return call_user_func_array(array($pk, 'validate'), $args);
+        $result = call_user_func_array(array($pk, 'validate'), $args);
+        if (isset($cache) && isset($cacheItem)) {
+            $cache->save($cacheItem->set($result));
+        }
+
+        return $result;
     }
 
     public function __call($f, $a)
