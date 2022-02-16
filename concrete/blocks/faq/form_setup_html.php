@@ -1,4 +1,10 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var Concrete\Core\Block\View\BlockView $this */
+/** @var Concrete\Block\Faq\Controller $controller */
+/** @var array<string,mixed>|null $rows */
+/** @var int|null $bID */
+?>
 
 <style>
     .ccm-faq-block-container {
@@ -64,10 +70,10 @@
 <div class="ccm-faq-block-container">
     <button type="button" class="btn btn-success ccm-add-faq-entry"><?php echo t('Add Entry'); ?></button>
     <?php
-    if ($rows) {
+    if (isset($rows) && is_array($rows)) {
         foreach ($rows as $row) { ?>
             <div class="ccm-faq-entry border bg-light entry-closed">
-                <p class="entry-collapse-text"><?php echo $row['linkTitle'] ? $row['linkTitle'] : ''; ?></p>
+                <p class="entry-collapse-text"><?php echo $row['linkTitle'] ?: ''; ?></p>
 
                 <div class="form-group">
                     <label class="control-label form-label"><?php echo t('Navigation Link Text'); ?></label>
@@ -215,7 +221,7 @@ $(document).ready(function() {
     });
 
     <?php
-    if ($controller->getAction() == 'add') { ?>
+    if ($controller->getAction() === 'add') { ?>
         $(function() {
             $('.ccm-add-faq-entry').trigger('click');
         });

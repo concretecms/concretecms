@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
-
+/** @var \Concrete\Core\Block\View\BlockView $view */
+/** @var \Concrete\Core\Block\View\BlockView $this */
+/** @var int|null $bID */
+/** @var array<string,mixed>|null $rows */
 $linkCount = 1;
 $faqEntryCount = 1;
 ?>
@@ -10,7 +13,7 @@ $faqEntryCount = 1;
             <?php foreach ($rows as $row) { ?>
                 <a href="#<?php echo $bID . $linkCount; ?>"><?php echo $row['linkTitle']; ?></a>
                 <?php
-                ++$linkCount;
+                $linkCount++;
             } ?>
         </div>
         <div class="ccm-faq-block-entries">
@@ -21,7 +24,7 @@ $faqEntryCount = 1;
                     <?php echo $row['description']; ?>
                 </div>
                 <?php
-                ++$faqEntryCount;
+                $faqEntryCount++;
             } ?>
         </div>
     <?php
