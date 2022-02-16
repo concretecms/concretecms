@@ -1,11 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Core\File\Service\File $file */
-/* @var Concrete\Core\Form\Service\Form $form */
+/** @var Concrete\Core\File\Service\File $file */
+/** @var Concrete\Core\Form\Service\Form $form */
 
-/* @var string[] $filenames */
-/* @var string $filename */
+/** @var string[] $filenames */
+/** @var string|null $filename */
 
 $optionValues = [
     '' => '** ' . t('Select a form'),
@@ -16,7 +16,7 @@ foreach ($filenames as $ffilename) {
 ?>
 <div class="form-group">
     <?= $form->label('cstFilename', t('External Form to Include')) ?>
-    <?= $form->select('filename', $optionValues, $filename) ?>
+    <?= $form->select('filename', $optionValues, $filename ?? '') ?>
 </div>
 <div class="help-block">
     <p><?= t('This is a list of forms found in your external forms directory:') ?><br />
