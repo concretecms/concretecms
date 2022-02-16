@@ -11,9 +11,11 @@ div.ccm-page {
         &:hover {
           color: $primary;
         }
-
       }
 
+      .navbar-nav {
+        order: 0;
+      }
     }
 
     // Logo/brand
@@ -40,6 +42,13 @@ div.ccm-page {
         display: none;
       }
 
+    }
+
+    // Search
+    form {
+      margin-left: auto;
+      display: flex;
+      order: 1;
     }
 
     &.transparency-enabled:not(.transparency-temporarily-disabled) {

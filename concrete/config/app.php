@@ -465,6 +465,11 @@ return [
         ],
 
         // Fallback/minimal assets for accessory features
+        'feature/accordions/frontend' => [
+            ['javascript', 'js/features/accordions/frontend.js', ['minify' => false]],
+            ['css', 'css/features/accordions/frontend.css', ['minify' => false]],
+        ],
+
         'feature/account/frontend' => [
             ['javascript', 'js/features/account/frontend.js', ['minify' => false]],
             ['css', 'css/features/account/frontend.css', ['minify' => false]],
@@ -645,6 +650,12 @@ return [
         ],
 
         // Fallback/minimal assets groups
+        'feature/accordions/frontend' => [
+            [
+                ['javascript', 'feature/accordions/frontend'],
+                ['css', 'feature/accordions/frontend'],
+            ],
+        ],
 
         'feature/account/frontend' => [
             [
