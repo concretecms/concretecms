@@ -1,9 +1,40 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/**
+ * Building the button
+ */
 
+if (isset($button)) {
+
+    if ($buttonStyle == 'outline') {
+        $button->addClass('btn btn-outline-' . $buttonColor) ;
+    } elseif ($buttonStyle == 'link') {
+        $button->addClass('btn btn-link');
+    } else {
+        $button->addClass('btn btn-' . $buttonColor) ;
+    }
+    if ($buttonSize) {
+        $button->addClass('btn-' . $buttonSize);
+    }
+    if ($buttonIcon && $button->getValue()) {
+        $iconTag = '<span class="me-3">' . $iconTag . '</span>';
+    }
+
+    //Optionally use the setAttribute() function to add additional attributes
+    //$button->setAttribute('target', '_blank');
+
+    //Change the button value using the setValue() function
+    $button->setValue($iconTag . $button->getValue());
+
+}
+?>
 
 <div class="ccm-block-feature-link">
 
+<<<<<<< HEAD
+    <div class="ccm-block-feature-link-text<?php if (isset($buttonColor)) { ?> border-top pt-5 border-5 border-<?=$buttonColor?><?php } ?>">
+=======
     <div class="ccm-block-feature-link-text">
+>>>>>>> e9377bd763b26bde5b0e5cee97fbee302deea082
 
         <?php if ($title) { ?>
             <<?=$titleFormat?>><?=$title?></<?=$titleFormat?>>
