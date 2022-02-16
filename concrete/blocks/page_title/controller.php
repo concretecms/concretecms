@@ -145,6 +145,9 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function view()
     {
+        if (empty($this->formatting)) {
+            $this->set('formatting', 'h1');
+        }
         $this->set('title', $this->getTitleText());
     }
 
