@@ -1,7 +1,33 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var Concrete\Core\Application\Service\UserInterface $concrete_ui */
+/** @var Concrete\Core\Form\Service\Form $form */
+/** @var Concrete\Core\Form\Service\Widget\PageSelector $form_page_selector */
+/** @var Concrete\Core\Entity\Express\Entity[] $entities */
+/** @var \Concrete\Block\ExpressForm\Controller $controller */
+
+/** @var string $formName */
+/** @var string $submitLabel */
+/** @var string $thankyouMsg */
+/** @var int|null $resultsFolder */
+/** @var Concrete\Core\Tree\Node\Type\FileFolder|null $addFilesToFolder */
+/** @var string|bool $formSubmissionConfig */
+/** @var bool $storeFormSubmission */
+/** @var int $displayCaptcha */
+/** @var Concrete\Core\Tree\Type\ExpressEntryResults|null $tree */
+/** @var int|null $formResultsRootFolderNodeID */
+/** @var array $controls */
+/** @var stdClass[] $types_select contains two properties label and fields */
+/** @var int|null $notifyMeOnSubmission */
+$notifyMeOnSubmission = $notifyMeOnSubmission ?? 0;
+
+/** @var int|null $exFormID */
+$exFormID = $exFormID ?? 0;
+$redirectCID = $redirectCID ?? 0;
+?>
 
 <div id="ccm-block-express-form-tabs">
-<?php echo Loader::helper('concrete/ui')->tabs([
+<?php echo $concrete_ui->tabs([
     ['ccm-block-express-form-add', t('Add')],
     ['ccm-block-express-form-edit', t('Edit')],
     ['ccm-block-express-form-express', t('Express Object')],
@@ -133,7 +159,7 @@
                     }
                     ?>
                     <?=$form->checkbox('storeFormSubmission', 1, $storeFormSubmission, $storeFormSubmissionFormFields); ?>
-                    <?=$form->label('storeFormSubmission', t('Store submitted results of form.'), ['class'=>'form-check-label']); ?>
+                    <?=$form->label('storeFormSubmission', t('Store submitted results of form.'), ['class' => 'form-check-label']); ?>
                 </div>
                 <?php if ($formSubmissionConfig === false) { ?>
                     <div class="alert alert-warning"><?=t('<strong>Warning!</strong> Form submissions are not allowed to be stored in the database. You must set a valid email in the Options tab.'); ?>                </div>
@@ -188,11 +214,11 @@
                 <label class="control-label form-label" for="ccm-form-redirect"><?=t('Redirect to another page after form submission?'); ?></label>
                 <div id="ccm-form-redirect-page">
                     <?php
-                    $page_selector = Loader::helper('form/page_selector');
+
                     if ($redirectCID) {
-                        echo $page_selector->selectPage('redirectCID', $redirectCID);
+                        echo $form_page_selector->selectPage('redirectCID', $redirectCID);
                     } else {
-                        echo $page_selector->selectPage('redirectCID');
+                        echo $form_page_selector->selectPage('redirectCID');
                     }
                     ?>
                 </div>
@@ -206,7 +232,7 @@
                     <div class="input-group-text">
                         <input type="checkbox" name="notifyMeOnSubmission" value="1" <?php if ($notifyMeOnSubmission == 1) { ?>checked<?php } ?>>
                     </div>
-                    <?=$form->text('recipientEmail', $recipientEmail, ['autocomplete' => 'off', 'style' => 'z-index:2000;']); ?>
+                    <?=$form->text('recipientEmail', $recipientEmail ?? '', ['autocomplete' => 'off', 'style' => 'z-index:2000;']); ?>
                 </div>
                 <div class="help-block"><?=t('(Separate multiple emails with a comma)'); ?></div>
             </div>
@@ -223,7 +249,7 @@
                     foreach ($fileSets as $fileSet) {
                         $sets[$fileSet->getFileSetID()] = $fileSet->getFileSetDisplayName();
                     }
-                    echo $form->select('addFilesToSet', $sets, $addFilesToSet);
+                    echo $form->select('addFilesToSet', $sets, $addFilesToSet ?? 0);
                     ?>
             </div>
             <div class="form-group">
@@ -325,7 +351,7 @@
         // This needs to be wrapped in the $(function() {}) because sometimes auto.js loads after this is done loading.
         Concrete.event.publish('open.block_express_form', {
             task: '<?=$controller->getTask(); ?>',
-            <?php if ('edit' == $controller->getTask()) {
+            <?php if ($controller->getTask() == 'edit') {
                     ?>
                 <?php if (isset($expressEntity) && is_object($expressEntity) && $expressEntity->getIncludeInPublicList()) {
                         ?>
@@ -338,10 +364,10 @@
                     } ?>
             <?php
                 } ?>
-            controls: <?=json_encode($controls);?>,
-            types: <?=json_encode($types_select);?>,
+            controls: <?=json_encode($controls); ?>,
+            types: <?=json_encode($types_select); ?>,
             settings: {
-                'replyToEmailControlID': <?=json_encode($replyToEmailControlID);?>
+                'replyToEmailControlID': <?=json_encode($replyToEmailControlID ?? ''); ?>
             }
         });
     });

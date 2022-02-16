@@ -31,6 +31,7 @@ use Concrete\Core\File\Set\Set;
 use Concrete\Core\Form\Context\ContextFactory;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Routing\Redirect;
 use Concrete\Core\Support\Facade\Express;
 use Concrete\Core\Support\Facade\Url;
@@ -41,22 +42,90 @@ use Concrete\Core\Validator\String\EmailValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\UuidGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Concrete\Core\Permission\Checker;
 
 class Controller extends BlockController implements NotificationProviderInterface, UsesFeatureInterface
 {
-    protected $btInterfaceWidth = 640;
-    protected $btInterfaceHeight = 700;
-    protected $btCacheBlockOutput = false;
-    protected $btTable = 'btExpressForm';
-    protected $btExportPageColumns = ['redirectCID'];
+    public const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
+    /**
+     * @var bool|null
+     */
     public $notifyMeOnSubmission;
+
+    /**
+     * @var string|null
+     */
     public $recipientEmail;
+
+    /**
+     * @var string|null
+     */
     public $replyToEmailControlID;
+
+    /**
+     * @var int
+     */
     public $storeFormSubmission = 1;
 
-    const FORM_RESULTS_CATEGORY_NAME = 'Forms';
+    /**
+     * @var string[]
+     */
+    protected $helpers = ['form', 'concrete/ui', 'form/page_selector'];
+
+    /**
+     * @var int
+     */
+    protected $btInterfaceWidth = 640;
+
+    /**
+     * @var int
+     */
+    protected $btInterfaceHeight = 700;
+
+    /**
+     * @var string
+     */
+    protected $btTable = 'btExpressForm';
+
+    /**
+     * @var string[]
+     */
+    protected $btExportPageColumns = ['redirectCID'];
+
+    /**
+     * @var int|null
+     */
+    protected $displayCaptcha;
+
+    /**
+     * @var string|null
+     */
+    protected $thankyouMsg;
+
+    /**
+     * @var int|null
+     */
+    protected $exFormID;
+
+    /**
+     * @var int|null
+     */
+    protected $addFilesToSet;
+
+    /**
+     * @var int|null
+     */
+    protected $addFilesToFolder;
+
+    /**
+     * @var int
+     */
+    protected $redirectCID = 0;
+
+    /**
+     * @var string|null
+     */
+    protected $submitLabel;
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
@@ -68,18 +137,29 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return t('Build simple forms and surveys.');
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
         return t('Form');
     }
 
+    /**
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::FORMS
+            Features::FORMS,
         ];
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function view()
     {
         $form = $this->getFormEntity();
@@ -108,16 +188,16 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if (!isset($renderer)) {
             $page = $this->block->getBlockCollectionObject();
             $this->app->make('log')
-                ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionName(), $page->getCollectionID()));
+                ->warning(t('Form block on page %s (ID: %s) could not be loaded. Its express object or express form no longer exists.', $page->getCollectionName(), $page->getCollectionID()))
+            ;
         }
     }
 
-    protected function clearSessionControls()
-    {
-        $session = $this->app->make('session');
-        $session->remove('block.express_form.new');
-    }
-
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function add()
     {
         $this->set('formName', $this->request->getCurrentPage()->getCollectionName());
@@ -131,26 +211,11 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('displayCaptcha', 1);
     }
 
-    protected function areFormSubmissionsStored()
-    {
-        $config = $this->getFormSubmissionConfigValue();
-        if ($config === true) {
-            return true;
-        }
-        if ($config === 'auto') {
-            return $this->storeFormSubmission; // let the block decide.
-        }
-
-        // else config is false.
-        return false;
-    }
-
-    protected function getFormSubmissionConfigValue()
-    {
-        $config = $this->app->make('config');
-        return $config->get('concrete.form.store_form_submissions');
-    }
-
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return FormBlockSubmissionEmailNotification[]
+     */
     public function getNotifications()
     {
         $notifications = [new FormBlockSubmissionEmailNotification($this->app, $this)];
@@ -162,6 +227,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return $notifications;
     }
 
+    /**
+     * @param int|string $bID
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function action_form_success($bID = null)
     {
         if ($this->bID == $bID) {
@@ -171,6 +243,13 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->view();
     }
 
+    /**
+     * @param array<string,mixed> $args
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return \Concrete\Core\Error\ErrorList\ErrorList
+     */
     public function validate($args)
     {
         $e = $this->app->make('helper/validation/error');
@@ -187,24 +266,37 @@ class Controller extends BlockController implements NotificationProviderInterfac
         return $e;
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function delete()
     {
         parent::delete();
 
         $form = $this->getFormEntity();
         if (is_object($form)) {
+            /** @var Entity $entity */
             $entity = $form->getEntity();
             $entityManager = $this->app->make(EntityManagerInterface::class);
             // Important – are other blocks in the system using this form? If so, we don't want to delete it!
             $db = $entityManager->getConnection();
             $r = $db->fetchColumn('select count(bID) from btExpressForm where bID <> ? and exFormID = ?', [$this->bID, $this->exFormID]);
-            if (0 == $r && !$entity->getIncludeInPublicList()) {
+            if ($r == 0 && !$entity->getIncludeInPublicList()) {
                 $entityManager->remove($entity);
                 $entityManager->flush();
             }
         }
     }
 
+    /**
+     * @param int|string $bID
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return \Concrete\Core\Routing\RedirectResponse|false|void
+     */
     public function action_submit($bID = null)
     {
         if ($this->bID == $bID) {
@@ -213,6 +305,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
             if (is_object($form)) {
                 $express = $this->app->make('express');
+                /** @var Entity $entity */
                 $entity = $form->getEntity();
 
                 /** @var ControllerInterface $controller */
@@ -222,8 +315,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 if ($this->displayCaptcha) {
                     $validator->addRoutine(
                         new CaptchaRoutine(
-                        $this->app->make('helper/validation/captcha')
-                    )
+                            $this->app->make('helper/validation/captcha')
+                        )
                     );
                 }
 
@@ -233,9 +326,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 if ($e->has()) {
                     $this->set('error', $e);
                     $this->view();
+
                     return false;
                 }
-
 
                 if ($this->areFormSubmissionsStored()) {
                     $entry = $manager->addEntry($entity, $this->app->make('site')->getSite());
@@ -246,6 +339,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $submittedData = '';
                     foreach ($values as $value) {
                         $submittedData .= $value->getAttributeKey()->getAttributeKeyDisplayName('text') . ":\r\n";
+                        /** @phpstan-ignore-next-line */
                         $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
                     }
 
@@ -276,12 +370,14 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     foreach ($values as $value) {
                         $value = $value->getValueObject();
                         if ($value instanceof FileProviderInterface) {
+                            /** @var \Concrete\Core\Entity\File\File[] $files */
                             $files = $value->getFileObjects();
                             foreach ($files as $file) {
                                 if ($set) {
                                     $set->addFileToSet($file);
                                 }
-                                if ($folder && $folder->getTreeNodeID() != $rootFolder->getTreeNodeID()) {
+                                if ($folder && $rootFolder && $folder->getTreeNodeID() != $rootFolder->getTreeNodeID()) {
+                                    /** @var \Concrete\Core\Tree\Node\Type\File|null $fileNode */
                                     $fileNode = $file->getFileNodeObject();
                                     if ($fileNode) {
                                         $fileNode->move($folder);
@@ -299,19 +395,20 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     $submittedAttributeValues = $manager->getEntryAttributeValuesForm($form, $entry);
                 }
                 $notifier = $controller->getNotifier($this);
-                $notifications = $notifier->getNotificationList();
-                array_walk($notifications->getNotifications(), function ($notification) use ($submittedAttributeValues) {
-                    if (method_exists($notification, "setAttributeValues")) {
+                $notificationList = $notifier->getNotificationList();
+                $notifications = $notificationList->getNotifications();
+                array_walk($notifications, static function ($notification) use ($submittedAttributeValues) {
+                    if (method_exists($notification, 'setAttributeValues')) {
                         $notification->setAttributeValues($submittedAttributeValues);
                     }
                 });
-                $notifier->sendNotifications($notifications, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
+                $notifier->sendNotifications($notificationList, $entry, ProcessorInterface::REQUEST_TYPE_ADD);
                 $r = null;
                 if ($this->redirectCID > 0) {
                     $c = Page::getByID($this->redirectCID);
                     if (is_object($c) && !$c->isError()) {
                         $r = Redirect::page($c);
-                        $target = strpos($r->getTargetUrl(),"?") === false ? $r->getTargetUrl()."?" : $r->getTargetUrl()."&";
+                        $target = strpos($r->getTargetUrl(), '?') === false ? $r->getTargetUrl() . '?' : $r->getTargetUrl() . '&';
                         $r->setTargetUrl($target . 'form_success=1&entry=' . $entry->getID());
                     }
                 }
@@ -328,12 +425,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->view();
     }
 
-    protected function loadResultsFolderInformation()
-    {
-        $folder = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
-        $this->set('formResultsRootFolderNodeID', $folder->getTreeNodeID());
-    }
-
+    /**
+     * @throws \Doctrine\ORM\Exception\NotSupported
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return JsonResponse
+     */
     public function action_add_control()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
@@ -345,40 +442,45 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $controls = [];
         }
 
+        /** @var string[] $field */
         $field = explode('|', $this->request->request->get('type'));
-        switch ($field[0]) {
-            case 'attribute_key':
-                $type = Type::getByID($field[1]);
-                if (is_object($type)) {
-                    $control = new AttributeKeyControl();
+        // should be an array but incase it returns false, lets check it
+        if (is_array($field)) {
+            switch ($field[0]) {
+                case 'attribute_key':
+                    /** @phpstan-ignore-next-line */
+                    $type = Type::getByID($field[1]);
+                    if (is_object($type)) {
+                        $control = new AttributeKeyControl();
+                        $control->setId((new UuidGenerator())->generate($entityManager, $control));
+                        $key = new ExpressKey();
+                        $key->setAttributeKeyName($post['question']);
+                        if ($post['required']) {
+                            $control->setIsRequired(true);
+                        }
+                        $key->setAttributeType($type);
+                        if (!$post['question']) {
+                            $e = $this->app->make('error');
+                            $e->add(t('You must give this question a name.'));
+
+                            return new JsonResponse($e);
+                        }
+                        $controller = $type->getController();
+                        $key = $this->saveAttributeKeySettings($controller, $key, $post);
+
+                        $control->setAttributeKey($key);
+                    }
+                    break;
+                case 'entity_property':
+                    /** @var EntityPropertyType $propertyType */
+                    $propertyType = $this->app->make(EntityPropertyType::class);
+
+                    $control = $propertyType->createControlByIdentifier($field[1]);
                     $control->setId((new UuidGenerator())->generate($entityManager, $control));
-                    $key = new ExpressKey();
-                    $key->setAttributeKeyName($post['question']);
-                    if ($post['required']) {
-                        $control->setIsRequired(true);
-                    }
-                    $key->setAttributeType($type);
-                    if (!$post['question']) {
-                        $e = $this->app->make('error');
-                        $e->add(t('You must give this question a name.'));
-
-                        return new JsonResponse($e);
-                    }
-                    $controller = $type->getController();
-                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
-
-                    $control->setAttributeKey($key);
-                }
-                break;
-            case 'entity_property':
-                /** @var EntityPropertyType $propertyType */
-                $propertyType = $this->app->make(EntityPropertyType::class);
-
-                $control = $propertyType->createControlByIdentifier($field[1]);
-                $control->setId((new UuidGenerator())->generate($entityManager, $control));
-                $saver = $control->getControlSaveHandler();
-                $control = $saver->saveFromRequest($control, $this->request);
-                break;
+                    $saver = $control->getControlSaveHandler();
+                    $control = $saver->saveFromRequest($control, $this->request);
+                    break;
+            }
         }
 
         if (!isset($control)) {
@@ -388,32 +490,17 @@ class Controller extends BlockController implements NotificationProviderInterfac
             return new JsonResponse($e);
         }
 
-        $controls[$control->getId()]= $control;
+        $controls[$control->getId()] = $control;
         $session->set('block.express_form.new', $controls);
 
         return new JsonResponse($control);
     }
 
     /**
-     * @param \Concrete\Core\Attribute\Controller $controller
-     * @param ExpressKey $key
-     * @param array $post
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
-     * @return ExpressKey
+     * @return JsonResponse
      */
-    protected function saveAttributeKeySettings($controller, ExpressKey $key, $post)
-    {
-        $settings = $controller->saveKey($post);
-        if (!is_object($settings)) {
-            $settings = $controller->getAttributeKeySettings();
-        }
-
-        $settings->setAttributeKey($key);
-        $key->setAttributeKeySettings($settings);
-
-        return $key;
-    }
-
     public function action_update_control()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
@@ -432,44 +519,49 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         if (!isset($control)) {
             $control = $entityManager->getRepository(\Concrete\Core\Entity\Express\Control\Control::class)
-                ->findOneById($this->request->request->get('id'));
+                ->findOneById($this->request->request->get('id'))
+            ;
         }
-
+        /** @var string[] $field */
         $field = explode('|', $this->request->request->get('type'));
-        switch ($field[0]) {
-            case 'attribute_key':
-                $type = Type::getByID($field[1]);
-                if (is_object($type)) {
-                    $key = $control->getAttributeKey();
-                    $key->setAttributeKeyName($post['question']);
+        $type = null;
+        if (is_array($field)) {
+            switch ($field[0]) {
+                case 'attribute_key':
+                    /** @phpstan-ignore-next-line */
+                    $type = Type::getByID($field[1]);
+                    if (is_object($type)) {
+                        $key = $control->getAttributeKey();
+                        $key->setAttributeKeyName($post['question']);
 
-                    if (!$post['question']) {
-                        $e = $this->app->make('error');
-                        $e->add(t('You must give this question a name.'));
+                        if (!$post['question']) {
+                            $e = $this->app->make('error');
+                            $e->add(t('You must give this question a name.'));
 
-                        return new JsonResponse($e);
+                            return new JsonResponse($e);
+                        }
+
+                        if ($post['requiredEdit']) {
+                            $control->setIsRequired(true);
+                        } else {
+                            $control->setIsRequired(false);
+                        }
+
+                        $controller = $key->getController();
+                        $key = $this->saveAttributeKeySettings($controller, $key, $post);
+                        $control->setAttributeKey($key);
                     }
 
-                    if ($post['requiredEdit']) {
-                        $control->setIsRequired(true);
-                    } else {
-                        $control->setIsRequired(false);
-                    }
+                    break;
+                case 'entity_property':
+                    /** @var EntityPropertyType $type */
+                    $type = $this->app->make(EntityPropertyType::class);
 
-                    $controller = $key->getController();
-                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
-                    $control->setAttributeKey($key);
-                }
+                    $saver = $control->getControlSaveHandler();
+                    $control = $saver->saveFromRequest($control, $this->request);
 
-                break;
-            case 'entity_property':
-                /** @var EntityPropertyType $propertyType */
-                $type = $this->app->make(EntityPropertyType::class);
-
-                $saver = $control->getControlSaveHandler();
-                $control = $saver->saveFromRequest($control, $this->request);
-
-                break;
+                    break;
+            }
         }
 
         if (!is_object($type)) {
@@ -479,16 +571,26 @@ class Controller extends BlockController implements NotificationProviderInterfac
             return new JsonResponse($e);
         }
 
-        $sessionControls[$control->getId()]= $control;
+        $sessionControls[$control->getId()] = $control;
         $session->set('block.express_form.new', $sessionControls);
 
         return new JsonResponse($control);
     }
+
+    /**
+     * @param array<string,mixed> $data
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function save($data)
     {
         $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
-        if (isset($data['exFormID']) && '' != $data['exFormID']) {
-            return parent::save($data);
+        if (isset($data['exFormID']) && $data['exFormID'] != '') {
+            parent::save($data);
+
+            return;
         }
 
         $requestControls = (array) $this->request->request->get('controlID');
@@ -496,12 +598,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $session = $this->app->make('session');
         $sessionControls = $session->get('block.express_form.new');
 
-        $name = $data['formName'] ? $data['formName'] : t('Form');
+        $name = !empty($data['formName']) ? $data['formName'] : t('Form');
 
         if (!$this->exFormID) {
-            // This is a new submission.
-            $c = \Page::getCurrentPage();
-
             // Create a results node
             $node = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
             $node = \Concrete\Core\Tree\Node\Type\ExpressEntryResults::add($name, $node);
@@ -531,11 +630,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
         } else {
             // We check save the order as well as potentially deleting orphaned controls.
 
-            /* @var Form $form */
+            // @var Form $form
             $form = $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
-                ->findOneById($this->exFormID);
+                ->findOneById($this->exFormID)
+            ;
 
-            /* @var FieldSet $fieldSet */
+            // @var FieldSet $fieldSet
             $fieldSet = $form->getFieldSets()[0];
 
             $entity = $form->getEntity();
@@ -656,7 +756,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 }
             }
 
-            ++$position;
+            $position++;
         }
 
         // Now, we look through all existing controls to see whether they should be removed.
@@ -696,6 +796,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $filesystem = new Filesystem();
             $addFilesToFolder = $filesystem->getFolder($addFilesToFolderFromPost);
             $fp = new Checker($addFilesToFolder);
+            /** @phpstan-ignore-next-line */
             if ($fp->canSearchFiles()) {
                 $data['addFilesToFolder'] = $addFilesToFolderFromPost;
             }
@@ -712,13 +813,20 @@ class Controller extends BlockController implements NotificationProviderInterfac
         parent::save($data);
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function edit()
     {
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->loadResultsFolderInformation();
         $this->clearSessionControls();
-        $list = Type::getList("express");
+        /** @var \Concrete\Core\Entity\Attribute\Type[] $list */
+        /** @phpstan-ignore-next-line */
+        $list = Type::getList('express');
 
         $attribute_fields = [];
 
@@ -763,47 +871,52 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $filesystem = new Filesystem();
             $addFilesToFolder = $filesystem->getFolder($this->addFilesToFolder);
             $fp = new Checker($addFilesToFolder);
-            if ($fp->canSearchFiles()) {
-                $this->set('addFilesToFolder', $addFilesToFolder);
+            /** @phpstan-ignore-next-line */
+            if (!$fp->canSearchFiles()) {
+                $addFilesToFolder = null;
             }
         }
-
+        $this->set('addFilesToFolder', $addFilesToFolder);
+        /** @phpstan-ignore-next-line */
         $this->set('entities', Express::getEntities());
     }
 
+    /**
+     * @return JsonResponse|void
+     */
     public function action_get_type_form()
     {
+        /** @var string[] $field */
         $field = explode('|', $this->request->request->get('id'));
-        if ('attribute_key' == $field[0]) {
-            $type = Type::getByID($field[1]);
-            if (is_object($type)) {
-                ob_start();
-                echo $type->render(new AttributeTypeSettingsContext());
-                $html = ob_get_contents();
-                ob_end_clean();
+        if (is_array($field)) {
+            if ($field[0] === 'attribute_key') {
+                /** @phpstan-ignore-next-line */
+                $type = Type::getByID($field[1]);
+                if (is_object($type)) {
+                    ob_start();
+                    echo $type->render(new AttributeTypeSettingsContext());
+                    $html = ob_get_clean();
 
+                    $obj = new \stdClass();
+                    $obj->content = $html;
+                    $obj->showControlRequired = true;
+                    $obj->showControlName = true;
+                    $obj->assets = $this->getAssetsDefinedDuringOutput();
+                }
+            } elseif ($field[0] === 'entity_property') {
                 $obj = new \stdClass();
-                $obj->content = $html;
-                $obj->showControlRequired = true;
-                $obj->showControlName = true;
-                $obj->assets = $this->getAssetsDefinedDuringOutput();
-            }
-        } elseif ('entity_property' == $field[0]) {
-            $obj = new \stdClass();
-            switch ($field[1]) {
-                case 'text':
+                if ($field[1] === 'text') {
                     $controller = new TextOptions();
                     ob_start();
                     echo $controller->render();
-                    $html = ob_get_contents();
-                    ob_end_clean();
+                    $html = ob_get_clean();
 
                     $obj = new \stdClass();
                     $obj->content = $html;
                     $obj->showControlRequired = false;
                     $obj->showControlName = false;
                     $obj->assets = $this->getAssetsDefinedDuringOutput();
-                    break;
+                }
             }
         }
 
@@ -815,26 +928,10 @@ class Controller extends BlockController implements NotificationProviderInterfac
     }
 
     /**
-     * @return array [
-     *  Key: string, asset type
-     *  Value: string, the URL of the asset
-     * ]
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return JsonResponse|void
      */
-    protected function getAssetsDefinedDuringOutput()
-    {
-        $ag = ResponseAssetGroup::get();
-        $r = [];
-        foreach ($ag->getAssetsToOutput() as $position => $assets) {
-            foreach ($assets as $asset) {
-                if (is_object($asset)) {
-                    $r[$asset->getAssetType()][] = $asset->getAssetURL();
-                }
-            }
-        }
-
-        return $r;
-    }
-
     public function action_get_control()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
@@ -851,7 +948,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         if (!isset($control)) {
             $control = $entityManager->getRepository(\Concrete\Core\Entity\Express\Control\Control::class)
-                ->findOneById($this->request->query->get('control'));
+                ->findOneById($this->request->query->get('control'))
+            ;
         }
 
         if (is_object($control)) {
@@ -861,8 +959,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 $type = $control->getAttributeKey()->getAttributeType();
                 ob_start();
                 echo $type->render(new AttributeTypeSettingsContext(), $control->getAttributeKey());
-                $html = ob_get_contents();
-                ob_end_clean();
+                $html = ob_get_clean();
 
                 $obj->question = $control->getDisplayLabel();
                 $obj->isRequired = $control->isRequired();
@@ -874,15 +971,14 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 $controller = $control->getControlOptionsController();
                 ob_start();
                 echo $controller->render();
-                $html = ob_get_contents();
-                ob_end_clean();
+                $html = ob_get_clean();
 
                 $obj->showControlRequired = false;
                 $obj->showControlName = false;
                 $obj->type = 'entity_property|text';
             }
 
-            $obj->id = $control->getID();
+            $obj->id = $control->getId();
             $obj->assets = $this->getAssetsDefinedDuringOutput();
             $obj->typeContent = $html;
 
@@ -893,12 +989,110 @@ class Controller extends BlockController implements NotificationProviderInterfac
     }
 
     /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
+    protected function clearSessionControls()
+    {
+        $session = $this->app->make('session');
+        $session->remove('block.express_form.new');
+    }
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return bool|int
+     */
+    protected function areFormSubmissionsStored()
+    {
+        $config = $this->getFormSubmissionConfigValue();
+        if ($config === true) {
+            return true;
+        }
+        if ($config === 'auto') {
+            return $this->storeFormSubmission; // let the block decide.
+        }
+
+        // else config is false.
+        return false;
+    }
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return string|bool
+     */
+    protected function getFormSubmissionConfigValue()
+    {
+        return $this->app->make('config')->get('concrete.form.store_form_submissions');
+    }
+
+    /**
+     * @return void
+     */
+    protected function loadResultsFolderInformation()
+    {
+        $folder = ExpressEntryCategory::getNodeByName(self::FORM_RESULTS_CATEGORY_NAME);
+        $this->set('formResultsRootFolderNodeID', $folder->getTreeNodeID());
+    }
+
+    /**
+     * @param \Concrete\Core\Attribute\Controller $controller
+     * @param ExpressKey $key
+     * @param array<string,mixed> $post
+     *
+     * @return ExpressKey
+     */
+    protected function saveAttributeKeySettings($controller, ExpressKey $key, $post)
+    {
+        /** @var \Concrete\Core\Attribute\Type|null $settings */
+        $settings = $controller->saveKey($post);
+        if (!is_object($settings)) {
+            $settings = $controller->getAttributeKeySettings();
+        }
+
+        $settings->setAttributeKey($key);
+        $key->setAttributeKeySettings($settings);
+
+        return $key;
+    }
+
+    /**
+     * @return array<string,string[]> [
+     *                                Key: string, asset type
+     *                                Value: an array of strings, the URL of the assets
+     *                                ]
+     */
+    protected function getAssetsDefinedDuringOutput()
+    {
+        $ag = ResponseAssetGroup::get();
+        $r = [];
+        /** @var \Concrete\Core\Asset\Asset[]|mixed $assets */
+        foreach ($ag->getAssetsToOutput() as $assets) {
+            foreach ($assets as $asset) {
+                if (is_object($asset)) {
+                    $r[$asset->getAssetType()][] = $asset->getAssetURL();
+                }
+            }
+        }
+
+        return $r;
+    }
+
+    /**
      * @return \Concrete\Core\Entity\Express\Form|null
      */
     protected function getFormEntity()
     {
+        // save a few calls if we don't have an exFormID
+        if (!$this->exFormID) {
+            return null;
+        }
         $entityManager = $this->app->make(EntityManagerInterface::class);
+
         return $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
-            ->findOneById($this->exFormID);
+            ->findOneById($this->exFormID)
+        ;
     }
 }
