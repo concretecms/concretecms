@@ -1,7 +1,8 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 /** @var \Concrete\Block\Feature\Controller $controller */
 /** @var \Concrete\Core\Form\Service\Form $form */
+/** @var \Concrete\Core\Form\Service\Widget\PageSelector $form_page_selector */
 $bID = $bID ?? 0;
 $icon = $icon ?? '';
 $title = $title ?? '';
@@ -20,17 +21,17 @@ $externalLink = $externalLink ?? '';
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("title", t('Title')); ?>
+        <?php echo $form->label('title', t('Title')); ?>
 	    <div class="input-group">
 		    <?php echo $form->text('title', $title); ?>
-			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+			<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, ['style' => 'width:105px;flex-grow:0;', 'class' => 'form-select']); ?>
 		</div>
 	</div>
 
     <div class="form-group">
-        <?php echo $form->label('paragraph', t('Paragraph:'));?>
+        <?php echo $form->label('paragraph', t('Paragraph:')); ?>
         <?php
-            $editor = Core::make('editor');
+            $editor = app('editor');
             echo $editor->outputBlockEditModeEditor('paragraph', $controller->getParagraphEditMode());
         ?>
     </div>
@@ -50,7 +51,7 @@ $externalLink = $externalLink ?? '';
 
     <div data-select-contents="feature-link-type-internal" style="display: none;" class="form-group">
         <?=$form->label('internalLinkCID', t('Choose Page:'))?>
-        <?= Loader::helper('form/page_selector')->selectPage('internalLinkCID', $internalLinkCID); ?>
+        <?= $form_page_selector->selectPage('internalLinkCID', $internalLinkCID); ?>
     </div>
 
     <div data-select-contents="feature-link-type-external" style="display: none;" class="form-group">
