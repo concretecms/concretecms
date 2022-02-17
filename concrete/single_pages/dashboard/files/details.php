@@ -33,11 +33,11 @@ if ($view->controller->getAction() == 'preview_version') { ?>
 
 <section>
     <h3><?= t('Preview') ?></h3>
-    <div class="ccm-file-manager-details-preview">
-        <div class="ccm-file-manager-details-preview-thumbnail">
+    <div class="row">
+        <div class="col-lg-6 ccm-file-manager-details-preview-thumbnail">
             <?= $thumbnail ?>
         </div>
-        <div class="ccm-file-manager-details-preview-actions">
+        <div class="col-lg-6">
             <?php
             if ($view->controller->getAction() == 'preview_version') { ?>
 

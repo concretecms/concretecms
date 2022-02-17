@@ -1,21 +1,8 @@
-.ccm-file-manager-details-preview {
-  display: flex;
-  flex-flow: row wrap;
-  margin-top: -2rem;
-  margin-left: -2rem;
-  >div {
-    margin-top: 2rem;
-    margin-left: 2rem;
-  }
-  .ccm-file-manager-details-preview-thumbnail {
-    img, svg {
-      max-width: 100%;
-      height: auto;
-    }
-  }
-  .ccm-file-manager-details-preview-actions {
-    flex-grow: 1;
-    flex-basis: 200px;
+
+.ccm-file-manager-details-preview-thumbnail {
+  img, svg {
+    max-width: 100%;
+    height: auto;
   }
 }
 
