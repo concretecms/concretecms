@@ -47,7 +47,7 @@ $(document).ready(function() {
 </script>
 <div class="form-group">
     <?= $form->label('itemsToDisplay', t('Items to Show')) ?>
-    <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>
+    <input name="itemsToDisplay" type="number" class="form-control" placeholder="10" required="required" value="<?= h($rssObj->itemsToDisplay) ?>"/>
 </div>
 <div class="form-group">
     <div class="form-check">
