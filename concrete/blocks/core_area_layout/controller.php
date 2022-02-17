@@ -144,6 +144,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($arLayout instanceof CustomAreaLayout) {
                 $asset = new CssAsset();
                 $asset->setAssetURL((string) Url::to('/ccm/system/css/layout', $arLayout->getAreaLayoutID()));
+                $asset->setAssetSupportsMinification(false);
+                $asset->setAssetSupportsCombination(false);
                 $this->requireAsset($asset);
             }
         }

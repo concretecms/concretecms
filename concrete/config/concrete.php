@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.0.3a1',
     'version_installed' => '9.0.3a1',
-    'version_db' => '20220114215506', // the key of the latest database migration
+    'version_db' => '20220210120000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -266,6 +266,13 @@ return [
          * @var bool
          */
         'blocks' => true,
+
+        /*
+         * Cache Assets
+         *
+         * @var bool
+         */
+        'assets' => false,
 
         /*
          * Cache Theme CSS/JS

@@ -8,6 +8,11 @@ class CssLocalizedAsset extends CssAsset
 {
 
     /**
+     * @var bool
+     */
+    protected $assetSupportsMinification = false;
+
+    /**
      * @return string
      */
     public function getAssetType()

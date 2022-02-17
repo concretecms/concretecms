@@ -1,0 +1,39 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+
+// Navigation bar styling
+div.ccm-block-top-navigation-bar {
+
+  @import 'bootstrap/scss/navbar';
+  @import 'bootstrap/scss/forms/input-group';
+
+  .navbar {
+    .navbar-nav {
+      order: 0;
+    }
+  }
+
+  // Logo/brand
+  .navbar-brand {
+    // If this is being included in a BS4 theme we need to reset some parameters
+    float: none;
+    height: auto;
+
+    img {
+      max-height: 38px;
+    }
+  }
+
+  // Search
+  form {
+    display: flex;
+    margin-left: auto;
+    order: 1;
+
+    .btn {
+      background: none;
+      padding: $btn-padding-x-sm $btn-padding-y-sm;
+    }
+  }
+}

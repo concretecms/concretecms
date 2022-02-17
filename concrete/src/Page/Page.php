@@ -2837,7 +2837,7 @@ EOT
     {
         $cID = $this->getCollectionID();
 
-        if ($this->isAliasPage()) {
+        if ($this->isAliasPage() && !$this->isExternalLink()) {
             $this->removeThisAlias();
 
             return;

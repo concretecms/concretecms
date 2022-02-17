@@ -11,6 +11,8 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use HtmlObject\Link;
+use Concrete\Core\Html\Service\FontAwesomeIcon;
+
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -50,6 +52,10 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string|null
      */
     public $buttonColor;
+    /**
+     * @var string|null
+     */
+    public $buttonIcon;
 
     /**
      * @var string
@@ -90,6 +96,10 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var int
      */
     protected $btCacheBlockOutputLifetime = 300;
+    /**
+     * @var string|null
+     */
+    protected $icon;
 
     /**
      * {@inheritdoc}
@@ -189,25 +199,25 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function view()
     {
-        if ($this->buttonText) {
-            $button = new Link($this->getLinkURL(), $this->buttonText);
+      if ($this->buttonText || $this->getLinkURL()) {
 
-            $theme = Theme::getSiteTheme();
-            if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
-                $button->addClass('btn');
-                $styleClass = '';
-                if ($this->buttonStyle === 'outline') {
-                    $styleClass = 'outline-';
-                }
-                $colorClass = 'btn-' . $styleClass . $this->buttonColor;
-                $button->addClass($colorClass);
-                if ($this->buttonSize) {
-                    $button->addClass('btn-' . $this->buttonSize);
-                }
-            }
-            $this->set('button', $button);
+        $button = new Link($this->getLinkURL(), $this->buttonText);
+        $this->set('button', $button);
+
+        $theme = Theme::getSiteTheme();
+        if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
+          $this->set('theme', $theme);
         }
+
+        $this->set('button', $button);
+        $this->set('linkURL', $this->getLinkURL());
+        $this->set('buttonIcon', $this->icon);
+        $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
+      }
     }
+
+
+
 
     /**
      * @param array<string,mixed> $args
@@ -248,9 +258,13 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
         $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
+        /** @var SanitizeService $security */
+        $security = $this->app->make('helper/security');
+        $args['icon'] = $security->sanitizeString($args['icon']);
 
         parent::save($args);
     }
+
 
     /**
      * @return array<int|string,string|array<string,mixed>>

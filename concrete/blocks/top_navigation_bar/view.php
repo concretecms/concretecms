@@ -42,7 +42,7 @@ $c = Page::getCurrentPage();
                 </button>
                 <div class="collapse navbar-collapse" id="top-navigation-bar-<?=$bID?>">
                     <?php if ($includeSearchInput) { ?>
-                        <form class="ms-auto d-flex order-1" method="get" action="<?=$searchAction?>">
+                        <form method="get" action="<?=$searchAction?>">
                             <div class="input-group">
                                 <input class="form-control border-end-0 border" type="search" name="query" placeholder="<?=t('Search')?>" aria-label="<?=t('Search')?>">
                                 <span class="input-group-append">
@@ -53,7 +53,7 @@ $c = Page::getCurrentPage();
                             </div>
                         </form>
                     <?php } ?>
-                    <ul class="navbar-nav order-0">
+                    <ul class="navbar-nav">
                         <?php foreach ($navigation->getItems() as $item) {
                             /**
                              * @var $item \Concrete\Core\Navigation\Item\PageItem
