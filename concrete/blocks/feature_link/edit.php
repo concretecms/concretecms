@@ -6,16 +6,26 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 
 /** @var \Concrete\Core\Form\Service\Form $form */
 /** @var \Concrete\Core\Editor\EditorInterface $editor */
+/** @var \Concrete\Core\Page\Theme\Color\ColorCollection|null $themeColorCollection */
+
+/** @var string|null $title */
+/** @var string|null $linkURL */
+/** @var string|null $titleFormat */
+/** @var string|null $body */
+/** @var string[] $imageLinkPickers */
+/** @var string|null $imageLinkHandle */
+/** @var string|null $imageLinkValue */
+/** @var DestinationPicker $destinationPicker */
 
 ?>
 
 <fieldset class="mb-3">
     <legend><?=t('Text')?></legend>
     <div class="mb-3">
-        <?php echo $form->label("title", t('Title')); ?>
+        <?php echo $form->label('title', t('Title')); ?>
         <div class="input-group">
             <?php echo $form->text('title', $title ?? null); ?>
-            <?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+            <?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? 'h2', ['style' => 'width:105px;flex-grow:0;', 'class' => 'form-select']); ?>
         </div>
     </div>
     <div class="mb-3">
@@ -36,17 +46,17 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
         </div>
     </div>
     <div class="form-group">
-        <?php echo $form->label("buttonSize", t("Button Size")); ?>
-        <?php echo $form->select("buttonSize", [
-                '' => t('Regular'),
-                'lg' => t('Large'),
-                'sm' => t('Small')
-            ], $buttonSize ?? null);
+        <?php echo $form->label('buttonSize', t('Button Size')); ?>
+        <?php echo $form->select('buttonSize', [
+            '' => t('Regular'),
+            'lg' => t('Large'),
+            'sm' => t('Small'),
+        ], $buttonSize ?? null);
         ?>
     </div>
     <div class="form-group">
-        <?php echo $form->label("buttonStyle", t("Button Style")); ?>
-        <?php echo $form->select("buttonStyle", [
+        <?php echo $form->label('buttonStyle', t('Button Style')); ?>
+        <?php echo $form->select('buttonStyle', [
             '' => t('Regular'),
             'outline' => t('Outline'),
         ], $buttonStyle ?? null);

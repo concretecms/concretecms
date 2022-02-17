@@ -2,39 +2,93 @@
 
 namespace Concrete\Block\FeatureLink;
 
-use Concrete\Core\Application\Service\FileManager;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Permission\Checker;
 use HtmlObject\Link;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = ['form'];
-
+    /**
+     * @var int|null
+     */
     public $buttonInternalLinkCID;
+
+    /**
+     * @var string|null
+     */
     public $buttonExternalLink;
+
+    /**
+     * @var int|null
+     */
     public $buttonFileLinkID;
+
+    /**
+     * @var string|null
+     */
     public $buttonText;
+
+    /**
+     * @var string|null
+     */
     public $buttonSize;
+
+    /**
+     * @var string|null
+     */
     public $buttonStyle;
+
+    /**
+     * @var string|null
+     */
     public $buttonColor;
 
+    /**
+     * @var string
+     */
     protected $btDefaultSet = 'basic';
+
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 640;
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 500;
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btFeatureLink';
-    protected $btCacheBlockRecord = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutput = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputOnPost = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputForRegisteredUsers = true;
+
+    /**
+     * @var int
+     */
     protected $btCacheBlockOutputLifetime = 300;
 
     /**
@@ -54,19 +108,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @return string[]
-     */
-    protected function getImageLinkPickers()
-    {
-        return [
-            'none',
-            'page',
-            'file',
-            'external_url' => ['maxlength' => 255],
-        ];
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getRequiredFeatures(): array
@@ -76,19 +117,29 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function add()
     {
         $this->set('titleFormat', 'h2');
         $this->edit();
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function edit()
     {
         $theme = Theme::getSiteTheme();
         $this->set('editor', $this->app->make('editor'));
         $this->set('destinationPicker', $this->app->make(DestinationPicker::class));
         $this->set('imageLinkPickers', $this->getImageLinkPickers());
-        $this->set('themeColorCollection', $theme->getColorCollection());
+        $this->set('themeColorCollection', is_object($theme) ? $theme->getColorCollection() : null);
         if ($this->buttonInternalLinkCID) {
             $this->set('imageLinkHandle', 'page');
             $this->set('imageLinkValue', $this->buttonInternalLinkCID);
@@ -123,6 +174,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $linkUrl = $linkToC->getCollectionLink();
             }
         } elseif (!empty($this->buttonFileLinkID)) {
+            /** @var \Concrete\Core\Entity\File\Version $fileLinkObject */
             $fileLinkObject = File::getByID($this->buttonFileLinkID);
             if (is_object($fileLinkObject)) {
                 $linkUrl = $fileLinkObject->getRelativePath();
@@ -132,6 +184,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $linkUrl;
     }
 
+    /**
+     * @return void
+     */
     public function view()
     {
         if ($this->buttonText) {
@@ -141,7 +196,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
                 $button->addClass('btn');
                 $styleClass = '';
-                if ($this->buttonStyle == 'outline') {
+                if ($this->buttonStyle === 'outline') {
                     $styleClass = 'outline-';
                 }
                 $colorClass = 'btn-' . $styleClass . $this->buttonColor;
@@ -154,9 +209,41 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
     }
 
+    /**
+     * @param array<string,mixed> $args
+     *
+     * @version 9.0.3a1 Method added to feature_link block
+     *
+     * @return ErrorList
+     */
+    public function validate($args)
+    {
+        /** @var ErrorList $e */
+        $e = parent::validate($args);
+
+        if (empty($args['body']) && empty($args['title']) && empty($args['buttonText'])) {
+            $e->add(t('You must enter a title, body or button.'));
+        }
+
+        return $e;
+    }
+
+    /**
+     * @param array<string,mixed> $args
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function save($args)
     {
-        list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+        [$imageLinkType, $imageLinkValue] = $this->app->make(DestinationPicker::class)->decode(
+            'imageLink',
+            $this->getImageLinkPickers(),
+            null,
+            null,
+            $args
+        );
 
         $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
@@ -165,4 +252,16 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($args);
     }
 
+    /**
+     * @return array<int|string,string|array<string,mixed>>
+     */
+    protected function getImageLinkPickers(): array
+    {
+        return [
+            'none',
+            'page',
+            'file',
+            'external_url' => ['maxlength' => 255],
+        ];
+    }
 }

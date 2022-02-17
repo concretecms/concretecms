@@ -1,4 +1,9 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var string|null $title */
+/** @var string $titleFormat */
+/** @var string|null $body */
+/** @var HtmlObject\Link|null $button */
+?>
 
 
 <div class="ccm-block-feature-link">
