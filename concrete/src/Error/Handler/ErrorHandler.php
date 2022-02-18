@@ -148,7 +148,7 @@ class ErrorHandler extends PrettyPageHandler
             }
 
             foreach ((array) $keys as $key) {
-                //$this->hideSuperglobalKey($superGlobal, $key);
+                $this->hideSuperglobalKey($superGlobal, $key);
             }
         }
     }
