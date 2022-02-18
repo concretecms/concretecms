@@ -68,13 +68,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         return t('Page List');
     }
 
-    public function getJavaScriptStrings()
-    {
-        return [
-            'feed-name' => t('Please give your RSS Feed a name.'),
-        ];
-    }
-
     public function action_preview_pane()
     {
         $bt = BlockType::getByHandle('page_list');

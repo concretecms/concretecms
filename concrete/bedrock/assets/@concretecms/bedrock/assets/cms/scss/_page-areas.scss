@@ -379,6 +379,19 @@ ul.ccm-edit-mode-inline-commands:hover {
     margin: 0 !important;
     padding: 0;
     position: static;
+
+    .dropdown-item:first-child {
+      border-top-left-radius: $dropdown-border-radius;
+      border-top-right-radius: $dropdown-border-radius;
+    }
+
+    .dropdown-item:last-child {
+      border-bottom-left-radius: $dropdown-border-radius;
+      border-bottom-right-radius: $dropdown-border-radius;
+    }
+
+
+
   }
 
 }
@@ -428,7 +441,7 @@ div.ccm-area[data-total-blocks='0'] {
   div.ccm-area-drag-area {
     color: #bbb;
     padding: 24px;
-    text-align: center;
+    text-align: center !important; /* https://github.com/concrete5/concrete5/issues/10249 */
     text-indent: 0;
   }
 }

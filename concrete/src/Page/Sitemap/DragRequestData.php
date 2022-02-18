@@ -89,6 +89,11 @@ class DragRequestData
     /**
      * @var bool|null
      */
+    protected $isSomeOriginalPageAnExternalLink;
+
+    /**
+     * @var bool|null
+     */
     protected $isSaveOldPagePath;
 
     /**
@@ -294,6 +299,25 @@ class DragRequestData
         return $this->isSomeOriginalPageAnAlias;
     }
 
+    /**
+     * @return bool
+     */
+    protected function isSomeOriginalPageAnExternalLink()
+    {
+        if ($this->isSomeOriginalPageAnExternalLink === null) {
+            $isSomeOriginalPageAnExternalLink = false;
+            foreach ($this->getOriginalPages() as $originalPage) {
+                if ($originalPage->isExternalLink()) {
+                    $isSomeOriginalPageAnExternalLink = true;
+                    break;
+                }
+            }
+            $this->isSomeOriginalPageAnExternalLink = $isSomeOriginalPageAnExternalLink;
+        }
+
+        return $this->isSomeOriginalPageAnExternalLink;
+    }
+
     protected function initializeDragMode()
     {
         $this->dragMode = $this->request->request->get('dragMode', $this->request->query->get('dragMode', ''));
@@ -416,6 +440,9 @@ class DragRequestData
     {
         if ($this->isSomeOriginalPageAnAlias()) {
             return t('It\'s not possible to create aliases of aliases.');
+        }
+        if ($this->isSomeOriginalPageAnExternalLink()) {
+            return t('It\'s not possible to create aliases of external links. Just create a new external link in the new location.');
         }
         $destinationPageChecker = new Checker($this->getDestinationPage());
         foreach ($this->getOriginalPages() as $originalPage) {
