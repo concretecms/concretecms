@@ -32,7 +32,7 @@ class GroupSetField extends AbstractField
         foreach ($gsl->get() as $gs) {
             $groupsets[$gs->getGroupSetID()] = $gs->getGroupSetDisplayName();
         }
-        $html = $form->select('gsID', $groupsets);
+        $html = $form->select('gsID', $groupsets, $this->getData('gsID'));
 
         return $html;
     }

@@ -25,11 +25,6 @@ class Controller extends BlockController
         return t('External Form');
     }
 
-    public function getJavaScriptStrings()
-    {
-        return ['form-required' => t('You must select a form.')];
-    }
-
     public function getFilename()
     {
         return $this->filename;

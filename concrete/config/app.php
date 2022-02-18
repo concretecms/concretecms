@@ -391,7 +391,7 @@ return [
             [
                 'javascript',
                 'js/jquery.js',
-                ['position' => Asset::ASSET_POSITION_HEADER],
+                ['position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false],
             ],
         ],
 
@@ -399,6 +399,7 @@ return [
             [
                 'javascript',
                 'js/vue.js',
+                ['minify' => false, 'combine' => false]
             ],
         ],
 
@@ -408,13 +409,15 @@ return [
                 'js/bootstrap.js',
                 [
                     'position' => Asset::ASSET_POSITION_FOOTER,
+                    'minify' => false,
+                    'combine' => false,
                     'version' => '5.0.0'
                 ]
             ]
         ],
 
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'combine' => false, 'version' => '2.24.0']],
             ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
 
@@ -423,17 +426,18 @@ return [
             [
                 'javascript',
                 'js/ckeditor/ckeditor.js',
+                ['minify' => false, 'combine' => false]
             ],
         ],
 
         // These are our CKEditor extensions, including custom plugins, and the jQuery adapter.
         'ckeditor/concrete' => [
-            ['javascript', 'js/ckeditor/concrete.js'],
+            ['javascript', 'js/ckeditor/concrete.js', ['minify' => false, 'combine' => false]],
             ['css', 'css/ckeditor/concrete.css'],
         ],
 
         'fullcalendar' => [
-            ['javascript', 'js/fullcalendar.js'],
+            ['javascript', 'js/fullcalendar.js', ['minify' => false, 'combine' => false]],
             ['css', 'css/fullcalendar.css'],
         ],
 
@@ -441,6 +445,7 @@ return [
             [
                 'css',
                 'css/fontawesome/all.css',
+                ['minify' => false, 'combine' => false]
             ],
         ],
 
@@ -454,94 +459,99 @@ return [
 
         // Foundational Assets
         'core/cms' => [
-            ['javascript', 'js/cms.js'],
+            ['javascript', 'js/cms.js', ['minify' => false, 'combine' => false]],
             ['javascript-localized', '/ccm/assets/localization/core/js'],
-            ['css', 'css/cms.css'],
+            ['css', 'css/cms.css', ['minify' => false, 'combine' => false]],
         ],
 
         // Fallback/minimal assets for accessory features
+        'feature/accordions/frontend' => [
+            ['javascript', 'js/features/accordions/frontend.js', ['minify' => false]],
+            ['css', 'css/features/accordions/frontend.css', ['minify' => false]],
+        ],
+
         'feature/account/frontend' => [
-            ['javascript', 'js/features/account/frontend.js'],
-            ['css', 'css/features/account/frontend.css'],
+            ['javascript', 'js/features/account/frontend.js', ['minify' => false]],
+            ['css', 'css/features/account/frontend.css', ['minify' => false]],
         ],
 
         'feature/profile/frontend' => [
-            ['css', 'css/features/profile/frontend.css'],
+            ['css', 'css/features/profile/frontend.css', ['minify' => false]],
         ],
 
         'feature/desktop/frontend' => [
-            ['javascript', 'js/features/desktop/frontend.js'],
-            ['css', 'css/features/desktop/frontend.css'],
+            ['javascript', 'js/features/desktop/frontend.js', ['minify' => false]],
+            ['css', 'css/features/desktop/frontend.css', ['minify' => false]],
         ],
 
         'feature/boards/frontend' => [
-            ['javascript', 'js/features/boards/frontend.js'],
-            ['css', 'css/features/boards/frontend.css'],
+            ['javascript', 'js/features/boards/frontend.js', ['minify' => false]],
+            ['css', 'css/features/boards/frontend.css', ['minify' => false]],
         ],
 
         'feature/calendar/frontend' => [
-            ['javascript', 'js/features/calendar/frontend.js'],
-            ['css', 'css/features/calendar/frontend.css'],
+            ['javascript', 'js/features/calendar/frontend.js', ['minify' => false]],
+            ['css', 'css/features/calendar/frontend.css', ['minify' => false]],
         ],
 
         'feature/conversations/frontend' => [
-            ['javascript', 'js/features/conversations/frontend.js'],
-            ['css', 'css/features/conversations/frontend.css'],
+            ['javascript', 'js/features/conversations/frontend.js', ['minify' => false]],
+            ['css', 'css/features/conversations/frontend.css', ['minify' => false]],
         ],
         'ace' => [
-            ['javascript', 'js/ace/ace.js'],
+            ['javascript', 'js/ace/ace.js', ['minify' => false, 'combine' => false]],
         ],
         'feature/documents/frontend' => [
-            ['javascript', 'js/features/documents/frontend.js'],
-            ['css', 'css/features/documents/frontend.css'],
+            ['javascript', 'js/features/documents/frontend.js', ['minify' => false]],
+            ['css', 'css/features/documents/frontend.css', ['minify' => false]],
         ],
 
         'feature/testimonials/frontend' => [
-            ['css', 'css/features/testimonials/frontend.css'],
+            ['css', 'css/features/testimonials/frontend.css', ['minify' => false]],
         ],
 
         'feature/faq/frontend' => [
-            ['css', 'css/features/faq/frontend.css'],
+            ['css', 'css/features/faq/frontend.css', ['minify' => false]],
         ],
 
         'feature/basics/frontend' => [
-            ['css', 'css/features/basics/frontend.css'],
+            ['css', 'css/features/basics/frontend.css', ['minify' => false]],
         ],
 
         'feature/navigation/frontend' => [
-            ['javascript', 'js/features/navigation/frontend.js'],
-            ['css', 'css/features/navigation/frontend.css'],
+            ['javascript', 'js/features/navigation/frontend.js', ['minify' => false]],
+            ['css', 'css/features/navigation/frontend.css', ['minify' => false]],
         ],
 
         'feature/imagery/frontend' => [
-            ['javascript', 'js/features/imagery/frontend.js'],
-            ['css', 'css/features/imagery/frontend.css'],
+            ['javascript', 'js/features/imagery/frontend.js', ['minify' => false]],
+            ['css', 'css/features/imagery/frontend.css', ['minify' => false]],
         ],
 
         'feature/express/frontend' => [
-            ['javascript', 'js/features/express/frontend.js'],
-            ['css', 'css/features/express/frontend.css'],
+            ['javascript', 'js/features/express/frontend.js', ['minify' => false]],
+            ['css', 'css/features/express/frontend.css', ['minify' => false]],
         ],
 
         'feature/search/frontend' => [
-            ['css', 'css/features/search/frontend.css'],
+            ['css', 'css/features/search/frontend.css', ['minify' => false]],
         ],
 
         'feature/social/frontend' => [
-            ['css', 'css/features/social/frontend.css'],
+            ['css', 'css/features/social/frontend.css', ['minify' => false]],
         ],
 
         'feature/video/frontend' => [
-            ['css', 'css/features/video/frontend.css'],
+            ['css', 'css/features/video/frontend.css', ['minify' => false]],
         ],
 
         'feature/taxonomy/frontend' => [
-            ['css', 'css/features/taxonomy/frontend.css'],
+            ['css', 'css/features/taxonomy/frontend.css', ['minify' => false]],
         ],
 
         'feature/maps/frontend' => [
-            ['javascript', 'js/features/maps/frontend.js'],
-            ['css', 'css/features/maps/frontend.css'],
+            ['javascript', 'js/features/maps/frontend.js', ['minify' => false]],
+            ['css', 'css/features/maps/frontend.css', ['minify' => false]],
         ],
 
         'tui-image-editor' => [
@@ -552,6 +562,7 @@ return [
             [
                 'javascript',
                 'js/tui-image-editor.js',
+                ['minify' => false, 'combine' => false]
             ],
         ],
         'core/translator' => [
@@ -643,6 +654,12 @@ return [
         ],
 
         // Fallback/minimal assets groups
+        'feature/accordions/frontend' => [
+            [
+                ['javascript', 'feature/accordions/frontend'],
+                ['css', 'feature/accordions/frontend'],
+            ],
+        ],
 
         'feature/account/frontend' => [
             [

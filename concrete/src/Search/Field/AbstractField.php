@@ -112,6 +112,8 @@ abstract class AbstractField implements FieldInterface
             }
             $this->isLoaded = true;
         }
+
+        return $this;
     }
 
     public function loadDataFromImport(\SimpleXMLElement $element)

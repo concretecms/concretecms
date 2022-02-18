@@ -16,7 +16,7 @@ foreach ($filenames as $ffilename) {
 ?>
 <div class="form-group">
     <?= $form->label('cstFilename', t('External Form to Include')) ?>
-    <?= $form->select('filename', $optionValues, $filename) ?>
+    <?= $form->select('filename', $optionValues, $filename, ['required' => 'required']) ?>
 </div>
 <div class="help-block">
     <p><?= t('This is a list of forms found in your external forms directory:') ?><br />

@@ -15,7 +15,7 @@ $sizing = $sizing ?? null;
 $videoID = $videoID ?? '';
 $bID = $bID ?? 0; // This should always be set but just incase
 $c = Page::getCurrentPage();
-if (isset($vWidth) && isset($vHeight)) {
+if (!empty($vWidth) && !empty($vHeight)) {
     $sizeargs = 'width="' . $vWidth . '" height="' . $vHeight . '"';
     $sizeDisabled = 'style="width:' . $vWidth . 'px; height:' . $vHeight . 'px"';
     $responsiveClass = '';

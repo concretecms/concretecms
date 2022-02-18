@@ -39,11 +39,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         return t('File');
     }
 
-    public function getJavaScriptStrings()
-    {
-        return ['file-required' => t('You must select a file.')];
-    }
-
     public function getRequiredFeatures(): array
     {
         return [
