@@ -648,8 +648,8 @@ return [
         'core/translator' => [
             [
                 ['css', 'core/translator'],
-                ['javascript-localized', 'core/translator'],
                 ['javascript', 'core/translator'],
+                ['javascript-localized', 'core/translator'],
             ],
         ],
 
