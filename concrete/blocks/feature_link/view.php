@@ -3,7 +3,11 @@
 /** @var string $titleFormat */
 /** @var string|null $body */
 /** @var HtmlObject\Link|null $button */
-
+/** @var string|null $buttonStyle */
+/** @var string|null $buttonColor */
+/** @var string|null $buttonSize */
+/** @var string|null $buttonIcon */
+/** @var string|null $iconTag */
 /**
  * Building the button
  */
