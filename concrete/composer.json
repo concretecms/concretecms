@@ -109,7 +109,8 @@
     "laminas/laminas-cache": "^2.13",
     "laminas/laminas-i18n": "^2.11",
     "laminas/laminas-cache-storage-adapter-memory": "^1.0",
-    "tubalmartin/cssmin": "^4.1"
+    "tubalmartin/cssmin": "^4.1",
+    "ssddanbrown/htmldiff": "^1.0"
   },
   "replace": {
     "laminas/laminas-cache-storage-adapter-apc": "*",
