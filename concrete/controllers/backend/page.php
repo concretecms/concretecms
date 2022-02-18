@@ -78,7 +78,7 @@ class Page extends Controller
                 $redirectUrl = $redirectUrl->setQuery($query);
                 break;
             case 'add-block':
-                $this->app->make(ResponseCookieJar::class)->addCookie('ccmLoadAddBlockWindow', '1');
+                $this->app->make(ResponseCookieJar::class)->addCookie('ccmLoadAddBlockWindow', '1', 0, $this->app->make('app_relative_path') . '/');
                 break;
         }
 

@@ -113,7 +113,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $logger->addEmergency($e->getMessage());
         }
 
-        if ($form) {
+        if ($form && $entity) {
             $express = \Core::make('express');
             $controller = $express->getEntityController($entity);
             $factory = new ContextFactory($controller);

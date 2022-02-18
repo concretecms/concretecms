@@ -8,6 +8,11 @@ class Events extends Facade
         return 'director';
     }
 
+    /**
+     * @deprecated
+     * @param $eventName
+     * @param null $event
+     */
     public static function fire($eventName, $event = null)
     {
         $app = Facade::getFacadeApplication();
