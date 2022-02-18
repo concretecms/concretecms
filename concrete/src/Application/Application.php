@@ -165,7 +165,7 @@ class Application extends Container
     public function isInstalled()
     {
         if ($this->installed === null) {
-            if (!$this->isShared('config')) {
+            if (!$this->isAlias('config')) {
                 throw new Exception('Attempting to check install status before application initialization.');
             }
 
