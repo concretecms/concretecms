@@ -3,12 +3,12 @@ ports:
     onOpen: open-preview
 
 tasks:
-  - before:
+  - name: Development Environment
+    init: |
+      composer install
       cd build/
       npm i
-      npm run prod
-  - init: composer update
-    command: php -S 0.0.0.0:8000 -t public/
+    command: php -S 0.0.0.0:8000 -t /
 
 vscode:
   extensions:
