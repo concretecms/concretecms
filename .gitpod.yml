@@ -1,14 +1,26 @@
+image:
+  file: .gitpod/Dockerfile
+  context: .gitpod
 ports:
-  - port: 8000
-    onOpen: open-preview
-
+  - port: 8080
+  - port: 3306
+    onOpen: ignore
 tasks:
-  - name: Development Environment
-    init: |
-      composer install
-    command: php -S 0.0.0.0:8000 -t .
-
-vscode:
-  extensions:
-    - felixfbecker.php-debug
-    - bmewburn.vscode-intelephense-client
+  - name: Apache
+    command: |
+      apachectl start
+      multitail /var/log/apache2/access.log -I /var/log/apache2/error.log
+  - name: Terminal
+    command: |
+      clear
+      $GITPOD_REPO_ROOT/.gitpod/bootstrap.sh
+      echo ""
+      echo "Commands you can try:"
+      echo " * apachectl stop"
+      echo " * apachectl start"
+      echo " * gp open /var/log/apache2/access.log"
+      echo " * gp open /var/log/apache2/error.log"
+      echo " * gp preview $(gp url 8080)"
+      echo " * sh .gitpod/mysql-restart.sh"
+      echo " * joomla site:delete ${APACHE_DOCROOT_IN_REPO} --www=$GITPOD_REPO_ROOT --mysql-login=root:;
+      echo " * $GITPOD_REPO_ROOT/.gitpod/bootstrap.sh
