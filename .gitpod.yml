@@ -6,8 +6,6 @@ tasks:
   - name: Development Environment
     init: |
       composer install
-      cd build/
-      npm i
     command: php -S 0.0.0.0:8000 -t /
 
 vscode:
