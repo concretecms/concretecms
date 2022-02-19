@@ -3,24 +3,19 @@ image:
   context: .gitpod
 ports:
   - port: 8080
-  - port: 3306
-    onOpen: ignore
+    onOpen: open-preview
 tasks:
-  - name: Apache
-    command: |
-      apachectl start
-      multitail /var/log/apache2/access.log -I /var/log/apache2/error.log
   - name: Terminal
-    command: |
-      clear
-      $GITPOD_REPO_ROOT/.gitpod/bootstrap.sh
-      echo ""
-      echo "Commands you can try:"
-      echo " * apachectl stop"
-      echo " * apachectl start"
-      echo " * gp open /var/log/apache2/access.log"
-      echo " * gp open /var/log/apache2/error.log"
-      echo " * gp preview $(gp url 8080)"
-      echo " * sh .gitpod/mysql-restart.sh"
-      echo " * joomla site:delete ${APACHE_DOCROOT_IN_REPO} --www=$GITPOD_REPO_ROOT --mysql-login=root:;
-      echo " * $GITPOD_REPO_ROOT/.gitpod/bootstrap.sh
+    command: >
+      echo "";
+      echo "Commands you can try:";
+      echo " * nginx";
+      echo " * nginx -s stop";
+      echo " * nginx -s reload";
+      echo " * gp open /etc/nginx/nginx.conf";
+      echo " * gp open /var/log/nginx/access.log";
+      echo " * gp open /var/log/nginx/error.log";
+  - name: Nginx
+    command: >
+      nginx &&
+      multitail /var/log/nginx/access.log -I /var/log/nginx/error.log
