@@ -1,0 +1,16 @@
+ports:
+  - port: 8000
+    onOpen: open-preview
+
+tasks:
+  - before:
+      cd build/
+      npm i
+      npm run prod
+  - init: composer update
+    command: php -S 0.0.0.0:8000 -t public/
+
+vscode:
+  extensions:
+    - felixfbecker.php-debug
+    - bmewburn.vscode-intelephense-client
