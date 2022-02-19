@@ -6,7 +6,7 @@ tasks:
   - name: Development Environment
     init: |
       composer install
-    command: php -S 0.0.0.0:8000 -t /
+    command: php -S 0.0.0.0:8000 -t .
 
 vscode:
   extensions:
