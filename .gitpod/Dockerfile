@@ -20,7 +20,14 @@ RUN \
         done \
     done;
 
+# Configure nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Set Public Path
+ENV NGINX_DOCROOT_IN_REPO=""
+
 # Fix file permissions
+RUN chown -R gitpod:gitpod /var/www/
 RUN chown -R gitpod:gitpod /etc/nginx/
 RUN chown -R gitpod:gitpod /etc/mysql/
 RUN chown -R gitpod:gitpod /etc/php/7.4
