@@ -1,0 +1,20 @@
+Installs the hot-reload system.
+Run this command one-time prior to running any other hot-reload command.
+The files affected by this command are: package.json, webpack.mix.js and yarn.lock
+
+Notes:
+When this command is run, the actions below are completed if they have not already been completed.
+If any of the first two actions below have already been completed, you will be notified that that action
+was skipped. The third action is always taken.
+1. Install the latest versions of the following node packages as devDependencies (via yarn):
+  browser-sync
+  browser-sync-webpack-plugin
+2. Append .gp/snippets/webpack/browser-sync.snippet to webpack.mix.js
+3. Run Laravel Mix 
+
+Usage:
+  hot-reload setup [FLAG]
+
+Flags:
+  -h, --help       show help for this command
+

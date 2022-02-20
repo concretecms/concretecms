@@ -1,0 +1,20 @@
+Command line interface for opening the preview browser
+Usage:
+  op [-<port number> | -h | --help | path]
+
+Notes:
+All arguments are optional. Paths cannot contain a leading slash.
+The -<port number> option must be a dash followed by a valid port number.
+If -<port number> is omitted then the port for the default server will be used.
+The -h or --help option will show this help message
+If the path is omitted then the web root will be opened in the preview browser.
+If the path is given then that path segment will be opened in the preview browser.
+
+Example 1: Open the web root using the default server port.
+op
+Example 2: Open the web root on port 3005.
+op -3005
+Example 3: Open /answers/2 (relative to the web root) on the default server port
+op answers/2
+Example 4: Open /foo (relative to the web root) on port 8001
+op -8001 answers/3

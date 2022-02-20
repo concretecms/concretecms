@@ -1,0 +1,12 @@
+hot-reload has the following dependencies:
+  Project must be built using https://github.com/apolopena/gitpod-laravel-starter
+  hot-reload 'setup' command requires yarn
+
+hot-reload 'setup' command installs the latest versions of the following node packages as devDependencies:
+  browser-sync
+  browser-sync-webpack-plugin
+
+Notes:
+  The hot-reload 'setup' command will append your webpack.mix.js file with a hot-reload code snippet.
+  The code in the hot-reload snippet can be altered (add browser-sync options, etc..) but do not
+  remove or alter the comments that surround the snippet as they are a hook that this system uses.

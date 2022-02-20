@@ -1,0 +1,11 @@
+Refreshes the hot reload preview browser on port 3005.
+This command should only be used when the hot-reload server is running. The hot-reload server is running 
+whenever a successful hot-reload `start` command is given or whenever Laravel Mix Watch is started 
+(and running) via yarn.
+
+Usage:
+  hot-reload refresh [FLAG]
+
+Flags:
+  -h, --help       show help for this command
+

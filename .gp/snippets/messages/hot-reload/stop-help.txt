@@ -1,0 +1,13 @@
+Stops Laravel Mix Watch, which then stops the browser-sync hot reload webpack server on port 3005.
+This command should only be called after the hot-reload 'setup' and 'start' commands have been called.
+
+Notes:
+This command can be called from any terminal. The terminal that is running Laravel Mix Watch
+(invoked by yarn) will be sent a ctrl+c signal.
+The hot-reload 'stop' command will not close the preview browser.
+
+Usage:
+  hot-reload stop [FLAG]
+
+Flags:
+  -h, --help       show help for this command

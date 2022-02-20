@@ -1,0 +1,3 @@
+\e[38;5;208mYou have installed phpMyAdmin with default user account passwords.
+This is a security concern and be easily addressed using the alias:\e[0m \e[38;2;222;173;0mupdate-pma-pws\e[0m
+\e[38;5;208mFor more information on using update_pma_pws, run the alias:\e[0m \e[38;2;222;173;0mupdate-pma-pws-help\e[0m

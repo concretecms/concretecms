@@ -1,0 +1,6 @@
+The following steps are required to successfully run the `update-phpmyadmin-pws` command:
+  1. Create a file in .gp named `.starter.env`. You can run this command from the project root: `cp .gp/.starter.env.example .gp/.starter.env`
+  2. Or Copy and paste all the keys containing `PHPMYADMIN` from `.gp/.starter.env.example` to your blank `.gp/.starter.env` file
+  3. In `.gp/.starter.env`, set your password values for the `PHPMYADMIN` keys and save the file
+  4. In a terminal run the alias: `update-phpmyadmin-pws`
+This information can also be found at https://github.com/apolopena/gitpod-laravel-starter/blob/main/README.md#securing-phpmyadmin

@@ -1,21 +1,41 @@
 image:
-  file: .gitpod/Dockerfile
-  context: .gitpod
+  file: .gitpod.Dockerfile
+
 ports:
-  - port: 8080
-    onOpen: open-preview
+  - port: 3005
+    onOpen: ignore
+  - port: 3306
+    onOpen: ignore
+  - port: 8000
+    onOpen: ignore
+  - port: 8001
+    onOpen: ignore
+  - port: 8002
+    onOpen: ignore
+  - port: 9000
+    onOpen: ignore
+    visibility: private
+  - port: 9009
+    onOpen: ignore
+    visibility: private
+
 tasks:
-  - name: Terminal
-    command: >
-      echo "";
-      echo "Commands you can try:";
-      echo " * nginx";
-      echo " * nginx -s stop";
-      echo " * nginx -s reload";
-      echo " * gp open /etc/nginx/nginx.conf";
-      echo " * gp open /var/log/nginx/access.log";
-      echo " * gp open /var/log/nginx/error.log";
-  - name: Nginx
-    command: >
-      nginx &&
-      multitail /var/log/nginx/access.log -I /var/log/nginx/error.log
+  - before: bash .gp/bash/before-tasks.sh
+    init: |
+      bash .gp/bash/init-gitpod.sh
+      bash .gp/bash/init-optional-scaffolding.sh
+      bash .gp/bash/init-project.sh
+      bash .gp/bash/init-complete.sh
+    name: Main Terminal
+  - openMode: split-right
+    command: |
+      bash .gp/bash/start-server.sh
+    name: Web Server
+  - openMode: split-right
+    command: |
+      if bash .gp/bash/open-preview.sh; then exit; else bash .gp/bash/patch-preview.sh; fi
+    name: Extra Terminal
+
+vscode:
+  extensions:
+    - felixfbecker.php-debug
