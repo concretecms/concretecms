@@ -6,6 +6,7 @@ use Concrete\Core\Entity\Package;
 use Concrete\Core\Logging\Channels;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Punic\Unit;
 
 /**
  * Represent an IP Access Control Category.
@@ -20,6 +21,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IpAccessControlCategory
 {
+    /**
+     * The units of the time limit.
+     * Array keys are the number of seconds, array values are the Unicode CLDR names of these numbers of seconds.
+     */
+    public const TIMEWINDOW_UNITS = [
+        1 => 'duration/second',
+        60 => 'duration/minute',
+        3600 => 'duration/hour',
+        86400 => 'duration/day',
+        604800 => 'duration/week',
+    ];
+
     /**
      * The IP Access Control Category identifier.
      *
@@ -394,5 +407,53 @@ class IpAccessControlCategory
     public function getRanges()
     {
         return $this->ranges;
+    }
+
+    /**
+     * Get the representation of a time window expressed in seconds.
+     *
+     * @return array index 0 is the number of the new units, index 1 is the Unicode CLSR name of the number of seconds in the new units (one of the keys returned by getTimeWindowUnits). If the time window is empty, you'll get NULL
+     *
+     * @example splitTimeWindowUnits(300) returns [5, 'duration/minute']
+     */
+    public static function splitTimeWindow(?int $timeWindow): ?array
+    {
+        if ($timeWindow === null || $timeWindow <= 0) {
+            return null;
+        }
+        $seconds = array_map('intval', array_keys(static::TIMEWINDOW_UNITS));
+        rsort($seconds, SORT_NUMERIC);
+        $foundSeconds = 1;
+        foreach ($seconds as $s) {
+            if (($timeWindow % $s) === 0) {
+                $foundSeconds = $s;
+                break;
+            }
+        }
+
+        return [
+            (int) ($timeWindow / $foundSeconds),
+            static::TIMEWINDOW_UNITS[$foundSeconds],
+        ];
+    }
+
+    public function describeTimeWindow(): string
+    {
+        $splittedTimeWindow = static::splitTimeWindow($this->getTimeWindow());
+        if ($splittedTimeWindow === null) {
+            return t2(
+                /* i18n: %s is a number */
+                '%s event', '%s events',
+                $this->getMaxEvents()
+            );
+        }
+        [$value, $unit] = $splittedTimeWindow;
+
+        return t2(
+            /* i18n: %1$s is a number; %2$s is a duration (like for example 2 minutes) */
+            '%1$s event every %2$s', '%1$s events every %2$s',
+            $this->getMaxEvents(),
+            Unit::format($value, $unit, 'long')
+        );
     }
 }

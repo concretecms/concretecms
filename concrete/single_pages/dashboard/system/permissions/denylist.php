@@ -21,6 +21,7 @@ else {
                 <th><?= t('Name') ?></th>
                 <th><?= t('Enabled') ?></th>
                 <th><?= t('Package') ?></th>
+                <th><?= t('Limit') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -39,6 +40,7 @@ else {
                     }
                     ?>
                 </td>
+                <td><?= h($category->describeTimeWindow(true)) ?></td>
             </tr>
             <?php
         }
