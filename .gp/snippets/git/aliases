@@ -1,2 +1,0 @@
-aliases = config --get-regexp '^alias\\.'
-a = config --get-regexp '^alias\\.'
