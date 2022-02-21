@@ -168,9 +168,8 @@ class Legacy extends DashboardPageController
         //load requested survey response
         if ($this->request->get('qsid')) {
             $questionSet = intval(preg_replace('/[^[:alnum:]]/', '', $this->request->get('qsid')));
-
             //get Survey Questions
-            $questionsRS = MiniSurvey::loadQuestions($questionSet);
+            $questionsRS = $tempMiniSurvey->loadQuestions($questionSet);
             $questions = [];
             while ($question = $questionsRS->fetch()) {
                 $questions[$question['msqID']] = $question;
@@ -183,6 +182,7 @@ class Legacy extends DashboardPageController
             $pageBaseSurvey = $pageBase . '?qsid=' . $questionSet;
             $paginator = Loader::helper('pagination');
             $sortBy = $this->request->get('sortBy');
+            $this->set('sortBy', $sortBy);
             $paginator->init(
                 (int) $this->request->get('page'), $answerSetCount, $pageBaseSurvey . '&page=%pageNum%&sortBy=' . $sortBy,
                 $this->pageSize

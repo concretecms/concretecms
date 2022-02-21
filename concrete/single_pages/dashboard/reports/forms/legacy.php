@@ -187,7 +187,7 @@ EOT
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <?php if ($_REQUEST['sortBy'] == 'chrono') { ?>
+                    <?php if ($sortBy == 'chrono') { ?>
                     <th class="header headerSortDown">
                         <a href="<?php echo $text->entities($urlhelper->unsetVariable('sortBy')) ?>">
                             <?php } else { ?>
