@@ -231,7 +231,7 @@ class IpAccessControlService implements LoggerAwareInterface
             $dateTimeLimit = new DateTime('-' . $this->getCategory()->getTimeWindow() . ' seconds');
             $qb
                 ->andWhere($x->gt('e.dateTime', ':dateTimeLimit'))
-                ->setParameter('dateTimeLimit', $dateTimeLimit)
+                ->setParameter('dateTimeLimit', $dateTimeLimit->format($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
             ;
         }
         if ($this->getCategory()->isSiteSpecific()) {
@@ -400,7 +400,7 @@ class IpAccessControlService implements LoggerAwareInterface
             $dateTimeLimit = new DateTime('-' . ((int) $minAge) . ' seconds');
             $qb
                 ->andWhere($x->lte('e.dateTime', ':dateTimeLimit'))
-                ->setParameter('dateTimeLimit', $dateTimeLimit)
+                ->setParameter('dateTimeLimit', $dateTimeLimit->format($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
             ;
         }
 
@@ -429,7 +429,7 @@ class IpAccessControlService implements LoggerAwareInterface
             $dateTimeLimit = new DateTime('now');
             $qb
                 ->andWhere($x->lte('r.expiration', ':dateTimeLimit'))
-                ->setParameter('dateTimeLimit', $dateTimeLimit)
+                ->setParameter('dateTimeLimit', $dateTimeLimit->format($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
             ;
         }
 
