@@ -3,11 +3,20 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Block\Form\MiniSurvey;
+use Concrete\Core\Http\Request;
 
+/** @var \Concrete\Core\Block\Block $b */
+/** @var \Concrete\Core\Page\Page $c */
+/** @var \Concrete\Core\Area\Area $a */
+/** @var int|string $bID */
+/** @var \Concrete\Block\Form\Controller $controller */
+/** @var \Concrete\Core\Block\BlockType\BlockType $bt */
+/** @var \Concrete\Core\Block\View\BlockView $this */
+/** @var \Concrete\Core\Block\View\BlockView $view */
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 $survey = $controller;
-$miniSurvey = new MiniSurvey($b);
+$miniSurvey = new MiniSurvey();
 $miniSurvey->frontEndMode = true;
 
 //Clean up variables from controller so html is easier to work with...
@@ -19,12 +28,12 @@ $questionsRS = $miniSurvey->loadQuestions($qsID, $bID);
 $questions = [];
 while ($questionRow = $questionsRS->fetch()) {
     $question = $questionRow;
-    $question['input'] = $miniSurvey->loadInputType($questionRow, false);
+    $question['input'] = $miniSurvey->loadInputType($questionRow, false, isset($errorDetails[$question['msqID']]));
 
     //Make type names common-sensical
-    if ($questionRow['inputType'] == 'text') {
+    if ($questionRow['inputType'] === 'text') {
         $question['type'] = 'textarea';
-    } elseif ($questionRow['inputType'] == 'field') {
+    } elseif ($questionRow['inputType'] === 'field') {
         $question['type'] = 'text';
     } else {
         $question['type'] = $questionRow['inputType'];
@@ -33,7 +42,7 @@ while ($questionRow = $questionsRS->fetch()) {
     $question['labelFor'] = 'for="Question' . $questionRow['msqID'] . '"';
 
     //Remove hardcoded style on textareas
-    if ($question['type'] == 'textarea') {
+    if ($question['type'] === 'textarea') {
         $question['input'] = str_replace('style="width:95%"', '', $question['input']);
     }
 
@@ -41,7 +50,7 @@ while ($questionRow = $questionsRS->fetch()) {
 }
 
 //Prep thank-you message
-$success = (\Request::request('surveySuccess') && \Request::request('qsid') == (int) $qsID);
+$success = (Request::request('surveySuccess') && Request::request('qsid') == $qsID);
 $thanksMsg = $survey->thankyouMsg;
 
 //Collate all errors and put them into divs
@@ -66,7 +75,7 @@ $captcha = $surveyBlockInfo['displayCaptcha'] ? $app->make('helper/validation/ca
 <div id="formblock<?php echo $bID; ?>" class="ccm-block-type-form">
     <form enctype="multipart/form-data" class="form-stacked miniSurveyView" id="miniSurveyView<?php echo $bID; ?>"
           method="post" action="<?php echo $formAction ?>">
-        <?= Core::make('token')->output('form_block_submit_qs_' . $qsID); ?>
+        <?= $app->make('token')->output('form_block_submit_qs_' . $qsID); ?>
         <?php if ($success) { ?>
 
             <div class="alert alert-success">

@@ -1,13 +1,16 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Block\Form\MiniSurvey;
 
-//$miniSurveyInfo['surveyName']= $bs->surveyName;
-$miniSurvey = new MiniSurvey($b);
-$miniSurveyInfo = $miniSurvey->getMiniSurveyBlockInfo($b->getBlockID());
-MiniSurvey::questionCleanup((int) ($miniSurveyInfo['questionSetId']), $b->getBlockID());
+/** @var \Concrete\Core\Block\Block $b */
+/** @var \Concrete\Core\Page\Page $c */
+/** @var \Concrete\Core\Area\Area $a */
+/** @var \Concrete\Core\Block\BlockType\BlockType $bt */
+/** @var \Concrete\Core\Block\View\BlockView $this */
 
-$u = Core::make(Concrete\Core\User\User::class);
-$ui = UserInfo::getByID($u->uID);
+//$miniSurveyInfo['surveyName']= $bs->surveyName;
+$miniSurvey = new MiniSurvey();
+$miniSurveyInfo = $miniSurvey->getMiniSurveyBlockInfo($b->getBlockID());
+MiniSurvey::questionCleanup((int) ($miniSurveyInfo['questionSetId'] ?? null), $b->getBlockID());
 ?>
 
 <script>

@@ -2,19 +2,38 @@
 /**
  * @var \Concrete\Core\Application\Service\UserInterface $uih
  * @var \Concrete\Core\Application\Service\Urls $uh
- * @var array $miniSurveyInfo
- * @var int $msqID
+ * @var \Concrete\Block\Form\Controller $controller
+ * @var array<string,mixed> $miniSurveyInfo
+ * @var int|null $msqID
  * @var int $addSelected
+ * @var \Concrete\Core\Block\View\BlockView $this
+ * @var \Concrete\Core\Block\View\BlockView $view
+ * @var \Concrete\Core\Entity\Block\BlockType\BlockType|null $bt
+ * @var \Concrete\Core\Form\Service\Form $form
+ * @var \Concrete\Core\Form\Service\Widget\PageSelector $page_selector
+ * @var Concrete\Core\Area\Area $a
  */
+echo $uih->tabs([
+    ['form-add', t('Add'), $addSelected],
+    ['form-edit', t('Edit')],
+    ['form-preview', t('Preview')],
+    ['form-options', t('Options')],
+]);
+
+$answerTypes = [
+    'field' => t('Text Field'),
+    'text' => t('Text Area'),
+    'radios' => t('Radio Buttons'),
+    'select' => t('Select Box'),
+    'checkboxlist' => t('Checkbox List'),
+    'fileupload' => t('File Upload'),
+    'email' => t('Email Address'),
+    'telephone' => t('Telephone'),
+    'url' => t('Web Address'),
+    'date' => t('Date Field'),
+    'datetime' => t('DateTime Field'),
+];
 ?>
-<p>
-    <?php echo $uih->tabs([
-        ['form-add', t('Add'), $addSelected],
-        ['form-edit', t('Edit')],
-        ['form-preview', t('Preview')],
-        ['form-options', t('Options')],
-    ]); ?>
-</p>
 
 <input type="hidden" name="miniSurveyServices" value="<?= h($controller->getActionURL('services')) ?>"/>
 <input type="hidden" name="miniSurveyServicesToken" value="<?= h(app('token')->generate('ccm-bt-form-service')) ?>" />
@@ -41,19 +60,7 @@
             </div>
             <div class="form-group">
                 <?= $form->label('answerType', t('Answer Type')) ?>
-                <select class="form-select" name="answerType" id="answerType">
-                    <option value="field"><?= t('Text Field') ?></option>
-                    <option value="text"><?= t('Text Area') ?></option>
-                    <option value="radios"><?= t('Radio Buttons') ?></option>
-                    <option value="select"><?= t('Select Box') ?></option>
-                    <option value="checkboxlist"><?= t('Checkbox List') ?></option>
-                    <option value="fileupload"><?= t('File Upload') ?></option>
-                    <option value="email"><?= t('Email Address') ?></option>
-                    <option value="telephone"><?= t('Telephone') ?></option>
-                    <option value="url"><?= t('Web Address') ?></option>
-                    <option value="date"><?= t('Date Field') ?></option>
-                    <option value="datetime"><?= t('DateTime Field') ?></option>
-                </select>
+                <?= $form->select('answerType', $answerTypes)?>
             </div>
 
             <div id="answerOptionsArea">
@@ -79,13 +86,13 @@
                 <div class="form-group">
                     <?= $form->label('defaultDate', t('Default Value')) ?>
                     <?= $form->select(
-        'defaultDate',
-        [
-            '' => t('Blank'),
-            'now' => t('Current Date/Time'),
-        ],
-        'blank'
-    ) ?>
+    'defaultDate',
+    [
+        '' => t('Blank'),
+        'now' => t('Current Date/Time'),
+    ],
+    ''
+) ?>
                 </div>
             </div>
 
@@ -116,7 +123,7 @@
                 </div>
             </div>
 
-            <?= $ih->button(t('Add Question'), '#', '', '', ['id' => 'addQuestion']) ?>
+            <?= $uih->button(t('Add Question'), '#', '', '', ['id' => 'addQuestion']) ?>
 
         </fieldset>
 
@@ -140,19 +147,7 @@
                 </div>
                 <div class="form-group">
                     <?= $form->label('answerTypeEdit', t('Answer Type')) ?>
-                    <select class="form-select" name="answerTypeEdit" id="answerTypeEdit">
-                        <option value="field"><?= t('Text Field') ?></option>
-                        <option value="text"><?= t('Text Area') ?></option>
-                        <option value="radios"><?= t('Radio Buttons') ?></option>
-                        <option value="select"><?= t('Select Box') ?></option>
-                        <option value="checkboxlist"><?= t('Checkbox List') ?></option>
-                        <option value="fileupload"><?= t('File Upload') ?></option>
-                        <option value="email"><?= t('Email Address') ?></option>
-                        <option value="telephone"><?= t('Telephone') ?></option>
-                        <option value="url"><?= t('Web Address') ?></option>
-                        <option value="date"><?= t('Date Field') ?></option>
-                        <option value="datetime"><?= t('DateTime Field') ?></option>
-                    </select>
+                    <?= $form->select('answerTypeEdit', $answerTypes)?>
                 </div>
 
 
@@ -219,8 +214,8 @@
             <input type="hidden" id="positionEdit" name="position" value="1000"/>
 
             <div>
-                <?= $ih->button(t('Cancel'), 'javascript:void(0)', 'left', '', ['id' => 'cancelEditQuestion']) ?>
-                <?= $ih->button(t('Save Changes'), 'javascript:void(0)', 'right', 'primary', ['id' => 'editQuestion']) ?>
+                <?= $uih->button(t('Cancel'), 'javascript:void(0)', 'left', '', ['id' => 'cancelEditQuestion']) ?>
+                <?= $uih->button(t('Save Changes'), 'javascript:void(0)', 'right', 'primary', ['id' => 'editQuestion']) ?>
             </div>
         </div>
 
@@ -234,7 +229,7 @@
 
     <div class="tab-pane" id="form-options" role="tabpanel">
         <?php
-        $c = Page::getCurrentPage();
+        $c = \Concrete\Core\Page\Page::getCurrentPage();
         if (!isset($miniSurveyInfo['surveyName']) || strlen($miniSurveyInfo['surveyName']) == 0) {
             $miniSurveyInfo['surveyName'] = $c->getCollectionName();
         }
@@ -254,16 +249,13 @@
                 <?= $form->textarea('thankyouMsg', $this->controller->thankyouMsg, ['rows' => 3]) ?>
             </div>
             <div class="form-group">
-
-                <span class="input-group-text btn btn-secondary">
-                    <div class="form-check">
-                        <?= $form->checkbox('notifyMeOnSubmission', 1, isset($miniSurveyInfo['notifyMeOnSubmission']) && $miniSurveyInfo['notifyMeOnSubmission'] == 1, ['onclick' => "$('input[name=recipientEmail]').focus()"]) ?>
-                        <label class="form-check-label" for="notifyMeOnSubmission"></label>
+                <?=$form->label('recipientEmail', t('Send form submissions to email addresses')); ?>
+                <div class="input-group">
+                    <div class="input-group-text">
+                        <?= $form->checkbox('notifyMeOnSubmission', 1, !empty($miniSurveyInfo['notifyMeOnSubmission'])) ?>
                     </div>
-                </span>
-
-                <?= $form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], ['style' => 'z-index:2000;']) ?>
-
+                    <?= $form->text('recipientEmail', empty($miniSurveyInfo['recipientEmail']) ? '' : $miniSurveyInfo['recipientEmail'], empty($miniSurveyInfo['notifyMeOnSubmission']) ? ['style' => 'z-index:2000;', 'readonly' => 'readonly'] : ['style' => 'z-index:2000;']) ?>
+                </div>
                 <span class="help-block"><?= t('(Separate multiple emails with a comma)') ?></span>
             </div>
             <div class="form-group">
@@ -299,8 +291,7 @@
                 <div id="ccm-form-fileset">
                     <?php
 
-                    $fs = new FileSet();
-                    $fileSets = $fs->getMySets();
+                    $fileSets = \Concrete\Core\File\Set\Set::getMySets();
                     $sets = [0 => t('None')];
                     foreach ($fileSets as $fileSet) {
                         $sets[$fileSet->fsID] = $fileSet->fsName;
@@ -339,9 +330,9 @@
     function initFormBlockWhenReady() {
         if (miniSurvey && typeof (miniSurvey.init) == 'function') {
             miniSurvey.cID = parseInt(<?php echo $c->getCollectionID()?>);
-            miniSurvey.arHandle = "<?php echo urlencode($_REQUEST['arHandle'])?>";
+            miniSurvey.arHandle = "<?php echo $a->getAreaHandle()?>";
             miniSurvey.bID = thisbID;
-            miniSurvey.btID = thisbtID;
+            miniSurvey.btID = <?=is_object($bt) ? $bt->getBlockTypeID() : 0?>;
             miniSurvey.qsID = parseInt(<?= $miniSurveyInfo['questionSetId'] ?? null ?>);
             miniSurvey.init();
             miniSurvey.refreshSurvey();
