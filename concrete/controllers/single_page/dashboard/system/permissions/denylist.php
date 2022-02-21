@@ -33,8 +33,8 @@ EOT
         );
         $categories = $this->getCategoryRepository()->findAll();
         $cmp = new Comparer();
-        usort($categories, function (IpAccessControlCategory $a, IpAccessControlCategory $b) use ($cmp) {
-            $cmp->compare($a->getDisplayName(), $b->getDisplayName());
+        usort($categories, static function (IpAccessControlCategory $a, IpAccessControlCategory $b) use ($cmp): int {
+            return $cmp->compare($a->getDisplayName(), $b->getDisplayName());
         });
         $this->set('categories', $categories);
     }
