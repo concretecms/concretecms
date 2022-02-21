@@ -507,6 +507,15 @@ var ccmi18n_processes = ' . json_encode([
     'close' => t('Close'),
     'delete' => t('Delete'),
 ]) . ';
+        
+var ccmi18n_legacy_form = ' . json_encode([
+                'deleteQuestion' => t('Are you sure you want to delete this question?'),
+                'formName' => t('Your form must have a name.'),
+                'completeRequired' => t('Please complete all required fields.'),
+                'ajaxError' => t('AJAX Error.'),
+                'formMin' => t('Please add at least one question to your form.'),
+            ]) . ';
+        
         ';
 
         return $this->createJavascriptResponse($content);

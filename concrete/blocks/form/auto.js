@@ -43,22 +43,24 @@ var miniSurvey = {
         $('#emailSettings').hide();
     },
     tabSetup: function () {
-        $('ul#ccm-formblock-tabs li a').each(function (num, el) {
-            el.onclick = function () {
-                var pane = this.id.replace('ccm-formblock-tab-', '');
-                miniSurvey.showPane(pane);
+        $('#form-options').on('change', 'input[name=notifyMeOnSubmission]', function() {
+
+            let $recipentEmails = $('input[name=recipientEmail]');
+            if ($(this).is(':checked')) {
+                $recipentEmails.removeAttr('readonly');
+                $recipentEmails.val('');
+                $recipentEmails.focus();
+            } else {
+                $recipentEmails.attr('readonly','readonly');
+            }
+        }).trigger('change');
+        $('#form-options input[name=recipientEmail]').on('click', function() {
+
+            if ($(this).attr('readonly')) {
+                $('#form-options input[name=notifyMeOnSubmission]').prop("checked",true).trigger("change");
             }
         });
-    },
-    showPane: function (pane) {
-        $('ul#ccm-formblock-tabs li').each(function (num, el) {
-            $(el).removeClass('active')
-        });
-        $(document.getElementById('ccm-formblock-tab-' + pane).parentNode).addClass('active');
-        $('div.ccm-formBlockPane').each(function (num, el) {
-            el.style.display = 'none';
-        });
-        $('#ccm-formBlockPane-' + pane).css('display', 'block');
+
     },
     refreshSurvey: function () {
         $.ajax({
@@ -136,20 +138,20 @@ var miniSurvey = {
             data: postStr,
             url: this.serviceURL + 'mode=addQuestion&qsID=' + parseInt(this.qsID) + '&ccm_token=' + this.serviceToken,
             success: function (msg) {
-                eval('var jsonObj=' + msg);
-                if (!jsonObj) {
-                    alert(ccm_t('ajax-error'));
-                } else if (jsonObj.noRequired) {
-                    alert(ccm_t('complete-required'));
+
+                if (!msg || !msg.success) {
+                    alert(ccmi18n_legacy_form.ajaxError);
+                } else if (msg.noRequired) {
+                    alert(ccmi18n_legacy_form.completeRequired);
                 } else {
-                    if (jsonObj.mode == 'Edit') {
+                    if (msg.mode == 'Edit') {
                         var questionMsg = $('#questionEditedMsg');
                         questionMsg.fadeIn();
                         setTimeout(function () {
                             questionMsg.fadeOut();
                         }, 5000);
-                        if (jsonObj.hideQID) {
-                            miniSurvey.hideQuestions.push(miniSurvey.edit_qID); //jsonObj.hideQID);
+                        if (msg.hideQID) {
+                            miniSurvey.hideQuestions.push(miniSurvey.edit_qID); //msg.hideQID);
                             miniSurvey.edit_qID = 0;
                         }
                     } else {
@@ -162,9 +164,9 @@ var miniSurvey = {
                     }
                     $('#editQuestionForm').css('display', 'none');
                     $('#miniSurvey').show();
-                    miniSurvey.qsID = jsonObj.qsID;
-                    miniSurvey.ignoreQuestionId(jsonObj.msqID);
-                    $('#qsID').val(jsonObj.qsID);
+                    miniSurvey.qsID = msg.qsID;
+                    miniSurvey.ignoreQuestionId(msg.msqID);
+                    $('#qsID').val(msg.qsID);
                     miniSurvey.resetQuestion();
                     miniSurvey.refreshSurvey();
                     //miniSurvey.showPane('preview');
@@ -239,7 +241,7 @@ var miniSurvey = {
     },
     hideQuestions: [],
     deleteQuestion: function (el, msqID, qID) {
-        if (confirm(ccm_t('delete-question'))) {
+        if (confirm(ccmi18n_legacy_form.deleteQuestion)){
             $.ajax({
                 url: this.serviceURL + "mode=delQuestion&qsID=" + parseInt(this.qsID) + '&msqID=' + parseInt(msqID) + '&ccm_token=' + this.serviceToken,
                 success: function (msg) {
@@ -271,7 +273,7 @@ var miniSurvey = {
 
         var n = $('#surveyName');
         if (!n || parseInt(n.val().length, 10) == 0) {
-            alert(ccm_t('form-name'));
+            alert(ccmi18n_legacy_form.formName);
             this.showPane('options');
             n.focus();
             failed = 1;
@@ -279,7 +281,7 @@ var miniSurvey = {
 
         var Qs = $('.miniSurveyQuestionRow');
         if (!Qs || parseInt(Qs.length, 10) < 1) {
-            alert(ccm_t('form-min-1'));
+            alert(ccmi18n_legacy_form.formMin);
             failed = 1;
         }
 
