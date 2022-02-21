@@ -55,14 +55,6 @@ class Controller extends BlockController
     }
 
     /**
-     * @return array<string, string>
-     */
-    public function getJavaScriptStrings()
-    {
-        return ['form-required' => t('You must select a form.')];
-    }
-
-    /**
      * @return string|null
      */
     public function getFilename()

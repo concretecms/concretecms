@@ -1708,18 +1708,28 @@ class Version implements ObjectInterface
                 $imageHeight = (int) $this->getAttribute('height');
                 $file = $this->getFile();
                 if ($type->shouldExistFor($imageWidth, $imageHeight, $file)) {
-                    $path_resolver = $app->make(Resolver::class);
-                    $path = $path_resolver->getPath($this, $type);
+                    $configuration = $this->getFileStorageLocationConfiguration();
+                    if ($configuration !== null) {
+                        $path = $type->getFilePath($this);
+                    } else {
+                        $path_resolver = $app->make(Resolver::class);
+                        $path = $path_resolver->getPath($this, $type);
+                    }
+
                     if ($path) {
-                        $url = $app->make('site')->getSite()->getSiteCanonicalURL();
-                        if ($url) {
-                            // Note: this logic seems like the wrong place to put this. getThumbnailURL() should
-                            // definitely return a URL and not a relative path, so I don't have a problem with
-                            // changing what this method returns. However it seems like the thumbnail path resolver
-                            // itself should have an option to get a full URL, and we should be using that
-                            // method and move this canonical URL logic into the thumbnail path resolver instead.
-                            // @TODO - refactor this and make it more elegant, while retaining this URL behavior.
-                            $path = rtrim($url, '/') . $path;
+                        if ($configuration !== null) {
+                            $path = $configuration->getPublicURLToFile($path);
+                        } else {
+                            $url = $app->make('site')->getSite()->getSiteCanonicalURL();
+                            if ($url) {
+                                // Note: this logic seems like the wrong place to put this. getThumbnailURL() should
+                                // definitely return a URL and not a relative path, so I don't have a problem with
+                                // changing what this method returns. However it seems like the thumbnail path resolver
+                                // itself should have an option to get a full URL, and we should be using that
+                                // method and move this canonical URL logic into the thumbnail path resolver instead.
+                                // @TODO - refactor this and make it more elegant, while retaining this URL behavior.
+                                $path = rtrim($url, '/') . $path;
+                            }
                         }
                     }
                 }

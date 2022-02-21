@@ -6,14 +6,15 @@ use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Command\DeletePageForeverCommand;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 
 class SitemapDeleteForever extends AbstractController
 {
 
     public function canAccess()
     {
-        $dh = $this->app->make('helper/concrete/dashboard/sitemap');
-        return $dh->canRead();
+        $checker = new Checker();
+        return $checker->canEmptyTrash();
     }
 
     public function fillQueue()

@@ -9,6 +9,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Validation\Numbers;
+use Ssddanbrown\HtmlDiff\Diff;
 use Symfony\Component\HttpFoundation\Response;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -19,6 +20,7 @@ class PreviewVersion extends AbstractController
     {
         $page = $this->getPage();
         $this->prepareRequest($page);
+        $this->prepareConfig();
 
         return $this->preparePage($page) ?: $this->renderPage($page);
     }
@@ -33,6 +35,13 @@ class PreviewVersion extends AbstractController
     protected function getVersionID(): ?int
     {
         $versionID = $this->request->request->get('cvID', $this->request->query->get('cvID'));
+
+        return $this->app->make(Numbers::class)->integer($versionID, 1) ? (int) $versionID : null;
+    }
+
+    protected function getCompareVersionID(): ?int
+    {
+        $versionID = $this->request->request->get('compareVersionID', $this->request->query->get('compareVersionID'));
 
         return $this->app->make(Numbers::class)->integer($versionID, 1) ? (int) $versionID : null;
     }
@@ -59,6 +68,14 @@ class PreviewVersion extends AbstractController
         if (!$pageVersion || $pageVersion->isError()) {
             throw new UserMessageException(t('Unable to find the page version specified'));
         }
+        $compareVersionID = $this->getCompareVersionID();
+        if ($compareVersionID) {
+            $page->loadVersionObject($compareVersionID);
+            $compareVersion = $page->getVersionObject();
+            if (!$compareVersion || $compareVersion->isError()) {
+                throw new UserMessageException(t('Unable to find the page version to compare'));
+            }
+        }
 
         return $page;
     }
@@ -67,6 +84,11 @@ class PreviewVersion extends AbstractController
     {
         $this->request->setCustomRequestUser(-1);
         $this->request->setCurrentPage($page);
+    }
+
+    protected function prepareConfig(): void
+    {
+        $this->app->make('config')->set('concrete.cache.pages', false);
     }
 
     protected function preparePage(Page $page): ?Response
@@ -90,6 +112,19 @@ class PreviewVersion extends AbstractController
         $controller = $page->getPageController();
         $view = $controller->getViewObject();
         $content = $view->render();
+
+        $compareVersionID = $this->getCompareVersionID();
+        if ($compareVersionID) {
+            $this->requireAsset('htmldiff');
+            $previewPage = Page::getByID($page->getCollectionID(), $this->getVersionID());
+            $this->preparePage($previewPage);
+            $previewController = $previewPage->getPageController();
+            $previewView = $previewController->getViewObject();
+            $previewContent = $previewView->render();
+
+            $diff = new Diff($content, $previewContent);
+            $content = $diff->build();
+        }
 
         return $this->app->make(ResponseFactoryInterface::class)->create($content);
     }

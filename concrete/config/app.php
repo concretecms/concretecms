@@ -570,6 +570,10 @@ return [
             ['javascript-localized', '/ccm/assets/localization/translator/js'],
             ['css', 'css/translator.css', ['minify' => false]],
         ],
+
+        'htmldiff' => [
+            ['css', 'css/htmldiff.css'],
+        ],
     ],
     'asset_groups' => [
         'jquery' => [
@@ -644,8 +648,8 @@ return [
         'core/translator' => [
             [
                 ['css', 'core/translator'],
-                ['javascript-localized', 'core/translator'],
                 ['javascript', 'core/translator'],
+                ['javascript-localized', 'core/translator'],
             ],
         ],
 
@@ -772,6 +776,11 @@ return [
             [
             ],
             true,
+        ],
+        'htmldiff' => [
+            [
+                ['css', 'htmldiff'],
+            ],
         ],
     ],
     // HTTP Client options

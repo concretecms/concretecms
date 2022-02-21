@@ -15,6 +15,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\File\DownloadStatistics;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\Entity\User\GroupSignup;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -297,6 +298,11 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             } else {
                 $this->entityManager->remove($expressEntity);
             }
+        }
+
+        $groupSignups = $this->entityManager->getRepository(GroupSignup::class)->findBy(['user' => (int)$this->getUserID()]);
+        foreach ($groupSignups as $groupSignup) {
+            $this->entityManager->remove($groupSignup);
         }
 
         $this->entityManager->remove($this->entity);

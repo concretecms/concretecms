@@ -1,47 +1,30 @@
 <?php
+
 namespace Concrete\Controller\Panel\Page;
 
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Collection\Collection;
-use Concrete\Core\Workflow\Request\UnapprovePageRequest;
-use Permissions;
-use Page;
-use Loader;
-use Core;
-use Config;
-use CollectionVersion;
 use Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
-use PageEditResponse;
-use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
+use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
+use Concrete\Core\Workflow\Request\UnapprovePageRequest;
 
 class Versions extends BackendInterfacePageController
 {
     protected $viewPath = '/panels/page/versions';
+
     public function canAccess()
     {
         return $this->permissions->canViewPageVersions() || $this->permissions->canEditPageVersions();
-    }
-
-    protected function getPageVersionListResponse($currentPage = false)
-    {
-        $vl = new VersionList($this->page);
-        $vl->setItemsPerPage(20);
-        $vArray = $vl->getPage($currentPage);
-
-        $r = new PageEditVersionResponse();
-        $r->setPage($this->page);
-        $r->setVersionList($vl);
-        $cpCanDeletePageVersions = $this->permissions->canDeletePageVersions();
-        foreach ($vArray as $v) {
-            $r->addCollectionVersion($v);
-        }
-
-        return $r;
     }
 
     public function view()
@@ -53,11 +36,12 @@ class Versions extends BackendInterfacePageController
     public function get_json()
     {
         $currentPage = false;
-        if ($_POST['currentPage']) {
-            $currentPage = Loader::helper('security')->sanitizeInt($_POST['currentPage']);
+        if ($this->request->request->has('currentPage')) {
+            $currentPage = $this->app->make('helper/security')->sanitizeInt($this->request->request->get('currentPage'));
         }
         $r = $this->getPageVersionListResponse($currentPage);
-        $r->outputJSON();
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($r->getJSON());
     }
 
     public function duplicate()
@@ -69,7 +53,8 @@ class Versions extends BackendInterfacePageController
             $r = new PageEditVersionResponse();
             $r->setMessage(t('Version %s copied successfully. New version is %s.', $this->request->request->get('cvID'), $v->getVersionID()));
             $r->addCollectionVersion($v);
-            $r->outputJSON();
+
+            return $this->app->make(ResponseFactoryInterface::class)->json($r->getJSON());
         }
     }
 
@@ -77,10 +62,10 @@ class Versions extends BackendInterfacePageController
     {
         if ($this->validateAction()) {
             $c = $this->page;
-            $e = Core::make('helper/validation/error');
+            $e = $this->app->make('helper/validation/error');
             $pt = $c->getPageTypeObject();
             if (is_object($pt)) {
-                $ptp = new \Permissions($pt);
+                $ptp = new Permissions($pt);
                 if (!$ptp->canAddPageType()) {
                     $e->add(t('You do not have permission to create new pages of this type.'));
                 }
@@ -101,7 +86,7 @@ class Versions extends BackendInterfacePageController
                 $vls = new VersionList($nc);
                 $vls->setItemsPerPage(-1);
                 $vArray = $vls->getPage();
-                for ($i = 1; $i < count($vArray); ++$i) {
+                for ($i = 1; $i < count($vArray); $i++) {
                     $cv = $vArray[$i];
                     $cv->delete();
                 }
@@ -115,7 +100,8 @@ class Versions extends BackendInterfacePageController
                     ])
                 );
             }
-            $r->outputJSON();
+
+            return $this->app->make(ResponseFactoryInterface::class)->json($r->getJSON());
         }
     }
 
@@ -123,7 +109,6 @@ class Versions extends BackendInterfacePageController
     {
         if ($this->validateAction()) {
             $r = new PageEditVersionResponse();
-            /** @var \Concrete\Core\Page\Collection\Collection $c */
             $c = $this->page;
             $versions = $this->countVersions($c);
 
@@ -131,16 +116,16 @@ class Versions extends BackendInterfacePageController
             if ($cp->canDeletePageVersions()) {
                 $r = new PageEditVersionResponse();
                 $r->setPage($c);
-                if (is_array($_POST['cvID'])) {
-                    foreach ($_POST['cvID'] as $cvID) {
+                if (is_array($this->request->request->get('cvID'))) {
+                    foreach ($this->request->request->get('cvID') as $cvID) {
                         $v = CollectionVersion::get($c, $cvID);
                         if (is_object($v)) {
                             if ($versions == 1) {
-                                $e = Loader::helper('validation/error');
+                                $e = $this->app->make('helper/validation/error');
                                 $e->add(t('You cannot delete all page versions.'));
                                 $r = new PageEditResponse($e);
-                            } else if ($v->isApprovedNow()) {
-                                $e = Loader::helper('validation/error');
+                            } elseif ($v->isApprovedNow()) {
+                                $e = $this->app->make('helper/validation/error');
                                 $e->add(t('You cannot delete the active version.'));
                                 $r = new PageEditResponse($e);
                             } else {
@@ -152,28 +137,20 @@ class Versions extends BackendInterfacePageController
                     }
                 }
                 if ($r instanceof PageEditVersionResponse) {
-                    $r->setMessage(t2('%s version deleted successfully', '%s versions deleted successfully.',
-                        count($r->getCollectionVersions())));
+                    $r->setMessage(t2(
+                        '%s version deleted successfully',
+                        '%s versions deleted successfully.',
+                        count($r->getCollectionVersions())
+                    ));
                 }
             } else {
-                $e = Loader::helper('validation/error');
+                $e = $this->app->make('helper/validation/error');
                 $e->add(t('You do not have permission to delete page versions.'));
                 $r = new PageEditResponse($e);
             }
-            $r->outputJSON();
+
+            return $this->app->make(ResponseFactoryInterface::class)->json($r->getJSON());
         }
-    }
-
-
-    private function countVersions(Collection $c)
-    {
-        /** @var Connection $database */
-        $database = $this->app['database']->connection();
-        $count = $database->fetchColumn('select count(cvID) from CollectionVersions where cID = :cID', [
-            ':cID' => $c->getCollectionID()
-        ]);
-
-        return $count;
     }
 
     public function approve()
@@ -187,7 +164,7 @@ class Versions extends BackendInterfacePageController
                 if (is_object($ov)) {
                     $ovID = $ov->getVersionID();
                 }
-                $nvID = $_REQUEST['cvID'];
+                $nvID = $this->request->request->get('cvID');
 
                 $r = new PageEditVersionResponse();
                 $r->setPage($c);
@@ -204,19 +181,19 @@ class Versions extends BackendInterfacePageController
                     // we are deferred
                     $r->setMessage(t('<strong>Request Saved.</strong> You must complete the workflow before this change is active.'));
                 } else {
-                    if ($ovID) {
+                    if (isset($ovID) && $ovID) {
                         $r->addCollectionVersion(CollectionVersion::get($c, $ovID));
                     }
                     $r->addCollectionVersion(CollectionVersion::get($c, $nvID));
                     $r->setMessage(t('Version %s approved successfully', $v->getVersionID()));
                 }
             } else {
-                $e = Loader::helper('validation/error');
+                $e = $this->app->make('helper/validation/error');
                 $e->add(t('You do not have permission to approve page versions.'));
                 $r = new PageEditResponse($e);
             }
 
-            $r->outputJSON();
+            return $this->app->make(ResponseFactoryInterface::class)->json($r->getJSON());
         }
     }
 
@@ -245,12 +222,39 @@ class Versions extends BackendInterfacePageController
                     $r->setMessage(t('Version %s unapproved successfully', $v->getVersionID()));
                 }
             } else {
-                $e = Loader::helper('validation/error');
+                $e = $this->app->make('helper/validation/error');
                 $e->add(t('You do not have permission to approve page versions.'));
                 $r = new PageEditResponse($e);
             }
 
-            $r->outputJSON();
+            return $this->app->make(ResponseFactoryInterface::class)->json($r->getJSON());
         }
+    }
+
+    protected function getPageVersionListResponse($currentPage = false)
+    {
+        $vl = new VersionList($this->page);
+        $vl->setItemsPerPage(20);
+        $vArray = $vl->getPage($currentPage);
+
+        $r = new PageEditVersionResponse();
+        $r->setPage($this->page);
+        $r->setVersionList($vl);
+        $cpCanDeletePageVersions = $this->permissions->canDeletePageVersions();
+        foreach ($vArray as $v) {
+            $r->addCollectionVersion($v);
+        }
+
+        return $r;
+    }
+
+    private function countVersions(Collection $c)
+    {
+        /** @var Connection $database */
+        $database = $this->app['database']->connection();
+
+        return $database->fetchOne('select count(cvID) from CollectionVersions where cID = :cID', [
+            ':cID' => $c->getCollectionID(),
+        ]);
     }
 }

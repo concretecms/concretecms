@@ -3,11 +3,15 @@
 namespace Concrete\Core\User\Group\Command;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\User\GroupCreate;
+use Concrete\Core\Entity\User\GroupSignup;
+use Concrete\Core\Entity\User\GroupSignupRequest;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\User\Group\DeleteEvent;
 use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\Events\EventDispatcher;
+use Doctrine\ORM\EntityManager;
 
 class DeleteGroupCommandHandler
 {
@@ -27,16 +31,22 @@ class DeleteGroupCommandHandler
      */
     protected $groupRepository;
 
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
 
     public function __construct(
         GroupRepository $groupRepository,
         Connection $connection,
-        EventDispatcher $dispatcher
+        EventDispatcher $dispatcher,
+        EntityManager  $entityManager
     )
     {
         $this->groupRepository = $groupRepository;
         $this->connection = $connection;
         $this->dispatcher = $dispatcher;
+        $this->entityManager = $entityManager;
     }
 
     public function __invoke(DeleteGroupCommand $command)
@@ -70,6 +80,23 @@ class DeleteGroupCommandHandler
             $node = GroupTreeNode::getTreeNodeByGroupID($groupID);
             $node->delete();
         }
+
+        $groupCreates = $this->entityManager->getRepository(GroupCreate::class)
+            ->findBy(['gID' => $command->getGroupID()]);
+        foreach ($groupCreates as $groupCreate) {
+            $this->entityManager->remove($groupCreate);
+        }
+        $groupSignups = $this->entityManager->getRepository(GroupSignup::class)
+            ->findBy(['gID' => $command->getGroupID()]);
+        foreach ($groupSignups as $groupSignup) {
+            $this->entityManager->remove($groupSignup);
+        }
+        $groupSignupRequests = $this->entityManager->getRepository(GroupSignupRequest::class)
+            ->findBy(['gID' => $command->getGroupID()]);
+        foreach ($groupSignupRequests as $groupSignupRequest) {
+            $this->entityManager->remove($groupSignupRequest);
+        }
+        $this->entityManager->flush();
 
         $table = $this->connection->getDatabasePlatform()->quoteSingleIdentifier('Groups');
         $this->connection->query('DELETE FROM UserGroups WHERE gID = ?', [intval($groupID)]);

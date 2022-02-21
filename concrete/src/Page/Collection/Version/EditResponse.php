@@ -1,10 +1,11 @@
 <?php
+
 namespace Concrete\Core\Page\Collection\Version;
 
-use Core;
-use PageEditResponse;
-use Page;
-use Permissions;
+use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
+use Concrete\Core\Support\Facade\Application;
 use stdClass;
 
 class EditResponse extends PageEditResponse
@@ -12,7 +13,8 @@ class EditResponse extends PageEditResponse
     /**
      * @var \Concrete\Core\Page\Collection\Version\Version[]
      */
-    protected $versions = array();
+    protected $versions = [];
+
     protected $vl;
 
     public function addCollectionVersion(Version $cv)
@@ -24,6 +26,7 @@ class EditResponse extends PageEditResponse
     {
         return $this->versions;
     }
+
     public function setVersionList(VersionList $vl)
     {
         $this->vl = $vl;
@@ -31,8 +34,8 @@ class EditResponse extends PageEditResponse
 
     public function getJSONObject()
     {
-        $dateHelper = Core::make('helper/date');
-        /* @var $dateHelper \Concrete\Core\Localization\Service\Date */
+        $dateHelper = Application::getFacadeApplication()->make('helper/date');
+        // @var $dateHelper \Concrete\Core\Localization\Service\Date
 
         $o = parent::getBaseJSONObject();
 
@@ -40,11 +43,11 @@ class EditResponse extends PageEditResponse
         $cp = new Permissions($c);
         $cpCanDeletePageVersions = $cp->cpCanDeletePageVersions();
 
-        $versions = array();
+        $versions = [];
         foreach ($this->versions as $v) {
             $obj = new stdClass();
             $obj->cvID = $v->getVersionID();
-            $obj->cvIsApproved = (bool)$v->isApproved();
+            $obj->cvIsApproved = (bool) $v->isApproved();
             $obj->cvIsApprovedNow = $v->isApprovedNow();
             $obj->cvIsScheduled = $v->getPublishDate() || $v->getPublishEndDate();
             $obj->cvPublishDate = $dateHelper->formatDateTime($v->getPublishDate());
@@ -55,7 +58,7 @@ class EditResponse extends PageEditResponse
             $obj->cvAuthorUserName = $v->getVersionAuthorUserName();
             $obj->cvApproverUserName = $v->getVersionApproverUserName();
             $obj->cvComments = $v->getVersionComments();
-            $obj->cIsStack = ($c->getCollectionTypeHandle() === STACKS_PAGE_TYPE);
+            $obj->cIsStack = ($c->getPageTypeHandle() === STACKS_PAGE_TYPE);
             $versions[] = $obj;
         }
         $o->versions = $versions;

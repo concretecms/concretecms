@@ -121,7 +121,9 @@ class AttributeKeyField extends AbstractField
     public function jsonSerialize()
     {
         $json = parent::jsonSerialize();
-        $json['akID'] = $this->attributeKey->getAttributeKeyID();
+        if ($this->attributeKey) {
+            $json['akID'] = $this->attributeKey->getAttributeKeyID();
+        }
         return $json;
     }
 
