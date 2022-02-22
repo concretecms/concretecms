@@ -68,11 +68,12 @@ class Client extends GuzzleHttpClient implements LoggerAwareInterface
             } else {
                 $shortBody = mb_substr($body, 0, 197) . '...';
             }
+            $headers = $response->getHeaders();
             $logger->debug(
                 'The response code was {statusCode} and the body was {shortBody}',
                 [
                     'statusCode' => $statusCode,
-                    'headers' => $response->getHeaders()->toArray(),
+                    'headers' => is_object($headers) ? $headers->toArray() : $headers,
                     'shortBody' => $shortBody,
                     'body' => $body,
                 ]
