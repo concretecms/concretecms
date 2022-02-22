@@ -175,12 +175,26 @@ class IpAccessControlService implements LoggerAwareInterface
     /**
      * Create and save an IP Access Control Event.
      *
-     * @param \IPLib\Address\AddressInterface|null $ipAddress
-     * @param bool $evenIfDisabled
+     * @param \IPLib\Address\AddressInterface|null $ipAddress the IP address to be recorded (if NULL we'll use the current one)
+     * @param bool $evenIfDisabled create the event even if the category is disabled?
      *
      * @return \Concrete\Core\Entity\Permission\IpAccessControlEvent|null
      */
     public function registerEvent(AddressInterface $ipAddress = null, $evenIfDisabled = false)
+    {
+        return $this->registerEventAt(new DateTime('now'), $ipAddress, $evenIfDisabled ? true : false);
+    }
+
+    /**
+     * Create and save an IP Access Control Event at a specific date/time.
+     *
+     * @param \DateTime $dateTime the date/time of the event
+     * @param \IPLib\Address\AddressInterface|null $ipAddress the IP address to be recorded (if NULL we'll use the current one)
+     * @param bool $evenIfDisabled create the event even if the category is disabled?
+     *
+     * @return \Concrete\Core\Entity\Permission\IpAccessControlEvent|null return NULL if the category is disabled and $evenIfDisabled is false, the created event otherwise
+     */
+    public function registerEventAt(DateTime $dateTime, ?AddressInterface $ipAddress = null, bool $evenIfDisabled = false): ?IpAccessControlEvent
     {
         if (!$evenIfDisabled && !$this->getCategory()->isEnabled()) {
             return null;
@@ -190,7 +204,7 @@ class IpAccessControlService implements LoggerAwareInterface
             ->setCategory($this->getCategory())
             ->setSite($this->site)
             ->setIpAddress($ipAddress ?: $this->defaultIpAddress)
-            ->setDateTime(new DateTime('now'))
+            ->setDateTime($dateTime)
         ;
         $this->em->persist($event);
         $this->em->flush();
