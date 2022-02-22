@@ -451,7 +451,7 @@ class IpAccessControlCategory
 
         return t2(
             /* i18n: %1$s is a number; %2$s is a duration (like for example 2 minutes) */
-            '%1$s event every %2$s', '%1$s events every %2$s',
+            '%1$s event in %2$s', '%1$s events in %2$s',
             $this->getMaxEvents(),
             Unit::format($value, $unit, 'long')
         );
