@@ -10,14 +10,12 @@ use Concrete\Core\Calendar\Event\EventOccurrenceList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Object\HeadLink;
-use Core;
-use Page;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Support\Facade\Url;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = ['form'];
-
     /**
      * @var int|null
      */
@@ -68,32 +66,64 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public $lightboxProperties;
 
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 500;
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 475;
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btCalendar';
 
+    /**
+     * @var \Concrete\Core\Entity\Attribute\Key\EventKey[]
+     */
+    protected $eventAttributes;
+
+    /**
+     * {@inheritdoc}
+     */
     public function getBlockTypeDescription()
     {
         return t('Displays a month view calendar on a page.');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getBlockTypeName()
     {
         return t('Calendar');
     }
 
+    /**
+     * @return void
+     */
     public function on_start()
     {
+        /** @phpstan-ignore-next-line  */
         $this->eventAttributes = EventKey::getList();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::CALENDAR
+            Features::CALENDAR,
         ];
     }
 
+    /**
+     * @return void
+     */
     public function loadData()
     {
         $viewTypes = [
@@ -119,15 +149,24 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('lightboxProperties', $lightboxProperties);
 
         // topics
+        /** @phpstan-ignore-next-line  */
         $keys = EventKey::getList(['atHandle' => 'topics']);
-        $this->set('attributeKeys', array_filter($keys, function ($ak) {
-            return 'topics' == $ak->getAttributeTypeHandle();
+        $this->set('attributeKeys', array_filter($keys, static function ($ak) {
+            return $ak->getAttributeTypeHandle() === 'topics';
         }));
     }
 
+    /**
+     * @param int $bID
+     *
+     * @throws \Concrete\Core\Attribute\Exception\InvalidAttributeException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return JsonResponse|void
+     */
     public function action_get_events($bID)
     {
-        $service = \Core::make('date');
+        $service = $this->app->make('date');
 
         if ($bID == $this->bID) {
             $start = $this->request->query->get('start');
@@ -161,7 +200,6 @@ class Controller extends BlockController implements UsesFeatureInterface
                 } else {
                     $obj->start = $service->formatCustom('Y-m-d H:i:s', $occurrence->getStart());
                     $obj->end = $service->formatCustom('Y-m-d H:i:s', $occurrence->getEnd());
-
                 }
                 $obj->backgroundColor = $background;
                 $obj->borderColor = $background;
@@ -172,12 +210,14 @@ class Controller extends BlockController implements UsesFeatureInterface
                 }
                 $data[] = $obj;
             }
-            $js = new JsonResponse($data);
 
-            return $js;
+            return new JsonResponse($data);
         }
     }
 
+    /**
+     * @return void
+     */
     public function add()
     {
         $this->loadData();
@@ -188,20 +228,31 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('viewTypesOrder', ['month_' . t('Month'), 'basicWeek_' . t('Week'), 'basicDay_' . t('Day')]);
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return \Concrete\Core\Entity\Calendar\Calendar|null
+     */
     public function getCalendar()
     {
         if ($this->calendarAttributeKeyHandle) {
-            $site = \Core::make('site')->getSite();
+            $site = $this->app->make('site')->getSite();
             $calendar = $site->getAttribute($this->calendarAttributeKeyHandle);
             if (is_object($calendar)) {
                 return $calendar;
             }
         }
         if ($this->caID) {
+            /** @phpstan-ignore-next-line */
             return Calendar::getByID($this->caID);
         }
+
+        return null;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getSelectedLightboxProperties()
     {
         return (array) json_decode($this->lightboxProperties);
@@ -214,7 +265,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      * - "month" is the view type
      * - "Month" is the view type display name
      *
-     * @param array $viewTypesOrder
+     * @param string[] $viewTypesOrder
      *
      * @return string
      */
@@ -225,13 +276,17 @@ class Controller extends BlockController implements UsesFeatureInterface
         foreach ($viewTypesOrder as $test) {
             $viewType = explode('_', $test);
             $viewTypeArray[$i] = $viewType[0];
-            ++$i;
+            $i++;
         }
-        $viewTypeString = implode(',', $viewTypeArray);
 
-        return $viewTypeString;
+        return implode(',', $viewTypeArray);
     }
 
+    /**
+     * @param string $key
+     *
+     * @return string|null
+     */
     public function getPropertyTitle($key)
     {
         switch ($key) {
@@ -248,8 +303,18 @@ class Controller extends BlockController implements UsesFeatureInterface
                 }
                 break;
         }
+
+        return null;
     }
 
+    /**
+     * @param string $key
+     * @param \Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence $occurrence
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return string
+     */
     public function getPropertyValue($key, $occurrence)
     {
         $event = $occurrence->getEvent();
@@ -284,22 +349,31 @@ class Controller extends BlockController implements UsesFeatureInterface
                     break;
             }
         }
+
+        return '';
     }
 
+    /**
+     * @return void
+     */
     public function composer()
     {
         $this->edit();
     }
 
+    /**
+     * @return void
+     */
     public function edit()
     {
         $this->loadData();
         $this->set('viewTypesSelected', (array) json_decode($this->viewTypes));
         $this->set('viewTypesOrder', (array) json_decode($this->viewTypesOrder));
         $this->set('lightboxPropertiesSelected', $this->getSelectedLightboxProperties());
+        /** @phpstan-ignore-next-line  */
         $calendars = array_filter(Calendar::getList(), function ($calendar) {
-            $p = new \Permissions($calendar);
-
+            $p = new Checker($calendar);
+            /** @phpstan-ignore-next-line */
             return $p->canViewCalendarInEditInterface();
         });
         $calendarSelect = ['' => t('** Select a Calendar')];
@@ -309,6 +383,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('calendars', $calendarSelect);
     }
 
+    /**
+     * @return bool
+     */
     public function supportsLightbox()
     {
         $props = $this->getSelectedLightboxProperties();
@@ -316,29 +393,18 @@ class Controller extends BlockController implements UsesFeatureInterface
         return count($props) > 0;
     }
 
-    /*
-    public function validate($args)
-    {
-        $calendar = Calendar::getByID($args['caID']);
-        $e = \Core::make('error');
-        if (!is_object($calendar)) {
-            $e->add(t('You must choose a valid calendar.'));
-        }
-        $p = new \Permissions($calendar);
-        if (!$p->canViewCalendarInEditInterface()) {
-            $e->add(t('You do not have access to select this calendar.'));
-        }
-        return $e;
-    }
-    */
-
+    /**
+     * @param mixed $args
+     *
+     * @return void
+     */
     public function save($args)
     {
-        if ('specific' == $args['chooseCalendar']) {
+        if ($args['chooseCalendar'] === 'specific') {
             $args['caID'] = (int) $args['caID'];
             $args['calendarAttributeKeyHandle'] = '';
         }
-        if ('site' == $args['chooseCalendar']) {
+        if ($args['chooseCalendar'] === 'site') {
             $args['caID'] = 0;
             // pass through the attribute key handle to save.
         }
@@ -372,14 +438,20 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($args);
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function view()
     {
         $this->loadData();
         $calendar = $this->getCalendar();
         if (is_object($calendar)) {
-            $permissions = new \Permissions($calendar);
+            $permissions = new Checker($calendar);
+            /** @phpstan-ignore-next-line */
             if ($permissions->canAccessCalendarRssFeed()) {
-                $link = new HeadLink(\URL::route(['/feed', 'calendar'], $this->getCalendar()->getID()), 'alternate', 'application/rss+xml');
+                $link = new HeadLink(Url::route(['/feed', 'calendar'], $this->getCalendar()->getID()), 'alternate', 'application/rss+xml');
                 $this->addHeaderItem($link);
             }
             $this->set('permissions', $permissions);
