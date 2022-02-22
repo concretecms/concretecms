@@ -11,7 +11,7 @@ use Punic\Comparer;
 class Denylist extends DashboardPageController
 {
     /**
-     * @var \Doctrine\Common\Persistence\ObjectRepository|null
+     * @var \Doctrine\ORM\EntityRepository|null
      */
     private $categoryRepository;
 
@@ -40,7 +40,7 @@ EOT
     }
 
     /**
-     * @return \Doctrine\Common\Persistence\ObjectRepository
+     * @return \Doctrine\ORM\EntityRepository
      */
     protected function getCategoryRepository()
     {
