@@ -231,7 +231,7 @@ class IpAccessControlService implements LoggerAwareInterface
             $dateTimeLimit = new DateTime('-' . $this->getCategory()->getTimeWindow() . ' seconds');
             $qb
                 ->andWhere($x->gt('e.dateTime', ':dateTimeLimit'))
-                ->setParameter('dateTimeLimit', $dateTimeLimit)
+                ->setParameter('dateTimeLimit', $dateTimeLimit->format($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
             ;
         }
         if ($this->getCategory()->isSiteSpecific()) {
@@ -400,7 +400,7 @@ class IpAccessControlService implements LoggerAwareInterface
             $dateTimeLimit = new DateTime('-' . ((int) $minAge) . ' seconds');
             $qb
                 ->andWhere($x->lte('e.dateTime', ':dateTimeLimit'))
-                ->setParameter('dateTimeLimit', $dateTimeLimit)
+                ->setParameter('dateTimeLimit', $dateTimeLimit->format($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
             ;
         }
 
@@ -429,7 +429,7 @@ class IpAccessControlService implements LoggerAwareInterface
             $dateTimeLimit = new DateTime('now');
             $qb
                 ->andWhere($x->lte('r.expiration', ':dateTimeLimit'))
-                ->setParameter('dateTimeLimit', $dateTimeLimit)
+                ->setParameter('dateTimeLimit', $dateTimeLimit->format($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
             ;
         }
 
@@ -471,7 +471,8 @@ class IpAccessControlService implements LoggerAwareInterface
         $qb
             ->from(IpAccessControlRange::class, 'r')
             ->select('r')
-            ->where($x->lte('r.ipFrom', ':ip'))
+            ->andWhere($x->eq('r.category', ':category'))
+            ->andWhere($x->lte('r.ipFrom', ':ip'))
             ->andWhere($x->gte('r.ipTo', ':ip'))
             ->andWhere(
                 $x->orX(
@@ -479,8 +480,9 @@ class IpAccessControlService implements LoggerAwareInterface
                     $x->gt('r.expiration', ':now')
                 )
             )
+            ->setParameter('category', $this->getCategory()->getIpAccessControlCategoryID())
             ->setParameter('ip', $ipAddress->getComparableString())
-            ->setParameter('now', new DateTime('now'))
+            ->setParameter('now', date($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
         ;
         if ($this->getCategory()->isSiteSpecific()) {
             $qb
