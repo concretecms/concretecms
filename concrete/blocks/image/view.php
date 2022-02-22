@@ -170,10 +170,10 @@ if (is_object($f) && $f->getFileID()) {
                 hoverSrc = image.getAttribute('data-hover-src'),
                 defaultSrc = image.getAttribute('data-default-src');
             image.onmouseover = function () {
-                image.setAttribute('src', hoverSrc);
+                this.setAttribute('src', hoverSrc);
             };
             image.onmouseout = function () {
-                image.setAttribute('src', defaultSrc);
+                this.setAttribute('src', defaultSrc);
             };
         }
     </script>
