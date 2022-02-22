@@ -200,4 +200,21 @@ class IPServiceTest extends ConcreteDatabaseTestCase
         $this->assertTrue($this->ipService->isAllowlisted($ip));
         $this->assertFalse($this->ipService->isDenylisted($ip));
     }
+
+    public function testDenyListWithNoTimeWindow()
+    {
+        $this->category
+            ->setMaxEvents(1)
+            ->setTimeWindow(null)
+            ->setBanDuration(1000)
+        ;
+        $ip = IPFactory::parseAddressString('1.2.3.4');
+        $this->assertFalse($this->ipService->isThresholdReached($ip));
+        $this->ipService->registerEventAt(new DateTime('5 seconds ago'), $ip);
+        $this->assertTrue($this->ipService->isThresholdReached($ip));
+        $this->ipService->deleteEvents();
+        $this->assertFalse($this->ipService->isThresholdReached($ip));
+        $this->ipService->registerEventAt(new DateTime(($this->category->getBanDuration() + 5) . ' seconds ago'), $ip);
+        $this->assertFalse($this->ipService->isThresholdReached($ip));
+    }
 }
