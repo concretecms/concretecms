@@ -9,6 +9,7 @@ use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use IPLib\Address\AddressInterface;
@@ -213,21 +214,12 @@ class IpAccessControlService implements LoggerAwareInterface
     }
 
     /**
-     * Check if the IP address has reached the threshold.
+     * Get the number of events registered (in the time window if it's not null, or any events if null).
      *
-     * @param \IPLib\Address\AddressInterface $ipAddress
-     * @param bool $evenIfDisabled
-     *
-     * @return bool
+     * @param \IPLib\Address\AddressInterface|null $ipAddress the IP address to be checked (if null we'll use the current IP address)
      */
-    public function isThresholdReached(AddressInterface $ipAddress = null, $evenIfDisabled = false)
+    public function getEventsCount(?AddressInterface $ipAddress = null): int
     {
-        if (!$evenIfDisabled && !$this->getCategory()->isEnabled()) {
-            return false;
-        }
-        if ($this->isAllowlisted($ipAddress)) {
-            return false;
-        }
         if ($ipAddress === null) {
             $ipAddress = $this->defaultIpAddress;
         }
@@ -236,7 +228,7 @@ class IpAccessControlService implements LoggerAwareInterface
         $qb
             ->from(IpAccessControlEvent::class, 'e')
             ->select($x->count('e.ipAccessControlEventID'))
-            ->where($x->eq('e.ip', ':ip'))
+            ->andWhere($x->eq('e.ip', ':ip'))
             ->andWhere($x->eq('e.category', ':category'))
             ->setParameter('ip', $ipAddress->getComparableString())
             ->setParameter('category', $this->getCategory()->getIpAccessControlCategoryID())
@@ -259,15 +251,106 @@ class IpAccessControlService implements LoggerAwareInterface
                 ->setParameter('site', $this->site->getSiteID())
             ;
         }
-        $numEvents = (int) $qb->getQuery()->getSingleScalarResult();
 
-        return $numEvents >= $this->getCategory()->getMaxEvents();
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Get the date/time of the last registered events (in the time window if it's not null, or any events if null).
+     *
+     * @param \IPLib\Address\AddressInterface|null $ipAddress the IP address to be checked (if null we'll use the current IP address)
+     */
+    public function getLastEvent(?AddressInterface $ipAddress = null): ?DateTimeImmutable
+    {
+        if ($ipAddress === null) {
+            $ipAddress = $this->defaultIpAddress;
+        }
+        $qb = $this->em->createQueryBuilder();
+        $x = $qb->expr();
+        $qb
+            ->from(IpAccessControlEvent::class, 'e')
+            ->select($x->max('e.dateTime'))
+            ->andWhere($x->eq('e.ip', ':ip'))
+            ->andWhere($x->eq('e.category', ':category'))
+            ->setParameter('ip', $ipAddress->getComparableString())
+            ->setParameter('category', $this->getCategory()->getIpAccessControlCategoryID())
+        ;
+        if ($this->getCategory()->getTimeWindow() !== null) {
+            $dateTimeLimit = new DateTime('-' . $this->getCategory()->getTimeWindow() . ' seconds');
+            $qb
+                ->andWhere($x->gt('e.dateTime', ':dateTimeLimit'))
+                ->setParameter('dateTimeLimit', $dateTimeLimit->format($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
+            ;
+        }
+        if ($this->getCategory()->isSiteSpecific()) {
+            $qb
+                ->andWhere(
+                    $x->orX(
+                        $x->isNull('e.site'),
+                        $x->eq('e.site', ':site')
+                    )
+                )
+                ->setParameter('site', $this->site->getSiteID())
+            ;
+        }
+        $sqlDateTime = $qb->getQuery()->getSingleScalarResult();
+        if ($sqlDateTime === null) {
+            return null;
+        }
+
+        return DateTimeImmutable::createFromFormat($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString(), $sqlDateTime);
+    }
+
+    /**
+     * Check if the IP address has reached the threshold.
+     *
+     * @param \IPLib\Address\AddressInterface|null $ipAddress the IP address to be checked (if null we'll use the current IP address)
+     * @param bool $evenIfDisabled
+     *
+     * @return bool
+     */
+    public function isThresholdReached(AddressInterface $ipAddress = null, $evenIfDisabled = false)
+    {
+        if (!$evenIfDisabled && !$this->getCategory()->isEnabled()) {
+            return false;
+        }
+        if ($ipAddress === null) {
+            $ipAddress = $this->defaultIpAddress;
+        }
+        if ($this->isAllowlisted($ipAddress)) {
+            return false;
+        }
+        $numEvents = $this->getEventsCount($ipAddress);
+        if ($numEvents < $this->getCategory()->getMaxEvents()) {
+            return false;
+        }
+        if ($this->category->getTimeWindow() !== null) {
+            return true;
+        }
+        $banDuration = $this->category->getBanDuration();
+        if ($banDuration === null) {
+            return true;
+        }
+        // Here:
+        // - the time window is null (which means that we count all events, not only those in a specific time interval)
+        // - the ban duration is not null (which means that we ban the IP only for a specific interval)
+        // So, we need to check if the ban duration is already passed, and we need to reset the recorded events,
+        // otherwise the ban would last forever.
+        $lastEvent = $this->getLastEvent($ipAddress);
+        $now = new DateTimeImmutable();
+        $elapsedSeconds = $now->getTimestamp() - $lastEvent->getTimestamp();
+        if ($elapsedSeconds < $banDuration) {
+            return true;
+        }
+        $this->deleteEventsFor($ipAddress);
+
+        return false;
     }
 
     /**
      * Add an IP address to the list of denylisted IP address when too many events occur.
      *
-     * @param \IPLib\Address\AddressInterface $ipAddress the IP to add to the denylist (if null, we'll use the current IP address)
+     * @param \IPLib\Address\AddressInterface|null $ipAddress the IP to add to the denylist (if null, we'll use the current IP address)
      * @param bool $evenIfDisabled if set to true, we'll add the IP address even if the IP ban system is disabled in the configuration
      *
      * @return \Concrete\Core\Entity\Permission\IpAccessControlRange|null
@@ -395,7 +478,6 @@ class IpAccessControlService implements LoggerAwareInterface
 
     /**
      * Delete the recorded events.
-
      *
      * @param int|null $minAge the minimum age (in seconds) of the records (specify an empty value to delete all records)
      *
@@ -403,15 +485,34 @@ class IpAccessControlService implements LoggerAwareInterface
      */
     public function deleteEvents($minAge = null)
     {
+        return $this->deleteEventsFor(null, $minAge ? (int) $minAge : null);
+    }
+
+    /**
+     * Delete the recorded events.
+     *
+     * @param \IPLib\Address\AddressInterface|null $ipAddress delete the records for this specific IP address (or for any address if NULL)
+     * @param int|null $minAge the minimum age (in seconds) of the records (specify NULL delete all records)
+     *
+     * @return int the number of records deleted
+     */
+    public function deleteEventsFor(?AddressInterface $ipAddress = null, ?int $minAge = null): int
+    {
         $qb = $this->em->createQueryBuilder();
         $x = $qb->expr();
         $qb
             ->delete(IpAccessControlEvent::class, 'e')
-            ->where($x->eq('e.category', ':category'))
+            ->andWhere($x->eq('e.category', ':category'))
             ->setParameter('category', $this->getCategory()->getIpAccessControlCategoryID())
         ;
-        if ($minAge) {
-            $dateTimeLimit = new DateTime('-' . ((int) $minAge) . ' seconds');
+        if ($ipAddress !== null) {
+            $qb
+                ->andWhere($x->eq('e.ip', ':ip'))
+                ->setParameter('ip', $ipAddress->getComparableString())
+            ;
+        }
+        if ($minAge !== null) {
+            $dateTimeLimit = new DateTime("-{$minAge} seconds");
             $qb
                 ->andWhere($x->lte('e.dateTime', ':dateTimeLimit'))
                 ->setParameter('dateTimeLimit', $dateTimeLimit->format($this->em->getConnection()->getDatabasePlatform()->getDateTimeFormatString()))
