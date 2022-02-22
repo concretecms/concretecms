@@ -17,22 +17,24 @@ RUN sudo touch /var/log/workspace-image.log \
 && sudo chmod 666 /var/log/workspace-init.log \
 && sudo touch /var/log/xdebug.log \
 && sudo chmod 666 /var/log/xdebug.log \
-&& sudo mv /tmp/nginx.conf /etc/nginx/nginx.conf
+&& sudo mv /tmp/nginx.conf /etc/nginx/nginx.conf \
+&& sudo mv /tmp/.bash_aliases /home/gitpod/.bash_aliases \
+&& sudo mv /tmp/server-functions.sh /home/gitpod/.bashrc.d/server-functions
 
 # Needed for local development? Remove later?
 RUN sudo chown gitpod:gitpod /workspace
 
-  # Install and configure php and php-fpm as specified in starter.ini
+# Install and configure php and php-fpm
 RUN sudo bash -c ". /tmp/php.sh" && rm /tmp/php.sh
 
-  # Install core packages for gitpod-laravel-starter
+# Install core packages
 RUN sudo bash -c ". /tmp/install-core-packages.sh" && rm /tmp/install-core-packages.sh
 
-  # Download, compile, install and configure xdebug from source
+# Download, compile, install and configure xdebug from source
 RUN sudo bash -c ". /tmp/install-xdebug.sh" && rm /tmp/install-xdebug.sh
 
-  # Update composer
+# Update composer
 RUN bash -c ". /tmp/update-composer.sh" && rm /tmp/update-composer.sh
 
 # Force the docker image to build by incrementing this value
-ENV INVALIDATE_CACHE=3
+ENV INVALIDATE_CACHE=4
