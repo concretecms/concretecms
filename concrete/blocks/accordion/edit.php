@@ -6,7 +6,7 @@ use Concrete\Core\Support\Facade\Application;
 
 $app = Application::getFacadeApplication();
 
-/** @var UserInterface $userInterface */
+/** @var Concrete\Core\Application\Service\UserInterface $userInterface */
 $userInterface = $app->make(UserInterface::class);
 
 echo $userInterface->tabs([

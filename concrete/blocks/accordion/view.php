@@ -4,7 +4,6 @@
  * @var \Concrete\Block\Accordion\AccordionEntry[] $entries
  */
 /** @var int $bID */
-/** @var int $bID */
 
 $i = 0;
 $flush = $flush ?? false;
@@ -19,14 +18,14 @@ $alwaysOpen = $alwaysOpen ?? false;
       foreach ($entries as $entry) {
         $i++;
         $entryClass = '';
-        if(($initialState == 'openfirst' && $i == 1) || $initialState == 'open') {
+        if(($initialState === 'openfirst' && $i == 1) || $initialState === 'open') {
           $entryClass = ' show';
         }
       ?>
         <div class="accordion-item">
 
             <<?php echo $itemHeadingFormat; ?> class="accordion-header">
-                <button class="accordion-button <?php if($i != 1){echo 'collapsed'; }?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getID()?>">
+                <button class="accordion-button <?php if($i != 1){echo 'collapsed'; }?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getId()?>">
                     <?=$entry->getTitle()?>
                 </button>
             </<?php echo $itemHeadingFormat; ?>>
