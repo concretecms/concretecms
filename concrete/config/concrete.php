@@ -960,10 +960,10 @@ return [
     'urls' => [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
-        'background_feed' => '//backgroundimages.concrete5.org/wallpaper', // staying at concrete5.org for the momen
+        'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
-        'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
+        'background_info' => 'http://backgroundimages.concretecms.com/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'activity_slots' => 'https://marketing.concretecms.com/ccm/marketing/activity_slots',
         'help' => [

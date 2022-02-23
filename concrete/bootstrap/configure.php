@@ -310,7 +310,6 @@ const THEME_DOCUMENTATION_PAGE_TEMPLATE = 'core_theme_documentation';
  */
 /* -- Appearance -- */
 const VIEW_CORE_THEME = 'concrete';
-const VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE = 'background_image.php';
 
 /* -- Users -- */
 const USER_SUPER = 'admin';
