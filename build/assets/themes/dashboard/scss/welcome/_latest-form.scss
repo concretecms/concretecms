@@ -5,7 +5,7 @@ div.ccm-block-desktop-latest-form {
   color: #47bbf6;
   transition: background-color linear 0.1s;
   border-radius: .25rem;
-  box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
+  box-shadow: $popover-box-shadow;
 
   div.ccm-block-desktop-latest-form-inner {
     padding-top: 40px;

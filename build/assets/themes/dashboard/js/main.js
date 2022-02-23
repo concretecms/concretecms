@@ -24,6 +24,9 @@ import '@concretecms/bedrock/assets/desktop/js/frontend';
 // Calendar
 import '@concretecms/bedrock/assets/calendar/js/backend';
 
+// Welcome
+import Backstretch from 'jquery-backstretch';
+
 // Advanced search and search bars
 import './search/advanced-search-launcher';
 import './search/preset-selector';
