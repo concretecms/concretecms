@@ -10,6 +10,7 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\Html\Service\Navigation as NavigationService;
 use Concrete\Core\Navigation\Breadcrumb\PageBreadcrumbFactory;
 use Concrete\Core\Navigation\Item\PageItem;
 use Concrete\Core\Navigation\Navigation;
@@ -114,20 +115,45 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         return false;
     }
 
+    protected function getParentIDsToCurrent(): array
+    {
+        $current = Page::getCurrentPage();
+        $navigationService = $this->app->make(NavigationService::class);
+        $trail = $navigationService->getTrailToCollection($current);
+        $ids = [];
+        foreach ($trail as $ancestor) {
+            $ids[] = (int) $ancestor->getCollectionID();
+        }
+
+        return $ids;
+    }
+
     protected function getNavigation(): Navigation
     {
         $site = $this->app->make('site')->getSite();
         $home = $site->getSiteHomePageObject();
         $children = $home->getCollectionChildren();
         $navigation = new Navigation();
+
+        $current = Page::getCurrentPage();
+        $parentIDs = $this->getParentIDsToCurrent();
+
         foreach ($children as $child) {
             if ($this->includePageInNavigation($child)) {
                 $item = new PageItem($child);
+                if ($home->getCollectionID() !== $current->getCollectionID() && in_array($child->getCollectionID(), $parentIDs)) {
+                    $item->setIsActiveParent(true);
+                }
+                $item->setIsActive($current->getCollectionID() === $child->getCollectionID());
                 if ($this->includeSubPagesInNavigation($child)) {
                     $dropdownChildren = $child->getCollectionChildren();
                     foreach ($dropdownChildren as $dropdownChild) {
                         if ($this->includePageInNavigation($dropdownChild)) {
                             $dropdownChildItem = new PageItem($dropdownChild);
+                            if (in_array($dropdownChild->getCollectionID(), $parentIDs)) {
+                                $dropdownChildItem->setIsActiveParent(true);
+                            }
+                            $dropdownChildItem->setIsActive($current->getCollectionID() === $dropdownChild->getCollectionID());
                             $item->addChild($dropdownChildItem);
                         }
                     }
