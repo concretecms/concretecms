@@ -7,7 +7,7 @@ use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Exception\LessThan1CurrentPageException;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Pagerfanta;
-use Symfony\Component\HttpFoundation\Request;
+use Concrete\Core\Http\Request;
 
 class PaginationFactory
 {
@@ -22,7 +22,6 @@ class PaginationFactory
 
     /**
      * PaginationFactory constructor.
-     * @param PaginationProviderInterface $itemList
      */
     public function __construct(Request $request)
     {
