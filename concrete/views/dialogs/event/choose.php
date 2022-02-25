@@ -19,11 +19,19 @@
                 center: 'title',
                 right: 'month,basicWeek,basicDay'
             },
+            locale: <?= json_encode(Localization::activeLanguage()); ?>,
+            contentHeight: 'auto',
             events: {
                 url: '<?=$view->action('get_events')?>',
                 data: {
                     'caID': '<?=$calendar->getID()?>'
                 }
+            },
+            eventDataTransform: function(event) {
+                if(event.allDay) {
+                    event.end = moment(event.end).add(1, 'days')
+                }
+                return event;
             },
             eventRender: function(event, element) {
                 element.attr('href', '#'); // Just to make the pointer nice instead of a text handle.
@@ -36,10 +44,5 @@
                 });
             }
         });
-        setTimeout(function() {
-            // not sure why i need this to render off the bat but I do and I don't care to find out.
-
-            $('div[data-calendar=<?=$calendar->getID()?>]').fullCalendar('render');
-        }, 50);
     });
 </script>

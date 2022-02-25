@@ -6,18 +6,21 @@ use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\CalendarServiceProvider;
 use Concrete\Core\Calendar\Event\EventOccurrenceList;
-use Concrete\Core\Calendar\Event\Formatter;
+use Concrete\Core\Permission\Checker;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ChooseEvent extends BackendInterfaceController
 {
     protected $viewPath = '/dialogs/event/choose';
 
+    /**
+     * @return bool
+     */
     protected function canAccess()
     {
         $calendar = Calendar::getByID($_REQUEST['caID']);
         if (is_object($calendar)) {
-            $cp = new \Permissions($calendar);
+            $cp = new Checker($calendar);
 
             return $cp->canViewCalendarInEditInterface();
         }
@@ -25,9 +28,15 @@ class ChooseEvent extends BackendInterfaceController
         return false;
     }
 
+    /**
+     * @return JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Punic\Exception
+     * @throws \Punic\Exception\BadArgumentType
+     */
     public function getEvents()
     {
-        $calendar = Calendar::getByID($_REQUEST['caID']);
+        $calendar = Calendar::getByID($this->request->query->get('caID',0));
         $start = $this->request->query->get('start');
         $end = $this->request->query->get('end');
         $list = new EventOccurrenceList();
@@ -35,7 +44,7 @@ class ChooseEvent extends BackendInterfaceController
         $list->filterByStartTimeAfter(strtotime($start));
         $list->filterByStartTimeBefore(strtotime($end));
         $results = $list->getResults();
-        $data = array();
+        $data = [];
         $service = new Date();
         $formatter = $this->app->make(CalendarServiceProvider::class)
             ->getLinkFormatter();
@@ -47,8 +56,15 @@ class ChooseEvent extends BackendInterfaceController
             $obj->id = $event->getID();
             $obj->occurrenceID = $occurrence->getID();
             $obj->title = $event->getName();
-            $obj->start = $service->formatCustom('Y-m-d H:i:s', $occurrence->getStart());
-            $obj->end = $service->formatCustom('Y-m-d H:i:s', $occurrence->getEnd());
+            $repetition = $occurrence->getRepetition();
+            if ($repetition->isStartDateAllDay()) {
+                $obj->allDay = true;
+                $obj->start = $service->formatCustom('Y-m-d', $occurrence->getStart());
+                $obj->end = $service->formatCustom('Y-m-d', $occurrence->getEnd());
+            } else {
+                $obj->start = $service->formatCustom('Y-m-d H:i:s', $occurrence->getStart());
+                $obj->end = $service->formatCustom('Y-m-d H:i:s', $occurrence->getEnd());
+            }
             $obj->backgroundColor = $background;
             $obj->borderColor = $background;
             $obj->textColor = $text;
@@ -60,9 +76,12 @@ class ChooseEvent extends BackendInterfaceController
         return $js;
     }
 
+    /**
+     * @return void
+     */
     public function view()
     {
         $this->requireAsset('fullcalendar');
-        $this->set('calendar', Calendar::getByID($_REQUEST['caID']));
+        $this->set('calendar', Calendar::getByID($this->request->query->get('caID', 0)));
     }
 }
