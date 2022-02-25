@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
-/** @var \Concrete\Core\Navigation\Breadcrumb\PageBreadcrumb $breadcrumb */
+/** @var \Concrete\Core\Navigation\Breadcrumb\PageBreadcrumb|null $breadcrumb */
 $breadcrumb = $breadcrumb ?? null;
 if ($breadcrumb && count($breadcrumb->getItems()) > 0) {
     ?>

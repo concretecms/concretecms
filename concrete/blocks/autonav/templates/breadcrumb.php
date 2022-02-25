@@ -1,7 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
+/** @var \Concrete\Block\Autonav\Controller $controller */
 $navItems = $controller->getNavItems(true); // Ignore exclude from nav
-$c = Page::getCurrentPage();
+$c = \Concrete\Core\Page\Page::getCurrentPage();
 
 if (count($navItems) > 0) {
     echo '<nav role="navigation" aria-label="breadcrumb">'; //opens the top-level menu
@@ -20,5 +21,5 @@ if (count($navItems) > 0) {
 } elseif (is_object($c) && $c->isEditMode()) {
     ?>
     <div class="ccm-edit-mode-disabled-item"><?=t('Empty Auto-Nav Block.')?></div>
-<?php 
+<?php
 }
