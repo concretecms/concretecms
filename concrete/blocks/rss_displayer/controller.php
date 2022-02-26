@@ -161,6 +161,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->set('errorMsg', $e->getMessage());
         }
 
+        if (empty($this->titleFormat)) {
+            $this->set('titleFormat', 'h3');
+        }
         $this->set('posts', $posts);
         $this->set('title', $this->title);
     }

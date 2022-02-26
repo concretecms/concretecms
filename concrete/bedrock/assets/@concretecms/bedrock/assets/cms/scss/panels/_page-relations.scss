@@ -1,0 +1,28 @@
+div#ccm-panel-page_relations {
+  ul.item-select-list {
+    li {
+      border-bottom: 0;
+    }
+
+    a.ccm-panel-multilingual-menu-hover,
+    a.ccm-menu-item-active {
+      @include item-select-list-hover();
+    }
+
+    a.ccm-panel-multilingual-section-no-mappings {
+      color: #999;
+    }
+  }
+}
+
+div#ccm-popover-menu-container.ccm-panel-multilingual-menu-container,
+div#ccm-popover-menu-container.ccm-panel-multilingual-menu-container div.popover {
+  z-index: $index-level-menu-panel-and-dialog;
+}
+
+div#ccm-menu-click-proxy {
+  &.ccm-panel-multilingual-menu-hover {
+    z-index: $index-level-menu-panel-and-dialog;
+  }
+}
+

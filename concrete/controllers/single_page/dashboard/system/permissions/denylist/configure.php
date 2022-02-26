@@ -3,6 +3,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist;
 
 use Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist;
+use Concrete\Core\Entity\Permission\IpAccessControlCategory;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -10,11 +11,6 @@ use Punic\Unit;
 
 class Configure extends Denylist
 {
-    const UNIT_SECONDS = 's';
-    const UNIT_MINUTES = 'm';
-    const UNIT_HOURS = 'h';
-    const UNIT_DAYS = 'd';
-
     public function view($id = '')
     {
         $category = $this->getCategory($id);
@@ -26,12 +22,11 @@ class Configure extends Denylist
         }
         $this->set('pageTitle', t('%s: Configure IP blocking', $category->getDisplayName()));
         $this->set('category', $category);
-        $this->set('units', [
-            self::UNIT_SECONDS => Unit::getName('duration/second', 'long'),
-            self::UNIT_MINUTES => Unit::getName('duration/minute', 'long'),
-            self::UNIT_HOURS => Unit::getName('duration/hour', 'long'),
-            self::UNIT_DAYS => Unit::getName('duration/day', 'long'),
-        ]);
+        $units = [];
+        foreach (IpAccessControlCategory::TIMEWINDOW_UNITS as $unitName) {
+            $units[$unitName] = Unit::getName($unitName, 'long');
+        }
+        $this->set('units', $units);
     }
 
     public function update_ipdenylist($id = '')
@@ -52,8 +47,6 @@ class Configure extends Denylist
             $post = $this->request->request;
             $valn = $this->app->make('helper/validation/numbers');
             $category->setEnabled($post->get('banEnabled'));
-            /* @var \Concrete\Core\Utility\Service\Validation\Numbers $valn */
-
             $maxEvents = $post->get('maxEvents');
             if ($valn->integer($maxEvents, 1)) {
                 $category->setMaxEvents($maxEvents);
@@ -94,63 +87,15 @@ class Configure extends Denylist
         $this->view($category->getIpAccessControlCategoryID());
     }
 
-    /**
-     * @param int|null $seconds
-     *
-     * @return array
-     */
-    public function splitSeconds($seconds)
-    {
-        if ((string) $seconds === '') {
-            $selectedUnit = self::UNIT_SECONDS;
-            $unitValue = '';
-        } else {
-            $seconds = (int) $seconds;
-            if ($seconds < 60 || $seconds % 60 !== 0) {
-                $selectedUnit = self::UNIT_SECONDS;
-                $unitValue = (string) $seconds;
-            } else {
-                $minutes = round($seconds / 60);
-                if ($minutes < 60 || $minutes % 60 !== 0) {
-                    $selectedUnit = self::UNIT_MINUTES;
-                    $unitValue = (string) $minutes;
-                } else {
-                    $hours = round($minutes / 60);
-                    if ($hours < 24 || $hours % 24 !== 0) {
-                        $selectedUnit = self::UNIT_HOURS;
-                        $unitValue = (string) $hours;
-                    } else {
-                        $days = round($hours / 24);
-                        $selectedUnit = self::UNIT_DAYS;
-                        $unitValue = (string) $days;
-                    }
-                }
-            }
-        }
-
-        return [$selectedUnit, $unitValue];
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return int|null
-     */
-    protected function getPostedSeconds($name)
+    protected function getPostedSeconds(string $name): ?int
     {
         $post = $this->request->request;
-        $unit = $post->get("{$name}Unit");
-        if ($unit === self::UNIT_SECONDS) {
-            $multiplier = 1;
-        } elseif ($unit === self::UNIT_MINUTES) {
-            $multiplier = 1 * 60;
-        } elseif ($unit === self::UNIT_HOURS) {
-            $multiplier = 1 * 60 * 60;
-        } elseif ($unit === self::UNIT_DAYS) {
-            $multiplier = 1 * 60 * 60 * 24;
-        } else {
+        $unitName = $post->get("{$name}Unit");
+        $multiplier = array_search($unitName, IpAccessControlCategory::TIMEWINDOW_UNITS, true);
+        if (!$multiplier) {
             return null;
         }
+        $multiplier = (int) $multiplier;
         $value = $post->get("{$name}Value");
         $valn = $this->app->make('helper/validation/numbers');
         if (!$valn->integer($value, 0)) {

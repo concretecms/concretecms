@@ -166,14 +166,12 @@ if (is_object($f) && $f->getFileID()) {
         var images = document.getElementsByClassName('ccm-image-block-hover');
 
         for (var i = 0; i < images.length; i++) {
-            var image = images[i],
-                hoverSrc = image.getAttribute('data-hover-src'),
-                defaultSrc = image.getAttribute('data-default-src');
+            var image = images[i];
             image.onmouseover = function () {
-                image.setAttribute('src', hoverSrc);
+                this.setAttribute('src', this.getAttribute('data-hover-src'));
             };
             image.onmouseout = function () {
-                image.setAttribute('src', defaultSrc);
+                this.setAttribute('src', this.getAttribute('data-default-src'));
             };
         }
     </script>

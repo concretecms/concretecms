@@ -531,7 +531,6 @@ final class Controller implements LoggerAwareInterface
         // Start building a view:
         $contents = new View('/oauth/authorize');
         $contents->setViewTheme('concrete');
-        $contents->setViewTemplate('background_image.php');
         $contents->addScopeItems($data);
 
         return $contents;

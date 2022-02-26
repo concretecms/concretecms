@@ -30,7 +30,8 @@ if ($controller->getAction() == 'add'
     $iconFID = 0;
     $imageFile = null;
     $button = t('Add');
-    if (is_object($feed)) {
+    $ignorePermissions = false;
+    if (isset($feed)) {
         $pfTitle = $feed->getTitle();
         $pfDescription = h($feed->getDescription());
         $pfHandle = $feed->getHandle();
@@ -58,7 +59,7 @@ if ($controller->getAction() == 'add'
         <button data-dialog="delete-feed" class="btn btn-danger"><?php echo t('Delete Feed') ?></button>
     </div>
 
-    <?php if (is_object($feed)) { ?>
+    <?php if (isset($feed)) { ?>
         <div style="display: none">
             <div id="ccm-dialog-delete-feed" class="ccm-ui">
                 <form method="post" class="form-stacked" action="<?= $view->action('delete_feed') ?>">

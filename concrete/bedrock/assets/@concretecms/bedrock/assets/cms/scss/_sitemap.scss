@@ -20,6 +20,14 @@
   div.ccm-sitemap-tree {
     background-color: $sitemap-container-background-color;
     border: 0;
+
+    .ccm-page-home {
+      img {
+        // Locales
+        margin-right: 5px;
+        margin-top: 9px;
+      }
+    }
   }
 
   ul.ui-fancytree {

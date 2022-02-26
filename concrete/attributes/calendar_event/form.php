@@ -1,6 +1,10 @@
+<?php
+/** @var \Concrete\Core\Form\Service\Form $form */
+/** @var \Concrete\Core\Attribute\View $view */
+?>
 <div class="form-group">
     <?=$form->label('calendarID', t('Calendar'))?>
-    <?=$form->select('calendarID', $calendars, $calendarID, array('data-select' => 'calendar'));?>
+    <?=$form->select('calendarID', $calendars ?? [], $calendarID ?? 0, ['data-select' => 'calendar']);?>
 </div>
 
 <div class="form-group">

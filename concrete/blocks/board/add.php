@@ -1,9 +1,15 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var \Concrete\Core\Form\Service\Form $form */
+/** @var array<string,mixed> $boardSelect */
+/** @var int|string $boardID */
+/** @var \Concrete\Core\Block\View\BlockView $view */
+$boardInstanceID = $boardInstanceID ?? 0;
+?>
 <div data-view="edit-board-block">
     <div class="form-group">
         <?php echo $form->label('boardID', t('Board'))?>
         <?php echo $form->select('boardID', $boardSelect, $boardID, [
-            'v-model' => 'boardID'
+            'v-model' => 'boardID',
         ])?>
     </div>
 
