@@ -35,10 +35,9 @@ class MailImporter extends ConcreteObject
     public static function getList()
     {
         $db = Database::connection();
-        $r = $db->Execute('select miID from MailImporters order by miID asc');
-        $importers = array();
-        while ($row = $r->FetchRow()) {
-            $importers[] = static::getByID($row['miID']);
+        $importers = [];
+        foreach ($db->fetchFirstColumn('select miID from MailImporters order by miID asc') as $miID) {
+            $importers[] = static::getByID($miID);
         }
 
         return $importers;
@@ -50,10 +49,9 @@ class MailImporter extends ConcreteObject
     public static function getEnabledList()
     {
         $db = Database::connection();
-        $r = $db->Execute('select miID from MailImporters where miIsEnabled = 1 order by miID asc');
-        $importers = array();
-        while ($row = $r->FetchRow()) {
-            $importers[] = static::getByID($row['miID']);
+        $importers = [];
+        foreach ($db->fetchFirstColumn('select miID from MailImporters where miIsEnabled = 1 order by miID asc') as $miID) {
+            $importers[] = static::getByID($miID);
         }
 
         return $importers;
@@ -99,14 +97,12 @@ class MailImporter extends ConcreteObject
     public static function getListByPackage($pkg)
     {
         $db = Database::connection();
-        $list = array();
-        $r = $db->Execute('select miID from MailImporters where pkgID = ? order by miID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
-            $list[] = static::getByID($row['miID']);
+        $importers = [];
+        foreach ($db->fetchFirstColumn('select miID from MailImporters where pkgID = ? order by miID asc', [$pkg->getPackageID()]) as $miID) {
+            $importers[] = static::getByID($miID);
         }
-        $r->Close();
 
-        return $list;
+        return $importers;
     }
 
     public function getMailImporterID()
