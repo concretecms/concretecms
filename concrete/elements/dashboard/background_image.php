@@ -48,41 +48,7 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
                 fade: 500
             });
         <?php } ?>
-
-        <?php if ($canEdit) { ?>
-            $('#ccm-dashboard-welcome-check-in').on('click', function(e) {
-                e.preventDefault();
-                $(this).closest('form').submit();
-            });
-
-            $('form[data-form=check-in]').concreteAjaxForm();
-
-            ConcreteEvent.on('AddBlockListAddBlock', function(event, data) {
-                var editor = Concrete.getEditMode();
-                var area = editor.getNextBlockArea();
-                blockType = new Concrete.BlockType(data.$launcher, editor);
-                blockType.addToDragArea(_.last(area.getDragAreas()));
-            });
-
-            ConcreteEvent.on('EditModeAfterInit', function(event, data) {
-                var areas = data.editMode.getAreas();
-                _.each(areas, function(area) {
-                    area.bindEvent("EditModeAddBlocksToArea.area",
-                        function(e, myData) {
-                            if (myData.area === area) {
-                                var arHandle = myData.area.getHandle();
-                                $.fn.dialog.open({
-                                    width: 550,
-                                    height: 380,
-                                    title: '<?=t('Add Block')?>',
-                                    href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block_list?cID=<?=$c->getCollectionID()?>&arHandle=' + encodeURIComponent(arHandle)});
-                            }
-                        }
-                    )
-                });
-            });
-        <?php } ?>
-
+        
     });
 </script>
 
