@@ -4,7 +4,7 @@ namespace Concrete\Core\Permission\Response;
 use Exception;
 use Concrete\Core\User\User;
 use Concrete\Core\Support\Facade\Application;
-use PermissionKeyCategory;
+use Concrete\Core\Permission\Category as PermissionKeyCategory;
 use Core;
 
 class Response
