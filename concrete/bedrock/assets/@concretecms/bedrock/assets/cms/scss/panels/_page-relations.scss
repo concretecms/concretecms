@@ -1,9 +1,7 @@
 div#ccm-panel-page_relations {
-
   ul.item-select-list {
     li {
-      border-bottom: none;
-
+      border-bottom: 0;
     }
 
     a.ccm-panel-multilingual-menu-hover,
@@ -17,7 +15,8 @@ div#ccm-panel-page_relations {
   }
 }
 
-div#ccm-popover-menu-container.ccm-panel-multilingual-menu-container, div#ccm-popover-menu-container.ccm-panel-multilingual-menu-container div.popover {
+div#ccm-popover-menu-container.ccm-panel-multilingual-menu-container,
+div#ccm-popover-menu-container.ccm-panel-multilingual-menu-container div.popover {
   z-index: $index-level-menu-panel-and-dialog;
 }
 
