@@ -16,15 +16,10 @@
 #
 # Usage: bash -i <function name> arg1 arg2 arg3 ...
 
-# gls_version
-# Description:
-# Parses The gitpod-laravel-starter version from it's CHANGELOG.
-# If the CHANGELOG.md cannot be found then a hardcoded string is used.
-#
-gls_version() {
+gps_version() {
   local hard version title file
-  hard="1.4.0"
-  title="Gitpod Laravel Starter Framework"
+  hard="0.9"
+  title="Concrete CMS Gitpod"
   file="$GITPOD_REPO_ROOT"/.gp/CHANGELOG.md
   if [[ -f $file ]]; then
     version=$(grep -oE "([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)?" "$file" | head -n 1)
@@ -114,7 +109,7 @@ show_powered_by() {
   local ver file ver_pattern="([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)"
   echo "This project is powered by:"
   echo -en "\e[38;5;34m"
-  gls_version
+  gps_version
   echo "PHP $(bash .gp/bash/utils.sh php_version)"
   composer show | grep laravel/ui >/dev/null && ui=1 || ui=0
   if [[ $ui -eq 1 ]]; then

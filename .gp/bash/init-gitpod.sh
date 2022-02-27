@@ -43,3 +43,18 @@ if [[ $update_npm == 1 ]]; then
   fi
 fi
 # END: Update npm if needed
+
+# php fpm
+# BEGIN: Autogenerate php-fpm.conf
+php_fpm_conf_path=".gp/conf/php-fpm/php-fpm.conf"
+active_php_version="$(. .gp/bash/utils.sh php_version)"
+msg="Autogenerating $php_fpm_conf_path for PHP $active_php_version"
+log_silent "$msg" && start_spinner "$msg"
+if bash .gp/bash/helpers.sh php_fpm_conf "$active_php_version" "$php_fpm_conf_path"; then
+  stop_spinner $?
+  log_silent "SUCCESS: $msg"
+else
+  stop_spinner $?
+  log -e "ERROR: $msg"
+fi
+# END: Autogenerate php-fpm.conf
