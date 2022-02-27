@@ -19,12 +19,15 @@ class PageValueTest extends AttributeValueTestCase
             'PermissionKeys',
             'PageTypePublishTargetTypes',
             'PageThemes',
+            'UserGroups',
         ]);
 
         $this->metadatas = array_merge($this->metadatas, [
             'Concrete\Core\Entity\Attribute\Key\Settings\EmptySettings',
             'Concrete\Core\Entity\Attribute\Value\Value\NumberValue',
             'Concrete\Core\Entity\Page\Template',
+            'Concrete\Core\Entity\User\User',
+            'Concrete\Core\Entity\User\UserSignup',
         ]);
     }
 
@@ -39,6 +42,8 @@ class PageValueTest extends AttributeValueTestCase
         $this->truncateTables();
 
         parent::setUp();
+
+        \Core::make('user/registration')->createSuperUser('password', 'admin@example.com');
 
         $template = \Concrete\Core\Page\Template::add('full', 'Full');
         $pt = \Concrete\Core\Page\Type\Type::add([
