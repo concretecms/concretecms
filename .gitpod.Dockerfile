@@ -8,6 +8,7 @@ COPY --chown=gitpod:gitpod .gp/bash/update-composer.sh \
 .gp/bash/.bash_aliases \
 .gp/bash/php.sh \
 .gp/bash/install-core-packages.sh \
+.gp/bash/utils.sh \
 .gp/snippets/server-functions.sh \
 .gp/bash/install-xdebug.sh \
 /tmp/
@@ -39,4 +40,4 @@ RUN sudo bash -c ". /tmp/install-xdebug.sh" && rm /tmp/install-xdebug.sh
 RUN bash -c ". /tmp/update-composer.sh" && rm /tmp/update-composer.sh
 
 # Force the docker image to build by incrementing this value
-ENV INVALIDATE_CACHE=7
+ENV INVALIDATE_CACHE=8

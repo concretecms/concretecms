@@ -6,17 +6,11 @@
 #
 # php.sh
 # Description:
-# Installs an optional PHP version if specified in the [PHP] section of starter.ini
-# If an optional PHP version is installed then the original PHP version will be uninstalled and purged
-#
+# Installs PHP
 # Notes:
 # This script assumes it is being run from .gitpod.Dockerfile as a sudo user
 # and that all of this scripts dependencies have already been copied to /tmp
 # If you change this script you must force a rebuild of the docker image
-#
-# Gitpod currently implements PHP as an embedded Apache module (prefork MPM)
-# This script assumes that case by installing libapache2-mod-phpX.X when an optional
-# php version is required when X.X is the supported PHP version specified in starter.ini
 
 log='/var/log/workspace-image.log'
 php7_4='php7.4 php7.4-fpm php7.4-dev libapache2-mod-php7.4 php7.4-bcmath php7.4-ctype php7.4-curl php-date php7.4-gd php7.4-intl php7.4-json php7.4-mbstring php7.4-mysql php-net-ftp php7.4-pgsql php7.4-sqlite3 php7.4-tokenizer php7.4-xml php7.4-zip'
@@ -50,10 +44,6 @@ purge_gp_php() {
 
 install_php() {
   local msg=
-  local ppa=
-  ppa=$(. /tmp/utils.sh parse_ini_value /tmp/starter.ini PHP ppa)
-  # Strip any potential leading or tailing whitepsace from the parsed ppa value
-  ppa=$(bash /tmp/utils.sh trim_external "$ppa")
 
   # Uncomment to debugging installed packages in the build image step
   # sudo a2query -m
@@ -61,22 +51,7 @@ install_php() {
   # Disable existing php mod and prefork, this will automatically be reinstated when PHP is installed
   sudo a2dismod "php$latest_php" mpm_prefork
 
-  # Conditionally remove ppa:ondrej/php (if directed to do so AND it exists)
-  if [[ $ppa != "ondrej" ]]; then
-    if grep ^deb /etc/apt/sources.list /etc/apt/sources.list.d/* | grep -wq "ondrej/php"; then
-      msg="Removing ppa:ondrej/php (as specified in starter.ini)"
-      echo "  $msg" | tee -a $log
-      if sudo add-apt-repository -y --remove "ppa:ondrej/php"; then
-        echo "    SUCCESS: $msg" | tee -a $log
-        echo "      The standard OS ppa will be used to install PHP $php_version"
-      else
-        2>&1 echo "    ERROR: $msg" | tee -a $log
-      fi # end removal of ppa:ondrej/php
-    fi # end check if ppa:ondrej/php is active
-  fi # end check ppa directive in starter.ini
-
-
-  msg="Installing PHP $php_version as specified in starter.ini"
+  msg="Installing PHP $php_version"
   echo "  $msg" | tee -a $log
   echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections \
     && sudo apt-get update -q \
@@ -120,7 +95,7 @@ keep_existing_php() {
   local msg1 msg2=
 
   [[ $1 == 'fallback' ]] &&
-    msg1="  WARNING: unsupported PHP version $php_version found in starter.ini." &&
+    msg1="  WARNING: unsupported PHP version $php_version ." &&
     msg2="Falling back to the existing PHP version $latest_php as specified in $gp_php_url" &&
     echo "$msg1 $msg2" | tee -a $log &&
     echo "END: php.sh" | tee -a $log  &&
@@ -133,12 +108,7 @@ keep_existing_php() {
 
 # BEGIN: MAIN
 echo "BEGIN: php.sh" | tee -a $log
-php_version=$(. /tmp/utils.sh parse_ini_value /tmp/starter.ini PHP version)
-ec=$?
-if [[ $ec -ne 0 ]]; then
-  2>&1 echo "  WARNING: could not parse /tmp/starter.ini. Defaulting PHP version to 'gitpodlatest' as specified in $gp_php_url" | tee -a $log
-  php_version='gitpodlatest'
-fi
+php_version=7.4
 
 if [[ $php_version == '7.4' ]]; then
   IFS=" " read -r -a all_packages <<< "$php7_4"

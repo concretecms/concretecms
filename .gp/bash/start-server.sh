@@ -21,7 +21,7 @@ if [[ $UP -ne 1 ]]; then
 fi 
 gp await-port 3306 &&
 __port=$(bash .gp/bash/helpers.sh get_default_server_port)
-__server=$(bash .gp/bash/utils.sh parse_ini_value starter.ini development default_server)
+__server=default_server
 start_spinner "Starting $__server server on port $__port when system is ready..." &&
 gp sync-await gitpod-inited &&
 stop_spinner $? &&

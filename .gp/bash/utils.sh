@@ -83,15 +83,6 @@ add_file_to_file_after() {
 # The name argument ($3) and the section argument ($2)
 # must be simple strings with no special regex characters in them.
 # If a value is not set then an empty string with be echoed.
-#
-# Usage:
-# Example: get the value of the install variable under the section myphpadmin in the file starter.ini
-# Assume the contents of starter.ini has at least this block in it.
-#   [phpmyadmin]
-#   ; this is a comment: install=1, do not install = 0
-#   install=1
-#
-# parse_ini_value starter.ini phpmyadmin install
 # // outputs: 1
 #
 parse_ini_value() {
