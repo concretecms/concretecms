@@ -39,4 +39,4 @@ RUN sudo bash -c ". /tmp/install-xdebug.sh" && rm /tmp/install-xdebug.sh
 RUN bash -c ". /tmp/update-composer.sh" && rm /tmp/update-composer.sh
 
 # Force the docker image to build by incrementing this value
-ENV INVALIDATE_CACHE=4
+ENV INVALIDATE_CACHE=5
