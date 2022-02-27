@@ -5,8 +5,10 @@ USER gitpod
   # Copy required files to /tmp
 COPY --chown=gitpod:gitpod .gp/bash/update-composer.sh \
 .gp/conf/nginx/nginx.conf \
+.gp/bash/.bash_aliases \
 .gp/bash/php.sh \
 .gp/bash/install-core-packages.sh \
+.gp/snippets/server-functions.sh \
 .gp/bash/install-xdebug.sh \
 /tmp/
 
