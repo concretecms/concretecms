@@ -13,7 +13,7 @@ abstract class Entity extends ConcreteObject
 {
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $label;
 
