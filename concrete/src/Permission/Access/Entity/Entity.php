@@ -13,6 +13,11 @@ abstract class Entity extends ConcreteObject
 {
 
     /**
+     * @var string
+     */
+    public $label;
+
+    /**
      * @var int
      */
     public $petID;
