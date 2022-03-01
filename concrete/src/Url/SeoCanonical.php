@@ -156,4 +156,14 @@ class SeoCanonical
     {
         $this->pathArguments = $pathArguments;
     }
+
+    /**
+     * @since 9.0.3
+     * @param string $parameter
+     * @return void
+     */
+    public function addIncludedQuerystringParameter(string $parameter)
+    {
+        $this->includedQuerystringParameters[] = $parameter;
+    }
 }

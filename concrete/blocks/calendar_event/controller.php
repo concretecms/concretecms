@@ -14,6 +14,7 @@ use Concrete\Core\Entity\Calendar\CalendarEventVersionOccurrence;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Url\SeoCanonical;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -200,6 +201,15 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         return null;
+    }
+
+    public function on_start()
+    {
+        if ($this->request->query->has('occurrenceID') && $this->mode == 'R') {
+            /** @var SeoCanonical $seo */
+            $seo = $this->app->make(SeoCanonical::class);
+            $seo->addIncludedQuerystringParameter('occurrenceID');
+        }
     }
 
     /**

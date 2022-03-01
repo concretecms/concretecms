@@ -6,10 +6,13 @@ use CollectionAttributeKey;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
@@ -267,6 +270,12 @@ class Controller extends BlockController implements UsesFeatureInterface
             } else {
                 $this->list->filterByParentID($cParentID);
             }
+        }
+
+        if ($this->paginate) {
+            /** @var SeoCanonical $seoCanonical */
+            $seoCanonical = $this->app->make(SeoCanonical::class);
+            $seoCanonical->addIncludedQuerystringParameter($this->list->getQueryPaginationPageParameter());
         }
 
         return $this->list;
