@@ -34,6 +34,17 @@
             log-channel-handle=""
             package=""
         />
+		<ipaccesscontrolcategory
+				handle="forgot_password"
+				enabled="1"
+				name="Forgot Password Attempts"
+				max-events="2"
+				time-window="30"
+				ban-duration="600"
+				site-specific="0"
+				log-channel-handle=""
+				package=""
+		/>
     </ipaccesscontrolcategories>
 
 </concrete5-cif>
