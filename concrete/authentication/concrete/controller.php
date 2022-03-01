@@ -205,7 +205,7 @@ class Controller extends AuthenticationTypeController
                  */
                 $accessControlCategoryService->registerEvent();
                 if ($accessControlCategoryService->isThresholdReached()) {
-                    throw new \Exception(t('Unable to reset password: too many attempts. Please try again later.'));
+                    throw new \Exception(t('Unable to request password reset: too many attempts. Please try again later.'));
                 }
 
                 if (!$token->validate()) {
