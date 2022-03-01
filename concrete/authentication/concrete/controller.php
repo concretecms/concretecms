@@ -203,8 +203,18 @@ class Controller extends AuthenticationTypeController
                 /**
                  * @var $accessControlCategoryService IpAccessControlService
                  */
-                $accessControlCategoryService->registerEvent();
-                if ($accessControlCategoryService->isThresholdReached()) {
+                $forgotPasswordThresholdReached = false;
+                if ($accessControlCategoryService->isDenylisted()) {
+                    $forgotPasswordThresholdReached = true;
+                } else {
+                    $accessControlCategoryService->registerEvent();
+                    if ($accessControlCategoryService->isThresholdReached()) {
+                        $accessControlCategoryService->addToDenylistForThresholdReached();
+                        $forgotPasswordThresholdReached = true;
+                    }
+                }
+
+                if ($forgotPasswordThresholdReached) {
                     throw new \Exception(t('Unable to request password reset: too many attempts. Please try again later.'));
                 }
 
