@@ -13,11 +13,6 @@ use Concrete\Core\User\UserInfoRepository;
 class ConversationMessageAuthorEntity extends Entity
 {
     /**
-     * @var string|null
-     */
-    protected $label;
-
-    /**
      * @param PermissionAccess $pa
      *
      * @return \Concrete\Core\User\UserInfo[]
