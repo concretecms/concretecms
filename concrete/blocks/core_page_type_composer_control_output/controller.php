@@ -12,10 +12,6 @@ use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputCont
 
 class Controller extends BlockController
 {
-    /**
-     * @var bool
-     */
-    protected $btCacheBlockRecord = true;
 
     /**
      * @var string
@@ -32,7 +28,6 @@ class Controller extends BlockController
      */
     protected $ptComposerOutputControlID;
 
-    protected $helpers = ['form'];
 
     /**
      * {@inheritdoc}
