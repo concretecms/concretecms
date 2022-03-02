@@ -51,9 +51,8 @@ foreach ($list as $pa) {
 <div class="ccm-ui" id="ccm-permissions-access-entity-wrapper">
     <!--suppress HtmlUnknownTarget -->
     <form id="ccm-permissions-timed-guest-access-form" class="form-stacked" method="post"
-          action="<?= h(Category::getByHandle('block')->getTaskURL()) ?>">
+          action="<?= h(Category::getByHandle('block')->getTaskURL('set_timed_guest_access')) ?>">
 
-        <?php echo $form->hidden('task', 'set_timed_guest_access'); ?>
         <?php echo $form->hidden('cID', $c->getCollectionID()); ?>
         <?php echo $form->hidden('bID', $b->getBlockID()); ?>
         <?php echo $form->hidden('arHandle', $arHandle); ?>
@@ -63,7 +62,7 @@ foreach ($list as $pa) {
         </p>
 
         <?php /** @noinspection PhpUnhandledExceptionInspection */
-        echo View::element('permission/duration', ['pd' => $pd]); ?>
+         View::element('permission/duration', ['pd' => $pd]); ?>
 
         <div class="dialog-buttons">
             <input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?php echo h(t('Cancel')) ?>"
