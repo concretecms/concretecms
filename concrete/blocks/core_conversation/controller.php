@@ -104,6 +104,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
      * @return string
      */
     public function getSearchableContent()
@@ -152,7 +154,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function duplicate_master($newBID, $newPage)
     {
-        parent::duplicate($newBID);
+        $this->duplicate($newBID);
         $db = $this->app->make('database');
         $conv = Conversation::add();
         $conv->setConversationPageObject($newPage);
@@ -322,11 +324,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
         if ($values['attachmentOverridesEnabled']) {
             $conversation->setConversationAttachmentOverridesEnabled((int) ($values['attachmentOverridesEnabled']));
-            if ($values['attachmentsEnabled']) {
-                $conversation->setConversationAttachmentsEnabled(1);
-            } else {
-                $conversation->setConversationAttachmentsEnabled(0);
-            }
+            $conversation->setConversationAttachmentsEnabled($values['attachmentsEnabled'] ? 1 : 0);
         } else {
             $conversation->setConversationAttachmentOverridesEnabled(0);
         }
@@ -396,7 +394,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         /** @var PageKey $key */
         foreach ($keys as $key) {
-            if ($key->getAttributeType()->getAttributeTypeHandle() == 'rating') {
+            if ($key->getAttributeType()->getAttributeTypeHandle() === 'rating') {
                 yield $key->getAttributeKeyID() => $key->getAttributeKeyDisplayName();
             }
         }

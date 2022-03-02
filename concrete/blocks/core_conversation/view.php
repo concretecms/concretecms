@@ -1,17 +1,24 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
-
+/** @var \Concrete\Core\Block\View\BlockView $this */
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 /** @var bool|string $paginate */
 $paginate = ($paginate ?? null) ? 'true' : 'false';
 /** @var int $itemsPerPage */
 $itemsPerPage = ($paginate === 'true') ? $itemsPerPage ?? 50 : -1;
-$blockAreaHandle = $this->block->getAreaHandle();
+/** @var \Concrete\Core\Block\Block $b */
+$blockAreaHandle = $b->getAreaHandle();
 /** @var int $maxFileSizeRegistered */
 /** @var int $maxFileSizeGuest */
 /** @var int $maxFilesRegistered */
 /** @var int $maxFilesGuest */
 /** @var int $bID */
 /** @var int $cID */
+
+$newCollectionID = null;
+if ($b->getBlockCollectionID()) {
+    // Fix for when using stacks (for sitewide conversations)
+    $newCollectionID = $b->getBlockCollectionID();
+}
 
 /** @var \Concrete\Core\User\User $u */
 $u = app(Concrete\Core\User\User::class);
@@ -56,7 +63,7 @@ if (isset($conversation) && is_object($conversation)) { ?>
         $('div[data-conversation-id=<?=$conversation->getConversationID()?>]').concreteConversation({
             cnvID: <?=$conversation->getConversationID()?>,
             blockID: <?=$bID?>,
-            cID: <?=$cID?>,
+            cID: <?=$newCollectionID ?? $cID?>,
             addMessageToken: '<?=$addMessageToken?>',
             editMessageToken: '<?=$editMessageToken?>',
             deleteMessageToken: '<?=$deleteMessageToken?>',

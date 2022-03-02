@@ -5,11 +5,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\File\Service\Application as FileApplication;
-use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\UserSelector;
 use Concrete\Core\Support\Facade\Application;
 
-/** @var \Concrete\Block\CoreConversation\Controller $controller */
+/** @var Concrete\Block\CoreConversation\Controller $controller */
 /** @var int $cnvID */
 /** @var int $enablePosting */
 /** @var bool $paginate */
@@ -37,18 +36,18 @@ use Concrete\Core\Support\Facade\Application;
 /** @var bool|null $notificationOverridesEnabled */
 /** @var bool $subscriptionEnabled */
 /** @var \Concrete\Core\User\UserInfo[] $notificationUsers */
+/** @var Concrete\Core\Form\Service\Form $form */
 
 $app = Application::getFacadeApplication();
-/** @var Repository $config */
+/** @var Concrete\Core\Config\Repository\Repository $config */
 $config = $app->make(Repository::class);
-/** @var Form $form */
-$form = $app->make(Form::class);
-/** @var FileApplication $helperFile */
+
+/** @var Concrete\Core\File\Service\Application $helperFile */
 $helperFile = $app->make(FileApplication::class);
-/** @var UserSelector $userSelector */
+/** @var Concrete\Core\Form\Service\Widget\UserSelector $userSelector */
 $userSelector = $app->make(UserSelector::class);
 
-if ($controller->getAction() == 'add') {
+if ($controller->getAction() === 'add') {
     $enablePosting = 1;
     $paginate = 1;
     $itemsPerPage = 50;
