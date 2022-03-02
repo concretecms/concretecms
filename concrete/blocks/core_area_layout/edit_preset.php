@@ -11,6 +11,7 @@ $columns = $columns ?? [];
     /** @var \Concrete\Core\Area\Area $a */
     /** @var \Concrete\Core\Page\Theme\GridFramework\GridFramework $themeGridFramework */
     /** @var \Concrete\Core\Area\Layout\Formatter\FormatterInterface $formatter */
+    /** @var \Concrete\Core\Block\View\BlockView $this */
     $this->inc('form.php', ['b' => $b, 'a' => $a]);
 
 ?>
