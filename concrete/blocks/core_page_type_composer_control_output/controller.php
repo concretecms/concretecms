@@ -12,7 +12,6 @@ use Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputCont
 
 class Controller extends BlockController
 {
-
     /**
      * @var string
      */
@@ -27,7 +26,6 @@ class Controller extends BlockController
      * @var int|null
      */
     protected $ptComposerOutputControlID;
-
 
     /**
      * {@inheritdoc}
