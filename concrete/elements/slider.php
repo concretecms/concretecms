@@ -25,9 +25,9 @@ if (!isset($default)) {
 }
 ?>
 <div>
-    <span class="ccm-inline-style-slider-heading">
+    <label class="form-label">
         <?php echo $label; ?>
-    </span>
+    </label>
 
     <div class="ccm-inline-style-slider-wrapper">
         <div class="ccm-inline-style-sliders"

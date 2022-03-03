@@ -1,12 +1,7 @@
-div.ccm-ui {
+.ccm-ui {
   .btn {
     letter-spacing: 0.03rem;
   }
-
-  /*
-  .btn-secondary {
-    @include button-variant($gray-700, $gray-700, $secondary, $secondary, #fff, $secondary);
-  }*/
 
   .btn-secondary {
     @include button-variant(#fff, $gray-200, $hover-background: $secondary, $hover-border: $secondary, $hover-color: #fff, $active-background: $gray-700, $active-border: $gray-700);
