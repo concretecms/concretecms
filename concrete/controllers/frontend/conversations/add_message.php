@@ -3,6 +3,7 @@
 namespace Concrete\Controller\Frontend\Conversations;
 
 use ArrayAccess;
+use Concrete\Block\CoreConversation\Controller;
 use Concrete\Core\Antispam\Service as AntispamService;
 use Concrete\Core\Conversation\Conversation;
 use Concrete\Core\Conversation\ConversationService;
@@ -223,6 +224,7 @@ class AddMessage extends FrontendController
 
     /**
      * @return \Concrete\Core\Entity\File\File[]
+     * @throws UserMessageException
      */
     protected function getAttachments(ArrayAccess $errors): array
     {
@@ -237,7 +239,7 @@ class AddMessage extends FrontendController
         } else {
             $blockController = $this->getBlockController();
             $u = $this->app->make(User::class);
-            $maxFiles = $u->isRegistered() ? $blockController->maxFilesRegistered : $blockController->maxFilesGuest;
+            $maxFiles = $u->isRegistered() ? $blockController->getFileSettings()['maxFilesRegistered'] : $blockController->getFileSettings()['maxFilesGuest'];
             if ($maxFiles > 0 && count($attachmentIDs) > $maxFiles) {
                 $errors[] = t('You have too many attachments.');
             } else {

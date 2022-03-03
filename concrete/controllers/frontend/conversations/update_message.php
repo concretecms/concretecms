@@ -190,7 +190,7 @@ class UpdateMessage extends FrontendController
     protected function dispatchEvent(Message $message): void
     {
         $event = new MessageEvent($message);
-        $dispatcher = $this->app->make(EventDispatcherInterface::class);
+        $dispatcher = $this->app->make('director');
         $dispatcher->dispatch('on_conversations_message_update', $event);
     }
 

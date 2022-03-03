@@ -30,6 +30,7 @@ $c = Page::getByID(\Request::request('cID'));
 $cnvMessageURL = urlencode($c->getCollectionLink(true) . '#cnv' . $cnvID . 'Message' . $cnvMessageID);
 
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
+
     $author = $message->getConversationMessageAuthorObject();
     $formatter = $author->getFormatter();
     ?>
