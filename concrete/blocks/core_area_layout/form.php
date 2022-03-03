@@ -1,6 +1,5 @@
 <?php
     defined('C5_EXECUTE') or die('Access Denied.');
-
     $minColumns = 1;
     $columnsNum = $columnsNum ?? 1;
     $maxColumns = $maxColumns ?? 12;
@@ -10,7 +9,7 @@
     /** @var \Concrete\Core\Block\View\BlockView $view */
     /** @var \Concrete\Core\Area\Area $a */
     /** @var \Concrete\Core\Page\Theme\GridFramework\GridFramework $themeGridFramework */
-    if ($controller->getTask() == 'add') {
+    if ($controller->getAction() === 'add') {
         $spacing = 0;
         $iscustom = false;
     }
@@ -48,10 +47,10 @@
 	</li>
 	<li data-grid-form-view="themegrid">
 		<label for="themeGridColumns"><?=t('Columns:')?></label>
-		<input type="number" name="themeGridColumns" id="themeGridColumns" style="width: 40px" <?php if ($controller->getTask() == 'add') {
+		<input type="number" name="themeGridColumns" id="themeGridColumns" style="width: 40px" <?php if ($controller->getAction() === 'add') {
     ?>  min="<?=$minColumns?>" max="<?= $themeGridMaxColumns ?? '' ?>" <?php
 } ?> value="<?=$columnsNum?>" />
-		<?php if ($controller->getTask() == 'edit') {
+		<?php if ($controller->getAction() === 'edit') {
     // we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode.?>
 			<input type="hidden" name="themeGridColumns" value="<?=$columnsNum?>" />
 		<?php
@@ -59,10 +58,10 @@
 	</li>
 	<li data-grid-form-view="custom" class="ccm-sub-toolbar-text-cell">
 		<label for="columns"><?=t('Columns:')?></label>
-		<input type="number" name="columns" id="columns" style="width: 40px" <?php if ($controller->getTask() == 'add') {
+		<input type="number" name="columns" id="columns" style="width: 40px" <?php if ($controller->getAction() === 'add') {
     ?> min="<?=$minColumns?>" max="<?=$maxColumns?>" <?php
 } ?> value="<?=$columnsNum?>" />
-		<?php if ($controller->getTask() == 'edit') {
+		<?php if ($controller->getAction() === 'edit') {
     // we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode.?>
 			<input type="hidden" name="columns" value="<?=$columnsNum?>" />
 		<?php
@@ -81,7 +80,7 @@
     ?>0<?php
 } ?>" />
 	</li>
-	<?php if ($controller->getTask() == 'edit') {
+	<?php if ($controller->getAction() === 'edit') {
     $bp = new \Concrete\Core\Permission\Checker($b);
     ?>
 
@@ -103,7 +102,7 @@
 		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t('Cancel')?></button>
 	</li>
 	<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save">
-	  <button class="btn btn-primary" type="button" id="ccm-layouts-save-button"><?php if ($controller->getTask() == 'add') {
+	  <button class="btn btn-primary" type="button" id="ccm-layouts-save-button"><?php if ($controller->getAction() === 'add') {
     ?><?=t('Add Layout')?><?php
 } else {
     ?><?=t('Update Layout')?><?php
@@ -111,7 +110,7 @@
 	</li>
 </ul>
 
-	<?php if ($controller->getTask() == 'add') {
+	<?php if ($controller->getAction() === 'add') {
     ?>
 		<input name="arLayoutMaxColumns" type="hidden" value="<?=$view->getAreaObject()->getAreaGridMaximumColumns()?>" />
 	<?php
@@ -120,7 +119,7 @@
 <script type="text/javascript">
 <?php
 
-if ($controller->getTask() == 'edit') {
+if ($controller->getAction() === 'edit') {
     $editing = 'true';
 } else {
     $editing = 'false';
@@ -132,7 +131,7 @@ $(function() {
 
 
 	<?php
-    if ($controller->getTask() == 'edit') {
+    if ($controller->getAction() === 'edit') {
         ?>
 	$('#ccm-layouts-toolbar').on('click', 'a[data-menu-action=delete-layout]', function(e) {
 		var editor = new Concrete.getEditMode(),
@@ -161,7 +160,7 @@ $(function() {
 		'rowend': '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowEndHTML())?>',
         'additionalGridColumnClasses': '<?=$themeGridFramework->getPageThemeGridFrameworkColumnAdditionalClasses()?>',
         'additionalGridColumnOffsetClasses': '<?=$themeGridFramework->getPageThemeGridFrameworkColumnOffsetAdditionalClasses()?>',
-		<?php if ($controller->getTask() == 'add') {
+		<?php if ($controller->getAction() === 'add') {
     ?>
 		'maxcolumns': '<?=$controller->getAreaObject()->getAreaGridMaximumColumns()?>',
 		<?php
@@ -174,10 +173,10 @@ $(function() {
 		'gridColumnClasses': [
 			<?php $classes = $themeGridFramework->getPageThemeGridFrameworkColumnClasses();
     ?>
-			<?php for ($i = 0; $i < count($classes); $i++) {
+			<?php for ($i = 0,$iMax = count($classes); $i < $iMax; $i++) {
     $class = $classes[$i];
     ?>
-				'<?=$class?>' <?php if (($i + 1) < count($classes)) {
+				'<?=$class?>' <?php if (($i + 1) < $iMax) {
     ?>, <?php
 }
     ?>
@@ -198,5 +197,5 @@ $(function() {
 </script>
 
 <div class="ccm-area-layout-control-bar-wrapper">
-	<div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar ccm-area-layout-control-bar-<?=$controller->getTask()?>"></div>
+	<div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar ccm-area-layout-control-bar-<?=$controller->getAction()?>"></div>
 </div>
