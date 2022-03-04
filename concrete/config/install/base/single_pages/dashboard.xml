@@ -1452,6 +1452,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Security Policy" path="/dashboard/system/environment/security"
+              filename="/dashboard/system/environment/security.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, content security policy, csp, strict transport security, hsts, x-frame-options</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Update Concrete" path="/dashboard/system/update" filename="/dashboard/system/update/view.php"
               pagetype="" description="" package="">
         </page>
