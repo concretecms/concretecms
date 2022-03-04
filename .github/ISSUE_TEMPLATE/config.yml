@@ -3,7 +3,10 @@ contact_links:
     - name: Security Issue
       url: https://hackerone.com/concretecms
       about: Do not report security issues in GitHub – please post them to https://hackerone.com/concretecms.
-    - name: Support Question
+    - name: Questions and Comments
+      url: https://forums.concretecms.org
+      about: For questions and comments regarding Concrete, please see the forums at https://forums.concretecms.org.
+    - name: Support
       url: https://www.concretecms.com/support
       about: We use GitHub to discuss Concrete CMS features and report verifiable bugs. For help with a specific Concrete site or custom code development, please visit https://www.concretecms.com/support.
     - name: New Documentation
