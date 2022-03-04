@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: Support Question
+      url: https://www.concretecms.com/support
+      about: We use GitHub to discuss Concrete CMS features and report verifiable bugs. For help with a specific Concrete site or custom code development, please visit https://www.concretecms.com/support.
+    - name: New Documentation
+      url: https://documentation.concretecms.org
+      about: To view or contribute Concrete documentation, please visit documentation.concretecms.org.
