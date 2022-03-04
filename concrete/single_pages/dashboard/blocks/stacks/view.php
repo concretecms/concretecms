@@ -336,6 +336,10 @@ if (isset($neutralStack)) {
                     });
                 });
 
+                ConcreteEvent.on('ToolbarDirectExitDisabled', function (event, data) {
+                    showApprovalButton();
+                });
+
                 ConcreteEvent.on('EditModeBlockMove', function (event, data) {
                     showApprovalButton();
                     Concrete.getEditMode().scanBlocks();
