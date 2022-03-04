@@ -48,7 +48,7 @@ $config = $site->getConfigRepository();
 <?php if ($showLogo) {
     ?>
 <div id="ccm-toolbar">
-    <ul>
+    <ul class="ccm-toolbar-item-list">
         <li class="ccm-logo float-start"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
         <?php if ($showAccount) {
     ?>

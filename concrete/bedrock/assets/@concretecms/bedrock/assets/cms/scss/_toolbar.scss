@@ -19,17 +19,17 @@ div#ccm-toolbar {
       display: inline-block;
     }
 
-    li > a {
+    .ccm-toolbar-item-list > li > a {
       padding: 14px 16px;
       width: auto !important;
     }
 
-    li > a i,
-    li > a img {
+    .ccm-toolbar-item-list > li > a i,
+    .ccm-toolbar-item-list > li > a img {
       position: static;
     }
 
-    .spinner {
+    .ccm-toolbar-item-list > .spinner {
       left: 11px;
     }
   }

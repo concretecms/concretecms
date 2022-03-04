@@ -47,7 +47,7 @@ $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
     } ?> ccm-ui">
         <?=View::element('icons'); ?>
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : ''; ?> <?= $large_font ? 'large-font' : ''; ?>">
-            <ul>
+            <ul class="ccm-toolbar-item-list">
                 <li class="ccm-logo float-start"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC(); ?></span></li>
                 <li class="float-start ccm-toolbar-button-with-text">
                     <a href="<?=$backLink; ?>">
