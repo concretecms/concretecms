@@ -1,5 +1,6 @@
 name: 🚀 Feature Request
 description: Proposals for new features and other enhancements.
+label: Type:Enhancement
 body:
     - type: textarea
       id: description
