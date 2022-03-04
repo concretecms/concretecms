@@ -8,9 +8,9 @@ body:
       attributes:
          label: Affected Version of Concrete CMS
          multiple: true
-      options:
-        - 8.5.x
-        - 9.x
+         options:
+             - 8.5.x
+             - 9.x
       validations:
           required: true
     - type: textarea
