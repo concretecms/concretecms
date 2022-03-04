@@ -3,7 +3,7 @@ description: Bugs are specific defects in how Concrete works.
 labels: Type:Bug
 
 body:
-  - type: dropdown
+   - type: dropdown
     id: version
     attributes:
       label: Affected Version of Concrete CMS
