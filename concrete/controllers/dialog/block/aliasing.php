@@ -91,7 +91,7 @@ class Aliasing extends BackendInterfaceBlockController
                     }
 
                     $totalItems = $queue->count();
-                    \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d pages", "%d pages", $totalItems)));
+                    \View::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)));
                 }
             }
         }
