@@ -203,14 +203,13 @@ class Controller extends AuthenticationTypeController
                 /**
                  * @var $accessControlCategoryService IpAccessControlService
                  */
-                $forgotPasswordThresholdReached = false;
                 if ($accessControlCategoryService->isDenylisted()) {
                     $forgotPasswordThresholdReached = true;
                 } else {
+                    $forgotPasswordThresholdReached = $accessControlCategoryService->isThresholdReached();
                     $accessControlCategoryService->registerEvent();
-                    if ($accessControlCategoryService->isThresholdReached()) {
+                    if ($forgotPasswordThresholdReached) {
                         $accessControlCategoryService->addToDenylistForThresholdReached();
-                        $forgotPasswordThresholdReached = true;
                     }
                 }
 
