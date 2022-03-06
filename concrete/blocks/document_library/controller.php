@@ -15,6 +15,7 @@ use Concrete\Core\File\Import\ImportException;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\File\Set\SetList;
 use Concrete\Core\File\Type\Type;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Tree\Node\Node;
@@ -33,6 +34,11 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btDocumentLibrary';
     protected $fileAttributes = [];
     protected $btExportFileFolderColumns = ['folderID'];
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = false;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputOnEditMode = false;
+    protected $btCacheBlockOutputLifetime = 300;
 
     /** @var FileFolder|null */
     protected $rootNode = null;
@@ -989,5 +995,16 @@ class Controller extends BlockController implements UsesFeatureInterface
         $query->setParameter('keywords', '%' . $keywords . '%');
 
         return $list;
+    }
+
+    public function cacheBlockOutput()
+    {
+        /** @var Request $request */
+        $request = $this->app->make(Request::class);
+        if ($request->query->has('keywords')) {
+            return false;
+        }
+
+        return $this->btCacheBlockOutput;
     }
 }

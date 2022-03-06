@@ -47,6 +47,12 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btTable = 'btTopicList';
 
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputOnEditMode = false;
+    protected $btCacheBlockOutputLifetime = 0;
+
     /**
      * @var string[]
      */

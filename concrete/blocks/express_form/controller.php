@@ -47,7 +47,10 @@ class Controller extends BlockController implements NotificationProviderInterfac
 {
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 700;
-    protected $btCacheBlockOutput = false;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = false;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = true;
     protected $btTable = 'btExpressForm';
     protected $btExportPageColumns = ['redirectCID'];
 
