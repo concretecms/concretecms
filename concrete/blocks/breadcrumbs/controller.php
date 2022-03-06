@@ -34,6 +34,8 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     /** @var bool  */
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    /** @var bool  */
+    protected $btCacheBlockOutputOnEditMode = true;
     /** @var int  */
     protected $btCacheBlockOutputLifetime = 300;
 

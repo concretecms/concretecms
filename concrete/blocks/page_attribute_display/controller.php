@@ -27,7 +27,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     /** @var bool */
     protected $btCacheBlockOutputOnPost = true;
     /** @var bool */
-    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputForRegisteredUsers = null;
+    /** @var bool */
+    protected $btCacheBlockOutputOnEditMode = false;
 
     /**
      * @var int thumbnail height
@@ -104,6 +106,19 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        if ($this->btCacheBlockOutputForRegisteredUsers === null) {
+            $templateHandle = $this->getTemplateHandle();
+            /**
+             * Date helper may change output depends on the user's timezone or language, so we can't cache output.
+             * Otherwise, we can cache output.
+             */
+            $this->btCacheBlockOutputForRegisteredUsers = $templateHandle !== 'date_time';
+        }
+
+        return $this->btCacheBlockOutputForRegisteredUsers;
+    }
 
     /**
      * @return mixed AttributeValue

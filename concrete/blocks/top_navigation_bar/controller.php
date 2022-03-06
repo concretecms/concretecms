@@ -39,6 +39,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = false;
     protected $btCacheBlockOutputLifetime = 300;
     protected $btExportFileColumns = ['brandingLogo', 'brandingTransparentLogo'];
 

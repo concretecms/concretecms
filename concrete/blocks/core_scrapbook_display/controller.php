@@ -188,6 +188,15 @@ class Controller extends BlockController
         }
     }
 
+    public function cacheBlockOutputOnEditMode()
+    {
+        $bc = $this->getScrapbookBlockController();
+
+        if ($bc) {
+            return $bc->cacheBlockOutputOnEditMode();
+        }
+    }
+
     public function cacheBlockOutputOnPost()
     {
         $bc = $this->getScrapbookBlockController();

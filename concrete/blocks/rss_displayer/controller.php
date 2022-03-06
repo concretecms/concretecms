@@ -21,6 +21,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btCacheBlockOutputOnPost = true;
     protected $btWrapperClass = 'ccm-ui';
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = true;
 
     /**
      * Default number of seconds that the output of this block should be cached

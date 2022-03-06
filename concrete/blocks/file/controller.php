@@ -18,7 +18,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
     protected $btCacheBlockOutputOnPost = true;
 
-    protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputForRegisteredUsers = false;
+
+    protected $btCacheBlockOutputOnEditMode = false;
 
     protected $btInterfaceHeight = 320;
 

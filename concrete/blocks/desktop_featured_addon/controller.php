@@ -20,6 +20,7 @@ use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
         protected $btCacheBlockOutput = true;
         protected $btCacheBlockOutputOnPost = true;
         protected $btCacheBlockOutputForRegisteredUsers = true;
+        protected $btCacheBlockOutputOnEditMode = true;
         protected $btCacheBlockOutputLifetime = 7200;
 
         protected $btInterfaceWidth = 300;

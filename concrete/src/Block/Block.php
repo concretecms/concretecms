@@ -1190,6 +1190,18 @@ EOT
     }
 
     /**
+     * Should the block output be cached on the edit mode?
+     *
+     * @return bool
+     */
+    public function cacheBlockOutputOnEditMode()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+
+        return $settings->cacheBlockOutputOnEditMode();
+    }
+
+    /**
      * Get the lifetime (in seconds) of the block output cache.
      *
      * @return int

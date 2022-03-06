@@ -12,6 +12,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutputLifetime = 7200;
     protected $btTable = 'btDesktopConcreteLatest';
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = true;
     protected $slot;
 
     public function getBlockTypeDescription()

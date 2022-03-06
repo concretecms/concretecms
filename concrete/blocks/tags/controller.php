@@ -17,9 +17,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btExportPageColumns = array('targetCID');
 
     protected $btCacheBlockRecord = true;
-    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutput = false;
     protected $btCacheBlockOutputOnPost = false;
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutputOnEditMode = false;
     protected $btWrapperClass = 'ccm-ui';
 
     public $attributeHandle = 'tags';
@@ -53,9 +54,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('ak', $ak);
         if ($this->isValidStack(Page::getCurrentPage())) {
             $this->set('inStackDashboardPage', true);
+        } else {
+            $this->set('inStackDashboardPage', false);
         }
         $this->set('displayMode', 'page');
         $this->set('titleFormat', 'h5');
+        $this->set('title', null);
+        $this->set('cloudCount', $this->cloudCount);
+        $this->set('targetCID', null);
     }
 
     protected function loadAttribute()
@@ -71,18 +77,20 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('ak', $ak);
         if ($this->isValidStack(Page::getCurrentPage())) {
             $this->set('inStackDashboardPage', true);
+        } else {
+            $this->set('inStackDashboardPage', false);
         }
     }
 
     public function view()
     {
+        $options = array();
         $ak = $this->loadAttribute();
         if ($this->displayMode == "cloud") {
             $type = $ak->getAttributeType();
             $controller = $type->getController();
             $controller->setAttributeKey($ak);
             $items = $controller->getOptions();
-            $options = array();
             if ($this->cloudCount > 0 && count($items) > 0) {
                 $i = 1;
                 foreach ($items as $item) {

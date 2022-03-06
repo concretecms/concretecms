@@ -13,6 +13,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnEditMode = true;
     protected $btCacheBlockOutputLifetime = 86400; // check every day
 
     public function getBlockTypeDescription()

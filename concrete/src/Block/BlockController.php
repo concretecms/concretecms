@@ -42,11 +42,38 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /** @var string | int  */
     protected $btInterfaceHeight = "400";
     protected $btHasRendered = false;
+    /**
+     * @var bool Defaults to true. When block caching is enabled, this means that the block's database record data will
+     *           also be cached. This can almost always be set to true.
+     */
     protected $btCacheBlockRecord = true;
+    /**
+     * @var bool Defaults to false. When block caching is enabled, enabling this boolean means that the output of the
+     *           block will be saved and delivered without rendering the view() function or hitting the database at all.
+     */
     protected $btCacheBlockOutput = false;
+    /**
+     * @var int Defaults to no time limit (0). When block caching is enabled and output caching is enabled for a block,
+     *          this is the value in seconds that the cache will last before being refreshed.
+     */
     protected $btCacheBlockOutputLifetime = 0;
+    /**
+     * @var bool Defaults to false. This determines whether a block will cache its output on POST. Some blocks can
+     *           cache their output but must serve uncached output on POST in order to show error messages, etc…
+     */
     protected $btCacheBlockOutputOnPost = false;
+    /**
+     * @var bool Defaults to false. Determines whether a block that can cache its output will continue to cache its
+     *           output even if the current user viewing it is logged in.
+     */
     protected $btCacheBlockOutputForRegisteredUsers = false;
+    /**
+     * @var bool Defaults to false. This determines whether a block will cache its output on edit mode.
+     *           If the block show messages like "This block is disabled in edit mode" for editing users but still
+     *           enable to cache it's output for other users, consider keeping this value false and set true for
+     *           $btCacheBlockOutputForRegisteredUsers.
+     */
+    protected $btCacheBlockOutputOnEditMode = false;
     protected $bActionCID;
     protected $btExportPageColumns = [];
     protected $btExportFileColumns = [];
@@ -632,6 +659,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public function cacheBlockOutputOnPost()
     {
         return $this->btCacheBlockOutputOnPost;
+    }
+
+    public function cacheBlockOutputOnEditMode()
+    {
+        return $this->btCacheBlockOutputOnEditMode;
     }
 
     public function getBlockTypeCacheOutputLifetime()

@@ -20,6 +20,10 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btCacheBlockOutputOnPost = true;
 
+    protected $btCacheBlockOutputForRegisteredUsers = true;
+
+    protected $btCacheBlockOutputOnEditMode = false;
+
     public function getBlockTypeDescription()
     {
         return t('Enter an address and a Google Map of that location will be placed in your page.');

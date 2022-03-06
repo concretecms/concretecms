@@ -151,6 +151,11 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     protected $btCacheBlockOutputForRegisteredUsers = true;
 
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockOutputOnEditMode = true;
+
     public function getBlockTypeName()
     {
         return t('Accordion');
