@@ -24,7 +24,7 @@ class Security extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            $content_security_policy = array_map('trim', explode(PHP_EOL, $this->post('content_security_policy')));
+            $content_security_policy = preg_split('/[\r\n]+/ms', (string) $this->post('content_security_policy'), -1, PREG_SPLIT_NO_EMPTY);
             if (count($content_security_policy) === 1) {
                 $content_security_policy = $content_security_policy[0];
             } elseif (count($content_security_policy) === 0) {
