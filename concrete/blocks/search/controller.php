@@ -7,11 +7,11 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
-use Concrete\Core\Http\Request;
 use Concrete\Core\Page\PageList;
 use Core;
 use Database;
 use Page;
+use Request;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
@@ -257,9 +257,13 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function cacheBlockOutput()
     {
         if ($this->btCacheBlockOutput === null) {
-            /** @var Request $request */
-            $request = $this->app->make(Request::class);
-            $this->btCacheBlockOutput = !$request->query->has('query');
+            $this->btCacheBlockOutput = false;
+            if ($this->postTo_cID || (string) $this->resultsURL !== '') {
+                if ($this->request->get('query') === null) {
+                    $this->btCacheBlockOutput = true;
+                }
+            }
+            $this->btCacheBlockOutput = (($this->postTo_cID || $this->resultsURL) && Request::request('query') === null);
         }
 
         return $this->btCacheBlockOutput;
