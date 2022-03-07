@@ -487,11 +487,9 @@ $identifier = $app->make(Identifier::class);
                                 </div>
                             </div>
 
-                            <hr/>
-
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="form-group">
+                                    <div class="form-group mt-3">
                                         <?php echo $form->label("boxShadowColor", t('Color')) ?>
                                         <?php $color->output('boxShadowColor', $boxShadowColor, ['showAlpha' => true]); ?>
                                     </div>
@@ -526,14 +524,24 @@ $identifier = $app->make(Identifier::class);
 
                     <?php if (count($deviceHideClasses)) { ?>
                         <div class="col-sm-6">
-                            <fieldset>
+                            <fieldset class="position-relative">
                                 <legend>
                                     <?php echo t('Device Visibility') ?>
 
-                                    <i class="fas fa-question-circle launch-tooltip"
-                                       title="<?php echo h(t('Hide the current content on a particular type of device. Un-check a device below to hide the content.')) ?>"></i>
+                                    <label class="form-label"><?=t('Visible on Device(s)')?></label>
                                 </legend>
 
+                                <?php foreach ($deviceHideClasses as $class) {
+                                    $hidden = false;
+
+                                    if (is_object($set)) {
+                                        $hidden = $set->isHiddenOnDevice($class);
+                                    }
+
+                                    echo $form->hidden("hideOnDevice" . $identifier->getString(), (int)$hidden, ["name" => "hideOnDevice[" . h($class) . "]", "data-hide-on-device-input" => $class]);
+
+                                    ?>
+                                <?php } ?>
                                 <div class="btn-group">
                                     <?php foreach ($deviceHideClasses as $class) {
                                         $hidden = false;
@@ -541,17 +549,13 @@ $identifier = $app->make(Identifier::class);
                                         if (is_object($set)) {
                                             $hidden = $set->isHiddenOnDevice($class);
                                         }
-
-                                        echo $form->hidden("hideOnDevice" . $identifier->getString(), (int)$hidden, ["name" => "hideOnDevice[" . h($class) . "]", "data-hide-on-device-input" => $class]);
-
-                                        ?>
-
-                                        <button type="button"
-                                                data-hide-on-device="<?php echo h($class) ?>"
-                                                class="btn btn-secondary <?php echo (!$hidden) ? "active" : ""; ?>">
-                                            <i class="<?php echo $gf->getDeviceHideClassIconClass($class) ?>"></i>
-                                        </button>
-                                    <?php } ?>
+                                    ?>
+                                    <button type="button"
+                                            data-hide-on-device="<?php echo h($class) ?>"
+                                            class="btn btn-sm btn-secondary <?php echo (!$hidden) ? "active" : ""; ?>">
+                                        <i class="<?php echo $gf->getDeviceHideClassIconClass($class) ?>"></i>
+                                    </button>
+                                <?php } ?>
                                 </div>
                             </fieldset>
                         </div>

@@ -13,7 +13,7 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
-    "@concretecms/bedrock": "^1.1.13",
+    "@concretecms/bedrock": "^1.1.15",
     "cross-env": "^5.1.1",
     "download": "~4.4.3",
     "grunt": "^1.3.0",

@@ -12,6 +12,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var int $pageIndex
  * @var string $displayMode
  * @var bool $enablePosting
+ * @var bool $enableCommentRating
+ * @var bool $displaySocialLinks
  */
 
 // $totalPages = $messageList->getSummary()->pages;
@@ -23,6 +25,8 @@ foreach ($messageList->getPage($pageIndex) as $message) {
             'message' => $message,
             'displayMode' => $displayMode,
             'enablePosting' => $enablePosting,
+            'enableCommentRating'=> $enableCommentRating,
+            'displaySocialLinks'=> $displaySocialLinks,
         ]
     );
 }

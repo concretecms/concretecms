@@ -7,16 +7,24 @@ use Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use Concrete\Core\Conversation\FlagType\FlagTypeList as ConversationFlagTypeList;
 use Concrete\Core\Conversation\Message\Message as ConversationMessage;
 use Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker;
 
 class Messages extends DashboardPageController
 {
+
+    /**
+     * @var string[]
+     */
+    protected $helpers = ['form','text','date','validation/token','validation/ip'];
+
+    /**
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function view()
     {
-        $this->set('valt', $this->app->make('helper/validation/token'));
-        $this->set('th', $this->app->make('helper/text'));
-        $this->set('dh', $this->app->make('date'));
-        $this->set('ip', $this->app->make('helper/validation/ip'));
 
         $ml = new ConversationMessageList();
         $ml->setItemsPerPage(20);
@@ -28,19 +36,20 @@ class Messages extends DashboardPageController
         ];
         $fl = new ConversationFlagTypeList();
         foreach ($fl->get() as $flagtype) {
-            $cmpFilterTypes[$flagtype->getConversationFlagTypeHandle()] = $this->app->make('helper/text')->unhandle(
-                $flagtype->getConversationFlagTypeHandle()
+            $flagTypeHandle = $flagtype->getConversationFlagTypeHandle();
+            $cmpFilterTypes[$flagTypeHandle] = $this->app->make('helper/text')->unhandle(
+                $flagTypeHandle
             );
         }
 
-        if ($_REQUEST['cmpMessageKeywords']) {
-            $ml->filterByKeywords($_REQUEST['cmpMessageKeywords']);
+        if ($this->request->query->get('cmpMessageKeywords')) {
+            $ml->filterByKeywords($this->request->query->get('cmpMessageKeywords'));
             $ml->filterByNotDeleted();
         }
 
         $cmpMessageFilter = $this->getDefaultMessageFilter();
         if ($this->request->query->has('cmpMessageFilter')
-            && in_array($this->request->query->get('cmpMessageFilter'), array_keys($cmpFilterTypes))) {
+            && array_key_exists($this->request->query->get('cmpMessageFilter'), $cmpFilterTypes)) {
             $cmpMessageFilter = $this->request->query->get('cmpMessageFilter');
         }
 
@@ -58,13 +67,11 @@ class Messages extends DashboardPageController
                 $ml->filterByNotDeleted();
                 break;
             default: // flag
-                $flagtype = ConversationFlagType::getByHandle($_REQUEST['cmpMessageFilter']);
+                $flagtype = ConversationFlagType::getByHandle($this->request->query->get('cmpMessageFilter'));
                 if (is_object($flagtype)) {
                     $ml->filterByFlag($flagtype);
-                    $ml->filterByNotDeleted();
-                } else {
-                    $ml->filterByNotDeleted();
                 }
+                $ml->filterByNotDeleted();
                 break;
         }
 
@@ -76,6 +83,10 @@ class Messages extends DashboardPageController
         $this->set('cmpMessageFilter', $cmpMessageFilter);
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function approve_message()
     {
         $e = $this->app->make('error');
@@ -93,9 +104,13 @@ class Messages extends DashboardPageController
             $message->approve();
             $er->setMessage(t('Message approved.'));
         }
-        $er->outputJSON();
+        return $this->app->make(ResponseFactoryInterface::class)->json($er->getJSONObject());
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function unflag_message()
     {
         $e = $this->app->make('error');
@@ -114,9 +129,13 @@ class Messages extends DashboardPageController
             $message->unflag($spamFlag);
             $er->setMessage(t('Message unflagged.'));
         }
-        $er->outputJSON();
+        return $this->app->make(ResponseFactoryInterface::class)->json($er->getJSONObject());
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function undelete_message()
     {
         $e = $this->app->make('error');
@@ -124,7 +143,7 @@ class Messages extends DashboardPageController
         if (!is_object($message)) {
             $e->add(t('Invalid message'));
         } else {
-            $mp = new \Permissions($message);
+            $mp = new Checker($message);
             if (!$mp->canDeleteConversationMessage()) {
                 $e->add(t('You do not have permission to restore this message.'));
             }
@@ -134,18 +153,22 @@ class Messages extends DashboardPageController
             $message->restore();
             $er->setMessage(t('Message restored.'));
         }
-        $er->outputJSON();
+
+        return $this->app->make(ResponseFactoryInterface::class)->json($er->getJSONObject());
     }
 
     /**
      * Returns default message filter for search interface. We default to all, UNLESS we have at least one access
      * entity that publishes its messages and has them be unapproved. If that's the case, then we default to unapproved.
+     * @throws \Doctrine\DBAL\Exception
+     * @return string
      */
     protected function getDefaultMessageFilter()
     {
         $filter = 'all';
+        /** @var \Concrete\Core\Database\Connection\Connection $db */
         $db = $this->app->make(('database/connection'));
-        $count = $db->fetchColumn('select count(cpa.paID) from ConversationPermissionAssignments cpa
+        $count = $db->fetchOne('select count(cpa.paID) from ConversationPermissionAssignments cpa
             inner join PermissionAccess pa on cpa.paID = pa.paID
             inner join ConversationPermissionAddMessageAccessList cpl on pa.paID = cpl.paID
             where paIsInUse = 1 and permission = "U"');

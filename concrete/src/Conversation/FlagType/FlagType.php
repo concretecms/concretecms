@@ -50,7 +50,7 @@ class FlagType extends ConcreteObject
         return $bw;
     }
 
-    public static function getByhandle($handle)
+    public static function getByHandle($handle)
     {
         $db = Loader::db();
         $handle = strtolower($handle);
@@ -70,7 +70,7 @@ class FlagType extends ConcreteObject
         }
         $db = Loader::db();
         $handle = strtolower($handle);
-        if ($ft = static::getByhandle($handle)) {
+        if ($ft = static::getByHandle($handle)) {
             return $ft;
         }
         $db->execute('INSERT INTO ConversationFlaggedMessageTypes (cnvMessageFlagTypeHandle) VALUES (?)', array($handle));

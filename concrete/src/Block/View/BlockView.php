@@ -436,7 +436,22 @@ class BlockView extends AbstractView
 
     public function runControllerTask()
     {
-        $this->controller->on_start();
+        // First, check the block controller is already started.
+        $started = false;
+        $c = Page::getCurrentPage();
+        if (is_object($c) && is_object($this->block)) {
+            $pageController = $c->getPageController();
+            $blockController = $pageController->getBlockController($this->block);
+            if ($blockController) {
+                $this->controller = $blockController;
+                $started = true;
+            }
+        }
+
+        // If the block controller is not started yet, run on_start() of it.
+        if (!$started) {
+            $this->controller->on_start();
+        }
 
         if ($this->useBlockCache()) {
             $this->didPullFromOutputCache = true;
@@ -452,10 +467,8 @@ class BlockView extends AbstractView
             }
             $passthru = false;
             if ($method == 'view' && is_object($this->block)) {
-                $c = Page::getCurrentPage();
-                if (is_object($c)) {
-                    $cnt = $c->getController();
-                    $controller = $cnt->getPassThruBlockController($this->block);
+                if (isset($pageController)) {
+                    $controller = $pageController->getPassThruBlockController($this->block);
                     if (is_object($controller)) {
                         $passthru = true;
                         $this->controller = $controller;

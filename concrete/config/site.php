@@ -144,6 +144,7 @@ return [
                     'enabled' => true,
                     // List of querystring parameters to be included in SEO canonical URLs
                     'included_querystring_parameters' => [
+                        'ccm_paging_p',
                     ],
                 ],
                 'tracking' => [

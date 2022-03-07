@@ -145,32 +145,30 @@
 .ccm-ui {
   div.dropdown-menu.ccm-inline-design-dropdown-menu,
   div.ccm-dropdown-menu {
-    background-color: #0f0f0f;
-    color: #7f8d90;
-
+    @include border-radius($dropdown-border-radius);
+    background-color: $dropdown-bg;
+    border: $dropdown-border-width solid $dropdown-border-color;
     line-height: $line-height-base;
     min-width: 265px;
     padding: 20px;
-
     text-align: left;
 
     &.ccm-inline-design-dropdown-menu-doubled {
       min-width: 522px;
     }
 
-    .ccm-file-selector {
-      margin-bottom: 15px;
-      margin-top: 5px;
-    }
-
-    .ccm-inline-style-slider-heading {
-      display: block;
-      margin-bottom: 5px;
-    }
-
     .ui-widget-content {
       border: 0 !important;
     }
+
+    .form-label {
+      font-size: $font-size-sm;
+      font-weight: bold;
+      height: 30px;
+      line-height: 30px;
+      margin: 0;
+    }
+
 
     .ccm-inline-style-slider-display-value {
       display: inline-block;
@@ -180,15 +178,11 @@
       width: 25%;
 
       input[type='text'] {
-        background: #444;
-        border: 0;
-        color: #ccc;
         height: 25.1875px;
         margin-bottom: 0;
         margin-top: 0;
         outline: none;
         padding: 0 10px;
-        text-align: center;
         text-align: center;
         width: 100%;
 
@@ -196,7 +190,6 @@
           width: 80%;
         }
       }
-
     }
 
     .ccm-inline-style-sliders {
@@ -222,40 +215,18 @@
     }
 
     .ui-slider-horizontal {
-      background: #444;
+      background: #eee;
       border-radius: 4px;
       margin-bottom: 5px;
       margin-top: 5px;
     }
 
-    button.btn-default {
-      @include button-variant(#ccc, #666, #333);
-
-      opacity: 0.5;
-
-      &.active {
-        opacity: 1;
-      }
-    }
-
     input[type='text'] {
       border-radius: 3px;
       font-size: $font-size-sm;
-      font-weight: 200;
       margin-bottom: 15px;
       margin-top: 5px;
       padding: 5px 10px;
-    }
-
-    select {
-      &.form-control,
-      &.form-select {
-        background: #aaa;
-        color: #4c4c4d;
-        margin-bottom: 15px;
-        margin-top: 5px;
-        padding-right: 30px;
-      }
     }
 
     .ccm-inline-select-container {
@@ -287,14 +258,13 @@
     }
 
     h3 {
-      color: #fff;
-      font-size: $font-size-sm;
+      font-size: $font-size-base;
       font-weight: bold;
       margin: 0 0 20px;
     }
 
     hr {
-      border-color: #666;
+      border-color: #ccc;
       margin-bottom: 14px;
       margin-top: 14px;
     }
@@ -303,6 +273,7 @@
 
 /* new styles for new the area and block style customizer toolbar */
 .ccm-inline-toolbar {
+  background-color: #f7f7f7;
   border-radius: 2px;
   display: table;
   height: 31px;
@@ -326,25 +297,6 @@
       margin-bottom: 5px !important;
     }
 
-    .btn-group {
-      .btn {
-        padding: 10px 20px;
-      }
-    }
-
-    .ccm-item-selector-choose .btn {
-      background-color: #fafafe;
-      color: #2c2c2c;
-      width: 100%;
-    }
-
-    .ccm-inline-style-slider-heading {
-      color: #7f8d90;
-      font-size: $font-size-sm;
-      font-weight: normal;
-      margin-bottom: 5px;
-    }
-
     .clearfix {
       clear: both;
     }
@@ -352,15 +304,6 @@
     .form-group {
       margin-bottom: 0;
       padding-left: 0 !important;
-
-      label {
-        color: #7f8d90;
-        font-size: $font-size-sm;
-        font-weight: normal;
-        height: 30px;
-        line-height: 30px;
-        margin: 0;
-      }
 
       .ccm-widget-colorpicker {
         float: right;
@@ -380,7 +323,7 @@
       width: calc(95% - 65px);
 
       .ui-slider-handle {
-        background-color: #fff !important;
+        background-color: #ccc !important;
         border-color: #fff;
         margin-top: 2px;
         outline: none !important;
@@ -403,7 +346,6 @@
   }
 
   > li {
-    background: #fff;
     border-bottom: 1px solid #c4c4c4;
     border-right: 1px solid #e1e1e1;
     border-top: 1px solid #c4c4c4;
@@ -430,7 +372,6 @@
   }
 
   > li.ccm-inline-toolbar-icon-cell {
-    @include gradient-y(#fff, #f1f1f1);
     padding: 0;
     position: relative;
     text-align: center;
@@ -438,12 +379,12 @@
   }
 
   > li.ccm-inline-toolbar-icon-cell > a {
-    color: #333;
+    color: $gray-600;
     cursor: pointer;
     display: block;
     height: 100%;
-    opacity: 0.7;
     text-decoration: none;
+    transition: background-color 0.25s ease-in-out;
 
     i {
       display: inline-block;
@@ -452,10 +393,19 @@
     }
   }
 
-  > li.ccm-inline-toolbar-icon-cell.ccm-inline-toolbar-icon-selected > a,
   li.ccm-inline-toolbar-icon-cell > a:hover {
-    @include gradient-y(#f3f3f3, #d2d2d2);
-    box-shadow: inset 1px 1px 5px -1px rgba(0, 0, 0, 0.35) !important;
+    background-color: $gray-200;
+  }
+
+  li.ccm-inline-toolbar-icon-selected {
+    a,
+    a:hover {
+      background-color: $blue;
+
+      i {
+        color: white;
+      }
+    }
   }
 
   > li.ccm-inline-toolbar-button {
@@ -559,20 +509,8 @@
   li.ccm-inline-toolbar-icon-cell > div.ccm-dropdown-menu {
     display: none;
 
-    &::before {
-      border-color: transparent transparent #000;
-      border-style: solid;
-      border-width: 0 5px 5px;
-      content: ' ';
-      height: 0;
-      left: 11px;
-      position: absolute;
-      top: -5px;
-      width: 0;
-    }
-
     &.active {
-      box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.43);
+      box-shadow: $dropdown-box-shadow;
       display: block;
       margin-top: 1px;
       position: absolute;

@@ -6,6 +6,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Permission\IpAccessControlService;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
@@ -189,7 +190,6 @@ class Controller extends AuthenticationTypeController
      */
     public function forgot_password()
     {
-        $loginData['success'] = 0;
         $error = $this->app->make('helper/validation/error');
         $em = $this->post('uEmail');
         $token = $this->app->make(Token::class);
@@ -198,6 +198,25 @@ class Controller extends AuthenticationTypeController
 
         if ($em) {
             try {
+
+                $accessControlCategoryService = $this->app->make('ip/access/control/forgot_password');
+                /**
+                 * @var $accessControlCategoryService IpAccessControlService
+                 */
+                if ($accessControlCategoryService->isDenylisted()) {
+                    $forgotPasswordThresholdReached = true;
+                } else {
+                    $forgotPasswordThresholdReached = $accessControlCategoryService->isThresholdReached();
+                    $accessControlCategoryService->registerEvent();
+                    if ($forgotPasswordThresholdReached) {
+                        $accessControlCategoryService->addToDenylistForThresholdReached();
+                    }
+                }
+
+                if ($forgotPasswordThresholdReached) {
+                    throw new \Exception(t('Unable to request password reset: too many attempts. Please try again later.'));
+                }
+
                 if (!$token->validate()) {
                     throw new \Exception($token->getErrorMessage());
                 }
@@ -255,7 +274,7 @@ class Controller extends AuthenticationTypeController
                 $error->add($e);
             }
             if ($error->has()) {
-                $this->set('error', $error);
+                $this->set('callbackError', $error);
             } else {
                 $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(),
                     'password_sent');
