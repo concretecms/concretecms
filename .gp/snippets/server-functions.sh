@@ -1,8 +1,3 @@
-# shellcheck shell=bash
-
-# override linter for parsing pid: pgrep is too simple for this case
-# shellcheck disable=2009
-
 mtail_nginx() {
   multitail /var/log/nginx/access.log -I /var/log/nginx/error.log;
 }
@@ -55,16 +50,5 @@ stop_nginx() {
     echo "ERROR stop_enginx: invalid nginx_log_monitor type: $log_monitor_type."
     ;;
   esac
-  [[ -n $pid ]] && kill -2 "$pid"
-}
-
-start_php_dev() {
-  php -S 127.0.0.1:8000 -t public/
-}
-
-stop_php_dev() {
-  local pid
-  # The grep string here must match the command given in the function start_php_dev
-  pid=$(ps axf | grep 'php -S 127.0.0.1:8000 -t public/' | grep -v grep | awk '{print $1}' | sed 1q)
   [[ -n $pid ]] && kill -2 "$pid"
 }

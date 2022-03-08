@@ -13,9 +13,6 @@
 # Load logger
 . .gp/bash/workspace-init-logger.sh
 
-# Summarize results
-bash .gp/bash/helpers.sh show_first_run_summary
-
 # Persist the workspace-init.log since the .gitpod.Dockerfile will wipe it out and it wont come back after the first run
 bash .gp/bash/helpers.sh persist_file /var/log/workspace-init.log
 

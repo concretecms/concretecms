@@ -84,13 +84,6 @@ configure_php() {
   fi
 }
 
-configure_apache() {
-  local loc=/var/log/apache2
-  mv /tmp/apache2.conf /etc/apache2/apache2.conf
-  sudo chown gitpod:gitpod "$loc/access.log" "$loc/error.log" "$loc/other_vhosts_access.log"
-  return $?
-}
-
 keep_existing_php() {
   local msg1 msg2=
 
@@ -137,11 +130,6 @@ fi
 # Configure PHP
 if ! configure_php; then
   2>&1 echo "  php.sh was aborted: Optional php installation failed to be configured!" | tee -a $log && exit 1
-fi
-
-# Configure Apache
-if ! configure_apache; then
-  2>&1 echo "  WARNING: Apache configuration failed. Apache may not work properly." | tee -a $log
 fi
 
 echo "END: php.sh" | tee -a $log
