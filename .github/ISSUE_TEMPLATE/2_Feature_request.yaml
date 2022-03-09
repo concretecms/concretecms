@@ -1,0 +1,17 @@
+name: 🚀 Feature Request
+description: Proposals for new features and other enhancements.
+labels: ["Type:Enhancement"]
+body:
+    - type: textarea
+      id: description
+      attributes:
+          label: Description
+          description: A clear and concise description of the new feature
+      validations:
+          required: true
+    - type: textarea
+      id: example
+      attributes:
+          label: Example
+          description: |
+              How would this new feature make your life easier?
