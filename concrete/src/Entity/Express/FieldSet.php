@@ -2,8 +2,10 @@
 
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gettext\Translations;
 
@@ -94,7 +96,7 @@ class FieldSet
     }
 
     /**
-     * @return mixed
+     * @return Form
      */
     public function getForm()
     {
@@ -110,7 +112,7 @@ class FieldSet
     }
 
     /**
-     * @return mixed
+     * @return Collection<int, Control>|Control[]
      */
     public function getControls()
     {
@@ -166,5 +168,12 @@ class FieldSet
         }
 
         return $translations;
+    }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $this->controls = new ArrayCollection();
+        $this->form = null;
     }
 }
