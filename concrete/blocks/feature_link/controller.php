@@ -168,7 +168,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
         /** @var SanitizeService $security */
         $security = $this->app->make('helper/security');
-        $args['icon'] = $security->sanitizeString($args['icon']);
+        $args['icon'] = $security->sanitizeString($args['icon'] ?? '');
 
         parent::save($args);
     }
