@@ -132,8 +132,12 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
     protected function getNavigation(): Navigation
     {
         $section = Section::getByLocale(\Localization::getInstance()->getLocale());
-
-        $home = \Page::getByID($section->getSiteHomePageID());
+        if ($section instanceof Section) {
+            $home = \Page::getByID($section->getSiteHomePageID());
+        } else {
+            $site = $this->app->make('site')->getSite();
+            $home = $site->getSiteHomePageObject();
+        }
         $children = $home->getCollectionChildren();
         $navigation = new Navigation();
 
