@@ -11,6 +11,7 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Html\Service\Navigation as NavigationService;
+use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Navigation\Breadcrumb\PageBreadcrumbFactory;
 use Concrete\Core\Navigation\Item\PageItem;
 use Concrete\Core\Navigation\Navigation;
@@ -130,8 +131,13 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 
     protected function getNavigation(): Navigation
     {
-        $site = $this->app->make('site')->getSite();
-        $home = $site->getSiteHomePageObject();
+        $section = Section::getByLocale(\Localization::getInstance()->getLocale());
+        if ($section instanceof Section) {
+            $home = \Page::getByID($section->getSiteHomePageID());
+        } else {
+            $site = $this->app->make('site')->getSite();
+            $home = $site->getSiteHomePageObject();
+        }
         $children = $home->getCollectionChildren();
         $navigation = new Navigation();
 
