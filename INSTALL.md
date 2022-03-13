@@ -10,7 +10,7 @@ You'll probably want to change your admin users password (which can be done in t
 
 ## Simpler Installation
 
-concrete5.org offers hosting and will pre-install and suppport concrete5 for you:
+concrete5.org offers hosting and will pre-install and support concrete5 for you:
 
 	concrete5 Hosting
 	http://www.concrete5.org/hosting/
