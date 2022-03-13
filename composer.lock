@@ -3848,6 +3848,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.1-dev"
+                },
+                "patches_applied": {
+                    "hash": "c01ee49dae3ec5d99a499583022d4223d59924fc",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.6.1",
+                            "path": "lcobucci/jwt/php8-compatibility.patch",
+                            "description": "Adds php 8 compability to jwt version 3.4.6"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6342,6 +6352,18 @@
                 "php": ">=5.3.2"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "43699395013691839330f8406ee49fa752c163fb",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.6.1",
+                            "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                            "description": "Fix minus in regular expressions"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Sunra\\PhpSimple\\HtmlDomParser": "Src/"
@@ -9798,16 +9820,16 @@
         },
         {
             "name": "tedivm/stash",
-            "version": "v0.16.0",
+            "version": "v0.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tedious/Stash.git",
-                "reference": "7d42f58e4f395397d7c76d4eff55eb56aacadc34"
+                "reference": "7a898d86277373b80de432538545e65870e2594e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/Stash/zipball/7d42f58e4f395397d7c76d4eff55eb56aacadc34",
-                "reference": "7d42f58e4f395397d7c76d4eff55eb56aacadc34",
+                "url": "https://api.github.com/repos/tedious/Stash/zipball/7a898d86277373b80de432538545e65870e2594e",
+                "reference": "7a898d86277373b80de432538545e65870e2594e",
                 "shasum": ""
             },
             "require": {
@@ -9818,9 +9840,11 @@
                 "psr/cache-implementation": "1.0.0"
             },
             "require-dev": {
+                "dms/phpunit-arraysubset-asserts": "^0.4.0",
                 "friendsofphp/php-cs-fixer": "^2.8",
-                "phpunit/phpunit": "^6",
-                "satooshi/php-coveralls": "1.0.*"
+                "php": "^7.2|^8.0",
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpunit/phpunit": "^9.0"
             },
             "type": "library",
             "autoload": {
@@ -9856,11 +9880,15 @@
             ],
             "funding": [
                 {
+                    "url": "https://github.com/tedivm",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/tedivm/stash",
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-18T04:06:48+00:00"
+            "time": "2022-02-21T22:01:48+00:00"
         },
         {
             "name": "true/punycode",
