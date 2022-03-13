@@ -1,7 +1,7 @@
 
 #  How to Contribute to Concrete CMS
 
-Community contributions are one of the key points that make open source software so great. We've tried to categorize our issues in ways that will make it clear how best we can use your help. In general, if something is labelled as "Available" it is ready for development! If you find an issue that is labeled in this way, without a dedicated person assigned to it, post that you'd like to work on it, and go for it. When you're done submit a pull request and we'll review it right away for inclusion.
+Community contributions are one of the key points that make open source software so great. We've tried to categorize our issues in ways that will make it clear how best we can use your help. In general, if something is labeled as "Available" it is ready for development! If you find an issue that is labeled in this way, without a dedicated person assigned to it, post that you'd like to work on it, and go for it. When you're done submit a pull request and we'll review it right away for inclusion.
 
 Helpful Links:
 
