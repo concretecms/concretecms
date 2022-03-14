@@ -32,9 +32,10 @@ class AuthorDataFieldData implements DataFieldDataInterface
         if (!isset($this->data['avatar'])) {
             $ui = app(UserInfoRepository::class)->getByID($this->data['id']);
             if ($ui) {
-                return $ui->getUserAvatar()->getPath();
+                $this->data['avatar'] = $ui->getUserAvatar()->getPath();
             }
         }
+        return $this->data['avatar'];
     }
 
     public function __construct(UserInfo $ui = null)
