@@ -6,14 +6,13 @@ on:
 
 jobs:
   install:
-    name: Update from ${{ matrix.from-version }} with PHP${{ matrix.php-version }}
+    name: Update from ${{ matrix.from-version }} with PHP ${{ matrix.php-version }}
     runs-on: ubuntu-latest
     container: ghcr.io/concrete5-community/docker5:${{ matrix.from-version }}-full
     strategy:
       matrix:
         from-version:
-          #- 5.7.5.13
-          #- 8.5.2
+          - 8.5.7
           - 9.0.1
         php-version:
           - "7.4"
