@@ -2291,6 +2291,7 @@ EOT
         $cName = $this->getCollectionName();
         $cDescription = $this->getCollectionDescription();
         $cDatePublic = $this->getCollectionDatePublic();
+        $uID = $this->getCollectionUserID();
         $pkgID = $this->getPackageID();
         $cFilename = $this->getCollectionFilename();
         $pTemplateID = $this->getPageTemplateID();
