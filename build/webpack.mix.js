@@ -110,6 +110,7 @@ mix
 
 // CKEditor
 mix
+    .copy('node_modules/@concretecms/bedrock/assets/ckeditor/js/concrete/concretestyles/icons/snippet.png', '../concrete/js/ckeditor/plugins/concretestyles/icons/snippet.png')
     .sass('node_modules/@concretecms/bedrock/assets/ckeditor/scss/concrete.scss', 'css/ckeditor/concrete.css', {
         sassOptions: {
             includePaths: [
