@@ -96,15 +96,17 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     /**
      * {@inheritdoc}
      *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key[]
      * @see \Concrete\Core\Attribute\Category\CategoryInterface::getList()
      *
-     * @return \Concrete\Core\Entity\Attribute\Key\Key[]
      */
     public function getList()
     {
-        return $this->getAttributeKeyRepository()->findBy([
-            'akIsInternal' => false,
-        ]);
+        return $this->getAttributeKeyRepository()->findBy(
+            [
+                'akIsInternal' => false,
+            ]
+        );
     }
 
     /**
@@ -114,9 +116,11 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function getSearchableList()
     {
-        return $this->getAttributeKeyRepository()->findBy([
-            'akIsSearchable' => true,
-        ]);
+        return $this->getAttributeKeyRepository()->findBy(
+            [
+                'akIsSearchable' => true,
+            ]
+        );
     }
 
     /**
@@ -126,55 +130,71 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function getSearchableIndexedList()
     {
-        return $this->getAttributeKeyRepository()->findBy([
-            'akIsSearchableIndexed' => true,
-        ]);
+        return $this->getAttributeKeyRepository()->findBy(
+            [
+                'akIsSearchableIndexed' => true,
+            ]
+        );
+    }
+
+    public function getCacheNamespace()
+    {
+        $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
+        $category = strtolower(substr($class, 0, strpos($class, 'Category')));
+        return '/attribute/' . $category;
     }
 
     /**
      * {@inheritdoc}
      *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
      * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByHandle()
      *
-     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
      */
     public function getAttributeKeyByHandle($handle)
     {
         $cache = $this->application->make('cache/request');
-        $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
-        $category = strtolower(substr($class, 0, strpos($class, 'Category')));
-        $item = $cache->getItem(sprintf('/attribute/%s/handle/%s', $category, $handle));
+        $cacheKey = $this->getCacheNamespace() . '/handle/' . $handle;
+        $item = $cache->getItem($cacheKey);
         if (!$item->isMiss()) {
             $key = $item->get();
         } else {
-            $key = $this->getAttributeKeyRepository()->findOneBy([
-                'akHandle' => $handle,
-            ]);
+            $key = $this->getAttributeKeyByHandleUncached($handle);
             $cache->save($item->set($key));
         }
 
         return $key;
     }
 
+    public function getAttributeKeyByHandleUncached($handle)
+    {
+        return $this->getAttributeKeyRepository()->findOneBy(
+            [
+                'akHandle' => $handle,
+            ]
+        );
+    }
+
     /**
      * {@inheritdoc}
      *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
      * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByID()
      *
-     * @return \Concrete\Core\Entity\Attribute\Key\Key|null
      */
     public function getAttributeKeyByID($akID)
     {
         $cache = $this->application->make('cache/request');
-        $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
-        $category = strtolower(substr($class, 0, strpos($class, 'Category')));
-        $item = $cache->getItem(sprintf('/attribute/%s/id/%s', $category, $akID));
+        $cacheKey = $this->getCacheNamespace() . '/id/' . $akID;
+        $item = $cache->getItem($cacheKey);
         if (!$item->isMiss()) {
             $key = $item->get();
         } else {
-            $key = $this->getAttributeKeyRepository()->findOneBy([
-                'akID' => $akID,
-            ]);
+            $key = $this->getAttributeKeyRepository()->findOneBy(
+                [
+                    'akID' => $akID,
+                ]
+            );
             $cache->save($item->set($key));
         }
 
@@ -276,9 +296,9 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     /**
      * {@inheritdoc}
      *
+     * @return \Concrete\Core\Entity\Attribute\Key\Key
      * @see \Concrete\Core\Attribute\Category\CategoryInterface::addFromRequest()
      *
-     * @return \Concrete\Core\Entity\Attribute\Key\Key
      */
     public function addFromRequest(AttributeType $type, Request $request)
     {

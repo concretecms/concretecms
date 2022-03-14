@@ -82,6 +82,14 @@ class ExpressCategory extends AbstractStandardCategory
     }
 
     /**
+     * @return string
+     */
+    public function getCacheNamespace()
+    {
+        return '/attribute/express/' . snake_case($this->expressEntity->getHandle());
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\Category\AbstractCategory::getSearchableIndexedList()
@@ -109,6 +117,16 @@ class ExpressCategory extends AbstractStandardCategory
             'entity' => $this->expressEntity,
             'akIsSearchable' => true,
         ]);
+    }
+
+    public function getAttributeKeyByHandleUncached($handle)
+    {
+        return $this->getAttributeKeyRepository()->findOneBy(
+            [
+                'entity' => $this->expressEntity,
+                'akHandle' => $handle,
+            ]
+        );
     }
 
     /**
