@@ -37,7 +37,7 @@ jobs:
         run: |
           sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.display_errors true
           sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.detail debug
-          # sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.error_reporting -1
+          sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.error_reporting -1
       -
         name: Install
         run: |
