@@ -2291,7 +2291,6 @@ EOT
         $cName = $this->getCollectionName();
         $cDescription = $this->getCollectionDescription();
         $cDatePublic = $this->getCollectionDatePublic();
-        $uID = $this->getCollectionUserID();
         $pkgID = $this->getPackageID();
         $cFilename = $this->getCollectionFilename();
         $pTemplateID = $this->getPageTemplateID();
@@ -2328,6 +2327,13 @@ EOT
         }
         if (isset($data['ptID'])) {
             $ptID = $data['ptID'];
+        }
+
+        // https://github.com/concrete5/concrete5/issues/10413
+        if (isset($uID)) {
+            $uID = (int) $uID;
+        } else {
+            $uID = 0;
         }
 
         if (!$cDatePublic) {
@@ -3480,6 +3486,10 @@ EOT
             $uID = $u->getUserID();
             $data['uID'] = $uID;
         }
+
+        // https://github.com/concrete5/concrete5/issues/10149
+        $data['uID'] = (int) $uID;
+        $uID = (int) $uID;
 
         if (isset($data['pkgID'])) {
             $pkgID = $data['pkgID'];
