@@ -231,6 +231,7 @@ class GroupRole extends ConcreteObject implements JsonSerializable
         return true;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -34,6 +34,7 @@ class FontWeightValue extends Value
         $this->fontWeight = $fontWeight;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

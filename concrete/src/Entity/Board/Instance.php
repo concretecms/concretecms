@@ -241,6 +241,7 @@ class Instance implements \JsonSerializable, ObjectInterface
         $this->dateDataPoolLastUpdated = $dateDataPoolLastUpdated;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $site = $this->getSite();

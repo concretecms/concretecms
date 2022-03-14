@@ -83,6 +83,7 @@ class TypeStyle extends Style
         throw new \RuntimeException(t('The TypeStyle class is a container style – it cannot convert to variables.'));
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

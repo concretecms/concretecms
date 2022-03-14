@@ -24,6 +24,7 @@ class Definition implements \JsonSerializable
         return $this->fields;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -81,6 +81,7 @@ class Set implements \JsonSerializable
         return $this->styles;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

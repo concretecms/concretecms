@@ -11,6 +11,7 @@ final class EntryJsonFormatter implements \JsonSerializable
         $this->entry = $entry;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $response = array(

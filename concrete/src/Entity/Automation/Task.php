@@ -152,6 +152,7 @@ class Task implements \JsonSerializable, TaskInterface
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $controller = $this->getController();

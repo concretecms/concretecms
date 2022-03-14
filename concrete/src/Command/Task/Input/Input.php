@@ -51,6 +51,7 @@ class Input implements InputInterface, DenormalizableInterface
         return $this->fields;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

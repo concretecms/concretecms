@@ -33,6 +33,7 @@ class LinkDataFieldData implements DataFieldDataInterface
         return (string) $this->link;
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

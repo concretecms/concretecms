@@ -205,6 +205,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
      *
      * @return array|null
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $formatter = new JsonFormatter($this);

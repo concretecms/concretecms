@@ -42,6 +42,7 @@ class FileFolderItem extends Item
         $this->folderId = $folderId;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

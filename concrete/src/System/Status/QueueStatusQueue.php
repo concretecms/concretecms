@@ -40,6 +40,7 @@ class QueueStatusQueue implements \JsonSerializable
 
 
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
