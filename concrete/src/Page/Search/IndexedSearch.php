@@ -157,7 +157,7 @@ class IndexedSearch
         if ($pageController = $c->getPageController()) {
             $searchableContent = $pageController->getSearchableContent();
 
-            if (strlen(trim($searchableContent))) {
+            if (trim((string) $searchableContent) !== '') {
                 $text .= $th->decodeEntities(
                         strip_tags(str_ireplace($tagsToSpaces, ' ', $searchableContent)),
                         ENT_QUOTES,
