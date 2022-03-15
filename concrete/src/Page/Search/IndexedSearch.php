@@ -41,7 +41,7 @@ class IndexedSearch
     public static function getSavedSearchableAreas()
     {
         $areas = Config::get('concrete.misc.search_index_area_list');
-        $areas = unserialize($areas);
+        $areas = $areas ? unserialize($areas) : [];
         if (!is_array($areas)) {
             $areas = [];
         }
