@@ -1045,7 +1045,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if (is_array($r) && isset($r['ptID']) && $r['ptID']) {
             $cm = new static();
             $cm->setPropertiesFromArray($r);
-            $cm->ptPublishTargetObject = unserialize($r['ptPublishTargetObject']);
+            $cm->ptPublishTargetObject = $r['ptPublishTargetObject'] ? unserialize($r['ptPublishTargetObject']) : null;
             $cache->save($item->set($cm));
 
             return $cm;
