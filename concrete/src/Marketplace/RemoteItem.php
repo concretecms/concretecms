@@ -227,7 +227,8 @@ class RemoteItem extends ConcreteObject
         }
 
         $r = $pkg->backup();
-        if (is_object($r) && $r instanceof Error) {
+        // Can the calling code handle a return of ErrorList?
+        if (is_object($r) && ($r instanceof Error || $r instanceof ErrorList)) {
             return $r;
         }
 
@@ -237,7 +238,10 @@ class RemoteItem extends ConcreteObject
             $am = new PackageArchive($this->getHandle());
             $am->install($file, true);
         } catch (Exception $e) {
-            $pkg->restore();
+            // This is a messy fix. Better would be to restructure this method to avoid variant object type for $pkg.
+            if(is_callable([$pkg, 'restore'])){
+                $pkg->restore();
+            }
             $error = \Core::make('error');
             $error->add($e);
             return $error;
