@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Express;
 
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 use Database;
 use Express;
@@ -28,6 +29,7 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         'Concrete\Core\Entity\Express\Entry',
         'Concrete\Core\Entity\Express\Entry\Association',
         'Concrete\Core\Entity\Express\Entry\AssociationEntry',
+        'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Value\ExpressValue',
         'Concrete\Core\Entity\Attribute\Value\Value\Value',
         'Concrete\Core\Entity\Attribute\Value\Value\TextValue',
@@ -59,6 +61,8 @@ class AssociationApplierTest extends ConcreteDatabaseTestCase
         \Concrete\Core\Tree\Node\NodeType::add('express_entry_results');
 
         $tree = \Concrete\Core\Tree\Type\ExpressEntryResults::add();
+
+        Category::add('express');
 
         $factory = \Core::make('\Concrete\Core\Attribute\TypeFactory');
         $factory->add('text', 'Text');
