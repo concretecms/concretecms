@@ -32,11 +32,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     use ApplicationAwareTrait;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\Session
-     */
-    protected $session;
-
-    /**
      * @var \Concrete\Core\Http\Request
      */
     protected $request;
@@ -49,9 +44,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     private $config;
 
-    public function __construct(Session $session, Request $request, Localization $localization, Repository $config)
+    public function __construct(Request $request, Localization $localization, Repository $config)
     {
-        $this->session = $session;
         $this->request = $request;
         $this->localization = $localization;
         $this->config = $config;
