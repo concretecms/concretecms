@@ -312,6 +312,7 @@ class Text
      */
     public function fnmatch($pattern, $string)
     {
+        $string = (string) $string;
         if (!function_exists('fnmatch')) {
             return preg_match(
                 "#^" . strtr(
