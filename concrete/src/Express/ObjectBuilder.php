@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Express;
 
+use Concrete\Core\Application\Application;
+use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Attribute\TypeFactory;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -14,7 +16,7 @@ class ObjectBuilder
     protected $attributeTypeFactory;
     protected $entity;
     protected $entityManager;
-    protected $generator;
+    protected $app;
 
     /**
      * @return TypeFactory
@@ -25,12 +27,12 @@ class ObjectBuilder
     }
 
     public function __construct(
-        AttributeKeyHandleGenerator $generator,
+        Application $app,
         EntityManagerInterface $entityManager,
         TypeFactory $attributeTypeFactory)
     {
+        $this->app = $app;
         $this->attributeTypeFactory = $attributeTypeFactory;
-        $this->generator = $generator;
         $this->entityManager = $entityManager;
     }
 
@@ -129,7 +131,10 @@ class ObjectBuilder
         $key->setAttributeKeyName($name);
         $key->setAttributeType($type);
         if (!$handle) {
-            $handle = $this->generator->generate($key);
+            $generator = new AttributeKeyHandleGenerator(
+                $this->app->make(ExpressCategory::class, ['entity' => $this->entity])
+            );
+            $handle = $generator->generate($key);
         }
         $key->setAttributeKeyHandle($handle);
         $key->setIsAttributeKeySearchable($akIsSearchable);
