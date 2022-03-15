@@ -55,7 +55,7 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
         $list->filterByAttribute(
             $this->attributeKey->getAttributeKeyHandle(),
             $value->getValue(),
-            '=',
+            '='
         );
     }
 
