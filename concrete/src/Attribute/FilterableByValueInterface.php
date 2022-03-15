@@ -1,8 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Entity\Attribute\Value\Value\Value;
-use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Search\ItemList\ItemList;
 
 /**
@@ -17,9 +16,9 @@ interface FilterableByValueInterface
      * Filters list by exact value
      *
      * @var ItemList $list
-     * @param Value $value
+     * @param mixed|AbstractValue $value
      * @return mixed
      */
-    public function filterByExactValue($list, Value $value);
+    public function filterByExactValue($list, $value);
 
 }

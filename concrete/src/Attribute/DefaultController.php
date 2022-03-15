@@ -45,9 +45,18 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
         return TextValue::class;
     }
 
-    public function filterByExactValue($list, Value $value)
+    /**
+     * @param \Concrete\Core\Search\ItemList\ItemList $list
+     * @param TextValue $value
+     * @return mixed|void
+     */
+    public function filterByExactValue($list, $value)
     {
-        dd($value);
+        $list->filterByAttribute(
+            $this->attributeKey->getAttributeKeyHandle(),
+            $value->getValue(),
+            '=',
+        );
     }
 
     public function search()
