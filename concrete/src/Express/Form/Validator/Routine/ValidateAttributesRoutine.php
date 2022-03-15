@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Express\Form\Validator\Routine;
 
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,7 @@ class ValidateAttributesRoutine implements RoutineInterface
         $this->request = $request;
     }
 
-    public function validate(ErrorList $error, Form $form, $requestType)
+    public function validate(ErrorList $error, Form $form, Entry $entry = null)
     {
         $valid = true;
         foreach ($form->getControls() as $control) {

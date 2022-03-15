@@ -227,7 +227,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                     );
                 }
 
-                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
+                $validator->validate($form);
                 $manager = $controller->getEntryManager($this->request);
                 $e = $validator->getErrorList();
                 if ($e->has()) {
