@@ -30,8 +30,8 @@ class IndexedSearch
 
     public static function getSearchableAreaAction()
     {
-        $action = Config::get('concrete.misc.search_index_area_method');
-        if (!strlen($action)) {
+        $action = (string) Config::get('concrete.misc.search_index_area_method');
+        if ($action === '') {
             $action = 'denylist';
         }
 
