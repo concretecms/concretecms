@@ -170,6 +170,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
  */
 function camelcase($string, $leaveSlashes = false)
 {
+    $string = (string) $string;
     $return = '';
     $string = trim($string, '_-/\\');
     if (strpos($string, '/')) {
