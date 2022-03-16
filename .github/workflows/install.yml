@@ -54,3 +54,16 @@ jobs:
             --admin-email=admin@example.org \
             --admin-password=12345 \
             -vvv
+      -
+        name: Test that the website actually works
+        run: |
+          rm -rf /app
+          ln -s "$GITHUB_WORKSPACE" /app
+          ccm-service start web
+          SITE_NAME="$(sudo -u www-data ./concrete/bin/concrete5 c5:config get site.sites.default.name)"
+          curl -sSf -o /tmp/index.html http://localhost/
+          if ! grep -Eq "<title>.*$SITE_NAME.*</title>" /tmp/index.html; then
+            echo 'Wrong response from the website' >&1
+            cat /tmp/index.html >&2
+            exit 1
+          fi
