@@ -18,7 +18,7 @@ class ZipTest extends TestCase
 
     protected $fileSystemProblem = null;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->zipHelper = Core::make('helper/zip');
         $this->workDir = null;
@@ -59,7 +59,7 @@ class ZipTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function TearDown():void
     {
         if ($this->workDir !== null) {
             id(new Filesystem())->deleteDirectory($this->workDir);

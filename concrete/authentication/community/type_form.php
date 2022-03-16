@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die('Access denied.');
 /**
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Form\Service\Widget\GroupSelector $groupSelector
- * @var string $concrete5SecurePrefix
+ * @var string $concreteSecurePrefix
  * @var Concrete\Core\Url\UrlImmutable $callbackURI
  * @var string $apikey
  * @var string $apisecret
@@ -15,21 +15,19 @@ defined('C5_EXECUTE') or die('Access denied.');
 ?>
 
 <div class="alert alert-info">
-    <div><?= t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', $concrete5SecurePrefix . '/profile/apps/') ?></div>
+    <div><?= t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', $concreteSecurePrefix . '/profile/apps/') ?></div>
     <div><?= t('Set the "Callback URI" to: %s', '<code>' . $callbackURI . '</code>') ?></div>
 </div>
 
 <div class="form-group">
     <?= $form->label('apikey', t('App ID')) ?>
-    <?= $form->text('apikey', $apikey, ['autocomplete' => 'off', 'class' => 'text-monospace', 'spellcheck' => 'false']) ?>
+    <?= $form->text('apikey', $apikey, ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
 </div>
 <div class="form-group">
     <?= $form->label('apisecret', t('App Secret')) ?>
     <div class="input-group">
-        <?= $form->password('apisecret', $apisecret, ['autocomplete' => 'off', 'class' => 'text-monospace', 'spellcheck' => 'false']) ?>
-        <div class="input-group-append">
-            <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="far fa-eye"></i></button>
-        </div>
+        <?= $form->password('apisecret', $apisecret, ['autocomplete' => 'off', 'class' => 'font-monospace', 'spellcheck' => 'false']) ?>
+        <button id="showsecret" class="btn btn-outline-secondary" title="<?= t('Show secret key') ?>"><i class="fas fa-eye"></i></button>
     </div>
 </div>
 
@@ -55,13 +53,13 @@ $(document).ready(function() {
             $apisecret.attr('type', 'text');
             $('#showsecret')
                 .attr('title', <?= json_encode(t('Hide secret key')) ?>)
-                .html('<i class="far fa-eye-slash"></i>')
+                .html('<i class="fas fa-eye-slash"></i>')
             ;
         } else {
             $apisecret.attr('type', 'password');
             $('#showsecret')
                 .attr('title', <?= json_encode(t('Show secret key')) ?>)
-                .html('<i class="far fa-eye"></i>')
+                .html('<i class="fas fa-eye"></i>')
             ;
         }
     });

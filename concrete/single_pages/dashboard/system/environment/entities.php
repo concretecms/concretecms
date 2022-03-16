@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <fieldset>
         <legend><?= t('Settings'); ?></legend>
         <div class="form-group">
-            <label class="launch-tooltip" data-placement="right" title="<?= t('Defines whether the Doctrine proxy classes are created on the fly. On the fly generation is active when development mode is enabled.'); ?>">
+            <label class="launch-tooltip" data-bs-placement="right" title="<?= t('Defines whether the Doctrine proxy classes are created on the fly. On the fly generation is active when development mode is enabled.'); ?>">
                 <?= t('Doctrine Development Mode'); ?>
             </label>
 
@@ -46,9 +46,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     <div class="col-md-1"><span class="text-muted"><?= t('Paths'); ?></span></div>
                     <div class="col-md-11">
                         <?php
-                            if ($driver instanceof Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver) {
+                            if ($driver instanceof \Doctrine\ORM\Mapping\Driver\AnnotationDriver) {
                                 $paths = $driver->getPaths();
-                            } elseif ($driver instanceof Doctrine\Common\Persistence\Mapping\Driver\FileDriver) {
+                            } elseif ($driver instanceof \Doctrine\Persistence\Mapping\Driver\FileDriver) {
                                 $paths = $driver->getLocator()->getPaths();
                             } else {
                                 $paths = [];
@@ -77,8 +77,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="float-left btn btn-danger" name="refresh" value="1" type="submit"><?= t('Refresh Entities'); ?></button>
-            <button class="float-right btn btn-primary" type="submit"><?= t('Save'); ?></button>
+            <button class="float-start btn btn-danger" name="refresh" value="1" type="submit"><?= t('Refresh Entities'); ?></button>
+            <button class="float-end btn btn-primary" type="submit"><?= t('Save'); ?></button>
         </div>
     </div>
 

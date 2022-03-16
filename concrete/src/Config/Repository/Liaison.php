@@ -125,7 +125,7 @@ class Liaison
      */
     public function withKey($key, $value, callable $callable)
     {
-        return $this->repository->withKey($key, $value, $callable);
+        return $this->repository->withKey($this->transformKey($key), $value, $callable);
     }
 
     /**

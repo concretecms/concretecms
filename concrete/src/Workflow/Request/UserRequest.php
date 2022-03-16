@@ -102,7 +102,7 @@ abstract class UserRequest extends Request
     public function getRequestIconElement()
     {
         $span = new Element('i');
-        $span->addClass('fa fa-user');
+        $span->addClass('fas fa-user');
         return $span;
     }
 }

@@ -10,6 +10,11 @@ class JavascriptLocalizedAsset extends JavascriptAsset
 {
 
     /**
+     * @var bool
+     */
+    protected $assetSupportsMinification = false;
+
+    /**
      * @return string
      */
     public function getAssetType()

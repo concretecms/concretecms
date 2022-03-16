@@ -45,7 +45,7 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
 
         if (is_object($controller)) {
             if (method_exists($controller, '__invoke')) {
-                return $controller;
+                return [$controller, '__invoke'];
             }
 
             throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', get_class($controller), $request->getPathInfo()));
@@ -53,9 +53,10 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
 
         if (false === strpos($controller, ':')) {
             if (method_exists($controller, '__invoke')) {
-                return $this->app->make($controller);
-            } elseif (function_exists($controller)) {
-                return $controller;
+                return [$this->app->make($controller), '__invoke'];
+            }
+            if (function_exists($controller)) {
+                return [new FunctionController($controller), '__invoke'];
             }
         }
 
@@ -83,12 +84,12 @@ class ApplicationAwareControllerResolver extends SymfonyControllerResolver imple
             throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
         }
 
-        list($class, $method) = explode('::', $controller, 2);
+        [$class, $method] = explode('::', $controller, 2);
 
         if (!class_exists($class) && !$this->app->bound($class)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
-        return array($this->app->make($class), $method);
+        return [$this->app->make($class), $method];
     }
 }

@@ -6,7 +6,7 @@
 
 ?>
 <table class="table">
-    <caption><h4><?= t('Local translations file') ?></h4></caption>
+    <caption class="caption-top"><h4><?= t('Local translations file') ?></h4></caption>
     <tbody>
         <tr>
             <th><?= t('File path') ?></th>
@@ -23,7 +23,7 @@
     </tbody>
 </table>
 <table class="table">
-    <caption><h4><?= t('Remote translations file') ?></h4></caption>
+    <caption class="caption-top"><h4><?= t('Remote translations file') ?></h4></caption>
     <tbody>
         <tr>
             <th><?= t('Version') ?></th>

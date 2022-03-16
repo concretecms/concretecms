@@ -42,7 +42,7 @@ class PackageList extends ConcreteObject
         $packageList = array();
         $db = Loader::db();
         $r = $db->Execute('select pkgID, pkgHandle from Packages where pkgIsInstalled = 1');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $packageList[$row['pkgID']] = $row['pkgHandle'];
         }
 

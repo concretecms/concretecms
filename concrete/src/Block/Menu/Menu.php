@@ -207,8 +207,8 @@ class Menu extends PopoverMenu
                     'dialog-title' => t('Schedule Guest Access'),
                     'data-menu-action' => 'block_dialog',
                     'data-menu-href' => \URL::to('/ccm/system/dialogs/block/permissions/guest_access'),
-                    'dialog-width' => 500,
-                    'dialog-height' => 320
+                    'dialog-width' => 520,
+                    'dialog-height' => 400
                 ]));
             }
 

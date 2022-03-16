@@ -1,6 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var \Concrete\Core\Block\View\BlockView $view */
 
-<?php
-$info = array();
-$view->inc('form_setup_html.php', array('info' => $info, 'c' => isset($c) ? $c : null));
-?>
+$view->inc('form_setup_html.php', ['info' => [], 'c' => $c ?? null]);

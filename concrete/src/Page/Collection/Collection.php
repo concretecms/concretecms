@@ -3,9 +3,10 @@
 namespace Concrete\Core\Page\Collection;
 
 use Concrete\Core\Area\Area;
-use Block;
+
 use CacheLocal;
 use CollectionVersion;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -14,10 +15,10 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\Driver\PDOStatement;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
-use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
 use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\Command\ReindexPageCommand;
 use Concrete\Core\Page\Search\IndexedSearch;
 use Concrete\Core\Page\Summary\Template\Populator;
 use Concrete\Core\Search\Index\IndexManagerInterface;
@@ -423,102 +424,30 @@ class Collection extends ConcreteObject implements TrackableInterface
         return t('Version %d', $cvID + 1);
     }
 
-    /**
-     * (Re)Index the contents of this collection (or mark the collection as to be reindexed if $actuallyDoReindex is falsy and the concrete.page.search.always_reindex configuration key is falsy).
-     *
-     * @param \Concrete\Core\Page\Search\IndexedSearch|false $index the IndexedSearch instance that indexes the collection content (if falsy: we'll create a new instance of it)
-     * @param bool $actuallyDoReindex Set to true to always reindex the collection immediately (otherwise we'll look at the concrete.page.search.always_reindex configuration key)
-     *
-     * @return bool|null Return false if the collection can't be indexed, NULL otherwise
-     */
-    public function reindex($index = false, $actuallyDoReindex = true)
+    public function reindex()
     {
         if ($this->isAlias() && !$this->isExternalLink()) {
             return false;
         }
 
-        $app = Application::getFacadeApplication();
-        /** @var Connection $db */
-        $db = $app->make(Connection::class);
-
-        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
-            // Retrieve the attribute values for the current page
-            $category = \Core::make('Concrete\Core\Attribute\Category\PageCategory');
-            $indexer = $category->getSearchIndexer();
-            $values = $category->getAttributeValues($this);
-            foreach ($values as $value) {
-                $indexer->indexEntry($category, $value, $this);
-            }
-
-            if ($index == false) {
-                $index = new IndexedSearch();
-            }
-
-            $index->reindexPage($this);
-
-            $qb = $db->createQueryBuilder();
-            $r = $qb->select('cID')
-                ->from('PageSearchIndex')
-                ->where('cID = :cID')
-                ->setParameter('cID', $this->getCollectionID())
-                ->execute()->fetch();
-
-            $qb2 = $db->createQueryBuilder();
-            if ($r !== false) {
-                $qb2->update('PageSearchIndex')
-                    ->set('cRequiresReindex', 0)
-                    ->where('cID = :cID');
-            } else {
-                $qb2->insert('PageSearchIndex')
-                    ->setValue('cID', ':cID')
-                    ->setValue('cRequiresReindex', 0);
-            }
-            $qb2->setParameter('cID', $this->getCollectionID())->execute();
-
-            $cache = PageCache::getLibrary();
-            $cache->purge($this);
-
-            $app = Facade::getFacadeApplication();
-            $populator = $app->make(Populator::class);
-            $populator->updateAvailableSummaryTemplates($this);
-
-        } else {
-            Config::save('concrete.misc.do_page_reindex_check', true);
-
-            $qb = $db->createQueryBuilder();
-            $r = $qb->select('cID')
-                ->from('PageSearchIndex')
-                ->where('cID = :cID')
-                ->setParameter('cID', $this->getCollectionID())
-                ->execute()->fetch();
-
-            $qb2 = $db->createQueryBuilder();
-            if ($r !== false) {
-                $qb2->update('PageSearchIndex')
-                    ->set('cRequiresReindex', 1)
-                    ->where('cID = :cID')
-                    ->setParameter('cID', $this->getCollectionID());
-            } else {
-                $qb2->insert('PageSearchIndex')
-                    ->setValue('cID', ':cID')
-                    ->setValue('cRequiresReindex', 1)
-                    ->setParameter('cID', $this->getCollectionID());
-            }
-            $qb2->execute();
-        }
+        $command = new ReindexPageCommand($this->getCollectionID());
+        $app = Facade::getFacadeApplication();
+        $app->executeCommand($command);
     }
+
+
 
     /**
      * Set the attribute value for the currently loaded collection version.
      *
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak the attribute key (or its handle)
      * @param \Concrete\Core\Entity\Attribute\Value\Value\AbstractValue|mixed $value an attribute value object, or the data needed by the attribute controller to create the attribute value object
-     *
+     * @param bool $doReindexImmediately
      * @return \Concrete\Core\Entity\Attribute\Value\PageValue
      */
-    public function setAttribute($ak, $value)
+    public function setAttribute($ak, $value, $doReindexImmediately = true)
     {
-        return $this->vObj->setAttribute($ak, $value);
+        return $this->vObj->setAttribute($ak, $value, $doReindexImmediately);
     }
 
     /**
@@ -601,10 +530,11 @@ class Collection extends ConcreteObject implements TrackableInterface
      * Delete the value of a specific attribute key associated to the currently loaded collection version.
      *
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak the attribute key (or its handle)
+     * @param bool $doReindexImmediately
      */
-    public function clearAttribute($ak)
+    public function clearAttribute($ak, bool $doReindexImmediately = true)
     {
-        $this->vObj->clearAttribute($ak);
+        $this->vObj->clearAttribute($ak, $doReindexImmediately);
     }
 
     /**
@@ -1188,7 +1118,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         if ($r) {
             if ($r->rowCount() > 0) {
                 // then we know we got a value; we increment it and return
-                $res = $r->fetchRow();
+                $res = $r->fetchAssociative();
                 $displayOrder = $res['cbdis'];
                 if ($displayOrder === null) {
                     return 0;
@@ -1232,6 +1162,72 @@ class Collection extends ConcreteObject implements TrackableInterface
         if ($r) {
             $displayOrder = 0;
             while ($row = $r->fetch()) {
+                $qb2 = $db->createQueryBuilder();
+                $qb2->update('CollectionVersionBlocks')
+                    ->set('cbDisplayOrder', ':cbDisplayOrder')
+                    ->where('cID = :cID')
+                    ->andWhere('cvID = :cvID')
+                    ->andWhere('arHandle = :arHandle')
+                    ->andWhere('bID = :bID')
+                    ->setParameter('cbDisplayOrder', $displayOrder)
+                    ->setParameter('cID', $cID)
+                    ->setParameter('cvID', $cvID)
+                    ->setParameter('arHandle', $arHandle)
+                    ->setParameter('bID', $row['bID'])
+                    ->execute();
+                ++$displayOrder;
+            }
+        }
+    }
+
+
+    /**
+     * Fix the display order properties for all the blocks after this block in this area.
+     * This is useful for forcing a certain block order.
+     * @param Block $block the block to begin the display order rescan from
+     * @param string $arHandle the handle of the area to be processed
+     * @param int|null $fromDisplay an optional integer to override the starting number,
+     *                              i.e start from 0 even though our block is 8
+     * @return void
+     * @throws \Doctrine\DBAL\Driver\Exception|\Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function rescanDisplayOrderFromBlock(Block $block, string $arHandle, int $fromDisplay = null)
+    {
+        /** This block doesnt have a display order */
+        if ($block->getBlockDisplayOrder() === null) {
+            return $this->rescanDisplayOrder($arHandle);
+        }
+        $fromDisplay = $fromDisplay ?? $block->getBlockDisplayOrder();
+        $cID = $this->cID;
+        $cvID = $this->vObj->cvID;
+        $app = Application::getFacadeApplication();
+        /** @var Connection $db */
+        $db = $app->make(Connection::class);
+        $qb = $db->createQueryBuilder();
+        $r =$qb->select('bID')
+            ->from('CollectionVersionBlocks')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->andWhere('bID != :bID')
+            ->andWhere('cbDisplayOrder >= :cbDisplay')
+            ->andWhere('arHandle = :arHandle')
+            ->orderBy('cbDisplayOrder', 'asc')
+            ->setParameter('cbDisplay', $fromDisplay)
+            ->setParameter('bID', $block->getBlockID())
+            ->setParameter('cID', $cID)
+            ->setParameter('cvID', $cvID)
+            ->setParameter('arHandle', $arHandle)
+            ->execute();
+
+        if ($r) {
+            $currentDisplayOrder = $block->getBlockDisplayOrder();
+            $displayOrder = $fromDisplay;
+            while ($row = $r->fetchAssociative()) {
+                if ($displayOrder === $currentDisplayOrder) {
+                    // Skip our blocks display order
+                    $displayOrder++;
+                }
                 $qb2 = $db->createQueryBuilder();
                 $qb2->update('CollectionVersionBlocks')
                     ->set('cbDisplayOrder', ':cbDisplayOrder')

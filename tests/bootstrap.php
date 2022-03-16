@@ -52,7 +52,6 @@ $app = require DIR_BASE_CORE . '/bootstrap/start.php';
 
 // Configure error reporting (test more strictly than core settings)
 error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
-Notice::$enabled = false;
 
 // Initialize the database
 $cn = $app->make('database')->connection('travisWithoutDB');

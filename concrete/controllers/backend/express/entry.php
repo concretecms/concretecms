@@ -92,18 +92,17 @@ class Entry extends AbstractController
             if ($entity instanceof Entity) {
                 $permissionChecker = new Checker($entity);
                 if ($permissionChecker->canViewExpressEntries()) {
+
+                    $filters = [new SiteField()];
+                    if ($this->request->query->has('keyword')) {
+                        $filters[] = new KeywordsField($this->request->query->get('keyword'));
+                    }
                     /** @var Entity $entity */
                     $entity = $entityRepository->find($exEntityID);
                     $provider = $this->app->make(SearchProvider::class, ['entity' => $entity]);
                     $resultFactory = $this->app->make(ResultFactory::class);
                     $queryFactory = $this->app->make(QueryFactory::class);
-                    $query = $queryFactory->createQuery(
-                        $provider,
-                        [
-                            new SiteField(),
-                            new KeywordsField($this->request->query->get('keyword'))
-                        ]
-                    );
+                    $query = $queryFactory->createQuery($provider, $filters);
                     $queryModifier = new QueryModifier();
                     $queryModifier->addModifier(new AutoSortColumnRequestModifier($provider, $this->request, Request::METHOD_GET));
                     $query = $queryModifier->process($query);
@@ -129,7 +128,7 @@ class Entry extends AbstractController
     protected function buildExpressListFractalArray(EntryList $list)
     {
         $adapter = $list->getPaginationAdapter();
-        $paginationFactory = $this->app->make(PaginationFactory::class, [$this->request]);
+        $paginationFactory = $this->app->make(PaginationFactory::class, ['request' => $this->request]);
         $pagination = $paginationFactory->deliverPaginationObject($list, new Pagination($list, $adapter));
         $collection = new Collection($pagination->getCurrentPageResults(), new ExpressTransformer());
         $collection->setPaginator(new PagerfantaPaginatorAdapter($pagination, function ($page) {

@@ -28,7 +28,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
         <?php if (isset($rssUrl) && $rssUrl) {
             ?>
             <a href="<?php echo $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed">
-                <i class="fa fa-rss"></i>
+                <i class="fas fa-rss"></i>
             </a>
             <?php
         } ?>
@@ -54,6 +54,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
                 $buttonClasses = 'ccm-block-page-list-read-more';
                 $entryClasses = 'ccm-block-page-list-page-entry';
                 $title = $page->getCollectionName();
+                $target = '_self';
                 if ($page->getCollectionPointerExternalLink() != '') {
                     $url = $page->getCollectionPointerExternalLink();
                     if ($page->openCollectionPointerExternalLinkInNewWindow()) {
@@ -63,7 +64,6 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
                     $url = $page->getCollectionLink();
                     $target = $page->getAttribute('nav_target');
                 }
-                $target = empty($target) ? '_self' : $target;
                 $description = $page->getCollectionDescription();
                 $description = $controller->truncateSummaries ? $th->wordSafeShortText($description, $controller->truncateChars) : $description;
                 $thumbnail = false;
@@ -104,7 +104,7 @@ if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
                         ?>
                         <div class="ccm-block-page-list-page-entry-thumbnail">
                             <?php
-                            $img = Core::make('html/image', [$thumbnail]);
+                            $img = Core::make('html/image', ['f' => $thumbnail]);
                             $tag = $img->getTag();
                             $tag->addClass('img-fluid');
                             echo $tag; ?>

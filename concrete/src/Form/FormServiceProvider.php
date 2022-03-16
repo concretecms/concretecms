@@ -5,7 +5,9 @@ namespace Concrete\Core\Form;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Form\Context\Registry\ControlRegistry;
 use Concrete\Core\Form\Service\DestinationPicker;
+use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Http\Request;
 
 class FormServiceProvider extends ServiceProvider
 {
@@ -32,15 +34,16 @@ class FormServiceProvider extends ServiceProvider
         $this->app->singleton(ControlRegistry::class);
 
         $this->app->bind(DestinationPicker\DestinationPicker::class, function (Application $app) {
-            return $app->build(DestinationPicker\DestinationPicker::class)
-                ->registerPickers([
-                    'none' => $app->make(DestinationPicker\NoDestinationPicker::class),
-                    'page' => $app->make(DestinationPicker\PagePicker::class),
-                    'file' => $app->make(DestinationPicker\FilePicker::class),
-                    'external_url' => $app->make(DestinationPicker\ExternalUrlPicker::class),
-                    'email' => $app->make(DestinationPicker\EmailPicker::class),
-                ])
-            ;
+            $request = Request::createFromGlobals();
+            $picker = new DestinationPicker\DestinationPicker($app, $app->make(Form::class), $request);
+            $picker->registerPickers([
+                'none' => $app->make(DestinationPicker\NoDestinationPicker::class),
+                'page' => $app->make(DestinationPicker\PagePicker::class),
+                'file' => $app->make(DestinationPicker\FilePicker::class),
+                'external_url' => $app->make(DestinationPicker\ExternalUrlPicker::class),
+                'email' => $app->make(DestinationPicker\EmailPicker::class)
+            ]);
+            return $picker;
         });
     }
 }

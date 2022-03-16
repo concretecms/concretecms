@@ -23,6 +23,13 @@ class UserInfoResponse extends Response
         // "registered users" explicitly
 
         foreach ($groups as $gID => $gName) {
+            if ($gID == GUEST_GROUP_ID) {
+                // Every user is technically a part of this group, so including it only muddies the waters
+                // because people have to expicitly setting permissions in the Dashboard against it if they want
+                // to keep you from doing things with it, which makes no sense.
+                continue;
+            }
+
             $g = Group::getByID($gID);
             if (is_object($g)) {
                 $gp = new Permissions($g);

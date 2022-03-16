@@ -1,5 +1,19 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
+/** @var \Concrete\Block\Calendar\Controller $controller */
+/** @var \Concrete\Core\Permission\Checker $permissions */
+
+/** @var string $viewTypeString */
+/** @var string $defaultView */
+/** @var \Concrete\Core\Block\View\BlockView $view */
+
+/** @var int $bID */
+$bID = $bID ?? 0;
+$eventLimit = $eventLimit ?? 0;
+$navLinks = $navLinks ?? 0;
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+
 if (!isset($calendar) || !is_object($calendar)) {
     $calendar = null;
 }
@@ -9,6 +23,7 @@ if ($c->isEditMode()) {
     $loc->pushActiveContext(Localization::CONTEXT_UI);
     ?><div class="ccm-edit-mode-disabled-item"><?=t('Calendar disabled in edit mode.')?></div><?php
     $loc->popActiveContext();
+    /** @phpstan-ignore-next-line */
 } elseif ($calendar !== null && $permissions->canViewCalendar()) { ?>
     <div class="ccm-block-calendar-wrapper" data-calendar="<?=$bID?>"></div>
 
@@ -18,7 +33,7 @@ if ($c->isEditMode()) {
                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: '<?= $viewTypeString ? $viewTypeString : ''; ?>'
+                    right: '<?= $viewTypeString ?: ''; ?>'
                 },
                 locale: <?= json_encode(Localization::activeLanguage()); ?>,
                 views: {
@@ -50,7 +65,7 @@ if ($c->isEditMode()) {
 
                 eventRender: function(event, element) {
                     <?php if ($controller->supportsLightbox()) { ?>
-                        element.attr('href', '<?=rtrim(URL::route(array('/view_event', 'calendar'), $bID))?>/' + event.id).magnificPopup({
+                        element.attr('href', '<?=rtrim(\Concrete\Core\Support\Facade\Url::route(['/view_event', 'calendar'], $bID))?>/' + event.id).magnificPopup({
                             type: 'ajax',
                             callbacks: {
                                 beforeOpen: function () {

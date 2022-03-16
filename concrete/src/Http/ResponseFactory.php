@@ -4,6 +4,7 @@ namespace Concrete\Core\Http;
 use Concrete\Controller\Frontend\PageForbidden;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Command\Process\Menu\Item\RunningProcessesItem;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Http\Service\Ajax;
@@ -14,7 +15,6 @@ use Concrete\Core\Page\Event;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Relation\Menu\Item\RelationListItem;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Page\Theme\ThemeRouteCollection;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Key\Key;
 use Concrete\Core\Routing\RedirectResponse;
@@ -32,11 +32,6 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
     use ApplicationAwareTrait;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\Session
-     */
-    protected $session;
-
-    /**
      * @var \Concrete\Core\Http\Request
      */
     protected $request;
@@ -49,9 +44,8 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     private $config;
 
-    public function __construct(Session $session, Request $request, Localization $localization, Repository $config)
+    public function __construct(Request $request, Localization $localization, Repository $config)
     {
-        $this->session = $session;
         $this->request = $request;
         $this->localization = $localization;
         $this->config = $config;
@@ -265,7 +259,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
                 $dl->setupSiteInterfaceLocalization($collection);
                 $request->setCurrentPage($collection);
 
-                return $this->view($v, $code, $headers);
+                return $this->view($v, Response::HTTP_SERVICE_UNAVAILABLE, $headers);
             }
         }
 
@@ -358,10 +352,13 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
         $menu = $this->app->make('helper/concrete/ui/menu');
         $menu->addMenuItem($item);
 
+        // Running processes item
+        $item = new RunningProcessesItem();
+        $menu->addMenuItem($item);
+
         // Multisite item
         $item = new SiteListItem();
         $menu->addMenuItem($item);
-
         $controller = $collection->getPageController();
 
         // we update the current page with the one bound to this controller.

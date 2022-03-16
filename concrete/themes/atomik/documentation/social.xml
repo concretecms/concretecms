@@ -1,0 +1,228 @@
+<concrete5-cif version="1.0">
+    <area name="Main">
+        <blocks>
+            <block type="core_theme_documentation_breadcrumb" name="">
+                <style>
+                    <backgroundColor/>
+                    <backgroundRepeat/>
+                    <backgroundSize/>
+                    <backgroundPosition/>
+                    <borderWidth/>
+                    <borderColor/>
+                    <borderStyle/>
+                    <borderRadius/>
+                    <baseFontSize/>
+                    <alignment/>
+                    <textColor/>
+                    <linkColor/>
+                    <paddingTop/>
+                    <paddingBottom/>
+                    <paddingLeft/>
+                    <paddingRight/>
+                    <marginTop/>
+                    <marginBottom/>
+                    <marginLeft/>
+                    <marginRight/>
+                    <rotate/>
+                    <boxShadowHorizontal/>
+                    <boxShadowVertical/>
+                    <boxShadowBlur/>
+                    <boxShadowSpread/>
+                    <boxShadowColor/>
+                    <customClass>mt-5</customClass>
+                    <customID/>
+                    <customElementAttribute/>
+                    <hideOnExtraSmallDevice/>
+                    <hideOnSmallDevice/>
+                    <hideOnMediumDevice/>
+                    <hideOnLargeDevice/>
+                </style>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h1>Social Networking</h1>
+
+<p class="lead">Build a community within your site, or integrate with social networking platforms.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Survey</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="survey" name="">
+                <data table="btSurvey">
+                    <record>
+                        <question><![CDATA[How are we doing?]]></question>
+                        <requiresRegistration><![CDATA[0]]></requiresRegistration>
+                        <showResults><![CDATA[0]]></showResults>
+                        <customMessage><![CDATA[]]></customMessage>
+                    </record>
+                </data>
+                <data table="btSurveyOptions">
+                    <record>
+                        <optionID><![CDATA[1]]></optionID>
+                        <optionName><![CDATA[Great!]]></optionName>
+                        <displayOrder><![CDATA[0]]></displayOrder>
+                    </record>
+                    <record>
+                        <optionID><![CDATA[2]]></optionID>
+                        <optionName><![CDATA[Could Be Better...]]></optionName>
+                        <displayOrder><![CDATA[1]]></displayOrder>
+                    </record>
+                    <record>
+                        <optionID><![CDATA[3]]></optionID>
+                        <optionName><![CDATA[At What?]]></optionName>
+                        <displayOrder><![CDATA[2]]></displayOrder>
+                    </record>
+                    <record>
+                        <optionID><![CDATA[4]]></optionID>
+                        <optionName><![CDATA[Terrible.]]></optionName>
+                        <displayOrder><![CDATA[3]]></displayOrder>
+                    </record>
+                </data>
+                <data table="btSurveyResults"/>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Conversation</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="core_conversation" name="">
+                <data table="btCoreConversation">
+                    <record>
+                        <cnvID><![CDATA[1]]></cnvID>
+                        <enablePosting><![CDATA[1]]></enablePosting>
+                        <paginate><![CDATA[1]]></paginate>
+                        <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                        <displayMode><![CDATA[threaded]]></displayMode>
+                        <orderBy><![CDATA[date_asc]]></orderBy>
+                        <enableOrdering><![CDATA[1]]></enableOrdering>
+                        <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                        <enableTopCommentReviews><![CDATA[0]]></enableTopCommentReviews>
+                        <displaySocialLinks><![CDATA[1]]></displaySocialLinks>
+                        <reviewAggregateAttributeKey><![CDATA[0]]></reviewAggregateAttributeKey>
+                        <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                        <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                        <dateFormat><![CDATA[default]]></dateFormat>
+                        <customDateFormat><![CDATA[]]></customDateFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Social Links</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="social_links" name="">
+                <link service="facebook"/>
+                <link service="github"/>
+                <link service="instagram"/>
+                <link service="twitter"/>
+                <link service="youtube"/>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Testimonial</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Basic View</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="testimonial" name="">
+                <data table="btTestimonial">
+                    <record>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <name><![CDATA[Testimonial Name]]></name>
+                        <position><![CDATA[Testimonial Position]]></position>
+                        <company><![CDATA[Testimonial Company]]></company>
+                        <companyURL><![CDATA[https://www.concretecms.com]]></companyURL>
+                        <paragraph><![CDATA[This is the bio/quote. ]]></paragraph>
+                        <awardImageID/>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Testimonial Circle</h4>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                <data table="btTestimonial">
+                    <record>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <name><![CDATA[Testimonial Name]]></name>
+                        <position><![CDATA[Testimonial Position]]></position>
+                        <company><![CDATA[Testimonial Company]]></company>
+                        <companyURL><![CDATA[https://www.concretecms.com]]></companyURL>
+                        <paragraph><![CDATA[This is the bio/quote. ]]></paragraph>
+                        <awardImageID/>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h4>Custom Template: Hero Testimonial</h4>
+
+<p class="text-secondary small">Note: remember &ndash;&nbsp;since the testimonial block honors the page grid container by default, you&#39;ll need to explicitly disable it in the block design settings to make the image full width.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="testimonial" name="" custom-template="hero_testimonial.php"
+                   custom-container-settings="0">
+                <data table="btTestimonial">
+                    <record>
+                        <fID>{ccm:export:file:atomik-documentation-image-tall-01.jpg}</fID>
+                        <name><![CDATA[Testimonial Name]]></name>
+                        <position><![CDATA[Testimonial Position]]></position>
+                        <company><![CDATA[Testimonial Company]]></company>
+                        <companyURL><![CDATA[https://www.concretecms.com]]></companyURL>
+                        <paragraph><![CDATA[This is the bio/quote. ]]></paragraph>
+                        <awardImageID>{ccm:export:file:atomik-documentation-image-wide-01.jpg}
+                        </awardImageID>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Share This Page</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="share_this_page" name="">
+                <data>
+                    <service>facebook</service>
+                    <service>twitter</service>
+                    <service>reddit</service>
+                </data>
+            </block>
+        </blocks>
+    </area>
+</concrete5-cif>

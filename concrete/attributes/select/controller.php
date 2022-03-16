@@ -272,15 +272,15 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             // The post comes through in the select2 format. Either a SelectAttributeOption:ID item
             // or a new item.
             $option = false;
-            if ($data['atSelectOptionValue']) {
+            if (isset($data['atSelectOptionValue'])) {
                 if (preg_match(
                     '/SelectAttributeOption\:(.+)/i',
-                    $data['atSelectOptionValue'],
+                    $data['atSelectOptionValue'][0],
                     $matches
                 )) {
                     $option = $this->getOptionByID($matches[1]);
                 } else {
-                    $option = $this->getOptionByValue(trim($data['atSelectOptionValue']), $this->attributeKey);
+                    $option = $this->getOptionByValue(trim($data['atSelectOptionValue'][0]), $this->attributeKey);
                     if (!is_object($option)) {
                         $displayOrder = 0;
                         if ($optionList) {
@@ -290,7 +290,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         $option->setOptionList($optionList);
                         $option->setIsEndUserAdded(true);
                         $option->setDisplayOrder($displayOrder);
-                        $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue']));
+                        $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue'][0]));
                     }
                 }
             }
@@ -304,7 +304,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             // The post comes through in the select2 format. A comma-separated
             // list of SelectAttributeOption:ID items and new items.
             $options = [];
-            if ($data['atSelectOptionValue']) {
+            if (isset($data['atSelectOptionValue'])) {
                 if (!is_array($data['atSelectOptionValue'])) {
                     $data['atSelectOptionValue'] = explode(',', $data['atSelectOptionValue']);
                 }
@@ -458,12 +458,24 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return is_object($value = $this->getAttributeValue()->getValue()) && ((string) $value != '');
     }
 
+    public function validateKey($data = false)
+    {
+        $e = $this->app->make('error');
+        $selectedPostValues = $this->getSelectValuesFromPost();
+        if (empty($selectedPostValues)) {
+            $e->add(t("You must at least add one value for this option list."));
+        };
+
+        return $e;
+
+    }
+
     public function validateForm($p)
     {
         $this->load();
         $options = $this->request('atSelectOptionValue');
 
-        return $options != '';
+        return !empty($options);
     }
 
     public function searchForm($list)
@@ -581,7 +593,7 @@ EOT
         $q .= ' group by avSelectOptionID order by total desc limit ' . $limit;
         $r = $db->Execute($q, $v);
         $options = new ArrayCollection();
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $opt = new SelectValueUsedOption();
             $opt->setSelectAttributeOptionValue($row['value']);
             $opt->setSelectAttributeOptionID($row['avSelectOptionID']);

@@ -147,7 +147,9 @@ class Chooser extends Controller
 
     public function getFolderFiles($folderId = null)
     {
-        if ($this->app->make('helper/validation/numbers')->integer($folderId)) {
+        $numberValidator = $this->app->make('helper/validation/numbers');
+        $session = $this->app->make('session');
+        if ($numberValidator->integer($folderId)) {
             $folder = $this->filesystem->getFolder($folderId);
             if (!is_object($folder)) {
                 $error = $this->app->make('error');
@@ -161,6 +163,7 @@ class Chooser extends Controller
 
         $permissions = new Checker($folder);
         if ($permissions->canSearchFiles()) {
+            $session->set('concrete.file_manager.chooser.folder_id', $folder->getTreeNodeID());
             $list = new FolderItemList();
             $list->filterByParentFolder($folder);
             $list->getQueryObject()->addOrderBy('fv.fvType');
@@ -224,7 +227,7 @@ class Chooser extends Controller
     protected function buildFileListFractalResponse($list): JsonResponse
     {
         $adapter = $list->getPaginationAdapter();
-        $paginationFactory = $this->app->make(PaginationFactory::class, [$this->request]);
+        $paginationFactory = $this->app->make(PaginationFactory::class, ['request' => $this->request]);
         $pagination = $paginationFactory->deliverPaginationObject($list, new Pagination($list, $adapter));
 
         $transformer = ($list instanceof FileList) ? new FileTransformer() : new NodeTransformer();

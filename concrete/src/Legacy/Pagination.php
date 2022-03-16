@@ -12,9 +12,9 @@ class Pagination
     public $result_count = 0;
     public $result_lower = 0; //for 'Results lower-upper of result_count'
     public $result_upper = 0;
-    public $classOff = 'ltgray';
+    public $classOff = '';
     public $classOn = '';
-    public $classCurrent = 'currentPage active';
+    public $classCurrent = '';
     public $URL = ''; //%pageNum% for page number
     public $jsFunctionCall = '';
     public $queryStringPagingVariable;
@@ -191,11 +191,11 @@ class Pagination
         }
         //if not last page
         if (!$this->hasNextPage()) {
-            return '<' . $wrapper . ' class="'.$this->classOff.'"' . ($wrapper == 'a' ? ' href="#"' : '') . '>'.$linkText.'</' . $wrapper . '>';
+            return '<' . $wrapper . ' class="page-link"' . ($wrapper == 'a' ? ' href="#"' : '') . '>'.$linkText.'</' . $wrapper . '>';
         } else {
             $linkURL = str_replace("%pageNum%", $this->getNextInt() + 1, $this->URL);
 
-            return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt() + 1).'>'.$linkText.'</a>';
+            return '<a class="page-link" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt() + 1).'>'.$linkText.'</a>';
         }
     }
 
@@ -218,11 +218,11 @@ class Pagination
         }
         //if not first page
         if ($this->current_page == "0") {
-            return '<' . $wrapper . ' class="'.$this->classOff.'"' . ($wrapper == 'a' ? ' href="#"' : '') . '>'.$linkText.'</' . $wrapper . '>';
+            return '<' . $wrapper . ' class="page-link"' . ($wrapper == 'a' ? ' href="#"' : '') . '>'.$linkText.'</' . $wrapper . '>';
         } else {
             $linkURL = str_replace("%pageNum%", $this->getPreviousInt() + 1, $this->URL);
 
-            return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt() + 1).'>'.$linkText.'</a>';
+            return '<a class="page-link" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt() + 1).'>'.$linkText.'</a>';
         }
     }
 
@@ -269,7 +269,7 @@ class Pagination
             if ($i < ($this->current_page - 5) && $i != 0) {
                 if ($predotted != 1) {
                     if ($wrapper == 'li') {
-                        $pages .= '<li class="ccm-pagination-ellipses disabled"><a href="#">...</a></li>';
+                        $pages .= '<li class="page-item disabled"><a href="#" class="page-link">...</a></li>';
                     } else {
                         $pages .= '<span class="ccm-pagination-ellipses">...</span>';
                     }
@@ -282,7 +282,7 @@ class Pagination
             if ($i > ($this->current_page + 5) && $i != ($this->number_of_pages - 1)) {
                 if ($postdotted != 1) {
                     if ($wrapper == 'li') {
-                        $pages .= '<li class="ccm-pagination-ellipses disabled"><a href="#">...</a></li>';
+                        $pages .= '<li class="page-item disabled"><a href="#" class="page-link">...</a></li>';
                     } else {
                         $pages .= '<span class="ccm-pagination-ellipses">...</span>';
                     }
@@ -295,17 +295,17 @@ class Pagination
             //if not current page
             if ($this->current_page == $i) {
                 if ($wrapper == 'li') {
-                    $pages .= "<li class=\"{$this->classCurrent} numbers disabled\"><a href=\"#\">".($i + 1)."</a></li>";
+                    $pages .= "<li class=\"page-item active\"><a href=\"#\" class=\"page-link\">".($i + 1)."</a></li>";
                 } else {
-                    $pages .= "<span class=\"{$this->classCurrent} numbers\"><strong>".($i + 1)."</strong></span>";
+                    $pages .= "<span class=\"{$this->classCurrent}\"><strong>".($i + 1)."</strong></span>";
                 }
             } else {
                 $linkURL = str_replace("%pageNum%", $i + 1, $this->URL);
 
                 if ($wrapper == 'li') {
-                    $pages .= "<li class=\"{$this->classOn} numbers\"><a href=\"{$linkURL}\" ".$this->getJSFunctionCall($i + 1).">".($i + 1)."</a></li>";
+                    $pages .= "<li class=\"page-item\"><a class=\"page-link\" href=\"{$linkURL}\" ".$this->getJSFunctionCall($i + 1).">".($i + 1)."</a></li>";
                 } else {
-                    $pages .= "<span class=\"{$this->classOn} numbers\"><a href=\"{$linkURL}\" ".$this->getJSFunctionCall($i + 1).">".($i + 1)."</a></span>";
+                    $pages .= "<span class=\"page-item\"><a class=\"page-link\" href=\"{$linkURL}\" ".$this->getJSFunctionCall($i + 1).">".($i + 1)."</a></span>";
                 }
             } //end if not current page
             ++$pages_made;

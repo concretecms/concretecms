@@ -65,13 +65,13 @@ class RemoteItem extends ConcreteObject
     {
         switch ($this->getSkillLevel()) {
             case 'beginner':
-                return 'fa fa-cog ccm-marketplace-skill-level-beginner';
+                return 'fas fa-cog ccm-marketplace-skill-level-beginner';
             case 'intermediate':
-                return 'fa fa-cog ccm-marketplace-skill-level-intermediate';
+                return 'fas fa-cog ccm-marketplace-skill-level-intermediate';
             case 'advanced':
-                return 'fa fa-cog ccm-marketplace-skill-level-advanced';
+                return 'fas fa-cog ccm-marketplace-skill-level-advanced';
             case 'bleeding_edge':
-                return 'fa fa-cogs ccm-marketplace-skill-level-bleeding-edge';
+                return 'fas fa-cogs ccm-marketplace-skill-level-bleeding-edge';
         }
     }
     public function getSkillLevelDisplayName()
@@ -227,7 +227,8 @@ class RemoteItem extends ConcreteObject
         }
 
         $r = $pkg->backup();
-        if (is_object($r) && $r instanceof Error) {
+        // Can the calling code handle a return of ErrorList?
+        if (is_object($r) && ($r instanceof Error || $r instanceof ErrorList)) {
             return $r;
         }
 
@@ -237,8 +238,11 @@ class RemoteItem extends ConcreteObject
             $am = new PackageArchive($this->getHandle());
             $am->install($file, true);
         } catch (Exception $e) {
-            $pkg->restore();
-            $error = \Core::make('error');
+            // This is a messy fix. Better would be to restructure this method to avoid variant object type for $pkg.
+            if(is_callable([$pkg, 'restore'])){
+                $pkg->restore();
+            }
+            $error = app('error');
             $error->add($e);
             return $error;
         }
@@ -267,7 +271,7 @@ class RemoteItem extends ConcreteObject
         $dbConfig = \Core::make('config/database');
         $csToken = $dbConfig->get('concrete.marketplace.token');
         $csiURL = urlencode(\Core::getApplicationURL());
-        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.item_free_license');
+        $url = Config::get('concrete.urls.concrete') . Config::get('concrete.urls.paths.marketplace.item_free_license');
         $url .= "?mpID=" . $this->mpID . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $fh->getContents($url);
     }
@@ -281,7 +285,7 @@ class RemoteItem extends ConcreteObject
         $csToken = $dbConfig->get('concrete.marketplace.token');
         $csiURL = urlencode(\Core::getApplicationURL());
 
-        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.item_information');
+        $url = Config::get('concrete.urls.concrete') . Config::get('concrete.urls.paths.marketplace.item_information');
         $url .= "?" . $method . "=" . $identifier . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $json = $fh->getContents($url);
 

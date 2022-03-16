@@ -48,9 +48,9 @@ class Controller extends BlockController
 
     protected $btCopyWhenPropagate = true;
 
-    public function __construct($b = null)
+    public function __construct($obj = null)
     {
-        parent::__construct($b);
+        parent::__construct($obj);
         //$this->bID = intval($this->_bID);
         if (is_string($this->thankyouMsg) && !strlen($this->thankyouMsg)) {
             $this->thankyouMsg = $this->getDefaultThankYouMsg();
@@ -73,17 +73,6 @@ class Controller extends BlockController
     public function getBlockTypeName()
     {
         return t('Legacy Form');
-    }
-
-    public function getJavaScriptStrings()
-    {
-        return [
-            'delete-question' => t('Are you sure you want to delete this question?'),
-            'form-name' => t('Your form must have a name.'),
-            'complete-required' => t('Please complete all required fields.'),
-            'ajax-error' => t('AJAX Error.'),
-            'form-min-1' => t('Please add at least one question to your form.'),
-        ];
     }
 
     // we are not using registerViewAssets because this block doesn't support caching
@@ -265,7 +254,7 @@ class Controller extends BlockController
         $v = [$this->bID];
         $q = "select * from {$this->btTable} where bID = ? LIMIT 1";
         $r = $db->query($q, $v);
-        $row = $r->fetchRow();
+        $row = $r->fetch();
 
         //if the same block exists in multiple collections with the same questionSetID
         if (count($row) > 0) {
@@ -292,7 +281,7 @@ class Controller extends BlockController
             $result = $db->executeQuery($q, $v);
 
             $rs = $db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId={$oldQuestionSetId} AND bID=" . (int) ($this->bID));
-            while ($row = $rs->fetchRow()) {
+            while ($row = $rs->fetch()) {
                 $v = [$newQuestionSetId, (int) ($row['msqID']), (int) $newBID, $row['question'], $row['inputType'], $row['options'], $row['position'], $row['width'], $row['height'], $row['required'], $row['defaultDate']];
                 $sql = "INSERT INTO {$this->btQuestionsTablename} (questionSetId,msqID,bID,question,inputType,options,position,width,height,required,defaultDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
                 $db->executeQuery($sql, $v);
@@ -318,7 +307,7 @@ class Controller extends BlockController
         $ip = $this->app->make('failed_login');
         $this->view();
 
-        if ($ip->isBlacklisted()) {
+        if ($ip->isDenylisted()) {
             $this->set('invalidIP', $ip->getErrorMessage());
 
             return;

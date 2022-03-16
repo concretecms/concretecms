@@ -180,7 +180,7 @@ class SiteTest extends TestCase
         $default = $service->installDefault();
 
         $this->assertInstanceOf('Concrete\Core\Entity\Site\Site', $default);
-        $this->assertEquals('concrete5', $default->getSiteName());
+        $this->assertEquals('Concrete', $default->getSiteName());
         $this->assertEquals('default', $default->getSiteHandle());
         $this->assertTrue($default->isDefault());
     }

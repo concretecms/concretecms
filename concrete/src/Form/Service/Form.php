@@ -159,7 +159,13 @@ class Form
             $result .= ' for="' . $forFieldID . '"';
         }
 
-        return $result . $this->serializeMiscFields('', $miscFields, []) . '>' . $innerHTML . '</label>';
+        // BS5 hack – form-label and form-check-label cannot coexist. So if someone is passing in
+        // 'form-check-label' hoping it will replace 'form-label', we reapply it to the new 9.0.2+ 'classes'
+        // key, so it will completely replace it.
+        if (isset($miscFields['class']) && !isset($miscFields['classes']) && strpos($miscFields['class'], 'form-check-label') > -1) {
+            $miscFields['classes'] = $miscFields['class'];
+        }
+        return $result . $this->serializeMiscFields('form-label', $miscFields, []) . '>' . $innerHTML . '</label>';
     }
 
     /**
@@ -203,8 +209,8 @@ class Form
      * Generates a checkbox.
      *
      * @param string $key The name/id of the element. It should end with '[]' if it's to return an array on submit.
-     * @param string $value String value sent to server, if checkbox is checked, on submit
-     * @param string $isChecked "Checked" value (subject to be overridden by $_REQUEST). Checkbox is checked if value is true (string). Note that 'false' (string) evaluates to true (boolean)!
+     * @param string | int $value String value sent to server, if checkbox is checked, on submit
+     * @param string | bool | int $isChecked "Checked" value (subject to be overridden by $_REQUEST). Checkbox is checked if value is true (string). Note that 'false' (string) evaluates to true (boolean)!
      * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
@@ -270,8 +276,8 @@ class Form
      * Generates a radio button.
      *
      * @param string $key the name of the element (its id will start with $key but will have a progressive unique number added)
-     * @param string $value the value of the radio button
-     * @param string|array $checkedValueOrMiscFields the value of the element (if it should be initially checked) or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param string|int $value the value of the radio button
+     * @param string|array|bool|int $checkedValueOrMiscFields the value of the element (if it should be initially checked) or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      * @param array $miscFields (used if $checkedValueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
@@ -350,8 +356,8 @@ class Form
      * Renders a number input field.
      *
      * @param string $key the name/id of the element
-     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
-     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param int|string|array<string,mixed> $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param array<string,mixed> $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
      */
@@ -441,7 +447,7 @@ class Form
      *
      * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
      * @param array $optionValues an associative array of key => display
-     * @param string|array $valueOrMiscFields the value of the field to be selected or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param string|array|int $valueOrMiscFields the value of the field to be selected or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return $html
@@ -478,7 +484,7 @@ class Form
             $this->selectIndex++;
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 $str .= '<optgroup label="' . h($k) . '">';
@@ -573,7 +579,7 @@ class Form
             $miscFields['ccm-passed-value'] = $selectedCountryCode;
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = '<select' . $nameAndID . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             $str .= '<option value="' . h($k) . '"';
             if ((string) $k === (string) $selectedOption) {
@@ -639,7 +645,7 @@ class Form
             $optionValues = [];
         }
         $nameAndID = $this->buildNameAndID($key, $miscFields);
-        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-control', $miscFields) . '>';
+        $str = "<select{$nameAndID} multiple=\"multiple\"" . $this->serializeMiscFields('form-select', $miscFields) . '>';
         foreach ($optionValues as $k => $text) {
             if (is_array($text)) {
                 if (count($text) > 0) {
@@ -791,7 +797,7 @@ EOT;
     
     /**
      * @param string $defaultClass Default CSS class name
-     * @param array $attributes a key/value array of attributes (name => value), possibly including 'class'
+     * @param array $attributes a key/value array of attributes (name => value), possibly including 'class' or 'classes'
      * @param array $skipFields names of fields not to be serialized
      *
      * @return string
@@ -799,9 +805,26 @@ EOT;
     protected function serializeMiscFields($defaultClass, $attributes, array $skipFields = ['name', 'id']): string
     {
         $attributes = (array) $attributes;
+        // Ok, so here's the new behavior with CSS classes here. This should help us handle various BS5 use cases,
+        // preserve backward compatibility, and still offer some flexibility. A quick summary.
+        // 1. Previous behavior had any 'class' that was passed being appended to defaultClass.
+        // 2. In 9.0 and 9.0.1, we changed it so that the 'class' => '..' would completely override. Why? Well,
+        // semantically it seems better to me but it does result in more code. Really, the result is because the
+        // previous implementation would result in classes like `form-label form-check-label` being applied to <label>
+        // tags, which would cause BS5 to add strangely.
+        // 3. People have concerns about this, and it does require a lot of duplicate code in some situations. So
+        // let's back up off that and change it to work in this way:
+        // a. If you don't have a default class none of this matters – we just use whatever 'class' you pass in.
+        // b. If there is a default class used by the method, we use that class.
+        // c. If you also pass in a 'class' in your array, we append, just like the old days.
+        // d. If you pass in a 'classes' key instead of class, we completely replace, like the 9.0, 9.0.1 version.
         $defaultClass = trim((string) $defaultClass);
         if ($defaultClass !== '') {
             $attributes['class'] = trim(($attributes['class'] ?? '') . ' ' . $defaultClass);
+        }
+        if (isset($attributes['classes'])) {
+            $attributes['class'] = $attributes['classes'];
+            unset($attributes['classes']);
         }
         $attr = '';
         foreach ($attributes as $k => $v) {

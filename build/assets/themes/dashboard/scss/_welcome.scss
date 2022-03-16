@@ -3,7 +3,7 @@
 @import "./welcome/latest-form";
 @import "./welcome/marketplace";
 @import "./welcome/draft-list";
-@import "./welcome/newsflow-latest";
+@import "./welcome/concrete-latest";
 
 body.ccm-dashboard-desktop {
   background-color: #f8fafb;
@@ -11,26 +11,12 @@ body.ccm-dashboard-desktop {
 
   div#ccm-dashboard-content {
     position: relative;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
-    background-attachment: fixed;
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      background-color: rgba(76,79,86,0.70);
-      z-index: 1;
-      display: none;
-    }
+    margin-bottom: 0;
 
     div.ccm-dashboard-desktop-content {
-      margin-left: $dashboard-content-padding-l;
-      margin-right: $dashboard-content-padding-r;
+      padding-left: $dashboard-content-padding-l;
+      padding-right: $dashboard-content-padding-r;
+      padding-bottom: 98px;
       position: relative;
       z-index: 1;
     }
@@ -58,6 +44,7 @@ div.ccm-dashboard-desktop-flex {
 }
 
 .ccm-ui {
+
   nav.ccm-dashboard-desktop-navbar.navbar {
     border-radius: 0px;
     border-width: 0px;
@@ -81,6 +68,10 @@ div.ccm-dashboard-desktop-flex {
         font-weight: 700;
       }
     }
+
+    a:hover {
+      color: $primary;
+    }
   }
 }
 
@@ -88,6 +79,35 @@ div.ccm-dashboard-welcome-customize {
   margin: 20px 0;
   text-align: right;
 }
+
+.ccm-page-background-credit {
+  color: $gray-200;
+  background-color: #2e2e2f;
+  display: flex;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: $dashboard-content-padding-l;
+  padding-right: $dashboard-content-padding-r;
+  font-size: $font-size-sm;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  a {
+    color: $primary;
+
+    &:hover {
+      color: $primary;
+      text-decoration: underline;
+    }
+  }
+
+  .ccm-page-background-photo-credit {
+    margin-left: auto;
+  }
+}
+
 
 @include media-breakpoint-down(md) {
   .ccm-ui {

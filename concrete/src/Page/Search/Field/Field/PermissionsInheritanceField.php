@@ -30,15 +30,15 @@ class PermissionsInheritanceField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $list->filter('cInheritPermissionsFrom', $this->data['cInheritPermissionsFrom']);
+        $list->filter('cInheritPermissionsFrom', $this->getData('cInheritPermissionsFrom'));
     }
 
     public function renderSearchField()
     {
-        $html = '<select name="cInheritPermissionsFrom" class="form-control">';
-        $html .= '<option value="PARENT"' . ($this->data['cInheritPermissionsFrom'] == 'PARENT' ? ' selected' : '') . '>' . t('Parent Page') . '</option>';
-        $html .= '<option value="TEMPLATE"' . ($this->data['cInheritPermissionsFrom'] == 'TEMPLATE' ? ' selected' : '') . '>' . t('Page Type') . '</option>';
-        $html .= '<option value="OVERRIDE"' . ($this->data['cInheritPermissionsFrom'] == 'OVERRIDE' ? ' selected' : '') . '>' . t('Itself (Override)') . '</option>';
+        $html = '<select name="cInheritPermissionsFrom" class="form-select">';
+        $html .= '<option value="PARENT"' . ($this->getData('cInheritPermissionsFrom') == 'PARENT' ? ' selected' : '') . '>' . t('Parent Page') . '</option>';
+        $html .= '<option value="TEMPLATE"' . ($this->getData('cInheritPermissionsFrom') == 'TEMPLATE' ? ' selected' : '') . '>' . t('Page Type') . '</option>';
+        $html .= '<option value="OVERRIDE"' . ($this->getData('cInheritPermissionsFrom') == 'OVERRIDE' ? ' selected' : '') . '>' . t('Itself (Override)') . '</option>';
         $html .= '</select>';
         return $html;
     }

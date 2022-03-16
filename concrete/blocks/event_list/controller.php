@@ -124,7 +124,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             $this->set('list', $list);
             $this->set('calendar', $calendar);
-            if ($this->internalLinkCID) {
+            if (isset($this->internalLinkCID)) {
                 $calendarPage = \Page::getByID($this->internalLinkCID);
                 if (is_object($calendarPage) && !$calendarPage->isError()) {
                     $this->set('calendarPage', $calendarPage);
@@ -186,16 +186,18 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('pageSelector', Core::make("helper/form/page_selector"));
 
         $number = new Numbers();
-        if ($number->integer($this->caID)) {
-            $this->set('caID', array($this->caID)); // legacy single calendar field.
-        } else {
-            $this->set('caID', json_decode($this->caID));
+        if (isset($this->caID)) {
+            if ($number->integer($this->caID)) {
+                $this->set('caID', array($this->caID)); // legacy single calendar field.
+            } else {
+                $this->set('caID', json_decode($this->caID));
+            }
         }
         $this->loadKeys();
 
-        if ($this->filterByPageTopicAttributeKeyHandle) {
+        if (isset($this->filterByPageTopicAttributeKeyHandle)) {
             $this->set('filterByTopic', 'page_attribute');
-        } elseif ($this->filterByTopicAttributeKeyID) {
+        } elseif (isset($this->filterByTopicAttributeKeyID)) {
             $this->set('filterByTopic', 'specific');
         } else {
             $this->set('filterByTopic', 'none');
@@ -260,7 +262,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         $args['linkToPage'] = intval($args['linkToPage']);
-        $args['filterByFeatured'] = intval($args['filterByFeatured']);
+        $args['filterByFeatured'] = intval($args['filterByFeatured'] ?? null);
         parent::save($args);
     }
 }

@@ -13,7 +13,7 @@ class AreaLayoutTest extends ConcreteDatabaseTestCase
 {
     protected $tables = ['AreaLayoutPresets', 'AreaLayouts', 'AreaLayoutColumns',
         'AreaLayoutCustomColumns', 'AreaLayoutThemeGridColumns', 'PageThemes', 'Pages', 'Collections',
-        'CollectionVersions', ];
+        'CollectionVersions', 'SiteTrees'];
     protected $fixtures = [];
 
     protected $metadatas = [

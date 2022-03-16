@@ -31,15 +31,15 @@ class ThemeField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $list->filter('pThemeID', $this->data['pThemeID']);
+        $list->filter('pThemeID', $this->getData('pThemeID'));
     }
 
     public function renderSearchField()
     {
-        $html = '<select name="pThemeID" class="form-control">';
+        $html = '<select name="pThemeID" class="form-select">';
         $themes = Theme::getList();
         foreach ($themes as $pt) {
-            $html .= '<option value="' . $pt->getThemeID() . '" ' . ($pt->getThemeID() == $this->data['pThemeID'] ? ' selected' : '') . '>' . $pt->getThemeName() . '</option>';
+            $html .= '<option value="' . $pt->getThemeID() . '" ' . ($pt->getThemeID() == $this->getData('pThemeID') ? ' selected' : '') . '>' . $pt->getThemeName() . '</option>';
         }
         $html .= '</select>';
         return $html;

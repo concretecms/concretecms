@@ -30,7 +30,8 @@ if ($controller->getAction() == 'add'
     $iconFID = 0;
     $imageFile = null;
     $button = t('Add');
-    if (is_object($feed)) {
+    $ignorePermissions = false;
+    if (isset($feed)) {
         $pfTitle = $feed->getTitle();
         $pfDescription = h($feed->getDescription());
         $pfHandle = $feed->getHandle();
@@ -58,7 +59,7 @@ if ($controller->getAction() == 'add'
         <button data-dialog="delete-feed" class="btn btn-danger"><?php echo t('Delete Feed') ?></button>
     </div>
 
-    <?php if (is_object($feed)) { ?>
+    <?php if (isset($feed)) { ?>
         <div style="display: none">
             <div id="ccm-dialog-delete-feed" class="ccm-ui">
                 <form method="post" class="form-stacked" action="<?= $view->action('delete_feed') ?>">
@@ -67,9 +68,9 @@ if ($controller->getAction() == 'add'
                     <p><?= t('Are you sure? This action cannot be undone.') ?></p>
                 </form>
                 <div class="dialog-buttons">
-                    <button class="btn btn-secondary float-left"
+                    <button class="btn btn-secondary float-start"
                             onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                    <button class="btn btn-danger float-right"
+                    <button class="btn btn-danger float-end"
                             onclick="$('#ccm-dialog-delete-feed form').submit()"><?= t('Delete Feed') ?></button>
                 </div>
             </div>
@@ -111,7 +112,7 @@ if ($controller->getAction() == 'add'
             ?>
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Filter by Parent Page') ?></label>
+            <label class="control-label form-label"><?= t('Filter by Parent Page') ?></label>
             <?= $psHelper->selectPage('cParentID', $cParentID);
             ?>
         </div>
@@ -121,7 +122,7 @@ if ($controller->getAction() == 'add'
         </div>
         <div class="form-group">
             <?= $form->label('customTopicAttributeKeyHandle', t('Filter By Topic')) ?>
-            <select class="form-control" name="customTopicAttributeKeyHandle" id="customTopicAttributeKeyHandle">
+            <select class="form-select" name="customTopicAttributeKeyHandle" id="customTopicAttributeKeyHandle">
                 <option value=""><?= t('** No Filtering') ?></option>
                 <?php foreach ($topicAttributes as $attributeKey) {
                     $attributeController = $attributeKey->getController();
@@ -143,7 +144,7 @@ if ($controller->getAction() == 'add'
             <input type="hidden" name="customTopicTreeNodeID" value="<?php echo $customTopicTreeNodeID ?>">
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Include All Sub-Pages of Parent?') ?></label>
+            <label class="control-label form-label"><?= t('Include All Sub-Pages of Parent?') ?></label>
             <div class="form-check">
                 <?= $form->radio('pfIncludeAllDescendents', 1, $pfIncludeAllDescendents) ?>
                 <label class="form-check-label" for="pfIncludeAllDescendents1"><?= t('Yes'); ?></label>
@@ -154,7 +155,7 @@ if ($controller->getAction() == 'add'
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Display Page Aliases?') ?></label>
+            <label class="control-label form-label"><?= t('Display Page Aliases?') ?></label>
 
             <div class="form-check">
                 <?= $form->radio('pfDisplayAliases', 1, $pfDisplayAliases) ?>
@@ -166,7 +167,7 @@ if ($controller->getAction() == 'add'
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Display Featured Only?') ?></label>
+            <label class="control-label form-label"><?= t('Display Featured Only?') ?></label>
             <div class="form-check">
                 <?= $form->radio('pfDisplayFeaturedOnly', 1, $pfDisplayFeaturedOnly) ?>
                 <label class="form-check-label" for="pfDisplayFeaturedOnly5"><?= t('Yes'); ?></label>
@@ -178,7 +179,7 @@ if ($controller->getAction() == 'add'
 
         </div>
         <div class="form-group">
-            <label class="control-label"><?= t('Get Content From') ?></label>
+            <label class="control-label form-label"><?= t('Get Content From') ?></label>
 
             <div class="form-check">
                 <?= $form->radio('pfContentToDisplay', 'S', $pfContentToDisplay) ?>
@@ -208,8 +209,8 @@ if ($controller->getAction() == 'add'
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?= URL::to('/dashboard/pages/feeds') ?>"
-                   class="btn btn-primary float-left"><?= t('Cancel') ?></a>
-                <button class="float-right btn btn-success" type="submit"><?= $button ?></button>
+                   class="btn btn-primary float-start"><?= t('Cancel') ?></a>
+                <button class="float-end btn btn-success" type="submit"><?= $button ?></button>
             </div>
         </div>
     </form>
@@ -265,7 +266,7 @@ if ($controller->getAction() == 'add'
                 ?>
                 <li>
                     <a href="<?= $view->action('edit', $feed->getID()) ?>">
-                        <i class="fa fa-rss"></i> <?= $feed->getFeedDisplayTitle() ?>
+                        <i class="fas fa-rss"></i> <?= $feed->getFeedDisplayTitle() ?>
                     </a>
                 </li>
                 <?php

@@ -114,6 +114,13 @@ class Channels
     const CHANNEL_API = 'api';
 
     /**
+     * Channel identifier: messenger. Used for queue/command/messenger events (not private messages).
+     *
+     * @var string
+     */
+    const CHANNEL_MESSENGER = 'messenger';
+
+    /**
      * Channel identifier: board.
      *
      * @var string
@@ -156,6 +163,9 @@ class Channels
             self::CHANNEL_OPERATIONS,
             self::CHANNEL_API,
             self::CHANNEL_FILES,
+            self::CHANNEL_CONTENT,
+            self::CHANNEL_MESSENGER,
+            self::CHANNEL_BOARD,
         ];
     }
 

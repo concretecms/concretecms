@@ -7,11 +7,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class ThreeByThreeDriver implements DriverInterface
 {
-    
-    public function getFormFactor()
-    {
-        return 'card';
-    }
 
     public function getTotalSlots(): int
     {

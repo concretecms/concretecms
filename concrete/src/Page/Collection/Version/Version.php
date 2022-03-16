@@ -7,7 +7,9 @@ use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Value\PageValue;
 use Concrete\Core\Foundation\ConcreteObject;
 use Block;
-use Page;
+use Concrete\Core\Localization\Service\Date;
+use Concrete\Core\Page\Page;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PageType;
 use Permissions;
 use Concrete\Core\User\User;
@@ -118,6 +120,13 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @var int|string
      */
     public $pThemeID;
+
+    /**
+     * The identifier of any custom skin attached to this page version.
+     *
+     * @var string
+     */
+    public $pThemeSkinIdentifier;
 
     /**
      * @deprecated what's deprecated is the public part of this property: use the getPublishDate() / setPublishDate() / setPublishInterval() methods instead
@@ -656,7 +665,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         );
         $this->cvPublishDate = $startDateTime;
         $this->cvPublishEndDate = $endDateTime;
-        $this->avoidApprovalOverlapping();
     }
 
     /**
@@ -686,13 +694,21 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      * @param bool $doReindexImmediately reindex the collection contents now? Otherwise it's reindexing will just be scheduled
      * @param string|\DateTime|int|null $cvPublishDate the scheduled date/time when the collection is published (start)
      * @param string|\DateTime|int|null $cvPublishEndDate the scheduled date/time when the collection is published (end)
+     * @param bool $keepOtherScheduling Set to true to keep scheduling of other versions
+     *                                  (e.g., users can view the current live version until the publish date of this version).
+     *                                  Set to false (default) to disapprove all other versions
+     *                                  (e.g., users can't see this page until the publish date of this version, even if this page is live now).
+     *
+     * @since 9.0.0 Added $keepOtherScheduling argument
      *
      * @throws \Concrete\Core\Error\UserMessageException if the start of the publish date/time is its end.
      */
-    public function approve($doReindexImmediately = true, $cvPublishDate = null, $cvPublishEndDate = null)
+    public function approve($doReindexImmediately = true, $cvPublishDate = null, $cvPublishEndDate = null, bool $keepOtherScheduling = false)
     {
         $app = Facade::getFacadeApplication();
+        /** @var Connection $db */
         $db = $app->make(Connection::class);
+        /** @var Date $dh */
         $dh = $app->make('helper/date');
         $u = $app->make(\Concrete\Core\User\User::class);
         $uID = $u->getUserID();
@@ -713,10 +729,23 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $newHandle = $this->cvHandle;
 
         // update a collection updated record
-        $db->executeQuery(
-            'update Collections set cDateModified = ? where cID = ?',
-            [$now, $cID]
-        );
+        $this->updateCollectionDateModified();
+
+        // disapprove other versions
+        $disapproveVersionsQuery = $db->createQueryBuilder();
+        $disapproveVersionsQuery->update('CollectionVersions')
+            ->set('cvIsApproved', ':cvIsApproved')
+            ->where('cID = :cID')
+            ->andWhere('cvIsApproved = 1')
+            ->setParameter('cvIsApproved', 0)
+            ->setParameter('cID', $cID);
+        if ($keepOtherScheduling && ($cvPublishDate || $cvPublishEndDate)) {
+            // We can disapprove live versions only their scheduling is already end
+            $expr = $disapproveVersionsQuery->expr();
+            $disapproveVersionsQuery->andWhere($expr->and($expr->isNotNull('cvPublishEndDate'), $expr->lte('cvPublishEndDate', ':now')));
+            $disapproveVersionsQuery->setParameter(':now', $dh->getOverridableNow());
+        }
+        $disapproveVersionsQuery->execute();
 
         $pageWithActiveVersion->refreshCache();
 
@@ -742,7 +771,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->cvDateApproved = $now;
         $this->cvPublishDate = $cvPublishDate;
         $this->cvPublishEndDate = $cvPublishEndDate;
-        $this->avoidApprovalOverlapping();
         $c = Page::getByID($cID, $cvID);
         // next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
         if ($oldHandle != $newHandle && !$c->isGeneratedCollection()) {
@@ -786,7 +814,6 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $app->make('director')->dispatch('on_page_version_approve', $ev);
 
         $c->reindex(false, $doReindexImmediately);
-        $c->writePageThemeCustomizations();
         $this->refreshCache();
     }
 
@@ -858,38 +885,49 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
     }
 
+    private function updateCollectionDateModified(): void
+    {
+        $app = Facade::getFacadeApplication();
+        $cID = $this->getCollectionID();
+        /** @var Date $dh */
+        $dh = $app->make(Date::class);
+        $now = $dh->getOverridableNow();
+        /** @var QueryBuilder $qb */
+        $qb = $app->make(Connection::class)->createQueryBuilder();
+        $qb->update('Collections')
+            ->set('cDateModified', ':cDateModified')
+            ->where('cID = :cID')
+            ->setParameter('cDateModified', $now)
+            ->setParameter('cID', $cID)
+            ->execute();
+    }
+
     /**
      * Mark this collection version as not approved.
      */
-    public function deny()
+    public function deny(): void
     {
         $app = Facade::getFacadeApplication();
-        $db = $app->make('database')->connection();
-        $cvID = $this->cvID;
-        $cID = $this->cID;
+        $cvID = $this->getVersionID();
+        $cID = $this->getCollectionID();
 
         // first we update a collection updated record
-        $dh = $app->make('helper/date');
-        $db->executeQuery('update Collections set cDateModified = ? where cID = ?', array(
-            $dh->getOverridableNow(),
-            $cID,
-        ));
-
-        // first we remove approval for all versions of this collection
-        $v = array(
-            $cID,
-        );
-        $q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
-        $db->executeQuery($q, $v);
-        $this->cvIsApproved = 0;
+        $this->updateCollectionDateModified();
 
         // now we deny our version
-        $v2 = array(
-            $cID,
-            $cvID,
-        );
-        $q2 = "update CollectionVersions set cvIsApproved = 0, cvApproverUID = 0 where cID = ? and cvID = ?";
-        $db->executeQuery($q2, $v2);
+        /** @var QueryBuilder $qb */
+        $qb = $app->make(Connection::class)->createQueryBuilder();
+        $qb->update('CollectionVersions')
+            ->set('cvIsApproved', ':cvIsApproved')
+            ->set('cvApproverUID', ':cvApproverUID')
+            ->where('cID = :cID')
+            ->andWhere('cvID = :cvID')
+            ->setParameter('cvIsApproved', 0)
+            ->setParameter('cvApproverUID', 0)
+            ->setParameter('cID', $cID)
+            ->setParameter('cvID', $cvID)
+            ->execute();
+
         $this->refreshCache();
     }
 
@@ -951,6 +989,10 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
         $db->executeQuery($q);
         $this->refreshCache();
+
+        $ev = new Event($c);
+        $ev->setCollectionVersionObject($this);
+        $app->make('director')->dispatch('on_page_version_delete', $ev);
     }
 
     /**

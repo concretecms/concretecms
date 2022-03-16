@@ -8,6 +8,16 @@ class CssAsset extends Asset
 {
 
     /**
+     * @var bool
+     */
+    protected $assetSupportsMinification = true;
+
+    /**
+     * @var bool
+     */
+    protected $assetSupportsCombination = true;
+
+    /**
      * The default media of this asset.
      *
      * @var string

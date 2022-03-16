@@ -11,6 +11,7 @@ use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Site\Resolver\Resolver;
 use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\Mapping as ORM;
+use Laminas\Feed\Writer\Feed as LaminasFeed;
 
 /**
  * @ORM\Entity
@@ -88,6 +89,23 @@ class Feed
     {
         return $this->pfDescription;
     }
+
+    /**
+     * @return bool
+     */
+    public function getDisplaySystemPages()
+    {
+        return $this->pfDisplaySystemPages;
+    }
+
+    /**
+     * @param bool $pfDisplaySystemPages
+     */
+    public function setDisplaySystemPages(bool $pfDisplaySystemPages): void
+    {
+        $this->pfDisplaySystemPages = $pfDisplaySystemPages;
+    }
+
 
     /**
      * @param mixed $pfDisplayAliases
@@ -284,6 +302,11 @@ class Feed
     protected $pfDisplayAliases = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $pfDisplaySystemPages = false;
+
+    /**
      * @ORM\Column(type="string")
      */
     protected $pfContentToDisplay = 'S'; // short description
@@ -410,6 +433,9 @@ class Feed
         if ($this->pfDisplayAliases) {
             $pl->includeAliases();
         }
+        if ($this->pfDisplaySystemPages) {
+            $pl->includeSystemPages();
+        }
         if ($this->ptID) {
             $pl->filterByPageTypeID($this->ptID);
         }
@@ -470,7 +496,7 @@ class Feed
         $pagination = $pl->getPagination();
         $results = $pagination->getCurrentPageResults();
         if (count($results)) {
-            $writer = new \Zend\Feed\Writer\Feed();
+            $writer = new LaminasFeed();
             $writer->setTitle($this->getTitle());
             $writer->setDescription($this->getDescription());
             if ($this->getIconFileID()) {

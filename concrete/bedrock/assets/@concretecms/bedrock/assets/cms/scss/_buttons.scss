@@ -1,0 +1,42 @@
+.ccm-ui {
+  .btn {
+    letter-spacing: 0.03rem;
+  }
+
+  .btn-secondary {
+    @include button-variant(#fff, $gray-200, $hover-background: $secondary, $hover-border: $secondary, $hover-color: #fff, $active-background: $gray-700, $active-border: $gray-700);
+  }
+
+  .btn-primary {
+    @include button-variant($blue, $blue, #fff, #2276D7, #2276D7, $disabled-color: #fff);
+  }
+
+  .btn-success {
+    @include button-variant($green, $green, #fff, #1F8035, #1F8035);
+  }
+
+  .btn-danger {
+    @include button-variant($red, $red, #fff, #972121, #972121);
+  }
+
+  .btn-icon {
+    @include button-variant(#fff, $gray-200, $secondary, $secondary, $blue, $white);
+    line-height: 0;
+    padding-bottom: $btn-padding-x / 2; // no, this is not a typo; this is padding X, not Y
+    padding-left: $btn-padding-x / 2;
+    padding-right: $btn-padding-x / 2;
+    padding-top: $btn-padding-x / 2; //  // no, this is not a typo; this is padding X, not Y
+
+    &:active {
+      fill: white;
+    }
+  }
+
+  div.dropdown.show {
+    .btn-icon {
+      @include button-variant($blue, $white);
+      fill: white;
+    }
+  }
+
+}

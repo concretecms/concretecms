@@ -27,7 +27,7 @@ class IsActiveField extends AbstractField
     public function renderSearchField()
     {
         $form = \Core::make('helper/form');
-        $html = $form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), array('style' => 'vertical-align: middle'));
+        $html = $form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), $this->getData('active'), array('style' => 'vertical-align: middle'));
         return $html;
 
     }
@@ -38,9 +38,9 @@ class IsActiveField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        if ($this->data['active'] === '0') {
+        if ($this->getData('active') === '0') {
             $list->filterByIsActive(0);
-        } elseif ($this->data['active'] === '1') {
+        } elseif ($this->getData('active') === '1') {
             $list->filterByIsActive(1);
         }
     }

@@ -34,6 +34,11 @@ class FileManagerOption implements ChooserOptionInterface
         /** @var User $userEntity */
         $userEntity = $userRepository->findOneBy(["uID" => $user->getUserID()]);
 
+        $session = $app->make('session');
+        if ($session->has('concrete.file_manager.chooser.folder_id')) {
+            return $session->get('concrete.file_manager.chooser.folder_id');
+        }
+
         if ($userEntity->getHomeFileManagerFolderID() === null) {
             $fileSystem = new Filesystem();
             return (string)$fileSystem->getRootFolder()->getTreeNodeID();

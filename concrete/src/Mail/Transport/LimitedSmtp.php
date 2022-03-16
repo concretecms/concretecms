@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Mail\Transport;
 
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Smtp;
-use Zend\Mail\Transport\TransportInterface;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\Smtp;
+use Laminas\Mail\Transport\TransportInterface;
 
 class LimitedSmtp implements TransportInterface
 {
@@ -44,7 +44,7 @@ class LimitedSmtp implements TransportInterface
     /**
      * Get the actual transport instance.
      *
-     * @return \Zend\Mail\Transport\Smtp
+     * @return \Laminas\Mail\Transport\Smtp
      */
     public function getSmtpTransport()
     {
@@ -54,7 +54,7 @@ class LimitedSmtp implements TransportInterface
     /**
      * {@inheritdoc}
      *
-     * @see \Zend\Mail\Transport\TransportInterface::send()
+     * @see \Laminas\Mail\Transport\TransportInterface::send()
      */
     public function send(Message $message)
     {

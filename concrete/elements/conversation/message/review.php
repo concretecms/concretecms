@@ -3,9 +3,10 @@
  * @type int $review A number between 0 and 5
  * @type bool $starsOnly Should editing be disabled
  */
+$review = $review ?? 0;
 if (!isset($starsOnly) || !$starsOnly) {
     ?>
-    <label for="review" class="float-left">
+    <label for="review" class="float-start">
         <?= t('Rating') ?>&nbsp;
     </label>
     <?php

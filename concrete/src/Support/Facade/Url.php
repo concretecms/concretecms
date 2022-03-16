@@ -26,7 +26,7 @@ class Url extends Facade
      * \Url::to($page_object = \Page::getByPath('blog'), 'action')
      *     http://example.com/blog/action/
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      */
     public static function to(/* ... */)
     {
@@ -36,7 +36,7 @@ class Url extends Facade
     /**
      * This method is only here as a legacy decorator, use url::to.
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      *
      * @deprecated
      */
@@ -55,7 +55,7 @@ class Url extends Facade
     /**
      * This method is only here as a legacy decorator, use `\URL::to($page)`.
      *
-     * @return \League\URL\URLInterface
+     * @return \League\Url\UrlInterface
      *
      * @deprecated
      */

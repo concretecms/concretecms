@@ -41,13 +41,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 </ul>
             </div>
             <div class="col ccm-dashboard-update-detail-main">
-                <a v-if="details &amp;&amp; details.releaseNotesUrl" v-bind:href="details.releaseNotesUrl" target="_blank" class="btn btn-secondary btn-sm float-right"><?= t('View Full Release Notes') ?></a>
+                <a v-if="details &amp;&amp; details.releaseNotesUrl" v-bind:href="details.releaseNotesUrl" target="_blank" class="btn btn-secondary btn-sm float-end"><?= t('View Full Release Notes') ?></a>
                 <h3 id="notes"><?= t('Release Notes') ?></h3>
                 <div class="ccm-dashboard-update-detail-release-notes" v-html="releaseNotes"></div>
 
                 <div class="my-5"></div>
 
-                <a href="<?= $updatePackagesUrl ?>" class="btn btn-secondary btn-sm float-right"><?= t('Update Add-Ons') ?></a>
+                <a href="<?= $updatePackagesUrl ?>" class="btn btn-secondary btn-sm float-end"><?= t('Update Add-Ons') ?></a>
                 <h3 id="addons"><?= t('Add-On Compatibility') ?></h3>
                 <?php
                 if ($installedPackages === []) {
@@ -59,12 +59,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         $packageData = h('getAddonData(' . json_encode($installedPackage->getPackageHandle()) . ')');
                         ?>
                         <div class="media">
-                            <img src="<?= $ci->getPackageIconURL($installedPackage) ?>" class="mr-3" style="width: 49px" />
+                            <img src="<?= $ci->getPackageIconURL($installedPackage) ?>" class="me-3" style="width: 49px" />
                             <div class="media-body">
-                                <i class="float-right" v-bind:class="<?= $packageData?>.iconClass"></i>
+                                <i class="float-end" v-bind:class="<?= $packageData?>.iconClass"></i>
                                 <h5 class="my-0">
                                     <?= h($installedPackage->getPackageName()) ?>
-                                    <span class="badge badge-pill badge-secondary"><?= tc('AddonVersion', 'v.%s', $installedPackage->getPackageVersion()) ?></span>
+                                    <span class="badge rounded-pill bg-secondary"><?= tc('AddonVersion', 'v.%s', $installedPackage->getPackageVersion()) ?></span>
                                 </h5>
                                 <div v-bind:class="<?= $packageData . '.stateClass' ?>" v-html="<?= $packageData ?>.stateHtml"></div>
                             </div>
@@ -78,7 +78,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
                 <h3 id="notices"><?= t('Upgrade Notices') ?></h3>
                 <div>
-                    <i v-if="state === STATE.FAILED"><?= t('Unable to retrieve upgrade notices from concrete5.org.') ?></i>
+                    <i v-if="state === STATE.FAILED"><?= t('Unable to retrieve upgrade notices.') ?></i>
                     <i v-else-if="!details.notices || !details.notices.length"><?= t('No upgrade notices found.') ?></i>
                     <ul v-else class="fa-ul">
                         <li v-for="(notice, noticeIndex) in details.notices" v-bind:key="noticeIndex" class="my-3">
@@ -93,7 +93,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-right">
+            <div class="float-end">
                 <a href="<?= $controller->action('check_for_updates') ?>" class="btn btn-primary" v-bind:class="this.state === this.STATE.LOADING ? 'disabled' : ''">
                     <?= t('Check For Updates') ?>
                 </a>
@@ -133,7 +133,7 @@ $(document).ready(function() {
                             return {
                                 iconClass: 'fas fa-exclamation-triangle text-info',
                                 textClass: 'text-info',
-                                text: <?= json_encode(t('Unable to retrieve information about this update from concrete5.org. You may upgrade but do so with caution.')) ?>,
+                                text: <?= json_encode(t('Unable to retrieve information about this update from the Concrete community. You may upgrade but do so with caution.')) ?>,
                             };
                         case this.STATE.SUCCESS:
                             var data = {
@@ -163,7 +163,7 @@ $(document).ready(function() {
                 },
                 releaseNotes: function() {
                     if (this.state === this.STATE.FAILED) {
-                        return <?= json_encode('<i>' . t('Unable to retrieve release notes from concrete5.org.') . '</i>') ?>;
+                        return <?= json_encode('<i>' . t('Unable to retrieve release notes.') . '</i>') ?>;
                     }
                     return this.details && this.details.releaseNotes ? this.details.releaseNotes : <?= json_encode('<i>' . t('Release notes not available.') . '</i>') ?>;
                 },
@@ -175,7 +175,7 @@ $(document).ready(function() {
                 getAddonData: function(mpHandle) {
                     if (this.state === this.STATE.LOADING) {
                         return {
-                            iconClass: 'fa fa-question-circle text-muted',
+                            iconClass: 'fas fa-question-circle text-muted',
                             stateClass: '',
                             stateHtml: <?= json_encode('<i>' . t('Loading... ') . '</i>') ?>,
                         }
@@ -190,7 +190,7 @@ $(document).ready(function() {
                         });
                     }
                     var result = {
-                        iconClass: 'fa fa-question-circle text-muted',
+                        iconClass: 'fas fa-question-circle text-muted',
                         stateClass: '',
                         stateHtml: <?= json_encode('<i>' . t('No information about this add-on available.') . '</i>') ?>,
                     }
@@ -221,15 +221,15 @@ $(document).ready(function() {
                     };
                     switch(notice.safety) {
                         case 'info':
-                            result.iconClass = 'fa fa-question-circle text-info';
+                            result.iconClass = 'fas fa-question-circle text-info';
                             result.textClass = '';
                             break;
                         case 'warning':
-                            result.iconClass  = 'fa fa-warning text-warning';
+                            result.iconClass  = 'fas fa-exclamation-triangle text-warning';
                             result.textClass = 'text-warning';
                             break;
                         case 'danger':
-                            result.iconClass  = 'fa fa-exclamation-circle text-danger';
+                            result.iconClass  = 'fas fa-exclamation-circle text-danger';
                             result.textClass = 'text-danger';
                             break;
                     }

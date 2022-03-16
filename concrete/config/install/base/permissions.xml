@@ -16,10 +16,9 @@
         <category handle="admin" package=""/>
         <category handle="notification" package=""/>
         <category handle="sitemap" package=""/>
-        <category handle="marketplace_newsflow" package=""/>
+        <category handle="marketplace" package=""/>
         <category handle="basic_workflow" package=""/>
         <category handle="page_type" package=""/>
-        <category handle="gathering" package=""/>
         <category handle="group_tree_node" package=""/>
         <category handle="group_folder" package="" />
         <category handle="express_tree_node" package=""/>
@@ -177,7 +176,7 @@
         <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
 
-        <permissionkey handle="upgrade" name="Upgrade concrete5" package="" category="admin">
+        <permissionkey handle="upgrade" name="Upgrade Concrete" package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>
             </access>
@@ -357,7 +356,9 @@
         <permissionkey handle="edit_group_folder" name="Edit Group Folder" description="Edit a group folder." package="" category="group_folder"/>
         <permissionkey handle="edit_group_folder_permissions" name="Edit Group Access" description="Can edit access to group folder." package="" category="group_folder"/>
         <permissionkey handle="delete_group_folder" name="Delete Group Folder" description="Can delete group folder." package="" category="group_folder"/>
+        <permissionkey handle="add_group_folder" name="Add Group Folder" description="Can add folders." package="" category="group_folder"/>
         <permissionkey handle="add_group" name="Add Group" description="Can add groups to folder." package="" category="group_folder"/>
+        <permissionkey handle="assign_groups" name="Assign Groups" description="Can assign the groups within this folder." package="" category="group_folder"/>
 
         <!-- groups //-->
 
@@ -429,25 +430,19 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="view_in_maintenance_mode" name="View Site in Maintenance Mode" description="Ability to see and use the website when concrete5 is in maintenance mode." package="" category="admin">
+        <permissionkey handle="view_in_maintenance_mode" name="View Site in Maintenance Mode" description="Ability to see and use the website when Concrete is in maintenance mode." package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
-        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
+        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace">
             <access>
                 <group name="Administrators" description=""/>
             </access>
         </permissionkey>
 
-        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace_newsflow">
-            <access>
-                <group name="Administrators" description=""/>
-            </access>
-        </permissionkey>
-
-        <permissionkey handle="view_newsflow" name="View Newsflow" package="" category="marketplace_newsflow">
+        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace">
             <access>
                 <group name="Administrators" description=""/>
             </access>
@@ -499,10 +494,9 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
                 <category handle="group_tree_node" />
@@ -530,10 +524,9 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="express_tree_node" />
                 <category handle="express_entry" />
@@ -561,10 +554,9 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="group_folder" />
                 <category handle="express_tree_node" />
@@ -591,10 +583,9 @@
                 <category handle="notification" />
 		        <category handle="admin" />
 		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
+		        <category handle="marketplace" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
-                <category handle="gathering" />
                 <category handle="group_tree_node" />
                 <category handle="group_folder" />
                 <category handle="express_tree_node" />

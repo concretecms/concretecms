@@ -1,0 +1,27 @@
+/**
+ * Transitions used by our components.
+ */
+.concrete-nav-tab-content-switch-enter-active,
+.concrete-nav-tab-content-switch-enter-leave {
+  transition: $transition-base;
+}
+
+.concrete-nav-tab-content-switch-enter,
+.concrete-nav-tab-content-switch-leave-to {
+  opacity: 0;
+}
+
+/**
+ * Deleting items
+ */
+.concrete-delete-item-enter-active,
+.concrete-delete-item-leave-active {
+  transition: opacity 0.15s ease-out;
+}
+
+.concrete-delete-item-enter,
+.concrete-delete-item-leave-to {
+  opacity: 0;
+}
+
+

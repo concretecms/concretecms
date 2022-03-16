@@ -2,17 +2,17 @@
 
 namespace Concrete\Block\Autonav;
 
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Entity\Block\BlockType\BlockType;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
-use Core;
-use Database;
-use Page;
-use Permissions;
-use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Http\ResponseFactoryInterface;
-use Concrete\Core\Entity\Block\BlockType\BlockType;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Doctrine\ORM\EntityManagerInterface;
 
 defined('C5_EXECUTE') or die('Access Denied.');
@@ -25,57 +25,174 @@ defined('C5_EXECUTE') or die('Access Denied.');
  *
  * @author     Andrew Embler <andrew@concrete5.org>
  * @author     Jordan Lev
- * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
+ * @copyright  Copyright (c) 2003-2022 ConcreteCMS. (http://www.concretecms.org)
+ * @license    http://www.concretecms.org/license/     MIT License
  */
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var Page|null
+     */
     public $collection;
+
+    /**
+     * @var NavItem[]
+     */
     public $navArray = [];
+
+    /**
+     * @var int[]
+     */
     public $cParentIDArray = [];
-    public $sorted_array = [];
-    public $navSort = [];
-    public $navObjectNames = [];
+
+    /**
+     * @var string
+     */
     public $displayPages;
-    Public $displayPagesCID;
-    Public $displayPagesIncludeSelf;
-    Public $displaySubPages;
-    Public $displaySubPageLevels;
-    Public $displaySubPageLevelsNum;
-    Public $orderBy;
-    Public $displayUnavailablePages;
+
+    /**
+     * @var int|null
+     */
+    public $displayPagesCID;
+
+    /**
+     * @var int
+     */
+    public $displayPagesIncludeSelf;
+
+    /**
+     * @var string
+     */
+    public $displaySubPages;
+
+    /**
+     * @var string
+     */
+    public $displaySubPageLevels;
+
+    /**
+     * @var int
+     */
+    public $displaySubPageLevelsNum = 0;
+
+    /**
+     * @var string
+     */
+    public $orderBy;
+
+    /**
+     * @var int
+     */
+    public $displayUnavailablePages;
+
+    /**
+     * @var bool
+     */
     public $haveRetrievedSelf = false;
+
+    /**
+     * @var bool
+     */
     public $haveRetrievedSelfPlus1 = false;
+
+    /**
+     * @var bool
+     */
     public $displayUnapproved = false;
+
+    /**
+     * @var bool
+     */
     public $ignoreExcludeNav = false;
+
+    /**
+     * @var int|null
+     */
+    public $cParentID;
+
+    /**
+     * @var string[]
+     */
     protected $helpers = ['form', 'validation/token', 'form/page_selector', 'concrete/ui'];
+
+    /**
+     * @var int|null
+     */
     protected $homePageID;
+
+    /**
+     * @var string
+     */
     protected $btTable = 'btNavigation';
+
+    /**
+     * @var int
+     */
     protected $btInterfaceWidth = 700;
+
+    /**
+     * @var int
+     */
     protected $btInterfaceHeight = 525;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockRecord = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutput = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputOnPost = true;
+
+    /**
+     * @var bool
+     */
     protected $btCacheBlockOutputForRegisteredUsers = false;
+
+    /**
+     * @var int
+     */
     protected $btCacheBlockOutputLifetime = 300;
+
+    /**
+     * @var string
+     */
     protected $btWrapperClass = 'ccm-ui';
+
+    /**
+     * @var string[]
+     */
     protected $btExportPageColumns = ['displayPagesCID'];
+
+    /**
+     * @var bool
+     */
     protected $includeParentItem;
 
+    /**
+     * @var int|null
+     */
+    protected $cID;
+
+    /**
+     * Instantiates the block controller.
+     *
+     * @param BlockType $obj |Block $obj
+     */
     public function __construct($obj = null)
     {
         if (is_object($obj)) {
-            switch (strtolower(get_class($obj))) {
-                case "blocktype":
-                    // instantiating autonav on a particular collection page, instead of adding
-                    // it through the block interface
-                    $this->bID = null;
-                    break;
-                case "block": // block
-                    // standard block object
-                    $this->bID = $obj->bID;
-                    break;
+            if ($obj instanceof Block) {
+                $this->bID = $obj->bID;
+            } else {
+                $this->bID = null;
             }
         }
 
@@ -94,6 +211,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::__construct($obj);
     }
 
+    /**
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [
@@ -101,11 +221,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         ];
     }
 
-    // private variable $displayUnapproved, used by the dashboard
-
+    /**
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
-        return t("Creates navigation trees and sitemaps.");
+        return t('Creates navigation trees and sitemaps.');
     }
 
     // haveRetrievedSelf is a variable that stores whether or not a particular tree walking operation has retrieved the current page. We use this
@@ -115,11 +236,17 @@ class Controller extends BlockController implements UsesFeatureInterface
     // or whether they display them, but then restrict them when the page is actually visited
     // TODO - Implement displayUnavailablePages in the btNavigation table, and in the frontend of the autonav block
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
-        return t("Auto-Nav");
+        return t('Auto-Nav');
     }
 
+    /**
+     * @param array<string,mixed> $args
+     */
     public function save($args)
     {
         $args['displayPagesIncludeSelf'] = isset($args['displayPagesIncludeSelf']) && $args['displayPagesIncludeSelf'] ? 1 : 0;
@@ -129,27 +256,36 @@ class Controller extends BlockController implements UsesFeatureInterface
         parent::save($args);
     }
 
-    public function getContent()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getContent(): array
     {
-        /* our templates expect a variable not an object */
+        // our templates expect a variable not an object
         $con = [];
-        foreach ($this as $key => $value) {
+        foreach (get_object_vars($this) as $key => $value) {
             $con[$key] = $value;
         }
 
         return $con;
     }
 
-    public function getChildPages($c)
+    /**
+     * @param Page $c
+     *
+     * @return Page[]
+     */
+    public function getChildPages($c): array
     {
-
-        // a quickie
-        $db = Database::connection();
-        $r = $db->query(
-                "select cID from Pages where cParentID = ? order by cDisplayOrder asc",
-                [$c->getCollectionID()]);
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        $r = $db->executeQuery(
+            'select cID from Pages where cParentID = ? order by cDisplayOrder asc',
+            [$c->getCollectionID()]
+        );
         $pages = [];
-        while ($row = $r->fetchRow()) {
+        $rows = $r->fetchAllAssociative();
+        foreach ($rows as $row) {
             $pages[] = Page::getByID($row['cID'], 'ACTIVE');
         }
 
@@ -169,6 +305,10 @@ class Controller extends BlockController implements UsesFeatureInterface
      * because we need to maintain the generateNav() function for backwards compatibility with
      * older custom templates... and that function unfortunately has side-effects so it cannot
      * be called more than once per request (otherwise there will be duplicate items in the nav menu).
+     *
+     * @param bool $ignore_exclude_nav
+     *
+     * @return \stdClass[]
      */
     public function getNavItems($ignore_exclude_nav = false)
     {
@@ -192,7 +332,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         while ($parentCIDnotZero) {
             $cParentID = $inspectC->getCollectionParentID();
-            if (!intval($cParentID)) {
+            if (!(int) $cParentID) {
                 $parentCIDnotZero = false;
             } else {
                 if ($cParentID != $this->homePageID) {
@@ -224,7 +364,8 @@ class Controller extends BlockController implements UsesFeatureInterface
                 } else {
                     $excluded_parent_level = 9999; //Reset to arbitrarily high number to denote that we're no longer excluding a parent
                     $exclude_children_below_level = $_c->getAttribute(
-                                                       'exclude_subpages_from_nav') ? $current_level : 9999;
+                        'exclude_subpages_from_nav'
+                    ) ? $current_level : 9999;
                     $exclude_page = false;
                 }
             }
@@ -237,7 +378,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         //Prep all data and put it into a clean structure so markup output is as simple as possible
         $navItems = [];
         $navItemCount = count($includedNavItems);
-        for ($i = 0; $i < $navItemCount; ++$i) {
+        for ($i = 0; $i < $navItemCount; $i++) {
             $ni = $includedNavItems[$i];
             $_c = $ni->getCollectionObject();
             $current_level = $ni->getLevel();
@@ -251,8 +392,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($_c->getAttribute('replace_link_with_first_in_nav')) {
                 $subPage = $_c->getFirstChild(); //Note: could be a rare bug here if first child was excluded, but this is so unlikely (and can be solved by moving it in the sitemap) that it's not worth the trouble to check
                 if ($subPage instanceof Page) {
-                    $pageLink = Core::make('helper/navigation')->getLinkToCollection(
-                                      $subPage); //We could optimize by instantiating the navigation helper outside the loop, but this is such an infrequent attribute that I prefer code clarity over performance in this case
+                    $pageLink = $this->app->make('helper/navigation')->getLinkToCollection(
+                        $subPage
+                    ); //We could optimize by instantiating the navigation helper outside the loop, but this is such an infrequent attribute that I prefer code clarity over performance in this case
                 }
             }
             if (!$pageLink) {
@@ -282,7 +424,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             //Calculate if this is the last item in its level (useful for CSS classes)
             $is_last_in_level = true;
-            for ($j = $i + 1; $j < $navItemCount; ++$j) {
+            for ($j = $i + 1; $j < $navItemCount; $j++) {
                 if ($includedNavItems[$j]->getLevel() == $current_level) {
                     //we found a subsequent item at this level (before this level "ended"), so this is NOT the last in its level
                     $is_last_in_level = false;
@@ -308,7 +450,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $navItem->url = $pageLink;
             $translate = $this->get('translate');
             $name = (isset($translate) && $translate == true) ? t($ni->getName()) : $ni->getName();
-            $text = Core::make('helper/text');
+            $text = $this->app->make('helper/text');
             $navItem->name = $text->entities($name);
             $navItem->target = $target;
             $navItem->level = $current_level + 1; //make this 1-based instead of 0-based (more human-friendly)
@@ -332,46 +474,28 @@ class Controller extends BlockController implements UsesFeatureInterface
      * This function is used by the getNavItems() method to generate the raw "pre-processed" nav items array.
      * It also must exist as a separate function to preserve backwards-compatibility with older autonav templates.
      * Warning: this function has side-effects -- if this gets called twice, items will be duplicated in the nav structure!
+     *
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return NavItem[]
      */
-    public function generateNav()
+    public function generateNav(): array
     {
         // Initialize Nav Array
         $this->navArray = [];
 
-        if (isset($this->displayPagesCID) && !Core::make('helper/validation/numbers')->integer($this->displayPagesCID)) {
+        if (isset($this->displayPagesCID) && !$this->app->make('helper/validation/numbers')->integer($this->displayPagesCID)) {
             $this->displayPagesCID = 0;
         }
 
-        $db = Database::connection();
-        // now we proceed, with information obtained either from the database, or passed manually from
-        $orderBy = "";
-        /*switch($this->orderBy) {
-        switch($this->orderBy) {
-            case 'display_asc':
-                $orderBy = "order by Collections.cDisplayOrder asc";
-                break;
-            case 'display_desc':
-                $orderBy = "order by Collections.cDisplayOrder desc";
-                break;
-            case 'chrono_asc':
-                $orderBy = "order by cvDatePublic asc";
-                break;
-            case 'chrono_desc':
-                $orderBy = "order by cvDatePublic desc";
-                break;
-            case 'alpha_desc':
-                $orderBy = "order by cvName desc";
-                break;
-            default:
-                $orderBy = "order by cvName asc";
-                break;
-        }*/
         switch ($this->orderBy) {
             case 'display_asc':
-                $orderBy = "order by Pages.cDisplayOrder asc";
+                $orderBy = 'order by Pages.cDisplayOrder asc';
                 break;
             case 'display_desc':
-                $orderBy = "order by Pages.cDisplayOrder desc";
+                $orderBy = 'order by Pages.cDisplayOrder desc';
                 break;
             default:
                 $orderBy = '';
@@ -410,34 +534,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($cParentID != null) {
-
-            /*
-
-            $displayHeadPage = false;
-
-            if ($this->displayPagesIncludeSelf) {
-                $q = "select Pages.cID from Pages where Pages.cID = '{$cParentID}' and cIsTemplate = 0";
-                $r = $db->query($q);
-                if ($r) {
-                    $row = $r->fetchRow();
-                    $displayHeadPage = true;
-                    if ($this->displayUnapproved) {
-                        $tc1 = Page::getByID($row['cID'], "RECENT");
-                    } else {
-                        $tc1 = Page::getByID($row['cID'], "ACTIVE");
-                    }
-                    $tc1v = $tc1->getVersionObject();
-                    if (!$tc1v->isApprovedNow() && !$this->displayUnapproved) {
-                        $displayHeadPage = false;
-                    }
-                }
-            }
-
-            if ($displayHeadPage) {
-                $level++;
-            }
-            */
-
             if ($this->displaySubPages == 'relevant' || $this->displaySubPages == 'relevant_breadcrumb') {
                 $this->populateParentIDArray($this->cID);
             }
@@ -451,37 +547,21 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
             if ($shouldIncludeParentItem) {
                 if ($this->displayUnapproved) {
-                    $tc1 = Page::getByID($cParentID, "RECENT");
+                    $tc1 = Page::getByID($cParentID);
                 } else {
-                    $tc1 = Page::getByID($cParentID, "ACTIVE");
+                    $tc1 = Page::getByID($cParentID, 'ACTIVE');
                 }
                 $niRow = [];
                 $niRow['cvName'] = $tc1->getCollectionName();
                 $niRow['cID'] = $cParentID;
                 $niRow['cvDescription'] = $tc1->getCollectionDescription();
-                $niRow['cPath'] = Core::make('helper/navigation')->getLinkToCollection($tc1);
+                $niRow['cPath'] = $this->app->make('helper/navigation')->getLinkToCollection($tc1);
 
                 $ni = new NavItem($niRow, 0);
                 $ni->setCollectionObject($tc1);
 
                 array_unshift($this->navArray, $ni);
             }
-
-            /*
-            if ($displayHeadPage) {
-                $niRow = [];
-                $niRow['cvName'] = $tc1->getCollectionName();
-                $niRow['cID'] = $row['cID'];
-                $niRow['cvDescription'] = $tc1->getCollectionDescription();
-                $niRow['cPath'] = $tc1->getCollectionPath();
-
-                $ni = new NavItem($niRow, 0);
-                $level++;
-                $ni->setCollectionObject($tc1);
-
-                array_unshift($this->navArray, $ni);
-            }
-            */
         }
 
         return $this->navArray;
@@ -489,15 +569,22 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * heh. probably should've gone the simpler route and named this getGrandparentID().
+     *
+     * @return int
      */
     public function getParentParentID()
     {
         // this has to be the stupidest name of a function I've ever created. sigh
         $cParentID = Page::getCollectionParentIDFromChildID($this->cParentID);
 
-        return ($cParentID) ? $cParentID : 0;
+        return $cParentID ?: 0;
     }
 
+    /**
+     * @param int $level
+     *
+     * @return int|null
+     */
     public function getParentAtLevel($level)
     {
         // this function works in the following way
@@ -517,13 +604,15 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         if (isset($idArray[$level])) {
             return $idArray[$level];
-        } else {
-            return null;
         }
+
+            return null;
     }
 
     /** Pupulates the $cParentIDArray instance property.
-     * @param int $cID The collection id.
+     * @param int $cID the collection id
+     *
+     * @return void
      */
     public function populateParentIDArray($cID)
     {
@@ -539,6 +628,17 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
     }
 
+    /**
+     * @param int $cParentID
+     * @param string $orderBy
+     * @param int $currentLevel
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\DBAL\Driver\Exception
+     *
+     * @return void
+     */
     public function getNavigationArray($cParentID, $orderBy, $currentLevel)
     {
         // Check if the parent page is excluded or if it has been set to exclude child pages
@@ -557,25 +657,27 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
 
-        $db = Database::connection();
-        $navSort = $this->navSort;
-        $sorted_array = $this->sorted_array;
-        $navObjectNames = $this->navObjectNames;
+        /** @var Connection $db */
+        $db = $this->app->make(Connection::class);
+        $navSort = [];
+        $sorted_array = [];
+        $navObjectNames = [];
 
         $q = "select Pages.cID from Pages where cIsTemplate = 0 and cIsActive = 1 and cParentID = '{$cParentID}' {$orderBy}";
-        $r = $db->query($q);
-        if ($r) {
-            while ($row = $r->fetchRow()) {
+        $rows = $db->executeQuery($q)->fetchAllAssociative();
+        if (count($rows) > 0) {
+            foreach ($rows as $row) {
                 if ($this->displaySubPages != 'relevant_breadcrumb' || (in_array(
-                            $row['cID'],
-                            $this->cParentIDArray) || $row['cID'] == $this->cID)
+                    $row['cID'],
+                    $this->cParentIDArray
+                ) || $row['cID'] == $this->cID)
                 ) {
                     /*
                     if ($this->haveRetrievedSelf) {
                         // since we've already retrieved self, and we're going through again, we set plus 1
                         $this->haveRetrievedSelfPlus1 = true;
                     } else
-                    */
+                     */
 
                     if ($this->haveRetrievedSelf && $cParentID == $this->cID) {
                         $this->haveRetrievedSelfPlus1 = true;
@@ -584,12 +686,10 @@ class Controller extends BlockController implements UsesFeatureInterface
                             $this->haveRetrievedSelf = true;
                         }
                     }
-
-                    $displayPage = true;
                     if ($this->displayUnapproved) {
-                        $tc = Page::getByID($row['cID'], "RECENT");
+                        $tc = Page::getByID($row['cID']);
                     } else {
-                        $tc = Page::getByID($row['cID'], "ACTIVE");
+                        $tc = Page::getByID($row['cID'], 'ACTIVE');
                     }
 
                     $displayPage = $this->displayPage($tc);
@@ -599,12 +699,12 @@ class Controller extends BlockController implements UsesFeatureInterface
                         $niRow['cvName'] = $tc->getCollectionName();
                         $niRow['cID'] = $row['cID'];
                         $niRow['cvDescription'] = $tc->getCollectionDescription();
-                        $niRow['cPath'] = Core::make('helper/navigation')->getLinkToCollection($tc);
+                        $niRow['cPath'] = $this->app->make('helper/navigation')->getLinkToCollection($tc);
                         $niRow['cPointerExternalLink'] = $tc->getCollectionPointerExternalLink();
                         $niRow['cPointerExternalLinkNewWindow'] = $tc->openCollectionPointerExternalLinkInNewWindow();
                         $dateKey = strtotime($tc->getCollectionDatePublic());
 
-                        $ni = new NavItem($niRow, $currentLevel);
+                        $ni = new NavItem($niRow, (int) $currentLevel);
                         $ni->setCollectionObject($tc);
                         // $this->navArray[] = $ni;
                         $navSort[$niRow['cID']] = $dateKey;
@@ -621,84 +721,53 @@ class Controller extends BlockController implements UsesFeatureInterface
             // Joshua's Huge Sorting Crap
             if ($navSort) {
                 $sortit = 0;
-                if ($this->orderBy == "chrono_asc") {
-                    asort($navSort);
-                    $sortit = 1;
-                }
-                if ($this->orderBy == "chrono_desc") {
-                    arsort($navSort);
-                    $sortit = 1;
-                }
-
-                if ($sortit) {
-                    foreach ($navSort as $sortCID => $sortdatewhocares) {
-                        // create sorted_array
-                        $this->navArray[] = $sorted_array[$sortCID];
-
-                        #############start_recursive_crap
-                        $retrieveMore = false;
-                        if ($this->displaySubPages == 'all') {
-                            if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
-                                $retrieveMore = true;
-                            }
-                        } else {
-                            if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array(
-                                        $sortCID,
-                                        $this->cParentIDArray) || $sortCID == $this->cID)
-                            ) {
-                                if ($this->displaySubPageLevels == "enough" && $this->haveRetrievedSelf == false) {
-                                    $retrieveMore = true;
-                                } else {
-                                    if ($this->displaySubPageLevels == "enough_plus1" && $this->haveRetrievedSelfPlus1 == false) {
-                                        $retrieveMore = true;
-                                    } else {
-                                        if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
-                                            $retrieveMore = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if ($retrieveMore) {
-                            $this->getNavigationArray($sortCID, $orderBy, $currentLevel + 1);
-                        }
-                        #############end_recursive_crap
-                    }
-                }
-
-                $sortit = 0;
-                if ($this->orderBy == "alpha_desc") {
+                if ($this->orderBy == 'alpha_desc') {
                     $navObjectNames = array_map('strtolower', $navObjectNames);
                     arsort($navObjectNames);
                     $sortit = 1;
                 }
 
-                if ($this->orderBy == "alpha_asc") {
+                if ($this->orderBy == 'alpha_asc') {
                     $navObjectNames = array_map('strtolower', $navObjectNames);
                     asort($navObjectNames);
                     $sortit = 1;
                 }
+                $sortArray = $navObjectNames;
+                if ($this->orderBy == 'chrono_asc') {
+                    asort($navSort);
+                    $sortit = 1;
+                    $sortArray = $navSort;
+                }
+                if ($this->orderBy == 'chrono_desc') {
+                    arsort($navSort);
+                    $sortit = 1;
+                    $sortArray = $navSort;
+                }
+                if ($this->orderBy == 'display_desc' || $this->orderBy == 'display_asc') {
+                    $sortit = 1;
+                }
 
                 if ($sortit) {
-                    foreach ($navObjectNames as $sortCID => $sortnameaction) {
+                    foreach ($sortArray as $sortCID => $sortnameaction) {
                         // create sorted_array
                         $this->navArray[] = $sorted_array[$sortCID];
 
-                        #############start_recursive_crap
+                        //############start_recursive_crap
                         $retrieveMore = false;
                         if ($this->displaySubPages == 'all') {
                             if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
                                 $retrieveMore = true;
                             }
                         } else {
-                            if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array(
-                                        $sortCID,
-                                        $this->cParentIDArray) || $sortCID == $this->cID)
+                            if (($this->displaySubPages == 'relevant' || $this->displaySubPages == 'relevant_breadcrumb') && (in_array(
+                                $sortCID,
+                                $this->cParentIDArray
+                            ) || $sortCID == $this->cID)
                             ) {
-                                if ($this->displaySubPageLevels == "enough" && $this->haveRetrievedSelf == false) {
+                                if ($this->displaySubPageLevels == 'enough' && $this->haveRetrievedSelf == false) {
                                     $retrieveMore = true;
                                 } else {
-                                    if ($this->displaySubPageLevels == "enough_plus1" && $this->haveRetrievedSelfPlus1 == false) {
+                                    if ($this->displaySubPageLevels == 'enough_plus1' && $this->haveRetrievedSelfPlus1 == false) {
                                         $retrieveMore = true;
                                     } else {
                                         if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
@@ -711,52 +780,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                         if ($retrieveMore) {
                             $this->getNavigationArray($sortCID, $orderBy, $currentLevel + 1);
                         }
-                        #############end_recursive_crap
-                    }
-                }
-
-                $sortit = 0;
-                if ($this->orderBy == "display_desc") {
-                    $sortit = 1;
-                }
-                if ($this->orderBy == "display_asc") {
-                    $sortit = 1;
-                }
-
-                if ($sortit) {
-                    // for display order? this stuff is already sorted...
-                    foreach ($navObjectNames as $sortCID => $sortnameaction) {
-                        // create sorted_array
-                        $this->navArray[] = $sorted_array[$sortCID];
-
-                        #############start_recursive_crap
-                        $retrieveMore = false;
-                        if ($this->displaySubPages == 'all') {
-                            if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
-                                $retrieveMore = true;
-                            }
-                        } else {
-                            if (($this->displaySubPages == "relevant" || $this->displaySubPages == "relevant_breadcrumb") && (in_array(
-                                        $sortCID,
-                                        $this->cParentIDArray) || $sortCID == $this->cID)
-                            ) {
-                                if ($this->displaySubPageLevels == "enough" && $this->haveRetrievedSelf == false) {
-                                    $retrieveMore = true;
-                                } else {
-                                    if ($this->displaySubPageLevels == "enough_plus1" && $this->haveRetrievedSelfPlus1 == false) {
-                                        $retrieveMore = true;
-                                    } else {
-                                        if ($this->displaySubPageLevels == 'all' || ($this->displaySubPageLevels == 'custom' && $this->displaySubPageLevelsNum > $currentLevel)) {
-                                            $retrieveMore = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if ($retrieveMore) {
-                            $this->getNavigationArray($sortCID, $orderBy, $currentLevel + 1);
-                        }
-                        #############end_recursive_crap
+                        //############end_recursive_crap
                     }
                 }
             }
@@ -764,28 +788,22 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
     }
 
-    protected function displayPage($tc)
-    {
-        $tcv = $tc->getVersionObject();
-        if ((!is_object($tcv)) || (!$tcv->isApprovedNow() && !$this->displayUnapproved)) {
-            return false;
-        }
-
-        if ($this->displayUnavailablePages == false) {
-            $tcp = new Permissions($tc);
-            if (!$tcp->canRead()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
+    /**
+     * @param Page $c
+     *
+     * @return mixed
+     */
     public function excludeFromNavViaAttribute($c)
     {
         return $c->getAttribute('exclude_nav');
     }
 
+    /**
+     * @throws UserMessageException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return \Concrete\Core\Http\Response
+     */
     public function action_preview_pane()
     {
         $token = $this->app->make('token');
@@ -793,6 +811,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             throw new UserMessageException($token->getErrorMessage());
         }
         $bt = $this->app->make(EntityManagerInterface::class)->find(BlockType::class, $this->getBlockTypeID());
+        /** @var Controller $btc */
         $btc = $bt->getController();
         $post = $this->request->request;
         $btc->collection = $this->getCollectionObject();
@@ -826,9 +845,34 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     /**
      * @param bool $includeParentItem
+     *
+     * @return void
      */
     public function setIncludeParentItem($includeParentItem)
     {
         $this->includeParentItem = $includeParentItem;
+    }
+
+    /**
+     * @param Page $tc
+     *
+     * @return bool
+     */
+    protected function displayPage($tc)
+    {
+        $tcv = $tc->getVersionObject();
+        if ((!is_object($tcv)) || (!$tcv->isApprovedNow() && !$this->displayUnapproved)) {
+            return false;
+        }
+
+        if ($this->displayUnavailablePages == false) {
+            $tcp = new Checker($tc);
+            /** @phpstan-ignore-next-line */
+            if (!$tcp->canRead()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

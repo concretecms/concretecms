@@ -17,14 +17,14 @@ if (!$canRead) {
 }
 ?>
 <div class="ccm-dashboard-header-buttons">
-    <button type="button" class="btn btn-secondary dropdown-toggle" data-button="attribute-type" data-toggle="dropdown">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-button="attribute-type" data-bs-toggle="dropdown">
         <?= t('Options') ?> <span class="caret"></span>
     </button>
     <div class="dropdown-menu">
         <?php
         if ($includeSystemPages) {
             ?>
-            <a class="dropdown-item" href="<?= $view->action('include_system_pages', 0) ?>"><span class="text-success"><i class="fa fa-check"></i> <?= t('Include System Pages in Sitemap') ?></span></a>
+            <a class="dropdown-item" href="<?= $view->action('include_system_pages', 0) ?>"><span class="text-success"><i class="fas fa-check"></i> <?= t('Include System Pages in Sitemap') ?></span></a>
             <?php
         } else {
             ?>
@@ -33,7 +33,7 @@ if (!$canRead) {
         }
         if ($displayDoubleSitemap) {
             ?>
-            <a class="dropdown-item" href="<?= $view->action('display_double_sitemap', 0) ?>"><span class="text-success"><i class="fa fa-check"></i> <?= t('View 2-Up Sitemap') ?></span></a>
+            <a class="dropdown-item" href="<?= $view->action('display_double_sitemap', 0) ?>"><span class="text-success"><i class="fas fa-check"></i> <?= t('View 2-Up Sitemap') ?></span></a>
             <?php
         } else {
             ?>

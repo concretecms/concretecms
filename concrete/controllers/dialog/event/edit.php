@@ -3,11 +3,12 @@ namespace Concrete\Controller\Dialog\Event;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Support\Facade\Facade;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\Response;
 use Concrete\Core\Workflow\Request\ApproveCalendarEventRequest;
-use Core;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersionRepetition;
@@ -16,7 +17,6 @@ use Concrete\Core\Calendar\Event\EventOccurrenceService;
 use Concrete\Core\Calendar\Event\EventRepetitionService;
 use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Calendar\Utility\Preferences;
-use RedirectResponse;
 
 class Edit extends BackendInterfaceController
 {
@@ -31,6 +31,14 @@ class Edit extends BackendInterfaceController
      * @var EventService
      */
     protected $eventService;
+    /**
+     * @var EventRepetitionService
+     */
+    protected $eventRepetitionService;
+    /**
+     * @var EventOccurrenceService
+     */
+    protected $eventOccurrenceService;
 
     public function __construct()
     {
@@ -53,7 +61,7 @@ class Edit extends BackendInterfaceController
 
     public function edit()
     {
-        if ($this->canAccess(false)) {
+        if ($this->canAccess()) {
             $occurrence = $this->eventOccurrenceService->getByID($this->request->query->get('versionOccurrenceID'));
             if (!$occurrence) {
                 throw new \Exception(t('Invalid occurrence.'));
@@ -74,22 +82,22 @@ class Edit extends BackendInterfaceController
         }
         $calendar = $caID ? Calendar::getByID($caID) : null;
         if (is_object($calendar)) {
-            $cp = new \Permissions($calendar);
+            $cp = new Checker($calendar);
 
             return $cp->canAddCalendarEvent();
-        } else {
-            $versionOccurrenceID = $this->request->request->get('versionOccurrenceID');
-            if ($versionOccurrenceID === null) {
-                $versionOccurrenceID = $this->request->query->get('versionOccurrenceID');
-            }
-            $occurrence = $versionOccurrenceID ? $this->eventOccurrenceService->getByID($versionOccurrenceID) : null;
-            if (is_object($occurrence)) {
-                $calendar = $occurrence->getEvent()->getCalendar();
-                if (is_object($calendar)) {
-                    $cp = new \Permissions($calendar);
+        }
 
-                    return $cp->canEditCalendarEvents();
-                }
+        $versionOccurrenceID = $this->request->request->get('versionOccurrenceID');
+        if ($versionOccurrenceID === null) {
+            $versionOccurrenceID = $this->request->query->get('versionOccurrenceID');
+        }
+        $occurrence = $versionOccurrenceID ? $this->eventOccurrenceService->getByID($versionOccurrenceID) : null;
+        if (is_object($occurrence)) {
+            $calendar = $occurrence->getEvent()->getCalendar();
+            if (is_object($calendar)) {
+                $cp = new Checker($calendar);
+
+                return $cp->canEditCalendarEvents();
             }
         }
 
@@ -101,13 +109,12 @@ class Edit extends BackendInterfaceController
      */
     protected function validateRequest($calendar, $repetitions)
     {
-        $e = \Core::make('error');
+        $e = $this->app->make('error');
         if ($this->canAccess()) {
             if (!is_object($calendar)) {
                 $e->add(t('Invalid calendar.'));
             }
 
-            $datetime = \Core::make('helper/form/date_time');
             if (!count($repetitions)) {
                 $e->add(t('You must specify a valid date for this event.'));
             }
@@ -138,14 +145,14 @@ class Edit extends BackendInterfaceController
                 $eventVersionRepetitions[] = new CalendarEventVersionRepetition($eventVersion, $repetition);
             }
 
-            $permissions = new \Permissions($calendar);
+            $permissions = new Checker($calendar);
             if ($permissions->canEditCalendarEventMoreDetailsLocation()) {
                 if ($this->request->request->get('cID') !== null) {
                     $cID = intval($this->request->request->get('cID'));
                     if ($cID) {
-                        $eventPage = \Page::getByID($cID);
+                        $eventPage = Page::getByID($cID);
                         if (is_object($eventPage) && !$eventPage->isError()) {
-                            $cp = new \Permissions($eventPage);
+                            $cp = new Checker($eventPage);
                             if ($cp->canViewPage()) {
                                 $eventVersion->setRelatedPageRelationType(null);
                                 $eventVersion->setPageObject($eventPage);
@@ -211,69 +218,92 @@ class Edit extends BackendInterfaceController
 
     public function addEvent()
     {
-        $calendar = Calendar::getByID($this->request->request->get('caID'));
-        $repetitions = $this->eventRepetitionService->translateFromRequest('event', $calendar, $this->request);
-        $r = $this->addCalendarEventVersionFromRequest(new CalendarEvent($calendar), $repetitions);
-        if (!$r->hasError()) {
-            $version = $r->getEventVersion();
-            $this->eventService->generateDefaultOccurrences($version);
-            if ($this->request->request->get('publishAction') == 'approve') {
-                $u = $this->app->make(User::class);
-                $pkr = new ApproveCalendarEventRequest();
-                $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
-                $pkr->setRequesterUserID($u->getUserID());
-                $response = $pkr->trigger();
-                if ($response instanceof Response) {
-                    $this->flash('success', t('Event added successfully. It is published and live.'));
+        if ($this->validateAction()) {
+            $calendar = Calendar::getByID($this->request->request->get('caID'));
+            $repetitions = $this->eventRepetitionService->translateFromRequest('event', $calendar, $this->request);
+            $r = $this->addCalendarEventVersionFromRequest(new CalendarEvent($calendar), $repetitions);
+            if (!$r->hasError()) {
+                $version = $r->getEventVersion();
+                $this->eventService->generateDefaultOccurrences($version);
+                if ($this->request->request->get('publishAction') == 'approve') {
+                    $u = $this->app->make(User::class);
+                    $pkr = new ApproveCalendarEventRequest();
+                    $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
+                    $pkr->setRequesterUserID($u->getUserID());
+                    $response = $pkr->trigger();
+                    if ($response instanceof Response) {
+                        $this->flash('success', t('Event added successfully. It is published and live.'));
+                    } else {
+                        $this->flash(
+                            'success',
+                            t(
+                                'Event added successfully. This event must be approved before it will be posted.'
+                            )
+                        );
+                    }
                 } else {
-                    $this->flash('success', t('Event added successfully. This event must be approved before it will be posted.'));
+                    $this->flash('success', t('Event added successfully. The event is not yet published.'));
                 }
-            } else {
-                $this->flash('success', t('Event added successfully. The event is not yet published.'));
             }
+            $r->outputJSON();
         }
-        $r->outputJSON();
     }
 
     public function updateEvent()
     {
-        $occurrence = $this->eventOccurrenceService->getByID($this->request->request->get('versionOccurrenceID'));
-        if (!$occurrence) {
-            throw new \Exception(t('Invalid occurrence.'));
-        }
-        $originalVersion = $occurrence->getVersion();
-        $originalRepetitions = $originalVersion->getRepetitionEntityCollection();
-        if ($this->request->request->get('edit_type') == 'local') {
-            $repetitions = $this->eventRepetitionService->translateFromRequest('local', $occurrence->getEvent()->getCalendar(), $this->request);
-        } else {
-            $repetitions = $this->eventRepetitionService->translateFromRequest('event', $occurrence->getEvent()->getCalendar(), $this->request);
-        }
-        $r = $this->addCalendarEventVersionFromRequest($occurrence->getEvent(), $repetitions);
-        if ($this->request->request->get('edit_type') == 'local') {
-            $this->eventOccurrenceService->delete($originalVersion, $occurrence->getOccurrence());
-        }
-        if (!$r->hasError()) {
-            if ($this->eventService->requireOccurrenceRegeneration($originalRepetitions, $repetitions)) {
-                $this->eventService->generateDefaultOccurrences($r->getEventVersion());
+        if ($this->validateAction()) {
+            $occurrence = $this->eventOccurrenceService->getByID($this->request->request->get('versionOccurrenceID'));
+            if (!$occurrence) {
+                throw new \Exception(t('Invalid occurrence.'));
             }
-            if ($this->request->request->get('publishAction') == 'approve') {
-                $u = $this->app->make(User::class);
-                $pkr = new ApproveCalendarEventRequest();
-                $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
-                $pkr->setRequesterUserID($u->getUserID());
-                $response = $pkr->trigger();
-                if ($response instanceof Response) {
-                    $this->flash('success', t('Event updated successfully. It is published and live.'));
-                } else {
-                    $this->flash('success', t('Event updated successfully. This event must be approved before it will be posted.'));
-                }
+            $originalVersion = $occurrence->getVersion();
+            $originalRepetitions = $originalVersion->getRepetitionEntityCollection();
+            if ($this->request->request->get('edit_type') == 'local') {
+                $repetitions = $this->eventRepetitionService->translateFromRequest(
+                    'local',
+                    $occurrence->getEvent()->getCalendar(),
+                    $this->request
+                );
             } else {
-                $this->flash('success', t('Event updated successfully. This version of the event is not yet published.'));
+                $repetitions = $this->eventRepetitionService->translateFromRequest(
+                    'event',
+                    $occurrence->getEvent()->getCalendar(),
+                    $this->request
+                );
             }
+            $r = $this->addCalendarEventVersionFromRequest($occurrence->getEvent(), $repetitions);
+            if ($this->request->request->get('edit_type') == 'local') {
+                $this->eventOccurrenceService->delete($originalVersion, $occurrence->getOccurrence());
+            }
+            if (!$r->hasError()) {
+                if ($this->eventService->requireOccurrenceRegeneration($originalRepetitions, $repetitions)) {
+                    $this->eventService->generateDefaultOccurrences($r->getEventVersion());
+                }
+                if ($this->request->request->get('publishAction') == 'approve') {
+                    $u = $this->app->make(User::class);
+                    $pkr = new ApproveCalendarEventRequest();
+                    $pkr->setCalendarEventVersionID($r->getEventVersion()->getID());
+                    $pkr->setRequesterUserID($u->getUserID());
+                    $response = $pkr->trigger();
+                    if ($response instanceof Response) {
+                        $this->flash('success', t('Event updated successfully. It is published and live.'));
+                    } else {
+                        $this->flash(
+                            'success',
+                            t(
+                                'Event updated successfully. This event must be approved before it will be posted.'
+                            )
+                        );
+                    }
+                } else {
+                    $this->flash(
+                        'success',
+                        t('Event updated successfully. This version of the event is not yet published.')
+                    );
+                }
+            }
+            $r->outputJSON();
         }
-        $r->outputJSON();
     }
-
-
 
 }

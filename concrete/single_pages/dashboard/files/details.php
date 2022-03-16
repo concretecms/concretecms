@@ -27,17 +27,17 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $file = $fileVersion->getFile();
 if ($view->controller->getAction() == 'preview_version') { ?>
     <div class="alert alert-info d-flex align-items-center"><div><?=t('You are currently previewing file version %s.', $fileVersion->getFileVersionID())?></div>
-    <a href="<?=URL::to('/dashboard/files', 'details', $file->getFileID())?>" class="btn-sm btn btn-secondary d-flex ml-auto"><?=t('Exit Preview')?></a>
+    <a href="<?=URL::to('/dashboard/files', 'details', $file->getFileID())?>" class="btn-sm btn btn-secondary d-flex ms-auto"><?=t('Exit Preview')?></a>
     </div>
 <?php } ?>
 
 <section>
     <h3><?= t('Preview') ?></h3>
-    <div class="ccm-file-manager-details-preview">
-        <div class="ccm-file-manager-details-preview-thumbnail">
+    <div class="row">
+        <div class="col-lg-6 ccm-file-manager-details-preview-thumbnail">
             <?= $thumbnail ?>
         </div>
-        <div class="ccm-file-manager-details-preview-actions">
+        <div class="col-lg-6">
             <?php
             if ($view->controller->getAction() == 'preview_version') { ?>
 
@@ -401,7 +401,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
         if ($filePermissions->canEditFilePermissions()) {
             ?>
             <a
-                    class="btn btn-secondary float-right dialog-launch"
+                    class="btn btn-secondary float-end dialog-launch"
                     dialog-title="<?= t('Storage Location') ?>"
                     dialog-width="500" dialog-height="400"
                     href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/bulk/storage?fID[]=' . $file->getFileID()])) ?>"
@@ -415,7 +415,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
         <dt><?= t('Tracked URL') ?></dt>
         <dd>
             <?= h($fileVersion->getDownloadURL()) ?>
-            <div class="text-muted"><?= t("If you're going to hard code a link to this file, use this URL. By using this URL concrete5 will still be able to manage permissions and track statistics on its use.") ?></div>
+            <div class="text-muted"><?= t("If you're going to hard code a link to this file, use this URL. By using this URL Concrete will still be able to manage permissions and track statistics on its use.") ?></div>
         </dd>
         <dt><?= t('File in OS') ?></dt>
         <dd>

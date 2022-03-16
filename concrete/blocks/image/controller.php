@@ -13,7 +13,6 @@ use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
-use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Concrete\Core\View\View;
 
 class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
@@ -28,17 +27,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = ['fID', 'fOnstateID', 'fileLinkID'];
     protected $btExportPageColumns = ['internalLinkCID'];
-
-    /**
-     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
-     */
-    protected $tracker;
-
-    public function __construct($blockType = null, AggregateTracker $tracker = null)
-    {
-        parent::__construct($blockType);
-        $this->tracker = $tracker;
-    }
 
     public function getBlockTypeName()
     {
@@ -99,6 +87,43 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('c', Page::getCurrentPage());
     }
 
+    public function importAdditionalData($b, $blockNode)
+    {
+        parent::importAdditionalData($b, $blockNode);
+        if (isset($blockNode->thumbnails)) {
+            $db = $this->app->make(Connection::class);
+            foreach ($blockNode->thumbnails->thumbnail as $thumbnailNode) {
+                $ftTypeHandle = (string) $thumbnailNode['handle'];
+                $breakpointHandle = (string) $thumbnailNode['breakpointHandle'];
+                if ($ftTypeHandle && $breakpointHandle) {
+                    $type = Type::getByHandle($ftTypeHandle);
+                    if ($type) {
+                        $db->insert('btContentImageBreakpoints', ['bID' => $b->getBlockID(), 'breakpointHandle' => $breakpointHandle, 'ftTypeID' => $type->getID()]);
+                    }
+                }
+            }
+        }
+    }
+
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        parent::export($blockNode);
+
+        $thumbnailTypes = $this->getSelectedThumbnailTypes();
+        if (count($thumbnailTypes)) {
+            $thumbnails = $blockNode->addChild('thumbnails');
+            foreach ($thumbnailTypes as $breakpointHandle => $thumbnailTypeID) {
+                $thumbnailType = Type::getByID($thumbnailTypeID);
+                if ($thumbnailType) {
+                    $thumbnail = $thumbnails->addChild('thumbnail');
+                    $thumbnail['breakpointHandle'] = $breakpointHandle;
+                    $thumbnail['handle'] = $thumbnailType->getHandle();
+                }
+            }
+        }
+    }
+
+
     /**
      * @return array
      */
@@ -110,7 +135,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         if ($activeTheme instanceof Theme) {
             $activeThemeResponsiveImageMap = $activeTheme->getThemeResponsiveImageMap();
-            asort($activeThemeResponsiveImageMap);
         }
 
         return $activeThemeResponsiveImageMap;
@@ -142,7 +166,12 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $thumbnailTypes = [];
 
         foreach(Type::getList() as $thumbnailTypeEntity) {
-            $thumbnailTypes[$thumbnailTypeEntity->getID()] = $thumbnailTypeEntity->getName();
+            if (!$thumbnailTypeEntity->isRequired()) {
+                // We don't want to include core thumbnail types like file manager listing and detail, so let's
+                // not show "required" thumbnails. It would probably be better if we had a different boolean
+                // to track required vs internal, but we don't, so let's use required as internal.
+                $thumbnailTypes[$thumbnailTypeEntity->getID()] = $thumbnailTypeEntity->getName();
+            }
         }
 
         return $thumbnailTypes;
@@ -224,16 +253,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $this->set('imageLinkHandle', 'none');
             $this->set('imageLinkValue', null);
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function getJavaScriptStrings()
-    {
-        return [
-            'image-required' => t('You must select an image.'),
-        ];
     }
 
     /**
@@ -442,7 +461,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         /** @noinspection PhpUnhandledExceptionInspection */
         $db->delete('btContentImageBreakpoints', ['bID' => $this->bID]);
 
-        $this->getTracker()->forget($this);
         parent::delete();
     }
 
@@ -475,7 +493,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
             $args['maxHeight'] = 0;
         }
 
+        // @TODO - this is not working on install. fix it.
         list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
+
         $args['internalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['fileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
         $args['externalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';
@@ -488,7 +508,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         parent::save($args);
 
-        if (is_array($args["selectedThumbnailTypes"])) {
+        if (isset($args["selectedThumbnailTypes"]) && is_array($args["selectedThumbnailTypes"])) {
             foreach ($args["selectedThumbnailTypes"] as $breakpointHandle => $ftTypeID) {
                 /** @noinspection PhpUnhandledExceptionInspection */
                 /** @noinspection SqlDialectInspection */
@@ -502,30 +522,11 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 );
             }
         }
-
-        $this->getTracker()->track($this);
     }
 
     public function getUsedFiles()
     {
         return [$this->getFileID()];
-    }
-
-    public function getUsedCollection()
-    {
-        return $this->getCollectionObject();
-    }
-
-    /**
-     * @return \Concrete\Core\Statistics\UsageTracker\AggregateTracker
-     */
-    protected function getTracker()
-    {
-        if ($this->tracker === null) {
-            $this->tracker = $this->app->make(AggregateTracker::class);
-        }
-
-        return $this->tracker;
     }
 
     /**

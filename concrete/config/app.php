@@ -66,8 +66,6 @@ return [
         'PermissionKey' => '\Concrete\Core\Permission\Key\Key',
         'PermissionKeyCategory' => '\Concrete\Core\Permission\Category',
         'Permissions' => '\Concrete\Core\Permission\Checker',
-        'Queue' => '\Concrete\Core\Foundation\Queue\Queue',
-        'QueueableJob' => '\Concrete\Core\Job\QueueableJob',
         'Redirect' => '\Concrete\Core\Routing\Redirect',
         'RedirectResponse' => '\Concrete\Core\Routing\RedirectResponse',
         'Response' => '\Concrete\Core\Http\Response',
@@ -94,8 +92,7 @@ return [
         'core_logging' => '\Concrete\Core\Logging\LoggingServiceProvider',
         'core_router' => 'Concrete\Core\Routing\RoutingServiceProvider',
         'core_database' => '\Concrete\Core\Database\DatabaseServiceProvider',
-        'core_queue' => '\Concrete\Core\Foundation\Queue\QueueServiceProvider',
-        'core_bus' => '\Concrete\Core\Foundation\Command\DispatcherServiceProvider',
+        'core_messenger' => '\Concrete\Core\Messenger\MessengerServiceProvider',
         'core_cache' => '\Concrete\Core\Cache\CacheServiceProvider', // needs to come before api
         'core_file' => '\Concrete\Core\File\FileServiceProvider',
         'core_encryption' => '\Concrete\Core\Encryption\EncryptionServiceProvider',
@@ -116,6 +113,7 @@ return [
         'core_manager_layout_preset_provider' => '\Concrete\Core\Area\Layout\Preset\Provider\ManagerServiceProvider',
         'core_manager_search_fields' => '\Concrete\Core\Search\Field\ManagerServiceProvider',
         'core_permissions' => '\Concrete\Core\Permission\PermissionServiceProvider',
+        'core_automation' => '\Concrete\Core\Command\Task\ServiceProvider',
         'core_api' => 'Concrete\Core\Api\ApiServiceProvider',
         'core_form' => '\Concrete\Core\Form\FormServiceProvider',
         'core_session' => '\Concrete\Core\Session\SessionServiceProvider',
@@ -138,14 +136,11 @@ return [
         'core_boards' => '\Concrete\Core\Board\ServiceProvider',
         'core_page' => \Concrete\Core\Page\PageServiceProvider::class,
 
-        // Console CLI commands
-        'core_console' => \Concrete\Core\Console\ServiceProvider::class,
-
         // Authentication
         'core_oauth' => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
         'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider',
         'core_auth_google' => '\Concrete\Core\Authentication\Type\Google\ServiceProvider',
-        'core_auth_external_concrete5' => '\Concrete\Core\Authentication\Type\ExternalConcrete5\ServiceProvider',
+        'core_auth_external_concrete' => '\Concrete\Core\Authentication\Type\ExternalConcrete\ServiceProvider',
 
         // Validator
         'core_validator' => '\Concrete\Core\Validator\ValidatorServiceProvider',
@@ -198,6 +193,7 @@ return [
         'block_type_set',
         'express_entity',
         'captcha_library',
+        'container',
         'content_editor_snippet',
         'conversation_rating_type',
         'geolocator_library',
@@ -221,7 +217,9 @@ return [
         'workflow_progress_category',
         'workflow_type',
         'external_file_provider_type',
-        'image_editor'
+        'image_editor',
+        'task',
+        'task_set',
     ],
 
     'importer_routines' => [
@@ -241,9 +239,6 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportDesignTagsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportFileImportantThumbnailTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringDataSourcesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplateTypesRoutine',
-        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGatheringItemTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardDataSourcesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardSlotTemplatesRoutine',
@@ -263,6 +258,8 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionKeyCategoriesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionAccessEntityTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPermissionsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTasksRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTaskSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportJobSetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTemplatesRoutine',
@@ -272,6 +269,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSummaryTemplatesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypesBaseRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageStructureRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBoardsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageFeedsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeTargetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportPageTypeDefaultsRoutine',
@@ -285,6 +283,7 @@ return [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSystemContentEditorSnippetsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGeolocatorsRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportIpAccessControlCategoriesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\PopulateBoardInstancesRoutine',
     ],
 
     /*
@@ -385,14 +384,14 @@ return [
      * Assets
      */
     'assets' => [
-        // External vendor libraries required to run concrete5 or our themes at a fundamental level that can't
+        // External vendor libraries required to run concrete or our themes at a fundamental level that can't
         // or shouldn't be bundled with our own SCSS/JS files.
 
         'jquery' => [
             [
                 'javascript',
                 'js/jquery.js',
-                ['position' => Asset::ASSET_POSITION_HEADER],
+                ['position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false],
             ],
         ],
 
@@ -400,6 +399,7 @@ return [
             [
                 'javascript',
                 'js/vue.js',
+                ['minify' => false, 'combine' => false]
             ],
         ],
 
@@ -409,13 +409,15 @@ return [
                 'js/bootstrap.js',
                 [
                     'position' => Asset::ASSET_POSITION_FOOTER,
-                    'version' => '4.0.0'
+                    'minify' => false,
+                    'combine' => false,
+                    'version' => '5.0.0'
                 ]
             ]
         ],
 
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'version' => '2.24.0']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'combine' => false, 'version' => '2.24.0']],
             ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
 
@@ -424,17 +426,18 @@ return [
             [
                 'javascript',
                 'js/ckeditor/ckeditor.js',
+                ['minify' => false, 'combine' => false]
             ],
         ],
 
         // These are our CKEditor extensions, including custom plugins, and the jQuery adapter.
         'ckeditor/concrete' => [
-            ['javascript', 'js/ckeditor/concrete.js'],
+            ['javascript', 'js/ckeditor/concrete.js', ['minify' => false, 'combine' => false]],
             ['css', 'css/ckeditor/concrete.css'],
         ],
 
         'fullcalendar' => [
-            ['javascript', 'js/fullcalendar.js'],
+            ['javascript', 'js/fullcalendar.js', ['minify' => false, 'combine' => false]],
             ['css', 'css/fullcalendar.css'],
         ],
 
@@ -442,6 +445,7 @@ return [
             [
                 'css',
                 'css/fontawesome/all.css',
+                ['minify' => false, 'combine' => false]
             ],
         ],
 
@@ -455,90 +459,99 @@ return [
 
         // Foundational Assets
         'core/cms' => [
-            ['javascript', 'js/cms.js'],
+            ['javascript', 'js/cms.js', ['minify' => false, 'combine' => false]],
             ['javascript-localized', '/ccm/assets/localization/core/js'],
-            ['css', 'css/cms.css'],
+            ['css', 'css/cms.css', ['minify' => false, 'combine' => false]],
         ],
 
         // Fallback/minimal assets for accessory features
+        'feature/accordions/frontend' => [
+            ['javascript', 'js/features/accordions/frontend.js', ['minify' => false]],
+            ['css', 'css/features/accordions/frontend.css', ['minify' => false]],
+        ],
+
         'feature/account/frontend' => [
-            ['javascript', 'js/features/account/frontend.js'],
-            ['css', 'css/features/account/frontend.css'],
+            ['javascript', 'js/features/account/frontend.js', ['minify' => false]],
+            ['css', 'css/features/account/frontend.css', ['minify' => false]],
+        ],
+
+        'feature/profile/frontend' => [
+            ['css', 'css/features/profile/frontend.css', ['minify' => false]],
         ],
 
         'feature/desktop/frontend' => [
-            ['javascript', 'js/features/desktop/frontend.js'],
-            ['css', 'css/features/desktop/frontend.css'],
+            ['javascript', 'js/features/desktop/frontend.js', ['minify' => false]],
+            ['css', 'css/features/desktop/frontend.css', ['minify' => false]],
         ],
 
         'feature/boards/frontend' => [
-            ['javascript', 'js/features/boards/frontend.js'],
-            ['css', 'css/features/boards/frontend.css'],
+            ['javascript', 'js/features/boards/frontend.js', ['minify' => false]],
+            ['css', 'css/features/boards/frontend.css', ['minify' => false]],
         ],
 
         'feature/calendar/frontend' => [
-            ['javascript', 'js/features/calendar/frontend.js'],
-            ['css', 'css/features/calendar/frontend.css'],
+            ['javascript', 'js/features/calendar/frontend.js', ['minify' => false]],
+            ['css', 'css/features/calendar/frontend.css', ['minify' => false]],
         ],
 
         'feature/conversations/frontend' => [
-            ['javascript', 'js/features/conversations/frontend.js'],
-            ['css', 'css/features/conversations/frontend.css'],
+            ['javascript', 'js/features/conversations/frontend.js', ['minify' => false]],
+            ['css', 'css/features/conversations/frontend.css', ['minify' => false]],
         ],
         'ace' => [
-            ['javascript', 'js/ace/ace.js'],
+            ['javascript', 'js/ace/ace.js', ['minify' => false, 'combine' => false]],
         ],
         'feature/documents/frontend' => [
-            ['javascript', 'js/features/documents/frontend.js'],
-            ['css', 'css/features/documents/frontend.css'],
+            ['javascript', 'js/features/documents/frontend.js', ['minify' => false]],
+            ['css', 'css/features/documents/frontend.css', ['minify' => false]],
         ],
 
         'feature/testimonials/frontend' => [
-            ['css', 'css/features/testimonials/frontend.css'],
+            ['css', 'css/features/testimonials/frontend.css', ['minify' => false]],
         ],
 
         'feature/faq/frontend' => [
-            ['css', 'css/features/faq/frontend.css'],
+            ['css', 'css/features/faq/frontend.css', ['minify' => false]],
         ],
 
         'feature/basics/frontend' => [
-            ['css', 'css/features/basics/frontend.css'],
+            ['css', 'css/features/basics/frontend.css', ['minify' => false]],
         ],
 
         'feature/navigation/frontend' => [
-            ['javascript', 'js/features/navigation/frontend.js'],
-            ['css', 'css/features/navigation/frontend.css'],
+            ['javascript', 'js/features/navigation/frontend.js', ['minify' => false]],
+            ['css', 'css/features/navigation/frontend.css', ['minify' => false]],
         ],
 
         'feature/imagery/frontend' => [
-            ['javascript', 'js/features/imagery/frontend.js'],
-            ['css', 'css/features/imagery/frontend.css'],
+            ['javascript', 'js/features/imagery/frontend.js', ['minify' => false]],
+            ['css', 'css/features/imagery/frontend.css', ['minify' => false]],
         ],
 
         'feature/express/frontend' => [
-            ['javascript', 'js/features/express/frontend.js'],
-            ['css', 'css/features/express/frontend.css'],
+            ['javascript', 'js/features/express/frontend.js', ['minify' => false]],
+            ['css', 'css/features/express/frontend.css', ['minify' => false]],
         ],
 
         'feature/search/frontend' => [
-            ['css', 'css/features/search/frontend.css'],
+            ['css', 'css/features/search/frontend.css', ['minify' => false]],
         ],
 
         'feature/social/frontend' => [
-            ['css', 'css/features/social/frontend.css'],
+            ['css', 'css/features/social/frontend.css', ['minify' => false]],
         ],
 
         'feature/video/frontend' => [
-            ['css', 'css/features/video/frontend.css'],
+            ['css', 'css/features/video/frontend.css', ['minify' => false]],
         ],
 
         'feature/taxonomy/frontend' => [
-            ['css', 'css/features/taxonomy/frontend.css'],
+            ['css', 'css/features/taxonomy/frontend.css', ['minify' => false]],
         ],
 
         'feature/maps/frontend' => [
-            ['javascript', 'js/features/maps/frontend.js'],
-            ['css', 'css/features/maps/frontend.css'],
+            ['javascript', 'js/features/maps/frontend.js', ['minify' => false]],
+            ['css', 'css/features/maps/frontend.css', ['minify' => false]],
         ],
 
         'tui-image-editor' => [
@@ -549,12 +562,17 @@ return [
             [
                 'javascript',
                 'js/tui-image-editor.js',
+                ['minify' => false, 'combine' => false]
             ],
         ],
         'core/translator' => [
             ['javascript', 'js/translator.js', ['minify' => false]],
             ['javascript-localized', '/ccm/assets/localization/translator/js'],
             ['css', 'css/translator.css', ['minify' => false]],
+        ],
+
+        'htmldiff' => [
+            ['css', 'css/htmldiff.css'],
         ],
     ],
     'asset_groups' => [
@@ -630,17 +648,29 @@ return [
         'core/translator' => [
             [
                 ['css', 'core/translator'],
-                ['javascript-localized', 'core/translator'],
                 ['javascript', 'core/translator'],
+                ['javascript-localized', 'core/translator'],
             ],
         ],
 
         // Fallback/minimal assets groups
+        'feature/accordions/frontend' => [
+            [
+                ['javascript', 'feature/accordions/frontend'],
+                ['css', 'feature/accordions/frontend'],
+            ],
+        ],
 
         'feature/account/frontend' => [
             [
                 ['javascript', 'feature/account/frontend'],
                 ['css', 'feature/account/frontend'],
+            ],
+        ],
+
+        'feature/profile/frontend' => [
+            [
+                ['css', 'feature/profile/frontend'],
             ],
         ],
 
@@ -742,6 +772,16 @@ return [
                 ['css', 'feature/basics/frontend'],
             ],
         ],
+        'core/conversation' => [
+            [
+            ],
+            true,
+        ],
+        'htmldiff' => [
+            [
+                ['css', 'htmldiff'],
+            ],
+        ],
     ],
     // HTTP Client options
     'http_client' => [
@@ -769,12 +809,12 @@ return [
         'sslpassphrase' => null,
         // Whether to store last response for later retrieval with getLastResponse(). If set to FALSE, getLastResponse() will return NULL.
         'storeresponse' => true,
-        // Directory where to store temporary streams by default (if empty, we'll use the default concrete5 temporry directory).
+        // Directory where to store temporary streams by default (if empty, we'll use the default concrete temporry directory).
         'streamtmpdir' => null,
         // Whether to strictly follow the RFC when redirecting (see https://framework.zend.com/manual/2.4/en/modules/zend.http.client.advanced.html#http-redirections )
         'strictredirects' => false,
         // User agent identifier string.
-        'useragent' => 'concrete5 CMS',
+        'useragent' => 'Concrete CMS',
         // Whether to pass the cookie value through urlencode/urldecode. Enabling this breaks support with some web servers. Disabling this limits the range of values the cookies can contain.
         'encodecookies' => true,
         // HTTP protocol version (usually '1.1' or '1.0').
@@ -796,62 +836,13 @@ return [
             'class' => \Concrete\Core\Http\Middleware\ApplicationMiddleware::class,
         ],
         'core_cookie' => \Concrete\Core\Http\Middleware\CookieMiddleware::class,
-        'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class,
-        'core_thumbnails' => '\Concrete\Core\Http\Middleware\ThumbnailMiddleware',
+        'core_csp' => \Concrete\Core\Http\Middleware\ContentSecurityPolicyMiddleware::class,
+        'core_hsts' => \Concrete\Core\Http\Middleware\StrictTransportSecurityMiddleware::class,
+        'core_xframeoptions' => \Concrete\Core\Http\Middleware\FrameOptionsMiddleware::class
     ],
 
-    'commands' => [
-        ['Concrete\Core\User\Command\UpdateUserAvatarCommand', 'Concrete\Core\User\Command\UpdateUserAvatarCommandHandler'],
+    'command_handlers' => [
 
-        ['Concrete\Core\File\Command\RescanFileCommand', 'Concrete\Core\File\Command\RescanFileCommandHandler'],
-        ['Concrete\Core\Page\Command\RescanMultilingualPageCommand', 'Concrete\Core\Page\Command\RescanMultilingualPageCommandHandler'],
-        ['Concrete\Core\Page\Command\DeletePageCommand', 'Concrete\Core\Page\Command\DeletePageCommandHandler'],
-        ['Concrete\Core\Page\Command\DeletePageForeverCommand', 'Concrete\Core\Page\Command\DeletePageForeverCommandHandler'],
-        ['Concrete\Core\Page\Command\CopyPageCommand', 'Concrete\Core\Page\Command\CopyPageCommandHandler'],
-        ['Concrete\Core\Block\Command\DeleteBlockCommand', 'Concrete\Core\Block\Command\DeleteBlockCommandHandler'],
-        ['Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\AddAliasDefaultsBlockCommandHandler'],
-        ['Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand', 'Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommandHandler'],
-        ['Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommand', 'Concrete\Core\Page\Type\Command\UpdatePageTypeDefaultsCommandHandler'],
-        ['Concrete\Core\Job\Command\ExecuteJobItemCommand', 'Concrete\Core\Job\Command\ExecuteJobItemCommandHandler'],
-        ['Concrete\Core\User\Group\Command\AddGroupCommand', 'Concrete\Core\User\Group\Command\AddGroupCommandHandler'],
-        ['Concrete\Core\User\Group\Command\DeleteGroupCommand', 'Concrete\Core\User\Group\Command\DeleteGroupCommandHandler'],
-        ['Concrete\Core\Page\Container\Command\AddContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
-        ['Concrete\Core\Page\Container\Command\UpdateContainerCommand', 'Concrete\Core\Page\Container\Command\PersistContainerCommandHandler'],
-        ['Concrete\Core\Page\Container\Command\DeleteContainerCommand', 'Concrete\Core\Page\Container\Command\DeleteContainerCommandHandler'],
-        ['Concrete\Core\Page\Summary\Template\Command\EnableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
-        ['Concrete\Core\Page\Summary\Template\Command\DisableCustomPageSummaryTemplatesCommand', 'Concrete\Core\Page\Summary\Template\Command\CustomPageSummaryTemplatesCommandHandler'],
-        ['Concrete\Core\Calendar\Event\Summary\Template\Command\EnableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
-        ['Concrete\Core\Calendar\Event\Summary\Template\Command\DisableCustomCalendarEventSummaryTemplatesCommand', 'Concrete\Core\Calendar\Event\Summary\Template\Command\CustomCalendarEventSummaryTemplatesCommandHandler'],
-
-        ['Concrete\Core\Board\Command\CreateBoardCommand', 'Concrete\Core\Board\Command\CreateBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\UpdateBoardCommand', 'Concrete\Core\Board\Command\UpdateBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\DeleteBoardCommand', 'Concrete\Core\Board\Command\DeleteBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\SetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\SetBoardCustomWeightingCommandHandler'],
-        ['Concrete\Core\Board\Command\ResetBoardCustomWeightingCommand', 'Concrete\Core\Board\Command\ResetBoardCustomWeightingCommandHandler'],
-        ['Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceDataPoolCommandHandler'],
-        ['Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommand', 'Concrete\Core\Board\Command\PopulateBoardInstanceDataPoolCommandHandler'],
-        ['Concrete\Core\Board\Command\CreateBoardInstanceCommand', 'Concrete\Core\Board\Command\CreateBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\DeleteBoardInstanceCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommand', 'Concrete\Core\Board\Command\DeleteBoardInstanceSlotRuleCommandHandler'],
-        ['Concrete\Core\Board\Command\EnableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
-        ['Concrete\Core\Board\Command\DisableCustomSlotTemplatesCommand', 'Concrete\Core\Board\Command\CustomSlotTemplatesCommandHandler'],
-        ['Concrete\Core\Board\Command\RefreshBoardInstanceCommand', 'Concrete\Core\Board\Command\RefreshBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\ClearBoardInstanceCommand', 'Concrete\Core\Board\Command\ClearBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\GenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\GenerateBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\RegenerateBoardInstanceCommand', 'Concrete\Core\Board\Command\RegenerateBoardInstanceCommandHandler'],
-        ['Concrete\Core\Board\Command\AddContentToBoardInstanceCommand', 'Concrete\Core\Board\Command\AddContentToBoardInstanceCommandHandler'],
-
-        ['Concrete\Core\Board\Command\PinSlotToBoardCommand', 'Concrete\Core\Board\Command\PinSlotToBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\ClearSlotFromBoardCommand', 'Concrete\Core\Board\Command\ClearSlotFromBoardCommandHandler'],
-        ['Concrete\Core\Board\Command\AddCustomSlotToBoardCommand', 'Concrete\Core\Board\Command\AddCustomSlotToBoardCommandHandler'],
-        ['Concrete\Core\Express\Command\RescanEntityCommand', 'Concrete\Core\Express\Command\RescanEntityCommandHandler'],
-
-        ['Concrete\Core\Board\Designer\Command\CreateItemSelectorCustomElementCommand', 'Concrete\Core\Board\Designer\Command\CreateItemSelectorCustomElementCommandHandler'],
-        ['Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommand', 'Concrete\Core\Board\Designer\Command\SetItemSelectorCustomElementItemsCommandHandler'],
-        ['Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommand', 'Concrete\Core\Board\Designer\Command\ScheduleCustomElementCommandHandler'],
-        ['Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommand', 'Concrete\Core\Board\Designer\Command\AddDesignerSlotToBoardCommandHandler'],
-
-        ['Concrete\Core\Attribute\Command\SaveAttributesCommand', 'Concrete\Core\Attribute\Command\SaveAttributesCommandHandler'],
-        ['Concrete\Core\Attribute\Command\ClearAttributesCommand', 'Concrete\Core\Attribute\Command\ClearAttributesCommandHandler'],
     ],
+
 ];

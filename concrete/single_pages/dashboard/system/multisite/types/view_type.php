@@ -20,15 +20,19 @@ if (!$type->isDefault()) {
     ?>
     <div class="ccm-dashboard-dialog-wrapper">
         <div data-dialog-wrapper="delete-type">
-            <form method="post" action="<?= $controller->action('delete_type') ?>">
-                <?php $token->output('delete_type') ?>
-                <input type="hidden" name="id" value="<?= $type->getSiteTypeID() ?>" />
-                <p><?= t('Are you sure you want to delete this site type? This cannot be undone.') ?></p>
-                <div class="dialog-buttons">
-                    <button class="btn btn-secondary" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                    <button class="btn btn-danger" onclick="$('div[data-dialog-wrapper=delete-type] form').submit()"><?= t('Delete Site Type') ?></button>
-                </div>
-            </form>
+            <?php if (count($sites) > 0) { ?>
+                <p><?=t('You must delete all sites of this type before you can remove this site type')?></p>
+            <?php } else { ?>
+                <form method="post" action="<?= $controller->action('delete_type') ?>">
+                    <?php $token->output('delete_type') ?>
+                    <input type="hidden" name="id" value="<?= $type->getSiteTypeID() ?>" />
+                    <p><?= t('Are you sure you want to delete this site type? This cannot be undone.') ?></p>
+                    <div class="dialog-buttons">
+                        <button class="btn btn-secondary" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+                        <button class="btn btn-danger" onclick="$('div[data-dialog-wrapper=delete-type] form').submit()"><?= t('Delete Site Type') ?></button>
+                    </div>
+                </form>
+            <?php } ?>
         </div>
     </div>
     <?php
@@ -50,7 +54,7 @@ if ($sites === []) {
         foreach ($sites as $site) {
             ?>
             <li>
-                <a href="<?= $urlResolver->resolve(['/dashboard/system/multisite/sites', 'view_site', $site->getSiteID()]) ?>"><i class="fa fa-link"></i> <?= h($site->getSiteName()) ?></a>
+                <a href="<?= $urlResolver->resolve(['/dashboard/system/multisite/sites', 'view_site', $site->getSiteID()]) ?>"><i class="fas fa-link"></i> <?= h($site->getSiteName()) ?></a>
             </li>
             <?php
         }
@@ -62,8 +66,8 @@ if (!$type->isDefault()) {
     ?>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <div class="float-right">
-                <a href="javascript:void(0)" class="btn btn-danger" data-dialog="delete-type" data-dialog-title="<?= t('Delete Site Type') ?>" data-dialog-width="400"><?= t('Delete Site Type') ?></a>            
+            <div class="float-end">
+                <a href="javascript:void(0)" class="btn btn-danger" data-dialog="delete-type" data-dialog-title="<?= t('Delete Site Type') ?>" data-dialog-width="400"><?= t('Delete Site Type') ?></a>
             </div>
         </div>
     </div>

@@ -19,10 +19,12 @@ use Concrete\Core\User\Group\Group;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Page\Page;
 use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\Group\GroupRole;
-use Hautelook\Phpass\PasswordHash;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Encryption\PasswordHasher;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class User extends ConcreteObject
 {
@@ -33,7 +35,7 @@ class User extends ConcreteObject
     public $uTimezone = null;
     protected $uDefaultLanguage = null;
     // an associative array of all access entity objects that are associated with this user.
-    protected $accessEntities = [];
+    protected $accessEntities = null;
     protected $hasher;
     protected $uLastPasswordChange;
 
@@ -52,7 +54,7 @@ class User extends ConcreteObject
         $v = [$uID];
         $q = 'SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage, uLastPasswordChange FROM Users WHERE uID = ? LIMIT 1';
         $r = $db->query($q, $v);
-        $row = $r ? $r->FetchRow() : null;
+        $row = $r ? $r->fetch() : null;
         $nu = null;
         if ($row) {
             $nu = new static();
@@ -190,42 +192,66 @@ class User extends ConcreteObject
             $db = $app->make('Concrete\Core\Database\Connection\Connection');
             $r = $db->query($q, $v);
             if ($r) {
-                $row = $r->fetchRow();
-                $pw_is_valid_legacy = ($config->get('concrete.user.password.legacy_salt') && self::legacyEncryptPassword($password) == $row['uPassword']);
-                $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
-                if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get('concrete.user.registration.validate_email')) {
-                    $this->loadError(USER_NON_VALIDATED);
-                } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
-                    if ($row['uIsPasswordReset']) {
-                        $this->loadError(USER_PASSWORD_RESET);
-                    } else {
-                        $this->uID = $row['uID'];
-                        $this->uName = $row['uName'];
-                        $this->uIsActive = $row['uIsActive'];
-                        $this->uTimezone = $row['uTimezone'];
-                        $this->uDefaultLanguage = $row['uDefaultLanguage'];
-                        $this->uLastPasswordChange = $row['uLastPasswordChange'];
-                        $this->uGroups = $this->_getUserGroups($disableLogin);
-                        if ($row['uID'] == USER_SUPER_ID) {
-                            $this->superUser = true;
-                        } else {
-                            $this->superUser = false;
-                        }
-                        $this->recordLogin();
-                        if (!$disableLogin) {
-                            $this->persist();
+                $row = $r->fetch();
+                if ($row) {
+                    $pw_is_valid_legacy = ($config->get(
+                            'concrete.user.password.legacy_salt'
+                        ) && self::legacyEncryptPassword($password) == $row['uPassword']);
+
+                    $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
+                    if ($pw_is_valid && $hasher->needsRehash($row['uPassword'])) {
+                        $em = $app->make(EntityManagerInterface::class);
+
+                        try {
+                            $em->transactional(function (EntityManagerInterface $em) use ($hasher, $password, $row) {
+                                $user = $em->find(\Concrete\Core\Entity\User\User::class, $row['uID']);
+                                if (!$user) {
+                                    throw new \RuntimeException('User not found.');
+                                }
+
+                                $user->setUserPassword($hasher->hashPassword($password));
+                            });
+                        } catch (\Throwable $e) {
+                            $app->make(LoggerInterface::class)->emergency('Unable to rehash password for user {user} ({id}): {message}', [
+                                'user' => $row['uName'],
+                                'id' => $row['uID'],
+                                'message' => $e->getMessage(),
+                            ]);
                         }
                     }
-                } elseif ($row['uID'] && !$row['uIsActive']) {
-                    $this->loadError(USER_INACTIVE);
+
+                    if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get(
+                            'concrete.user.registration.validate_email'
+                        )) {
+                        $this->loadError(USER_NON_VALIDATED);
+                    } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
+                        if ($row['uIsPasswordReset']) {
+                            $this->loadError(USER_PASSWORD_RESET);
+                        } else {
+                            $this->uID = $row['uID'];
+                            $this->uName = $row['uName'];
+                            $this->uIsActive = $row['uIsActive'];
+                            $this->uTimezone = $row['uTimezone'];
+                            $this->uDefaultLanguage = $row['uDefaultLanguage'];
+                            $this->uLastPasswordChange = $row['uLastPasswordChange'];
+                            $this->uGroups = $this->_getUserGroups($disableLogin);
+                            if ($row['uID'] == USER_SUPER_ID) {
+                                $this->superUser = true;
+                            } else {
+                                $this->superUser = false;
+                            }
+                            $this->recordLogin();
+                            if (!$disableLogin) {
+                                $this->persist();
+                            }
+                        }
+                    } elseif ($row['uID'] && !$row['uIsActive']) {
+                        $this->loadError(USER_INACTIVE);
+                    } else {
+                        $this->loadError(USER_INVALID);
+                    }
                 } else {
                     $this->loadError(USER_INVALID);
-                }
-                if ($pw_is_valid_legacy) {
-                    // this password was generated on a previous version of Concrete5.
-                    // We re-hash it to make it more secure.
-                    $v = [$hasher->hashPassword($password), $this->uID];
-                    $db->execute($db->prepare('update Users set uPassword = ? where uID = ?'), $v);
                 }
             } else {
                 $hasher->hashPassword($password); // HashPassword and CheckPassword are slow functions.
@@ -252,7 +278,7 @@ class User extends ConcreteObject
                     }
                     $this->uTimezone = $ux->getUserTimezone();
                 } elseif ($ux === -1) {
-                    $this->uID = -1;
+                    $this->uID = 0;
                     $this->uName = t('Guest');
                 }
                 $this->uGroups = $this->_getUserGroups(true);
@@ -484,6 +510,10 @@ class User extends ConcreteObject
             $cookie->clear($config->get('concrete.session.name'));
         }
 
+        if ($cookie->has('ConcreteSitemapTreeID')) {
+            $cookie->clear('ConcreteSitemapTreeID');
+        }
+
         $app->make(PersistentAuthentication\CookieService::class)->deleteCookie();
 
         $loginCookie = sprintf('%s_LOGIN', $app['config']->get('concrete.session.name'));
@@ -606,45 +636,48 @@ class User extends ConcreteObject
     public function getUserAccessEntityObjects()
     {
         $app = Application::getFacadeApplication();
-        $session = $app['session'];
-        $validator = $app->make(SessionValidator::class);
-        // Check if the user is loggged in
-        if ($validator->hasActiveSession() && $session->has('uID')) {
-            $req = Request::getInstance();
 
-            if ($req->hasCustomRequestUser()) {
-                // we bypass session-saving performance
-                // and we don't save them in session.
-                return PermissionAccessEntity::getForUser($this);
-            }
-
-            // If a user is logged in and running a script to get the user access entities
-            // return the correct access entities
-            if ($session->has('accessEntities') && $this->getUserID() == $session->get('uID')) {
-                $entities = $session->get('accessEntities');
-            } elseif ($this->getUserID() == $session->get('uID')) {
-                $entities = PermissionAccessEntity::getForUser($this);
-                $session->set('accessEntities', $entities);
-                $session->set('accessEntitiesUpdated', time());
-            } else {
-                $entities = PermissionAccessEntity::getForUser($this);
-
-            }
-        } else {
-
-            if ((int)$this->getUserID() > 0) {
-                $entities = PermissionAccessEntity::getForUser($this);
-            } else {
-                $group = Group::getByID(GUEST_GROUP_ID);
-                if ($group) {
-                    $entities = [GroupEntity::getOrCreate($group)];
-                } else {
-                    $entities = [];
-                }
-            }
+        $req = $app->make(Request::class);
+        if ($req->hasCustomRequestUser()) {
+            // we bypass session-saving performance
+            // and we don't save them in session.
+            return PermissionAccessEntity::getForUser($this);
         }
 
-        return $entities;
+        if ($this->accessEntities === null) {
+            $session = $app['session'];
+            $validator = $app->make(SessionValidator::class);
+            // Check if the user is loggged in
+            if ($validator->hasActiveSession() && $session->has('uID')) {
+                // If a user is logged in and running a script to get the user access entities
+                // return the correct access entities
+                if ($session->has('accessEntities') && $this->getUserID() == $session->get('uID')) {
+                    $entities = $session->get('accessEntities');
+                } elseif ($this->getUserID() == $session->get('uID')) {
+                    $entities = PermissionAccessEntity::getForUser($this);
+                    $session->set('accessEntities', $entities);
+                    $session->set('accessEntitiesUpdated', time());
+                } else {
+                    $entities = PermissionAccessEntity::getForUser($this);
+                }
+            } else {
+                if ((int)$this->getUserID() > 0) {
+                    $entities = PermissionAccessEntity::getForUser($this);
+                } else {
+                    $repository = $app->make(GroupRepository::class);
+                    $group = $repository->getGroupByID(GUEST_GROUP_ID);
+                    if ($group) {
+                        $entities = [GroupEntity::getOrCreate($group)];
+                    } else {
+                        $entities = [];
+                    }
+                }
+            }
+
+            $this->accessEntities = $entities;
+        }
+
+        return $this->accessEntities;
     }
 
     /**
@@ -885,7 +918,7 @@ class User extends ConcreteObject
         $q = 'select cIsCheckedOut, cCheckedOutDatetime from Pages where cID = ?';
         $r = $db->executeQuery($q, [$cID]);
         if ($r) {
-            $row = $r->fetchRow();
+            $row = $r->fetch();
             if (!$row['cIsCheckedOut']) {
                 $app['session']->set('editCID', $cID);
                 $uID = $this->getUserID();
@@ -1007,25 +1040,6 @@ class User extends ConcreteObject
         $r = $db->query($q);
 
         return $r;
-    }
-
-    /**
-     * @return \Hautelook\Phpass\PasswordHash
-     * @deprecated Use $app->make(\Concrete\Core\Encryption\PasswordHasher::class)
-     *
-     */
-    public function getUserPasswordHasher()
-    {
-        $app = Application::getFacadeApplication();
-        $config = $app['config'];
-        if (isset($this->hasher)) {
-            return $this->hasher;
-        }
-        $this->hasher = new PasswordHash(
-            $config->get('concrete.user.password.hash_cost_log2'),
-            $config->get('concrete.user.password.hash_portable'));
-
-        return $this->hasher;
     }
 
     /**

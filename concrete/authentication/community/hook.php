@@ -7,8 +7,8 @@
 </div>
 <div class="form-group">
     <a href="<?= \URL::to('/ccm/system/authentication/oauth2/community/attempt_attach'); ?>" class="btn btn-primary btn-community">
-        <img src="<?= \Core::getApplicationURL() ?>/concrete/images/logo.svg" class="concrete5-icon" />
-        <?= t('Attach a concrete5.org account') ?>
+        <img src="<?= \Core::getApplicationURL() ?>/concrete/images/logo.svg" class="concrete-icon" />
+        <?= t('Attach a community.concretecms.com account') ?>
     </a>
 </div>
 
@@ -25,7 +25,7 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1fbae8', endColorstr='#129bd3',GradientType=0 );
     }
 
-    img.concrete5-icon {
+    img.concrete-icon {
         width: 20px;
         margin-right:5px;
     }

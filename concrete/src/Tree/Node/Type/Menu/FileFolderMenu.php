@@ -4,7 +4,7 @@ namespace Concrete\Core\Tree\Node\Type\Menu;
 use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Tree\Menu\Item\File\EditFolderItem;
-use Concrete\Core\Tree\Menu\Item\DeleteItem;
+use Concrete\Core\Tree\Menu\Item\File\DeleteFolderItem;
 use Concrete\Core\Tree\Menu\Item\EditPermissionsItem;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 
@@ -25,7 +25,7 @@ class FileFolderMenu extends DropdownMenu
             $this->addItem(new EditPermissionsItem($folder));
         }
         if ($p->canDeleteTreeNode()) {
-            $this->addItem(new DeleteItem($folder));
+            $this->addItem(new DeleteFolderItem($folder));
         }
     }
 

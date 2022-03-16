@@ -6,7 +6,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $resolver = $app->make(ResolverManagerInterface::class);
-$image = date('Ymd') . '.jpg';
 $c = \Concrete\Core\Page\Page::getCurrentPage();
 $cp = new \Concrete\Core\Permission\Checker($c);
 $canEdit = $cp->canEditPageContents();
@@ -23,17 +22,11 @@ $controller = new \Concrete\Controller\Panel\Page\CheckIn();
 $controller->setPageObject($c);
 $approveAction = $controller->action('submit');
 
-if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::get('concrete.white_label.background_url')) {
-    $imagePath = Config::get('concrete.urls.background_feed') . '/' . $image;
-} else if (Config::get('concrete.white_label.background_url')) {
-    $imagePath = Config::get('concrete.white_label.background_url');
-}
-
 ?>
 
-<nav class="ccm-dashboard-desktop-navbar navbar navbar-dark navbar-expand-md">
+<nav class="ccm-dashboard-desktop-navbar navbar navbar-expand-md">
     <span class="navbar-text"><?=$app->make('date')->formatDate('now', 'full')?></span>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarWelcomeBack" aria-controls="navbarWelcomeBack" aria-expanded="false" aria-label="<?=h(t('Toggle navigation'))?>">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarWelcomeBack" aria-controls="navbarWelcomeBack" aria-expanded="false" aria-label="<?=h(t('Toggle navigation'))?>">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarWelcomeBack">
@@ -68,17 +61,6 @@ if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::
         <?php } ?>
     </form>
 </div>
-
-<?php if (isset($imagePath)) { ?>
-    <style type="text/css">
-        body.ccm-dashboard-desktop div#ccm-dashboard-content {
-            background-image: url(<?=$imagePath?>);
-        }
-        body.ccm-dashboard-desktop div#ccm-dashboard-content::before {
-            display: block;
-        }
-    </style>
-<?php } ?>
 
 <script type="text/javascript">
     $(function() {

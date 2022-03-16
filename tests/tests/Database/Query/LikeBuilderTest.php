@@ -12,7 +12,7 @@ class LikeBuilderTest extends TestCase
      */
     private static $defaultInstance;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         parent::setUpBeforeClass();
         self::$defaultInstance = new LikeBuilder();

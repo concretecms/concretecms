@@ -49,6 +49,7 @@ class User implements UserEntityInterface, \JsonSerializable
     protected $uEmail;
 
     /**
+     * 255 is the recommended width according to https://www.php.net/manual/en/password.constants.php
      * @ORM\Column(type="string", length=255)
      */
     protected $uPassword;

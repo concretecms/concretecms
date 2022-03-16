@@ -27,7 +27,7 @@ class AuthorObjectRegistry extends AbstractObjectRegistry
         $this->addEntry(new PermissionsEntry(new FileFolder(''), [
             'search_file_folder',
         ]));
-        $this->addEntry(new PermissionsEntry(new FileFolder('/Shared Files'), [
+        $this->addEntry(new PermissionsEntry(new FileFolder('/' . t('Shared Files')), [
             'search_file_folder',
             'add_file',
         ]));

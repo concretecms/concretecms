@@ -101,7 +101,7 @@ class PileContent extends ConcreteObject implements \JsonSerializable
         $v = array($pcID);
         $q = "select pID, pcID, itemID, itemType, displayOrder, quantity, timestamp from PileContents where pcID = ?";
         $r = $db->query($q, $v);
-        $row = $r->fetchRow();
+        $row = $r->fetch();
 
         $pc = new self();
         if (is_array($row)) {

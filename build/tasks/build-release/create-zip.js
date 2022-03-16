@@ -19,7 +19,7 @@ module.exports = function(grunt, config, parameters, done) {
 			path = require('path'),
 			shell = require('shelljs'),
 			c5fs = require('../../libraries/fs');
-		process.stdout.write('Determining concrete5 version... ');
+		process.stdout.write('Determining Concrete version... ');
 		var str = fs.readFileSync(path.join(workFolder, 'concrete/config/concrete.php'), 'utf8');
 		// Remove comments and new lines
 		str = str.replace(/\/\/.*?($|\r|\n)/g, '').replace(/[\r\n]/g, ' ').replace(/\/\*.*?\*\//g, '');
@@ -30,7 +30,7 @@ module.exports = function(grunt, config, parameters, done) {
 		}
 		version = version[1];
 		process.stdout.write(version + '\n');
-		var dirname = 'concrete5-' + version;
+		var dirname = 'concrete-cms-' + version;
 		var workFolderParent = path.join(workFolder, '..');
 		var folderToZip = path.join(workFolderParent, dirname);
 		fs.renameSync(workFolder, folderToZip);

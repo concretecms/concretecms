@@ -6,12 +6,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 ?>
 
-    <div class="form-inline">
+    <div class="row row-cols-auto align-items-center">
 
     <?php
     if (!empty($itemsPerPageOptions)) { ?>
         <div class="btn-group">
-            <button type="button" class="btn btn-secondary p-2 dropdown-toggle" data-toggle="dropdown"
+            <button type="button" class="btn btn-secondary p-2 dropdown-toggle" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false"><span
                         id="selected-option"><?= $itemsPerPage; ?></span>
             </button>
@@ -36,12 +36,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php if ($exportURL) { ?>
             <li>
                 <a href="<?= $exportURL ?>" class="link-primary">
-                    <i class="fa fa-download"></i> <?= t('Export to CSV') ?>
+                    <i class="fas fa-download"></i> <?= t('Export to CSV') ?>
                 </a>
             </li>
             <?php } ?>
             <?php if ($createURL) { ?>
-            <li><a href="<?= $createURL ?>" class="link-primary"><i class="fa fa-plus"></i> <?= t('New %s',
+            <li><a href="<?= $createURL ?>" class="link-primary"><i class="fas fa-plus"></i> <?= t('New %s',
                         $entity->getEntityDisplayName()) ?></a></li>
             <?php } ?>
         </ul>

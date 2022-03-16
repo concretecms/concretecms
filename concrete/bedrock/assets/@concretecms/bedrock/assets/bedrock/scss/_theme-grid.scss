@@ -1,0 +1,7 @@
+// This file ensures that the layout tools work with this theme grid
+div#ccm-theme-grid-temp,
+div#ccm-theme-grid-edit-mode-row-wrapper {
+  div.row {
+    position: relative; // This is necessary in order for the javascript to correctly use jquery position() calls
+  }
+}

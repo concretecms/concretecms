@@ -25,11 +25,6 @@ class Controller extends BlockController
         return t('External Form');
     }
 
-    public function getJavaScriptStrings()
-    {
-        return ['form-required' => t('You must select a form.')];
-    }
-
     public function getFilename()
     {
         return $this->filename;
@@ -68,6 +63,21 @@ class Controller extends BlockController
         $e = $this->app->make('helper/validation/error');
         if (!$args['filename']) {
             $e->add(t('You must specify an external form.'));
+        } else {
+
+            $filename = $args['filename'];
+            if (substr($filename, -4) === '.php') {
+                // Let's run our regular expression check on everything BEFORE ".php"
+                $filenameToCheck = substr($filename, 0, -4);
+            } else {
+                $filenameToCheck = $filename; // We just check the entirety of what's passed in.
+            }
+
+            if (!preg_match('/^[A-Za-z0-9_-]+$/i', $filenameToCheck)) {
+                $e->add(
+                    t('External forms may only contain letters, numbers, dashes and underscores.')
+                );
+            }
         }
 
         return $e;

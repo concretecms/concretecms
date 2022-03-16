@@ -4,6 +4,7 @@ namespace Concrete\Core\Attribute\Command;
 
 use Concrete\Core\Attribute\AttributeKeyInterface;
 use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Foundation\Command\Command;
 
 /**
  * Saves a group of attribute keys against an object.
@@ -11,7 +12,7 @@ use Concrete\Core\Attribute\ObjectInterface;
  * Class SaveAttributesCommand
  * @package Concrete\Core\Attribute\Command
  */
-class SaveAttributesCommand
+class SaveAttributesCommand extends Command
 {
 
     /**

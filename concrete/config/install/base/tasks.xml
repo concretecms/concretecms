@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <tasks>
+        <task handle="clear_cache" package=""/>
+        <task handle="generate_sitemap" package=""/>
+        <task handle="rescan_files" package=""/>
+        <task handle="check_automated_groups" package=""/>
+        <task handle="deactivate_users" package=""/>
+        <task handle="remove_old_page_versions" package=""/>
+        <task handle="reindex_content" package=""/>
+        <task handle="process_email" package=""/>
+        <task handle="update_statistics" package=""/>
+        <task handle="generate_thumbnails" package=""/>
+        <task handle="remove_old_file_attachments" package=""/>
+        <task handle="remove_unvalidated_users" package=""/>
+    </tasks>
+    <tasksets>
+        <taskset handle="maintenance" name="Maintenance" package="">
+            <task handle="clear_cache"/>
+            <task handle="rescan_files"/>
+            <task handle="remove_old_page_versions"/>
+            <task handle="remove_old_file_attachments"/>
+            <task handle="generate_thumbnails" package=""/>
+        </taskset>
+        <taskset handle="seo" name="SEO and Search" package="">
+            <task handle="generate_sitemap"/>
+            <task handle="reindex_content"/>
+            <task handle="update_statistics"/>
+        </taskset>
+        <taskset handle="user_groups" name="Users and Groups" package="">
+            <task handle="check_automated_groups"/>
+            <task handle="deactivate_users"/>
+            <task handle="process_email"/>
+            <task handle="remove_unvalidated_users"/>
+        </taskset>
+    </tasksets>
+
+</concrete5-cif>

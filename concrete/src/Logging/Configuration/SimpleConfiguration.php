@@ -7,7 +7,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Logging\Channels;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
-use Concrete\Core\Logging\Processor\Concrete5UserProcessor;
+use Concrete\Core\Logging\Processor\ConcreteUserProcessor;
 
 abstract class SimpleConfiguration implements ConfigurationInterface, ApplicationAwareInterface
 {
@@ -60,7 +60,7 @@ abstract class SimpleConfiguration implements ConfigurationInterface, Applicatio
 
         $logger->pushHandler($handler);
         $logger->pushProcessor($this->app->make(PsrLogMessageProcessor::class));
-        $logger->pushProcessor($this->app->make(Concrete5UserProcessor::class));
+        $logger->pushProcessor($this->app->make(ConcreteUserProcessor::class));
 
         return $logger;
     }

@@ -28,7 +28,6 @@ class Update extends DashboardPageController
         $data = array_filter($data, function (LocaleStatus $status) {
             return !empty($status->getInstalledUpdated()) || !empty($status->getInstalledOutdated()) || !empty($status->getOnlyRemote());
         });
-
         return $data;
     }
 
@@ -42,7 +41,7 @@ class Update extends DashboardPageController
             }
             $installer = $this->app->make(TranslationsInstaller::class);
             /* @var TranslationsInstaller $installer */
-            if ($packageHandle === 'concrete5') {
+            if ($packageHandle === 'concrete') {
                 $installer->installCoreTranslations($localeID);
             } else {
                 $package = null;
@@ -119,7 +118,7 @@ class Update extends DashboardPageController
 
         $dialogTitle = t('Language Details');
         $dialogUrl = \URL::to('/ccm/system/dialogs/language/update/details') . '?cID=' . $this->request->getCurrentPage()->getCollectionID() . '&locale=' . rawurlencode($localeID);
-        if ($handle !== 'concrete5') {
+        if ($handle !== 'concrete') {
             $dialogUrl .= '&pkgHandle=' . rawurldecode($handle);
         }
 

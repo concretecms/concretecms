@@ -1,5 +1,10 @@
 <?php
+
 namespace Concrete\Core\Page\Theme;
+
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Page\Theme\Color\ColorCollection;
+use Concrete\Core\Page\Theme\Color\ColorCollectionFactory;
 
 /**
  * This is a trait you can add to your theme's PageTheme class if it is built with the Concrete bedrock. That means
@@ -8,6 +13,14 @@ namespace Concrete\Core\Page\Theme;
  */
 trait BedrockThemeTrait
 {
+
+    public function getThemeSupportedFeatures()
+    {
+        return [
+            Features::BASICS,
+            Features::TYPOGRAPHY
+        ];
+    }
 
     public function registerAssets()
     {
@@ -20,7 +33,17 @@ trait BedrockThemeTrait
 
     public function getThemeGridFrameworkHandle(): string
     {
-        return 'bootstrap4';
+        return 'bootstrap5';
     }
 
+    public function getColorCollection(): ?ColorCollection
+    {
+        $factory = new ColorCollectionFactory();
+        return $factory->createFromArray([
+            'primary' => t('Primary'),
+            'secondary' => t('Secondary'),
+            'light' => t('Light'),
+            'dark' => t('Dark'),
+        ]);
+    }
 }

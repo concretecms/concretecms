@@ -2,6 +2,7 @@
 
 namespace Concrete\Block\Gallery;
 
+use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\File\File;
@@ -9,19 +10,22 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File as ConcreteFile;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Utility\Service\Number;
+use Concrete\Core\Utility\Service\Xml;
 use Generator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     protected $btTable = 'btGallery';
     protected $btInterfaceWidth = '750';
     protected $btInterfaceHeight = '820';
     protected $btExportTables = ['btGallery', 'btGalleryEntries', 'btGalleryEntryDisplayChoices'];
+    protected $btExportFileColumns = ['fID'];
     protected $btCacheBlockRecord = false;
     /** @var int */
     protected $includeDownloadLink;
@@ -44,6 +48,64 @@ class Controller extends BlockController implements UsesFeatureInterface
         return [
             Features::IMAGERY
         ];
+    }
+
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        $blockNode->addChild('includeDownloadLink', $this->includeDownloadLink);
+
+        // now we can do the entries.
+        $entries = $this->getEntries();
+        $entriesNode = $blockNode->addChild('entries');
+        $xml = new Xml();
+        foreach ($entries as $entry) {
+            $entryNode = $entriesNode->addChild('entry');
+            $entryNode->addChild('fID', ContentExporter::replaceFileWithPlaceHolder($entry['id']));
+            $choicesNode = $entryNode->addChild('displaychoices');
+            if (count($entry['displayChoices'])) {
+                foreach ($entry['displayChoices'] as $dckey => $displayChoice) {
+                    $choiceNode = $choicesNode->addChild('choice');
+                    $choiceNode->addChild('dckey', $dckey);
+                    $xml->createCDataNode($choiceNode, 'value', $displayChoice['value']);
+                }
+            }
+        }
+    }
+
+
+    public function importAdditionalData($b, $blockNode)
+    {
+        $db = $this->app->make(Connection::class);
+        $data['includeDownloadLink'] = (string)$blockNode->includeDownloadLink;
+        if ($data['includeDownloadLink']) {
+            $db->update('btGallery', $data, ['bID' => $b->getBlockID()]);
+        }
+        $inspector = \Core::make('import/value_inspector');
+
+        if (isset($blockNode->entries->entry)) {
+            $idx = 0;
+            foreach ($blockNode->entries->entry as $entryNode) {
+                $result = $inspector->inspect((string)$entryNode->fID);
+                $db->insert(
+                    'btGalleryEntries',
+                    ['idx' => $idx, 'bID' => $b->getBlockID(), 'fID' => $result->getReplacedValue()]
+                );
+                $entryID = $db->lastInsertID();
+                if (isset($entryNode->displaychoices->choice)) {
+                    foreach ($entryNode->displaychoices->choice as $choiceNode) {
+                        $db->insert(
+                            'btGalleryEntryDisplayChoices',
+                            [
+                                'entryID' => $entryID,
+                                'bID' => $b->getBlockID(),
+                                'dcKey' => (string) $choiceNode->dckey,
+                                'value' => (string) $choiceNode->value,
+                            ]
+                        );
+                    }
+                }
+            }
+        }
     }
 
     public function getBlockTypeName()
@@ -181,6 +243,33 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->validateDisplayChoices($entry, $file, $errors);
     }
 
+    public function duplicate($newBID)
+    {
+        $db = $this->app->make(Connection::class);
+        $data = $db->fetchAssociative('select * from btGallery where bID = ?', [$this->bID]);
+        $data['bID'] = $newBID;
+        $db->insert('btGallery', $data);
+
+        $r = $db->executeQuery('select * from btGalleryEntries where bID = ?', [$this->bID]);
+        while ($row = $r->fetchAssociative()) {
+            $lastEID = $row['eID'];
+            $row['bID'] = $newBID;
+            unset($row['eID']);
+            $db->insert('btGalleryEntries', $row);
+            $newEID = $db->lastInsertID();
+
+            $choiceR = $db->executeQuery('select * from btGalleryEntryDisplayChoices where entryID = ? and bID = ?', [$lastEID, $this->bID]);
+            while ($choiceRow = $choiceR->fetchAssociative()) {
+                unset($choiceRow['dcID']);
+                $choiceRow['bID'] = $newBID;
+                $choiceRow['entryID'] = $newEID;
+                $db->insert('btGalleryEntryDisplayChoices', $choiceRow);
+            }
+
+        }
+
+    }
+
     /**
      * Handle saving entries and display choices
      *
@@ -283,31 +372,40 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         // Resolve the file
         $file = ConcreteFile::getByID($entry['fID']);
-        $version = $file->getVersion();
-        $resource = $version->getFileResource();
+        if ($file) {
+            $version = $file->getVersion();
+            if ($version) {
+                $resource = $version->getFileResource();
 
-        $attributes = [];
-        foreach ($version->getAttributes() as $value) {
-            $attributes[] = [$value->getAttributeKey()->getAttributeKeyDisplayName(), $value->getDisplayValue()];
+                $attributes = [];
+                foreach ($version->getAttributes() as $value) {
+                    $attributes[] = [
+                        $value->getAttributeKey()->getAttributeKeyDisplayName(),
+                        $value->getDisplayValue()
+                    ];
+                }
+
+                return [
+                    'eID' => $entry['eID'],
+                    'id' => $entry['fID'],
+                    'title' => $version->getTitle(),
+                    'description' => $version->getDescription(),
+                    'extension' => $resource->getMimetype(),
+                    'attributes' => $attributes,
+                    'fileSize' => $this->numbersHelper()->formatSize($version->getFullSize()),
+                    'imageUrl' => $version->getThumbnailURL('file_manager_detail'),
+                    'thumbUrl' => $version->getThumbnailURL('file_manager_listing'),
+                    'file' => $file,
+                    'detailUrl' => (string)$this->urlResolver()->resolve(
+                        [
+                            '/dashboard/files/details',
+                            'view',
+                            $file->getFileID()
+                        ]
+                    )
+                ];
+            }
         }
-
-        return [
-            'eID' => $entry['eID'],
-            'id' => $entry['fID'],
-            'title' => $version->getTitle(),
-            'description' => $version->getDescription(),
-            'extension' => $resource->getMimetype(),
-            'attributes' => $attributes,
-            'fileSize' => $this->numbersHelper()->formatSize($version->getFullSize()),
-            'imageUrl' => $version->getThumbnailURL('file_manager_detail'),
-            'thumbUrl' => $version->getThumbnailURL('file_manager_listing'),
-            'file' => $file,
-            'detailUrl' => (string)$this->urlResolver()->resolve([
-                '/dashboard/files/details',
-                'view',
-                $file->getFileID()
-            ])
-        ];
     }
 
     /**
@@ -324,13 +422,23 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected function getDisplayChoices(): array
     {
         return [
+            "caption" => [
+                "value" => '',
+                "title" => t('Caption'),
+                "type" => 'text',
+            ],
+            "hover_caption" => [
+                "value" => '',
+                "title" => t('Hover Caption'),
+                "type" => 'text',
+            ],
             "size" => [
                 "value" => 'standard',
-                "title" => 'Size',
+                "title" => t('Size'),
                 "type" => 'select',
                 "options" => [
-                    "wide" => 'Wide',
-                    "standard" => 'Standard',
+                    "wide" => t('Wide'),
+                    "standard" => t('Standard'),
                 ]
             ]
         ];
@@ -465,4 +573,14 @@ class Controller extends BlockController implements UsesFeatureInterface
             $errors->add(t('Invalid choice provided: %s %s', $key, $value ?? ''));
         }
     }
+
+    public function getUsedFiles()
+    {
+        $ids = [];
+        foreach ($this->getEntries() as $entry) {
+            $ids[] = $entry['id'];
+        }
+        return $ids;
+    }
+
 }

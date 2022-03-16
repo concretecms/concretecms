@@ -2,7 +2,8 @@
 
 return [
     'drivers' => [
-        'c5_pdo_mysql' => '\Concrete\Core\Database\Driver\PDOMySqlConcrete5\Driver',
+        'c5_pdo_mysql' => '\Concrete\Core\Database\Driver\PDOMySqlConcrete\Driver',
+        'concrete_pdo_mysql' => '\Concrete\Core\Database\Driver\PDOMySqlConcrete\Driver',
     ],
 
     /*

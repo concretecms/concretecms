@@ -5,6 +5,16 @@ class CssInlineAsset extends CssAsset
 {
 
     /**
+     * @var bool
+     */
+    protected $assetSupportsMinification = false;
+
+    /**
+     * @var bool
+     */
+    protected $assetSupportsCombination = false;
+
+    /**
      * @return bool
      */
     public function isAssetLocal()

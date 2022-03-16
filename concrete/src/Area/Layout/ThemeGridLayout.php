@@ -52,6 +52,7 @@ class ThemeGridLayout extends Layout
      */
     public function exportDetails($node)
     {
+        $node->addAttribute('type', 'theme-grid');
         $node->addAttribute('columns', $this->arLayoutMaxColumns);
     }
 

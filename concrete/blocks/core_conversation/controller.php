@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\CoreConversation;
 
 use Concrete\Core\Attribute\Category\PageCategory;
@@ -9,47 +10,104 @@ use Concrete\Core\Entity\Attribute\Key\PageKey;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
+use Concrete\Core\User\UserInfo;
 
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
- *
- * @package Blocks
- * @subpackage Conversation
- *
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
  */
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    protected $btInterfaceWidth = 450;
-    protected $btInterfaceHeight = 400;
-    protected $btCacheBlockRecord = true;
-    protected $btTable = 'btCoreConversation';
-    protected $conversation;
-    protected $btWrapperClass = 'ccm-ui';
-    protected $btCopyWhenPropagate = true;
-
+    /**
+     * @var int|null
+     */
     public $enableTopCommentReviews;
+
+    /**
+     * @var string|null
+     */
     public $reviewAggregateAttributeKey;
 
+    /**
+     * @var int|null
+     */
+    public $maxFilesRegistered;
+
+    /**
+     * @var int|null
+     */
+    public $maxFilesGuest;
+
+    /**
+     * @var bool|int
+     */
+    public $enablePosting;
+
+    /**
+     * @var int
+     */
+    protected $btInterfaceWidth = 450;
+
+    /**
+     * @var int
+     */
+    protected $btInterfaceHeight = 400;
+
+    /**
+     * @var bool
+     */
+    protected $btCacheBlockRecord = true;
+
+    /**
+     * @var string
+     */
+    protected $btTable = 'btCoreConversation';
+
+    /**
+     * @var Conversation|null
+     */
+    protected $conversation;
+
+    /**
+     * @var string
+     */
+    protected $btWrapperClass = 'ccm-ui';
+
+    /**
+     * @var bool
+     */
+    protected $btCopyWhenPropagate = true;
+
+    /**
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
-        return t("Displays conversations on a page.");
+        return t('Displays conversations on a page.');
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
-        return t("Conversation");
+        return t('Conversation');
     }
 
+    /**
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [
-            Features::CONVERSATIONS
+            Features::CONVERSATIONS,
         ];
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return string
+     */
     public function getSearchableContent()
     {
         $ml = new MessageList();
@@ -67,7 +125,12 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         return rtrim($content);
     }
-    
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return Conversation
+     */
     public function getConversationObject()
     {
         if (!isset($this->conversation)) {
@@ -81,9 +144,17 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $this->conversation;
     }
 
+    /**
+     * @param int $newBID
+     * @param Page $newPage
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function duplicate_master($newBID, $newPage)
     {
-        parent::duplicate($newBID);
+        $this->duplicate($newBID);
         $db = $this->app->make('database');
         $conv = Conversation::add();
         $conv->setConversationPageObject($newPage);
@@ -91,6 +162,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         $db->executeQuery('update btCoreConversation set cnvID = ? where bID = ?', [$conv->getConversationID(), $newBID]);
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function edit()
     {
         $keys = $this->getReviewAttributeKeys();
@@ -111,17 +187,21 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('notificationUsers', $conversation->getConversationSubscribedUsers());
     }
 
-    /*
+    /**
+     * @param string $outputContent
+     *
+     * @return void
+     */
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('core/conversation');
-        $u = $this->app->make(User::class);
-        if (!$u->isRegistered()) {
-            $this->requireAsset('css', 'core/frontend/captcha');
-        }
     }
-    */
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function view()
     {
         if ($this->enableTopCommentReviews) {
@@ -154,6 +234,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return array<string,mixed>
+     */
     public function getFileSettings()
     {
         $conversation = $this->getConversationObject();
@@ -180,6 +265,13 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $fileSettings;
     }
 
+    /**
+     * @param bool $lower
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return string[]
+     */
     public function getActiveUsers($lower = false)
     {
         $cnv = $this->getConversationObject();
@@ -196,6 +288,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $users;
     }
 
+    /**
+     * @param array<string, mixed> $post
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function save($post)
     {
         $helperFile = $this->app->make('helper/concrete/file');
@@ -226,12 +323,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             'fileExtensions' => null,
         ];
         if ($values['attachmentOverridesEnabled']) {
-            $conversation->setConversationAttachmentOverridesEnabled(intval($values['attachmentOverridesEnabled']));
-            if ($values['attachmentsEnabled']) {
-                $conversation->setConversationAttachmentsEnabled(1);
-            } else {
-                $conversation->setConversationAttachmentsEnabled(0);
-            }
+            $conversation->setConversationAttachmentOverridesEnabled((int) ($values['attachmentOverridesEnabled']));
+            $conversation->setConversationAttachmentsEnabled($values['attachmentsEnabled'] ? 1 : 0);
         } else {
             $conversation->setConversationAttachmentOverridesEnabled(0);
         }
@@ -239,16 +332,16 @@ class Controller extends BlockController implements UsesFeatureInterface
             $values['itemsPerPage'] = 0;
         }
         if ($values['maxFilesGuest']) {
-            $conversation->setConversationMaxFilesGuest(intval($values['maxFilesGuest']));
+            $conversation->setConversationMaxFilesGuest((int) ($values['maxFilesGuest']));
         }
         if ($values['maxFilesRegistered']) {
-            $conversation->setConversationMaxFilesRegistered(intval($values['maxFilesRegistered']));
+            $conversation->setConversationMaxFilesRegistered((int) ($values['maxFilesRegistered']));
         }
         if ($values['maxFileSizeGuest']) {
-            $conversation->setConversationMaxFileSizeGuest(intval($values['maxFileSizeGuest']));
+            $conversation->setConversationMaxFileSizeGuest((int) ($values['maxFileSizeGuest']));
         }
         if ($values['maxFileSizeRegistered']) {
-            $conversation->setConversationMaxFilesRegistered(intval($values['maxFileSizeRegistered']));
+            $conversation->setConversationMaxFilesRegistered((int) ($values['maxFileSizeRegistered']));
         }
         if (!$values['enableOrdering']) {
             $values['enableOrdering'] = 0;
@@ -268,21 +361,21 @@ class Controller extends BlockController implements UsesFeatureInterface
             $users = [];
             if (is_array($this->post('notificationUsers'))) {
                 foreach ($this->post('notificationUsers') as $uID) {
-                    $ui = \UserInfo::getByID($uID);
+                    $ui = UserInfo::getByID($uID);
                     if (is_object($ui)) {
                         $users[] = $ui;
                     }
                 }
             }
             $conversation->setConversationSubscribedUsers($users);
-            $conversation->setConversationSubscriptionEnabled(intval($values['subscriptionEnabled']));
+            $conversation->setConversationSubscriptionEnabled((int) ($values['subscriptionEnabled']));
         } else {
             $conversation->setConversationNotificationOverridesEnabled(false);
             $conversation->setConversationSubscriptionEnabled(0);
         }
 
         if ($values['fileExtensions']) {
-            $receivedExtensions = preg_split('{,}', strtolower($values['fileExtensions']), null, PREG_SPLIT_NO_EMPTY);
+            $receivedExtensions = preg_split('{,}', strtolower($values['fileExtensions']), -1, PREG_SPLIT_NO_EMPTY);
             $fileExtensions = $helperFile->serializeUploadFileExtensions($receivedExtensions);
             $conversation->setConversationFileExtensions($fileExtensions);
         }
@@ -292,7 +385,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     }
 
     /**
-     * @return \Generator
+     * @return \Generator<string|int, string>
      */
     private function getReviewAttributeKeys()
     {
@@ -301,7 +394,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         /** @var PageKey $key */
         foreach ($keys as $key) {
-            if ($key->getAttributeType()->getAttributeTypeHandle() == 'rating') {
+            if ($key->getAttributeType()->getAttributeTypeHandle() === 'rating') {
                 yield $key->getAttributeKeyID() => $key->getAttributeKeyDisplayName();
             }
         }

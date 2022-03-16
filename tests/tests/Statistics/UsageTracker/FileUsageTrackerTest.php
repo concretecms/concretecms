@@ -2,12 +2,14 @@
 
 namespace Concrete\Tests\Statistics\UsageTracker;
 
+use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Entity\Statistics\UsageTracker\FileUsageRepository;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\File\Tracker\UsageTracker;
 use Concrete\Core\Page\Collection\Collection;
+use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\TestHelpers\Statistics\UsageTracker\TrackableBlockController;
 use Doctrine\ORM\EntityManagerInterface;
 use Concrete\Tests\TestCase;
@@ -16,8 +18,7 @@ class FileUsageTrackerTest extends TestCase
 {
     public function testTrackingCollection()
     {
-        $trackable = $this->getFileTrackableMock([], 1, 5);
-        $collection = $trackable->getUsedCollection();
+        list($collection, $trackable) = $this->getFileTrackableMock([], 1, 5);
 
         $nonTrackableBuilder = $this->getMockBuilder(BlockController::class);
         $nonTrackableBuilder->disableProxyingToOriginalMethods();
@@ -31,12 +32,10 @@ class FileUsageTrackerTest extends TestCase
         $builder->setMethods([
             'getCollectionObject',
             'getBlockObject',
-            'getUsedCollection',
             'getUsedFiles',
         ]);
         $trackableBlock = $builder->getMockForAbstractClass();
 
-        $trackableBlock->method('getUsedCollection')->willReturn($collection);
         $trackableBlock->method('getUsedFiles')->willReturn([10, 5]);
 
         $blockBuilder = $this->getMockBuilder(Block::class);
@@ -54,7 +53,6 @@ class FileUsageTrackerTest extends TestCase
         $trackableBlock->method('getBlockObject')->willReturn($block2);
 
         $collection->method('getBlocks')->willReturn([$block1, $block2]);
-        $collection->method('getSetCollectionAttributes')->willReturn([]);
 
         $items = [];
         $manager = $this->getDatabaseMock();
@@ -64,6 +62,12 @@ class FileUsageTrackerTest extends TestCase
 
         $trackableBlock->method('getUsedFiles')->willReturn([10]);
         $trackableBlock->method('getBlockObject')->willReturn([10]);
+
+        $version = $this->getMockBuilder(Version::class)->getMock();
+        $attributeCategory = $this->getMockBuilder(PageCategory::class)->disableOriginalConstructor()->getMock();
+        $version->method('getObjectAttributeCategory')->willReturn($attributeCategory);
+        $attributeCategory->method('getAttributeValues')->willReturn([]);
+        $collection->method('getVersionObject')->willReturn($version);
 
         // Test the tracker
         $tracker = new UsageTracker($manager);
@@ -86,8 +90,7 @@ class FileUsageTrackerTest extends TestCase
 
     public function testTrackingBlockController()
     {
-        $trackable = $this->getFileTrackableMock([], 10, 5);
-        $collection = $trackable->getUsedCollection();
+        list($collection, $trackable) = $this->getFileTrackableMock([], 10, 5);
 
         $blockClass = $this->getMockClass(Block::class, [
             'getBlockID',
@@ -102,7 +105,6 @@ class FileUsageTrackerTest extends TestCase
         ]);
         $controller->method('getBlockObject')->willReturn($block);
         $controller->method('getUsedFiles')->willReturn([1234, 4321]);
-        $controller->method('getUsedCollection')->willReturn($collection);
         $controller->method('getCollectionObject')->willReturn($collection);
 
         $block->method('getController')->willReturn($controller);
@@ -133,39 +135,12 @@ class FileUsageTrackerTest extends TestCase
             $item->getBlockID(), ]);
     }
 
-    public function testTrackingFileTrackable()
-    {
-        // Prepare the mock objects
-        $trackableItems = [1, 2, 5, 10, 11, 12, 13];
-        $trackable = $this->getFileTrackableMock($trackableItems, 5, 9);
-        $manager = $this->getDatabaseMock();
-        $items = [];
-
-        $manager->expects($this->exactly(7))->method('merge')->willReturnCallback(function ($item) use (&$items) {
-            $items[] = $item;
-        });
-
-        $manager->expects($this->exactly(3))->method('flush');
-
-        // Test the tracker
-        $tracker = new UsageTracker($manager);
-        $tracker->track($trackable);
-
-        // Verify the items
-        $trackedItems = [];
-        foreach ($items as $item) {
-            $trackedItems[] = $item->getFileID();
-        }
-
-        $this->assertEquals($trackableItems, $trackedItems);
-    }
-
     /**
      * @param $usedFiles
      * @param $collectionID
      * @param $collectionVersionID
      *
-     * @return FileTrackableInterface
+     * @return array
      */
     private function getFileTrackableMock($usedFiles, $collectionID, $collectionVersionID)
     {
@@ -176,9 +151,8 @@ class FileUsageTrackerTest extends TestCase
 
         $trackable = $this->getMockForAbstractClass(FileTrackableInterface::class);
         $trackable->method('getUsedFiles')->willReturn($usedFiles);
-        $trackable->method('getUsedCollection')->willReturn($collection);
 
-        return $trackable;
+        return [$collection, $trackable];
     }
 
     private function getDatabaseMock()

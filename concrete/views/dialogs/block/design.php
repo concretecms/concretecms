@@ -8,7 +8,7 @@ if ($btHandle == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
         $btHandle = $bx->getBlockTypeHandle();
     }
 }
-if (is_object($set)) {
+if (is_object($set) && isset($styleHeader)) { ?>
     ?>
     <script type="text/javascript">
         $('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
@@ -31,7 +31,11 @@ if (isset($blockClasses['*'])) {
 
 $enableBlockContainer = -1;
 if ($pt->supportsGridFramework() && $b->overrideBlockTypeContainerSettings()) {
-    $enableBlockContainer = $b->enableBlockContainer();
+    if ($b->enableBlockContainer()) {
+        $enableBlockContainer = 1;
+    } else {
+        $enableBlockContainer = 0;
+    }
 }
 
 $gf = $pt->getThemeGridFrameworkObject();

@@ -1,0 +1,35 @@
+div.page-list-with-buttons {
+  div.ccm-block-page-list-page-entry {
+
+    div.ccm-block-page-list-title {
+      .make-heading(@h3-type-font-family, @h3-type-font-size, @h3-type-font-weight, @h3-type-color);
+    }
+
+    border-bottom: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+
+    &:first-child {
+      padding-top: 0px;
+      border-top: none;
+      margin-top: 0px;
+    }
+
+    a.ccm-block-page-list-read-more {
+      .btn;
+      border: 1px solid transparent;
+      display: inline-block;
+      .button-variant(@body-type-color, @page-background-color, @default-button-border-color);
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    margin-top: 50px;
+    padding-top: 50px;
+    border-top: 1px solid @footer-section-divider-color;
+
+  }
+
+}

@@ -1,0 +1,23 @@
+div.theme-atomik {
+  div.ccm-block-autonav {
+
+    background-color: $light;
+    border-radius: $border-radius;
+
+    .nav-item {
+      .nav-link {
+        color: $dark;
+
+        &:hover {
+          text-decoration: underline;
+        }
+
+        &.active {
+          color: $primary;
+          font-weight: bold;
+        }
+
+      }
+    }
+  }
+}

@@ -6,8 +6,8 @@ use Core;
 use Database;
 use File;
 use Localization;
-use Page;
-use Permissions;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker as Permissions;
 use Session;
 use Concrete\Core\User\User as ConcreteUser;
 use Concrete\Core\Support\Facade\Application;
@@ -16,18 +16,32 @@ use View;
 class Dashboard
 {
     /**
+     * @var bool|null
+     */
+    protected $canRead;
+
+    /**
+     * @var bool|null
+     */
+    protected $canAccessComposer;
+
+    /**
      * Checks to see if a user has access to the C5 dashboard.
      *
      * @return bool
      */
     public function canRead()
     {
-        $c = Page::getByPath('/dashboard', 'ACTIVE');
-        if ($c && !$c->isError()) {
-            $cp = new Permissions($c);
+        if ($this->canRead === null) {
+            $c = Page::getByPath('/dashboard', 'ACTIVE');
+            if ($c && !$c->isError()) {
+                $cp = new Permissions($c);
 
-            return $cp->canViewPage();
+                $this->canRead = $cp->canViewPage();
+            }
         }
+
+        return $this->canRead;
     }
 
     /**
@@ -35,10 +49,14 @@ class Dashboard
      */
     public function canAccessComposer()
     {
-        $c = Page::getByPath('/dashboard/composer', 'ACTIVE');
-        $cp = new Permissions($c);
+        if ($this->canAccessComposer === null) {
+            $c = Page::getByPath('/dashboard/composer', 'ACTIVE');
+            $cp = new Permissions($c);
 
-        return $cp->canViewPage();
+            $this->canAccessComposer = $cp->canViewPage();
+        }
+
+        return $this->canAccessComposer;
     }
 
     /**

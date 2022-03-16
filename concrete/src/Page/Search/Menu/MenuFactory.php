@@ -28,6 +28,16 @@ class MenuFactory
         $menu->addItem(
             new LinkItem(
                 "#",
+                t('Move/Copy'),
+                [
+                    'data-bulk-action' => 'move-copy'
+                ]
+            )
+        );
+
+        $menu->addItem(
+            new LinkItem(
+                "#",
                 t('Delete'),
                 [
                     'data-bulk-action-type' => 'dialog',

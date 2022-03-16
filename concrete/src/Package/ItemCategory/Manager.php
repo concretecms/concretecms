@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Package\ItemCategory;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Entity\Package;
 use Concrete\Core\Support\Manager as CoreManager;
 
@@ -9,6 +10,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Manager extends CoreManager
 {
+    public function __construct(Application $application)
+    {
+        parent::__construct($application);
+    }
+
     public function createAuthenticationTypeDriver()
     {
         return new AuthenticationType();
@@ -177,6 +183,21 @@ class Manager extends CoreManager
     public function createIpAccessControlCategoryDriver()
     {
         return $this->app->make(IpAccessControlCategory::class);
+    }
+
+    public function createTaskSetDriver()
+    {
+        return $this->app->make(TaskSet::class);
+    }
+
+    public function createTaskDriver()
+    {
+        return $this->app->make(Task::class);
+    }
+
+    public function createContainerDriver()
+    {
+        return $this->app->make(Container::class);
     }
 
     public function getPackageItems(Package $package)

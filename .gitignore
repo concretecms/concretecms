@@ -49,6 +49,12 @@ error_log
 /.settings/
 /.buildpath
 
+# phpunit
+/.phpunit.result.cache
+
+# nova
+/.nova
+
 # ignore JavaScript source maps
 /concrete/js/*.js.map
 /concrete/js/bootstrap/*.js.map

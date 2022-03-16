@@ -57,11 +57,11 @@ class SiteLocaleField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $localeID = $this->data['localeID'];
+        $localeID = $this->getData('localeID');
         $app = Facade::getFacadeApplication();
-        if (isset($this->data['localeID']) && $this->data['localeID'] !== '') {
+        if (isset($this->data['localeID']) && $this->getData('localeID') !== '') {
             $em = $app->make(EntityManager::class);
-            $selectedLocale = $em->find(Locale::class, $this->data['localeID']);
+            $selectedLocale = $em->find(Locale::class, $this->getData('localeID'));
             $list->setSiteTreeObject($selectedLocale->getSiteTree());
         }
     }
@@ -75,9 +75,9 @@ class SiteLocaleField extends AbstractField
     {
         $app = Facade::getFacadeApplication();
         $selectedLocale = null;
-        if (isset($this->data['localeID']) && $this->data['localeID'] !== '') {
+        if (isset($this->data['localeID']) && $this->getData('localeID') !== '') {
             $em = $app->make(EntityManager::class);
-            $selectedLocale = $em->find(Locale::class, $this->data['localeID']);
+            $selectedLocale = $em->find(Locale::class, $this->getData('localeID'));
         }
         $site = $app->make('site')->getActiveSiteForEditing();
         $selector = new SiteLocaleSelector();

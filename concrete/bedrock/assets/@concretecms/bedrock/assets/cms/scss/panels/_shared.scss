@@ -1,0 +1,590 @@
+html.ccm-panel-detail-open {
+  > body {
+    overflow: hidden;
+  }
+
+  .ccm-panel-detail {
+    left: 0;
+    overflow: auto;
+    position: fixed;
+    top: 0;
+  }
+}
+
+div.ccm-panel {
+  background-color: $panel-background-color;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  user-select: none;
+  width: 320px;
+  z-index: $index-level-panel; // has to come above the detail actions wrapper
+  /* overflow: hidden; */ /* This causes problems with floating palettes inside the panels. So let's only apply this during transitions */
+  div.ccm-panel-close {
+    position: absolute;
+    right: 17px;
+    text-decoration: none;
+    top: 7px;
+  }
+}
+
+div#ccm-panel-overlay {
+  background: transparent;
+  display: none;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  transition: background-color cubic-bezier(0.19, 1, 0.22, 1) 0.5s;
+  width: 100%;
+  z-index: $index-level-panel-overlay;
+}
+
+div#ccm-panel-overlay.ccm-panel-translucent {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+html.ccm-panel-ready {
+  div.ccm-page {
+    transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.5s;
+  }
+}
+
+html.ccm-panel-ready.ccm-panel-left {
+  div.ccm-page {
+    transform: translate(320px, 0);
+  }
+}
+
+html.ccm-panel-ready.ccm-panel-right {
+  div.ccm-page {
+    transform: translate(-320px, 0);
+  }
+}
+
+html.ccm-panel-ready.ccm-panel-transition-none {
+  div.ccm-page {
+    transition: none;
+  }
+}
+
+/*
+html.ccm-panel-ready {
+
+  div.ccm-page {
+    .backface-visibility(hidden);
+    .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+  }
+
+}
+*/
+
+div.ccm-panel-transition-none.ccm-panel-left {
+  display: none;
+}
+
+div.ccm-panel-transition-none.ccm-panel-left.ccm-panel-active {
+  display: block;
+}
+
+div.ccm-panel-transition-slide.ccm-panel-left {
+  left: -4px;
+  transform: translate(-100%, 0);
+  transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.5s;
+
+}
+
+div.ccm-panel-transition-none.ccm-panel-right {
+  display: none;
+}
+
+div.ccm-panel-transition-none.ccm-panel-right.ccm-panel-active {
+  display: block;
+}
+
+div.ccm-panel-transition-slide.ccm-panel-right {
+  right: -4px;
+  transform: translate(100%, 0);
+  transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.5s;
+}
+
+div.ccm-panel-left.ccm-panel-transition-slide.ccm-panel-active {
+  transform: translate(0, 0);
+}
+
+div.ccm-panel-right.ccm-panel-transition-slide.ccm-panel-active {
+  transform: translate(0, 0);
+}
+
+/**
+ * Shadow layer
+ */
+
+div.ccm-panel-right.ccm-panel-active {
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.12);
+}
+
+div.ccm-panel-right {
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.12);
+}
+
+div.ccm-panel-left {
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.12);
+}
+
+/**
+ * Panel Content
+ */
+div.ccm-panel-content {
+  bottom: 0;
+  left: 0;
+  margin-top: 48px;
+  overflow: auto;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  transition: transform cubic-bezier(0.19, 1, 0.22, 1) 0.5s;
+  width: 320px;
+
+  button.ccm-delete-clipboard-item,
+  button.ccm-delete-orphaned-block-item {
+    color: #a2a3a8;
+
+    &:hover {
+      color: darken(#a2a3a8, 15%);
+    }
+  }
+
+  section {
+    padding: 0;
+  }
+}
+
+div.ccm-panel-content {
+
+  padding: 20px 15px 0;
+
+  header {
+    font-weight: 600;
+    padding: 12px 11px 0 24px;
+
+    aside {
+      float: right;
+      font-size: $font-size-sm;
+      font-weight: lighter;
+      margin-top: 4px;
+
+      a {
+        text-decoration: none;
+      }
+    }
+
+    .dropdown-toggle {
+      transition: $transition-base;
+
+      &:hover {
+        color: $blue;
+        cursor: pointer;
+      }
+    }
+
+  }
+
+  table {
+    border-top: 1px solid $gray-200;
+    margin-top: 1em;
+  }
+
+  ul.nav,
+  menu {
+    border-top: 1px solid $gray-200;
+    font-weight: 400;
+    margin-bottom: 0.9rem;
+    margin-top: 0.9rem;
+    padding: 0;
+    padding-top: 0.5rem;
+
+    > li {
+      margin-left: 0;
+      margin-top: 0;
+    }
+
+    li {
+
+      list-style-type: none;
+
+      &.active {
+        > a {
+          background-color: $panel-menu-item-active-bg-color;
+          color: $panel-menu-item-active-color !important;
+          font-weight: $panel-menu-item-active-font-weight;
+
+          &:hover {
+            background-color: $panel-menu-item-active-bg-color !important;
+            color: $panel-menu-item-active-color !important;
+            cursor: default !important;
+          }
+        }
+      }
+
+      a {
+        color: $panel-menu-item-color;
+        display: block;
+        line-height: 1.8em;
+        padding: 11px 21px 11px 24px;
+        text-decoration: none;
+        transition: $panel-menu-item-transition;
+
+        &:hover {
+          background-color: $panel-menu-item-hover-bg-color;
+          color: $panel-menu-item-hover-color;
+
+        }
+
+        &.ccm-panel-menu-parent-item-active {
+          color: $panel-menu-item-parent-item-active-color;
+          font-weight: $panel-menu-item-parent-item-active-font-weight;
+        }
+
+        &.ccm-panel-menu-item-active {
+          background-color: $panel-menu-item-active-bg-color;
+          color: $panel-menu-item-active-color;
+          font-weight: $panel-menu-item-active-font-weight;
+
+          &:hover {
+            color: $panel-menu-item-active-color;
+          }
+        }
+
+      }
+
+      a:hover {
+        text-decoration: none;
+      }
+
+      ul {
+        border-top-width: 0;
+        margin-top: 0;
+        padding-left: 0;
+        padding-top: 0;
+
+        li {
+          margin-left: 0;
+          margin-top: 0;
+          padding-left: 10px;
+        }
+
+      }
+    }
+
+  }
+}
+
+div.ccm-panel-content-inner {
+  padding: 20px 40px 40px;
+}
+
+/**
+ * Panel selection dropdown
+ * Used by block add panel (left hand menu)
+ * and the dashboard/favorites drop-down menu (right hand menu)
+ */
+div.ccm-panel-header-accordion {
+  padding-bottom: 0 !important;
+  position: relative;
+
+  &.ccm-panel-header-accordion-dropdown-visible nav ul {
+    max-height: 220px !important;
+  }
+
+  nav {
+    ul.ccm-panel-header-accordion-dropdown {
+      height: auto;
+      margin-bottom: 0;
+      margin-left: 0;
+      max-height: 0;
+      overflow: hidden;
+      padding-left: 0;
+      transition: max-height 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    li {
+      list-style-type: none;
+    }
+
+    li>a,
+    span {
+      cursor: pointer;
+      display: block;
+      line-height: 15px;
+      // font-size: 1.5rem;
+      padding: 18px 15px 18px 40px;
+      position: relative;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    span {
+      background-color: transparent;
+      font-size: 1.5rem;
+      font-weight: 600;
+      padding-left: 0;
+
+      &::after {
+        border-color: $gray-700 transparent;
+        border-style: solid;
+        border-width: 6px 6px 0;
+        content: '';
+        height: 0;
+        margin-left: 10px;
+        position: absolute;
+        top: 24px;
+        width: 0;
+      }
+    }
+  }
+}
+
+// This is a fix for when the dropdown is open in the blocks panel.
+// It stops the blocks under the dropdown from taking the focus away from the dropdown
+#ccm-panel-add-blocktypes-list.ccm-no-pointer-events a.ccm-panel-add-block-draggable-block-type-dragger {
+  pointer-events: none;
+}
+/**
+ * Panel search input
+ * Used by both block and container add panel (left hand menu)
+ */
+#ccm-panel-add-block {
+  .ccm-panel-header-search {
+    margin-bottom: $form-group-margin-bottom;
+    position: relative;
+
+    input {
+      // lint was rejecting booder: none which is a standard css value
+      border-width: 0;
+      padding: 10px 35px 10px 10px;
+      width: 100%;
+    }
+
+    svg {
+      fill: $gray-600;
+      height: 20px;
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+    }
+  }
+}
+
+// so far only used in the add blocks panel but it makes more sense styling it here
+.ccm-panel-header-list-grid-view-switcher {
+  background-color: $dark;
+  cursor: pointer;
+  height: 24px;
+  padding: 4px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 24px;
+  z-index: 1;
+
+  >i {
+    color: $gray-100;
+    line-height: 16px;
+    position: absolute;
+  }
+}
+
+
+/**
+ * Panel main detail areas
+ */
+div.ccm-panel-detail {
+  background: transparent;
+  box-sizing: border-box;
+  display: none;
+  height: 100%;
+  padding-top: 48px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: $index-level-panel-detail;
+
+  &.ccm-panel-detail-static {
+    display: block;
+  }
+
+  &.ccm-panel-detail-static-left {
+    padding-left: 321px;
+  }
+
+  &.ccm-panel-detail-static-right {
+    padding-right: 321px;
+  }
+
+}
+
+html.ccm-panel-left div.ccm-panel-detail {
+  padding-left: 321px;
+}
+
+html.ccm-panel-right div.ccm-panel-detail {
+  padding-right: 321px;
+}
+
+div.ccm-panel-detail-content {
+  background-color: white;
+  min-height: 100%;
+  min-width: 100%;
+  padding: 40px 40px 80px;
+  position: relative;
+
+  section {
+    padding: 0;
+  }
+
+  header {
+    margin-bottom: 20px;
+  }
+
+}
+
+iframe.ccm-page-preview-frame {
+  background: transparent;
+  border: 0;
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+/**
+ * Panel Detail Fade
+ */
+div.ccm-panel-detail.ccm-panel-detail-transition-fade {
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+div.ccm-panel-detail.ccm-panel-detail-transition-fade-apply {
+  opacity: 1;
+}
+
+/**
+ * Miscellaneous effects classes
+ * First we have to push the item with positioning
+ * because it's going to lose its position once the new effect takes place.
+ */
+
+html.ccm-panel-left div.ccm-page.ccm-panel-detail-transition-swap {
+  left: 320px;
+  position: relative;
+}
+
+html.ccm-panel-right div.ccm-page.ccm-panel-detail-transition-swap {
+  position: relative;
+  right: 320px;
+}
+
+html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap {
+  transform: rotateY(0deg);
+  transition-duration: 0.5s;
+  transition-timing-function: none;
+}
+
+html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-apply {
+  transform: rotateY(180deg);
+  transition-duration: 0.5s;
+  transition-timing-function: none;
+}
+
+div.ccm-panel-detail.ccm-panel-detail-transition-none.ccm-panel-detail-transition-none-apply {
+  display: block;
+}
+
+html.ccm-panel-ready div.ccm-page.ccm-panel-detail-disable-transition {
+  transition: none;
+}
+
+div.ccm-panel-dashboard-footer {
+  margin: 20px 0;
+}
+
+/**
+ * Panel Drill Down
+ */
+div.ccm-panel-slide-left {
+  transform: translate(-320px, 0);
+}
+
+div.ccm-panel-slide-right {
+  transform: translate(320px, 0);
+}
+
+div.ccm-panel-content-appearing {
+  transform: translate(320px, 0);
+}
+
+div.ccm-panel-content.ccm-panel-content-visible {
+  transform: translate(0, 0);
+}
+
+div.ccm-panel-transitioning {
+  overflow: hidden;
+
+  div.ccm-panel-content {
+    overflow: auto;
+  }
+}
+
+div.ccm-panel-content {
+  header {
+    a {
+      color: $gray-700;
+      text-decoration: none;
+      transition: color 0.1s ease-in-out;
+
+      &:hover {
+        color: $blue;
+
+        svg {
+          fill: $blue;
+        }
+      }
+    }
+
+    a.ccm-panel-back {
+      display: block;
+      margin-bottom: 30px;
+      margin-top: -15px;
+
+      svg {
+        height: 20px;
+        transition: fill 0.1s ease-in-out;
+        width: 20px;
+      }
+    }
+  }
+}
+
+/**
+ * Forms and button actions
+ */
+div.ccm-panel-detail-form-actions {
+  background-color: $gray-100;
+  border-top: 1px solid $gray-200;
+  bottom: 0;
+  left: 0;
+  padding: 15px 20px 15px 340px;
+  position: fixed;
+  width: 100%;
+}
+
+/**
+ * Panel icons
+ */

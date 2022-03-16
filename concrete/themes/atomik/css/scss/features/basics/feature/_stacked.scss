@@ -1,0 +1,34 @@
+div.theme-atomik {
+  .ccm-block-feature-stacked {
+
+    display: block; // in case the element is an anchor link
+    text-align: center;
+
+    > i {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      color: var(--bs-body-color);
+      transition: all 0.2s;
+    }
+
+    > h1, h2, h3, h4, h5, h6 {
+      margin-bottom: 1.5rem;
+    }
+
+    > p {
+      margin-bottom: 3rem;
+      color: var(--bs-body-color);
+    }
+
+  }
+
+  a.ccm-block-feature-stacked {
+    &:hover {
+      > i {
+        color: $link-color;
+      }
+    }
+  }
+
+}
+

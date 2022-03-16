@@ -39,6 +39,16 @@ class Sitemap
     protected $includeSystemPages = false;
 
     /**
+     * @var bool|null
+     */
+    protected $canViewSitemapPanel;
+
+    /**
+     * @var bool|null
+     */
+    protected $canRead;
+
+    /**
      * Sitemap constructor.
      *
      * @param \Concrete\Core\Application\Application $app
@@ -241,11 +251,11 @@ class Sitemap
         $cPointerID = $c->getCollectionPointerID();
         if ($cAlias) {
             if ($cPointerID > 0) {
-                $cIconClass = 'fa fa-sign-in';
+                $cIconClass = 'fas fa-sign-out-alt';
                 $cAlias = 'POINTER';
                 $cID = $c->getCollectionPointerOriginalID();
             } else {
-                $cIconClass = 'fa fa-external-link';
+                $cIconClass = 'fas fa-external-link-alt';
                 $cAlias = 'LINK';
             }
         }
@@ -308,14 +318,21 @@ class Sitemap
 
     public function canViewSitemapPanel()
     {
-        $types = Type::getList();
-        foreach($types as $pt) {
-            $ptp = new \Permissions($pt);
-            if ($ptp->canAddPageType()) {
-                return true;
+        if ($this->canViewSitemapPanel === null) {
+            $types = Type::getList();
+            foreach ($types as $pt) {
+                $ptp = new Permissions($pt);
+                if ($ptp->canAddPageType()) {
+                    $this->canViewSitemapPanel = true;
+                    break;
+                }
+            }
+            if ($this->canViewSitemapPanel === null) {
+                $this->canViewSitemapPanel = $this->canRead();
             }
         }
-        return $this->canRead();
+
+        return $this->canViewSitemapPanel;
     }
 
     /**
@@ -323,8 +340,11 @@ class Sitemap
      */
     public function canRead()
     {
-        $tp = new Permissions();
+        if ($this->canRead === null) {
+            $tp = new Permissions();
+            $this->canRead = $tp->canAccessSitemap();
+        }
 
-        return $tp->canAccessSitemap();
+        return $this->canRead;
     }
 }

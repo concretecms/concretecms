@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Board\Command;
 
-class RefreshBoardInstanceCommand
+use Concrete\Core\Foundation\Command\Command;
+
+class RefreshBoardInstanceCommand extends Command
 {
     
     use BoardInstanceTrait;

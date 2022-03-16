@@ -24,6 +24,8 @@ class PageController extends Controller
     protected $parameters = array();
     protected $replacement = null;
     protected $requestValidated;
+    /** @var BlockController[] */
+    protected $blocks = [];
 
     /** @var bool A flag to track whether we've loaded sets from the session flash bags */
     private $hasCheckedSessionMessages = false;
@@ -224,7 +226,7 @@ class PageController extends Controller
             $requestPath = $request->getPath();
         }
 
-        if (!empty($this->c->getCollectionPath()) && strpos($requestPath, $this->c->getCollectionPath()) !== false) {
+        if (!empty($this->c->getCollectionPath()) && stripos($requestPath, $this->c->getCollectionPath()) !== false) {
             // If the request path starts with the collection path, remove it
             $task = substr($requestPath, strlen($this->c->getCollectionPath()) + 1);
         } else {
@@ -315,6 +317,29 @@ class PageController extends Controller
         return isset($this->passThruBlocks[$bID]) ? $this->passThruBlocks[$bID] : null;
     }
 
+    /**
+     * @since 9.0.3
+     * @param Block $block
+     * @param BlockController $controller
+     * @return void
+     */
+    public function setBlockController(Block $block, BlockController $controller)
+    {
+        $this->blocks[$block->getBlockID()] = $controller;
+    }
+
+    /**
+     * @since 9.0.3
+     * @param Block $block
+     * @return BlockController|null
+     */
+    public function getBlockController(Block $block): ?BlockController
+    {
+        $bID = $block->getBlockID();
+
+        return $this->blocks[$bID] ?? null;
+    }
+
     public function validateRequest()
     {
 
@@ -324,16 +349,23 @@ class PageController extends Controller
 
         $valid = true;
 
+        $blockControllers = [];
+        $blocks = array_merge($this->getPageObject()->getBlocks(), $this->getPageObject()->getGlobalBlocks());
+        foreach ($blocks as $block) {
+            $controller = $block->getController();
+            // We have to run on_start() method of all blocks on this page instead of only ones that have valid tasks
+            $controller->on_start();
+            // We'll also reuse this controller in BlockView, so let's store it to avoid duplicate calls
+            $this->setBlockController($block, $controller);
+            $blockControllers[] = $controller;
+        }
+
         if (!$this->isValidControllerTask($this->action, $this->parameters)) {
             $valid = false;
             // we check the blocks on the page.
-            $blocks = array_merge($this->getPageObject()->getBlocks(), $this->getPageObject()->getGlobalBlocks());
-
-            foreach ($blocks as $b) {
-                $controller = $b->getController();
+            foreach ($blockControllers as $controller) {
                 list($method, $parameters) = $controller->getPassThruActionAndParameters($this->parameters);
                 if ($controller->isValidControllerTask($method, $parameters)) {
-                    $controller->on_start();
                     $response = $controller->runAction($method, $parameters);
                     if ($response instanceof Response) {
                         return $response;

@@ -30,7 +30,7 @@ class NameField extends AbstractField
         $app = Application::getFacadeApplication();
         /** @var Form $form */
         $form = $app->make(Form::class);
-        $html = $form->text('gName', $this->data["gName"]);
+        $html = $form->text('gName', $this->getData("gName"));
         return $html;
 
     }/** @noinspection PhpDocSignatureInspection */

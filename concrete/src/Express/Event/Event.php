@@ -1,9 +1,8 @@
 <?php
 namespace Concrete\Core\Express\Event;
 use Concrete\Core\Entity\Express\Entry;
-use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-class Event extends AbstractEvent
+class Event
 {
 
     /**

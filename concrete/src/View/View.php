@@ -3,12 +3,17 @@ namespace Concrete\Core\View;
 
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\Output\StandardFormatter;
+use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Page\Theme\ThemeRouteCollection;
+use Concrete\Core\Page\View\Preview\SkinCustomizerPreviewRequest;
+use Concrete\Core\Site\Service;
+use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
 use Environment;
 use Events;
 use Concrete\Core\Support\Facade\Facade;
+use HtmlObject\Element;
 use PageTheme;
 use Page;
 use Config;
@@ -25,6 +30,8 @@ class View extends AbstractView
     protected $viewPkgHandle;
     protected $themePkgHandle;
     protected $viewRootDirectoryName = DIRNAME_VIEWS;
+
+    use HandleRequiredFeaturesTrait;
 
     protected function constructView($path = false)
     {
@@ -45,6 +52,15 @@ class View extends AbstractView
     {
         return $this->viewPath;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getThemeObject()
+    {
+        return $this->themeObject;
+    }
+
     /**
      * gets the relative theme path for use in templates.
      *
@@ -195,6 +211,11 @@ class View extends AbstractView
             }
             $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
             $this->themeRelativePath = $env->getURL(DIRNAME_THEMES.'/'.$this->themeHandle, $this->themePkgHandle);
+
+            if ($this->themeObject) {
+                $this->handleRequiredFeatures($this->controller, $this->themeObject);
+            }
+
         }
     }
 
@@ -224,6 +245,7 @@ class View extends AbstractView
             }
             $this->setViewTemplate($env->getPath(DIRNAME_THEMES.'/'.$this->themeHandle.'/'.$templateFile, $this->themePkgHandle));
         }
+
     }
 
     public function startRender()
@@ -346,6 +368,63 @@ class View extends AbstractView
         return $contents;
     }
 
+    protected function postProcessAssets($assets)
+    {
+        $c = Page::getCurrentPage();
+        if (!Config::get('concrete.cache.assets')) {
+            return $assets;
+        }
+
+        if (!count($assets)) {
+            return [];
+        }
+
+        // goes through all assets in this list, creating new URLs and post-processing them where possible.
+        $segment = 0;
+        $groupedAssets = [];
+        for ($i = 0; $i < count($assets); ++$i) {
+            $asset = $assets[$i];
+            $nextasset = isset($assets[$i + 1]) ? $assets[$i + 1] : null;
+
+            $groupedAssets[$segment][] = $asset;
+            if (!($asset instanceof Asset) || !($nextasset instanceof Asset)) {
+                ++$segment;
+                continue;
+            }
+
+            if ($asset->getOutputAssetType() != $nextasset->getOutputAssetType()) {
+                ++$segment;
+                continue;
+            }
+
+            if (!$asset->assetSupportsCombination() || !$nextasset->assetSupportsCombination()) {
+                ++$segment;
+                continue;
+            }
+        }
+
+        $return = [];
+        // now we have a sub assets array with different segments split by whether they can be combined.
+
+        foreach ($groupedAssets as $assets) {
+            if (
+                ($assets[0] instanceof Asset)
+                &&
+                (
+                    (count($assets) > 1)
+                    ||
+                    $assets[0]->assetSupportsMinification()
+                )
+            ) {
+                $class = get_class($assets[0]);
+                $assets = call_user_func([$class, 'process'], $assets);
+            }
+            $return = array_merge($return, $assets);
+        }
+
+        return $return;
+    }
+
     protected function replaceEmptyAssetPlaceholders($pageContent)
     {
         foreach (['<!--ccm:assets:'.Asset::ASSET_POSITION_HEADER.'//-->', '<!--ccm:assets:'.Asset::ASSET_POSITION_FOOTER.'//-->'] as $comment) {
@@ -360,7 +439,8 @@ class View extends AbstractView
         $outputItems = [];
         foreach ($outputAssets as $position => $assets) {
             $output = '';
-            foreach ($assets as $item) {
+            $transformed = $this->postProcessAssets($assets);
+            foreach ($transformed as $item) {
                 $itemstring = (string) $item;
                 if (!in_array($itemstring, $outputItems)) {
                     $output .= $this->outputAssetIntoView($item);
@@ -382,6 +462,21 @@ class View extends AbstractView
             return $item . "\n";
         }
     }
+
+    public function getThemeStyles()
+    {
+        $site = app(Service::class)->getSite();
+        $skinIdentifier = SkinInterface::SKIN_DEFAULT;
+        if ($site) {
+            if ($site->getThemeSkinIdentifier()) {
+                $skinIdentifier = $site->getThemeSkinIdentifier();
+            }
+        }
+        $skin = $this->themeObject->getSkinByIdentifier($skinIdentifier);
+        $stylesheet = $skin->getStylesheet();
+        return $stylesheet;
+    }
+
 
     public static function element($_file, $args = null, $_pkgHandle = null)
     {

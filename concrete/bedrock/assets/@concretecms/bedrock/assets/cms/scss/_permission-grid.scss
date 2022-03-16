@@ -1,0 +1,22 @@
+table.ccm-permission-grid td.ccm-permission-grid-name {
+  text-align: right;
+  white-space: nowrap;
+  width: auto;
+}
+
+table.ccm-permission-grid td {
+  vertical-align: middle;
+  width: 100%;
+}
+
+div.ccm-permission-access-line {
+  display: inline;
+}
+
+.ccm-permission-grid-cell .ccm-permission-access-line span:hover {
+  cursor: copy;
+}
+
+td.ccm-permissions-grid-cell-active {
+  background-color: #e4f4f8;
+}

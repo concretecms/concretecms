@@ -50,6 +50,14 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
     protected $pThemeID = 0;
 
     /**
+     * A theme skin to use for this site.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $pThemeSkinIdentifier;
+
+
+    /**
      * Is this the default site?
      *
      * @ORM\Column(type="boolean")
@@ -478,4 +486,22 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
             'name' => $this->getSiteName(),
         ];
     }
+
+    /**
+     * @return mixed
+     */
+    public function getThemeSkinIdentifier()
+    {
+        return $this->pThemeSkinIdentifier;
+    }
+
+    /**
+     * @param mixed $pThemeSkinIdentifier
+     */
+    public function setThemeSkinIdentifier($pThemeSkinIdentifier): void
+    {
+        $this->pThemeSkinIdentifier = $pThemeSkinIdentifier;
+    }
+
+
 }

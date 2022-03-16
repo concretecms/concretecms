@@ -24,6 +24,11 @@ class AccessTokenRepository extends EntityRepository implements AccessTokenRepos
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
         $token = new AccessToken();
+        $token->setClient($clientEntity);
+        foreach ($scopes as $scope) {
+            $token->addScope($scope);
+        }
+
 
         $token->setUserIdentifier($userIdentifier);
 

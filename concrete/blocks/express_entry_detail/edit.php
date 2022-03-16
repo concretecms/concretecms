@@ -28,8 +28,8 @@ $expressEntrySelector = $app->make(ExpressEntrySelector::class);
 $exForms = [];
 
 if (is_object($entity)) {
-    foreach ($entity->getForms() as $form) {
-        $exForms[$form->getID()] = $form->getName();
+    foreach ($entity->getForms() as $formEntity) {
+        $exForms[$formEntity->getID()] = $formEntity->getName();
     }
 }
 ?>
@@ -67,7 +67,7 @@ if (is_object($entity)) {
 
         <?php if (count($expressAttributes)) { ?>
             <!--suppress HtmlFormInputWithoutLabel -->
-            <select name="exEntryAttributeKeyHandle" class="form-control">
+            <select name="exEntryAttributeKeyHandle" class="form-select">
                 <option value="">
                     <?php echo t('** Select Attribute') ?>
                 </option>
@@ -102,7 +102,7 @@ if (is_object($entity)) {
 
 <script type="text/template" data-template="express-attribute-form-list">
     <!--suppress HtmlFormInputWithoutLabel -->
-    <select name="exFormID" class="form-control">
+    <select name="exFormID" class="form-select">
         <% _.each(forms, function(form) { %>
         <option value="<%=form.exFormID%>"
         <% if (exFormID == form.exFormID) { %>selected<% } %>><%=form.exFormName%></option>

@@ -1,5 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+/* @var $dh \Concrete\Core\Localization\Service\Date */
+$dh = app('helper/date');
+/** @var \Concrete\Controller\Dialog\Block\Aliasing $controller */
+$total = $total ?? 0;
 ?>
 <div class="ccm-ui">
 
@@ -14,15 +17,21 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <p><?=t('This block will be added to all pages of this type. If it has been previously added it will be updated.')?></p>
 
         <div class="form-group">
-            <label class="control-label"><?=t('If this block does not appear on a page of this type')?></label>
+            <label class="control-label form-label"><?=t('If this block does not appear on a page of this type')?></label>
             <div class="form-check"><input class="form-check-input" type="radio" name="addBlock" id="addBlock1" value="1" checked><label class="form-check-label" for="addBlock1"> <?=t('Add a new instance of the block to the page.')?></label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="addBlock" id="addBlock2" value="0"><label class="form-check-label" for="addBlock2"> <?=t('Keep this block off that page.')?></label></div>
         </div>
 
         <div class="form-group">
-            <label class="control-label"><?=t('Would you like to update forked blocks?')?></label>
+            <label class="control-label form-label"><?=t('Would you like to update forked blocks?')?></label>
             <div class="form-check"><input class="form-check-input" type="radio" name="updateForkedBlocks" id="updateForkedBlocks1" value="1"><label class="form-check-label" for="updateForkedBlocks1"> <?=t('Yes')?></label></div>
             <div class="form-check"><input class="form-check-input" type="radio" name="updateForkedBlocks" id="updateForkedBlocks2" value="0" checked><label class="form-check-label" for="updateForkedBlocks2"> <?=t('No')?></label></div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label form-label"><?=t('Would you like to force the display order of this block?')?></label>
+            <div class="form-check"><input class="form-check-input" type="radio" name="forceDisplayOrder" id="forceDisplayOrder1" value="1"><label class="form-check-label" for="forceDisplayOrder1"> <?=t('Yes')?></label></div>
+            <div class="form-check"><input class="form-check-input" type="radio" name="forceDisplayOrder" id="forceDisplayOrder2" value="0" checked><label class="form-check-label" for="forceDisplayOrder2"> <?=t('No')?></label></div>
         </div>
 
         <div data-dialog-form-element="progress-bar"></div>

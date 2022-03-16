@@ -5,7 +5,7 @@ class LegacyGroupFormatter implements ListFormatterInterface
 {
     public function getIconElement()
     {
-        return '<i class="fa fa-users-folder"></i>';
+        return '<i class="fas fa-folder"></i>';
     }
 
     public function getSearchResultsClass()

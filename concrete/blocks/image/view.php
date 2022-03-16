@@ -2,7 +2,6 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Image\BasicThumbnailer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Html\Image;
@@ -13,18 +12,31 @@ use HtmlObject\Image as HtmlImage;
 
 $app = Application::getFacadeApplication();
 
-/** @var array $themeResponsiveImageMap */
-/** @var array $selectedThumbnailTypes */
-/** @var string $altText */
-/** @var bool $openLinkInNewWindow */
-/** @var string $linkURL */
-/** @var bool $cropImage */
-/** @var int $maxWidth */
-/** @var int $maxHeight */
-/** @var Version $f */
-/** @var Version $foS */
-/** @var string $sizingOption */
-/** @var array $imgPaths */
+/**
+ * @var Concrete\Core\Block\View\BlockView $this
+ * @var Concrete\Core\Block\View\BlockView $view
+ * @var Concrete\Core\Area\SubArea $a
+ * @var Concrete\Core\Entity\Block\BlockType\BlockType $bt
+ * @var Concrete\Core\Block\Block $b
+ * @var Concrete\Block\Image\Controller $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var int $bID
+ *
+ * @var bool $cropImage
+ * @var int $maxWidth
+ * @var int $maxHeight
+ * @var string $sizingOption
+ * @var Concrete\Core\Entity\File\File|null $f
+ * @var Concrete\Core\Entity\File\File|null $foS
+ * @var array $imgPaths May be empty, or may contain two strings (with keys 'default' and 'hover')
+ * @var string $altText
+ * @var string|null $title
+ * @var string $linkURL
+ * @var bool $openLinkInNewWindow
+ * @var array $selectedThumbnailTypes Array keys are the breakpoint handles, array values are the breakpoint IDs
+ * @var array $themeResponsiveImageMap Array keys are the responsive breakpoint names, array values are the widths.
+ * @var Concrete\Core\Page\Page $c
+ */
 
 if (is_object($f) && $f->getFileID()) {
     $imageTag = new HtmlImage();
@@ -45,7 +57,7 @@ if (is_object($f) && $f->getFileID()) {
         switch ($sizingOption) {
             case "thumbnails_default":
                 /** @var Image $image */
-                $image = $app->make('html/image', [$f]);
+                $image = $app->make('html/image', ['f' => $f]);
                 $imageTag = $image->getTag();
                 break;
 
@@ -59,7 +71,6 @@ if (is_object($f) && $f->getFileID()) {
                 }
 
                 foreach ($selectedThumbnailTypes as $breakpointHandle => $ftTypeID) {
-                    $type = Type::getByID($ftTypeID);
 
                     $width = 0;
 
@@ -70,10 +81,21 @@ if (is_object($f) && $f->getFileID()) {
                         }
                     }
 
-                    if ($type instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type && $width > 0) {
-                        $src = $f->getThumbnailURL($type->getBaseVersion());
+                    if ($ftTypeID > 0) {
+                        $type = Type::getByID($ftTypeID);
 
-                        $sources[] = ['src' => $src, 'width' => $width];
+                        if ($type instanceof \Concrete\Core\Entity\File\Image\Thumbnail\Type\Type) {
+                            $src = $f->getThumbnailURL($type->getBaseVersion());
+
+                            // Note, the above if statement used to also include $width > 0, but this
+                            // was making it so that you couldn't use a thumbnail on the extra small screen size.
+                            // I removed this part of the conditional and things seem ok ?! even though I would
+                            // have thought this could result in double images. Let's keep an eye on this.
+                            $sources[] = ['src' => $src, 'width' => $width];
+                        }
+                    } else {
+                        // We're displaying the "full size" image at this breakpoint
+                        $sources[] = ['src' => $fallbackSrc, 'width' => $width];
                     }
                 }
 
@@ -144,14 +166,12 @@ if (is_object($f) && $f->getFileID()) {
         var images = document.getElementsByClassName('ccm-image-block-hover');
 
         for (var i = 0; i < images.length; i++) {
-            var image = images[i],
-                hoverSrc = image.getAttribute('data-hover-src'),
-                defaultSrc = image.getAttribute('data-default-src');
+            var image = images[i];
             image.onmouseover = function () {
-                image.setAttribute('src', hoverSrc);
+                this.setAttribute('src', this.getAttribute('data-hover-src'));
             };
             image.onmouseout = function () {
-                image.setAttribute('src', defaultSrc);
+                this.setAttribute('src', this.getAttribute('data-default-src'));
             };
         }
     </script>

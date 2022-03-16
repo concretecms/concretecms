@@ -1,0 +1,12 @@
+// Import Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Import Font Awesome
+@import '@fortawesome/fontawesome-free/scss/variables';
+
+// Import Theme Foundation items
+@import 'theme-context-root';
+@import 'mixins';
+@import 'utilities';
+@import 'theme-grid';
+@import 'pagination';

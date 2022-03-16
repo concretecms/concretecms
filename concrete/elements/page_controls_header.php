@@ -1,4 +1,10 @@
 <?php
+
+use Concrete\Core\Messenger\Transport\TransportInterface;
+use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
+use Concrete\Core\Notification\Events\MercureService;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
@@ -8,22 +14,20 @@ if (isset($cp)) {
     if ($cp->canViewToolbar()) {
         ?>
 
-<style type="text/css">div.ccm-page {padding-top: 48px !important;} </style>
+        <script type="text/javascript">
+            <?php
+            $valt = Loader::helper('validation/token');
+            echo "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
+            ?>
+        </script>
 
-<script type="text/javascript">
-<?php
-$valt = Loader::helper('validation/token');
-        echo "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
-        ?>
-</script>
-
-<?php
-$dh = Loader::helper('concrete/dashboard');
+        <?php
+        $dh = Loader::helper('concrete/dashboard');
         $v = View::getInstance();
         $request = \Request::getInstance();
-        
+
         $v->requireAsset('core/cms');
-        
+
         $editMode = $c->isEditMode();
         $htmlTagClasses = 'ccm-toolbar-visible';
 
@@ -78,13 +82,32 @@ EOL;
 EOL;
         }
         $v->addFooterItem($js);
-
-        if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
-            $v->addFooterItem('<script type="text/javascript">$(function() { ConcretePageIndexer.reindexPendingPages(); });</script>');
-        }
         $cih = Loader::helper('concrete/ui');
         if (Localization::activeLanguage() != 'en') {
-            $v->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
+            $v->addFooterItem(
+                '<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>'
+            );
+        }
+        if (Config::get('concrete.messenger.consume.method') === 'app') {
+            $transportManager = Core::make(\Concrete\Core\Messenger\Transport\TransportManager::class);
+            $transport = $transportManager->getReceivers()->get(TransportInterface::DEFAULT_ASYNC);
+            if ($transport instanceof MessageCountAwareInterface && $transport->getMessageCount() > 0) {
+                $v->addFooterItem(
+                    '<script type="text/javascript">$(function() { ConcreteQueueConsumer.consume(\'' . $valt->generate('consume_messages') . '\') });</script>'
+                );
             }
         }
+        $mercureService = app(MercureService::class);
+        if ($mercureService->isEnabled()) {
+            $resolver = app(ResolverManagerInterface::class);
+            //$siteUrl = $resolver->resolve(['/ccm/events']);
+            $siteUrl = '/ccm/events';
+            /**
+             * @var \Concrete\Core\Url\UrlImmutable $siteUrl
+             */
+            $v->addFooterItem(
+                '<script type="text/javascript">$(function() { ConcreteServerEvents.listen(\'' . $mercureService->getPublisherUrl() . '\', \'' . (string) $siteUrl . '\') });</script>'
+            );
+        }
+    }
 }

@@ -1,0 +1,29 @@
+div.theme-atomik {
+  div.ccm-block-feature-link {
+    margin-bottom: 2rem;
+
+    div.ccm-block-feature-link-text {
+      font-size: 1.25rem;
+
+      p {
+        color: $secondary;
+      }
+    }
+
+    @include make-display-headings();
+
+    @include media-breakpoint-up(md) {
+      margin-bottom: 0;
+    }
+  }
+
+  .row {
+    > div:last-child {
+      > div.ccm-block-feature-link {
+        margin-bottom: 0; // If the feature link comes at the of a container we don't want to add extra margin
+      }
+    }
+  }
+
+}
+

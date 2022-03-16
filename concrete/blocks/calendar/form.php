@@ -2,32 +2,31 @@
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\Color;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\View\View;
 
-/** @var int $caID */
-/** @var string $calendarAttributeKeyHandle */
-/** @var int $filterByTopicAttributeKeyID */
+/** @var int|null $caID */
+/** @var string|null $calendarAttributeKeyHandle */
+/** @var int|null $filterByTopicAttributeKeyID */
 /** @var int $filterByTopicID */
+$filterByTopicID = $filterByTopicID ?? 0;
 /** @var string $viewTypes */
 /** @var string $viewTypesOrder */
-/** @var string $defaultView */
+/** @var string|null $defaultView */
 /** @var int $navLinks */
 /** @var int $eventLimit */
-/** @var array $lightboxProperties */
-/** @var array $viewTypesSelected */
-/** @var array $viewTypesOrder */
-/** @var array $lightboxPropertiesSelected */
-/** @var array $calendars */
-/** @var array $attributeKeys */
-/** @var array $viewTypes */
+/** @var array<string,string> $lightboxProperties */
+/** @var string[] $viewTypesSelected */
+/** @var string[] $viewTypesOrder */
+/** @var array<string,string> $lightboxPropertiesSelected */
+/** @var Concrete\Core\Entity\Calendar\Calendar[] $calendars */
+/** @var Concrete\Core\Entity\Attribute\Key\EventKey[] $attributeKeys */
+/** @var array<string, string> $viewTypes */
+/** @var Concrete\Core\Form\Service\Form $form */
 
 $app = Application::getFacadeApplication();
-/** @var Form $form */
-$form = $app->make(Form::class);
-/** @var Color $color */
+/** @var Concrete\Core\Form\Service\Widget\Color $color */
 $color = $app->make(Color::class);
 ?>
 
@@ -38,8 +37,8 @@ $color = $app->make(Color::class);
 
     <?php /** @noinspection PhpUnhandledExceptionInspection */
     View::element('calendar/block/data_source', [
-        'caID' => isset($caID) ? $caID : null,
-        'calendarAttributeKeyHandle' => isset($calendarAttributeKeyHandle) ? $calendarAttributeKeyHandle : null
+        'caID' => $caID ?? null,
+        'calendarAttributeKeyHandle' => $calendarAttributeKeyHandle ?? null,
     ]) ?>
 </fieldset>
 
@@ -50,20 +49,24 @@ $color = $app->make(Color::class);
 
     <div data-section="customize-results">
         <div class="form-group">
-            <?php echo $form->label("viewTypes", t("View Types")); ?>
+            <?php echo $form->label('viewTypes', t('View Types')); ?>
 
-            <?php if ($viewTypes) { ?>
-                <?php foreach ($viewTypes as $key => $name) { ?>
+            <?php if ($viewTypes) {
+                /**
+                 * @var string $key
+                 * @var string $name
+                 */
+                foreach ($viewTypes as $key => $name) { ?>
                     <div class="form-check">
-                        <?php echo $form->checkbox('viewTypes[]', $key, in_array($key, $viewTypesSelected), ["name" => "viewTypes[]", "id" => "viewTypes" . $key]); ?>
-                        <?php echo $form->label("viewTypes" . $key, $name, ["class" => "form-check-label"]); ?>
+                        <?php echo $form->checkbox('viewTypes[]', $key, in_array($key, $viewTypesSelected), ['name' => 'viewTypes[]', 'id' => 'viewTypes_' . $key]); ?>
+                        <?php echo $form->label('viewTypes_' . $key, $name, ['class' => 'form-check-label']); ?>
                     </div>
                 <?php } ?>
             <?php } ?>
         </div>
 
         <div class="form-group">
-            <?php echo $form->label("", t("View Type Order")); ?>
+            <?php echo $form->label('', t('View Type Order')); ?>
 
             <p class="help-block">
                 <?php echo t('Click and drag to change view type order.'); ?>
@@ -75,7 +78,7 @@ $color = $app->make(Color::class);
                         <?php $valueNameArray = explode('_', $valueName); ?>
 
                         <li style="cursor: move" data-field-order-item="<?php echo $valueNameArray[0]; ?>">
-                            <?php echo $form->hidden("viewTypesOrder[]", $valueName); ?>
+                            <?php echo $form->hidden('viewTypesOrder[]', $valueName); ?>
                             <?php echo $valueNameArray[1]; ?>
                             <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
                         </li>
@@ -87,15 +90,15 @@ $color = $app->make(Color::class);
 
     <div class="form-group">
         <?php echo $form->label('defaultView', t('Default View')); ?>
-        <?php echo $form->select('defaultView', $viewTypes, isset($defaultView) ? $defaultView : null); ?>
+        <?php echo $form->select('defaultView', $viewTypes, $defaultView ?? null); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->label("", t("Day Heading Links")); ?>
+        <?php echo $form->label('', t('Day Heading Links')); ?>
 
         <div class="form-check">
-            <?php echo $form->checkbox('navLinks', 1, !empty($navLinks)); ?>
-            <?php echo $form->label("navLinks", t('Make day headings into links.'), ["class" => "form-check-label"]); ?>
+            <?php echo $form->checkbox('navLinks', '1', !empty($navLinks)); ?>
+            <?php echo $form->label('navLinks', t('Make day headings into links.'), ['class' => 'form-check-label']); ?>
         </div>
     </div>
 
@@ -104,11 +107,11 @@ $color = $app->make(Color::class);
     </p>
 
     <div class="form-group">
-        <?php echo $form->label("", t("Event Limit")); ?>
+        <?php echo $form->label('', t('Event Limit')); ?>
 
         <div class="form-check">
-            <?php echo $form->checkbox('eventLimit', 1, !empty($eventLimit)); ?>
-            <?php echo $form->label("eventLimit", t('Limit the number of events displayed on a day.'), ["class" => "form-check-label"]); ?>
+            <?php echo $form->checkbox('eventLimit', '1', !empty($eventLimit)); ?>
+            <?php echo $form->label('eventLimit', t('Limit the number of events displayed on a day.'), ['class' => 'form-check-label']); ?>
         </div>
 
         <p class="help-block">
@@ -123,16 +126,17 @@ $color = $app->make(Color::class);
     </legend>
 
     <div class="form-group">
-        <?php echo $form->label("totalToRetrieve", t("Filter by Topic Attribute")); ?>
+        <?php echo $form->label('totalToRetrieve', t('Filter by Topic Attribute')); ?>
 
         <!--suppress HtmlFormInputWithoutLabel -->
-        <select class="form-control" name="filterByTopicAttributeKeyID">
+        <select class="form-select" name="filterByTopicAttributeKeyID">
             <option value="">
                 <?php echo t('** None') ?>
             </option>
 
-            <?php foreach ($attributeKeys as $ak) { ?>
-                <?php $attributeController = $ak->getController(); ?>
+            <?php foreach ($attributeKeys as $ak) {
+                /** @var \Concrete\Attribute\Topics\Controller $attributeController */
+                $attributeController = $ak->getController(); ?>
 
                 <option value="<?php echo h($ak->getAttributeKeyID()) ?>"
                         <?php if (isset($filterByTopicAttributeKeyID) && $ak->getAttributeKeyID() == $filterByTopicAttributeKeyID) { ?>selected<?php } ?>
@@ -142,7 +146,7 @@ $color = $app->make(Color::class);
             <?php } ?>
         </select>
 
-        <?php echo $form->hidden("filterByTopicID", isset($filterByTopicID) ? $filterByTopicID : ''); ?>
+        <?php echo $form->hidden('filterByTopicID', (string) $filterByTopicID); ?>
 
         <div class="tree-view-container">
             <div class="tree-view-template"></div>
@@ -161,8 +165,8 @@ $color = $app->make(Color::class);
 
     <?php foreach ($lightboxProperties as $key => $name) { ?>
         <div class="form-check">
-            <?php echo $form->checkbox('lightboxProperties[]', $key, in_array($key, $lightboxPropertiesSelected), ["name" => "lightboxProperties[]", "id" => "lightboxProperties_" . $key]) ?>
-            <?php echo $form->label("lightboxProperties_" . $key, $name, ["class" => "form-check-label"]) ?>
+            <?php echo $form->checkbox('lightboxProperties[]', $key, in_array($key, $lightboxPropertiesSelected), ['name' => 'lightboxProperties[]', 'id' => 'lightboxProperties_' . $key]) ?>
+            <?php echo $form->label('lightboxProperties_' . $key, $name, ['class' => 'form-check-label']) ?>
         </div>
     <?php } ?>
 </fieldset>
@@ -182,7 +186,7 @@ $color = $app->make(Color::class);
             $('.tree-view-template').concreteTree({
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
-                'selectNodesByKey': [<?php echo isset($filterByTopicID) ? (int)$filterByTopicID : 0?>],
+                'selectNodesByKey': [<?php echo $filterByTopicID ?>],
                 'onSelect': function (nodes) {
                     if (nodes.length) {
                         $('input[name=filterByTopicID]').val(nodes[0]);
@@ -202,7 +206,7 @@ $color = $app->make(Color::class);
         var sortList = form.find('ul[data-sort-list=view-types]');
 
         form.on('click', 'input[type=checkbox]', function () {
-            var label = $(this).parent().find('span').html();
+            var label = $(this).parent().find('label').html();
             var id = $(this).attr('id');
             var splitID = id.split('_');
             var value = splitID[1];

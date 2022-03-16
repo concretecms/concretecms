@@ -93,6 +93,10 @@ class ArrangeBlocks extends Page
                 } else {
                     $block = Block::getByID($movingBlockID, $nvc, $sourceAreaHandle);
                 }
+                // we need to check permissions of the original block in case of a scrapbook proxy
+                if ($block && $block->getBlockTypeHandle() === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+                    $block = Block::getByID($block->getController()->getOriginalBlockID());
+                }
                 if (!$block) {
                     $e->add(t('Unable to find the block to be moved.'));
                 } elseif (!$destAP->canAddBlock($block)) {

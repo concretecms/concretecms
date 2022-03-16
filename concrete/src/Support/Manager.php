@@ -1,15 +1,28 @@
 <?php
 namespace Concrete\Core\Support;
 
+use Illuminate\Contracts\Container\Container;
+
 class Manager extends \Illuminate\Support\Manager
 {
 
     protected $defaultDriver;
 
+    /**
+     * @var Container
+     */
+    protected $app;
+
+    public function __construct(Container $container)
+    {
+        parent::__construct($container);
+        $this->app = $container;
+    }
+
     protected function createDriver($driver)
     {
 
-        // Note –this overrides the laravel createDriver because we do concrete5
+        // Note –this overrides the laravel createDriver because we do Concrete
         // camelcasing magic.
 
         $method = 'create'.camelcase($driver).'Driver';

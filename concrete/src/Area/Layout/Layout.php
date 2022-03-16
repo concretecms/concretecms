@@ -40,7 +40,7 @@ abstract class Layout extends ConcreteObject
     /**
      * @param int $arLayoutID
      *
-     * @return CustomLayout|ThemeGridLayout|null
+     * @return \Concrete\Core\Area\Layout\PresetLayout|CustomLayout|ThemeGridLayout|null
      */
     public static function getByID($arLayoutID)
     {
@@ -144,7 +144,7 @@ abstract class Layout extends ConcreteObject
         $r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', [$this->arLayoutID]);
         $columns = [];
         $class = '\\Concrete\\Core\\Area\\Layout\\' . Core::make('helper/text')->camelcase($this->arLayoutType) . 'Column';
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $column = call_user_func_array([$class, 'getByID'], [$row['arLayoutColumnID']]);
             if (is_object($column)) {
                 $column->setAreaLayoutObject($this);
@@ -183,11 +183,6 @@ abstract class Layout extends ConcreteObject
     public function export($node)
     {
         $layout = $node->addChild('arealayout');
-        if ($this->isAreaLayoutUsingThemeGridFramework()) {
-            $layout->addAttribute('type', 'theme-grid');
-        } else {
-            $layout->addAttribute('type', 'custom');
-        }
         $this->exportDetails($layout);
         $columns = $layout->addChild('columns');
         foreach ($this->getAreaLayoutColumns() as $column) {

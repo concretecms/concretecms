@@ -1,0 +1,15 @@
+div.ccm-ui {
+  .modal-header {
+    background-color: $blue;
+    color: $modal-title-color;
+    font-weight: 400;
+
+    .modal-title {
+      font-size: $modal-title-font-size;
+      font-weight: $modal-title-font-weight;
+      letter-spacing: $modal-title-letter-spacing;
+    }
+
+
+  }
+}

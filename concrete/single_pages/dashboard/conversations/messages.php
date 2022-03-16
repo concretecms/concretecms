@@ -5,10 +5,15 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var \Concrete\Core\Conversation\Message\MessageList $list
+ * @var Concrete\Core\Conversation\Message\MessageList $list
  * @var array $messages
  * @var array $cmpFilterTypes
  * @var string $cmpMessageFilter
+ * @var Concrete\Controller\SinglePage\Dashboard\Conversations\Messages $controller
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Validation\CSRF\Token $validation_token
+ * @var Concrete\Core\Permission\IPService $validation_ip
+ * @var Concrete\Core\Localization\Service\Date $date
  */
 $resolverManager = app(ResolverManagerInterface::class);
 ?>
@@ -28,16 +33,17 @@ $resolverManager = app(ResolverManagerInterface::class);
             <?php if (count($messages) > 0) {
             foreach ($messages as $msg) {
                 $cnv = $msg->getConversationObject();
+                $page = null;
                 if (is_object($cnv)) {
                     $page = $cnv->getConversationPageObject();
                 }
 
                 $msgID = $msg->getConversationMessageID();
                 $cnvID = $cnv->getConversationID();
-                $p = new Permissions($cnv);
+                $p = new \Concrete\Core\Permission\Checker($cnv);
                 $author = $msg->getConversationMessageAuthorObject();
                 $formatter = $author->getFormatter();
-
+                $displayFlagOption = false;
                 $displayUnflagOption = $p->canFlagConversationMessage() && $msg->isConversationMessageFlagged();
                 $displayUndeleteOption = $p->canDeleteConversationMessage() && $msg->isConversationMessageDeleted();
 
@@ -50,11 +56,11 @@ $resolverManager = app(ResolverManagerInterface::class);
                 <tr>
                     <!-- <td><?=$form->checkbox('cnvMessageID[]', $msg->getConversationMessageID())?></td> -->
                     <td>
-                        <?=$dh->formatDateTime(strtotime($msg->getConversationMessageDateTime()))?>
+                        <?=$date->formatDateTime(strtotime($msg->getConversationMessageDateTime()))?>
                     </td>
                     <td>
                         <div class="ccm-popover ccm-conversation-message-popover popover fade" data-menu="<?=$msg->getConversationMessageID()?>">
-                            <div class="arrow"></div><div class="popover-inner">
+                            <div class="popover-arrow"></div><div class="popover-inner">
                                 <ul class="dropdown-menu">
                                 <?php if (is_object($page)) { ?>
                                     <li><a href="<?=$page->getCollectionLink()?>#cnv<?=$cnv->getConversationID()?>Message<?=$msg->getConversationMessageID()?>" class="dropdown-item"><?=t('View Conversation')?></a></li>
@@ -126,14 +132,20 @@ $resolverManager = app(ResolverManagerInterface::class);
 </div>
 
 <div class="ccm-dashboard-header-buttons">
-    <form class="form-inline" role="form" action="<?=$controller->action('view')?>">
-        <input type="text" class="ml-2 form-control-sm form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($_REQUEST['cmpMessageKeywords'])?>" placeholder="<?=t('Keywords')?>">
-        <select class="ml-2 custom-select custom-select-sm" name="cmpMessageFilter">
-            <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
-                <option value="<?= $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?= $optionText; ?></option>
-            <?php } ?>
-        </select>
-        <button class="ml-2 btn btn-secondary btn-sm" type="submit"><i class="fas fa-search"></i></button>
+    <form class="row row-cols-auto g-0 align-items-center" role="form" action="<?=$controller->action('view')?>">
+        <div class="col-auto">
+            <input type="text" class="ms-2 form-control-sm form-control" autocomplete="off" name="cmpMessageKeywords" value="<?=h($controller->get('cmpMessageKeywords'))?>" placeholder="<?=t('Keywords')?>">
+        </div>
+        <div class="col-auto">
+            <select class="ms-2 form-select form-select-sm" name="cmpMessageFilter">
+                <?php foreach ($cmpFilterTypes as $optionValue => $optionText) { ?>
+                    <option value="<?= $optionValue; ?>" <?php if ($optionValue == $cmpMessageFilter) { echo 'selected'; } ?>><?= $optionText; ?></option>
+                <?php } ?>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button class="ms-2 btn btn-secondary btn-sm" type="submit"><i class="fas fa-search"></i></button>
+        </div>
     </form>
 </div>
 
@@ -151,7 +163,7 @@ $(function() {
             url: <?= json_encode((string) $resolverManager->resolve(['/ccm/frontend/conversations/flag_message/1'])) ?>,
             data: {
                 'cnvMessageID': $(this).attr('data-message-id'),
-                'token': '<?= $valt->generate('flag_conversation_message'); ?>'
+                'token': '<?= $validation_token->generate('flag_conversation_message'); ?>'
             },
             success: function(r) {
                 window.location.reload();
@@ -165,7 +177,7 @@ $(function() {
             url: <?= json_encode((string) $resolverManager->resolve(['/ccm/frontend/conversations/delete_message'])) ?>,
             data: {
                 'cnvMessageID': $(this).attr('data-message-id'),
-                'token': '<?= $valt->generate('delete_conversation_message'); ?>'
+                'token': '<?= $validation_token->generate('delete_conversation_message'); ?>'
             },
             success: function(r) {
                 window.location.reload();

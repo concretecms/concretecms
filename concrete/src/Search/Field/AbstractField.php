@@ -2,6 +2,7 @@
 namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Utility\Service\Xml;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 abstract class AbstractField implements FieldInterface
@@ -69,6 +70,14 @@ abstract class AbstractField implements FieldInterface
         ];
     }
 
+    public function export(\SimpleXMLElement $element)
+    {
+        $xml = new Xml();
+        $fieldNode = $element->addChild('field');
+        $fieldNode->addAttribute('key', $this->getKey());
+        $xml->createCDataNode($fieldNode, 'data', json_encode($this->data));
+    }
+
     public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = [])
     {
         $this->data = $data['data'];
@@ -77,6 +86,15 @@ abstract class AbstractField implements FieldInterface
     public function setData($key, $value)
     {
         $this->data[$key] = $value;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed|null
+     */
+    public function getData(string $key)
+    {
+        return $this->data[$key] ?? null;
     }
 
     /**
@@ -93,6 +111,15 @@ abstract class AbstractField implements FieldInterface
                 }
             }
             $this->isLoaded = true;
+        }
+
+        return $this;
+    }
+
+    public function loadDataFromImport(\SimpleXMLElement $element)
+    {
+        if (!$this->isLoaded) {
+            $this->data = json_decode($element->data);
         }
     }
 }

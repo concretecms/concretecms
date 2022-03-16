@@ -21,6 +21,7 @@ class ApprovePageRequest extends PageRequest
     private $isScheduled = false;
     private $cvPublishDate;
     private $cvPublishEndDate;
+    private $keepOtherScheduling = false;
 
     public function __construct()
     {
@@ -92,7 +93,7 @@ class ApprovePageRequest extends PageRequest
 
     public function getWorkflowRequestApproveButtonInnerButtonRightHTML()
     {
-        return '<i class="fa fa-thumbs-o-up"></i>';
+        return '<i class="fas fa-thumbs-up"></i>';
     }
 
     public function getWorkflowRequestApproveButtonText()
@@ -114,7 +115,7 @@ class ApprovePageRequest extends PageRequest
         }
 
         $span = new Element('i');
-        $span->addClass('fa fa-file');
+        $span->addClass('fas fa-file');
         return $span;
     }
 
@@ -130,7 +131,7 @@ class ApprovePageRequest extends PageRequest
             $button->addWorkflowProgressActionButtonParameter('dialog-title', t('Compare Versions'));
             $button->addWorkflowProgressActionButtonParameter('dialog-width', '90%');
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
-            $button->addWorkflowProgressActionButtonParameter('data-dismiss-alert', 'page-alert');
+            $button->addWorkflowProgressActionButtonParameter('data-bs-dismiss-alert', 'page-alert');
             $button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
             $button->setWorkflowProgressActionURL(app(ResolverManagerInterface::class)->resolve(['/ccm/system/workflow/dialogs/approve_page_preview']) . '?wpID=' . $wp->getWorkflowProgressID());
             $button->setWorkflowProgressActionStyleClass('dialog-launch');
@@ -156,7 +157,7 @@ class ApprovePageRequest extends PageRequest
     {
         $c = Page::getByID($this->getRequestedPageID());
         $v = CollectionVersion::get($c, $this->cvID);
-        $v->approve(false, $this->cvPublishDate, $this->cvPublishEndDate);
+        $v->approve(false, $this->cvPublishDate, $this->cvPublishEndDate, $this->keepOtherScheduling);
 
         $ev = new \Concrete\Core\Page\Collection\Version\Event($c);
         $ev->setCollectionVersionObject($v);
@@ -180,6 +181,40 @@ class ApprovePageRequest extends PageRequest
         $c = Page::getByID($this->getRequestedPageID());
         $v = CollectionVersion::get($c, $this->cvID);
         return $v->getVersionComments();
+    }
+
+    public function getPublishDate()
+    {
+        return $this->cvPublishDate;
+    }
+
+    public function getPublishEndDate()
+    {
+        return $this->cvPublishEndDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldKeepOtherScheduling(): bool
+    {
+        return $this->keepOtherScheduling;
+    }
+
+    /**
+     * @param bool $keepOtherScheduling
+     */
+    public function setKeepOtherScheduling(bool $keepOtherScheduling): void
+    {
+        $this->keepOtherScheduling = $keepOtherScheduling;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isScheduled(): bool
+    {
+        return $this->isScheduled;
     }
 
 }

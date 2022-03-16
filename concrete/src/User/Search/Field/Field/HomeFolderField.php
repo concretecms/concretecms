@@ -29,7 +29,7 @@ class HomeFolderField extends AbstractField
         $app = Application::getFacadeApplication();
         /** @var FileFolderSelector $fileFolderSelector */
         $fileFolderSelector = $app->make(FileFolderSelector::class);
-        return $fileFolderSelector->selectFileFolder('home_folder');
+        return $fileFolderSelector->selectFileFolder('home_folder', $this->getData('home_folder'));
     }
 
     /**
@@ -38,7 +38,7 @@ class HomeFolderField extends AbstractField
      */
     public function filterList(ItemList $list)
     {
-        $list->filterByHomeFolderID($this->data['home_folder']);
+        $list->filterByHomeFolderID($this->getData('home_folder'));
     }
 
 

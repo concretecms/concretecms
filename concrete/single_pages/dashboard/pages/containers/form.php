@@ -7,14 +7,15 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Validation\CSRF\Token $token
  * @var Concrete\Core\Entity\Page\Container[] $containers
- * @var Concrete\Core\Entity\Page\Container $container
+ * @var Concrete\Core\Entity\Page\Container|null $container
+ * @var \Concrete\Core\Page\View\PageView $view
  * @var string $tokenMessage
  */
 
 $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 $icons = $app->make(\Concrete\Core\Page\Container\IconRepository::class)->getIcons();
-
-if (isset($container) && $container) {
+$container = $container ?? null;
+if ($container) {
     $action = URL::to('/dashboard/pages/containers/update_container', $container->getContainerID());
     $buttonText = t('Save');
     $containerName = $container->getContainerName();
@@ -80,11 +81,11 @@ if (isset($container) && $container) {
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/pages/containers'); ?>" class="btn btn-secondary float-left"><?=t('Cancel'); ?></a>
-            <button type="submit" class="btn float-right btn-primary"><?=$buttonText; ?></button>
+            <a href="<?=URL::to('/dashboard/pages/containers'); ?>" class="btn btn-secondary float-start"><?=t('Cancel'); ?></a>
+            <button type="submit" class="btn float-end btn-primary"><?=$buttonText; ?></button>
             <?php if ($container) {
                 ?>
-                <button type="button" class="btn float-right btn-danger mr-1" data-toggle="modal" data-target="#delete-container"><?=t('Delete Container'); ?></button>
+                <button type="button" class="btn float-end btn-danger me-1" data-bs-toggle="modal" data-bs-target="#delete-container"><?=t('Delete Container'); ?></button>
             <?php
             } ?>
         </div>
@@ -99,16 +100,14 @@ if (isset($container) && $container) {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title"><?=t('Delete Container'); ?></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="<?= t('Close') ?>">
-                            <svg><use xlink:href="#icon-dialog-close" /></svg>
-                        </button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                     </div>
                     <div class="modal-body">
                         <?=t('Are you sure you want to remove this container? Content will be lost anywhere it is used on your site. This cannot be undone.'); ?>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal"><?=t('Cancel'); ?></button>
-                        <button type="submit" class="btn btn-danger float-right"><?=t('Delete Container'); ?></button>
+                        <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal"><?=t('Cancel'); ?></button>
+                        <button type="submit" class="btn btn-danger float-end"><?=t('Delete Container'); ?></button>
                     </div>
                 </div>
             </div>

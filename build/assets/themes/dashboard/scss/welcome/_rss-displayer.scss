@@ -3,7 +3,7 @@ body.ccm-dashboard-desktop {
     position: relative;
     background: $gray-100;
     border-radius: .25rem;
-    box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
+    box-shadow: $popover-box-shadow;
     display: flex;
     align-items: flex-start;
 

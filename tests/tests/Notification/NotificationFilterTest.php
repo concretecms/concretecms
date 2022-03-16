@@ -36,7 +36,7 @@ class NotificationFilterTest extends ConcreteDatabaseTestCase
         $this->assertCount(12, $filters);
         $filter = $filters[0];
         $this->assertInstanceOf(FilterInterface::class, $filter);
-        $this->assertEquals('concrete5 Updates', $filter->getName());
+        $this->assertEquals('Concrete Updates', $filter->getName());
     }
 
     public function testFilterListFactoryWorkflow()

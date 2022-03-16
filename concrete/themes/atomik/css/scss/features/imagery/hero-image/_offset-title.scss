@@ -1,0 +1,60 @@
+div.theme-atomik {
+  div.ccm-block-hero-image-offset-title {
+    height: 0;
+    overflow: hidden;
+
+    .ccm-block-hero-image-offset-image-container {
+      overflow: hidden;
+      img {
+        width: 100%;
+      }
+    }
+
+    div.ccm-block-hero-image-text {
+
+      text-align: center;
+
+      @include media-breakpoint-up(lg) {
+        margin-left: 6rem;
+        margin-right: 6rem;
+      }
+
+      @include media-breakpoint-up(xl) {
+        position: relative;
+        z-index: 2;
+        margin-top: -6rem; // put the h1 on top of the image.
+        background-color: $body-bg;
+      }
+
+      h1 {
+        font-family: $display-font-family;
+        @extend .display-2;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+        margin-bottom: 0;
+
+      }
+
+      p {
+        @include line-height-crop(3);
+        font-size: $lead-font-size;
+        color: $secondary;
+      }
+    }
+
+  }
+
+  @include media-breakpoint-up(lg) {
+    // If a container is around, let's add some extra padding
+
+    div.container {
+      div.ccm-block-hero-image-offset-title {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+
+}
+
+

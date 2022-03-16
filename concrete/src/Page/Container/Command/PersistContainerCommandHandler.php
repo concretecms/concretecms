@@ -3,7 +3,6 @@
 namespace Concrete\Core\Page\Container\Command;
 
 use Concrete\Core\Entity\Page\Container;
-use Concrete\Core\Foundation\Command\CommandInterface;
 use Doctrine\ORM\EntityManager;
 
 class PersistContainerCommandHandler
@@ -19,7 +18,7 @@ class PersistContainerCommandHandler
         $this->entityManager = $entityManager;
     }
 
-    public function handle(ContainerCommand $command)
+    public function __invoke(ContainerCommand $command)
     {
         $container = $command->getContainer();
         $this->entityManager->persist($container);

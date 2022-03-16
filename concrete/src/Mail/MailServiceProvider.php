@@ -3,7 +3,7 @@ namespace Concrete\Core\Mail;
 
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Mail\Transport\Factory as TransportFactory;
-use Zend\Mail\Transport\TransportInterface;
+use Laminas\Mail\Transport\TransportInterface;
 
 class MailServiceProvider extends ServiceProvider
 {

@@ -1,0 +1,20 @@
+/**
+ * Use when a table row has been added or updated.
+ */
+tr.table-row-highlight {
+  td {
+    animation-duration: 1.5s;
+    animation-fill-mode: both;
+    animation-name: tableRowHighlight;
+  }
+}
+
+@keyframes tableRowHighlight {
+  0% {
+    background-color: $table-row-highlight-bg;
+  }
+
+  90% {
+    background-color: $table-row-highlight-bg;
+  }
+}

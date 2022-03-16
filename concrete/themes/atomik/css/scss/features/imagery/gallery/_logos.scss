@@ -1,0 +1,34 @@
+div.theme-atomik {
+  .ccm-block-gallery-logos {
+    margin-top: -2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+    .logo {
+
+      img {
+        max-width: 200px;
+        max-height: 32px;
+      }
+
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .ccm-block-gallery-logos {
+      display: block;
+      .logo {
+        img, picture {
+          margin-bottom: 2rem;
+          margin-left: auto;
+          margin-right: auto;
+          display: block;
+        }
+      }
+    }
+  }
+
+}

@@ -24,7 +24,7 @@ class HttpClientTest extends TestCase
      */
     private static $testRemoteURI;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass():void
     {
         self::$app = Application::getFacadeApplication();
         self::$testRemoteURI = getenv('CONCRETE5TESTS_TEST_REMOTE_URI') ?: 'https://www.concrete5.org/';

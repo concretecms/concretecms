@@ -26,11 +26,8 @@ $saveUrl = Url::createFromUrl($view->action('save_avatar'))->setQuery(array(
 ?>
 
 <div data-view="account">
-    <h2>
-        <?php echo $c->getCollectionName()?>
-    </h2>
-  
-    <p>
+
+    <p class="lead">
         <?php echo t('Change the picture attached to my posts.') ?>
     </p>
 
@@ -39,6 +36,8 @@ $saveUrl = Url::createFromUrl($view->action('save_avatar'))->setQuery(array(
             v-bind:width="<?php echo h($config->get('concrete.icons.user_avatar.width')) ?>"
             uploadurl="<?php echo h($saveUrl) ?>"
             uploadtoken="<?php echo h($token->generate()) ?>"
+            cancel-confirm-text="<?= h(t('Are you sure you want to quit?')) ?>"
+            canceled-text="<?= h(t('Upload canceled.')) ?>"
             src="<?php echo h($profile->getUserAvatar()->getPath()) ?>">
     </avatar-cropper>
 

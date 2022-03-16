@@ -17,6 +17,7 @@ use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Routing\Router;
 use Doctrine\ORM\EntityManagerInterface;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\AuthorizationValidators\BearerTokenValidator;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
@@ -28,7 +29,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
-use phpseclib\Crypt\RSA;
+use phpseclib3\Crypt\RSA;
 use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\CryptKey;
 
@@ -57,6 +58,16 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->singleton(ScopeRegistryInterface::class, function() {
             return new ScopeRegistry();
         });
+        
+        // Provide our public key to the BearerTokenValidator
+        $this->app->extend(BearerTokenValidator::class, function(BearerTokenValidator $validator) {
+            if (method_exists($validator, 'setPublicKey')) {
+                $key = (string) $this->getKey(self::KEY_PUBLIC);
+                $validator->setPublicKey(new CryptKey($key));
+            }
+
+            return $validator;
+        });
     }
 
     private function repositoryFactory($factoryClass, $entityClass)
@@ -66,8 +77,8 @@ class ApiServiceProvider extends ServiceProvider
             $metadata = $em->getClassMetadata($entityClass);
 
             return $this->app->make($factoryClass, [
-                $em,
-                $metadata
+                'em' => $em,
+                'class' => $metadata,
             ]);
         };
     }
@@ -92,14 +103,11 @@ class ApiServiceProvider extends ServiceProvider
         $keyPair = $config->get('api.keypair');
 
         if (!$keyPair) {
-            $rsa = $this->app->make(RSA::class);
-
             // Generate a new RSA key
-            $keyPair = $rsa->createKey(2048);
+            $privateKey = RSA::createKey(2048);
+            $publicKey = $privateKey->getPublicKey();
 
-            foreach ($keyPair as &$item) {
-                $item = str_replace("\r\n", "\n", $item);
-            }
+            $keyPair = [self::KEY_PRIVATE=>str_replace("\r\n","\n",$privateKey->__toString()),self::KEY_PUBLIC=>str_replace("\r\n","\n",$publicKey->__toString())];
 
             // Save the keypair
             $config->save('api.keypair', $keyPair);
@@ -110,10 +118,10 @@ class ApiServiceProvider extends ServiceProvider
 
     /**
      * Get a key by handle
-     * @param $handle privatekey | publickey
+     * @param string $handle privatekey | publickey
      * @return string|null
      */
-    private function getKey($handle)
+    private function getKey(string $handle)
     {
         if (!$this->keyPair) {
             $this->keyPair = $this->getKeyPair();
@@ -130,22 +138,22 @@ class ApiServiceProvider extends ServiceProvider
         // The ResourceServer deals with authenticating requests, in other words validating tokens
         $this->app->bind(ResourceServer::class, function() {
             $cryptKey = new CryptKey($this->getKey(self::KEY_PUBLIC), null, DIRECTORY_SEPARATOR !== '\\');
-            return $this->app->build(ResourceServer::class, [
+            return new ResourceServer(
                 $this->app->make(AccessTokenRepositoryInterface::class),
                 $cryptKey,
                 $this->app->make(DefaultValidator::class)
-            ]);
+            );
         });
 
         // AuthorizationServer on the other hand deals with authorizing a session with a username and password and key and secret
         $this->app->when(AuthorizationServer::class)->needs('$privateKey')->give($this->getKey(self::KEY_PRIVATE));
         $this->app->when(AuthorizationServer::class)->needs('$publicKey')->give($this->getKey(self::KEY_PUBLIC));
+        $this->app->when(AuthorizationServer::class)->needs('$encryptionKey')->give($this->app->make('config/database')->get('concrete.security.token.encryption'));
         $this->app->when(AuthorizationServer::class)->needs(ResponseTypeInterface::class)->give(function() {
             return $this->app->make(IdTokenResponse::class);
         });
 
         $this->app->extend(AuthorizationServer::class, function (AuthorizationServer $server) {
-            $server->setEncryptionKey($this->app->make('config/database')->get('concrete.security.token.encryption'));
 
             $oneHourTTL = new \DateInterval('PT1H');
             $oneDayTTL = new \DateInterval('P1D');

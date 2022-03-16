@@ -9,7 +9,7 @@ use Concrete\Core\Page\Page;
 class UpdateForkedAliasDefaultsBlockCommandHandler
 {
 
-    public function handle(UpdateForkedAliasDefaultsBlockCommand $command)
+    public function __invoke(UpdateForkedAliasDefaultsBlockCommand $command)
     {
         $page = Page::getByID($command->getPageID(), $command->getCollectionVersionID());
         if ($page && !$page->isError()) {
@@ -21,7 +21,12 @@ class UpdateForkedAliasDefaultsBlockCommandHandler
                     if (is_object($forked) && !$forked->isError()) {
                         // take the current block that is in defaults, and replace the block on the page
                         // with that block.
-                        $existingDisplayOrder = $forked->getBlockDisplayOrder();
+                        if ($command->getForceDisplayOrder()) {
+                            $existingDisplayOrder = $b->getBlockDisplayOrder();
+                        } else {
+                            $existingDisplayOrder = $forked->getBlockDisplayOrder();
+                        }
+
                         $bt = $b->getBlockTypeObject();
 
                         // Now we delete the existing forked block.
@@ -35,7 +40,7 @@ class UpdateForkedAliasDefaultsBlockCommandHandler
                         }
 
                         $b->setAbsoluteBlockDisplayOrder($existingDisplayOrder);
-                        $page->rescanDisplayOrder($command->getAreaHandle());
+                        $page->rescanDisplayOrderFromBlock($b, $command->getAreaHandle(), 0);
                     }
                 }
             }

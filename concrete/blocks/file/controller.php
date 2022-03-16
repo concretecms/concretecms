@@ -6,8 +6,9 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
 
-class Controller extends BlockController implements UsesFeatureInterface
+class Controller extends BlockController implements FileTrackableInterface, UsesFeatureInterface
 {
     protected $btInterfaceWidth = 300;
 
@@ -36,11 +37,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function getBlockTypeName()
     {
         return t('File');
-    }
-
-    public function getJavaScriptStrings()
-    {
-        return ['file-required' => t('You must select a file.')];
     }
 
     public function getRequiredFeatures(): array
@@ -144,5 +140,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         $f = $this->getFileObject();
 
         return $f->getTitle();
+    }
+
+    public function getUsedFiles()
+    {
+        return [$this->fID];
     }
 }

@@ -37,7 +37,7 @@ use Concrete\Core\Page\Menu;
                             disabled="disabled"
                             data-search-checkbox-button="dropdown"
                             class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
-                            data-toggle="dropdown"
+                            data-bs-toggle="dropdown"
                             data-reference="parent">
 
                             <span class="sr-only">
@@ -45,9 +45,7 @@ use Concrete\Core\Page\Menu;
                             </span>
                     </button>
 
-                    <div data-search-menu="dropdown">
-                        <?php echo $resultsBulkMenu->getMenuElement(); ?>
-                    </div>
+                    <?php echo $resultsBulkMenu->getMenuElement(); ?>
                 </div>
             </th>
 
@@ -96,7 +94,7 @@ use Concrete\Core\Page\Menu;
                             </a>
                         </td>
                     <?php else: ?>
-                        <td class="<?php echo $class ?>">
+                        <td class="<?=$class?? '' ?>">
                             <?php echo $column->getColumnValue(); ?>
                         </td>
                     <?php endif; ?>
@@ -111,7 +109,7 @@ use Concrete\Core\Page\Menu;
                             <button class="btn btn-icon"
                                     data-boundary="viewport"
                                     type="button"
-                                    data-toggle="dropdown"
+                                    data-bs-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false">
 
@@ -133,7 +131,7 @@ use Concrete\Core\Page\Menu;
 <script>
     (function ($) {
         $(function () {
-            let searchResultsTable = new window.ConcreteSearchResultsTable($("#ccm-search-results-table"));
+            let searchResultsTable = new window.ConcretePageSearchTable($("#ccm-search-results-table"));
             searchResultsTable.setupBulkActions();
         });
     })(jQuery);

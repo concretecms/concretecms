@@ -59,7 +59,9 @@ class TemplateLocator
                     $filename = DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/' . DIRNAME_SUMMARY_TEMPLATES . '/' . $handle . '.php';
                     $this->themeLocation->setTheme($theme);
                     $this->fileLocator->addLocation($this->themeLocation);
-                    $this->fileLocator->addPackageLocation($template->getPackageHandle());
+                    if ($template->getPackageHandle()) {
+                        $this->fileLocator->addPackageLocation($template->getPackageHandle());
+                    }
                     $record = $this->fileLocator->getRecord($filename);
                     if ($record->exists()) {
                         return $record->getFile();

@@ -49,7 +49,7 @@
                                         <data table="btRssDisplay">
                                             <record>
                                                 <title>Tutorials</title>
-                                                <url>http://documentation.concrete5.org/rss/tutorials</url>
+                                                <url>http://documentation.concretecms.org/rss/tutorials</url>
                                                 <dateFormat>longDate</dateFormat>
                                                 <itemsToDisplay>1</itemsToDisplay>
                                                 <showSummary>1</showSummary>
@@ -66,10 +66,10 @@
                     </block>
                     <block type="core_area_layout" name="">
                         <arealayout type="theme-grid" columns="12">
-                            <columns>desktop_newsflow_latest
+                            <columns>
                                 <column span="4" offset="0">
-                                    <block type="desktop_newsflow_latest" name="">
-                                        <data table="btDesktopNewsflowLatest">
+                                    <block type="desktop_concrete_latest" name="">
+                                        <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>A</slot>
                                             </record>
@@ -77,8 +77,8 @@
                                     </block>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_newsflow_latest" name="">
-                                        <data table="btDesktopNewsflowLatest">
+                                    <block type="desktop_concrete_latest" name="">
+                                        <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>B</slot>
                                             </record>
@@ -86,8 +86,8 @@
                                     </block>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_newsflow_latest" name="">
-                                        <data table="btDesktopNewsflowLatest">
+                                    <block type="desktop_concrete_latest" name="">
+                                        <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>C</slot>
                                             </record>
@@ -99,12 +99,12 @@
                     </block>
                     <block type="rss_displayer" name="">
                         <style>
-                            <customClass>concrete5-org-stories</customClass>
+                            <customClass>concrete-blog</customClass>
                         </style>
                         <data table="btRssDisplay">
                             <record>
-                                <title>News from concrete5.org</title>
-                                <url>http://www.concrete5.org/rss/blog</url>
+                                <title>News from Concrete</title>
+                                <url>http://www.concretecms.com/rss/blog</url>
                                 <dateFormat>longDate</dateFormat>
                                 <itemsToDisplay>3</itemsToDisplay>
                                 <showSummary>1</showSummary>

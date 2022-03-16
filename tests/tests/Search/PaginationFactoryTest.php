@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Search;
 
+use Concrete\Core\Http\Request;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Search\ItemList\Pager\QueryString\VariableFactory;
 use Concrete\Core\Search\Pagination\PagerPagination;
@@ -9,9 +10,8 @@ use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Concrete\TestHelpers\Search\TestList;
-use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Tests\TestCase;
-use Symfony\Component\HttpFoundation\Request;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 class PaginationFactoryTest extends TestCase
 {
@@ -58,6 +58,9 @@ class PaginationFactoryTest extends TestCase
         $list->expects($this->once())
             ->method('getPaginationAdapter')
             ->willReturn(static::getFakeAdapter());
+        $list->expects($this->once())
+            ->method('getQueryPaginationPageParameter')
+            ->willReturn('ccm_paging_p');
 
         $factory = new PaginationFactory($request);
         $pagination = $factory->createPaginationObject($list);
@@ -76,6 +79,9 @@ class PaginationFactoryTest extends TestCase
         $list->expects($this->exactly(2))
             ->method('getResults')
             ->willReturn([]);
+        $list->expects($this->any())
+            ->method('getQueryPaginationPageParameter')
+            ->willReturn('ccm_paging_p');
 
         $factory = new PaginationFactory($request);
         $pagination = $factory->createPaginationObject($list);
@@ -95,6 +101,9 @@ class PaginationFactoryTest extends TestCase
         $list->expects($this->once())
             ->method('getPagerVariableFactory')
             ->willReturn(new VariableFactory($list));
+        $list->expects($this->any())
+            ->method('getQueryPaginationPageParameter')
+            ->willReturn('ccm_paging_p');
 
         $factory = new PaginationFactory($request);
         $pagination = $factory->createPaginationObject($list, PaginationFactory::PERMISSIONED_PAGINATION_STYLE_PAGER);

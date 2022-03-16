@@ -8,17 +8,15 @@ class Events extends Facade
         return 'director';
     }
 
+    /**
+     * @deprecated
+     * @param $eventName
+     * @param null $event
+     */
     public static function fire($eventName, $event = null)
     {
         $app = Facade::getFacadeApplication();
         $args = func_get_args();
-        // legacy support
-        if (!($event instanceof \Symfony\Component\EventDispatcher\Event)) {
-            array_shift($args);
-            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-            $event->setArgument('arguments', $args);
-        }
-
         $app['director']->dispatch($eventName, $event);
     }
 }

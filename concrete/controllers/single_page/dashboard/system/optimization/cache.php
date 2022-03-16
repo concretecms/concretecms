@@ -11,6 +11,7 @@ class Cache extends DashboardPageController
         $this->set('dateService', $this->app->make('date'));
         $config = $this->app->make('config');
         $this->set('enableBlockCache', (bool) $config->get('concrete.cache.blocks'));
+        $this->set('enableAssetCache', (bool) $config->get('concrete.cache.assets'));
         $this->set('enableThemeCssCache', (bool) $config->get('concrete.cache.theme_css'));
         $this->set('compressThemePreprocessorOutput', (bool) $config->get('concrete.theme.compress_preprocessor_output'));
         $this->set('generateLessSourcemap', (bool) $config->get('concrete.theme.generate_less_sourcemap'));
@@ -38,6 +39,7 @@ class Cache extends DashboardPageController
         }
         $config = $this->app->make('config');
         $config->save('concrete.cache.blocks', (bool) $post->get('ENABLE_BLOCK_CACHE'));
+        $config->save('concrete.cache.assets', (bool) $post->get('ENABLE_ASSET_CACHE'));
         $config->save('concrete.cache.theme_css', (bool) $post->get('ENABLE_THEME_CSS_CACHE'));
         $config->save('concrete.theme.compress_preprocessor_output', (bool) $post->get('COMPRESS_THEME_PREPROCESSOR_OUTPUT'));
         $config->save('concrete.theme.generate_less_sourcemap', (bool) $this->post('GENERATE_LESS_SOURCEMAP'));

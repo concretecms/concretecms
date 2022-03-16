@@ -6,6 +6,11 @@ use TaskPermission;
 use Marketplace;
 use Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
+/**
+ * Abstract controller for extending Concrete CMS through the Dashboard.
+ * 
+ */
+
 abstract class MarketplaceDashboardPageController extends DashboardPageController
 {
     abstract public function getMarketplaceType();
@@ -83,17 +88,16 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
             }
 
             $mri->setIncludeInstalledItems(false);
-            if (isset($_REQUEST['marketplaceRemoteItemSetID'])) {
-                $set = $_REQUEST['marketplaceRemoteItemSetID'];
-            }
 
             $mri->filterByCompatibility(1);
-            if (isset($_REQUEST['keywords']) && $_REQUEST['keywords']) {
-                $keywords = h($_REQUEST['keywords']);
+            $requestKeywords = $_REQUEST['keywords'] ?? '';
+            if ($requestKeywords) {
+                $keywords = h($requestKeywords);
                 $mri->filterByKeywords($keywords);
                 $this->set('keywords', $keywords);
             }
 
+            $set = $_REQUEST['marketplaceRemoteItemSetID'] ?? '';
             if ($set) {
                 $mri->filterBySet($set);
             }

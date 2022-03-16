@@ -11,7 +11,7 @@
     <?php echo $form->label("title", t('Feed Title')); ?>
     <div class="input-group">
     	<input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($rssObj->title) ?>"/>
-		<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'custom-select input-group-append')); ?>
+		<?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
 	</div>
 </div>
 <div class="form-group">
@@ -47,7 +47,7 @@ $(document).ready(function() {
 </script>
 <div class="form-group">
     <?= $form->label('itemsToDisplay', t('Items to Show')) ?>
-    <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>
+    <input name="itemsToDisplay" type="number" class="form-control" placeholder="10" required="required" value="<?= h($rssObj->itemsToDisplay) ?>"/>
 </div>
 <div class="form-group">
     <div class="form-check">

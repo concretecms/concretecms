@@ -20,22 +20,45 @@ class ClientRepository extends EntityRepository implements ClientRepositoryInter
      *                                        is confidential
      *
      * @return ClientEntityInterface
+     * @throws OAuthServerException
      */
-    public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
+    public function getClientEntity($clientIdentifier, $grantType = null, $clientSecret = null, $mustValidateSecret = true)
     {
+        /** @var ClientEntityInterface $client */
         $client = $this->findOneBy(['clientKey' => $clientIdentifier]);
 
         // Handle client not found
         if (!$client) {
-            throw OAuthServerException::invalidClient();
+            throw OAuthServerException::invalidCredentials();
         }
 
         // Handle validation
-        if ($mustValidateSecret && !password_verify($clientSecret, $client->getClientSecret())) {
-            throw OAuthServerException::invalidClient();
-        }
+
 
         return $client;
+    }
+
+    /**
+     * Validate a client's secret.
+     *
+     * @param string      $clientIdentifier The client's identifier
+     * @param null|string $clientSecret     The client's secret (if sent)
+     * @param null|string $grantType        The type of grant the client is using (if sent)
+     *
+     * @return bool
+     */
+    public function validateClient($clientIdentifier, $clientSecret, $grantType)
+    {
+        /** @var ClientEntityInterface $client */
+        $client = $this->findOneBy(['clientKey' => $clientIdentifier]);
+
+        // Probably need to add grant type validation
+
+        if($client->getClientSecret() && $clientSecret) {
+            return password_verify($clientSecret, $client->getClientSecret());
+        }
+
+        return false;
     }
 
     /**

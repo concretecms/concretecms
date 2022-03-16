@@ -1,5 +1,3 @@
-import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
-
 
 ;(function(global, $) {
     'use strict'
@@ -23,6 +21,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         my.activateIndividualCheckboxes()
         my.disableSelectAllOnInvalidNodeTypeSelection()
         my.setupFileUploads()
+        my.setupFileEvents()
         my.setupBulkActions()
         my.setupFolderActions()
         my.setupFavoriteFolderActions()
@@ -62,7 +61,7 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
             }
         })
 
-        ConcreteEvent.subscribe('FileManagerRefreshFavoriteFolderList', function(){
+        ConcreteEvent.subscribe('FileManagerRefreshFavoriteFolderList', function() {
             // fetch user favorite folders and render list
             new ConcreteAjaxRequest({
                 url: CCM_DISPATCHER_FILENAME + "/ccm/system/file/get_favorite_folders",
@@ -93,6 +92,21 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
         // load list on page start up
         $favoriteFolderSelector.selectpicker('refresh')
         ConcreteEvent.publish('FileManagerRefreshFavoriteFolderList')
+    }
+
+    ConcreteFileManagerTable.prototype.setupFileEvents = function () {
+        // Single file event
+        ConcreteEvent.subscribe('ConcreteDeleteFile', function() {
+            window.location.reload()
+        })
+        // Bulk file event
+        ConcreteEvent.subscribe('FileManagerDeleteFilesComplete', function() {
+            window.location.reload()
+        })
+        // File Folder
+        ConcreteEvent.subscribe('ConcreteTreeDeleteTreeNode', function() {
+            window.location.reload()
+        })
     }
 
     ConcreteFileManagerTable.prototype.disableSelectAllOnInvalidNodeTypeSelection = function() {
@@ -160,17 +174,25 @@ import Dropzone from '../../../../../node_modules/dropzone/dist/dropzone';
     ConcreteFileManagerTable.prototype.activateSearchResultMenus = function() {
         var my = this;
         my.$searchResultMenu.find('a[data-file-manager-action=download]').on('click', function(e) {
-            var fID = $(this).data('file-id');
             e.preventDefault()
+            var fID = $(this).data('file-id');
             var fUUID = $("input[data-item-id=" +fID + "]").data("item-uuid")
-            window.frames['ccm-file-manager-download-target'].location =
-                CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + fUUID ? fUUID : fID
+            var downloadIdentifier
+            if (fUUID) {
+                downloadIdentifier = fUUID
+            } else {
+                downloadIdentifier = fID
+            }
+            my.$downloadTarget.get(0).src = CCM_DISPATCHER_FILENAME + '/ccm/system/file/download?fID=' + downloadIdentifier
         })
         my.$searchResultMenu.find('a[data-file-manager-action=duplicate]').on('click', function() {
             var fID = $(this).data('file-id');
             $.concreteAjax({
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
-                data: { fID: fID },
+                data: {
+                    token: CCM_SECURITY_TOKEN,
+                    fID: fID
+                },
                 success: function(r) {
                     window.location.reload();
                 }

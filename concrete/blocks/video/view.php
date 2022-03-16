@@ -1,9 +1,19 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+use Concrete\Core\Localization\Localization;
+use Concrete\Core\Page\Page;
+
+/** @var string|null $mp4URL */
+/** @var string|null $oggURL */
+/** @var string|null $webmURL */
+/** @var string|null $posterURL */
+/** @var int|null $videoSize */
+/** @var int|null $width */
+?>
 
 <div style="text-align:center; margin-top: 20px; margin-bottom: 20px;">
 <?php
 $c = Page::getCurrentPage();
-if ($c->isEditMode()) {
+if (is_object($c) && $c->isEditMode()) {
     $loc = Localization::getInstance();
     $loc->pushActiveContext(Localization::CONTEXT_UI);
     ?>

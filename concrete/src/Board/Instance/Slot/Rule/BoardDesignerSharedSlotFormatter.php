@@ -4,17 +4,8 @@ namespace Concrete\Core\Board\Instance\Slot\Rule;
 
 use Concrete\Core\Entity\Board\InstanceSlotRule;
 
-class BoardDesignerSharedSlotFormatter implements FormatterInterface
+class BoardDesignerSharedSlotFormatter extends AbstractFormatter
 {
-
-    public function getRuleName(InstanceSlotRule $rule) : string
-    {
-        $name = $rule->getNotes();
-        if (!$name) {
-            $name = t('(No Name)');
-        }
-        return $name;
-    }
 
     public function getRuleActionDescription(InstanceSlotRule $rule): string
     {
@@ -25,9 +16,9 @@ class BoardDesignerSharedSlotFormatter implements FormatterInterface
         }
         $date = new \DateTime('@' . $rule->getDateCreated(), new \DateTimeZone($rule->getTimezone()));
         if ($rule->isLocked()) {
-            return t(/*i18n: %1$s is a user name, %2$s is a date */'Locked by %1$s on %2$s', $user, $date->format('n/j/Y'));
+            return t(/*i18n: %1$s is a user name, %2$s is a date */'Created within the board designer and locked by %1$s on %2$s', $user, $date->format('n/j/Y'));
         } else {
-            return t(/*i18n: %1$s is a user name, %2$s is a date */'Shared by %1$s on %2$s', $user, $date->format('n/j/Y'));
+            return t(/*i18n: %1$s is a user name, %2$s is a date */'Created within the board designer and shared by %1$s on %2$s', $user, $date->format('n/j/Y'));
         }
     }
 

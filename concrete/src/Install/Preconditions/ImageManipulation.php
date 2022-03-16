@@ -71,7 +71,7 @@ class ImageManipulation implements PreconditionInterface
         )) {
             $result
                 ->setState(PreconditionResult::STATE_FAILED)
-                ->setMessage(t('concrete5 requires GD library 2.0.1 with JPEG, PNG and GIF support. Doublecheck that your installation has support for all these image types.'))
+                ->setMessage(t('Concrete requires GD library 2.0.1 with JPEG, PNG and GIF support. Doublecheck that your installation has support for all these image types.'))
             ;
         }
 

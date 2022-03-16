@@ -16,9 +16,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
-    protected $btCacheBlockOutput = false;
-    protected $btCacheBlockOutputOnPost = false;
-    protected $btCacheBlockOutputForRegisteredUsers = false;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btShareThisPage';
 

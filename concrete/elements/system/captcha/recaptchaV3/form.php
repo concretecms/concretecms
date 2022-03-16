@@ -13,38 +13,23 @@ $config = $app->make('config');
 </div>
 
 <div class="form-group">
-  <div class="input-group">
-      <div class="input-group-prepend">
-        <?= $form->label('site_key', t('Site Key'), ['class'=>'input-group-text']) ?>
-      </div>
-    <?= $form->text('site_key', $config->get('captcha.recaptcha_v3.site_key')) ?>
-  </div>
+      <?= $form->label('site_key', t('Site Key')) ?>
+      <?= $form->text('site_key', $config->get('captcha.recaptcha_v3.site_key')) ?>
 </div>
 
 <div class="form-group">
-  <div class="input-group">
-    <div class="input-group-prepend">
-      <?= $form->label('secret_key', t('Secret Key'), ['class'=>'input-group-text']) ?>
-    </div>
+    <?= $form->label('secret_key', t('Secret Key')) ?>
     <?= $form->text('secret_key', $config->get('captcha.recaptcha_v3.secret_key')) ?>
-  </div>
 </div>
 
 <div class="form-group">
-  <div class="input-group">
-    <div class="input-group-prepend">
-      <?= $form->label('score', t('Score'),['class'=>'input-group-text']) ?>
-    </div>
+    <?= $form->label('score', t('Score')) ?>
     <?= $form->number('score', $config->get('captcha.recaptcha_v3.score', '0.5'), ['min' => '0', 'max' => '1', 'step' => '0.01']) ?>
-  </div>
-  <div class="small text-muted"><?= t('1.0 is very likely a good interaction, 0.0 is very likely a bot')?></div>
+  <div class="help-block"><?= t('1.0 is very likely a good interaction, 0.0 is very likely a bot')?></div>
 </div>
 
 <div class="form-group">
-  <div class="input-group">
-    <div class="input-group-prepend">
-    <?= $form->label('position', t('Position of the reCAPTCHA badge'),['class'=>'input-group-text']) ?>
-    </div>
+    <?= $form->label('position', t('Position of the reCAPTCHA badge')) ?>
     <?= $form->select(
             'position',
             [
@@ -52,10 +37,8 @@ $config = $app->make('config');
                 'bottomleft' => t('Bottom Left'),
                 'inline' => t('Inline'),
             ],
-            [ 'class'=>'custom-select' ],
             $config->get('captcha.recaptcha_v3.position')
     ) ?>
-    </div>
 </div>
 
 <div class="form-group">
@@ -70,7 +53,7 @@ $config = $app->make('config');
         <label class="form-check-label">
             <?= $form->checkbox('send_ip', '1', (bool) $config->get('captcha.recaptcha_v3.send_ip')) ?>
             <?= t('Send IP') ?>
-            <span class="small text-muted"><br /><?= t('For extra checks you can send the clients IP address to reCaptcha (this will effect your GDPR compliance).') ?></span>
         </label>
     </div>
+    <div class="help-block"><?= t('For extra checks you can send the clients IP address to reCaptcha (this will effect your GDPR compliance).') ?></div>
 </div>

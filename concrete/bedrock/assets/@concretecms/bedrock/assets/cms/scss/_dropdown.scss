@@ -1,0 +1,22 @@
+.ccm-ui {
+  .dropdown-divider {
+    margin: $dropdown-divider-margin-y 10px !important;
+  }
+
+  .dropdown-item {
+    box-sizing: border-box;
+    cursor: pointer;
+    line-height: 1rem;
+    min-width: 100%;
+    width: auto !important;
+
+    .menu-icon {
+      align-items: center;
+      color: $gray-500;
+      display: flex;
+      justify-content: center;
+      width: 45px;
+    }
+
+  }
+}

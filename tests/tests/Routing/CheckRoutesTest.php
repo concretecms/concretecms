@@ -58,7 +58,14 @@ class CheckRoutesTest extends TestCase
             }
         }
         if ($checked === false) {
-            $this->assertTrue(is_callable($callable), "Not callable! Invalid route for path {$path} : {$callable}");
+            if (PHP_MAJOR_VERSION < 8) {
+                $this->assertTrue(is_callable($callable), "Not callable! Invalid route for path {$path} : {$callable}");
+            } else {
+                // PHP 8 is_callable only works on static methods
+                // get_class_methods only returns public methods so its similar to the old behaviour
+                $this->assertTrue(class_exists($class) && in_array($method, get_class_methods($class)), "Not callable! Invalid route for path {$path} : {$callable}");
+            }
+
         }
     }
 

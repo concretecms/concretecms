@@ -182,7 +182,7 @@ class GroupFolder extends TreeNode
         $node = TreeNode::getTreeNodeJSON();
         if ($node) {
             $node->isFolder = true;
-            $node->icon = 'fa fa-folder';
+            $node->icon = 'fas fa-folder';
             $node->resultsThumbnailImg = $this->getListFormatter()->getIconElement();
         }
 

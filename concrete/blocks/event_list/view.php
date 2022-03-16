@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-if ($calendar) {
+if (isset($calendar)) {
     $pagination = $list->getPagination();
     $pagination->setMaxPerPage($totalToRetrieve);
     $events = $pagination->getCurrentPageResults();
@@ -93,8 +93,8 @@ if ($calendar) {
         <div class="btn-group ccm-block-calendar-event-list-controls">
             <?php if ($numEvents > $totalPerPage) {
     ?>
-            <button type="button" class="btn btn-default" data-cycle="previous"><i class="fa fa-angle-left"></i></button>
-                <button type="button" class="btn btn-default" data-cycle="next"><i class="fa fa-angle-right"></i></button>
+            <button type="button" class="btn btn-default" data-cycle="previous"><i class="fas fa-angle-left"></i></button>
+                <button type="button" class="btn btn-default" data-cycle="next"><i class="fas fa-angle-right"></i></button>
             <?php
 
 }

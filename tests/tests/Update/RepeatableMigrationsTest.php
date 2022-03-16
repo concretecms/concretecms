@@ -5,8 +5,8 @@ namespace Concrete\Tests\Update;
 use Concrete\Core\Updater\Migrations\Configuration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Migrations\Version;
+use Doctrine\Migrations\AbstractMigration;
+use Doctrine\Migrations\Version\Version;
 
 class RepeatableMigrationsTest extends ConcreteDatabaseTestCase
 {

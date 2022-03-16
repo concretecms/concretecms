@@ -45,7 +45,7 @@ class ThemeLocation extends AbstractLocation
                 . DIRNAME_THEMES
                 . '/'
                 . $this->themeHandle;
-        } else if ($this->themeHandle === 'elemental') {
+        } else if ($this->themeHandle === 'elemental' || $this->themeHandle === 'atomik') {
             return DIR_BASE_CORE . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;
         } else {
             return DIR_APPLICATION . '/' . DIRNAME_THEMES . '/' . $this->themeHandle;

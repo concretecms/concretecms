@@ -1,0 +1,184 @@
+@import 'node_modules/@pnotify/core/dist/PNotify';
+@import 'node_modules/@pnotify/mobile/dist/PNotifyMobile';
+
+$notification-info-bg-color: darken($blue, 12.5%) !default;
+$notification-info-color: color-contrast($notification-info-bg-color) !default;
+
+$notification-success-bg-color: darken($green, 12.5%) !default;
+$notification-success-color: color-contrast($notification-success-bg-color) !default;
+
+$notification-error-bg-color: darken($red, 12.5%) !default;
+$notification-error-color: color-contrast($notification-error-bg-color) !default;
+
+.ccm-notification {
+  border-radius: 3px;
+  font-family: $font-family-sans-serif;
+  font-size: $font-size-base;
+  -webkit-font-smoothing: antialiased;
+  padding: 0.8rem 1rem;
+
+  div.ccm-notification-icon {
+    align-items: center;
+    display: flex;
+    font-size: 1.6rem;
+    justify-content: center;
+    margin-right: 0.75rem;
+    padding-top: 0.25rem;
+  }
+
+  div.ccm-notification-title {
+    font-size: 1.3rem;
+    margin-bottom: 0;
+    padding: 0;
+
+    + div.ccm-notification-text {
+      margin-top: 0.5rem;
+    }
+  }
+
+  div.ccm-notification-text {
+    margin-top: 0.2rem;
+  }
+
+  div.ccm-notification-inner-buttons {
+    margin-top: 0.5rem;
+
+    a,
+    button {
+      border: 0;
+      outline: 0;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    .dropdown-menu > li > a {
+      border-radius: 0;
+      display: block;
+    }
+  }
+}
+
+.pnotify.pnotify-with-icon {
+  .ccm-notification-content,
+  .ccm-notification-ml {
+    margin-left: 0;
+
+    [dir=rtl] & {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+div.ccm-notification-info {
+  @include gradient-bg($notification-info-bg-color);
+
+  color: $notification-info-color;
+
+  h3 {
+    color: $notification-info-color;
+  }
+
+  .ccm-notification-icon {
+    color: $notification-info-color;
+  }
+}
+
+div.ccm-notification-success {
+  @include gradient-bg($notification-success-bg-color);
+
+  color: $notification-success-color;
+
+  h3 {
+    color: $notification-success-color;
+  }
+
+  .ccm-notification-icon {
+    color: $notification-success-color;
+  }
+}
+
+div.ccm-notification-danger {
+  @include gradient-bg($notification-error-bg-color);
+
+  color: $notification-error-color;
+
+  h3 {
+    color: $notification-error-color;
+  }
+
+  .ccm-notification-icon {
+    color: $notification-error-color;
+  }
+}
+
+/**
+ * Error dialogs
+ */
+div#ccm-popup-alert-message {
+  word-wrap: break-word;
+}
+
+.ccm-notifications-box {
+  background: $white;
+  bottom: 0;
+  box-shadow: $box-shadow-sm;
+  max-width: 100%;
+  padding: 10px;
+  position: fixed;
+  right: 30px;
+  width: 380px;
+  z-index: $index-level-page-alert;
+}
+
+.ccm-notifications-box-header {
+  font-weight: 600;
+  height: 25px;
+  position: relative;
+  text-transform: uppercase;
+
+  > div[data-bs-toggle] {
+    cursor: pointer;
+  }
+}
+
+.ccm-notifications-box-body {
+  max-height: 400px;
+  overflow-y: hidden;
+
+  &.show {
+    // Don't show scrollbar until the box is completely opened
+    overflow-y: auto;
+  }
+
+  > .ccm-notification-elem {
+    margin-top: 10px;
+    position: static;
+  }
+
+  .pnotify-closer {
+    display: none; // Don't show the closer inside the nested page notification box
+  }
+
+}
+
+.ccm-notifications-box-close {
+  height: 24px;
+  position: absolute;
+  right: 0;
+  top: -1px;
+  width: 24px;
+
+  svg {
+    fill: $gray-500;
+    height: 24px;
+    transition: fill 0.1s ease-in-out;
+    width: 24px;
+  }
+
+  &:hover svg {
+    fill: $blue;
+  }
+}

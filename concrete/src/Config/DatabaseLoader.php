@@ -103,7 +103,9 @@ class DatabaseLoader implements LoaderInterface
             ->groupBy('configNamespace')
             ->execute();
 
-        return array_map('array_shift', $results->fetchAll());
+        return array_map(function($res) {
+            return array_shift($res);
+        }, $results->fetchAllAssociative());
     }
 
     /**

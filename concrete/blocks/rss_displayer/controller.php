@@ -68,14 +68,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         return t("RSS Displayer");
     }
 
-    public function getJavaScriptStrings()
-    {
-        return [
-            'feed-address' => t('Please enter a valid feed address.'),
-            'feed-num-items' => t('Please enter the number of items to display.'),
-        ];
-    }
-
     public function getDefaultDateTimeFormats()
     {
         $formats = [
@@ -169,6 +161,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->set('errorMsg', $e->getMessage());
         }
 
+        if (empty($this->titleFormat)) {
+            $this->set('titleFormat', 'h3');
+        }
         $this->set('posts', $posts);
         $this->set('title', $this->title);
     }

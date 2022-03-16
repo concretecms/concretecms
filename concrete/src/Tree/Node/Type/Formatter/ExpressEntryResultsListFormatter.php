@@ -5,7 +5,7 @@ class ExpressEntryResultsListFormatter implements ListFormatterInterface
 {
     public function getIconElement()
     {
-        return '<i class="fa fa-th-list"></i>';
+        return '<i class="fas fa-th-list"></i>';
     }
 
     public function getSearchResultsClass()

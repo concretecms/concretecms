@@ -1,5 +1,5 @@
 {
-  "name": "concrete5",
+  "name": "concreteCMS",
   "scripts": {
     "git-skip": "node ./libraries/built-assets skip",
     "git-unskip": "node ./libraries/built-assets unskip",
@@ -13,15 +13,17 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
-    "@concretecms/bedrock": "github:concrete5/bedrock",
+    "@concretecms/bedrock": "^1.1.17",
     "cross-env": "^5.1.1",
+    "download": "~4.4.3",
     "grunt": "^1.3.0",
     "grunt-env": "^1.0.1",
-    "grunt-newer": "^0.7.0",
     "laravel-mix": "^5.0.5",
     "resolve-url-loader": "^3.1.1",
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
+    "shelljs": "0.8.5",
+    "temp": "~0.8.1",
     "vue-template-compiler": "^2.6.12"
   },
   "dependencies": {

@@ -18,14 +18,14 @@ if ($dashboard->inDashboard($c)) {
     $parents = array_reverse(app(\Concrete\Core\Html\Service\Navigation::class)->getTrailToCollection($c));
     if (count($parents) == 1) {
         $section = $c;
-    } else {
+    } else if (isset($parents[1])) {
         $section = $parents[1];
     }
 } else if ($account->inMyAccount($c)) {
     $section = \Concrete\Core\Page\Page::getByPath('/dashboard/welcome');
 }
 if ($section) {
-    $sectionMenu = Element::get('dashboard/navigation/panel/section', [$section, $c]);
+    $sectionMenu = Element::get('dashboard/navigation/panel/section', ['section' => $section, 'currentPage' => $c]);
     $currentMode = 'section';
 }
 
@@ -35,11 +35,9 @@ if ($section) {
     <div class="ccm-dashboard-panel-top" v-show="currentMode !== 'section'">
         <menu class="ccm-panel-dashboard-favorites-menu" v-show="currentMode != 'section'">
             <li :class="{active: currentMode === 'dashboard'}"><a @click="currentMode = 'dashboard'" href="#"
-                                                                id="panel-dashboard-dashboard"
-                                                                data-toggle="pill"><?= t('Dashboard') ?></a></li>
+                                                                id="panel-dashboard-dashboard"><?= t('Dashboard') ?></a></li>
             <li :class="{active: currentMode === 'favorites'}"><a @click="currentMode = 'favorites'" href="#"
-                                                                id="panel-dashboard-favorites"
-                                                                data-toggle="pill"><?= t('Favorites') ?></a></li>
+                                                                id="panel-dashboard-favorites"><?= t('Favorites') ?></a></li>
         </menu>
 
         <div v-show="currentMode === 'dashboard'">
@@ -68,7 +66,7 @@ if ($section) {
                         <?= t('Dashboard') ?>
                     </a>
 
-                    <h5><?=h(t($section->getCollectionName()))?></h5>
+                    <h5><a href="<?=$section->getCollectionLink()?>"><?=h(t($section->getCollectionName()))?></a></h5>
                 </header>
 
                 <?php
@@ -110,8 +108,10 @@ if ($section) {
                         var my = this
                         const $sectionNav = $(this.$el).closest('.ccm-panel-content-visible')
                         const $topNav = $sectionNav.prev()
+                        const $panel = $(this.$el).closest('.ccm-panel')
                         $sectionNav
                             .queue(function() {
+                                $panel.addClass('ccm-panel-transitioning')
                                 $(this).removeClass('ccm-panel-content-visible')
                                     .addClass('ccm-panel-slide-right')
                                 my.currentMode = 'dashboard'
@@ -121,6 +121,10 @@ if ($section) {
                             .queue(function() {
                                 $topNav.removeClass('ccm-panel-slide-left').addClass('ccm-panel-content-visible')
                                 $sectionNav.dequeue()
+                            })
+                            .delay(500)
+                            .queue(function() {
+                                $panel.removeClass('ccm-panel-transitioning')
                             })
                     }
                 },

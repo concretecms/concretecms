@@ -26,6 +26,8 @@ $app = Application::getFacadeApplication();
 $pageSelector = $app->make(PageSelector::class);
 /** @var FileManager $fileManager */
 $fileManager = $app->make(FileManager::class);
+
+$thumbnailTypes['0'] = t('Full Size');
 ?>
 
 <fieldset>
@@ -41,7 +43,7 @@ $fileManager = $app->make(FileManager::class);
     </div>
 
     <div class="form-group">
-        <label class="control-label">
+        <label class="control-label form-label">
             <?php echo t('Image Hover') ?>
 
             <small style="color: #999999; font-weight: 200;">
@@ -49,7 +51,7 @@ $fileManager = $app->make(FileManager::class);
             </small>
         </label>
 
-        <i class="fa fa-question-circle launch-tooltip" title=""
+        <i class="fas fa-question-circle launch-tooltip" title=""
            data-original-title="<?php echo t('The image hover effect requires constraining the image size.'); ?>"></i>
 
         <?php echo $fileManager->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo); ?>
@@ -168,11 +170,9 @@ $fileManager = $app->make(FileManager::class);
                 <div class="input-group">
                     <?php echo $form->number('maxWidth', isset($maxWidth) ? $maxWidth : '', ['min' => 0]); ?>
 
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <?php echo t('px'); ?>
-                        </span>
-                    </div>
+                    <span class="input-group-text">
+                        <?php echo t('px'); ?>
+                    </span>
                 </div>
             </div>
 
@@ -182,11 +182,9 @@ $fileManager = $app->make(FileManager::class);
                 <div class="input-group">
                     <?php echo $form->number('maxHeight', isset($maxHeight) ? $maxHeight : '', ['min' => 0]); ?>
 
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <?php echo t('px'); ?>
-                        </span>
-                    </div>
+                    <span class="input-group-text">
+                        <?php echo t('px'); ?>
+                    </span>
                 </div>
             </div>
         </div>

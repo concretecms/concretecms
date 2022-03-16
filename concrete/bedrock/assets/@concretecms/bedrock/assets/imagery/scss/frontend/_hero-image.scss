@@ -1,0 +1,36 @@
+div.ccm-block-hero-image {
+
+  min-height: 50vh;
+  position: relative;
+
+  div.ccm-block-hero-image-text,
+  div.ccm-block-hero-image-cover {
+    height: 50vh;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  div.ccm-block-hero-image-text {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  div.ccm-block-hero-image-cover {
+    z-index: 2;
+  }
+
+  div.ccm-block-hero-image-text {
+    z-index: 3;
+  }
+
+  div.ccm-block-hero-image-image {
+    background-position: center center;
+    background-size: cover;
+    height: 50vh;
+    z-index: 1;
+  }
+}

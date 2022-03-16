@@ -192,7 +192,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
         if ($this->includeAliases) {
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'Pages', 'pa', 'p.cPointerID = pa.cID')
-                ->leftJoin('p', 'PagePaths', 'pp', 'p.cID = pp.cID and pp.ppIsCanonical = true')
                 ->leftJoin('pa', 'PageSearchIndex', 'psi', 'psi.cID = if(pa.cID is null, p.cID, pa.cID)')
                 ->leftJoin('p', 'PageTypes', 'pt', 'pt.ptID = if(pa.cID is null, p.ptID, pa.ptID)')
                 ->leftJoin('p', 'CollectionSearchIndexAttributes', 'csi', 'csi.cID = if(pa.cID is null, p.cID, pa.cID)')
@@ -201,7 +200,6 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
                 ->andWhere('p.cIsTemplate = 0 or pa.cIsTemplate = 0');
         } else {
             $query->from('Pages', 'p')
-                ->leftJoin('p', 'PagePaths', 'pp', '(p.cID = pp.cID and pp.ppIsCanonical = true)')
                 ->leftJoin('p', 'PageSearchIndex', 'psi', 'p.cID = psi.cID')
                 ->leftJoin('p', 'PageTypes', 'pt', 'p.ptID = pt.ptID')
                 ->leftJoin('c', 'CollectionSearchIndexAttributes', 'csi', 'c.cID = csi.cID')
@@ -228,18 +226,8 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
             case self::PAGE_VERSION_ACTIVE:
             default:
                 $app = Application::getFacadeApplication();
-                $nowParameter = $query->createNamedParameter($app->make('date')->getOverridableNow());
-                $query
-                    ->andWhere($expr->eq('cv.cvIsApproved', 1))
-                    ->andWhere($expr->orX(
-                        $expr->isNull('cv.cvPublishDate'),
-                        $expr->lte('cv.cvPublishDate', $nowParameter)
-                    ))
-                    ->andWhere($expr->orX(
-                        $expr->isNull('cv.cvPublishEndDate'),
-                        $expr->gte('cv.cvPublishEndDate', $nowParameter)
-                    ))
-                ;
+                $query->andWhere('cv.cvID = (select max(cvID) from CollectionVersions where cID = cv.cID and cvIsApproved = 1 and ((cvPublishDate <= :cvPublishDate or cvPublishDate is null) and (cvPublishEndDate >= :cvPublishDate or cvPublishEndDate is null)))');
+                $query->setParameter('cvPublishDate', $app->make('date')->getOverridableNow());
                 break;
         }
 
@@ -573,6 +561,7 @@ class PageList extends DatabaseItemList implements PagerProviderInterface, Pagin
      */
     public function filterByPath($path, $includeAllChildren = true)
     {
+        $this->query->leftJoin('p', 'PagePaths', 'pp', 'p.cID = pp.cID and pp.ppIsCanonical = true');
         if (!$includeAllChildren) {
             $this->query->andWhere('pp.cPath = :cPath');
             $this->query->setParameter('cPath', $path);

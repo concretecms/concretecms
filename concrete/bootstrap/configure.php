@@ -119,10 +119,12 @@ const DIRNAME_DASHBOARD_MODULES = 'modules';
 const DIRNAME_MAIL_TEMPLATES = 'mail';
 const DIRNAME_THEMES = 'themes';
 const DIRNAME_THEMES_CORE = 'core';
+const DIRNAME_THEME_DOCUMENTATION = 'documentation';
 const DIRNAME_CONFIG = 'config';
 const DIRNAME_BLOCK_TEMPLATES = 'templates';
 const DIRNAME_BLOCK_TEMPLATES_COMPOSER = 'composer';
 const DIRNAME_CSS = 'css';
+const DIRNAME_SCSS = 'scss';
 const DIRNAME_CLASSES = 'src';
 const DIRNAME_ENTITIES = 'Entity';
 const DIRNAME_PREVIEW = 'preview';
@@ -141,9 +143,6 @@ const DIRNAME_SYSTEM = 'system';
 const DIRNAME_PANELS = 'panels';
 const DIRNAME_CONTROLLERS = 'controllers';
 const DIRNAME_PAGE_CONTROLLERS = 'single_page';
-const DIRNAME_GATHERING = 'gathering';
-const DIRNAME_GATHERING_DATA_SOURCES = 'data_sources';
-const DIRNAME_GATHERING_ITEM_TEMPLATES = 'templates';
 const DIRNAME_COMPOSER = 'composer';
 const DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES = 'target_types';
 const DIRNAME_COMPOSER_ELEMENTS_CONTROLS = 'controls';
@@ -154,7 +153,10 @@ const DIRNAME_VENDOR = 'vendor';
 const DIRNAME_LANGUAGES_SITE_INTERFACE = 'site';
 const DIRNAME_STYLE_CUSTOMIZER = 'style_customizer';
 const DIRNAME_STYLE_CUSTOMIZER_TYPES = 'types';
+const DIRNAME_STYLE_CUSTOMIZER_SKINS = 'skins';
 const DIRNAME_STYLE_CUSTOMIZER_PRESETS = 'presets';
+const DIRNAME_BEDROCK = 'bedrock';
+const DIRNAME_BEDROCK_ASSETS = 'assets';
 const DIRNAME_FILE_STORAGE_LOCATION_TYPES = 'storage_location_types';
 const DIRNAME_EXTERNAL_FILE_PROVIDER_TYPES = 'external_file_provider_types';
 const DIRNAME_EXPRESS = 'express';
@@ -223,11 +225,10 @@ const FILENAME_THEMES_CLASS = 'page_theme.php';
 const FILENAME_THEMES_THUMBNAIL = 'thumbnail.png';
 const FILENAME_THEMES_ERROR = 'error';
 const FILENAME_EXPRESS_CONTROL_OPTIONS = 'options.php';
-const FILENAME_GATHERING_DATA_SOURCE_OPTIONS = 'options.php';
-const FILENAME_GATHERING_ITEM_TEMPLATE_ICON = 'icon.png';
 const FILENAME_CONVERSATION_EDITOR_OPTIONS = 'options.php';
 const FILENAME_STYLE_CUSTOMIZER_STYLES = 'styles.xml';
 const FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME = 'defaults.less';
+const FILENAME_THEMES_SKIN_STYLESHEET_ENTRYPOINT = 'main.css';
 
 /*
  * ----------------------------------------------------------------------------
@@ -278,9 +279,6 @@ const BLOCK_HANDLE_BOARD_SLOT_PROXY = 'core_board_slot';
 const BLOCK_HANDLE_LAYOUT_PROXY = 'core_area_layout';
 const BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY = 'core_page_type_composer_control_output';
 const BLOCK_HANDLE_STACK_PROXY = 'core_stack_display';
-const BLOCK_HANDLE_GATHERING = 'core_gathering';
-const BLOCK_HANDLE_GATHERING_ITEM_PROXY = 'core_gathering_item';
-const BLOCK_HANDLE_GATHERING_PROXY = 'core_gathering_display';
 const BLOCK_HANDLE_CONVERSATION = 'core_conversation';
 const BLOCK_HANDLE_CONVERSATION_MESSAGE = 'core_conversation_message';
 
@@ -297,12 +295,21 @@ const STACK_CATEGORY_PAGE_TYPE = 'core_stack_category';
 
 /*
  * ----------------------------------------------------------------------------
+ * Theme documentation
+ * ----------------------------------------------------------------------------
+ */
+const THEME_DOCUMENTATION_CATEGORY_PAGE_TYPE = 'core_theme_documentation_category';
+const THEME_DOCUMENTATION_PAGE_TYPE = 'core_theme_documentation';
+const THEME_DOCUMENTATION_PAGE_PATH = '/!themes';
+const THEME_DOCUMENTATION_PAGE_TEMPLATE = 'core_theme_documentation';
+
+/*
+ * ----------------------------------------------------------------------------
  * Configuration values that cannot be overridden
  * ----------------------------------------------------------------------------
  */
 /* -- Appearance -- */
 const VIEW_CORE_THEME = 'concrete';
-const VIEW_CORE_THEME_TEMPLATE_BACKGROUND_IMAGE = 'background_image.php';
 
 /* -- Users -- */
 const USER_SUPER = 'admin';

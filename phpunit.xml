@@ -4,7 +4,7 @@
         bootstrap="./tests/bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
+        convertNoticesToExceptions="false"
         convertWarningsToExceptions="true"
         backupGlobals="false"
         backupStaticAttributes="false"
@@ -30,7 +30,6 @@
     <groups>
         <exclude>
             <group>online</group>
-            <group>docker</group>
         </exclude>
     </groups>
     <php>

@@ -9,7 +9,7 @@
         <blocktype handle="desktop_latest_form" package=""/>
         <blocktype handle="desktop_waiting_for_me" package=""/>
         <blocktype handle="desktop_draft_list" package=""/>
-        <blocktype handle="desktop_newsflow_latest" package=""/>
+        <blocktype handle="desktop_concrete_latest" package=""/>
     </blocktypes>
 
     <blocktypesets>
@@ -21,7 +21,7 @@
             <blocktype handle="desktop_latest_form"/>
             <blocktype handle="desktop_waiting_for_me"/>
             <blocktype handle="desktop_draft_list"/>
-            <blocktype handle="desktop_newsflow_latest"/>
+            <blocktype handle="desktop_concrete_latest"/>
         </blocktypeset>
     </blocktypesets>
 

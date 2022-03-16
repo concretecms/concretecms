@@ -3,12 +3,11 @@
 namespace Concrete\Core\Localization\Translator\Loader;
 
 use Gettext\Languages\Language;
-use Zend\I18n\Exception\RuntimeException;
-use Zend\I18n\Translator\Loader\Gettext as ZendGettext;
-use Zend\I18n\Translator\Plural\Rule;
-use Zend\I18n\Translator\TextDomain;
+use Laminas\I18n\Translator\Loader\Gettext as LaminasGettext;
+use Laminas\I18n\Translator\Plural\Rule;
+use Laminas\I18n\Translator\TextDomain;
 
-class Gettext extends ZendGettext
+class Gettext extends LaminasGettext
 {
     /**
      * Tthe absolute path of the web root.
@@ -30,7 +29,7 @@ class Gettext extends ZendGettext
     /**
      * {@inheritdoc}
      *
-     * @see \Zend\I18n\Translator\Loader\Gettext::load()
+     * @see \Laminas\I18n\Translator\Loader\Gettext::load()
      */
     public function load($locale, $filename)
     {
@@ -38,7 +37,7 @@ class Gettext extends ZendGettext
 
         $localeInfo = Language::getById($locale);
         if ($localeInfo !== null) {
-            $this->fixPlurals($filename, $textDomain, $localeInfo);
+            $this->fixPlurals($textDomain, $localeInfo);
         }
 
         return $textDomain;
@@ -47,44 +46,39 @@ class Gettext extends ZendGettext
     /**
      * Fix the plural rules of the translations loaded from a file.
      *
-     * @param string $filename
-     * @param \Zend\I18n\Translator\TextDomain $textDomain
+     * @param \Laminas\I18n\Translator\TextDomain $textDomain
      * @param \Gettext\Languages\Language $localeInfo
      *
-     * @throws \Zend\I18n\Exception\RuntimeException when the loaded file has less plural rules than the required ones
+     * @return \Laminas\I18n\Translator\TextDomain
      */
-    private function fixPlurals($filename, TextDomain $textDomain, Language $localeInfo)
+    private function fixPlurals(TextDomain $textDomain, Language $localeInfo)
     {
         $expectedNumPlurals = count($localeInfo->categories);
-        $pluralRule = $textDomain->getPluralRule(false);
-        if ($pluralRule === null) {
+        $actualPluralRule = $textDomain->getPluralRule(false);
+        if ($actualPluralRule === null) {
             // Build the plural rules
             $pluralRule = Rule::fromString("nplurals={$expectedNumPlurals}; plural={$localeInfo->formula};");
             $textDomain->setPluralRule($pluralRule);
         } else {
-            $readNumPlurals = $pluralRule->getNumPlurals();
-            if ($expectedNumPlurals < $readNumPlurals) {
-                // Reduce the number of plural rules, in order to consider other systems that use wrong counts (for example, Transifex uses 4 plural rules, but gettext only defines 3)
+            $actualNumPlurals = $actualPluralRule->getNumPlurals();
+            if ($expectedNumPlurals !== $actualNumPlurals) {
+                // Adjust the number of plural rules, in order to consider other systems that different plural rule counts
                 $pluralRule = Rule::fromString("nplurals={$expectedNumPlurals}; plural={$localeInfo->formula};");
                 $textDomain->setPluralRule($pluralRule);
-            } elseif ($expectedNumPlurals > $readNumPlurals) {
-                // The language file defines less plurals than the required ones.
-                $filename = str_replace(DIRECTORY_SEPARATOR, '/', $filename);
-                if (strpos($filename, $this->webrootDirectory . '/') === 0) {
-                    $filename = substr($filename, strlen($this->webrootDirectory));
+                if ($actualNumPlurals < $expectedNumPlurals) {
+                    $maxPluralIndex = $expectedNumPlurals - 1;
+                    foreach (array_filter($textDomain->getArrayCopy(), 'is_array') as $messageID => $translations) {
+                        $lastValue = end($translations);
+                        if ($expectedNumPlurals === 1) {
+                            $translations = $lastValue;
+                        } else {
+                            while (!isset($translations[$maxPluralIndex])) {
+                                $translations[] = $lastValue;
+                            }
+                        }
+                        $textDomain[$messageID] = $translations;
+                    }
                 }
-                // Don't translate the message, otherwise we may have an infinite loop (t() -> load translations -> t() -> load translations -> ...)
-                throw new RuntimeException(sprintf(
-                    $readNumPlurals === 1 ?
-                        'The language file %1$s for %2$s has %3$s plural form instead of %4$s.'
-                        :
-                        'The language file %1$s for %2$s has %3$s plural forms instead of %4$s.'
-                    ,
-                    $filename,
-                    $localeInfo->name,
-                    $readNumPlurals,
-                    $expectedNumPlurals
-                ));
             }
         }
 

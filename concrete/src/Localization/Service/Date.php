@@ -27,9 +27,9 @@ class Date
     /**
      * Convert any date/time representation to a string that can be used in DB queries.
      *
-     * @param string|int|\DateTime $value It can be:<ul>
+     * @param string|int|\DateTimeInterface $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
-     *    <li>a \DateTime instance</li>
+     *    <li>a \DateTimeInterface instance</li>
      *    <li>a string parsable by strtotime (the $fromTimezone timezone is used)</li>
      *    <li>a timestamp</li>
      * </ul>
@@ -307,7 +307,7 @@ class Date
     /**
      * Returns the display name of a timezone.
      *
-     * @param string|\DateTimeZone|\DateTime $timezone The timezone for which you want the localized display name
+     * @param string|\DateTimeZone|\DateTimeInterface $timezone The timezone for which you want the localized display name
      *
      * @return string
      */
@@ -317,7 +317,7 @@ class Date
         if (is_object($timezone)) {
             if ($timezone instanceof \DateTimeZone) {
                 $displayName = $timezone->getName();
-            } elseif ($timezone instanceof \DateTime) {
+            } elseif ($timezone instanceof \DateTimeInterface) {
                 $displayName = $timezone->getTimezone()->getName();
             }
         } elseif (is_string($timezone)) {
@@ -489,9 +489,9 @@ class Date
     /**
      * Convert a date to a \DateTime instance.
      *
-     * @param string|\DateTime|int $value It can be:<ul>
+     * @param string|\DateTimeInterface|int $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
-     *    <li>a \DateTime instance</li>
+     *    <li>a \DateTimeInterface instance</li>
      *    <li>a string parsable by strtotime (the $fromTimezone timezone is used)</li>
      *    <li>a timestamp</li>
      * </ul>

@@ -19,7 +19,7 @@ class Add extends Node
     {
         $np = new Checker($this->getNode());
         /** @noinspection PhpUndefinedMethodInspection */
-        return $np->canAddTreeNode();
+        return $np->canAddGroupFolder();
     }
 
     public function view()

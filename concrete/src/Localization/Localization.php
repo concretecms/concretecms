@@ -1,15 +1,15 @@
 <?php
 namespace Concrete\Core\Localization;
 
-use Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader as ZendSiteTranslationLoader;
-use Concrete\Core\Localization\Translator\Adapter\Zend\TranslatorAdapter as ZendTranslatorAdapter;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\Translation\Loader\Gettext\SiteTranslationLoader as LaminasSiteTranslationLoader;
+use Concrete\Core\Localization\Translator\Adapter\Laminas\TranslatorAdapter as LaminasTranslatorAdapter;
 use Concrete\Core\Localization\Translator\TranslatorAdapterRepositoryInterface;
 use Concrete\Core\Support\Facade\Facade;
 use Core;
 use Exception;
 use Punic\Data as PunicData;
 use Throwable;
-use Zend\I18n\Translator\Translator as ZendTranslator;
+use Laminas\I18n\Translator\Translator as LaminasTranslator;
 
 class Localization
 {
@@ -302,7 +302,7 @@ class Localization
      *
      * @deprecated Use translator adapters instead
      *
-     * @return ZendTranslator|null
+     * @return LaminasTranslator|null
      */
     public function getActiveTranslateObject()
     {
@@ -332,7 +332,7 @@ class Localization
      *
      * @deprecated Use translator adapters instead
      *
-     * @return ZendTranslator
+     * @return LaminasTranslator
      */
     public static function getTranslate()
     {
@@ -466,7 +466,7 @@ class Localization
     {
         // cache/expensive should be used by the translator adapters.
         $app = Facade::getFacadeApplication();
-        $app->make('cache/expensive')->getItem('zend')->clear();
+        $app->make('cache/expensive')->getItem('laminas')->clear();
 
         // Also remove the loaded translation adapters so that old strings are
         // not being used from the adapters already in memory.
@@ -477,22 +477,22 @@ class Localization
     /**
      * Load the site language files (must be done after all packages called their setupPackageLocalization).
      *
-     * @deprecated use \Concrete\Core\Localization\Translator\Adapter\Zend\Translation\Loader\Gettext\SiteTranslationLoader instead
+     * @deprecated use \Concrete\Core\Localization\Translator\Adapter\Laminas\Translation\Loader\Gettext\SiteTranslationLoader instead
      *
-     * @param ZendTranslator $translate
+     * @param LaminasTranslator $translate
      */
-    public static function setupSiteLocalization(ZendTranslator $translate = null)
+    public static function setupSiteLocalization(LaminasTranslator $translate = null)
     {
         $loc = static::getInstance();
         if ($translate === null) {
             $translate = $loc->getActiveTranslateObject();
         }
-        if ($translate instanceof ZendTranslator) {
-            $adapter = new ZendTranslatorAdapter($translate);
+        if ($translate instanceof LaminasTranslator) {
+            $adapter = new LaminasTranslatorAdapter($translate);
             $adapter->setLocale($translate->getLocale());
 
             $app = Facade::getFacadeApplication();
-            $loader = new ZendSiteTranslationLoader($app);
+            $loader = new LaminasSiteTranslationLoader($app);
             $loader->loadTranslations($adapter);
         }
     }

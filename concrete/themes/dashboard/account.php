@@ -20,13 +20,15 @@ $view->inc('elements/header.php', ['bodyClass' => 'ccm-dashboard-account']);
                 <?php echo $c->getCollectionName() ?>
             </span>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarWelcomeBack"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarWelcomeBack"
                     aria-controls="navbarWelcomeBack" aria-expanded="false"
                     aria-label="<?= h(t('Toggle navigation')) ?>">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </nav>
-
+        <?php
+        $view->inc('elements/result_messages.php');
+        ?>
         <?php print $innerContent; ?>
     </div>
 </div>

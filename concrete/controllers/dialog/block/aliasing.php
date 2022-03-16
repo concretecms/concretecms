@@ -2,17 +2,17 @@
 namespace Concrete\Controller\Dialog\Block;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Area\Area;
+use Concrete\Core\Block\Block;
 use Concrete\Core\Block\Command\AddAliasDefaultsBlockCommand;
-use Concrete\Core\Block\Command\DefaultsBlockBatchProcessFactory;
-use Concrete\Core\Block\Command\UpdateDefaultsBlockCommand;
+use Concrete\Core\Block\Command\ForceDefaultDisplayOrderBlockCommand;
 use Concrete\Core\Block\Command\UpdateForkedAliasDefaultsBlockCommand;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
-use Concrete\Core\Foundation\Queue\Response\EnqueueItemsResponse;
+use Concrete\Core\Command\Batch\Batch;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Template;
 use Concrete\Core\Page\Type\Type;
+use Concrete\Core\Permission\Checker;
 
 class Aliasing extends BackendInterfaceBlockController
 {
@@ -32,25 +32,46 @@ class Aliasing extends BackendInterfaceBlockController
         $this->set('total', $pl->getTotalResults());
     }
 
+    /**
+     * @return \Concrete\Core\Http\Response | void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException | \Doctrine\DBAL\Exception
+     */
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
-            $a = \Area::get($this->page, $_GET['arHandle']);
+            $a = Area::get($this->page, $this->request->get('arHandle'));
             $c = $this->page;
             if (is_object($a)) {
-                $b = \Block::getByID($_GET['bID'], $c, $a);
-                $p = new \Permissions($b);
+                $b = Block::getByID($this->request->get('bID'), $c, $a);
+                $p = new Checker($b);
+                /** @phpstan-ignore-next */
                 if ($p->canAdminBlock() && $c->isMasterCollection()) {
+                    $blocks = $this->block->queueForDefaultsAliasing($this->request->request->get('addBlock'), $this->request->request->get('updateForkedBlocks'), (bool) $this->request->request->get('forceDisplayOrder' , false));
+                    $batch = Batch::create(t('Update Defaults'), function() use ($blocks) {
+                        foreach ($blocks as $b) {
+                            if ($b['action'] == 'update_forked_alias') {
+                                $commandClass = UpdateForkedAliasDefaultsBlockCommand::class;
+                            } elseif ($b['action']== 'force_display_order') {
+                                $commandClass = ForceDefaultDisplayOrderBlockCommand::class;
+                            } else {
+                                $commandClass = AddAliasDefaultsBlockCommand::class;
+                            }
 
-                    $queue = $this->app->make(QueueService::class);
-                    $q = $queue->get('update_defaults');
-                    $blocks = $this->block->queueForDefaultsAliasing($_POST);
-                    $factory = new DefaultsBlockBatchProcessFactory($b, $c, $this->request->query->get('arHandle'));
-                    /**
-                     * @var $processor Processor
-                     */
-                    $processor = $this->app->make(Processor::class);
-                    return $processor->process($factory, $blocks);
+                            $command = new $commandClass(
+                                $this->block->getBlockID(),
+                                $this->page->getCollectionID(),
+                                $this->page->getVersionID(),
+                                $this->area->getAreaHandle(),
+                                $b['bID'],
+                                $b['cID'],
+                                $b['cvID'],
+                                $b['arHandle'],
+                                (bool) $this->request->request->get('forceDisplayOrder', false)
+                            );
+                            yield $command;
+                        }
+                    });
+                    return $this->dispatchBatch($batch);
                 }
             }
         }
@@ -115,7 +136,7 @@ class Aliasing extends BackendInterfaceBlockController
     {
         if (parent::validateAction()) {
             $r = $this->request->request;
-            if (!$r->get('addBlock') && !$r->get('updateForkedBlocks')) {
+            if (!$r->get('addBlock') && !$r->get('updateForkedBlocks') && !$r->get('forceDisplayOrder')) {
                 $this->error->add(t('You need to select at least one action'));
             } else {
                 return true;

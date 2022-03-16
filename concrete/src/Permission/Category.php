@@ -26,7 +26,7 @@ class Category extends ConcreteObject
         $db = Database::get();
         self::$categories = array();
         $r = $db->Execute('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $pkc = new static();
             $pkc->setPropertiesFromArray($row);
             self::$categories[$pkc->getPermissionKeyCategoryID()] = $pkc;
@@ -67,10 +67,10 @@ class Category extends ConcreteObject
         $db = Database::get();
         $list = array();
         $r = $db->Execute('select pkCategoryID from PermissionKeyCategories where pkgID = ? order by pkCategoryID asc', array($pkg->getPackageID()));
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $list[] = static::getByID($row['pkCategoryID']);
         }
-        $r->Close();
+        $r->free();
 
         return $list;
     }
@@ -179,7 +179,7 @@ class Category extends ConcreteObject
         $db = Database::get();
         $cats = array();
         $r = $db->Execute('select pkCategoryID from PermissionKeyCategories order by pkCategoryID asc');
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $cats[] = static::getByID($row['pkCategoryID']);
         }
 

@@ -7,7 +7,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Page\Sitemap\Element\SitemapHeader;
 use Concrete\Core\Page\Sitemap\Element\SitemapPage;
 use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Concrete\Core\Events\EventDispatcher;
 
 class SitemapWriter
 {
@@ -71,7 +71,7 @@ class SitemapWriter
     protected $mode = self::MODE_AUTO;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var EventDispatcher
      */
     protected $director;
 
@@ -100,7 +100,7 @@ class SitemapWriter
      */
     private $temporaryDirectory = '';
 
-    public function __construct(Application $app, Filesystem $filesystem, EventDispatcherInterface $director)
+    public function __construct(Application $app, Filesystem $filesystem, EventDispatcher $director)
     {
         $this->app = $app;
         $this->filesystem = $filesystem;
@@ -250,7 +250,7 @@ class SitemapWriter
     {
         $outputFilename = $this->getOutputFilename();
         if (strpos($outputFilename, DIR_BASE . '/') === 0) {
-            $result = (string) $this->getSitemapGenerator()->resolveUrl([substr($outputFilename, strlen(DIR_BASE))]);
+            $result = (string) $this->getSitemapGenerator()->resolveUrl(substr($outputFilename, strlen(DIR_BASE)));
         } else {
             $result = '';
         }

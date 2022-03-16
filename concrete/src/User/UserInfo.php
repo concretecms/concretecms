@@ -15,6 +15,7 @@ use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\File\DownloadStatistics;
 use Concrete\Core\Entity\File\File;
 use Concrete\Core\Entity\File\Version;
+use Concrete\Core\Entity\User\GroupSignup;
 use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -51,7 +52,7 @@ use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
 use League\URL\URLInterface;
 use stdClass;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Concrete\Core\Events\EventDispatcher;
 
 class UserInfo extends ConcreteObject implements AttributeObjectInterface, PermissionObjectInterface, ExportableInterface
 {
@@ -297,6 +298,11 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             } else {
                 $this->entityManager->remove($expressEntity);
             }
+        }
+
+        $groupSignups = $this->entityManager->getRepository(GroupSignup::class)->findBy(['user' => (int)$this->getUserID()]);
+        foreach ($groupSignups as $groupSignup) {
+            $this->entityManager->remove($groupSignup);
         }
 
         $this->entityManager->remove($this->entity);
@@ -586,6 +592,19 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
         }
 
         return $result;
+    }
+
+    /**
+     * Checks the uPassword record for the current user and returns true if the hashed version of the
+     * passed password matches.
+     *
+     * @param $uPassword
+     * @return bool
+     */
+    public function passwordMatches(string $uPassword): bool
+    {
+        $hasher = $this->application->make(PasswordHasher::class);
+        return $hasher->CheckPassword($uPassword, $this->getUserPassword());
     }
 
     /**

@@ -3,7 +3,7 @@
 <div class="col-sm-10 col-sm-offset-1">
 
 <div class="page-header">
-	<h1><?=t('Upgrade concrete5')?></h1>
+	<h1><?=t('Upgrade Concrete')?></h1>
 </div>
 <p>
 <?=$status?>

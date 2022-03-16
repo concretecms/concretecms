@@ -116,16 +116,11 @@ class Renderer implements LoggerAwareInterface
             $summaryObjectInspector = $this->summaryObjectInspector; // This is included here for use in the template.
             $summaryObjectFields = $this->summaryObjectExtractor->getData($summaryObject);
             if ($this->summaryObjectSupportsTemplate($summaryObjectFields, $template)) {
-                include $this->fileLocator->getRecord(
-                    DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_header.php'
-                )
-                    ->getFile();
+                // note: we used to include <span class="ccm-summary-template-header"></span> around this, but it's
+                // too prescriptive and annoying, it causes problems with more advanced flexbox styling.
+
                 extract($summaryObjectFields, EXTR_OVERWRITE);
                 include $file;
-                include $this->fileLocator->getRecord(
-                    DIRNAME_ELEMENTS . '/' . DIRNAME_SUMMARY . '/summary_template_footer.php'
-                )
-                    ->getFile();
             }
         } else {
             if ($template->getHandle()) {

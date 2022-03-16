@@ -9,7 +9,8 @@ jobs:
     name: "PHPUnit"
     env:
       LC_ALL: en_US.UTF-8
-      CODE_COVERAGE: n
+      CODE_COVERAGE: none
+    continue-on-error: ${{ matrix.php-version == '8.1' }}
 
     runs-on: ${{ matrix.operating-system }}
     services:
@@ -25,25 +26,34 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.2"
           - "7.3"
           - "7.4"
-#          - "8.0"
+          - "8.0"
         dependencies:
           - "locked"
         operating-system:
           - "ubuntu-latest"
+        composer:
+          - "composer:v2"
 
         include:
-          - php-version: 7.4
+          - php-version: 8.0
             operating-system: "ubuntu-latest"
             dependencies: "highest"
-# Lowest doesn't work at the moment. Revisit once we have dependencies updated.
-#          - php-version: 7.4
-#            operating-system: "ubuntu-latest"
-#            dependencies: "lowest"
+          # Lowest doesn't work at the moment. Test with composer version 1 on 7.3 only.
+          - php-version: 7.3
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
+            composer: "composer:v1, prestissimo"
+          - php-version: 8.1
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
 
     steps:
+      - name: Enable code coverage
+        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked' && github.repository_owner == 'concrete5'
+        run: printf 'CODE_COVERAGE=pcov\n' >> "$GITHUB_ENV"
+
       - name: "Checkout"
         uses: "actions/checkout@v2"
         with:
@@ -54,18 +64,14 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
-          coverage: pcov
+          coverage: ${{ env.CODE_COVERAGE }}
           ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
-          tools: composer:v1, prestissimo
+          tools: ${{matrix.composer}}
 
       - name: "Prepare mysql user"
         run: |
           mysql -h127.0.0.1 -uroot -proot -e "CREATE USER 'travis'@'%' IDENTIFIED BY '';"
           mysql -h127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-
-      - name: Enable code coverage
-        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked'
-        run: printf 'CODE_COVERAGE=y\n' >> "$GITHUB_ENV"
 
       - name: "Install lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}
@@ -78,30 +84,29 @@ jobs:
         if: ${{ matrix.dependencies == 'highest' }}
         run: |
           composer update --no-interaction --no-progress --no-suggest
-          # Run twice for mediawiki merge
-          composer update --no-interaction --no-progress --no-suggest
 
       - name: "Install locked dependencies"
         if: ${{ matrix.dependencies == 'locked' }}
-        run: "composer install --no-interaction --no-progress --no-suggest"
-
-      # PCOV is a fast code coverage driver
-      - name: Setup PCOV
-        if: env.CODE_COVERAGE == 'y'
         run: |
-          composer require pcov/clobber
-          cd concrete && vendor/bin/pcov clobber
+          composer install --no-interaction --no-progress --no-suggest
+        # Since continue on error still marks a job as failed.
+        # We also have to add continue-on-error here so it doesnt X the whole build
+        # See https://github.com/actions/toolkit/issues/399
+        continue-on-error: ${{ matrix.php-version == '8.1' }}
+
 
       - name: "Tests"
-        if: env.CODE_COVERAGE == 'n'
+        if: env.CODE_COVERAGE == 'none'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit
+        # Same as above
+        continue-on-error: ${{ matrix.php-version == '8.1' }}
 
       - name: "Tests with coverage"
-        if: env.CODE_COVERAGE == 'y'
+        if: env.CODE_COVERAGE != 'none'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover
 
       - name: "Upload coverage"
-        if: env.CODE_COVERAGE == 'y'
+        if: env.CODE_COVERAGE != 'none'
         run: |
           wget --tries=5 https://scrutinizer-ci.com/ocular.phar
           php ocular.phar code-coverage:upload --format=php-clover coverage.clover

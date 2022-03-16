@@ -1,0 +1,216 @@
+.ccm-ui {
+  #fancytree-drop-marker {
+    &.fancytree-drop-over {
+      display: none !important;
+    }
+  }
+
+  div.ccm-sitemap-tree-selector-wrapper {
+    margin-bottom: 1em;
+
+    div.ccm-sitemap-tree-selector-option {
+      img {
+        display: inline-block;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  div.ccm-sitemap-tree {
+    background-color: $sitemap-container-background-color;
+    border: 0;
+
+    .ccm-page-home {
+      img {
+        // Locales
+        margin-right: 5px;
+        margin-top: 9px;
+      }
+    }
+  }
+
+  ul.ui-fancytree {
+    background-color: transparent;
+    border: 0;
+    display: inline-block;
+    font-size: $sitemap-font-size;
+    margin: 0;
+    padding: 0;
+
+    li[role=treeitem] {
+      display: block;
+      width: auto;
+
+      span.fancytree-node {
+        margin: 0;
+        padding: 0;
+
+        &.fancytree-drag-source {
+          background-color: transparent !important;
+        }
+
+        &.fancytree-active {
+          span.fancytree-title {
+            background-color: $sitemap-active-item-background-color;
+            border-color: $sitemap-active-item-border-color;
+            color: $sitemap-active-item-text-color;
+          }
+
+          span.fancytree-expander,
+          span.fancytree-icon,
+          span.fancytree-custom-icon {
+            &.icon-folder::before,
+            &.fa-folder::before {
+              background-image: url($sitemap-folder-icon-active-b64);
+            }
+
+            &.icon-home::before {
+              background-image: url($sitemap-home-icon-active-b64);
+            }
+
+            &.icon-page::before {
+              background-image: url($sitemap-page-icon-active-b64);
+            }
+          }
+        }
+
+        span.fancytree-expander,
+        span.fancytree-checkbox {
+          cursor: pointer;
+        }
+
+        span.fancytree-expander,
+        span.fancytree-icon,
+        span.fancytree-custom-icon,
+        span.fancytree-checkbox {
+          display: inline-block;
+          height: $sitemap-hover-item-height;
+          margin: 0;
+          padding: 0;
+          position: relative;
+          width: $sitemap-hover-item-height;
+
+          &::before {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 70%;
+            height: $sitemap-hover-item-height;
+            line-height: $sitemap-hover-item-height;
+            position: absolute;
+            text-align: center;
+            width: $sitemap-hover-item-height;
+          }
+
+          &.fa-spinner::before {
+            background-image: url($sitemap-loading-icon-b64);
+            content: ' ';
+          }
+
+          &.fa-angle-right::before,
+          &.fa-caret-right::before {
+            background-image: url($sitemap-expand-icon-b64);
+            background-size: 45%;
+            content: ' ';
+          }
+
+          &.fa-caret-down::before {
+            background-image: url($sitemap-collapsed-icon-b64);
+            background-size: 45%;
+            content: ' ';
+          }
+
+          &.icon-home::before {
+            background-image: url($sitemap-home-icon-b64);
+            content: ' ';
+          }
+
+          &.icon-folder::before,
+          &.fa-folder::before {
+            background-image: url($sitemap-folder-icon-b64);
+            content: ' ';
+          }
+
+          &.icon-page::before {
+            background-image: url($sitemap-page-icon-b64);
+            content: ' ';
+          }
+        }
+
+        &:not(.fancytree-active) span.fancytree-title {
+          &:hover {
+            background-color: $sitemap-hover-item-background-color;
+            border-color: $sitemap-hover-item-border-color;
+            color: $sitemap-hover-item-text-color;
+          }
+        }
+
+        &.ccm-parent-menu-item-hover,
+        &.fancytree-drop-target {
+          span.fancytree-title {
+            background-color: $sitemap-hover-item-background-color;
+            border-color: $sitemap-hover-item-border-color;
+            color: $sitemap-hover-item-text-color;
+          }
+
+          &:not(.fancytree-drop-after) {
+            &:not(.fancytree-active) {
+              span.fancytree-expander,
+              span.fancytree-icon,
+              span.fancytree-custom-icon {
+                &.icon-folder::before,
+                &.fa-folder::before {
+                  background-image: url($sitemap-folder-icon-drag-b64) !important;
+                }
+
+                &.icon-home::before {
+                  background-image: url($sitemap-home-icon-drag-b64) !important;
+                }
+
+                &.icon-page::before {
+                  background-image: url($sitemap-page-icon-drag-b64) !important;
+                }
+              }
+            }
+
+            &.fancytree-active {
+              span.fancytree-expander,
+              span.fancytree-icon,
+              span.fancytree-custom-icon {
+                &.icon-folder::before,
+                &.fa-folder::before {
+                  background-image: url($sitemap-folder-icon-drag-active-b64) !important;
+                }
+
+                &.icon-home::before {
+                  background-image: url($sitemap-home-icon-drag-active-b64) !important;
+                }
+
+                &.icon-page::before {
+                  background-image: url($sitemap-page-icon-drag-active-b64) !important;
+                }
+              }
+            }
+          }
+        }
+
+        span.fancytree-title {
+          background-color: $sitemap-normal-item-background-color;
+          border-color: $sitemap-normal-item-border-color;
+          color: $sitemap-normal-item-text-color;
+          height: $sitemap-hover-item-height;
+          letter-spacing: 0;
+          line-height: $sitemap-hover-item-height;
+          margin: 0;
+          padding: 0 10px;
+        }
+      }
+
+      ul {
+        display: inline-block;
+        margin-left: 30px;
+        padding: 0;
+      }
+    }
+  }
+}

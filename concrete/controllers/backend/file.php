@@ -3,15 +3,14 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Application\EditResponse;
+use Concrete\Core\Command\Batch\Batch as BatchBuilder;
 use Concrete\Core\Controller\Controller;
 use Concrete\Core\Entity\File\File as FileEntity;
 use Concrete\Core\Entity\File\Folder\FavoriteFolder;
-use Concrete\Core\Entity\File\StorageLocation\StorageLocation as StorageLocationEntity;
 use Concrete\Core\Entity\File\Version as FileVersionEntity;
 use Concrete\Core\Entity\User\User;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
-use Concrete\Core\File\Command\RescanFileBatchProcessFactory;
 use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Filesystem;
@@ -21,36 +20,28 @@ use Concrete\Core\File\Rescanner;
 use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Concrete\Core\File\ValidationService;
-use Concrete\Core\Foundation\Queue\Batch\BatchDispatcher;
-use Concrete\Core\Foundation\Queue\Batch\BatchFactory;
-use Concrete\Core\Foundation\Queue\Batch\Processor;
-use Concrete\Core\Foundation\Queue\QueueService;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Url;
-use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Utility\Service\Number;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use Concrete\Core\Validation\CSRF\Token;
-use Concrete\Core\View\View;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 use Exception;
 use FileSet;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
 use IPLib\Factory as IPFactory;
+use IPLib\ParseStringFlag as IPParseStringFlag;
 use IPLib\Range\Type as IPRangeType;
 use Permissions as ConcretePermissions;
 use RuntimeException;
-use stdClass;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use ZipArchive;
 
 class File extends Controller
@@ -116,9 +107,12 @@ class File extends Controller
     public function rescanMultiple()
     {
         $files = $this->getRequestFiles('edit_file_contents');
-        $factory = new RescanFileBatchProcessFactory();
-        $processor = $this->app->make(Processor::class);
-        return $processor->process($factory, $files);
+        $batch = BatchBuilder::create(t('Rescan Files'), function() use ($files) {
+            foreach ($files as $file) {
+                yield new RescanFileCommand($file->getFileID());
+            }
+        });
+        return $this->dispatchBatch($batch);
     }
 
     public function approveVersion()
@@ -421,13 +415,16 @@ class File extends Controller
                     }
                     break;
             }
-            $this->checkRemoteURlsToImport($urls);
+
+            $validIps = (array) $this->checkRemoteURlsToImport($urls);
+
             $originalPage = $this->getImportOriginalPage();
             $fi = $this->app->make(Importer::class);
             $volatileDirectory = $this->app->make(VolatileDirectory::class);
             foreach ($urls as $url) {
                 try {
-                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath());
+                    $host = (string) \League\Url\Url::createFromUrl($url)->getHost();
+                    $downloadedFile = $this->downloadRemoteURL($url, $volatileDirectory->getPath(), $validIps[$host] ?? null);
                     $fileVersion = $fi->import($downloadedFile, false, $replacingFile ?: $this->getDestinationFolder());
                     if (!$fileVersion instanceof FileVersionEntity) {
                         $errors->add($url . ': ' . $fi->getErrorMessage($fileVersion));
@@ -450,12 +447,24 @@ class File extends Controller
 
     public function duplicate()
     {
-        $files = $this->getRequestFiles('copy_file');
         $r = new FileEditResponse();
-        $newFiles = [];
-        foreach ($files as $f) {
-            $nf = $f->duplicate();
-            $newFiles[] = $nf;
+        /** @var Token $token */
+        $token = $this->app->make(Token::class);
+        /** @var \Concrete\Core\Http\Request $request */
+        $request = $this->app->make(\Concrete\Core\Http\Request::class);
+
+        if ($token->validate("", $request->request->get("token"))) {
+            $files = $this->getRequestFiles('copy_file');
+            $newFiles = [];
+            foreach ($files as $f) {
+                $nf = $f->duplicate();
+                $newFiles[] = $nf;
+            }
+            $r->setFiles($newFiles);
+        } else {
+            $errorList = new ErrorList();
+            $errorList->add($token->getErrorMessage());
+            $r->setError($errorList);
         }
         $r->setFiles($newFiles);
         $r->outputJSON();
@@ -756,6 +765,7 @@ class File extends Controller
      * Check that a list of strings are valid "incoming" file names.
      *
      * @param string $urls
+     * @return array<string, string> An array of domains and their validated IPs
      *
      * @throws \Concrete\Core\Error\UserMessageException in case one or more of the specified URLs are not valid
      *
@@ -763,6 +773,7 @@ class File extends Controller
      */
     protected function checkRemoteURlsToImport(array $urls)
     {
+        $validIps = [];
         foreach ($urls as $u) {
             try {
                 $url = Url::createFromUrl($u);
@@ -778,6 +789,11 @@ class File extends Controller
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
 
+            // If we've already validated this hostname just skip it.
+            if (array_key_exists($host, $validIps)) {
+                continue;
+            }
+
             $ipFormatBlocks = [
                 '/^\d+$/', // No fully integer / octal hostnames http://2130706433 http://017700000001
                 '/^0x[0-9a-f]+$/i', // No Hexadecimal hostnames http://0x07f000001
@@ -789,18 +805,24 @@ class File extends Controller
                 }
             }
 
-            $ip = IPFactory::addressFromString($host, true, true, true);
+            $ipFlags = IPParseStringFlag::IPV4_MAYBE_NON_DECIMAL | IPParseStringFlag::IPV4ADDRESS_MAYBE_NON_QUAD_DOTTED | IPParseStringFlag::MAY_INCLUDE_PORT | IPParseStringFlag::MAY_INCLUDE_ZONEID;
+            $ip = IPFactory::parseAddressString($host, $ipFlags);
             if ($ip === null) {
                 $dnsList = @dns_get_record($host, DNS_A | DNS_AAAA);
                 while ($ip === null && $dnsList !== false && count($dnsList) > 0) {
                     $dns = array_shift($dnsList);
-                    $ip = IPFactory::addressFromString($dns['ip'], true, true, true);
+                    $ip = IPFactory::parseAddressString($dns['ip']);
                 }
             }
-            if ($ip !== null && !in_array($ip->getRangeType(), [IPRangeType::T_PUBLIC, IPRangeType::T_PRIVATENETWORK], true)) {
+
+            if ($ip !== null && $ip->getRangeType() !== IPRangeType::T_PUBLIC) {
                 throw new UserMessageException(t('The URL "%s" is not valid.', $u));
             }
+
+            $validIps[$host] = $ip->toString();
         }
+
+        return $validIps;
     }
 
     /**
@@ -813,14 +835,26 @@ class File extends Controller
      * @throws \Concrete\Core\Error\UserMessageException in case of errors
      *
      */
-    protected function downloadRemoteURL($url, $temporaryDirectory)
+    protected function downloadRemoteURL($url, $temporaryDirectory, string $ip = null)
     {
         /** @var Client $client */
         $client = $this->app->make(Client::class);
         $request = new Request('GET', $url);
-        $response = $client->send($request, [
-            RequestOptions::ALLOW_REDIRECTS => false
-        ]);
+
+        $config = [
+            RequestOptions::ALLOW_REDIRECTS => false,
+        ];
+
+        if ($ip) {
+            $host = parse_url($url, PHP_URL_HOST);
+            $scheme = parse_url($url, PHP_URL_SCHEME);
+            $port = parse_url($url, PHP_URL_PORT) ?: ($scheme === 'http' ? 80 : 443);
+
+            // Specify IP if one is provided.
+            $config['curl'] = [CURLOPT_RESOLVE => ["{$host}:{$port}:{$ip}"]];
+        }
+
+        $response = $client->send($request, $config);
 
         if ($response->getStatusCode() !== 200) {
             throw new UserMessageException(t(/*i18n: %1$s is an URL, %2$s is an error message*/ 'There was an error downloading "%1$s": %2$s', $url, $response->getReasonPhrase() . ' (' . $response->getStatusCode() . ')'));
@@ -848,6 +882,14 @@ class File extends Controller
                 }
             }
         }
+
+        $fileValidationService = $this->app->make('helper/validation/file');
+
+        if (!$fileValidationService->extension($filename)) {
+            $fileHelper = $this->app->make('helper/file');
+            throw new UserMessageException(t('The file extension "%s" is not valid.', $fileHelper->getExtension($filename)));
+        }
+
         $fullFilename = $temporaryDirectory . '/' . $filename;
         // write the downloaded file to a temporary location on disk
         $handle = fopen($fullFilename, 'wb');

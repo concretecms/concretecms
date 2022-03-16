@@ -29,12 +29,16 @@ use Gettext\Translations;
 use GroupTree;
 use GroupTreeNode;
 use Concrete\Core\User\UserList;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, \JsonSerializable
 {
-    public $ctID;
-    public $permissionSet;
-    private $permissions = []; // more advanced version of permissions
+
+    public $gID = 0;
+
+    public $gIsBadge = false;
+
+    public $gName;
 
     public function getPermissionObjectIdentifier()
     {
@@ -98,8 +102,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function delete()
     {
         $app = Facade::getFacadeApplication();
-        $command = new DeleteGroupCommand();
-        $command->setGroupID($this->getGroupID());
+        $command = new DeleteGroupCommand($this->getGroupID());
         return $app->executeCommand($command);
     }
 
@@ -297,7 +300,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gOverrideGroupTypeSettings = $gOverrideGroupTypeSettings;
 
         try {
-            $db->executeQuery("update Groups set gOverrideGroupTypeSettings = ? where gID = ?", [(int)$gOverrideGroupTypeSettings, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gOverrideGroupTypeSettings = ? where gID = ?", [(int)$gOverrideGroupTypeSettings, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -337,7 +340,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gtID = $groupType->getId();
 
         try {
-            $db->executeQuery("update Groups set gtID = ? where gID = ?", [$this->gtID, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gtID = ? where gID = ?", [$this->gtID, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -382,7 +385,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gDefaultRoleID = $role->getId();
 
         try {
-            $db->executeQuery("update Groups set gDefaultRoleID = ? where gID = ?", [(int)$this->gDefaultRoleID, (int)$this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gDefaultRoleID = ? where gID = ?", [(int)$this->gDefaultRoleID, (int)$this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -414,7 +417,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = $app->make(Connection::class);
 
         try {
-            $db->executeQuery("update Groups set gThumbnailFID = ? where gID = ?", [0, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gThumbnailFID = ? where gID = ?", [0, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -435,7 +438,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gThumbnailFID = $file->getFileID();
 
         try {
-            $db->executeQuery("update Groups set gThumbnailFID = ? where gID = ?", [$this->gThumbnailFID, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gThumbnailFID = ? where gID = ?", [$this->gThumbnailFID, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -461,7 +464,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->gPetitionForPublicEntry = $gPetitionForPublicEntry;
 
         try {
-            $db->executeQuery("update Groups set gPetitionForPublicEntry = ? where gID = ?", [(int)$gPetitionForPublicEntry, $this->getGroupID()]);
+            $db->executeQuery("update `Groups` set gPetitionForPublicEntry = ? where gID = ?", [(int)$gPetitionForPublicEntry, $this->getGroupID()]);
 
             return true;
         } catch (Exception $e) {
@@ -711,9 +714,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     {
         $class = $this->getGroupAutomationControllerClass();
         try {
-            $c = \Core::make($class, [$this]);
+            $c = \Core::make($class, ['g' => $this]);
         } catch (\ReflectionException $e) {
-            $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), [$this]);
+            $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), ['g' => $this]);
         }
 
         return $c;
@@ -873,7 +876,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $command = new AddGroupCommand();
         $command->setName($gName);
         $command->setDescription($gDescription);
-        if ($parentFolder instanceof GroupFolder) {
+        if ($parentFolder) {
             $command->setParentNodeID($parentFolder->getTreeNodeID());
         }
 

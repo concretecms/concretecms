@@ -1,0 +1,230 @@
+div.ccm-page {
+  div.ccm-block-top-navigation-bar {
+
+    // Navigation bar styling
+    .navbar {
+      background-color: $top-navbar-bg;
+
+      .nav-link {
+        transition: all 0.2s;
+
+        &:hover {
+          color: $primary;
+        }
+      }
+
+      .navbar-nav {
+        order: 0;
+      }
+    }
+
+    // Logo/brand
+    .navbar-brand {
+      img {
+        max-height: 38px;
+      }
+
+      font-family: $display-font-family;
+      font-weight: $display-font-weight;
+      font-size: 32px;
+      text-transform: uppercase;
+      margin-right: 1rem;
+
+      &:hover {
+        color: $primary;
+      }
+
+      .logo {
+        display: inline-block;
+      }
+
+      .logo-transparent {
+        display: none;
+      }
+
+    }
+
+    // Search
+    form {
+      margin-left: auto;
+      display: flex;
+      order: 1;
+    }
+
+    &.transparency-enabled:not(.transparency-temporarily-disabled) {
+      .navbar {
+        background-color: transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 5; // to put it over any other elements
+        transition: all 0.2s;
+
+        &.sticky-top {
+          position: sticky; // need to declare this because otherwise our customizations override this
+        }
+
+        .navbar-brand {
+          color: $white;
+          transition: all 0.2s;
+
+          &:hover {
+            color: $gray-500;
+          }
+
+          .logo {
+            display: none;
+          }
+
+          .logo-transparent {
+            display: inline-block;
+          }
+        }
+
+        .nav-item {
+          a.nav-link {
+            color: $white;
+
+            &:hover {
+              color: $gray-500;
+            }
+          }
+        }
+      }
+    }
+
+    // Desktop specific functionality:
+    @include media-breakpoint-up(lg) {
+
+
+      // Animated dropdown menu
+      .dropdown-menu {
+        perspective: 1000px;
+        animation: dropdownMenuGrowDrown 300ms ease-in-out forwards;
+        transform-origin: top center;
+      }
+    }
+
+    // Mobile specific functionality
+    @include media-breakpoint-down(lg) {
+
+      // Navigation styling.
+      .nav-link {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        text-align: center;
+      }
+
+      // Navigation dropdown styling
+      .dropdown-menu {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+        border: 0;
+
+        .dropdown-item {
+          &:hover {
+            background-color: transparent;
+            color: $navbar-light-hover-color;
+          }
+        }
+      }
+    }
+
+    // Dropdown menu behaviors
+    .dropdown-menu {
+      display: none;
+    }
+
+    .dropdown-toggle.show {
+      ~ .dropdown-menu {
+          display: block;
+      }
+    }
+  }
+}
+
+@keyframes dropdownMenuGrowDrown {
+  0% {
+    transform: scaleY(0)
+  }
+  80% {
+    transform: scaleY(1.1)
+  }
+  100% {
+    transform: scaleY(1)
+  }
+}
+
+// navbar animated toggler
+div.theme-atomik {
+
+  .navbar-toggler {
+    .icon-bar {
+      display: block;
+      width: 25px;
+      height: 2px;
+      transition: all 0.2s;
+      background-color: $black;
+
+      &:nth-of-type(1) {
+        transform: rotate(45deg);
+        transform-origin: 10% 10%;
+      }
+
+      &:nth-of-type(2) {
+        opacity: 0;
+      }
+
+      &:nth-of-type(3) {
+        transform: rotate(-45deg);
+        transform-origin: 10% 90%;
+      }
+
+      + .icon-bar {
+        margin-top: 5px;
+      }
+    }
+
+    &.collapsed {
+      .icon-bar {
+        &:nth-of-type(1) {
+          transform: rotate(0);
+        }
+
+        &:nth-of-type(2) {
+          opacity: 1;
+        }
+
+        &:nth-of-type(3) {
+          transform: rotate(0);
+        }
+      }
+    }
+
+    &:hover {
+      .icon-bar {
+        background-color: $primary;
+      }
+    }
+  }
+
+  .transparency-enabled:not(.transparency-temporarily-disabled) {
+    .navbar-toggler {
+      .icon-bar {
+        background-color: $white;
+      }
+    }
+  }
+
+}
+
+html.ccm-toolbar-visible {
+  div.ccm-page {
+    div.ccm-block-top-navigation-bar {
+      .fixed-top {
+        top: 48px; // https://github.com/concrete5/concrete5/issues/10275
+      }
+    }
+  }
+}

@@ -30,7 +30,7 @@ $resolverManager = app(ResolverManagerInterface::class);
         <?php
         if (is_object($draft) && !$draft->isPageDraft()) {
             ?>
-            <div><a href="#" class="icon-link" data-composer-field="edit_url_slug"><i class="fas fa-pencil"></i></a> <span><?= $control->getPageTypeComposerControlDraftValue() ?></span></div>
+            <div><a href="#" class="icon-link" data-composer-field="edit_url_slug"><i class="fas fa-pencil-alt"></i></a> <span><?= $control->getPageTypeComposerControlDraftValue() ?></span></div>
         <?php
         } else {
             echo $element;

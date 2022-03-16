@@ -9,6 +9,10 @@ use Concrete\Core\View\View;
 /** @var View $view */
 /** @var array $groups */
 
+$subject = $subject ?? null;
+$group = $group ?? null;
+$message = $message ?? null;
+
 $app = Application::getFacadeApplication();
 /** @var Form $form */
 $form = $app->make(Form::class);
@@ -36,7 +40,7 @@ $token = $app->make(Token::class);
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <button class="float-right btn btn-primary" type="submit">
+            <button class="float-end btn btn-primary" type="submit">
                 <i class="fas fa-paper-plane"></i> <?php echo t('Send Message') ?>
             </button>
         </div>

@@ -1,0 +1,18 @@
+.ccm-ui {
+  .ccm-image-chooser-popover {
+    max-width: 400px;
+
+    img {
+      height: auto;
+      margin-bottom: 1rem;
+      max-width: 100%;
+    }
+  }
+
+  table.ccm-image-chooser-list-view {
+    img {
+      height: 32px;
+      width: 32px;
+    }
+  }
+}

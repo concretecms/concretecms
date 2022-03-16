@@ -1,0 +1,20 @@
+// Page level element choices
+.ccm-page {
+  > div.container {
+    // The goal of this – any page level objects like layouts or blocks wrapped in a container that are NOT Concrete
+    // containers should have automatic padding. Without this you have to add tons of custom design CSS within the block
+    // design tool
+    @include rfs(3rem, 'margin-top');
+    @include rfs(3rem, 'margin-bottom');
+  }
+
+  // Let's add the same spacing even in edit mode.
+  div[data-container=block] {
+    > div.container {
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+}
+

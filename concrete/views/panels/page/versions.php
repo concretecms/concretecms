@@ -18,7 +18,7 @@ use Concrete\Core\Support\Facade\Url;
 </script>
 
 <script type="text/template" class="version">
-    <tr <% if (cvIsApproved) { %> class="ccm-panel-page-version-approved" <% } else if (cvIsScheduled == 1) { %> class="ccm-panel-page-version-scheduled" <% } %>>
+    <tr <% if (cvIsApprovedNow) { %> class="ccm-panel-page-version-approved" <% } else if (cvIsScheduled == 1) { %> class="ccm-panel-page-version-scheduled" <% } %>>
         <td>
             <!--suppress HtmlFormInputWithoutLabel -->
             <input class="ccm-flat-checkbox" type="checkbox" name="cvID[]" value="<%-cvID%>"
@@ -49,11 +49,21 @@ use Concrete\Core\Support\Facade\Url;
 
             <div class="ccm-panel-page-versions-status">
                 <% if (cvIsApproved) { %>
-                    <p>
-                        <span class="badge badge-dark">
+                <p>
+                    <% if (cvIsApprovedNow) { %>
+                        <span class="badge bg-dark">
                             <?php echo t('Live') ?>
                         </span>
-                    </p>
+                    <% } else if (cvIsScheduled) { %>
+                        <span class="badge bg-info">
+                            <?php echo t('Scheduled') ?>
+                        </span>
+                    <% } else { %>
+                        <span class="badge bg-info">
+                            <?php echo t('Approved') ?>
+                        </span>
+                    <% } %>
+                </p>
                 <% } %>
             </div>
 
@@ -100,10 +110,14 @@ use Concrete\Core\Support\Facade\Url;
                 <% } %>
 
                 <% if (cvIsScheduled) { %>
-                    <p>
-                        <?php echo t('Scheduled by') ?>
-                        <%-cvApproverUserName%> <?php echo tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/
-                            'ScheduledByFor', ' for ') ?> <%-cvPublishDate%>
+                    <p><?= t('Scheduled by') ?> <%-cvApproverUserName%>
+                        <% if (cvPublishDate && cvPublishEndDate) { %>
+                        <?= tc(/*i18n: In the sentence Scheduled by USERNAME between DATE/TIME and DATE/TIME*/'ScheduledDate', 'between %s and %s', '<%-cvPublishDate%>', '<%-cvPublishEndDate%>') ?>
+                        <% } else if (cvPublishDate) { %>
+                        <?= tc(/*i18n: In the sentence Scheduled by USERNAME for DATE/TIME*/'ScheduledDate', 'for %s', '<%-cvPublishDate%>') ?>
+                        <% } else if (cvPublishEndDate) { %>
+                        <?= tc(/*i18n: In the sentence Scheduled by USERNAME to close on DATE/TIME*/'ScheduledDate', 'to close on %s', '<%-cvPublishEndDate%>') ?>
+                        <% } %>
                     </p>
                 <% } %>
             </div>
@@ -111,7 +125,7 @@ use Concrete\Core\Support\Facade\Url;
             <div class="popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
                 <div class="dropdown-menu">
                     <% if (cvIsApproved) { %>
-                        <span class="dropdown-item">
+                        <span class="dropdown-item ui-state-disabled">
                             <?php echo t('Approve') ?>
                         </span>
                     <% } else { %>
@@ -133,7 +147,7 @@ use Concrete\Core\Support\Facade\Url;
                     <% } %>
 
                     <% if (!cvIsApproved) { %>
-                        <span class="dropdown-item">
+                        <span class="dropdown-item ui-state-disabled">
                             <?php echo t('Unapprove') ?>
                         </span>
                     <% } else { %>
@@ -143,7 +157,7 @@ use Concrete\Core\Support\Facade\Url;
                     <% } %>
 
                     <% if (cpCanDeletePageVersions) { %>
-                        <span <% if (!cvIsApproved) { %>style="display:none"<% } %> class="dropdown-item">
+                        <span <% if (!cvIsApprovedNow) { %>style="display:none"<% } %> class="dropdown-item ui-state-disabled">
                             <?php echo t('Delete') ?>
                         </span>
 
@@ -162,13 +176,13 @@ use Concrete\Core\Support\Facade\Url;
         <tr>
             <td colspan="3">
                 <% if (hasPreviousPage == '1') { %>
-                    <a href="#" class="float-left" data-version-navigation="<%=previousPageNum%>">
+                    <a href="#" class="float-start" data-version-navigation="<%=previousPageNum%>">
                         <?php echo t('&larr; Newer Versions') ?>
                     </a>
                 <% } %>
 
                 <% if (hasNextPage == '1') { %>
-                    <a href="#" class="float-right" data-version-navigation="<%=nextPageNum%>">
+                    <a href="#" class="float-end" data-version-navigation="<%=nextPageNum%>">
                         <?php echo t('Older Versions &rarr;') ?>
                     </a>
                 <% } %>
@@ -482,7 +496,7 @@ use Concrete\Core\Support\Facade\Url;
     });
 </script>
 
-<?php if ($isDialogMode): ?>
+<?php if (isset($isDialogMode) && $isDialogMode === true): ?>
     <section id="ccm-panel-page-versions" class="ccm-ui">
         <header>
             <a href="" data-panel-navigation="back" class="ccm-panel-back">
@@ -504,11 +518,11 @@ use Concrete\Core\Support\Facade\Url;
         <hr/>
 
         <div class="dialog-buttons">
-            <button class="btn btn-secondary float-left" data-dialog-action="cancel">
+            <button class="btn btn-secondary float-start" data-dialog-action="cancel">
                 <?php echo t('Cancel') ?>
             </button>
 
-            <button type="button" class="btn btn-danger float-right" disabled data-version-action="delete">
+            <button type="button" class="btn btn-danger float-end" disabled data-version-action="delete">
                 <?php echo t('Delete') ?>
             </button>
         </div>
@@ -534,7 +548,7 @@ use Concrete\Core\Support\Facade\Url;
 
         <hr/>
 
-        <button type="button" class="btn btn-danger float-right" disabled data-version-action="delete">
+        <button type="button" class="btn btn-danger float-end" disabled data-version-action="delete">
             <?php echo t('Delete') ?>
         </button>
     </section>

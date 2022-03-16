@@ -24,6 +24,9 @@ abstract class DefaultsBlockCommand extends BlockCommand
      */
     protected $originalAreaHandle;
 
+    /** @var bool */
+    protected $forceDisplayOrder;
+
     public function __construct(
         int $originalBlockID,
         int $originalPageID,
@@ -32,7 +35,8 @@ abstract class DefaultsBlockCommand extends BlockCommand
         int $blockID,
         int $pageID,
         int $collectionVersionID,
-        string $areaHandle
+        string $areaHandle,
+        bool $forceDisplayOrder = false
     ) {
         parent::__construct($blockID, $pageID, $collectionVersionID, $areaHandle);
         $this
@@ -40,6 +44,7 @@ abstract class DefaultsBlockCommand extends BlockCommand
             ->setOriginalPageID($originalPageID)
             ->setOriginalCollectionVersionID($originalCollectionVersionID)
             ->setOriginalAreaHandle($originalAreaHandle)
+            ->setForceDisplayOrder($forceDisplayOrder)
         ;
     }
 
@@ -102,4 +107,25 @@ abstract class DefaultsBlockCommand extends BlockCommand
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function getForceDisplayOrder(): bool
+    {
+        return $this->forceDisplayOrder;
+    }
+
+    /**
+     * @param bool $forceDisplayOrder
+     * @return $this
+     */
+    public function setForceDisplayOrder(bool $forceDisplayOrder): self
+    {
+        $this->forceDisplayOrder = $forceDisplayOrder;
+
+        return $this;
+    }
+
+
 }

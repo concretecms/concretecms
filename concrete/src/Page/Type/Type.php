@@ -180,7 +180,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
     }
 
-    public function publish(Page $c, $requestOrDateTime = null, $cvPublishEndDate = null)
+    public function publish(Page $c, $requestOrDateTime = null, $cvPublishEndDate = null, bool $keepOtherScheduling = false)
     {
         $app = Application::getFacadeApplication();
         $this->stripEmptyPageTypeComposerControls($c);
@@ -213,6 +213,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
                 // That means it's a date time
                 $pkr->scheduleVersion($requestOrDateTime, $cvPublishEndDate);
             }
+            $pkr->setKeepOtherScheduling($keepOtherScheduling);
         } else {
             $pkr = $requestOrDateTime;
         }
@@ -243,7 +244,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             'select pTemplateID from PageTypePageTemplates where ptID = ? order by pTemplateID asc',
             array($this->ptID)
         );
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $pt = PageTemplate::getByID($row['pTemplateID']);
             if (is_object($pt)) {
                 $templates[] = $pt;
@@ -271,6 +272,11 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
     {
         if (!$template) {
             $template = $this->getPageTypeDefaultPageTemplateObject();
+        }
+
+        if (!$template) {
+            // We're probably on an internal page like core theme documentation or core stack display
+            return;
         }
 
         $db = Loader::db();
@@ -624,7 +630,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $db = \Database::get();
         $r = $db->Execute('select cID from Pages where cIsTemplate = 1 and ptID = ?', array($this->getPageTypeID()));
         $home = Page::getByID(Page::getHomePageID());
-        while ($row = $r->FetchRow()) {
+        while ($row = $r->fetch()) {
             $c = Page::getByID($row['cID']);
             if (is_object($c)) {
                 $nc = $c->duplicate($home);
@@ -868,7 +874,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $templates = $data['templates'];
         }
         $ptIsInternal = $this->isPageTypeInternal();
-        if ($data['internal']) {
+        if (isset($data['internal']) && $data['internal']) {
             $ptIsInternal = 1;
         }
         $db = Loader::db();

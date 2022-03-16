@@ -21,7 +21,7 @@ class Redirect
     }
 
     /**
-     * Redirects to a concrete5 resource.
+     * Redirects to a Concrete resource.
      */
     public static function to()
     {

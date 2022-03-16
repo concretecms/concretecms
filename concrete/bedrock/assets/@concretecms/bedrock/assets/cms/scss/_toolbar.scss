@@ -1,0 +1,528 @@
+/* stylelint-disable selector-max-compound-selectors, property-no-vendor-prefix, selector-max-id */
+div#ccm-toolbar {
+  background-color: $gray-100;
+  border-bottom: 1px solid $gray-200;
+  height: 48px;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: $index-level-main-bar; /* over the top of the highlighter, which is 1000 */
+
+  .ccm-toolbar-accessibility-title {
+    display: none;
+    margin-left: 5px;
+  }
+
+  &.titles {
+    .ccm-toolbar-accessibility-title {
+      display: inline-block;
+    }
+
+    .ccm-toolbar-item-list > li > a {
+      padding: 14px 16px;
+      width: auto !important;
+    }
+
+    .ccm-toolbar-item-list > li > a i,
+    .ccm-toolbar-item-list > li > a img {
+      position: static;
+    }
+
+    .ccm-toolbar-item-list > .spinner {
+      left: 11px;
+    }
+  }
+
+  &.large-font {
+    li > a {
+      font-size: $font-size-lg !important;
+      padding: 10px 16px;
+    }
+  }
+
+  > ul {
+    @include clearfix();
+    list-style-type: none;
+    margin: 0;
+    padding-left: 0;
+
+    > li {
+
+      position: relative;
+
+      > a {
+        align-items: center;
+        border-right: 1px solid $gray-200;
+        box-sizing: border-box;
+        color: $gray-600;
+
+        display: flex;
+        height: 47px;
+        position: relative;
+        text-decoration: none;
+        width: 58px;
+
+        i,
+        img {
+          height: 14px;
+          margin: 0 auto;
+        }
+
+        svg {
+          fill: $gray-600;
+          height: 16px;
+          margin: 0 auto;
+          transition: fill 0.25s ease-in-out;
+          width: 16px;
+        }
+
+      }
+
+      > a:hover {
+        background-color: $gray-200;
+        color: $gray-900;
+      }
+
+      > a.ccm-launch-panel-active,
+      > a.ccm-launch-panel-active:hover {
+        background-color: $blue;
+        color: #fff;
+        transition: background-color 0.25s ease-in-out;
+
+        i {
+          display: inline-block;
+        }
+
+        svg {
+          fill: #fff;
+        }
+      }
+
+
+    }
+
+    li.ccm-toolbar-button-with-text {
+      > a {
+        padding: 0 17px;
+        width: auto;
+
+        svg {
+          margin-right: 8px;
+        }
+
+        span {
+          font-size: 0.8rem;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      }
+
+    }
+
+    li {
+      > div.ccm-menu-item-site-list-container {
+        align-items: center;
+        border-right: 1px solid $gray-200;
+        box-sizing: border-box;
+        color: $gray-600;
+        display: flex;
+        height: 47px;
+        padding: 0 17px;
+        position: relative;
+        text-decoration: none;
+      }
+
+    }
+
+
+    li.ccm-logo {
+      span {
+        border-right: 1px solid $gray-200;
+        display: block;
+        height: 47px;
+        padding: 9px 18px 0 17px;
+        width: 60px;
+
+        img {
+          height: 24px;
+        }
+      }
+    }
+
+    li.ccm-toolbar-search {
+      background-color: #fff;
+      border-left: 1px solid $gray-200;
+      color: #888;
+      height: 47px;
+      margin-left: -1px;
+      padding: 0;
+      position: relative;
+      white-space: nowrap;
+
+      svg {
+        fill: $gray-600;
+        height: 20px;
+        left: 16px;
+        position: absolute;
+        top: 16px;
+        width: 20px;
+      }
+
+      input {
+        background-color: transparent;
+        border-right: 1px solid $gray-200;
+        margin-right: 0;
+        padding-right: 10px;
+      }
+
+      input[type=search] {
+        height: 47px;
+        margin: 0 0 0 40px;
+        padding: 0;
+        width: 210px;
+      }
+
+      input[type=search],
+      textarea {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      input[type=search]:focus,
+      textarea:focus {
+        -webkit-appearance: none !important;
+        outline: none !important;
+      }
+
+    }
+
+    li.ccm-toolbar-page-edit-mode-active {
+      > a {
+        background-color: $green;
+        color: #fff;
+
+        svg {
+          fill: white;
+        }
+      }
+    }
+
+    li.ccm-toolbar-page-edit-mode-pinned {
+      > a,
+      a:hover {
+        @include gradient-y(#D6E6EE, #B8DCEE);
+        background-color: #d6e6ee;
+        color: #136cc0;
+      }
+    }
+
+    > li#ccm-white-label-message {
+      border-right: 0 !important;
+
+      color: #ccc;
+      font-size: $font-size-sm;
+      height: 30px;
+      line-height: $line-height-sm;
+      padding: 18px 24px 0;
+
+      > a {
+        border: 0;
+        color: $gray-200;
+        display: inline;
+        padding: 0;
+        text-decoration: underline;
+      }
+
+      > a:hover {
+        background-color: transparent !important;
+        background-image: none !important;
+        text-decoration: underline;
+      }
+    }
+
+  }
+
+  .dropdown-menu {
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+  }
+
+  li.ccm-toolbar-last-left-child {
+    border-right: 1px solid $gray-200;
+  }
+
+  /* Multisite List Item Menu Component */
+
+  div.ccm-menu-item-site-list-container {
+    padding: 0 17px;
+    text-align: left;
+    width: 240px;
+
+    &:hover {
+      background-color: transparent;
+    }
+
+    .btn {
+      padding-left: 9px;
+      padding-right: 9px;
+    }
+
+    i {
+      margin-left: 0;
+      margin-right: 8px;
+    }
+
+    .dropdown-menu {
+      max-height: 400px;
+    }
+
+  }
+
+  a.ccm-menu-item-site-list {
+    span.ccm-toolbar-accessibility-title {
+      color: #333;
+      display: inline-block;
+      position: absolute;
+    }
+
+  }
+
+  li > a.ccm-menu-item-site-list {
+    padding: 14px 16px 14px 36px;
+    text-align: left;
+    width: 240px;
+  }
+
+  &.titles li > a.ccm-menu-item-site-list {
+    width: 240px !important;
+  }
+
+  li > a.ccm-menu-item-site-list-inactive {
+    cursor: not-allowed;
+  }
+
+
+}
+
+
+/* Disabling the toolbar */
+div#ccm-toolbar-disabled {
+  background-color: rgba(255, 255, 255, 0.8);
+  height: 49px;
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: $index-level-toolbar-disabled; /* right over the toolbar */
+}
+
+/* Responsive Toolbar */
+#ccm-dashboard-content {
+  @media only screen and (max-width: 768px) {
+    margin-right: 0 !important;
+  }
+}
+
+ul.ccm-mobile-menu {
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+
+    a,
+    li,
+    ul,
+    i {
+      flex: 1 0 auto;
+      max-width: 100%;
+    }
+
+    ul {
+      min-width: 100%;
+
+      li {
+        a {
+          width: 100%;
+        }
+      }
+    }
+
+    a {
+      flex: 1 0 auto;
+      height: 50px !important;
+      max-width: 258px;
+      min-width: 200px;
+    }
+  }
+}
+
+.ccm-toolbar-mobile-menu-button {
+  border-left: 1px solid $gray-200;
+  cursor: pointer;
+  height: 47px;
+  padding: 14px 18px;
+
+  i {
+    font-size: $font-size-lg;
+  }
+
+  &:hover,
+  &.ccm-mobile-close {
+    color: #7d7d7d;
+  }
+
+  &.ccm-toolbar-mobile-menu-button-active {
+    @include gradient-y(#c2ffc2, #b5eeb5);
+    background-color: #b5eeb5;
+  }
+}
+
+.ccm-mobile-toolbar-menu {
+  display: none;
+
+}
+
+.ccm-mobile-menu-overlay {
+  background-color: #fcfcfc;
+  border-bottom: 5px solid #4674a1;
+  display: none;
+  left: 0;
+  overflow-y: scroll;
+  padding: 15px 0;
+  position: fixed;
+  top: 48px;
+  width: 100%;
+  z-index: $index-level-main-bar;
+
+  &.ccm-mobile-menu-overlay-dashboard {
+    // level 1 navigation link
+    .ccm-mobile-menu-entries > li > a {
+      width: 228px;
+    }
+
+    .fa-sliders.mobile-leading-icon {
+      margin-right: -4px; // line up Dashboard and Sign Out text
+    }
+  }
+
+  li {
+    ul {
+      display: block; // dashboard's mobile menu is always visible
+    }
+  }
+
+  .ccm-mobile-menu-entries {
+    list-style-type: none;
+    margin-left: 12px;
+    padding-left: 0;
+    -webkit-text-size-adjust: none;
+
+    li {
+      &.ccm-toolbar-page-edit-mode-active {
+        a {
+          color: #0c6;
+        }
+
+        i {
+          &.fa-pencil {
+            color: #0c6;
+          }
+        }
+      }
+
+      &.nav-selected {
+        > a {
+          text-decoration: underline;
+        }
+      }
+
+      ul {
+        display: none;
+        margin-left: 55px;
+
+        li {
+          a {
+            background: none;
+            color: #4674a1;
+            font-weight: normal;
+            padding: 12px 5px;
+            text-transform: none;
+          }
+
+          ul {
+            margin-left: 15px;
+          }
+        }
+      }
+
+      i {
+        &.fa-caret-down,
+        &.fa-caret-up {
+          color: #4674a1;
+          cursor: pointer;
+          padding: 14px 17px;
+        }
+
+        &.mobile-leading-icon {
+          color: #cac9c9;
+          display: inline-block !important;
+          min-width: 30px;
+          text-align: center;
+        }
+      }
+
+      a {
+        color: #4674a1;
+        display: inline-block;
+        font-weight: 200;
+        height: 100%;
+        padding: 8px 5% 8px 15px;
+        text-decoration: none;
+        vertical-align: middle;
+
+        &:hover {
+          color: #195279;
+          text-decoration: none;
+        }
+      }
+    }
+
+    // level 1 navigation link
+    > li > a {
+      width: 224px;
+    }
+
+    // level 2 navigation link
+    > li > ul > li > a {
+      width: 199px;
+    }
+
+    // level 3 navigation link
+    > li > ul > li > ul > li > a {
+      width: 184px;
+    }
+
+    // level 4 navigation link
+    > li > ul > li > ul > li > ul > li > a {
+      width: 169px;
+    }
+
+    // level 5 navigation link
+    > li > ul > li > ul > li > ul > li > ul > li > a {
+      width: 144px;
+    }
+  }
+}
+
+html.ccm-toolbar-visible {
+  .ccm-page {
+    // This used to be dynamically included in the theme. Now we're moving it here.
+    // The purpose of this code is to push the content of the page down if the toolbar appears at the top.
+    margin-top: 48px;
+  }
+}

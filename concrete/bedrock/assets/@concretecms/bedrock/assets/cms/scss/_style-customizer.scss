@@ -1,0 +1,22 @@
+div.ccm-theme-customizer {
+
+  /**
+   * Color picker
+   */
+  div.sp-dd {
+    display: none;
+  }
+
+  div.sp-preview {
+    margin-right: 0;
+  }
+
+  /**
+   * Bootstrap Select - font selector
+   */
+  .flyout-menu-form {
+    .bootstrap-select {
+      width: 100% !important;
+    }
+  }
+}

@@ -1,0 +1,363 @@
+<concrete5-cif version="1.0">
+<area name="Main">
+    <blocks>
+        <block type="core_theme_documentation_breadcrumb" name="">
+            <style>
+                <customClass>mt-5</customClass>
+            </style>
+        </block>
+        <block type="html" name="" custom-container-settings="1">
+            <style>
+                <customClass>mb-1</customClass>
+            </style>
+            <data table="btContentLocal">
+                <record>
+                    <content><![CDATA[
+                            <h1>Containers</h1>
+
+                            <p class="lead">The Atomik theme has some custom containers for placing blocks into, in a nice responsive way.</p>
+                                    ]]>
+                    </content>
+                </record>
+            </data>
+        </block>
+        <block type="html" name="" custom-container-settings="1">
+            <data table="btContentLocal">
+                <record>
+                    <content><![CDATA[
+                            <h3 class="text-primary">1. Two Column Highlight</h3>
+                            <p>A light background with two columns. Useful for two column layouts that need to stand out, or alternating image layouts.</p>
+                            ]]>
+                    </content>
+                </record>
+            </data>
+        </block>
+        <block type="core_container" name="">
+            <container handle="two_column_light">
+                <containerarea name="Column 1">
+                    <block type="feature_link" name="">
+                        <data table="btFeatureLink">
+                            <record>
+                                <title><![CDATA[
+                                                Feature Link Block]]></title>
+                                <body><![CDATA[<p>This is an instance of the feature link block. It lets you group buttons, text and titles together, with optional color accents.</p>
+]]></body>
+                                <buttonText><![CDATA[Learn More]]></buttonText>
+                                <buttonExternalLink><![CDATA[]]></buttonExternalLink>
+                                <buttonInternalLinkCID><![CDATA[0]]></buttonInternalLinkCID>
+                                <buttonFileLinkID><![CDATA[0]]></buttonFileLinkID>
+                                <buttonColor><![CDATA[accent]]></buttonColor>
+                                <buttonStyle><![CDATA[outline]]></buttonStyle>
+                                <buttonSize><![CDATA[lg]]></buttonSize>
+                                <titleFormat><![CDATA[h4]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Column 2">
+                    <block type="image" name="">
+                        <data table="btContentImage">
+                            <record>
+                                <fID>0</fID>
+                                <fOnstateID/>
+                                <cropImage><![CDATA[0]]></cropImage>
+                                <maxWidth><![CDATA[0]]></maxWidth>
+                                <maxHeight><![CDATA[0]]></maxHeight>
+                                <externalLink><![CDATA[]]></externalLink>
+                                <internalLinkCID/>
+                                <fileLinkID/>
+                                <openLinkInNewWindow><![CDATA[0]]></openLinkInNewWindow>
+                                <altText><![CDATA[]]></altText>
+                                <title><![CDATA[]]></title>
+                                <sizingOption><![CDATA[thumbnails_configurable]]></sizingOption>
+                            </record>
+                        </data>
+                        <thumbnails>
+                            <thumbnail breakpointHandle="xs" handle="stripe_column"/>
+                            <thumbnail breakpointHandle="xl" handle="stripe_column"/>
+                            <thumbnail breakpointHandle="sm" handle="stripe_column"/>
+                            <thumbnail breakpointHandle="md" handle="stripe_column"/>
+                            <thumbnail breakpointHandle="lg" handle="stripe_column"/>
+                        </thumbnails>
+                    </block>
+                </containerarea>
+            </container>
+        </block>
+        <block type="html" name="" custom-container-settings="1">
+            <data table="btContentLocal">
+                <record>
+                    <content><![CDATA[
+                            <h3 class="text-primary">2. Highlight Stripe</h3>
+                            <p>A single column with an optional header area.</p>
+                            ]]>
+                    </content>
+                </record>
+            </data>
+        </block>
+        <block type="core_container" name="">
+            <container handle="light_stripe">
+                <containerarea name="Title">
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<h4 class="display-4" style="text-align: center;">Stripe Title</h4>
+]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Body">
+                    <block type="html" name="" custom-container-settings="1">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[
+                            <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer non lorem dolor. Nam sed suscipit massa. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus at dignissim massa, nec placerat nibh. Morbi lobortis posuere tortor, eget ultrices justo semper a. In lectus arcu, euismod vel tempus ut, commodo gravida nulla. Phasellus eget libero ex. Aenean a porttitor nunc, non eleifend odio. Morbi id ligula vel est finibus venenatis eu sed ante. Sed elementum sapien nec lectus auctor, a maximus est maximus.
+
+Cras vestibulum est eu feugiat rhoncus. Fusce eget leo erat. Aliquam sit amet tristique urna. Fusce et feugiat sapien, nec volutpat ipsum. Nulla blandit rhoncus dui quis sagittis. Aliquam erat volutpat. Quisque quis sem mollis neque malesuada blandit vitae in sapien. In hac habitasse platea dictumst. Morbi et lacus sapien. Praesent suscipit dignissim consectetur. Suspendisse ornare eros sit amet dolor laoreet ornare. Nunc egestas interdum metus, nec pharetra nibh cursus ac. Nulla eu mattis justo. Duis a sapien mattis, mollis ligula at, consectetur dui.
+
+</p>
+                            ]]>
+                                </content>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+            </container>
+        </block>
+        <block type="html" name="" custom-container-settings="1">
+            <data table="btContentLocal">
+                <record>
+                    <content><![CDATA[
+                            <h3 class="text-primary">3. Two Column Condensed</h3>
+                            <p>A two column area useful for putting images and feature links into.</p>
+                            ]]>
+                    </content>
+                </record>
+            </data>
+        </block>
+        <block type="core_container" name="">
+            <container handle="two_column_condensed">
+                <containerarea name="Column 1">
+                    <block type="feature_link" name="">
+                        <data table="btFeatureLink">
+                            <record>
+                                <title>
+                                    <![CDATA[Headline 1]]></title>
+                                <body><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.&nbsp;</p>
+]]></body>
+                                <buttonText><![CDATA[Learn More]]></buttonText>
+                                <buttonExternalLink><![CDATA[]]></buttonExternalLink>
+                                <buttonInternalLinkCID><![CDATA[0]]></buttonInternalLinkCID>
+                                <buttonFileLinkID><![CDATA[0]]></buttonFileLinkID>
+                                <buttonColor><![CDATA[primary]]></buttonColor>
+                                <buttonStyle><![CDATA[outline]]></buttonStyle>
+                                <buttonSize><![CDATA[lg]]></buttonSize>
+                                <titleFormat><![CDATA[h4]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Column 2">
+                    <block type="feature_link" name="">
+                        <data table="btFeatureLink">
+                            <record>
+                                <title>
+                                    <![CDATA[Headline 2]]></title>
+                                <body><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.&nbsp;</p>
+]]></body>
+                                <buttonText><![CDATA[Learn More]]></buttonText>
+                                <buttonExternalLink><![CDATA[]]></buttonExternalLink>
+                                <buttonInternalLinkCID><![CDATA[0]]></buttonInternalLinkCID>
+                                <buttonFileLinkID><![CDATA[0]]></buttonFileLinkID>
+                                <buttonColor><![CDATA[primary]]></buttonColor>
+                                <buttonStyle><![CDATA[outline]]></buttonStyle>
+                                <buttonSize><![CDATA[lg]]></buttonSize>
+                                <titleFormat><![CDATA[h4]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+            </container>
+        </block>
+        <block type="html" name="" custom-container-settings="1">
+            <data table="btContentLocal">
+                <record>
+                    <content><![CDATA[
+                            <h3 class="text-primary">4. Responsive Grid of Four</h3>
+                            <p>Four wide columns that collapses down to two on small devices.</p>
+                            ]]>
+                    </content>
+                </record>
+            </data>
+        </block>
+        <block type="core_container" name="">
+            <container handle="grid_four">
+                <containerarea name="Item 1">
+                    <block type="feature" name="" custom-template="stacked.php">
+                        <data table="btFeature">
+                            <record>
+                                <icon><![CDATA[fas fa-award]]></icon>
+                                <title><![CDATA[Quality]]></title>
+                                <paragraph></paragraph>
+                                <externalLink><![CDATA[]]></externalLink>
+                                <internalLinkCID/>
+                                <titleFormat><![CDATA[h6]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Item 2">
+                    <block type="feature" name="" custom-template="stacked.php">
+                        <data table="btFeature">
+                            <record>
+                                <icon><![CDATA[fas fa-palette]]></icon>
+                                <title><![CDATA[Design]]></title>
+                                <paragraph></paragraph>
+                                <externalLink><![CDATA[]]></externalLink>
+                                <internalLinkCID/>
+                                <titleFormat><![CDATA[h6]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Item 3">
+                    <block type="feature" name="" custom-template="stacked.php">
+                        <data table="btFeature">
+                            <record>
+                                <icon><![CDATA[fas fa-code]]></icon>
+                                <title><![CDATA[Development]]></title>
+                                <paragraph></paragraph>
+                                <externalLink><![CDATA[]]></externalLink>
+                                <internalLinkCID/>
+                                <titleFormat><![CDATA[h6]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Item 4">
+                    <block type="feature" name="" custom-template="stacked.php">
+                        <data table="btFeature">
+                            <record>
+                                <icon><![CDATA[fas fa-shield-alt]]></icon>
+                                <title><![CDATA[Security]]></title>
+                                <paragraph></paragraph>
+                                <externalLink><![CDATA[]]></externalLink>
+                                <internalLinkCID/>
+                                <titleFormat><![CDATA[h6]]></titleFormat>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+            </container>
+        </block>
+        <block type="html" name="" custom-container-settings="1">
+            <data table="btContentLocal">
+                <record>
+                    <content><![CDATA[
+                            <h3 class="text-primary">4. Responsive Grid of Six</h3>
+                            <p>Six content slots in two rows, that collapses down to two per row on small devices.</p>
+                            ]]>
+                    </content>
+                </record>
+            </data>
+        </block>
+        <block type="core_container" name="">
+            <container handle="grid_six">
+                <containerarea name="Item 1">
+                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                        <data table="btTestimonial">
+                            <record>
+                                <name><![CDATA[Amanda Johnson]]></name>
+                                <position><![CDATA[CFO]]></position>
+                                <company><![CDATA[Bass Designs]]></company>
+                                <companyURL><![CDATA[]]></companyURL>
+                                <paragraph>
+                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                <awardImageID/>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Item 2">
+                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                        <data table="btTestimonial">
+                            <record>
+                                <name><![CDATA[Sam Heinz]]></name>
+                                <position><![CDATA[Lead Developer]]></position>
+                                <company><![CDATA[TaftCo Enterprises]]></company>
+                                <companyURL><![CDATA[]]></companyURL>
+                                <paragraph>
+                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                <awardImageID/>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Item 3">
+                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                        <data table="btTestimonial">
+                            <record>
+                                <name><![CDATA[VP Engineering]]></name>
+                                <position><![CDATA[VitalTech Incorporated]]></position>
+                                <company><![CDATA[]]></company>
+                                <companyURL><![CDATA[]]></companyURL>
+                                <paragraph>
+                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                <awardImageID/>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Item 4">
+                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                        <data table="btTestimonial">
+                            <record>
+                                <name><![CDATA[David Briscoe]]></name>
+                                <position><![CDATA[CTO]]></position>
+                                <company><![CDATA[AmuseCorp]]></company>
+                                <companyURL><![CDATA[]]></companyURL>
+                                <paragraph>
+                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                <awardImageID/>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Item 5">
+                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                        <data table="btTestimonial">
+                            <record>
+                                <name><![CDATA[Christina Backman]]></name>
+                                <position><![CDATA[Co-Founder]]></position>
+                                <company><![CDATA[Backman Design]]></company>
+                                <companyURL><![CDATA[]]></companyURL>
+                                <paragraph>
+                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                <awardImageID/>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+                <containerarea name="Item 6">
+                    <block type="testimonial" name="" custom-template="testimonial_circle.php">
+                        <data table="btTestimonial">
+                            <record>
+                                <name><![CDATA[Robert Cook]]></name>
+                                <position><![CDATA[Founder]]></position>
+                                <company><![CDATA[Foo Energy Bars]]></company>
+                                <companyURL><![CDATA[]]></companyURL>
+                                <paragraph>
+                                    <![CDATA[Donec sem massa, bibendum sodales odio et, pretium eleifend urna. Donec eu nibh mattis, congue velit imperdiet.]]></paragraph>
+                                <awardImageID/>
+                            </record>
+                        </data>
+                    </block>
+                </containerarea>
+            </container>
+        </block>
+    </blocks>
+</area>
+</concrete5-cif>
+
+

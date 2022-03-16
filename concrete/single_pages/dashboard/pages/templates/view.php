@@ -6,6 +6,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Controller\SinglePage\Dashboard\Pages\Templates $controller
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var \Concrete\Core\View\View $view
+ * @var array $icons
+ * @var \Concrete\Core\Entity\Page\Template[] $templates
  */
 
 if (isset($template) && is_object($template) && ($controller->getAction() == 'edit' || $controller->getAction() == 'update')) {
@@ -56,9 +59,9 @@ if (isset($template) && is_object($template) && ($controller->getAction() == 'ed
       
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-                <a href="<?=$view->action(''); ?>" class="btn btn-secondary float-left"><?=t('Cancel'); ?></a>
-                <div class="btn-toolbar float-right">
-                    <button class="btn btn-danger mr-1" data-toggle="modal" data-target="#delete-template" type="button"><?=t('Delete Template'); ?></button>
+                <a href="<?=$view->action(''); ?>" class="btn btn-secondary float-start"><?=t('Cancel'); ?></a>
+                <div class="btn-toolbar float-end">
+                    <button class="btn btn-danger me-1" data-bs-toggle="modal" data-bs-target="#delete-template" type="button"><?=t('Delete Template'); ?></button>
                     <button type="submit" class="btn btn-primary"><?=t('Update'); ?></button>
                 </div>
             </div>
@@ -93,7 +96,7 @@ if (isset($template) && is_object($template) && ($controller->getAction() == 'ed
     }
 }
 
-if ($template) {
+if (isset($template)) {
         ?>
     <div class="modal fade" id="delete-template" tabindex="-1">
         <form method="post" action="<?=$view->action('delete', $template->getPageTemplateID(), $token->generate('delete_page_template')); ?>">
@@ -102,16 +105,14 @@ if ($template) {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title"><?=t('Delete Template'); ?></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="<?= t('Close') ?>">
-                            <svg><use xlink:href="#icon-dialog-close" /></svg>
-                        </button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                     </div>
                     <div class="modal-body">
                         <?=t('Are you sure?'); ?>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal"><?=t('Cancel'); ?></button>
-                        <button type="submit" class="btn btn-danger float-right"><?=t('Delete Template'); ?></button>
+                        <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal"><?=t('Cancel'); ?></button>
+                        <button type="submit" class="btn btn-danger float-end"><?=t('Delete Template'); ?></button>
                     </div>
                 </div>
             </div>

@@ -18,8 +18,6 @@ use Mockery as M;
 class FiltererTest extends TestCase
 {
     
-    use MockeryPHPUnitIntegration;
-    
     public function templatesProvider()
     {
         return [

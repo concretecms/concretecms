@@ -52,7 +52,7 @@ class GenerateBoardInstanceCommandHandler
         $this->serializer = $serializer;
     }
 
-    public function handle(GenerateBoardInstanceCommand $command)
+    public function __invoke(GenerateBoardInstanceCommand $command)
     {
         $instance = $command->getInstance();
         $items = $this->itemSegmenter->getBoardItemsForInstance($instance);

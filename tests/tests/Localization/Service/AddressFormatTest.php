@@ -133,7 +133,7 @@ class AddressFormatTest extends TestCase
      */
     private $testAddresses;
 
-    public function setUp()
+    public function setUp():void
     {
         $this->testAddresses = $this->getTestAddresses();
 
@@ -162,7 +162,7 @@ class AddressFormatTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function TearDown():void
     {
         $this->localization->setActiveContext(Localization::CONTEXT_SYSTEM);
 

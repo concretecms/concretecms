@@ -9,6 +9,9 @@ use Concrete\Core\File\Type\TypeList as FileTypeList;
 use Exception;
 use Imagine\Image\ImagineInterface;
 use Concrete\Core\File\Image\BitmapFormat;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\FileNotFoundException;
+use League\Flysystem\Filesystem;
 
 /**
  * Represents a file being imported.
@@ -190,7 +193,15 @@ class ImportingFile
     public function getMimeType()
     {
         if ($this->mimeType === null) {
-            $this->mimeType = (string) $this->mimeService->mimeFromExtension($this->getFileExtension());
+            $pathInfo = pathinfo($this->getLocalFilename());
+            $local = new Local($pathInfo["dirname"]);
+            $fs = new Filesystem($local);
+
+            try {
+                $this->mimeType = $fs->getMimetype($pathInfo["basename"]);
+            } catch (FileNotFoundException $e) {
+                $this->mimeType = (string) $this->mimeService->mimeFromExtension($this->getFileExtension());
+            }
         }
 
         return $this->mimeType;

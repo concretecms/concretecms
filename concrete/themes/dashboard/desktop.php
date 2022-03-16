@@ -15,6 +15,8 @@ $view->inc('elements/header.php', array('bodyClass' => 'ccm-dashboard-desktop'))
         ?>
     </div>
 
+    <?php View::element('dashboard/background_image'); ?>
+
 </div>
 
 <?php $view->inc('elements/footer.php'); ?>

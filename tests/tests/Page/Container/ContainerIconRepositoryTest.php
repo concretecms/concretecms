@@ -6,13 +6,10 @@ use Concrete\Core\Filesystem\Icon\Icon;
 use Concrete\Core\Page\Container\IconRepository;
 use Concrete\Tests\TestCase;
 use Illuminate\Filesystem\Filesystem;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery as M;
 
 class ContainerIconRepositoryTest extends TestCase
 {
-    
-    use MockeryPHPUnitIntegration;
     
     public function testGetIcons()
     {
