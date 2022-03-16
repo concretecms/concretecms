@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Attribute\Key\ExpressKey;
+use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\Set;
