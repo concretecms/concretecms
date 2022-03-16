@@ -80,6 +80,28 @@ class Controller extends BlockController implements NotificationProviderInterfac
         ];
     }
 
+    public function duplicate_clipboard($newBID)
+    {
+        $newBlockRecord = parent::duplicate($newBID);
+
+        if ($newBlockRecord !== null && is_object($form = $this->getFormEntity())) {
+            $entity = $form->getEntity();
+            if (!$entity->getIncludeInPublicList()) {
+                $controls = [];
+                $cloner = $this->app->make(\Concrete\Core\Express\Entity\Cloner::class);
+                $newEntity = $cloner->cloneEntity($entity, $controls);
+                $newBlockRecord->exFormID = $newEntity->getDefaultEditForm()->getId();
+                $newBlockRecord->Save();
+
+                // We need to store controls mapping in session for further use
+                $session = $this->app->make('session');
+                $session->set('block.express_form.duplicate.' . $newBID, $controls);
+            }
+        }
+
+        return $newBlockRecord;
+    }
+
     public function view()
     {
         $form = $this->getFormEntity();
@@ -116,6 +138,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     {
         $session = $this->app->make('session');
         $session->remove('block.express_form.new');
+        $session->remove('block.express_form.duplicate.' . $this->bID);
     }
 
     public function add()
@@ -487,7 +510,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function save($data)
     {
         $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
-        if (isset($data['exFormID']) && '' != $data['exFormID']) {
+        if (isset($data['exFormID']) && $data['exFormID'] != '') {
             return parent::save($data);
         }
 
@@ -496,7 +519,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $session = $this->app->make('session');
         $sessionControls = $session->get('block.express_form.new');
 
-        $name = $data['formName'] ? $data['formName'] : t('Form');
+        $name = $data['formName'] ?: t('Form');
 
         if (!$this->exFormID) {
             // This is a new submission.
@@ -560,14 +583,19 @@ class Controller extends BlockController implements NotificationProviderInterfac
             $existingControlIDs[] = $control->getId();
         }
 
+        // If we are in duplication state then we need a mapping to the newly created controls.
+        $controlsMapping = $session->get('block.express_form.duplicate.' . $this->bID, []);
+
         // Now, let's loop through our request controls
         $indexKeys = [];
         $position = 0;
 
         foreach ($requestControls as $id) {
+            // Are we in a newly duplicated block? So we need to get the ID of the new control
+            $duplicatedControlId = $controlsMapping[$id] ?? null;
             if (isset($sessionControls[$id])) {
                 $control = $sessionControls[$id];
-                if (!in_array($id, $existingControlIDs)) {
+                if (!in_array($duplicatedControlId ?? $id, $existingControlIDs)) {
                     // Possibility 1: This is a new control.
                     if ($control instanceof AttributeKeyControl) {
                         $key = $control->getAttributeKey();
@@ -605,7 +633,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 } else {
                     // Possibility 2: This is an existing control that has an updated version.
                     foreach ($existingControls as $existingControl) {
-                        if ($existingControl->getId() == $id) {
+                        if ($existingControl->getId() == ($duplicatedControlId ?? $id)) {
                             if ($control instanceof AttributeKeyControl) {
                                 $settings = $control->getAttributeKey()->getAttributeKeySettings();
                                 $key = $existingControl->getAttributeKey();
@@ -649,7 +677,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                 // Possibility 3: This is an existing control that doesn't have a new version. But we still
                 // want to update its position.
                 foreach ($existingControls as $control) {
-                    if ($control->getId() == $id) {
+                    if ($control->getId() == ($duplicatedControlId ?? $id)) {
                         $control->setPosition($position);
                         $entityManager->persist($control);
                     }
@@ -662,7 +690,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
         // Now, we look through all existing controls to see whether they should be removed.
         foreach ($existingControls as $control) {
             // Does this control exist in the request? If not, it gets axed
-            if (!is_array($requestControls) || !in_array($control->getId(), $requestControls)) {
+            if (!is_array($requestControls)
+                || (!in_array($control->getId(), $requestControls) && !in_array($control->getId(), $controlsMapping))) {
                 $entityManager->remove($control);
             }
         }

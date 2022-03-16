@@ -33,7 +33,7 @@ class UpdateForkedAliasDefaultsBlockCommandHandler
                         $forked->deleteBlock();
 
                         if ($bt->isCopiedWhenPropagated()) {
-                            $b = $b->duplicate($page, true);
+                            $b = $b->duplicate($page, 'duplicate_master');
                         } else {
                             $b->alias($page);
                             $b = \Block::getByID($b->getBlockID(), $page, $command->getAreaHandle());

@@ -1,7 +1,9 @@
 <?php
+
 namespace Concrete\Core\Entity\Express;
 
 use Concrete\Core\Attribute\CategoryObjectInterface;
+use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Export\ExportableInterface;
@@ -10,9 +12,11 @@ use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\ExpressEntryResults;
-use Doctrine\Common\Collections\ArrayCollection;
 use Concrete\Core\Export\Item\Express\Entity as EntityExporter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
  * @ORM\Table(name="ExpressEntities")
@@ -329,7 +333,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return mixed
+     * @return Form|null
      */
     public function getDefaultViewForm()
     {
@@ -337,7 +341,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @param mixed $default_view_form
+     * @param Form|null $default_view_form
      */
     public function setDefaultViewForm($default_view_form)
     {
@@ -345,7 +349,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return mixed
+     * @return Form|null
      */
     public function getDefaultEditForm()
     {
@@ -353,7 +357,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @param mixed $default_edit_form
+     * @param Form|null $default_edit_form
      */
     public function setDefaultEditForm($default_edit_form)
     {
@@ -430,7 +434,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return ArrayCollection[]
+     * @return Collection<int, ExpressKey>|ExpressKey[]
      */
     public function getAttributes()
     {
@@ -443,7 +447,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return Association[]
+     * @return Collection<int, Association>|Association[]
      */
     public function getAssociations()
     {
@@ -459,7 +463,7 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     }
 
     /**
-     * @return mixed
+     * @return Collection<int, Form>|Form[]
      */
     public function getForms()
     {
@@ -576,5 +580,17 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function getController()
     {
 
+    }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $this->attributes = new ArrayCollection();
+        $this->associations = new ArrayCollection();
+        $this->entries = new ArrayCollection();
+        $this->forms = new ArrayCollection();
+        $this->default_edit_form = null;
+        $this->default_view_form = null;
+        $this->created_date = new \DateTime();
     }
 }

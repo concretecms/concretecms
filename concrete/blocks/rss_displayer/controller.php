@@ -149,8 +149,10 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         try {
             $channel = $fp->load($this->url, $this->rssFeedCacheLifetime);
+            $posts = $fp->getPosts($channel);
+
             $i = 0;
-            foreach ($channel as $post) {
+            foreach ($posts as $post) {
                 $posts[] = $post;
                 if (($i + 1) == intval($this->itemsToDisplay)) {
                     break;
