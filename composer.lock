@@ -178,16 +178,16 @@
         },
         {
             "name": "concrete5/dependency-patches",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/dependency-patches.git",
-                "reference": "43f3a7517708c21e7bf0a047778ba6976eb66ae6"
+                "reference": "6716e26f9c7e7bcd548c0e7b7b75a56558015cee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/43f3a7517708c21e7bf0a047778ba6976eb66ae6",
-                "reference": "43f3a7517708c21e7bf0a047778ba6976eb66ae6",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/6716e26f9c7e7bcd548c0e7b7b75a56558015cee",
+                "reference": "6716e26f9c7e7bcd548c0e7b7b75a56558015cee",
                 "shasum": ""
             },
             "require": {
@@ -210,7 +210,8 @@
                         "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
                     },
                     "sunra/php-simple-html-dom-parser:1.5.2": {
-                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch"
+                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                        "Add PHP 8.1 compability to league/url version 3.3.5": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch"
                     },
                     "phpunit/phpunit:4.8.36": {
                         "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
@@ -236,6 +237,9 @@
                     },
                     "lcobucci/jwt:3.4.6": {
                         "Adds php 8 compability to jwt version 3.4.6": "lcobucci/jwt/php8-compatibility.patch"
+                    },
+                    "league/url:3.3.5": {
+                        "Add PHP 8.1 compability to league/url version 3.3.5": "league/url/php8.1-compatibility.patch"
                     }
                 }
             },
@@ -253,7 +257,11 @@
             ],
             "description": "Patches required for concrete5 dependencies",
             "homepage": "https://github.com/concrete5/dependency-patches",
-            "time": "2021-10-27T20:00:13+00:00"
+            "support": {
+                "issues": "https://github.com/concrete5/dependency-patches/issues",
+                "source": "https://github.com/concrete5/dependency-patches/tree/1.7.0"
+            },
+            "time": "2022-03-15T17:06:12+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
