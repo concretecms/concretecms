@@ -2,8 +2,10 @@
 
 namespace Concrete\Core\Express\Entity;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Attribute\Category\ExpressCategory;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Express\Control\AssociationControl;
 use Concrete\Core\Entity\Express\Control\AttributeKeyControl;
@@ -28,26 +30,18 @@ class Cloner implements ApplicationAwareInterface
     private $entityHandleGenerator;
 
     /**
-     * @var AttributeKeyHandleGenerator
-     */
-    private $akHandleGenerator;
-
-    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
 
     /**
      * Cloner constructor.
-     *
      * @param EntityHandleGenerator $entityHandleGenerator
-     * @param AttributeKeyHandleGenerator $akHandleGenerator
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityHandleGenerator $entityHandleGenerator, AttributeKeyHandleGenerator $akHandleGenerator, EntityManagerInterface $entityManager)
+    public function __construct(EntityHandleGenerator $entityHandleGenerator, EntityManagerInterface $entityManager)
     {
         $this->entityHandleGenerator = $entityHandleGenerator;
-        $this->akHandleGenerator = $akHandleGenerator;
         $this->entityManager = $entityManager;
     }
 
@@ -87,10 +81,13 @@ class Cloner implements ApplicationAwareInterface
     protected function cloneEntityAttributes(Entity $sourceEntity, Entity $destinationEntity): array
     {
         $akMapping = [];
+        $attributeKeyHandleGenerator = new AttributeKeyHandleGenerator(
+            $this->app->make(ExpressCategory::class, ['entity' => $destinationEntity])
+        );
         foreach ($sourceEntity->getAttributes() as $ak) {
             $newKey = clone $ak;
             $newKey->setAttributeKeyID(null);
-            $newKey->setAttributeKeyHandle($this->akHandleGenerator->generate($newKey));
+            $newKey->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($newKey));
             $this->entityManager->persist($newKey);
 
             $newKey->setEntity($destinationEntity);
