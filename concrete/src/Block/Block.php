@@ -1705,16 +1705,19 @@ EOT
     }
 
     /**
-     * Duplicate this block to a new collection.
+     * Duplicate this block to a new collection. Runs the $controllerMethodToTryAndRun on the block controller to
+     * copy relevant data for a particular context. Valid options for $controllerMethodToTryAndRun are
+     * 'duplicate', 'duplicate_master' and 'duplicate_clipboard'. If a method is specified but does not exist
+     * we fall back to duplicate in all situations.
      *
      * @param \Concrete\Core\Page\Collection\Collection $nc The destination collection
-     * @param bool $isCopyFromMasterCollectionPropagation
+     * @param string $controllerMethodToTryAndRun
      *
      * @throws \Doctrine\DBAL\Exception|\Doctrine\DBAL\Driver\Exception|\Illuminate\Contracts\Container\BindingResolutionException
      *
      * @return \Concrete\Core\Block\Block|false returns false if the block type can't be found; the new block instance otherwise
      */
-    public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
+    public function duplicate($nc, string $controllerMethodToTryAndRun = 'duplicate')
     {
         $app = Facade::getFacadeApplication();
         /** @var Connection $connection */
@@ -1811,8 +1814,8 @@ EOT
         }
 
         // we duplicate block-specific sub-content
-        if ($isCopyFromMasterCollectionPropagation && method_exists($bc, 'duplicate_master')) {
-            $bc->duplicate_master($newBID, $nc);
+        if ($controllerMethodToTryAndRun !== 'duplicate' && method_exists($bc, $controllerMethodToTryAndRun)) {
+            $bc->$controllerMethodToTryAndRun($newBID, $nc);
         } else {
             $bc->duplicate($newBID);
         }

@@ -80,7 +80,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         ];
     }
 
-    public function duplicate($newBID)
+    public function duplicate_clipboard($newBID)
     {
         $newBlockRecord = parent::duplicate($newBID);
 
