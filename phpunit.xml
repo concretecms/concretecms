@@ -30,7 +30,6 @@
     <groups>
         <exclude>
             <group>online</group>
-            <group>docker</group>
         </exclude>
     </groups>
     <php>

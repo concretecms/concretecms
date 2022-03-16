@@ -1,0 +1,56 @@
+name: Install
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  install:
+    name: Install ${{ matrix.starting-point }} with PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+    container: ghcr.io/concrete5-community/docker5:base
+    strategy:
+      matrix:
+        php-version:
+          - "7.4"
+          - "8.1"
+        starting-point:
+          - atomik_full
+    steps:
+      -
+        name: Configure environment
+        run: |
+          switch-composer 2
+          switch-php ${{ matrix.php-version }}
+          ccm-service start db
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Set owner
+        run: chown -R www-data:www-data "$GITHUB_WORKSPACE"
+      -
+        name: Install Composer dependencies
+        run: sudo -Hu www-data composer install --optimize-autoloader --no-cache --ansi --no-interaction
+      -
+        name: Configure Concrete
+        run: |
+          sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.display_errors true
+          sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.detail debug
+          # sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.error_reporting -1
+      -
+        name: Install
+        run: |
+          sudo -Hu www-data \
+            ./concrete/bin/concrete5 c5:install \
+            --ansi --no-interaction \
+            --db-server=localhost \
+            --db-username=c5 \
+            --db-password=12345 \
+            --db-database=c5 \
+            --timezone=UTC \
+            --site='ConcreteCMS website' \
+            --starting-point=${{ matrix.starting-point }} \
+            --admin-email=admin@example.org \
+            --admin-password=12345 \
+            -vvv

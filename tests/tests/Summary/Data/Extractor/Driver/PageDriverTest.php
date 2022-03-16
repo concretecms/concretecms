@@ -53,13 +53,13 @@ class PageDriverTest extends TestCase
         $file->shouldReceive('getFileID')->andReturn(4);
 
         $page = M::mock(Page::class);
-        $page->shouldReceive('getCollectionLink')->once()->andReturn('https://www.foo.com/path/to/page');
         $page->shouldReceive('getCollectionName')->once()->andReturn('My Name');
         $page->shouldReceive('getCollectionDescription')->once()->andReturn('');
         $page->shouldReceive('getCollectionUserID')->once();
         $page->shouldReceive('getCollectionDatePublicObject')->once()->andReturn(new \DateTime(
             '2010-01-01 00:00:00', new \DateTimeZone('GMT')
         ));
+        $page->shouldReceive('getCollectionPath')->once()->andReturn('/path/to/page');
         $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
         $driver = new BasicPageDriver($installationService, $userInfoRepository);
         $data = $driver->extractData($page);

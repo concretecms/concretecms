@@ -39,7 +39,7 @@ class DriverCollectionTest extends TestCase
         $file = M::Mock(File::class);
         $file->shouldReceive('getFileID')->andReturn(3);
         $page->shouldReceive('getCollectionName')->once()->andReturn('hi');
-        $page->shouldReceive('getCollectionLink')->once()->andReturn('https://foo.com');
+        $page->shouldReceive('getCollectionPath')->once()->andReturn('/path/to/page');
         $page->shouldReceive('getCollectionDescription')->once()->andReturn('asd');
         $page->shouldReceive('getCollectionDatePublicObject')->andReturn($date);
         $page->shouldReceive('getAttribute')->with('thumbnail')->once()->andReturn($file);
