@@ -72,6 +72,7 @@ class InstallCommand extends Command
             ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
             ->addOption('canonical-url-alternative', null, InputOption::VALUE_REQUIRED, 'Alternative canonical URL', '')
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
+            ->addOption('session-handler', null, InputOption::VALUE_REQUIRED, 'Session Handler. Use "file" or "database".', '')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
             ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username')
@@ -734,6 +735,7 @@ EOT
                         ],
                     ],
                 ],
+                'session-handler' => $options['session-handler'] ?: null,
                 'canonical-url' => $options['canonical-url'] ?: '',
                 'canonical-url-alternative' => $options['canonical-url-alternative'] ?: '',
             ])
