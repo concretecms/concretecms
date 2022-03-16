@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Attribute\Key\ExpressKey;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
@@ -15,6 +16,7 @@ class Version20210331213100 extends AbstractMigration implements RepeatableMigra
      */
     public function upgradeDatabase()
     {
+        $this->refreshEntities([ExpressKey::class]);
         Page::getByPath("/dashboard/users/points")->delete();
         Page::getByPath("/dashboard/users/points/actions")->delete();
         Page::getByPath("/dashboard/users/points/assign")->delete();
