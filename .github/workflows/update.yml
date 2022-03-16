@@ -54,3 +54,14 @@ jobs:
         run: |
           cd /app
           sudo -Hu www-data ./concrete/bin/concrete5 c5:update --ansi --no-interaction -vvv
+      -
+        name: Test that the website actually works
+        run: |
+          ccm-service start web
+          SITE_NAME="$(sudo -u www-data ./concrete/bin/concrete5 c5:config get site.sites.default.name)"
+          curl -sSf -o /tmp/index.html http://localhost/
+          if ! grep -Eq "<title>.*$SITE_NAME.*</title>" /tmp/index.html; then
+            echo 'Wrong response from the website' >&1
+            cat /tmp/index.html >&2
+            exit 1
+          fi
