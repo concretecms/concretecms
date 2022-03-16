@@ -10,7 +10,6 @@ jobs:
     env:
       LC_ALL: en_US.UTF-8
       CODE_COVERAGE: none
-    continue-on-error: ${{ matrix.php-version == '8.1' }}
 
     runs-on: ${{ matrix.operating-system }}
     services:
@@ -89,17 +88,10 @@ jobs:
         if: ${{ matrix.dependencies == 'locked' }}
         run: |
           composer install --no-interaction --no-progress --no-suggest
-        # Since continue on error still marks a job as failed.
-        # We also have to add continue-on-error here so it doesnt X the whole build
-        # See https://github.com/actions/toolkit/issues/399
-        continue-on-error: ${{ matrix.php-version == '8.1' }}
-
 
       - name: "Tests"
         if: env.CODE_COVERAGE == 'none'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit
-        # Same as above
-        continue-on-error: ${{ matrix.php-version == '8.1' }}
 
       - name: "Tests with coverage"
         if: env.CODE_COVERAGE != 'none'
