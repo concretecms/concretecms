@@ -49,6 +49,7 @@ $publishDate = $v->getPublishDate();
     <?php
     }
     ?>
+    <button type="button" data-page-type-composer-form-btn="exit" class="btn btn-secondary float-start"><?=t('Save and Exit')?></button>
     <?php
 } elseif ($cp->canDeletePage() && $cmpp->canAddPageType() && count($page->getCollectionChildrenArray(true)) === 0) {
     ?>
@@ -67,7 +68,6 @@ $publishDate = $v->getPublishDate();
         </div>
     </div>
     <?php
-    <button type="button" data-page-type-composer-form-btn="exit" class="btn btn-secondary float-start"><?=t('Save and Exit')?></button>
 } ?>
 
 
