@@ -13,9 +13,11 @@ final class Version20220314234512 extends AbstractMigration implements Repeatabl
 
     public function upgradeDatabase()
     {
-        $this->refreshEntities([
-            ExpressKey::class,
-        ]);
+        $this->refreshEntities(
+            [
+                ExpressKey::class,
+            ]
+        );
     }
 
 }

@@ -76,6 +76,11 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     protected $include_in_public_list = true;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $is_published = true;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $entity_results_node_id;
@@ -245,6 +250,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     public function setIncludeInPublicList($include_in_public_list)
     {
         $this->include_in_public_list = $include_in_public_list;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublished(): bool
+    {
+        return $this->is_published;
+    }
+
+    /**
+     * @param bool $is_published
+     */
+    public function setIsPublished(bool $is_published): void
+    {
+        $this->is_published = $is_published;
     }
 
     /**
