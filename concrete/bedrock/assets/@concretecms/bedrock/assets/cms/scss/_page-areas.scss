@@ -313,41 +313,46 @@ div#ccm-menu-highlighter.ccm-block-highlight {
  */
 ul.ccm-edit-mode-inline-commands {
   background-color: #fff;
-  height: 20px !important;
+  border-bottom-left-radius: 3px;
+  box-shadow: $popover-box-shadow;
+  display: flex;
+  height: 25px;
   list-style-type: none;
   margin: 0 !important;
   opacity: 0;
   padding: 0 !important;
   position: absolute;
-  right: 1px;
-  top: 1px;
+  right: 0;
+  top: 0;
   z-index: $index-level-inline-commands; // has to be over the click proxy
   li {
-    display: inline-block;
-    height: 20px !important;
-    line-height: 20px !important;
+    align-items: center;
+    display: flex;
     margin: 0 !important;
     padding: 0 !important;
 
+    span {
+      color: #888;
+      display: inline-block;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 12px;
+      padding-left: 4px;
+      padding-right: 4px;
+      text-transform: uppercase;
+    }
+
     a {
-      color: #555 !important;
+      color: #444 !important;
       display: inline-block;
       font-weight: lighter;
-      height: 20px !important;
-      line-height: 20px !important;
+      padding: 0;
       position: relative;
       text-align: center;
-      width: 20px !important;
+      width: 25px !important;
 
       &:hover {
-        color: #000 !important;
-      }
-
-      i {
-        left: 3px;
-        position: absolute;
-        top: 3px;
-        vertical-align: middle;
+        color: $blue !important;
       }
 
       &.ccm-edit-mode-inline-command-move {
