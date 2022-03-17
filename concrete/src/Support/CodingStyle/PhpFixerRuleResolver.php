@@ -484,7 +484,9 @@ class PhpFixerRuleResolver
             'linebreak_after_opening_tag' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,
 
             // List (`array` destructuring) assignment should be declared using the configured syntax. Requires PHP >= 7.1.
-            'list_syntax' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '7.1') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
+            'list_syntax' => [
+                'syntax' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '7.1') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? 'long' : 'short',
+            ],
 
             // There should not be blank lines between docblock and the documented element.
             'no_blank_lines_after_phpdoc' => $hasFlag(PhpFixer::FLAG_PHPONLY) ? true : false,

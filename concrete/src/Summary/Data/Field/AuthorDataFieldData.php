@@ -2,6 +2,7 @@
 namespace Concrete\Core\Summary\Data\Field;
 
 use Concrete\Core\User\UserInfo;
+use Concrete\Core\User\UserInfoRepository;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Concrete\Core\File\File;
@@ -26,6 +27,14 @@ class AuthorDataFieldData implements DataFieldDataInterface
 
     public function getAvatar()
     {
+        // This used to be cached with the board but we should probably make it dynamic anyway
+        // so that updated images happen when users change their avatar. Also fixes #9822
+        if (!isset($this->data['avatar'])) {
+            $ui = app(UserInfoRepository::class)->getByID($this->data['id']);
+            if ($ui) {
+                $this->data['avatar'] = $ui->getUserAvatar()->getPath();
+            }
+        }
         return $this->data['avatar'];
     }
 
@@ -35,7 +44,6 @@ class AuthorDataFieldData implements DataFieldDataInterface
             $data = [
                 'name' => $ui->getUserDisplayName(),
                 'id' => $ui->getUserID(),
-                'avatar' => $ui->getUserAvatar()->getPath(),
             ];
             $this->data = $data;
         }

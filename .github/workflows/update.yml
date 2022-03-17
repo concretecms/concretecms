@@ -1,0 +1,67 @@
+name: Update
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  install:
+    name: Update from ${{ matrix.from-version }} with PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+    container: ghcr.io/concrete5-community/docker5:${{ matrix.from-version }}-full
+    strategy:
+      matrix:
+        from-version:
+          - 8.5.7
+          - 9.0.1
+        php-version:
+          - "7.4"
+    steps:
+      -
+        name: Configure environment
+        run: |
+          switch-composer 2
+          switch-php ${{ matrix.php-version }}
+          ccm-service start db
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Set owner
+        run: chown -R www-data:www-data "$GITHUB_WORKSPACE"
+      -
+        name: Replace installed core
+        id: replace
+        run: |
+          rm -rf /app/concrete /app/composer.json /app/composer.lock
+          ln -s "$GITHUB_WORKSPACE/concrete" /app/concrete
+          cp "$GITHUB_WORKSPACE/composer.json" "$GITHUB_WORKSPACE/composer.lock" /app
+          chown www-data:www-data /app/*
+      -
+        name: Install Composer dependencies
+        run: |
+          cd /app
+          sudo -Hu www-data composer install --optimize-autoloader --no-cache --ansi --no-interaction
+      -
+        name: Configure Concrete
+        run: |
+          cd /app
+          sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.display_errors true
+          sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.detail debug
+          # sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.error_reporting -1
+      -
+        name: Update Concrete
+        run: |
+          cd /app
+          sudo -Hu www-data ./concrete/bin/concrete5 c5:update --ansi --no-interaction -vvv
+      -
+        name: Test that the website actually works
+        run: |
+          ccm-service start web
+          SITE_NAME="$(sudo -u www-data ./concrete/bin/concrete5 c5:config get site.sites.default.name)"
+          curl -sSf -o /tmp/index.html http://localhost/
+          if ! grep -Eq "<title>.*$SITE_NAME.*</title>" /tmp/index.html; then
+            echo 'Wrong response from the website' >&1
+            cat /tmp/index.html >&2
+            exit 1
+          fi

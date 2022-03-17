@@ -25,49 +25,49 @@ class IpAccessControlService implements LoggerAwareInterface
      *
      * @var int
      */
-    const IPRANGEFLAG_BLACKLIST = 0x0001;
+    public const IPRANGEFLAG_BLACKLIST = 0x0001;
 
     /**
      * Bit mask for allowlist ranges.
      *
      * @var int
      */
-    const IPRANGEFLAG_WHITELIST = 0x0002;
+    public const IPRANGEFLAG_WHITELIST = 0x0002;
 
     /**
      * Bit mask for manually generated ranges.
      *
      * @var int
      */
-    const IPRANGEFLAG_MANUAL = 0x0010;
+    public const IPRANGEFLAG_MANUAL = 0x0010;
 
     /**
      * Bit mask for automatically generated ranges.
      *
      * @var int
      */
-    const IPRANGEFLAG_AUTOMATIC = 0x0020;
+    public const IPRANGEFLAG_AUTOMATIC = 0x0020;
 
     /**
      * IP range type: manually added to the denylist.
      *
      * @var int
      */
-    const IPRANGETYPE_BLACKLIST_MANUAL = 0x0011; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_MANUAL
+    public const IPRANGETYPE_BLACKLIST_MANUAL = self::IPRANGEFLAG_BLACKLIST | self::IPRANGEFLAG_MANUAL;
 
     /**
      * IP range type: automatically added to the denylist.
      *
      * @var int
      */
-    const IPRANGETYPE_BLACKLIST_AUTOMATIC = 0x0021; // IPRANGEFLAG_BLACKLIST | IPRANGEFLAG_AUTOMATIC
+    public const IPRANGETYPE_BLACKLIST_AUTOMATIC = self::IPRANGEFLAG_BLACKLIST | self::IPRANGEFLAG_AUTOMATIC;
 
     /**
      * IP range type: manually added to the allowlist.
      *
      * @var int
      */
-    const IPRANGETYPE_WHITELIST_MANUAL = 0x0012; // IPRANGEFLAG_WHITELIST | IPRANGEFLAG_MANUAL
+    public const IPRANGETYPE_WHITELIST_MANUAL = self::IPRANGEFLAG_WHITELIST | self::IPRANGEFLAG_MANUAL;
 
     /**
      * @var \Doctrine\ORM\EntityManagerInterface

@@ -2330,6 +2330,13 @@ EOT
             $ptID = $data['ptID'];
         }
 
+        // https://github.com/concrete5/concrete5/issues/10413
+        if (isset($uID)) {
+            $uID = (int) $uID;
+        } else {
+            $uID = 0;
+        }
+
         if (!$cDatePublic) {
             $cDatePublic = Core::make('helper/date')->getOverridableNow();
         }
@@ -3480,6 +3487,10 @@ EOT
             $uID = $u->getUserID();
             $data['uID'] = $uID;
         }
+
+        // https://github.com/concrete5/concrete5/issues/10149
+        $data['uID'] = (int) $uID;
+        $uID = (int) $uID;
 
         if (isset($data['pkgID'])) {
             $pkgID = $data['pkgID'];

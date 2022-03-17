@@ -5,9 +5,13 @@ use Concrete\Core\User\UserInfo;
 
 class Author
 {
+    /** @var \Concrete\Core\User\UserInfo */
     protected $user;
+    /** @var string|null */
     protected $name;
+    /** @var string|null */
     protected $email;
+    /** @var string|null */
     protected $website;
 
     /**
@@ -19,7 +23,8 @@ class Author
     }
 
     /**
-     * @param mixed
+     * @param \Concrete\Core\User\User|\Concrete\Core\User\UserInfo $user
+     * @return void
      */
     public function setUser($user)
     {
@@ -33,7 +38,7 @@ class Author
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getName()
     {
@@ -41,7 +46,8 @@ class Author
     }
 
     /**
-     * @param mixed $name
+     * @param string|null $name
+     * @return void
      */
     public function setName($name)
     {
@@ -49,7 +55,7 @@ class Author
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getWebsite()
     {
@@ -57,7 +63,8 @@ class Author
     }
 
     /**
-     * @param mixed $website
+     * @param string|null $website
+     * @return void
      */
     public function setWebsite($website)
     {
@@ -65,7 +72,7 @@ class Author
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getEmail()
     {
@@ -73,7 +80,8 @@ class Author
     }
 
     /**
-     * @param mixed $email
+     * @param string|null $email
+     * @return void
      */
     public function setEmail($email)
     {
@@ -81,10 +89,10 @@ class Author
     }
 
     /**
-     *
+     * @return AuthorFormatter
      */
     public function getFormatter()
     {
-        return \Core::make(AuthorFormatter::class, [$this]);
+        return app(AuthorFormatter::class, ['author'=>$this]);
     }
 }

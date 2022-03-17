@@ -451,6 +451,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
     }
 
+    /**
+     * @param \SimpleXMLElement $blockNode
+     * @param \Concrete\Core\Page\Page $page
+     * @return array<string,mixed>
+     */
     protected function getImportData($blockNode, $page)
     {
         $args = [];

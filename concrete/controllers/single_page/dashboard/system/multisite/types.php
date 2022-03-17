@@ -130,6 +130,10 @@ class Types extends DashboardPageController
         if ($type->isDefault()) {
             $this->error->add(t('You may not delete the default site type.'));
         }
+        $sites = $this->app->make('site')->getByType($type);
+        if (count($sites) > 0) {
+            $this->error->add(t('You must delete all sites of this type before you can remove this site type.'));
+        }
         if (!$this->error->has()) {
             $service->delete($type);
             $this->flash('success', t('Site type removed successfully.'));

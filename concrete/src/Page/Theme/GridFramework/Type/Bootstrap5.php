@@ -87,21 +87,21 @@ class Bootstrap5 extends GridFramework
 
     public function getPageThemeGridFrameworkHideOnExtraSmallDeviceClass()
     {
-        return 'hidden-xs';
+        return 'd-none d-sm-block';
     }
 
     public function getPageThemeGridFrameworkHideOnSmallDeviceClass()
     {
-        return 'hidden-sm';
+        return 'd-sm-none d-md-block';
     }
 
     public function getPageThemeGridFrameworkHideOnMediumDeviceClass()
     {
-        return 'hidden-md';
+        return 'd-md-none d-lg-block';
     }
 
     public function getPageThemeGridFrameworkHideOnLargeDeviceClass()
     {
-        return 'hidden-lg';
+        return 'd-lg-none .d-xl-block';
     }
 }

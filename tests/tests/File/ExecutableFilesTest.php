@@ -30,8 +30,6 @@ class ExecutableFilesTest extends TestCase
         $expected = [
             'concrete/bin/concrete',
             'concrete/bin/concrete5',
-            'tests/assets/Docker/run-install.sh',
-            'tests/assets/Docker/run-update.sh',
         ];
         $this->assertSame(
             $expected,
