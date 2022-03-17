@@ -33,7 +33,7 @@ $form = $app->make(Form::class);
 
         <form method="post" action="<?php echo h($controller->action('submit')) ?>"
               class="pt-4 ccm-panel-detail-content-form"
-              data-dialog-form="seo" data-panel-detail-form="seo" data-action-after-save="reload">
+              data-dialog-form="seo" data-panel-detail-form="seo">
 
             <?php if ($allowEditName) { ?>
                 <div class="form-group">
