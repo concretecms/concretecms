@@ -87,7 +87,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $data = $blockNode->addChild('data');
         $this->loadTypes();
         $types = $this->get('types');
-        foreach($types as $type) {
+        foreach ($types as $type) {
             $data->addChild('type', $type);
         }
     }
@@ -249,7 +249,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         $ids = [];
         $new = 0;
-        foreach($forms as $form) {
+        foreach ($forms as $form) {
             $ids[] = $form->getID();
         }
 
@@ -272,10 +272,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $categories = Category::getList();
         $items = 0;
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             $list = $category->getPendingWorkflowProgressList();
             if (is_object($list)) {
-                foreach($list->get() as $it) {
+                foreach ($list->get() as $it) {
                     $wp = $it->getWorkflowProgressObject();
                     $wf = $wp->getWorkflowObject();
                     if ($wf->canApproveWorkflowProgressObject($wp)) {
