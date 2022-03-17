@@ -60,6 +60,12 @@ class CacheSettings
         return $o;
     }
 
+    public function temporarilyDisableCache(): void
+    {
+        $this->btCacheBlockOutputForRegisteredUsers = false;
+        $this->btCacheBlockOutput = false;
+    }
+
     public function cacheBlockOutput()
     {
         return $this->btCacheBlockOutput;

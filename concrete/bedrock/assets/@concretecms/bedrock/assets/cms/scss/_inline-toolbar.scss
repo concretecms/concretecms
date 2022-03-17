@@ -16,131 +16,20 @@
   top: 0 !important;
 }
 
-/*
- old customizer. delete.
- */
-/*
-.ccm-panel-left {
-  .sp-container {
-    background-color: rgba(0, 0, 0, 0.95);
-    border: 0;
-    border-radius: 4px;
-
-    .sp-picker-container {
-      border-left: 0;
-
-      .sp-color,
-      .sp-alpha,
-      .sp-initial,
-      .sp-hue {
-        border: 2px solid #232323;
-        border-radius: 4px;
-
-        .sp-alpha-inner {
-          border: 0;
-        }
-      }
-
-      .sp-slider {
-        border-radius: 6px;
-      }
-
-      .sp-alpha {
-        background-color: #232323;
-        height: 4px;
-      }
-
-      .sp-input-container {
-        float: none;
-        width: 100%;
-
-        .sp-input {
-          border: 1px solid #666;
-          color: #8f969a;
-          outline: 0;
-
-          &:focus {
-            border: 1px solid #666;
-            box-shadow: none;
-            outline: 0;
-          }
-        }
-      }
-
-      .sp-alpha-handle {
-        background-color: #fff;
-        background-image: none;
-        border: 0;
-        border-radius: 6px;
-        height: 12px;
-        outline: none !important;
-        top: -4px;
-        width: 12px;
-
-      }
-
-      a.sp-cancel {
-        color: #8f969a !important;
-        float: left;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: $font-size-sm;
-        font-weight: bold;
-        text-transform: capitalize;
-
-        &:hover {
-          color: rgb(235, 54, 54) !important;
-          text-decoration: none;
-        }
-      }
-
-      .sp-button-container {
-        display: block;
-        float: none;
-        padding-top: 5px;
-
-        button.sp-choose {
-          background-color: transparent !important;
-          background-image: none !important;
-          border: 0 !important;
-          box-shadow: none;
-          color: #8f969a !important;
-          float: right;
-          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-          font-size: $font-size-sm;
-          font-weight: bold;
-          padding: 2px;
-          text-shadow: none !important;
-          text-transform: capitalize;
-
-          &:hover {
-            color: #0c6 !important;
-            text-decoration: none;
-          }
-
-          &:focus {
-            outline: none;
-          }
-
-          &:active {
-            outline: none;
-          }
-        }
-      }
-
-      .sp-initial {
-        float: none;
-        overflow: hidden;
-        width: 100%;
-
-        span {
-          width: 172px;
-        }
-      }
-    }
+.light-tooltip {
+  .tooltip-inner {
+    background-color: $dropdown-bg;
+    border-color: $gray-300;
+    box-shadow: $dropdown-box-shadow;
+    color: $gray-700;
+    font-weight: bold;
   }
 
+  .tooltip-arrow::before {
+    border-bottom-color: $dropdown-bg;
+    border-top-color: $dropdown-bg;
+  }
 }
- */
 
 .ccm-ui {
   div.dropdown-menu.ccm-inline-design-dropdown-menu,
@@ -169,7 +58,6 @@
       margin: 0;
     }
 
-
     .ccm-inline-style-slider-display-value {
       display: inline-block;
       margin-left: 5%;
@@ -194,9 +82,8 @@
 
     .ccm-inline-style-sliders {
       display: inline-block;
-      margin-bottom: 15px;
       vertical-align: middle;
-      width: 68%;
+      width: 60%;
 
       &.ui-slider-horizontal {
         margin-bottom: 15px;
@@ -316,31 +203,109 @@
     display: block;
     width: 100%;
 
-    .ui-slider {
-      display: block;
-      float: left;
-      margin-top: 10px;
-      width: calc(95% - 65px);
+    .input-group.input-group-sm {
+      display: inline-flex;
+      height: 34px;
+      margin: 0;
+      padding: 0;
+      width: 38%;
 
-      .ui-slider-handle {
-        background-color: #ccc !important;
-        border-color: #fff;
-        margin-top: 2px;
-        outline: none !important;
+      input {
+        margin: 0;
       }
     }
 
-    .ccm-inline-style-slider-display-value {
-      display: block;
-      float: right;
-      width: 65px;
+    .input[type='range'] {
+      appearance: none;
+      appearance: none;
+      background: $gray-300;
+      background-color: transparent;
+      background-image: linear-gradient($primary, $primary);
+      background-repeat: no-repeat;
+      background-size: 0% 100%;
+      height: add($form-range-thumb-height, $form-range-thumb-focus-box-shadow-width * 2);
+      padding: 0;
+      width: 100%;
 
-      input {
-        display: block;
-        float: right;
-        height: 34px;
-        padding: 0;
-        width: 100%;
+      &:focus {
+        outline: 0;
+
+        &::-webkit-slider-thumb {
+          box-shadow: $form-range-thumb-focus-box-shadow;
+        }
+
+        &::-moz-range-thumb {
+          box-shadow: $form-range-thumb-focus-box-shadow;
+        }
+      }
+
+      &::-moz-focus-outer {
+        border: 0;
+      }
+
+      &::-webkit-slider-thumb {
+        @include gradient-bg($form-range-thumb-bg);
+        @include border-radius($form-range-thumb-border-radius);
+        @include box-shadow($form-range-thumb-box-shadow);
+        @include transition($form-range-thumb-transition);
+        appearance: none;
+        border: $form-range-thumb-border;
+        height: $form-range-thumb-height;
+        margin-top: ($form-range-track-height - $form-range-thumb-height) * 0.5; // Webkit specific
+        width: $form-range-thumb-width;
+
+        &:active {
+          @include gradient-bg($form-range-thumb-active-bg);
+        }
+      }
+
+      &::-webkit-slider-runnable-track {
+        @include border-radius($form-range-track-border-radius);
+        @include box-shadow($form-range-track-box-shadow);
+        background-color: $form-range-track-bg;
+        border-color: transparent;
+        color: transparent;
+        cursor: $form-range-track-cursor;
+        height: $form-range-track-height;
+        width: $form-range-track-width;
+      }
+
+      &::-moz-range-thumb {
+        @include gradient-bg($form-range-thumb-bg);
+        @include border-radius($form-range-thumb-border-radius);
+        @include box-shadow($form-range-thumb-box-shadow);
+        @include transition($form-range-thumb-transition);
+        appearance: none;
+        border: $form-range-thumb-border;
+        height: $form-range-thumb-height;
+        width: $form-range-thumb-width;
+
+        &:active {
+          @include gradient-bg($form-range-thumb-active-bg);
+        }
+      }
+
+      &::-moz-range-track {
+        @include border-radius($form-range-track-border-radius);
+        @include box-shadow($form-range-track-box-shadow);
+        background-color: $form-range-track-bg;
+        border-color: transparent;
+        color: transparent;
+        cursor: $form-range-track-cursor;
+        height: $form-range-track-height;
+        width: $form-range-track-width;
+      }
+
+      &:disabled {
+        pointer-events: none;
+
+        &::-webkit-slider-thumb {
+          background-color: $form-range-thumb-disabled-bg;
+        }
+
+        &::-moz-range-thumb {
+          background-color: $form-range-thumb-disabled-bg;
+        }
       }
     }
   }
@@ -356,7 +321,6 @@
     outline: none;
     padding: 3px 8px;
     vertical-align: middle;
-
   }
 
   > li:first-child {
@@ -399,6 +363,8 @@
 
   li.ccm-inline-toolbar-icon-selected {
     a,
+    .btn,
+    .btn:hover
     a:hover {
       background-color: $blue;
 
@@ -449,7 +415,6 @@
       }
     }
 
-
     .bootstrap-select {
       background: transparent;
       float: right;
@@ -473,7 +438,7 @@
         width: 100%;
 
         &:hover,
-        &[aria-expanded=true] {
+        &[aria-expanded='true'] {
           @include gradient-y(#f3f3f3, #d2d2d2);
           box-shadow: inset 1px 1px 5px -1px rgba(0, 0, 0, 0.35) !important;
           transition: none;
@@ -506,13 +471,21 @@
     background-image: none;
   }
 
+  toolbar-section-widget {
+    display: none;
+
+    > * {
+      display: none;
+    }
+  }
+
   li.ccm-inline-toolbar-icon-cell > div.ccm-dropdown-menu {
     display: none;
 
     &.active {
       box-shadow: $dropdown-box-shadow;
       display: block;
-      margin-top: 1px;
+      margin-top: 2px;
       position: absolute;
     }
   }

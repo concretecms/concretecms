@@ -72,7 +72,6 @@
 // Forms
 @import './forms';
 
-
 // Bs5 box-shadow mixin needs to be imported again
 // Otherwise we will get a SassError due a mixin names conflict
 // Previously wasn't throwing the error because Selectize includes the BS mixins
@@ -93,7 +92,7 @@
 @import './item-select-list';
 @import './permission-grid';
 @import './tooltips';
-@import 'spectrum-colorpicker/spectrum';
+@import 'spectrum-colorpicker2/dist/spectrum';
 @import './icons';
 @import './date-time';
 @import './dropdown';
