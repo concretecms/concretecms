@@ -118,7 +118,9 @@ class BlockViewTemplate
                 }
 
                 return;
-            } else if ($bFilename !== $bFilenameWithoutDotPhp) {
+            }
+
+            if ($bFilename !== $bFilenameWithoutDotPhp) {
                 $record = $locator->getRecord(
                     DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilenameWithoutDotPhp
                 );
@@ -138,70 +140,7 @@ class BlockViewTemplate
             $this->baseURL = dirname($record->getUrl());
             $this->template = $record->getFile();
             $this->basePath = dirname($this->template);
-            return;
         }
-
-        // we check all installed packages
-        /*
-        $obj = $this->obj;
-
-
-        if ($bFilename) {
-
-
-            // we check all installed packages
-            if (!isset($template)) {
-                $pl = PackageList::get();
-                $packages = $pl->getPackages();
-                foreach ($packages as $pkg) {
-                    $d = '';
-                    if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
-                        $d = DIR_PACKAGES . '/'. $pkg->getPackageHandle();
-                    } elseif (is_dir(DIR_PACKAGES_CORE . '/'. $pkg->getPackageHandle())) {
-                        $d = DIR_PACKAGES_CORE . '/'. $pkg->getPackageHandle();
-                    }
-
-                    if ($d != '') {
-                        $baseStub = (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) ? DIR_REL . '/' . DIRNAME_PACKAGES . '/'. $pkg->getPackageHandle() : ASSETS_URL . '/'. DIRNAME_PACKAGES . '/' . $pkg->getPackageHandle();
-
-                        if (is_file($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $bFilename)) {
-                            $template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $bFilename;
-                            $this->baseURL = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-                            $this->basePath = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle();
-                        } elseif (is_file($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-                            $template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-                            $this->baseURL = $baseStub . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-                            $this->basePath = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-                        } elseif (is_dir($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
-                            $template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename . '/' . $this->render;
-                            $this->baseURL = $baseStub . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-                        }
-                    }
-
-                    if ($this->baseURL != '') {
-                        continue;
-                    }
-                }
-            }
-        } elseif (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php')) {
-        } elseif (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render)) {
-            $template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render;
-            $this->baseURL = REL_DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
-        }
-
-        if (!isset($template)) {
-            $bv = new BlockView($obj);
-            $template = $bv->getBlockPath($this->render) . '/' . $this->render;
-            $this->baseURL = $bv->getBlockURL($this->render);
-        }
-
-        if ($this->basePath == '') {
-            $this->basePath = dirname($template);
-        }
-        $this->template = $template;
-        */
-
-
 
     }
 

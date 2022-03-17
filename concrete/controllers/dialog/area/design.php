@@ -26,8 +26,14 @@ class Design extends BackendPageController
     {
         $a = $this->area;
         $nvc = $this->page->getVersionToModify();
-        $nvc->resetAreaCustomStyle($a);
+        $styleObject = $nvc->getAreaCustomStyle($a);
         $pr = new EditResponse();
+        if (is_object($styleObject)) {
+            // Set the old style id, so we can remove any hardcoded styles
+            $pr->setAdditionalDataAttribute('oldIssID',$styleObject->getCustomStyleID());
+        }
+        $nvc->resetAreaCustomStyle($a);
+
         $pr->setPage($this->page);
         $pr->setAdditionalDataAttribute('aID', $this->area->getAreaID());
         $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
@@ -40,6 +46,7 @@ class Design extends BackendPageController
         if ($this->validateAction() && $this->canAccess()) {
             $a = $this->area;
             $oldStyle = $this->page->getAreaCustomStyle($a);
+            $oldStyleSet = null;
             if (is_object($oldStyle)) {
                 $oldStyleSet = $oldStyle->getStyleSet();
             }
