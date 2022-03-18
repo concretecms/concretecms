@@ -4686,16 +4686,16 @@
         },
         {
             "name": "mlocati/composer-patcher",
-            "version": "1.2.2",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/composer-patcher.git",
-                "reference": "38db5a938b33dfba6ccba5f0eb11a2fba8205b52"
+                "reference": "7b8e063adde96a7bc1c991b070937df9d36098ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/38db5a938b33dfba6ccba5f0eb11a2fba8205b52",
-                "reference": "38db5a938b33dfba6ccba5f0eb11a2fba8205b52",
+                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/7b8e063adde96a7bc1c991b070937df9d36098ad",
+                "reference": "7b8e063adde96a7bc1c991b070937df9d36098ad",
                 "shasum": ""
             },
             "require": {
@@ -4739,6 +4739,10 @@
                 "patches",
                 "plugin"
             ],
+            "support": {
+                "issues": "https://github.com/mlocati/composer-patcher/issues",
+                "source": "https://github.com/mlocati/composer-patcher/tree/1.2.4"
+            },
             "funding": [
                 {
                     "url": "https://github.com/sponsors/mlocati",
@@ -4749,7 +4753,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2020-10-30T11:26:06+00:00"
+            "time": "2022-03-29T08:58:34+00:00"
         },
         {
             "name": "mlocati/concrete5-translation-library",
