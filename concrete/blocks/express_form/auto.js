@@ -45,35 +45,65 @@ $(function() {
         }
 
         $chooseContainer.find('button').on('click', function() {
-            var action = $(this).attr('data-action');
+            var action = $(this).attr('data-button-action');
             if (action == 'choose-new-form') {
                 my.chooseFormType('new');
             } else {
                 my.chooseFormType('existing');
             }
         });
+
+        // Disable the add block button until we've chosen a form.
+        my.disableBlockForm()
+    }
+
+    ConcreteBlockForm.prototype.disableBlockForm = function() {
+        // disable the button
+        $('div.ui-dialog.ccm-ui .ui-dialog-buttonpane a.btn-primary').addClass('disabled')
+        // disable the form events.
+        $('form#ccm-block-form').on('submit', function(e) {
+            e.preventDefault()
+            e.stopPropagation()
+            return false
+        })
     }
 
     ConcreteBlockForm.prototype.chooseFormType = function(mode) {
         var my = this,
             $chooseContainer = $('#ccm-block-express-form-choose-type'),
-            $tabsContainer = $('#ccm-block-express-form-tabs');
+            $tabsContainer = $('#ccm-block-express-form-tabs'),
+            addBlockForm = $('#ccm-block-form').get(0)
+
+        const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
 
         switch(mode) {
             case 'new':
-                $tabsContainer.find('li').eq(2).remove();
+                if (addBlockForm.checkValidity()) {
+                    // Try to create the form on the backend
+                    $.concreteAjax({
+                        url: $chooseContainer.attr('data-add-new-form-action'),
+                        data: {
+                            'formName': $('input#newFormName').val()
+                        },
+                        success: function(r) {
+                            $tabsContainer.find('li').eq(2).remove();
+                            firstTab.show()
+                            $tabsContainer.show();
+                            $chooseContainer.hide();
+                        }
+                    });
+                } else {
+                    addBlockForm.reportValidity()
+                }
                 break;
             case 'existing':
                 $tabsContainer.find('li').eq(0).remove();
                 $tabsContainer.find('li').eq(0).remove();
+                firstTab.show()
+                $tabsContainer.show();
+                $chooseContainer.hide();
                 break;
         }
-
-        const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
-        firstTab.show()
-
-        $tabsContainer.show();
-        $chooseContainer.hide();
     }
 
     ConcreteBlockForm.prototype.destroyContents = function($element) {
@@ -168,7 +198,7 @@ $(function() {
             var data = $form.serializeArray();
             jQuery.fn.dialog.showLoader();
             $.concreteAjax({
-                url: $tabEdit.attr('data-action'),
+                url: $tabEdit.attr('data-update-action'),
                 data: data,
                 success: function(r) {
                     var $fields = $tabEdit.find('[data-view=form-fields]'),
@@ -196,14 +226,23 @@ $(function() {
 
 
         $tabEdit.on('click', 'a[data-action=delete-control]', function() {
-            $(this).closest('li').queue(function() {
-                $(this).addClass('animated bounceOutLeft');
-                $(this).dequeue();
-            }).delay(500).queue(function () {
-                $(this).remove();
-                my.rescanEmailFields();
-                $(this).dequeue();
-            })
+            var $control = $(this)
+
+            $.concreteAjax({
+                url: $tabEdit.attr('data-delete-action'),
+                data: {'control': $control.attr('data-control-id')},
+                success: function(r) {
+                    $control.closest('li').queue(function() {
+                        $(this).addClass('animated bounceOutLeft');
+                        $(this).dequeue();
+                    }).delay(500).queue(function () {
+                        $(this).remove();
+                        my.rescanEmailFields();
+                        $(this).dequeue();
+                    })
+                }
+            });
+
         });
 
         $tabEdit.on('click', 'button[data-action=cancel-edit]', function() {
@@ -258,13 +297,28 @@ $(function() {
             });
         });
 
-        $tabEdit.find('ul').sortable({
+        var $tabEditControlList = $tabEdit.find('ul')
+
+        $tabEditControlList.sortable({
             placeholder: "ui-state-highlight",
             axis: "y",
             handle: "i.fa-arrows-alt",
             cursor: "move",
             update: function() {
+                var sortAction = $tabEdit.attr('data-sort-action'),
+                    sortControls = []
 
+                $tabEditControlList.find('li').each(function() {
+                    sortControls.push($(this).attr('data-form-control-id'))
+                })
+
+                $.concreteAjax({
+                    url: sortAction,
+                    data: {'controls': sortControls},
+                    success: function(r) {
+
+                    }
+                });
             }
         });
 

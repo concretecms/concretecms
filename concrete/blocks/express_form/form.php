@@ -10,28 +10,30 @@
 ]); ?>
 </div>
 
-<div id="ccm-block-express-form-choose-type">
+<div id="ccm-block-express-form-choose-type" data-add-new-form-action="<?=$view->action('add_new_form'); ?>">
 
     <div class="spacer-row-6"></div>
 
     <fieldset>
-        <legend><?=t('Form Type'); ?></legend>
 
-        <div class="form-group">
-            <label class="control-label launch-tooltip" title="<?=t('If you are creating a completely new form, choose New Form. If you have already created an express entity in the Dashboard and would like to embed its form on this page, choose Existing Express Entity Form.'); ?>"><?=t('What kind of form do you want to create?'); ?></label>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="d-grid">
-                    <button data-action="choose-new-form" type="button" class="btn btn-secondary"><i class="fas fa-plus-circle" style="opacity: 0.3"></i> &nbsp; <?=t('New Form'); ?></button>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="d-grid">
-                    <button data-action="choose-existing-form" type="button" class="btn btn-secondary"><i class="fas fa-database" style="opacity: 0.3"></i> &nbsp; <?=t('Existing Express Entity Form'); ?></button>
-                </div>
+        <div class="mb-3">
+            <label class="form-label" for="newFormName"><?=t('New Form')?></label>
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control-lg form-control" id="newFormName" required placeholder="<?=t('Form Name')?>">
+                <button class="btn btn-primary" data-button-action="choose-new-form" type="button"><i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
+
+        <hr>
+
+        <label class="form-label"><?=t('Existing Form')?></label>
+
+        <p class="text-muted"><?=t('If you are creating a completely new form, choose New Form. If you have already created an express entity in the Dashboard and would like to embed its form on this page, choose Existing Express Entity Form.'); ?></p>
+
+        <div class="d-grid">
+            <button data-button-action="choose-existing-form" type="button" class="btn btn-secondary"><?=t('Choose Existing Express Entity Form'); ?></button>
+        </div>
+
     </fieldset>
 </div>
 
@@ -55,7 +57,10 @@
 
     </div>
 
-    <div id="ccm-block-express-form-edit" class="tab-pane" data-action="<?=$view->action('update_control'); ?>">
+    <div id="ccm-block-express-form-edit" class="tab-pane"
+         data-delete-action="<?=$view->action('delete_control')?>"
+         data-sort-action="<?=$view->action('update_control_order')?>"
+         data-update-action="<?=$view->action('update_control'); ?>">
 
         <div class="alert alert-success" style="display: none"><?=t('Field updated successfully.'); ?></div>
 
@@ -248,7 +253,7 @@
     <span class="float-end">
         <a href="javascript:void(0)" class="icon-link"><i style="cursor: move" class="fas fa-arrows-alt"></i></a>
         <a href="javascript:void(0)" class="icon-link" data-action="edit-control"><i class="fas fa-pencil-alt"></i></a>
-        <a href="javascript:void(0)" class="icon-link" data-action="delete-control"><i class="fas fa-trash-alt"></i></a>
+        <a href="javascript:void(0)" class="icon-link" data-control-id="<%=control.id%>" data-action="delete-control"><i class="fas fa-trash-alt"></i></a>
         </span>
     <% if (control.isRequired) { %>
     <span style="margin-right: 20px" class="float-end badge bg-info"><?=t('Required'); ?></span>
