@@ -7,6 +7,10 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 /** @var \Concrete\Core\Form\Service\Form $form */
 /** @var \Concrete\Core\Application\Service\FileManager $fileManager */
 /** @var \Concrete\Core\Editor\EditorInterface $editor */
+/** @var \Concrete\Block\FeatureLink\Controller $controller */
+
+$bID = $bID ?? 0;
+$icon = $icon ?? '';
 
 ?>
 
@@ -28,8 +32,11 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
 <fieldset class="mb-3">
     <legend><?=t('Text')?></legend>
     <div class="mb-3">
-        <label class="form-label" for="title"><?=t('Title')?></label>
-        <input type="text" name="title" class="form-control" value="<?=$title ?? null?>">
+      <?php echo $form->label("title", t('Title')); ?>
+      <div class="input-group">
+          <?php echo $form->text('title', $title ?? null); ?>
+          <?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+      </div>
     </div>
     <div class="mb-3">
         <label class="form-label" for="body"><?=t('Body')?></label>
@@ -44,9 +51,6 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
     <div class="mb-3">
         <label class="form-label" for="buttonText"><?=t('Button Text')?></label>
         <input type="text" name="buttonText" class="form-control" value="<?=$buttonText ?? null ?>">
-        <div class="help-block">
-            <?=t('Leave blank to omit the button.')?>
-        </div>
     </div>
     <div class="form-group">
         <?php echo $form->label("buttonSize", t("Button Size")); ?>
@@ -62,6 +66,7 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
         <?php echo $form->select("buttonStyle", [
             '' => t('Regular'),
             'outline' => t('Outline'),
+            'link' => t('Link'),
         ], $buttonStyle ?? null);
         ?>
     </div>
@@ -75,6 +80,14 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
             </concrete-theme-color-input>
         </div>
     <?php } ?>
+
+    <div class="form-group ccm-block-select-icon">
+        <?php echo $form->label('icon', t('Icon'))?>
+        <div id="ccm-icon-selector-<?= h($bID) ?>">
+            <icon-selector name="icon" selected="<?= h($icon) ?>" title="<?= t('Choose Icon') ?>" empty-option-label="<?= h(tc('Icon', '** None Selected')) ?>" />
+        </div>
+    </div>
+
     <div class="mb-3">
         <?php echo $form->label('buttonLink', t('Button Link')) ?>
         <?php echo $destinationPicker->generate(
@@ -84,6 +97,9 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
             $imageLinkValue
         )
         ?>
+        <div class="help-block">
+            <?=t('Leave blank to omit the button.')?>
+        </div>
     </div>
 </fieldset>
 
@@ -101,5 +117,20 @@ use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
             })
         })
 
-    })
+        Concrete.Vue.activateContext('cms', function(Vue, config) {
+            new Vue({
+                el: '#ccm-icon-selector-<?= h($bID) ?>',
+                components: config.components
+            })
+        })
+    });
 </script>
+
+<style type="text/css">
+    div.ccm-block-select-icon .input-group-addon {
+        min-width:70px;
+    }
+    div.ccm-block-select-icon i {
+        font-size: 22px;
+    }
+</style>
