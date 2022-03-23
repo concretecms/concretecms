@@ -2,6 +2,7 @@
 namespace Concrete\Tests\Multilingual;
 
 use Concrete\Core\Multilingual\Page\Section\Section;
+use Concrete\Core\Page\Page;
 use Concrete\TestHelpers\Page\PageTestCase;
 
 class SectionTest extends PageTestCase
@@ -92,5 +93,28 @@ class SectionTest extends PageTestCase
         $oldPage->delete();
         $newPage->delete();
         $newPageInSecondLocale->delete();
+    }
+
+    public function testDuplicateAliasMultilingual()
+    {
+        $default = Section::getDefaultSection();
+        $parent = self::createPage('Parent', $default);
+        $original = self::createPage('Awesome', $parent);
+        $aliasID = $original->addCollectionAlias($default);
+        $alias = Page::getByID($aliasID);
+        $this->assertEquals($original->getCollectionID(), $alias->getCollectionPointerID());
+
+        $second = Section::getByLocale('de_CH');
+        $secondParent = $parent->duplicate($second);
+        $secondOriginal = $original->duplicate($secondParent);
+        $secondAlias = $alias->duplicate($second);
+        $this->assertEquals($secondOriginal->getCollectionID(), $secondAlias->getCollectionID());
+
+        $parent->delete();
+        $original->delete();
+        $alias->delete();
+        $secondParent->delete();
+        $secondOriginal->delete();
+        $secondAlias->delete();
     }
 }
