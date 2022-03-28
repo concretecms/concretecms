@@ -296,7 +296,7 @@
             </select>
         <% } else { %>
             <input type="hidden" name="type" value="<%=selectedType%>">
-            <div><strong><%=selectedTypeDisplayName%></strong></div>
+            <input type="text" class="form-control" readonly value="<%=selectedTypeDisplayName%>">
         <% } %>
     </div>
 
@@ -314,12 +314,12 @@
     <div class="form-group" data-group="control-required" style="display: none">
         <label class="control-label form-label"><?=t('Required'); ?></label>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="required<% if (id) { %>Edit<% } %>" value="1" <% if (isRequired) { %>checked<% } %>>
-            <label class="form-check-label"><?=t('Yes'); ?></label>
+            <input class="form-check-input" type="radio" id="required<% if (id) { %>Edit<% } %>0" name="required<% if (id) { %>Edit<% } %>" value="1" <% if (isRequired) { %>checked<% } %>>
+            <label class="form-check-label" for="required<% if (id) { %>Edit<% } %>0" ><?=t('Yes'); ?></label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="required<% if (id) { %>Edit<% } %>" value="0" <% if (!isRequired) { %>checked<% } %>>
-            <label class="form-check-label"><?=t('No'); ?></label>
+            <input class="form-check-input" type="radio" id="required<% if (id) { %>Edit<% } %>1" name="required<% if (id) { %>Edit<% } %>" value="0" <% if (!isRequired) { %>checked<% } %>>
+            <label class="form-check-label" for="required<% if (id) { %>Edit<% } %>1"><?=t('No'); ?></label>
         </label></div>
     </div>
 </script>

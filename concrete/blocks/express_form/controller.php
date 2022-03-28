@@ -270,26 +270,112 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function action_update_control()
     {
         $fieldSet = $this->getFormFieldSetFromSession();
-        $data = $this->request->request->all();
-        $controlId = $data['id'] ?? null;
+        $post = $this->request->request->all();
+        $controlId = $post['id'] ?? null;
         $entityManager = $this->app->make(EntityManagerInterface::class);
 
         if ($controlId) {
             $control = $entityManager->find(Control::class, $controlId);
             if ($control && $control->getFieldSet()->getId() === $fieldSet->getId()) {
+                if ($control instanceof AttributeKeyControl) {
+                    $key = $control->getAttributeKey();
+                    $key->setAttributeKeyName($post['question']);
 
+                    if (!$post['question']) {
+                        $e = $this->app->make('error');
+                        $e->add(t('You must give this question a name.'));
+                        return new JsonResponse($e);
+                    }
+
+                    if ($post['requiredEdit']) {
+                        $control->setIsRequired(true);
+                    } else {
+                        $control->setIsRequired(false);
+                    }
+
+                    $controller = $key->getController();
+                    $key = $this->saveAttributeKeySettings($controller, $key, $post);
+                    $entityManager->persist($key);
+                    $entityManager->flush();
+                    $control->setAttributeKey($key);
+                    $control->setAttributeKey($key);
+                } else if ($control instanceof TextControl) {
+                    /** @var EntityPropertyType $propertyType */
+                    $type = $this->app->make(EntityPropertyType::class);
+
+                    $saver = $control->getControlSaveHandler();
+                    $control = $saver->saveFromRequest($control, $this->request);
+                }
+
+                $entityManager->persist($control);
+                $entityManager->flush();
+                return new JsonResponse($control);
             }
         }
     }
 
+    public function save($data)
+    {
+        $entityManager = $this->app->make(EntityManagerInterface::class);
 
+        // Make sure our data goes through correctly.
+        $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
 
+        // Now, let's handle saving the form entity ID against the form block db record
+        $entity = false;
+        if (!isset($data['exFormID']) || $data['exFormID'] == '') {
+            // This is a new form submission, and we're meant to be joining the user's session form ID to
+            // the block instead.
+            $fieldSet = $this->getFormFieldSetFromSession();
+            if ($fieldSet) {
+                $form = $fieldSet->getForm();
+                $data['exFormID'] = $form->getId();
+                $entity = $form->getEntity();
+                $entity->setIsPublished(true);
+                $entityManager->persist($entity);
+                $entityManager->flush();
+            }
+        } else {
+            $form = $entityManager->getRepository(Form::class)->findOneById($this->exFormID);
+            if ($form) {
+                $entity = $form->getEntity();
+            }
+        }
 
+        if (!$entity) {
+            throw new \Exception(t('Invalid Express object selected.'));
+        }
 
+        // Now, we handle the entity results folder.
+        $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
+        $folder = Node::getByID($data['resultsFolder']);
+        if (is_object($folder)) {
+            $resultsNode->move($folder);
+        }
 
+        // File manager folder
+        $addFilesToFolderFromPost = $data['addFilesToFolder'];
+        $existingAddFilesToFolder = $this->addFilesToFolder;
+        unset($data['addFilesToFolder']);
 
+        if ($addFilesToFolderFromPost && $addFilesToFolderFromPost != $existingAddFilesToFolder) {
+            $filesystem = new Filesystem();
+            $addFilesToFolder = $filesystem->getFolder($addFilesToFolderFromPost);
+            $fp = new Checker($addFilesToFolder);
+            if ($fp->canSearchFiles()) {
+                $data['addFilesToFolder'] = $addFilesToFolderFromPost;
+            }
+        }
 
+        if (!$data['addFilesToFolder']) {
+            $data['addFilesToFolder'] = $existingAddFilesToFolder;
+        }
 
+        $session = $this->app->make('session');
+        $session->remove('block.express_form.new');
+
+        return parent::save($data);
+    }
 
 
 
@@ -554,6 +640,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
      */
     protected function saveAttributeKeySettings($controller, ExpressKey $key, $post)
     {
+        $entityManager = $this->app->make(EntityManagerInterface::class);
         $settings = $controller->saveKey($post);
         if (!is_object($settings)) {
             $settings = $controller->getAttributeKeySettings();
@@ -561,217 +648,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         $settings->setAttributeKey($key);
         $key->setAttributeKeySettings($settings);
-
+        $entityManager->persist($settings);
         return $key;
-    }
-
-    public function save($data)
-    {
-        $data['storeFormSubmission'] = isset($data['storeFormSubmission']) ?: 0;
-        if (isset($data['exFormID']) && $data['exFormID'] != '') {
-            return parent::save($data);
-        }
-
-        $requestControls = (array) $this->request->request->get('controlID');
-        $entityManager = $this->app->make(EntityManagerInterface::class);
-        $session = $this->app->make('session');
-        $sessionControls = $session->get('block.express_form.new');
-
-
-        if (!$this->exFormID) {
-            // This is a new submission.
-            $c = \Page::getCurrentPage();
-
-            // Create a results node
-
-        } else {
-            // We check save the order as well as potentially deleting orphaned controls.
-
-            /* @var Form $form */
-            $form = $entityManager->getRepository(\Concrete\Core\Entity\Express\Form::class)
-                ->findOneById($this->exFormID);
-
-            /* @var FieldSet $fieldSet */
-            $fieldSet = $form->getFieldSets()[0];
-
-            $entity = $form->getEntity();
-            $entity->setName($name);
-
-            $entityManager->persist($entity);
-            $entityManager->flush();
-
-            $nodeId = $entity->getEntityResultsNodeId();
-            $node = Node::getByID($nodeId);
-            $node->setTreeNodeName($name);
-        }
-
-        $attributeKeyCategory = $entity->getAttributeKeyCategory();
-        $attributeKeyHandleGenerator = new AttributeKeyHandleGenerator($attributeKeyCategory);
-
-        // First, we get the existing controls, so we can check them
-        // to see if controls should be removed later.
-        $existingControls = $form->getControls();
-        $existingControlIDs = [];
-        foreach ($existingControls as $control) {
-            $existingControlIDs[] = $control->getId();
-        }
-
-        // If we are in duplication state then we need a mapping to the newly created controls.
-        $controlsMapping = $session->get('block.express_form.duplicate.' . $this->bID, []);
-
-        // Now, let's loop through our request controls
-        $indexKeys = [];
-        $position = 0;
-
-        foreach ($requestControls as $id) {
-            // Are we in a newly duplicated block? So we need to get the ID of the new control
-            $duplicatedControlId = $controlsMapping[$id] ?? null;
-            if (isset($sessionControls[$id])) {
-                $control = $sessionControls[$id];
-                if (!in_array($duplicatedControlId ?? $id, $existingControlIDs)) {
-                    // Possibility 1: This is a new control.
-                    if ($control instanceof AttributeKeyControl) {
-                        $key = $control->getAttributeKey();
-                        $type = $key->getAttributeType();
-                        $settings = $key->getAttributeKeySettings();
-
-                        // We have to merge entities back into the entity manager because they have been
-                        // serialized. First type, because if we merge key first type gets screwed
-                        $mergedType = $entityManager->merge($type);
-
-                        // Now key, because we need key to set as the primary key for settings.
-                        // Note - we rename the objects in order to get spl_object_hash to not screw them up
-                        // Ref: https://github.com/concrete5/concrete5/issues/5584#issuecomment-403652601
-                        $mergedKey = $entityManager->merge($key);
-                        $mergedKey->setAttributeType($mergedType);
-                        $mergedKey->setEntity($entity);
-                        $mergedKey->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($mergedKey));
-                        $entityManager->persist($mergedKey);
-                        $entityManager->flush();
-
-                        // Now attribute settings.
-                        $settings->setAttributeKey($mergedKey);
-                        $mergedSettings = $entityManager->merge($settings);
-                        $entityManager->persist($mergedSettings);
-                        $entityManager->flush();
-
-                        $control->setAttributeKey($mergedKey);
-                        $indexKeys[] = $mergedKey;
-                    }
-
-                    $control->setFieldSet($fieldSet);
-                    $control->setPosition($position);
-                    $entityManager->persist($control);
-                    $entityManager->flush();
-                } else {
-                    // Possibility 2: This is an existing control that has an updated version.
-                    foreach ($existingControls as $existingControl) {
-                        if ($existingControl->getId() == ($duplicatedControlId ?? $id)) {
-                            if ($control instanceof AttributeKeyControl) {
-                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
-                                $key = $existingControl->getAttributeKey();
-                                $type = $key->getAttributeType();
-                                $type = $entityManager->merge($type);
-
-                                // question name
-                                $key->setAttributeKeyName($control->getAttributeKey()->getAttributeKeyName());
-                                $key->setAttributeKeyHandle($attributeKeyHandleGenerator->generate($key));
-
-                                // Key Type
-                                $key = $entityManager->merge($key);
-                                $key->setAttributeType($type);
-
-                                $type = $control->getAttributeKey()->getAttributeType();
-                                $type = $entityManager->merge($type);
-                                $key->setAttributeType($type);
-                                $settings = $control->getAttributeKey()->getAttributeKeySettings();
-                                $settings->setAttributeKey($key);
-                                $settings = $settings->mergeAndPersist($entityManager);
-
-                                // Required
-                                $existingControl->setIsRequired($control->isRequired());
-
-                                // Finalize control
-                                $existingControl->setAttributeKey($key);
-
-                                $indexKeys[] = $key;
-                            } elseif ($control instanceof TextControl) {
-                                // Wish we had a better way of doing this that wasn't so hacky.
-                                $existingControl->setHeadline($control->getHeadline());
-                                $existingControl->setBody($control->getBody());
-                            }
-
-                            // save it.
-                            $entityManager->persist($existingControl);
-                        }
-                    }
-                }
-            } else {
-                // Possibility 3: This is an existing control that doesn't have a new version. But we still
-                // want to update its position.
-                foreach ($existingControls as $control) {
-                    if ($control->getId() == ($duplicatedControlId ?? $id)) {
-                        $control->setPosition($position);
-                        $entityManager->persist($control);
-                    }
-                }
-            }
-
-            ++$position;
-        }
-
-        // Now, we look through all existing controls to see whether they should be removed.
-        foreach ($existingControls as $control) {
-            // Does this control exist in the request? If not, it gets axed
-            if (!is_array($requestControls)
-                || (!in_array($control->getId(), $requestControls) && !in_array($control->getId(), $controlsMapping))) {
-                $entityManager->remove($control);
-            }
-        }
-
-        $entityManager->flush();
-
-        $category = new ExpressCategory($entity, $this->app, $entityManager);
-        $indexer = $category->getSearchIndexer();
-        foreach ($indexKeys as $key) {
-            // The key might not be fully initialized and it might be coming
-            // from session and might not have all the right info in it.
-            // This is to fix a bug where packaged attribute types weren't being seen
-            // as being in a package because the package handle property on the object wasn't set.
-            $entityManager->refresh($key->getAttributeType());
-            $indexer->updateRepositoryColumns($category, $key);
-        }
-
-        // Now, we handle the entity results folder.
-        $resultsNode = Node::getByID($entity->getEntityResultsNodeId());
-        $folder = Node::getByID($data['resultsFolder']);
-        if (is_object($folder)) {
-            $resultsNode->move($folder);
-        }
-
-        // File manager folder
-        $addFilesToFolderFromPost = $data['addFilesToFolder'];
-        $existingAddFilesToFolder = $this->addFilesToFolder;
-        unset($data['addFilesToFolder']);
-
-        if ($addFilesToFolderFromPost && $addFilesToFolderFromPost != $existingAddFilesToFolder) {
-            $filesystem = new Filesystem();
-            $addFilesToFolder = $filesystem->getFolder($addFilesToFolderFromPost);
-            $fp = new Checker($addFilesToFolder);
-            if ($fp->canSearchFiles()) {
-                $data['addFilesToFolder'] = $addFilesToFolderFromPost;
-            }
-        }
-
-        if (!$data['addFilesToFolder']) {
-            $data['addFilesToFolder'] = $existingAddFilesToFolder;
-        }
-
-        $data['exFormID'] = $form->getId();
-
-        $this->clearSessionControls();
-
-        parent::save($data);
     }
 
     public function edit()
@@ -899,21 +777,8 @@ class Controller extends BlockController implements NotificationProviderInterfac
     public function action_get_control()
     {
         $entityManager = $this->app->make(EntityManagerInterface::class);
-        $session = $this->app->make('session');
-        $sessionControls = $session->get('block.express_form.new');
-        if (is_array($sessionControls)) {
-            foreach ($sessionControls as $sessionControl) {
-                if ($sessionControl->getID() == $this->request->query->get('control')) {
-                    $control = $sessionControl;
-                    break;
-                }
-            }
-        }
-
-        if (!isset($control)) {
-            $control = $entityManager->getRepository(\Concrete\Core\Entity\Express\Control\Control::class)
-                ->findOneById($this->request->query->get('control'));
-        }
+        $control = $entityManager->getRepository(Control::class)
+            ->findOneById($this->request->query->get('control'));
 
         if (is_object($control)) {
             $obj = new \stdClass();

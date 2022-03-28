@@ -40,68 +40,84 @@ $(function() {
 
         if (data.task == 'add') {
             $tabsContainer.hide();
+            // Disable the add block button until we've chosen a form.
+            my.disableBlockForm()
+            $chooseContainer.find('button').on('click', function() {
+                var action = $(this).attr('data-button-action');
+                if (action == 'choose-new-form') {
+                    my.chooseFormType('new', 'add');
+                } else {
+                    my.chooseFormType('existing', 'add');
+                }
+            });
         } else {
-            my.chooseFormType(data.mode);
+            my.chooseFormType(data.mode, 'edit');
         }
-
-        $chooseContainer.find('button').on('click', function() {
-            var action = $(this).attr('data-button-action');
-            if (action == 'choose-new-form') {
-                my.chooseFormType('new');
-            } else {
-                my.chooseFormType('existing');
-            }
-        });
-
-        // Disable the add block button until we've chosen a form.
-        my.disableBlockForm()
     }
 
     ConcreteBlockForm.prototype.disableBlockForm = function() {
         // disable the button
         $('div.ui-dialog.ccm-ui .ui-dialog-buttonpane a.btn-primary').addClass('disabled')
         // disable the form events.
-        $('form#ccm-block-form').on('submit', function(e) {
+        $('form#ccm-block-form').on('submit.addExpressForm', function(e) {
             e.preventDefault()
             e.stopPropagation()
             return false
         })
     }
 
-    ConcreteBlockForm.prototype.chooseFormType = function(mode) {
+    ConcreteBlockForm.prototype.enableBlockForm = function() {
+        // disable the button
+        $('div.ui-dialog.ccm-ui .ui-dialog-buttonpane a.btn-primary').removeClass('disabled')
+        // disable the form events.
+        $('form#ccm-block-form').unbind('submit.addExpressForm');
+    }
+
+    ConcreteBlockForm.prototype.chooseFormType = function(mode, task) {
         var my = this,
             $chooseContainer = $('#ccm-block-express-form-choose-type'),
             $tabsContainer = $('#ccm-block-express-form-tabs'),
             addBlockForm = $('#ccm-block-form').get(0)
 
-        const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
 
         switch(mode) {
             case 'new':
-                if (addBlockForm.checkValidity()) {
-                    // Try to create the form on the backend
-                    $.concreteAjax({
-                        url: $chooseContainer.attr('data-add-new-form-action'),
-                        data: {
-                            'formName': $('input#newFormName').val()
-                        },
-                        success: function(r) {
-                            $tabsContainer.find('li').eq(2).remove();
-                            firstTab.show()
-                            $tabsContainer.show();
-                            $chooseContainer.hide();
-                        }
-                    });
+                if (task === 'edit') {
+                    $tabsContainer.find('li').eq(2).remove();
+                    const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
+                    firstTab.show()
+                    $tabsContainer.show();
+                    $chooseContainer.hide();
                 } else {
-                    addBlockForm.reportValidity()
+                    if (addBlockForm.checkValidity()) {
+                        // Try to create the form on the backend
+                        $.concreteAjax({
+                            url: $chooseContainer.attr('data-add-new-form-action'),
+                            data: {
+                                'formName': $('input#newFormName').val()
+                            },
+                            success: function (r) {
+                                $tabsContainer.find('li').eq(2).remove();
+                                const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
+                                firstTab.show()
+                                $tabsContainer.show();
+                                $chooseContainer.hide();
+                                my.enableBlockForm()
+                            }
+                        });
+                    } else {
+                        addBlockForm.reportValidity()
+                    }
                 }
                 break;
             case 'existing':
                 $tabsContainer.find('li').eq(0).remove();
                 $tabsContainer.find('li').eq(0).remove();
+                const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
                 firstTab.show()
                 $tabsContainer.show();
                 $chooseContainer.hide();
+                my.enableBlockForm()
                 break;
         }
     }

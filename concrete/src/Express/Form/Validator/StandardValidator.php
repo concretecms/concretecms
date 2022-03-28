@@ -5,6 +5,7 @@ namespace Concrete\Core\Express\Form\Validator;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Express\Form\Validator\Routine\CheckPermissionsRoutine;
+use Concrete\Core\Express\Form\Validator\Routine\CheckPublishedStatusRoutine;
 use Concrete\Core\Express\Form\Validator\Routine\CSRFTokenRoutine;
 use Concrete\Core\Express\Form\Validator\Routine\ValidateAttributesRoutine;
 use Concrete\Core\Express\Form\Validator\Routine\ValidateUniqueAttributesRoutine;
@@ -20,6 +21,7 @@ class StandardValidator extends AbstractValidator
     {
         $this->request = $request;
         $this->error = $error;
+        $this->addRoutine(new CheckPublishedStatusRoutine());
         $this->addRoutine(new CheckPermissionsRoutine());
         $this->addRoutine(new CSRFTokenRoutine($app->make('token'), $request));
         $this->addRoutine(new ValidateAttributesRoutine($request));
