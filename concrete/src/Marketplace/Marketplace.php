@@ -79,7 +79,7 @@ class Marketplace implements ApplicationAwareInterface
         if ($csToken != '') {
             $fh = $this->app->make('helper/file');
             $csiURL = urlencode($this->getSiteURL());
-            $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+            $url = $this->config->get('concrete.urls.concrete5_secure') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . '&csiVersion=' . APP_VERSION . $ms;
             $vn = $this->app->make('helper/validation/numbers');
             $r = $this->get($url);
 
@@ -240,8 +240,8 @@ class Marketplace implements ApplicationAwareInterface
         // Retrieve the URL contents
         $csToken = $marketplace->databaseConfig->get('concrete.marketplace.token');
         $csiURL = urlencode($marketplace->getSiteURL());
-        $url = $marketplace->config->get('concrete.urls.concrete5') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
-        $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+        $url = $marketplace->config->get('concrete.urls.concrete5_secure') . $marketplace->config->get('concrete.urls.paths.marketplace.purchases');
+        $url .= "?csToken={$csToken}&csiURL=" . $csiURL . '&csiVersion=' . APP_VERSION;
         $json = $marketplace->get($url);
 
         $addons = array();
@@ -285,7 +285,7 @@ class Marketplace implements ApplicationAwareInterface
     public function getSitePageURL()
     {
         $token = $this->databaseConfig->get('concrete.marketplace.url_token');
-        $url = $this->config->get('concrete.urls.concrete5') . $this->config->get('concrete.urls.paths.site_page');
+        $url = $this->config->get('concrete.urls.concrete5_secure') . $this->config->get('concrete.urls.paths.site_page');
 
         return $url . '/' . $token;
     }
@@ -389,8 +389,9 @@ class Marketplace implements ApplicationAwareInterface
     public function generateSiteToken()
     {
         return $this->get(
-            $this->config->get('concrete.urls.concrete5') .
-            $this->config->get('concrete.urls.paths.marketplace.connect_new_token'));
+            $this->config->get('concrete.urls.concrete5_secure') .
+            $this->config->get('concrete.urls.paths.marketplace.connect_new_token')
+        );
     }
 
     public static function getSiteToken()
