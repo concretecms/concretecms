@@ -46,7 +46,7 @@ if (isset($neutralStack)) {
                     <p>
                         <button class="btn btn-primary" type="submit"><?=$isGlobalArea ? t('Create localized global area version') : t('Create localized stack version')?></button><br />
                     </p>
-                </form>                    
+                </form>
                 <?php
             }
             ?>
@@ -324,8 +324,8 @@ $(function() {
                     <thead>
                         <tr>
                             <th></th>
-                            <th class="<?=$list->getSortClassName('cv.cvName')?>"><a href="<?=$list->getSortURL('cv.cvName')?>"><?=t('Name')?></a></th>
-                            <th class="<?=$list->getSortClassName('c.cDateAdded')?>"><a href="<?=$list->getSortURL('c.cDateAdded')?>"><?=t('Date Added')?></a></th>
+                            <th class="<?=$list->getSortClassName('cv.cvName')?>"><a href="<?=h($list->getSortURL('cv.cvName'))?>"><?=t('Name')?></a></th>
+                            <th class="<?=$list->getSortClassName('c.cDateAdded')?>"><a href="<?=h($list->getSortURL('c.cDateAdded'))?>"><?=t('Date Added')?></a></th>
                             <th></th>
                         </tr>
                     </thead>
