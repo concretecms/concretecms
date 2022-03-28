@@ -445,10 +445,10 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
             <tr>
                 <th></th>
                 <th class="<?= $list->getSortClassName('cv.cvName') ?>">
-                    <a href="<?= $list->getSortURL('cv.cvName') ?>"><?= t('Name') ?></a>
+                    <a href="<?= h($list->getSortURL('cv.cvName')) ?>"><?= t('Name') ?></a>
                 </th>
                 <th class="<?= $list->getSortClassName('c.cDateAdded') ?>">
-                    <a href="<?= $list->getSortURL('c.cDateAdded') ?>"><?= t('Date Added') ?></a>
+                    <a href="<?= h($list->getSortURL('c.cDateAdded')) ?>"><?= t('Date Added') ?></a>
                 </th>
                 <th></th>
             </tr>
