@@ -84,12 +84,18 @@ class ThumbnailPlaceholderService
 
         $attributes = array_merge($attributes, $defaults);
 
+        if(empty($thumbnailType->getHeight())){
+            $thumbnailHeight = $thumbnailType->getHeight();
+        } else {
+            $thumbnailHeight = $thumbnailType->getWidth();
+        }
+
         return (string)new Element(
             "div",
             [
                 $this->getThumbnailImage(
                     $thumbnailType->getWidth(),
-                    $thumbnailType->getHeight(),
+                    $thumbnailHeight,
                     $placeholderBackgroundColor
                 ),
                 new Element(
