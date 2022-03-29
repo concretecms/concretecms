@@ -1,5 +1,7 @@
-<?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php
+<?php  defined('C5_EXECUTE') or die("Access Denied.");
+/** @var \Concrete\Core\Block\View\BlockView $view */
+$view->requireAsset('css', 'font-awesome');
+
 $title = h($title);
 if ($linkURL) {
     $title = '<a href="' . $linkURL . '">' . $title . '</a>';

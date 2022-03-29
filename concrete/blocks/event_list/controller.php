@@ -85,7 +85,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (!$this->totalToRetrieve) {
             $this->set('totalToRetrieve', 9);
         }
-        $this->requireAsset('font-awesome');
         $list = new EventOccurrenceList();
         $calendar = $this->getCalendarOrCalendars();
         if (is_object($calendar)) {

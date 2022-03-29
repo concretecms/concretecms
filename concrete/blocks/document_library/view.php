@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<?php defined('C5_EXECUTE') or die(_("Access Denied."));
+/** @var \Concrete\Core\Block\View\BlockView $view */
+$view->requireAsset('css', 'font-awesome');?>
 <?php
 $c = Page::getCurrentPage();
 ?>

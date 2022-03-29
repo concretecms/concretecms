@@ -7,6 +7,10 @@ $c = Page::getCurrentPage();
 $th = Core::make('helper/text');
 /** @var \Concrete\Core\Localization\Service\Date $dh */
 $dh = Core::make('helper/date');
+if(isset($rssUrl)){
+    /** @var \Concrete\Core\Block\View\BlockView $view */
+    $this->requireAsset('css', 'font-awesome');
+}
 
 if (is_object($c) && $c->isEditMode() && $controller->isBlockEmpty()) {
     ?>

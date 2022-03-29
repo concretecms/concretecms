@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /* @var Concrete\Core\Form\Service\Form $form */
 /* @var Concrete\Core\Block\View\BlockView $view */
+$view->requireAsset('javascript', 'jquery');
 
 // The text label as configured by the user
 /* @var string $label */

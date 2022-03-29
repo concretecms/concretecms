@@ -1,6 +1,6 @@
-<?php
-
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+/** @var \Concrete\Core\Block\View\BlockView $view */
+$view->requireAsset('font-awesome');
 
 if (isset($calendar)) {
     $pagination = $list->getPagination();

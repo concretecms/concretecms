@@ -70,7 +70,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function registerViewAssets($outputContent = '')
     {
-        $this->requireAsset('css', 'font-awesome');
         if (is_object($this->block) && $this->block->getBlockFilename() == 'hover_description') {
             // this isn't great but it's the only way to do this and still make block
             // output caching available to this block.

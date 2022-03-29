@@ -288,7 +288,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('nh', $nh);
 
         if ($this->pfID) {
-            $this->requireAsset('css', 'font-awesome');
             $feed = Feed::getByID($this->pfID);
             if (is_object($feed)) {
                 $this->set('rssUrl', $feed->getFeedURL());

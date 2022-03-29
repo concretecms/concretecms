@@ -1,4 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var \Concrete\Core\Block\View\BlockView $view */
+$view->requireAsset('javascript', 'jquery');
+$this->requireAsset('javascript', 'core/frontend/parallax-image');
+
 $minColumns = 1;
 $columnsNum = $columnsNum ?? 1;
 $maxColumns = $maxColumns ?? 12;
