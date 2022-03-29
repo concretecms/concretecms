@@ -134,11 +134,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         $db->delete('btShareThisPage', array('bID' => $this->bID));
     }
 
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('css', 'font-awesome');
-    }
-
     public function view()
     {
         if (count($this->services) == 0) {
