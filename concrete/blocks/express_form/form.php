@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$token = Core::make('token');
+?>
 
 <div id="ccm-block-express-form-tabs">
 <?php echo Loader::helper('concrete/ui')->tabs([
@@ -10,7 +13,7 @@
 ]); ?>
 </div>
 
-<div id="ccm-block-express-form-choose-type" data-add-new-form-action="<?=$view->action('add_new_form'); ?>">
+<div id="ccm-block-express-form-choose-type" data-add-new-form-token="<?=$token->generate('add_new_form')?>" data-add-new-form-action="<?=$view->action('add_new_form'); ?>">
 
     <div class="spacer-row-6"></div>
 
@@ -39,7 +42,7 @@
 
 <div class="tab-content">
 
-    <div id="ccm-block-express-form-add" class="tab-pane" data-action="<?=$view->action('add_control'); ?>">
+    <div id="ccm-block-express-form-add" class="tab-pane" data-action="<?=$view->action('add_control'); ?>" data-token="<?=$token->generate('add_control')?>">
         <div class="alert alert-success" style="display: none"><?=t('Field added successfully.'); ?></div>
         <fieldset>
             <legend><?php echo t('New Question'); ?></legend>
@@ -60,7 +63,11 @@
     <div id="ccm-block-express-form-edit" class="tab-pane"
          data-delete-action="<?=$view->action('delete_control')?>"
          data-sort-action="<?=$view->action('update_control_order')?>"
-         data-update-action="<?=$view->action('update_control'); ?>">
+         data-update-action="<?=$view->action('update_control'); ?>"
+         data-sort-token="<?=$token->generate('update_control_order')?>"
+         data-delete-token="<?=$token->generate('delete_control')?>"
+         data-update-token="<?=$token->generate('update_control')?>"
+    >
 
         <div class="alert alert-success" style="display: none"><?=t('Field updated successfully.'); ?></div>
 
@@ -245,6 +252,7 @@
 <script type="text/template" data-template="express-form-form-control">
 <li class="list-group-item"
     data-action="<?=$view->action('get_control'); ?>"
+    data-token="<?=$token->generate('get_control')?>"
     data-form-control-field-type="<%=control.attributeType%>"
     data-form-control-label="<%=control.displayLabel%>"
     data-form-control-id="<%=control.id%>">
@@ -279,7 +287,7 @@
         <input type="hidden" name="id" value="<%=id%>">
     <% } %>
 
-    <div class="form-group" data-action="<?=$view->action('get_type_form'); ?>" data-group="field-types">
+    <div class="form-group" data-action="<?=$view->action('get_type_form'); ?>" data-token="<?=$token->generate('get_type_form')?>" data-group="field-types">
         <?=$form->label('type', t('Answer Type')); ?>
 
         <% if (!id) { %>

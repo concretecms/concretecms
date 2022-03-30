@@ -87,13 +87,14 @@ $(function() {
                     const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
                     firstTab.show()
                     $tabsContainer.show();
-                    $chooseContainer.hide();
+                    $chooseContainer.remove();
                 } else {
                     if (addBlockForm.checkValidity()) {
                         // Try to create the form on the backend
                         $.concreteAjax({
                             url: $chooseContainer.attr('data-add-new-form-action'),
                             data: {
+                                'ccm_token': $chooseContainer.attr('data-add-new-form-token'),
                                 'formName': $('input#newFormName').val()
                             },
                             success: function (r) {
@@ -116,7 +117,7 @@ $(function() {
                 const firstTab = new bootstrap.Tab($tabsContainer.find('li').eq(0).find('a'))
                 firstTab.show()
                 $tabsContainer.show();
-                $chooseContainer.hide();
+                $chooseContainer.remove();
                 my.enableBlockForm()
                 break;
         }
@@ -186,6 +187,7 @@ $(function() {
         $tabAdd.on('click', 'button[data-action=add-question]', function() {
             var $form = $tabAdd.find(':input');
             var data = $form.serializeArray();
+            data.push({'name': 'ccm_token', 'value': $tabAdd.attr('data-token')})
             jQuery.fn.dialog.showLoader();
             $.concreteAjax({
                 url: $tabAdd.attr('data-action'),
@@ -212,6 +214,7 @@ $(function() {
         $tabEdit.on('click', 'button[data-action=update-question]', function() {
             var $form = $tabEdit.find(':input');
             var data = $form.serializeArray();
+            data.push({'name': 'ccm_token', 'value': $tabEdit.attr('data-update-token')})
             jQuery.fn.dialog.showLoader();
             $.concreteAjax({
                 url: $tabEdit.attr('data-update-action'),
@@ -246,7 +249,7 @@ $(function() {
 
             $.concreteAjax({
                 url: $tabEdit.attr('data-delete-action'),
-                data: {'control': $control.attr('data-control-id')},
+                data: {'control': $control.attr('data-control-id'), 'ccm_token': $tabEdit.attr('data-delete-token')},
                 success: function(r) {
                     $control.closest('li').queue(function() {
                         $(this).addClass('animated bounceOutLeft');
@@ -276,7 +279,7 @@ $(function() {
             $.concreteAjax({
                 url: $control.attr('data-action'),
                 type: 'get',
-                data: {'control': $control.attr('data-form-control-id')},
+                data: {'control': $control.attr('data-form-control-id'), 'ccm_token': $control.attr('data-token')},
                 success: function(r) {
                     var $fields = $tabEdit.find('[data-view=form-fields]'),
                         $editQuestion = $tabEdit.find('[data-view=edit-question]'),
@@ -330,7 +333,7 @@ $(function() {
 
                 $.concreteAjax({
                     url: sortAction,
-                    data: {'controls': sortControls},
+                    data: {'controls': sortControls, 'ccm_token': $tabEdit.attr('data-sort-token')},
                     success: function(r) {
 
                     }
@@ -348,7 +351,7 @@ $(function() {
                 $types.find('i.fa-refresh').show();
                 $.concreteAjax({
                     url: $types.attr('data-action'),
-                    data: {'id': value},
+                    data: {'id': value, 'ccm_token': $types.attr('data-token')},
                     loader: false,
                     success: function(r) {
                         _.each(r.assets.css, function(css) {
