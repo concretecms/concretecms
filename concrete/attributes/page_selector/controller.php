@@ -108,5 +108,14 @@ class Controller extends AttributeTypeController
         }
 
         return $error;
+    public function getSearchIndexValue()
+    {
+        if ($this->attributeValue) {
+            $cID = $this->getAttributeValue()->getValue();
+            $page = Page::getByID($cID, 'ACTIVE');
+            if (is_object($page) && !$page->isError()) {
+                return  $cID;
+            }
+        }
     }
 }

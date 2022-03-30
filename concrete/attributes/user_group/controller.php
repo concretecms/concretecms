@@ -245,9 +245,12 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        $group = $this->getAttributeValue()->getValue();
-        if ($group) {
-            return $group->getGroupID();
+        $gID = $this->getAttributeValue()->getValue();
+        if ($gID) {
+            $group = Group::getByID($gID);
+            if ($group) {
+                return $group->getGroupID();
+            }
         }
     }
 

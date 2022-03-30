@@ -31,7 +31,13 @@ class Controller extends AttributeTypeController
 
     public function getSearchIndexValue()
     {
-        return $this->attributeValue->getValue();
+        if ($this->attributeValue) {
+            $uID = $this->getAttributeValue()->getValue();
+            $user = User::getByUserID($uID);
+            if (is_object($user)) {
+                return $uID;
+            }
+        }
     }
     
     public function form()
