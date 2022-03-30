@@ -43,6 +43,9 @@ $token = Core::make('token');
 <div class="tab-content">
 
     <div id="ccm-block-express-form-add" class="tab-pane" data-action="<?=$view->action('add_control'); ?>" data-token="<?=$token->generate('add_control')?>">
+        <?php if (isset($expressEntity) && $expressEntity->isPublished() && !$expressEntity->getIncludeInPublicList()) { ?>
+            <div class="alert alert-warning"><?=t('<b>Note</b>: You are adding fields to a published form. Any changes made will happen immediately.')?></div>
+        <?php } ?>
         <div class="alert alert-success" style="display: none"><?=t('Field added successfully.'); ?></div>
         <fieldset>
             <legend><?php echo t('New Question'); ?></legend>
@@ -68,6 +71,10 @@ $token = Core::make('token');
          data-delete-token="<?=$token->generate('delete_control')?>"
          data-update-token="<?=$token->generate('update_control')?>"
     >
+
+        <?php if (isset($expressEntity) && $expressEntity->isPublished() && !$expressEntity->getIncludeInPublicList()) { ?>
+            <div class="alert alert-warning"><?=t('<b>Note</b>: You are updating fields in a published form. Any changes made will happen immediately.')?></div>
+        <?php } ?>
 
         <div class="alert alert-success" style="display: none"><?=t('Field updated successfully.'); ?></div>
 
@@ -188,7 +195,7 @@ $token = Core::make('token');
                     <?=$form->radio('displayCaptcha', 0, (int) $displayCaptcha); ?>
                     <label class="form-check-label"><?=t('No'); ?></label>
                 </div>
-            </div>
+            </>
         </fieldset>
         <fieldset>
             <legend><?=t('Success'); ?></legend>
