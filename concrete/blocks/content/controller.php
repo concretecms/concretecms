@@ -205,7 +205,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     {
         $files = [];
         $matches = [];
-        if (preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
+        if ($this->content && preg_match_all('/\<concrete-picture[^>]*?fID\s*=\s*[\'"]([^\'"]*?)[\'"]/i', $this->content, $matches)) {
             list(, $ids) = $matches;
             foreach ($ids as $id) {
                 $files[] = $id;
@@ -220,6 +220,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     protected function getUsedFilesDownload()
     {
+        if (!$this->content) {
+            return [];
+        }
         preg_match_all('(FID_DL_\d+)', $this->content, $matches);
 
         return array_map(

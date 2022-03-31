@@ -105,7 +105,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function view()
     {
-        $this->requireAsset('javascript', 'jquery');
         $ml = Section::getList();
         $c = \Page::getCurrentPage();
         $al = Section::getBySectionOfSite($c);

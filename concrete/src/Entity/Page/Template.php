@@ -121,6 +121,7 @@ class Template implements \JsonSerializable
         return $iconImg;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

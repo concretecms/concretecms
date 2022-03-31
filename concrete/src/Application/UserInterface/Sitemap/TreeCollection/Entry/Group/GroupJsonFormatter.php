@@ -11,6 +11,7 @@ final class GroupJsonFormatter implements \JsonSerializable
         $this->entryGroup = $entryGroup;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $response = array(

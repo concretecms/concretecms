@@ -88,6 +88,7 @@ class AccordionEntry implements \JsonSerializable
         $this->id = $id;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

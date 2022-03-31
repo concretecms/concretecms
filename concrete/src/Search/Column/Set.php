@@ -98,6 +98,7 @@ class Set implements \JsonSerializable
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

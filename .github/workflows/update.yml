@@ -16,6 +16,7 @@ jobs:
           - 9.0.1
         php-version:
           - "7.4"
+          - "8.1"
     steps:
       -
         name: Configure environment
@@ -48,7 +49,7 @@ jobs:
           cd /app
           sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.display_errors true
           sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.detail debug
-          # sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.error_reporting -1
+          sudo -Hu www-data ./concrete/bin/concrete5 c5:config -g -- set concrete.debug.error_reporting -1
       -
         name: Update Concrete
         run: |
@@ -59,8 +60,8 @@ jobs:
         run: |
           ccm-service start web
           SITE_NAME="$(sudo -u www-data ./concrete/bin/concrete5 c5:config get site.sites.default.name)"
-          curl -sSf -o /tmp/index.html http://localhost/
-          if ! grep -Eq "<title>.*$SITE_NAME.*</title>" /tmp/index.html; then
+          curl -sSi -o /tmp/index.html http://localhost/
+          if ! head -n1 /tmp/index.html | grep -Eq '^HTTP[^\s]* 200 ' || ! grep -Eq "<title>.*$SITE_NAME.*</title>" /tmp/index.html; then
             echo 'Wrong response from the website' >&1
             cat /tmp/index.html >&2
             exit 1

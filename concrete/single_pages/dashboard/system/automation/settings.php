@@ -30,7 +30,7 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
             'If set to automatic, queued actions like file rescans and bulk page deletions be performed when triggered, but may abort if leaving a page. Want to improve their efficiency and/or ensure they run in the background? Enable manual queue processing.'
         ) ?></div>
     <div class="alert alert-warning" v-show="listening === 'worker'"><?= t(
-            'If you enable manual listening you <b>must</b> ensure the queue listener is running at least one worker: <code>concrete/bin/concrete messenger:consume async</code>'
+            'If you enable manual listening you <b>must</b> ensure the queue listener is running at least one worker: <code>/path/to/public/concrete/bin/concrete messenger:consume async</code>'
         ); ?></div>
 
 
@@ -86,7 +86,7 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
             'If you enable scheduling, you <b>must</b> ensure that the scheduling worker runs every minute.'
         ); ?>
         <br/><br/>
-        <textarea class="form-control" rows="1" readonly onclick="this.select()">* * * * * concrete/bin/concrete schedule:run >> /dev/null 2>&1</textarea>
+        <textarea class="form-control" rows="1" readonly onclick="this.select()">* * * * * /path/to/public/concrete/bin/concrete concrete:scheduler:run >> /dev/null 2>&1</textarea>
     </div>
 
 

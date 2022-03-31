@@ -38,6 +38,7 @@ class TopicsDataFieldData implements DataFieldDataInterface
         }
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -33,6 +33,7 @@ class DatetimeDataFieldData implements DataFieldDataInterface
         return $this->dateTime;
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -41,10 +41,14 @@ class ThemeRouteCollection
      *
      * @param string $path
      *
-     * @return array
+     * @return array|false
      */
     public function getThemeByRoute($path)
     {
+        $path = (string) $path;
+        if ($path === '') {
+            return false;
+        }
         $text = new Text();
         // there's probably a more efficient way to do this
         foreach ($this->themePaths as $lp => $layout) {

@@ -516,6 +516,7 @@ class User implements UserEntityInterface, \JsonSerializable
     /**
      * @return mixed|void
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -65,6 +65,7 @@ class Scope implements ScopeEntityInterface
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->getIdentifier();

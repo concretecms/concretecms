@@ -108,7 +108,7 @@ abstract class Block extends Page
                 $ax = \Area::getOrCreate($cx, $ax);
             }
             $ob->setBlockAreaObject($ax);
-            $nb = $ob->duplicate($nvc, 'duplicate_clipboard');
+            $nb = $ob->duplicate($nvc);
             $nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
             $b->deleteBlock();
             $b = &$nb;

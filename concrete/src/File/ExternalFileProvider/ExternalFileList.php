@@ -23,6 +23,7 @@ class ExternalFileList implements JsonSerializable
         return $this->files;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->getFiles();

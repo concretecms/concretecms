@@ -31,6 +31,7 @@ class ExpressEntryDataFieldData implements DataFieldDataInterface
         return (string) $this->entry->getLabel();
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -104,7 +104,7 @@ class Process extends AbstractController
                 $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
                 $nb = $nvc->addBlock($btx, $ax, ['bOriginalID' => $bID]);
             } else {
-                $nb = $b->duplicate($nvc);
+                $nb = $b->duplicate($nvc, 'duplicate_clipboard');
                 $nb->move($nvc, $ax);
                 if (!$nb) {
                     throw new UserMessageException(t('Unable to find the specified block'));

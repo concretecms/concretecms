@@ -352,6 +352,7 @@ class Theme extends ConcreteObject implements \JsonSerializable
     /**
      * @return mixed|void
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $hasSkins = $this->hasSkins();

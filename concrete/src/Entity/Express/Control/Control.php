@@ -125,6 +125,7 @@ abstract class Control implements \JsonSerializable, ExportableInterface, Contro
 
     abstract public function getType();
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

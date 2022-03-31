@@ -35,7 +35,7 @@ class View extends AbstractView
 
     protected function constructView($path = false)
     {
-        $path = '/'.trim($path, '/');
+        $path = '/' . trim((string) $path, '/');
         $this->viewPath = $path;
     }
 

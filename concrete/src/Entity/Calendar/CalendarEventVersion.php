@@ -282,8 +282,9 @@ class CalendarEventVersion implements ObjectInterface, \JsonSerializable
     }
 
     /**
-     * @return \stdClass
+     * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $o = array();

@@ -149,6 +149,7 @@ abstract class CustomElement implements \JsonSerializable
         return $dateTime;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

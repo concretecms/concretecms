@@ -52,12 +52,14 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected $btCacheBlockOutput = false;
     protected $btTable = 'btExpressForm';
     protected $btExportPageColumns = ['redirectCID'];
+    protected $btCopyWhenPropagate = true;
 
     public $notifyMeOnSubmission;
     public $recipientEmail;
     public $replyToEmailControlID;
     public $storeFormSubmission = 1;
     public $exFormID;
+    public $addFilesToFolder;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
@@ -363,11 +365,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         // Add mode
         if (isset($data['exFormID']) && $data['exFormID'] !== '') {
-            // Add block - existing form instance
-            $form = $entityManager->getRepository(Form::class)->findOneById($data['exFormID']);
-            if ($form) {
-                $entity = $form->getEntity();
-            }
+            return parent::save($data);
         } else {
             $fieldSet = $this->getFormFieldSet();
             if ($fieldSet) {
@@ -409,7 +407,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
             }
         }
 
-        if (!$data['addFilesToFolder']) {
+        if (!isset($data['addFilesToFolder'])) {
             $data['addFilesToFolder'] = $existingAddFilesToFolder;
         }
 
@@ -505,6 +503,24 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         return $e;
+    }
+
+    public function duplicate_clipboard($newBID)
+    {
+        $newBlockRecord = parent::duplicate($newBID);
+
+        if ($newBlockRecord !== null && is_object($form = $this->getFormEntity())) {
+            $entity = $form->getEntity();
+            if (!$entity->getIncludeInPublicList()) {
+                $controls = [];
+                $cloner = $this->app->make(\Concrete\Core\Express\Entity\Cloner::class);
+                $newEntity = $cloner->cloneEntity($entity, $controls);
+                $newBlockRecord->exFormID = $newEntity->getDefaultEditForm()->getId();
+                $newBlockRecord->Save();
+            }
+        }
+
+        return $newBlockRecord;
     }
 
     public function delete()

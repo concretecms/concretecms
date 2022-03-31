@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.1.0a1',
     'version_installed' => '9.1.0a1',
-    'version_db' => '20220316212429', // the key of the latest database migration
+    'version_db' => '20220331222557', // the key of the latest database migration
 
     /*
      * Installation status
@@ -411,6 +411,10 @@ return [
         'clear' => [
             'thumbnails' => false,
         ],
+        /**
+         * Timestamp of the last time that the cache was cleared, this is used when generating assets.
+         */
+        'last_cleared'=> 1648642409
     ],
 
     'design' => [

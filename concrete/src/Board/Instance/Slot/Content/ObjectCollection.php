@@ -29,6 +29,7 @@ class ObjectCollection implements \JsonSerializable, DenormalizableInterface
         return $this->contentObjects->toArray();
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

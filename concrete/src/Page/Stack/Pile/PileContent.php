@@ -136,6 +136,7 @@ class PileContent extends ConcreteObject implements \JsonSerializable
         return $modules;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $block = Block::getByID($this->getItemID());
