@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 <div class="ccm-block-switch-language">
 
     <form method="post" class="row row-cols-auto g-0 align-items-center">
-        <div class="col-auto">
+        <div class="col-auto me-3">
             <?= $label ?>
         </div>
         <div class="col-auto">
