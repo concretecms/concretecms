@@ -25,12 +25,8 @@ $isArrangeMode = false;
 if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
     $pageTitle = null;
 }
-if (!isset($pageDescription)) {
-    $pageDescription = null;
-}
-if (!isset($pageMetaKeywords)) {
-    $pageMetaKeywords = null;
-}
+$pageDescription = $pageDescription ?? '';
+$pageMetaKeywords = $pageMetaKeywords ?? '';
 $defaultPageTitle = $pageTitle;
 $app = Application::getFacadeApplication();
 $site = $app->make('site')->getSite();
@@ -72,16 +68,16 @@ if (is_object($c)) {
         }
     }
 
-    if (!$pageDescription) {
+    if ($pageDescription === '') {
         // we aren't getting it dynamically.
-        $pageDescription = $c->getAttribute('meta_description');
-        if (!$pageDescription) {
-            $pageDescription = $c->getCollectionDescription();
+        $pageDescription = (string) $c->getAttribute('meta_description');
+        if ($pageDescription === '') {
+            $pageDescription = (string) $c->getCollectionDescription();
         }
         $pageDescription = trim($pageDescription);
     }
-    if (!$pageMetaKeywords) {
-        $pageMetaKeywords = trim($c->getAttribute('meta_keywords'));
+    if ($pageMetaKeywords === '') {
+        $pageMetaKeywords = trim((string) $c->getAttribute('meta_keywords'));
     }
 
     // @deprecated – this is support for page level customizations custom CSS records, which are only available to
@@ -102,10 +98,10 @@ if (is_object($c)) {
 }
 $metaTags = [];
 $metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s"/>', APP_CHARSET);
-if ($pageDescription) {
+if ($pageDescription !== '') {
     $metaTags['description'] = sprintf('<meta name="description" content="%s"/>', htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET));
 }
-if ($pageMetaKeywords) {
+if ($pageMetaKeywords !== '') {
     $metaTags['keywords'] = sprintf('<meta name="keywords" content="%s"/>', htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET));
 }
 if ($c !== null && $c->getAttribute('exclude_search_index')) {
