@@ -177,6 +177,7 @@ class FieldSet implements \JsonSerializable
         $this->form = null;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
