@@ -14,6 +14,8 @@ final class Version20220331222557 extends AbstractMigration implements Repeatabl
     public function upgradeDatabase()
     {
         $this->refreshBlockType('express_form');
+        // Default the boolean to true. This was set in a previous migration but we can't reference it until a later migration.
+        $this->connection->executeStatement('update ExpressEntities set is_published = 1');
     }
 
 }

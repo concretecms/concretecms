@@ -20,8 +20,6 @@ final class Version20220321122800 extends AbstractMigration implements Repeatabl
                 ExpressKey::class,
             ]
         );
-        // Default the boolean to true
-        $this->connection->executeStatement('update ExpressEntities set is_published = 1');
     }
 
 }
