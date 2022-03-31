@@ -25,7 +25,7 @@ if (is_object($parent) && $parent->isError()) {
     <?php } ?>
 
 	<?php if ($description) { ?>
-	    <i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?= $description ?>"></i>
+        <i class="fas fa-question-circle launch-tooltip" data-bs-toggle="tooltip" title="<?= h($description); ?>"></i>
 	<?php } ?>
 
 	<div data-composer-field="name">
