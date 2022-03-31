@@ -363,11 +363,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
 
         // Add mode
         if (isset($data['exFormID']) && $data['exFormID'] !== '') {
-            // Add block - existing form instance
-            $form = $entityManager->getRepository(Form::class)->findOneById($data['exFormID']);
-            if ($form) {
-                $entity = $form->getEntity();
-            }
+            return parent::save($data);
         } else {
             $fieldSet = $this->getFormFieldSet();
             if ($fieldSet) {
