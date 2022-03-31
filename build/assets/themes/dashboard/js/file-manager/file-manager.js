@@ -76,7 +76,7 @@
                             var $favoriteFolderOptionItem = $("<option></option>")
                                 .attr("value", favoriteFolderId)
                                 .attr("data-icon", "fa fa-folder")
-                                .html(favoriteFolderName)
+                                .text(favoriteFolderName)
 
                             $favoriteFolderSelector.append($favoriteFolderOptionItem)
                         }

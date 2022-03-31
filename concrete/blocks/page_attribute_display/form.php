@@ -84,6 +84,7 @@ echo $ui->tabs([
         <div class="form-group">
             <?php echo $form->label("delimiter", t('Delimiter for Multiple Items')); ?>
             <?php echo $form->select("delimiter", [
+                "" => t('None'),
                 "comma" => t('Comma (",")'),
                 "commaSpace" => t('Comma With Space After (", ")'),
                 "pipe" => t('Pipe ("|")'),

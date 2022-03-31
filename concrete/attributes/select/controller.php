@@ -970,11 +970,11 @@ EOT
             $id = substr($key, 14);
             // now we determine from the post whether this is a new option
             // or an existing. New ones have this value from in the akSelectValueNewOption_ post field
-            if ($_POST['akSelectValueNewOption_' . $id] == $id) {
+            if (isset($_POST['akSelectValueNewOption_' . $id]) && $_POST['akSelectValueNewOption_' . $id] == $id) {
                 $opt = new SelectValueOption();
                 $opt->setSelectAttributeOptionValue($value);
                 $opt->setDisplayOrder($displayOrder);
-            } elseif ($_POST['akSelectValueExistingOption_' . $id] == $id) {
+            } elseif (isset($_POST['akSelectValueExistingOption_' . $id]) && $_POST['akSelectValueExistingOption_' . $id] == $id) {
                 $opt = $this->getOptionByID($id);
                 $opt->setSelectAttributeOptionValue($value);
                 $opt->setDisplayOrder($displayOrder);

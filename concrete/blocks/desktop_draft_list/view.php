@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var array<string, mixed> $drafts */
+/** @var Concrete\Core\Search\Pagination\Pagination<\Concrete\Core\Page\Page>|null $pagination */
+?>
 
 <div class="card ccm-block-desktop-draft-list">
     <div class="card-body">
@@ -11,8 +15,8 @@
             <?php foreach ($drafts as $draft) {
         ?>
                 <div class="draft-list-item">
-                    <a href="<?= $draft['link']; ?>">
-                        <?= t('%s created by %s on %s', $draft['name'], $draft['user'], $draft['dateAdded']); ?>
+                    <a href="<?= $draft['link']?>">
+                        <?= t('%s created by %s on %s', $draft['name'], $draft['user'], $draft['dateAdded'])?>
                     </a>
                     <?php if (!empty($draft['deleteLink'])) {
             ?>
@@ -28,7 +32,7 @@
             if ($pagination && $pagination->haveToPaginate()) {
                 $pagination->setBaseURL($view->action('reload_drafts')); ?>
                 <div class="ccm-search-results-pagination">
-                    <?= $pagination->renderDefaultView(); ?>
+                    <?= $pagination->renderDefaultView()?>
                 </div>
                 <?php
             } ?>
