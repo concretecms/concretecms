@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$token = Core::make('token');
+?>
 
 <div id="ccm-block-express-form-tabs">
 <?php echo Loader::helper('concrete/ui')->tabs([
@@ -10,34 +13,39 @@
 ]); ?>
 </div>
 
-<div id="ccm-block-express-form-choose-type">
+<div id="ccm-block-express-form-choose-type" data-add-new-form-token="<?=$token->generate('add_new_form')?>" data-add-new-form-action="<?=$view->action('add_new_form'); ?>">
 
     <div class="spacer-row-6"></div>
 
     <fieldset>
-        <legend><?=t('Form Type'); ?></legend>
 
-        <div class="form-group">
-            <label class="control-label launch-tooltip" title="<?=t('If you are creating a completely new form, choose New Form. If you have already created an express entity in the Dashboard and would like to embed its form on this page, choose Existing Express Entity Form.'); ?>"><?=t('What kind of form do you want to create?'); ?></label>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="d-grid">
-                    <button data-action="choose-new-form" type="button" class="btn btn-secondary"><i class="fas fa-plus-circle" style="opacity: 0.3"></i> &nbsp; <?=t('New Form'); ?></button>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="d-grid">
-                    <button data-action="choose-existing-form" type="button" class="btn btn-secondary"><i class="fas fa-database" style="opacity: 0.3"></i> &nbsp; <?=t('Existing Express Entity Form'); ?></button>
-                </div>
+        <div class="mb-3">
+            <label class="form-label" for="newFormName"><?=t('New Form')?></label>
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control-lg form-control" id="newFormName" required placeholder="<?=t('Form Name')?>">
+                <button class="btn btn-primary" data-button-action="choose-new-form" type="button"><i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
+
+        <hr>
+
+        <label class="form-label"><?=t('Existing Form')?></label>
+
+        <p class="text-muted"><?=t('If you are creating a completely new form, choose New Form. If you have already created an express entity in the Dashboard and would like to embed its form on this page, choose Existing Express Entity Form.'); ?></p>
+
+        <div class="d-grid">
+            <button data-button-action="choose-existing-form" type="button" class="btn btn-secondary"><?=t('Choose Existing Express Entity Form'); ?></button>
+        </div>
+
     </fieldset>
 </div>
 
 <div class="tab-content">
 
-    <div id="ccm-block-express-form-add" class="tab-pane" data-action="<?=$view->action('add_control'); ?>">
+    <div id="ccm-block-express-form-add" class="tab-pane" data-action="<?=$view->action('add_control'); ?>" data-token="<?=$token->generate('add_control')?>">
+        <?php if (isset($expressEntity) && $expressEntity->isPublished() && !$expressEntity->getIncludeInPublicList()) { ?>
+            <div class="alert alert-warning"><?=t('<b>Note</b>: You are adding fields to a published form. Any changes made will happen immediately.')?></div>
+        <?php } ?>
         <div class="alert alert-success" style="display: none"><?=t('Field added successfully.'); ?></div>
         <fieldset>
             <legend><?php echo t('New Question'); ?></legend>
@@ -55,7 +63,18 @@
 
     </div>
 
-    <div id="ccm-block-express-form-edit" class="tab-pane" data-action="<?=$view->action('update_control'); ?>">
+    <div id="ccm-block-express-form-edit" class="tab-pane"
+         data-delete-action="<?=$view->action('delete_control')?>"
+         data-sort-action="<?=$view->action('update_control_order')?>"
+         data-update-action="<?=$view->action('update_control'); ?>"
+         data-sort-token="<?=$token->generate('update_control_order')?>"
+         data-delete-token="<?=$token->generate('delete_control')?>"
+         data-update-token="<?=$token->generate('update_control')?>"
+    >
+
+        <?php if (isset($expressEntity) && $expressEntity->isPublished() && !$expressEntity->getIncludeInPublicList()) { ?>
+            <div class="alert alert-warning"><?=t('<b>Note</b>: You are updating fields in a published form. Any changes made will happen immediately.')?></div>
+        <?php } ?>
 
         <div class="alert alert-success" style="display: none"><?=t('Field updated successfully.'); ?></div>
 
@@ -176,7 +195,7 @@
                     <?=$form->radio('displayCaptcha', 0, (int) $displayCaptcha); ?>
                     <label class="form-check-label"><?=t('No'); ?></label>
                 </div>
-            </div>
+            </>
         </fieldset>
         <fieldset>
             <legend><?=t('Success'); ?></legend>
@@ -240,6 +259,7 @@
 <script type="text/template" data-template="express-form-form-control">
 <li class="list-group-item"
     data-action="<?=$view->action('get_control'); ?>"
+    data-token="<?=$token->generate('get_control')?>"
     data-form-control-field-type="<%=control.attributeType%>"
     data-form-control-label="<%=control.displayLabel%>"
     data-form-control-id="<%=control.id%>">
@@ -248,7 +268,7 @@
     <span class="float-end">
         <a href="javascript:void(0)" class="icon-link"><i style="cursor: move" class="fas fa-arrows-alt"></i></a>
         <a href="javascript:void(0)" class="icon-link" data-action="edit-control"><i class="fas fa-pencil-alt"></i></a>
-        <a href="javascript:void(0)" class="icon-link" data-action="delete-control"><i class="fas fa-trash-alt"></i></a>
+        <a href="javascript:void(0)" class="icon-link" data-control-id="<%=control.id%>" data-action="delete-control"><i class="fas fa-trash-alt"></i></a>
         </span>
     <% if (control.isRequired) { %>
     <span style="margin-right: 20px" class="float-end badge bg-info"><?=t('Required'); ?></span>
@@ -274,7 +294,7 @@
         <input type="hidden" name="id" value="<%=id%>">
     <% } %>
 
-    <div class="form-group" data-action="<?=$view->action('get_type_form'); ?>" data-group="field-types">
+    <div class="form-group" data-action="<?=$view->action('get_type_form'); ?>" data-token="<?=$token->generate('get_type_form')?>" data-group="field-types">
         <?=$form->label('type', t('Answer Type')); ?>
 
         <% if (!id) { %>
@@ -291,7 +311,7 @@
             </select>
         <% } else { %>
             <input type="hidden" name="type" value="<%=selectedType%>">
-            <div><strong><%=selectedTypeDisplayName%></strong></div>
+            <input type="text" class="form-control" readonly value="<%=selectedTypeDisplayName%>">
         <% } %>
     </div>
 
@@ -309,12 +329,12 @@
     <div class="form-group" data-group="control-required" style="display: none">
         <label class="control-label form-label"><?=t('Required'); ?></label>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="required<% if (id) { %>Edit<% } %>" value="1" <% if (isRequired) { %>checked<% } %>>
-            <label class="form-check-label"><?=t('Yes'); ?></label>
+            <input class="form-check-input" type="radio" id="required<% if (id) { %>Edit<% } %>0" name="required<% if (id) { %>Edit<% } %>" value="1" <% if (isRequired) { %>checked<% } %>>
+            <label class="form-check-label" for="required<% if (id) { %>Edit<% } %>0" ><?=t('Yes'); ?></label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="required<% if (id) { %>Edit<% } %>" value="0" <% if (!isRequired) { %>checked<% } %>>
-            <label class="form-check-label"><?=t('No'); ?></label>
+            <input class="form-check-input" type="radio" id="required<% if (id) { %>Edit<% } %>1" name="required<% if (id) { %>Edit<% } %>" value="0" <% if (!isRequired) { %>checked<% } %>>
+            <label class="form-check-label" for="required<% if (id) { %>Edit<% } %>1"><?=t('No'); ?></label>
         </label></div>
     </div>
 </script>

@@ -11,6 +11,7 @@ use Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Permission\Checker as Permissions;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
@@ -252,6 +253,65 @@ class Versions extends BackendInterfacePageController
         }
 
         return $this->app->make(ResponseFactoryInterface::class)->json($r->getJSONObject());
+    }
+
+    public function revert()
+    {
+        /** @var Page $page */
+        $page = $this->page;
+        $this->validationToken = 'revert_page';
+        if ($this->validateAction()) {
+            /** @var Checker $cp */
+            $cp = $this->permissions;
+            if (!$cp->canDeletePage()) {
+                $this->error->add(t('You do not have permission to delete this page.'));
+            }
+            $type = $page->getPageTypeObject();
+            $tp = new Checker($type);
+            if (!$tp->canAddPageType()) {
+                $this->error->add(t('You do not have permission to add a page of this type.'));
+            }
+        } else {
+            $this->error->add(t('Access Denied.'));
+        }
+
+        /** @var ResponseFactoryInterface $factory */
+        $factory = $this->app->make(ResponseFactoryInterface::class);
+        $response = new PageEditResponse($this->error);
+        $response->setError($this->error);
+
+        if (!$this->error->has()) {
+            // create a new page from the current page
+            $page->loadVersionObject('RECENT');
+            $page = $page->cloneVersion(t('New Reverted Page'));
+            $drafts = Page::getDraftsParentPage();
+            $newPage = $page->duplicate($drafts);
+            $newPage->deactivate();
+            $newPage->setPageToDraft();
+            $newPage->move($drafts);
+
+            // now we delete all but the new version
+            $versionList = new VersionList($newPage);
+            $versionList->setItems(-1);
+            $versions = $versionList->getPage();
+            for ($i = 1; $i < count($versions); ++$i) {
+                $cv = $versions[$i];
+                $cv->delete();
+            }
+
+            // now we delete the current page
+            $page->moveToTrash();
+
+            // finally, we redirect the user to the new draft page in composer mode.
+            $response->setPage($newPage);
+            $response->setRedirectURL(
+                $this->app->make(ResolverManagerInterface::class)->resolve([
+                    '/ccm/system/page/checkout', $newPage->getCollectionID(), 'first', $this->app->make('token')->generate()
+                ])
+            );
+        }
+
+        return $factory->json($response->getJSONObject());
     }
 
     /**

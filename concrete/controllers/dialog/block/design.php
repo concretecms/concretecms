@@ -4,6 +4,7 @@ namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\CustomStyle;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -21,16 +22,20 @@ class Design extends BackendInterfaceBlockController
 
     public function reset()
     {
+        /** @var \Concrete\Core\Block\Block $b */
         $b = $this->getBlockToEdit();
-        $b->resetCustomStyle();
         $pr = new EditResponse();
+        // Set the old style id, so we can remove any hardcoded styles
+        $pr->setAdditionalDataAttribute('oldIssID',$b->getCustomStyleSetID());
+        $b->resetCustomStyle();
+
         $pr->setPage($this->page);
         $pr->setAdditionalDataAttribute('aID', $this->area->getAreaID());
         $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
         $pr->setAdditionalDataAttribute('originalBlockID', $this->block->getBlockID());
         $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
         $pr->setMessage(t('Custom design reset.'));
-        $pr->outputJSON();
+        return $this->app->make(ResponseFactoryInterface::class)->json($pr->getJSONObject());
     }
 
     public function submit()
@@ -93,7 +98,7 @@ class Design extends BackendInterfaceBlockController
 
             $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
             $pr->setMessage(t('Design updated.'));
-            $pr->outputJSON();
+            return $this->app->make(ResponseFactoryInterface::class)->json($pr->getJSONObject());
         }
     }
 

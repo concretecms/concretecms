@@ -13,7 +13,7 @@ use Gettext\Translations;
  * @ORM\Entity
  * @ORM\Table(name="ExpressFormFieldSets")
  */
-class FieldSet
+class FieldSet implements \JsonSerializable
 {
     /**
      * @ORM\Id @ORM\Column(type="integer")
@@ -175,5 +175,14 @@ class FieldSet
         $this->id = null;
         $this->controls = new ArrayCollection();
         $this->form = null;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'position' => $this->getPosition()
+        ];
     }
 }

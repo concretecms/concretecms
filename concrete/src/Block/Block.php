@@ -406,6 +406,23 @@ EOT
         return $this->bFilename;
     }
 
+    public function setTempFilename(string $bFilename = null): void
+    {
+        $this->bFilename = $bFilename;
+
+    }
+
+    /**
+     * Removes the block cache records (on this object) to null
+     * disables all cache on the cache object
+     */
+    public function temporaryClearBlockCache():void
+    {
+        $this->btCachedBlockRecord = null;
+        $this->btCacheBlockOutputForRegisteredUsers = false;
+        $this->getBlockCacheSettingsObject()->temporarilyDisableCache();
+    }
+
     /**
      * Set the name of the custom template.
      *

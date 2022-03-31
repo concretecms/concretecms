@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Entity\Attribute\Key\ExpressKey;
+use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
-use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-final class Version20220314234512 extends AbstractMigration implements RepeatableMigrationInterface
+final class Version20220316212429 extends AbstractMigration
 {
 
     public function upgradeDatabase()
     {
         $this->refreshEntities(
             [
-                ExpressKey::class,
+                Entity::class,
             ]
         );
+
+        // Default the boolean to true
+        $this->connection->executeStatement('update ExpressEntities set is_published = 1');
     }
 
 }

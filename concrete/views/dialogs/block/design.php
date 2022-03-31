@@ -2,7 +2,7 @@
 
 $set = $b->getCustomStyle();
 $btHandle = $b->getBlockTypeHandle();
-if ($btHandle == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+if ($btHandle === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
     $bx = Block::getByID($b->getController()->getOriginalBlockID());
     if (is_object($bx)) {
         $btHandle = $bx->getBlockTypeHandle();
@@ -20,10 +20,7 @@ if (is_object($set) && isset($styleHeader)) { ?>
 $pt = $c->getCollectionThemeObject();
 
 $blockClasses = $pt->getThemeBlockClasses();
-$customClasses = array();
-if (isset($blockClasses[$btHandle])) {
-    $customClasses = $blockClasses[$btHandle];
-}
+$customClasses = $blockClasses[$btHandle] ?? [];
 
 if (isset($blockClasses['*'])) {
     $customClasses = array_unique(array_merge($customClasses, $blockClasses['*']));

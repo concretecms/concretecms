@@ -7,7 +7,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findPublicEntities()
     {
-        $entities = $this->findBy(array('include_in_public_list' => true));
+        $entities = $this->findBy(array('is_published' => true, 'include_in_public_list' => true));
         $return = array();
         foreach($entities as $entity) {
             if (!$entity->getOwnedBy()) {
