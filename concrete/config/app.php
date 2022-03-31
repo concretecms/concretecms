@@ -554,6 +554,11 @@ return [
             ['css', 'css/features/maps/frontend.css', ['minify' => false]],
         ],
 
+        'feature/multilingual/frontend' => [
+            ['javascript', 'js/features/multilingual/frontend.js', ['minify' => false]],
+            ['css', 'css/features/multilingual/frontend.css', ['minify' => false]],
+        ],
+
         'tui-image-editor' => [
             [
                 'css',
@@ -746,6 +751,13 @@ return [
             [
                 ['javascript', 'feature/maps/frontend'],
                 ['css', 'feature/maps/frontend'],
+            ],
+        ],
+
+        'feature/multilingual/frontend' => [
+            [
+                ['javascript', 'feature/multilingual/frontend'],
+                ['css', 'feature/multilingual/frontend'],
             ],
         ],
 
