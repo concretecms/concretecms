@@ -47,6 +47,7 @@ class Field implements FieldInterface, DenormalizableInterface
         return $this->value;
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

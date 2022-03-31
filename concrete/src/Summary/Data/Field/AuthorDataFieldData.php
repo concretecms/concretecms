@@ -59,6 +59,7 @@ class AuthorDataFieldData implements DataFieldDataInterface
         return $this->data['name'];
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

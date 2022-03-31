@@ -212,6 +212,7 @@ class CustomSkin implements \JsonSerializable, SkinInterface
         $this->customCss = $customCss;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

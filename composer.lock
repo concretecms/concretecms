@@ -178,16 +178,16 @@
         },
         {
             "name": "concrete5/dependency-patches",
-            "version": "1.6.1",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concrete5/dependency-patches.git",
-                "reference": "43f3a7517708c21e7bf0a047778ba6976eb66ae6"
+                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/43f3a7517708c21e7bf0a047778ba6976eb66ae6",
-                "reference": "43f3a7517708c21e7bf0a047778ba6976eb66ae6",
+                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/ec219a55e89c2552efb7368175c65e68cd2a3de0",
+                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0",
                 "shasum": ""
             },
             "require": {
@@ -210,7 +210,8 @@
                         "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
                     },
                     "sunra/php-simple-html-dom-parser:1.5.2": {
-                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch"
+                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                        "Add PHP 8.1 compatibility": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch"
                     },
                     "phpunit/phpunit:4.8.36": {
                         "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
@@ -232,10 +233,19 @@
                         "Fix idn_to_ascii/idn_to_utf8 deprecation warning": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch"
                     },
                     "lcobucci/jwt:3.4.5": {
-                        "Adds php 8 compability to jwt version 3.4.5": "lcobucci/jwt/php8-compatibility.patch"
+                        "Add PHP 8 compatibility": "lcobucci/jwt/php8-compatibility.patch"
                     },
                     "lcobucci/jwt:3.4.6": {
-                        "Adds php 8 compability to jwt version 3.4.6": "lcobucci/jwt/php8-compatibility.patch"
+                        "Add PHP 8 compatibility": "lcobucci/jwt/php8-compatibility.patch"
+                    },
+                    "league/url:3.3.5": {
+                        "Add PHP 8.1 compatibility": "league/url/php8.1-compatibility.patch"
+                    },
+                    "laminas/laminas-code:3.4.1": {
+                        "Add PHP 8.1 compatibility": "laminas/laminas-code/php8.1-compatibility.patch"
+                    },
+                    "anahkiasen/html-object:1.4.4": {
+                        "Add PHP 8.1 compatibility": "anahkiasen/html-object/php8.1-compatibility.patch"
                     }
                 }
             },
@@ -253,7 +263,11 @@
             ],
             "description": "Patches required for concrete5 dependencies",
             "homepage": "https://github.com/concrete5/dependency-patches",
-            "time": "2021-10-27T20:00:13+00:00"
+            "support": {
+                "issues": "https://github.com/concrete5/dependency-patches/issues",
+                "source": "https://github.com/concrete5/dependency-patches/tree/1.7.2"
+            },
+            "time": "2022-03-31T17:52:31+00:00"
         },
         {
             "name": "concrete5/doctrine-xml",
@@ -2683,26 +2697,26 @@
         },
         {
             "name": "imagine/imagine",
-            "version": "1.2.4",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-imagine/Imagine.git",
-                "reference": "d2e18be6e930ca169e4f921ef73ebfc061bf55d8"
+                "reference": "fc3e477a15907e8f2a11c32f1aecb07101c0bd31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-imagine/Imagine/zipball/d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
-                "reference": "d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
+                "url": "https://api.github.com/repos/php-imagine/Imagine/zipball/fc3e477a15907e8f2a11c32f1aecb07101c0bd31",
+                "reference": "fc3e477a15907e8f2a11c32f1aecb07101c0bd31",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": ">=5.5"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.2",
                 "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4 || ^9.3"
             },
             "suggest": {
+                "ext-exif": "to read EXIF metadata",
                 "ext-gd": "to use the GD implementation",
                 "ext-gmagick": "to use the Gmagick implementation",
                 "ext-imagick": "to use the Imagick implementation"
@@ -2710,7 +2724,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-develop": "0.7-dev"
+                    "dev-develop": "1.x-dev"
                 }
             },
             "autoload": {
@@ -2737,7 +2751,11 @@
                 "image manipulation",
                 "image processing"
             ],
-            "time": "2020-11-03T22:35:03+00:00"
+            "support": {
+                "issues": "https://github.com/php-imagine/Imagine/issues",
+                "source": "https://github.com/php-imagine/Imagine/tree/1.3.1"
+            },
+            "time": "2022-03-15T15:19:48+00:00"
         },
         {
             "name": "indigophp/hash-compat",
@@ -3848,16 +3866,6 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.1-dev"
-                },
-                "patches_applied": {
-                    "hash": "c01ee49dae3ec5d99a499583022d4223d59924fc",
-                    "list": [
-                        {
-                            "from-package": "concrete5/dependency-patches 1.6.1",
-                            "path": "lcobucci/jwt/php8-compatibility.patch",
-                            "description": "Adds php 8 compability to jwt version 3.4.6"
-                        }
-                    ]
                 }
             },
             "autoload": {
@@ -4684,16 +4692,16 @@
         },
         {
             "name": "mlocati/composer-patcher",
-            "version": "1.2.2",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mlocati/composer-patcher.git",
-                "reference": "38db5a938b33dfba6ccba5f0eb11a2fba8205b52"
+                "reference": "7b8e063adde96a7bc1c991b070937df9d36098ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/38db5a938b33dfba6ccba5f0eb11a2fba8205b52",
-                "reference": "38db5a938b33dfba6ccba5f0eb11a2fba8205b52",
+                "url": "https://api.github.com/repos/mlocati/composer-patcher/zipball/7b8e063adde96a7bc1c991b070937df9d36098ad",
+                "reference": "7b8e063adde96a7bc1c991b070937df9d36098ad",
                 "shasum": ""
             },
             "require": {
@@ -4737,6 +4745,10 @@
                 "patches",
                 "plugin"
             ],
+            "support": {
+                "issues": "https://github.com/mlocati/composer-patcher/issues",
+                "source": "https://github.com/mlocati/composer-patcher/tree/1.2.4"
+            },
             "funding": [
                 {
                     "url": "https://github.com/sponsors/mlocati",
@@ -4747,7 +4759,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2020-10-30T11:26:06+00:00"
+            "time": "2022-03-29T08:58:34+00:00"
         },
         {
             "name": "mlocati/concrete5-translation-library",
@@ -6352,18 +6364,6 @@
                 "php": ">=5.3.2"
             },
             "type": "library",
-            "extra": {
-                "patches_applied": {
-                    "hash": "43699395013691839330f8406ee49fa752c163fb",
-                    "list": [
-                        {
-                            "from-package": "concrete5/dependency-patches 1.6.1",
-                            "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
-                            "description": "Fix minus in regular expressions"
-                        }
-                    ]
-                }
-            },
             "autoload": {
                 "psr-0": {
                     "Sunra\\PhpSimple\\HtmlDomParser": "Src/"

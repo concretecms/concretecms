@@ -16,6 +16,7 @@ class WebFontCollection extends ArrayCollection implements \JsonSerializable
         return parent::add($font);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();

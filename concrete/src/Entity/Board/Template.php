@@ -127,6 +127,7 @@ class Template implements \JsonSerializable
         $template->addAttribute('package', $this->getPackageHandle());
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

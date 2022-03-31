@@ -481,7 +481,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         $inspector = \Core::make('import/value_inspector');
         if (isset($blockNode->data)) {
             foreach ($blockNode->data as $data) {
-                if (strtoupper($data['table']) != strtoupper($this->getBlockTypeDatabaseTable())) {
+                if (strtoupper((string) $data['table']) != strtoupper((string) $this->getBlockTypeDatabaseTable())) {
                     $table = (string) $data['table'];
                     if (isset($data->record)) {
                         foreach ($data->record as $record) {

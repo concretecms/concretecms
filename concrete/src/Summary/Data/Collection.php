@@ -52,6 +52,7 @@ class Collection implements \JsonSerializable, DenormalizableInterface
         return $this->collection->get($field);
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $json = [

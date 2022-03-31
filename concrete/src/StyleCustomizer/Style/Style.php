@@ -118,6 +118,7 @@ abstract class Style implements StyleInterface
         return $this->getVariable();
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

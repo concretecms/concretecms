@@ -330,6 +330,7 @@ class Key implements AttributeKeyInterface, ExportableInterface, ControlInterfac
         return array();
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

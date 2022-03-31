@@ -51,6 +51,7 @@ class ImageValue extends Value
     }
 
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

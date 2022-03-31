@@ -78,6 +78,7 @@ class ItemSelectorCustomElement extends CustomElement
         return $block;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

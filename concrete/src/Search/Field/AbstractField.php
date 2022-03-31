@@ -44,6 +44,7 @@ abstract class AbstractField implements FieldInterface
      *
      * @see \JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         ob_start();

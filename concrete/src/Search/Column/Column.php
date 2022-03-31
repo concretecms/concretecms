@@ -119,6 +119,7 @@ class Column implements ColumnInterface
         $this->sortDirection = $this->sanitizeSortDirection($sort);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

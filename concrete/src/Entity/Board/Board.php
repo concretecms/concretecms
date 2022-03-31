@@ -314,6 +314,7 @@ class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializ
         $manager->setPermissionsToOverride($this);
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

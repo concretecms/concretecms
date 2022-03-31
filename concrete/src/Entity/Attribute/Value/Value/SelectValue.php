@@ -65,6 +65,7 @@ class SelectValue extends AbstractValue implements \IteratorAggregate
         return $str;
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->selectedOptions->getIterator();

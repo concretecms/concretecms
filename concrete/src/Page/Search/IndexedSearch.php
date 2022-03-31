@@ -30,8 +30,8 @@ class IndexedSearch
 
     public static function getSearchableAreaAction()
     {
-        $action = Config::get('concrete.misc.search_index_area_method');
-        if (!strlen($action)) {
+        $action = (string) Config::get('concrete.misc.search_index_area_method');
+        if ($action === '') {
             $action = 'denylist';
         }
 
@@ -41,7 +41,7 @@ class IndexedSearch
     public static function getSavedSearchableAreas()
     {
         $areas = Config::get('concrete.misc.search_index_area_list');
-        $areas = unserialize($areas);
+        $areas = $areas ? unserialize($areas) : [];
         if (!is_array($areas)) {
             $areas = [];
         }
@@ -157,7 +157,7 @@ class IndexedSearch
         if ($pageController = $c->getPageController()) {
             $searchableContent = $pageController->getSearchableContent();
 
-            if (strlen(trim($searchableContent))) {
+            if (trim((string) $searchableContent) !== '') {
                 $text .= $th->decodeEntities(
                         strip_tags(str_ireplace($tagsToSpaces, ' ', $searchableContent)),
                         ENT_QUOTES,

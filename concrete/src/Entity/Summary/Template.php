@@ -214,6 +214,7 @@ class Template implements \JsonSerializable
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

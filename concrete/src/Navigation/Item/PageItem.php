@@ -79,6 +79,7 @@ class PageItem extends Item
         return t(parent::getName());
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

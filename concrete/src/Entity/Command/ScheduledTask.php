@@ -142,6 +142,7 @@ class ScheduledTask implements \JsonSerializable
         return new CronExpression($this->getCronExpression());
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $timezone = date_default_timezone_get();

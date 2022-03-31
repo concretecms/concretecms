@@ -478,6 +478,7 @@ class Site implements TreeInterface, ObjectInterface, PermissionObjectInterface,
         $this->pThemeID = $pThemeID;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

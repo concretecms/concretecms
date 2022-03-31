@@ -73,6 +73,7 @@ class Query implements \JsonSerializable, DenormalizableInterface
         $this->columns = $columns;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
