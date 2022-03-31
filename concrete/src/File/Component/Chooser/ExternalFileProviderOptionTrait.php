@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 trait ExternalFileProviderOptionTrait
 {
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $user = new \Concrete\Core\User\User();

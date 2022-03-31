@@ -118,6 +118,7 @@ class AttributeKeyField extends AbstractField
     /**
      * @return array|mixed
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $json = parent::jsonSerialize();

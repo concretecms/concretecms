@@ -34,6 +34,7 @@ class FontFamilyValue extends Value
         $this->fontFamily = $fontFamily;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

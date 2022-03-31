@@ -30,6 +30,7 @@ class CalendarEventData implements DataInterface
         return $this->occurrenceID;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['occurrenceID' => $this->occurrenceID];

@@ -83,6 +83,7 @@ class UserMessageException extends Exception implements JsonSerializable, HtmlAw
      *
      * @see JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $result = [

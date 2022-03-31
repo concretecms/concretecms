@@ -426,6 +426,7 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     /**
      * @return array|mixed
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $app = Application::getFacadeApplication();

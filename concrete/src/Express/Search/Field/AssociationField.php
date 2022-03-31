@@ -119,6 +119,7 @@ class AssociationField extends AbstractField
     /**
      * @return array|mixed
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $json = parent::jsonSerialize();

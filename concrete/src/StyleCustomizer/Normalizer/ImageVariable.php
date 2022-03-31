@@ -101,6 +101,7 @@ class ImageVariable implements VariableInterface
         return sprintf("url('%s')", $this->getComputedUrl());
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

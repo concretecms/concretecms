@@ -295,7 +295,7 @@ class Connection extends \Doctrine\DBAL\Connection
             }
             $updateKeys[$key] = $field;
             if ($autoQuote) {
-                $field = $qb->expr()->literal($field);
+                $field = $qb->expr()->literal($field === null ? '' : $field);
             }
             $where->add($qb->expr()->eq($key, $field));
         }

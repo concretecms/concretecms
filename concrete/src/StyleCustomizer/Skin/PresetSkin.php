@@ -43,6 +43,7 @@ class PresetSkin implements SkinInterface
         return $this->identifier;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

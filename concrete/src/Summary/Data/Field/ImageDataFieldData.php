@@ -47,6 +47,7 @@ class ImageDataFieldData implements DataFieldDataInterface
         }
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

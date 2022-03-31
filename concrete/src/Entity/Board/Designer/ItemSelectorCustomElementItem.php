@@ -70,6 +70,7 @@ class ItemSelectorCustomElementItem implements \JsonSerializable, ItemProviderIn
         $this->element = $element;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [];

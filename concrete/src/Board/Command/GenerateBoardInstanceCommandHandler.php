@@ -58,7 +58,7 @@ class GenerateBoardInstanceCommandHandler
         $items = $this->itemSegmenter->getBoardItemsForInstance($instance);
         $contentObjectGroups = $this->contentPopulator->createContentObjects($items);
         $boardTemplateDriver = $instance->getBoard()->getTemplate()->getDriver();
-        $slotsToPlan = $boardTemplateDriver->getTotalSlots() * 1.5; // This will give us some wiggle room
+        $slotsToPlan = (int) round($boardTemplateDriver->getTotalSlots() * 1.5); // This will give us some wiggle room
         $plannedInstance = $this->planner->plan($instance, $contentObjectGroups, 1, $slotsToPlan);
 
         $blockType = BlockType::getByHandle(BLOCK_HANDLE_BOARD_SLOT_PROXY);

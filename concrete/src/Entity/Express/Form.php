@@ -124,6 +124,7 @@ class Form implements \JsonSerializable, ExportableInterface, FormInterface
         return $controls;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

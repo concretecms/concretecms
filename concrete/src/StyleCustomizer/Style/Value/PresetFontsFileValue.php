@@ -23,6 +23,7 @@ class PresetFontsFileValue extends Value
         return $this->value;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['value' => $this->value];

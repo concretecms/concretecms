@@ -12,6 +12,7 @@ class GroupedStyleValueList implements \JsonSerializable
         $this->sets[] = $set;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

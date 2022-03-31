@@ -320,6 +320,7 @@ class InstanceSlotRule implements \JsonSerializable, ObjectInterface
         $this->batchIdentifier = $batchIdentifier;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $checker = new Checker($this);

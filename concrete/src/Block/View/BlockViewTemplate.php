@@ -74,7 +74,7 @@ class BlockViewTemplate
 
     protected function computeView()
     {
-        $bFilename = $this->bFilename;
+        $bFilename = $this->bFilename ?? '';
         $obj = $this->obj;
 
         /**

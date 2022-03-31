@@ -101,6 +101,7 @@ class Field implements FieldInterface
         return $this->isRequired;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

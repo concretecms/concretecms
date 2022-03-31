@@ -37,7 +37,7 @@ class PageData implements DataInterface
         $this->cID = $cID;
     }
 
-
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['cID' => $this->cID];

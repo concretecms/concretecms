@@ -149,6 +149,7 @@ class ExternalFileEntry implements \JsonSerializable
         return (string)$img;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
