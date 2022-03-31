@@ -162,13 +162,13 @@ class Text
     /**
      * A concrete5 specific version of htmlspecialchars(). Double encoding is OFF, and the character set is set to your site's.
      *
-     * @param $v
+     * @param string $v
      *
      * @return string
      */
     public function specialchars($v)
     {
-        return htmlspecialchars($v, ENT_QUOTES, APP_CHARSET, false);
+        return htmlspecialchars((string) $v, ENT_QUOTES, APP_CHARSET, false);
     }
 
     /**
