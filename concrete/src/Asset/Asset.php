@@ -249,13 +249,14 @@ abstract class Asset implements AssetInterface
         }
         $result = $this->assetURL;
         if ($result && $this->isAssetLocal() && !preg_match('/\?(.*&)?' . preg_quote(static::OUTPUT_NOCACHE_PARAM, '/') . '=/', $result)) {
+            $app = Application::getFacadeApplication();
+            $config = $app->make('config');
             if ($this->pkg) {
                 $noCacheValue = $this->pkg->getPackageVersion();
             } else {
-                $app = Application::getFacadeApplication();
-                $config = $app->make('config');
                 $noCacheValue = $config->get('concrete.version_installed') . '-' . $config->get('concrete.version_db');
             }
+            $noCacheValue .= '-' . $config->get('concrete.cache.last_cleared');
             $assetVersion = $this->getAssetVersion();
             $noCacheValue = !empty($assetVersion) ? $noCacheValue . '-' . $assetVersion : $noCacheValue;
             $noCacheValue = $this->obfuscateNoCacheValue($noCacheValue);

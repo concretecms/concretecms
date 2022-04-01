@@ -332,6 +332,10 @@ return [
 
         'clear' => [
             'thumbnails' => false,
+            /*
+             * Timestamp of the last time that the cache was cleared, this is used when generating assets.
+             */
+            'last_cleared'=> 1648642409
         ],
     ],
 
