@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
+/* @var Concrete\Core\Block\View\BlockView $view */
+$this->requireAsset('javascript', 'bootstrap/tooltip');
+$this->requireAsset('css', 'bootstrap/tooltip');
 $iconTag = $iconTag ?? '';
 ?>
 

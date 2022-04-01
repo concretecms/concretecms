@@ -68,17 +68,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         return LinkAbstractor::translateFromEditMode($this->paragraph);
     }
 
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('css', 'font-awesome');
-        if (is_object($this->block) && $this->block->getBlockFilename() == 'hover_description') {
-            // this isn't great but it's the only way to do this and still make block
-            // output caching available to this block.
-            $this->requireAsset('javascript', 'bootstrap/tooltip');
-            $this->requireAsset('css', 'bootstrap/tooltip');
-        }
-    }
-
     public function add()
     {
         $this->set('titleFormat', 'h4');

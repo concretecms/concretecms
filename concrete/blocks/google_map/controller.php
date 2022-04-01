@@ -73,8 +73,6 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function registerViewAssets($outputContent = '')
     {
-        $this->requireAsset('javascript', 'jquery');
-
         $c = Page::getCurrentPage();
         if (!$c->isEditMode()) {
             $this->addFooterItem(

@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+/** @var \Concrete\Core\Block\View\BlockView $view */
+$this->requireAsset('css', 'font-awesome');?>
 
 <div id="ccm-block-social-links<?php echo $bID; ?>" class="ccm-block-social-links">
     <ul class="list-inline">

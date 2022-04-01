@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+/* @var Concrete\Core\Block\View\BlockView $view */
+$this->requireAsset('css', 'font-awesome');?>
 
 <div class="ccm-block-share-this-page">
     <ul class="list-inline">

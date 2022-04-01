@@ -143,9 +143,4 @@ class Controller extends BlockController implements UsesFeatureInterface
         $links = $this->getSelectedLinks();
         $this->set('links', $links);
     }
-
-    public function registerViewAssets($outputContent = '')
-    {
-        $this->requireAsset('css', 'font-awesome');
-    }
 }

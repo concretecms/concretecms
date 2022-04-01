@@ -794,7 +794,6 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('results', $results);
         $this->set('hideFolders', $this->hideFolders);
 
-        $this->requireAsset('css', 'font-awesome');
         $this->set('canAddFiles', false);
         $fp = \FilePermissions::getGlobal();
 
