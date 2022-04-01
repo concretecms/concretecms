@@ -1,12 +1,13 @@
 <?php
 namespace Concrete\Core\Entity\Express;
 
+use Concrete\Core\Entity\Express\Control\Control;
 use Concrete\Core\Export\ExportableInterface;
 use Concrete\Core\Express\Form\FormInterface;
 use Concrete\Core\Express\Form\Control\View\FormView;
 use Concrete\Core\Form\Context\ContextInterface;
-use Concrete\Core\Form\Control\ControlInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Concrete\Core\Export\Item\Express\Form as FormExporter;
 
@@ -76,7 +77,7 @@ class Form implements \JsonSerializable, ExportableInterface, FormInterface
     }
 
     /**
-     * @return mixed
+     * @return Collection<int, FieldSet>|FieldSet[]
      */
     public function getFieldSets()
     {
@@ -92,7 +93,7 @@ class Form implements \JsonSerializable, ExportableInterface, FormInterface
     }
 
     /**
-     * @return mixed
+     * @return Entity
      */
     public function getEntity()
     {
@@ -107,11 +108,19 @@ class Form implements \JsonSerializable, ExportableInterface, FormInterface
         $this->entity = $entity;
     }
 
+    /**
+     * @param ContextInterface $context
+     *
+     * @return FormView
+     */
     public function getControlView(ContextInterface $context)
     {
         return new FormView($context, $this);
     }
 
+    /**
+     * @return Control[]
+     */
     public function getControls()
     {
         $controls = array();
@@ -133,8 +142,17 @@ class Form implements \JsonSerializable, ExportableInterface, FormInterface
         ];
     }
 
+    /**
+     * @return FormExporter
+     */
     public function getExporter()
     {
         return new FormExporter();
+    }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $this->field_sets = new ArrayCollection();
     }
 }

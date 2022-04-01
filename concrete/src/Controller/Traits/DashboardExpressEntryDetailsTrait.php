@@ -226,9 +226,9 @@ trait DashboardExpressEntryDetailsTrait
             $validator = $processor->getValidator($this->request);
 
             if (null === $entry) {
-                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_ADD);
+                $validator->validate($form);
             } else {
-                $validator->validate($form, ProcessorInterface::REQUEST_TYPE_UPDATE);
+                $validator->validate($form, $entry);
             }
 
             $this->error = $validator->getErrorList();

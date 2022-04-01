@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Express\Form\Validator\Routine;
 
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Validation\CSRF\Token;
@@ -19,7 +20,7 @@ class CSRFTokenRoutine implements RoutineInterface
         $this->csrfValidator = $validator;
     }
 
-    public function validate(ErrorList $error, Form $form, $requestType)
+    public function validate(ErrorList $error, Form $form, Entry $entry = null)
     {
         if (!$this->csrfValidator->validate('express_form', $this->request->request->get('ccm_token'))) {
             $error->add($this->csrfValidator->getErrorMessage());

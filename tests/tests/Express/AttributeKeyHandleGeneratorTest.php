@@ -2,6 +2,7 @@
 
 namespace Concrete\Tests\Express;
 
+use Concrete\Core\Attribute\Key\Category;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
 
 class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
@@ -9,6 +10,7 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
     protected $metadatas = [
         'Concrete\Core\Entity\Express\Entity',
         'Concrete\Core\Entity\Express\Entry',
+        'Concrete\Core\Entity\Attribute\Category',
         'Concrete\Core\Entity\Attribute\Key\Key',
         'Concrete\Core\Entity\Attribute\Key\ExpressKey',
     ];
@@ -21,6 +23,7 @@ class AttributeKeyHandleGeneratorTest extends ConcreteDatabaseTestCase
     public static function setupBeforeClass():void
     {
         parent::setUpBeforeClass();
+        Category::add('express');
     }
 
     public function testExpressHandleGenerator()

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Express\Form\Validator;
 
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Express\Form\Validator\Routine\RoutineInterface;
 
@@ -19,11 +20,11 @@ abstract class AbstractValidator implements ValidatorInterface
         $this->routines[] = $routine;
     }
 
-    public function validate(Form $form, $requestType)
+    public function validate(Form $form, Entry $entry = null)
     {
         $valid = true;
         foreach($this->routines as $routine) {
-            if (!$routine->validate($this->error, $form, $requestType)) {
+            if (!$routine->validate($this->error, $form, $entry)) {
                 $valid = false;
             }
         }

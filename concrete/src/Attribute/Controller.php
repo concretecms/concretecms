@@ -342,9 +342,12 @@ class Controller extends AbstractController implements AttributeInterface
 
     /**
      * @param SimpleXMLElement $element
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\Settings\Settings|null
      */
     public function importKey(SimpleXMLElement $element)
     {
+        return null;
     }
 
     /**

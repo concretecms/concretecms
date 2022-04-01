@@ -73,7 +73,7 @@ if (isset($button)) {
          if ((string) $body !== '') {
             echo $body;
          }
-         if ($button !== null) {
+         if (isset($button)) {
              ?>
              <div class="mt-4"><?= $button ?></div>
              <?php

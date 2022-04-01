@@ -21,6 +21,18 @@ use Concrete\Core\View\View;
 </div>
 
 <div class="row">
+
+    <?php if (!$entity->isPublished()) { ?>
+        <div class="alert alert-warning">
+            <form method="post" action="<?=$view->action('publish')?>" class="d-flex align-items-center">
+                <input type="hidden" name="entity_id" value="<?=$entity->getID()?>">
+                <?=$token->output('publish')?>
+                <div><?=t('This entity has not been published. It cannot be populated with content or be shown on the front-end until it is published.')?></div>
+                <button type="submit" name="publish" class="btn btn-secondary btn-sm ms-auto"><?=t('Publish')?></button>
+            </form>
+        </div>
+    <?php } ?>
+
     <?php /** @noinspection PhpUnhandledExceptionInspection */
     View::element('dashboard/express/detail_navigation', ['entity' => $entity]) ?>
 
