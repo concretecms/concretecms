@@ -2697,16 +2697,16 @@
         },
         {
             "name": "imagine/imagine",
-            "version": "1.3.1",
+            "version": "1.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-imagine/Imagine.git",
-                "reference": "fc3e477a15907e8f2a11c32f1aecb07101c0bd31"
+                "reference": "ae864f26afbf8859ebd2e2b9df92d77ee175dc13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-imagine/Imagine/zipball/fc3e477a15907e8f2a11c32f1aecb07101c0bd31",
-                "reference": "fc3e477a15907e8f2a11c32f1aecb07101c0bd31",
+                "url": "https://api.github.com/repos/php-imagine/Imagine/zipball/ae864f26afbf8859ebd2e2b9df92d77ee175dc13",
+                "reference": "ae864f26afbf8859ebd2e2b9df92d77ee175dc13",
                 "shasum": ""
             },
             "require": {
@@ -2753,9 +2753,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-imagine/Imagine/issues",
-                "source": "https://github.com/php-imagine/Imagine/tree/1.3.1"
+                "source": "https://github.com/php-imagine/Imagine/tree/1.3.2"
             },
-            "time": "2022-03-15T15:19:48+00:00"
+            "time": "2022-04-01T11:58:30+00:00"
         },
         {
             "name": "indigophp/hash-compat",
