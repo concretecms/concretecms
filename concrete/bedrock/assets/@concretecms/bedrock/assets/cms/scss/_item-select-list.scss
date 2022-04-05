@@ -50,16 +50,15 @@ ul.item-select-list i.ccm-item-select-list-sort {
   font-style: normal;
   margin: 0;
   padding-left: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
   padding-right: 5px;
   position: absolute;
   right: 10px;
   top: 10px;
 
   &::after {
-    content: $fa-var-arrows-alt-v;
-    font-family: FontAwesome;
+    content: '\f338';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 600;
   }
 
   &:hover {
