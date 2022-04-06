@@ -27,6 +27,16 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btExportFileColumns = ['fID'];
 
     /**
+     * @var string
+     */
+    public $fileLinkText;
+
+    /**
+     * @var int|null
+     */
+    public $fID;
+
+    /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
     public function getBlockTypeDescription()
