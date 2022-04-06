@@ -18,7 +18,7 @@
 </div>
 <div class="form-group">
     <div class="form-check">
-        <?= $form->checkbox('forceDownload', '1', $forceDownload) ?>
+        <?= $form->checkbox('forceDownload', '1', $forceDownload ?? null) ?>
         <?= $form->label('forceDownload', t('Force file to download'), ['class' => 'form-check-label']) ?>
     </div>
 </div>
