@@ -260,6 +260,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             $queryModifier = new QueryModifier();
             $queryModifier->addModifier(new AutoSortColumnRequestModifier($searchProvider, $this->request, Request::METHOD_GET));
+            $itemsPerPageSpecified = null;
             if ($this->enableItemsPerPageSelection) {
                 $maxItemsPerPage = max($this->getItemsPerPageOptions());
                 if ($this->request->query->get('itemsPerPage')) {
@@ -297,6 +298,8 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
                 $this->requireAsset('css', 'core/frontend/pagination');
+            } else {
+                $this->set('pagination', null);
             }
 
             if ($this->enableItemsPerPageSelection) {
