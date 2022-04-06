@@ -181,6 +181,9 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
                 $this->set('logo', $logo);
             }
         }
+        if (!isset($logo)) {
+            $this->set('logo', null);
+        }
         if ($this->brandingTransparentLogo) {
             $transparentLogo = File::getByID($this->brandingTransparentLogo);
             if ($transparentLogo) {

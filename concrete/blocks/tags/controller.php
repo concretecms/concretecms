@@ -77,12 +77,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function view()
     {
         $ak = $this->loadAttribute();
+        $options = array();
         if ($this->displayMode == "cloud") {
             $type = $ak->getAttributeType();
             $controller = $type->getController();
             $controller->setAttributeKey($ak);
             $items = $controller->getOptions();
-            $options = array();
             if ($this->cloudCount > 0 && count($items) > 0) {
                 $i = 1;
                 foreach ($items as $item) {
