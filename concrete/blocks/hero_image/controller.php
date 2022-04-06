@@ -30,6 +30,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public $buttonStyle;
     public $buttonColor;
     public $buttonIcon;
+    public $titleFormat;
 
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 500;
@@ -158,6 +159,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
           $this->set('linkURL', $this->getLinkURL());
           $this->set('buttonIcon', $this->icon);
           $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
+          $this->set('titleFormat', $this->titleFormat ?? 'h1');
         }
     }
 
