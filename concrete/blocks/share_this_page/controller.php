@@ -77,8 +77,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function duplicate($newBlockID)
     {
         $db = Database::get();
+        $displayOrder = 0;
         foreach ($this->getSelectedServices() as $service) {
-            $db->insert('btShareThisPage', array('bID' => $newBlockID, 'service' => $service->getHandle(), 'displayOrder' => $this->displayOrder));
+            $db->insert('btShareThisPage', array('bID' => $newBlockID, 'service' => $service->getHandle(), 'displayOrder' => $displayOrder));
+            $displayOrder++;
         }
     }
 
