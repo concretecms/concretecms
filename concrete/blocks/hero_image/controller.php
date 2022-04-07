@@ -87,6 +87,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     public function add()
     {
         $this->set('height', '60');
+        $this->set('titleFormat', 'h1');
         $this->edit();
     }
 
