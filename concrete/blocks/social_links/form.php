@@ -36,8 +36,8 @@ $form = $app->make(Form::class);
 
             <?php if ($service) { ?>
                 <div class="form-check">
+                    <?php echo $form->checkbox("socialService", $link->getID(), is_array($selectedLinks) && in_array($link, $selectedLinks), ["name" => "slID[]", "id" => "slID" . $link->getID()]); ?>
                     <label for="<?php echo "slID" . $link->getID(); ?>" class="form-check-label">
-                        <?php echo $form->checkbox("socialService", $link->getID(), is_array($selectedLinks) && in_array($link, $selectedLinks), ["name" => "slID[]", "id" => "slID" . $link->getID()]); ?>
                         <?php echo $service->getDisplayName(); ?>
                     </label>
                     <i class="fas fa-arrows-alt"></i>
@@ -59,28 +59,18 @@ $form = $app->make(Form::class);
     }
 
     #ccm-block-social-links-list .form-check {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        margin-bottom: 0;
-        padding: 6px;
+        position: relative;
     }
-
-    #ccm-block-social-links-list .form-check:hover {
-        background: #e7e7e7;
-        border-radius: 4px;
-        transition: background-color .1s linear;
-    }
-
+    
     #ccm-block-social-links-list .form-check.ui-sortable-helper {
         background: none;
     }
 
     #ccm-block-social-links-list i.fa-arrows-alt {
+        position: absolute;
         display: none;
+        right: 4px;
+        top: 4px;
         color: #666;
         cursor: move;
         margin-left: auto;
