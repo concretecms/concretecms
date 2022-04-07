@@ -115,6 +115,7 @@ class Controller extends BlockController
 
     public function add()
     {
+        $this->set('filename', null);
         $this->set('filenames', $this->getFormList());
     }
 
