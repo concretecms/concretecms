@@ -361,7 +361,7 @@ $token = Core::make('token');
             controls: <?=json_encode($controls);?>,
             types: <?=json_encode($types_select);?>,
             settings: {
-                'replyToEmailControlID': <?=json_encode($replyToEmailControlID);?>
+                'replyToEmailControlID': <?= isset($replyToEmailControlID) ? json_encode($replyToEmailControlID) : 'null'?>
             }
         });
     });
