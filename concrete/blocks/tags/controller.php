@@ -53,9 +53,14 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('ak', $ak);
         if ($this->isValidStack(Page::getCurrentPage())) {
             $this->set('inStackDashboardPage', true);
+        } else {
+            $this->set('inStackDashboardPage', false);
         }
         $this->set('displayMode', 'page');
         $this->set('titleFormat', 'h5');
+        $this->set('title', '');
+        $this->set('cloudCount', 10);
+        $this->set('targetCID', null);
     }
 
     protected function loadAttribute()
@@ -71,6 +76,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('ak', $ak);
         if ($this->isValidStack(Page::getCurrentPage())) {
             $this->set('inStackDashboardPage', true);
+        } else {
+            $this->set('inStackDashboardPage', false);
         }
     }
 
