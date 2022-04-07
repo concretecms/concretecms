@@ -83,6 +83,18 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('rows', $query);
     }
 
+    public function add()
+    {
+        $this->set('navigationType', 0);
+        $this->set('timeout', null);
+        $this->set('speed', null);
+        $this->set('noAnimate', false);
+        $this->set('pause', false);
+        $this->set('maxWidth', null);
+        $this->set('maxHeight', null);
+        $this->set('rows', []);
+    }
+
     public function composer()
     {
         $this->edit();

@@ -46,7 +46,10 @@ foreach ($optionResults as &$value) {
         $value = round($value / $totalVotes * 100, 0);
     }
 }
-$show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVotes > 0);
+$show_graph = true;
+if (count($optionNamesAbbrev) === 0 || $totalVotes < 0 || (isset($_GET['dontGraphPoll']) && $_GET['dontGraphPoll'])) {
+    $show_graph = false;
+}
 ?>
 
 <div class="poll">
@@ -124,7 +127,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
             <div class="spacer">&nbsp;</div>
 
             <?php
-            if ($_GET['dontGraphPoll']) {
+            if (isset($_GET['dontGraphPoll']) && $_GET['dontGraphPoll']) {
                 ?>
                 <div class="small right" style="margin-top:8px">
                     <a class="arrow" href="<?= DIR_REL ?>/?cID=<?= $b->getBlockCollectionID() ?>">

@@ -335,12 +335,11 @@ class Controller extends BlockController implements UsesFeatureInterface
             foreach ($results as $file) {
                 if ($file instanceof File) {
                     $fileObject = $file->getTreeNodeFileObject();
-                }
-
-                $fp = new \Permissions($fileObject);
-                if ($fp->canEditFileProperties()) {
-                    $return[] = 'edit_properties';
-                    break;
+                    $fp = new \Permissions($fileObject);
+                    if ($fp->canEditFileProperties()) {
+                        $return[] = 'edit_properties';
+                        break;
+                    }
                 }
             }
         }
@@ -808,6 +807,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             $success = $success[0];
             $this->set('success', $success);
         }
+        $this->set('advancedSearchDisplayed', $this->request->query->get('advancedSearchDisplayed') ? true : false);
     }
 
     public function save($args)

@@ -83,11 +83,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     public function action_set_current_language()
     {
-        if ($this->post('language')) {
-            $section = Section::getByID($this->post('language'));
+        if ($this->request->request->has('language')) {
+            $section = Section::getByID($this->request->request->get('language'));
             if (is_object($section)) {
                 Session::set('multilingual_default_locale', $section->getLocale());
-                if ($this->post('remember')) {
+                if ($this->request->request->get('remember')) {
                     Cookie::set('multilingual_default_locale', $section->getLocale(), time() + (60 * 60 * 24 * 365));
                 } else {
                     Cookie::clear('multilingual_default_locale');
@@ -95,7 +95,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
         }
 
-        return $this->action_switch_language($this->post('rcID'), $this->post('language'));
+        return $this->action_switch_language($this->request->request->get('rcID'), $this->request->request->get('language'));
     }
 
     public function add()

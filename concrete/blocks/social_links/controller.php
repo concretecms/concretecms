@@ -57,6 +57,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $links = Link::getList();
         $this->set('links', $links);
+        $this->set('selectedLinks', []);
     }
 
     protected function getSelectedLinks()

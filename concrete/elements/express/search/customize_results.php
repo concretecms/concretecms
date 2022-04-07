@@ -46,7 +46,7 @@ if (!isset($type)) {
                                name="<?= $col->getColumnKey() ?>"
                                id="<?= $col->getColumnKey() ?>"
                                value="1"
-                               <?php if ($current->contains($col)) { ?>checked<?php } ?>>
+                               <?php if (isset($current) && $current->contains($col)) { ?>checked<?php } ?>>
                         <label class="form-check-label"
                                for="<?= $col->getColumnKey() ?>"><?= $col->getColumnName() ?></label>
                     </div>
@@ -98,7 +98,7 @@ if (!isset($type)) {
                                name="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"
                                id="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"
                                value="1"
-                               <?php if ($current->contains($ak)) { ?>checked<?php } ?>>
+                               <?php if (isset($current) && $current->contains($ak)) { ?>checked<?php } ?>>
                         <label class="form-check-label"
                                for="<?= 'ak_' . $ak->getAttributeKeyHandle() ?>"><?= $ak->getAttributeKeyDisplayName() ?></label>
                     </div>
@@ -118,14 +118,16 @@ if (!isset($type)) {
             <p><?= t('Click and drag to change column order.') ?></p>
             <ul class="item-select-list" data-search-column-list="<?= $type ?>">
                 <?php
-                foreach ($current->getColumns() as $col) {
-                    ?>
-                    <li style="cursor: move" data-field-order-column="<?= $col->getColumnKey() ?>"><input type="hidden"
-                                                                                                          name="column[]"
-                                                                                                          value="<?= $col->getColumnKey() ?>"/><?= $col->getColumnName() ?>
-                        <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
-                    </li>
-                    <?php
+                if (isset($current)) {
+                    foreach ($current->getColumns() as $col) {
+                        ?>
+                        <li style="cursor: move" data-field-order-column="<?= $col->getColumnKey() ?>"><input type="hidden"
+                                                                                                              name="column[]"
+                                                                                                              value="<?= $col->getColumnKey() ?>"/><?= $col->getColumnName() ?>
+                            <i class="ccm-item-select-list-sort ui-sortable-handle"></i>
+                        </li>
+                        <?php
+                    }
                 }
                 ?>
             </ul>
@@ -135,7 +137,12 @@ if (!isset($type)) {
     <fieldset>
         <legend><?= t('Sort By') ?></legend>
 
-        <?php $ds = $current->getDefaultSortColumn(); ?>
+        <?php
+        $ds = null;
+        if (isset($current)) {
+            $ds = $current->getDefaultSortColumn();
+        }
+        ?>
 
         <div class="form-group">
             <label class="control-label form-label" for="fSearchDefaultSort"><?= t('Default Column') ?></label>

@@ -75,7 +75,7 @@ $icon = $icon ?? '';
         <div data-vue="hero-image">
             <concrete-theme-color-input
                 :color-collection='<?=json_encode($themeColorCollection)?>'
-                <?php if ($buttonColor) { ?> color="<?=$buttonColor ?? null?>"<?php } ?>
+                <?php if (isset($buttonColor)) { ?> color="<?=$buttonColor ?? null?>"<?php } ?>
                 input-name="buttonColor">
             </concrete-theme-color-input>
         </div>
