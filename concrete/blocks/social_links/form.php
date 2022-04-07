@@ -61,7 +61,7 @@ $form = $app->make(Form::class);
     #ccm-block-social-links-list .form-check {
         position: relative;
     }
-    
+
     #ccm-block-social-links-list .form-check.ui-sortable-helper {
         background: none;
     }
