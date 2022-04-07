@@ -53,7 +53,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $this->set('rows', []);
     }
-    
+
     public function edit()
     {
         $db = $this->app->make('database')->connection();

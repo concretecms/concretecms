@@ -24,6 +24,8 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $icon;
 
+    public $paragraph;
+    
     public function getBlockTypeDescription()
     {
         return t("Displays an icon, a title, and a short paragraph description.");
