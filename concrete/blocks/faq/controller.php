@@ -49,6 +49,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $content;
     }
 
+    public function add()
+    {
+        $this->set('rows', []);
+    }
+    
     public function edit()
     {
         $db = $this->app->make('database')->connection();
