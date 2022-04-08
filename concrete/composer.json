@@ -106,7 +106,7 @@
     "dragonmantank/cron-expression": "^3.1",
     "symfony/polyfill-uuid": "^1.20",
     "predis/predis": "^1.1",
-    "enshrined/svg-sanitize": "^0.14.1",
+    "enshrined/svg-sanitize": "^0.15.4",
     "laminas/laminas-feed": "^2.16",
     "laminas/laminas-mail": "^2.16",
     "laminas/laminas-cache": "^3.1.2",
