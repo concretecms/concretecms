@@ -30,6 +30,18 @@
                 "symfony/css-selector": "^2.6"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "e2a5dd43ca137fd4803f9f35257a7ada4d1e1cdd",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.7.2",
+                            "path": "anahkiasen/html-object/php8.1-compatibility.patch",
+                            "description": "Add PHP 8.1 compatibility"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "HtmlObject\\": "src"
@@ -1727,16 +1739,16 @@
         },
         {
             "name": "enshrined/svg-sanitize",
-            "version": "0.14.1",
+            "version": "0.15.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/darylldoyle/svg-sanitizer.git",
-                "reference": "307b42066fb0b76b5119f5e1f0826e18fefabe95"
+                "reference": "e50b83a2f1f296ca61394fe88fbfe3e896a84cf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/darylldoyle/svg-sanitizer/zipball/307b42066fb0b76b5119f5e1f0826e18fefabe95",
-                "reference": "307b42066fb0b76b5119f5e1f0826e18fefabe95",
+                "url": "https://api.github.com/repos/darylldoyle/svg-sanitizer/zipball/e50b83a2f1f296ca61394fe88fbfe3e896a84cf4",
+                "reference": "e50b83a2f1f296ca61394fe88fbfe3e896a84cf4",
                 "shasum": ""
             },
             "require": {
@@ -1745,7 +1757,6 @@
                 "php": "^7.0 || ^8.0"
             },
             "require-dev": {
-                "codeclimate/php-test-reporter": "^0.1.2",
                 "phpunit/phpunit": "^6.5 || ^8.5"
             },
             "type": "library",
@@ -1765,7 +1776,7 @@
                 }
             ],
             "description": "An SVG sanitizer for PHP",
-            "time": "2021-08-09T23:46:54+00:00"
+            "time": "2022-02-21T09:13:59+00:00"
         },
         {
             "name": "filp/whoops",
@@ -3050,6 +3061,16 @@
                     "dev-master": "3.4.x-dev",
                     "dev-develop": "3.5.x-dev",
                     "dev-dev-4.0": "4.0.x-dev"
+                },
+                "patches_applied": {
+                    "hash": "6f006a7696da07388dae3a779300352f43c32416",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.7.2",
+                            "path": "laminas/laminas-code/php8.1-compatibility.patch",
+                            "description": "Add PHP 8.1 compatibility"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -3855,6 +3876,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.1-dev"
+                },
+                "patches_applied": {
+                    "hash": "c01ee49dae3ec5d99a499583022d4223d59924fc",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.7.2",
+                            "path": "lcobucci/jwt/php8-compatibility.patch",
+                            "description": "Add PHP 8 compatibility"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -4692,6 +4723,16 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.3-dev"
+                },
+                "patches_applied": {
+                    "hash": "cf09d5571fb17829c242450582ed83792df24c88",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.7.2",
+                            "path": "league/url/php8.1-compatibility.patch",
+                            "description": "Add PHP 8.1 compatibility"
+                        }
+                    ]
                 }
             },
             "autoload": {
@@ -6495,6 +6536,23 @@
                 "php": ">=5.3.2"
             },
             "type": "library",
+            "extra": {
+                "patches_applied": {
+                    "hash": "eeaf2de99396bfbe3749811d57f2dd4a4c3c0554",
+                    "list": [
+                        {
+                            "from-package": "concrete5/dependency-patches 1.7.2",
+                            "path": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                            "description": "Fix minus in regular expressions"
+                        },
+                        {
+                            "from-package": "concrete5/dependency-patches 1.7.2",
+                            "path": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch",
+                            "description": "Add PHP 8.1 compatibility"
+                        }
+                    ]
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Sunra\\PhpSimple\\HtmlDomParser": "Src/"
