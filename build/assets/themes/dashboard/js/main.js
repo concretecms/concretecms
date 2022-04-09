@@ -111,7 +111,11 @@ var setupDetailsURLs = function() {
         )
             .on('click', function(e) {
                 if ($(e.target).is('td')) {
-                    window.location.href = $(this).data('details-url');
+                    if ($(e.target).hasClass('ccm-search-results-checkbox')) {
+                        $(e.target).find('input[type=checkbox]').trigger('click')
+                    } else {
+                        window.location.href = $(this).data('details-url');
+                    }
                 }
             });
     });

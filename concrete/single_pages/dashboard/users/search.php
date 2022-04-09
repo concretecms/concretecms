@@ -74,7 +74,7 @@ use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
             /** @var UserInfo $user */
             $user = $item->getItem();
             ?>
-            <tr data-details-url="javascript:void(0)">
+            <tr data-details-url="<?=URL::to('/dashboard/users/search', 'edit', $user->getUserID())?>">
                 <td class="ccm-search-results-checkbox">
                     <?php if ($user instanceof UserInfo) { ?>
                         <!--suppress HtmlFormInputWithoutLabel -->
@@ -132,12 +132,6 @@ use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
         $(function () {
             let searchResultsTable = new window.ConcreteSearchResultsTable($("#ccm-search-results-table"));
             searchResultsTable.setupBulkActions();
-
-            $('#ccm-search-results-table').on('click', 'a[data-user-id]', function () {
-                window.location.href = '<?=rtrim(URL::to('/dashboard/users/search', 'edit'), '/')?>/' + $(this).attr('data-user-id');
-                return false;
-            });
-
         });
     })(jQuery);
 </script>
