@@ -22,7 +22,7 @@ View::element(
             return false;
         },
 
-        'getRadioButton' => function ($folder, $checked = false) use ($f) {
+        'getRadioButton' => function ($folder, $checked = false) {
             return id(new Input('radio', 'folderID', $folder->getTreeNodeID(), ['checked' => $checked]));
         }
     ]
