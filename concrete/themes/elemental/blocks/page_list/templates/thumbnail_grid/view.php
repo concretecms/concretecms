@@ -59,7 +59,7 @@ $c = Page::getCurrentPage();
 } ?>
 
                 <?php if ($includeDate): ?>
-                    <div class="ccm-block-page-list-date"><?=$date?></div>
+                    <div class="ccm-block-page-list-date"><?=$date ?? null?></div>
                 <?php endif; ?>
 
                 <?php if ($includeDescription): ?>
