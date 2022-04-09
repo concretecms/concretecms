@@ -14,6 +14,10 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Validation\CSRF\Token;
 
+if (!isset($bID)) {
+    $bID = null;
+}
+
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
 

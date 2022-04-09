@@ -75,7 +75,7 @@ echo $ui->tabs([
 
         <div id="fixedsizes" class="<?php echo $sizing == 'fixed' ? '' : 'd-none'; ?>">
             <div class="form-group">
-                <?php echo $form->label('YouTubeVideoWidth', t("Width")); ?>
+                <?php echo $form->label('YouTubeVideoWidth', t("Width"), ["class" => "form-check-label"]); ?>
 
                 <div class="input-group">
                     <?php echo $form->number('vWidth', $vWidth, ["id" => "YouTubeVideoWidth", "name" => "vWidth", "min" => 0, "step" => "1"]); ?>
@@ -87,7 +87,7 @@ echo $ui->tabs([
             </div>
 
             <div class="form-group">
-                <?php echo $form->label('YouTubeVideoHeight', t("Height")); ?>
+                <?php echo $form->label('YouTubeVideoHeight', t("Height"), ["class" => "form-check-label"]); ?>
 
                 <div class="input-group">
                     <?php echo $form->number('vHeight', $vHeight, ["id" => "YouTubeVideoHeight", "name" => "vHeight", "min" => 0, "step" => "1"]); ?>
@@ -111,7 +111,7 @@ echo $ui->tabs([
                     <div class="form-group">
                         <div class="form-check">
                             <?php echo $form->checkbox('controls', '1', ($controls ?? true)); ?>
-                            <?php echo $form->label("controls", t('Show controls')); ?>
+                            <?php echo $form->label("controls", t('Show controls'), ["class" => "form-check-label"]); ?>
                         </div>
 
                         <div class="form-check">
@@ -124,14 +124,14 @@ echo $ui->tabs([
 
                             echo $form->checkbox('modestbranding', '1', ($modestbranding ?? true), $additionalAttributes); ?>
 
-                            <?php echo $form->label("modestbranding", t('Hide YouTube Logo')); ?>
+                            <?php echo $form->label("modestbranding", t('Hide YouTube Logo'), ["class" => "form-check-label"]); ?>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-xs-6">
                     <div class="form-group controls-only <?php echo isset($controls) && $controls == 0 ? 'd-none' : ''; ?>">
-                        <?php echo $form->label('color', t('Progress Bar Color')); ?>
+                        <?php echo $form->label('color', t('Progress Bar Color'), ["class" => "form-check-label"]); ?>
                         <?php echo $form->select('color', ['red' => t('Red'), 'white' => t('White')], isset($color) ? $color : null); ?>
                     </div>
                 </div>
@@ -146,32 +146,32 @@ echo $ui->tabs([
             <div class="form-group">
                 <div class="form-check">
                     <?php echo $form->checkbox('rel', '1', !empty($rel)); ?>
-                    <?php echo $form->label('rel', t('Show related videos from different channels when playback ends')); ?>
+                    <?php echo $form->label('rel', t('Show related videos from different channels when playback ends'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
                     <?php echo $form->checkbox('iv_load_policy', '1', isset($iv_load_polict) && $iv_load_policy == 3); ?>
-                    <?php echo $form->label("iv_load_policy", t('Hide annotations by default')); ?>
+                    <?php echo $form->label("iv_load_policy", t('Hide annotations by default'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
                     <?php echo $form->checkbox('autoplay', '1', !empty($autoplay)); ?>
-                    <?php echo $form->label("autoplay", t('Automatically play')); ?>
+                    <?php echo $form->label("autoplay", t('Automatically play'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
                     <?php echo $form->checkbox('loopEnd', '1', !empty($loopEnd)); ?>
-                    <?php echo $form->label("loopEnd", t('Loop video')); ?>
+                    <?php echo $form->label("loopEnd", t('Loop video'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
                     <?php echo $form->checkbox('showCaptions', '1', !empty($showCaptions)); ?>
-                    <?php echo $form->label("showCaptions", t('Show captions')); ?>
+                    <?php echo $form->label("showCaptions", t('Show captions'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
                     <?php echo $form->checkbox('startTimeEnabled', '1', !empty($startTimeEnabled)); ?>
-                    <?php echo $form->label("startTimeEnabled", t('Start video at:')); ?>
+                    <?php echo $form->label("startTimeEnabled", t('Start video at:'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-group">
@@ -187,7 +187,7 @@ echo $ui->tabs([
 
             <div class="form-check">
                 <?php echo $form->checkbox('noCookie', '1', ($noCookie ?? false)); ?>
-                <?php echo $form->label("noCookie", t('No cookie')); ?>
+                <?php echo $form->label("noCookie", t('No cookie'), ["class" => "form-check-label"]); ?>
             </div>
         </fieldset>
 
@@ -198,7 +198,7 @@ echo $ui->tabs([
 
             <div class="form-check">
                 <?php echo $form->checkbox('lazyLoad', '1', ($lazyLoad ?? false)); ?>
-                <?php echo $form->label("lazyLoad", t('Lazy load video')) ?>
+                <?php echo $form->label("lazyLoad", t('Lazy load video'), ["class" => "form-check-label"]) ?>
             </div>
         </fieldset>
     </div>

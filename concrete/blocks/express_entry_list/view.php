@@ -52,10 +52,14 @@ if ($entity) { ?>
         </form>
     <?php }
 
-    $results = $result->getItemListObject()->getResults();
+    try {
+        $results = $result->getItemListObject()->getResults();
+    } catch (\Exception $e) {
+        $results = [];
+    }
     if (count($results)) { ?>
 
-        <?php if ($enableItemsPerPageSelection) { ?>
+        <?php if (isset($enableItemsPerPageSelection) && $enableItemsPerPageSelection) { ?>
             <div class="mt-3 mb-3">
                 <div class="row row-cols-auto align-items-center">
                     <div class="col-auto">
@@ -109,7 +113,7 @@ if ($entity) { ?>
             </tbody>
         </table>
 
-        <?php if ($enablePagination && $pagination) { ?>
+        <?php if (isset($enablePagination) && $enablePagination && $pagination) { ?>
             <?=$pagination ?>
         <?php } ?>
 

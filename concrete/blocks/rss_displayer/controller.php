@@ -89,6 +89,16 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $result;
     }
 
+    public function add()
+    {
+        $this->set('url', '');
+        $this->set('title', '');
+        $this->set('titleFormat', 'h5');
+        $this->set('dateFormat', ':longDate:shortTime:');
+        $this->set('itemsToDisplay', '5');
+        $this->set('showSummary', true);
+        $this->set('launchInNewWindow', true);
+    }
     /**
      * Format a \DateTime instance accordingly to $format.
      *

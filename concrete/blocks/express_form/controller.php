@@ -297,6 +297,12 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $this->set('storeFormSubmission', $this->areFormSubmissionsStored());
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
         $this->set('displayCaptcha', 1);
+        $this->set('exFormID', null);
+        $this->set('redirectCID', null);
+        $this->set('notifyMeOnSubmission', false);
+        $this->set('recipientEmail', '');
+        $this->set('addFilesToSet', false);
+        $this->set('replyToEmailControlID', null);
     }
 
     public function action_update_control()
@@ -747,6 +753,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         }
 
         $this->set('entities', Express::getEntities());
+        $this->set('notifyMeOnSubmission', (bool) $this->notifyMeOnSubmission);
     }
 
     public function action_get_type_form()

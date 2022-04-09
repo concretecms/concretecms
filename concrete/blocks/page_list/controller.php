@@ -50,6 +50,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $truncateSummaries;
     public $displayThumbnail;
     public $includeName;
+    public $paginate;
 
     public function getRequiredFeatures(): array
     {
@@ -119,9 +120,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         $controller->filterDateStart = $_REQUEST['filterDateStart'];
         $controller->filterDateEnd = $_REQUEST['filterDateEnd'];
         $controller->filterDateDays = $_REQUEST['filterDateDays'];
+        $controller->noResultsMessage = $_REQUEST['noResultsMessage'];
         $controller->set('includeEntryText', true);
         $controller->set('includeName', true);
         $controller->set('displayThumbnail', $controller->displayThumbnail);
+        $controller->set('noResultsMessage', $controller->noResultsMessage);
         $bv = new BlockView($bt);
         ob_start();
         $bv->render('view');

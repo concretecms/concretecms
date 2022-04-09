@@ -24,6 +24,16 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btTable = 'btExpressEntryDetail';
 
+    public $exEntityID;
+
+    public $exSpecificEntryID;
+
+    public $exEntryAttributeKeyHandle;
+
+    public $exFormID;
+
+    public $entryMode;
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -61,6 +71,11 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function add()
     {
         $this->loadData();
+        $this->set('entryMode', 'L');
+        $this->set('exEntityID', null);
+        $this->set('entity', null);
+        $this->set('exEntryAttributeKeyHandle', null);
+        $this->set('exFormID', null);
     }
 
     public function edit()
@@ -75,6 +90,7 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $this->set('entry', Express::getEntry($this->exSpecificEntryID));
             }
         }
+        $this->set('exEntryAttributeKeyHandle', $this->exEntryAttributeKeyHandle ?? null);
     }
 
     public function view()

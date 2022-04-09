@@ -367,8 +367,11 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
         $rows = $db->fetchAll('select fsID from FileSetFiles where fID = ?', [$this->getFileID()]);
-
-        return array_map('intval', array_map('array_pop', $rows));
+        $ids = [];
+        foreach ($rows as $row) {
+            $ids[] = (int) $row['fsID'];
+        }
+        return $ids;
     }
 
     /**

@@ -25,6 +25,13 @@ class Controller extends BlockController implements UsesFeatureInterface
 
     protected $btExportTables = ['btSurvey', 'btSurveyOptions', 'btSurveyResults'];
 
+    public $question;
+
+    public $showResults;
+
+    public $customMessage;
+
+    public $requiresRegistration = false;
     /**
      * Used for localization. If we want to localize the name/description we have to include this.
      */
@@ -126,9 +133,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $u = $this->app->make(User::class);
         $db = Database::connection();
         $bo = $this->getBlockObject();
-        if ($this->post('rcID')) {
+        if ($this->request->request->has('rcID')) {
             // we pass the rcID through the form so we can deal with stacks
-            $c = Page::getByID($this->post('rcID'));
+            $c = Page::getByID($this->request->request->get('rcID'));
         } else {
             $c = $this->getCollectionObject();
         }
@@ -243,7 +250,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function save($args)
     {
         $sanitizer = $this->app->make('helper/security');
-        if (!$args['showResults']) {
+        if (empty($args['showResults'])) {
             $args['showResults'] = 0;
             $args['customMessage'] = '';
         }
