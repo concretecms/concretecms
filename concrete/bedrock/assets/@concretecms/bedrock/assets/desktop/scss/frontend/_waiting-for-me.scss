@@ -83,7 +83,6 @@ div.ccm-block-desktop-waiting-for-me {
         font-size: 1rem;
         font-weight: bold;
         height: 40px;
-        line-height: 50px;
         padding: 0;
         position: relative;
         text-align: center;
@@ -97,9 +96,6 @@ div.ccm-block-desktop-waiting-for-me {
 
         i {
           color: #ccc;
-          left: 10px;
-          position: absolute;
-          top: 10px;
         }
 
         &:active {

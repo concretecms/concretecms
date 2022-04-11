@@ -14,7 +14,7 @@ class FolderManager
     /**
      * Creates everything necessary to store files in folders.
      *
-     * @return \Concrete\Core\Tree\Type\FolderManager
+     * @return \Concrete\Core\Tree\Type\Group
      * @throws \Doctrine\DBAL\Exception
      */
     public function create()
@@ -25,7 +25,7 @@ class FolderManager
             $type = NodeType::add('group_folder');
         }
 
-        $manager = \Concrete\Core\Tree\Type\Group::get();
+        $groupTree = \Concrete\Core\Tree\Type\Group::get();
 
         // transform the parent group node to a group folder
         $app = Application::getFacadeApplication();
@@ -34,10 +34,10 @@ class FolderManager
 
         $db->executeQuery("UPDATE TreeNodes n SET n.treeNodeTypeID = ? WHERE n.treeNodeID = ?", [
             $type->getTreeNodeTypeID(),
-            $manager->getRootTreeNodeID()
+            $groupTree->getRootTreeNodeID()
         ]);
 
-        return $manager;
+        return $groupTree;
     }
 
     /**

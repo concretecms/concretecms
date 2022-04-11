@@ -87,7 +87,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
             <tbody>
             <?php
             foreach ($result->getItems() as $item) { ?>
-                <tr data-details-url="javascript:void(0)"
+                <tr data-details-url="<?=$item->getDetailsURL()?>"
                     <?php if (isset($highlightResults)
                         && in_array($item->getItem()->getTreeNodeID(), $highlightResults)) { ?>
                             class="table-row-highlight"<?php } ?>
@@ -137,11 +137,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                         /** @noinspection PhpUndefinedMethodInspection */
                         if ($column->getColumn() instanceof NameColumn) { ?>
                             <td class="ccm-search-results-name">
-                                <a href="<?php
-                                echo $item->getDetailsURL(); ?>">
-                                    <?php
-                                    echo $column->getColumnValue($item); ?>
-                                </a>
+                                <?php echo $column->getColumnValue($item); ?>
                             </td>
                         <?php } else { ?>
                             <td class="<?=$class?? '' ?>">

@@ -73,7 +73,7 @@ use Concrete\Core\User\Group\Menu;
             /** @var Group $group */
             $group = $item->getItem();
             ?>
-            <tr data-details-url="javascript:void(0)"
+            <tr data-details-url="<?=URL::to("/dashboard/users/groups", "edit", $group->getTreeNodeGroupID())?>"
                 <?php if (isset($highlightResults)
                     && in_array($item->getItem()->getTreeNodeID(), $highlightResults)) { ?>
                     class="table-row-highlight"<?php } ?>

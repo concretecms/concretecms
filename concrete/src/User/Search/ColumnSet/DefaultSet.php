@@ -20,7 +20,7 @@ class DefaultSet extends ColumnSet
 
     public static function getUserName($ui)
     {
-        return '<a data-user-name="' . h($ui->getUserDisplayName()) . '" data-user-email="' . h($ui->getUserEmail()) . '" data-user-id="' . $ui->getUserID() . '" href="#">' . h($ui->getUserName()) . '</a>';
+        return h($ui->getUserName());
     }
 
     public static function getUserEmail($ui)
