@@ -142,7 +142,10 @@ class PileContent extends ConcreteObject implements \JsonSerializable
         $block = Block::getByID($this->getItemID());
 
         if (!$block || !is_object($block) || $block->isError()) {
-            return [];
+            return [
+                "name" => t('(Deleted Block)'),
+                "pileContentId" => $this->getPileContentID(),
+            ];
         }
 
         /** @var \Concrete\Core\Entity\Block\BlockType\BlockType $type */
