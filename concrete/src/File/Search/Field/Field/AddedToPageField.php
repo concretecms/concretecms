@@ -35,7 +35,7 @@ class AddedToPageField extends AbstractField
     {
         $ocID = $this->getData('ocIDSearchField');
         if ($ocID > 0) {
-            $list->filterByOriginalPageID($ocID);
+            $list->filterByAddedToPageID($ocID);
         }
     }
 
