@@ -16,8 +16,7 @@ use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\File\Importer;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
-use Core;
-use File;
+use Concrete\Core\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface, FileTrackableInterface
@@ -50,7 +49,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function type_form()
     {
-        $this->set('form', \Core::make('helper/form'));
+        $this->set('form', app('helper/form'));
         $this->set('mode', $this->getAttributeKeySettings()->getMode());
     }
 
@@ -130,8 +129,13 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function form()
     {
         $bf = false;
-        if (is_object($this->attributeValue)) {
-            $bf = $this->getAttributeValue()->getValue();
+        if ($this->request->isPost()) {
+            $bfID = $this->request('value');
+            $bf = File::getByID($bfID);
+        } else {
+            if (is_object($this->attributeValue)) {
+                $bf = $this->getAttributeValue()->getValue();
+            }
         }
         $this->set('mode', $this->getAttributeKeySettings()->getMode());
         $this->set('file', $bf ?: null);
@@ -157,7 +161,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         if (isset($akv->value->fID)) {
             $fIDVal = (string) $akv->value->fID;
-            $inspector = \Core::make('import/value_inspector');
+            $inspector = app('import/value_inspector');
             $result = $inspector->inspect($fIDVal);
             $fID = $result->getReplacedValue();
             if ($fID) {
@@ -185,7 +189,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function validateValue()
     {
         $f = $this->getAttributeValue()->getValue();
-        $e = Core::make('helper/validation/error');
+        $e = app('helper/validation/error');
         if (!is_object($f)) {
             return new CustomFieldNotPresentError(
                 t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName())
