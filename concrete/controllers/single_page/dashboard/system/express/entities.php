@@ -38,6 +38,8 @@ class Entities extends DashboardPageController
                 $entity = Express::getObjectByHandle($handle);
                 if (is_object($entity)) {
                     $this->error->add(t('An express object with this handle already exists.'));
+                } else if (strlen($handle) > 34) {
+                    $this->error->add(t('Your entity handle must be 34 characters or less.'));
                 }
             }
 
@@ -325,6 +327,8 @@ class Entities extends DashboardPageController
             $exist = Express::getObjectByHandle($handle);
             if (is_object($exist) && $exist->getID() != $id) {
                 $this->error->add(t('An express object with this handle already exists.'));
+            } else if (strlen($handle) > 34) {
+                $this->error->add(t('Your entity handle must be 34 characters or less.'));
             }
         }
 
