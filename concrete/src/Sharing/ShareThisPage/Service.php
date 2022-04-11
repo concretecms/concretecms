@@ -41,7 +41,7 @@ class Service extends SocialNetworkService
                 case 'twitter':
                     return "https://twitter.com/intent/tweet?url=$url";
                 case 'linkedin':
-                    return "https://www.linkedin.com/shareArticle?mini-true&url={$url}&title=".urlencode($title);
+                    return "https://www.linkedin.com/shareArticle?mini-true&amp;url={$url}&amp;title=".urlencode($title);
                 case 'pinterest':
                     return "https://www.pinterest.com/pin/create/button?url=$url";
                 case 'google_plus':
@@ -54,7 +54,7 @@ class Service extends SocialNetworkService
                     $body = rawurlencode(t("Check out this article on %s:\n\n%s\n%s", tc('SiteName', \Core::make('site')->getSite()->getSiteName()), $title, urldecode($url)));
                     $subject = rawurlencode(t('Thought you\'d enjoy this article.'));
 
-                    return "mailto:?body={$body}&subject={$subject}";
+                    return "mailto:?body={$body}&amp;subject={$subject}";
             }
         }
     }
