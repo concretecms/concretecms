@@ -6,7 +6,7 @@ use Concrete\Core\Site\Service;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-class Version20220319043123 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20220408000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
     /**
      * Web Spell Checker ended support on December 31st, 2011, and was removed from CKEditor4 since 4.18.0
