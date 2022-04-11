@@ -50,6 +50,13 @@
       border: 0 !important;
     }
 
+    .bootstrap-select {
+      .filter-option {
+        // Fix https://github.com/concrete5/concrete5/issues/10510
+        max-width: 300px;
+      }
+    }
+
     .form-label {
       font-size: $font-size-sm;
       font-weight: bold;
