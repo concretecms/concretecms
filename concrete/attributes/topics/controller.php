@@ -345,7 +345,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function validateForm($p)
     {
-        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()];
+        $topicsArray = $_POST['topics_' . $this->attributeKey->getAttributeKeyID()] ?? null;
 
         return is_array($topicsArray) && count($topicsArray) > 0;
     }
