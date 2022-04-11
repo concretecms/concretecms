@@ -5,7 +5,12 @@
 // Feature support - comes outside div.ccm-page
 @import "./features/desktop/desktop";
 
+// Define where to find our concrete directory relative to where this file is built
+// This is used for things like background images in CSS (like the mobile preview, jQuery UI icons)
+// It is only a part of the CMS base, not a part of Concrete bedrock
+$concrete-path: "../../../concrete";
 @import "@concretecms/bedrock/assets/cms/scss/base";
+
 @import "mixins/concrete-data-row-dl";
 @import "account";
 @import "toolbar";
