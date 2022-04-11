@@ -38,33 +38,6 @@ if ($loggedIn) {
     $title = $alreadyLoggedInMessage;
 }
 ?>
-<?php
-// Check for custom background image
-if (Config::get('concrete.white_label.background_image') !== 'none' && !Config::get('concrete.white_label.background_url')) {
-    //Uncomment below two lines if you want picture of the day to load
-    //$image = date('Ymd') . '.jpg';
-    //$imagePath = Config::get('concrete.urls.background_feed') . '/' . $image;
-} elseif (Config::get('concrete.white_label.background_url')) {
-    $imagePath = Config::get('concrete.white_label.background_url');
-}
-?>
-<style type="text/css">
-html,body {
-    height: 100%;
-    background-color: #94959A;
-}
-<?php
-if (!empty($imagePath)) {
-    ?>
-    body {
-        background-image: url('<?=$imagePath; ?>');
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-    }
-<?php
-}?>
-</style>
 
 <div class="login-page">
     <div class="container">
@@ -85,7 +58,7 @@ if (!empty($imagePath)) {
                     <h2 class="login-page-title">
                         <?php if (!$attribute_mode) {
                 ?>
-                            <?=t('Welcome back!'); ?><br>
+                            <?=t('Welcome back!'); ?>
                         <?php
             }?>
                         <?= $title; ?>

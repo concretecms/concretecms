@@ -1985,6 +1985,7 @@ EOT
 
             // now that the block's subcontent delete() method has been run, we delete the block from the Blocks table
             $db->executeStatement('delete from Blocks where bID = ?', $v);
+            $db->executeStatement("delete from PileContents where itemType = 'BLOCK' and itemID = ?", [$bID]);
 
             // Aaaand then we delete all scrapbooked blocks to this entry
             $r = $db->executeQuery(

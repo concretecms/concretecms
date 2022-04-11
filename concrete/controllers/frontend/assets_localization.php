@@ -940,7 +940,6 @@ jQuery.fn.concreteConversationAttachments.localize(' . json_encode([
             200,
             [
                 'Content-Type' => 'application/javascript; charset=' . APP_CHARSET,
-                'Content-Length' => strlen($content),
             ]
         );
     }
