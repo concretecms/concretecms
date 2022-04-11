@@ -178,8 +178,6 @@ class EditorServiceProvider extends ServiceProvider
                 'toolbar' => [t('Editor Toolbar'), t('This plugin provides the classical experience to access editor commands, including items like buttons and drop-down lists.')],
                 // https://ckeditor.com/cke4/addon/undo
                 'undo' => [t('Undo'), t('This plugin provides the undo and redo features.')],
-                // https://ckeditor.com/cke4/addon/wsc
-                'wsc' => [t('WebSpellChecker'), t('This plugin provides a dialog window for spell checking.')],
                 // https://ckeditor.com/cke4/addon/wysiwygarea
                 'wysiwygarea' => [t('IFrame Editing Area'), t('This plugin represents an editing area that stores the editor content inside of an embedded iframe.')],
             ];
