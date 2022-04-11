@@ -9,8 +9,6 @@ use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
-use Doctrine\DBAL\Schema\Schema;
-use Doctrine\ORM\EntityManager;
 
 final class Version20200523051311 extends AbstractMigration implements RepeatableMigrationInterface
 {

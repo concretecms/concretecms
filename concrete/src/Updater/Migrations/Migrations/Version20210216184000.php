@@ -16,8 +16,10 @@ use Concrete\Core\Entity\User\GroupSignup;
 use Concrete\Core\Entity\User\GroupSignupRequest;
 use Concrete\Core\Entity\User\GroupSignupRequestAccept;
 use Concrete\Core\Entity\User\GroupSignupRequestDecline;
+use Concrete\Core\Permission\Access\Entity\Type;
 use Concrete\Core\Permission\Category;
 use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\NodeType;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
@@ -46,15 +48,53 @@ final class Version20210216184000 extends AbstractMigration implements Repeatabl
         ]);
 
         if (Category::getByHandle("group_folder") === null) {
-            Category::add("group_folder");
+            $groupFolderCategory = Category::add("group_folder");
+
+            // add permission access entity types to the category
+            $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group'));
+            $groupFolderCategory->associateAccessEntityType(Type::getByHandle('user'));
+            $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group_set'));
+            $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group_combination'));
         }
 
-        if (Key::getByHandle("search_group_folder") === null) {
-            Key::add('group_folder', 'search_group_folder', t("Search Group Folder"), t("Search Group Folder"), false, false);
+        $key = Key::getByHandle('search_group_folder');
+        if (!$key) {
+            Key::add(
+                'group_folder',
+                'search_group_folder',
+                t("Search Group Folder"),
+                t("Search Group Folder"),
+                false,
+                false
+            );
+        }
+        $key = Key::getByHandle('edit_group_folder');
+        if (!$key) {
             Key::add('group_folder', 'edit_group_folder', t("Edit Group Folder"), t("Edit Group Folder"), false, false);
+        }
+
+        $key = Key::getByHandle('edit_group_folder_permissions');
+        if (!$key) {
             Key::add('group_folder', 'edit_group_folder_permissions', t("Edit Group Access"), t("Edit Group Access"), false, false);
+        }
+
+        $key = Key::getByHandle('delete_group_folder');
+        if (!$key) {
             Key::add('group_folder', 'delete_group_folder', t("Delete Group Folder"), t("Delete Group Folder"), false, false);
+        }
+
+        $key = Key::getByHandle('add_group');
+        if (!$key) {
             Key::add('group_folder', 'add_group', t("Add Group"), t("Add Group"), false, false);
+        }
+
+        $key = Key::getByHandle('add_group_folder');
+        if (!$key) {
+            Key::add('group_folder', 'add_group_folder', t("Add Group Folder"), t("Add Group Folder"), false, false);
+        }
+        $key = Key::getByHandle('assign_groups');
+        if (!$key) {
+            Key::add('group_folder', 'assign_groups', t("Assign Groups"), t("Can assign the groups within this folder."), false, false);
         }
 
         $results = NodeType::getByHandle('group_folder');
@@ -64,7 +104,7 @@ final class Version20210216184000 extends AbstractMigration implements Repeatabl
         }
 
         $folderManager = new FolderManager();
-        $folderManager->create();
+        $groupTree = $folderManager->create();
 
         $this->createSinglePage("/dashboard/users/group_types", t("Group Types"));
 
@@ -81,6 +121,56 @@ final class Version20210216184000 extends AbstractMigration implements Repeatabl
         } catch (Exception $e) {
             // The group type + role was already created
         }
+
+        // Transform permissions if necessary
+        $groupTreeRootNode = $groupTree->getRootTreeNodeObject();
+        if ($groupTreeRootNode) {
+            $this->transformPermissionsFromGroupToGroupFolder($groupTreeRootNode, 'search_users_in_group', 'search_group_folder');
+            $this->transformPermissionsFromGroupToGroupFolder($groupTreeRootNode, 'edit_group', 'edit_group_folder');
+            $this->transformPermissionsFromGroupToGroupFolder($groupTreeRootNode, 'assign_group', 'assign_groups');
+            $this->transformPermissionsFromGroupToGroupFolder($groupTreeRootNode, 'add_sub_group', 'add_group');
+            $this->transformPermissionsFromGroupToGroupFolder($groupTreeRootNode, 'edit_group_permissions', 'edit_group_folder_permissions');
+            // Now copy two other permissions that don't directly map from the edit_group permissions permission
+            $this->insertGroupFolderPermissions($groupTreeRootNode, 'edit_group_folder_permissions', 'delete_group_folder');
+            $this->insertGroupFolderPermissions($groupTreeRootNode, 'edit_group_folder_permissions', 'add_group_folder');
+        }
+    }
+
+    private function transformPermissionsFromGroupToGroupFolder(Node $groupTreeNode, string $oldKeyHandle, string $newKeyHandle)
+    {
+        $db = $this->connection;
+        $db->beginTransaction();
+        $oldKey = Key::getByHandle($oldKeyHandle);
+        $newKey = Key::getByHandle($newKeyHandle);
+        if ($oldKey && $newKey) {
+            $paID = $db->fetchOne('select paID from TreeNodePermissionAssignments tn where tn.pkID = ? and tn.treeNodeID = ?', [$oldKey->getPermissionKeyID(), $groupTreeNode->getTreeNodeID()]);
+            if ($paID) {
+                $db->update('TreeNodePermissionAssignments', ['pkID' => $newKey->getPermissionKeyID()], ['treeNodeID' => $groupTreeNode->getTreeNodeID(), 'pkID' => $oldKey->getPermissionKeyID()]);
+                $this->output(t('Transforming old permission key %s to new permission key %s for tree node ID %s', $oldKeyHandle, $newKeyHandle, $groupTreeNode->getTreeNodeID()));
+            } else {
+                $this->output(t('Checking old permission key %s to new permission key %s for tree node ID %s, but no match found. Skipping...', $oldKeyHandle, $newKeyHandle, $groupTreeNode->getTreeNodeID()));
+            }
+        }
+        $db->commit();
+    }
+
+    private function insertGroupFolderPermissions(Node $groupTreeNode, string $oldKeyHandle, string $newKeyHandle)
+    {
+        $db = $this->connection;
+        $db->beginTransaction();
+        $oldKey = Key::getByHandle($oldKeyHandle);
+        $newKey = Key::getByHandle($newKeyHandle);
+        if ($oldKey && $newKey) {
+            $paID = $db->fetchOne('select paID from TreeNodePermissionAssignments tn where tn.pkID = ? and tn.treeNodeID = ?', [$oldKey->getPermissionKeyID(), $groupTreeNode->getTreeNodeID()]);
+            $existingPAID = $db->fetchOne('select paID from TreeNodePermissionAssignments tn where tn.pkID = ? and tn.treeNodeID = ?', [$newKey->getPermissionKeyID(), $groupTreeNode->getTreeNodeID()]);
+            if (!$existingPAID) {
+                $db->insert('TreeNodePermissionAssignments', ['pkID' => $newKey->getPermissionKeyID(), 'paID' => $paID, 'treeNodeID' => $groupTreeNode->getTreeNodeID()]);
+                $this->output(t('Copying permissions based on permission key %s to permission key %s for tree node ID %s', $oldKeyHandle, $newKeyHandle, $groupTreeNode->getTreeNodeID()));
+            } else {
+                $this->output(t('Checking permissions for permission key %s for tree node ID %s, but permissions already present. Skipping...', $newKeyHandle, $groupTreeNode->getTreeNodeID()));
+            }
+        }
+        $db->commit();
     }
 
     /**
