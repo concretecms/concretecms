@@ -202,34 +202,36 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     public function form($additionalClass = false)
     {
         $this->load();
-        if (is_object($this->attributeValue)) {
-            $valueIDs = [];
-            $valueObject = $this->attributeValue->getValueObject();
-            if ($valueObject) {
-                foreach ($valueObject->getSelectedTopics() as $value) {
-                    $valueID = $value->getTreeNodeID();
-                    $withinParentScope = false;
-                    $nodeObj = TreeNode::getByID($value->getTreeNodeID());
-                    if (is_object($nodeObj)) {
-                        $parentNodeArray = $nodeObj->getTreeNodeParentArray();
-                        // check to see if selected node is still within parent scope, in case it has been changed.
-                        foreach ($parentNodeArray as $parent) {
-                            if ($parent->treeNodeID == $this->akTopicParentNodeID) {
-                                $withinParentScope = true;
-                                break;
+        $valueIDs = [];
+        if ($this->request->isPost()) {
+            $valueIDs = (array) $this->request->request->get('topics_' . $this->attributeKey->getAttributeKeyID());
+        } else {
+            if (is_object($this->attributeValue)) {
+                $valueIDs = [];
+                $valueObject = $this->attributeValue->getValueObject();
+                if ($valueObject) {
+                    foreach ($valueObject->getSelectedTopics() as $value) {
+                        $valueID = $value->getTreeNodeID();
+                        $withinParentScope = false;
+                        $nodeObj = TreeNode::getByID($value->getTreeNodeID());
+                        if (is_object($nodeObj)) {
+                            $parentNodeArray = $nodeObj->getTreeNodeParentArray();
+                            // check to see if selected node is still within parent scope, in case it has been changed.
+                            foreach ($parentNodeArray as $parent) {
+                                if ($parent->treeNodeID == $this->akTopicParentNodeID) {
+                                    $withinParentScope = true;
+                                    break;
+                                }
                             }
-                        }
-                        if ($withinParentScope) {
-                            $valueIDs[] = $valueID;
+                            if ($withinParentScope) {
+                                $valueIDs[] = $valueID;
+                            }
                         }
                     }
                 }
             }
-            $this->set('valueIDs', implode(',', $valueIDs));
-        } else {
-            $valueIDs = null;
-            $this->set('valueIDs', null);
         }
+        $this->set('valueIDs', implode(',', $valueIDs));
         $this->set('valueIDArray', $valueIDs);
         $ak = $this->getAttributeKey();
         $this->set('akID', $ak->getAttributeKeyID());
