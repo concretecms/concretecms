@@ -184,9 +184,10 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         ));
     }
 
-    public function filterByOriginalPageID($ocID)
+    public function filterByAddedToPageID($ocID)
     {
-        $this->query->andWhere('f.ocID = :ocID');
+        $this->query->leftJoin('f', 'FileUsageRecord', 'fu', 'f.fID = fu.file_id');
+        $this->query->andWhere('fu.collection_id = :ocID');
         $this->query->setParameter('ocID', $ocID);
     }
 
