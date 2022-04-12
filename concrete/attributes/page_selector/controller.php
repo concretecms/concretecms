@@ -12,7 +12,7 @@ use Concrete\Core\Page\Page;
 class Controller extends AttributeTypeController
 {
     protected $searchIndexFieldDefinition = ['type' => 'integer', 'options' => ['default' => 0, 'notnull' => false]];
-    
+
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('link');
@@ -26,12 +26,18 @@ class Controller extends AttributeTypeController
     public function form()
     {
         $value = null;
-        if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValue();
-        }
-        if (!$value) {
-            if ($this->request->query->has($this->attributeKey->getAttributeKeyHandle())) {
-                $value = $this->createAttributeValue((int) $this->request->query->get($this->attributeKey->getAttributeKeyHandle()));
+        if ($this->request->isPost()) {
+            $value = $this->post('value');
+        } else {
+            if (is_object($this->attributeValue)) {
+                $value = $this->getAttributeValue()->getValue();
+            }
+            if (!$value) {
+                if ($this->request->query->has($this->attributeKey->getAttributeKeyHandle())) {
+                    $value = $this->createAttributeValue(
+                        (int)$this->request->query->get($this->attributeKey->getAttributeKeyHandle())
+                    );
+                }
             }
         }
         $this->set('value', $value);
