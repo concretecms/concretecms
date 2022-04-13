@@ -1813,8 +1813,6 @@ class Version implements ObjectInterface
             } else {
                 $image = $app->make('html/image', ['f' => $this->getFile()]);
                 $tag = $image->getTag();
-                $tag->setAttribute('width', $config->get('concrete.icons.file_manager_detail.width'));
-                $tag->setAttribute('height', $config->get('concrete.icons.file_manager_detail.height'));
                 $result = (string) $tag;
             }
         } else {

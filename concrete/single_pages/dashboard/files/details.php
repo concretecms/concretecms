@@ -25,6 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 $file = $fileVersion->getFile();
+$genericType = $fileVersion->getTypeObject()->getGenericType();
 if ($view->controller->getAction() == 'preview_version') { ?>
     <div class="alert alert-info d-flex align-items-center"><div><?=t('You are currently previewing file version %s.', $fileVersion->getFileVersionID())?></div>
     <a href="<?=URL::to('/dashboard/files', 'details', $file->getFileID())?>" class="btn-sm btn btn-secondary d-flex ms-auto"><?=t('Exit Preview')?></a>
@@ -32,120 +33,164 @@ if ($view->controller->getAction() == 'preview_version') { ?>
 <?php } ?>
 
 <section>
-    <h3><?= t('Preview') ?></h3>
-    <div class="row">
-        <div class="col-lg-6 ccm-file-manager-details-preview-thumbnail">
-            <?= $thumbnail ?>
+    <div class="row gx-5">
+        <div class="col-lg-6">
+            <div class="ccm-file-manager-details-preview-thumbnail">
+                <?= $thumbnail ?>
+            </div>
         </div>
         <div class="col-lg-6">
-            <?php
-            if ($view->controller->getAction() == 'preview_version') { ?>
+            <?php if ($view->controller->getAction() != 'preview_version') { ?>
 
-                <div class="card mb-3 h-100 d-flex align-items-center justify-content-center">
-                    <div>
-                        <h2 class="card-title"><?=t('File Preview')?></h2>
-                        <p class="card-text"><?=t('File actions are not available in preview mode.')?></p>
-                    </div>
+                <?php
+                if ($filePermissions->canEditFileProperties() || (
+                        $filePermissions->canEditFileContents() && (
+                            $genericType === \Concrete\Core\File\Type\Type::T_IMAGE ||
+                            $fileVersion->canEdit()
+                        )
+                    )
+                ) {
+                ?>
+                <div class="dropdown float-end">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                        <?=t('Edit')?>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <?php
+                        if ($filePermissions->canEditFileProperties()) {
+                            ?>
+                            <li>
+                                    <a
+                                            data-bs-placement="left"
+                                            class="dropdown-item launch-tooltip dialog-launch"
+                                            dialog-title="<?= t('Attributes') ?>"
+                                            dialog-width="850" dialog-height="80%"
+                                            title="<?=t('Change the name, description, tags and custom attributes of this file.')?>"
+                                            href="<?=URL::to('/ccm/system/dialogs/file/properties')?>?fID=<?=$file->getFileID()?>"
+                                    ><?= t('Edit Attributes') ?></a>
+                            </li>
+                            <?php
+                        }
+                        if ($genericType === \Concrete\Core\File\Type\Type::T_IMAGE
+                            && $filePermissions->canEditFileContents()) {
+                            ?>
+                            <li><a
+                                    data-bs-placement="left"
+                                    class="dropdown-item launch-tooltip dialog-launch"
+                                    dialog-title="<?= t('Edit') ?>"
+                                    dialog-width="90%" dialog-height="75%"
+                                    title="<?= t('Adjust the thumbnails for this image.') ?>"
+                                    href="<?=URL::to('/ccm/system/dialogs/file/thumbnails?fID=' . $file->getFileID())?>"
+                            ><?= t('Thumbnails') ?></a></li>
+                            <?php
+                        }
+                        if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
+                            ?>
+                            <li>
+                                <a
+                                        data-bs-placement="left"
+                                        class="dropdown-item launch-tooltip dialog-launch"
+                                        dialog-title="<?= t('Edit') ?>"
+                                        dialog-width="90%" dialog-height="75%"
+                                        <?php
+                                        if ($genericType === \Concrete\Core\File\Type\Type::T_IMAGE) { ?>
+                                            title="<?= t('Resize, crop or apply filters to this image.') ?>"
+                                        <?php } else { ?>
+                                            title="<?= t('Edit this file.') ?>"
+                                            <?php
+                                        }
+                                        ?>
+                                        href="<?=URL::to('/ccm/system/file/edit')?>?fID=<?=$file->getFileID()?>">
+                                        <?php
+                                        if ($genericType === \Concrete\Core\File\Type\Type::T_IMAGE) { ?>
+                                            <?= t('Open Image Editor') ?>
+                                        <?php } else { ?>
+                                            <?= t('Edit File Contents') ?>
+                                            <?php
+                                        }
+                                        ?>
+                                </a>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
                 </div>
 
-            <?php } else {
-                if ($filePermissions->canEditFileContents()) {
-                    ?>
-                    <div class="mb-4">
-                        <a
-                                class="btn btn-secondary dialog-launch"
-                                dialog-title="<?= t('Swap') ?>"
-                                dialog-width="80%" dialog-height="600"
-                                href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/replace?fID=' . $file->getFileID()])) ?>"
-                        ><?= t('Swap') ?></a>
-                        <div class="text-muted">
-                            <i><?= t('Upload a new file to be used everywhere this current file is referenced.') ?></i>
-                        </div>
-                    </div>
-                    <?php
-                }
-                if ($filePermissions->canEditFileContents()) {
-                    ?>
-                    <div class="mb-4">
-                        <form method="POST" action="<?= h($controller->action('rescan', $file->getFileID())) ?>">
-                            <?php $token->output("ccm-filedetails-rescan-{$file->getFileID()}") ?>
-                            <button type="submit" class="btn btn-secondary"><?= t('Rescan') ?></button>
-                        </form>
-                        <div class="text-muted">
-                            <i><?= t('Automatically regenerate thumbnails for all sizes of this image.') ?></i></div>
-                    </div>
-                    <?php
-                }
-                if ($fileVersion->getTypeObject()->getGenericType() === \Concrete\Core\File\Type\Type::T_IMAGE
-                    && $filePermissions->canEditFileContents()) {
-                    ?>
-                    <div class="mb-4">
-                        <a
-                                class="btn btn-secondary dialog-launch"
-                                dialog-title="<?= t('Edit') ?>"
-                                dialog-width="90%" dialog-height="75%"
-                                href="<?=URL::to('/ccm/system/dialogs/file/thumbnails?fID=' . $file->getFileID())?>"
-                        ><?= t('Thumbnails') ?></a>
-                        <div class="text-muted">
-                            <i><?= t('Adjust the thumbnails for this image.') ?></i></div>
-                    </div>
-                    <?php
-                }
-                if ($fileVersion->canEdit() && $filePermissions->canEditFileContents()) {
-                    ?>
-                    <div class="mb-4">
-                        <a
-                                class="btn btn-secondary dialog-launch"
-                                dialog-title="<?= t('Edit') ?>"
-                                dialog-width="90%" dialog-height="75%"
-                                href="<?= h($resolverManager->resolve(['/ccm/system/file/edit?fID=' . $file->getFileID()])) ?>"
-                        ><?= t('Edit') ?></a>
-                        <div class="text-muted">
-                            <?php
-                            if ($fileVersion->getTypeObject()->getGenericType() === \Concrete\Core\File\Type\Type::T_IMAGE) { ?>
-                                <i><?= t('Resize, crop or apply filters to this image.') ?></i>
-                            <?php } else { ?>
-                                <i><?= t('Edit this file.') ?></i>
 
+                <?php } ?>
+            <?php } ?>
+
+            <h3 class="mb-4"><?=t('Attributes')?></h3>
+            <dl class="ccm-file-manager-details-attributes">
+                <dt><?= t('Title') ?></dt>
+                <dd>
+                    <div><?= (string)$fileVersion->getTitle() === '' ? '<i>' . t('No title') . '</i>' : h($fileVersion->getTitle()) ?></div>
+                </dd>
+                <dt><?= t('Description') ?></dt>
+                <dd>
+                    <div><?= (string)$fileVersion->getDescription() === '' ? '<i>' . t('No description') . '</i>' : nl2br(h($fileVersion->getDescription())) ?></div>
+                </dd>
+                <dt><?= t('Tags') ?></dt>
+                <dd>
+                    <?php
+                    $tags = preg_split('/\s*\n\s*/', (string)$fileVersion->getTags(), -1, PREG_SPLIT_NO_EMPTY);
+                    if ($tags === []) {
+                        ?>
+                        <i><?= t('No tags') ?></i>
+                        <?php
+                    } else {
+                        ?>
+                        <span><?= implode(', ', $tags) ?></span>
+                        <?php
+                    }
+                    ?>
+                </dd>
+                <dt><?= t('Size') ?></dt>
+                <dd>
+                    <div>
+                        <?php
+                        echo sprintf(
+                            '%s (%s)',
+                            $fileVersion->getSize(),
+                            t2(
+                            /*i18n: %s is a number */
+                                '%s byte',
+                                '%s bytes',
+                                $fileVersion->getFullSize(),
+                                $number->format($fileVersion->getFullSize())
+                            )
+                        );
+                        ?>
+                    </div>
+                </dd>
+                <?php
+                foreach ($attributeKeys as $attributeKey) {
+                    ?>
+                    <dt><?= $attributeKey->getAttributeKeyDisplayName() ?></dt>
+                    <dd>
+                        <div>
                             <?php
+                            $attributeValue = $fileVersion->getAttributeValueObject($attributeKey);
+                            if ($attributeValue === null) {
+                                $noValueDisplayHtml = '<i>' . t('None') . '</i>';
+                                if (method_exists($attributeKey, 'getController')) {
+                                    $attributeController = $attributeKey->getController();
+                                    if ($attributeController instanceof CustomNoValueTextAttributeInterface) {
+                                        $noValueDisplayHtml = (string)$attributeController->getNoneTextDisplayValue();
+                                    }
+                                }
+                                echo $noValueDisplayHtml;
+                            } else {
+                                echo (string)$attributeValue;
                             }
                             ?>
                         </div>
-                    </div>
-                    <?php
-                }
-                if ($filePermissions->canEditFilePermissions()) {
-                    ?>
-                    <div class="mb-4">
-                        <a
-                            class="btn btn-secondary dialog-launch"
-                            dialog-title="<?= t('Permissions') ?>"
-                            dialog-width="520" dialog-height="500"
-                            href="<?=URL::to('/ccm/system/file/permissions?fID=' . $file->getFileID())?>"
-                        ><?= t('Permissions') ?></a>
-                        <div class="text-muted">
-                            <i><?= t('Configure who can view or edit this file.') ?></i>
-                        </div>
-                    </div>
-                    <?php
-                }
-                if ($filePermissions->canEditFileProperties()) {
-                    ?>
-                    <div>
-                        <a
-                                class="btn btn-secondary dialog-launch"
-                                dialog-title="<?= t('Versions') ?>"
-                                dialog-width="80%" dialog-height="600"
-                                href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/versions?fID=' . $file->getFileID()])) ?>"
-                        ><?= t('Versions') ?></a>
-                        <div class="text-muted">
-                            <i><?= t('Access or approve old versions of this file.') ?></i>
-                        </div>
-                    </div>
+                    </dd>
                     <?php
                 }
                 ?>
-            <?php } ?>
+            </dl>
         </div>
     </div>
 </section>
@@ -153,93 +198,25 @@ if ($view->controller->getAction() == 'preview_version') { ?>
 <hr class="mt-5 mb-4"/>
 
 <section>
-    <?php if ($view->controller->getAction() != 'preview_version') { ?>
-    <a
-            class="btn btn-secondary btn-section dialog-launch"
-            dialog-title="<?= t('Attributes') ?>"
-            dialog-width="850" dialog-height="80%"
-            href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/properties?fID=' . $file->getFileID()])) ?>"
-    ><?= t('Edit') ?></a>
-    <?php } ?>
-    <h3><?= t('Attributes') ?></h3>
-    <dl class="ccm-file-manager-details-attributes">
-        <dt><?= t('Title') ?></dt>
-        <dd>
-            <div><?= (string)$fileVersion->getTitle() === '' ? '<i>' . t('No title') . '</i>' : h($fileVersion->getTitle()) ?></div>
+    <h3 class="mb-4"><?=t('URLs')?></h3>
+    <dl>
+        <dt><?= t('Direct URL') ?></dt>
+        <dd class="mb-5">
+            <input type="text" class="bg-white form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getURL()) ?>">
+            <div class="text-muted mt-2"><i><?= t('If you need to embed an image directly in HTML, use this URL.') ?></i></div>
         </dd>
-        <dt><?= t('Description') ?></dt>
+        <dt><?= t('Tracking URL') ?></dt>
         <dd>
-            <div><?= (string)$fileVersion->getDescription() === '' ? '<i>' . t('No description') . '</i>' : nl2br(h($fileVersion->getDescription())) ?></div>
+            <input type="text" class="bg-white form-control" readonly onclick="this.select()" value="<?= h($fileVersion->getDownloadURL()) ?>">
+            <div class="text-muted mt-2"><i><?= t("By using this URL Concrete will still be able to manage permissions and track statistics on its use.") ?></i></div>
         </dd>
-        <dt><?= t('Tags') ?></dt>
-        <dd>
-            <?php
-            $tags = preg_split('/\s*\n\s*/', (string)$fileVersion->getTags(), -1, PREG_SPLIT_NO_EMPTY);
-            if ($tags === []) {
-                ?>
-                <i><?= t('No tags') ?></i>
-                <?php
-            } else {
-            ?>
-            <span><?= implode(', ', $tags) ?></span>
-                <?php
-                }
-                ?>
-                <div class="text-muted">
-                    <i><?= t('Search for files with these tags using the advanced search link in the file manager.') ?></i>
-                </div>
-        </dd>
-        <dt><?= t('Size') ?></dt>
-        <dd>
-            <div>
-            <?php
-            echo sprintf(
-                '%s (%s)',
-                $fileVersion->getSize(),
-                t2(
-                /*i18n: %s is a number */
-                    '%s byte',
-                    '%s bytes',
-                    $fileVersion->getFullSize(),
-                    $number->format($fileVersion->getFullSize())
-                )
-            );
-            ?>
-                </div>
-        </dd>
-        <?php
-        foreach ($attributeKeys as $attributeKey) {
-            ?>
-            <dt><?= $attributeKey->getAttributeKeyDisplayName() ?></dt>
-            <dd>
-                <div>
-                    <?php
-                    $attributeValue = $fileVersion->getAttributeValueObject($attributeKey);
-                    if ($attributeValue === null) {
-                        $noValueDisplayHtml = '<i>' . t('None') . '</i>';
-                        if (method_exists($attributeKey, 'getController')) {
-                            $attributeController = $attributeKey->getController();
-                            if ($attributeController instanceof CustomNoValueTextAttributeInterface) {
-                                $noValueDisplayHtml = (string)$attributeController->getNoneTextDisplayValue();
-                            }
-                        }
-                        echo $noValueDisplayHtml;
-                    } else {
-                        echo (string)$attributeValue;
-                    }
-                    ?>
-                </div>
-            </dd>
-            <?php
-        }
-        ?>
     </dl>
 </section>
 
 <hr class="mt-5 mb-4"/>
 
 <section>
-    <h3><?=t('Sets')?></h3>
+    <h3 class="mb-4"><?=t('Sets')?></h3>
     <?php if ($view->controller->getAction() != 'preview_version') { ?>
         <a
                 class="btn btn-secondary btn-section dialog-launch"
@@ -247,8 +224,8 @@ if ($view->controller->getAction() == 'preview_version') { ?>
                 dialog-width="850" dialog-height="600"
                 href="<?= h($resolverManager->resolve(['/ccm/system/dialogs/file/sets?fID=' . $file->getFileID()])) ?>">
             <?=t('Edit')?>
-            </a>
-        <?php } ?>
+        </a>
+    <?php } ?>
     <dl class="ccm-file-manager-details-sets">
         <dt><?= t('Sets') ?></dt>
         <dd>
@@ -266,11 +243,11 @@ if ($view->controller->getAction() == 'preview_version') { ?>
                     $fileSets
                 );
                 ?>
-                <sapn><?= implode(', ', $fileSetNames) ?></sapn>
+                <span><?= implode(', ', $fileSetNames) ?></span>
                 <?php
             }
             ?>
-            <div class="text-muted">
+            <div class="text-muted mt-2">
                 <i><?= t('You can add this file to many sets. Lots of image sliders/galleries use sets to determine what to display.') ?></i>
             </div>
         </dd>
@@ -284,10 +261,10 @@ if ($view->controller->getAction() == 'preview_version') { ?>
     <dl class="ccm-file-manager-details-statistics">
         <dt><?= t('Date Added') ?></dt>
         <dd>
-            <?= t(/*%1$s is a user name, %2$s is a date/time*/ 'Added by %1$s on %2$s', h($fileVersion->getAuthorName()), h($date->formatPrettyDateTime($fileVersion->getDateAdded(), true))) ?>
+            <i><?= t(/*%1$s is a user name, %2$s is a date/time*/ 'Added by %1$s on %2$s', h($fileVersion->getAuthorName()), h($date->formatPrettyDateTime($fileVersion->getDateAdded(), true))) ?></i>
         </dd>
         <dt><?= t('Total Downloads') ?></dt>
-        <dd><?= $number->format($file->getTotalDownloads(), 0) ?></dd>
+        <dd><i><?= $number->format($file->getTotalDownloads(), 0) ?></i></dd>
         <dt><?= t('Most Recent Downloads') ?></dt>
         <dd>
             <?php
@@ -295,7 +272,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
                 ?><i><?= t('No downloads') ?></i><?php
             } else {
                 ?>
-                <table class="table table-sm table-borderless ccm-file-manager-details-download">
+                <table class="table table-bordered">
                     <tbody>
                     <?php
                     foreach ($recentDownloads as $recentDownload) {
@@ -333,7 +310,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
                 <?php
             }
             ?>
-            <div class="text-muted">
+            <div class="text-muted mt-2">
                 <i><?= t('If this file is downloaded through the File Block we track it here.') ?></i></div>
         </dd>
         <dt><?= t('File Usage') ?></dt>
@@ -345,7 +322,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
                 <?php
             } else {
                 ?>
-                <table class="table table-sm table-borderless ccm-file-manager-details-usage">
+                <table class="table table-bordered">
                     <thead>
                     <tr>
                         <th><?= t('Page ID') ?></th>
@@ -412,16 +389,6 @@ if ($view->controller->getAction() == 'preview_version') { ?>
     <?php } ?>
     <h3><?= t('Storage') ?></h3>
     <dl class="ccm-file-manager-details-storage">
-        <dt><?= t('Tracked URL') ?></dt>
-        <dd>
-            <?= h($fileVersion->getDownloadURL()) ?>
-            <div class="text-muted"><?= t("If you're going to hard code a link to this file, use this URL. By using this URL Concrete will still be able to manage permissions and track statistics on its use.") ?></div>
-        </dd>
-        <dt><?= t('File in OS') ?></dt>
-        <dd>
-            <?= h($fileVersion->getURL()) ?>
-            <div class="text-muted"><?= t('For debugging only, this is the complete URL to the source file.') ?></div>
-        </dd>
         <dt><?= t('Storage Locations') ?></dt>
         <dd>
             <?= $file->getFileStorageLocationObject()->getDisplayName() ?>

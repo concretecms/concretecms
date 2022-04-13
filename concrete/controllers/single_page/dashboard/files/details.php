@@ -11,6 +11,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\File\Command\RescanFileAsyncCommand;
 use Concrete\Core\File\Command\RescanFileCommand;
 use Concrete\Core\File\Rescanner;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
@@ -18,6 +19,7 @@ use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Details extends DashboardPageController
 {
@@ -35,6 +37,10 @@ class Details extends DashboardPageController
         $this->set('attributeKeys', $this->app->make(FileCategory::class)->getList());
         $this->set('usageRecords', $this->getUsageRecords($fileVersion->getFile()));
         $this->set('recentDownloads', $this->getRecentDownloads($fileVersion->getFile()));
+        $this->set('headerMenu', $this->app->make(ElementManager::class)->get('dashboard/files/header',
+            ['file' => $fileVersion->getFile()]
+        ));
+
     }
 
     public function view($fID = '')
@@ -61,17 +67,10 @@ class Details extends DashboardPageController
 
     public function rescan($fID = '')
     {
-        try {
-            $fileVersion = $this->getFileVersion($fID ? (int) $fID : null);
-        } catch (UserMessageException $x) {
-            $this->flash('error', $x->getMessage());
+        $fileVersion = $this->getFileVersion($fID ? (int) $fID : null);
 
-            return $this->buildRedirect('/dashboard/files/search');
-        }
-        if (!$this->token->validate("ccm-filedetails-rescan-{$fID}")) {
-            $this->flash('error', $this->token->getErrorMessage());
-
-            return $this->buildRedirect($this->action());
+        if (!$this->token->validate("ccm-filedetails-rescan-{$fID}", $this->request->request->get('token'))) {
+            throw new \RuntimeException($this->token->getErrorMessage());
         }
 
         $rescanFileCommand = new RescanFileAsyncCommand($fID);
@@ -79,7 +78,7 @@ class Details extends DashboardPageController
 
         $this->flash('success', t('The file has been rescanned.'));
 
-        return $this->buildRedirect($this->action($fID));
+        return new JsonResponse($fileVersion);
     }
 
     /**
