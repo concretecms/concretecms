@@ -6,9 +6,11 @@ div#ccm-dashboard-content {
     div.ccm-dashboard-header-row {
       padding: 0 $dashboard-content-padding-r 0 $dashboard-content-padding-l;
       position: relative;
-      display: flex;
-      align-items: center;
 
+      @include media-breakpoint-up(lg) {
+        display: flex;
+        align-items: center;
+      }
     }
 
     div.ccm-dashboard-header-row + div.ccm-dashboard-header-row {

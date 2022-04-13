@@ -22,6 +22,10 @@ div#ccm-dashboard-content {
     margin-right: $dashboard-content-padding-r;
     padding-top: $dashboard-content-padding-t;
     border-top: 1px solid $gray-200;
+
+    @include media-breakpoint-down(md) {
+      margin-top: $dashboard-content-padding-t;
+    }
   }
 
   /* full width pages (like stacks & blocks, search pages) */
