@@ -4,6 +4,7 @@ $enable-shadows: true;
 
 /* colors */
 $gray-100: #f7f7f7;
+$gray-200: #e9ecef; // This is the same as BS default but we reference it below
 $gray-300: #d8d8d8;
 $gray-400: #9b9b9b;
 $gray-500: #7c8088;
@@ -26,6 +27,10 @@ $primary: #4a90e2;
 $body-color: $gray-700;
 $small-font-size: 0.9rem;
 $text-muted: $gray-500;
+
+/* horizontal rules */
+$hr-color: $gray-200;
+$hr-opacity: 1;
 
 /* borders */
 $border-radius: 3px;

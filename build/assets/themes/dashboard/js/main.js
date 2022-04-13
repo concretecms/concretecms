@@ -5,17 +5,12 @@ import '@concretecms/bedrock/assets/cms/js/base';
 // Has to come after cms base because cms base registers the Vue Manager
 import '@concretecms/bedrock/assets/bedrock/js/frontend';
 
-// Import the CMS components and the backend components
-// Note, this currently isn't technically necessary, but I'm putting here so we have some place to put components
-// as we create them.
-// ---
-// import BoardInstanceRule from './components/Board/InstanceRule'
-// ---
-// Note, we actually have no components that are in backend that aren't in cms, becauase we're moving InstanceRule into
-// the CMS namespace. But let's keep this here so we can remember it's an option.
+// Import the CMS components and the backend components.
+// We need the avatar component because we use it in the Dashboard user view.
+import AvatarCropper from '@concretecms/bedrock/assets/account/js/frontend/components/Avatar/Cropper.vue'
 
 Concrete.Vue.createContext('backend', {
-//    BoardInstanceRule
+    AvatarCropper
 }, 'cms')
 
 // Desktops and waiting for me

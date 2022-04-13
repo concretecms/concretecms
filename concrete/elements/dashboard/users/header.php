@@ -19,24 +19,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php endif; ?>
     <?php endif; ?>
 
-    <?php
-    if ($user->getAttribute('profile_private_messages_enabled')) {
-        $u = Core::make(Concrete\Core\User\User::class);
-        if ($u->getUserID() != $user->getUserID()) { ?>
-            <a href="<?php echo View::url('/account/messages', 'write', $user->getUserID())?>" class="btn btn-secondary"><?php echo t("Send Private Message")?></a>
-        <?php } ?>
-    <?php } ?>
-
     <?php if ($canActivateUser) { ?>
         <?php if ($user->isActive()) { ?>
             <?php if (!in_array("deactivate", $workflowRequestActions)) { ?>
                 <button type="button" name="task" data-bs-toggle="modal" data-bs-target="#deactivate-user-modal"
-                        class="btn btn-secondary"><?= t('Deactivate User') ?></button>
+                        class="btn btn-secondary"><?= t('Deactivate') ?></button>
             <?php } ?>
         <?php } else { ?>
             <?php if ((!in_array("activate", $workflowRequestActions) && !in_array("register_activate", $workflowRequestActions))) { ?>
                 <button type="button" name="task" data-bs-toggle="modal" data-bs-target="#activate-user-modal"
-                        class="btn btn-secondary"><?= t('Activate User') ?></button>
+                        class="btn btn-secondary"><?= t('Activate') ?></button>
             <?php } ?>
         <?php } ?>
     <?php } ?>
