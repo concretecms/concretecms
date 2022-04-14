@@ -17,12 +17,6 @@
                       category="collection">
             <type mode="text"/>
         </attributekey>
-        <attributekey handle="exclude_subpages_from_nav" name="Exclude Sub-Pages From Nav" package="" searchable="1"
-                      indexed="1" type="boolean" category="collection">
-            <type checked="0"/>
-        </attributekey>
-        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file"
-                      category="collection"/>
         <attributekey handle="blog_entry_topics" name="Blog Entry Topics" package="" searchable="1" indexed="1"
                       type="topics" category="collection">
             <tree name="Blog Entries" path="/"/>
