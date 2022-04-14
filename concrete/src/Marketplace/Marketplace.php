@@ -79,7 +79,7 @@ class Marketplace implements ApplicationAwareInterface
         if ($csToken != '') {
             $fh = $this->app->make('helper/file');
             $csiURL = urlencode($this->getSiteURL());
-            $url = $this->config->get('concrete.urls.concrete5_secure') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . '&csiVersion=' . APP_VERSION . $ms;
+            $url = $this->config->get('concrete.urls.concrete5_secure') . $this->config->get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . '&csiVersion=' . APP_VERSION;
             $vn = $this->app->make('helper/validation/numbers');
             $r = $this->get($url);
 
