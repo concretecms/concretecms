@@ -380,6 +380,12 @@ EOL;
      */
     public function outputPageComposerEditor($key, $content)
     {
+        $pluginManager = $this->getPluginManager();
+        if ($pluginManager->isSelected('sourcearea')) {
+            // Sourcearea conflicts with composer
+            // See https://github.com/concrete5/concrete5/issues/10232
+            $pluginManager->deselect('sourcearea');
+        }
         return $this->outputStandardEditor($key, $content);
     }
 
