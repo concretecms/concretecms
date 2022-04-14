@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
+use Concrete\Core\Page\Page;
 
 class Controller extends \Concrete\Attribute\Number\Controller
 {
@@ -53,6 +54,18 @@ class Controller extends \Concrete\Attribute\Number\Controller
             $av->setValue(0);
 
             return $av;
+        }
+    }
+
+    public function getDisplayValue()
+    {
+        $caID = $this->getAttributeValue()->getValue();
+        if ($caID) {
+            $calendar = Calendar::getByID($caID);
+            if ($calendar) {
+                $url = app('url');
+                return sprintf('<a href="%s">%s</a>', $url->to('/dashboard/calendar/events', 'view', $calendar->getID()), $calendar->getName());
+            }
         }
     }
 
