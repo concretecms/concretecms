@@ -157,7 +157,7 @@ class Types extends DashboardPageController
             $this->error->add(t('You must choose a valid default page template.'));
         }
         $templates = array();
-        if (is_array($_POST['ptPageTemplateID'])) {
+        if (isset($_POST['ptPageTemplateID']) && is_array($_POST['ptPageTemplateID'])) {
             foreach ($this->post('ptPageTemplateID') as $pageTemplateID) {
                 $pt = PageTemplate::getByID($pageTemplateID);
                 if (is_object($pt)) {
