@@ -467,7 +467,7 @@ class StyleSet
     /**
      * @return bool
      */
-    public function getBoxShadowInset(): bool
+    public function getBoxShadowInset(): ?bool
     {
         return $this->boxShadowInset;
     }
