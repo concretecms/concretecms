@@ -3716,7 +3716,7 @@ EOT
         // Get upcoming publish date
         $upcomingPublishDate = $connection->createQueryBuilder()
             ->select('cv.cvPublishDate')
-            ->from('collectionVersions', 'cv')
+            ->from('CollectionVersions', 'cv')
             ->where('cv.cID = :cID')
             ->andWhere('cv.cvIsApproved = :cvIsApproved')
             ->andWhere('cv.cvPublishDate > :now')
@@ -3729,7 +3729,7 @@ EOT
         // Get upcoming publish end date
         $upcomingPublishEndDate = $connection->createQueryBuilder()
             ->select('cv.cvPublishEndDate')
-            ->from('collectionVersions', 'cv')
+            ->from('CollectionVersions', 'cv')
             ->where('cv.cID = :cID')
             ->andWhere('cv.cvIsApproved = :cvIsApproved')
             ->andWhere('cv.cvPublishEndDate > :now')
