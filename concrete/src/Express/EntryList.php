@@ -33,6 +33,8 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
      */
     protected $enableAutomaticSorting = false;
 
+    protected $permissionsChecker = null;
+
     /**
      * Columns in this array can be sorted via the request.
      *
@@ -152,7 +154,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
     public function checkPermissions($mixed)
     {
 
-        if (isset($this->permissionsChecker)) {
+        if ($this->permissionsChecker != null) {
             if ($this->permissionsChecker === -1) {
                 return true;
             } else {
