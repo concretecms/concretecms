@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\File\Image\Thumbnail\Type;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\File\Image\Thumbnail\Type\Type as ThumbnailTypeEntity;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\Support\Facade\Application;
@@ -38,9 +39,22 @@ class Type
     public static function getList()
     {
         $app = Application::getFacadeApplication();
-        $em = $app->make(EntityManagerInterface::class);
 
-        return $em->getRepository(ThumbnailTypeEntity::class)->findBy([], ['ftTypeWidth' => 'asc']);
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $item = $cache->getItem('file/image/thumbnail/type/list');
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
+        $em = $app->make(EntityManagerInterface::class);
+        $list = $em->getRepository(ThumbnailTypeEntity::class)->findBy([], ['ftTypeWidth' => 'asc']);
+
+        if ($item->isMiss()) {
+            $cache->save($item->set($list));
+        }
+
+        return $list;
     }
 
     /**
