@@ -5,6 +5,7 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\ExpressSetManager;
 use Concrete\Core\Attribute\TypeFactory;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -365,11 +366,22 @@ class ExpressCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $entry)
     {
+        /** @var RequestCache $cache */
+        $cache = $this->application->make('cache/request');
+        $item = $cache->getItem(sprintf('attribute/value/express/%d/%d', $entry->getID(), $key->getAttributeKeyID()));
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\ExpressValue');
         $value = $r->findOneBy([
             'entry' => $entry,
             'attribute_key' => $key,
         ]);
+
+        if ($item->isMiss()) {
+            $cache->save($item->set($value));
+        }
 
         return $value;
     }

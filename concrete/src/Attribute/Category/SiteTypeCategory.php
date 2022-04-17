@@ -2,6 +2,7 @@
 namespace Concrete\Core\Attribute\Category;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\SiteKey;
 use Concrete\Core\Entity\Attribute\Value\SiteTypeValue;
@@ -62,13 +63,28 @@ class SiteTypeCategory extends AbstractStandardCategory
         return $values;
     }
 
+    /**
+     * @param Key $key
+     * @param \Concrete\Core\Entity\Site\Skeleton $skeleton
+     */
     public function getAttributeValue(Key $key, $skeleton)
     {
+        /** @var RequestCache $cache */
+        $cache = $this->application->make('cache/request');
+        $item = $cache->getItem(sprintf('attribute/value/sitetype/%d/%d', $skeleton->getSiteSkeletonID(), $key->getAttributeKeyID()));
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
         $r = $this->entityManager->getRepository(SiteTypeValue::class);
         $value = $r->findOneBy(array(
             'skeleton' => $skeleton,
             'attribute_key' => $key,
         ));
+
+        if ($item->isMiss()) {
+            $cache->save($item->set($value));
+        }
 
         return $value;
     }

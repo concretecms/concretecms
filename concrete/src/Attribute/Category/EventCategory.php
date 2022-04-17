@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Key\EventKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
@@ -54,13 +55,28 @@ class EventCategory extends AbstractStandardCategory
         return $query->getResult();
     }
 
+    /**
+     * @param Key $key
+     * @param \Concrete\Core\Entity\Calendar\CalendarEventVersion $version
+     */
     public function getAttributeValue(Key $key, $version)
     {
+        /** @var RequestCache $cache */
+        $cache = $this->application->make('cache/request');
+        $item = $cache->getItem(sprintf('attribute/value/event/%d/%d', $version->getID(), $key->getAttributeKeyID()));
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\EventValue');
         $value = $r->findOneBy(array(
             'version' => $version,
             'attribute_key' => $key,
         ));
+
+        if ($item->isMiss()) {
+            $cache->save($item->set($value));
+        }
 
         return $value;
     }

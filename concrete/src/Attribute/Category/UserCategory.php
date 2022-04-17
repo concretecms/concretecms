@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Attribute\Category;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\UserKey;
 use Concrete\Core\Entity\Attribute\Type;
@@ -221,14 +222,26 @@ class UserCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $user)
     {
+        /** @var RequestCache $cache */
+        $cache = $this->application->make('cache/request');
+        $item = $cache->getItem(sprintf('attribute/value/user/%d/%d', $user->getUserID(), $key->getAttributeKeyID()));
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
         if ($user instanceof UserInfo) {
             $user = $user->getEntityObject();
         }
+
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\UserValue');
         $value = $r->findOneBy([
             'user' => $user,
             'attribute_key' => $key,
         ]);
+
+        if ($item->isMiss()) {
+            $cache->save($item->set($value));
+        }
 
         return $value;
     }
