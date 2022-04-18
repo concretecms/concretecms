@@ -27,7 +27,7 @@
                             <i class="fas fa-download"></i> <?= t('Export to CSV') ?>
                         </a>
                     </li>
-                    <?php if ($manageURL) { ?>
+                    <?php if (isset($manageURL) && $manageURL) { ?>
                         <li>
                             <a href="<?= $manageURL ?>" class="link-primary">
                                 <i class="fas fa-cog"></i> <?= t('Manage Data Object') ?>
