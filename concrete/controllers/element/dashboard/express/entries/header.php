@@ -3,6 +3,10 @@ namespace Concrete\Controller\Element\Dashboard\Express\Entries;
 
 use Concrete\Core\Controller\ElementController;
 
+/**
+ * @deprecated
+ * This does not appear to be referenced in the core any longer. It will be removed in a subsequent update.
+ */
 class Header extends ElementController
 {
     protected $entity;
