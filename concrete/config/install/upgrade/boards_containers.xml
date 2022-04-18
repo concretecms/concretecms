@@ -14,7 +14,7 @@
             </attributes>
         </page>
         <page name="Boards" path="/dashboard/boards" filename="/dashboard/boards/view.php" pagetype=""
-              description="Express Data Objects" package=""/>
+              description="" package=""/>
 
         <page name="View Boards" path="/dashboard/boards/boards" filename="/dashboard/boards/boards.php" pagetype=""
               description="" package="">

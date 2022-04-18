@@ -46,7 +46,7 @@ final class Version20200523051311 extends AbstractMigration implements Repeatabl
             "rating",
             "topics",
             "calendar",
-            "express",
+            "calendar_event",
             "page_selector",
             "user_selector",
             "site",
