@@ -29,6 +29,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="textarea" name="Text Area" package="">
@@ -174,6 +175,7 @@
         <attributetype handle="calendar_event" name="Calendar Event" package="">
             <categories>
                 <category handle="collection"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="express" name="Express Entity" package="">
@@ -183,7 +185,6 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="site_type"/>
-                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="page_selector" name="Page Selector" package="">
