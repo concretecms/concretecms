@@ -214,8 +214,8 @@ class Block extends ConcreteObject implements ObjectInterface
             $b = $cache->getItem('/block/' . $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
         }
 
-        if ($b instanceof self) {
-            return $b;
+        if ($b->isHit()) {
+            return $b->get();
         }
 
         /** @var Connection $db */
