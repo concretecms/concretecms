@@ -517,9 +517,24 @@ class Theme extends ConcreteObject implements \JsonSerializable
      */
     public static function getByHandle($pThemeHandle)
     {
+        /** @var RequestCache $cache */
+        $cache = Facade::getFacadeApplication()->make('cache/request');
+        $key = '/PageTheme/handle/' . $pThemeHandle;
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($key);
+            if ($item->isHit()) {
+                return $item->get();
+            }
+        }
+
         $where = 'pThemeHandle = ?';
         $args = [$pThemeHandle];
         $pt = static::populateThemeQuery($where, $args);
+
+        if (isset($item) && $item->isMiss()) {
+            $item->set($pt);
+            $cache->save($item);
+        }
 
         return $pt;
     }

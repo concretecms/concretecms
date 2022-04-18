@@ -55,11 +55,11 @@ class PopulateBoardInstanceDataPoolCommandHandler implements LoggerAwareInterfac
 
             $db = $this->entityManager->getConnection();
             foreach ($items as $item) {
-                $existing = $db->executeQuery('select count(boardInstanceItemID) from BoardInstanceItems bi
+                $existing = $db->fetchColumn('select count(boardInstanceItemID) from BoardInstanceItems bi
                 inner join BoardItems i on bi.boardItemID = i.boardItemID where i.uniqueItemId = ? and bi.configuredDataSourceID = ?', [
                     $item->getUniqueItemId(), $configuredDataSource->getConfiguredDataSourceID()
                 ]);
-                if ($existing->fetchColumn() === "0") {
+                if ($existing < 1) {
                     $instanceItem = new InstanceItem();
                     $instanceItem->setInstance($instance);
                     $instanceItem->setDataSource($configuredDataSource);

@@ -1,5 +1,11 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
+/**
+ * @deprecated
+ * This does not appear to be referenced in the core any longer. It will be removed in a subsequent update.
+ */
+
+?>
 <div class="ccm-header-search-form ccm-ui" data-header="express-search">
     <form class="row row-cols-auto g-0 align-items-center" method="get" action="<?php echo URL::to('/ccm/system/search/express/basic')?>?exEntityID=<?=$entity->getID()?>">
 
