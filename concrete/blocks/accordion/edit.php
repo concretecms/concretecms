@@ -3,7 +3,7 @@
 /** @var \Concrete\Core\Form\Service\Form $form */
 use Concrete\Core\Application\Service\UserInterface;
 use Concrete\Core\Support\Facade\Application;
-
+use Concrete\Core\Editor\CkeditorEditor;
 $app = Application::getFacadeApplication();
 
 /** @var Concrete\Core\Application\Service\UserInterface $userInterface */
@@ -13,6 +13,13 @@ echo $userInterface->tabs([
     ['accordion-content', t('Content'), true],
     ['accordion-settings', t('Settings')],
 ]);
+
+$editor = $app->make(CkeditorEditor::class);
+// Note - unless you explicitly call this when using the ckeditor component, it will be loaded from cdn.ckeditor.com
+// and it won't have access to any plugins.
+$editor->requireEditorAssets();
+// This has to be run in order to use the file manager, snippets, etc... all the Concrete-specific stuff.
+$config = $editor->getOptions();
 ?>
 
 <div class="tab-content">
@@ -41,7 +48,7 @@ echo $userInterface->tabs([
                   </div>
                   <div>
                       <label class="form-label"><?=t('Body')?></label>
-                      <ckeditor v-model="entry.description"></ckeditor>
+                      <ckeditor :config='<?=json_encode($config)?>' v-model="entry.description"></ckeditor>
                   </div>
               </div>
               <div v-else>
@@ -92,7 +99,6 @@ echo $userInterface->tabs([
 <script>
     $(function() {
         Concrete.Vue.activateContext('accordion', function (Vue, config) {
-            Vue.use(config.components.CKEditor) // I don't understand why this is required :(
             new Vue({
                 el: 'div[data-vue=accordion-block]',
                 components: config.components,
