@@ -4,15 +4,20 @@
 * @var $entries \Concrete\Block\Accordion\AccordionEntry[]
  */
 
-$i =0;
+$i = 0;
+$flush = $flush ?? false;
+$initialState = $initialState ?? null;
+$itemHeadingFormat = $itemHeadingFormat ?? 'h2';
+$alwaysOpen = $alwaysOpen ?? false;
+
 ?>
 
-<div class="accordion ccm-block-accordion<?php if($flush){echo ' accordion-flush';}?>" id="accordion<?=$bID?>">
+<div class="accordion ccm-block-accordion <?php if($flush){ echo ' accordion-flush'; }?>" id="accordion<?=$bID?>">
     <?php
       foreach ($entries as $entry) {
         $i ++;
         $entryClass = '';
-        if(($initialState == 'openfirst' && $i == 1) || $initialState == 'open') {
+        if (($initialState == 'openfirst' && $i == 1) || $initialState == 'open') {
           $entryClass = ' show';
         }
       ?>
