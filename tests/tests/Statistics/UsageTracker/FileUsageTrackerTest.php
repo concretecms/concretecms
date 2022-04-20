@@ -11,7 +11,7 @@ use Concrete\Core\File\Tracker\UsageTracker;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Collection\Version\Version;
 use Concrete\TestHelpers\Statistics\UsageTracker\TrackableBlockController;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Concrete\Tests\TestCase;
 
 class FileUsageTrackerTest extends TestCase
@@ -162,7 +162,8 @@ class FileUsageTrackerTest extends TestCase
         $builder->disableProxyingToOriginalMethods();
         $repository = $builder->getMock();
 
-        $manager = $this->getMockForAbstractClass(EntityManagerInterface::class);
+        $manager = $this->getMockBuilder(EntityManager::class)
+            ->disableOriginalConstructor()->getMock();
         $manager->method('getRepository')->willReturn($repository);
 
         return $manager;

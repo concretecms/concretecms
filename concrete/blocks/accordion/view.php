@@ -18,7 +18,7 @@ $alwaysOpen = $alwaysOpen ?? false;
       foreach ($entries as $entry) {
         $i++;
         $entryClass = '';
-        if(($initialState === 'openfirst' && $i == 1) || $initialState === 'open') {
+        if (($initialState === 'openfirst' && $i == 1) || $initialState === 'open') {
           $entryClass = ' show';
         }
       ?>

@@ -66,16 +66,22 @@ class PasswordUsageTrackerTest extends TestCase
 
     public function testPruning()
     {
+        $mock5 = M::mock(UsedString::class);
+        $mock4 = M::mock(UsedString::class);
+        $mock3 = M::mock(UsedString::class);
+        $mock2 = M::mock(UsedString::class);
+        $mock1 = M::mock(UsedString::class);
+
         $repository = M::mock(ObjectRepository::class);
-        $repository->shouldReceive('findBy')->with(['subject' => 1337], ['id' => 'desc'])->andReturn([5, 4, 3, 2, 1]);
+        $repository->shouldReceive('findBy')->with(['subject' => 1337], ['id' => 'desc'])->andReturn([$mock5, $mock4, $mock3, $mock2, $mock1]);
 
         $method = new ReflectionMethod(PasswordUsageTracker::class, 'pruneUses');
         $method->setAccessible(true);
 
         $entityManager = M::mock(EntityManagerInterface::class);
         $entityManager->shouldReceive('getRepository')->with(UsedString::class)->once()->andReturn($repository);
-        $entityManager->shouldReceive('remove')->with(2)->once();
-        $entityManager->shouldReceive('remove')->with(1)->once();
+        $entityManager->shouldReceive('remove')->with($mock2)->once();
+        $entityManager->shouldReceive('remove')->with($mock1)->once();
         $entityManager->shouldReceive('flush')->once();
 
         $tracker = new PasswordUsageTracker($entityManager, 3);
