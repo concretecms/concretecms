@@ -6,6 +6,7 @@ use Concrete\Core\Application\UserInterface\ContextMenu\Item\DividerItem;
 use Concrete\Core\Tree\Menu\Item\File\EditFolderItem;
 use Concrete\Core\Tree\Menu\Item\File\DeleteFolderItem;
 use Concrete\Core\Tree\Menu\Item\EditPermissionsItem;
+use Concrete\Core\Tree\Menu\Item\File\MoveFolderItem;
 use Concrete\Core\Tree\Node\Type\FileFolder;
 
 class FileFolderMenu extends DropdownMenu
@@ -17,6 +18,7 @@ class FileFolderMenu extends DropdownMenu
         $p = new \Permissions($folder);
         if ($p->canEditTreeNode()) {
             $this->addItem(new EditFolderItem($folder));
+            $this->addItem(new MoveFolderItem($folder));
         }
         if ($p->canEditTreeNode() && ($p->canEditTreeNodePermissions() || $p->canDeleteTreeNode())) {
             $this->addItem(new DividerItem());

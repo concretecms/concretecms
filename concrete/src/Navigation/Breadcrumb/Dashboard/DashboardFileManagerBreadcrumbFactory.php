@@ -40,9 +40,9 @@ class DashboardFileManagerBreadcrumbFactory implements ApplicationAwareInterface
         $pages = array_reverse($this->navigation->getTrailToCollection($dashboardPage));
         $breadcrumb = new DashboardBreadcrumb();
         foreach($pages as $page) {
-            $breadcrumb->add(new Item(Url::to($page->getCollectionLink())->setQuery(["browserFolder" => true]), $page->getCollectionName()));
+            $breadcrumb->add(new Item(Url::to($page->getCollectionLink()), $page->getCollectionName()));
         }
-        $breadcrumb->add(new Item(Url::to($dashboardPage->getCollectionLink())->setQuery(["browserFolder" => true]), $dashboardPage->getCollectionName()));
+        $breadcrumb->add(new Item(Url::to($dashboardPage->getCollectionLink()), $dashboardPage->getCollectionName()));
 
         if ($mixed instanceof FileFolder) {
             if ($mixed->getTreeNodeParentID() > 0) {
@@ -59,7 +59,7 @@ class DashboardFileManagerBreadcrumbFactory implements ApplicationAwareInterface
                     $item = new Item(
                         $this->app->make('url')->to(
                             '/dashboard/files/search', 'folder', $node->getTreeNodeID()
-                        )->setQuery(["browserFolder" => true]),
+                        ),
                         $node->getTreeNodeDisplayName()
                     );
                     $breadcrumb->add($item);
@@ -68,7 +68,7 @@ class DashboardFileManagerBreadcrumbFactory implements ApplicationAwareInterface
                 $item = new Item(
                     $this->app->make('url')->to(
                         '/dashboard/files/search', 'folder', $mixed->getTreeNodeID()
-                    )->setQuery(["browserFolder" => true]),
+                    ),
                     $mixed->getTreeNodeDisplayName()
                 );
                 $breadcrumb->add($item);
