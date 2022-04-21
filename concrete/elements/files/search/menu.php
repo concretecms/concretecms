@@ -7,7 +7,7 @@ use Concrete\Core\Support\Facade\Url;
 /** @var $urlHelper Url */
 ?>
 
-<div class="row row-cols-auto align-items-center">
+<div class="row row-cols-auto g-0 align-items-center">
     <select id="favoriteFolderSelector" class="selectpicker me-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
 
     <?php if (!empty($itemsPerPageOptions)) { ?>
