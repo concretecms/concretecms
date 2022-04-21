@@ -219,14 +219,10 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
     public function validateKey($data = false)
     {
         // additional validation for select type
-        $akCustomCountries = $data['akCustomCountries'];
-        $akHasCustomCountries = $data['akHasCustomCountries'];
-        if ($data['akHasCustomCountries'] != 1) {
-            $akHasCustomCountries = 0;
-        }
-
-        if (!is_array($data['akCustomCountries'])) {
-            $akCustomCountries = [];
+        $akCustomCountries = $data['akCustomCountries'] ?? [];
+        $akHasCustomCountries = $data['akHasCustomCountries'] ?? false;
+        if ($akHasCustomCountries != false) {
+            $akHasCustomCountries = true;
         }
 
         $e = $this->app->make('error');
@@ -333,12 +329,12 @@ class Controller extends AttributeTypeController implements MulticolumnTextExpor
     {
         $type = $this->getAttributeKeySettings();
 
-        $akCustomCountries = $data['akCustomCountries'];
-        $akHasCustomCountries = $data['akHasCustomCountries'];
-        if ($data['akHasCustomCountries'] != 1) {
+        $akCustomCountries = $data['akCustomCountries'] ?? [];
+        $akHasCustomCountries = $data['akHasCustomCountries'] ?? 0;
+        if ($akHasCustomCountries != 1) {
             $akHasCustomCountries = 0;
         }
-        if (!is_array($data['akCustomCountries'])) {
+        if (!is_array($akCustomCountries)) {
             $akCustomCountries = [];
         }
 
