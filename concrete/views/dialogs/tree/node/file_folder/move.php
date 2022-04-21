@@ -7,27 +7,23 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\View\View;
 use HtmlObject\Input;
-use Concrete\Controller\Dialog\File\Folder;
+use Concrete\Controller\Dialog\Tree\Node\FileFolder\Move;
 
-/** @var Folder $controller */
+/** @var $currentFolder \Concrete\Core\Tree\Node\Type\FileFolder */
+/** @var Move $controller */
 $app = Application::getFacadeApplication();
 /** @var Form $form */
 $form = $app->make(Form::class);
 
-$folderID = null;
-if (isset($f) && (is_object($f))) {
-    $fileFolderObject = $f->getFileFolderObject();
-    if ($fileFolderObject) {
-        $folderID = $fileFolderObject->getTreeNodeID();
-    }
-}
+$folderID = $currentFolder->getTreeNodeParentID();
+
 ?>
 
 <form method="post" data-dialog-form="move-to-folder" action="<?php echo $controller->action('submit') ?>">
     <div class="ccm-ui">
         <?php
-            /** @noinspection PhpUnhandledExceptionInspection */
-            View::element('files/move_to_folder', ['folderID' => $folderID]);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        View::element('files/move_to_folder', ['folderID' => $folderID]);
         ?>
     </div>
 

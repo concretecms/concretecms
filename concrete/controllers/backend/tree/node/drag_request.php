@@ -68,7 +68,7 @@ class DragRequest extends UserInterface
         list($sourceNodes, $destNode) = $this->getNodes();
         if (is_array($sourceNodes)) {
             foreach($sourceNodes as $sourceNode) {
-                if ($_REQUEST['copyNodes']) {
+                if (isset($_REQUEST['copyNodes']) && $_REQUEST['copyNodes']) {
                     $sourceNode->duplicate($destNode);
                     $message->setMessage(t('Item copied successfully.'));
                 } else {
