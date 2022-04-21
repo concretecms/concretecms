@@ -22,5 +22,14 @@ abstract class Node extends UserInterface
         $this->set('node', $node);
     }
 
+    public function action()
+    {
+        $url = call_user_func_array('parent::action', func_get_args());
+        if (isset($this->node)) {
+            $url .= '&treeNodeID=' . $this->node->getTreeNodeID();
+        }
+        return $url;
+    }
+
 
 }

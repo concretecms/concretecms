@@ -1,0 +1,47 @@
+div.ccm-draggable-search-item {
+
+  position: relative;
+
+  &:after {
+    font-family: 'Font Awesome 5 Free';
+    font-style: normal;
+    text-decoration: inherit;
+    font-size: 24px;
+    color: #666;
+    display: inline-block;
+  }
+
+  &.ccm-search-results-stack {
+    &:after {
+      content: "\f1b3";
+    }
+  }
+
+  &.ccm-search-results-folder {
+    &:after {
+      content: "\f07b";
+    }
+  }
+
+  &.ccm-search-results-file {
+    &:after {
+      content: "\f016";
+    }
+  }
+
+  span {
+    display: inline-block;
+    background-color: #0099ff;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 10px;
+    top: -2px;
+    right: 18px;
+    position: absolute;
+
+  }
+}

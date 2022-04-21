@@ -527,10 +527,9 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
                         stop: function () {
                             $('.ccm-undroppable-search-item').css('opacity', '');
                         },
-                        revert: 'invalid',
                         helper: function () {
                             var $selected = $this.add($tbody.find('.ccm-stack-folder-dragging'));
-                            return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
+                            return $('<div class="' + className + ' ccm-draggable-search-item"><span><i class="fa fa-share"></i></span></div>').data('$selected', $selected);
                         },
                         cursorAt: {
                             left: -20,

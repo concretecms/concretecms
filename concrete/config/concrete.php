@@ -892,7 +892,7 @@ return [
          *
          * @var int
          */
-        'results' => 10,
+        'results' => 50,
     ],
 
     'search_users' => [
