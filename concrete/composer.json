@@ -52,6 +52,7 @@
     "doctrine/dbal": "^2.13.2",
     "doctrine/orm": "^2.8.5",
     "doctrine/common": "^3.1.2",
+    "doctrine/persistence": "^2.5.1",
     "doctrine/migrations": "^2",
     "symfony/cache": "^v5.3.7",
     "league/flysystem": "1.*",

@@ -182,10 +182,6 @@ class Update
         $app->executeCommand($command);
 
         $em = $app->make(EntityManagerInterface::class);
-        $cmf = $em->getMetadataFactory();
-        foreach (array_keys($cmf->getLoadedMetadata()) as $loadedClass) {
-            $cmf->setMetadataFor($loadedClass, null);
-        }
         $dbm = new DatabaseStructureManager($em);
         $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
@@ -232,7 +228,7 @@ class Update
             }
             ++$performedMigrations;
             if ($defaultTimeLimit !== 0 && !$timeLimitSet && $migration instanceof Migrations\LongRunningMigrationInterface) {
-                // The current eecution time is not unlimited, we are unable to reset the time limit, and the performed migration took long time
+                // The current execution time is not unlimited, we are unable to reset the time limit, and the performed migration took long time
                 if ($performedMigrations < $totalMigrations) {
                     throw new Migrations\MigrationIncompleteException($performedMigrations, $totalMigrations - $performedMigrations);
                 }
