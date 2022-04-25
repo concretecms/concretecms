@@ -182,10 +182,6 @@ class Update
         $app->executeCommand($command);
 
         $em = $app->make(EntityManagerInterface::class);
-        $cmf = $em->getMetadataFactory();
-        foreach (array_keys($cmf->getLoadedMetadata()) as $loadedClass) {
-            $cmf->setMetadataFor($loadedClass, null);
-        }
         $dbm = new DatabaseStructureManager($em);
         $dbm->destroyProxyClasses('ConcreteCore');
         $dbm->generateProxyClasses();
