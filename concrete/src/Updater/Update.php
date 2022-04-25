@@ -228,7 +228,7 @@ class Update
             }
             ++$performedMigrations;
             if ($defaultTimeLimit !== 0 && !$timeLimitSet && $migration instanceof Migrations\LongRunningMigrationInterface) {
-                // The current eecution time is not unlimited, we are unable to reset the time limit, and the performed migration took long time
+                // The current execution time is not unlimited, we are unable to reset the time limit, and the performed migration took long time
                 if ($performedMigrations < $totalMigrations) {
                     throw new Migrations\MigrationIncompleteException($performedMigrations, $totalMigrations - $performedMigrations);
                 }
