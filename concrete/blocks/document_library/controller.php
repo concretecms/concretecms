@@ -499,10 +499,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     {
         $query = $list->getQueryObject();
 
-        $category = $this->app->make(FileCategory::class);
-        $table = $category->getIndexedSearchTable();
-        $query->leftJoin('fv', $table, 'fis', 'fv.fID = fis.fID');
-
         $searchProperties = (array) json_decode($this->searchProperties);
         $type = $this->request->query->get('type');
         $extension = $this->request->query->get('extension');
@@ -542,15 +538,17 @@ class Controller extends BlockController implements UsesFeatureInterface
                     }
                     break;
                 default:
-                    $akID = substr($column, 3);
-                    $ak = FileKey::getByID($akID);
-                    if (is_object($ak)) {
-                        $this->enableSubFolderSearch($list);
-                        $type = $ak->getAttributeType();
-                        $cnt = $type->getController();
-                        $cnt->setRequestArray($allQueries);
-                        $cnt->setAttributeKey($ak);
-                        $cnt->searchForm($list);
+                    if ($this->request->query->has('search')) {
+                        $akID = substr($column, 3);
+                        $ak = FileKey::getByID($akID);
+                        if (is_object($ak)) {
+                            $this->enableSubFolderSearch($list);
+                            $type = $ak->getAttributeType();
+                            $cnt = $type->getController();
+                            $cnt->setRequestArray($allQueries);
+                            $cnt->setAttributeKey($ak);
+                            $cnt->searchForm($list);
+                        }
                     }
                     break;
             }

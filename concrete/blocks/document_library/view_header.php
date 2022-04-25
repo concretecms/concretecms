@@ -22,7 +22,7 @@ $c = Page::getCurrentPage();
             <div class="col-md-6">
                 <div class="hstack gap-2">
                     <?=$form->text('keywords', ['placeholder' => t('Keyword Search')])?>
-                    <button type="submit" class="btn btn-primary" name="search"><?=t('Search')?></button>
+                    <button type="submit" class="btn btn-primary" name="search" value="search"><?=t('Search')?></button>
                 </div>
             </div>
             <div class="col-md-6 text-end">
