@@ -56,6 +56,13 @@ class Add extends Node
         $this->set('node', $node);
         $storageLocations = $this->app->make(StorageLocationFactory::class)->fetchList();
         $locations = [];
+        $selectedLocationID = null;
+        if ($node instanceof FileFolder) {
+            $selectedLocation = $node->getTreeNodeStorageLocationObject();
+            if ($selectedLocation) {
+                $selectedLocationID = $selectedLocation->getID();
+            }
+        }
         foreach ($storageLocations as $location) {
             if ($location->isDefault()) {
                 $locations[$location->getID()] = t('%s (default)', h($location->getName()));
@@ -63,6 +70,7 @@ class Add extends Node
                 $locations[$location->getID()] = h($location->getName());
             }
         }
+        $this->set('selectedLocationID', $selectedLocationID);
         $this->set('locations', $locations);
     }
 
