@@ -2,11 +2,11 @@
 namespace Concrete\Core\Database;
 
 use Closure;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Schema\SchemaDiff;
 use Doctrine\ORM\EntityManagerInterface;
 use Core;
 use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\Persistence\Mapping\MappingException;
 
 class DatabaseStructureManager
 {
@@ -195,7 +195,6 @@ class DatabaseStructureManager
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
             $sm = $conn->getSchemaManager();
-            $cmf = $em->getMetadataFactory();
             $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
             $comparator = new \Doctrine\DBAL\Schema\Comparator();
 
@@ -271,7 +270,6 @@ class DatabaseStructureManager
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
             $sm = $conn->getSchemaManager();
-            $cmf = $em->getMetadataFactory();
             $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
 
             $newSchema = $tool->getSchemaFromMetadata($metadatas);
@@ -323,7 +321,6 @@ class DatabaseStructureManager
         $em = $this->getEntityManager();
         $conn = $em->getConnection();
         $sm = $conn->getSchemaManager();
-        $cmf = $em->getMetadataFactory();
         // Exclude existing entity tables from being dropped
         $metadatas = $this->getMetadatas();
         foreach ($metadatas as $md) {
@@ -394,7 +391,7 @@ class DatabaseStructureManager
             $cache->flushAll();
         }
 
-        // Next, we regnerate proxies
+        // Next, we regenerate proxies
         $metadatas = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $this->entityManager->getProxyFactory()->generateProxyClasses($metadatas, \Config::get('database.proxy_classes'));
         return $metadatas;

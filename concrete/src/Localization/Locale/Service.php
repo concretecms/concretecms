@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Localization\Locale;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Page\Template;
 use Concrete\Core\Entity\Site\Locale;
 use Concrete\Core\Entity\Site\LocaleEntityInterface;
@@ -39,17 +40,49 @@ class Service
         }
     }
 
-    public function setDefaultLocale(Locale $defaultLocale)
+    public function setDefaultLocale(Locale $newDefaultLocale)
     {
-        foreach ($defaultLocale->getSite()->getLocales() as $locale) {
+        $db = $this->entityManager->getConnection();
+        $site = $newDefaultLocale->getSite();
+        $existingDefaultLocale = $site->getDefaultLocale();
+        // Now let's find all pages under this locale that have a cParentID of zero. Those are the "root"
+        // pages like /!drafts. Each multi-site site has a single drafts page, that lives beneath the
+        // default locale. That means if you have multiple sites in your Concrete installation, you have
+        // multiple drafts pages. That's fine. However if you have multilingual locales, you only have a single
+        // Drafts page per site, located under the default locale. If you we don't move the drafts page with the
+        // default locale when we move it, deleting the once-default locale will result in a Concrete site without
+        // a drafts page.
+        $pageIDsToMove = [];
+        $qb = $db->createQueryBuilder();
+        $r = $qb->select('cID')
+            ->from('Pages')
+            ->where('cParentID = 0')
+            ->andWhere('siteTreeID = :siteTreeID')
+            ->andWhere('cFilename is not null')
+            ->setParameter('siteTreeID', $existingDefaultLocale->getSiteTreeID())
+            ->execute();
+        while ($row = $r->fetchAssociative()) {
+            $pageIDsToMove[] = $row['cID'];
+        }
+
+        foreach ($newDefaultLocale->getSite()->getLocales() as $locale) {
             $locale->setIsDefault(false);
             $this->entityManager->persist($locale);
         }
         $this->entityManager->flush();
-
-        $defaultLocale->setIsDefault(true);
-        $this->entityManager->persist($defaultLocale);
+        $newDefaultLocale->setIsDefault(true);
+        $this->entityManager->persist($newDefaultLocale);
         $this->entityManager->flush();
+
+        // Now let's move the pages.
+        if (count($pageIDsToMove)) {
+            $db->createQueryBuilder()
+                ->update('Pages', 'p')
+                ->set('siteTreeID', $newDefaultLocale->getSiteTreeID())
+                ->where('p.cID in (:pageIDsToMove)')
+                ->setParameter('pageIDsToMove', $pageIDsToMove, Connection::PARAM_INT_ARRAY)
+                ->execute();
+        }
     }
 
     public function add(Site $site, $language, $country)

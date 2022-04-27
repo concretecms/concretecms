@@ -3368,7 +3368,10 @@ EOT
      */
     public function isActive()
     {
-        return (bool) $this->cIsActive;
+        if (isset($this->cIsActive)) {
+            return (bool) $this->cIsActive;
+        }
+        return false;
     }
 
     /**
