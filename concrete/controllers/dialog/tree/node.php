@@ -5,6 +5,8 @@ use Concrete\Controller\Backend\UserInterface;
 
 abstract class Node extends UserInterface
 {
+    protected $node;
+
     /**
      * @return \Concrete\Core\Tree\Node\Node
      */
