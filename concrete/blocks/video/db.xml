@@ -28,5 +28,6 @@
         <field name="width" type="integer">
             <unsigned/>
         </field>
+        <field name="title" type="string" size="255" />
     </table>
 </schema>

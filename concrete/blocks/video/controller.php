@@ -182,6 +182,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'posterfID' => 0,
             'width' => 0,
             'videoSize' => 0,
+            'title' => '',
         ];
         $args = [
             'webmfID' => max(0, (int) $data['webmfID']),
@@ -189,6 +190,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'mp4fID' => max(0, (int) $data['mp4fID']),
             'posterfID' => max(0, (int) $data['posterfID']),
             'videoSize' => max(0, (int) $data['videoSize']),
+            'title' =>  $data['title'],
         ];
         $args['width'] = $args['videoSize'] === 0 || $args['videoSize'] == 1 ? 0 : (int) $data['width'];
 
