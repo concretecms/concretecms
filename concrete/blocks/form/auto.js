@@ -208,9 +208,9 @@ var miniSurvey = {
                         if (key_val.length == 2) {
                             if (key_val[0] == 'send_notification_from') {
                                 if (key_val[1] == 1) {
-                                    $('.send_notification_from_edit input').prop('checked', true);
+                                    $('input[name="send_notification_from_edit"]').prop('checked', true);
                                 } else {
-                                    $('.send_notification_from_edit input').prop('checked', false);
+                                    $('input[name="send_notification_from_edit"]').prop('checked', false);
                                 }
                             }
                         }
