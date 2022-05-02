@@ -88,17 +88,15 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function getSearchIndexer()
     {
-        $indexer = $this->application->make(StandardSearchIndexer::class);
-
-        return $indexer;
+        return $this->application->make(StandardSearchIndexer::class);
     }
 
     /**
      * {@inheritdoc}
      *
      * @return \Concrete\Core\Entity\Attribute\Key\Key[]
-     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getList()
      *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getList()
      */
     public function getList()
     {
@@ -141,6 +139,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     {
         $class = substr(get_class($this), strrpos(get_class($this), '\\') + 1);
         $category = strtolower(substr($class, 0, strpos($class, 'Category')));
+
         return '/attribute/' . $category;
     }
 
@@ -148,8 +147,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      * {@inheritdoc}
      *
      * @return \Concrete\Core\Entity\Attribute\Key\Key|null
-     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByHandle()
      *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByHandle()
      */
     public function getAttributeKeyByHandle($handle)
     {
@@ -179,8 +178,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      * {@inheritdoc}
      *
      * @return \Concrete\Core\Entity\Attribute\Key\Key|null
-     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByID()
      *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::getAttributeKeyByID()
      */
     public function getAttributeKeyByID($akID)
     {
@@ -229,7 +228,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
     {
         if (is_string($type)) {
             $typeFactory = $this->application->make(TypeFactory::class);
-            /* @var TypeFactory $typeFactory */
+            // @var TypeFactory $typeFactory
             $type = $typeFactory->getByHandle($type);
         }
 
@@ -279,7 +278,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         $this->entityManager->persist($key);
         $this->entityManager->flush();
 
-        /* legacy support, attribute set */
+        // legacy support, attribute set
 
         if ($asID) {
             $manager = $this->getSetManager();
@@ -297,8 +296,8 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      * {@inheritdoc}
      *
      * @return \Concrete\Core\Entity\Attribute\Key\Key
-     * @see \Concrete\Core\Attribute\Category\CategoryInterface::addFromRequest()
      *
+     * @see \Concrete\Core\Attribute\Category\CategoryInterface::addFromRequest()
      */
     public function addFromRequest(AttributeType $type, Request $request)
     {
@@ -329,7 +328,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      *
      * @return \Concrete\Core\Entity\Attribute\Key\Key
      */
-    public function import(AttributeType $type, SimpleXMLElement $element, Package $package = null)
+    public function import(AttributeType $type, SimpleXMLElement $element, ?Package $package = null)
     {
         $key = $this->createAttributeKey();
         $loader = $this->getImportLoader();
@@ -417,7 +416,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
      */
     public function deleteValue(AttributeValueInterface $attributeValue)
     {
-        /* @var \Concrete\Core\Entity\Attribute\Value\AbstractValue $attributeValue */
+        // @var \Concrete\Core\Entity\Attribute\Value\AbstractValue $attributeValue
 
         $genericValue = $attributeValue->getGenericValue();
         if ($genericValue !== null) {

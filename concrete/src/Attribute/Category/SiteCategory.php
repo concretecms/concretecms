@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\SiteKey;
 
@@ -103,11 +102,9 @@ class SiteCategory extends AbstractStandardCategory
      */
     public function getAttributeValues($site)
     {
-        $values = $this->getAttributeValueRepository()->findBy([
+        return $this->getAttributeValueRepository()->findBy([
             'site' => $site,
         ]);
-
-        return $values;
     }
 
     /**
@@ -122,23 +119,12 @@ class SiteCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $site)
     {
-        /** @var RequestCache $cache */
-        $cache = $this->application->make('cache/request');
-        $item = $cache->getItem(sprintf('attribute/value/site/%d/%d', $site->getSiteID(), $key->getAttributeKeyID()));
-        if ($item->isHit()) {
-            return $item->get();
-        }
-
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\SiteValue');
-        $value = $r->findOneBy([
+        $cacheKey = sprintf('attribute/value/site/%d/%d', $site->getSiteID(), $key->getAttributeKeyID());
+        $parameters = [
             'site' => $site,
             'attribute_key' => $key,
-        ]);
+        ];
 
-        if ($item->isMiss()) {
-            $cache->save($item->set($value));
-        }
-
-        return $value;
+        return $this->getAttributeValueEntity($cacheKey, $parameters);
     }
 }

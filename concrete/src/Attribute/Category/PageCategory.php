@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\PageKey;
 
@@ -69,7 +68,7 @@ class PageCategory extends AbstractStandardCategory
                     'onDelete' => 'CASCADE',
                 ],
             ],
-            'index' => ['exclude_page_list', 'is_featured']
+            'index' => ['exclude_page_list', 'is_featured'],
         ];
     }
 
@@ -104,12 +103,10 @@ class PageCategory extends AbstractStandardCategory
      */
     public function getAttributeValues($page)
     {
-        $values = $this->getAttributeValueRepository()->findBy([
+        return $this->getAttributeValueRepository()->findBy([
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID(),
         ]);
-
-        return $values;
     }
 
     /**
@@ -124,23 +121,13 @@ class PageCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $page)
     {
-        /** @var RequestCache $cache */
-        $cache = $this->application->make('cache/request');
-        $item = $cache->getItem(sprintf('attribute/value/page/%d/%d/%d', $page->getCollectionID(), $page->getVersionID(), $key->getAttributeKeyID()));
-        if ($item->isHit()) {
-            return $item->get();
-        }
-
-        $value = $this->getAttributeValueRepository()->findOneBy([
+        $cacheKey = sprintf('attribute/value/page/%d/%d/%d', $page->getCollectionID(), $page->getVersionID(), $key->getAttributeKeyID());
+        $parameters = [
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID(),
             'attribute_key' => $key,
-        ]);
+        ];
 
-        if ($item->isMiss()) {
-            $cache->save($item->set($value));
-        }
-
-        return $value;
+        return $this->getAttributeValueEntity($cacheKey, $parameters);
     }
 }

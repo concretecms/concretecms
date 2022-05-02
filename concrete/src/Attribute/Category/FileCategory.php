@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Attribute\Category;
 
-use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Key\FileKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 
@@ -123,24 +122,13 @@ class FileCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $file)
     {
-        /** @var RequestCache $cache */
-        $cache = $this->application->make('cache/request');
-        $item = $cache->getItem(sprintf('attribute/value/file/%d/%d/%d', $file->getFileID(), $file->getFileVersionID(), $key->getAttributeKeyID()));
-        if ($item->isHit()) {
-            return $item->get();
-        }
-
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\FileValue');
-        $value = $r->findOneBy([
+        $cacheKey = sprintf('attribute/value/file/%d/%d/%d', $file->getFileID(), $file->getFileVersionID(), $key->getAttributeKeyID());
+        $parameters = [
             'fID' => $file->getFileID(),
             'fvID' => $file->getFileVersionID(),
             'attribute_key' => $key,
-        ]);
+        ];
 
-        if ($item->isMiss()) {
-            $cache->save($item->set($value));
-        }
-
-        return $value;
+        return $this->getAttributeValueEntity($cacheKey, $parameters);
     }
 }

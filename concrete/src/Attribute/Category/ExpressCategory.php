@@ -5,7 +5,6 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\ExpressSetManager;
 use Concrete\Core\Attribute\TypeFactory;
-use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
@@ -69,9 +68,7 @@ class ExpressCategory extends AbstractStandardCategory
      */
     public function getSearchIndexer()
     {
-        $indexer = $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer');
-
-        return $indexer;
+        return $this->application->make('Concrete\Core\Attribute\Category\SearchIndexer\ExpressSearchIndexer');
     }
 
     /**
@@ -97,6 +94,7 @@ class ExpressCategory extends AbstractStandardCategory
             // check above for `getId()`
             return '/attribute/express/' . snake_case($this->expressEntity->getHandle());
         }
+
         return null;
     }
 
@@ -178,7 +176,8 @@ class ExpressCategory extends AbstractStandardCategory
     public function deleteKey(Key $key)
     {
         $controls = $this->entityManager->getRepository('Concrete\Core\Entity\Express\Control\AttributeKeyControl')
-            ->findBy(['attribute_key' => $key]);
+            ->findBy(['attribute_key' => $key])
+        ;
         foreach ($controls as $control) {
             $this->entityManager->remove($control);
         }
@@ -266,7 +265,8 @@ class ExpressCategory extends AbstractStandardCategory
     {
         /** @var TypeFactory $typeFactory */
         $typeFactory = $this->application->make(TypeFactory::class);
-        return $typeFactory->getList("express");
+
+        return $typeFactory->getList('express');
     }
 
     /**
@@ -276,14 +276,15 @@ class ExpressCategory extends AbstractStandardCategory
      *
      * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey
      */
-    public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
+    public function import(Type $type, \SimpleXMLElement $element, ?Package $package = null)
     {
         $key = parent::import($type, $element, $package);
         /**
-         * @var $key ExpressKey
+         * @var ExpressKey $key
          */
         $key->setEntity($this->expressEntity);
         $key->setIsAttributeKeyUnique((string) $element['unique'] == 1);
+
         return $key;
     }
 
@@ -298,10 +299,11 @@ class ExpressCategory extends AbstractStandardCategory
     {
         $key = parent::addFromRequest($type, $request);
         /**
-         * @var $key ExpressKey
+         * @var ExpressKey $key
          */
         $key->setEntity($this->expressEntity);
         $this->saveFromRequest($key, $request);
+
         return $key;
     }
 
@@ -333,25 +335,10 @@ class ExpressCategory extends AbstractStandardCategory
     public function getAttributeValues($entry)
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\ExpressValue');
-        $values = $r->findBy([
+
+        return $r->findBy([
             'entry' => $entry,
         ]);
-
-        return $values;
-    }
-
-    /**
-     * @param \Concrete\Core\Entity\Attribute\Key\ExpressKey $key The user attribute key to be updated
-     * @param \Symfony\Component\HttpFoundation\Request $request The request containing the posted data
-     *
-     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey
-     */
-    protected function saveFromRequest(Key $key, Request $request)
-    {
-        $key->setIsAttributeKeyUnique((string) $request->request->get('eakUnique') == 1);
-        // Actually save the changes to the database
-        $this->entityManager->flush();
-        return $key;
     }
 
     /**
@@ -366,23 +353,27 @@ class ExpressCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $entry)
     {
-        /** @var RequestCache $cache */
-        $cache = $this->application->make('cache/request');
-        $item = $cache->getItem(sprintf('attribute/value/express/%d/%d', $entry->getID(), $key->getAttributeKeyID()));
-        if ($item->isHit()) {
-            return $item->get();
-        }
-
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\ExpressValue');
-        $value = $r->findOneBy([
+        $cacheKey = sprintf('attribute/value/express/%d/%d', $entry->getID(), $key->getAttributeKeyID());
+        $parameters = [
             'entry' => $entry,
             'attribute_key' => $key,
-        ]);
+        ];
 
-        if ($item->isMiss()) {
-            $cache->save($item->set($value));
-        }
+        return $this->getAttributeValueEntity($cacheKey, $parameters);
+    }
 
-        return $value;
+    /**
+     * @param \Concrete\Core\Entity\Attribute\Key\ExpressKey $key The user attribute key to be updated
+     * @param \Symfony\Component\HttpFoundation\Request $request The request containing the posted data
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey
+     */
+    protected function saveFromRequest(Key $key, Request $request)
+    {
+        $key->setIsAttributeKeyUnique((string) $request->request->get('eakUnique') == 1);
+        // Actually save the changes to the database
+        $this->entityManager->flush();
+
+        return $key;
     }
 }
