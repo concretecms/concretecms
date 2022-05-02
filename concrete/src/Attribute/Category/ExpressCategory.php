@@ -353,7 +353,7 @@ class ExpressCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $entry)
     {
-        $cacheKey = sprintf('attribute/value/express/%d/%d', $entry->getID(), $key->getAttributeKeyID());
+        $cacheKey = sprintf('attribute/value/%d/express/%d', $key->getAttributeKeyID(), $entry->getID());
         $parameters = [
             'entry' => $entry,
             'attribute_key' => $key,

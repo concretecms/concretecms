@@ -76,7 +76,7 @@ trait ObjectTrait
         $app = Application::getFacadeApplication();
         /** @var RequestCache $cache */
         $cache = $app->make('cache/request');
-        $cache->delete('attribute/value');
+        $cache->delete('attribute/value/' . $ak->getAttributeKeyID());
 
         $orm = \Database::connection()->getEntityManager();
 

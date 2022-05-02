@@ -60,7 +60,7 @@ class EventCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $version)
     {
-        $cacheKey = sprintf('attribute/value/event/%d/%d', $version->getID(), $key->getAttributeKeyID());
+        $cacheKey = sprintf('attribute/value/%d/event/%d', $key->getAttributeKeyID(), $version->getID());
         $parameters = [
             'version' => $version,
             'attribute_key' => $key,

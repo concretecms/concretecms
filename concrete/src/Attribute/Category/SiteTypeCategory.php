@@ -65,7 +65,7 @@ class SiteTypeCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $skeleton)
     {
-        $cacheKey = sprintf('attribute/value/sitetype/%d/%d', $skeleton->getSiteSkeletonID(), $key->getAttributeKeyID());
+        $cacheKey = sprintf('attribute/value/%d/sitetype/%d', $key->getAttributeKeyID(), $skeleton->getSiteSkeletonID());
         $parameters = [
             'skeleton' => $skeleton,
             'attribute_key' => $key,

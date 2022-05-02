@@ -122,7 +122,7 @@ class FileCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $file)
     {
-        $cacheKey = sprintf('attribute/value/file/%d/%d/%d', $file->getFileID(), $file->getFileVersionID(), $key->getAttributeKeyID());
+        $cacheKey = sprintf('attribute/value/%d/file/%d/%d', $key->getAttributeKeyID(), $file->getFileID(), $file->getFileVersionID());
         $parameters = [
             'fID' => $file->getFileID(),
             'fvID' => $file->getFileVersionID(),
