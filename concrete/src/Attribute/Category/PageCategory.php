@@ -121,7 +121,7 @@ class PageCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $page)
     {
-        $cacheKey = sprintf('attribute/value/%d/page/%d/%d', $key->getAttributeKeyID(), $page->getCollectionID(), $page->getVersionID());
+        $cacheKey = sprintf('attribute/value/%s/page/%d/%d', $key->getAttributeKeyHandle(), $page->getCollectionID(), $page->getVersionID());
         $parameters = [
             'cID' => $page->getCollectionID(),
             'cvID' => $page->getVersionID(),

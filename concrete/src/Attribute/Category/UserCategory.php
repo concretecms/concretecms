@@ -220,7 +220,7 @@ class UserCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $user)
     {
-        $cacheKey = sprintf('attribute/value/%d/user/%d', $key->getAttributeKeyID(), $user->getUserID());
+        $cacheKey = sprintf('attribute/value/%s/user/%d', $key->getAttributeKeyHandle(), $user->getUserID());
         $parameters = [
             'user' => $user,
             'attribute_key' => $key,

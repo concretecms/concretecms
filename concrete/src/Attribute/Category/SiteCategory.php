@@ -119,7 +119,7 @@ class SiteCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $site)
     {
-        $cacheKey = sprintf('attribute/value/%d/site/%d', $key->getAttributeKeyID(), $site->getSiteID());
+        $cacheKey = sprintf('attribute/value/%s/site/%d', $key->getAttributeKeyHandle(), $site->getSiteID());
         $parameters = [
             'site' => $site,
             'attribute_key' => $key,
