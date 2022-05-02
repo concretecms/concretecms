@@ -3,8 +3,10 @@ namespace Concrete\Core\Attribute;
 
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Value\EmptyRequestAttributeValue;
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Entity\Attribute\Value\Value as AttributeValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
+use Concrete\Core\Support\Facade\Application;
 
 trait ObjectTrait
 {
@@ -71,6 +73,11 @@ trait ObjectTrait
      */
     public function setAttribute($ak, $value, $doReindexImmediately = true)
     {
+        $app = Application::getFacadeApplication();
+        /** @var RequestCache $cache */
+        $cache = $app->make('cache/request');
+        $cache->delete('attribute/value');
+
         $orm = \Database::connection()->getEntityManager();
 
         $this->clearAttribute($ak, $doReindexImmediately);
