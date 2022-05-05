@@ -38,6 +38,7 @@ if (is_object($c) && $c->isEditMode()) {
     style="max-width: 100%;"
     <?php
     }?>
+    <?php echo $title ? 'title="' . h($title) . '"' : ''; ?>
     >
         <?php if ($webmURL) { ?>
         <source src="<?php echo $webmURL; ?>" type="video/webm">
