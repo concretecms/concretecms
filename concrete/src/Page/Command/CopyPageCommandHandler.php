@@ -14,7 +14,7 @@ class CopyPageCommandHandler
         $db = \Database::connection();
         if ($oc && !$oc->isError()) {
             $cParentID = $db->getOne('select cParentID from Pages where cID = ?', [$command->getPageID()]);
-            $newCID = $db->GetOne('select cID from QueuePageDuplicationRelations where originalCID = ? and queue_name = ?', array($cParentID, 'copy_page'));
+            $newCID = $db->GetOne('select cID from QueuePageDuplicationRelations where originalCID = ? and queue_name = ?', array($cParentID, $command->getCopyBatchID()));
             if ($newCID > 0) {
                 $dc = Page::getByID($newCID);
             } else {
@@ -53,7 +53,7 @@ class CopyPageCommandHandler
                 $ncID = $nc->getCollectionPointerOriginalID();
             }
             $db->Execute('insert into QueuePageDuplicationRelations (cID, originalCID, queue_name) values (?, ?, ?)', array(
-                $ncID, $ocID, 'copy_page',
+                $ncID, $ocID, $command->getCopyBatchID(),
             ));
         }
     }
