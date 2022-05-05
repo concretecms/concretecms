@@ -6,6 +6,7 @@ use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait as KeySelectorControllerTrait;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Concrete\Core\Page\Page;
@@ -87,10 +88,14 @@ class Properties extends BackendInterfaceController
     public function submit()
     {
         if ($this->validateAction()) {
-            $this->saveAttributes();
+            $attributesResponse = $this->saveAttributes();
             $r = new PageEditResponse();
             $r->setPages($this->pages);
-            $r->setMessage(t('Attributes updated successfully.'));
+            if ($attributesResponse instanceof ErrorList) {
+                $r->setError($attributesResponse);
+            } else {
+                $r->setMessage(t('Attributes updated successfully.'));
+            }
 
             return new JsonResponse($r);
         }

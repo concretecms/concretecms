@@ -12,6 +12,7 @@ use Concrete\Core\Attribute\Command\ClearAttributesCommand;
 use Concrete\Core\Attribute\Command\SaveAttributesCommand;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait;
 use Concrete\Core\Attribute\Key\Component\KeySelector\KeySerializer;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
@@ -123,9 +124,13 @@ class Attributes extends BackendInterfaceController
     public function submit()
     {
         if ($this->validateAction()) {
-            $this->saveAttributes();
+            $attributesResponse = $this->saveAttributes();
             $message = new EditResponse();
-            $message->setMessage(t('Attributes updated successfully.'));
+            if ($attributesResponse instanceof ErrorList) {
+                $message->setError($attributesResponse);
+            } else {
+                $message->setMessage(t('Attributes updated successfully.'));
+            }
             return new JsonResponse($message);
         }
     }
