@@ -247,7 +247,7 @@ class MiniSurvey
 					</li>
 				<?php
             }
-            echo '</div></div>';
+            echo '</ul></div>';
         }
     }
 
