@@ -8,6 +8,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Cloner;
 use Concrete\Core\Page\ClonerOptions;
+use Concrete\Core\Page\Command\ClearPageCopyCommandBatch;
 use Concrete\Core\Page\Command\CopyPageCommand;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Sitemap\DragRequestData;
@@ -87,11 +88,12 @@ class DragRequest extends UserInterfaceController
             $pages = [];
             $pages = $oc->populateRecursivePages($pages, ['cID' => $oc->getCollectionID()], $oc->getCollectionParentID(), 0, !$dragRequestData->isCopyChildrenOnly());
             usort($pages, ['\Concrete\Core\Page\Page', 'queueForDuplicationSort']);
-            $batch = Batch::create(t('Copy Pages'), function() use ($pages, $dragRequestData, $isMultilingual) {
-                foreach ($pages as $page) {
-                    yield new CopyPageCommand($page['cID'], $dragRequestData->getDestinationPage()->getCollectionID(), $isMultilingual);
-                }
-            });
+            $copyBatchID = uuid_create();
+            $batch = Batch::create(t('Copy Pages'));
+            foreach ($pages as $page) {
+                $batch->add(new CopyPageCommand($page['cID'], $copyBatchID, $dragRequestData->getDestinationPage()->getCollectionID(), $isMultilingual));
+            }
+            $batch->add(new ClearPageCopyCommandBatch($copyBatchID));
             return $this->dispatchBatch($batch);
         }
     }
