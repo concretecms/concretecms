@@ -7,6 +7,7 @@ use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Key\Component\KeySelector\ControllerTrait;
 use Concrete\Core\Entity\Attribute\Key\Key;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
 use Concrete\Core\Filesystem\ElementManager;
@@ -79,10 +80,14 @@ class Properties extends BackendInterfaceFileController
             $fv->updateTitle($this->request->request->get('title'));
             $fv->updateDescription($this->request->request->get('description'));
             $fv->updateTags($this->request->request->get('tags'));
-            $this->saveAttributes();
+            $attributesResponse = $this->saveAttributes();
             $sr = new EditResponse();
             $sr->setFile($this->file);
-            $this->flash('success', t('File updated successfully.'));
+            if ($attributesResponse instanceof ErrorList) {
+                $sr->setError($attributesResponse);
+            } else {
+                $this->flash('success', t('File updated successfully.'));
+            }
             return new JsonResponse($sr);
         } else {
             throw new \Exception(t('Access Denied.'));

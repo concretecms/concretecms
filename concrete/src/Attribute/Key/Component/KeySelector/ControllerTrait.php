@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Command\ClearAttributesCommand;
 use Concrete\Core\Attribute\Command\SaveAttributesCommand;
 use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Validation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -57,13 +58,27 @@ trait ControllerTrait
                 if ($this->canEditAttributeKey($akID)) {
                     $ak = $this->category->getAttributeKeyByID($akID);
                     if ($ak) {
-                        $attributesToSave[] = $ak;
+                        $controller = $ak->getController();
+                        $validator = $controller->getValidator();
+                        /**
+                         * @var $response Response
+                         */
+                        $response = $validator->validateSaveValueRequest(
+                            $controller,
+                            $this->request
+                        );
+                        if ($response->isValid()) {
+                            $attributesToSave[] = $ak;
+                        } else {
+                            return $response->getErrorObject();
+                        }
                     }
                 }
             }
 
             $this->app->executeCommand(new ClearAttributesCommand($attributesToClear, $object));
             $this->app->executeCommand(new SaveAttributesCommand($attributesToSave, $object));
+            return null;
         }
     }
 
