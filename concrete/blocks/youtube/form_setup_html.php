@@ -73,6 +73,11 @@ echo $ui->tabs([
             </div>
         </div>
 
+        <div class="form-group">
+            <?php echo $form->label('title', t("Title")); ?>
+            <?php echo $form->text('title', $title ?? ''); ?>
+        </div>
+
         <div id="fixedsizes" class="<?php echo $sizing == 'fixed' ? '' : 'd-none'; ?>">
             <div class="form-group">
                 <?php echo $form->label('YouTubeVideoWidth', t("Width"), ["class" => "form-check-label"]); ?>
