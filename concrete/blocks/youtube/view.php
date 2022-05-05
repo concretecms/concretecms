@@ -100,7 +100,7 @@ if (is_object($c) && $c->isEditMode()) {
     $loc->popActiveContext();
 } else { ?>
     <div id="youtube<?= $bID; ?>" class="youtubeBlock <?php echo $responsiveClass; ?>">
-        <iframe class="youtube-player" <?php echo $sizeargs; ?>
+        <iframe class="youtube-player" <?php echo $sizeargs; ?> <?php echo $title ? 'title="' . h($title) . '"' : ''; ?>
             src="<?= $source ?>"
             allow="autoplay" allowfullscreen <?= $lazyLoadAttribute; ?>></iframe>
     </div>
