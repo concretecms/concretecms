@@ -9,12 +9,11 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Html\Service\FontAwesomeIcon;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use HtmlObject\Link;
-use Concrete\Core\Html\Service\FontAwesomeIcon;
-
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -147,21 +146,19 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('image', File::getByID($this->image));
 
         if ($this->buttonText || $this->getLinkURL()) {
-
-          $button = new Link($this->getLinkURL(), $this->buttonText);
-          $this->set('button', $button);
-
-          $theme = Theme::getSiteTheme();
-          if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
-            $this->set('theme', $theme);
-          }
-
-          $this->set('button', $button);
-          $this->set('linkURL', $this->getLinkURL());
-          $this->set('buttonIcon', $this->icon);
-          $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
-          $this->set('titleFormat', $this->titleFormat ?? 'h1');
+            $button = new Link($this->getLinkURL(), $this->buttonText);
+            $this->set('button', $button);
         }
+
+        $theme = Theme::getSiteTheme();
+        if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
+            $this->set('theme', $theme);
+        }
+
+        $this->set('linkURL', $this->getLinkURL());
+        $this->set('buttonIcon', $this->icon);
+        $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
+        $this->set('titleFormat', $this->titleFormat ?? 'h1');
     }
 
     public function validate($args)
@@ -178,6 +175,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 $e->add(t('You must provide a valid file object.'));
             }
         }
+
         return $e;
     }
 
@@ -201,6 +199,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         if (isset($this->image)) {
             return [$this->image];
         }
+
         return [];
     }
 
