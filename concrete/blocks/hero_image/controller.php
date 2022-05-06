@@ -9,12 +9,11 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Form\Service\DestinationPicker\DestinationPicker;
+use Concrete\Core\Html\Service\FontAwesomeIcon;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Theme\Theme;
 use Concrete\Core\Permission\Checker;
 use HtmlObject\Link;
-use Concrete\Core\Html\Service\FontAwesomeIcon;
-
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -105,7 +104,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         } elseif ($this->buttonFileLinkID) {
             $this->set('imageLinkHandle', 'file');
             $this->set('imageLinkValue', $this->buttonFileLinkID);
-        } elseif ((string)$this->buttonExternalLink !== '') {
+        } elseif ((string) $this->buttonExternalLink !== '') {
             $this->set('imageLinkHandle', 'external_url');
             $this->set('imageLinkValue', $this->buttonExternalLink);
         } else {
@@ -147,7 +146,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         $this->set('image', File::getByID($this->image));
 
         if ($this->buttonText || $this->getLinkURL()) {
-
             $button = new Link($this->getLinkURL(), $this->buttonText);
             $this->set('button', $button);
         }
@@ -177,6 +175,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 $e->add(t('You must provide a valid file object.'));
             }
         }
+
         return $e;
     }
 
@@ -200,6 +199,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         if (isset($this->image)) {
             return [$this->image];
         }
+
         return [];
     }
 
