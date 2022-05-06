@@ -105,7 +105,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
         } elseif ($this->buttonFileLinkID) {
             $this->set('imageLinkHandle', 'file');
             $this->set('imageLinkValue', $this->buttonFileLinkID);
-        } elseif ((string) $this->buttonExternalLink !== '') {
+        } elseif ((string)$this->buttonExternalLink !== '') {
             $this->set('imageLinkHandle', 'external_url');
             $this->set('imageLinkValue', $this->buttonExternalLink);
         } else {
@@ -148,20 +148,19 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
 
         if ($this->buttonText || $this->getLinkURL()) {
 
-          $button = new Link($this->getLinkURL(), $this->buttonText);
-          $this->set('button', $button);
-
-          $theme = Theme::getSiteTheme();
-          if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
-            $this->set('theme', $theme);
-          }
-
-          $this->set('button', $button);
-          $this->set('linkURL', $this->getLinkURL());
-          $this->set('buttonIcon', $this->icon);
-          $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
-          $this->set('titleFormat', $this->titleFormat ?? 'h1');
+            $button = new Link($this->getLinkURL(), $this->buttonText);
+            $this->set('button', $button);
         }
+
+        $theme = Theme::getSiteTheme();
+        if ($theme && $theme->supportsFeature(Features::TYPOGRAPHY)) {
+            $this->set('theme', $theme);
+        }
+
+        $this->set('linkURL', $this->getLinkURL());
+        $this->set('buttonIcon', $this->icon);
+        $this->set('iconTag', FontAwesomeIcon::getFromClassNames(h($this->icon)));
+        $this->set('titleFormat', $this->titleFormat ?? 'h1');
     }
 
     public function validate($args)
