@@ -22,6 +22,12 @@ class ExternalFileEntry implements \JsonSerializable
     protected $title;
     /** @var string */
     protected $thumbnailUrl;
+    /** @var string */
+    protected $size;
+    /** @var int */
+    protected $width;
+    /** @var int */
+    protected $height;
     /** @var DateTime */
     protected $fvDateAdded;
     /** @var bool */
@@ -30,7 +36,7 @@ class ExternalFileEntry implements \JsonSerializable
     protected $treeNodeID;
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getFID()
     {
@@ -48,7 +54,7 @@ class ExternalFileEntry implements \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTitle()
     {
@@ -66,7 +72,7 @@ class ExternalFileEntry implements \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getThumbnailUrl()
     {
@@ -84,7 +90,61 @@ class ExternalFileEntry implements \JsonSerializable
     }
 
     /**
-     * @return DateTime
+     * @return string|null
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param string $size
+     * @return ExternalFileEntry
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param int $width
+     * @return ExternalFileEntry
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param int $height
+     * @return ExternalFileEntry
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
      */
     public function getFvDateAdded()
     {
@@ -120,7 +180,7 @@ class ExternalFileEntry implements \JsonSerializable
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getTreeNodeID()
     {
@@ -149,17 +209,36 @@ class ExternalFileEntry implements \JsonSerializable
         return (string)$img;
     }
 
+    public function getDetailThumbnailImage()
+    {
+        $img = new Element("img");
+        $img->setAttribute("src", $this->getThumbnailUrl());
+        $img->addClass("ccm-file-manager-detail-thumbnail");
+        return (string)$img;
+    }
+
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
-        return [
+        $file = [
             "fID" => $this->getFID(),
             "resultsThumbnailImg" => $this->getListingThumbnailImage(),
+            "resultsThumbnailDetailImg" => $this->getDetailThumbnailImage(),
+            "size" => $this->getSize(),
             "title" => $this->getTitle(),
             "fvDateAdded" => $this->getFvDateAdded() instanceof DateTime ? $this->getFvDateAdded()->format('F d, Y g:i a') : null,
             "isFolder" => $this->isFolder(),
             "treeNodeID" => $this->getTreeNodeID()
         ];
+
+        if ($this->getWidth() && $this->getHeight()) {
+            $file["attributes"] = [
+                'width' => $this->getWidth(),
+                'height' => $this->getHeight()
+            ];
+        }
+
+        return $file;
     }
 
 }
