@@ -262,7 +262,7 @@ class Controller extends BlockController
 
             //It should only generate a new question set id if the block is copied to a new page,
             //otherwise it will loose all of its answer sets (from all the people who've used the form on this page)
-            $questionSetCIDs = $db->fetchAll("SELECT distinct cID FROM {$this->btTable} AS f, CollectionVersionBlocks AS cvb " .
+            $questionSetCIDs = $db->fetchFirstColumn("SELECT distinct cID FROM {$this->btTable} AS f, CollectionVersionBlocks AS cvb " .
                         'WHERE f.bID=cvb.bID AND questionSetId=' . (int) ($row['questionSetId']));
 
             //this question set id is used on other pages, so make a new one for this page block
