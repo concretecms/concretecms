@@ -2402,7 +2402,7 @@ EOT
                         if (!in_array($b->getBlockID(), $oldMCBlockIDs)) {
                             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($b->getAreaHandle());
                             $db->executeQuery('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)', [
-                                $this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $newBlockDisplayOrder, (int) ($b->isAlias()), $b->overrideAreaPermissions(), $b->disableBlockVersioning(),
+                                $this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $newBlockDisplayOrder, (int) ($b->isOriginal()), $b->overrideAreaPermissions(), $b->disableBlockVersioning(),
                             ]);
                         }
                     }
