@@ -1,7 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
-* @var $entries \Concrete\Block\Accordion\AccordionEntry[]
+ * @var $entries \Concrete\Block\Accordion\AccordionEntry[]
+ * @var int $bID
  */
 
 $i = 0;
@@ -17,14 +18,14 @@ $alwaysOpen = $alwaysOpen ?? false;
       foreach ($entries as $entry) {
         $i ++;
         $entryClass = '';
-        if (($initialState == 'openfirst' && $i == 1) || $initialState == 'open') {
+        if (($initialState === 'openfirst' && $i == 1) || $initialState === 'open') {
           $entryClass = ' show';
         }
       ?>
         <div class="accordion-item">
 
             <<?php echo $itemHeadingFormat; ?> class="accordion-header">
-                <a href="javascript:void(0)" class="accordion-button <?php if($i != 1) {echo 'collapsed'; }?>" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getID()?>">
+                <a href="javascript:void(0)" class="accordion-button <?php if($entryClass !== ' show'){echo 'collapsed'; }?>" data-bs-toggle="collapse" data-bs-target="#collapse<?=$entry->getID()?>">
                     <?=$entry->getTitle()?>
                 </a>
             </<?php echo $itemHeadingFormat; ?>>
