@@ -76,7 +76,7 @@ $hideFolders = isset($hideFolders) ? $hideFolders : false;
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="sources" role="tabpanel">
+    <div class="tab-pane active" id="sources" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('folderID', t('File Folder')) ?>
             <?php echo $form->select('folderID', $folders, empty($folderID) ? 0 : $folderID); ?>
