@@ -24,7 +24,7 @@ $config = $editor->getOptions();
 
 <div class="tab-content">
 
-  <div class="tab-pane show active" id="accordion-content" role="tabpanel">
+  <div class="tab-pane active" id="accordion-content" role="tabpanel">
 
     <div data-vue="accordion-block">
 

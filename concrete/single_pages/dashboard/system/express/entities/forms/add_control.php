@@ -30,7 +30,7 @@ $token = $app->make(Token::class);
     <?php foreach ($drivers as $type => $driver) { ?>
         <?php /** @var TypeInterface $driver */ ?>
 
-        <div class="tab-pane<?php echo ($i === 0) ? " show active" : ""; ?>" id="<?php echo $type ?>" role="tabpanel">
+        <div class="tab-pane<?php echo ($i === 0) ? " active" : ""; ?>" id="<?php echo $type ?>" role="tabpanel">
             <ul class="item-select-list" id="ccm-stack-list">
                 <?php $items = $driver->getItems($set->getForm()->getEntity()); ?>
 

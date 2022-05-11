@@ -117,7 +117,7 @@ echo $userInterface->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active pagelist-form" id="page-list-settings" role="tabpanel">
+    <div class="tab-pane active pagelist-form" id="page-list-settings" role="tabpanel">
         <input type="hidden" name="pageListPreviewPane" value="<?= h($controller->getActionURL('preview_pane')) ?>"/>
 
         <fieldset>
