@@ -876,17 +876,21 @@ EOT
             return $r->rowCount() > 0;
         }
 
-        return $this->isOriginal();
+        return !$this->isOriginal();
     }
 
-    public function setOriginal(bool $isOrignal): void
+    public function setOriginal(bool $isOriginal): void
     {
-        $this->isOriginal = $isOrignal;
+        $this->isOriginal = $isOriginal;
     }
 
-    public function isOriginal(): bool
+    public function isOriginal(): ?bool
     {
-        return isset($this->isOriginal) && !$this->isOriginal;
+        if (!isset($this->isOriginal)) {
+            return null;
+        }
+        
+        return (bool)$this->isOriginal;
     }
 
     /**
