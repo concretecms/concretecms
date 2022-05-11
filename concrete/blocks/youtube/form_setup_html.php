@@ -46,7 +46,7 @@ echo $ui->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="video" role="tabpanel">
+    <div class="tab-pane active" id="video" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('videoURL', t("YouTube URL")); ?>
             <?php echo $form->text('videoURL', $videoURL ?? '', ['required' => 'required']); ?>

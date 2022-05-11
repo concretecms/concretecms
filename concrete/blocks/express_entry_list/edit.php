@@ -59,7 +59,7 @@ echo $userInterface->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="search" role="tabpanel">
+    <div class="tab-pane active" id="search" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('exEntityID', t('Entity')) ?>
             <?php echo $form->select('exEntityID', $entities, $exEntityID, [
