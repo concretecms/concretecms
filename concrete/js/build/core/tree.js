@@ -1,5 +1,5 @@
 /* jshint unused:vars, undef:true, browser:true, jquery:true */
-/* global ccmi18n, ccmi18n_tree, CCM_DISPATCHER_FILENAME, CCM_SECURITY_TOKEN, ConcreteAlert, ConcreteEvent, ConcreteMenu */
+/* global ccmi18n, ccmi18n_tree, CCM_CID, CCM_DISPATCHER_FILENAME, CCM_SECURITY_TOKEN, ConcreteAlert, ConcreteEvent, ConcreteMenu */
 
 ;(function(global, $) {
 	'use strict';
@@ -70,6 +70,12 @@
 			if (options.allowFolderSelection) {
 				ajaxData.allowFolderSelection = 1;
 			}
+
+            if (typeof CCM_CID !== 'undefined') {
+                ajaxData.cID = CCM_CID;
+            } else {
+                ajaxData.cID = 0;
+            }
 
 			var persist = true;
 
