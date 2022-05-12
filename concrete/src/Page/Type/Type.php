@@ -330,6 +330,15 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $template->setPermissionsToManualOverride();
         }
 
+        // either set the default page object to have the default theme of the page type, or, set the theme id to 0 to be based on active them
+        if ($this->getPageTypeDefaultThemeID() != $template->getCollectionThemeID()) {
+            if ($this->getPageTypeDefaultThemeID() > 0 && $theme = $this->getPageTypeDefaultThemeObject()) {
+                $template->setTheme($theme);
+            } else {
+                $template->setTheme(false);
+            }
+        }
+
         return $template;
     }
 

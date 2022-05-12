@@ -1946,7 +1946,7 @@ class Page extends Collection implements CategoryMemberInterface,
     public function setTheme($pl)
     {
         $db = Database::connection();
-        $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl->getThemeID(), $this->cID, $this->vObj->getVersionID()]);
+        $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl ? $pl->getThemeID() : 0, $this->cID, $this->vObj->getVersionID()]);
         $this->themeObject = $pl;
     }
 
