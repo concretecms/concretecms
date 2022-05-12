@@ -1,3 +1,164 @@
+# 9.1.0
+
+## New Features
+
+* Improved appearance and functionality when editing block, area, layout and container styles inline in the page (thanks deek87)
+* Added the ability for an Express attribute to be marked as unique, provided its attribute type supports it. Unique attributes will be useful for SKUs, enforcing email uniqueness, etc…
+* Much improved version comparison feature that can compare the HTML of two page versions and highlight differences (thanks deek87 and hissy)
+* Feature Link block improvements: Adds option for 'link' styled button using BS5 .btn-link button class, Adds the option to include an icon in the button and to have icon only buttons. Moves some construction of the button to the view file to allow easy comprehension/modification/extension in Block Templates by novice developers (thanks Katalysis)
+* Hero Image block improvements: Adds option for 'link' styled button using BS5 .btn-link button class, Adds the option to include an icon in the button and to have icon only buttons. Moves some construction of the button to the view file to allow easy comprehension/modification/extension in Block Templates by novice developers (thanks Katalysis)
+* Added new Security Policy page in the Dashboard (thanks hissy)
+* Added a “Revert to Draft” command button on published pages in the Composer interface (thanks hissy)
+* Improvements and refinements to Dashboard file details screen in desktop and mobile views.
+* Added the ability to move a file folder in the Dashboard file manager.
+* Added the tree view back to the Groups Dashboard page.
+* Add title field for YouTube and Video block types for better accessibility (thanks Mesuva)
+
+## Behavioral Improvements
+
+* Express attributes no longer need to be unique across all Express objects. Instead attribute handles can be reused provided they’re not reused within the same object.
+* New Express forms will be created when Express Form blocks that have been copied are edited in their new locations (thanks Xanweb)
+* File chooser has improved view and functionality; bug fixes; adding width, height and size to list and grid view; adding detail image callout on hover.
+* Task Options in the Dashboard have have been moved into a modal dialog when present, so they’re harder to miss (thanks deek87)
+* Express entity attribute handles now can be reused as long as they’re not reused within the same Express object.
+* You can now click on the entire row of a Dashboard results table (like the page search, file manager, etc…) and go to the detail URL.
+* Better display of inline floating commands for things like containers and block move. 
+* We now show the container name when hovering over containers in edit mode.
+* Reinstated CSS and JavaScript asset post-processing cache setting; restructured the Dashboard Cache Settings page for better grouping of functionality and explanation.
+* Improve display of Recaptcha settings page.
+* Appearance improvements to Waiting for Me and the Dashboard desktop.
+* Active classes for pages added to the output of the Top Navigation Bar block (thanks danklassen)
+* Locale home page is now undeleteable when using multilingual sites.
+* Miscellaneous performance improvements for logged-in users (thanks hissy)
+* Added rate limiting to Forgot Password using the built-in IP Allowlist/Denylist functionality
+* Better usage of meta canonical tag in page under certain circumstances (thanks hissy)
+* File folders now cannot be deleted if they have sub-folders or sub-files in them.
+* Display improvements to inline style dropdown (no more too-dark panels with no contrast.)
+* Better automatic display of the “Approve Stack” button when editing block parameters, styles and permissions in the stacks Dashboard page.
+* Don’t allow users to delete site types until they have removed all sites of that type.
+* Improvements when Concrete is installed in a subdirectory instead of the root directory of a website.
+* Added the ability to view a user’s public profile from their Dashboard user details page.
+* Added `--session-handler` to the console install utility. Set to `database` if you’d like to override the default file-based sessions.
+* Gotten rid of the behavior where certain dynamic trees cause pages to scroll to them on load (visible on Express Object details edit, adding groups, using the Groups selector in custom Dashboard pages, and more)
+* JavaScript and CSS assets now have the timestamp of when the cache was last cleared appended to them (thanks deek87, haeflimi)
+* Added the link back to the “Data Objects” Express management interface from the header of that Express objects results page.
+* Added URL Path as a column that can be added to the Page Search interface.
+* Fixed: Login page forces gray background on custom themes
+* Fixed: Scheduled page publishing doesn't purge the page cache (thanks hissy)
+* Added more caching to certain objects to improve performance (thanks hissy)
+* Pre-selected File Storage Location For Nested Folder
+
+## Bug Fixes
+
+* Much improved PHP 8 compatibility fixes for all core block types (thanks deek87)
+* Fixed user permissions for searching users with non super admin not working in sites upgraded from 8.5 until permissions were reset.
+* Fixed inability to assign groups, users, group sets or group combinations to group permissions when updating from 8.5.
+* Improvements to core libraries to allow for installation on PHP 8.1 w/Composer.
+* PHP 8 compatibility fixes for Calendar (thanks deek87)
+* Fixed: Database Character Set is no longer showing current character set.
+* Fixed: Missing font selection for body font in Atomik customizer when using Default skin.
+* Fixed: Batch Task with empty batch does not finish running
+* Fix Top Navigation Bar block 'include sticky nav' setting not set appropriately when editing the block
+* Fixed inability to drag an individual block out of the stacks panel in a page.
+* Fixed: Document Library advanced search fields do not display
+* Fixed “Express form error dirty entity” error that users might see when creating forms on the front-end.
+* Fixed bug where attribute data validation routines weren’t being run when updating certain objects and certain objects in bulk.
+* Fixed: Express Calendar and Calendar Event Attributes Not Correctly Implemented
+* Fixed: "Added to Page" File search filter doesn't work
+* Fixed: Schedule Guest Access doesn't work (thanks HamedDarragi)
+* Fixed: Page Search in chooser dialog doesn’t work (thanks HamedDarragi)
+* Fixed: The multilingual panel/page relations panel didn’t allow you to create pages in the multilingual trees from the related page - and it used to.
+* Fixed strange appearance in Dashboard sitemap selector when using multisite and multiple locales.
+* Fixed bugs with using custom file attributes with the Document Library block.
+* Fixed theme customizer not working on legacy LESS-based themes when being used with a large number of LESS variables.
+* Fixed inability to see sort icons on attributes in the Dashboard.
+* Fix Auto-Nav showing duplicate tabs in themes based on Bootstrap 3 (thanks lvanstrijland)
+* Fixed: When using more than one user search criteria by group, one to include groups and one to exclude groups, we get the wrong results (thanks mnakalay)
+* Fixed: Accordion block doesn't load required assets when not using BS5 based theme.
+* Fixed Error when try to edit 'express details block' (thanks Ruud-Zuiderlicht)
+* Fixed edit page type basic details error on PHP 8.
+* Tooltips now work properly again in Composer interface (thanks danklassen)
+* Fixed inability to create and update skins for themes that had a large number of parameters under certain conditions.
+* Fixed errors that would occur when creating a site, enabling multilingual, setting a new source locale, and deleting the original default locale.
+* Fixed: User activation workflow, Activate action not working
+* Fixed: 9.0.2 Seo Bulk Updater for multilingual site not showing results when selecting All Levels (thanks danklassen)
+* Fixed: Placing a Sticky "Top Navigation Bar" in Global "Navigation" using Atomik blocks editing of page
+* Fixed: Topics Attribute Search Form is not getting translated on Frontend (thanks 1stthomas)
+* Re-enabled the ability to edit a user’s avatar from their Dashboard details page.
+* Fixed: Clipboard - Unable to remove broken clipboard entries/clipboard doesnt remove deleted blocks
+* Fixed: When placing a stack, the edit mode menu is not displayed
+* Fixed: Adding Options To Option List Page Attribute Undefined Array Key under PHP 8
+* Fixed: Multilingual copy site tree with alias pages (thanks hissy)
+* Fixed: v9 Elemental Block Edit Nav Tabs Broken (thanks ccmEnlil)
+* Fixed: Error in updating package from marketplace incorrectly displaying itself under certain conditions (thanks JohnTheFish)
+* Fixed: Accordion block editing interface rich text editor doesn’t have access to Concrete-specific features like file manager, sitemap, etc…
+* Fixes ErrorException - Undefined property: Concrete\Core\Permission\Access\Entity\GroupCombinationEntity::$label under PHP 8 (thanks 1stthomas)
+* Legacy form's "reply to this email address" checked state was not properly passed (thanks katzueno)
+* Fixed errors with the legacy form (thanks mlocati)
+* Fixed: Updating an express form handle can result in a table name that is too long for mysql
+* Fix several user search fields not retaining their selected values (thanks mnakalay)
+* Fixed: install with Elemental full fails due to undefined array key "titleFormat" under PHP 8
+* Fix YouTube block responsive size class issue (thanks katalysis)
+* Fixed Marketplace dashboard page broken under PHP 8
+* Conversation rating stars now appear properly (thanks deek87)
+* Fixed inability to remove an entry from the trash when that entry is an alias to an external link (thanks Ruud-Zuiderlicht)
+* Fixed bug where core “Parallax Image” area custom template (deprecated) now works again
+* Fix a bug with having multiple image blocks with on-hover attribute set on the page didn’t work reliably (thanks evgk)
+* Fixed: Toolbar title styling interfering with intelligent search results in accessibility mode (thanks Mesuva)
+* Fixed: Switch Language block default view does not work
+* Fixed inability to use the “Express Entry Selector Multiple” form control type.
+* [V9 RC]Fixed cookie not being cleared properly to open "add block panel" when using the sticky add panel and installing Concrete in a sub-directory
+* Fixed: Position of the reCAPTCHA badge not shown correctly after saving
+* Fixed errors in waiting for me when groups or users were deleted.
+* Fix inability to set storage location from file details Dashboard page.
+* Fixed bugs with thumbnails on alternate storage locations (thanks mnakalay)
+* Fixed: concrete.debug.hide_keys' not working on Globals do to commented Code
+* Fix IpAccessControlService check against specific access control category (thanks mlocati)
+*  Access Control: fix sorting categories in the dashboard page (thanks mlocati)
+* Fixed bug: When there's no time window, we currently ban IP addresses forever, even if we configure Concrete to only ban for X seconds. (thanks mlocati)
+* Fixed bug: "Illegal mix of collations" when running reindex task when running under certain database conditions.
+* Added “snippet.png” back into rich text editor so you can see that button.
+* Fixed: Removing Author User From Page Attributes & Saving Throws Error 
+* Fixed: Deleting Containers throws Access Denied error under certain in-page editing conditions.
+* Fixed: Rich Text Page Attribute Composer "Source" Editing Hindered By Composer Autosave
+* Fixed a bug in image processing (Imagine Library) that could lead to segmentation faults under certain conditions (thanks mlocati)
+* Fixed: PlaceholderService error in thumbnail overview (thanks haeflimi)
+* Fixed: Deleting Containers shows multiple delete modal windows under certain in-page editing conditions.
+* Fixed: Top navigation block always loads the default site tree even in multilingual sites (thanks danklassen)
+* Fixed inability to override session handler to database in config prior to installation and then install successfully.
+* Fix missing none option in attribute display block (thanks JohnTheFish)
+* Fixed: Stacks with no approved versions do not appear in stacks list
+
+## Backward Compatibility Notes
+
+* The `Concrete\Core\Express\Form\Validator\Routine\RoutineInterface` class and all classes that implement it has changed. The `validate` method now takes a nullable third parameter for the `Concrete\Core\Entity\Express\Entry` object that may or may not exist. This replaces the request type attribute. The request type can now be inferred - if the entry does not exist, we assume this to be an `ADD` operation. If the entry exists within the `validate` method, you are running an `UPDATE` operation.
+* Block::duplicate() has changed its secondary parameter from $isCopiedWhenPropagated to $controllerMethodToTryAndRun. This lets us choose `duplicate_master` or the new `duplicate_clipboard` in certain situations. It is very unlikely that this should impact any custom code you have written as this is pretty deep in the Concrete internals.
+* If you have customized the Document Library view template, please ensure that your `<form>` tag has a valid input button with the name `”search”`. This is checked in the controller in order to ensure searching is actually occurring. If you want to search by advanced file attributes, you’ll need this to be in place or else the Document Library controller will not check for attribute searching.
+
+## Developer Updates
+
+* Added `on_page_version_delete` event (thanks hathawayweb)
+* Mail Importer code running on ancient Zend Mail code updated to PHP 7+ (thanks KevinBLT)
+* Patches to third party libraries to allow for installation on PHP 8.1 w/Composer (thanks mlocati)
+* htmlawed HTML sanitization library updated for better compatibility with HTML5.
+* IP Access Control: add IpAccessControlCategory::describeTimeWindow() (thanks mlocati)
+* Allow Date service class to work with DateTimeImmutable objects (thanks mlocati)
+* Improvements and bug fixes to route building and controller syntax (thanks mlocati)
+* More reliable running of on_start() in block controllers before page contents are rendered (thanks hissy)
+* Moved concrete5/dependency-patches to the core composer.json instead of the separate composer project (thanks mlocati)
+* Improved code commenting throughout all core blocks (thanks deek87)
+* Fix list_syntax rule of PHP-CS-Fixer (thanks mlocati)
+* Significant list of third party PHP script minor updates.
+* Simplify c5:exec return code (thanks mlocati)
+* Fixed: Task scheduling command is incorrect on dashboard page and in documentation, needs more detail
+* `Concrete\Core\Http\ResponseFactory` used to take `$session` as its first constructor dependency, even though that was not used. This caused problems in the event response factory was used prior to sessions being available or being configured for database sessions that were not yet installed. This parameter has been removed. If you use the `$app->make()` method of building this class, you should not be affected.
+* Now using https:// for communication with the Concrete marketplace even when the user’s site is not https://
+
+## Security Fixes
+
+* Fixed: https://hackerone.com/reports/1483104
+* Fixed several places where we weren’t sanitizing file names in the file manager and stacks page.
+
 # 9.0.2
 
 ## Behavioral Improvements
