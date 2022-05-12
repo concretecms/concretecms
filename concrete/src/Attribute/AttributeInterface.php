@@ -72,6 +72,7 @@ interface AttributeInterface
      * $data is simply the POST values from the form.
      *
      * @param array $data
+     * @return \Concrete\Core\Attribute\Type|null|void
      */
     public function saveKey($data);
 

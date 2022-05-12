@@ -6,10 +6,13 @@ use CollectionAttributeKey;
 use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Html\Service\Seo;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Package\Offline\Exception;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\Topic;
@@ -47,6 +50,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $truncateSummaries;
     public $displayThumbnail;
     public $includeName;
+    public $paginate;
 
     public function getRequiredFeatures(): array
     {
@@ -66,13 +70,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function getBlockTypeName()
     {
         return t('Page List');
-    }
-
-    public function getJavaScriptStrings()
-    {
-        return [
-            'feed-name' => t('Please give your RSS Feed a name.'),
-        ];
     }
 
     public function action_preview_pane()
@@ -123,9 +120,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         $controller->filterDateStart = $_REQUEST['filterDateStart'];
         $controller->filterDateEnd = $_REQUEST['filterDateEnd'];
         $controller->filterDateDays = $_REQUEST['filterDateDays'];
+        $controller->noResultsMessage = $_REQUEST['noResultsMessage'];
         $controller->set('includeEntryText', true);
         $controller->set('includeName', true);
         $controller->set('displayThumbnail', $controller->displayThumbnail);
+        $controller->set('noResultsMessage', $controller->noResultsMessage);
         $bv = new BlockView($bt);
         ob_start();
         $bv->render('view');
@@ -274,6 +273,12 @@ class Controller extends BlockController implements UsesFeatureInterface
             } else {
                 $this->list->filterByParentID($cParentID);
             }
+        }
+
+        if ($this->paginate) {
+            /** @var SeoCanonical $seoCanonical */
+            $seoCanonical = $this->app->make(SeoCanonical::class);
+            $seoCanonical->addIncludedQuerystringParameter($this->list->getQueryPaginationPageParameter());
         }
 
         return $this->list;

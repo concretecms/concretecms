@@ -59,7 +59,7 @@ echo $userInterface->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="search" role="tabpanel">
+    <div class="tab-pane active" id="search" role="tabpanel">
         <div class="form-group">
             <?php echo $form->label('exEntityID', t('Entity')) ?>
             <?php echo $form->select('exEntityID', $entities, $exEntityID, [
@@ -113,11 +113,11 @@ echo $userInterface->tabs([
 
         <div class="form-group">
             <div class="form-check">
-                <?php echo $form->checkbox('enablePagination', 1, $enablePagination) ?>
+                <?php echo $form->checkbox('enablePagination', 1, $enablePagination ?? null) ?>
                 <?php echo $form->label('enablePagination', t('Display pagination interface in results.'), ["class" => "form-check-label"]) ?>
             </div>
             <div class="form-check">
-                <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection) ?>
+                <?php echo $form->checkbox('enableItemsPerPageSelection', 1, $enableItemsPerPageSelection ?? null) ?>
                 <?php echo $form->label('enableItemsPerPageSelection', t('Allow users to select items per page.'), ["class" => "form-check-label"]) ?>
             </div>
         </div>

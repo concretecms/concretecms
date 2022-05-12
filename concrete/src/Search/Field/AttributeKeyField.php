@@ -118,10 +118,13 @@ class AttributeKeyField extends AbstractField
     /**
      * @return array|mixed
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $json = parent::jsonSerialize();
-        $json['akID'] = $this->attributeKey->getAttributeKeyID();
+        if ($this->attributeKey) {
+            $json['akID'] = $this->attributeKey->getAttributeKeyID();
+        }
         return $json;
     }
 

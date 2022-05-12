@@ -489,6 +489,7 @@ class GeolocationResult implements JsonSerializable
      *
      * @see JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

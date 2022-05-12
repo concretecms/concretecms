@@ -29,6 +29,7 @@
                 <category handle="site"/>
                 <category handle="event"/>
                 <category handle="site_type"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="textarea" name="Text Area" package="">
@@ -174,6 +175,7 @@
         <attributetype handle="calendar_event" name="Calendar Event" package="">
             <categories>
                 <category handle="collection"/>
+                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="express" name="Express Entity" package="">
@@ -183,7 +185,6 @@
                 <category handle="file"/>
                 <category handle="site"/>
                 <category handle="site_type"/>
-                <category handle="express"/>
             </categories>
         </attributetype>
         <attributetype handle="page_selector" name="Page Selector" package="">
@@ -260,6 +261,9 @@
         <attributekey handle="exclude_sitemapxml" name="Exclude From sitemap.xml" package="" searchable="1" indexed="0" type="boolean" category="collection">
             <type checked=""/>
         </attributekey>
+        <attributekey handle="exclude_subpages_from_nav" name="Exclude Sub-Pages From Nav" package="" searchable="1" indexed="1" type="boolean" category="collection">
+            <type checked="0"/>
+        </attributekey>
         <attributekey handle="profile_private_messages_enabled" name="I would like to receive private messages." package="" searchable="1" indexed="0" type="boolean" category="user" profile-displayed="0" profile-editable="1" profile-required="0" register-editable="1" register-required="0" member-list-displayed="0">
             <type checked="1"/>
         </attributekey>
@@ -270,6 +274,7 @@
         <attributekey handle="height" name="Height" package="" searchable="1" indexed="0" type="number" category="file"/>
         <attributekey handle="account_profile_links" name="Personal Links" package="" type="social_links" category="user"/>
         <attributekey handle="duration" name="Duration" package="" searchable="1" indexed="0" type="number" category="file"/>
+        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file" category="collection"/>
     </attributekeys>
     <attributesets>
         <attributeset handle="seo" name="SEO" package="" locked="0" category="collection">

@@ -89,15 +89,21 @@ class ProcessUpdater
 
     protected function clearOldProcesses()
     {
-        $threshold = (int)$this->config->get('concrete.processes.delete_threshold');
+        $threshold = (int) $this->config->get('concrete.processes.delete_threshold');
         $now = new \DateTime();
         $now->sub(new \DateInterval('P' . $threshold . 'D'));
         $minTimestamp = $now->getTimestamp();
         $query = $this->entityManager->createQuery(
-            "delete from \Concrete\Core\Entity\Command\Process p where p.dateCompleted < :minTimestamp and p.dateCompleted is not null"
+            "select p from \Concrete\Core\Entity\Command\Process p where p.dateCompleted < :minTimestamp and p.dateCompleted is not null"
         );
         $query->setParameter('minTimestamp', $minTimestamp);
-        $query->execute();
+        $processes = $query->getResult();
+        if ($processes) {
+            foreach ($processes as $process) {
+                $this->entityManager->remove($process);
+            }
+        }
+        $this->entityManager->flush();
     }
 
 }

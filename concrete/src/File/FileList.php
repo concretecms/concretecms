@@ -265,12 +265,6 @@ class FileList extends DatabaseItemList implements PagerProviderInterface, Pagin
             $this->query->createNamedParameter($date)));
     }
 
-    public function filterByOriginalPageID($ocID)
-    {
-        $this->query->andWhere('f.ocID = :ocID');
-        $this->query->setParameter('ocID', $ocID);
-    }
-
     /**
      * filters a FileList by the uID of the approving User.
      *

@@ -20,7 +20,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 <form method="post" action="<?= $view->action('submit'); ?>">
     <?= $form->getAutocompletionDisabler(); ?>
 	<fieldset>
-		<legend><?= t('Basic Details'); ?></legend>
+		<legend><?= t('Account Details'); ?></legend>
 		
 		<div class="form-group">
             <?= $form->label('uName', t('Username')) ?>

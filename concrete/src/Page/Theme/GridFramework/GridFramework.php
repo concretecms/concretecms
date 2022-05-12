@@ -155,6 +155,25 @@ abstract class GridFramework
         }
     }
 
+    /**
+     * @param int $class A const representing a device size
+     * @return string
+     */
+    public function getDeviceHideClasses(int $class): string
+    {
+        switch ($class) {
+            case self::DEVICE_CLASSES_HIDE_ON_EXTRA_SMALL:
+                return $this->getPageThemeGridFrameworkHideOnExtraSmallDeviceClass();
+            case self::DEVICE_CLASSES_HIDE_ON_SMALL:
+                return $this->getPageThemeGridFrameworkHideOnSmallDeviceClass();
+            case self::DEVICE_CLASSES_HIDE_ON_MEDIUM:
+                return $this->getPageThemeGridFrameworkHideOnMediumDeviceClass();
+            case self::DEVICE_CLASSES_HIDE_ON_LARGE:
+                return $this->getPageThemeGridFrameworkHideOnLargeDeviceClass();
+        }
+        return '';
+    }
+
     public function supportsNesting()
     {
         return false;

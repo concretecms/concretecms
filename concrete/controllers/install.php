@@ -78,7 +78,6 @@ class Install extends Controller
     {
         $v = new View('/frontend/install');
         $v->setViewTheme('concrete');
-        $v->setViewTemplate('background_image.php');
         return $v;
     }
 

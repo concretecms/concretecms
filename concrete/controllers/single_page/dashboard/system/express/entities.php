@@ -38,6 +38,8 @@ class Entities extends DashboardPageController
                 $entity = Express::getObjectByHandle($handle);
                 if (is_object($entity)) {
                     $this->error->add(t('An express object with this handle already exists.'));
+                } else if (strlen($handle) > 34) {
+                    $this->error->add(t('Your entity handle must be 34 characters or less.'));
                 }
             }
 
@@ -52,6 +54,7 @@ class Entities extends DashboardPageController
                 $entity->setPluralHandle($this->request->request->get('plural_handle'));
                 $entity->setLabelMask($this->request->request->get('label_mask'));
                 $entity->setDescription($this->request->request->get('description'));
+                $entity->setIsPublished(false);
 
                 if ($this->request->request->get('supports_custom_display_order')) {
                     $entity->setSupportsCustomDisplayOrder(true);
@@ -104,6 +107,27 @@ class Entities extends DashboardPageController
     {
         $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
         $entities = [];
+        $unpublishedEntities = [];
+        foreach($r->findBy(array('is_published' => true), array('name' => 'asc')) as $entity) {
+            $permissions = new Checker($entity);
+            if ($permissions->canViewExpressEntries()) {
+                $entities[] = $entity;
+            }
+        }
+        foreach($r->findBy(array('is_published' => false), array('name' => 'asc')) as $entity) {
+            $permissions = new Checker($entity);
+            if ($permissions->canViewExpressEntries()) {
+                $unpublishedEntities[] = $entity;
+            }
+        }
+        $this->set('entities', $entities);
+        $this->set('unpublishedEntities', $unpublishedEntities);
+    }
+
+    public function include_unpublished_entities()
+    {
+        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity');
+        $entities = [];
         foreach($r->findBy(array(), array('name' => 'asc')) as $entity) {
             $permissions = new Checker($entity);
             if ($permissions->canViewExpressEntries()) {
@@ -111,6 +135,7 @@ class Entities extends DashboardPageController
             }
         }
         $this->set('entities', $entities);
+        $this->set('unpublishedEntities', []);
     }
 
     public function delete()
@@ -200,6 +225,29 @@ class Entities extends DashboardPageController
         return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
     }
 
+    /**
+     * @return \Concrete\Core\Routing\RedirectResponse
+     */
+    public function publish()
+    {
+        /** @var \Concrete\Core\Entity\Express\Entity $entity */
+        $entity = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity')->findOneById($this->request->request->get('entity_id'));
+
+        if (!is_object($entity)) {
+            $this->error->add(t('Invalid express entity.'));
+        }
+
+        if (!$this->token->validate('publish')) {
+            $this->error->add($this->token->getErrorMessage());
+        }
+
+        $entity->setIsPublished(true);
+        $this->entityManager->flush();
+
+        $this->flash('success', t('Entity published successfully.'));
+        return Redirect::to('/dashboard/system/express/entities', 'view_entity', $entity->getId());
+    }
+
     public function clear_entries($id = null)
     {
         $entity = $this->entityManager->getRepository('\Concrete\Core\Entity\Express\Entity')->findOneById($id);
@@ -279,6 +327,8 @@ class Entities extends DashboardPageController
             $exist = Express::getObjectByHandle($handle);
             if (is_object($exist) && $exist->getID() != $id) {
                 $this->error->add(t('An express object with this handle already exists.'));
+            } else if (strlen($handle) > 34) {
+                $this->error->add(t('Your entity handle must be 34 characters or less.'));
             }
         }
 

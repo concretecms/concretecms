@@ -4,6 +4,7 @@ $enable-shadows: true;
 
 /* colors */
 $gray-100: #f7f7f7;
+$gray-200: #e9ecef; // This is the same as BS default but we reference it below
 $gray-300: #d8d8d8;
 $gray-400: #9b9b9b;
 $gray-500: #7c8088;
@@ -26,6 +27,10 @@ $primary: #4a90e2;
 $body-color: $gray-700;
 $small-font-size: 0.9rem;
 $text-muted: $gray-500;
+
+/* horizontal rules */
+$hr-color: $gray-200;
+$hr-opacity: 1;
 
 /* borders */
 $border-radius: 3px;
@@ -111,15 +116,20 @@ $dropdown-item-padding-y: 0.625rem;
 $dropdown-item-padding-x: 10px;
 $dropdown-link-active-color: #fff;
 $dropdown-border-color: transparent;
-$dropdown-border-radius: 2px;
-$dropdown-border-width: 2px;
+$dropdown-border-radius: 5px;
+$dropdown-border-width: 0;
 $dropdown-min-width: 175px;
-$dropdown-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.15);
+$dropdown-padding-y: 10px;
+$dropdown-box-shadow: 0 1px 1px 0 rgba(65, 69, 73, 0.3), 0 1px 3px 1px rgba(65, 69, 73, 0.15);
 
 /* popovers - these are used for in page menus, help menus */
-$popover-border-color: $gray-300;
-$popover-border-radius: 2px;
-$popover-box-shadow: 0 2px 4px 1px rgba(0, 0, 0, 0.1);
+$popover-border-color: transparent;
+$popover-border-radius: 5px;
+$popover-inner-border-radius: 5px;
+$popover-border-width: 0;
+$popover-box-shadow: 0 1px 1px 0 rgba(65, 69, 73, 0.3), 0 1px 3px 1px rgba(65, 69, 73, 0.15);
+$popover-arrow-width: 0;
+$popover-arrow-height: 0;
 
 /* Links */
 $link-decoration: none;

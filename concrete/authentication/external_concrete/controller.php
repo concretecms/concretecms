@@ -30,7 +30,7 @@ class Controller extends GenericOauth2TypeController
     protected $config;
 
     public function __construct(
-        ?\Concrete\Core\Authentication\AuthenticationType $type = null,
+        ?\Concrete\Core\Authentication\AuthenticationType $type,
         ServiceFactory $factory,
         ResolverManagerInterface $urlResolver,
         Repository $config

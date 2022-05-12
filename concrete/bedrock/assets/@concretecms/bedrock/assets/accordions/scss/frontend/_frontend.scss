@@ -1,0 +1,11 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+
+// Base styling
+@import 'bootstrap/scss/accordion';
+
+// Reset header top margins because if this is used on old bootstrap sometimes a margin is present.
+.accordion-header {
+  margin-top: 0;
+}

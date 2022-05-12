@@ -174,6 +174,15 @@ class Groups extends DashboardPageController
         $this->headerSearch->getElementController()->setQuery(null);
     }
 
+    public function view_tree()
+    {
+        $rootFolder = $this->getRootFolder();
+        $this->set('headerMenu', $this->app->make(ElementManager::class)->get('dashboard/groups/menu_tree'));
+        $this->set('tree', $rootFolder->getTreeObject());
+        $this->render('/dashboard/users/groups/tree');
+    }
+
+
     protected function getRootFolder()
     {
         /** @var FolderManager $folderManager */

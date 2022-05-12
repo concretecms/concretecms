@@ -2,6 +2,7 @@
 namespace Concrete\Core\Search\Field;
 
 use Concrete\Core\Attribute\SetManagerInterface;
+use Concrete\Core\Search\Field\AbstractField;
 
 class Manager implements ManagerInterface
 {
@@ -89,8 +90,21 @@ class Manager implements ManagerInterface
             foreach ($this->groups as $group) {
                 foreach ($group->getFields() as $field) {
                     if (in_array($field->getKey(), $keys)) {
-                        $field->loadDataFromRequest($request);
-                        $fields[] = $field;
+                        $loadedFields = $field->loadDataFromRequest($request);
+                        // some search inputs, like user group, can be added more than once
+                        // so we allow them to return an array to define more than one field
+                        // otherwise the data is merged and we don't get the search result we're hoping for
+                        if (is_array($loadedFields) && count($loadedFields)) {
+                            foreach ($loadedFields as $fld) {
+                                if ($fld instanceof AbstractField) {
+                                    $fields[] = $fld;
+                                }
+                            }
+                        } elseif ($loadedFields instanceof AbstractField) {
+                            $fields[] = $loadedFields;
+                        } else {
+                            $fields[] = $field;
+                        }
                     }
                 }
             }

@@ -3,8 +3,6 @@ namespace Concrete\Core\Entity\StyleCustomizer\Inline;
 
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
-use Database;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -236,6 +234,11 @@ class StyleSet
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
+    protected $boxShadowInset = false;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
     protected $hideOnExtraSmallDevice = false;
 
     /**
@@ -460,6 +463,24 @@ class StyleSet
     {
         return $this->boxShadowVertical;
     }
+
+    /**
+     * @return bool
+     */
+    public function getBoxShadowInset(): ?bool
+    {
+        return $this->boxShadowInset;
+    }
+
+    /**
+     * @param bool $boxShadowInset
+     */
+    public function setBoxShadowInset(bool $boxShadowInset)
+    {
+        $this->boxShadowInset = $boxShadowInset;
+    }
+
+
 
     /**
      * @param mixed $linkColor
@@ -775,6 +796,7 @@ class StyleSet
         $node->addChild('boxShadowBlur', $this->getBoxShadowBlur());
         $node->addChild('boxShadowSpread', $this->getBoxShadowSpread());
         $node->addChild('boxShadowColor', $this->getBoxShadowColor());
+        $node->addChild('boxShadowInset', $this->getBoxShadowInset());
         $node->addChild('customClass', $this->getCustomClass());
         $node->addChild('customID', $this->getCustomID());
         $node->addChild('customElementAttribute', $this->getCustomElementAttribute());

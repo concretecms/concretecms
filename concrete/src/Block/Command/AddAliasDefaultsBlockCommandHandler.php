@@ -22,7 +22,7 @@ class AddAliasDefaultsBlockCommandHandler
                         $displayOrder = $b->getBlockDisplayOrder();
                     }
                     if ($bt->isCopiedWhenPropagated()) {
-                        $b = $b->duplicate($page, true);
+                        $b = $b->duplicate($page, 'duplicate_master');
                         if ($displayOrder) $b->setAbsoluteBlockDisplayOrder($displayOrder);
                     } else {
                         $b->alias($page, $displayOrder);

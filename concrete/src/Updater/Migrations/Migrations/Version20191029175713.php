@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
+use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\Set;
@@ -40,6 +41,7 @@ final class Version20191029175713 extends AbstractMigration implements Repeatabl
 {
     public function upgradeDatabase()
     {
+        $this->refreshEntities([ExpressKey::class]);
         $this->refreshEntities([
             Board::class,
             BoardPermissionAssignment::class,

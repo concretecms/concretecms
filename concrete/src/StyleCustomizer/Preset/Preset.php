@@ -43,6 +43,7 @@ class Preset implements PresetInterface
         return $this->identifier;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

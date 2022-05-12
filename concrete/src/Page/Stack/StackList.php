@@ -16,6 +16,8 @@ class StackList extends PageList
     {
         parent::__construct();
         $this->foldersFirst = false;
+        /* retreive most recent version to include stacks that have no approved versions */
+        $this->pageVersionToRetrieve = self::PAGE_VERSION_RECENT;
         $this->query->leftJoin('p', 'Stacks', 's', 's.cID = p.cID');
         $this->ignorePermissions();
         $this->filterByPath(STACKS_PAGE_PATH);

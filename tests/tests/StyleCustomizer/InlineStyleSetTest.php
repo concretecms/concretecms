@@ -126,6 +126,7 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
             'boxShadowHorizontal' => '50px',
             'boxShadowVertical' => '55px',
             'boxShadowSpread' => '60px',
+            'boxShadowInset' => '1',
             'customClass' => ['testclass'],
             'customID' => 'testid',
             'customElementAttribute' => 'data-test="test"',
@@ -143,6 +144,7 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('rgb(30,30,30)', $set->getTextColor());
         $this->assertEquals('15px', $set->getBaseFontSize());
         $this->assertEquals('5px', $set->getMarginTop());
+
         $this->assertEquals('10px', $set->getMarginRight());
         $this->assertEquals('15px', $set->getMarginBottom());
         $this->assertEquals('20px', $set->getMarginLeft());
@@ -161,6 +163,7 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('50px', $set->getBoxShadowHorizontal());
         $this->assertEquals('55px', $set->getBoxShadowVertical());
         $this->assertEquals('60px', $set->getBoxShadowSpread());
+        $this->assertTrue($set->getBoxShadowInset());
         $this->assertEquals('testclass', $set->getCustomClass());
         $this->assertEquals('testid', $set->getCustomID());
         $this->assertEquals('data-test="test"', $set->getCustomElementAttribute());

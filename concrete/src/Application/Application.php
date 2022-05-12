@@ -165,7 +165,7 @@ class Application extends Container
     public function isInstalled()
     {
         if ($this->installed === null) {
-            if (!$this->isShared('config')) {
+            if (!$this->isAlias('config')) {
                 throw new Exception('Attempting to check install status before application initialization.');
             }
 
@@ -255,8 +255,8 @@ class Application extends Container
         $entityManager = $this['Doctrine\ORM\EntityManager'];
         $configUpdater = new EntityManagerConfigUpdater($entityManager);
 
-        foreach ($this->packages as $pkg) {
-            if ($config->get('concrete.updates.enable_auto_update_packages')) {
+        if ($config->get('concrete.updates.enable_auto_update_packages')) {
+            foreach ($this->packages as $pkg) {
                 $dbPkg = \Package::getByHandle($pkg->getPackageHandle());
                 $pkgInstalledVersion = $dbPkg->getPackageVersion();
                 $pkgFileVersion = $pkg->getPackageVersion();

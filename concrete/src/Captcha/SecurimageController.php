@@ -225,6 +225,7 @@ class SecurimageController extends AbstractController implements CaptchaWithPict
                 'id' => static::DEFAULT_INPUT_ID,
                 'class' => 'form-control ccm-input-captcha',
                 'required' => 'required',
+                'autocomplete' => 'off',
             ]
         );
         foreach ($attributes as $attributeName => $attributeValue) {

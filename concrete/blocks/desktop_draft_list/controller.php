@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\DesktopDraftList;
 
 use Concrete\Core\Block\BlockController;
@@ -7,43 +8,70 @@ use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\UserInfo;
-use Permissions;
-use URL;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = ['form'];
+    /**
+     * @var string
+     */
     protected $btTable = 'btDesktopDraftList';
+
+    /**
+     * @var int
+     */
     protected $defaultDraftsPerPage = 10;
 
+    /**
+     * @return string[]
+     */
     public function getRequiredFeatures(): array
     {
         return [Features::DESKTOP];
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeDescription()
     {
         return t('Displays a list of all drafts.');
     }
 
+    /**
+     * @return string
+     */
     public function getBlockTypeName()
     {
         return t('Draft List');
     }
 
+    /**
+     * @return void
+     */
     public function add()
     {
         $this->set('defaultDraftsPerPage', $this->defaultDraftsPerPage);
     }
 
+    /**
+     * @return void
+     */
     public function edit()
     {
         $this->set('defaultDraftsPerPage', $this->defaultDraftsPerPage);
     }
 
+    /**
+     * @param array<string,mixed> $args
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return bool|\Concrete\Core\Error\ErrorList\ErrorList|mixed|object
+     */
     public function validate($args)
     {
         $e = $this->app->make('helper/validation/error');
@@ -57,6 +85,11 @@ class Controller extends BlockController implements UsesFeatureInterface
         return $e;
     }
 
+    /**
+     * @param array<string,mixed> $args
+     *
+     * @return void
+     */
     public function save($args)
     {
         if (empty($args['draftsPerPage'])) {
@@ -64,7 +97,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         parent::save($args);
     }
-    
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return void
+     */
     public function view()
     {
         $myDrafts = [];
@@ -90,7 +128,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             $date = $this->app->make('helper/date');
             $navigation = $this->app->make('helper/navigation');
             foreach ($drafts as $draft) {
-                $dp = new Permissions($draft);
+                $dp = new Checker($draft);
+                /** @phpstan-ignore-next-line */
                 if ($dp->canEditPageContents()) {
                     $draftName = $draft->getCollectionName();
                     if (empty($draftName)) {
@@ -105,8 +144,9 @@ class Controller extends BlockController implements UsesFeatureInterface
                         }
                     }
                     $deleteLink = null;
+                    /** @phpstan-ignore-next-line */
                     if ($dp->canDeletePage()) {
-                        $deleteLink = URL::to('/ccm/system/dialogs/page/delete_from_sitemap') . '?cID=' . $draft->getCollectionID();
+                        $deleteLink = \Concrete\Core\Support\Facade\Url::to('/ccm/system/dialogs/page/delete_from_sitemap') . '?cID=' . $draft->getCollectionID();
                     }
                     $myDrafts[] = [
                         'link' => $navigation->getLinkToCollection($draft),
@@ -123,6 +163,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('pagination', $pagination);
     }
 
+    /**
+     * @return void
+     */
     public function action_reload_drafts()
     {
         $b = $this->getBlockObject();

@@ -68,7 +68,6 @@ if (isset($set_connection_collation_warnings)) {
 $(document).ready(function() {
     var submitted = false;
     $('#collation')
-        .selectpicker()
         .closest('form')
             .on('submit', function(e) {
                 if (submitted) {

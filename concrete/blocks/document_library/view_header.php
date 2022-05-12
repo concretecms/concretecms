@@ -22,7 +22,7 @@ $c = Page::getCurrentPage();
             <div class="col-md-6">
                 <div class="hstack gap-2">
                     <?=$form->text('keywords', ['placeholder' => t('Keyword Search')])?>
-                    <button type="submit" class="btn btn-primary" name="search"><?=t('Search')?></button>
+                    <button type="submit" class="btn btn-primary" name="search" value="search"><?=t('Search')?></button>
                 </div>
             </div>
             <div class="col-md-6 text-end">
@@ -36,6 +36,20 @@ $c = Page::getCurrentPage();
                 <?php } ?>
             </div>
         </div>
+
+        <?php if (count($tableSearchProperties)) { ?>
+            <div data-document-library-advanced-search-fields="<?=$bID?>"
+                 class="ccm-block-document-library-advanced-search-fields mt-5">
+                <input type="hidden" name="advancedSearchDisplayed" value="">
+                <?php foreach($tableSearchProperties as $column) { ?>
+                    <div class="mb-3"><h5><?=$controller->getColumnTitle($column)?></h5>
+                    <div><?=$controller->getSearchValue($column)?></div>
+                        </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
+
+
     </form>
 <?php } else if ($canAddFiles) { ?>
     <div class="mb-5 text-right">
@@ -52,6 +66,7 @@ $c = Page::getCurrentPage();
         <?=Core::make('token')->output()?>
     </div>
 <?php } ?>
+
 
 <?php
 if (isset($breadcrumbs) && $breadcrumbs) { ?>
@@ -86,7 +101,8 @@ if (isset($breadcrumbs) && $breadcrumbs) { ?>
         $.concreteDocumentLibrary({
             'bID': '<?=$bID?>',
             'allowFileUploading': <?php if ($allowFileUploading) { ?>true<?php } else { ?>false<?php } ?>,
-            'allowInPageFileManagement': <?php if ($allowInPageFileManagement) { ?>true<?php } else { ?>false<?php } ?>
+            'allowInPageFileManagement': <?php if ($allowInPageFileManagement) { ?>true<?php } else { ?>false<?php } ?>,
+            'advancedSearchDisplayed': <?php if ($advancedSearchDisplayed) { ?>true<?php } else { ?>false<?php } ?>
         });
     });
 </script>

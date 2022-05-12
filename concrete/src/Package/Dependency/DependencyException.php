@@ -25,6 +25,7 @@ abstract class DependencyException extends LogicException implements ErrorInterf
      *
      * @see \JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

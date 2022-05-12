@@ -133,7 +133,7 @@ $thumbnailTypes['0'] = t('Full Size');
                         </span>
                     </div>
 
-                    <?php echo $form->select('selectedThumbnailTypes['  . $breakpointHandle . ']', $thumbnailTypes, $selectedThumbnailTypes[$breakpointHandle]); ?>
+                    <?php echo $form->select('selectedThumbnailTypes['  . $breakpointHandle . ']', $thumbnailTypes, $selectedThumbnailTypes[$breakpointHandle] ?? null); ?>
                 </div>
             </div>
         <?php } ?>

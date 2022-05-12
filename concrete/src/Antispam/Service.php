@@ -54,7 +54,7 @@ class Service
         foreach ($additionalArgs as $key => $value) {
             $args[$key] = $value;
         }
-        if (method_exists($this->controller, 'report')) {
+        if ($this->controller && method_exists($this->controller, 'report')) {
             $this->controller->report($args);
         }
 

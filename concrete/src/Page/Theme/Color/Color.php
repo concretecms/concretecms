@@ -39,6 +39,7 @@ class Color implements \JsonSerializable
         return $this->variable;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['name' => $this->getName(), 'variable' => $this->getVariable()];

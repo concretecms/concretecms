@@ -137,6 +137,7 @@ class Bulk extends DashboardPageController
             if ($pc && !$pc->isError()) {
                 if ($searchRequest['cParentAll']) {
                     $cPath = $pc->getCollectionPath();
+		    $pageList->filterBySite($pc->getSite());
                     $pageList->filterByPath($cPath);
                 } else {
                     $pageList->filterByParentID($searchRequest['cParentIDSearchField']);

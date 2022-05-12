@@ -102,7 +102,9 @@ class ClearCacheCommandHandler
         if ($command->doClearGlobalAreas()) {
             $this->deleteEmptyGlobalAreas();
         }
-
+        $timestamp = time();
+        $this->repository->set('concrete.cache.last_cleared', $timestamp);
+        $this->repository->save('concrete.cache.last_cleared', $timestamp);
         $this->dispatcher->dispatch('on_cache_flush_end');
     }
 

@@ -256,16 +256,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     }
 
     /**
-     * @return array
-     */
-    public function getJavaScriptStrings()
-    {
-        return [
-            'image-required' => t('You must select an image.'),
-        ];
-    }
-
-    /**
      * @return bool
      */
     public function isComposerControlDraftValueEmpty()

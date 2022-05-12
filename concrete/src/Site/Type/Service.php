@@ -74,7 +74,7 @@ class Service
 
     public function getDefault(): ?Type
     {
-        return $this->getByID(1);
+        return $this->getByHandle('default');
     }
 
     /**

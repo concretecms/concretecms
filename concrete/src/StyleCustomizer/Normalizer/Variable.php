@@ -42,6 +42,7 @@ class Variable implements VariableInterface
         return $this->value;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['name' => $this->getName(), 'value' => $this->getValue()];

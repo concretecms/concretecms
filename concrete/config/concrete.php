@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.0.2',
-    'version_installed' => '9.0.2',
-    'version_db' => '20220114215506', // the key of the latest database migration
+    'version' => '9.1.0',
+    'version_installed' => '9.1.0',
+    'version_db' => '20220503000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -268,6 +268,13 @@ return [
         'blocks' => true,
 
         /*
+         * Cache Assets
+         *
+         * @var bool
+         */
+        'assets' => false,
+
+        /*
          * Cache Theme CSS/JS
          *
          * @var bool
@@ -404,6 +411,10 @@ return [
         'clear' => [
             'thumbnails' => false,
         ],
+        /**
+         * Timestamp of the last time that the cache was cleared, this is used when generating assets.
+         */
+        'last_cleared'=> 1648642409
     ],
 
     'design' => [
@@ -881,7 +892,7 @@ return [
          *
          * @var int
          */
-        'results' => 10,
+        'results' => 50,
     ],
 
     'search_users' => [
@@ -953,10 +964,10 @@ return [
     'urls' => [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
-        'background_feed' => '//backgroundimages.concrete5.org/wallpaper', // staying at concrete5.org for the momen
+        'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
-        'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
+        'background_info' => 'http://backgroundimages.concretecms.com/get_image_data.php',
         'videos' => 'https://www.youtube.com/user/concrete5cms/videos',
         'activity_slots' => 'https://marketing.concretecms.com/ccm/marketing/activity_slots',
         'help' => [

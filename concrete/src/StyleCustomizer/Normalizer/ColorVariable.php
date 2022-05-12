@@ -86,6 +86,7 @@ class ColorVariable implements VariableInterface
         return $value;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

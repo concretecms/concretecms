@@ -4,10 +4,11 @@ namespace Concrete\Core\Attribute;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Entity\Attribute\Key\Settings\TextSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Core;
 
-class DefaultController extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class DefaultController extends AttributeTypeController implements SimpleTextExportableAttributeInterface, FilterableByValueInterface
 {
     protected $searchIndexFieldDefinition = [
         'type' => 'text',
@@ -42,6 +43,20 @@ class DefaultController extends AttributeTypeController implements SimpleTextExp
     public function getAttributeValueClass()
     {
         return TextValue::class;
+    }
+
+    /**
+     * @param \Concrete\Core\Search\ItemList\ItemList $list
+     * @param TextValue $value
+     * @return mixed|void
+     */
+    public function filterByExactValue($list, $value)
+    {
+        $list->filterByAttribute(
+            $this->attributeKey->getAttributeKeyHandle(),
+            $value->getValue(),
+            '='
+        );
     }
 
     public function search()

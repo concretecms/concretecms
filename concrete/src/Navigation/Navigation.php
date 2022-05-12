@@ -62,6 +62,7 @@ class Navigation implements NavigationInterface, JsonSerializable
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [];

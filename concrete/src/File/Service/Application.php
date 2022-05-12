@@ -87,8 +87,11 @@ class Application
      */
     public function unSerializeUploadFileExtensions($types)
     {
+        if ((string) $types === '') {
+            return [];
+        }
         //split by semi-colon
-        $types = preg_split('{;}', $types, null, PREG_SPLIT_NO_EMPTY);
+        $types = preg_split('{;}', $types, -1, PREG_SPLIT_NO_EMPTY);
         $types = preg_replace('{[^a-z0-9]}i', '', $types);
 
         return $types;

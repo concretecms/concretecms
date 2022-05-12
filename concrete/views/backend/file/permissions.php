@@ -26,7 +26,7 @@ $tabs[] = ['ccm-file-storage', t('Storage Location')];
         <?php
         if ($permissionsModel !== 'simple') {
             ?>
-            <div class="tab-pane show active" id="ccm-file-permissions-advanced" role="tabpanel">
+            <div class="tab-pane active" id="ccm-file-permissions-advanced" role="tabpanel">
                 <?php
                 View::element('permission/lists/file', ['f' => $file]);
                 ?>
@@ -34,7 +34,7 @@ $tabs[] = ['ccm-file-storage', t('Storage Location')];
             <?php
         }
         ?>
-        <div class="tab-pane<?= $permissionsModel === 'simple' ? ' show active' : '' ?>" id="ccm-file-password" role="tabpanel">
+        <div class="tab-pane<?= $permissionsModel === 'simple' ? ' active' : '' ?>" id="ccm-file-password" role="tabpanel">
             <h4><?= t('Requires Password to Access') ?></h4>
             <p><?= t('Leave the following form field blank in order to allow everyone to download this file.') ?></p>
             <form method="POST" data-dialog-form="file-password" action="<?= h($resolverManager->resolve(['/ccm/system/file/permissions/set_password'])) ?>">
@@ -42,8 +42,8 @@ $tabs[] = ['ccm-file-storage', t('Storage Location')];
                 <?= $form->hidden('fID', $file->getFileID()) ?>
                 <?= $form->text('fPassword', $file->getPassword()) ?>
                 <div id="ccm-file-password-buttons" style="display: none">
-                    <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?= t('Cancel') ?></button>
-                    <button type="button" onclick="$('form[data-dialog-form=file-password]').submit()" class="btn btn-primary float-end"><?= t('Save Password') ?></button>
+                    <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary"><?= t('Cancel') ?></button>
+                    <button type="button" onclick="$('form[data-dialog-form=file-password]').submit()" class="btn btn-primary me-auto"><?= t('Save Password') ?></button>
                 </div>
             </form>
             <div class="help-block">
@@ -77,8 +77,8 @@ $tabs[] = ['ccm-file-storage', t('Storage Location')];
                 </div>
             </form>
             <div id="ccm-file-storage-buttons" style="display: none">
-                <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?= t('Cancel') ?></button>
-                <button type="button" onclick="$('form[data-dialog-form=file-storage]').submit()" class="btn btn-primary float-end"><?= t('Save Location') ?></button>
+                <button type="button" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary"><?= t('Cancel') ?></button>
+                <button type="button" onclick="$('form[data-dialog-form=file-storage]').submit()" class="btn btn-primary ms-auto"><?= t('Save Location') ?></button>
             </div>
         </div>
     </div>

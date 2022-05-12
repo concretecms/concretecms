@@ -9,6 +9,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php echo $form->checkbox('enable_api', 1, $enable_api) ?>
         <label for="enable_api"><?php echo t('Enable API'); ?></label>
     </div>
+
+    <div class="help-block"><?=t('You must ensure that the HTTP Authorization header is available on your web server. Some web servers or proxies may strip it away.')?></div>
     
 
 

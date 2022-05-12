@@ -19,17 +19,17 @@ div#ccm-toolbar {
       display: inline-block;
     }
 
-    li > a {
+    .ccm-toolbar-item-list > li > a {
       padding: 14px 16px;
       width: auto !important;
     }
 
-    li > a i,
-    li > a img {
+    .ccm-toolbar-item-list > li > a i,
+    .ccm-toolbar-item-list > li > a img {
       position: static;
     }
 
-    .spinner {
+    .ccm-toolbar-item-list > .spinner {
       left: 11px;
     }
   }
@@ -516,5 +516,13 @@ ul.ccm-mobile-menu {
     > li > ul > li > ul > li > ul > li > ul > li > a {
       width: 144px;
     }
+  }
+}
+
+html.ccm-toolbar-visible {
+  .ccm-page {
+    // This used to be dynamically included in the theme. Now we're moving it here.
+    // The purpose of this code is to push the content of the page down if the toolbar appears at the top.
+    margin-top: 48px;
   }
 }

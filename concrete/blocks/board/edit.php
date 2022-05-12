@@ -1,17 +1,30 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+use Concrete\Core\Support\Facade\Url;
 
-<?php
-$instanceName = $instance->getBoardInstanceName();
-if (!$instanceName) {
-    $instanceName = t('(No Name)');
+/** @var \Concrete\Core\Block\View\BlockView $view */
+/** @var \Concrete\Block\Board\Controller $controller */
+/** @var Concrete\Core\Validation\CSRF\Token $validation_token */
+/** @var \Concrete\Core\Entity\Board\Instance|null $instance */
+/** @var \Concrete\Core\Board\Instance\Renderer|null $renderer */
+$renderer = $renderer ?? null;
+$instance = $instance ?? null;
+$checker = null;
+$boardInstanceId = 0;
+if (is_object($instance)) {
+    $instanceName = $instance->getBoardInstanceName();
+    $checker = new \Concrete\Core\Permission\Checker($instance->getBoard());
+    $boardInstanceId = $instance->getBoardInstanceID();
 }
-$checker = new Permissions($instance->getBoard());
+$instanceName = $instanceName ?? t('(No Name)');
+
 ?>
 <ul class="ccm-inline-toolbar ccm-ui" data-inline-toolbar="board">
-    <li><a target="_blank" href="<?php echo URL::to('/dashboard/boards/instances/details', $instance->getBoardInstanceID())?>">
+    <li><a target="_blank" href="<?php echo Url::to('/dashboard/boards/instances/details', $boardInstanceId)?>">
         <?=t('Instance: %s', $instanceName)?>
     </a></li>
-    <?php if ($checker->canEditBoardContents()) { ?>
+    <?php
+    /** @phpstan-ignore-next-line */
+    if (is_object($checker) && $checker->canEditBoardContents()) { ?>
         <li class="ccm-inline-toolbar-icon-cell">
             <a href="javascript:void(0);"
                data-board-button="schedule"
@@ -42,12 +55,15 @@ $checker = new Permissions($instance->getBoard());
         </li>
     <?php } ?>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save">
-        <button type="button" data-toolbar-button-action="exit-board" class="btn btn-primary"><?= t("Done") ?></button>
+        <button type="button" data-toolbar-button-action="exit-board" class="btn btn-primary"><?= t('Done') ?></button>
     </li>
 </ul>
 
 <?php
-$renderer->render($instance);
+if (is_object($renderer)) {
+    $renderer->render($instance);
+}
+
 ?>
 
 <script type="text/javascript">
@@ -74,7 +90,7 @@ $renderer->render($instance);
             $.concreteAjax({
                 url: '<?=$view->action('update')?>',
                 data: {
-                    ccm_token: '<?= $token->generate('update') ?>'
+                    ccm_token: '<?= $validation_token->generate('update') ?>'
                 },
                 success: function(r) {
                     window.location.reload()
@@ -85,7 +101,7 @@ $renderer->render($instance);
 
         $toolbar.on('click', 'a[data-board-button=schedule]', function() {
             $.fn.dialog.open({
-                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/boards/schedule/' + <?=$instance->getBoardInstanceID()?>,
+                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/boards/schedule/' + <?=$boardInstanceId?>,
                 width: '820',
                 height: '600',
                 title: '<?=t('Scheduled Content')?>'
@@ -97,7 +113,7 @@ $renderer->render($instance);
             $.concreteAjax({
                 url: '<?=$view->action('regenerate')?>',
                 data: {
-                    ccm_token: '<?= $token->generate('regenerate') ?>'
+                    ccm_token: '<?= $validation_token->generate('regenerate') ?>'
                 },
                 success: function(r) {
                     window.location.reload()

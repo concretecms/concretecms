@@ -1,23 +1,9 @@
 div.ccm-block-desktop-waiting-for-me {
-  background-color: #fff;
-  border: 1px solid #dddfdf;
-  margin-bottom: 3rem;
-  padding: 20px;
-
-  h3 {
-    border-bottom: 1px solid #d6d6d8;
-    font-weight: normal;
-    margin-bottom: 20px;
-    margin-top: 0;
-    padding-bottom: 5px;
-    position: relative;
-  }
-
   i.ccm-block-desktop-waiting-for-me-loader {
     display: none;
     position: absolute;
-    right: 0;
-    top: 5px;
+    right: 20px;
+    top: 18px;
   }
 
   div.ccm-block-desktop-waiting-for-me-loading {
@@ -97,7 +83,6 @@ div.ccm-block-desktop-waiting-for-me {
         font-size: 1rem;
         font-weight: bold;
         height: 40px;
-        line-height: 50px;
         padding: 0;
         position: relative;
         text-align: center;
@@ -111,9 +96,6 @@ div.ccm-block-desktop-waiting-for-me {
 
         i {
           color: #ccc;
-          left: 10px;
-          position: absolute;
-          top: 10px;
         }
 
         &:active {

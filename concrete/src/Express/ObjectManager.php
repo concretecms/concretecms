@@ -30,7 +30,7 @@ class ObjectManager
         if ($asObject) {
             return $r;
         } else {
-            return $r->findBy(['include_in_public_list' => true]);
+            return $r->findBy(['include_in_public_list' => true, 'is_published' => true]);
         }
     }
 

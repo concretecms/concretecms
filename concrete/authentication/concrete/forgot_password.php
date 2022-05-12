@@ -1,5 +1,12 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
+<?php
+if (isset($callbackError) && $callbackError->has()) { ?>
+
+    <?php View::element('system_errors', ['format' => 'block', 'error' => $callbackError]); ?>
+
+<?php } ?>
+
 <div class="forgotPassword">
 	<form method="post" action="<?= URL::to('/login', 'callback', $authType->getAuthenticationTypeHandle(), 'forgot_password') ?>">
 		<?php $token->output(); ?>

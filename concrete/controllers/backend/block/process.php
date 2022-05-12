@@ -33,9 +33,10 @@ class Process extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function alias($cID, $arHandle, $pcID, $dragAreaBlockID = null, $orphanedBlockID = null): SymphonyResponse
+    public function alias($cID, $arHandle, $pcID, $dragAreaBlockID = null, $orphanedBlockID = null, $stackBlockID = null): SymphonyResponse
     {
-        $isOrphanedBlock = (int)$orphanedBlockID > 0;
+        $isOrphanedBlock = (int) $orphanedBlockID > 0;
+        $isStackBlock = (int) $stackBlockID > 0;
         $token = $this->app->make('token');
 
         if (!$token->validate()) {
@@ -60,20 +61,23 @@ class Process extends AbstractController
             $ax = $a;
         }
 
-        if ($isOrphanedBlock) {
+        if ($isStackBlock) {
+            $b = Block::getByID($stackBlockID);
+        } else if ($isOrphanedBlock) {
             $b = Block::getByID($orphanedBlockID);
         } else {
             $pc = PileContent::get($pcID);
             if (!$pc || $pc->isError() || $pc->getItemType() !== 'BLOCK') {
                 throw new UserMessageException(t('Unable to find the specified block'));
             }
-            $bID = $pc->getItemID();
-            $b = Block::getByID($bID);
+            $b = Block::getByID($pc->getItemID());
         }
 
         if (!$b) {
             throw new UserMessageException(t('Unable to find the specified block'));
         }
+
+        $bID = $b->getBlockID();
 
         $b->setBlockAreaObject($ax);
 
@@ -104,7 +108,7 @@ class Process extends AbstractController
                 $btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
                 $nb = $nvc->addBlock($btx, $ax, ['bOriginalID' => $bID]);
             } else {
-                $nb = $b->duplicate($nvc);
+                $nb = $b->duplicate($nvc, 'duplicate_clipboard');
                 $nb->move($nvc, $ax);
                 if (!$nb) {
                     throw new UserMessageException(t('Unable to find the specified block'));

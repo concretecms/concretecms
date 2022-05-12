@@ -1,22 +1,30 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
-
+/** @var \Concrete\Core\Block\View\BlockView $view */
+/** @var \Concrete\Core\Form\Service\Form $form */
 use Concrete\Core\Application\Service\UserInterface;
 use Concrete\Core\Support\Facade\Application;
-
+use Concrete\Core\Editor\CkeditorEditor;
 $app = Application::getFacadeApplication();
 
-/** @var UserInterface $userInterface */
+/** @var Concrete\Core\Application\Service\UserInterface $userInterface */
 $userInterface = $app->make(UserInterface::class);
 
 echo $userInterface->tabs([
     ['accordion-content', t('Content'), true],
     ['accordion-settings', t('Settings')],
 ]);
+
+$editor = $app->make(CkeditorEditor::class);
+// Note - unless you explicitly call this when using the ckeditor component, it will be loaded from cdn.ckeditor.com
+// and it won't have access to any plugins.
+$editor->requireEditorAssets();
+// This has to be run in order to use the file manager, snippets, etc... all the Concrete-specific stuff.
+$config = $editor->getOptions();
 ?>
 
 <div class="tab-content">
 
-  <div class="tab-pane show active" id="accordion-content" role="tabpanel">
+  <div class="tab-pane active" id="accordion-content" role="tabpanel">
 
     <div data-vue="accordion-block">
 
@@ -40,7 +48,7 @@ echo $userInterface->tabs([
                   </div>
                   <div>
                       <label class="form-label"><?=t('Body')?></label>
-                      <ckeditor v-model="entry.description"></ckeditor>
+                      <ckeditor :config='<?=json_encode($config)?>' v-model="entry.description"></ckeditor>
                   </div>
               </div>
               <div v-else>
@@ -59,12 +67,12 @@ echo $userInterface->tabs([
 
   		<div class="form-group">
   			<?php echo $form->label('initialState', t('Initial State'))?>
-  		  <?php echo $form->select('initialState', array('openfirst' => t('First Item Open'),'closed' => t('All Items Closed'),'open' => t('All Items Open')), $initialState); ?>
+  		  <?php echo $form->select('initialState', ['openfirst' => t('First Item Open'), 'closed' => t('All Items Closed'), 'open' => t('All Items Open')], $initialState ?? 'openfirst'); ?>
   	  </div>
 
   	  <div class="form-group">
   			<?php echo $form->label('itemHeadingFormat', t('Item Heading Format'))?>
-  		  <?php echo $form->select('itemHeadingFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $itemHeadingFormat); ?>
+  		  <?php echo $form->select('itemHeadingFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $itemHeadingFormat ?? 'h2'); ?>
   	  </div>
 
       <div class="form-group">
@@ -72,13 +80,13 @@ echo $userInterface->tabs([
         <?php echo $form->label('options', t('Options'))?>
 
         <div class="form-check">
-            <?php echo $form->checkbox("alwaysOpen", "1", $alwaysOpen);?>
-            <?php echo $form->label("alwaysOpen", t("Always Open (make accordion items stay open when another item is opened)"), ["class" => "form-check-label"]); ?>
+            <?php echo $form->checkbox('alwaysOpen', '1', $alwaysOpen ?? false); ?>
+            <?php echo $form->label('alwaysOpen', t('Always Open (make accordion items stay open when another item is opened)'), ['class' => 'form-check-label']); ?>
         </div>
 
         <div class="form-check">
-            <?php echo $form->checkbox("flush", "1", $flush);?>
-            <?php echo $form->label("flush", t("Flush (render accordion edge-to-edge)"), ["class" => "form-check-label"]); ?>
+            <?php echo $form->checkbox('flush', '1', $flush ?? false); ?>
+            <?php echo $form->label('flush', t('Flush (render accordion edge-to-edge)'), ['class' => 'form-check-label']); ?>
         </div>
       </div>
 
@@ -91,12 +99,11 @@ echo $userInterface->tabs([
 <script>
     $(function() {
         Concrete.Vue.activateContext('accordion', function (Vue, config) {
-            Vue.use(config.components.CKEditor) // I don't understand why this is required :(
             new Vue({
                 el: 'div[data-vue=accordion-block]',
                 components: config.components,
                 data: {
-                    entries: <?=json_encode($entries)?>
+                    entries: <?=json_encode($entries ?? [])?>
                 },
                 methods: {
                     addEntry() {

@@ -9,8 +9,7 @@ jobs:
     name: "PHPUnit"
     env:
       LC_ALL: en_US.UTF-8
-      CODE_COVERAGE: n
-    continue-on-error: ${{ matrix.php-version == '8.1' }}
+      CODE_COVERAGE: none
 
     runs-on: ${{ matrix.operating-system }}
     services:
@@ -50,6 +49,10 @@ jobs:
             dependencies: "locked"
 
     steps:
+      - name: Enable code coverage
+        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked' && github.repository_owner == 'concrete5'
+        run: printf 'CODE_COVERAGE=pcov\n' >> "$GITHUB_ENV"
+
       - name: "Checkout"
         uses: "actions/checkout@v2"
         with:
@@ -60,7 +63,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
-          coverage: pcov
+          coverage: ${{ env.CODE_COVERAGE }}
           ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
           tools: ${{matrix.composer}}
 
@@ -68,10 +71,6 @@ jobs:
         run: |
           mysql -h127.0.0.1 -uroot -proot -e "CREATE USER 'travis'@'%' IDENTIFIED BY '';"
           mysql -h127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-
-      - name: Enable code coverage
-        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked'
-        run: printf 'CODE_COVERAGE=y\n' >> "$GITHUB_ENV"
 
       - name: "Install lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}
@@ -89,24 +88,17 @@ jobs:
         if: ${{ matrix.dependencies == 'locked' }}
         run: |
           composer install --no-interaction --no-progress --no-suggest
-        # Since continue on error still marks a job as failed.
-        # We also have to add continue-on-error here so it doesnt X the whole build
-        # See https://github.com/actions/toolkit/issues/399
-        continue-on-error: ${{ matrix.php-version == '8.1' }}
-
 
       - name: "Tests"
-        if: env.CODE_COVERAGE == 'n'
+        if: env.CODE_COVERAGE == 'none'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit
-        # Same as above
-        continue-on-error: ${{ matrix.php-version == '8.1' }}
 
       - name: "Tests with coverage"
-        if: env.CODE_COVERAGE == 'y'
+        if: env.CODE_COVERAGE != 'none'
         run: php ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover
 
       - name: "Upload coverage"
-        if: env.CODE_COVERAGE == 'y'
+        if: env.CODE_COVERAGE != 'none'
         run: |
           wget --tries=5 https://scrutinizer-ci.com/ocular.phar
           php ocular.phar code-coverage:upload --format=php-clover coverage.clover

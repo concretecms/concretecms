@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Express\Form\Validator\Routine;
 
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Express\Form\Processor\ProcessorInterface;
@@ -11,11 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 class CheckPermissionsRoutine implements RoutineInterface
 {
 
-    public function validate(ErrorList $error, Form $form, $requestType)
+    public function validate(ErrorList $error, Form $form, Entry $entry = null)
     {
         $entity = $form->getEntity();
         $permissions = new \Permissions($entity);
-        if ($requestType = ProcessorInterface::REQUEST_TYPE_ADD) {
+        if ($entry === null) {
             $valid = $permissions->canAddExpressEntries();
         } else {
             $valid = $permissions->canEditExpressEntries();

@@ -64,6 +64,8 @@ class DialogView extends ConcreteView
             foreach ($assets as $asset) {
                 if ($asset instanceof Asset) {
                     $asset->setAssetPosition(Asset::ASSET_POSITION_HEADER);
+                    $asset->setAssetSupportsMinification(false);
+                    $asset->setAssetSupportsCombination(false);
                 }
                 $return[$position][] = $asset;
             }

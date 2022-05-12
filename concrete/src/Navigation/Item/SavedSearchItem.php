@@ -42,6 +42,7 @@ class SavedSearchItem extends Item
         $this->id = $id;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = parent::jsonSerialize();

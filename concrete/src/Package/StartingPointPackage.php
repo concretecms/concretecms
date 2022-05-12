@@ -594,6 +594,10 @@ class StartingPointPackage extends Package
 
         $this->installerOptions->deleteFiles();
 
+        // Set the version_db as the version_db_installed
+        $config->save('concrete.version_db_installed', $config->get('concrete.version_db'));
+
+        // Clear cache
         $config->clearCache();
         $this->app->make('cache')->flush();
     }

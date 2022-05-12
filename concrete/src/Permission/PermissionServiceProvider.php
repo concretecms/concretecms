@@ -46,6 +46,13 @@ class PermissionServiceProvider extends ServiceProvider
             return $app->make(IpAccessControlService::class, ['category' => $category]);
         });
 
+        $this->app->bind('ip/access/control/forgot_password', function (Application $app) {
+            $em = $app->make(EntityManagerInterface::class);
+            $repo = $em->getRepository(IpAccessControlCategory::class);
+            $category = $repo->findOneBy(['handle' => 'forgot_password']);
+            return $app->make(IpAccessControlService::class, ['category' => $category]);
+        });
+
         $this->app->singleton('permission/access/entity/factory', function () use ($app) {
             return new Access\Entity\Factory($app);
         });

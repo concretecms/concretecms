@@ -11,6 +11,7 @@ use Concrete\Core\Entity\Express\ManyToManyAssociation;
 use Concrete\Core\Entity\Express\ManyToOneAssociation;
 use Concrete\Core\Express\Entry\Search\Result\Result;
 use Concrete\Core\Express\EntryList;
+use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\Field\AssociationField;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Express\Search\SearchProvider;
@@ -37,6 +38,14 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceHeight = "400";
     protected $btTable = 'btExpressEntryList';
     protected $entityAttributes = [];
+
+    public $enableItemsPerPageSelection = false;
+
+    public $searchProperties = false;
+
+    public $searchAssociations;
+
+    public $columns;
 
     public function on_start()
     {
@@ -77,6 +86,22 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('displayLimit', 20);
         $this->set('titleFormat', 'h2');
         $this->set('enablePagination', 1);
+        $this->set('exEntityID', null);
+        $this->set('enableSearch', false);
+        $this->set('enableKeywordSearch', false);
+        $this->set('searchFieldSelectorElement', null);
+        $this->set('customizeElement', null);
+        $this->set('tableName', null);
+        $this->set('tableDescription', null);
+        $this->set('headerBackgroundColor', null);
+        $this->set('headerBackgroundColorActiveSort', null);
+        $this->set('headerTextColor', null);
+        $this->set('rowBackgroundColorAlternate', null);
+        $this->set('tableStriped', false);
+        $this->set('enableItemsPerPageSelection', null);
+        $this->set('detailPage', null);
+        $this->set('searchAssociationsSelected', []);
+        $this->set('linkedPropertiesSelected', []);
     }
 
     protected function getSearchFieldManager(Entity $entity)
@@ -260,6 +285,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
             $queryModifier = new QueryModifier();
             $queryModifier->addModifier(new AutoSortColumnRequestModifier($searchProvider, $this->request, Request::METHOD_GET));
+            $itemsPerPageSpecified = null;
             if ($this->enableItemsPerPageSelection) {
                 $maxItemsPerPage = max($this->getItemsPerPageOptions());
                 if ($this->request->query->get('itemsPerPage')) {
@@ -297,6 +323,8 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
                 $this->requireAsset('css', 'core/frontend/pagination');
+            } else {
+                $this->set('pagination', null);
             }
 
             if ($this->enableItemsPerPageSelection) {
@@ -354,8 +382,8 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $data['enableSearch'] = 0;
             }
         } else {
-            $data['searchProperties'] = [];
-            $data['searchAssociations'] = [];
+            $data['searchProperties'] = null;
+            $data['searchAssociations'] = null;
             $data['enableKeywordSearch'] = 0;
             $data['enableSearch'] = 0;
         }
@@ -391,7 +419,6 @@ class Controller extends BlockController implements UsesFeatureInterface
             $filterFields = $manager->getFieldsFromRequest($this->request->request->all());
             $data['filterFields'] = serialize($filterFields);
         }
-
 
         parent::save($data);
     }

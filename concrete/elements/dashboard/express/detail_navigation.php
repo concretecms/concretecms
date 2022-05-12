@@ -55,26 +55,28 @@ $c = Page::getCurrentPage();
             </a>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link <?php echo ($c->getCollectionPath() === '/dashboard/system/express/entities/order_entries') ? ' active' : '' ?>"
-               href="<?php echo (string)Url::to('/dashboard/system/express/entities/order_entries', $entity->getId()) ?>">
-                <?php echo t('Re-Order Entries') ?>
-            </a>
-        </li>
+        <?php if ($entity->isPublished()) { ?>
+            <li class="nav-item">
+                <a class="nav-link <?php echo ($c->getCollectionPath() === '/dashboard/system/express/entities/order_entries') ? ' active' : '' ?>"
+                   href="<?php echo (string)Url::to('/dashboard/system/express/entities/order_entries', $entity->getId()) ?>">
+                    <?php echo t('Re-Order Entries') ?>
+                </a>
+            </li>
 
-        <li class="nav-item">
-            <a class="nav-link" href="<?php echo (string)Url::to('/dashboard/express/entries/results', $entity->getId()) ?>">
-                <i class="fas fa-share float-end"></i>
-                <?php echo tc(/*i18n: %s is an entity name*/ 'Express', 'View %s Entries', $entity->getEntityDisplayName()) ?>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo (string)Url::to('/dashboard/express/entries/results', $entity->getId()) ?>">
+                    <i class="fas fa-share float-end"></i>
+                    <?php echo tc(/*i18n: %s is an entity name*/ 'Express', 'View %s Entries', $entity->getEntityDisplayName()) ?>
+                </a>
+            </li>
 
-        <li class="nav-item">
-            <a class="nav-link"
-               href="<?php echo (string)Url::to('/dashboard/system/express/entities', 'clear_entries', $entity->getId()) ?>">
-                <i class="fas fa-trash-alt float-end text-danger"></i>
-                <span class="text-danger"><?php echo t('Clear Entries') ?></span>
-            </a>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="<?php echo (string)Url::to('/dashboard/system/express/entities', 'clear_entries', $entity->getId()) ?>">
+                    <i class="fas fa-trash-alt float-end text-danger"></i>
+                    <span class="text-danger"><?php echo t('Clear Entries') ?></span>
+                </a>
+            </li>
+        <?php } ?>
     </ul>
 </div>

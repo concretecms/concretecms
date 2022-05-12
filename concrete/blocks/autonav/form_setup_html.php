@@ -1,19 +1,18 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Block\Autonav\Controller $controller */
-/* @var Concrete\Core\Block\View\BlockView $view */
+/** @var Concrete\Block\Autonav\Controller $controller */
+/** @var Concrete\Core\Block\View\BlockView $view */
+/** @var Concrete\Core\Entity\Block\BlockType\BlockType $bt */
+/** @var Concrete\Core\Form\Service\Form $form */
+/** @var Concrete\Core\Validation\CSRF\Token $validation_token */
+/** @var Concrete\Core\Application\Service\UserInterface $concrete_ui */
+/** @var \Concrete\Core\Form\Service\Widget\PageSelector $form_page_selector */
+/** @var array<string, mixed>|null $info */
 
-/* @var Concrete\Core\Entity\Block\BlockType\BlockType $bt */
-/* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Core\Validation\CSRF\Token $validation_token */
-/* @var array $info */
+$c = \Concrete\Core\Page\Page::getCurrentPage();
 
-$c = Page::getCurrentPage();
-
-if (!isset($info)) {
-    $info = [];
-}
+$info = $info ?? null;
 
 $info += [
     'orderBy' => null,
@@ -24,15 +23,17 @@ $info += [
     'displaySubPageLevels' => null,
     'displaySubPageLevelsNum' => null,
 ];
+
 ?>
 
-<?=$concrete_ui->tabs(array(
-    array('autonav-settings', t('Settings'), true),
-    array('autonav-preview', t('Preview'))
-)); ?>
+
+<?=$concrete_ui->tabs([
+    ['autonav-settings', t('Settings'), true],
+    ['autonav-preview', t('Preview')],
+]); ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="autonav-settings">
+    <div class="tab-pane active" id="autonav-settings">
         <div class="autonav-form">
             <input type="hidden" name="autonavCurrentCID" value="<?= $c->getCollectionID() ?>"/>
             <input type="hidden" name="autonavPreviewPane" value="<?= h($controller->getActionURL('preview_pane')) ?>"/>
@@ -70,7 +71,7 @@ $info += [
                 <div class="form-group">
                     <label><?= t('Check Page Permissions') ?></label>
                     <div class="form-check">
-                        <?= $form->checkbox('displayUnavailablePages', 1, $info['displayUnavailablePages']); ?>
+                        <?= $form->checkbox('displayUnavailablePages', '1', $info['displayUnavailablePages']); ?>
                         <label for="displayUnavailablePages" class="form-check-label"><?= t('Display links that may require login.'); ?></label>
                     </div>
                 </div>

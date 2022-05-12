@@ -27,6 +27,7 @@ trait ValueContainerTrait
         return $this->styleValues;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['values' => $this->styleValues];

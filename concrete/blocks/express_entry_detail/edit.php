@@ -27,9 +27,9 @@ $expressEntrySelector = $app->make(ExpressEntrySelector::class);
 
 $exForms = [];
 
-if (is_object($entity)) {
-    foreach ($entity->getForms() as $form) {
-        $exForms[$form->getID()] = $form->getName();
+if (isset($entity) && is_object($entity)) {
+    foreach ($entity->getForms() as $formEntity) {
+        $exForms[$formEntity->getID()] = $formEntity->getName();
     }
 }
 ?>
@@ -54,7 +54,7 @@ if (is_object($entity)) {
 
     <div class="form-group" data-container="express-entry-specific-entry">
         <?php if (is_object($entity)) { ?>
-            <?php print $expressEntrySelector->selectEntry($entity, 'exSpecificEntryID', $entry); ?>
+            <?php print $expressEntrySelector->selectEntry($entity, 'exSpecificEntryID', $entry ?? null); ?>
         <?php } else { ?>
             <p>
                 <?php echo t('You must select an entity before you can choose a specific entry from it.') ?>

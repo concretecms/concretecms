@@ -10,11 +10,17 @@ img.u-avatar {
 }
 
 div.ccm-user-detail-basics {
+  display: flex;
+
   .ccm-user-detail-basics-avatar {
+    align-self: center;
+    max-height: 80px;
     padding-right: 1.5em;
   }
 
-  display: flex;
+  .ccm-user-detail-basics-name {
+    align-self: center;
+  }
 }
 
 @media (min-width: map-get($grid-breakpoints, "md")) {

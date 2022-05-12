@@ -14,10 +14,6 @@ if (isset($cp)) {
     if ($cp->canViewToolbar()) {
         ?>
 
-        <style type="text/css">div.ccm-page {
-                padding-top: 48px !important;
-            } </style>
-
         <script type="text/javascript">
             <?php
             $valt = Loader::helper('validation/token');

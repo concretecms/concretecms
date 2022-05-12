@@ -209,8 +209,8 @@ class Form
      * Generates a checkbox.
      *
      * @param string $key The name/id of the element. It should end with '[]' if it's to return an array on submit.
-     * @param string $value String value sent to server, if checkbox is checked, on submit
-     * @param string | bool $isChecked "Checked" value (subject to be overridden by $_REQUEST). Checkbox is checked if value is true (string). Note that 'false' (string) evaluates to true (boolean)!
+     * @param string | int $value String value sent to server, if checkbox is checked, on submit
+     * @param string | bool | int $isChecked "Checked" value (subject to be overridden by $_REQUEST). Checkbox is checked if value is true (string). Note that 'false' (string) evaluates to true (boolean)!
      * @param array $miscFields additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
@@ -276,8 +276,8 @@ class Form
      * Generates a radio button.
      *
      * @param string $key the name of the element (its id will start with $key but will have a progressive unique number added)
-     * @param string $value the value of the radio button
-     * @param string|array $checkedValueOrMiscFields the value of the element (if it should be initially checked) or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param string|int $value the value of the radio button
+     * @param string|array|bool|int $checkedValueOrMiscFields the value of the element (if it should be initially checked) or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      * @param array $miscFields (used if $checkedValueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return string
@@ -447,7 +447,7 @@ class Form
      *
      * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
      * @param array $optionValues an associative array of key => display
-     * @param string|array $valueOrMiscFields the value of the field to be selected or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
+     * @param string|array|int $valueOrMiscFields the value of the field to be selected or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class', 'id', and 'name'
      *
      * @return $html

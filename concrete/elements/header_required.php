@@ -1,6 +1,7 @@
 <?php
 use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Url\SeoCanonical;
+use Concrete\Core\User\User;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Support\Facade\Application;
@@ -24,12 +25,8 @@ $isArrangeMode = false;
 if (!isset($pageTitle) || !is_string($pageTitle) || $pageTitle === '') {
     $pageTitle = null;
 }
-if (!isset($pageDescription)) {
-    $pageDescription = null;
-}
-if (!isset($pageMetaKeywords)) {
-    $pageMetaKeywords = null;
-}
+$pageDescription = $pageDescription ?? '';
+$pageMetaKeywords = $pageMetaKeywords ?? '';
 $defaultPageTitle = $pageTitle;
 $app = Application::getFacadeApplication();
 $site = $app->make('site')->getSite();
@@ -71,16 +68,16 @@ if (is_object($c)) {
         }
     }
 
-    if (!$pageDescription) {
+    if ($pageDescription === '') {
         // we aren't getting it dynamically.
-        $pageDescription = $c->getAttribute('meta_description');
-        if (!$pageDescription) {
-            $pageDescription = $c->getCollectionDescription();
+        $pageDescription = (string) $c->getAttribute('meta_description');
+        if ($pageDescription === '') {
+            $pageDescription = (string) $c->getCollectionDescription();
         }
         $pageDescription = trim($pageDescription);
     }
-    if (!$pageMetaKeywords) {
-        $pageMetaKeywords = trim($c->getAttribute('meta_keywords'));
+    if ($pageMetaKeywords === '') {
+        $pageMetaKeywords = trim((string) $c->getAttribute('meta_keywords'));
     }
 
     // @deprecated – this is support for page level customizations custom CSS records, which are only available to
@@ -101,10 +98,10 @@ if (is_object($c)) {
 }
 $metaTags = [];
 $metaTags['charset'] = sprintf('<meta http-equiv="content-type" content="text/html; charset=%s"/>', APP_CHARSET);
-if ($pageDescription) {
+if ($pageDescription !== '') {
     $metaTags['description'] = sprintf('<meta name="description" content="%s"/>', htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET));
 }
-if ($pageMetaKeywords) {
+if ($pageMetaKeywords !== '') {
     $metaTags['keywords'] = sprintf('<meta name="keywords" content="%s"/>', htmlspecialchars($pageMetaKeywords, ENT_COMPAT, APP_CHARSET));
 }
 if ($c !== null && $c->getAttribute('exclude_search_index')) {
@@ -182,14 +179,15 @@ if (!empty($alternateHreflangTags)) {
 }
 ?>
 <script type="text/javascript">
-    var CCM_DISPATCHER_FILENAME = "<?php echo DIR_REL . '/' . DISPATCHER_FILENAME; ?>";
-    var CCM_CID = <?php echo $cID ? $cID : 0; ?>;
-    var CCM_EDIT_MODE = <?php echo $isEditMode ? 'true' : 'false'; ?>;
-    var CCM_ARRANGE_MODE = <?php echo $isArrangeMode ? 'true' : 'false'; ?>;
-    var CCM_IMAGE_PATH = "<?php echo ASSETS_URL_IMAGES; ?>";
-    var CCM_APPLICATION_URL = "<?php echo rtrim((string) $app->make('url/canonical'), '/'); ?>";
-    var CCM_REL = "<?php echo $app->make('app_relative_path'); ?>";
-    var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale()) ?>;
+    var CCM_DISPATCHER_FILENAME = <?= json_encode(DIR_REL . '/' . DISPATCHER_FILENAME, JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_CID = <?= (int) $cID ?>;
+    var CCM_EDIT_MODE = <?= $isEditMode ? 'true' : 'false' ?>;
+    var CCM_ARRANGE_MODE = <?= $isArrangeMode ? 'true' : 'false' ?>;
+    var CCM_IMAGE_PATH = <?= json_encode(ASSETS_URL_IMAGES, JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_APPLICATION_URL = <?= json_encode(rtrim((string) $app->make('url/canonical'), '/'), JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_REL = <?= json_encode((string) $app->make('app_relative_path'), JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_ACTIVE_LOCALE = <?= json_encode(Localization::activeLocale(), JSON_UNESCAPED_SLASHES) ?>;
+    var CCM_USER_REGISTERED = <?= $app->make(User::class)->isRegistered() ? 'true ': 'false' ?>;
 </script>
 
 <?php

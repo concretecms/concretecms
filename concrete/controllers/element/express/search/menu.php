@@ -109,6 +109,11 @@ class Menu extends ElementController
         $this->set('form', $this->app->make(Form::class));
         $this->set('token', $this->app->make(Token::class));
         $this->set('urlHelper', $this->app->make(Url::class));
+        $managePage = \Page::getByPath('/dashboard/system/express/entities');
+        $permissions = new \Permissions($managePage);
+        if ($permissions->canViewPage()) {
+            $this->set('manageURL', \URL::to('/dashboard/system/express/entities', 'view_entity', $this->entity->getID()));
+        }
     }
 
 }

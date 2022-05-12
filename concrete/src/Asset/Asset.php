@@ -34,7 +34,21 @@ abstract class Asset implements AssetInterface
      * @var bool
      */
     protected $local = true;
-    
+
+    /**
+     * Does this asset support minification?
+     *
+     * @var bool
+     */
+    protected $assetSupportsMinification = false;
+
+    /**
+     * Can this asset be combined with other assets?
+     *
+     * @var bool
+     */
+    protected $assetSupportsCombination = false;
+
     /**
      * The location of the asset (used to build the path & URL).
      *
@@ -154,8 +168,6 @@ abstract class Asset implements AssetInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Asset\AssetInterface::isAssetLocal()
      */
     public function isAssetLocal()
     {
@@ -163,35 +175,43 @@ abstract class Asset implements AssetInterface
     }
 
     /**
-     * @deprecated. Assets no longer honor this value; it was too buggy.
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetSupportsMinification()
      */
     public function setAssetSupportsMinification($minify)
     {
-        // Nothing here.
+        $this->assetSupportsMinification = $minify;
     }
 
     /**
-     * @deprecated. Assets no longer honor this value; it was too buggy.
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::assetSupportsMinification()
      */
     public function assetSupportsMinification()
     {
-        return false;
+        return $this->local && $this->assetSupportsMinification;
     }
 
     /**
-     * @deprecated. Assets no longer honor this value; it was too buggy.
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::setAssetSupportsCombination()
      */
     public function setAssetSupportsCombination($combine)
     {
-        // Nothing here.
+        $this->assetSupportsCombination = $combine;
     }
 
     /**
-     * @deprecated. Assets no longer honor this value; it was too buggy.
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Asset\AssetInterface::assetSupportsCombination()
      */
     public function assetSupportsCombination()
     {
-        return false;
+        return $this->local && $this->assetSupportsCombination;
     }
 
     /**
@@ -227,13 +247,14 @@ abstract class Asset implements AssetInterface
         }
         $result = $this->assetURL;
         if ($result && $this->isAssetLocal() && !preg_match('/\?(.*&)?' . preg_quote(static::OUTPUT_NOCACHE_PARAM, '/') . '=/', $result)) {
+            $config = app('config');
             if ($this->pkg) {
                 $noCacheValue = $this->pkg->getPackageVersion();
             } else {
-                $app = Application::getFacadeApplication();
-                $config = $app->make('config');
+
                 $noCacheValue = $config->get('concrete.version_installed') . '-' . $config->get('concrete.version_db');
             }
+            $noCacheValue .= '-' . $config->get('concrete.cache.last_cleared');
             $assetVersion = $this->getAssetVersion();
             $noCacheValue = !empty($assetVersion) ? $noCacheValue . '-' . $assetVersion : $noCacheValue;
             $noCacheValue = $this->obfuscateNoCacheValue($noCacheValue);
@@ -430,6 +451,12 @@ abstract class Asset implements AssetInterface
         }
         $this->setAssetIsLocal($args['local']);
         $this->setAssetLocation($filename);
+        if ($args['minify'] === true || $args['minify'] === false) {
+            $this->setAssetSupportsMinification($args['minify']);
+        }
+        if ($args['combine'] === true || $args['combine'] === false) {
+            $this->setAssetSupportsCombination($args['combine']);
+        }
         if ($args['version']) {
             $this->setAssetVersion($args['version']);
         }

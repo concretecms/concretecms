@@ -1,3 +1,101 @@
+# 9.0.2
+
+## Behavioral Improvements
+
+* Many translation fixes, including new components that weren’t localized (thanks mlocati)
+* Better appearance of inline toolbars. Updates to remove potential style collisions between block design toolbar and themes.
+* Improvements to the process of publishing page type default blocks to child pages (thanks deek87)
+* Rehash passwords when needed to ensure adherence to the latest security standards.
+* Fixed display of the FAQ block in edit mode.
+* Use base64 encoding/decoding on submitting tracking codes in the Dashboard to avoid triggering mod_security (if present) on submit (thanks Mesuva)
+* Added a settings tab with new options to Accordion block type (thanks katalysis)
+* Concrete file choosers once again limit by file type and extension in certain contexts (e.g. no longer able to choose non-image files if the code requires image files be chosen.)
+* Two Column Light and Light Stripe containers in Atomik theme renamed to Two Column Highlight and Highlight Stripe to avoid confusion.
+* Stacked and Stacked Primary custom templates for Feature block in Atomik have nicer padding, better behavior when used to link elsewhere.
+* Hero Image “Offset Title” custom template in Atomik now has better behaviors: it honors the height setting and looks nicer in the theme whether the container is enabled or not.
+* Miscellaneous style classes added to the rich text editor when using Atomik theme.
+* Improvements to the new “configurable thumbnails” responsive thumbnails in the Image block.
+* Improvements to logo custom template and feature link CSS in Atomik theme.
+
+## Bug Fixes
+
+* Fixed fatal error when viewing Express object listings with associations in their list in a site updated from 8.5.x.
+* Fixed Hero Image block button not linking anywhere
+* Fixed Feature Link block button not linking anywhere
+* Fixed error where block template view.css and view.js files were not loading properly.
+* Fixed inability to start from a customized theme when using the legacy theme customizer.
+* Fixed inability to delete files or clear sample data content when files were being used in a Board.
+* Canonical URLs no longer include arbitrary query strings.
+* Fixed inability to uninstall tasks when working with packages that had installed custom tasks.
+* Fixed error when connecting to marketplace under PHP 8.
+* Fix issue where sitemap is inaccessible to users on multilingual sites if the user doesn't have access to view the default locale in the sitemap.
+* Fixed weird behavior when attempting to edit theme grid layouts in Atomik and other Bootstrap 5 themes.
+* Fixed bug when deleting containers that had been aliased out from a master page removing the container on the master page as well.
+* Fixed inability to sort entries in the Image Slider block.
+* File trackability works much more reliably and across more core block types than before.
+* Fixed: CollectionSearchIndexAttributes table is updated without approving the page version
+* Fixed missing icons in Share this Page block (thanks hissy)
+* Fixed: Layout toolbar partially off page window. Add Layout Function not working
+* Fixed custom CSS not showing up in the customizer when editing a custom skin.
+* Fixed fatal error when rendering /dashboard root page in PHP 8+.
+* Fixed fatal error rendering Dashboard file detail screen in PHP 8+.
+* Fixed fatal error when rendering gallery add block interface in PHP8+.
+* Fixed bug where border radius wasn’t being saved properly in block/area design settings.
+* Fixed error in Gallery block when images in it had been removed from the file manager.
+* Fixed error “Trying to access array offset on value of type bool “ when logging in with a username that doesn’t exist under PHP 8 (should get an error that explains what you did wrong better than this).
+* Many additional fixes for core block types in PHP 8 (thanks deek87)
+* Fix “division by zero” error under some conditions when running queueable commands.
+* Fixed bug where custom block cache override settings are reset on new version approval (thanks hissy)
+* Fixed: If by any chance $buttonColor is unset, the class tag of the `<div>` is never closed (thanks puka-tchou)
+* Theme responsive image breakpoints are now in the proper order to support the picture tags on mobile devices in Atomik.
+* Color picker in image editor now displays properly (thanks mlocati)
+* Fixed: Dashboard favorites menu aren’t localized properly (thanks mlocati)
+* Fixed bugs with Hero Image block under PHP 8
+* Fixed bugs with Feature Link block under PHP 8
+* Fixed error in YouTube block view when using PHP 8.
+* Fixed errors in Top Navigation Bar block under PHP 8
+* Fixed error in Testimonial block when using PHP 8 (thanks hissy)
+* Fix "Undefined array key" warning for advanced page search on php@8.0 (thanks hissy)
+* Fix "variable is undefined" errors when adding Conversation blocks when using PHP 8 (thanks mlocati)
+* Fixed Exception thrown when attempting to reload strings (thanks mlocati)
+* Fixed inability to download files in the file manager via the “Download File” option in the file menu.
+* Fixed broken Site attribute type.
+* Fixed: When configuring a select attribute to allow a single selection but also allow end user additions, an error is received.
+* Fixed: Adding a user unless multiple languages are installed fails under PHP 8
+* Fixed: Board "Error Call to a member function getStylesheet() on null"  when rendering a Board in the Dashboard.
+* Fixing issues viewing users in groups in Dashboard for sub-admins.
+* Fixed: Exception uninstalling package/theme when package has installed containers
+* Fixed: List of themes ready to install broken and has design issues (thanks mnakalay)
+* Fix c5:entities:refresh CLI command (thanks mlocati)
+* Fixed error when using files with UUIDs in the content block (thanks mnakalay)
+* Fix position of caption in Language Details dialog (thanks mlocati)
+* Fixed error adding Document Library block to the page.
+* Fixed error “Unknown named parameter $html” when attempting to reset a password on PHP 8.
+* Fixed: Document Library Block: Click on a folder leads to *Invalid folder ID*
+* Fixed magnifying glass button in the search in the navigation bar is not working in the Top Navigation Bar block.
+* Fixed some edge case errors with package uninstall and Doctrine entities
+* Fixed error where database entities weren’t showing their directory locations on the Database Entities Dashboard page.
+* Fixed error where uninstalling a package and reinstalling it doesn’t create the block type record in the package if there is only a single block type in the package and nothing else.
+* Fixed errors installing Atomik documentation under PHP 8.
+* Bug Fixes to Event List block in PHP 8.
+* Fixed: Featured Event Toggle Not Working in Event List block.
+* Fixed double select appearance on Edit File Thumbnail Dashboard screen.
+* Fixed PHP 8 Error: Error on editing Page List block on brand new 9.0.1 install
+* Fixed inability to set permissions against a particular user in advanced permissions mode (thanks hamzaouibacha)
+* Dashboard Reports page now links over to legacy form results page when necessary (thanks mnakalay)
+* Fix for broken area edit menu when advanced permissions were enabled under some conditions (thanks mnakalay)
+* Fixed: Contrast off for edit button label when toolbar titles setting enabled
+* Fixed image libraries check not running in Image Options single page (thanks mnakalay)
+* Fixed: Elemental theme, Version 9.0.1: New Accordion Block not working properly
+
+## Developer Updates
+
+* Reverted Form helper behavior so that passing in `class` will append the CSS classes to whatever the default class was, rather than replace it fully. Added a new `classes` key that will fully replace the classes if present.
+* Upgrade gettext/languages and punic/punic (thanks mlocati)
+* Theme grid preset layouts now export properly and import properly when using the exporter/Content XML format (thanks mlocati)
+* The canonical URL query string handler has been changed from excluded to included – meaning that if you as a developer want to include a query string parameter in your various canonical URLs, you’ll need to add the parameter key/name to the `site.siteName.seo.canonical_tag.included_querystring_parameters` parameter.
+* CKEditor updated to 4.17.1 (thanks hissy)
+
 # 9.0.1
 
 ## Behavioral Improvements

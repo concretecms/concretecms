@@ -11,7 +11,7 @@
 <body class="ccm-ui">
 
 <div id="ccm-toolbar">
-    <ul>
+    <ul class="ccm-toolbar-item-list">
         <li class="ccm-logo"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
     </ul>
 </div>

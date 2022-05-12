@@ -12,10 +12,6 @@ class ConfigServiceProvider extends Provider
     {
         $this->registerFileConfig();
         $this->registerDatabaseConfig();
-
-        // Bind the concrete types
-        $this->app->bind('Concrete\Core\Config\Repository\Repository', 'config');
-        $this->app->bind('Illuminate\Config\Repository', 'Concrete\Core\Config\Repository\Repository');
     }
 
     /**
@@ -31,11 +27,13 @@ class ConfigServiceProvider extends Provider
         });
         $this->app->bindIf(SaverInterface::class, FileSaver::class);
 
-        $this->app->singleton('config', function ($app) {
+        $this->app->singleton(Repository\Repository::class, static function ($app) {
             $loader = $app->make(LoaderInterface::class);
             $saver = $app->make(SaverInterface::class);
             return new Repository\Repository($loader, $saver, $app->environment());
         });
+        $this->app->alias(Repository\Repository::class, 'config');
+        $this->app->alias(Repository\Repository::class, \Illuminate\Config\Repository::class);
     }
 
     /**

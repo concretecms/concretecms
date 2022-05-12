@@ -288,6 +288,7 @@ class EditResponse implements JsonSerializable
      *
      * @see \JsonSerializable::jsonSerialize()
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->getJSONObject();

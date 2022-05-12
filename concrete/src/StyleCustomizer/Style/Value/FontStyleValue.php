@@ -34,6 +34,7 @@ class FontStyleValue extends Value
         $this->fontStyle = $fontStyle;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

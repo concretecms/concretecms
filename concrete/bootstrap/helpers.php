@@ -170,6 +170,7 @@ function overrideable_core_class($class, $path, $pkgHandle = null)
  */
 function camelcase($string, $leaveSlashes = false)
 {
+    $string = (string) $string;
     $return = '';
     $string = trim($string, '_-/\\');
     if (strpos($string, '/')) {
@@ -288,7 +289,7 @@ function core_log(
     $logger = Core::make(LoggerFactory::class)->createLogger($channel);
     $context = [];
     if (is_array($message)) {
-        $context = $message[1];$
+        $context = $message[1];
         $message = $message[0];
     }
     $logger->log($level, $message, $context);

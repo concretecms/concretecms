@@ -31,8 +31,7 @@ if (count($languages) > 0) {
 
 ?>
 
-<h3 class="mb-4"><?= t('Basic Details') ?></h3>
-<section data-section="basics" class="row">
+<section data-section="basics" class="mb-3 row">
     <div class="col-lg-12">
         <div class="ccm-user-detail-basics">
             <div class="ccm-user-detail-basics-avatar">
@@ -46,15 +45,40 @@ if (count($languages) > 0) {
                     <?= $user->getUserAvatar()->output() ?>
                 <?php } ?>
             </div>
-            <div>
-                <h5><?= $user->getUserName() ?></h5>
-                <a href="mailto:<?= $user->getUserEmail() ?>"><?= $user->getUserEmail() ?></a>
+            <div class="ccm-user-detail-basics-name">
+                <h5 class="mb-2"><?= $user->getUserName() ?></h5>
+                <div class="mb-2"><a href="mailto:<?= $user->getUserEmail() ?>"><?= $user->getUserEmail() ?></a></div>
+                <?php
+                $privateMessagesEnabled = $user->getAttribute('profile_private_messages_enabled');
+                $profileURL = $user->getUserPublicProfileURL();
+                if ($profileURL || $privateMessagesEnabled) {
+                ?>
+                <div>
+                    <div class="btn-group btn-group-sm">
+                        <?php
+                        if ($privateMessagesEnabled) {
+                            $u = Core::make(Concrete\Core\User\User::class);
+                            if ($u->getUserID() != $user->getUserID()) { ?>
+                                <a href="<?php echo View::url('/account/messages', 'write', $user->getUserID())?>" class="btn btn-secondary"><?php echo t("Send Private Message")?></a>
+                            <?php } ?>
+                        <?php } ?>
+
+                        <?php
+                        if ($profileURL) {
+                            ?>
+                            <a href="<?=$profileURL?>" class="btn btn-secondary"><?=t("View Public Profile")?></a>
+                            <?php
+                        } ?>
+
+                    </div>
+                </div>
+                <?php } ?>
             </div>
         </div>
     </div>
 </section>
 
-<hr class="mt-2 mb-4"/>
+<hr class="mb-4"/>
 
 <?php if ($canViewAccountModal) { ?>
 <div id="folderSelectorSourceContainer" class="d-none">
@@ -342,7 +366,8 @@ if (count($languages) > 0) {
 
 <script>
     $(document).ready(function () {
-        Concrete.Vue.activateContext('frontend', function (Vue, config) {
+
+        Concrete.Vue.activateContext('backend', function (Vue, config) {
             new Vue({
                 el: '[data-section=basics]',
                 components: config.components

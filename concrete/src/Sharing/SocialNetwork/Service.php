@@ -58,6 +58,7 @@ class Service implements JsonSerializable
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

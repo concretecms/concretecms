@@ -26,5 +26,6 @@
             <default value="h2" />
             <notnull/>
         </field>
+        <field name="icon" type="string" />
     </table>
 </schema>

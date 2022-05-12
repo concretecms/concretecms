@@ -59,6 +59,7 @@ class GroupedStyleValueListSet implements \JsonSerializable
         $this->name = $name;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return ['name' => $this->getDisplayName('text'), 'styles' => $this->values];

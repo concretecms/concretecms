@@ -73,7 +73,7 @@ use Concrete\Core\Page\Menu;
             /** @var Page $page */
             $page = $item->getItem();
             ?>
-            <tr data-details-url="javascript:void(0)">
+            <tr data-details-url="<?php echo (string)Url::to($page); ?>">
                 <td class="ccm-search-results-checkbox">
                     <?php if ($page instanceof Page): ?>
                         <!--suppress HtmlFormInputWithoutLabel -->
@@ -89,9 +89,7 @@ use Concrete\Core\Page\Menu;
 
                     if ($column->getColumnKey() === "cv.cvName"): ?>
                         <td class="ccm-search-results-name">
-                            <a href="<?php echo (string)Url::to($page); ?>">
-                                <?php echo $column->getColumnValue(); ?>
-                            </a>
+                        <?php echo $column->getColumnValue(); ?>
                         </td>
                     <?php else: ?>
                         <td class="<?=$class?? '' ?>">

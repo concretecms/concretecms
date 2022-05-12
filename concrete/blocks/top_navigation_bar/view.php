@@ -1,7 +1,9 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+$c = Page::getCurrentPage();
+?>
 
 <div class="ccm-block-top-navigation-bar" <?php if ($includeTransparency) { ?>style="display: none" data-transparency="navbar"<?php } ?>>
-    <nav class="navbar navbar-expand-lg navbar-light <?php if ($includeStickyNav) { ?>fixed-top<?php } ?>">
+    <nav class="navbar navbar-expand-lg navbar-light <?php if ($includeStickyNav && !$c->isEditMode()) { ?>fixed-top<?php } ?>">
         <div class="container-fluid">
             <a class="navbar-brand" href="<?=$home->getCollectionLink()?>">
                 <?php if ($logo && ($includeBrandLogo && $includeBrandText)) { ?>
@@ -40,7 +42,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="top-navigation-bar-<?=$bID?>">
                     <?php if ($includeSearchInput) { ?>
-                        <form class="ms-auto d-flex order-1" method="get" action="<?=$searchAction?>">
+                        <form method="get" action="<?=$searchAction?>">
                             <div class="input-group">
                                 <input class="form-control border-end-0 border" type="search" name="query" placeholder="<?=t('Search')?>" aria-label="<?=t('Search')?>">
                                 <span class="input-group-append">
@@ -51,24 +53,24 @@
                             </div>
                         </form>
                     <?php } ?>
-                    <ul class="navbar-nav order-0">
+                    <ul class="navbar-nav">
                         <?php foreach ($navigation->getItems() as $item) {
                             /**
                              * @var $item \Concrete\Core\Navigation\Item\PageItem
                              */
                             if (count($item->getChildren()) > 0) { ?>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-concrete-toggle="dropdown" href="<?=$item->getUrl()?>">
+                                    <a class="nav-link dropdown-toggle<?= $item->isActive() ? " active" : ""; ?>" data-concrete-toggle="dropdown" href="<?= $item->getUrl() ?>">
                                         <?=$item->getName()?>
                                     </a>
                                     <ul class="dropdown-menu">
                                         <?php foreach ($item->getChildren() as $dropdownChild) { ?>
-                                            <li><a class="dropdown-item" href="<?=$dropdownChild->getUrl()?>"><?=$dropdownChild->getName()?></a></li>
+                                            <li><a class="dropdown-item<?= $dropdownChild->isActive() ? " active" : ""; ?>" href="<?=$dropdownChild->getUrl()?>"><?=$dropdownChild->getName()?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>
                             <?php } else { ?>
-                                <li class="nav-item"><a class="nav-link" href="<?=$item->getUrl()?>"><?=$item->getName()?></a></li>
+                                <li class="nav-item"><a class="nav-link<?= $item->isActive() ? " active" : ""; ?>" href="<?=$item->getUrl()?>"><?=$item->getName()?></a></li>
                             <?php } ?>
                         <?php } ?>
                     </ul>

@@ -5,6 +5,7 @@ namespace Concrete\Core\Attribute\Category;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Attribute\ExpressSetManager;
 use Concrete\Core\Attribute\TypeFactory;
+use Concrete\Core\Entity\Attribute\Category;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Type;
@@ -33,6 +34,9 @@ class ExpressCategory extends AbstractStandardCategory
     {
         $this->expressEntity = $entity;
         parent::__construct($application, $entityManager);
+        $this->setCategoryEntity(
+            $entityManager->getRepository(Category::class)->findOneBy(['akCategoryHandle' => 'express'])
+        );
     }
 
     /**
@@ -82,6 +86,20 @@ class ExpressCategory extends AbstractStandardCategory
     }
 
     /**
+     * @return string
+     */
+    public function getCacheNamespace()
+    {
+        if ($this->expressEntity && $this->expressEntity->getId()) {
+            // If app(ExpressCategory::class) is run WITHOUT specifying the entity we will just
+            // merrily pass an empty one into here, which is obviously not valid. Hence the additional
+            // check above for `getId()`
+            return '/attribute/express/' . snake_case($this->expressEntity->getHandle());
+        }
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Attribute\Category\AbstractCategory::getSearchableIndexedList()
@@ -109,6 +127,16 @@ class ExpressCategory extends AbstractStandardCategory
             'entity' => $this->expressEntity,
             'akIsSearchable' => true,
         ]);
+    }
+
+    public function getAttributeKeyByHandleUncached($handle)
+    {
+        return $this->getAttributeKeyRepository()->findOneBy(
+            [
+                'entity' => $this->expressEntity,
+                'akHandle' => $handle,
+            ]
+        );
     }
 
     /**
@@ -250,8 +278,11 @@ class ExpressCategory extends AbstractStandardCategory
     public function import(Type $type, \SimpleXMLElement $element, Package $package = null)
     {
         $key = parent::import($type, $element, $package);
+        /**
+         * @var $key ExpressKey
+         */
         $key->setEntity($this->expressEntity);
-
+        $key->setIsAttributeKeyUnique((string) $element['unique'] == 1);
         return $key;
     }
 
@@ -265,12 +296,28 @@ class ExpressCategory extends AbstractStandardCategory
     public function addFromRequest(Type $type, Request $request)
     {
         $key = parent::addFromRequest($type, $request);
-        /*
-         * @var ExpressKey
+        /**
+         * @var $key ExpressKey
          */
         $key->setEntity($this->expressEntity);
-
+        $this->saveFromRequest($key, $request);
         return $key;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\Category\AbstractCategory::updateFromRequest()
+     *
+     * @param \Concrete\Core\Entity\Attribute\Key\UserKey $key
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\UserKey
+     */
+    public function updateFromRequest(Key $key, Request $request)
+    {
+        $key = parent::updateFromRequest($key, $request);
+
+        return $this->saveFromRequest($key, $request);
     }
 
     /**
@@ -290,6 +337,20 @@ class ExpressCategory extends AbstractStandardCategory
         ]);
 
         return $values;
+    }
+
+    /**
+     * @param \Concrete\Core\Entity\Attribute\Key\ExpressKey $key The user attribute key to be updated
+     * @param \Symfony\Component\HttpFoundation\Request $request The request containing the posted data
+     *
+     * @return \Concrete\Core\Entity\Attribute\Key\ExpressKey
+     */
+    protected function saveFromRequest(Key $key, Request $request)
+    {
+        $key->setIsAttributeKeyUnique((string) $request->request->get('eakUnique') == 1);
+        // Actually save the changes to the database
+        $this->entityManager->flush();
+        return $key;
     }
 
     /**

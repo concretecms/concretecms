@@ -77,6 +77,7 @@ class StyleSet
         $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowBlur((string) $node->boxShadowBlur);
         $o->setBoxShadowColor((string) $node->boxShadowColor);
+        $o->setBoxShadowInset((bool) $node->boxShadowInset);
         $o->setCustomClass((string) $node->customClass);
         $o->setCustomID((string) $node->customID);
         $o->setCustomElementAttribute((string) $node->customElementAttribute);
@@ -235,12 +236,14 @@ class StyleSet
             $boxShadowVertical = trim($post->get('boxShadowVertical', '')) ?: '0px';
             $boxShadowBlur = trim($post->get('boxShadowBlur', '')) ?: '0px';
             $boxShadowSpread = trim($post->get('boxShadowSpread', '')) ?: '0px';
+            $boxShadowInset = (bool) $post->get('boxShadowInset');
             if ($boxShadowHorizontal !== '0px' || $boxShadowVertical !== '0px' || $boxShadowBlur !== '0px' || $boxShadowSpread !== '0px') {
                 $set->setBoxShadowColor($post->get('boxShadowColor'));
                 $set->setBoxShadowBlur($boxShadowBlur);
                 $set->setBoxShadowHorizontal($boxShadowHorizontal);
                 $set->setBoxShadowVertical($boxShadowVertical);
                 $set->setBoxShadowSpread($boxShadowSpread);
+                $set->setBoxShadowInset($boxShadowInset);
                 $return = true;
             }
         }

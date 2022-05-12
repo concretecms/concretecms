@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <?php } ?>
 
 	<?php if ($description) { ?>
-	    <i class="fas fa-question-circle launch-tooltip" title="" data-original-title="<?= $description ?>"></i>
+        <i class="fas fa-question-circle launch-tooltip" data-bs-toggle="tooltip" title="<?= h($description); ?>"></i>
 	<?php } ?>
 
 	<?= app('helper/form/date_time')->datetime($this->field('date_time'), $control->getPageTypeComposerControlDraftValue()) ?>

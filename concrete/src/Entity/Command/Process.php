@@ -177,6 +177,7 @@ class Process implements \JsonSerializable
         $this->exitMessage = $exitMessage;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $timezone = date_default_timezone_get();

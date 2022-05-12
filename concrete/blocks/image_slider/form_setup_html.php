@@ -14,6 +14,10 @@ use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Validation\CSRF\Token;
 
+if (!isset($bID)) {
+    $bID = null;
+}
+
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
 
@@ -48,7 +52,7 @@ echo $userInterface->tabs([
 ?>
 
 <div class="tab-content">
-    <div class="tab-pane show active" id="slides-<?php echo $id; ?>" role="tabpanel">
+    <div class="tab-pane active" id="slides-<?php echo $id; ?>" role="tabpanel">
         <div class="ccm-image-slider-block-container">
             <div class="ccm-image-slider-entries ccm-image-slider-entries-<?php echo $bID; ?>">
 

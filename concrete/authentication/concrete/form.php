@@ -6,7 +6,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 
 <form class="concrete-login-form" method="post" action="<?= URL::to('/login', 'authenticate', $this->getAuthenticationTypeHandle()); ?>">
 
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-sm-3 col-form-label" for="uName">
             <?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('User Name'); ?>
         </label>
@@ -14,7 +14,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
             <input name="uName" id="uName" class="form-control" autofocus="autofocus" />
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-sm-3 col-form-label" for="uPassword">
             <?=t('Password'); ?>
         </label>
@@ -22,7 +22,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
             <input name="uPassword" id="uPassword" class="form-control" type="password" autocomplete="off" />
         </div>
     </div>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-sm-3 col-form-label" for="uPassword">
         </label>
         <div class="col-sm-9 text-end">
@@ -31,7 +31,7 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
     </div>
     <?php if (Config::get('concrete.session.remember_me.lifetime') > 0) {
     ?>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <div class="col-sm-3 col-form-label pt-0"><?=t('Remember Me'); ?></div>
         <div class="col-sm-9">
             <div class="form-check">
@@ -46,13 +46,13 @@ $dh = Core::make('helper/date');  /* @var $dh \Concrete\Core\Localization\Servic
 } ?>
     <?php if (isset($locales) && is_array($locales) && count($locales) > 0) {
         ?>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="USER_LOCALE" class="control-label form-label"><?= t('Language'); ?></label>
             <?= $form->select('USER_LOCALE', $locales); ?>
         </div>
     <?php
     } ?>
-    <div class="form-group row">
+    <div class="mb-3 row">
         <div class="col-sm-12 text-end">
             <a href="<?= \URL::to('/'); ?>" class="btn btn-secondary"> <?= t('Cancel'); ?> </a>
             <button class="btn btn-primary"><?= t('Sign In'); ?></button>

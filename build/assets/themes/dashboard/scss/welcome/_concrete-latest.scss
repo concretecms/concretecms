@@ -2,7 +2,7 @@ div#ccm-dashboard-content {
   div.ccm-block-dashboard-concrete-latest-wrapper {
     background: $gray-100;
     border-radius: .25rem;
-    box-shadow: 0 .125rem .5rem rgba(0,0,0,.15);
+    box-shadow: $popover-box-shadow;
 
     div.ccm-block-dashboard-concrete-latest {
       padding: 20px;

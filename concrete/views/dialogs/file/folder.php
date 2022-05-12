@@ -13,30 +13,21 @@ use Concrete\Controller\Dialog\File\Folder;
 $app = Application::getFacadeApplication();
 /** @var Form $form */
 $form = $app->make(Form::class);
+
+$folderID = null;
+if (isset($f) && (is_object($f))) {
+    $fileFolderObject = $f->getFileFolderObject();
+    if ($fileFolderObject) {
+        $folderID = $fileFolderObject->getTreeNodeID();
+    }
+}
 ?>
 
 <form method="post" data-dialog-form="move-to-folder" action="<?php echo $controller->action('submit') ?>">
     <div class="ccm-ui">
         <?php
             /** @noinspection PhpUnhandledExceptionInspection */
-            View::element('files/move_to_folder', $func = [
-                'isCurrentFolder' => function ($folder) use ($f) {
-                    /** @var Node $fileFolderObject */
-                    /** @var Node $folder */
-                    $fileFolderObject = $f->getFileFolderObject();
-
-                    if (is_object($fileFolderObject) && $fileFolderObject->getTreeNodeID() === $folder->getTreeNodeID()) {
-                        return true;
-                    }
-
-                    return false;
-                },
-
-                'getRadioButton' => function ($folder, $checked = false) use ($f) {
-                    /** @var Node $folder */
-                    return id(new Input('radio', 'folderID', $folder->getTreeNodeID(), ['checked' => $checked]));
-                }
-            ]);
+            View::element('files/move_to_folder', ['folderID' => $folderID]);
         ?>
     </div>
 

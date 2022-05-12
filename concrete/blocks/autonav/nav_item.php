@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Block\Autonav;
 
 use Concrete\Core\Page\Page;
@@ -8,24 +9,65 @@ use Concrete\Core\Page\Page;
  */
 class NavItem
 {
-    protected $level;
-    protected $isActive = false;
-    protected $_c;
+    /**
+     * @var bool|int
+     */
     public $hasChildren = false;
+
+    /**
+     * @var int|null
+     */
     public $cID;
+
+    /**
+     * @var string|null
+     */
     public $cPath;
+
+    /**
+     * @var string|null
+     */
     public $cPointerExternalLink;
+
+    /**
+     * @var string|null
+     */
     public $cPointerExternalLinkNewWindow;
+
+    /**
+     * @var string|null
+     */
     public $cvDescription;
+
+    /**
+     * @var string|null
+     */
     public $cvName;
+
+    /**
+     * @var int
+     */
+    protected $level;
+
+    /**
+     * @var bool
+     */
+    protected $isActive = false;
+
+    /**
+     * @var Page
+     */
+    protected $_c;
 
     /**
      * Instantiates an Autonav Block Item.
      *
-     * @param array $itemInfo
+     * @param array<string,mixed> $itemInfo
      * @param int $level
+     *
+     * @return void
      */
-    public function __construct($itemInfo, $level = 1)
+    public function __construct(array $itemInfo, int $level = 1)
     {
         $this->level = $level;
         if (is_array($itemInfo)) {
@@ -34,14 +76,12 @@ class NavItem
                 $this->{$key} = $value;
             }
         }
-
-        return $this;
     }
 
     /**
      * Returns the number of children below this current nav item.
      *
-     * @return int
+     * @return int|bool
      */
     public function hasChildren()
     {
@@ -51,17 +91,19 @@ class NavItem
     /**
      * Determines whether this nav item is the current page the user is on.
      *
-     * @param \Concrete\Core\Page\Page $c The page object for the current page
+     * @param \Concrete\Core\Page\Page|null $c The page object for the current page
      *
      * @return bool
      */
-    public function isActive(&$c)
+    public function isActive($c): bool
     {
         if ($c) {
             $cID = ($c->getCollectionPointerID() > 0) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
 
             return $cID == $this->cID;
         }
+
+        return false;
     }
 
     /**
@@ -76,8 +118,10 @@ class NavItem
 
     /**
      * Returns a target for the nav item.
+     *
+     * @return string
      */
-    public function getTarget()
+    public function getTarget(): string
     {
         if ($this->cPointerExternalLink != '') {
             if ($this->cPointerExternalLinkNewWindow) {
@@ -85,9 +129,10 @@ class NavItem
             }
         }
 
+        /** @var Page|null $_c */
         $_c = $this->getCollectionObject();
         if (is_object($_c)) {
-            return $_c->getAttribute('nav_target');
+            return (string) $_c->getAttribute('nav_target');
         }
 
         return '';
@@ -98,7 +143,7 @@ class NavItem
      *
      * @return string $url
      */
-    public function getURL()
+    public function getURL(): string
     {
         if ($this->cPointerExternalLink != '') {
             $link = $this->cPointerExternalLink;
@@ -147,6 +192,8 @@ class NavItem
      * Sets the collection Object of the navigation item to the passed object.
      *
      * @param \Concrete\Core\Page\Page $obj
+     *
+     * @return void
      */
     public function setCollectionObject(&$obj)
     {

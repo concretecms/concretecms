@@ -1,12 +1,14 @@
 <?php
 namespace Concrete\Core\File\Service;
 
+use Concrete\Core\Logging\Channels;
 use Config;
 use Environment;
 use Exception;
 use Core;
 use Concrete\Core\Support\Facade\Application as CoreApplication;
 use GuzzleHttp\Exception\RequestException;
+use Monolog\Logger;
 
 /**
  * File helper.
@@ -332,9 +334,8 @@ class File
             }
             try {
                 $response = $client->get($file, $options);
-            } catch (RequestException $x) {
-                throw $x;
             } catch (Exception $x) {
+                core_log(t($x->getMessage()), Logger::ALERT, Channels::CHANNEL_NETWORK);
                 $response = null;
             }
 

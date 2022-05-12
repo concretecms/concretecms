@@ -8,7 +8,7 @@ use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
 use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Attribute\Context\BasicFormContext;
-
+use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
 class Controller extends \Concrete\Attribute\Number\Controller
 {
     protected $helpers = ['form'];
@@ -59,13 +59,15 @@ class Controller extends \Concrete\Attribute\Number\Controller
     public function createAttributeValueFromRequest()
     {
         $data = $this->post();
-        $event = Event::getByID($data['eventID']);
-        if (is_object($event)) {
+        $event = null;
+        if (!empty($data['eventID'])) {
+            $event = Event::getByID($data['eventID']);
+        }
+        if ($event) {
             return $this->createAttributeValue($event);
         } else {
             $av = new NumberValue();
             $av->setValue(0);
-
             return $av;
         }
     }
@@ -77,6 +79,21 @@ class Controller extends \Concrete\Attribute\Number\Controller
             return Event::getByID(intval($value->getValue()));
         }
     }
+
+    public function getDisplayValue()
+    {
+        $event = $this->getValue();
+        if ($event) {
+            $formatter = app(LinkFormatter::class);
+            $link = $formatter->getEventFrontendViewLink($event);
+            if ($link) {
+                return sprintf('<a href="%s">%s</a>', $link, $event->getName());
+            } else {
+                return $event->getName();
+            }
+        }
+    }
+
 
     public function form()
     {

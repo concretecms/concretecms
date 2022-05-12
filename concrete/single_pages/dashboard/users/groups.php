@@ -73,7 +73,7 @@ use Concrete\Core\User\Group\Menu;
             /** @var Group $group */
             $group = $item->getItem();
             ?>
-            <tr data-details-url="javascript:void(0)"
+            <tr data-details-url="<?=$item->getDetailsURL()?>"
                 <?php if (isset($highlightResults)
                     && in_array($item->getItem()->getTreeNodeID(), $highlightResults)) { ?>
                     class="table-row-highlight"<?php } ?>
@@ -102,9 +102,7 @@ use Concrete\Core\User\Group\Menu;
 
                     if ($column->getColumnKey() ==  'name') { ?>
                         <td class="ccm-search-results-name">
-                            <a href="<?php echo $item->getDetailsURL(); ?>">
-                                <?php echo $column->getColumnValue(); ?>
-                            </a>
+                            <?php echo $column->getColumnValue(); ?>
                         </td>
                     <?php } else { ?>
                         <td class="<?=$class?? '' ?>">

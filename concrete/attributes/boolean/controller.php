@@ -99,13 +99,17 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $this->load();
         $checked = false;
-        if (is_object($this->attributeValue)) {
-            $value = $this->getAttributeValue()->getValue();
-            $checked = $value == 1 ? true : false;
+        if ($this->getRequest()->isPost()) {
+            $checked = (bool) $this->request('value');
         } else {
-            if (!isset($this->attributeObject)) {
-                if ($this->akCheckedByDefault) {
-                    $checked = true;
+            if (is_object($this->attributeValue)) {
+                $value = $this->getAttributeValue()->getValue();
+                $checked = $value == 1 ? true : false;
+            } else {
+                if (!isset($this->attributeObject)) {
+                    if ($this->akCheckedByDefault) {
+                        $checked = true;
+                    }
                 }
             }
         }

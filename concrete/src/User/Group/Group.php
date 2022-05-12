@@ -1083,6 +1083,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     /**
      * @return mixed|void
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

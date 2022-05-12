@@ -1,13 +1,17 @@
 <?php
+
+use Concrete\Core\Entity\Permission\IpAccessControlCategory;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Core\Page\View\PageView $view */
-/* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Core\Form\Service\Form $form */
-/* @var Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist\Configure $controller */
-
-/* @var Concrete\Core\Entity\Permission\IpAccessControlCategory $category */
-/* @var array $units */
+/**
+ * @var Concrete\Core\Page\View\PageView $view
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Permissions\Denylist\Configure $controller
+ * @var Concrete\Core\Entity\Permission\IpAccessControlCategory $category
+ * @var array $units
+ */
 
 $view->element('dashboard/system/permissions/denylist/menu', ['category' => $category, 'type' => null]);
 ?>
@@ -20,11 +24,12 @@ $view->element('dashboard/system/permissions/denylist/menu', ['category' => $cat
                 <?= $form->checkbox('banEnabled', 1, $category->isEnabled()) ?>
             </div>
             <?php
-            list($selectedUnit, $unitValue) = $controller->splitSeconds($category->getTimeWindow());
+            $timeWindowSplitted = IpAccessControlCategory::splitTimeWindow($category->getTimeWindow());
+            [$unitValue, $selectedUnit] = $timeWindowSplitted === null ? ['', 'duration/minute'] : $timeWindowSplitted;
             ?>
             <?php
             echo t(
-            /* i18n: %1$s is the number of events, %2$s is the number of seconds/minutes/hours/days, %3$s is "seconds", "minutes", "hours" or "days" */
+                /* i18n: %1$s is the number of events, %2$s is the number of seconds/minutes/hours/days, %3$s is "seconds", "minutes", "hours" or "days" */
                 'Lock IP after %1$s events in %2$s %3$s',
                 sprintf('<div class="col-auto">%s</div>', $form->number('maxEvents', $category->getMaxEvents(), ['style' => 'width:90px', 'required' => 'required', 'min' => 1])),
                 sprintf('<div class="col-auto">%s</div>', $form->number('timeWindowValue', $unitValue, ['style' => 'width:90px', 'min' => 1])),
@@ -41,7 +46,7 @@ $view->element('dashboard/system/permissions/denylist/menu', ['category' => $cat
                 </label>
             </div>
             <?php
-            list($selectedUnit, $unitValue) = $controller->splitSeconds($category->getBanDuration() === null ? 300 : $category->getBanDuration());
+            [$unitValue, $selectedUnit] = IpAccessControlCategory::splitTimeWindow($category->getBanDuration() ?: 300);
             echo t(
                 /* i18n: %1$s is the number of seconds/minutes/hours/days, %2$s is "seconds", "minutes", "hours" or "days" */
                 'Ban IP for %1$s %2$s',

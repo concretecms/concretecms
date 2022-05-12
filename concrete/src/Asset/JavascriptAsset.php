@@ -6,7 +6,17 @@ use Config;
 
 class JavascriptAsset extends Asset
 {
-    
+
+    /**
+     * @var bool
+     */
+    protected $assetSupportsMinification = true;
+
+    /**
+     * @var bool
+     */
+    protected $assetSupportsCombination = true;
+
     /**
      * @return string
      */

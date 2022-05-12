@@ -44,6 +44,7 @@ class AtomicThumbnailStream implements \IteratorAggregate
      * Get an iterator that outputs locked thumbnail rows
      * @return \Generator|void
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         $db = $this->manager->connection();

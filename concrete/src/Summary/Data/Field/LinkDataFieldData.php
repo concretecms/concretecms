@@ -1,17 +1,11 @@
 <?php
 namespace Concrete\Core\Summary\Data\Field;
 
-use Concrete\Core\Editor\LinkAbstractor;
-use Concrete\Core\Entity\File\File as FileEntity;
 use League\Url\Url;
-use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Concrete\Core\File\File;
 
 /**
- * Represents a link. Useful for linking to pages on your site, because the contents are run through the
- * Concrete\Core\Editor\LinkAbstractor class, ensuring that if your site is migrated elsewhere the cached
- * contents of the data field will translate to the new environment.
+ * Represents a link.
  */
 class LinkDataFieldData implements DataFieldDataInterface
 {
@@ -31,21 +25,20 @@ class LinkDataFieldData implements DataFieldDataInterface
      */
     public function setData($link): void
     {
-        $abstractor = new LinkAbstractor();
-        $this->link = $abstractor->translateTo((string) $link);
+        $this->link = $link;
     }
     
     public function __toString()
     {
-        $abstractor = new LinkAbstractor();
-        return $abstractor->translateFrom($this->link);
+        return (string) $this->link;
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
-            'class' => self::class,
-            'link' => (string) $this->link
+            'class' => static::class,
+            'link' => (string) $this->link,
         ];
     }
     

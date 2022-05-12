@@ -336,6 +336,10 @@ if (isset($neutralStack)) {
                     });
                 });
 
+                ConcreteEvent.on('ToolbarDirectExitDisabled', function (event, data) {
+                    showApprovalButton();
+                });
+
                 ConcreteEvent.on('EditModeBlockMove', function (event, data) {
                     showApprovalButton();
                     Concrete.getEditMode().scanBlocks();
@@ -441,10 +445,10 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
             <tr>
                 <th></th>
                 <th class="<?= $list->getSortClassName('cv.cvName') ?>">
-                    <a href="<?= $list->getSortURL('cv.cvName') ?>"><?= t('Name') ?></a>
+                    <a href="<?= h($list->getSortURL('cv.cvName')) ?>"><?= t('Name') ?></a>
                 </th>
                 <th class="<?= $list->getSortClassName('c.cDateAdded') ?>">
-                    <a href="<?= $list->getSortURL('c.cDateAdded') ?>"><?= t('Date Added') ?></a>
+                    <a href="<?= h($list->getSortURL('c.cDateAdded')) ?>"><?= t('Date Added') ?></a>
                 </th>
                 <th></th>
             </tr>
@@ -523,10 +527,9 @@ if ($showGlobalAreasFolder || !empty($stacks)) {
                         stop: function () {
                             $('.ccm-undroppable-search-item').css('opacity', '');
                         },
-                        revert: 'invalid',
                         helper: function () {
                             var $selected = $this.add($tbody.find('.ccm-stack-folder-dragging'));
-                            return $('<div class="' + className + ' ccm-draggable-search-item"><span>' + $selected.length + '</span></div>').data('$selected', $selected);
+                            return $('<div class="' + className + ' ccm-draggable-search-item"><span><i class="fa fa-share"></i></span></div>').data('$selected', $selected);
                         },
                         cursorAt: {
                             left: -20,

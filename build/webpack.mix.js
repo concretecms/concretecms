@@ -67,6 +67,7 @@ if (mix.inProduction()) {
 
     // Bedrock
     mix.copy('node_modules/@concretecms/bedrock/assets/account/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/account/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/accordions/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/accordions/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/basics/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/basics/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/bedrock/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/bedrock/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/boards/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/boards/scss');
@@ -109,6 +110,7 @@ mix
 
 // CKEditor
 mix
+    .copy('node_modules/@concretecms/bedrock/assets/ckeditor/js/concrete/concretestyles/icons/snippet.png', '../concrete/js/ckeditor/plugins/concretestyles/icons/snippet.png')
     .sass('node_modules/@concretecms/bedrock/assets/ckeditor/scss/concrete.scss', 'css/ckeditor/concrete.css', {
         sassOptions: {
             includePaths: [
@@ -129,6 +131,8 @@ mix
         }
     });
 
+// Version Compare
+mix.sass('assets/htmldiff.scss', '../concrete/css/htmldiff.css');
 
 /**
  * Build Block Components
@@ -140,6 +144,16 @@ mix.js('assets/blocks/accordion/accordion.js', '../concrete/blocks/accordion/aut
 /**
  * Build accessory Features
  */
+mix
+    .sass('node_modules/@concretecms/bedrock/assets/accordions/scss/frontend.scss', 'css/features/accordions/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('node_modules/@concretecms/bedrock/assets/accordions/js/frontend.js', 'js/features/accordions/frontend.js');
+
 mix
     .sass('node_modules/@concretecms/bedrock/assets/account/scss/frontend.scss', 'css/features/account/frontend.css', {
         sassOptions: {

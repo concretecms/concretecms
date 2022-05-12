@@ -1,16 +1,21 @@
 <?php
+
 namespace Concrete\Controller\Backend\UserInterface;
 
 use Concrete\Core\Error\UserMessageException;
-use Page as ConcretePage;
-use Permissions;
+use Concrete\Core\Page\Page as ConcretePage;
+use Concrete\Core\Permission\Checker as Permissions;
 
 abstract class Page extends \Concrete\Controller\Backend\UserInterface
 {
-    /** @var ConcretePage A page object */
+    /**
+     * @var ConcretePage A page object
+     */
     protected $page;
 
-    /** @var Permissions This page's permissions */
+    /**
+     * @var Permissions This page's permissions
+     */
     protected $permissions;
 
     public function on_start()

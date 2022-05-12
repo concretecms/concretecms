@@ -20,7 +20,8 @@ else {
                 <th><?= t('Handle') ?></th>
                 <th><?= t('Name') ?></th>
                 <th><?= t('Enabled') ?></th>
-                <th><?= t('Package') ?></th>
+                <th class="d-none d-lg-table-cell"><?= t('Limit') ?></th>
+                <th class="d-none d-xl-table-cell"><?= t('Package') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -32,7 +33,8 @@ else {
                 <td><a href="<?= h($href) ?>"><code><?= h($category->getHandle()) ?></code></a></td>
                 <td><a href="<?= h($href) ?>"><?= h($category->getDisplayName()) ?></a></td>
                 <td><?= $category->isEnabled() ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-ban text-danger"></i>' ?></td>
-                <td>
+                <td class="d-none d-lg-table-cell"><?= h($category->describeTimeWindow(true)) ?></td>
+                <td class="d-none d-xl-table-cell">
                     <?php
                     if ($category->getPackage() !== null) {
                         echo h($category->getPackage()->getPackageName());

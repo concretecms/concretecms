@@ -138,9 +138,9 @@ var miniSurvey = {
             success: function (msg) {
                 eval('var jsonObj=' + msg);
                 if (!jsonObj) {
-                    alert(ccm_t('ajax-error'));
+                    alert('AJAX Error');
                 } else if (jsonObj.noRequired) {
-                    alert(ccm_t('complete-required'));
+                    alert('Please complete all required fields');
                 } else {
                     if (jsonObj.mode == 'Edit') {
                         var questionMsg = $('#questionEditedMsg');
@@ -208,9 +208,9 @@ var miniSurvey = {
                         if (key_val.length == 2) {
                             if (key_val[0] == 'send_notification_from') {
                                 if (key_val[1] == 1) {
-                                    $('.send_notification_from_edit input').prop('checked', true);
+                                    $('input[name="send_notification_from_edit"]').prop('checked', true);
                                 } else {
-                                    $('.send_notification_from_edit input').prop('checked', false);
+                                    $('input[name="send_notification_from_edit"]').prop('checked', false);
                                 }
                             }
                         }
@@ -239,7 +239,7 @@ var miniSurvey = {
     },
     hideQuestions: [],
     deleteQuestion: function (el, msqID, qID) {
-        if (confirm(ccm_t('delete-question'))) {
+        if (confirm('Are you sure you want to delete this question?')) {
             $.ajax({
                 url: this.serviceURL + "mode=delQuestion&qsID=" + parseInt(this.qsID) + '&msqID=' + parseInt(msqID) + '&ccm_token=' + this.serviceToken,
                 success: function (msg) {
@@ -271,7 +271,7 @@ var miniSurvey = {
 
         var n = $('#surveyName');
         if (!n || parseInt(n.val().length, 10) == 0) {
-            alert(ccm_t('form-name'));
+            alert('Your form must have a name');
             this.showPane('options');
             n.focus();
             failed = 1;
@@ -279,7 +279,7 @@ var miniSurvey = {
 
         var Qs = $('.miniSurveyQuestionRow');
         if (!Qs || parseInt(Qs.length, 10) < 1) {
-            alert(ccm_t('form-min-1'));
+            alert('Please add at least one question to your form');
             failed = 1;
         }
 

@@ -3,6 +3,7 @@
 namespace Concrete\Core\Express\Form\Validator\Routine;
 
 use Concrete\Core\Captcha\CaptchaInterface;
+use Concrete\Core\Entity\Express\Entry;
 use Concrete\Core\Entity\Express\Form;
 use Concrete\Core\Error\ErrorList\ErrorList;
 
@@ -21,7 +22,7 @@ class CaptchaRoutine implements RoutineInterface
     /**
      * {@inheritDoc}
      */
-    public function validate(ErrorList $error, Form $form, $requestType)
+    public function validate(ErrorList $error, Form $form, Entry $entry = null)
     {
         if (!$this->captchaValidator->check()) {
             $error->add(t('Incorrect captcha code.'));

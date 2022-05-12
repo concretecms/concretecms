@@ -210,6 +210,8 @@ class Register extends PageController
                 // we need to default the new user to inactive (uIsActive=0).
                 $process->deactivate();
 
+                $redirectMethod = null;
+
                 // now we check whether we need to validate this user's email address
                 if ($config->get('concrete.user.registration.validate_email')) {
                     $this->app->make('user/status')->sendEmailValidation($process);
@@ -233,7 +235,8 @@ class Register extends PageController
                     }
                 }
 
-                if ($_REQUEST['format'] != 'JSON') {
+                $requestFormat = $_REQUEST['format'] ?? null;
+                if ($requestFormat != 'JSON') {
                     $this->redirect('/register', $redirectMethod, $rcID);
                 }
             }

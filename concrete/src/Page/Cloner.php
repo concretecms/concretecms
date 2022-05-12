@@ -15,6 +15,7 @@ use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Statistics as PageStatistics;
 use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Site\Tree\TreeInterface;
+use Concrete\Core\Support\Facade\Application;
 use Doctrine\ORM\EntityManagerInterface;
 use PDO;
 use Concrete\Core\Events\EventDispatcher;
@@ -72,127 +73,158 @@ class Cloner
      */
     public function clonePage(Page $page, ClonerOptions $options, Page $newParentPage = null, TreeInterface $site = null)
     {
-        if ($page->getPageTypeHandle() === STACKS_PAGE_TYPE) {
-            if (!$page instanceof Stack) {
-                $page = Stack::getByID($page->getCollectionID(), $page->getVersionID());
+        // If the provided page is an alias, let's add another alias of original page
+        if ($page->isAliasPage()) {
+            $pointer = Page::getByID($page->getCollectionPointerID());
+            $app = Application::getFacadeApplication();
+            if ($app->make('multilingual/detector')->isEnabled()) {
+                if ($newParentPage === null) {
+                    $newParentPage = Section::getBySectionOfSite($pointer);
+                }
+                // If new parent page is under the different section, find related page first.
+                // If related page is exists in that section, create an alias of the related page.
+                $pointerSection = Section::getBySectionOfSite($pointer);
+                $destinationSection = Section::getBySectionOfSite($newParentPage);
+                if ($pointerSection->getCollectionID() !== $destinationSection->getCollectionID()) {
+                    $sections = Section::getList();
+                    /** @var Section $section */
+                    foreach ($sections as $section) {
+                        if ($destinationSection->getCollectionID() === $section->getCollectionID()) {
+                            $relatedID = $section->getTranslatedPageID($pointer);
+                            $pointer = Page::getByID($relatedID);
+                            break;
+                        }
+                    }
+                }
+            } elseif ($newParentPage === null) {
+                $newParentPage = Page::getByID(Page::getHomePageID());
             }
-            if ($newParentPage === null) {
-                $newParentPage = Page::getByID($page->getCollectionParentID());
-            }
-        }
-        $cID = $page->getCollectionID();
-        $uID = $options->keepOriginalAuthor() ? $page->getCollectionUserID() : $options->getCurrentUser()->getUserID();
-        $cParentID = $newParentPage === null ? 0 : $newParentPage->getCollectionID();
-
-        $newCollectionName = $this->getUniquePageName($page->getCollectionName(), $cParentID);
-        $newCollectionHandle = $this->getUniquePageHandle($page->getCollectionHandle(), $cParentID);
-
-        $newC = $this->cloneCollection(Collection::getByID($cID), $options);
-        $newCID = $newC->getCollectionID();
-
-        if ($newParentPage !== null) {
-            $siteTreeID = $newParentPage->getSiteTreeID();
-        } elseif ($site !== null) {
-            $siteTreeID = $site->getSiteTreeID();
+            $newCID = $pointer->addCollectionAlias($newParentPage);
         } else {
-            $siteTreeID = $this->siteService->getSite()->getSiteTreeID();
-        }
+            if ($page->getPageTypeHandle() === STACKS_PAGE_TYPE) {
+                if (!$page instanceof Stack) {
+                    $page = Stack::getByID($page->getCollectionID(), $page->getVersionID());
+                }
+                if ($newParentPage === null) {
+                    $newParentPage = Page::getByID($page->getCollectionParentID());
+                }
+            }
+            $cID = $page->getCollectionID();
+            $uID = $options->keepOriginalAuthor() ? $page->getCollectionUserID() : $options->getCurrentUser()->getUserID();
+            $cParentID = $newParentPage === null ? 0 : $newParentPage->getCollectionID();
 
-        switch ($page->getCollectionInheritance()) {
-            case 'OVERRIDE':
-                $cInheritPermissionsFromCID = $newCID;
-                break;
-            case 'PARENT':
-                $cInheritPermissionsFromCID = $newParentPage ? $newParentPage->getPermissionsCollectionID() : $page->getPermissionsCollectionID();
-                break;
-            default:
-                $cInheritPermissionsFromCID = $page->getPermissionsCollectionID();
-                break;
-        }
-        $this->connection->insert('Pages', [
-            'cID' => $newCID,
-            'siteTreeID' => $siteTreeID,
-            'ptID' => $page->getPageTypeID(),
-            'cParentID' => $cParentID,
-            'uID' => $uID,
-            'cOverrideTemplatePermissions' => $page->overrideTemplatePermissions(),
-            'cInheritPermissionsFromCID' => $cInheritPermissionsFromCID,
-            'cInheritPermissionsFrom' => $page->getCollectionInheritance(),
-            'cFilename' => $page->getCollectionFilename(),
-            'cPointerID' => $page->getCollectionPointerID(),
-            'cPointerExternalLink' => $page->getCollectionPointerExternalLink(),
-            'cPointerExternalLinkNewWindow' => $page->openCollectionPointerExternalLinkInNewWindow(),
-            'cDisplayOrder' => $page->getCollectionDisplayOrder(),
-            'pkgID' => $page->getPackageID(),
-        ]);
+            $newCollectionName = $this->getUniquePageName($page->getCollectionName(), $cParentID);
+            $newCollectionHandle = $this->getUniquePageHandle($page->getCollectionHandle(), $cParentID);
 
-        PageStatistics::incrementParents($newCID);
+            $newC = $this->cloneCollection(Collection::getByID($cID), $options);
+            $newCID = $newC->getCollectionID();
+
+            if ($newParentPage !== null) {
+                $siteTreeID = $newParentPage->getSiteTreeID();
+            } elseif ($site !== null) {
+                $siteTreeID = $site->getSiteTreeID();
+            } else {
+                $siteTreeID = $this->siteService->getSite()->getSiteTreeID();
+            }
+
+            switch ($page->getCollectionInheritance()) {
+                case 'OVERRIDE':
+                    $cInheritPermissionsFromCID = $newCID;
+                    break;
+                case 'PARENT':
+                    $cInheritPermissionsFromCID = $newParentPage ? $newParentPage->getPermissionsCollectionID() : $page->getPermissionsCollectionID();
+                    break;
+                default:
+                    $cInheritPermissionsFromCID = $page->getPermissionsCollectionID();
+                    break;
+            }
+            $this->connection->insert('Pages', [
+                'cID' => $newCID,
+                'siteTreeID' => $siteTreeID,
+                'ptID' => $page->getPageTypeID(),
+                'cParentID' => $cParentID,
+                'uID' => $uID,
+                'cOverrideTemplatePermissions' => $page->overrideTemplatePermissions(),
+                'cInheritPermissionsFromCID' => $cInheritPermissionsFromCID,
+                'cInheritPermissionsFrom' => $page->getCollectionInheritance(),
+                'cFilename' => $page->getCollectionFilename(),
+                'cPointerID' => $page->getCollectionPointerID(),
+                'cPointerExternalLink' => $page->getCollectionPointerExternalLink(),
+                'cPointerExternalLinkNewWindow' => $page->openCollectionPointerExternalLinkInNewWindow(),
+                'cDisplayOrder' => $page->getCollectionDisplayOrder(),
+                'pkgID' => $page->getPackageID(),
+            ]);
+
+            PageStatistics::incrementParents($newCID);
+        }
 
         $newPage = Page::getByID($newCID);
 
-        if ($newPage->getCollectionInheritance() === 'OVERRIDE') {
-            $newPage->acquirePagePermissions($page->getPermissionsCollectionID());
-            $newPage->acquireAreaPermissions($page->getPermissionsCollectionID());
-        }
-
-        $args = [];
-        if ($newCollectionName !== $page->getCollectionName()) {
-            $args['cName'] = $newCollectionName;
-        }
-        if ($newCollectionHandle !== $page->getCollectionHandle()) {
-            $args['cHandle'] = $newCollectionHandle;
-        }
-        $newPage->update($args);
-
-        Section::registerDuplicate($newPage, $page);
-
-        $pe = new DuplicatePageEvent($page);
-        $pe->setNewPageObject($newPage);
-        $this->eventDispatcher->dispatch('on_page_duplicate', $pe);
-
-        $newPage->rescanCollectionPath();
-        $newPage->movePageDisplayOrderToBottom();
-
-        if ($page instanceof Stack) {
-            Area::getOrCreate($newPage, STACKS_AREA_NAME);
-            $this->connection->insert('Stacks', [
-                'stName' => $newPage->getCollectionName(),
-                'cID' => $newPage->getCollectionID(),
-                'stType' => $page->getStackType(),
-                'stMultilingualSection' => 0,
-            ]);
-            $newPage = Stack::getByID($newPage->getCollectionID());
-        }
-
-        $tree = $page->getSiteTreeObject();
-        if ($tree instanceof SkeletonTree) {
-            // Add a relation between the pages.
-            // Is there already a relation used by the source page?
-            $relation = $this->entityManager->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation')
-                ->findOneBy(['cID' => $page->getCollectionID()]);
-            if (!is_object($relation)) {
-                $mpRelationID = $this->entityManager->getConnection()->GetOne('select max(mpRelationID) as mpRelationID from SiblingPageRelations');
-                if (!$mpRelationID) {
-                    $mpRelationID = 1;
-                } else {
-                    ++$mpRelationID;
-                }
-
-                // Create one for the original sibling.
-                $original = new SiblingRelation();
-                $original->setPageRelationID($mpRelationID);
-                $original->setPageID($page->getCollectionID());
-                $this->entityManager->persist($original);
-
-            } else {
-                $mpRelationID = $relation->getPageRelationID();
+        if (!$newPage->isAliasPage()) {
+            if ($newPage->getCollectionInheritance() === 'OVERRIDE') {
+                $newPage->acquirePagePermissions($page->getPermissionsCollectionID());
+                $newPage->acquireAreaPermissions($page->getPermissionsCollectionID());
             }
 
-            $new = new SiblingRelation();
-            $new->setPageRelationID($mpRelationID);
-            $new->setPageID($newPage->getCollectionID());
-            $this->entityManager->persist($new);
-            $this->entityManager->flush();
+            $args = [];
+            if ($newCollectionName !== $page->getCollectionName()) {
+                $args['cName'] = $newCollectionName;
+            }
+            if ($newCollectionHandle !== $page->getCollectionHandle()) {
+                $args['cHandle'] = $newCollectionHandle;
+            }
+            $newPage->update($args);
+
+            Section::registerDuplicate($newPage, $page);
+
+            $pe = new DuplicatePageEvent($page);
+            $pe->setNewPageObject($newPage);
+            $this->eventDispatcher->dispatch('on_page_duplicate', $pe);
+
+            $newPage->rescanCollectionPath();
+            $newPage->movePageDisplayOrderToBottom();
+
+            if ($page instanceof Stack) {
+                Area::getOrCreate($newPage, STACKS_AREA_NAME);
+                $this->connection->insert('Stacks', [
+                    'stName' => $newPage->getCollectionName(),
+                    'cID' => $newPage->getCollectionID(),
+                    'stType' => $page->getStackType(),
+                    'stMultilingualSection' => 0,
+                ]);
+                $newPage = Stack::getByID($newPage->getCollectionID());
+            }
+
+            $tree = $page->getSiteTreeObject();
+            if ($tree instanceof SkeletonTree) {
+                // Add a relation between the pages.
+                // Is there already a relation used by the source page?
+                $relation = $this->entityManager->getRepository('Concrete\Core\Entity\Page\Relation\SiblingRelation')
+                    ->findOneBy(['cID' => $page->getCollectionID()]);
+                if (!is_object($relation)) {
+                    $mpRelationID = $this->entityManager->getConnection()->GetOne('select max(mpRelationID) as mpRelationID from SiblingPageRelations');
+                    if (!$mpRelationID) {
+                        $mpRelationID = 1;
+                    } else {
+                        ++$mpRelationID;
+                    }
+
+                    // Create one for the original sibling.
+                    $original = new SiblingRelation();
+                    $original->setPageRelationID($mpRelationID);
+                    $original->setPageID($page->getCollectionID());
+                    $this->entityManager->persist($original);
+
+                } else {
+                    $mpRelationID = $relation->getPageRelationID();
+                }
+
+                $new = new SiblingRelation();
+                $new->setPageRelationID($mpRelationID);
+                $new->setPageID($newPage->getCollectionID());
+                $this->entityManager->persist($new);
+                $this->entityManager->flush();
+            }
         }
 
         return $newPage;

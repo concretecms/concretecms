@@ -35,6 +35,7 @@ class SummaryObject implements ObjectInterface
         return $this->summaryObject;
     }
     
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

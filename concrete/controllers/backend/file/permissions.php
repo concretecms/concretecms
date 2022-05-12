@@ -61,7 +61,7 @@ class Permissions extends Controller
         $file = $this->getFile();
         $this->checkCSRF("set_location_{$file->getFileID()}");
         $fsl = $this->getFileStorageLocation();
-        $file->setStorageLocation($fsl);
+        $file->setFileStorageLocation($fsl);
         $response = new EditResponse();
         $response->setFile($file);
         $response->setMessage(t('File storage location saved successfully.'));
