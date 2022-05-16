@@ -353,7 +353,7 @@ class File extends Controller
         $request = $this->app->make(\Concrete\Core\Http\Request::class);
 
         if ($token->validate("", $request->request->get("token"))) {
-            $files = $this->getRequestFiles('copy_file');
+            $files = $this->getRequestFiles('canCopyFile');
             $newFiles = [];
             foreach ($files as $f) {
                 $nf = $f->duplicate();
