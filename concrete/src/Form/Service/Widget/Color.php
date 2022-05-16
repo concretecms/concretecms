@@ -26,6 +26,7 @@ class Color
         $strOptions = '';
         $defaults = [
             'value' => $value,
+            'type' => 'color',
             'className' => 'ccm-widget-colorpicker',
             'showInitial' => true,
             'showInput' => true,
