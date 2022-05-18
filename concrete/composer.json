@@ -1,5 +1,5 @@
 {
-  "name": "concrete5/core",
+  "name": "concretecms/core",
   "license": "MIT",
   "description": "Concrete core subtree split",
   "type": "concrete5-core",
