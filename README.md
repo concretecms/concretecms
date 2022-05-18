@@ -1,8 +1,8 @@
-[![Github Actions Build Status](https://github.com/concrete5/concrete5/actions/workflows/phpunit.yml/badge.svg?branch=develop)](https://github.com/concrete5/concrete5/actions/workflows/phpunit.yml)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/concrete5/concrete5?branch=develop&svg=true)](https://ci.appveyor.com/project/concrete5/concrete5)
+[![Github Actions Build Status](https://github.com/concretecms/concretecms/actions/workflows/phpunit.yml/badge.svg?branch=develop)](https://github.com/concretecms/concretecms/actions/workflows/phpunit.yml)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/concretecms/concretecms?branch=develop&svg=true)](https://ci.appveyor.com/project/concretecms/concretecms)
 
 Welcome to the official repository for Concrete CMS development! Concrete CMS is an open source CMS built by people from 
-around the world. Want to get involved? Check out our [contributor guide](https://github.com/concrete5/concrete5/blob/develop/CONTRIBUTING.md) for more info.
+around the world. Want to get involved? Check out our [contributor guide](https://github.com/concretecms/concretecms/blob/develop/CONTRIBUTING.md) for more info.
 
 ## Documentation
 
@@ -14,8 +14,8 @@ Just log in to the documentation site with your community.concretecms.com accoun
 
 1. Clone the repository
 
-        git clone https://github.com/concrete5/concrete5.git
-        cd concrete5/
+        git clone https://github.com/concretecms/concretecms.git
+        cd concretecms/
 
 2. Use [Composer](https://getcomposer.org/) to install the third party dependencies
 
@@ -30,8 +30,8 @@ Just log in to the documentation site with your community.concretecms.com accoun
 
 This repository is for Concrete CMS 9.0 and later. Looking for earlier versions? 
 
-* concrete5 8.x can be found in the [8.5.x](https://github.com/concrete5/concrete5/tree/8.5.x) branch.
-* concrete5 5.7.x can be found in the [5.7.x](https://github.com/concrete5/concrete5/tree/5.7.x) branch.
-* Looking for concrete5 5.6 and earlier? Head over to [the concrete5-legacy repository](http://github.com/concrete5/concrete5-legacy).
+* concrete5 8.x can be found in the [8.5.x](https://github.com/concretecms/concretecms/tree/8.5.x) branch.
+* concrete5 5.7.x can be found in the [5.7.x](https://github.com/concretecms/concretecms/tree/5.7.x) branch.
+* Looking for concrete5 5.6 and earlier? Head over to [the concrete5-legacy repository](http://github.com/concretecms/concrete5-legacy).
 
 (Note: Concrete CMS used to be called concrete5 – which hopefully explains the name of various GitHub repositories and projects.)
