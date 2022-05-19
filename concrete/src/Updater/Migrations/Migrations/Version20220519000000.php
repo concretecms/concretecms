@@ -1,21 +1,22 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Concrete\Core\Updater\Migrations\Migrations;
 
-use Concrete\Core\Permission\Key\Key;
+use Concrete\Core\Site\Service;
 use Concrete\Core\Updater\Migrations\AbstractMigration;
 use Concrete\Core\Updater\Migrations\RepeatableMigrationInterface;
 
-final class Version20210813173441 extends AbstractMigration implements RepeatableMigrationInterface
+class Version20220519000000 extends AbstractMigration implements RepeatableMigrationInterface
 {
-
+    /**
+     * Refresh PageTypes table
+     *
+     * @return void
+     */
     public function upgradeDatabase()
     {
         \Concrete\Core\Database\Schema\Schema::refreshCoreXMLSchema([
             'PageTypes',
         ]);
     }
-
 }

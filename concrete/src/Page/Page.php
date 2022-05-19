@@ -1946,7 +1946,7 @@ class Page extends Collection implements CategoryMemberInterface,
     public function setTheme($pl)
     {
         $db = Database::connection();
-        $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl->getThemeID(), $this->cID, $this->vObj->getVersionID()]);
+        $db->executeQuery('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', [$pl ? $pl->getThemeID() : 0, $this->cID, $this->vObj->getVersionID()]);
         $this->themeObject = $pl;
     }
 
@@ -3485,6 +3485,8 @@ EOT
         $db = Database::connection();
         $txt = Core::make('helper/text');
 
+        $theme = false;
+
         // the passed collection is the parent collection
         $cParentID = $this->getCollectionID();
 
@@ -3547,6 +3549,10 @@ EOT
             // then we use the page type's default template
             if ($pt->getPageTypeDefaultPageTemplateID() > 0 && !$template) {
                 $template = $pt->getPageTypeDefaultPageTemplateObject();
+            }
+
+            if ($pt->getPageTypeDefaultThemeID()) {
+                $theme = $pt->getPageTypeDefaultThemeObject();
             }
 
             $ptID = $pt->getPageTypeID();
@@ -3626,6 +3632,10 @@ EOT
         }
         if (!$hasAuthor) {
             $u->refreshUserGroups();
+        }
+
+        if ($theme) {
+            $pc->setTheme($theme);
         }
 
         return $pc;
