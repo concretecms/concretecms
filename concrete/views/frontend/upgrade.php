@@ -31,7 +31,7 @@
 <?php } else { ?>
 
 	<div class="well" style="text-align: left">
-	<a href="<?=DIR_REL?>/" class="btn btn-default btn-secondary"><?=t('Back to Home')?></a>
+	<a href="<?=DIR_REL?>/" class="btn btn-primary"><?=t('Back to Home')?></a>
 	<?php if (!isset($hide_force) || !$hide_force) { ?>
         <a href="<?=DIR_REL . '/' . DISPATCHER_FILENAME . '/ccm/system/upgrade?force=1'?>" class="btn btn-default btn-secondary"><?=t('Re-Run Upgrade Script')?></a>
         <?php } ?>
