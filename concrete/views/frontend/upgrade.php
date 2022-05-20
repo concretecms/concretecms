@@ -5,55 +5,39 @@
 <div class="page-header">
 	<h1><?=t('Upgrade Concrete')?></h1>
 </div>
-<p>
-<?=$status?>
-</p>
+<?php if (!empty($status)) { ?>
+	<p><?=$status?></p>
+<?php } ?>
 
-<?php if ($had_failures) {
-    ?>
-<div class="alert-message block-message error">
+<?php if (!empty($had_failures)) { ?>
+	<div class="alert-message block-message error">
 	<?=t('These errors are most likely related to incompatible add-ons, please upgrade any add-ons and re-run to this script to complete the conversion of your data.')?>
-</div>
-<?php 
-} ?>
+	</div>
+<?php } ?>
 
-<?php if ($completeMessage) {
-    ?>
+<?php if (!empty($completeMessage)) { ?>
 	<?=$completeMessage?>
-<?php 
-} ?>
+<?php } ?>
 
-<?php if ($do_upgrade) {
-    ?>
-<p>	<?=t('To proceed with the upgrade, click below.')?></p>
-
+<?php if (!empty($do_upgrade)) { ?>
+	<p><?=t('To proceed with the upgrade, click below.')?></p>
 
 	<form method="post" action="<?=$controller->action('submit')?>">
-	<div class="well" style="text-align: right">
+	<div class="well" style="text-align: left">
 	<input type="submit" name="do_upgrade" class="btn btn-primary" value="<?=t('Upgrade')?>"  />
 	</div>
 	</form>
 
-
-
-<?php 
-} else {
-    ?>
+<?php } else { ?>
 
 	<div class="well" style="text-align: left">
-	    <a href="<?=DIR_REL?>/" class="btn btn-default"><?=t('Back to Home')?></a>
+	<a href="<?=DIR_REL?>/" class="btn btn-default btn-secondary"><?=t('Back to Home')?></a>
+	<?php if (!isset($hide_force) || !$hide_force) { ?>
+        <a href="<?=DIR_REL . '/' . DISPATCHER_FILENAME . '/ccm/system/upgrade?force=1'?>" class="btn btn-default btn-secondary"><?=t('Re-Run Upgrade Script')?></a>
+        <?php } ?>
   	</div>
 	
-	<?php if (!isset($hide_force) || !$hide_force) {
-    ?>
-        <p>
-        <?=t('<a href="%s">Click here</a> if you would like to re-run this script.', DIR_REL . '/' . DISPATCHER_FILENAME . '/ccm/system/upgrade?force=1')?>
-        </p>
-    <?php 
-}
-    ?>
-<?php 
-} ?>
+<?php } ?>
 
 </div>
 </div>

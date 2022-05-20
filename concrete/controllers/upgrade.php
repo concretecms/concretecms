@@ -81,7 +81,7 @@ class Upgrade extends BackendUserInterfaceController
     public function view()
     {
         $sav = $this->siteVersion;
-
+        $message = '';
         if (!$sav) {
             $message = t('Unable to determine your current version of Concrete CMS. Upgrading cannot continue.');
         } elseif ($this->request->query->get('force', 0) == 1) {
@@ -95,8 +95,7 @@ class Upgrade extends BackendUserInterfaceController
                 if (version_compare($sav, APP_VERSION, '=')) {
                     $message = t('Your site is already up to date! The current version of Concrete is <b>%s</b>.', APP_VERSION);
                 } else {
-                    $message = '';
-                    $message .= t('Upgrading from <b>%s</b>', $sav) . '<br/>';
+                    $message = t('Upgrading from <b>%s</b>', $sav) . '<br/>';
                     $message .= t('Upgrading to <b>%s</b>', APP_VERSION) . '<br/><br/>';
                     $this->set('do_upgrade', true);
                 }
