@@ -10,7 +10,7 @@ if (!isset($query) || !is_string($query)) {
 }
 
 ?>
-    <form class="hstack gap-3" action="<?= $view->url($resultTarget) ?>" method="get" class="ccm-search-block-form"><?php
+    <form class="hstack gap-3 ccm-search-block-form" action="<?= $view->url($resultTarget) ?>" method="get"><?php
 if (isset($title) && ($title !== '')) {
     ?><h3><?= h($title) ?></h3><?php
 
