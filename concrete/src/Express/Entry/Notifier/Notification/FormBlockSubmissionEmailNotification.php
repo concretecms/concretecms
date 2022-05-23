@@ -71,6 +71,16 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
         return $this->attributeValues;
     }
 
+    protected function getAssociations(Entry $entry)
+    {
+        $associations = [];
+        // Have to do this so Doctrine gets converted to an object properly.
+        foreach ($entry->getAssociations() as $association) {
+            $associations[] = $association;
+        }
+        return $associations;
+    }
+
     /**
      * @param ExpressValue[] $attributeValues
      */
@@ -111,6 +121,7 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
                 }
             }
             $mh->addParameter('attributes', $this->getAttributeValues($entry));
+            $mh->addParameter('associations', $this->getAssociations($entry));
             $mh->load('block_express_form_submission');
             if (empty($mh->getSubject())) {
                 $mh->setSubject(t('Website Form Submission – %s', $this->getFormName($entry)));
