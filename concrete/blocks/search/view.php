@@ -28,8 +28,7 @@ if ($query === '') {
         }
     }
 }
-?><input name="query" class="form-control" type="text" value="<?= htmlentities($query, ENT_COMPAT, APP_CHARSET) ?>"
-         class="ccm-search-block-text" /><?php
+?><input name="query" class="form-control ccm-search-block-text" type="text" value="<?= htmlentities($query, ENT_COMPAT, APP_CHARSET) ?>" /><?php
 if (isset($buttonText) && ($buttonText !== '')) {
     ?> <input name="submit" type="submit" value="<?= h($buttonText) ?>"
               class="btn btn-secondary ccm-search-block-submit" /><?php
