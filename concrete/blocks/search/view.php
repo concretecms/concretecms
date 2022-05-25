@@ -10,7 +10,7 @@ if (!isset($query) || !is_string($query)) {
 }
 
 ?>
-    <form class="hstack gap-3" action="<?= $view->url($resultTarget) ?>" method="get" class="ccm-search-block-form"><?php
+    <form class="hstack gap-3 ccm-search-block-form" action="<?= $view->url($resultTarget) ?>" method="get"><?php
 if (isset($title) && ($title !== '')) {
     ?><h3><?= h($title) ?></h3><?php
 
@@ -28,8 +28,7 @@ if ($query === '') {
         }
     }
 }
-?><input name="query" class="form-control" type="text" value="<?= htmlentities($query, ENT_COMPAT, APP_CHARSET) ?>"
-         class="ccm-search-block-text" /><?php
+?><input name="query" class="form-control ccm-search-block-text" type="text" value="<?= htmlentities($query, ENT_COMPAT, APP_CHARSET) ?>" /><?php
 if (isset($buttonText) && ($buttonText !== '')) {
     ?> <input name="submit" type="submit" value="<?= h($buttonText) ?>"
               class="btn btn-secondary ccm-search-block-submit" /><?php

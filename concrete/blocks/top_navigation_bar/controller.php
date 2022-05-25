@@ -289,5 +289,22 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         }
         return $files;
     }
+    
+    public function getPageItemNavTarget($pageItem) // Respect nav_target Page Attribute & External Link targets
+    {
+	if (!is_object($pageItem) || !$pageItem instanceof \Concrete\Core\Navigation\Item\PageItem) {
+	    return '';
+	}
+	$page = Page::getByID($pageItem->getPageID());
+	
+	if ($page->getCollectionPointerExternalLink() != '' && $page->openCollectionPointerExternalLinkInNewWindow()) {
+	    $target = '_blank';
+	} else {
+	    $target = $page->getAttribute('nav_target');
+	}
+	$target = empty($target) ? '_self' : $target;
+	
+	return $target;
+    }
 
 }
