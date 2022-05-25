@@ -344,8 +344,8 @@ class Controller extends BlockController
 
         $blocks = [];
         $layout = $this->getAreaLayoutObject();
-        $layout->setAreaObject($this->getAreaObject());
         if ($layout) {
+            $layout->setAreaObject($this->getAreaObject());
             foreach ($layout->getAreaLayoutColumns() as $column) {
                 $area = $column->getSubAreaObject();
                 if ($area) {
