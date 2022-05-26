@@ -16,7 +16,7 @@
     "@concretecms/bedrock": "^1.2.9",
     "cross-env": "^5.1.1",
     "download": "~4.4.3",
-    "grunt": "^1.5.2",
+    "grunt": "^1.5.3",
     "grunt-env": "^1.0.1",
     "laravel-mix": "^5.0.5",
     "resolve-url-loader": "^3.1.1",
