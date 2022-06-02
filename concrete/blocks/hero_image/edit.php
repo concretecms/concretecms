@@ -35,7 +35,7 @@ $icon = $icon ?? '';
       <?php echo $form->label("title", t('Title')); ?>
       <div class="input-group">
           <?php echo $form->text('title', $title ?? null); ?>
-          <?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
+          <?php echo $form->select('titleFormat', \Concrete\Core\Block\BlockController::$btTitleFormats, $titleFormat ?? null, array('style' => 'width:105px;flex-grow:0;', 'class' => 'form-select')); ?>
       </div>
     </div>
     <div class="mb-3">

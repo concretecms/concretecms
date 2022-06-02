@@ -40,7 +40,7 @@ class AddSubpagePageAccess extends PageAccess
         $db = Database::connection();
         $db->executeQuery('delete from PagePermissionPageTypeAccessList where paID = ?', [$this->getPermissionAccessID()]);
         $db->executeQuery('delete from PagePermissionPageTypeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        if (is_array($args['pageTypesIncluded'])) {
+        if (isset($args['pageTypesIncluded']) && is_array($args['pageTypesIncluded'])) {
             foreach ($args['pageTypesIncluded'] as $peID => $permission) {
                 $ext = 0;
                 if (!empty($args['allowExternalLinksIncluded'][$peID])) {
@@ -51,7 +51,7 @@ class AddSubpagePageAccess extends PageAccess
             }
         }
 
-        if (is_array($args['pageTypesExcluded'])) {
+        if (isset($args['pageTypesExcluded']) && is_array($args['pageTypesExcluded'])) {
             foreach ($args['pageTypesExcluded'] as $peID => $permission) {
                 $ext = 0;
                 if (!empty($args['allowExternalLinksExcluded'][$peID])) {
@@ -62,7 +62,7 @@ class AddSubpagePageAccess extends PageAccess
             }
         }
 
-        if (is_array($args['ptIDInclude'])) {
+        if (isset($args['ptIDInclude']) && is_array($args['ptIDInclude'])) {
             foreach ($args['ptIDInclude'] as $peID => $ptIDs) {
                 foreach ($ptIDs as $ptID) {
                     $v = [$this->getPermissionAccessID(), $peID, $ptID];
@@ -71,7 +71,7 @@ class AddSubpagePageAccess extends PageAccess
             }
         }
 
-        if (is_array($args['ptIDExclude'])) {
+        if (isset($args['ptIDExclude']) && is_array($args['ptIDExclude'])) {
             foreach ($args['ptIDExclude'] as $peID => $ptIDs) {
                 foreach ($ptIDs as $ptID) {
                     $v = [$this->getPermissionAccessID(), $peID, $ptID];
