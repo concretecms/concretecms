@@ -31,12 +31,7 @@ class Available extends DefaultSet
             case 'file':
                 $file = $node->getTreeNodeFileObject();
                 if (is_object($file)) {
-                    $type = $file->getTypeObject();
-                    if (is_object($type)) {
-                        return $type->getGenericDisplayType();
-                    } else {
-                        return t('Unknown');
-                    }
+                    return $file->getGenericTypeText(true);
                 }
                 break;
         }
