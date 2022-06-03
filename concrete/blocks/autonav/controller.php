@@ -179,7 +179,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     /**
      * @var int|null
      */
-    protected $cID;
+    public $cID;
 
     /**
      * Instantiates the block controller.
