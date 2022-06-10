@@ -239,14 +239,13 @@ class Controller extends BlockController implements UsesFeatureInterface
             $this->list->ignorePermissions();
         }
         if ($this->excludeCurrentPage) {
-			$ID = Page::getCurrentPage()->getCollectionID();
-			foreach ($this->list->getResults() as $p) {
-				if ($p->getCollectionID() == $ID) { // If current page is in list
-					// Deprecated filter() => $this->list->filter('cvID', Page::getCurrentPage()->getCollectionID(), '!=');
-					$this->list->getQueryObject()->andWhere($expr->neq('p.cID', $ID));
-				}
-			}
+	    $ID = Page::getCurrentPage()->getCollectionID();
+	    foreach ($this->list->getResults() as $p) {
+	    	if ($p->getCollectionID() == $ID) {
+		    $this->list->getQueryObject()->andWhere($expr->neq('p.cID', $ID));
 		}
+	    }
+	}
 
         $this->list->filter('cvName', '', '!=');
 
