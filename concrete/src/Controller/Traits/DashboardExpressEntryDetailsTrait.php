@@ -136,10 +136,15 @@ trait DashboardExpressEntryDetailsTrait
 
         $this->set('renderer', $renderer);
         if ($entity->getOwnedBy()) {
-            // the back url is the detail of what is the owner
-            $ownerEntry = $entry->getOwnedByEntry();
-            if (is_object($ownerEntry)) {
-                $this->set('backURL', $this->getViewEntryURL($ownerEntry));
+            $h = null;
+            foreach($entity->getAssociations()->getValues() as $association) {
+                if ($association->isOwnedByAssociation()) {
+                    $h = $association->getTargetEntity();
+                }
+            }
+            if ($h) {
+                // the back url is the detail of what is the owner
+                $this->set('backURL', \URL::to($this->getPageObject()->getCollectionPath(), 'results', $h->getId()));
             }
         } else {
             $this->set('backURL', $this->getBackURL($entry->getEntity()));
