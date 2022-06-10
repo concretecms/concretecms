@@ -322,6 +322,12 @@ echo $userInterface->tabs([
                     <?php echo $form->checkbox("enableExternalFiltering", "1", $enableExternalFiltering); ?>
                     <?php echo $form->label("enableExternalFiltering", t("Enable Other Blocks to Filter This Page List."), ["class" => "form-check-label"]); ?>
                 </div>
+		
+		<div class="form-check">
+                    <?php echo $form->checkbox("excludeCurrentPage", "1", $excludeCurrentPage); ?>
+                    <?php echo $form->label("excludeCurrentPage", t("Exclude Current Page"), ["class" => "form-check-label"]); ?>
+		    <i class="launch-tooltip fa fa-question-circle" title="<?php echo t('If the currently rendered page is in the list, exclude it.') ?>"></i>
+                </div>
             </div>
         </fieldset>
 
