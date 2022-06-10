@@ -240,11 +240,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         if ($this->excludeCurrentPage) {
 	    $ID = Page::getCurrentPage()->getCollectionID();
-	    foreach ($this->list->getResults() as $p) {
-	    	if ($p->getCollectionID() == $ID) {
-		    $this->list->getQueryObject()->andWhere($expr->neq('p.cID', $ID));
-		}
-	    }
+	    $this->list->getQueryObject()->andWhere($expr->neq('p.cID', $ID));
 	}
 
         $this->list->filter('cvName', '', '!=');
