@@ -2,12 +2,14 @@
 
 namespace Concrete\Core\StyleCustomizer\Style;
 
+use Concrete\Core\StyleCustomizer\Normalizer\ColorVariable;
 use Concrete\Core\StyleCustomizer\Normalizer\NormalizedVariableCollection;
 use Concrete\Core\StyleCustomizer\Normalizer\Variable;
 use Concrete\Core\StyleCustomizer\Normalizer\VariableInterface;
 use Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Concrete\Core\StyleCustomizer\Style\Value\ValueInterface;
 use Primal\Color\Parser;
+use Primal\Color\RGBColor;
 
 class ColorStyle extends Style
 {
@@ -16,7 +18,14 @@ class ColorStyle extends Style
     {
         $variable = $collection->getVariable($this->getVariableToInspect());
         if ($variable) {
-            $color = new Parser($variable->getValue());
+            try {
+                $color = new Parser($variable->getValue());
+            } catch (\Exception $e) {
+                $color = new Parser(
+                    (new ColorVariable(255, 255, 255, 255, 0))
+                    ->getValue()
+                );
+            }
             if ($color) {
                 $result = $color->getResult();
                 $alpha = 1;
