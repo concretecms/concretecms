@@ -1,6 +1,7 @@
 <?php if ($style instanceof \Concrete\Core\Block\CustomStyle) {
     $areaID = $style->block->getBlockAreaObject()->getAreaID();
     $blockID = $style->block->getBlockID();
+    $pageId = $page->getCollectionID();
     ?>
 
 <form method="post" action="<?=$saveAction?>" id="ccm-inline-design-form">
@@ -30,6 +31,7 @@
                 components: config.components,
                 data: {
                     bFilename: '<?=$bFilename ?? null?>',
+                    pageId: <?=(int) $pageId?>,
                     blockId: <?=(int) $blockID?>,
                     areaId: <?=(int) $areaID?>,
                 },
@@ -93,7 +95,7 @@
                     {
                         const form = $('#ccm-inline-design-form').detach();
                         this.handleResponse({
-                            cID: CCM_CID,
+                            cID: this.pageId,
                             bID: this.blockId,
                             aID: this.areaId,
                             originalBlockID: this.blockId,

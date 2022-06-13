@@ -39,6 +39,7 @@ $gf = $pt->getThemeGridFrameworkObject();
 
 if (Config::get('concrete.design.enable_custom')) {
     Loader::element('custom_style', array(
+        'page' => $c,
         'saveAction' => $controller->action('submit'),
         'resetAction' => $controller->action('reset'),
         'style' => $b->getCustomStyle(true),
@@ -54,6 +55,7 @@ if (Config::get('concrete.design.enable_custom')) {
 }
 else {
     Loader::element('custom_block_template', array(
+        'page' => $c,
         'saveAction' => $controller->action('submit'),
         'resetAction' => $controller->action('reset'),
         'style' => $b->getCustomStyle(true),
