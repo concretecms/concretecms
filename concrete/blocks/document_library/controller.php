@@ -12,11 +12,13 @@ use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\FolderItemList;
 use Concrete\Core\File\Import\FileImporter;
 use Concrete\Core\File\Import\ImportException;
+use Concrete\Core\File\Import\ImportOptions;
 use Concrete\Core\File\Set\Set;
 use Concrete\Core\File\Set\SetList;
 use Concrete\Core\File\Type\Type;
 use Concrete\Core\Http\ResponseFactory;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Tree\Node\Node;
 use Concrete\Core\Tree\Node\Type\File;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -642,7 +644,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         $files = [];
         $r = new \Concrete\Core\File\EditResponse();
         if ($this->bID == $bID) {
-            $fp = \FilePermissions::getGlobal();
+            $folder = $this->getRootFolder();
+            $fp = new Checker($folder);
+            if (!$fp->canAddFiles()) {
+                throw new UserMessageException(t("You don't have the permission to upload to %s", $folder->getTreeNodeDisplayName()), 400);
+            }
+
             /** @var \Concrete\Core\File\Service\File $cf */
             $cf = $this->app->make('helper/file');
 
@@ -657,26 +664,29 @@ class Controller extends BlockController implements UsesFeatureInterface
                         /** @var \Concrete\Core\File\Import\FileImporter $importer */
                         $importer = $this->app->make(FileImporter::class);
                         try {
-                                $response = $importer->importUploadedFile($file);
-                            } catch (ImportException $x) {
-                                throw new UserMessageException($x->getMessage());
-                            }
-                            $file = $response->getFile();
-                            if ($this->addFilesToSetID) {
-                                $fs = \FileSet::getByID($this->addFilesToSetID);
-                                if (is_object($fs)) {
-                                    $fs->addFileToSet($file);
-                                }
-                            }
-                            /* @var \Concrete\Core\Entity\File\File $file */
-                            $files[] = $file;
-                            if (!$this->allowInPageFileManagement) {
-                                // We're going to set a message to display the next time the page loads.
-                                $this->app->make('session')->getFlashBag()->add('document_library_success_message',
-                                    t2('File added successfully', 'Files added successfully', count($files)));
-                            }
+                            $options = $this->app->make(ImportOptions::class);
+                            $options->setImportToFolder($folder);
+                            $response = $importer->importUploadedFile($file, '', $options);
+                        } catch (ImportException $x) {
+                            throw new UserMessageException($x->getMessage());
+                        }
 
-                            $r->setFiles($files);
+                        $file = $response->getFile();
+                        if ($this->addFilesToSetID) {
+                            $fs = \FileSet::getByID($this->addFilesToSetID);
+                            if (is_object($fs)) {
+                                $fs->addFileToSet($file);
+                            }
+                        }
+                        /* @var \Concrete\Core\Entity\File\File $file */
+                        $files[] = $file;
+                        if (!$this->allowInPageFileManagement) {
+                            // We're going to set a message to display the next time the page loads.
+                            $this->app->make('session')->getFlashBag()->add('document_library_success_message',
+                                t2('File added successfully', 'Files added successfully', count($files)));
+                        }
+
+                        $r->setFiles($files);
                     }
                 } else {
                     throw new UserMessageException(ImportException::describeErrorCode(ImportException::E_PHP_NO_FILE));
