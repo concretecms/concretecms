@@ -9,7 +9,7 @@ if ($btHandle === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
     }
 }
 if (is_object($set) && isset($styleHeader)) { ?>
-    ?>
+    
     <script type="text/javascript">
         $('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
     </script>
