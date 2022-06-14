@@ -84,7 +84,7 @@
     $bp = new \Concrete\Core\Permission\Checker($b);
     ?>
         <li class="ccm-inline-toolbar-icon-cell">
-            <button id="ccm-layouts-move-block-button" type="button" data-layout-command="move-block" class="btn-sm btn btn-outline-primary" data-placement="top" data-custom-class="light-tooltip" title="<?=h(t("Move Block"))?>">
+            <button id="ccm-layouts-move-block-button" type="button" data-layout-command="move-block" class="btn-sm btn" data-placement="top" data-custom-class="light-tooltip" title="<?=h(t("Move Block"))?>">
                 <i class="fas fa-arrows-alt"></i>
             </button>
         </li>
@@ -95,7 +95,7 @@
             $deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
             ?>
             <li class="ccm-inline-toolbar-icon-cell">
-                <button id="ccm-layouts-delete-button" type="button" class="btn-sm btn btn-outline-danger" data-placement="top" data-custom-class="light-tooltip" title="<?=h(t("Delete Block"))?>">
+                <button id="ccm-layouts-delete-button" type="button" class="btn-sm btn" data-placement="top" data-custom-class="light-tooltip" title="<?=h(t("Delete Block"))?>">
                     <i class="fas fa-trash"></i>
                 </button>
             </li>
@@ -106,10 +106,10 @@
 } ?>
 
 	<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">
-		<button id="ccm-layouts-cancel-button" @click="cancelDesign" type="button" class="btn btn-mini"><?=t('Cancel')?></button>
+		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t('Cancel')?></button>
 	</li>
 	<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save">
-	  <button class="btn btn-primary" type="button" @click="saveDesign" id="ccm-layouts-save-button"><?php if ($controller->getAction() === 'add') {
+	  <button class="btn btn-primary" type="button" id="ccm-layouts-save-button"><?php if ($controller->getAction() === 'add') {
     ?><?=t('Add Layout')?><?php
 } else {
     ?><?=t('Update Layout')?><?php
@@ -160,53 +160,6 @@ $(function() {
 
                 },
                 <?php } ?>
-                cancelDesign(){
-                    $('#ccm-inline-toolbar-container').hide();
-                    ConcreteEvent.fire('EditModeExitInline');
-                },
-                saveDesign(){
-                    const form = $('#ccm-inline-design-form');
-                    form.concreteAjaxForm({
-                        success:(resp) => {
-                            var editor = new Concrete.getEditMode()
-                            var area = editor.getAreaByID(resp.aID)
-                            var block = area.getBlockByID(parseInt(resp.originalBlockID))
-                            var arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0
-                            var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
-                            const request = {
-                                arHandle: area.getHandle(),
-                                cID: resp.cID,
-                                bID: resp.bID,
-                                arEnableGridContainer: arEnableGridContainer
-                            };
-                            $.get(action, request, (r)=> {
-                                ConcreteToolbar.disableDirectExit()
-                                var newBlock = block.replace(r)
-                                ConcreteAlert.notify({
-                                    message: resp.message
-                                })
-
-                                this.refreshStyles(resp)
-                                ConcreteEvent.fire('EditModeExitInline', {
-                                    action: 'save_inline',
-                                    block: newBlock
-                                })
-                                ConcreteEvent.fire('EditModeExitInlineComplete', {
-                                    block: newBlock
-                                })
-                                $.fn.dialog.hideLoader()
-                                editor.destroyInlineEditModeToolbars()
-                                editor.scanBlocks()
-                            })
-                        },
-                        error:(r) => {
-                            $(this.$el).prependTo('#ccm-inline-toolbar-container').show()
-                        }
-                    })
-                    $(this.$el).hide().prependTo(form);
-                    form.submit();
-                    ConcreteEvent.unsubscribe('EditModeExitInlineComplete');
-                },
                 handleBlockMove(event, data)
                 {
 
@@ -266,9 +219,20 @@ $(function() {
                     <?php
                     } ?>
                 });
-                new bootstrap.Tooltip(document.querySelector('button#ccm-layouts-delete-button'), { customClass: 'light-tooltip' });
-                new bootstrap.Tooltip(document.querySelector('button#ccm-layouts-move-block-button'), { customClass: 'light-tooltip' });
-                new bootstrap.Tooltip(document.querySelector('button#ccm-layouts-toggle-automated-button'), { customClass: 'light-tooltip' });
+
+                var deleteButton = document.querySelector('button#ccm-layouts-delete-button')
+                if (deleteButton) {
+                    new bootstrap.Tooltip(deleteButton, {customClass: 'light-tooltip'});
+                }
+                var moveButton = document.querySelector('button#ccm-layouts-move-block-button')
+                if (moveButton) {
+                    new bootstrap.Tooltip(moveButton, {customClass: 'light-tooltip'});
+                }
+                var toggleAutomatedButton = document.querySelector('button#ccm-layouts-toggle-automated-button')
+                if (toggleAutomatedButton) {
+                    new bootstrap.Tooltip(toggleAutomatedButton, {customClass: 'light-tooltip'});
+                }
+
                 <?php if ($controller->getAction() === 'edit') {
                     ?>
                 const peper = $('[data-layout-command="move-block"]');
