@@ -29,6 +29,7 @@ use Gettext\Translations;
 use GroupTree;
 use GroupTreeNode;
 use Concrete\Core\User\UserList;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface, \JsonSerializable
@@ -715,7 +716,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $class = $this->getGroupAutomationControllerClass();
         try {
             $c = \Core::make($class, ['g' => $this]);
-        } catch (\ReflectionException $e) {
+        } catch (BindingResolutionException $e) {
             $c = \Core::make(core_class('\\Core\\User\\Group\\AutomatedGroup\\DefaultAutomation'), ['g' => $this]);
         }
 
