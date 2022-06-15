@@ -32,7 +32,7 @@ class RequestUrls implements WebPreconditionInterface
      */
     public function getName()
     {
-        return t('Supports concrete5 request URLs');
+        return t('Supports Concrete CMS request URLs');
     }
 
     /**
