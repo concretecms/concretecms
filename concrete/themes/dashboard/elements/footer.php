@@ -6,7 +6,7 @@ if (!empty($showPrivacyPolicyNotice)) { ?>
             <div class="row">
                 <div class="col-sm-12">
                     <p>
-                    <?=t('concrete5 collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.')?></p>
+                    <?=t('Concrete CMS collects some information about your website to assist in upgrading and checking add-on compatibility. This information can be disabled in configuration.')?></p>
                 </div>
             </div>
             <div class="row">

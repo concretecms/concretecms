@@ -97,7 +97,7 @@ class Install extends Controller
 
         $config = $this->app->make('config');
         $this->set('backgroundFade', 0);
-        $this->set('pageTitle', t('Install concrete5'));
+        $this->set('pageTitle', t('Install Concrete CMS'));
         $image = date('Ymd') . '.jpg';
         $this->set('image', date('Ymd') . '.jpg');
         $this->set('imagePath', $config->get('concrete.urls.background_feed') . '/' . $image);

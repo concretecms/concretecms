@@ -102,7 +102,7 @@ class MemoryLimit implements PreconditionInterface
             $result
                 ->setState(PreconditionResult::STATE_WARNING)
                 ->setMessage(
-                    t('concrete5 runs best with at least %1$s of RAM. Your memory limit is currently %2$s. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.',
+                    t('concrete5 runs best with at least %1$s of RAM. Your memory limit is currently %2$s. You may experience problems uploading and resizing large images, and may have to install Concrete without sample content.',
                         $this->numberHelper->formatSize($recommended),
                         $this->numberHelper->formatSize($memoryLimit)
                     )

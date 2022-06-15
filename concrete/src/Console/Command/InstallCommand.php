@@ -58,7 +58,7 @@ class InstallCommand extends Command
         $errExitCode = static::RETURN_CODE_ON_FAILURE;
         $this
             ->setName('c5:install')
-            ->setDescription('Install concrete5')
+            ->setDescription('Install Concrete CMS')
             ->addEnvOption()
             ->setCanRunAsRoot(false)
             ->addOption('db-server', null, InputOption::VALUE_REQUIRED, 'Location of database server')

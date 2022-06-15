@@ -64,7 +64,7 @@ class Cookies implements WebPreconditionInterface
      */
     public function getHtml()
     {
-        $errorMessage = json_encode(t('Cookies must be enabled in your browser to install concrete5.'));
+        $errorMessage = json_encode(t('Cookies must be enabled in your browser to install Concrete CMS.'));
         $myIdentifier = json_encode($this->getUniqueIdentifier());
 
         return <<<EOT
