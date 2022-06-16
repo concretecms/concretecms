@@ -1,5 +1,8 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
+
+use Michelf\Markdown;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 $valt = Loader::helper('validation/token');
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/ui');
@@ -8,8 +11,8 @@ if ($tp->canInstallPackages()) {
     $mi = Marketplace::getInstance();
 }
 
-$pkgRemote = array();
-$pkgLocal = array();
+$pkgRemote = [];
+$pkgLocal = [];
 if (Config::get('concrete.marketplace.enabled') && is_object($mi)) {
     if ($mi->isConnected()) {
         $pkgArray = Package::getInstalledList();
@@ -28,7 +31,7 @@ foreach ($pkgAvailableArray as $pkg) {
 }
 
 ?>
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Add-Ons'));?>
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Add-Ons')); ?>
 
 <?php
 if (!$tp->canInstallPackages()) {
@@ -62,7 +65,7 @@ if (!$tp->canInstallPackages()) {
 					<?php 
 } else {
     ?>
-						<td class="ccm-marketplace-list-install-button"><a class="btn" target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a> <?=$ch->button(t("Download and Install"), View::url('/dashboard/extend/update', 'prepare_remote_upgrade', $rpkg->getMarketplaceItemID()), "", "primary")?></td>
+						<td class="ccm-marketplace-list-install-button"><a class="btn" target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a> <?=$ch->button(t('Download and Install'), View::url('/dashboard/extend/update', 'prepare_remote_upgrade', $rpkg->getMarketplaceItemID()), '', 'primary')?></td>
 					<?php 
 }
     ?>
@@ -77,7 +80,7 @@ if (!$tp->canInstallPackages()) {
     ?>
 							<div class="ccm-marketplace-update-changelog">
 								<h6><?=t('Version History')?></h6>
-								<?=$versionHistory?>
+								<?=Markdown::defaultTransform($versionHistory)?>
 							</div>
 						<?php 
 }
@@ -107,7 +110,7 @@ if (!$tp->canInstallPackages()) {
 					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></h3><p><?=$pkg->getPackageDescription()?></p>
 					<p><strong><?=t('New Version: %s. Upgrading from: %s.', $pkg->getPackageVersion(), $entity->getPackageVersion())?></strong></p>
 					</td>
-					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Update Add-On"), View::url('/dashboard/extend/update', 'do_update', $pkg->getPackageHandle()), "", "btn-primary")?></td>
+					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t('Update Add-On'), View::url('/dashboard/extend/update', 'do_update', $pkg->getPackageHandle()), '', 'btn-primary')?></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top: 0px">
@@ -117,7 +120,7 @@ if (!$tp->canInstallPackages()) {
     ?>
 							<div class="ccm-marketplace-update-changelog">
 								<h6><?=t('Version History')?></h6>
-								<?=$versionHistory?>
+								<?=Markdown::defaultTransform($versionHistory)?>
 							</div>
 						<?php 
 }
@@ -158,10 +161,10 @@ if (!$tp->canInstallPackages()) {
 			<div class="well" style="padding:10px 20px;">
 				<h3><?=t('Connect to Community')?></h3>
 				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons. Connecting enables automatic updates.')?></p>
-				<p><a class="btn btn-primary" href="<?=$view->url('/dashboard/extend/connect')?>"><?=t("Connect to Community")?></a></p>
+				<p><a class="btn btn-primary" href="<?=$view->url('/dashboard/extend/connect')?>"><?=t('Connect to Community')?></a></p>
 			</div>
 
 		<?php 
         } ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(); ?>
