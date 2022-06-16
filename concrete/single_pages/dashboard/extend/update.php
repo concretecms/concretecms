@@ -1,4 +1,7 @@
 <?php
+
+use Michelf\Markdown;
+
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $ci = Loader::helper('concrete/urls');
@@ -77,7 +80,7 @@ if (!$tp->canInstallPackages()) {
     ?>
 							<div class="ccm-marketplace-update-changelog">
 								<h6><?=t('Version History')?></h6>
-								<?=$versionHistory?>
+								<?=Markdown::defaultTransform($versionHistory)?>
 							</div>
 						<?php
 }
@@ -117,7 +120,7 @@ if (!$tp->canInstallPackages()) {
     ?>
 							<div class="ccm-marketplace-update-changelog">
 								<h6><?=t('Version History')?></h6>
-								<?=$versionHistory?>
+								<?= Markdown::defaultTransform($versionHistory)?>
 							</div>
 						<?php
 }
