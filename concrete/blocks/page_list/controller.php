@@ -41,6 +41,7 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $displayFeaturedOnly;
     public $displayAliases;
     public $displaySystemPages;
+    public $excludeCurrentPage;
     public $ptID;
     public $filterByRelated;
     public $filterByCustomTopic;
@@ -106,6 +107,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $controller->displayAliases = $_REQUEST['displayAliases'] ?? false;
         $controller->paginate = $_REQUEST['paginate'] ?? false;
         $controller->enableExternalFiltering = $_REQUEST['enableExternalFiltering'] ?? false;
+        $controller->excludeCurrentPage = $_REQUEST['excludeCurrentPage'] ?? false;
         $controller->filterByRelated = $_REQUEST['filterByRelated'] ?? false;
         $controller->relatedTopicAttributeKeyHandle = $_REQUEST['relatedTopicAttributeKeyHandle'];
         $controller->filterByCustomTopic = ($_REQUEST['topicFilter'] == 'custom') ? '1' : '0';
@@ -140,7 +142,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->list = new PageList();
         $this->list->disableAutomaticSorting();
         $this->list->setNameSpace('b' . $this->bID);
-
+        $expr = $this->list->getQueryObject()->expr(); // Get Query Expression Object
+        
         $cArray = [];
 
         switch ($this->orderBy) {
@@ -235,6 +238,10 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (isset($this->ignorePermissions) && $this->ignorePermissions) {
             $this->list->ignorePermissions();
         }
+        if ($this->excludeCurrentPage) {
+	    $ID = Page::getCurrentPage()->getCollectionID();
+	    $this->list->getQueryObject()->andWhere($expr->neq('p.cID', $ID));
+	}
 
         $this->list->filter('cvName', '', '!=');
 
@@ -350,6 +357,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('displaySystemPages', false);
         $this->set('ignorePermissions', false);
         $this->set('enableExternalFiltering', false);
+        $this->set('excludeCurrentPage', false);
         $this->set('paginate', false);
         $this->set('cParentID', 0);
         $this->set('cThis', false);
@@ -575,6 +583,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'displayThumbnail' => 0,
             'displayAliases' => 0,
             'displaySystemPages' => 0,
+            'excludeCurrentPage' => 0,
             'truncateChars' => 0,
             'paginate' => 0,
             'rss' => 0,
@@ -604,6 +613,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
         $args['displaySystemPages'] = ($args['displaySystemPages']) ? '1' : '0';
+        $args['excludeCurrentPage'] = ($args['excludeCurrentPage']) ? '1' : '0';
         $args['truncateChars'] = (int) ($args['truncateChars']);
         $args['paginate'] = (int) ($args['paginate']);
         $args['rss'] = (int) ($args['rss']);
@@ -619,6 +629,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
 
         if ($args['rss']) {
+            $pf = null;
             if (isset($this->pfID) && $this->pfID) {
                 $pf = Feed::getByID($this->pfID);
             }

@@ -838,11 +838,24 @@ class Version implements ObjectInterface
      *
      * @return string
      */
-    public function getGenericTypeText()
+    public function getGenericTypeText($includeExtension = false)
     {
         $to = $this->getTypeObject();
+        if ($includeExtension) {
+            $extension = $this->getExtension();
+            if ($extension) {
+                return tc(
+                    'FileExtensionAndType',
+                    '%s %s',
+                    strtoupper($extension),
+                    $to->getGenericDisplayType()
+                );
+            }
+        } else if ($to) {
+            return $to->getGenericDisplayType();
+        }
 
-        return $to->getGenericDisplayType();
+        return t('Unknown');
     }
 
     /**
