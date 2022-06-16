@@ -40,7 +40,7 @@ class EditPagePropertiesPageAccess extends PageAccess
         $db = Database::connection();
         $db->executeQuery('delete from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
         $db->executeQuery('delete from PagePermissionPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
-        if (is_array($args['propertiesIncluded'])) {
+        if (isset($args['propertiesIncluded']) && is_array($args['propertiesIncluded'])) {
             foreach ($args['propertiesIncluded'] as $peID => $attributePermission) {
                 $allowEditName = 0;
                 $allowEditDateTime = 0;
@@ -67,7 +67,7 @@ class EditPagePropertiesPageAccess extends PageAccess
             }
         }
 
-        if (is_array($args['propertiesExcluded'])) {
+        if (isset($args['propertiesExcluded']) && is_array($args['propertiesExcluded'])) {
             foreach ($args['propertiesExcluded'] as $peID => $attributePermission) {
                 $allowEditNameExcluded = 0;
                 $allowEditDateTimeExcluded = 0;
@@ -94,7 +94,7 @@ class EditPagePropertiesPageAccess extends PageAccess
             }
         }
 
-        if (is_array($args['akIDInclude'])) {
+        if (isset($args['akIDInclude']) && is_array($args['akIDInclude'])) {
             foreach ($args['akIDInclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = array($this->getPermissionAccessID(), $peID, $akID);
@@ -103,7 +103,7 @@ class EditPagePropertiesPageAccess extends PageAccess
             }
         }
 
-        if (is_array($args['akIDExclude'])) {
+        if (isset($args['akIDExclude']) && is_array($args['akIDExclude'])) {
             foreach ($args['akIDExclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = array($this->getPermissionAccessID(), $peID, $akID);

@@ -9,7 +9,7 @@ if ($btHandle === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
     }
 }
 if (is_object($set) && isset($styleHeader)) { ?>
-    ?>
+    
     <script type="text/javascript">
         $('head').append('<style type="text/css"><?=addslashes($styleHeader)?></style>');
     </script>
@@ -39,6 +39,7 @@ $gf = $pt->getThemeGridFrameworkObject();
 
 if (Config::get('concrete.design.enable_custom')) {
     Loader::element('custom_style', array(
+        'page' => $c,
         'saveAction' => $controller->action('submit'),
         'resetAction' => $controller->action('reset'),
         'style' => $b->getCustomStyle(true),
@@ -54,6 +55,7 @@ if (Config::get('concrete.design.enable_custom')) {
 }
 else {
     Loader::element('custom_block_template', array(
+        'page' => $c,
         'saveAction' => $controller->action('submit'),
         'resetAction' => $controller->action('reset'),
         'style' => $b->getCustomStyle(true),

@@ -4,6 +4,7 @@ $valt = Loader::helper('validation/token');
 $ci = Loader::helper('concrete/urls');
 $ch = Loader::helper('concrete/ui');
 $tp = new TaskPermission();
+$mi = $mi ?? null;
 if ($tp->canInstallPackages()) {
     $mi = Marketplace::getInstance();
 }

@@ -12,7 +12,7 @@ class AddConversationMessageConversationAccess extends ConversationAccess
         $db = Database::connection();
         $db->executeQuery('delete from ConversationPermissionAddMessageAccessList where paID = ?',
             array($this->getPermissionAccessID()));
-        if (is_array($args['addMessageApproval'])) {
+        if (isset($args['addMessageApproval']) && is_array($args['addMessageApproval'])) {
             foreach ($args['addMessageApproval'] as $peID => $permission) {
                 $v = array($this->getPermissionAccessID(), $peID, $permission);
                 $db->executeQuery('insert into ConversationPermissionAddMessageAccessList (paID, peID, permission) values (?, ?, ?)',

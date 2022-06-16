@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\PackageTrait;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\Export\ExportableInterface;
+use Concrete\Core\Express\Controller\ControllerInterface;
 use Concrete\Core\Express\Search\ColumnSet\ColumnSet;
 use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Permission\ObjectInterface;
@@ -16,6 +17,8 @@ use Concrete\Core\Export\Item\Express\Entity as EntityExporter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use League\Url\UrlInterface;
+use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 
 /**
  * @ORM\Entity(repositoryClass="\Concrete\Core\Entity\Express\EntityRepository")
@@ -598,9 +601,32 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         return new EntityExporter();
     }
 
+    /**
+     * @return ControllerInterface
+     */
     public function getController()
     {
+        return app('express')->getEntityController($this);
+    }
 
+    /**
+     * @TODO - add a new interface for managing this within an express entity's controller, perhaps in 9.2.0.
+     * It should have the same functionality in the StandardController, but this will allow custom controllers
+     * to change how this functions
+     *
+     * @return UrlInterface
+     */
+    public function getEntryListingUrl(): UrlInterface
+    {
+        $node = $this->getEntityResultsNodeObject();
+        $parent = $node->getTreeNodeParentObject();
+        $url = app('url/resolver/path');
+        if ($parent && $parent->getTreeNodeTypeHandle() == 'express_entry_category' && $parent->getTreeNodeName() ==
+            ExpressFormBlockController::FORM_RESULTS_CATEGORY_NAME) {
+            return $url->resolve(['/dashboard/reports/forms/results', $this->getId()]);
+        } else {
+            return $url->resolve(['/dashboard/express/entries/results', $this->getId()]);
+        }
     }
 
     public function __clone()

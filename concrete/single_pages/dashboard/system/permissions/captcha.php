@@ -25,7 +25,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 		<?php if (is_object($activeCaptcha)) {
     if ($activeCaptcha->hasOptionsForm()) {
         if ($activeCaptcha->getPackageID() > 0) {
-            View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', $activeCaptcha->getPackageHandle());
+            View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form', [], $activeCaptcha->getPackageHandle());
         } else {
             View::element('system/captcha/' . $activeCaptcha->getSystemCaptchaLibraryHandle() . '/form');
         }

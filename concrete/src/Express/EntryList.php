@@ -221,6 +221,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
     public function filterByAssociatedEntry(Association $association, Entry $entry)
     {
         // Find the inverse association to this one.
+        $matches = 0;
         $sourceEntity = $association->getSourceEntity();
         $targetEntity = $association->getTargetEntity();
         foreach($targetEntity->getAssociations() as $targetAssociation) {
@@ -228,6 +229,7 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
                 // we have a match.
                 $entryAssociation = $entry->getEntryAssociation($targetAssociation);
                 if ($entryAssociation) {
+                    $matches++;
                     $entryAssociationTable = 'a' . $entryAssociation->getID();
                     $entryAssociationEntriesTable = 'ae' . $entryAssociation->getID();
 
@@ -238,10 +240,11 @@ class EntryList extends DatabaseItemList implements PagerProviderInterface, Pagi
                     $this->query->andWhere($entryAssociationEntriesTable . '.exEntryID = :selectedEntryID' . $entryAssociation->getID());
                     $this->query->setParameter('entryAssociationID' . $entryAssociation->getID(), $association->getID());
                     $this->query->setParameter('selectedEntryID' . $entryAssociation->getID(), $entry->getID());
-                } else {
-                    $this->query->andWhere('1 = 0');
                 }
             }
+        }
+        if (!$matches) {
+            $this->query->andWhere('1 = 0');
         }
     }
 

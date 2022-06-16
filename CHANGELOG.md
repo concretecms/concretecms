@@ -1,3 +1,32 @@
+# 9.1.1
+
+## Behavioral Improvements
+
+* Enhancement: adding the ability to pass association ID through request and pick it up in the form
+* Adding associations to Express form notifications
+* Top Navigation Bar block now honors the `nav_target` custom attribute, if it exists (thanks ccmEnlil)
+
+## Bug Fixes
+
+* Fixed bug in /ccm/system/upgrade script on PHP 8.1 (thanks ccmEnlil)
+* Fixed upgrade inconsistencies that could cause problems for installers like Softaculous
+* Fixed Accordion Block: when the initial state set to 'all items open' or 'all items closed' the collapsed state is not always correct (thanks danklassen)
+* Fixed compatibility with PHP 8.1 when installing with Composer.
+* Fixing bug where Express entries with multiple associations could not be filtered accurately in advanced search
+* Fixing bug where submitted values do not persist in Express association forms
+* Fixed: Changing the page template of a draft breaks block versioning (thanks jaromirdalecky)
+* Fixed: Duplicating file as non-super admin does not work due to permissions key (thanks danklassen)
+* Fixed: core search block: the form tag has two class attributes
+* Fixed null pointer Exceptions when using area layouts under certain conditions (thanks biplobice)
+
+
+## Backward Compatibility Notes
+
+## Developer Updates
+
+* Laminas cache laminas/laminas-cache-storage-adapter-memory library updated to 2.0 in order to restore compatibility with PHP 8.1 when installing via Composer
+* Fixed: Block::isOriginal() returns opposite value (thanks jaromirdalecky)
+
 # 9.1.0
 
 ## New Features

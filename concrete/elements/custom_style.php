@@ -583,6 +583,7 @@ if ($style instanceof CustomStyle) {
                     customClass: <?=json_encode($customClassesSelected ?? [])?>,
                     aStyleRule: null,
                     isIgnoring: false,
+                    pageId: <?=(int) $page->getCollectionID()?>,
                     blockId: <?=(int) $blockID?>,
                     areaId: <?=(int) $areaID?>,
                     isBlock: <?=$blockID ? 'true': 'false'?>,
@@ -904,7 +905,7 @@ if ($style instanceof CustomStyle) {
                     {
                         const form = $('#ccm-inline-design-form').detach();
                         this.handleResponse({
-                            cID: CCM_CID,
+                            cID: this.pageId,
                             bID: this.blockId,
                             aID: this.areaId,
                             originalBlockID: this.blockId,
