@@ -10,7 +10,7 @@ $app = Concrete\Core\Support\Facade\Facade::getFacadeApplication();
 $dh = $app->make('helper/concrete/dashboard');
 $sh = $app->make('helper/concrete/dashboard/sitemap');
 
-if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
+if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEditingDisabled()) {
     $cih = $app->make('helper/concrete/ui');
     $ihm = $app->make('helper/concrete/ui/menu');
     $valt = $app->make('helper/validation/token');
