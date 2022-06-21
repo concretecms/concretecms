@@ -547,7 +547,7 @@ class Collection extends ConcreteObject implements TrackableInterface
      * @param string|\Concrete\Core\Attribute\Key\CollectionKey $ak the attribute key (or its handle)
      * @param bool $doReindexImmediately
      */
-    public function clearAttribute($ak, bool $doReindexImmediately = true)
+    public function clearAttribute($ak, $doReindexImmediately = true)
     {
         $this->vObj->clearAttribute($ak, $doReindexImmediately);
     }
