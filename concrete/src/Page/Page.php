@@ -2401,7 +2401,7 @@ EOT
                     foreach ($currentPageBlocks as $b) {
                         if (!in_array($b->getBlockID(), $oldMCBlockIDs)) {
                             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($b->getAreaHandle());
-                            $db->executeQuery('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)', [
+                            $db->executeQuery('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
                                 $this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $b->getBlockRelationID(), $newBlockDisplayOrder, (int) ($b->isOriginal()), $b->overrideAreaPermissions(), $b->disableBlockVersioning(),
                             ]);
                         }
