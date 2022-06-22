@@ -849,8 +849,8 @@ class File extends Controller
         $post = $this->request->request;
         $dzuuid = preg_replace('/[^a-z0-9\-]/i', '', $post->get('dzuuid'));
         $dzIndex = max(0, $post->get('dzchunkindex'));
-        $dzTotalChunks = max(1, $post->get('dztotalchunkcount'));
-        if ($dzuuid !== null && $dzIndex !== null && $dzTotalChunks !== null) {
+        $dzTotalChunks = max(0, $post->get('dztotalchunkcount'));
+        if ($dzuuid && $dzIndex > 0 && $dzTotalChunks > 0) {
             $file->move($file->getPath(), $dzuuid . $dzIndex);
             if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
                 $deleteFile = true;
