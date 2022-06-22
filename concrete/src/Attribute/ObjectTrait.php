@@ -45,7 +45,7 @@ trait ObjectTrait
      * @param AttributeKeyInterface | string $ak
      * @param bool $doReindexImmediately
      */
-    public function clearAttribute($ak, bool $doReindexImmediately = true)
+    public function clearAttribute($ak, $doReindexImmediately = true)
     {
         $value = $this->getAttributeValueObject($ak);
         if (is_object($value)) {
