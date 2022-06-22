@@ -514,3 +514,11 @@ div.ccm-block-edit[data-block-type-handle=core_container] {
     }
   }
 }
+
+/**
+ * Dragging performance. We have to change this because BS5 sets it to to smooth which botches drag operations. See
+ * issue https://github.com/concretecms/concretecms/issues/10701
+ */
+html.ccm-edit-mode {
+  scroll-behavior: auto;
+}

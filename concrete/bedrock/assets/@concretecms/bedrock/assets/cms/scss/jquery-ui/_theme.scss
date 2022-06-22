@@ -242,11 +242,7 @@ a.ui-button:active,
 }
 
 /* Overlays */
-.ui-widget-overlay {
-  background: #aaa;
-  filter: Alpha(Opacity=30)/*{opacityFilterOverlay}*/; /* support: IE8 */
-  opacity: 0.3;
-}
+/* Removed because it's screwing up CSS animation performance due to our CSS overrides of the property elsewhere */
 
 .ui-widget-shadow {
   -webkit-box-shadow: 0 0 5px #666#666;

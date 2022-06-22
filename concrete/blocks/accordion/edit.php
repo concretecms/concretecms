@@ -34,12 +34,13 @@ $config = $editor->getOptions();
           <button type="button" class="btn-sm btn btn-secondary" @click="addEntry"><i class="fas fa-plus-circle"></i> <?=t('Add Entry')?></button>
       </div>
 
-      <draggable class="image-container" v-model="entries">
+      <draggable class="image-container" v-model="entries" :options="{handle:'.fa-pencil-alt'}">
           <div v-for="(entry, index) in entries" :class="{'position-relative': true, 'p-2': true, 'm-2': true, 'bg-light': true, 'bg-opacity-50': !entry.expanded}">
               <div class="btn-group" style="position: absolute; top: 0; right: 0">
                   <a href="javascript:void(0)" v-if="entry.expanded" class="d-flex align-items-center btn btn-secondary btn-sm" @click="entry.expanded = false"><i class="fas fa-compress-alt"></i></a>
                   <a href="javascript:void(0)" v-if="!entry.expanded" class="d-flex align-items-center btn btn-secondary btn-sm" @click="entry.expanded = true"><i class="fas fa-expand-alt"></i></a>
                   <a href="javascript:void(0)" @click="deleteEntry(index)" class="d-flex align-items-center btn btn-secondary btn-sm"><i class="fas fa-times"></i></a>
+                  <i class="fa fa-pencil-alt"></i>
               </div>
               <div v-if="entry.expanded">
                   <div class="mb-3">
