@@ -441,7 +441,7 @@ if ($style instanceof CustomStyle) {
                                             $hidden = $set->isHiddenOnDevice($class);
                                         }
                                         $jsonClasses[$class] = ['classes'=>$gf->getDeviceHideClasses($class), 'hidden'=>$hidden ? 1 : 0];
-                                        $form->hidden('hideOnDevice['.$class.']',$hidden ? 1 : 0,['v-model.number'=>'deviceClasses['.$class.'].hidden'])
+                                        echo $form->hidden('hideOnDevice['.$class.']',$hidden ? 1 : 0,['v-model.number'=>'deviceClasses['.$class.'].hidden'])
                                     ?>
                                     <button type="button"
                                             data-hide-on-device="<?php echo h($class) ?>"
@@ -592,7 +592,7 @@ if ($style instanceof CustomStyle) {
                 methods: {
                     hideDevice(device) {
                         if (this.deviceClasses[device]) {
-                            this.deviceClasses[device].hidden = !this.deviceClasses[device].hidden;
+                            this.deviceClasses[device].hidden = this.deviceClasses[device].hidden === 0 ? 1 : 0;
                             if (this.deviceClasses[device].classes.length > 0) {
                                 const classes = this.deviceClasses[device].classes.split(/\s+/);
                                 for (let i = 0; i < classes.length; i++) {
