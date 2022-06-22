@@ -779,6 +779,15 @@ EOT;
         $value = h($value);
         $nameAndID = $this->buildNameAndID($key, $miscFields);
 
+        // for password type: append toggle-password-visibility button
+        if ($type == 'password') {
+            return 
+            "<div class='input-group'>".
+            "<input type=\"$type\"{$nameAndID} value=\"$value\"" . $this->serializeMiscFields("form-control ccm-input-$type", $miscFields) . ' />'.
+            "<button class='btn btn-light btn-toggle-password-visibility' type='button'><i class='fas fa-eye' aria-hidden='true'></i></button>".
+            "</div>";
+        }
+
         return "<input type=\"$type\"{$nameAndID} value=\"$value\"" . $this->serializeMiscFields("form-control ccm-input-$type", $miscFields) . ' />';
     }
 
