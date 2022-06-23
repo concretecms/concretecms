@@ -39,7 +39,10 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
                 <?php echo t('Required') ?>
             </span>
             </div>
-            <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
+            <div class="input-group">
+                <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
+                <button class="btn btn-light btn-toggle-password-visibility" type="button"><i class="fas fa-eye" aria-hidden="true"></i></button>
+            </div>    
 		</div>
 
 		<div class="form-group">
