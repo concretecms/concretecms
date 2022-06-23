@@ -851,6 +851,7 @@ class File extends Controller
         $dzIndex = $post->get('dzchunkindex');
         $dzTotalChunks = max(0, $post->get('dztotalchunkcount'));
         if ($dzuuid && !is_null($dzIndex) && $dzTotalChunks > 0) {
+            $dzIndex = (int) $dzIndex;
             $file->move($file->getPath(), $dzuuid . $dzIndex);
             if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
                 $deleteFile = true;
