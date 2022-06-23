@@ -678,6 +678,17 @@
                 </attributekey>
             </attributes>
         </page>
+
+        <page name="Production Mode" path="/dashboard/system/basics/production_mode"
+              filename="/dashboard/system/basics/production_mode.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>production, staging, site copy, development copy, local</value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Accessibility" path="/dashboard/system/basics/accessibility"
               filename="/dashboard/system/basics/accessibility.php" pagetype="" description="" package="">
             <attributes>
