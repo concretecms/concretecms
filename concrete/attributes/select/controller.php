@@ -23,11 +23,11 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         'type' => 'text',
         'options' => ['default' => null, 'notnull' => false],
     ];
-    private $akSelectAllowMultipleValues;
-    private $akSelectAllowOtherValues;
-    private $akHideNoneOption;
-    private $akSelectOptionDisplayOrder;
-    private $akDisplayMultipleValuesOnSelect;
+    protected $akSelectAllowMultipleValues;
+    protected $akSelectAllowOtherValues;
+    protected $akHideNoneOption;
+    protected $akSelectOptionDisplayOrder;
+    protected $akDisplayMultipleValuesOnSelect;
 
     public function getIconFormatter()
     {
