@@ -7,14 +7,17 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Notification\Events\ServerEvent\EventInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Lcobucci\JWT\Token\Plain;
 use Symfony\Component\Mercure\PublisherInterface;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use Symfony\Component\Mercure\Publisher;
 use Symfony\Component\Mercure\Update;
-use Lcobucci\JWT\Builder\Token\Builder as TokenBuilder;
-
+use Lcobucci\JWT\Token\Builder as TokenBuilder;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Signer\Key\InMemory;
 /**
  * An object-oriented wrapper for working with Channel objects with the Symfony Mercure service.
  */
@@ -77,20 +80,29 @@ class MercureService
             $dbConfig = $this->app->make('config/database');
             $tokenFunction = function () use ($config, $dbConfig) {
                 if (class_exists(TokenBuilder::class)) {
-                    $builder = new TokenBuilder();
+                    $builder = new TokenBuilder(new JoseEncoder(), ChainedFormatter::default());
                 } else {
                     $builder = new Builder();
                 }
+                if (class_exists(InMemory::class)) {
+                    $key = InMemory::plainText($dbConfig->get('concrete.notification.mercure.default.jwt_key'), '');
+                } else {
+                    $key = new Key($dbConfig->get('concrete.notification.mercure.default.jwt_key'), '');
+                }
+
                 $token = $builder
                     ->withClaim('mercure', ['publish' => ['*']])
                     ->getToken(
                         new Sha256(),
-                        new Key(
-                            $dbConfig->get('concrete.notification.mercure.default.jwt_key')
-                        )
+                        $key
                     );
 
-                return (string) $token;
+                if ($token instanceof Plain) {
+                    return $token->toString();
+                } else {
+                    return (string) $token;
+                }
+
             };
 
             $this->publisher = new Publisher(
