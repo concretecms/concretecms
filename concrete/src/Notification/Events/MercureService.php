@@ -13,6 +13,7 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use Symfony\Component\Mercure\Publisher;
 use Symfony\Component\Mercure\Update;
+use Lcobucci\JWT\Builder\Token\Builder as TokenBuilder;
 
 /**
  * An object-oriented wrapper for working with Channel objects with the Symfony Mercure service.
@@ -75,7 +76,12 @@ class MercureService
             $config = $this->config;
             $dbConfig = $this->app->make('config/database');
             $tokenFunction = function () use ($config, $dbConfig) {
-                $token = (new Builder())
+                if (class_exists(TokenBuilder::class)) {
+                    $builder = new TokenBuilder();
+                } else {
+                    $builder = new Builder();
+                }
+                $token = $builder
                     ->withClaim('mercure', ['publish' => ['*']])
                     ->getToken(
                         new Sha256(),
