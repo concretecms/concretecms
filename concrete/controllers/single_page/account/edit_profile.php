@@ -5,6 +5,7 @@ use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Controller\AccountPageController;
@@ -14,12 +15,22 @@ class EditProfile extends AccountPageController
 {
     public $helpers = ['form', 'date'];
 
+    protected $displayUserName = true;
+
     public function view()
     {
         $profile = $this->get('profile');
         if (!is_object($profile)) {
             throw new UserMessageException(t('You must be logged in to access this page.'));
         }
+
+        if (!$this->displayUserName) {
+            // something has overridden this controller and we want to honor that
+            $displayUserName = false;
+        } else {
+            $displayUserName = $this->app->make(Repository::class)->get('concrete.user.registration.display_username_field');
+        }
+        $this->set('displayUserName', $displayUserName);
 
         $locales = [];
         $languages = Localization::getAvailableInterfaceLanguages();
