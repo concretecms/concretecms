@@ -28,7 +28,7 @@ class EditProfile extends AccountPageController
             // something has overridden this controller and we want to honor that
             $displayUserName = false;
         } else {
-            $displayUserName = $this->app->make(Repository::class)->get('concrete.user.registration.display_username_field');
+            $displayUserName = $this->app->make(Repository::class)->get('concrete.user.edit_profile.display_username_field');
         }
         $this->set('displayUserName', $displayUserName);
 
