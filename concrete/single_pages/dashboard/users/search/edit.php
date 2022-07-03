@@ -3,8 +3,10 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Form\Service\Widget\FileFolderSelector;
+use Concrete\Core\Form\Service\Widget\Password;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
+
 
 /**
  * @var Concrete\Core\User\UserInfo $user
@@ -13,6 +15,7 @@ use Concrete\Core\Support\Facade\Application;
 $app = Application::getFacadeApplication();
 /** @var FileFolderSelector $fileFolderSelector */
 $fileFolderSelector = $app->make(FileFolderSelector::class);
+$password = $app->make(Password::class);
 
 $dh = $app->make('helper/date');
 // @var $dh \Concrete\Core\Localization\Service\Date
@@ -229,32 +232,17 @@ if (count($languages) > 0) {
 
                                     <div class="form-group">
                                         <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
-                                        <div class="input-group">
-                                            <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
-                                            <button type="button" class="input-group-icon btn-toggle-password-visibility">
-                                                <i class="fas fa-eye" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
+                                        <?php echo $password->output('uPasswordMine'); ?>
                                     </div>
 
                                     <div class="form-group">
                                         <?php echo $form->label('uPasswordNew', t('New Password')); ?>
-                                        <div class="input-group">
-                                            <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
-                                            <button type="button" class="input-group-icon btn-toggle-password-visibility">
-                                                <i class="fas fa-eye" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
+                                        <?php echo $password->output('uPasswordNew'); ?>
                                     </div>
 
                                     <div class="form-group">
                                         <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
-                                        <div class="input-group">
-                                            <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
-                                            <button type="button" class="input-group-icon btn-toggle-password-visibility">
-                                                <i class="fas fa-eye" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
+                                        <?php echo $password->output('uPasswordNewConfirm'); ?>
                                     </div>
                                     <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
                                 </fieldset>

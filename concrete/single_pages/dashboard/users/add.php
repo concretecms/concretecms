@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Form\Service\Widget\FileFolderSelector;
+use Concrete\Core\Form\Service\Widget\Password;
 use Concrete\Core\Support\Facade\Application;
 
 /**
@@ -14,6 +15,7 @@ use Concrete\Core\Support\Facade\Application;
 $app = Application::getFacadeApplication();
 /** @var FileFolderSelector $fileFolderSelector */
 $fileFolderSelector = $app->make(FileFolderSelector::class);
+$password = $app->make(Password::class);
 
 ?>
 
@@ -39,14 +41,9 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
                 <?php echo t('Required') ?>
             </span>
             </div>
-            <div class="input-group">
-                <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
-                <button type="button" class="input-group-icon btn-toggle-password-visibility">
-                    <i class="fas fa-eye" aria-hidden="true"></i>
-                </button>
-            </div>    
+            <?php echo $password->output('uPassword'); ?>
 		</div>
-
+        
 		<div class="form-group">
             <?= $form->label('uEmail', t('Email Address')) ?>
             <div class="float-end">
