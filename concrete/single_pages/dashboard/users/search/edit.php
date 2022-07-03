@@ -231,7 +231,9 @@ if (count($languages) > 0) {
                                         <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
                                         <div class="input-group">
                                             <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
-                                            <button class="btn btn-light btn-toggle-password-visibility" type="button"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                                            <button type="button" class="input-group-icon btn-toggle-password-visibility">
+                                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -239,7 +241,9 @@ if (count($languages) > 0) {
                                         <?php echo $form->label('uPasswordNew', t('New Password')); ?>
                                         <div class="input-group">
                                             <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
-                                            <button class="btn btn-light btn-toggle-password-visibility" type="button"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                                            <button type="button" class="input-group-icon btn-toggle-password-visibility">
+                                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -247,7 +251,9 @@ if (count($languages) > 0) {
                                         <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
                                         <div class="input-group">
                                             <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
-                                            <button class="btn btn-light btn-toggle-password-visibility" type="button"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                                            <button type="button" class="input-group-icon btn-toggle-password-visibility">
+                                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
