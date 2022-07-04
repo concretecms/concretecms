@@ -306,5 +306,19 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 	
 	return $target;
     }
+    
+    public function getPageItemURL($pageItem) 
+    {
+	if (!is_object($pageItem) || !$pageItem instanceof \Concrete\Core\Navigation\Item\PageItem) {
+	    return '';
+	}
+	$page = Page::getByID($pageItem->getPageID());
+	$url = $pageItem->getUrl();
+	if ($page->getCollectionPointerExternalLink() != '') {
+		$url = $page->getCollectionPointerExternalLink();
+	}
+	
+	return $url;
+    }
 
 }
