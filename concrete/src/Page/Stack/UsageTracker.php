@@ -114,7 +114,7 @@ class UsageTracker implements TrackerInterface
         $buffer = 0;
 
         foreach ($blocks as $block) {
-
+            $controller = null; // Reset conntroller
             if ($block instanceof Controller) {
                 $controller = $block;
                 $block = $controller->getBlockObject();
