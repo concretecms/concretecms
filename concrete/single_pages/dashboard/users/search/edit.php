@@ -229,17 +229,17 @@ if (count($languages) > 0) {
 
                                     <div class="form-group">
                                         <?php echo $form->label('uPasswordMine', t('Your Current Password')); ?>
-                                        <?php echo $form->password('uPasswordMine', ['autocomplete' => 'off']); ?>
+                                        <password-input name="uPasswordMine"/>
                                     </div>
 
                                     <div class="form-group">
                                         <?php echo $form->label('uPasswordNew', t('New Password')); ?>
-                                        <?php echo $form->password('uPasswordNew', ['autocomplete' => 'off']); ?>
+                                        <password-input name="uPasswordNew"/>
                                     </div>
 
                                     <div class="form-group">
                                         <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password')); ?>
-                                        <?php echo $form->password('uPasswordNewConfirm', ['autocomplete' => 'off']); ?>
+                                        <password-input name="uPasswordNewConfirm"/>
                                     </div>
                                     <div class="help-block"><?php echo h(t('Leave blank to leave the password unchanged.')); ?></div>
                                 </fieldset>
