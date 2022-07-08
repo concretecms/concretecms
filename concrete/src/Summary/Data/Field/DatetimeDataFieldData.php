@@ -9,7 +9,7 @@ class DatetimeDataFieldData implements DataFieldDataInterface
 {
 
     /**
-     * @var DateTime
+     * @var DateTime | null
      */
     protected $dateTime;
     
@@ -22,11 +22,11 @@ class DatetimeDataFieldData implements DataFieldDataInterface
 
     public function __toString()
     {
-        return (string) $this->dateTime->getTimestamp();
+        return ($this->dateTime !== null) ? (string) $this->dateTime->getTimestamp() : '';
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
     public function getDateTime()
     {
@@ -36,10 +36,19 @@ class DatetimeDataFieldData implements DataFieldDataInterface
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
+
+        if ($this->dateTime !== null) {
+            return [
+                'class' => self::class,
+                'timestamp' => (string) $this->dateTime->getTimestamp(),
+                'timezone' => (string) $this->dateTime->getTimezone()->getName()
+            ];
+        }
+
         return [
             'class' => self::class,
-            'timestamp' => (string) $this->dateTime->getTimestamp(),
-            'timezone' => (string) $this->dateTime->getTimezone()->getName()
+            'timestamp' => '',
+            'timezone' => ''
         ];
     }
     
