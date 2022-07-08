@@ -32,7 +32,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
             <?= $form->text('uName', ['autofocus' => 'autofocus', 'autocomplete' => 'off']); ?>
 		</div>
 
-        <div class="form-group">
+        <div class="form-group" data-vue="password">
             <?= $form->label('uPassword', t('Password')) ?>
             <div class="float-end">
             <span class="text-muted small">
@@ -123,7 +123,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
     $(function() {
         Concrete.Vue.activateContext('cms', function(Vue, config) {
             new Vue({
-                el: '#ccm-dashboard-content-regular',
+                el: 'div[data-vue]',
                 components: config.components
             })
         })
