@@ -39,7 +39,8 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
                 <?php echo t('Required') ?>
             </span>
             </div>
-            <?= $form->password('uPassword', ['autocomplete' => 'off']); ?>
+            <?= ''//$form->password('uPassword', ['autocomplete' => 'off']); ?>
+            <password-input name="uPassword"/>
 		</div>
 
 		<div class="form-group">
@@ -117,3 +118,14 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
 		</div>
 	</div>
 </form>
+
+<script type="text/javascript">
+    $(function() {
+        Concrete.Vue.activateContext('cms', function(Vue, config) {
+            new Vue({
+                el: '#ccm-dashboard-content-regular',
+                components: config.components
+            })
+        })
+    });
+</script>
