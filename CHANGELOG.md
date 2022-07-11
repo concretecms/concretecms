@@ -2689,7 +2689,7 @@ Adds ability to cache Search Block if the block doesn't display results - useful
 
 ## Developer Updates
 
-* Big thanks to mlocati for delivering a completely new way to specify database XML, built off of the Doctrine DBAL library, including its types and functionality instead of ADODB’s AXMLS. Database XML now has support for foreign keys, comments and more. Doctrine XML is a composer package and can be used by third party projects as well. More information can be found at https://github.com/concrete5/doctrine-xml.
+* Big thanks to mlocati for delivering a completely new way to specify database XML, built off of the Doctrine DBAL library, including its types and functionality instead of ADODB’s AXMLS. Database XML now has support for foreign keys, comments and more. Doctrine XML is a composer package and can be used by third party projects as well. More information can be found at https://github.com/concretecms/doctrine-xml.
 * $view->action() now works for blocks in add and edit templates. This makes block AJAX routing much easier (simply reference $view->action(‘my\_method’) in your block add/edit template, and implement action\_my\_method) in your block controller.
 * Code cleanup and API improvements and better code documentation (thanks mlocati)
 * Configuration and old PHP constants removed and replaced (thanks mlocati)
