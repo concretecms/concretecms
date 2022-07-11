@@ -8,6 +8,13 @@ $pagetemplates = PageTemplate::getList();
 foreach ($pagetemplates as $pt) {
     $templates[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
 }
+
+$themes = [''=>t('Active Theme')];
+$siteThemes = Concrete\Core\Page\Theme\Theme::getList();
+foreach ($siteThemes as $theme) {
+    $themes[$theme->getThemeID()] = $theme->getThemeName();
+}
+
 $targetTypes = PageTypePublishTargetType::getList();
 
 $ptName = '';
@@ -15,6 +22,7 @@ $ptHandle = '';
 $ptPageTemplateID = [];
 $ptAllowedPageTemplates = 'A';
 $ptDefaultPageTemplateID = 0;
+$ptDefaultThemeID = 0;
 $ptLaunchInComposer = 0;
 $ptIsFrequentlyAdded = 1;
 $token = 'add_page_type';
@@ -25,6 +33,7 @@ if (isset($pagetype) && is_object($pagetype)) {
     $ptHandle = $pagetype->getPageTypeHandle();
     $ptLaunchInComposer = $pagetype->doesPageTypeLaunchInComposer();
     $ptDefaultPageTemplateID = $pagetype->getPageTypeDefaultPageTemplateID();
+    $ptDefaultThemeID = $pagetype->getPageTypeDefaultThemeID();
     $ptAllowedPageTemplates = $pagetype->getPageTypeAllowedPageTemplates();
     $ptIsFrequentlyAdded = $pagetype->isPageTypeFrequentlyAdded();
     $selectedtemplates = $pagetype->getPageTypeSelectedPageTemplateObjects();
@@ -54,6 +63,11 @@ if (isset($pagetype) && is_object($pagetype)) {
 		<?= $form->label('ptDefaultPageTemplateID', t('Default Page Template')) ?>
 		<?= $form->select('ptDefaultPageTemplateID', $templates, $ptDefaultPageTemplateID) ?>
 	</div>
+
+    <div class="form-group">
+        <?= $form->label('ptDefaultThemeID', t('Default Theme')) ?>
+        <?= $form->select('ptDefaultThemeID', $themes, $ptDefaultThemeID) ?>
+    </div>
 
 	<div class="form-group">
 		<?= $form->label('ptLaunchInComposer', t('Launch in Composer?')) ?>
