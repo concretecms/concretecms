@@ -405,6 +405,27 @@ class Form
     }
 
     /**
+     * Renders any previously unspecified input field type. Allows for adaptive update to any new HTML input types
+     * that are not covered by explicit methods. Browsers will either handle the specific input type or fallback
+     * to a text input.
+     *
+     * @param string $key the name/id of the element
+     * @param string|array $valueOrMiscFields the value of the element or an array with additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     * @param array $miscFields (used if $valueOrMiscFields is not an array) Additional fields appended to the element (a hash array of attributes name => value), possibly including 'class'
+     *
+     * @return string
+     */
+    public function __call($name, $args)
+    {
+        if(!empty($args[2]) && is_array($args[2])){
+            return $this->inputType( $args[0], $name, $args[1], $args[2]);
+        }else{
+            return $this->inputType( $args[0], $name, $args[1],[]);
+        }
+    }
+    
+    
+    /**
      * Renders a select field.
      *
      * @param string $key The name of the element. If $key denotes an array, the ID will start with $key but will have a progressive unique number added; if $key does not denotes an array, the ID attribute will be $key.
