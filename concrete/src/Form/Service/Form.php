@@ -435,7 +435,7 @@ class Form
      */
     public function __call($name, $args)
     {
-        if(is_array($args[2])){
+        if(!empty($args[2]) && is_array($args[2])){
             return $this->inputType( $args[0], $name, $args[1], $args[2]);
         }else{
             return $this->inputType( $args[0], $name, $args[1],[]);
