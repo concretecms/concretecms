@@ -112,12 +112,12 @@
             "version": "1.5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/concrete5/dependency-patches.git",
+                "url": "https://github.com/concretecms/dependency-patches.git",
                 "reference": "ab8d9078c862d0decf90dbca90de411fbb987fa7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/dependency-patches/zipball/ab8d9078c862d0decf90dbca90de411fbb987fa7",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/ab8d9078c862d0decf90dbca90de411fbb987fa7",
                 "reference": "ab8d9078c862d0decf90dbca90de411fbb987fa7",
                 "shasum": ""
             },
@@ -174,6 +174,7 @@
             ],
             "description": "Patches required for concrete5 dependencies",
             "homepage": "https://github.com/concrete5/dependency-patches",
+            "abandoned": "concretecms/dependency-patches",
             "time": "2019-07-29T08:25:31+00:00"
         },
         {
@@ -181,12 +182,12 @@
             "version": "1.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/concrete5/doctrine-xml.git",
+                "url": "https://github.com/concretecms/doctrine-xml.git",
                 "reference": "03f1209d42477070a58d29e5af15688b96c66b56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concrete5/doctrine-xml/zipball/03f1209d42477070a58d29e5af15688b96c66b56",
+                "url": "https://api.github.com/repos/concretecms/doctrine-xml/zipball/03f1209d42477070a58d29e5af15688b96c66b56",
                 "reference": "03f1209d42477070a58d29e5af15688b96c66b56",
                 "shasum": ""
             },
@@ -215,6 +216,7 @@
                 "structure",
                 "xml"
             ],
+            "abandoned": "concretecms/doctrine-xml",
             "time": "2018-10-05T16:44:04+00:00"
         },
         {
@@ -316,6 +318,7 @@
                 "queue",
                 "zf2"
             ],
+            "abandoned": "concretecms/zend-queue",
             "time": "2016-09-01T14:16:11+00:00"
         },
         {
@@ -397,6 +400,7 @@
                 "captcha",
                 "security"
             ],
+            "abandoned": true,
             "time": "2020-05-30T09:43:22+00:00"
         },
         {
@@ -1921,12 +1925,12 @@
             "version": "1.2.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/avalanche123/Imagine.git",
+                "url": "https://github.com/php-imagine/Imagine.git",
                 "reference": "d2e18be6e930ca169e4f921ef73ebfc061bf55d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
+                "url": "https://api.github.com/repos/php-imagine/Imagine/zipball/d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
                 "reference": "d2e18be6e930ca169e4f921ef73ebfc061bf55d8",
                 "shasum": ""
             },
@@ -2023,6 +2027,7 @@
                 "hash_equals",
                 "hash_pbkdf2"
             ],
+            "abandoned": true,
             "time": "2015-08-22T07:03:35+00:00"
         },
         {
@@ -4227,6 +4232,7 @@
                     "type": "tidelift"
                 }
             ],
+            "abandoned": "symfony/error-handler",
             "time": "2020-10-24T10:57:07+00:00"
         },
         {
