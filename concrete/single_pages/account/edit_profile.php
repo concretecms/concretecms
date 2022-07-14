@@ -24,7 +24,7 @@ $token = $app->make(Token::class);
 $config = $app->make(Repository::class);
 /** @var Form $form */
 $form = $app->make(Form::class);
-
+$displayUserName = $displayUserName ?? true;
 ?>
 
 <form method="post" action="<?php echo $view->action('save'); ?>" enctype="multipart/form-data">
@@ -35,10 +35,12 @@ $form = $app->make(Form::class);
             <?php echo t('Basic Information'); ?>
         </legend>
 
-        <div class="mb-3">
-            <?php echo $form->label('uName', t('Username')); ?>
-            <?php echo $form->text('uName', $profile->getUserName()); ?>
-        </div>
+        <?php if ($displayUserName) { ?>
+            <div class="mb-3">
+                <?php echo $form->label('uName', t('Username')); ?>
+                <?php echo $form->text('uName', $profile->getUserName()); ?>
+            </div>
+        <?php } ?>
 
         <div class="mb-3">
             <?php echo $form->label('uEmail', t('Email')); ?>
