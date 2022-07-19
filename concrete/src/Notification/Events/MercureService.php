@@ -10,7 +10,8 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Lcobucci\JWT\Token\Plain;
 use Symfony\Component\Mercure\PublisherInterface;
 use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Rsa\Sha256 as RS256;
+use Lcobucci\JWT\Signer\Hmac\Sha256 as HS256;
 use Lcobucci\JWT\Signer\Key;
 use Symfony\Component\Mercure\Publisher;
 use Symfony\Component\Mercure\Update;
@@ -84,16 +85,24 @@ class MercureService
                 } else {
                     $builder = new Builder();
                 }
-                if (class_exists(InMemory::class)) {
-                    $key = InMemory::plainText($dbConfig->get('concrete.notification.mercure.default.jwt_key'), '');
+                $connectionMethod = $config->get('concrete.notification.mercure.default.connection_method') ?? null;
+                if ($connectionMethod === 'rsa_dual') {
+                    $keyString = file_get_contents($config->get('concrete.notification.mercure.default.publisher_private_key_path'));
+                    $signer = new RS256();
                 } else {
-                    $key = new Key($dbConfig->get('concrete.notification.mercure.default.jwt_key'), '');
+                    $keyString = $dbConfig->get('concrete.notification.mercure.default.jwt_key');
+                    $signer = new HS256();
+                }
+                if (class_exists(InMemory::class)) {
+                    $key = InMemory::plainText($keyString, '');
+                } else {
+                    $key = new Key($keyString, '');
                 }
 
                 $token = $builder
                     ->withClaim('mercure', ['publish' => ['*']])
                     ->getToken(
-                        new Sha256(),
+                        $signer,
                         $key
                     );
 
