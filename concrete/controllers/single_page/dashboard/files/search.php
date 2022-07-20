@@ -13,6 +13,9 @@ use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Http\Response;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardFileManagerBreadcrumbFactory;
+use Concrete\Core\Notification\Events\MercureService;
+use Concrete\Core\Notification\Events\ServerEvent\TestConnectionEvent;
+use Concrete\Core\Notification\Events\ServerEvent\ThumbnailGeneratedEvent;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Field\Field\KeywordsField;
 use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
@@ -264,6 +267,13 @@ class Search extends DashboardPageController
             $highlightedNodes = (array)$session->getFlashBag()->get('file_manager.updated_nodes');
         }
         $this->set('highlightResults', $highlightedNodes);
+
+        $mercureService = $this->app->make(MercureService::class);
+        if ($mercureService->isEnabled()) {
+            $subscriber = $mercureService->getSubscriber();
+            $subscriber->addEvent(ThumbnailGeneratedEvent::class);
+            $subscriber->refreshAuthorizationCookie();
+        }
     }
 
 

@@ -2,7 +2,8 @@
 defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?php
-if ($enable_server_sent_events) { ?>
+if ($enable_server_sent_events) {
+    ?>
     <form method="post" action="<?=$view->action('submit'); ?>">
         <?php echo $token->output('submit'); ?>
 
@@ -123,15 +124,11 @@ if ($enable_server_sent_events) { ?>
                             jwtKey: '<?=$jwtKey?>',
                             publisherPrivateKey: '<?=$publisherPrivateKey?>',
                             subscriberPrivateKey: '<?=$subscriberPrivateKey?>',
+                            eventSourceUrl: '<?=$eventSourceUrl?>',
+                            testConnectionTopicUrl: '<?=$testConnectionTopicUrl?>'
                         },
                         mounted() {
                             var my = this
-                            ConcreteEvent.subscribe('ConcreteServerEventTestConnection', function (e, data) {
-                                my.pong = data.pong
-                            })
-                            ConcreteEvent.subscribe('ConcreteServerEventGeneralError', function() {
-                                my.connectionError = '<?=t('Mercure attempted connection on page load, but was unable to connect.')?>'
-                            })
                         },
                         watch: {
                             connectionMethod: function () {
@@ -140,8 +137,27 @@ if ($enable_server_sent_events) { ?>
                             },
                         },
                         methods: {
+                            enableEventSource() {
+                                var my = this
+                                const eventSourceUrl = new URL(this.eventSourceUrl)
+                                eventSourceUrl.searchParams.append('topic', '{+siteUrl}/concrete/events/test_connection')
+                                const eventSource = new EventSource(eventSourceUrl, {
+                                    withCredentials: true
+                                })
+                                eventSource.onmessage = event => {
+                                    // Will be called every time an update is published by the server
+                                    var data = JSON.parse(event.data)
+                                    if (data.hasOwnProperty('pong')) {
+                                        my.pong = data.pong
+                                    }
+                                }
+                                eventSource.onerror = event => {
+                                    my.connectionError = true
+                                }
+                            },
                             testConnection() {
                                 var my = this
+                                this.enableEventSource()
                                 new ConcreteAjaxRequest({
                                     url: '<?=$view->action('test_connection')?>',
                                     data: {
@@ -149,7 +165,7 @@ if ($enable_server_sent_events) { ?>
                                     },
                                     method: 'POST',
                                     success: function () {
-                                        my.connectionError = false
+
                                     },
                                     error: function (r) {
                                         my.pong = null

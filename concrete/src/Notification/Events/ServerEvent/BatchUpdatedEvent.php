@@ -3,8 +3,10 @@
 namespace Concrete\Core\Notification\Events\ServerEvent;
 
 use Concrete\Core\Entity\Command\Batch;
+use Concrete\Core\Notification\Events\Topic\ConcreteProcessTopic;
+use Concrete\Core\Notification\Events\Topic\TopicInterface;
 
-class BatchUpdated implements EventInterface
+class BatchUpdatedEvent extends AbstractConcreteEvent
 {
 
     /**
@@ -21,12 +23,17 @@ class BatchUpdated implements EventInterface
         $this->batch = $batch;
     }
 
-    public function getEvent(): string
+    protected static function getEvent(): string
     {
         return 'BatchUpdated';
     }
 
-    public function getData(): array
+    protected static function createTopic(string $slug): TopicInterface
+    {
+        return new ConcreteProcessTopic($slug);
+    }
+
+    protected function getEventData(): array
     {
         return ['batch' => $this->batch];
     }

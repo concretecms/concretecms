@@ -32,6 +32,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Notification\Events\MercureService;
 use Concrete\Core\Notification\Events\ServerEvent\ThumbnailGenerated;
+use Concrete\Core\Notification\Events\ServerEvent\ThumbnailGeneratedEvent;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\UserInfoRepository;
@@ -1648,7 +1649,9 @@ class Version implements ObjectInterface
             /** @var MercureService $mercureService */
             $mercureService = $app->make(MercureService::class);
             if ($mercureService->isEnabled()) {
-                $mercureService->sendUpdate(new ThumbnailGenerated($this, $type));
+                $hub = $mercureService->getHub();
+                $event = new ThumbnailGeneratedEvent($this, $type);
+                $hub->publish($event->getUpdate());
             }
         }
     }

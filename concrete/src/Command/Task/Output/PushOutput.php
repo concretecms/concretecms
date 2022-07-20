@@ -3,7 +3,7 @@ namespace Concrete\Core\Command\Task\Output;
 
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Notification\Events\MercureService;
-use Concrete\Core\Notification\Events\ServerEvent\ProcessOutput;
+use Concrete\Core\Notification\Events\ServerEvent\ProcessOutputEvent;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
@@ -32,7 +32,7 @@ class PushOutput implements OutputInterface, NormalizableInterface, Denormalizab
 
     public function write($message)
     {
-        $this->service->sendUpdate(new ProcessOutput($this->processId, $message));
+        $this->service->getHub()->publish((new ProcessOutputEvent($this->processId, $message))->getUpdate());
     }
 
     public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])

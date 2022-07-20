@@ -2,7 +2,10 @@
 
 namespace Concrete\Core\Notification\Events\ServerEvent;
 
-class ProcessClosed implements EventInterface
+use Concrete\Core\Notification\Events\Topic\ConcreteProcessTopic;
+use Concrete\Core\Notification\Events\Topic\TopicInterface;
+
+class ProcessClosedEvent extends AbstractConcreteEvent
 {
 
     /**
@@ -26,12 +29,17 @@ class ProcessClosed implements EventInterface
         $this->exitCode = $exitCode;
     }
 
-    public function getEvent(): string
+    protected static function getEvent(): string
     {
         return 'CloseProcess';
     }
 
-    public function getData(): array
+    protected static function createTopic(string $slug): TopicInterface
+    {
+        return new ConcreteProcessTopic($slug);
+    }
+
+    protected function getEventData(): array
     {
         return [
             'process' => $this->processData,

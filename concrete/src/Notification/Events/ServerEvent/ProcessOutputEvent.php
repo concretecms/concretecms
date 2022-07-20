@@ -2,7 +2,10 @@
 
 namespace Concrete\Core\Notification\Events\ServerEvent;
 
-class ProcessOutput implements EventInterface
+use Concrete\Core\Notification\Events\Topic\ConcreteProcessTopic;
+use Concrete\Core\Notification\Events\Topic\TopicInterface;
+
+class ProcessOutputEvent extends AbstractConcreteEvent
 {
 
     /**
@@ -21,12 +24,17 @@ class ProcessOutput implements EventInterface
         $this->message = $message;
     }
 
-    public function getEvent(): string
+    protected static function getEvent(): string
     {
         return 'ProcessOutput';
     }
 
-    public function getData(): array
+    protected static function createTopic(string $slug): TopicInterface
+    {
+        return new ConcreteProcessTopic($slug);
+    }
+
+    protected function getEventData(): array
     {
         return [
             'processId' => $this->processId,
