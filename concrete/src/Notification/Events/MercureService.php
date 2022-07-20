@@ -4,6 +4,7 @@ namespace Concrete\Core\Notification\Events;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Notification\Events\ServerEvent\EventInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
@@ -120,6 +121,49 @@ class MercureService
             );
         }
         return $this->publisher;
+    }
+
+    public function setSubscriberCookie()
+    {
+        $config = $this->config;
+        $dbConfig = $this->app->make('config/database');
+        if (class_exists(TokenBuilder::class)) {
+            $builder = new TokenBuilder(new JoseEncoder(), ChainedFormatter::default());
+        } else {
+            $builder = new Builder();
+        }
+        $connectionMethod = $config->get('concrete.notification.mercure.default.connection_method') ?? null;
+        if ($connectionMethod === 'rsa_dual') {
+            $keyString = file_get_contents($config->get('concrete.notification.mercure.default.subscriber_private_key_path'));
+            $signer = new RS256();
+        } else {
+            $keyString = $dbConfig->get('concrete.notification.mercure.default.jwt_key');
+            $signer = new HS256();
+        }
+        if (class_exists(InMemory::class)) {
+            $key = InMemory::plainText($keyString, '');
+        } else {
+            $key = new Key($keyString, '');
+        }
+
+        $token = $builder
+            ->withClaim('mercure', ['subscribe' => ['*']])
+            ->getToken(
+                $signer,
+                $key
+            );
+
+        if ($token instanceof Plain) {
+            $value = $token->toString();
+        } else {
+            $value = (string) $token;
+        }
+
+        /**
+         * @var $cookie ResponseCookieJar
+         */
+        $cookie = app(ResponseCookieJar::class);
+        $cookie->addCookie('mercureAuthorization', $value);
     }
 
     public function sendUpdate(EventInterface $event): void

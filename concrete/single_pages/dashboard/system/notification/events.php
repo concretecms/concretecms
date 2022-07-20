@@ -129,6 +129,9 @@ if ($enable_server_sent_events) { ?>
                             ConcreteEvent.subscribe('ConcreteServerEventTestConnection', function (e, data) {
                                 my.pong = data.pong
                             })
+                            ConcreteEvent.subscribe('ConcreteServerEventGeneralError', function() {
+                                my.connectionError = '<?=t('Mercure attempted connection on page load, but was unable to connect.')?>'
+                            })
                         },
                         watch: {
                             connectionMethod: function () {
