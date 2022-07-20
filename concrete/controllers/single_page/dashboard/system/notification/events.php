@@ -2,11 +2,14 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Notification;
 
 use Concrete\Core\Notification\Events\MercureService;
-use Concrete\Core\Notification\Events\ServerEvent\TestConnection;
+use Concrete\Core\Notification\Events\ServerEvent\TestConnectionEvent;
+use Concrete\Core\Notification\Events\Subscriber;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Utility\Service\Identifier;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Mercure\Hub;
+use Symfony\Component\Mercure\Update;
 
 class Events extends DashboardPageController
 {
@@ -39,11 +42,25 @@ class Events extends DashboardPageController
             if ($this->request->request->has('subscriberPrivateKey')) {
                 $subscriberPrivateKey = h($this->request->request->get('subscriberPrivateKey'));
             }
+
             $this->set('connectionMethod', $connectionMethod);
             $this->set('jwtKey', $jwtKey);
             $this->set('publisherPrivateKey', $publisherPrivateKey);
             $this->set('subscriberPrivateKey', $subscriberPrivateKey);
-            $this->set('isTestConnectionAvailable', $this->isTestConnectionAvailable());
+
+
+            if ($this->isTestConnectionAvailable()) {
+                $mercureService = $this->app->make(MercureService::class);
+                $subscriber = $mercureService->getSubscriber();
+                $subscriber->addEvent(TestConnectionEvent::class);
+                $subscriber->refreshAuthorizationCookie();
+
+                $this->set('eventSourceUrl', $mercureService->getPublisherUrl());
+                $this->set('testConnectionTopicUrl', TestConnectionEvent::getTopics()[0]);
+                $this->set('isTestConnectionAvailable', true);
+            } else {
+                $this->set('isTestConnectionAvailable', false);
+            }
         }
     }
 
@@ -87,6 +104,12 @@ class Events extends DashboardPageController
         if (!$this->token->validate('enable_server_sent_events')) {
             $this->error->add($this->token->getErrorMessage());
         }
+
+        $defaultSite = $this->app->make('site')->getSite();
+        if (!$defaultSite->getSiteCanonicalURL()) {
+            $this->error->add(t('Your default site must define a canonical URL to enable server-sent-events.'));
+        }
+
         if (!$this->error->has()) {
             $config = $this->app->make('config');
             $config->save('concrete.notification.server_sent_events', true);
@@ -103,9 +126,14 @@ class Events extends DashboardPageController
     public function test_connection()
     {
         $ping = $this->request->request->get('ping');
-        $service = $this->app->make(MercureService::class);
-        $service->sendUpdate(new TestConnection($ping));
-        return new JsonResponse([]); // This is just here for our ajax requets, it has nothing to do with mercure
+        $hub = $this->app->make(Hub::class);
+        /**
+         * @var $subscriber Subscriber
+         */
+        $event = new TestConnectionEvent($ping);
+        $hub->publish($event->getUpdate());
+
+        return new JsonResponse([]); // This is just here for our ajax requests, it has nothing to do with mercure
     }
 
     public function submit()

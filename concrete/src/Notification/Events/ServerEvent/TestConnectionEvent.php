@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Notification\Events\ServerEvent;
 
-class TestConnection implements EventInterface
+class TestConnectionEvent extends AbstractConcreteEvent
 {
 
     /**
@@ -15,12 +15,12 @@ class TestConnection implements EventInterface
         $this->ping = $ping;
     }
 
-    public function getEvent(): string
+    protected static function getEvent(): string
     {
         return 'TestConnection';
     }
 
-    public function getData(): array
+    protected function getEventData()
     {
         return ['pong' => $this->ping];
     }

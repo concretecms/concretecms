@@ -5,7 +5,7 @@ namespace Concrete\Core\Notification\Events\ServerEvent;
 use Concrete\Core\Entity\File\Version as FileVersion;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 
-class ThumbnailGenerated implements EventInterface
+class ThumbnailGeneratedEvent extends AbstractConcreteEvent
 {
     /**
      * @var FileVersion
@@ -30,12 +30,12 @@ class ThumbnailGenerated implements EventInterface
         $this->thumbnailTypeVersion = $thumbnailTypeVersion;
     }
 
-    public function getEvent(): string
+    public static function getEvent(): string
     {
         return 'ThumbnailGenerated';
     }
 
-    public function getData(): array
+    public function getEventData(): array
     {
         return [
             'fileId' => $this->fileVersion->getFileID(),
