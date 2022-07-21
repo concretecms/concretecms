@@ -7,7 +7,7 @@ if ($enable_server_sent_events) {
     <form method="post" action="<?=$view->action('submit'); ?>">
         <?php echo $token->output('submit'); ?>
 
-        <div data-view="mercure" v-cloak>
+        <div data-view="mercure" class="mb-5" v-cloak>
 
             <section>
                 <h3><?= t('Mercure Server Integration') ?></h3>
@@ -77,6 +77,19 @@ if ($enable_server_sent_events) {
                 </div>
 
 
+            </section>
+
+            <section class="mb-5">
+                <h3><?=t('Authorization Cookie Settings')?></h3>
+                <div class="form-group">
+                    <?= $form->label('cookieDomain', t('Cookie Domain')) ?>
+                    <?= $form->text(
+                        'cookieDomain',
+                        $cookieDomain,
+                        ['placeholder' => t('Leave blank to use the same domain as the website.')]
+                    ) ?>
+                </div>
+                <div class="help-block"><?=t('When authorizing protected updates, authorization access is stored in a `mercureAuthorization` cookie. If your Mercure hub is on a different domain than your site, you will need to ensure your cookie domain is a common domain to both.')?></div>
             </section>
 
             <section v-if="isTestConnectionAvailable">

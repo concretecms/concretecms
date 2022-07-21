@@ -23,14 +23,9 @@ class BatchUpdatedEvent extends AbstractConcreteEvent
         $this->batch = $batch;
     }
 
-    protected static function getEvent(): string
+    public function createTopic(): TopicInterface
     {
-        return 'BatchUpdated';
-    }
-
-    protected static function createTopic(string $slug): TopicInterface
-    {
-        return new ConcreteProcessTopic($slug);
+        return new ConcreteProcessTopic('/batch_updated');
     }
 
     protected function getEventData(): array

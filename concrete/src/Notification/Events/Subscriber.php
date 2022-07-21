@@ -5,6 +5,7 @@ namespace Concrete\Core\Notification\Events;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Cookie\ResponseCookieJar;
 use Concrete\Core\Notification\Events\ServerEvent\ServerEventInterface;
+use Concrete\Core\Notification\Events\Topic\TopicInterface;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -48,9 +49,12 @@ class Subscriber
         }
     }
 
-    public function addEvent(string $eventClassName)
+    /**
+     * @param string|TopicInterface $topic
+     */
+    public function addTopic($topic)
     {
-        $this->addTopics($eventClassName::getTopics());
+        $this->topics[] = (string) $topic;
     }
 
     /**
@@ -83,7 +87,9 @@ class Subscriber
         }
         $connectionMethod = $config->get('concrete.notification.mercure.default.connection_method') ?? null;
         if ($connectionMethod === 'rsa_dual') {
-            $keyString = file_get_contents($config->get('concrete.notification.mercure.default.subscriber_private_key_path'));
+            $keyString = file_get_contents(
+                $config->get('concrete.notification.mercure.default.subscriber_private_key_path')
+            );
             $signer = new RS256();
         } else {
             $keyString = $dbConfig->get('concrete.notification.mercure.default.jwt_key');
@@ -105,13 +111,21 @@ class Subscriber
         if ($token instanceof Plain) {
             return $token->toString();
         } else {
-            return (string) $token;
+            return (string)$token;
         }
     }
 
     public function refreshAuthorizationCookie()
     {
-        return $this->cookieJar->addCookie('mercureAuthorization', $this->getSubscriberJwt());
+        $config = $this->app->make('config');
+        $cookieDomain = $config->get('concrete.notification.mercure.default.cookie_domain');
+        return $this->cookieJar->addCookie(
+            'mercureAuthorization',
+            $this->getSubscriberJwt(),
+            0,
+            DIR_REL,
+            $cookieDomain
+        );
     }
 }
 

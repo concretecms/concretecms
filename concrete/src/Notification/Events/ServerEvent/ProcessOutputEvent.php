@@ -24,14 +24,9 @@ class ProcessOutputEvent extends AbstractConcreteEvent
         $this->message = $message;
     }
 
-    protected static function getEvent(): string
+    public function createTopic(): TopicInterface
     {
-        return 'ProcessOutput';
-    }
-
-    protected static function createTopic(string $slug): TopicInterface
-    {
-        return new ConcreteProcessTopic($slug);
+        return new ConcreteProcessTopic('/process_output');
     }
 
     protected function getEventData(): array

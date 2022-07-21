@@ -271,7 +271,7 @@ class Search extends DashboardPageController
         $mercureService = $this->app->make(MercureService::class);
         if ($mercureService->isEnabled()) {
             $subscriber = $mercureService->getSubscriber();
-            $subscriber->addEvent(ThumbnailGeneratedEvent::class);
+            $subscriber->addTopic(ThumbnailGeneratedEvent::createTopic());
             $subscriber->refreshAuthorizationCookie();
         }
     }

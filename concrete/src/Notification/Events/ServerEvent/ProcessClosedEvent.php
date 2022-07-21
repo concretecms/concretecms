@@ -29,14 +29,9 @@ class ProcessClosedEvent extends AbstractConcreteEvent
         $this->exitCode = $exitCode;
     }
 
-    protected static function getEvent(): string
+    public function createTopic(): TopicInterface
     {
-        return 'CloseProcess';
-    }
-
-    protected static function createTopic(string $slug): TopicInterface
-    {
-        return new ConcreteProcessTopic($slug);
+        return new ConcreteProcessTopic('/close_process');
     }
 
     protected function getEventData(): array
