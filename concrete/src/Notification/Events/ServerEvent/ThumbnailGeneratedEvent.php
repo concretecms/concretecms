@@ -7,7 +7,7 @@ use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use Concrete\Core\Notification\Events\Topic\ConcreteTopic;
 use Concrete\Core\Notification\Events\Topic\TopicInterface;
 
-class ThumbnailGeneratedEvent extends AbstractConcreteEvent
+class ThumbnailGeneratedEvent extends AbstractConcreteEvent implements SubscribableEventInterface
 {
     /**
      * @var FileVersion
@@ -33,6 +33,11 @@ class ThumbnailGeneratedEvent extends AbstractConcreteEvent
     }
 
     public function createTopic(): TopicInterface
+    {
+        return static::getTopicForSubscribing();
+    }
+
+    public static function getTopicForSubscribing(): TopicInterface
     {
         return new ConcreteTopic('/thumbnail_generated');
     }

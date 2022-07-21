@@ -6,7 +6,7 @@ use Concrete\Core\Entity\Command\Batch;
 use Concrete\Core\Notification\Events\Topic\ConcreteProcessTopic;
 use Concrete\Core\Notification\Events\Topic\TopicInterface;
 
-class BatchUpdatedEvent extends AbstractConcreteEvent
+class BatchUpdatedEvent extends AbstractConcreteEvent implements SubscribableEventInterface
 {
 
     /**
@@ -24,6 +24,11 @@ class BatchUpdatedEvent extends AbstractConcreteEvent
     }
 
     public function createTopic(): TopicInterface
+    {
+        return static::getTopicForSubscribing();
+    }
+
+    public static function getTopicForSubscribing(): TopicInterface
     {
         return new ConcreteProcessTopic('/batch_updated');
     }
