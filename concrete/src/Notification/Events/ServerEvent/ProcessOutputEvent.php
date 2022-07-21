@@ -5,7 +5,7 @@ namespace Concrete\Core\Notification\Events\ServerEvent;
 use Concrete\Core\Notification\Events\Topic\ConcreteProcessTopic;
 use Concrete\Core\Notification\Events\Topic\TopicInterface;
 
-class ProcessOutputEvent extends AbstractConcreteEvent
+class ProcessOutputEvent extends AbstractConcreteEvent implements SubscribableEventInterface
 {
 
     /**
@@ -24,14 +24,14 @@ class ProcessOutputEvent extends AbstractConcreteEvent
         $this->message = $message;
     }
 
-    protected static function getEvent(): string
+    public function createTopic(): TopicInterface
     {
-        return 'ProcessOutput';
+        return static::getTopicForSubscribing();
     }
 
-    protected static function createTopic(string $slug): TopicInterface
+    public static function getTopicForSubscribing(): TopicInterface
     {
-        return new ConcreteProcessTopic($slug);
+        return new ConcreteProcessTopic('/process_output');
     }
 
     protected function getEventData(): array

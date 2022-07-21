@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Notification;
 use Concrete\Core\Notification\Events\MercureService;
 use Concrete\Core\Notification\Events\ServerEvent\TestConnectionEvent;
 use Concrete\Core\Notification\Events\Subscriber;
+use Concrete\Core\Notification\Events\Topic\TestConnectionTopic;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Utility\Service\Identifier;
 use Illuminate\Filesystem\Filesystem;
@@ -22,6 +23,7 @@ class Events extends DashboardPageController
         $this->set('enable_server_sent_events', $enable_server_sent_events);
         if ($enable_server_sent_events) {
             $this->set('publishUrl', $config->get('concrete.notification.mercure.default.publish_url'));
+            $this->set('cookieDomain', $config->get('concrete.notification.mercure.default.cookie_domain'));
 
             $connectionMethod = $config->get('concrete.notification.mercure.default.connection_method') ?? null;
             if ($this->request->request->has('connectionMethod')) {
@@ -52,11 +54,11 @@ class Events extends DashboardPageController
             if ($this->isTestConnectionAvailable()) {
                 $mercureService = $this->app->make(MercureService::class);
                 $subscriber = $mercureService->getSubscriber();
-                $subscriber->addEvent(TestConnectionEvent::class);
+                $subscriber->addTopic(new TestConnectionTopic());
                 $subscriber->refreshAuthorizationCookie();
 
                 $this->set('eventSourceUrl', $mercureService->getPublisherUrl());
-                $this->set('testConnectionTopicUrl', TestConnectionEvent::getTopics()[0]);
+                $this->set('testConnectionTopicUrl', (new TestConnectionTopic())->getTopicUrl());
                 $this->set('isTestConnectionAvailable', true);
             } else {
                 $this->set('isTestConnectionAvailable', false);
@@ -151,6 +153,7 @@ class Events extends DashboardPageController
             $config->save('concrete.notification.server_sent_events', false);
             $config->save('concrete.notification.mercure.default', null);
             $dbConfig->save('concrete.notification.mercure.default.jwt_key', null);
+            $dbConfig->save('concrete.notification.mercure.default.cookie_domain', null);
             $this->flash('success', t('Server-sent events disabled successfully.'));
             return $this->buildRedirect($this->action('view'));
         }
@@ -173,6 +176,12 @@ class Events extends DashboardPageController
             $config->save('concrete.notification.mercure.default.publish_url',
                   (string) $this->request->request->get('publishUrl')
             );
+            $cookieDomain = (string) $this->request->request->get('cookieDomain');
+            if ($cookieDomain !== '') {
+                $config->save('concrete.notification.mercure.default.cookie_domain', $cookieDomain);
+            } else {
+                $config->save('concrete.notification.mercure.default.cookie_domain', null);
+            }
             $connectionMethod = $this->request->request->get('connectionMethod') ?? 'single_secret_key';
             $config->save('concrete.notification.mercure.default.connection_method', $connectionMethod);
             switch ($connectionMethod) {

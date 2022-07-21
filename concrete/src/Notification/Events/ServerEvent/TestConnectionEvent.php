@@ -2,6 +2,10 @@
 
 namespace Concrete\Core\Notification\Events\ServerEvent;
 
+use Concrete\Core\Notification\Events\Topic\ConcreteTopic;
+use Concrete\Core\Notification\Events\Topic\TestConnectionTopic;
+use Concrete\Core\Notification\Events\Topic\TopicInterface;
+
 class TestConnectionEvent extends AbstractConcreteEvent
 {
 
@@ -15,9 +19,9 @@ class TestConnectionEvent extends AbstractConcreteEvent
         $this->ping = $ping;
     }
 
-    protected static function getEvent(): string
+    public function createTopic(): TopicInterface
     {
-        return 'TestConnection';
+        return new TestConnectionTopic();
     }
 
     protected function getEventData()

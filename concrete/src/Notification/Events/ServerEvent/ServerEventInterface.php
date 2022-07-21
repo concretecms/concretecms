@@ -8,8 +8,14 @@ namespace Concrete\Core\Notification\Events\ServerEvent;
 interface ServerEventInterface
 {
 
-    public static function getTopics(): array;
+    /**
+     * @return string[]
+     */
+    public function getTopics(): array;
 
+    /**
+     * @return string
+     */
     public function getData(): string;
 
 }

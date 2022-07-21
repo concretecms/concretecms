@@ -3,9 +3,11 @@
 namespace Concrete\Core\Notification\Events\Traits;
 
 use Concrete\Core\Notification\Events\MercureService;
+use Concrete\Core\Notification\Events\ServerEvent\AbstractEvent;
 use Concrete\Core\Notification\Events\ServerEvent\BatchUpdatedEvent;
 use Concrete\Core\Notification\Events\ServerEvent\ProcessClosedEvent;
 use Concrete\Core\Notification\Events\ServerEvent\ProcessOutputEvent;
+use Concrete\Core\Notification\Events\ServerEvent\SubscribableEventInterface;
 use Concrete\Core\Notification\Events\Subscriber;
 
 trait SubscribeToProcessTopicsTrait
@@ -22,7 +24,10 @@ trait SubscribeToProcessTopicsTrait
             ];
             $subscriber = $mercureService->getSubscriber();
             foreach ($events as $event) {
-                $subscriber->addEvent($event);
+                /**
+                 * @var $event SubscribableEventInterface
+                 */
+                $subscriber->addTopic($event::getTopicForSubscribing());
             }
             if ($refreshCookie) {
                 $subscriber->refreshAuthorizationCookie();

@@ -5,7 +5,7 @@ namespace Concrete\Core\Notification\Events\ServerEvent;
 use Concrete\Core\Notification\Events\Topic\ConcreteProcessTopic;
 use Concrete\Core\Notification\Events\Topic\TopicInterface;
 
-class ProcessClosedEvent extends AbstractConcreteEvent
+class ProcessClosedEvent extends AbstractConcreteEvent implements SubscribableEventInterface
 {
 
     /**
@@ -29,14 +29,14 @@ class ProcessClosedEvent extends AbstractConcreteEvent
         $this->exitCode = $exitCode;
     }
 
-    protected static function getEvent(): string
+    public function createTopic(): TopicInterface
     {
-        return 'CloseProcess';
+        return static::getTopicForSubscribing();
     }
 
-    protected static function createTopic(string $slug): TopicInterface
+    public static function getTopicForSubscribing(): TopicInterface
     {
-        return new ConcreteProcessTopic($slug);
+        return new ConcreteProcessTopic('/close_process');
     }
 
     protected function getEventData(): array
