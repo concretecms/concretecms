@@ -435,10 +435,11 @@ class Form
      */
     public function __call($name, $args)
     {
-        $key = $args[0];
-        $valueOrMiscFields = $args[1];
-        $miscFields = array_slice($args,2);
-        return $this->inputType($key, $name, $valueOrMiscFields, $miscFields);
+        if(!empty($args[2]) && is_array($args[2])){
+            return $this->inputType( $args[0], $name, $args[1], $args[2]);
+        }else{
+            return $this->inputType( $args[0], $name, $args[1],[]);
+        }
     }
     
     
