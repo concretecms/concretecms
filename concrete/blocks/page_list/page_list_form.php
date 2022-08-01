@@ -428,7 +428,7 @@ echo $userInterface->tabs([
                     <?php } else { ?>
                         <div class="form-group">
                             <?php echo $form->label('num', t('RSS Feed Title')); ?>
-                            <?php echo $form->text("rssTitle", $num, ["id" => "ccm-pagelist-rssTitle", "name" => "rssTitle"]); ?>
+                            <?php echo $form->text("rssTitle", null, ["id" => "ccm-pagelist-rssTitle", "name" => "rssTitle"]); ?>
                         </div>
 
                         <div class="form-group">
