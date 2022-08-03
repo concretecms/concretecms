@@ -11,14 +11,9 @@ if (count($sections) > 0) {
         <div class="ccm-search-fields-row">
             <div class="form-group">
                 <?= $form->label('keywords', t('Search')) ?>
-                <div class="ccm-search-field-content row">
-                    <div class="input-group col-md-11">
-                        <?= $form->search('keywords', array('placeholder' => t('Keywords'))) ?>
-                        <span class="input-group-text ccm-search-main-lookup-field"><i class="fas fa-search"></i></span>
-                    </div>
-                    <div class="col-md-1">
-                        <button type="submit" class="btn btn-primary" tabindex="-1"><?= t('Search') ?></button>
-                    </div>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <?= $form->search('keywords', array('placeholder' => t('Keywords'))) ?>
                 </div>
             </div>
         </div>
