@@ -73,7 +73,7 @@ if (count($sections) > 0) {
                 </div>
             </div>
         </div>
-        <div class="ccm-search-fields-submit">
+        <div class="ccm-search-fields-submit clearfix">
             <button type="submit" class="btn btn-primary float-end"><?= t('Search') ?></button>
         </div>
     </form>
