@@ -23,6 +23,8 @@ class ZendCacheDriverTest extends \PHPUnit_Framework_TestCase
         $driver = new ZendCacheDriver($cacheName, 50);
         $result = $driver->getItem($key);
         $this->assertEquals($value, $result);
+
+        $item->clear();
     }
 
     public function testSetZendCacheItem()
