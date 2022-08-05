@@ -69,6 +69,7 @@ class ZendCacheDriverTest extends \PHPUnit_Framework_TestCase
         $driver = new ZendCacheDriver($cacheName, 50);
         $driver->removeItem($key);
 
+        $item = $cache->getItem('zend/' . $key);
         $this->assertFalse($item->isHit());
     }
 }
