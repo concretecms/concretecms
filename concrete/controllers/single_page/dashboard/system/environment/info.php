@@ -25,14 +25,14 @@ class Info extends DashboardPageController
         $phpExtensions = ($info->getPhpExtensions() === false) ? 'Unable to determine' : $info->getPhpExtensions();
 
         $content = <<<EOL
+# Concrete Version
+{$info->getCoreVersions()}
+
 # Hostname
 {$hostname}
 
 # Environment
 {$environment}
-
-# Concrete Version
-{$info->getCoreVersions()}
 {$dbInfos}
 # Concrete Packages
 {$packages}
