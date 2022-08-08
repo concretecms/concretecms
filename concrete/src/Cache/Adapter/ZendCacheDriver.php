@@ -90,8 +90,11 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface, Flush
         /** @var Cache $cache  */
         $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/'.$normalizedKey);
+        if ($this->cacheLifetime !== null) {
+            $item->expiresAfter($this->cacheLifetime);
+        }
 
-        if ($result = $item->set($value, $this->cacheLifetime)) {
+        if ($result = $item->set($value)) {
             $item->save();
         }
 
