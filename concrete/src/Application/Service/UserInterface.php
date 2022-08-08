@@ -282,13 +282,15 @@ class UserInterface
      * @param $tabs
      *
      * @param null|string $id
+     * @param string $innerClass
      * @return string
      */
-    public function tabs($tabs, $id = null)
+    public function tabs($tabs, $id = null, $innerClass = 'nav-fill')
     {
         $ul = new Element("ul");
         $ul->addClass("nav");
-        $ul->addClass("nav-tabs mb-3 nav-fill");
+        $ul->addClass("nav-tabs mb-3");
+        $ul->addClass($innerClass);
         $ul->setAttribute("role", "tablist");
 
         if ($id !== null) {
