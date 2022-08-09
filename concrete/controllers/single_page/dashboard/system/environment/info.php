@@ -12,6 +12,9 @@ class Info extends DashboardPageController
     {
         $info = $this->app->make(SystemInfo::class);
 
+        $hostname = $info->getHostName();
+        $environment = $info->getEnvironment();
+
         $dbInfos = '';
         if ($info->isInstalled()) {
             $dbInfos = "\n# Database Information\nVersion: {$info->getDBMSVersion()}\nSQL Mode: {$info->getDBMSSqlMode()}\n";
@@ -24,6 +27,12 @@ class Info extends DashboardPageController
         $content = <<<EOL
 # Concrete Version
 {$info->getCoreVersions()}
+
+# Hostname
+{$hostname}
+
+# Environment
+{$environment}
 {$dbInfos}
 # Concrete Packages
 {$packages}

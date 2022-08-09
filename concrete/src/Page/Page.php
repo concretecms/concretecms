@@ -2264,7 +2264,13 @@ EOT
             $classes[] = 'page-template-' . str_replace('_', '-', $ptm->getPageTemplateHandle());
         }
 
-        return implode(' ', $classes);
+        /*
+         * Provide an opportunity for altering the CSS classes in the page wrapper.
+         */
+        $event = new Event($this);
+        $event->setArgument('classes', $classes);
+        Events::dispatch('on_get_page_wrapper_class', $event);
+        return implode(' ', $event->getArgument('classes'));
     }
 
     /**
