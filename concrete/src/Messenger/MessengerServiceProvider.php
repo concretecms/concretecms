@@ -15,6 +15,8 @@ use Concrete\Core\Messenger\Transport\TransportManager;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
+use Symfony\Component\Messenger\Command\FailedMessagesRemoveCommand;
+use Symfony\Component\Messenger\Command\FailedMessagesRetryCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesShowCommand;
 use Symfony\Component\Messenger\EventListener\AddErrorDetailsStampListener;
 use Symfony\Component\Messenger\EventListener\SendFailedMessageToFailureTransportListener;
@@ -161,7 +163,7 @@ class MessengerServiceProvider extends ServiceProvider
         });
 
         $this->app
-            ->when([FailedMessagesShowCommand::class])
+            ->when([FailedMessagesShowCommand::class, FailedMessagesRemoveCommand::class])
             ->needs('$globalFailureReceiverName')
             ->give(
                 function (Application $app) {
@@ -170,15 +172,25 @@ class MessengerServiceProvider extends ServiceProvider
                 }
             );
 
-
         $this->app
-            ->when([FailedMessagesShowCommand::class])
+            ->when([FailedMessagesShowCommand::class, FailedMessagesRetryCommand::class, FailedMessagesRemoveCommand::class])
             ->needs('$failureTransports')
             ->give(
                 function (Application $app) {
                     return $app->make(FailedTransportManager::class)->getReceivers();
                 }
             );
+
+        $this->app
+            ->when([FailedMessagesRetryCommand::class])
+            ->needs('$globalReceiverName')
+            ->give(
+                function (Application $app) {
+                    $manager = $app->make(FailedTransportManager::class);
+                    return $manager->getDefaultFailedReceiverName();
+                }
+            );
+
 
         $this->app
             ->when([SendFailedMessageToFailureTransportListener::class])

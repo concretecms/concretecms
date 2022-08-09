@@ -15,6 +15,10 @@ class RescanFileTaskCommandHandler extends RescanFileCommandHandler implements O
      */
     public function __invoke(RescanFileCommand $command)
     {
+        $rand = rand(1, 4);
+        if ($rand === 2) {
+            throw new \exception('random exception');
+        }
         $this->output->write(t('Rescanning file ID: %s', $command->getFileID()));
         parent::__invoke($command);
     }
