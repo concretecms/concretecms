@@ -191,12 +191,14 @@ class MessengerServiceProvider extends ServiceProvider
 
 
 
-        /**
-         * @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcher
-         */
-        $dispatcher = $this->app->make(EventDispatcher::class)->getEventDispatcher();
-        $dispatcher->addSubscriber($this->app->make(MessengerEventSubscriber::class));
-        $dispatcher->addSubscriber($this->app->make(SendFailedMessageToFailureTransportListener::class));
-        $dispatcher->addSubscriber($this->app->make(AddErrorDetailsStampListener::class));
+        if ($this->app->isInstalled()) {
+            /**
+             * @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcher
+             */
+            $dispatcher = $this->app->make(EventDispatcher::class)->getEventDispatcher();
+            $dispatcher->addSubscriber($this->app->make(MessengerEventSubscriber::class));
+            $dispatcher->addSubscriber($this->app->make(SendFailedMessageToFailureTransportListener::class));
+            $dispatcher->addSubscriber($this->app->make(AddErrorDetailsStampListener::class));
+        }
     }
 }
