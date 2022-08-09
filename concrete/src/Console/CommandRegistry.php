@@ -79,7 +79,6 @@ class CommandRegistry implements ApplicationAwareInterface
         Command\GenerateFileIdentifiersCommand::class,
         ConsumeMessagesCommand::class,
         FailedMessagesShowCommand::class,
-        FailedMessagesRetryCommand::class,
         /*
         MessengerCommand\FailedMessagesRetryCommand::class,
         MessengerCommand\FailedMessagesRemoveCommand::class,
