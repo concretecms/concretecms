@@ -203,29 +203,36 @@ var setupSiteListMenuItem = function() {
     })
 };
 
-window.ConcreteEvent.subscribe("ConcreteServerEventThumbnailGenerated", function(e, data) {
-    e.preventDefault();
+var setupAsynchronousThumbnails = function() {
+    if (typeof(CCM_SERVER_EVENTS_URL) !== 'undefined') {
+        const eventSourceUrl = new URL(CCM_SERVER_EVENTS_URL)
+        eventSourceUrl.searchParams.append('topic', '{+siteUrl}/concrete/events/thumbnail_generated')
+        const eventSource = new EventSource(eventSourceUrl, {
+            withCredentials: true
+        })
+        eventSource.onmessage = event => {
+            // Will be called every time an update is published by the server
+            var data = JSON.parse(event.data)
+            var $el = $(".ccm-image-wrapper[data-file-id='" + data.fileId + "'][data-file-version-id='" + data.fileVersionId + "'][data-thumbnail-type-handle='" + data.thumbnailTypeHandle + "']");
 
-    var $el = $(".ccm-image-wrapper[data-file-id='" + data.fileId + "'][data-file-version-id='" + data.fileVersionId + "'][data-thumbnail-type-handle='" + data.thumbnailTypeHandle + "']");
+            if ($el.length) {
+                if (data.thumbnailUrl.substr(0, CCM_REL.length) !== CCM_REL) {
+                    // If the worker is executed in CLI mode the generated url doesn't contain the base path.
+                    // So we manually prepend this to the image urls. (required if concrete is running within a sub directory)
+                    data.thumbnailUrl = CCM_APPLICATION_URL + data.thumbnailUrl;
+                }
 
-    if ($el.length) {
-        if (data.thumbnailUrl.substr(0, CCM_REL.length) !== CCM_REL) {
-            // If the worker is executed in CLI mode the generated url doesn't contain the base path.
-            // So we manually prepend this to the image urls. (required if concrete is running within a sub directory)
-            data.thumbnailUrl = CCM_APPLICATION_URL + data.thumbnailUrl;
+                var $img = $("<img/>")
+                    .attr("src", data.thumbnailUrl)
+                    .attr("alt", data.fileName)
+                    .attr("class", $el.attr("class"))
+                    .removeClass("ccm-image-wrapper");
+
+                $el.replaceWith($img);
+            }
         }
-
-        var $img = $("<img/>")
-            .attr("src", data.thumbnailUrl)
-            .attr("alt", data.fileName)
-            .attr("class", $el.attr("class"))
-            .removeClass("ccm-image-wrapper");
-
-        $el.replaceWith($img);
     }
-
-    return false;
-});
+}
 
 setupTooltips();
 setupResultMessages();
@@ -236,3 +243,4 @@ setupFavorites();
 setupAdvancedSearchLinks();
 setupHeaderMenu();
 setupPrivacyPolicy();
+setupAsynchronousThumbnails();

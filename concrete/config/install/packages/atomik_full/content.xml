@@ -278,7 +278,7 @@
                 </formlayout>
                 <output>
                     <pagetemplate handle="resource_detail">
-                        <page name="" path="" public-date="2021-08-28 07:31:35" filename="" pagetype="resource"
+                        <page name="" path="" filename="" pagetype="resource"
                               template="resource_detail" user="admin" description="" package="" root="true">
                             <area name="Page Header">
                                 <blocks>
@@ -475,7 +475,7 @@
     </attributesets>
 
     <pages>
-        <page name="Home" path="" public-date="2021-08-20 15:36:55" filename="" pagetype="page" template="full"
+        <page name="Home" path="" filename="" pagetype="page" template="full"
               user="admin" description="" package="" root="true">
             <area name="Page Header">
                 <blocks>
@@ -989,7 +989,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="About" path="/about" public-date="2021-08-18 16:20:23" filename="" pagetype="page" template="full"
+        <page name="About" path="/about" filename="" pagetype="page" template="full"
               user="admin" description="" package="">
             <area name="Main">
                 <blocks>
@@ -1443,7 +1443,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="Services" path="/about/services" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
+        <page name="Services" path="/about/services" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <area name="Page Header">
                 <blocks>
@@ -1704,7 +1704,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 </blocks>
             </area>
         </page>
-        <page name="Blog" path="/about/blog" public-date="2021-07-31 16:20:28" filename="" pagetype="blog"
+        <page name="Blog" path="/about/blog" filename="" pagetype="blog"
               template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_subpages_from_nav">
@@ -1845,7 +1845,7 @@ Maecenas consequat lectus a euismod pellentesque. Pellentesque commodo quam nec 
                 </blocks>
             </area>
         </page>
-        <page name="Contact Us" path="/about/contact" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
+        <page name="Contact Us" path="/about/contact" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <area name="Page Header">
                 <blocks>
@@ -1945,7 +1945,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="Resources" path="/resources" public-date="2021-08-18 16:20:40" filename="" pagetype="page"
+        <page name="Resources" path="/resources" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_subpages_from_nav">
@@ -2018,7 +2018,7 @@ Aenean eu enim justo. Vestibulum aliquam hendrerit molestie.</p>
                 </blocks>
             </area>
         </page>
-        <page name="Tips to Build a Beautiful Blog" public-date="2021-08-01 07:43:00"
+        <page name="Tips to Build a Beautiful Blog"
               path="/about/blog/tips-build-beautiful-blog" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2083,7 +2083,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="New Product Launch" public-date="2021-08-04 12:00:00" path="/about/blog/new-product-launch"
+        <page name="New Product Launch" path="/about/blog/new-product-launch"
               filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2148,7 +2148,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="More Fine Posts Here" public-date="2021-08-07 12:00:00" path="/about/blog/more-fine-posts-here"
+        <page name="More Fine Posts Here" path="/about/blog/more-fine-posts-here"
               filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2213,7 +2213,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Here's a Tip You Might Not Know" public-date="2021-08-11 12:00:00"
+        <page name="Here's a Tip You Might Not Know"
               path="/about/blog/heres-tip-you-might-not-know" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2278,7 +2278,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Time to Freshen Up Your Website" public-date="2021-08-17 12:00:00"
+        <page name="Time to Freshen Up Your Website"
               path="/about/blog/freshen-up-your-website" filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2343,7 +2343,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Meet Our New Hires!" public-date="2021-08-21 12:00:00" path="/about/blog/meet-our-new-hires"
+        <page name="Meet Our New Hires!" path="/about/blog/meet-our-new-hires"
               filename=""
               pagetype="blog_entry" template="right_sidebar" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et."
@@ -2408,7 +2408,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Documents" path="/documents" public-date="2021-08-18 16:20:35" filename="" pagetype="page"
+        <page name="Documents" path="/documents" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <area name="Page Header">
                 <blocks>
@@ -2473,7 +2473,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
             </area>
         </page>
 
-        <page name="Thanks for Subscribing" path="/subscribe-thanks" public-date="2021-08-24 13:16:00" filename=""
+        <page name="Thanks for Subscribing" path="/subscribe-thanks" filename=""
               pagetype="page" template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -2503,7 +2503,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Search" path="/search" public-date="2021-08-24 13:16:00" filename="" pagetype="page" template="full"
+        <page name="Search" path="/search" filename="" pagetype="page" template="full"
               user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -2558,7 +2558,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Blog Search" path="/blog-search" public-date="2021-09-06 15:02:43" filename="" pagetype="page"
+        <page name="Blog Search" path="/blog-search" filename="" pagetype="page"
               template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
@@ -2640,7 +2640,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 <blocks/>
             </area>
         </page>
-        <page name="Resource One" path="/resources/resource-one" public-date="2021-08-28 07:49:00" filename=""
+        <page name="Resource One" path="/resources/resource-one" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2717,7 +2717,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Two" path="/resources/resource-two" public-date="2021-08-27 07:49:00" filename=""
+        <page name="Resource Two" path="/resources/resource-two" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2765,7 +2765,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Three" path="/resources/resource-three" public-date="2021-08-26 07:49:00" filename=""
+        <page name="Resource Three" path="/resources/resource-three" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2813,7 +2813,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Four" path="/resources/resource-four" public-date="2021-08-25 07:49:00" filename=""
+        <page name="Resource Four" path="/resources/resource-four" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2861,7 +2861,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Five" path="/resources/resource-five" public-date="2021-08-24 07:49:00" filename=""
+        <page name="Resource Five" path="/resources/resource-five" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2909,7 +2909,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Resource Six" path="/resources/resource-six" public-date="2021-08-23 07:49:00" filename=""
+        <page name="Resource Six" path="/resources/resource-six" filename=""
               pagetype="resource" template="resource_detail" user="admin"
               description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. "
               package="">
@@ -2957,7 +2957,7 @@ Nam massa mauris, euismod vel tortor vel, finibus accumsan sem. Sed varius vulpu
                 </blocks>
             </area>
         </page>
-        <page name="Privacy Policy" path="/privacy-policy" public-date="2021-09-09 15:00:00" filename="" pagetype="page"
+        <page name="Privacy Policy" path="/privacy-policy" filename="" pagetype="page"
               template="left_sidebar" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
