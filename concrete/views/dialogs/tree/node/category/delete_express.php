@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <p><?=t('Are you sure you want to remove the Express entity results folder "%s"?', $node->getTreeNodeDisplayName())?></p>
 
             <div class="dialog-buttons clearfix">
-                <button class="btn btn-default" data-dialog-action="cancel"><?=t('Cancel')?></button>
+                <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
                 <button class="btn btn-danger float-end" data-dialog-action="submit" type="submit"><?=t('Remove')?></button>
             </div>
         </form>

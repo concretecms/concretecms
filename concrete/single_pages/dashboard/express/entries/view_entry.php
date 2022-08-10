@@ -23,7 +23,7 @@
             <input type="hidden" name="entry_id" value="<?=$entry->getID()?>">
             <p><?=t('Are you sure you want to delete this entry? This cannot be undone.')?></p>
             <div class="dialog-buttons clearfix">
-                <button class="btn btn-default" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                <button class="btn btn-secondary" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
                 <button class="btn btn-danger float-end" onclick="$('#ccm-dialog-delete-entry form').submit()"><?=t('Delete Entry')?></button>
             </div>
         </form>

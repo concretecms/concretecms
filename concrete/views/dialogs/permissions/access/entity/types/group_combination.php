@@ -41,7 +41,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     />
 </div>
 <div class="dialog-buttons">
-    <input type="button" onclick="$.fn.dialog.closeTop()" value="<?= t('Cancel') ?>" class="btn btn-default btn-hover-danger">
+    <input type="button" onclick="$.fn.dialog.closeTop()" value="<?= t('Cancel') ?>" class="btn btn-secondary btn-hover-danger">
     <input type="submit" onclick="$('#ccm-permission-access-entity-combination-groups-form').submit()" value="<?= t('Save') ?>" class="btn btn-primary ms-auto">
 </div>
 <script>
