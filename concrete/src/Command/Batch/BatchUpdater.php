@@ -8,6 +8,7 @@ use Concrete\Core\Entity\Command\Batch as BatchEntity;
 use Concrete\Core\Entity\Command\Process;
 use Concrete\Core\Notification\Events\MercureService;
 use Concrete\Core\Notification\Events\ServerEvent\BatchUpdated;
+use Concrete\Core\Notification\Events\ServerEvent\BatchUpdatedEvent;
 use Doctrine\ORM\EntityManager;
 
 class BatchUpdater
@@ -72,7 +73,9 @@ class BatchUpdater
         if ($mercureService->isEnabled()) {
             $batch = $entityManager->find(BatchEntity::class, $batchId);
             $entityManager->refresh($batch);
-            $mercureService->sendUpdate(new BatchUpdated($batch));
+            $event = new BatchUpdatedEvent($batch);
+            $hub = $mercureService->getHub();
+            $hub->publish($event->getUpdate());
         }
     }
 

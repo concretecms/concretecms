@@ -33,6 +33,12 @@ EOT
         $info = Facade::getFacadeApplication()->make(Info::class);
         /* @var Info $info */
 
+        $output->writeln('<info># Hostname</info>');
+        $output->writeln($info->getHostname());
+        $output->writeln('');
+        $output->writeln('<info># Environment</info>');
+        $output->writeln($info->getEnvironment());
+        $output->writeln('');
         $output->writeln('<info># Version</info>');
         $output->writeln('Installed - ' . ($info->isInstalled() ? 'Yes' : 'No'));
         $output->writeln($info->getCoreVersions());

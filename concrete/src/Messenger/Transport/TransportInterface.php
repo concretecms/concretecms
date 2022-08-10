@@ -9,6 +9,7 @@ interface TransportInterface
 {
 
     const DEFAULT_ASYNC = 'async';
+    const DEFAULT_FAILED = 'failed';
 
     /**
      * @return callable[]

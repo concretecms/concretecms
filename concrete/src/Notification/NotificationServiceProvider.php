@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 use Concrete\Core\Notification\Events\MercureService;
 use Concrete\Core\Notification\Type\UserDeactivatedType;
+use Symfony\Component\Mercure\Hub;
 use Symfony\Component\Mercure\PublisherInterface;
 
 class NotificationServiceProvider extends ServiceProvider
@@ -44,16 +45,6 @@ class NotificationServiceProvider extends ServiceProvider
             'manager/notification/subscriptions',
             function ($app) {
                 return $app->make('Concrete\Core\Notification\Subscription\Manager');
-            }
-        );
-
-        $this->app->singleton(MercureService::class);
-
-        $this->app->singleton(
-            PublisherInterface::class,
-            function (Application $app) {
-                $service = $app->make(MercureService::class);
-                return $service->getPublisher();
             }
         );
     }
