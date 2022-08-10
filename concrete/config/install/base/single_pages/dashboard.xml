@@ -1019,6 +1019,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Failed Messages" path="/dashboard/system/automation/failed"
+              filename="/dashboard/system/automation/failed.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>failed messages, retry</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Schedule" path="/dashboard/system/automation/schedule"
               filename="/dashboard/system/automation/schedule.php" pagetype="" description="" package="">
             <attributes>
