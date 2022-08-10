@@ -12,9 +12,9 @@
             <?= $form->label('fileFolderFileStorageLocation', t('Storage Location')); ?>
             <?= $form->select('fileFolderFileStorageLocation', $locations, $node->getTreeNodeStorageLocationID()); ?>
         </div>
-        <div class="dialog-buttons">
+        <div class="dialog-buttons clearfix">
             <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
-            <button class="btn btn-primary pull-right" data-dialog-action="submit" type="submit"><?= t('Update'); ?></button>
+            <button class="btn btn-primary float-end" data-dialog-action="submit" type="submit"><?= t('Update'); ?></button>
         </div>
     </form>
 

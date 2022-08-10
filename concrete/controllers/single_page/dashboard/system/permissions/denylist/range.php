@@ -58,7 +58,7 @@ class Range extends Denylist
                 $html .= $this->app->make('date')->formatPrettyDateTime($range->getExpiration(), true);
             }
             $html .= '</td>';
-            $html .= '<td class="pull-right"><a href="#" class="btn btn-xs btn-info ccm-iprange-makepermanent">' . t('Make permament') . '</a></td>';
+            $html .= '<td class="text-end"><a href="#" class="btn btn-xs btn-info ccm-iprange-makepermanent">' . t('Make permament') . '</a></td>';
         }
         $html .= '</tr>';
 

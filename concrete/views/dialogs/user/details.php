@@ -74,9 +74,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <!-- // user attribut end -->
 
-    <div class="dialog-buttons">
-        <button class="pull-left btn btn-default" onclick="jQuery.fn.dialog.closeTop()"><?= t('Close') ?></button>
+    <div class="dialog-buttons clearfix">
+        <button class="btn btn-default float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Close') ?></button>
         <a href="<?= URL::to('/dashboard/users/search/view', $user->getUserID()) ?>"
-           class="btn btn-primary pull-right"><?= t('Edit') ?></a>
+           class="btn btn-primary float-end"><?= t('Edit') ?></a>
     </div>
 </div><!-- // div ccm-ui end -->

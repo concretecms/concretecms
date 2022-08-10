@@ -14,8 +14,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
         echo t('The package was successfully installed.');
     }
     ?>
-    <div class="dialog-buttons">
-        <button class="btn btn-primary pull-right" type="button" onclick="ConcreteEvent.publish('MarketplaceRequestComplete', {'type': 'download'})"><?=t('Ok')?></button>
+    <div class="dialog-buttons clearfix">
+        <button class="btn btn-primary float-end" type="button" onclick="ConcreteEvent.publish('MarketplaceRequestComplete', {'type': 'download'})"><?=t('Ok')?></button>
     </div>
 
 <?php 
