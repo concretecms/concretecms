@@ -964,7 +964,7 @@ return [
     'urls' => [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
-        'concrete_community' => 'http://community.concretecms.com.test',
+        'concrete_community' => 'https://community.concretecms.com',
         'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
