@@ -37,8 +37,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
     </div>
 
-    <div class="ccm-search-fields-submit">
-        <button type="submit" class="btn btn-primary pull-right">
+    <div class="ccm-search-fields-submit clearfix">
+        <button type="submit" class="btn btn-primary float-end">
             <?php echo t('Export to CSV'); ?>
         </button>
     </div>

@@ -28,8 +28,8 @@ $token = Core::make('token');
             </tbody>
         </table>
         <div class="ccm-dashboard-form-actions-wrapper">
-            <div class="ccm-dashboard-form-actions">
-                <?=$form->submit('save', t('Save'), array(), 'btn-primary pull-right')?>
+            <div class="ccm-dashboard-form-actions clearfix">
+                <?=$form->submit('save', t('Save'), array(), 'btn-primary float-end')?>
             </div>
         </div>
     </form>

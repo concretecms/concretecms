@@ -406,6 +406,50 @@
 * Console command `c5:blacklist:clear` has been renamed `c5:denylist:clear`
 * If you work with Concrete cookies directly in your server configurations, be aware that they have been renamed. The default session cookie has been changed from CONCRETE5 to CONCRETE; the default is-logged-in cookie has been changed from CONCRETE5_LOGIN to CONCRETE_LOGIN.
 
+# 8.5.9
+
+## Bug Fixes
+
+* Fixed inability to upload files when file chunking is disabled.
+* Fixed bug that prevented file chunking from also working.
+* Reverted code that accidentally made the core require PHP 5.6+ in some situations.
+
+# 8.5.8
+
+## Behavioral Improvements
+
+* JavaScript and CSS assets now have the timestamp of when the cache was last cleared appended to them (thanks deek87, haeflimi)
+* Renamed concrete5 to Concrete CMS and Concrete during the installation process.
+* Nicer version history view in add-on update screen (thanks biplobice)
+
+## Bug Fixes
+
+* Fixed error that would occur if you deleted an Express entry and then attempted to reorder that same entry on the page before reloading (thanks biplobice)
+* Fixed error where users, files and sites weren’t being reindexed when running the `index_search_all` job.
+* Fixed error where copying conversation blocks out from page defaults made them all one instance of the same conversation (thanks hissy)
+* Validating Express, User and Page attribute types now works when used with Composer and Expres (thanks hissy)
+* Fixed bug in Redis caching backend when saving a primitive value.
+* Fixed: when using the Express Form block, and a file is uploaded through the form, it creates two versions of the file, which are seemingly identical (thanks 1stthomas)
+* Fixed: Clear old page versions in all site trees when running remove page versions job (thanks Ruud-Zuiderlicht)
+* Fixed bug where OAuth2 and sign in as user functionality could lead to someone unintentionally joining their user account to a different account.
+* Render single pages like 404, 403, login, register in default site locale (thanks hissy)
+* Fixed: : error message doesn't display when upload file failed via drag & drop (thanks hissy)
+* Fixed invalid and unhelpful displaying on marketplace connection failures during certain conditions (thanks JohnTheFish)
+* Topics Attribute Search Form is not getting translated on Frontend (thanks 1stthomas)
+* Fixed: Multilingual copy site tree with alias pages (thanks hissy)
+* Fix migration bug on fix overlapping start end dates when custom page publishing dates had been set in some cases (thanks hissy)
+* Fixed null pointer Exceptions when using area layouts under certain conditions (thanks biplobice)
+
+## Security Fixes 
+
+* CKEditor updated from 4.16.2 to 4.18.0 (thanks hissy)
+* Remediated CVE-2022-21829 - Concrete CMS Version 9.0.2 and below and 8.5.7 and below can download zip files over HTTP and execute code from those zip files which could lead to an RCE. Fixed by enforcing ‘concrete_secure’ instead of ‘concrete’. Concrete now only makes requests over https even if a request comes in via http. Concrete CMS security team ranked this 8 with CVSS v3.1 vector: AV:N/AC:H/PR:H/UI:N/S:C/C:H/I:H/A:H Credit goes to Anna for reporting on HackerOne - https://hackerone.com/reports/1482520
+* Remediated CVE-2022-30117 -  Concrete CMS version 9.0.2 and below and 8.5.7 and below allowed traversal in  /index.php/ccm/system/file/upload which could result in an Arbitrary File Delete exploit. This was remediated by sanitizing  /index.php/ccm/system/file/upload to ensure Concrete doesn’t allow traversal and by changing isFullChunkFilePresent to have an early false return when input doesn't match expectations.Concrete CMS Security team ranked this 5.8 with CVSS v3.1 vector AV:N/AC:H/PR:H/UI:N/S:C/C:N/I:N/A:H. Credit to Siebene for reporting https://hackerone.com/reports/1482280
+* Remediated CVE-2022-30120 - XSS in /dashboard/blocks/stacks/view_details/ -  old browsers only.  When using an older browser with built-in XSS protection disabled, insufficient sanitation where built urls are output can be exploited for Concrete CMS version 9.02 and below and Concrete CMS 8.5.7 to allow XSS. This cannot be exploited in modern-day web browsers due to an automatic input escape mechanism. Dashboard Stacks page sort URLs are now sanitized. Concrete CMS Security team ranked this vulnerability 3.1 with CVSS v3.1 Vector AV:N/AC:H/PR:N/UI:R/S:U/C:N/I:L/A:N. Sanitation has been added where built urls are output. Credit to Bogdan Tiron from FORTBRIDGE (https://www.fortbridge.co.uk/ ) for reporting https://hackerone.com/reports/1363598
+* Remediated CVE-2022-30119 - XSS in /dashboard/reports/logs/view -  old browsers only.  When using Internet Explorer with the XSS protection disabled, insufficient sanitation where built urls are output can be exploited for Concrete CMS version 9.02 and below and Concrete CMS 8.5.7 to allow XSS. This cannot be exploited in modern-day web browsers due to an automatic input escape mechanism. Concrete CMS Security team ranked this vulnerability 2 with CVSS v3.1 Vector AV:N/AC:H/PR:H/UI:R/S:U/C:N/I:L/A:N. Sanitation has been added where built urls are output. Thanks zeroinside for reporting https://hackerone.com/reports/1370054
+* Remediated CVE-2022-30118 - XSS in /dashboard/system/express/entities/forms/save_control/[GUID]: \  old browsers only.
+When using Internet Explorer with the XSS protection disabled, editing a form control in an express entities form for Concrete CMS version 9.02 and below and Concrete CMS 8.5.7 and below can allow XSS. This cannot be exploited in modern-day web browsers due to an automatic input escape mechanism. Concrete CMS Security team ranked this vulnerability 2 with CVSS v3.1 Vector AV:N/AC:H/PR:H/UI:R/S:U/C:N/I:L/A:N. Thanks zeroinside for reporting https://hackerone.com/reports/1370054
+
 # 8.5.7
 
 ## Bug Fixes
@@ -2645,7 +2689,7 @@ Adds ability to cache Search Block if the block doesn't display results - useful
 
 ## Developer Updates
 
-* Big thanks to mlocati for delivering a completely new way to specify database XML, built off of the Doctrine DBAL library, including its types and functionality instead of ADODB’s AXMLS. Database XML now has support for foreign keys, comments and more. Doctrine XML is a composer package and can be used by third party projects as well. More information can be found at https://github.com/concrete5/doctrine-xml.
+* Big thanks to mlocati for delivering a completely new way to specify database XML, built off of the Doctrine DBAL library, including its types and functionality instead of ADODB’s AXMLS. Database XML now has support for foreign keys, comments and more. Doctrine XML is a composer package and can be used by third party projects as well. More information can be found at https://github.com/concretecms/doctrine-xml.
 * $view->action() now works for blocks in add and edit templates. This makes block AJAX routing much easier (simply reference $view->action(‘my\_method’) in your block add/edit template, and implement action\_my\_method) in your block controller.
 * Code cleanup and API improvements and better code documentation (thanks mlocati)
 * Configuration and old PHP constants removed and replaced (thanks mlocati)

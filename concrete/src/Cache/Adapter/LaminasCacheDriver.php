@@ -90,8 +90,11 @@ class LaminasCacheDriver extends AbstractAdapter implements StorageInterface, Fl
         /** @var Cache $cache  */
         $cache = Core::make($this->cacheName);
         $item = $cache->getItem('laminas/'.$normalizedKey);
+        if ($this->cacheLifetime !== null) {
+            $item->setTTL($this->cacheLifetime);
+        }
 
-        if ($result = $item->set($value, $this->cacheLifetime)) {
+        if ($result = $item->set($value)) {
             $item->save();
         }
 

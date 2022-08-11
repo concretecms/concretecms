@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.2.0a1',
     'version_installed' => '9.2.0a1',
-    'version_db' => '20220622183132', // the key of the latest database migration
+    'version_db' => '20220809215454', // the key of the latest database migration
 
     /*
      * Installation status
@@ -488,6 +488,13 @@ return [
         'transports' => [
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncTransport',
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultSyncTransport', // used for tests and advanced configuration
+        ],
+
+        'failure' => [
+            'default_receiver' => 'failed',
+            'transports' => [
+                'Concrete\Core\Messenger\Transport\DefaultFailed\DefaultFailedTransport',
+            ],
         ],
 
         'consume' => [
@@ -1136,6 +1143,18 @@ return [
              * @var bool|string Email to notify
              */
             'notification' => false,
+        ],
+
+        /*
+         * --------------------------------------------------------------------
+         * Edit Profile form settings.
+         * --------------------------------------------------------------------
+         */
+        'edit_profile' => [
+            /*
+             * Determines whether the username field is displayed when editing profile
+             */
+            'display_username_field' => true,
         ],
 
         /*

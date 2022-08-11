@@ -11,6 +11,9 @@ use Doctrine\Migrations\OutputWriter;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
+use Symfony\Component\Messenger\Command\FailedMessagesRemoveCommand;
+use Symfony\Component\Messenger\Command\FailedMessagesRetryCommand;
+use Symfony\Component\Messenger\Command\FailedMessagesShowCommand;
 
 /**
  * Adds commands to the console
@@ -76,16 +79,9 @@ class CommandRegistry implements ApplicationAwareInterface
         Command\ReindexCommand::class,
         Command\GenerateFileIdentifiersCommand::class,
         ConsumeMessagesCommand::class,
-
-        /*
-        MessengerCommand\FailedMessagesShowCommand::class,
-        MessengerCommand\FailedMessagesRetryCommand::class,
-        MessengerCommand\FailedMessagesRemoveCommand::class,
-        MessengerCommand\SetupTransportsCommand::class,
-        MessengerCommand\StopWorkersCommand::class,
-        MessengerCommand\ConsumeMessagesCommand::class,
-        */
-
+        FailedMessagesShowCommand::class,
+        FailedMessagesRetryCommand::class,
+        FailedMessagesRemoveCommand::class,
         Command\BulkUserAssignCommand::class
     ];
 

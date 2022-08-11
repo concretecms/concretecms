@@ -122,6 +122,7 @@ return [
         'core_whoops' => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_element' => '\Concrete\Core\Filesystem\FilesystemServiceProvider',
         'core_notification' => '\Concrete\Core\Notification\NotificationServiceProvider',
+        'core_mercure' => '\Concrete\Core\Notification\Events\MercureServiceProvider',
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',

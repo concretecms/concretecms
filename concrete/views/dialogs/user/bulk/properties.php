@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
     <div class="dialog-buttons">
         <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
-        <button type="button" data-dialog-action="submit" class="btn btn-primary"><?=t('Save')?></button>
+        <button type="button" data-dialog-action="submit" class="btn btn-primary ms-auto"><?=t('Save')?></button>
     </div>
 
 </form>
