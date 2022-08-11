@@ -50,7 +50,7 @@ class Range extends Denylist
     {
         $html = '';
         $html .= '<tr data-range-id="' . $range->getIpAccessControlRangeID() . '">';
-        $html .= '<td><a class="btn btn-xs btn-danger ccm-iprange-delete" href="#"><i class="fas fa-times"></i></a></td>';
+        $html .= '<td><a class="btn btn-sm btn-danger ccm-iprange-delete" href="#"><i class="fas fa-times"></i></a></td>';
         $html .= '<td><code>' . $range->getIpRange() . '</code></td>';
         if ($range->getType() === IpAccessControlService::IPRANGETYPE_BLACKLIST_AUTOMATIC) {
             $html .= '<td>';
@@ -58,7 +58,7 @@ class Range extends Denylist
                 $html .= $this->app->make('date')->formatPrettyDateTime($range->getExpiration(), true);
             }
             $html .= '</td>';
-            $html .= '<td class="text-end"><a href="#" class="btn btn-xs btn-info ccm-iprange-makepermanent">' . t('Make permament') . '</a></td>';
+            $html .= '<td class="text-end"><a href="#" class="btn btn-sm btn-info ccm-iprange-makepermanent">' . t('Make permament') . '</a></td>';
         }
         $html .= '</tr>';
 

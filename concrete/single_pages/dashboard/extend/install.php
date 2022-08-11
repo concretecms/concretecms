@@ -247,7 +247,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             ?>
             <div class="alert alert-info">
                 <h5><?= t('Add-On updates are available!'); ?></h5>
-                <a class="btn-xs btn-secondary btn float-end" href="<?= $view->url('/dashboard/extend/update'); ?>"><?= t('Update Add-Ons'); ?></a>
+                <a class="btn btn-sm btn-secondary float-end" href="<?= $view->url('/dashboard/extend/update'); ?>"><?= t('Update Add-Ons'); ?></a>
                 <?php
                 if ($updates == 1) {
                     ?><p><?= t('There is currently <strong>1</strong> update available.'); ?></p><?php
