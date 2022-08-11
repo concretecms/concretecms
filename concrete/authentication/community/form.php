@@ -17,7 +17,7 @@ if (isset($message)) {
         ?>" class="btn btn-primary btn-community"
            title="<?= t('Join the Concrete community to setup multiple websites, shop for extensions, and get support.'); ?>">
             <img src="<?= Core::getApplicationURL(); ?>/concrete/images/logo.svg" class="concrete-icon"></i>
-            <?= t('Log in with community.concretecms.com'); ?>
+            <?= t('Sign in with community.concretecms.com'); ?>
         </a>
     </div>
 </div>
