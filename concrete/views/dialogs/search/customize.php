@@ -10,9 +10,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		print $customizeElement->render();
 	?>
 
-	<div class="dialog-buttons">
-	<button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-	<button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
+	<div class="dialog-buttons clearfix">
+	<button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+	<button type="button" data-dialog-action="submit" class="btn btn-primary float-end"><?=t('Save')?></button>
 	</div>
 
 </form>

@@ -247,7 +247,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             ?>
             <div class="alert alert-info">
                 <h5><?= t('Add-On updates are available!'); ?></h5>
-                <a class="btn-xs btn-secondary btn float-end" href="<?= $view->url('/dashboard/extend/update'); ?>"><?= t('Update Add-Ons'); ?></a>
+                <a class="btn btn-sm btn-secondary float-end" href="<?= $view->url('/dashboard/extend/update'); ?>"><?= t('Update Add-Ons'); ?></a>
                 <?php
                 if ($updates == 1) {
                     ?><p><?= t('There is currently <strong>1</strong> update available.'); ?></p><?php
@@ -348,7 +348,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
                 ?>
                 <hr/>
                 <div class="card">
-                    <div class="card-body bg-light" style="">
+                    <div class="card-body bg-light">
                         <h4><?= t('Connect to Community'); ?></h4>
                         <p><?= t('Your site is not connected to the Concrete community. Connecting lets you easily extend a site with themes and add-ons.'); ?></p>
                         <a class="btn btn-primary" href="<?= $view->url('/dashboard/extend/connect'); ?>"><?= t("Connect to Community"); ?></a>
