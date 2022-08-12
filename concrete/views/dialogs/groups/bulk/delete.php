@@ -34,7 +34,7 @@ $form = $app->make(Form::class);
         </div>
 
         <div class="dialog-buttons">
-            <button class="btn btn-default" data-dialog-action="cancel"><?php echo t('Cancel'); ?></button>
+            <button class="btn btn-secondary" data-dialog-action="cancel"><?php echo t('Cancel'); ?></button>
             <button type="button" data-dialog-action="submit" class="btn btn-primary ms-auto"><?php echo t('Delete'); ?></button>
         </div>
     </form>

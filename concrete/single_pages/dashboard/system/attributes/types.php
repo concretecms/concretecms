@@ -73,7 +73,7 @@ $types = PendingAttributeType::getList(); ?>
     ?>
 							<?=$at->getAttributeTypeDisplayName()?>
 
-							<?=$ch->submit(t("Install"), 'submit', 'right', 'btn-secondary btn-xs')?>
+							<?=$ch->submit(t("Install"), 'submit', 'right', 'btn-secondary btn-sm')?>
                         </form>
 
                     </span>

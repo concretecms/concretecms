@@ -93,8 +93,8 @@ if (isset($calendar)) {
         <div class="btn-group ccm-block-calendar-event-list-controls">
             <?php if ($numEvents > $totalPerPage) {
     ?>
-            <button type="button" class="btn btn-default" data-cycle="previous"><i class="fas fa-angle-left"></i></button>
-                <button type="button" class="btn btn-default" data-cycle="next"><i class="fas fa-angle-right"></i></button>
+            <button type="button" class="btn btn-secondary" data-cycle="previous"><i class="fas fa-angle-left"></i></button>
+            <button type="button" class="btn btn-secondary" data-cycle="next"><i class="fas fa-angle-right"></i></button>
             <?php
 
 }
