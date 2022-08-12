@@ -43,34 +43,3 @@ if (isset($message)) {
         margin-right:5px;
     }
 </style>
-<script>
-    (function() {
-        var svg = $('.ccm-concrete-authentication-type-svg > svg');
-
-        if (svg) {
-            var img = new Image();
-            img.onerror = function() {
-                svg.parent().replaceWith('<i class="fas fa-user"></i>');
-            };
-            img.src = svg.parent().data('src');
-            $(function() {
-
-                if (svg.closest('li').hasClass('active')) {
-                    var color = $('ul.auth-types li.active').css('color');
-                    svg.attr('fill', color);
-                } else {
-                    svg.attr('fill', 'rgb(155,155,155)');
-                }
-                Concrete.event.bind('AuthenticationTypeSelected', function(e, handle) {
-                    if (handle === 'community') {
-                        var color = $('ul.auth-types li.active').css('color');
-                        svg.attr('fill', color);
-                    } else {
-                        svg.attr('fill', 'rgb(155,155,155)');
-                    }
-                });
-
-            });
-        }
-    }());
-</script>
