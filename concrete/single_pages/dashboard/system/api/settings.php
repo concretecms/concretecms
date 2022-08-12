@@ -1,6 +1,12 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
+
+if ($enable_api) {
 ?>
+    <div class="ccm-dashboard-header-buttons">
+        <a href="<?=URL::to('/dashboard/system/api/integrations')?>" class="btn btn-secondary"><?=t('Integrations')?></a>
+    </div>
+<?php } ?>
 
 <form method="post" action="<?php echo $view->action('submit'); ?>">
     <?php echo $token->output('submit'); ?>
@@ -11,31 +17,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </div>
 
     <div class="help-block"><?=t('You must ensure that the HTTP Authorization header is available on your web server. Some web servers or proxies may strip it away.')?></div>
-    
-
 
 <?php if ($enable_api) { ?>
-    <section>
-        <h3><?=t('API Integrations')?></h3>
-        <?php if ($clients && count($clients)) { ?>
-            <ul class="item-select-list">
-                <?php foreach($clients as $client) { ?>
-                    <li><a href="<?=URL::to('/dashboard/system/api/integrations', 'view_client', $client->getIdentifier())?>">
-                        <i class="fas fa-handshake"></i>
-                        <?=$client->getName()?>
-                    </a></li>
-                    <?php
-                }
-                ?>
-            </ul>
-        <?php } else { ?>
-            <div class="text-muted"><?=t('None')?></div>
-        <?php } ?>
-        <hr>
-        <div><a href="<?=URL::to('/dashboard/system/api/integrations', 'add')?>" class="btn btn-secondary btn-xs mb-3"><?=t('Add Integration')?></a></div>
-    </section>
 
-    <section>
+
+    <section class="mt-5">
         <h3><?=t('Enabled Grant Types')?></h3>
         <div class="help-block"><?=t('Choose which OAuth2 grant types you want to have access to the API for this site.')?></div>
 
