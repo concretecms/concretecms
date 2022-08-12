@@ -67,7 +67,7 @@ class Controller extends GenericOauth2TypeController
         $config = $this->app->make('config');
         $this->set('groupSelector', $this->app->make(GroupSelector::class));
         $this->set('form', $this->app->make('helper/form'));
-        $this->set('concreteSecurePrefix', (string) $config->get('concrete.urls.concrete_secure'));
+        $this->set('concreteSecurePrefix', (string) $config->get('concrete.urls.concrete_community'));
         $this->set('callbackURI', $this->app->make(ResolverManagerInterface::class)->resolve(['/ccm/system/authentication/oauth2/community/callback']));
         $this->set('apikey', (string) $config->get('auth.community.appid', ''));
         $this->set('apisecret', (string) $config->get('auth.community.secret', ''));

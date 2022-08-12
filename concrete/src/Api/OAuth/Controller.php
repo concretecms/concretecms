@@ -219,6 +219,7 @@ final class Controller implements LoggerAwareInterface
             'auth' => $request,
             'request' => $this->request,
             'client' => $request->getClient(),
+            'authorize' => false,
             'emailLogin' => $emailLogin
         ]);
 
@@ -530,7 +531,6 @@ final class Controller implements LoggerAwareInterface
 
         // Start building a view:
         $contents = new View('/oauth/authorize');
-        $contents->setViewTheme('concrete');
         $contents->addScopeItems($data);
 
         return $contents;
