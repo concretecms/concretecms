@@ -265,7 +265,7 @@ if ($install_config) {
         </div>
         <div class="ccm-install-actions">
             <form method="post" action="<?= $urlResolver->resolve(['install']) ?>" id="rerun-tests"
-                  class="pull-left">
+                  class="float-start">
                 <input type="hidden" name="locale" value="<?= h($locale) ?>"/>
                 <button class="btn btn-danger" type="submit">
                     <?= t('Run Tests Again') ?>
