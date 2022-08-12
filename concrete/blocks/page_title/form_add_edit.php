@@ -67,7 +67,7 @@ if (!strlen($titleText ?? '')) {
         </label>
     </div>
 
-    <div class="well filterTitleOptions">
+    <div class="card card-body bg-light filterTitleOptions">
         <div class="form-check">
             <label for="useFilterTopic" class="form-check-label">
                 <?php echo $form->checkbox('useFilterTopic', '1', $useFilterTopic ?? false); ?>
@@ -82,7 +82,7 @@ if (!strlen($titleText ?? '')) {
             </label>
         </div>
 
-        <div class="form-check">
+        <div class="form-check mb-3">
             <label for="useFilterDate" class="form-check-label">
                 <?php echo $form->checkbox('useFilterDate', '1', $useFilterDate ?? false); ?>
                 <?php echo t('Date'); ?>
