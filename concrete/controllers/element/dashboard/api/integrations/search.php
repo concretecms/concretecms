@@ -12,12 +12,6 @@ class Search extends ElementController
         return 'dashboard/api/integrations/search';
     }
 
-    public function __construct()
-    {
-        parent::__construct();
-
-    }
-
     public function view()
     {
         $this->set('headerSearchAction', $this->app->make('url')->to('/dashboard/system/api/integrations'));
