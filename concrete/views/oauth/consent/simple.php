@@ -50,8 +50,8 @@ foreach ($auth->getScopes() as $scope) {
         <?php $token->output('oauth_authorize_' . $client->getClientKey()); ?>
     </div>
     <div>
-        <div class="form-group">
-            <button class="btn btn-success pull-right" name="authorize_client" value="1" style="margin: 10px 0">
+        <div class="form-group clearfix">
+            <button class="btn btn-success float-end" name="authorize_client" value="1" style="margin: 10px 0">
                 <?= t('Authorize') ?>
             </button>
         </div>

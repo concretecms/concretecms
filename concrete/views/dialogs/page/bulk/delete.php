@@ -50,7 +50,7 @@
 
 
         <div class="dialog-buttons">
-            <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
+            <button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
             <button type="button" data-dialog-action="submit" class="btn btn-danger ms-auto"><?=t('Delete')?></button>
         </div>
 

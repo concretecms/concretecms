@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="text-muted"><?=t('None')?></div>
         <?php } ?>
         <hr>
-        <div><a href="<?=URL::to('/dashboard/system/api/integrations', 'add')?>" class="btn btn-secondary btn-xs mb-3"><?=t('Add Integration')?></a></div>
+        <div><a href="<?=URL::to('/dashboard/system/api/integrations', 'add')?>" class="btn btn-secondary btn-sm mb-3"><?=t('Add Integration')?></a></div>
     </section>
 
     <section>
