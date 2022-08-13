@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Api;
 
 use Concrete\Core\Api\IntegrationList;
 use Concrete\Core\Api\OAuth\Client\ClientFactory;
+use Concrete\Core\Api\OAuth\Command\DeleteOAuthClientCommand;
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;
 use Concrete\Core\Entity\OAuth\Client;
@@ -137,42 +138,11 @@ class Integrations extends DashboardPageController
             /** @var Client $client */
             $client = $this->get('client');
 
-            // Revoke all tokens associated with the client
-            $this->revokeClientTokens($client);
+            $command = new DeleteOAuthClientCommand($client->getIdentifier());
+            $this->app->executeCommand($command);
 
-            $this->entityManager->remove($client);
-            $this->entityManager->flush();
             $this->flash('success', t('Integration deleted successfully.'));
             return $this->redirect('/dashboard/system/api/integrations');
-        }
-    }
-
-    private function revokeClientTokens(Client $client)
-    {
-        /** @var \Concrete\Core\Entity\OAuth\RefreshTokenRepository $refreshTokenRepository */
-        $refreshTokenRepository = $this->entityManager->getRepository(RefreshToken::class);
-
-        /** @var \Concrete\Core\Entity\OAuth\AccessTokenRepository $accessTokenRepository */
-        $accessTokenRepository = $this->entityManager->getRepository(AccessToken::class);
-
-        /** @var \Concrete\Core\Entity\OAuth\AuthCodeRepository $authCodeRepository */
-        $authCodeRepository = $this->entityManager->getRepository(AuthCode::class);
-
-        $criteria = ['client' => $client];
-
-        foreach ($accessTokenRepository->findBy($criteria) as $token) {
-            // If there is an associated refresh token, revoke it
-            if ($refreshToken = $refreshTokenRepository->findOneBy(['accessToken' => $token])) {
-                $refreshTokenRepository->revokeRefreshToken($refreshToken);
-            }
-
-            // Revoke the access token
-            $accessTokenRepository->revokeAccessToken($token);
-        }
-
-        // Finally revoke all auth codes
-        foreach ($authCodeRepository->findBy($criteria) as $authCode) {
-            $authCodeRepository->revokeAuthCode($authCode);
         }
     }
 
