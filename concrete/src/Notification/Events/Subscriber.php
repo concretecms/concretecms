@@ -101,8 +101,10 @@ class Subscriber
             $key = new Key($keyString, '');
         }
 
+        $expires = new \DateTimeImmutable($config->get('concrete.notification.mercure.jwt.subscriber.expires_at'));
         $token = $builder
             ->withClaim('mercure', ['subscribe' => $this->getTopics()])
+            ->expiresAt($expires)
             ->getToken(
                 $signer,
                 $key

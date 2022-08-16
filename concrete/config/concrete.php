@@ -1441,6 +1441,17 @@ return [
          */
         'server_sent_events' => false,
 
+        'mercure' => [
+            'jwt' => [
+                'publisher' => [
+                    'expires_at' => '+30 minutes',
+                ],
+                'subscriber' => [
+                    'expires_at' => '+30 minutes',
+                ],
+            ],
+        ],
+
     ],
 
     'mutex' => [
