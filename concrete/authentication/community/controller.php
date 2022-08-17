@@ -11,6 +11,9 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\Group\GroupRepository;
 use OAuth\ServiceFactory;
 
+/**
+ * @deprecated - will be replaced the general External Concrete authentication type in the future.
+ */
 class Controller extends GenericOauth2TypeController
 {
     public function registrationGroupID()
