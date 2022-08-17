@@ -103,7 +103,7 @@ class PageBreadcrumbFactory
         /** @var Page $_page */
         foreach ($pages as $_page) {
             if (!$this->shouldExcludeFromNav($_page) && $this->canViewPage($_page)) {
-                $breadcrumb->add(new Item($_page->getCollectionLink(), $_page->getCollectionName()));
+                $breadcrumb->add(new Item($_page->getCollectionLink(), (string) $_page->getCollectionName()));
             }
             if ($this->shouldExcludeSubpagesFromNav($_page)) {
                 $this->setIncludeCurrent(false);
