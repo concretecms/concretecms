@@ -50,10 +50,10 @@ class ColorStyle extends Style
         foreach ($styles as $style) {
             if (isset($style['variable']) && $style['variable'] == $this->getVariable()) {
                 $value = new ColorValue();
-                $value->setRed($style['value']['r']);
-                $value->setGreen($style['value']['g']);
-                $value->setBlue($style['value']['b']);
-                $value->setAlpha($style['value']['a']);
+                $value->setRed($style['value']['r'] ?? null);
+                $value->setGreen($style['value']['g'] ?? null);
+                $value->setBlue($style['value']['b'] ?? null);
+                $value->setAlpha($style['value']['a'] ?? null);
                 return $value;
             }
         }
