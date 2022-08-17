@@ -111,7 +111,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     if ($enablePermissions) {
         ?>
         <div class="dialog-buttons">
-            <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary pull-left"><?= t('Cancel') ?></a>
+            <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary"><?= t('Cancel') ?></a>
             <button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-end"><?= t('Save') ?> <i class="fas fa-check icon-white"></i></button>
         </div>
         <?php

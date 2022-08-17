@@ -156,7 +156,7 @@ $thumbnailTypes['0'] = t('Full Size');
     </div>
 
     <div data-fields="constrain-image" class="d-none">
-        <div class="well">
+        <div class="card card-body bg-light">
             <div class="form-group">
                 <div class="form-check">
                     <?php echo $form->checkbox('cropImage', 1, isset($cropImage) ? $cropImage : false); ?>

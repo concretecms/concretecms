@@ -45,7 +45,7 @@ if (!is_array($users) || count($users) == 0) {
 		</div>
 
 		<div class="dialog-buttons">
-			<button class="btn btn-secondary pull-left" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
+			<button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
 			<button type="button" data-dialog-action="submit" class="btn btn-primary ms-auto"><?= $button; ?></button>
 		</div>
 

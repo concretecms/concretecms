@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.1.2RC1',
-    'version_installed' => '9.1.2RC1',
-    'version_db' => '20220614180000', // the key of the latest database migration
+    'version' => '9.1.2RC2',
+    'version_installed' => '9.1.2RC2',
+    'version_db' => '20220812035034', // the key of the latest database migration
 
     /*
      * Installation status
@@ -964,6 +964,7 @@ return [
     'urls' => [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
+        'concrete_community' => 'https://community.concretecms.com',
         'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
@@ -1439,6 +1440,17 @@ return [
          * @var bool
          */
         'server_sent_events' => false,
+
+        'mercure' => [
+            'jwt' => [
+                'publisher' => [
+                    'expires_at' => '+30 minutes',
+                ],
+                'subscriber' => [
+                    'expires_at' => '+30 minutes',
+                ],
+            ],
+        ],
 
     ],
 
