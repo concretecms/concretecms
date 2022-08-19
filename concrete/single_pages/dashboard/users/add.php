@@ -39,8 +39,7 @@ $fileFolderSelector = $app->make(FileFolderSelector::class);
                 <?php echo t('Required') ?>
             </span>
             </div>
-            <?= ''//$form->password('uPassword', ['autocomplete' => 'off']); ?>
-            <password-input name="uPassword"/>
+            <password-input name="uPassword" :strength-meter="true"/>
 		</div>
 
 		<div class="form-group">
