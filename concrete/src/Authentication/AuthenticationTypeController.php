@@ -5,6 +5,7 @@ namespace Concrete\Core\Authentication;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Http\Request;
 use Concrete\Core\User\User;
 use Page;
 use Controller;
@@ -42,6 +43,7 @@ abstract class AuthenticationTypeController extends Controller implements Logger
     {
         $this->authenticationType = $type;
         $this->app = Application::getFacadeApplication();
+        $this->request = $this->app->make(Request::class);
     }
 
     /**
