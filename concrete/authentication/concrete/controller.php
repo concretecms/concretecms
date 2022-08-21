@@ -31,11 +31,21 @@ class Controller extends AuthenticationTypeController
 {
     public $apiMethods = ['forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token', 'required_password_upgrade'];
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeController::getHandle()
+     */
     public function getHandle()
     {
         return 'concrete';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeControllerInterface::deauthenticate()
+     */
     public function deauthenticate(User $u)
     {
         $authCookie = $this->app->make(CookieService::class)->getCookie();
@@ -51,11 +61,21 @@ class Controller extends AuthenticationTypeController
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeController::getAuthenticationTypeIconHTML()
+     */
     public function getAuthenticationTypeIconHTML()
     {
         return '<i class="fas fa-user"></i>';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeControllerInterface::verifyHash()
+     */
     public function verifyHash(User $u, $hash)
     {
         $uID = (int) $u->getUserID();
@@ -77,10 +97,20 @@ class Controller extends AuthenticationTypeController
         return $validRow;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeController::view()
+     */
     public function view()
     {
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeControllerInterface::buildHash()
+     */
     public function buildHash(User $u, $test = 1)
     {
         if ($test > 10) {
@@ -148,6 +178,11 @@ class Controller extends AuthenticationTypeController
         return md5($o);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeControllerInterface::isAuthenticated()
+     */
     public function isAuthenticated(User $u)
     {
         return $u->isRegistered();
@@ -341,6 +376,11 @@ class Controller extends AuthenticationTypeController
         $this->view();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeControllerInterface::authenticate()
+     */
     public function authenticate()
     {
         $post = $this->post();
