@@ -54,7 +54,7 @@ class Controller extends AuthenticationTypeController
         }
         $hasher = $this->app->make(PasswordHasher::class);
         $db = $this->app->make(Connection::class);
-        foreach ($db->fetchAll('select token from authTypeConcreteCookieMap WHERE uID = ? ORDER BY validThrough DESC', [$authCookie->getUserID()]) as $row) {
+        foreach ($db->fetchAllAssociative('select token from authTypeConcreteCookieMap WHERE uID = ? ORDER BY validThrough DESC', [$authCookie->getUserID()]) as $row) {
             if ($hasher->checkPassword($authCookie->getToken(), $row['token'])) {
                 $db->delete('authTypeConcreteCookieMap', ['uID' => $authCookie->getUserID(), 'token' => $row['token']]);
             }
@@ -83,7 +83,7 @@ class Controller extends AuthenticationTypeController
         $hasher = $this->app->make(PasswordHasher::class);
         $validRow = false;
         $validThrough = (new \DateTime())->getTimestamp();
-        $rows = $db->fetchAll('SELECT validThrough, token FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough > ? ORDER BY validThrough DESC', [$uID, $validThrough]);
+        $rows = $db->fetchAllAssociative('SELECT validThrough, token FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough > ? ORDER BY validThrough DESC', [$uID, $validThrough]);
         foreach ($rows as $row) {
             if ($hasher->checkPassword($hash, $row['token'])) {
                 $validRow = true;
@@ -92,7 +92,7 @@ class Controller extends AuthenticationTypeController
         }
 
         // delete all invalid entries for this user
-        $db->executeUpdate('DELETE FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough < ?', [$uID, $validThrough]);
+        $db->executeStatement('DELETE FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough < ?', [$uID, $validThrough]);
 
         return $validRow;
     }
@@ -124,7 +124,7 @@ class Controller extends AuthenticationTypeController
         $token = $this->genString();
         $hasher = $this->app->make(PasswordHasher::class);
         try {
-            $db->executeQuery(
+            $db->executeStatement(
                 'INSERT INTO authTypeConcreteCookieMap (token, uID, validThrough) VALUES (?,?,?)',
                 [$hasher->hashPassword($token), $u->getUserID(), $validThrough]
             );
@@ -462,9 +462,9 @@ class Controller extends AuthenticationTypeController
         $db = $app['database']->connection();
 
         if (Config::get('concrete.user.registration.email_registration')) {
-            return $db->GetOne('select uIsPasswordReset from Users where uEmail = ?', [$this->post('uName')]);
+            return $db->fetchOne('select uIsPasswordReset from Users where uEmail = ?', [$this->post('uName')]);
         } else {
-            return $db->GetOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
+            return $db->fetchOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
         }
     }
 
