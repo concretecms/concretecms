@@ -164,7 +164,11 @@ class Controller extends AuthenticationTypeController
             if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
                 $uName = $this->app->make('session')->get('uPasswordResetUserName');
                 if (is_string($uName) && $uName !== '') {
-                    $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
+                    if ($this->app->make(Repository::class)->get('concrete.user.registration.email_registration')) {
+                        $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
+                    } else {
+                        $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
+                    }
                 }
             }
             try {
