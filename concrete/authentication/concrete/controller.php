@@ -21,7 +21,7 @@ use Core;
 use Exception;
 use Session;
 use UserInfo;
-use View;
+use Concrete\Core\View\View;
 use Concrete\Core\Validator\String\EmailValidator;
 
 class Controller extends AuthenticationTypeController
