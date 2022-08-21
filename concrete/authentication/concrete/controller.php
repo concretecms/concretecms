@@ -416,17 +416,6 @@ class Controller extends AuthenticationTypeController
         throw $e;
     }
 
-    private function isPasswordReset()
-    {
-        $db = $this->app->make(Connection::class);
-
-        if ($this->app->make(Repository::class)->get('concrete.user.registration.email_registration')) {
-            return $db->fetchOne('select uIsPasswordReset from Users where uEmail = ?', [$this->post('uName')]);
-        } else {
-            return $db->fetchOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
-        }
-    }
-
     public function v($hash = '')
     {
         $ui = $this->app->make(UserInfoRepository::class)->getByValidationHash($hash);
