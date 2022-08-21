@@ -78,7 +78,7 @@ class Controller extends AuthenticationTypeController
         $db = $this->app->make(Connection::class);
         $hasher = $this->app->make(PasswordHasher::class);
         $validRow = false;
-        $validThrough = (new \DateTime())->getTimestamp();
+        $validThrough = time();
         $rows = $db->fetchAllAssociative('SELECT validThrough, token FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough > ? ORDER BY validThrough DESC', [$uID, $validThrough]);
         foreach ($rows as $row) {
             if ($hasher->checkPassword($hash, $row['token'])) {
