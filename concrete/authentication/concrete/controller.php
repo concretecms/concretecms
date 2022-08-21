@@ -186,7 +186,7 @@ class Controller extends AuthenticationTypeController
                     $userInfo = null;
                 }
             }
-            $this->resetPassword($userInfo, $error);
+            $this->resetPassword($userInfo, $error, false);
         }
         $this->set('authType', $this->getAuthenticationType());
         $this->set('askEmail', $loginWithEmail ? false : true);
@@ -236,10 +236,10 @@ class Controller extends AuthenticationTypeController
                 }
             }
         }
-        $this->resetPassword($userInfo, $error);
+        $this->resetPassword($userInfo, $error, true);
     }
 
-    protected function resetPassword(?UserInfo $userInfo, ErrorList $error)
+    protected function resetPassword(?UserInfo $userInfo, ErrorList $error, bool $isForgotPassword)
     {
         $token = $this->app->make(Token::class);
         $this->set('authType', $this->getAuthenticationType());
@@ -256,6 +256,7 @@ class Controller extends AuthenticationTypeController
                 $mh->addParameter('uName', $userInfo->getUserName());
             }
             $mh->to($userInfo->getUserEmail());
+            $mh->addParameter('isForgotPassword', $isForgotPassword);
             //generate hash that'll be used to authenticate user, allowing them to change their password
             $h = new ValidationHash();
             $uHash = $h->add($userInfo->getUserID(), UVTYPE_CHANGE_PASSWORD, true);
@@ -279,7 +280,7 @@ class Controller extends AuthenticationTypeController
             if ($fromEmail !== '') {
                 $fromName = (string) $this->app->make(Repository::class)->get('concrete.email.forgot_password.name');
                 if ($fromName === '') {
-                    $fromName = t('Forgot Password');
+                    $fromName = $isForgotPassword ? t('Forgot Password') : t('Password Reset');
                 }
                 $mh->from($fromEmail, $fromName);
             }
