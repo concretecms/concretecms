@@ -358,10 +358,9 @@ class Controller extends AuthenticationTypeController
         $uName = $post['uName'];
         $uPassword = $post['uPassword'];
 
-        /** @var \Concrete\Core\Permission\IPService $ip_service */
-        $ip_service = $this->app->make('ip');
-        if ($ip_service->isDenylisted()) {
-            throw new UserMessageException($ip_service->getErrorMessage());
+        $failedLogins = $this->app->make('failed_login');
+        if ($failedLogins->isDenylisted()) {
+            throw new UserMessageException($failedLogins->getErrorMessage());
         }
 
 
