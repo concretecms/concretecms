@@ -20,7 +20,7 @@ use Concrete\Core\Validation\CSRF\Token;
 use Core;
 use Exception;
 use Session;
-use UserInfo;
+use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\View\View;
 use Concrete\Core\Validator\String\EmailValidator;
 
@@ -200,7 +200,7 @@ class Controller extends AuthenticationTypeController
 
         if ($email) {
             $errorValidator = Core::make('helper/validation/error');
-            $userInfo = Core::make('Concrete\Core\User\UserInfoRepository')->getByName(Session::get('uPasswordResetUserName'));
+            $userInfo = Core::make(UserInfoRepository::class)->getByName(Session::get('uPasswordResetUserName'));
 
             try {
                 if ($userInfo && $email != $userInfo->getUserEmail()) {
@@ -258,7 +258,7 @@ class Controller extends AuthenticationTypeController
                     throw new UserMessageException($e->toText());
                 }
 
-                $oUser = UserInfo::getByEmail($em);
+                $oUser = $this->app->make(UserInfoRepository::class)->getByEmail($em);
                 if ($oUser) {
                     $mh = $this->app->make('helper/mail');
                     //$mh->addParameter('uPassword', $oUser->resetUserPassword());
@@ -283,7 +283,7 @@ class Controller extends AuthenticationTypeController
 
                     $fromEmail = (string) $this->app->make(Repository::class)->get('concrete.email.forgot_password.address');
                     if (!strpos($fromEmail, '@')) {
-                        $adminUser = UserInfo::getByID(USER_SUPER_ID);
+                        $adminUser = $this->app->make(UserInfoRepository::class)->getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
                             $fromEmail = $adminUser->getUserEmail();
                         } else {
@@ -319,7 +319,7 @@ class Controller extends AuthenticationTypeController
         $this->set('authType', $this->getAuthenticationType());
         $e = Core::make('helper/validation/error');
         if (is_string($uHash)) {
-            $ui = UserInfo::getByValidationHash($uHash);
+            $ui = $this->app->make(UserInfoRepository::class)->getByValidationHash($uHash);
         } else {
             $ui = null;
         }
@@ -464,7 +464,7 @@ class Controller extends AuthenticationTypeController
 
     public function v($hash = '')
     {
-        $ui = UserInfo::getByValidationHash($hash);
+        $ui = $this->app->make(UserInfoRepository::class)->getByValidationHash($hash);
         if (is_object($ui)) {
             $ui->markValidated();
             $this->set('uEmail', $ui->getUserEmail());
