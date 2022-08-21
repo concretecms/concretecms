@@ -18,10 +18,10 @@ use Concrete\Core\User\PersistentAuthentication\CookieService;
 use Concrete\Core\User\ValidationHash;
 use Concrete\Core\Validation\CSRF\Token;
 use Exception;
-use Session;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\View\View;
 use Concrete\Core\Validator\String\EmailValidator;
+use Concrete\Core\Session\SessionValidatorInterface;
 
 class Controller extends AuthenticationTypeController
 {
@@ -199,8 +199,13 @@ class Controller extends AuthenticationTypeController
 
         if ($email) {
             $errorValidator = $this->app->make('helper/validation/error');
-            $userInfo = $this->app->make(UserInfoRepository::class)->getByName(Session::get('uPasswordResetUserName'));
-
+            $userInfo = null;
+            if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
+                $uName = $this->app->make('session')->get('uPasswordResetUserName');
+                if (is_string($uName) && $uName !== '') {
+                    $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
+                }
+            }
             try {
                 if ($userInfo && $email != $userInfo->getUserEmail()) {
                     throw new UserMessageException(t('Invalid email address %s provided resetting a password', $email));
@@ -406,7 +411,7 @@ class Controller extends AuthenticationTypeController
         try {
             $user = $loginService->login($uName, $uPassword);
         } catch (UserPasswordResetException $e) {
-            Session::set('uPasswordResetUserName', $this->post('uName'));
+            $this->app->make('session')->set('uPasswordResetUserName', $this->post('uName'));
             $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
         } catch (UserException $e) {
             $this->handleFailedLogin($loginService, $uName, $uPassword, $e);
