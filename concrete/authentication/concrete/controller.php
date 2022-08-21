@@ -17,7 +17,6 @@ use Concrete\Core\User\User;
 use Concrete\Core\User\PersistentAuthentication\CookieService;
 use Concrete\Core\User\ValidationHash;
 use Concrete\Core\Validation\CSRF\Token;
-use Core;
 use Exception;
 use Session;
 use Concrete\Core\User\UserInfoRepository;
@@ -199,8 +198,8 @@ class Controller extends AuthenticationTypeController
         $this->set('token', $token);
 
         if ($email) {
-            $errorValidator = Core::make('helper/validation/error');
-            $userInfo = Core::make(UserInfoRepository::class)->getByName(Session::get('uPasswordResetUserName'));
+            $errorValidator = $this->app->make('helper/validation/error');
+            $userInfo = $this->app->make(UserInfoRepository::class)->getByName(Session::get('uPasswordResetUserName'));
 
             try {
                 if ($userInfo && $email != $userInfo->getUserEmail()) {
@@ -317,7 +316,7 @@ class Controller extends AuthenticationTypeController
     public function change_password($uHash = '')
     {
         $this->set('authType', $this->getAuthenticationType());
-        $e = Core::make('helper/validation/error');
+        $e = $this->app->make('helper/validation/error');
         if (is_string($uHash)) {
             $ui = $this->app->make(UserInfoRepository::class)->getByValidationHash($uHash);
         } else {
@@ -327,7 +326,7 @@ class Controller extends AuthenticationTypeController
             $vh = new ValidationHash();
             if ($vh->isValid($uHash)) {
                 if (isset($_POST['uPassword']) && strlen($_POST['uPassword'])) {
-                    Core::make('validator/password')->isValidFor($_POST['uPassword'], $ui, $e);
+                    $this->app->make('validator/password')->isValidFor($_POST['uPassword'], $ui, $e);
 
                     if (strlen($_POST['uPassword']) && $_POST['uPasswordConfirm'] != $_POST['uPassword']) {
                         $e->add(t('The two passwords provided do not match.'));
@@ -335,7 +334,7 @@ class Controller extends AuthenticationTypeController
 
                     if (!$e->has()) {
                         $ui->changePassword($_POST['uPassword']);
-                        $h = Core::make('helper/validation/identifier');
+                        $h = $this->app->make('helper/validation/identifier');
                         $h->deleteKey('UserValidationHashes', 'uHash', $uHash);
                         $this->set('passwordChanged', true);
 
@@ -395,7 +394,7 @@ class Controller extends AuthenticationTypeController
         $uPassword = $post['uPassword'];
 
         /** @var \Concrete\Core\Permission\IPService $ip_service */
-        $ip_service = Core::make('ip');
+        $ip_service = $this->app->make('ip');
         if ($ip_service->isDenylisted()) {
             throw new UserMessageException($ip_service->getErrorMessage());
         }
