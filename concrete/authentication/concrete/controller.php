@@ -7,7 +7,6 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Permission\IpAccessControlService;
-use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
 use Concrete\Core\User\Exception\UserDeactivatedException;
@@ -20,7 +19,6 @@ use Concrete\Core\User\ValidationHash;
 use Concrete\Core\Validation\CSRF\Token;
 use Config;
 use Core;
-use Database;
 use Exception;
 use Session;
 use UserInfo;
@@ -118,7 +116,7 @@ class Controller extends AuthenticationTypeController
             // we end up pulling 10 hashes that already exist. the chances of this are very very low.
             throw new UserMessageException(t('There was a database error, try again.'));
         }
-        $db = Database::connection();
+        $db = $this->app->make(Connection::class);
 
         $validThrough = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
         $token = $this->genString();
@@ -458,8 +456,7 @@ class Controller extends AuthenticationTypeController
 
     private function isPasswordReset()
     {
-        $app = Application::getFacadeApplication();
-        $db = $app['database']->connection();
+        $db = $this->app->make(Connection::class);
 
         if (Config::get('concrete.user.registration.email_registration')) {
             return $db->fetchOne('select uIsPasswordReset from Users where uEmail = ?', [$this->post('uName')]);
