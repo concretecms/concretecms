@@ -120,10 +120,11 @@ class Controller extends AuthenticationTypeController
         $token = $this->genString();
         $hasher = $this->app->make(PasswordHasher::class);
         try {
-            $db->executeStatement(
-                'INSERT INTO authTypeConcreteCookieMap (token, uID, validThrough) VALUES (?,?,?)',
-                [$hasher->hashPassword($token), $u->getUserID(), $validThrough]
-            );
+            $db->insert('authTypeConcreteCookieMap', [
+                'token' => $hasher->hashPassword($token),
+                'uID' => $u->getUserID(),
+                'validThrough' => $validThrough,
+            ]);
         } catch (\Exception $e) {
             // HOLY CRAP.. SERIOUSLY?
             $this->buildHash($u, ++$test);
