@@ -18,6 +18,7 @@ use Concrete\Core\User\PersistentAuthentication\CookieService;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\User\ValidationHash;
+use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Validation\CSRF\Token;
 use Concrete\Core\Validator\String\EmailValidator;
 use Concrete\Core\View\View;
@@ -117,7 +118,7 @@ class Controller extends AuthenticationTypeController
         $db = $this->app->make(Connection::class);
 
         $validThrough = time() + (int) $this->app->make(Repository::class)->get('concrete.session.remember_me.lifetime');
-        $token = $this->genString();
+        $token = $this->app->make(Identifier::class)->getString(32);
         $hasher = $this->app->make(PasswordHasher::class);
         try {
             $db->insert('authTypeConcreteCookieMap', [
@@ -131,48 +132,6 @@ class Controller extends AuthenticationTypeController
         }
 
         return $token;
-    }
-
-    private function genString($a = 16)
-    {
-        if (function_exists('random_bytes')) { // PHP7+
-            return bin2hex(random_bytes($a));
-        }
-        if (function_exists('mcrypt_create_iv')) {
-            // Use /dev/urandom if available, otherwise fall back to PHP's rand (below)
-            // Don't use (MCRYPT_DEV_URANDOM|MCRYPT_RAND) here, because we prefer
-            // openssl first.
-            // Use @ here because otherwise mcrypt throws a noisy warning if
-            // /dev/urandom is missing.
-            $iv = @mcrypt_create_iv($a, MCRYPT_DEV_URANDOM);
-            if ($iv !== false) {
-                return bin2hex($iv);
-            }
-        }
-        // don't use elseif, we need the fallthrough here.
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            $iv = openssl_random_pseudo_bytes($a, $crypto_strong);
-            if ($iv !== false && $crypto_strong) {
-                return bin2hex($iv);
-            }
-        }
-        // this means we've not yet returned, so MCRYPT_DEV_URANDOM isn't available.
-        if (function_exists('mcrypt_create_iv')) {
-            // terrible, but still better than what we're doing below
-            $iv = mcrypt_create_iv($a, MCRYPT_RAND);
-            if ($iv !== false) {
-                return bin2hex($iv);
-            }
-        }
-        // This really is a last resort.
-        $o = '';
-        $chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}|":<>?\'\\';
-        $l = strlen($chars);
-        while ($a--) {
-            $o .= substr($chars, rand(0, $l), 1);
-        }
-
-        return md5($o);
     }
 
     /**
