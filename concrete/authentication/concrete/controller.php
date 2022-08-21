@@ -153,11 +153,12 @@ class Controller extends AuthenticationTypeController
      */
     public function required_password_upgrade()
     {
-        $email = $this->post('uEmail');
+        $email = $this->request->request->get('uEmail');
+        $email = is_string($email) ? trim($email) : '';
         $token = $this->app->make(Token::class);
         $this->set('token', $token);
 
-        if ($email) {
+        if ($email !== '') {
             $errorValidator = $this->app->make('helper/validation/error');
             $userInfo = null;
             if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
@@ -187,7 +188,8 @@ class Controller extends AuthenticationTypeController
     public function forgot_password()
     {
         $error = $this->app->make('helper/validation/error');
-        $em = $this->post('uEmail');
+        $em = $this->request->request->get('uEmail');
+        $em = is_string($em) ? trim($em) : '';
         $token = $this->app->make(Token::class);
         $this->set('authType', $this->getAuthenticationType());
         $this->set('token', $token);
@@ -344,9 +346,13 @@ class Controller extends AuthenticationTypeController
      */
     public function authenticate()
     {
-        $post = $this->post();
-
-        if (empty($post['uName']) || empty($post['uPassword'])) {
+        $uName = $this->request->request->get('uName');
+        $uName = is_string($uName) ? trim($uName) : '';
+        $uPassword = $this->request->request->get('uPassword');
+        if (!is_string($uPassword)) {
+            $uPassword = '';
+        }
+        if ($uName === '' || $uPassword === '') {
             $config = $this->app->make(Repository::class);
             if ($config->get('concrete.user.registration.email_registration')) {
                 throw new UserMessageException(t('Please provide both email address and password.'));
@@ -354,10 +360,6 @@ class Controller extends AuthenticationTypeController
                 throw new UserMessageException(t('Please provide both username and password.'));
             }
         }
-        
-        $uName = $post['uName'];
-        $uPassword = $post['uPassword'];
-
         $failedLogins = $this->app->make('failed_login');
         if ($failedLogins->isDenylisted()) {
             throw new UserMessageException($failedLogins->getErrorMessage());
@@ -370,7 +372,7 @@ class Controller extends AuthenticationTypeController
         try {
             $user = $loginService->login($uName, $uPassword);
         } catch (UserPasswordResetException $e) {
-            $this->app->make('session')->set('uPasswordResetUserName', $this->post('uName'));
+            $this->app->make('session')->set('uPasswordResetUserName', $uName);
             $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
         } catch (UserException $e) {
             $this->handleFailedLogin($loginService, $uName, $uPassword, $e);
@@ -380,7 +382,7 @@ class Controller extends AuthenticationTypeController
             throw new UserMessageException(t('Unknown login error occurred. Please try again.'));
         }
 
-        if (isset($post['uMaintainLogin']) && $post['uMaintainLogin']) {
+        if ($this->request->request->get('uMaintainLogin')) {
             $user->setAuthTypeCookie('concrete');
         }
 
