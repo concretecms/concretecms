@@ -294,6 +294,9 @@ class Controller extends AuthenticationTypeController
             }
         }
         if (!$error->has()) {
+            if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
+                $this->app->make('session')->remove('uPasswordResetUserName');
+            }
             $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
         }
         $this->set('authType', $this->getAuthenticationType());
