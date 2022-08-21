@@ -37,7 +37,7 @@ if (isset($callbackError) && $callbackError->has()) {
         if ($askEmail) {
             ?>
             <div class="form-group">
-                <input name="uEmail" type="email" placeholder="<?= t('Email Address') ?>" class="form-control"/>
+                <input name="uEmail" type="email" placeholder="<?= t('Email Address') ?>" class="form-control" required="required" />
             </div>
             <?php
         }
