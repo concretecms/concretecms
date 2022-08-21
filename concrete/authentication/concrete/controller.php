@@ -7,21 +7,21 @@ use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Permission\IpAccessControlService;
+use Concrete\Core\Session\SessionValidatorInterface;
 use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
 use Concrete\Core\User\Exception\UserDeactivatedException;
 use Concrete\Core\User\Exception\UserException;
 use Concrete\Core\User\Exception\UserPasswordResetException;
 use Concrete\Core\User\Login\LoginService;
-use Concrete\Core\User\User;
 use Concrete\Core\User\PersistentAuthentication\CookieService;
+use Concrete\Core\User\User;
+use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\User\ValidationHash;
 use Concrete\Core\Validation\CSRF\Token;
-use Exception;
-use Concrete\Core\User\UserInfoRepository;
-use Concrete\Core\View\View;
 use Concrete\Core\Validator\String\EmailValidator;
-use Concrete\Core\Session\SessionValidatorInterface;
+use Concrete\Core\View\View;
+use Exception;
 
 class Controller extends AuthenticationTypeController
 {
