@@ -157,22 +157,26 @@ class Controller extends AuthenticationTypeController
         $email = is_string($email) ? trim($email) : '';
         $token = $this->app->make(Token::class);
         $this->set('token', $token);
-
-        if ($email !== '') {
-            $errorValidator = $this->app->make('helper/validation/error');
-            $userInfo = null;
-            if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
-                $uName = $this->app->make('session')->get('uPasswordResetUserName');
-                if (is_string($uName) && $uName !== '') {
-                    if ($this->app->make(Repository::class)->get('concrete.user.registration.email_registration')) {
-                        $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
-                    } else {
-                        $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
-                    }
+        $userInfo = null;
+        $loginWithEmail = (bool) $this->app->make(Repository::class)->get('concrete.user.registration.email_registration');
+        if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
+            $uName = $this->app->make('session')->get('uPasswordResetUserName');
+            if (is_string($uName) && $uName !== '') {
+                if ($loginWithEmail) {
+                    $userInfo = $this->app->make(UserInfoRepository::class)->getByEmail($uName);
+                } else {
+                    $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
                 }
             }
+        }
+        if ($userInfo === null) {
+            // We arrived at the required_password_upgrade step but the user didn't specify hasn't fulfilled the login/password form
+            $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'view');
+        }
+        if ($email !== '') {
+            $errorValidator = $this->app->make('helper/validation/error');
             try {
-                if ($userInfo && $email != $userInfo->getUserEmail()) {
+                if ($email != $userInfo->getUserEmail()) {
                     throw new UserMessageException(t('Invalid email address %s provided resetting a password', $email));
                 }
             } catch (\Exception $e) {
