@@ -1,4 +1,13 @@
-<?php defined('C5_EXECUTE') or die('Access denied.'); ?>
+<?php
+
+defined('C5_EXECUTE') or die('Access denied.');
+
+/**
+ * @var Concrete\Core\Authentication\AuthenticationType $authType
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var string|null $intro_msg (may be not set)
+ */
+?>
 
 <div class="required-password-upgrade">
     <form method="post"
