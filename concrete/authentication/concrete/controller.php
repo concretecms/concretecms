@@ -17,7 +17,6 @@ use Concrete\Core\User\User;
 use Concrete\Core\User\PersistentAuthentication\CookieService;
 use Concrete\Core\User\ValidationHash;
 use Concrete\Core\Validation\CSRF\Token;
-use Config;
 use Core;
 use Exception;
 use Session;
@@ -118,7 +117,7 @@ class Controller extends AuthenticationTypeController
         }
         $db = $this->app->make(Connection::class);
 
-        $validThrough = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
+        $validThrough = time() + (int) $this->app->make(Repository::class)->get('concrete.session.remember_me.lifetime');
         $token = $this->genString();
         $hasher = $this->app->make(PasswordHasher::class);
         try {
@@ -214,7 +213,7 @@ class Controller extends AuthenticationTypeController
             $this->forgot_password();
         } else {
             $this->set('authType', $this->getAuthenticationType());
-            $this->set('intro_msg', Core::make('config/database')->get('concrete.password.reset.message'));
+            $this->set('intro_msg', $this->app->make('config/database')->get('concrete.password.reset.message'));
         }
     }
 
@@ -263,7 +262,7 @@ class Controller extends AuthenticationTypeController
                 if ($oUser) {
                     $mh = $this->app->make('helper/mail');
                     //$mh->addParameter('uPassword', $oUser->resetUserPassword());
-                    if (Config::get('concrete.user.registration.email_registration')) {
+                    if ($this->app->make(Repository::class)->get('concrete.user.registration.email_registration')) {
                         $mh->addParameter('uName', $oUser->getUserEmail());
                     } else {
                         $mh->addParameter('uName', $oUser->getUserName());
@@ -282,7 +281,7 @@ class Controller extends AuthenticationTypeController
 
                     $mh->addParameter('changePassURL', $changePassURL);
 
-                    $fromEmail = (string) Config::get('concrete.email.forgot_password.address');
+                    $fromEmail = (string) $this->app->make(Repository::class)->get('concrete.email.forgot_password.address');
                     if (!strpos($fromEmail, '@')) {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         if (is_object($adminUser)) {
@@ -292,7 +291,7 @@ class Controller extends AuthenticationTypeController
                         }
                     }
                     if ($fromEmail) {
-                        $fromName = (string) Config::get('concrete.email.forgot_password.name');
+                        $fromName = (string) $this->app->make(Repository::class)->get('concrete.email.forgot_password.name');
                         if ($fromName === '') {
                             $fromName = t('Forgot Password');
                         }
@@ -384,9 +383,7 @@ class Controller extends AuthenticationTypeController
         $post = $this->post();
 
         if (empty($post['uName']) || empty($post['uPassword'])) {
-            /** @var Repository $config */
             $config = $this->app->make(Repository::class);
-
             if ($config->get('concrete.user.registration.email_registration')) {
                 throw new UserMessageException(t('Please provide both email address and password.'));
             } else {
@@ -458,7 +455,7 @@ class Controller extends AuthenticationTypeController
     {
         $db = $this->app->make(Connection::class);
 
-        if (Config::get('concrete.user.registration.email_registration')) {
+        if ($this->app->make(Repository::class)->get('concrete.user.registration.email_registration')) {
             return $db->fetchOne('select uIsPasswordReset from Users where uEmail = ?', [$this->post('uName')]);
         } else {
             return $db->fetchOne('select uIsPasswordReset from Users where uName = ?', [$this->post('uName')]);
