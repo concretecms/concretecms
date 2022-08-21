@@ -116,7 +116,7 @@ class Controller extends AuthenticationTypeController
         if ($test > 10) {
             // This should only ever happen if by some stroke of divine intervention,
             // we end up pulling 10 hashes that already exist. the chances of this are very very low.
-            throw new \Exception(t('There was a database error, try again.'));
+            throw new UserMessageException(t('There was a database error, try again.'));
         }
         $db = Database::connection();
 
@@ -207,7 +207,7 @@ class Controller extends AuthenticationTypeController
 
             try {
                 if ($userInfo && $email != $userInfo->getUserEmail()) {
-                    throw new \Exception(t('Invalid email address %s provided resetting a password', $email));
+                    throw new UserMessageException(t('Invalid email address %s provided resetting a password', $email));
                 }
             } catch (\Exception $e) {
                 $errorValidator->add($e);
@@ -249,16 +249,16 @@ class Controller extends AuthenticationTypeController
                 }
 
                 if ($forgotPasswordThresholdReached) {
-                    throw new \Exception(t('Unable to request password reset: too many attempts. Please try again later.'));
+                    throw new UserMessageException(t('Unable to request password reset: too many attempts. Please try again later.'));
                 }
 
                 if (!$token->validate()) {
-                    throw new \Exception($token->getErrorMessage());
+                    throw new UserMessageException($token->getErrorMessage());
                 }
 
                 $e = $this->app->make('error');
                 if (!$this->app->make(EmailValidator::class)->isValid($em, $e)) {
-                    throw new \Exception($e->toText());
+                    throw new UserMessageException($e->toText());
                 }
 
                 $oUser = UserInfo::getByEmail($em);
@@ -390,9 +390,9 @@ class Controller extends AuthenticationTypeController
             $config = $this->app->make(Repository::class);
 
             if ($config->get('concrete.user.registration.email_registration')) {
-                throw new Exception(t('Please provide both email address and password.'));
+                throw new UserMessageException(t('Please provide both email address and password.'));
             } else {
-                throw new Exception(t('Please provide both username and password.'));
+                throw new UserMessageException(t('Please provide both username and password.'));
             }
         }
         
@@ -402,7 +402,7 @@ class Controller extends AuthenticationTypeController
         /** @var \Concrete\Core\Permission\IPService $ip_service */
         $ip_service = Core::make('ip');
         if ($ip_service->isDenylisted()) {
-            throw new \Exception($ip_service->getErrorMessage());
+            throw new UserMessageException($ip_service->getErrorMessage());
         }
 
 
