@@ -207,7 +207,7 @@ class Controller extends AuthenticationTypeController
 
             try {
                 if ($userInfo && $email != $userInfo->getUserEmail()) {
-                    throw new \Exception(t(sprintf('Invalid email address %s provided resetting a password', $email)));
+                    throw new \Exception(t('Invalid email address %s provided resetting a password', $email));
                 }
             } catch (\Exception $e) {
                 $errorValidator->add($e);
