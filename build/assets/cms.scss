@@ -12,6 +12,9 @@
 // But stay strong – without this being broken out AFTER our own variables we can't customizable Bootstrap colors, etc...
 @import 'bootstrap/scss/variables';
 
+// New in BS 5.2, we need to include this after maps but before root-modified
+@import "bootstrap/scss/maps";
+
 // Import the subset of Bootstrap that is required in the CMS entry point.
 // Make sure to namespace it to .ccm-ui
 // Reboot HTML body and reboot tags are basically the bootstrap reboot.scss file split into two parts.
