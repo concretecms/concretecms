@@ -27,7 +27,7 @@ $form = $app->make(Form::class);
 
 <?php if (in_array($this->controller->getTask(), ['update_set', 'update_set_groups', 'edit', 'delete_set'])) { ?>
     <div class="ccm-dashboard-header-buttons">
-        <button class="btn btn-danger" data-launch-dialog="delete-set">
+        <button class="btn btn-danger" data-launch-modal="delete-set" data-modal-options='{"title": "Delete Group Set"}'>
             <?php echo t("Delete Group Set") ?>
         </button>
     </div>
@@ -75,7 +75,7 @@ $form = $app->make(Form::class);
     </form>
 
     <div style="display: none">
-        <div data-dialog="delete-set">
+        <div data-modal-content="delete-set">
             <form method="post" action="<?php echo $view->action('delete_set'); ?>">
                 <?php echo $token->output('delete_set'); ?>
 
@@ -86,7 +86,7 @@ $form = $app->make(Form::class);
                 </p>
 
                 <div class="dialog-buttons">
-                    <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()">
+                    <button class="btn btn-secondary float-start" data-bs-dismiss="modal">
                         <?php echo t('Cancel') ?>
                     </button>
 
@@ -100,7 +100,7 @@ $form = $app->make(Form::class);
 <?php } else { ?>
     <?php if ($config->get('concrete.permissions.model') == 'advanced') { ?>
         <div class="ccm-dashboard-header-buttons">
-            <button class="btn btn-primary" data-launch-dialog="add-set"><?php echo t("Add Group Set") ?></button>
+            <button class="btn btn-primary" data-launch-modal="add-set"  data-modal-options='{"title": "Add Group Set"}'><?php echo t("Add Group Set") ?></button>
         </div>
 
         <?php if (count($groupSets) > 0) { ?>
@@ -120,7 +120,7 @@ $form = $app->make(Form::class);
         <?php } ?>
 
         <div style="display: None">
-            <div data-dialog="add-set">
+            <div data-modal-content="add-set">
                 <form method="post" action="<?php echo $view->action('add_set'); ?>">
                     <?php echo $token->output('add_set'); ?>
 
@@ -164,23 +164,3 @@ $form = $app->make(Form::class);
         </p>
     <?php } ?>
 <?php } ?>
-
-
-<!--suppress ES6ConvertVarToLetConst, JSDuplicatedDeclaration -->
-<script type="text/javascript">
-    $('[data-launch-dialog]').on('click', function () {
-        var $element = $('div[data-dialog=' + $(this).attr('data-launch-dialog') + ']');
-        if ($(this).attr('data-dialog-title')) {
-            var title = $(this).attr('data-dialog-title');
-        } else {
-            var title = $(this).text();
-        }
-        jQuery.fn.dialog.open({
-            element: $element,
-            modal: true,
-            width: 320,
-            title: title,
-            height: 'auto'
-        });
-    });
-</script>
