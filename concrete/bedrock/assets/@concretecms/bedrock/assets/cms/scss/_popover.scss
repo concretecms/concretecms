@@ -1,5 +1,6 @@
 #ccm-popover-menu-container {
   .popover {
+    position: absolute;
     z-index: 2001;
 
     &.bs-popover-top,
