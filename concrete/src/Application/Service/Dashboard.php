@@ -81,7 +81,7 @@ class Dashboard
             }
             $page = Page::getCurrentPage();
             if ($page instanceof Page && !$page->isError()) {
-                $path = $page->getCollectionPath();
+                $path = (string) $page->getCollectionPath();
             }
         }
 
