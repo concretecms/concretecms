@@ -17,6 +17,7 @@ use Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Concrete\Core\Permission\Access\Entity\UserEntity;
+use Concrete\Core\Production\Modes;
 use Concrete\Core\Tree\Node\Type\ExpressEntryCategory;
 use Concrete\Core\Tree\Type\ExpressEntryResults;
 use Concrete\Core\Updater\Migrations\Configuration;
@@ -591,6 +592,8 @@ class StartingPointPackage extends Package
             @chmod(DIR_CONFIG_SITE . '/app.php', $config->get('concrete.filesystem.permissions.file'));
         }
         $config->save('app.server_timezone', $this->installerOptions->getServerTimeZone(true)->getName());
+
+        $config->save('concrete.security.production.mode', Modes::MODE_DEVELOPMENT);
 
         $this->installerOptions->deleteFiles();
 

@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.2.0a1',
     'version_installed' => '9.2.0a1',
-    'version_db' => '20220809215454', // the key of the latest database migration
+    'version_db' => '20220822000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -258,14 +258,14 @@ return [
          *
          * @var bool
          */
-        'overrides' => true,
+        'overrides' => false,
 
         /*
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => true,
+        'blocks' => false,
 
         /*
          * Cache Assets
@@ -1283,6 +1283,13 @@ return [
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
+            ],
+        ],
+        'production' => [
+            'mode' => 'production',
+            'staging' => [
+                // Whether to always show the staging notification bar, even for logged-out users.
+                'show_notification_to_unregistered_users' => false,
             ],
         ],
         'misc' => [

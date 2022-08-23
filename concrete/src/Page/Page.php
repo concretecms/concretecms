@@ -37,6 +37,7 @@ use Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEnt
 use Concrete\Core\Permission\AssignableObjectInterface;
 use Concrete\Core\Permission\AssignableObjectTrait;
 use Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use Concrete\Core\Production\Modes;
 use Concrete\Core\Site\SiteAggregateInterface;
 use Concrete\Core\Site\Tree\TreeInterface;
 use Concrete\Core\StyleCustomizer\Skin\SkinInterface;
@@ -2262,6 +2263,11 @@ EOT
         }
         if (is_object($ptm)) {
             $classes[] = 'page-template-' . str_replace('_', '-', $ptm->getPageTemplateHandle());
+        }
+
+        $config = app('config');
+        if (in_array($config->get('concrete.security.production.mode'), [Modes::MODE_STAGING, Modes::MODE_DEVELOPMENT])) {
+            $classes[] = 'ccm-production-mode-' . $config->get('concrete.security.production.mode');
         }
 
         /*
