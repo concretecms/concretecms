@@ -561,6 +561,10 @@ return [
             ['css', 'css/features/multilingual/frontend.css', ['minify' => false]],
         ],
 
+        'feature/staging/frontend' => [
+            ['css', 'css/features/staging/frontend.css', ['minify' => false]],
+        ],
+
         'tui-image-editor' => [
             [
                 'css',
@@ -766,6 +770,12 @@ return [
         'feature/search/frontend' => [
             [
                 ['css', 'feature/search/frontend'],
+            ],
+        ],
+
+        'feature/staging/frontend' => [
+            [
+                ['css', 'feature/staging/frontend'],
             ],
         ],
 

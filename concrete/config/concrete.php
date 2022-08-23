@@ -258,14 +258,14 @@ return [
          *
          * @var bool
          */
-        'overrides' => true,
+        'overrides' => false,
 
         /*
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => true,
+        'blocks' => false,
 
         /*
          * Cache Assets

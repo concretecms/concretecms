@@ -71,6 +71,7 @@ class Controller extends BlockController
                 }
             }
         }
+        $this->set('productionMode', $this->app->make('config')->get('concrete.security.production.mode'));
         $this->set('updates', $updates);
     }
 }
