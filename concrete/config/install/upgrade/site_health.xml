@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <tasks>
+        <task handle="check_site_production_readiness" package=""/>
+    </tasks>
+    <tasksets>
+        <taskset handle="site_health" name="Site Health" package="">
+            <task handle="check_site_production_readiness"/>
+        </taskset>
+    </tasksets>
+
+</concrete5-cif>
