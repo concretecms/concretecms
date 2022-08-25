@@ -374,6 +374,25 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Health" path="/dashboard/reports/health" filename="/dashboard/reports/health.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>health, check, site check, optimization</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Health" path="/dashboard/reports/health/details" filename="/dashboard/reports/health/details.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>page types</value>
+                </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype=""
               description="" package="">
             <attributes>

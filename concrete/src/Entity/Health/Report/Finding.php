@@ -2,11 +2,12 @@
 
 namespace Concrete\Core\Entity\Health\Report;
 
+use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="HealthReportResultFinding")
+ * @ORM\Table(name="HealthReportResultFindings")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  */
@@ -28,6 +29,11 @@ abstract class Finding
      * @ORM\Column(type="string")
      */
     protected $message;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    protected $details;
 
     /**
      * @return mixed
@@ -68,6 +74,23 @@ abstract class Finding
     {
         $this->message = $message;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    /**
+     * @param mixed $details
+     */
+    public function setDetails(DetailsInterface $details): void
+    {
+        $this->details = $details;
+    }
+
 
 
 

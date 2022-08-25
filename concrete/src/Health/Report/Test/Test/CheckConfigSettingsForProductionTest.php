@@ -2,6 +2,7 @@
 namespace Concrete\Core\Health\Report\Test\Test;
 
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Health\Report\Finding\Details\DashboardPageDetails;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 
@@ -18,7 +19,7 @@ class CheckConfigSettingsForProductionTest implements TestInterface
     public function run(Runner $report): void
     {
         if ($this->config->get('concrete.debug.display_errors') && $this->config->get('concrete.debug.detail') == 'debug') {
-            $report->alert('Debug Error Output is currently set to detail. Should be disabled.');
+            $report->alert('Debug Error Output is currently set to detail. Should be disabled.', new DashboardPageDetails('/dashboard/system/environment/debug'));
 		}
 	}
 

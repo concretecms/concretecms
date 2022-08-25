@@ -7,6 +7,7 @@ use Concrete\Core\Entity\Health\Report\InfoFinding;
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Entity\Health\Report\SuccessFinding;
 use Concrete\Core\Entity\Health\Report\WarningFinding;
+use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
 use Doctrine\ORM\EntityManager;
 
 class Runner
@@ -60,34 +61,35 @@ class Runner
         $this->result = $result;
     }
 
-    public function alert($message): Finding
+    public function alert(string $message, DetailsInterface $details = null): Finding
     {
-        return $this->finding(new AlertFinding(), $message);
+        return $this->finding(new AlertFinding(), $message, $details);
     }
 
-    public function warning($message): Finding
+    public function warning(string $message, DetailsInterface $details = null): Finding
     {
-        return $this->finding(new WarningFinding(), $message);
+        return $this->finding(new WarningFinding(), $message, $details);
     }
 
-    public function info($message): Finding
+    public function info(string $message, DetailsInterface $details = null): Finding
     {
-        return $this->finding(new InfoFinding(), $message);
+        return $this->finding(new InfoFinding(), $message, $details);
     }
 
-    public function success($message): Finding
+    public function success(string $message, DetailsInterface $details = null): Finding
     {
-        return $this->finding(new SuccessFinding(), $message);
+        return $this->finding(new SuccessFinding(), $message, $details);
     }
 
     /**
      * @param Finding $object
      * @param $message
      */
-    public function finding(Finding $finding, $message): Finding
+    public function finding(Finding $finding, string $message, DetailsInterface $details = null): Finding
     {
         $finding->setMessage($message);
         $finding->setResult($this->getResult());
+        $finding->setDetails($details);
         $this->entityManager->persist($finding);
         $this->entityManager->flush();
         return $finding;
