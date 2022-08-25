@@ -6,7 +6,7 @@
 
         <p><?= t('Are you sure you want to delete this occurrence?') ?></p>
 
-        <div class="well">
+        <div class="card card-body bg-light">
             <h4><?= $occurrence->getVersion()->getName() ?></h4>
             <?= $dateFormatter->getOccurrenceDateString($occurrence) ?>
         </div>

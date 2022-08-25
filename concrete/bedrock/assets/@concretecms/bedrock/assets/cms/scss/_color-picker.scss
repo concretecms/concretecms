@@ -1,0 +1,28 @@
+div.ccm-ui {
+  .ccm-widget-colorpicker {
+    border: 1px solid $input-border-color;
+    height: unset;
+    padding: 5px;
+    width: unset;
+
+    .sp-preview {
+      border: 1px solid $input-border-color;
+      border-radius: 2px;
+      height: 30px;
+      margin-right: 15px;
+      width: 35px;
+    }
+
+    .sp-dd {
+      color: $input-color;
+      font-size: 12px;
+      line-height: 2.6rem;
+      right: 2px;
+    }
+
+    &.sp-replacer:hover,
+    &.sp-replacer.sp-active {
+      border-color: $input-focus-border-color;
+    }
+  }
+}

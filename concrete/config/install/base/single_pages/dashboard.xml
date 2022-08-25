@@ -1494,6 +1494,12 @@
         <page name="API" path="/dashboard/system/api" filename="/dashboard/system/api/view.php"
               pagetype="" description="" package="">
         </page>
+
+        <page name="API Integrations" path="/dashboard/system/api/integrations"
+              filename="/dashboard/system/api/integrations.php" pagetype=""
+              description="" package="">
+        </page>
+
         <page name="API Settings" path="/dashboard/system/api/settings"
               filename="/dashboard/system/api/settings.php" pagetype="" description="" package="">
             <attributes>
@@ -1502,20 +1508,6 @@
                 </attributekey>
             </attributes>
         </page>
-
-        <page name="API Integrations" path="/dashboard/system/api/integrations"
-              filename="/dashboard/system/api/integrations.php" pagetype=""
-              description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-        </page>
-
 
         <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
             <attributes>
