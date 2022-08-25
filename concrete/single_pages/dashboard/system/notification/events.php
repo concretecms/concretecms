@@ -138,7 +138,8 @@ if ($enable_server_sent_events) {
                             publisherPrivateKey: '<?=$publisherPrivateKey?>',
                             subscriberPrivateKey: '<?=$subscriberPrivateKey?>',
                             eventSourceUrl: '<?=$eventSourceUrl?>',
-                            testConnectionTopicUrl: '<?=$testConnectionTopicUrl?>'
+                            testConnectionTopicUrl: '<?=$testConnectionTopicUrl?>',
+                            eventSource: null,
                         },
                         mounted() {
                             var my = this
@@ -167,6 +168,7 @@ if ($enable_server_sent_events) {
                                 eventSource.onerror = event => {
                                     my.connectionError = true
                                 }
+                                my.eventSource = eventSource
                             },
                             testConnection() {
                                 var my = this
@@ -186,6 +188,12 @@ if ($enable_server_sent_events) {
                                             my.connectionError = r.responseJSON.error.message
                                         } else {
                                             my.connectionError = true
+                                        }
+                                    },
+                                    complete: function() {
+                                        if (my.eventSource) {
+                                            my.eventSource.close()
+                                            $.fn.dialog.hideLoader()
                                         }
                                     }
                                 })

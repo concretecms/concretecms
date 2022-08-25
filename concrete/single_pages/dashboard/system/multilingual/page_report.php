@@ -142,7 +142,7 @@ if (count($sections) > 0) {
                                                     }
                                                     if (!$cID) {
                                                         ?>
-                                                        <button class="btn btn-success btn-xs" type="button"
+                                                        <button class="btn btn-success btn-sm" type="button"
                                                             data-btn-action="create"
                                                             data-btn-url="<?= $multilingualController->action('create_new') ?>"
                                                             data-btn-multilingual-page-source="<?= $pc->getCollectionID() ?>"
@@ -151,7 +151,7 @@ if (count($sections) > 0) {
                                                         <?php
                                                     }
                                                     ?>
-                                                    <button class="btn btn-info btn-xs" type="button"
+                                                    <button class="btn btn-info btn-sm" type="button"
                                                         data-btn-action="map"
                                                         data-btn-url="<?= $multilingualController->action('assign') ?>"
                                                         data-btn-multilingual-page-source="<?= $pc->getCollectionID() ?>"
@@ -160,7 +160,7 @@ if (count($sections) > 0) {
                                                     <?php
                                                     if ($cID !== '0' && !$cID) {
                                                         ?>
-                                                        <button class="btn btn-warning btn-xs" type="button"
+                                                        <button class="btn btn-warning btn-sm" type="button"
                                                             data-btn-action="ignore"
                                                             data-btn-url="<?= $multilingualController->action('ignore') ?>"
                                                             data-btn-multilingual-page-source="<?= $pc->getCollectionID() ?>"
@@ -170,7 +170,7 @@ if (count($sections) > 0) {
                                                     }
                                                     if ($cID) {
                                                         ?>
-                                                        <button class="btn btn-danger btn-xs" type="button"
+                                                        <button class="btn btn-danger btn-sm" type="button"
                                                             data-btn-action="unmap"
                                                             data-btn-url="<?= $multilingualController->action('unmap') ?>"
                                                             data-btn-multilingual-page-source="<?= $pc->getCollectionID() ?>"

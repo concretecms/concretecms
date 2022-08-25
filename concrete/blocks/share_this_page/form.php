@@ -10,7 +10,7 @@ use Concrete\Core\Sharing\ShareThisPage\Service;
 
 <fieldset>
     <legend>
-        <button class="btn btn-xs float-end btn-secondary" type="button"
+        <button class="btn btn-sm float-end btn-secondary" type="button"
                 id="ccm-block-share-this-page-add-service">
 
             <?php echo t('Add Service') ?>

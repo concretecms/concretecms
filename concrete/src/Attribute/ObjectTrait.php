@@ -101,7 +101,7 @@ trait ObjectTrait
                 // with a legacy attribute type that's not using Doctrine. We have not returned an 
                 // attribute value value object.
                 $controller->saveForm($controller->post());
-                unset($value);
+                $value = false;
             } else {
                 /**
                  * @var $value AttributeValue\AbstractValue

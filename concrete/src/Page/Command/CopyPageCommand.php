@@ -12,19 +12,19 @@ class CopyPageCommand extends PageCommand
     /**
      * @var bool
      */
-    protected $isMultilingual;
+    protected $multilingualCopy;
 
     /**
      * @var string
      */
     protected $copyBatchID;
 
-    public function __construct(int $pageID, string $copyBatchID, int $destinationPageID, bool $isMultilingual = false)
+    public function __construct(int $pageID, string $copyBatchID, int $destinationPageID, bool $multilingualCopy = false)
     {
         parent::__construct($pageID);
         $this->setDestinationPageID($destinationPageID);
         $this->copyBatchID = $copyBatchID;
-        $this->isMultilingual = $isMultilingual;
+        $this->multilingualCopy = $multilingualCopy;
     }
 
     public function getDestinationPageID(): int
@@ -44,7 +44,7 @@ class CopyPageCommand extends PageCommand
 
     public function isMultilingualCopy(): bool
     {
-        return $this->isMultilingual;
+        return $this->multilingualCopy;
     }
 
     /**
