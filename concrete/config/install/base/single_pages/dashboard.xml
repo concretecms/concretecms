@@ -374,7 +374,7 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Health" path="/dashboard/reports/health" filename="/dashboard/reports/health.php" pagetype=""
+        <page name="Site Health" path="/dashboard/reports/health" filename="/dashboard/reports/health.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
@@ -382,7 +382,7 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Health" path="/dashboard/reports/health/details" filename="/dashboard/reports/health/details.php" pagetype=""
+        <page name="Report Details" path="/dashboard/reports/health/details" filename="/dashboard/reports/health/details.php" pagetype=""
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">

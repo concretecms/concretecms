@@ -53,6 +53,41 @@ class Result
         $this->process = $process;
     }
 
+    public function getName(): string
+    {
+        return $this->process->getName();
+    }
+
+    public function getTotalFindings(): int
+    {
+        return $this->findings->count();
+    }
+
+    public function getDateStarted($mask = null)
+    {
+        $timestamp = $this->getProcess()->getDateStarted();
+        if ($timestamp) {
+            if ($mask) {
+                return (new \DateTime())->setTimestamp($timestamp)->format($mask);
+            } else {
+                return $timestamp;
+            }
+        }
+        return null;
+    }
+
+    public function getDateCompleted($mask = null)
+    {
+        $timestamp = $this->getProcess()->getDateCompleted();
+        if ($timestamp) {
+            if ($mask) {
+                return (new \DateTime())->setTimestamp($timestamp)->format($mask);
+            } else {
+                return $timestamp;
+            }
+        }
+        return null;
+    }
 
 
 
