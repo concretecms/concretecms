@@ -79,8 +79,8 @@ if ($loggedIn) {
                             echo $attribute_helper->display($key, true);
                         } ?>
                     </div>
-                    <div class="form-group">
-                        <button class="btn btn-primary pull-right"><?= t('Submit'); ?></button>
+                    <div class="form-group clearfix">
+                        <button class="btn btn-primary float-end"><?= t('Submit'); ?></button>
                     </div>
 
                 </div>

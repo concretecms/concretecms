@@ -163,7 +163,7 @@ class ErrorList implements ArrayAccess, JsonSerializable
     }
 
     /**
-     * Returns whether or not this error list has more than one error registered within it.
+     * Returns whether or not this error list has more than zero error registered within it.
      *
      * @return bool
      */

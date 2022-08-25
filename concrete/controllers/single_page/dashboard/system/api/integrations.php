@@ -1,26 +1,51 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Api;
 
+use Concrete\Core\Api\IntegrationList;
 use Concrete\Core\Api\OAuth\Client\ClientFactory;
+use Concrete\Core\Api\OAuth\Command\DeleteOAuthClientCommand;
 use Concrete\Core\Entity\OAuth\AccessToken;
-use Concrete\Core\Entity\OAuth\AccessTokenRepository;
 use Concrete\Core\Entity\OAuth\AuthCode;
 use Concrete\Core\Entity\OAuth\Client;
 use Concrete\Core\Entity\OAuth\RefreshToken;
-use Concrete\Core\Entity\OAuth\RefreshTokenRepository;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Utility\Service\Validation\Strings;
 use InvalidArgumentException;
-use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
-use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\Url\Url;
 
 class Integrations extends DashboardPageController
 {
+
     public function view()
     {
-        return $this->redirect('/dashboard/system/api');
+        $config = $this->app->make("config");
+        $enable_api = (bool)$config->get('concrete.api.enabled');
+        if (!$enable_api) {
+            return $this->buildRedirect(['/dashboard/system/api/settings']);
+        }
+
+        $list = new IntegrationList($this->entityManager);
+        if ($this->request->query->has('keywords')) {
+            $list->filterByKeywords(h($this->request->query->get('keywords')));
+        }
+        $list->setItemsPerPage(20);
+        $pagination = $this->app->make(PaginationFactory::class)->createPaginationObject($list);
+        $this->set('pagination', $pagination);
+        if ($pagination->getTotalResults() > 0) {
+            $this->setThemeViewTemplate('full.php');
+        }
+        $this->set(
+            'headerSearch',
+            $this->app->make(ElementManager::class)->get('dashboard/api/integrations/search')
+        );
+        $this->set(
+            'headerMenu',
+            $this->app->make(ElementManager::class)->get('dashboard/api/integrations/menu')
+        );
     }
 
     public function add()
@@ -81,7 +106,7 @@ class Integrations extends DashboardPageController
             /** @var Client $client */
             $client = $this->get('client');
             $client->setName($this->request->request->get('name'));
-            $client->setRedirectUri((string) $this->request->request->get('redirect'));
+            $client->setRedirectUri((string)$this->request->request->get('redirect'));
 
             try {
                 $requestConsentType = $this->request->request->get('consentType');
@@ -90,7 +115,7 @@ class Integrations extends DashboardPageController
                 }
 
                 // Try setting the consent type
-                $client->setConsentType((int) $requestConsentType);
+                $client->setConsentType((int)$requestConsentType);
             } catch (InvalidArgumentException $e) {
                 // Default to simple consent
                 $client->setConsentType(Client::CONSENT_SIMPLE);
@@ -113,42 +138,11 @@ class Integrations extends DashboardPageController
             /** @var Client $client */
             $client = $this->get('client');
 
-            // Revoke all tokens associated with the client
-            $this->revokeClientTokens($client);
+            $command = new DeleteOAuthClientCommand($client->getIdentifier());
+            $this->app->executeCommand($command);
 
-            $this->entityManager->remove($client);
-            $this->entityManager->flush();
             $this->flash('success', t('Integration deleted successfully.'));
-            return $this->redirect('/dashboard/system/api/settings');
-        }
-    }
-
-    private function revokeClientTokens(Client $client)
-    {
-        /** @var \Concrete\Core\Entity\OAuth\RefreshTokenRepository $refreshTokenRepository */
-        $refreshTokenRepository = $this->entityManager->getRepository(RefreshToken::class);
-
-        /** @var \Concrete\Core\Entity\OAuth\AccessTokenRepository $accessTokenRepository */
-        $accessTokenRepository = $this->entityManager->getRepository(AccessToken::class);
-
-        /** @var \Concrete\Core\Entity\OAuth\AuthCodeRepository $authCodeRepository */
-        $authCodeRepository = $this->entityManager->getRepository(AuthCode::class);
-
-        $criteria = ['client' => $client];
-
-        foreach ($accessTokenRepository->findBy($criteria) as $token) {
-            // If there is an associated refresh token, revoke it
-            if ($refreshToken = $refreshTokenRepository->findOneBy(['accessToken' => $token])) {
-                $refreshTokenRepository->revokeRefreshToken($refreshToken);
-            }
-
-            // Revoke the access token
-            $accessTokenRepository->revokeAccessToken($token);
-        }
-
-        // Finally revoke all auth codes
-        foreach ($authCodeRepository->findBy($criteria) as $authCode) {
-            $authCodeRepository->revokeAuthCode($authCode);
+            return $this->redirect('/dashboard/system/api/integrations');
         }
     }
 
