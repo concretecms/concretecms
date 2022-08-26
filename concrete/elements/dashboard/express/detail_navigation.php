@@ -64,7 +64,7 @@ $c = Page::getCurrentPage();
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="<?php echo (string)Url::to('/dashboard/express/entries/results', $entity->getId()) ?>">
+                <a class="nav-link" href="<?=$entity->getEntryListingUrl()?>">
                     <i class="fas fa-share float-end"></i>
                     <?php echo tc(/*i18n: %s is an entity name*/ 'Express', 'View %s Entries', $entity->getEntityDisplayName()) ?>
                 </a>

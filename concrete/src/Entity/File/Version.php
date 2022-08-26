@@ -32,6 +32,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Notification\Events\MercureService;
 use Concrete\Core\Notification\Events\ServerEvent\ThumbnailGenerated;
+use Concrete\Core\Notification\Events\ServerEvent\ThumbnailGeneratedEvent;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\UserInfoRepository;
@@ -838,11 +839,25 @@ class Version implements ObjectInterface
      *
      * @return string
      */
-    public function getGenericTypeText()
+    public function getGenericTypeText($includeExtension = false)
     {
         $to = $this->getTypeObject();
+        if ($includeExtension) {
+            $extension = $this->getExtension();
+            if ($extension) {
+                return tc(
+                    /* i18n: %1$s is a file extension (eg 'JPG'), %2$s is a file type (eg 'Image') */
+                    'FileExtensionAndType',
+                    '%1$s %2$s',
+                    strtoupper($extension),
+                    $to->getGenericDisplayType()
+                );
+            }
+        } else if ($to) {
+            return $to->getGenericDisplayType();
+        }
 
-        return $to->getGenericDisplayType();
+        return t('Unknown');
     }
 
     /**
@@ -1635,7 +1650,9 @@ class Version implements ObjectInterface
             /** @var MercureService $mercureService */
             $mercureService = $app->make(MercureService::class);
             if ($mercureService->isEnabled()) {
-                $mercureService->sendUpdate(new ThumbnailGenerated($this, $type));
+                $hub = $mercureService->getHub();
+                $event = new ThumbnailGeneratedEvent($this, $type);
+                $hub->publish($event->getUpdate());
             }
         }
     }

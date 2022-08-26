@@ -37,8 +37,8 @@ $total = $total ?? 0;
         <div data-dialog-form-element="progress-bar"></div>
 
         <div class="dialog-buttons">
-            <button class="btn btn-secondary pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
-            <button class="btn btn-primary pull-right" data-dialog-action="submit"><?=t('Save')?></button>
+            <button class="btn btn-secondary" data-dialog-action="cancel"><?=t('Cancel')?></button>
+            <button class="btn btn-primary ms-auto" data-dialog-action="submit"><?=t('Save')?></button>
         </div>
 
     </form>

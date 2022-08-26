@@ -6,8 +6,8 @@
 
 <div class="card ccm-block-desktop-draft-list">
     <div class="card-body">
-    <h5 class="card-title"><?= t('Page Drafts'); ?>
-        <i class="ccm-block-desktop-draft-list-for-me-loader fas fa-sync fa-spin pull-right invisible"></i>
+    <h5 class="card-title clearfix"><?= t('Page Drafts'); ?>
+        <i class="ccm-block-desktop-draft-list-for-me-loader fas fa-sync fa-spin float-end invisible"></i>
     </h5>
     <?php if (!empty($drafts)) {
     ?>

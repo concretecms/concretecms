@@ -70,7 +70,7 @@ class StandardValidator implements ValidatorInterface
         } else if ($validateResponse == false) {
             if ($includeFieldNotPresentErrors) {
                 $response->setIsValid(false);
-                $response->getErrorObject()->add(new FieldNotPresentError(new Field($key->getAttributeKeyDisplayName())));
+                $response->getErrorObject()->add(new FieldNotPresentError(new Field('akID['.$key->getAttributeKeyID().'][value]', $key->getAttributeKeyDisplayName())));
             }
         }
         return $response;

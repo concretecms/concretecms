@@ -40,7 +40,7 @@ function getAttributeOptionHTML($v)
     ?>" name="akSelectValue_<?php echo $akSelectValueID?>" type="text" value="<?php echo h($akSelectValue)?>" size="40" />
 			</span>		
 			<div class="rightCol">
-				<input class="btn btn-default" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />
+				<input class="btn btn-secondary" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />
 				<input class="btn btn-success" type="button" onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Save')?>" />
 			</div>		
 		</div>	

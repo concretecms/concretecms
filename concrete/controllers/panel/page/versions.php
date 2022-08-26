@@ -71,6 +71,7 @@ class Versions extends BackendInterfacePageController
             $versionID = app('helper/security')->sanitizeInt($this->request->request->get('cvID'));
             $this->page->loadVersionObject($versionID);
             $r = new PageEditVersionResponse();
+            $r->setPage($this->page);
             if ($this->page->getVersionID()) {
                 $nc = $this->page->cloneVersion(t('Copy of Version: %s', $this->page->getVersionID()));
                 $v = $nc->getVersionObject();

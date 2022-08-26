@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="alert alert-info">
             <p><?= t('The following area permissions are inherited from a parent area.') ?></p>
            <br/>
-           <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="ccm_setAreaPermissionsToOverride()"><?= t('Override Permissions') ?></a>
+           <a href="javascript:void(0)" class="btn btn-sm btn-secondary" onclick="ccm_setAreaPermissionsToOverride()"><?= t('Override Permissions') ?></a>
         </div>
         <?php
     } elseif ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaCollectionInheritID() > 0) {
@@ -43,7 +43,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 ?>
             </p>
             <br/>
-            <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="ccm_setAreaPermissionsToOverride()"><?= t('Override Permissions') ?></a>
+            <a href="javascript:void(0)" class="btn btn-sm btn-secondary" onclick="ccm_setAreaPermissionsToOverride()"><?= t('Override Permissions') ?></a>
         </div>
         <?php
     } elseif (!$a->overrideCollectionPermissions()) {
@@ -51,7 +51,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="alert alert-info">
             <p><?= t("The following area permissions are inherited from the page's permissions.") ?></p>
            <br/>
-           <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="ccm_setAreaPermissionsToOverride()"><?= t('Override Permissions') ?></a>
+           <a href="javascript:void(0)" class="btn btn-sm btn-secondary" onclick="ccm_setAreaPermissionsToOverride()"><?= t('Override Permissions') ?></a>
         </div>
        <?php
     } else {
@@ -60,7 +60,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="alert alert-info">
             <p><?= t('Permissions for this area currently override those of the page.') ?></p>
             <br/>
-           <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="ccm_revertToPagePermissions()"><?= t('Revert to Page Permissions') ?></a>
+           <a href="javascript:void(0)" class="btn btn-sm btn-secondary" onclick="ccm_revertToPagePermissions()"><?= t('Revert to Page Permissions') ?></a>
         </div>
         <?php
     }
@@ -111,7 +111,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     if ($enablePermissions) {
         ?>
         <div class="dialog-buttons">
-            <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?= t('Cancel') ?></a>
+            <a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-secondary"><?= t('Cancel') ?></a>
             <button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary float-end"><?= t('Save') ?> <i class="fas fa-check icon-white"></i></button>
         </div>
         <?php

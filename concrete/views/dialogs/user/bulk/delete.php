@@ -30,8 +30,8 @@ if (! is_array($users) || count($users) ==0) {
 		</div>
 
 		<div class="dialog-buttons">
-			<button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
-			<button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?= t('Delete'); ?></button>
+			<button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
+			<button type="button" data-dialog-action="submit" class="btn btn-primary ms-auto"><?= t('Delete'); ?></button>
 		</div>
 
 	</form>

@@ -41,7 +41,7 @@ class EditUserPropertiesUserAccess extends UserAccess
         $db = Database::connection();
         $db->executeQuery('delete from UserPermissionEditPropertyAccessList where paID = ?', [$this->getPermissionAccessID()]);
         $db->executeQuery('delete from UserPermissionEditPropertyAttributeAccessListCustom where paID = ?', [$this->getPermissionAccessID()]);
-        if (is_array($args['propertiesIncluded'])) {
+        if (isset($args['propertiesIncluded']) && is_array($args['propertiesIncluded'])) {
             foreach ($args['propertiesIncluded'] as $peID => $attributePermission) {
                 $allowEditUName = 0;
                 $allowEditUEmail = 0;
@@ -76,7 +76,7 @@ class EditUserPropertiesUserAccess extends UserAccess
             }
         }
 
-        if (is_array($args['propertiesExcluded'])) {
+        if (isset($args['propertiesExcluded']) && is_array($args['propertiesExcluded'])) {
             foreach ($args['propertiesExcluded'] as $peID => $attributePermission) {
                 $allowEditUNameExcluded = 0;
                 $allowEditUEmailExcluded = 0;
@@ -111,7 +111,7 @@ class EditUserPropertiesUserAccess extends UserAccess
             }
         }
 
-        if (is_array($args['akIDInclude'])) {
+        if (isset($args['akIDInclude']) && is_array($args['akIDInclude'])) {
             foreach ($args['akIDInclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = [$this->getPermissionAccessID(), $peID, $akID];
@@ -120,7 +120,7 @@ class EditUserPropertiesUserAccess extends UserAccess
             }
         }
 
-        if (is_array($args['akIDExclude'])) {
+        if (isset($args['akIDExclude']) && is_array($args['akIDExclude'])) {
             foreach ($args['akIDExclude'] as $peID => $akIDs) {
                 foreach ($akIDs as $akID) {
                     $v = [$this->getPermissionAccessID(), $peID, $akID];

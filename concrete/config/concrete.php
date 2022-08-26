@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.1.1',
-    'version_installed' => '9.1.1',
-    'version_db' => '20220516191423', // the key of the latest database migration
+    'version' => '9.1.2RC2',
+    'version_installed' => '9.1.2RC2',
+    'version_db' => '20220812035034', // the key of the latest database migration
 
     /*
      * Installation status
@@ -168,7 +168,7 @@ return [
          */
         'extensions' => '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;' .
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
-            '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv',
+            '*.pptx;*.kml;*.xml;*.svg;*.webm;*.webp;*.ogg;*.ogv',
         /*
          * Disallowed file extension list (takes the precedence over the extensions allowlist).
          *
@@ -964,6 +964,7 @@ return [
     'urls' => [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
+        'concrete_community' => 'https://community.concretecms.com',
         'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
@@ -1136,6 +1137,18 @@ return [
              * @var bool|string Email to notify
              */
             'notification' => false,
+        ],
+
+        /*
+         * --------------------------------------------------------------------
+         * Edit Profile form settings.
+         * --------------------------------------------------------------------
+         */
+        'edit_profile' => [
+            /*
+             * Determines whether the username field is displayed when editing profile
+             */
+            'display_username_field' => true,
         ],
 
         /*
@@ -1427,6 +1440,17 @@ return [
          * @var bool
          */
         'server_sent_events' => false,
+
+        'mercure' => [
+            'jwt' => [
+                'publisher' => [
+                    'expires_at' => '+30 minutes',
+                ],
+                'subscriber' => [
+                    'expires_at' => '+30 minutes',
+                ],
+            ],
+        ],
 
     ],
 

@@ -18,7 +18,7 @@ $consentType = $client->getConsentType();
 
 <div class="ccm-dashboard-header-buttons">
     <div class="btn-group">
-        <a href="<?=URL::to('/dashboard/system/api/settings'); ?>" class="btn btn-secondary"><?php echo t('Back to Settings'); ?></a>
+        <a href="<?=URL::to('/dashboard/system/api/integrations'); ?>" class="btn btn-secondary"><?php echo t('Back to Integrations'); ?></a>
         <button class="btn btn-danger" data-dialog="delete-client"><?=t("Delete")?></button>
         <a href="<?=URL::to('/dashboard/system/api/integrations', 'edit', $client->getIdentifier()); ?>" class="btn btn-primary"><?php echo t('Edit'); ?></a>
     </div>

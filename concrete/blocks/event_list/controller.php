@@ -112,7 +112,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             if ($this->filterByTopicAttributeKeyID) {
                 $ak = EventKey::getByID($this->filterByTopicAttributeKeyID);
                 if (is_object($ak)) {
-                    $list->filterByAttribute($ak->getAttributeKeyHandle(), $this->filterByTopicID);
+                    if (isset($this->filterByTopicID) && !empty($this->filterByTopicID)) {
+                        $list->filterByAttribute($ak->getAttributeKeyHandle(), $this->filterByTopicID);
+                    }
                 }
             } elseif ($this->filterByPageTopicAttributeKeyHandle) {
                 $c = \Page::getCurrentPage();
@@ -195,9 +197,9 @@ class Controller extends BlockController implements UsesFeatureInterface
         }
         $this->loadKeys();
 
-        if (isset($this->filterByPageTopicAttributeKeyHandle)) {
+        if (isset($this->filterByPageTopicAttributeKeyHandle) && !empty($this->filterByPageTopicAttributeKeyHandle)) {
             $this->set('filterByTopic', 'page_attribute');
-        } elseif (isset($this->filterByTopicAttributeKeyID)) {
+        } elseif (isset($this->filterByTopicAttributeKeyID) && !empty($this->filterByTopicAttributeKeyID)) {
             $this->set('filterByTopic', 'specific');
         } else {
             $this->set('filterByTopic', 'none');

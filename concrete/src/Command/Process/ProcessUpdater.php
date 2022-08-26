@@ -11,6 +11,7 @@ use Concrete\Core\Entity\Command\TaskProcess;
 use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\Notification\Events\MercureService;
+use Concrete\Core\Notification\Events\ServerEvent\ProcessClosedEvent;
 use Concrete\Core\Notification\Mercure\Update\BatchUpdated;
 use Concrete\Core\Notification\Events\ServerEvent\ProcessClosed;
 use Doctrine\ORM\EntityManager;
@@ -73,7 +74,9 @@ class ProcessUpdater
 
         if ($this->mercureService->isEnabled()) {
             usleep(500000); // some fast-running tasks cause race conditions.
-            $this->mercureService->sendUpdate(new ProcessClosed($process->jsonSerialize(), $exitCode));
+            $event = new ProcessClosedEvent($process->jsonSerialize(), $exitCode);
+            $hub = $this->mercureService->getHub();
+            $hub->publish($event->getUpdate());
         }
 
         $this->clearOldProcesses();

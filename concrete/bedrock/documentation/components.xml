@@ -211,14 +211,14 @@
 
                             <h4>Regular</h4>
 
-                                    <button class="btn btn-primary">Primary</span>
-                                    <button class="btn btn-secondary">Secondary</span>
-                                    <button class="btn btn-success">Success</span>
-                                    <button class="btn btn-danger">Danger</span>
-                                    <button class="btn btn-warning">Warning</span>
-                                    <button class="btn btn-info">Info</span>
-                                    <button class="btn btn-light text-dark">Light</span>
-                                    <button class="btn btn-dark">Dark</span>
+                                    <button class="btn btn-primary me-2">Primary</span>
+                                    <button class="btn btn-secondary me-2">Secondary</span>
+                                    <button class="btn btn-success me-2">Success</span>
+                                    <button class="btn btn-danger me-2">Danger</span>
+                                    <button class="btn btn-warning me-2">Warning</span>
+                                    <button class="btn btn-info me-2">Info</span>
+                                    <button class="btn btn-light text-dark me-2">Light</span>
+                                    <button class="btn btn-dark me-2">Dark</span>
 
 
                         </section>
@@ -227,14 +227,14 @@
 
                             <h4>Outline</h4>
 
-                                    <button class="btn btn-outline-primary">Primary</span>
-                                    <button class="btn btn-outline-secondary">Secondary</span>
-                                    <button class="btn btn-outline-success">Success</span>
-                                    <button class="btn btn-outline-danger">Danger</span>
-                                    <button class="btn btn-outline-warning">Warning</span>
-                                    <button class="btn btn-outline-info">Info</span>
-                                    <button class="btn btn-outline-light text-dark">Light</span>
-                                    <button class="btn btn-outline-dark">Dark</span>
+                                    <button class="btn btn-outline-primary me-2">Primary</span>
+                                    <button class="btn btn-outline-secondary me-2">Secondary</span>
+                                    <button class="btn btn-outline-success me-2">Success</span>
+                                    <button class="btn btn-outline-danger me-2">Danger</span>
+                                    <button class="btn btn-outline-warning me-2">Warning</span>
+                                    <button class="btn btn-outline-info me-2">Info</span>
+                                    <button class="btn btn-outline-light text-dark me-2">Light</span>
+                                    <button class="btn btn-outline-dark me-2">Dark</span>
 
 
                         </section>
@@ -258,8 +258,8 @@
             <section class="mt-5">
                 <h4>Large</h4>
                 <div>
-                    <button type="button" class="btn btn-lg btn-primary">Large Button</button>
-                    <button type="button" class="btn btn-lg btn-secondary">Large Button</button>
+                    <button type="button" class="btn btn-lg me-2 btn-primary">Large Button</button>
+                    <button type="button" class="btn btn-lg me-2 btn-secondary">Large Button</button>
                 </div>
             </section>
 ]]></content>
@@ -276,8 +276,8 @@
             <section class="mt-5">
                 <h4>Small</h4>
                 <div>
-                    <button type="button" class="btn btn-sm btn-primary">Small Button</button>
-                    <button type="button" class="btn btn-sm btn-secondary">Small Button</button>
+                    <button type="button" class="btn btn-sm me-2 btn-primary">Small Button</button>
+                    <button type="button" class="btn btn-sm me-2 btn-secondary">Small Button</button>
                 </div>
             </section>
 
@@ -294,8 +294,8 @@
             <section class="mt-5">
                 <h4>Disabled</h4>
                 <div>
-                    <button type="button" class="btn btn-primary" disabled>Button</button>
-                    <button type="button" class="btn btn-secondary" disabled>Button</button>
+                    <button type="button" class="btn btn-primary me-2" disabled>Button</button>
+                    <button type="button" class="btn btn-secondary me-2" disabled>Button</button>
                 </div>
             </section>
 

@@ -59,8 +59,8 @@ $form = $app->make('helper/form');
     </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">
-            <button class="pull-right btn btn-primary" type="submit" ><?=t('Save')?></button>
+        <div class="ccm-dashboard-form-actions clearfix">
+            <button class="btn btn-primary float-end" type="submit" ><?=t('Save')?></button>
         </div>
     </div>
 

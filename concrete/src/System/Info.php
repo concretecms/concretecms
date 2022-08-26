@@ -472,4 +472,14 @@ class Info
 
         return $this->dbmsSqlMode;
     }
+
+    public function getHostname()
+    {
+        return gethostname();
+    }
+
+    public function getEnvironment()
+    {
+        return $this->app->environment();
+    }
 }
