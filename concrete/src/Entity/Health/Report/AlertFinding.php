@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Entity\Health\Report;
 
+use Concrete\Core\Health\Report\Finding\Formatter\AlertFormatter;
+use Concrete\Core\Health\Report\Finding\Formatter\FormatterInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,8 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
 class AlertFinding extends Finding
 {
 
-
-
+    public function getFormatter(): FormatterInterface
+    {
+        return new AlertFormatter();
+    }
 
 
 }

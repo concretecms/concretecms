@@ -7,7 +7,7 @@ use Concrete\Core\Entity\Health\Report\InfoFinding;
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Entity\Health\Report\SuccessFinding;
 use Concrete\Core\Entity\Health\Report\WarningFinding;
-use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
+use Concrete\Core\Health\Report\Finding\SettingsLocation\SettingsLocationInterface;
 use Doctrine\ORM\EntityManager;
 
 class Runner
@@ -61,35 +61,35 @@ class Runner
         $this->result = $result;
     }
 
-    public function alert(string $message, DetailsInterface $details = null): Finding
+    public function alert(string $message, SettingsLocationInterface $location = null): Finding
     {
-        return $this->finding(new AlertFinding(), $message, $details);
+        return $this->finding(new AlertFinding(), $message, $location);
     }
 
-    public function warning(string $message, DetailsInterface $details = null): Finding
+    public function warning(string $message, SettingsLocationInterface $location = null): Finding
     {
-        return $this->finding(new WarningFinding(), $message, $details);
+        return $this->finding(new WarningFinding(), $message, $location);
     }
 
-    public function info(string $message, DetailsInterface $details = null): Finding
+    public function info(string $message, SettingsLocationInterface $location = null): Finding
     {
-        return $this->finding(new InfoFinding(), $message, $details);
+        return $this->finding(new InfoFinding(), $message, $location);
     }
 
-    public function success(string $message, DetailsInterface $details = null): Finding
+    public function success(string $message, SettingsLocationInterface $location = null): Finding
     {
-        return $this->finding(new SuccessFinding(), $message, $details);
+        return $this->finding(new SuccessFinding(), $message, $location);
     }
 
     /**
      * @param Finding $object
      * @param $message
      */
-    public function finding(Finding $finding, string $message, DetailsInterface $details = null): Finding
+    public function finding(Finding $finding, string $message, SettingsLocationInterface $location = null): Finding
     {
         $finding->setMessage($message);
         $finding->setResult($this->getResult());
-        $finding->setDetails($details);
+        $finding->setSettingsLocation($location);
         $this->entityManager->persist($finding);
         $this->entityManager->flush();
         return $finding;

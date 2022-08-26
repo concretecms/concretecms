@@ -3,9 +3,12 @@ namespace Concrete\Controller\SinglePage\Dashboard\Reports\Health;
 
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Health\Report\Command\DeleteReportResultCommand;
+use Concrete\Core\Health\Report\Finding\CsvWriter;
 use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Navigation\Item\PageItem;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 
 class Details extends DashboardPageController
 {
@@ -20,7 +23,7 @@ class Details extends DashboardPageController
         $this->setBreadcrumb($breadcrumb);
     }
 
-    public function view($resultId = null)
+    protected function getResult($resultId = null): ?Result
     {
         $result = null;
         if ($resultId) {
@@ -31,10 +34,48 @@ class Details extends DashboardPageController
             throw new \Exception(t('Invalid result ID.'));
         }
 
+        return $result;
+    }
+
+    public function view($resultId = null)
+    {
+        $result = $this->getResult($resultId);
+
         // Set breadcrumb
         $this->setHealthResultBreadcrumb($result);
 
+        $findings = $result->getWeightedFindings();
         $this->set('result', $result);
+
+        if (count($findings) > 0) {
+            $pagination = new Pagerfanta(new ArrayAdapter($findings));
+            $pagination->setMaxPerPage(20);
+
+            if ($this->request->query->has('p')) {
+                $currentPage = (int) $this->request->query->get('p');
+                $pagination->setCurrentPage($currentPage);
+            }
+
+            $manager = $this->app->make('manager/view/pagination');
+            $driver = $manager->driver('dashboard');
+
+            $this->set('pagination', $pagination);
+            $this->set('paginationView', $driver);
+
+            if (count($findings) > 0) {
+                $this->setThemeViewTemplate('full.php');
+            }
+        }
+    }
+
+    public function export($resultId = null, $token = null)
+    {
+        $result = $this->getResult($resultId);
+        if ($this->token->validate('export', $token)) {
+            $writer = $this->app->make(CsvWriter::class);
+            return $writer->outputResultFindings($result);
+        }
+        $this->view($resultId);
     }
 
     public function delete()

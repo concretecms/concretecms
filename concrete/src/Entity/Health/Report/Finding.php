@@ -2,11 +2,15 @@
 
 namespace Concrete\Core\Entity\Health\Report;
 
-use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
+use Concrete\Core\Health\Report\Finding\Formatter\FormatterInterface;
+use Concrete\Core\Health\Report\Finding\SettingsLocation\SettingsLocationInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="FindingRepository")
  * @ORM\Table(name="HealthReportResultFindings")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
@@ -33,7 +37,7 @@ abstract class Finding
     /**
      * @ORM\Column(type="json")
      */
-    protected $details;
+    protected $settingsLocation;
 
     /**
      * @return mixed
@@ -78,19 +82,29 @@ abstract class Finding
     /**
      * @return mixed
      */
-    public function getDetails()
+    public function getRawSettingsLocation()
     {
-        return $this->details;
+        return $this->settingsLocation;
+    }
+
+    public function getSettingsLocation(): ?SettingsLocationInterface
+    {
+        if (is_array($this->settingsLocation) && isset($this->settingsLocation['class'])) {
+            $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+            return $serializer->denormalize($this->settingsLocation, $this->settingsLocation['class']);
+        }
+        return null;
     }
 
     /**
-     * @param mixed $details
+     * @param mixed $settingsLocation
      */
-    public function setDetails(DetailsInterface $details): void
+    public function setSettingsLocation($settingsLocation): void
     {
-        $this->details = $details;
+        $this->settingsLocation = $settingsLocation;
     }
 
+    abstract public function getFormatter(): FormatterInterface;
 
 
 

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Health\Report\Test\Test;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Health\Report\Finding\Details\DashboardPageDetails;
+use Concrete\Core\Health\Report\Finding\SettingsLocation\Location\LoggingSettingsLocation;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 
@@ -21,13 +21,13 @@ class CheckConfigLoggingSettingsForProduction implements TestInterface
         if ($this->config->get('concrete.log.configuration.mode') === 'simple' && $this->config->get('concrete.log.configuration.simple.handler') === 'database') {
             $report->info(
                 'Log messages are being sent to the database. For increased security and performance, consider logging to a file instead.',
-                new DashboardPageDetails('/dashboard/system/environment/logging')
+                new LoggingSettingsLocation()
             );
         }
         if ($this->config->get('concrete.processes.logging.method') === 'none') {
             $report->info(
                 'Task process output is not being logged. Consider enabling logging on tasks.',
-                new DashboardPageDetails('/dashboard/system/automation/settings')
+                new LoggingSettingsLocation()
             );
         }
 

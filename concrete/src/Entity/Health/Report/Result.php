@@ -89,7 +89,46 @@ class Result
         return null;
     }
 
+    /**
+     * @return Finding[]
+     */
+    public function getFindings()
+    {
+        return $this->findings;
+    }
 
 
+
+    /**
+     * Returns all findings for the current report result, but weights them, with items by type coming in the following
+     * positions
+     *
+     * AlertFinding
+     * WarningFinding
+     * SuccessFinding
+     * InfoFinding
+     *
+     * @return Finding[]
+     */
+    public function getWeightedFindings(): array
+    {
+        $findings = $this->getFindings()->toArray();
+        usort($findings, function(Finding $a, Finding $b) {
+            if (get_class($a) === get_class($b)) {
+                return 0;
+            }
+            if ($a instanceof AlertFinding) {
+                return -1;
+            }
+            if ($a instanceof WarningFinding && $b instanceof SuccessFinding) {
+                return -1;
+            }
+            if ($a instanceof SuccessFinding && $b instanceof InfoFinding) {
+                return -1;
+            }
+            return 1;
+        });
+        return $findings;
+    }
 
 }
