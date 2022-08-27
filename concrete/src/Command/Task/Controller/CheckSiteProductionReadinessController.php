@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Command\Task\Controller;
 
+use Concrete\Core\Health\Report\Grader\GraderInterface;
+use Concrete\Core\Health\Report\Grader\ProductionGrader;
 use Concrete\Core\Health\Report\ReportController;
 use Concrete\Core\Health\Report\Test\Suite\CheckSiteProductionReadinessSuite;
 use Concrete\Core\Health\Report\Test\SuiteInterface;
@@ -23,5 +25,10 @@ class CheckSiteProductionReadinessController extends ReportController
     public function getTestSuite(): SuiteInterface
     {
         return new CheckSiteProductionReadinessSuite();
+    }
+
+    public function getResultGrader(): ?GraderInterface
+    {
+        return new ProductionGrader();
     }
 }

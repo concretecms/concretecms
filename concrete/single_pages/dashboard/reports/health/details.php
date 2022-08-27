@@ -1,5 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
+
+/**
+ * @var \Pagerfanta\Pagerfanta $pagination
+ * @var \Concrete\Core\Health\Grade\GradeInterface $grade
+ */
+
 ?>
 
 
@@ -27,12 +33,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <?php
 
-/**
- * @var \Pagerfanta\Pagerfanta $pagination
- */
 if (count($pagination)) { ?>
 
-    <?php if ($showGrade) { ?>
+    <?php if (isset($grade)) {
+        $gradeFormatter = $grade->getFormatter();
+        ?>
 
         <div class="container">
             <div class="row">
@@ -40,7 +45,7 @@ if (count($pagination)) { ?>
 
                     <div class="mb-5 mt-5 text-center">
 
-                        alkjasldfja
+                        <?=$gradeFormatter->getBannerElement()->render()?>
 
                     </div>
                 </div>

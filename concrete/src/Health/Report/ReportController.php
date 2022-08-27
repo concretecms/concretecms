@@ -8,6 +8,7 @@ use Concrete\Core\Command\Task\Runner\BatchProcessTaskRunner;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Health\Report\Message\FinishReportMessage;
+use Concrete\Core\Health\Report\Message\GradeReportMessage;
 use Concrete\Core\Health\Report\Message\RunReportTestMessage;
 
 abstract class ReportController extends AbstractController implements ReportControllerInterface
@@ -31,6 +32,7 @@ abstract class ReportController extends AbstractController implements ReportCont
         foreach($suite->getTests() as $test) {
             $batch->add(new RunReportTestMessage($result->getId(), $test));
         }
+        $batch->add(new GradeReportMessage($result->getId()));
         $batch->add(new FinishReportMessage($result->getId()));
         return new BatchProcessTaskRunner($task, $batch, $input, t('Generating report...'));
     }

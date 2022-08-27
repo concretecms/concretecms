@@ -62,12 +62,12 @@ class Details extends DashboardPageController
             $this->set('pagination', $pagination);
             $this->set('paginationView', $driver);
 
-            $showGrade = true;
+            $grade = $result->getGrade();
             if ($pagination->getCurrentPage() > 1) {
-                $showGrade = false;
+                $grade = null;
             }
 
-            $this->set('showGrade', $showGrade);
+            $this->set('grade', $grade);
 
             if (count($findings) > 0) {
                 $this->setThemeViewTemplate('full.php');

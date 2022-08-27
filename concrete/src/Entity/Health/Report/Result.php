@@ -2,7 +2,12 @@
 
 namespace Concrete\Core\Entity\Health\Report;
 
+use Concrete\Core\Entity\Automation\Task;
+use Concrete\Core\Health\Grade\GradeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @ORM\Entity
@@ -40,6 +45,16 @@ class Result
     protected $dateCompleted;
 
     /**
+     * @ORM\Column(type="integer", options={"unsigned":true}, nullable=true)
+     */
+    protected $score;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    protected $grade;
+
+    /**
      * @ORM\Column(type="string")
      */
     protected $name;
@@ -53,7 +68,7 @@ class Result
     }
 
     /**
-     * @return mixed
+     * @return Task|null
      */
     public function getTask()
     {
@@ -170,5 +185,49 @@ class Result
         });
         return $findings;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getScore()
+    {
+        return $this->score;
+    }
+
+    /**
+     * @param mixed $score
+     */
+    public function setScore($score): void
+    {
+        $this->score = $score;
+    }
+
+    /**
+     * @param mixed $grade
+     */
+    public function setGrade($grade): void
+    {
+        $this->grade = $grade;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRawGrade()
+    {
+        return $this->grade;
+    }
+
+    public function getGrade(): ?GradeInterface
+    {
+        if (is_array($this->grade) && isset($this->grade['class'])) {
+            $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+            return $serializer->denormalize($this->grade, $this->grade['class']);
+        }
+        return null;
+    }
+
+
+
 
 }

@@ -12,6 +12,7 @@ if ($pagination->getTotalResults() > 0) { ?>
             <th><?=t('Date Started')?></th>
             <th><?=t('Date Completed')?></th>
             <th class="text-center"><?=t('Findings')?></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -21,6 +22,16 @@ if ($pagination->getTotalResults() > 0) { ?>
                 <td class="text-nowrap"><?=$result->getDateStarted('F d, Y g:i a')?></td>
                 <td class="text-nowrap"><?=$result->getDateCompleted('F d, Y g:i a') ?? '<span class="text-muted">' . t('Running...') . '</span>'?></td>
                 <td class="text-nowrap text-center"><?=$result->getTotalFindings()?></td>
+                <td class="text-nowrap text-center">
+                    <?php
+                    $grade = $result->getGrade();
+                    if ($grade) {
+                        $gradeFormatter = $grade->getFormatter();
+                        echo $gradeFormatter->getResultsListIcon();?>
+
+                    <?php }
+                    ?>
+                </td>
             </tr>
         <?php } ?>
         </tbody>
