@@ -18,16 +18,31 @@ class Result
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Command\Process")
-     * @ORM\JoinColumn(name="processID", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\Automation\Task")
+     * @ORM\JoinColumn(name="taskID", referencedColumnName="id", onDelete="SET NULL")
      */
-    protected $process;
+    protected $task;
 
     /**
      * @ORM\OneToMany(targetEntity="Finding", mappedBy="result", cascade={"remove"})
      * @ORM\JoinColumn(name="resultFindingID", referencedColumnName="id")
      */
     protected $findings;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned":true})
+     */
+    protected $dateStarted;
+
+    /**
+     * @ORM\Column(type="integer", options={"unsigned":true}, nullable=true)
+     */
+    protected $dateCompleted;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $name;
 
     /**
      * @return mixed
@@ -40,22 +55,49 @@ class Result
     /**
      * @return mixed
      */
-    public function getProcess()
+    public function getTask()
     {
-        return $this->process;
+        return $this->task;
     }
 
     /**
-     * @param mixed $process
+     * @param mixed $task
      */
-    public function setProcess($process): void
+    public function setTask($task): void
     {
-        $this->process = $process;
+        $this->task = $task;
     }
 
-    public function getName(): string
+    /**
+     * @return mixed
+     */
+    public function getName()
     {
-        return $this->process->getName();
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param mixed $dateStarted
+     */
+    public function setDateStarted($dateStarted): void
+    {
+        $this->dateStarted = $dateStarted;
+    }
+
+    /**
+     * @param mixed $dateCompleted
+     */
+    public function setDateCompleted($dateCompleted): void
+    {
+        $this->dateCompleted = $dateCompleted;
     }
 
     public function getTotalFindings(): int
@@ -65,7 +107,7 @@ class Result
 
     public function getDateStarted($mask = null)
     {
-        $timestamp = $this->getProcess()->getDateStarted();
+        $timestamp = $this->dateStarted;
         if ($timestamp) {
             if ($mask) {
                 return (new \DateTime())->setTimestamp($timestamp)->format($mask);
@@ -78,7 +120,7 @@ class Result
 
     public function getDateCompleted($mask = null)
     {
-        $timestamp = $this->getProcess()->getDateCompleted();
+        $timestamp = $this->dateCompleted;
         if ($timestamp) {
             if ($mask) {
                 return (new \DateTime())->setTimestamp($timestamp)->format($mask);
@@ -96,8 +138,6 @@ class Result
     {
         return $this->findings;
     }
-
-
 
     /**
      * Returns all findings for the current report result, but weights them, with items by type coming in the following

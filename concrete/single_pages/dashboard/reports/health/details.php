@@ -32,6 +32,27 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 if (count($pagination)) { ?>
 
+    <?php if ($showGrade) { ?>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="mb-5 mt-5 text-center">
+
+                        alkjasldfja
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding-left: 37px">
+            <h3><?=t('Findings')?></h3>
+        </div>
+
+    <?php } ?>
+
     <table class="ccm-search-results-table">
         <thead>
         <tr>

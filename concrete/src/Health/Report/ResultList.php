@@ -20,7 +20,7 @@ class ResultList extends EntityItemList
     {
         $this->entityManager = $entityManager;
         parent::__construct();
-        $this->sortBy('process.dateStarted', 'desc');
+        $this->sortBy('result.dateStarted', 'desc');
     }
 
     public function getEntityManager()
@@ -30,8 +30,8 @@ class ResultList extends EntityItemList
 
     public function createQuery()
     {
-        $this->query->select('result, process')->from(Result::class, 'result')
-            ->innerJoin('result.process', 'process');
+        $this->query->select('result')->from(Result::class, 'result')
+            ->andWhere('result.dateCompleted is not null');
     }
 
     protected function createPaginationObject()
