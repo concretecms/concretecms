@@ -13,7 +13,9 @@
         <task handle="generate_thumbnails" package=""/>
         <task handle="remove_old_file_attachments" package=""/>
         <task handle="remove_unvalidated_users" package=""/>
-        <task handle="check_site_production_readiness" package=""/>
+        <task handle="production_status"/>
+        <task handle="page_cache_report"/>
+        <task handle="custom_javascript_report"/>
     </tasks>
     <tasksets>
         <taskset handle="maintenance" name="Maintenance" package="">
@@ -35,7 +37,9 @@
             <task handle="remove_unvalidated_users"/>
         </taskset>
         <taskset handle="site_health" name="Site Health" package="">
-            <task handle="check_site_production_readiness"/>
+            <task handle="production_status"/>
+            <task handle="page_cache_report"/>
+            <task handle="custom_javascript_report"/>
         </taskset>
     </tasksets>
 

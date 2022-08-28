@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <tasks>
-        <task handle="check_site_production_readiness" package=""/>
+        <task handle="production_status"/>
+        <task handle="page_cache_report"/>
+        <task handle="custom_javascript_report"/>
     </tasks>
     <tasksets>
         <taskset handle="site_health" name="Site Health" package="">
-            <task handle="check_site_production_readiness"/>
+            <task handle="production_status"/>
+            <task handle="page_cache_report"/>
+            <task handle="custom_javascript_report"/>
         </taskset>
     </tasksets>
     <singlepages>

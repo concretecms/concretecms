@@ -6,13 +6,10 @@ use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Entity\Health\Report\SuccessFinding;
 use Concrete\Core\Entity\Health\Report\WarningFinding;
 use Concrete\Core\Health\Grade\GradeInterface;
-use Concrete\Core\Health\Grade\PassFailGrade;
+use Concrete\Core\Health\Grade\ScoreGrade;
+use Concrete\Core\Health\Report\Test\Test\CheckConfigCacheSettingsForProduction as ProductionTest;
 
-/**
- * A more severe version of the StandardGrader - all the behavior is the same
- * but warnings count for 10 and any alerts at all result in a zero-failure.
- */
-class ProductionGrader implements ScoringGraderInterface
+class PageCacheReportGrader implements ScoringGraderInterface
 {
 
     public function getScoreFromResult(Result $result): int
@@ -22,13 +19,19 @@ class ProductionGrader implements ScoringGraderInterface
         $bonus = 0;
         foreach ($findings as $finding) {
 
-            if ($finding instanceof AlertFinding) {
-                $score = 0;
-                break;
-            }
+            if ($finding instanceof AlertFinding || $finding instanceof WarningFinding) {
 
-            if ($finding instanceof WarningFinding) {
-                $score -= 10;
+                if ($finding->getHandle() === ProductionTest::TEST_HANDLE_FILE_OVERRIDES) {
+                    $score -= 50;
+                }
+
+                if ($finding->getHandle() === ProductionTest::TEST_HANDLE_BLOCK_OUTPUT) {
+                    $score -= 30;
+                }
+
+                if ($finding->getHandle() === ProductionTest::TEST_HANDLE_PAGE_OUTPUT) {
+                    $score -= 30;
+                }
             }
 
             if ($finding instanceof SuccessFinding) {
@@ -45,7 +48,7 @@ class ProductionGrader implements ScoringGraderInterface
 
     public function getGrade(int $score = null): GradeInterface
     {
-        return new PassFailGrade($score);
+        return new ScoreGrade($score);
     }
 
 }

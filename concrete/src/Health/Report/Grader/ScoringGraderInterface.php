@@ -7,7 +7,7 @@ use Concrete\Core\Health\Grade\GradeInterface;
 interface ScoringGraderInterface extends GraderInterface
 {
 
-    public function getScoreFromResult(Result $result);
+    public function getScoreFromResult(Result $result): int;
 
     /**
      * Note: I'm actually kind of shocked I'm allowed to do this (override the parent methods with a semi-different

@@ -9,15 +9,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 if ($grade->hasPassed()) {
     $textClass = 'text-success';
     $title = t('PASS');
+    $icon = 'fa fa-thumbs-up';
 } else {
     $textClass = 'text-danger';
     $title = t('FAIL');
+    $icon = 'fa fa-exclamation-triangle';
 }
 ?>
 
-<div class="card col-md-3 ms-auto me-auto">
-    <div class="card-header"><b><?=t('Results')?></b></div>
-    <div class="card-body">
-        <h1 class="display-1 <?=$textClass?>"><?=$title?></h1>
-    </div>
+<div class="ms-auto me-auto">
+    <h1 class="display-1 <?=$textClass?>"><i class="bg-light rounded-circle p-5 <?=$icon?>"></i> <?=$title?></h1>
 </div>

@@ -40,6 +40,9 @@ class GradeReportMessageHandler
         if ($grader) {
             if ($grader instanceof ScoringGraderInterface) {
                 $score = $grader->getScoreFromResult($result);
+                if ($score < 0) {
+                    $score = 0;
+                }
                 $result->setScore($score);
                 $grade = $grader->getGrade($score);
             } else {
@@ -50,8 +53,6 @@ class GradeReportMessageHandler
 
         $this->entityManager->persist($result);
         $this->entityManager->flush();
-
-
     }
 
 }

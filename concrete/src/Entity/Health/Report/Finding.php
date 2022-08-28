@@ -35,6 +35,11 @@ abstract class Finding
     protected $message;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $handle;
+
+    /**
      * @ORM\Column(type="json")
      */
     protected $settingsLocation;
@@ -77,6 +82,22 @@ abstract class Finding
     public function setMessage($message): void
     {
         $this->message = $message;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHandle()
+    {
+        return $this->handle;
+    }
+
+    /**
+     * @param mixed $handle
+     */
+    public function setHandle($handle): void
+    {
+        $this->handle = $handle;
     }
 
     /**

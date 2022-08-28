@@ -7,11 +7,12 @@ use Concrete\Core\Entity\Health\Report\SuccessFinding;
 use Concrete\Core\Entity\Health\Report\WarningFinding;
 use Concrete\Core\Health\Grade\GradeInterface;
 use Concrete\Core\Health\Grade\PassFailGrade;
+use Concrete\Core\Health\Grade\ScoreGrade;
 
 class StandardGrader implements ScoringGraderInterface
 {
 
-    public function getScoreFromResult(Result $result)
+    public function getScoreFromResult(Result $result): int
     {
         $findings = $result->getFindings();
         $score = 100;
@@ -19,11 +20,11 @@ class StandardGrader implements ScoringGraderInterface
         foreach ($findings as $finding) {
 
             if ($finding instanceof AlertFinding) {
-                $score -= 10;
+                $score -= 20;
             }
 
             if ($finding instanceof WarningFinding) {
-                $score -= 5;
+                $score -= 10;
             }
 
             if ($finding instanceof SuccessFinding) {
@@ -38,10 +39,9 @@ class StandardGrader implements ScoringGraderInterface
         return $score;
     }
 
-    // @todo - change this into a score based one.
     public function getGrade(int $score = null): GradeInterface
     {
-        return new PassFailGrade($score);
+        return new ScoreGrade($score);
     }
 
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Concrete\Core\Health\Report;
 
 use Concrete\Core\Entity\Health\Report\AlertFinding;
@@ -61,35 +62,52 @@ class Runner
         $this->result = $result;
     }
 
-    public function alert(string $message, SettingsLocationInterface $location = null): Finding
-    {
-        return $this->finding(new AlertFinding(), $message, $location);
+    public function alert(
+        string $message,
+        SettingsLocationInterface $location = null,
+        string $findingHandle = null
+    ): Finding {
+        return $this->finding(new AlertFinding(), $message, $location, $findingHandle);
     }
 
-    public function warning(string $message, SettingsLocationInterface $location = null): Finding
-    {
-        return $this->finding(new WarningFinding(), $message, $location);
+    public function warning(
+        string $message,
+        SettingsLocationInterface $location = null,
+        string $findingHandle = null
+    ): Finding {
+        return $this->finding(new WarningFinding(), $message, $location, $findingHandle);
     }
 
-    public function info(string $message, SettingsLocationInterface $location = null): Finding
-    {
-        return $this->finding(new InfoFinding(), $message, $location);
+    public function info(
+        string $message,
+        SettingsLocationInterface $location = null,
+        string $findingHandle = null
+    ): Finding {
+        return $this->finding(new InfoFinding(), $message, $location, $findingHandle);
     }
 
-    public function success(string $message, SettingsLocationInterface $location = null): Finding
-    {
-        return $this->finding(new SuccessFinding(), $message, $location);
+    public function success(
+        string $message,
+        SettingsLocationInterface $location = null,
+        string $findingHandle = null
+    ): Finding {
+        return $this->finding(new SuccessFinding(), $message, $location, $findingHandle);
     }
 
     /**
      * @param Finding $object
      * @param $message
      */
-    public function finding(Finding $finding, string $message, SettingsLocationInterface $location = null): Finding
-    {
+    public function finding(
+        Finding $finding,
+        string $message,
+        SettingsLocationInterface $location = null,
+        string $findingHandle = null
+    ): Finding {
         $finding->setMessage($message);
         $finding->setResult($this->getResult());
         $finding->setSettingsLocation($location);
+        $finding->setHandle($findingHandle);
         $this->entityManager->persist($finding);
         $this->entityManager->flush();
         return $finding;

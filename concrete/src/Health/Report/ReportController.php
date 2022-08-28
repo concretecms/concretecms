@@ -24,6 +24,12 @@ abstract class ReportController extends AbstractController implements ReportCont
         $this->resultFactory = $resultFactory;
     }
 
+    public function getConsoleCommandName(): string
+    {
+        return 'health:' . parent::getConsoleCommandName();
+    }
+
+
     public function getTaskRunner(TaskInterface $task, InputInterface $input): TaskRunnerInterface
     {
         $result = $this->resultFactory->createResult($task);

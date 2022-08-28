@@ -3,7 +3,9 @@ namespace Concrete\Core\Command\Task;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Command\Task\Controller\CheckAutomatedGroupsController;
-use Concrete\Core\Command\Task\Controller\CheckSiteProductionReadinessController;
+use Concrete\Core\Command\Task\Controller\CustomJavascriptReportController;
+use Concrete\Core\Command\Task\Controller\PageCacheReportController;
+use Concrete\Core\Command\Task\Controller\ProductionStatusController;
 use Concrete\Core\Command\Task\Controller\ClearCacheController;
 use Concrete\Core\Command\Task\Controller\DeactivateUsersController;
 use Concrete\Core\Command\Task\Controller\GenerateSitemapController;
@@ -81,9 +83,19 @@ class Manager extends CoreManager
         return $this->container->make(RemoveUnvalidatedUsersController::class);
     }
 
-    public function createCheckSiteProductionReadinessDriver()
+    public function createProductionStatusDriver()
     {
-        return $this->container->make(CheckSiteProductionReadinessController::class);
+        return $this->container->make(ProductionStatusController::class);
+    }
+
+    public function createCustomJavascriptReportDriver()
+    {
+        return $this->container->make(CustomJavascriptReportController::class);
+    }
+
+    public function createPageCacheReportDriver()
+    {
+        return $this->container->make(PageCacheReportController::class);
     }
 
     public function __construct(Application $app)
