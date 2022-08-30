@@ -2,7 +2,8 @@
 namespace Concrete\Core\Health\Report\Test\Suite;
 
 use Concrete\Core\Health\Report\Test\Suite;
-use Concrete\Core\Health\Report\Test\Test\CheckConfigCacheSettingsForProduction;
+use Concrete\Core\Health\Report\Test\Test\CheckConfigCacheSettingsForProductionTest;
+use Concrete\Core\Health\Report\Test\Test\CheckPagesCustomCacheSettingsTestGroup;
 
 class PageCacheSuite extends Suite
 {
@@ -10,7 +11,8 @@ class PageCacheSuite extends Suite
     public function __construct()
     {
         $tests = [
-            CheckConfigCacheSettingsForProduction::class,
+            CheckConfigCacheSettingsForProductionTest::class,
+            CheckPagesCustomCacheSettingsTestGroup::class,
         ];
         foreach ($tests as $test) {
             $this->add($test);

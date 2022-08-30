@@ -1,12 +1,7 @@
 <?php
 namespace Concrete\Core\Health\Report\Test;
 
-interface SuiteInterface
+interface SuiteInterface extends TestGroupInterface
 {
-
-    /**
-     * @return TestInterface[]
-     */
-    public function getTests(): array;
 
 }

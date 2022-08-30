@@ -8,7 +8,9 @@ use Concrete\Core\Entity\Health\Report\InfoFinding;
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Entity\Health\Report\SuccessFinding;
 use Concrete\Core\Entity\Health\Report\WarningFinding;
-use Concrete\Core\Health\Report\Finding\SettingsLocation\SettingsLocationInterface;
+use Concrete\Core\Health\Report\Finding\Details\ButtonDetails;
+use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
+use Concrete\Core\Health\Report\Finding\Details\LocationInterface;
 use Doctrine\ORM\EntityManager;
 
 class Runner
@@ -62,36 +64,41 @@ class Runner
         $this->result = $result;
     }
 
+    public function button(LocationInterface $location): ButtonDetails
+    {
+        return new ButtonDetails($location);
+    }
+
     public function alert(
         string $message,
-        SettingsLocationInterface $location = null,
+        DetailsInterface $details = null,
         string $findingHandle = null
     ): Finding {
-        return $this->finding(new AlertFinding(), $message, $location, $findingHandle);
+        return $this->finding(new AlertFinding(), $message, $details, $findingHandle);
     }
 
     public function warning(
         string $message,
-        SettingsLocationInterface $location = null,
+        DetailsInterface $details = null,
         string $findingHandle = null
     ): Finding {
-        return $this->finding(new WarningFinding(), $message, $location, $findingHandle);
+        return $this->finding(new WarningFinding(), $message, $details, $findingHandle);
     }
 
     public function info(
         string $message,
-        SettingsLocationInterface $location = null,
+        DetailsInterface $details = null,
         string $findingHandle = null
     ): Finding {
-        return $this->finding(new InfoFinding(), $message, $location, $findingHandle);
+        return $this->finding(new InfoFinding(), $message, $details, $findingHandle);
     }
 
     public function success(
         string $message,
-        SettingsLocationInterface $location = null,
+        DetailsInterface $details = null,
         string $findingHandle = null
     ): Finding {
-        return $this->finding(new SuccessFinding(), $message, $location, $findingHandle);
+        return $this->finding(new SuccessFinding(), $message, $details, $findingHandle);
     }
 
     /**
@@ -101,12 +108,12 @@ class Runner
     public function finding(
         Finding $finding,
         string $message,
-        SettingsLocationInterface $location = null,
+        DetailsInterface $details = null,
         string $findingHandle = null
     ): Finding {
         $finding->setMessage($message);
         $finding->setResult($this->getResult());
-        $finding->setSettingsLocation($location);
+        $finding->setDetails($details);
         $finding->setHandle($findingHandle);
         $this->entityManager->persist($finding);
         $this->entityManager->flush();

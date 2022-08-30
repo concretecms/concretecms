@@ -7,7 +7,7 @@ use Concrete\Core\Entity\Health\Report\SuccessFinding;
 use Concrete\Core\Entity\Health\Report\WarningFinding;
 use Concrete\Core\Health\Grade\GradeInterface;
 use Concrete\Core\Health\Grade\ScoreGrade;
-use Concrete\Core\Health\Report\Test\Test\CheckConfigCacheSettingsForProduction as ProductionTest;
+use Concrete\Core\Health\Report\Test\Test\CheckConfigCacheSettingsForProductionTest as ProductionTest;
 
 class PageCacheReportGrader implements ScoringGraderInterface
 {

@@ -33,7 +33,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <?php
 
-if (count($pagination)) { ?>
+if (isset($pagination) && count($pagination)) { ?>
 
     <?php if (isset($grade)) {
         $gradeFormatter = $grade->getFormatter();
@@ -69,15 +69,15 @@ if (count($pagination)) { ?>
         <tbody>
         <?php foreach ($pagination->getCurrentPageResults() as $result) {
             $formatter = $result->getFormatter();
-            $settingsLocation = $result->getSettingsLocation();
+            $details = $result->getDetails();
             ?>
             <tr>
                 <td class="<?=$formatter->getFindingEntryTextClass()?>"><?=$formatter->getIcon()?></td>
                 <td class="<?=$formatter->getFindingEntryTextClass()?> ccm-search-results-name w-100"><?=$result->getMessage()?></td>
                 <td class="text-nowrap text-center <?=$formatter->getFindingEntryTextClass()?>">
-                    <?php if ($settingsLocation && $formatter->showSettingsLocation($settingsLocation)) {
-                        $detailsFormatter = $settingsLocation->getFormatter();
-                        echo $detailsFormatter->getFindingsListElement($settingsLocation);
+                    <?php if ($details && $formatter->showDetails($details)) {
+                        $detailsFormatter = $details->getFormatter();
+                        echo $detailsFormatter->getFindingsListElement($details);
                         ?>
                     <?php } ?>
                 </td>

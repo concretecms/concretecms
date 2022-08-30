@@ -20,11 +20,13 @@ abstract class Suite implements SuiteInterface
     public function getTests(): array
     {
         $tests = [];
-        foreach ($this->items as $item) {
-            $object = app($item);
+        foreach ($this->items as $object) {
+            if (is_string($object)) {
+                $object = app($object);
+            }
             if ($object instanceof TestInterface) {
                 $tests[] = $object;
-            } else if ($object instanceof SuiteInterface) {
+            } else if ($object instanceof TestGroupInterface) {
                 foreach ($object->getTests() as $itemTest) {
                     $tests[] = $itemTest;
                 }

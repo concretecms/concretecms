@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Health\Report\Finding\Formatter;
 
-use Concrete\Core\Health\Report\Finding\SettingsLocation\SettingsLocationInterface;
+use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
 use HtmlObject\Element;
 
 class WarningFormatter implements FormatterInterface
@@ -17,7 +17,7 @@ class WarningFormatter implements FormatterInterface
         return 'text-warning';
     }
 
-    public function showSettingsLocation(SettingsLocationInterface $settingsLocation): bool
+    public function showDetails(DetailsInterface $details): bool
     {
         return true;
     }

@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Health\Report\Test\Suite;
 
-use Concrete\Core\Health\Report\Test\Test\CheckConfigAutomationSettingsForProduction;
-use Concrete\Core\Health\Report\Test\Test\CheckConfigCacheSettingsForProduction;
+use Concrete\Core\Health\Report\Test\Test\CheckConfigAutomationSettingsForProductionTest;
+use Concrete\Core\Health\Report\Test\Test\CheckConfigCacheSettingsForProductionTest;
 use Concrete\Core\Health\Report\Test\Test\CheckConfigErrorSettingsForProductionTest;
 use Concrete\Core\Health\Report\Test\Suite;
-use Concrete\Core\Health\Report\Test\Test\CheckConfigLoggingSettingsForProduction;
+use Concrete\Core\Health\Report\Test\Test\CheckConfigLoggingSettingsForProductionTest;
 use Concrete\Core\Health\Report\Test\Test\CheckConfigServerSentEventsSettingsForProductionTest;
-use Concrete\Core\Health\Report\Test\Test\CheckConfigUrlSettingsForProduction;
+use Concrete\Core\Health\Report\Test\Test\CheckConfigUrlSettingsForProductionTest;
 
 class ProductionStatusSuite extends Suite
 {
@@ -16,11 +16,11 @@ class ProductionStatusSuite extends Suite
     {
         $tests = [
             CheckConfigErrorSettingsForProductionTest::class,
-            CheckConfigLoggingSettingsForProduction::class,
-            CheckConfigAutomationSettingsForProduction::class,
+            CheckConfigLoggingSettingsForProductionTest::class,
+            CheckConfigAutomationSettingsForProductionTest::class,
             CheckConfigServerSentEventsSettingsForProductionTest::class,
-            CheckConfigCacheSettingsForProduction::class,
-            CheckConfigUrlSettingsForProduction::class,
+            CheckConfigCacheSettingsForProductionTest::class,
+            CheckConfigUrlSettingsForProductionTest::class,
         ];
         foreach ($tests as $test) {
             $this->add($test);

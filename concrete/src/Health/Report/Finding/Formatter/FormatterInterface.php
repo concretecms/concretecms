@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Health\Report\Finding\Formatter;
 
-use Concrete\Core\Health\Report\Finding\SettingsLocation\SettingsLocationInterface;
+use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
 use HtmlObject\Element;
 
 interface FormatterInterface
@@ -11,7 +11,7 @@ interface FormatterInterface
 
     public function getFindingEntryTextClass(): string;
 
-    public function showSettingsLocation(SettingsLocationInterface $settingsLocation): bool;
+    public function showDetails(DetailsInterface $details): bool;
 
     public function getType(): string;
 }

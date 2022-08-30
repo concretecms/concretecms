@@ -172,16 +172,22 @@ class Result
             if (get_class($a) === get_class($b)) {
                 return 0;
             }
+
             if ($a instanceof AlertFinding) {
                 return -1;
+            } else {
+                if ($a instanceof WarningFinding && ($b instanceof SuccessFinding || $b instanceof InfoFinding)) {
+                    return -1;
+                }
+                if ($a instanceof SuccessFinding && $b instanceof InfoFinding) {
+                    return -1;
+                }
+                if ($a instanceof SuccessFinding && ($b instanceof WarningFinding || $b instanceof AlertFinding)) {
+                    return 1;
+                }
+
+                return 1;
             }
-            if ($a instanceof WarningFinding && $b instanceof SuccessFinding) {
-                return -1;
-            }
-            if ($a instanceof SuccessFinding && $b instanceof InfoFinding) {
-                return -1;
-            }
-            return 1;
         });
         return $findings;
     }

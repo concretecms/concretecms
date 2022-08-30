@@ -3,9 +3,10 @@
 namespace Concrete\Core\Entity\Health\Report;
 
 use Concrete\Core\Health\Report\Finding\Formatter\FormatterInterface;
-use Concrete\Core\Health\Report\Finding\SettingsLocation\SettingsLocationInterface;
+use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -40,9 +41,9 @@ abstract class Finding
     protected $handle;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      */
-    protected $settingsLocation;
+    protected $details;
 
     /**
      * @return mixed
@@ -103,26 +104,26 @@ abstract class Finding
     /**
      * @return mixed
      */
-    public function getRawSettingsLocation()
+    public function getRawDetails()
     {
-        return $this->settingsLocation;
+        return $this->details;
     }
 
-    public function getSettingsLocation(): ?SettingsLocationInterface
+    public function getDetails(): ?DetailsInterface
     {
-        if (is_array($this->settingsLocation) && isset($this->settingsLocation['class'])) {
-            $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
-            return $serializer->denormalize($this->settingsLocation, $this->settingsLocation['class']);
+        if (!is_null($this->details) && is_array($this->details) && isset($this->details['class'])) {
+            $serializer = new Serializer([new CustomNormalizer()], [new JsonEncoder()]);
+            return $serializer->denormalize($this->details, $this->details['class']);
         }
         return null;
     }
 
     /**
-     * @param mixed $settingsLocation
+     * @param mixed $details
      */
-    public function setSettingsLocation($settingsLocation): void
+    public function setDetails($details): void
     {
-        $this->settingsLocation = $settingsLocation;
+        $this->details = $details;
     }
 
     abstract public function getFormatter(): FormatterInterface;

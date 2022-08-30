@@ -2,7 +2,7 @@
 namespace Concrete\Core\Health\Report\Test\Test;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Health\Report\Finding\SettingsLocation\Location\DebugSettingsLocation;
+use Concrete\Core\Health\Report\Finding\Details\Location\DebugSettingsLocation;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 
@@ -22,12 +22,12 @@ class CheckConfigErrorSettingsForProductionTest implements TestInterface
             if ($this->config->get('concrete.debug.detail') == 'debug') {
                 $report->alert(
                     'Debug Error Output is currently set to detail. Debug errors should be disabled and errors should not be displayed in-page.',
-                    new DebugSettingsLocation()
+                    $report->button(new DebugSettingsLocation()),
                 );
             } else {
                 $report->warning(
                     'Error output is being displayed in page. Please disable in-page error reporting.',
-                    new DebugSettingsLocation()
+                    $report->button(new DebugSettingsLocation()),
                 );
             }
 		}

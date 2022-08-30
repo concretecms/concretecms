@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Health\Report\Test\Test;
 
-use Concrete\Core\Health\Report\Finding\SettingsLocation\Location\UrlSettingsLocation;
+use Concrete\Core\Health\Report\Finding\Details\Location\UrlSettingsLocation;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 use Concrete\Core\Site\Service;
 use Concrete\Core\Url\Url;
 
-class CheckConfigUrlSettingsForProduction implements TestInterface
+class CheckConfigUrlSettingsForProductionTest implements TestInterface
 {
 
     /**
@@ -28,14 +28,14 @@ class CheckConfigUrlSettingsForProduction implements TestInterface
         if (!$url) {
             $report->alert(
                 'No canonical URL set! You ought to set canonical URLs for all sites running in production.',
-                new UrlSettingsLocation()
+                $report->button(new UrlSettingsLocation())
             );
         } else {
             $url = Url::createFromUrl($url);
             if ($url->getScheme() !== 'https') {
                 $report->warning(
                     'Canonical URL set but not running SSL. SSL is strongly encouraged.',
-                    new UrlSettingsLocation()
+                    $report->button(new UrlSettingsLocation())
                 );
             }
 

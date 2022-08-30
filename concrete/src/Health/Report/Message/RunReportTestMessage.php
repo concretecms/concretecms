@@ -3,6 +3,7 @@ namespace Concrete\Core\Health\Report\Message;
 
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Foundation\Command\Command;
+use Concrete\Core\Health\Report\Test\PageTestInterface;
 use Concrete\Core\Health\Report\Test\TestInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -62,15 +63,20 @@ class RunReportTestMessage extends Command implements NormalizableInterface, Den
 
     public function normalize(NormalizerInterface $normalizer, string $format = null, array $context = [])
     {
-        return [
-            'type' => get_class($this->test),
+        $data = [
+            'class' => get_class($this->test),
+            'test' => $normalizer->normalize($this->test),
             'resultId' => $this->getResultId(),
         ];
+        return $data;
     }
 
     public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])
     {
-        $test = app($data['type']);
+        $test = app($data['class']);
+        if ($test instanceof PageTestInterface) {
+            $test->setPageId((int) $data['test']['pageId']);
+        }
         $this->resultId = $data['resultId'];
         $this->test = $test;
     }
