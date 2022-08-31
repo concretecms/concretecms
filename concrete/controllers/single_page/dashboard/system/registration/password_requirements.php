@@ -20,6 +20,7 @@ class PasswordRequirements extends DashboardPageController
         $this->set('upperCase', (int) max(0, array_get($config, 'required_upper_case', 0)));
         $this->set('lowerCase', (int) max(0, array_get($config, 'required_lower_case', 0)));
         $this->set('passwordReuse', (int) max(0, array_get($config, 'reuse', 0)));
+        $this->set('maxAge', max(0, (int) array_get($config, 'max_age', 0)) ?: null);
         if (!array_key_exists('customRegex', $this->getSets())) {
             $this->set('customRegex', (array) array_get($config, 'custom_regex', []));
         }
@@ -48,7 +49,7 @@ class PasswordRequirements extends DashboardPageController
         $config->save($prefix . '.required_upper_case', $this->int($args, 'upperCase'));
         $config->save($prefix . '.required_lower_case', $this->int($args, 'lowerCase'));
         $config->save($prefix . '.reuse', $this->int($args, 'passwordReuse'));
-
+        $config->save($prefix . '.max_age', $this->int($args, 'maxAge') ?: null);
         $regex = array_get($args, 'regex', []);
         $regexDesc = array_get($args, 'regex_desc', []);
         $regexWidthDesc = array_combine($regex, $regexDesc);
