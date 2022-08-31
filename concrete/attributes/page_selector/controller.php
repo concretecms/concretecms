@@ -1,13 +1,15 @@
 <?php
 namespace Concrete\Attribute\PageSelector;
 
-use Concrete\Core\Attribute\Controller as AttributeTypeController;
+use Concrete\Core\Attribute\DefaultController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Page\Page;
 
-class Controller extends AttributeTypeController
+class Controller extends DefaultController
 {
+    protected $searchIndexFieldDefinition = ['type' => 'integer', 'options' => ['default' => 0, 'notnull' => false]];
+
     public function getIconFormatter()
     {
         return new FontAwesomeIconFormatter('link');
@@ -16,6 +18,14 @@ class Controller extends AttributeTypeController
     public function getAttributeValueClass()
     {
         return NumberValue::class;
+    }
+
+    public function getSearchIndexValue()
+    {
+        $value = $this->getAttributeValue()->getValueObject();
+        if ($value) {
+            return intval($value->getValue());
+        }
     }
 
     public function form()
@@ -31,6 +41,18 @@ class Controller extends AttributeTypeController
         }
         $this->set('value', $value);
         $this->set('page_selector', $this->app->make('helper/form/page_selector'));
+    }
+
+    public function searchForm($list)
+    {
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), (int)$this->request('value'));
+        return $list;
+    }
+
+    public function search()
+    {
+        $page_selector = $this->app->make('helper/form/page_selector');
+        echo $page_selector->selectPage($this->field('value'), $this->request('value'));
     }
 
     public function getDisplayValue()
