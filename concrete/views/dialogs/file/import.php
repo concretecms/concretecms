@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Entity\File\File;
+use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Tree\Node\Type\FileFolder;
@@ -48,7 +49,17 @@ $dropZoneId = "ccm-drop-zone-" . $idHelper->getString();
     <div class="tab-content">
         <div class="tab-pane fade active" id="local" role="tabpanel" aria-labelledby="local-tab">
 
-            <concrete-file-uploader <?php if (isset($replacingFile) && $replacingFile) { ?>replace-file-id="<?=$replacingFile->getFileID()?>"<?php } ?> :max-files="1"></concrete-file-uploader>
+            <concrete-file-uploader
+                <?php
+                if ($replacingFile ?? null) {
+                    ?>
+                    :replace-file-id="<?= $replacingFile->getFileID() ?>"
+                    <?php
+                }
+                ?>
+                :max-files="1"
+                :dropzone-options="<?= h(json_encode($app->make(Dropzone::class)->getConfigurationOptions())) ?>"
+            ></concrete-file-uploader>
 
         </div>
 
