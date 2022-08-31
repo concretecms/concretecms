@@ -12,6 +12,7 @@ use Concrete\Core\User\Exception\FailedLoginThresholdExceededException;
 use Concrete\Core\User\Exception\InvalidCredentialsException;
 use Concrete\Core\User\Exception\UserDeactivatedException;
 use Concrete\Core\User\Exception\UserException;
+use Concrete\Core\User\Exception\UserPasswordExpiredException;
 use Concrete\Core\User\Exception\UserPasswordResetException;
 use Concrete\Core\User\Login\LoginService;
 use Concrete\Core\User\User;
@@ -373,6 +374,9 @@ class Controller extends AuthenticationTypeController
             $user = $loginService->login($uName, $uPassword);
         } catch (UserPasswordResetException $e) {
             Session::set('uPasswordResetUserName', $this->post('uName'));
+            $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
+        } catch (UserPasswordExpiredException $e) {
+            Session::set('uPasswordResetUserName', $uName);
             $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
         } catch (UserException $e) {
             $this->handleFailedLogin($loginService, $uName, $uPassword, $e);

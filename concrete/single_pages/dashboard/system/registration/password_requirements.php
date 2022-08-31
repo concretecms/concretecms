@@ -11,6 +11,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var int $upperCase
  * @var int $lowerCase
  * @var int $passwordReuse
+ * @var int|null $maxAge
  * @var array $customRegex
  */
 
@@ -46,6 +47,13 @@ foreach ($customRegex as $regex => $description) {
                 <label class="form-check-label" for="isPasswordReuse"><?= t('Prevent password reuse') ?></label>
                 <div class="form-group row row-cols-auto g-0 align-items-center" v-if="isPasswordReuse">
                     <?= t('Track previous %s passwords', $form->number('passwordReuse', ['v-model.trim' => 'passwordReuse', 'v-bind:required' => 'isPasswordReuse', 'style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1'])) ?>
+                </div>
+            </div>
+            <div class="form-check">
+                <?= $form->checkbox('hasMaxAge', '1', false, ['v-model' => 'hasMaxAge']) ?>
+                <label class="form-check-label" for="hasMaxAge"><?= t('Users must change their password every') ?></label>
+                <div class="form-group row row-cols-auto g-0 align-items-center" v-if="hasMaxAge">
+                    <?= t('%s days', $form->number('maxAge', ['v-model.trim' => 'maxAge', 'v-bind:required' => 'hasMaxAge', 'min' => '1', 'style' => 'width: 5rem;', 'class' => 'form-control-sm ms-1 me-1'])) ?>
                 </div>
             </div>
         </div>
@@ -94,7 +102,9 @@ $(document).ready(function() {
                 return {
                     isPasswordReuse: <?= json_encode($passwordReuse > 0) ?>,
                     passwordReuse: <?= json_encode($passwordReuse > 0 ? $passwordReuse : null) ?>,
-                    regexes: <?= json_encode($customRegexList) ?>
+                    regexes: <?= json_encode($customRegexList) ?>,
+                    hasMaxAge: <?= json_encode($maxAge !== null) ?>,
+                    maxAge: <?= json_encode($maxAge ?: 90) ?>,
                 };
             },
             methods: {
