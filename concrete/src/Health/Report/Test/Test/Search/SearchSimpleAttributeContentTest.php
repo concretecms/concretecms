@@ -2,6 +2,7 @@
 namespace Concrete\Core\Health\Report\Test\Test\Search;
 
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
+use Concrete\Core\Health\Report\Finding\Message\Search\SimpleAttributeMessage;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 use Concrete\Core\Health\Search\Traits\SearchContentTrait;
@@ -32,16 +33,9 @@ class SearchSimpleAttributeContentTest implements TestInterface
 
         /** @var TextValue $value */
         foreach ($this->iterateQuery($qb->getQuery()) as $value) {
-            $type = $this->valueToType($value);
-            $related = 'n/a';
-
-            var_dump_safe([
-                $type,
-                $value->getGenericValue()->getAttributeValueID(),
-                $related,
-                (string) $value->getValue(),
-                $report,
-            ]);
+            // Turn the TextValue into a real attribute value. It's a convoluted process.
+            $genericValue = $value->getGenericValue();
+            $report->warning(new SimpleAttributeMessage($genericValue));
         }
 
     }
