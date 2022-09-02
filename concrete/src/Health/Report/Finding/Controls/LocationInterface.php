@@ -1,8 +1,7 @@
 <?php
-namespace Concrete\Core\Health\Report\Finding\Details;
+namespace Concrete\Core\Health\Report\Finding\Controls;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizableInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizableInterface;
 
 interface LocationInterface extends \JsonSerializable, DenormalizableInterface
 {

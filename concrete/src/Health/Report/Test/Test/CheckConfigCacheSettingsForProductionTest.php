@@ -1,8 +1,9 @@
 <?php
+
 namespace Concrete\Core\Health\Report\Test\Test;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Health\Report\Finding\Details\Location\CacheSettingsLocation;
+use Concrete\Core\Health\Report\Finding\Controls\Location\CacheSettingsLocation;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 
@@ -60,14 +61,15 @@ class CheckConfigCacheSettingsForProductionTest implements TestInterface
                 $report->button(new CacheSettingsLocation()),
                 self::TEST_HANDLE_PAGE_OUTPUT
             );
-        } else if ($this->config->get('concrete.cache.pages') === 'all') {
-            $report->success(
-                'Full page cache is enabled by default.',
-                $report->button(new CacheSettingsLocation()),
-                self::TEST_HANDLE_PAGE_OUTPUT
-            );
+        } else {
+            if ($this->config->get('concrete.cache.pages') === 'all') {
+                $report->success(
+                    'Full page cache is enabled by default.',
+                    $report->button(new CacheSettingsLocation()),
+                    self::TEST_HANDLE_PAGE_OUTPUT
+                );
+            }
         }
-
     }
 
 }

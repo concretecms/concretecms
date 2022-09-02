@@ -1,11 +1,11 @@
 <?php
-namespace Concrete\Core\Health\Report\Finding\Details;
+namespace Concrete\Core\Health\Report\Finding\Controls;
 
-use Concrete\Core\Health\Report\Finding\Details\Formatter\ButtonFormatter;
-use Concrete\Core\Health\Report\Finding\Details\Formatter\FormatterInterface;
+use Concrete\Core\Health\Report\Finding\Controls\Formatter\ButtonFormatter;
+use Concrete\Core\Health\Report\Finding\Controls\Formatter\FormatterInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class ButtonDetails implements DetailsInterface
+class ButtonControls implements ControlsInterface
 {
 
     /**

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Health\Report\Finding\Formatter;
 
-use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
+use Concrete\Core\Health\Report\Finding\Controls\ControlsInterface;
 use HtmlObject\Element;
 
 class SuccessFormatter implements FormatterInterface
@@ -17,7 +17,7 @@ class SuccessFormatter implements FormatterInterface
         return 'text-success';
     }
 
-    public function showDetails(DetailsInterface $details): bool
+    public function showControls(ControlsInterface $controls): bool
     {
         return false;
     }

@@ -1,7 +1,7 @@
 <?php
-namespace Concrete\Core\Health\Report\Finding\Details\Location;
+namespace Concrete\Core\Health\Report\Finding\Controls\Location;
 
-use Concrete\Core\Health\Report\Finding\Details\DashboardPageLocation;
+use Concrete\Core\Health\Report\Finding\Controls\DashboardPageLocation;
 
 class AutomationSettingsLocation extends DashboardPageLocation
 {

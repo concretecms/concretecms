@@ -3,11 +3,11 @@
 namespace Concrete\Core\Entity\Health\Report;
 
 use Concrete\Core\Health\Report\Finding\Formatter\FormatterInterface;
-use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
+use Concrete\Core\Health\Report\Finding\Controls\ControlsInterface;
+use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 /**
@@ -31,7 +31,7 @@ abstract class Finding
     protected $result;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="json", nullable=true)
      */
     protected $message;
 
@@ -43,7 +43,7 @@ abstract class Finding
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    protected $details;
+    protected $controls;
 
     /**
      * @return mixed
@@ -74,13 +74,26 @@ abstract class Finding
      */
     public function getMessage()
     {
+        if (!is_null($this->message) && is_array($this->message) && isset($this->message['class'])) {
+            $serializer = new Serializer([new CustomNormalizer()], [new JsonEncoder()]);
+            return $serializer->denormalize($this->message, $this->message['class']);
+        }
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRawMessage()
+    {
         return $this->message;
     }
+
 
     /**
      * @param mixed $message
      */
-    public function setMessage($message): void
+    public function setMessage(MessageInterface $message): void
     {
         $this->message = $message;
     }
@@ -104,26 +117,26 @@ abstract class Finding
     /**
      * @return mixed
      */
-    public function getRawDetails()
+    public function getRawControls()
     {
-        return $this->details;
+        return $this->controls;
     }
 
-    public function getDetails(): ?DetailsInterface
+    public function getControls(): ?ControlsInterface
     {
-        if (!is_null($this->details) && is_array($this->details) && isset($this->details['class'])) {
+        if (!is_null($this->controls) && is_array($this->controls) && isset($this->controls['class'])) {
             $serializer = new Serializer([new CustomNormalizer()], [new JsonEncoder()]);
-            return $serializer->denormalize($this->details, $this->details['class']);
+            return $serializer->denormalize($this->controls, $this->controls['class']);
         }
         return null;
     }
 
     /**
-     * @param mixed $details
+     * @param mixed $controls
      */
-    public function setDetails($details): void
+    public function setControls($controls): void
     {
-        $this->details = $details;
+        $this->controls = $controls;
     }
 
     abstract public function getFormatter(): FormatterInterface;

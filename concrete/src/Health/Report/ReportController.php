@@ -7,21 +7,23 @@ use Concrete\Core\Command\Task\Input\InputInterface;
 use Concrete\Core\Command\Task\Runner\BatchProcessTaskRunner;
 use Concrete\Core\Command\Task\Runner\TaskRunnerInterface;
 use Concrete\Core\Command\Task\TaskInterface;
+use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Health\Report\Message\FinishReportMessage;
 use Concrete\Core\Health\Report\Message\GradeReportMessage;
 use Concrete\Core\Health\Report\Message\RunReportTestMessage;
+use Doctrine\ORM\EntityManager;
 
 abstract class ReportController extends AbstractController implements ReportControllerInterface
 {
 
     /**
-     * @var ResultFactory
+     * @var EntityManager
      */
-    protected $resultFactory;
+    protected $entityManager;
 
-    public function __construct(ResultFactory $resultFactory)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->resultFactory = $resultFactory;
+        $this->entityManager = $entityManager;
     }
 
     public function getConsoleCommandName(): string
@@ -29,10 +31,21 @@ abstract class ReportController extends AbstractController implements ReportCont
         return 'health:' . parent::getConsoleCommandName();
     }
 
+    protected function getResult(TaskInterface $task, InputInterface $input): Result
+    {
+        return new Result();
+    }
 
     public function getTaskRunner(TaskInterface $task, InputInterface $input): TaskRunnerInterface
     {
-        $result = $this->resultFactory->createResult($task);
+        $result = $this->getResult($task, $input);
+        $result->setName($this->getName());
+        $result->setDateStarted(time());
+        $result->setTask($task);
+
+        $this->entityManager->persist($result);
+        $this->entityManager->flush();
+
         $suite = $this->getTestSuite();
         $batch = Batch::create();
         foreach($suite->getTests() as $test) {
@@ -40,6 +53,7 @@ abstract class ReportController extends AbstractController implements ReportCont
         }
         $batch->add(new GradeReportMessage($result->getId()));
         $batch->add(new FinishReportMessage($result->getId()));
+
         return new BatchProcessTaskRunner($task, $batch, $input, t('Generating report...'));
     }
 

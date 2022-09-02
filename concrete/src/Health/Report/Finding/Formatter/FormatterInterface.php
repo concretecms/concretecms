@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Health\Report\Finding\Formatter;
 
-use Concrete\Core\Health\Report\Finding\Details\DetailsInterface;
+use Concrete\Core\Health\Report\Finding\Controls\ControlsInterface;
 use HtmlObject\Element;
 
 interface FormatterInterface
@@ -11,7 +11,7 @@ interface FormatterInterface
 
     public function getFindingEntryTextClass(): string;
 
-    public function showDetails(DetailsInterface $details): bool;
+    public function showControls(ControlsInterface $controls): bool;
 
     public function getType(): string;
 }

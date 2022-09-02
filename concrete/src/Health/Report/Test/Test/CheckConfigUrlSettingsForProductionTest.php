@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Health\Report\Test\Test;
 
-use Concrete\Core\Health\Report\Finding\Details\Location\UrlSettingsLocation;
+use Concrete\Core\Health\Report\Finding\Controls\Location\UrlSettingsLocation;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 use Concrete\Core\Site\Service;

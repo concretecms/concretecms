@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Health\Report\Message;
 
-use Concrete\Core\Command\Batch\BatchAwareInterface;
-use Concrete\Core\Command\Batch\BatchAwareTrait;
 use Concrete\Core\Health\Report\RunnerFactory;
 
 class RunReportTestMessageHandler

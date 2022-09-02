@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Health\Report\Finding\Details;
+namespace Concrete\Core\Health\Report\Finding\Controls;
 
 use Concrete\Core\Page\Page;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;

@@ -68,16 +68,18 @@ if (isset($pagination) && count($pagination)) { ?>
         </thead>
         <tbody>
         <?php foreach ($pagination->getCurrentPageResults() as $result) {
-            $formatter = $result->getFormatter();
-            $details = $result->getDetails();
+            $resultFormatter = $result->getFormatter();
+            $message = $result->getMessage();
+            $messageFormatter = $message->getFormatter();
+            $controls = $result->getControls();
             ?>
             <tr>
-                <td class="<?=$formatter->getFindingEntryTextClass()?>"><?=$formatter->getIcon()?></td>
-                <td class="<?=$formatter->getFindingEntryTextClass()?> ccm-search-results-name w-100"><?=$result->getMessage()?></td>
-                <td class="text-nowrap text-center <?=$formatter->getFindingEntryTextClass()?>">
-                    <?php if ($details && $formatter->showDetails($details)) {
-                        $detailsFormatter = $details->getFormatter();
-                        echo $detailsFormatter->getFindingsListElement($details);
+                <td class="<?=$resultFormatter->getFindingEntryTextClass()?>"><?=$resultFormatter->getIcon()?></td>
+                <td class="<?=$resultFormatter->getFindingEntryTextClass()?> ccm-search-results-name w-100"><?=$messageFormatter->getFindingsListMessage($message)?></td>
+                <td class="text-nowrap text-center <?=$resultFormatter->getFindingEntryTextClass()?>">
+                    <?php if ($controls && $resultFormatter->showControls($controls)) {
+                        $controlsFormatter = $controls->getFormatter();
+                        echo $controlsFormatter->getFindingsListElement($controls);
                         ?>
                     <?php } ?>
                 </td>

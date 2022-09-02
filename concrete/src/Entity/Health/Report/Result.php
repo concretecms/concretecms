@@ -11,6 +11,8 @@ use Symfony\Component\Serializer\Serializer;
 
 /**
  * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="HealthReportResults")
  */
 class Result
