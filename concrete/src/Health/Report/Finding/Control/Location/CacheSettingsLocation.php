@@ -1,7 +1,7 @@
 <?php
-namespace Concrete\Core\Health\Report\Finding\Controls\Location;
+namespace Concrete\Core\Health\Report\Finding\Control\Location;
 
-use Concrete\Core\Health\Report\Finding\Controls\DashboardPageLocation;
+use Concrete\Core\Health\Report\Finding\Control\DashboardPageLocation;
 
 class CacheSettingsLocation extends DashboardPageLocation
 {

@@ -181,13 +181,15 @@ var setupModals = function() {
         const options = optionsString ? JSON.parse(optionsString) : {}
         const modal = new ConcreteModal()
 
-        var elementOrUrl = $('div[data-modal-content=' + $(this).attr('data-launch-modal') + ']')
-        if (elementOrUrl.length) {
-            options.message = elementOrUrl.html()
-            modal.show(options)
-        } else {
-            // Treat data-launch-modal as a URL instead of an element in the page.
-            modal.openExternal({message: elementOrUrl.html()}, options.title ?? null)
+        try {
+            const url = new URL($(this).attr('data-launch-modal'))
+            modal.openExternal(url, options.title ?? null)
+        } catch (e) {
+            const element = $('div[data-modal-content=' + $(this).attr('data-launch-modal') + ']')
+            if (element.length) {
+                options.message = element.html()
+                modal.show(options)
+            }
         }
     });
 

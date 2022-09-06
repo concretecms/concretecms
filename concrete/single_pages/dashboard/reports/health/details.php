@@ -52,13 +52,15 @@ if (isset($pagination) && count($pagination)) { ?>
             </div>
         </div>
 
-        <div style="padding-left: 37px">
-            <h3><?=t('Findings')?></h3>
-        </div>
-
     <?php } ?>
 
-    <table class="ccm-search-results-table">
+    <div class="text-center">
+        <h3 class="mt-4 mb-0"><?=
+            $result->getFormatter()->getFindingsHeading($result);
+            ?></h3>
+    </div>
+
+    <table class="ccm-search-results-table mt-0">
         <thead>
         <tr>
             <th></th>
@@ -71,15 +73,15 @@ if (isset($pagination) && count($pagination)) { ?>
             $resultFormatter = $result->getFormatter();
             $message = $result->getMessage();
             $messageFormatter = $message->getFormatter();
-            $controls = $result->getControls();
+            $control = $result->getControl();
             ?>
             <tr>
                 <td class="<?=$resultFormatter->getFindingEntryTextClass()?>"><?=$resultFormatter->getIcon()?></td>
-                <td class="<?=$resultFormatter->getFindingEntryTextClass()?> ccm-search-results-name w-100"><?=$messageFormatter->getFindingsListMessage($message)?></td>
+                <td class="<?=$resultFormatter->getFindingEntryTextClass()?> ccm-search-results-name w-100"><?=$messageFormatter->getFindingsListMessage($message, $result)?></td>
                 <td class="text-nowrap text-center <?=$resultFormatter->getFindingEntryTextClass()?>">
-                    <?php if ($controls && $resultFormatter->showControls($controls)) {
-                        $controlsFormatter = $controls->getFormatter();
-                        echo $controlsFormatter->getFindingsListElement($controls);
+                    <?php if ($control && $resultFormatter->showControl($control)) {
+                        $controlFormatter = $control->getFormatter();
+                        echo $controlFormatter->getFindingsListElement($control, $result);
                         ?>
                     <?php } ?>
                 </td>

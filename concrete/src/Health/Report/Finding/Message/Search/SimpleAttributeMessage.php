@@ -4,6 +4,7 @@ namespace Concrete\Core\Health\Report\Finding\Message\Search;
 
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
+use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\FormatterInterface;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\Search\SimpleAttributeFormatter;
 use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
@@ -47,6 +48,11 @@ class SimpleAttributeMessage implements MessageInterface
         return null;
     }
 
+    public function getDetails(): string
+    {
+        return $this->getCategoryValue()->getDisplayValue();
+    }
+
     /**
      * @return Value
      */
@@ -55,6 +61,9 @@ class SimpleAttributeMessage implements MessageInterface
         return $this->value;
     }
 
+    /**
+     * @return SimpleAttributeFormatter
+     */
     public function getFormatter(): FormatterInterface
     {
         return new SimpleAttributeFormatter();

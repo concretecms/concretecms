@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Health\Report\Finding\Formatter;
 
-use Concrete\Core\Health\Report\Finding\Controls\ControlsInterface;
+use Concrete\Core\Health\Report\Finding\Control\ControlInterface;
 use HtmlObject\Element;
 
 class WarningFormatter implements FormatterInterface
@@ -16,7 +16,7 @@ class WarningFormatter implements FormatterInterface
         return 'text-warning';
     }
 
-    public function showControls(ControlsInterface $controls): bool
+    public function showControl(ControlInterface $control): bool
     {
         return true;
     }

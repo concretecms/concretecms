@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Core\Health\Report;
+namespace Concrete\Core\Health\Report\Result;
 
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Entity\OAuth\Client;

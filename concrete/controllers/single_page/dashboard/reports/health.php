@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
-use Concrete\Core\Health\Report\ResultList;
+use Concrete\Core\Health\Report\Result\ResultList;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 

@@ -1,6 +1,8 @@
 <?php
 
 namespace Concrete\Core\Entity\Health\Report;
+use Concrete\Core\Health\Report\Result\Formatter\FormatterInterface;
+use Concrete\Core\Health\Report\Result\Formatter\SearchResultFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -62,8 +64,10 @@ class SearchResult extends Result
         $this->searchType = $searchType;
     }
 
-
-
+    public function getFormatter(): FormatterInterface
+    {
+        return new SearchResultFormatter();
+    }
 
 
 }

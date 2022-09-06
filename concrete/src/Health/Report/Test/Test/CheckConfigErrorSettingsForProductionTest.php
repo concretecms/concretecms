@@ -2,7 +2,7 @@
 namespace Concrete\Core\Health\Report\Test\Test;
 
 use Concrete\Core\Config\Repository\Repository;
-use Concrete\Core\Health\Report\Finding\Controls\Location\DebugSettingsLocation;
+use Concrete\Core\Health\Report\Finding\Control\Location\DebugSettingsLocation;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 

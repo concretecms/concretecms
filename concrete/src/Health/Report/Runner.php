@@ -8,9 +8,9 @@ use Concrete\Core\Entity\Health\Report\InfoFinding;
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Entity\Health\Report\SuccessFinding;
 use Concrete\Core\Entity\Health\Report\WarningFinding;
-use Concrete\Core\Health\Report\Finding\Controls\ButtonControls;
-use Concrete\Core\Health\Report\Finding\Controls\ControlsInterface;
-use Concrete\Core\Health\Report\Finding\Controls\LocationInterface;
+use Concrete\Core\Health\Report\Finding\Control\ButtonControl;
+use Concrete\Core\Health\Report\Finding\Control\ControlInterface;
+use Concrete\Core\Health\Report\Finding\Control\LocationInterface;
 use Concrete\Core\Health\Report\Finding\Message\Message;
 use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
 use Doctrine\ORM\EntityManager;
@@ -66,41 +66,41 @@ class Runner
         $this->result = $result;
     }
 
-    public function button(LocationInterface $location): ButtonControls
+    public function button(LocationInterface $location): ButtonControl
     {
-        return new ButtonControls($location);
+        return new ButtonControl($location);
     }
 
     public function alert(
         $message,
-        ControlsInterface $controls = null,
+        ControlInterface $control = null,
         string $findingHandle = null
     ): Finding {
-        return $this->finding(new AlertFinding(), $message, $controls, $findingHandle);
+        return $this->finding(new AlertFinding(), $message, $control, $findingHandle);
     }
 
     public function warning(
         $message,
-        ControlsInterface $controls = null,
+        ControlInterface $control = null,
         string $findingHandle = null
     ): Finding {
-        return $this->finding(new WarningFinding(), $message, $controls, $findingHandle);
+        return $this->finding(new WarningFinding(), $message, $control, $findingHandle);
     }
 
     public function info(
         $message,
-        ControlsInterface $controls = null,
+        ControlInterface $control = null,
         string $findingHandle = null
     ): Finding {
-        return $this->finding(new InfoFinding(), $message, $controls, $findingHandle);
+        return $this->finding(new InfoFinding(), $message, $control, $findingHandle);
     }
 
     public function success(
         $message,
-        ControlsInterface $controls = null,
+        ControlInterface $control = null,
         string $findingHandle = null
     ): Finding {
-        return $this->finding(new SuccessFinding(), $message, $controls, $findingHandle);
+        return $this->finding(new SuccessFinding(), $message, $control, $findingHandle);
     }
 
     /**
@@ -110,7 +110,7 @@ class Runner
     public function finding(
         Finding $finding,
         $message,
-        ControlsInterface $controls = null,
+        ControlInterface $control = null,
         string $findingHandle = null
     ): Finding {
         if (!($message instanceof MessageInterface)) {
@@ -118,7 +118,7 @@ class Runner
         }
         $finding->setMessage($message);
         $finding->setResult($this->getResult());
-        $finding->setControls($controls);
+        $finding->setControl($control);
         $finding->setHandle($findingHandle);
         $this->entityManager->persist($finding);
         $this->entityManager->flush();

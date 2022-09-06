@@ -4,6 +4,9 @@ namespace Concrete\Core\Entity\Health\Report;
 
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Health\Grade\GradeInterface;
+use Concrete\Core\Health\Report\Result\Formatter\FormatterInterface;
+use Concrete\Core\Health\Report\Result\Formatter\StandardFormatter;
+use Concrete\Core\Health\Report\Result\ResultInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -15,7 +18,7 @@ use Symfony\Component\Serializer\Serializer;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\Table(name="HealthReportResults")
  */
-class Result
+class Result implements ResultInterface
 {
 
     /**
@@ -235,7 +238,8 @@ class Result
         return null;
     }
 
-
-
-
+    public function getFormatter(): FormatterInterface
+    {
+        return new StandardFormatter();
+    }
 }

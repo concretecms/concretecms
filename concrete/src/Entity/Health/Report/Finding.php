@@ -3,7 +3,7 @@
 namespace Concrete\Core\Entity\Health\Report;
 
 use Concrete\Core\Health\Report\Finding\Formatter\FormatterInterface;
-use Concrete\Core\Health\Report\Finding\Controls\ControlsInterface;
+use Concrete\Core\Health\Report\Finding\Control\ControlInterface;
 use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -43,7 +43,7 @@ abstract class Finding
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    protected $controls;
+    protected $control;
 
     /**
      * @return mixed
@@ -117,26 +117,26 @@ abstract class Finding
     /**
      * @return mixed
      */
-    public function getRawControls()
+    public function getRawControl()
     {
-        return $this->controls;
+        return $this->control;
     }
 
-    public function getControls(): ?ControlsInterface
+    public function getControl(): ?ControlInterface
     {
-        if (!is_null($this->controls) && is_array($this->controls) && isset($this->controls['class'])) {
+        if (!is_null($this->control) && is_array($this->control) && isset($this->control['class'])) {
             $serializer = new Serializer([new CustomNormalizer()], [new JsonEncoder()]);
-            return $serializer->denormalize($this->controls, $this->controls['class']);
+            return $serializer->denormalize($this->control, $this->control['class']);
         }
         return null;
     }
 
     /**
-     * @param mixed $controls
+     * @param mixed $control
      */
-    public function setControls($controls): void
+    public function setControl($control): void
     {
-        $this->controls = $controls;
+        $this->control = $control;
     }
 
     abstract public function getFormatter(): FormatterInterface;

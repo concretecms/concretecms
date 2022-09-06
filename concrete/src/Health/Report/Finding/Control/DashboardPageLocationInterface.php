@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Health\Report\Finding\Controls;
+namespace Concrete\Core\Health\Report\Finding\Control;
 
 interface DashboardPageLocationInterface extends LocationInterface
 {

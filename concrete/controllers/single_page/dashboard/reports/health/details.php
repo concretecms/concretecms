@@ -1,9 +1,14 @@
 <?php
+
 namespace Concrete\Controller\SinglePage\Dashboard\Reports\Health;
 
+use Concrete\Core\Entity\Health\Report\Finding;
 use Concrete\Core\Entity\Health\Report\Result;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Health\Report\Command\DeleteReportResultCommand;
 use Concrete\Core\Health\Report\Finding\CsvWriter;
+use Concrete\Core\Health\Report\Finding\Message\MessageHasDetailsInterface;
+use Concrete\Core\Http\Response;
 use Concrete\Core\Navigation\Item\Item;
 use Concrete\Core\Navigation\Item\PageItem;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -52,7 +57,7 @@ class Details extends DashboardPageController
             $pagination->setMaxPerPage(20);
 
             if ($this->request->query->has('p')) {
-                $currentPage = (int) $this->request->query->get('p');
+                $currentPage = (int)$this->request->query->get('p');
                 $pagination->setCurrentPage($currentPage);
             }
 
@@ -72,6 +77,31 @@ class Details extends DashboardPageController
             if (count($findings) > 0) {
                 $this->setThemeViewTemplate('full.php');
             }
+        }
+    }
+
+    public function view_finding_details($findingId, $token = null)
+    {
+        if ($this->token->validate('view_finding_details', $token)) {
+            $finding = $this->entityManager->find(Finding::class, $findingId);
+            if (!$finding) {
+                throw new \Exception(t('Invalid finding ID.'));
+            }
+
+            $message = $finding->getMessage();
+            $formatter = $message->getFormatter();
+            if (!($formatter instanceof MessageHasDetailsInterface)) {
+                throw new \RuntimeException(
+                    t(
+                        'Finding details for finding %s requested, but message attached to finding does not implement the MessageHasDetailsInterface',
+                        $findingId
+                    )
+                );
+            } else {
+                return new Response($formatter->getDetailsElement($message, $finding)->render());
+            }
+        } else {
+            throw new UserMessageException($this->token->getErrorMessage());
         }
     }
 
@@ -101,7 +131,6 @@ class Details extends DashboardPageController
             return $this->buildRedirect(['/dashboard/reports/health']);
         }
     }
-
 
 
 }
