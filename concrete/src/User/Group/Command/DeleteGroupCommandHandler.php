@@ -62,6 +62,12 @@ class DeleteGroupCommandHandler
             return false;
         }
 
+        if ($command->isOnlyIfEmpty()) {
+            if ($this->connection->fetchOne('SELECT gID FROM UserGroups gID = ? LIMIT 1', [$groupID]) !== false) {
+                return false;
+            }
+        }
+
         // run any internal event we have for group deletion
         $ge = new DeleteEvent($group);
         $ge = $this->dispatcher->dispatch('on_group_delete', $ge);
