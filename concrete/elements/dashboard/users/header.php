@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\User\UserInfo $user
  * @var bool $canActivateUser
  * @var bool $canSignInAsUser
+ * @var bool $canResetPassword
  * @var bool $canDeleteUser
  * @var bool $validateEmailRegistration
  * @var string[] $workflowRequestActions
@@ -49,6 +50,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
     if ($canSignInAsUser) {
         ?>
         <button type="button" data-bs-toggle="modal" data-bs-target="#sudo-user-modal" class="btn btn-secondary"><?= t('Sign in As User') ?></button>
+        <?php
+    }
+    if ($canResetPassword) {
+        ?>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#user-password-reset-modal" class="btn btn-warning"><?= t('Reset Password') ?></button>
         <?php
     }
     if ($canDeleteUser) {
@@ -116,6 +122,27 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= t('Close') ?></button>
                     <button type="submit" class="btn btn-primary"><?= t('Sign In') ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="user-password-reset-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="<?= $view->action('update_status', 'reset_password', $user->getUserID()) ?>">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?= t('Password Reset') ?></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
+                </div>
+                <div class="modal-body">
+                    <?= $token_validator->output() ?>
+                    <?= t('Are you sure you force the user to change his password at next login?') ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= t('Close') ?></button>
+                    <button type="submit" class="btn btn-warning"><?= t('Reset') ?></button>
                 </div>
             </form>
         </div>
