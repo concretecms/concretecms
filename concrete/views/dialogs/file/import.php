@@ -47,7 +47,7 @@ $dropZoneId = "ccm-drop-zone-" . $idHelper->getString();
     ?>
 
     <div class="tab-content">
-        <div class="tab-pane fade active" id="local" role="tabpanel" aria-labelledby="local-tab">
+        <div class="tab-pane active" id="local" role="tabpanel" aria-labelledby="local-tab">
 
             <concrete-file-uploader
                 <?php
