@@ -27,6 +27,14 @@ $primary: #4a90e2;
 $body-color: $gray-700;
 $small-font-size: 0.9rem;
 $text-muted: $gray-500;
+// Note, this is the same as $font-family-sans-serif, but we need to explicitly declare it, and since this
+// file is parsed before the bootstrap variables file we don't have access to that variable yet. We have to
+// explicitly define headings-font-family because when the CMS css file is used with Bedrock themes that
+// variable will probably be defined and we will have theme h1, h2 styles bleeding through into our styles.
+// So in order to do that, let's set our own sans serif variable here:
+$font-family-sans-serif: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !default;
+// That variable will be used in Bootstrap. And then we can reference it here.
+$headings-font-family: $font-family-sans-serif;
 
 /* horizontal rules */
 $hr-color: $gray-200;

@@ -1,25 +1,40 @@
-div.ccm-ui {
-  h1 {
+// Note - ideally these font families should be handled by Bootstrap but when using with
+// A bootstrap theme the font family from the theme can sometimes take precedence. So let's
+// redeclare it here as well.
+body div.ccm-ui {
+  h1,
+  .h1 {
+    font-family: $headings-font-family;
     font-weight: bold;
   }
 
-  h2 {
+  h2,
+  .h2 {
+    font-family: $headings-font-family;
     font-weight: bold;
   }
 
-  h3 {
+  h3,
+  .h3 {
+    font-family: $headings-font-family;
     font-weight: 300;
   }
 
-  h4 {
+  h4,
+  .h4 {
+    font-family: $headings-font-family;
     font-weight: 700;
   }
 
-  h5 {
+  h5,
+  .h5 {
+    font-family: $headings-font-family;
     font-weight: 600;
   }
 
-  h6 {
+  h6,
+  .h6 {
+    font-family: $headings-font-family;
     font-weight: normal;
     text-transform: uppercase;
   }

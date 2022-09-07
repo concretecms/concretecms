@@ -20,7 +20,7 @@
 }
 
 
-.ccm-ui {
+body div.ccm-ui { // Added body for extra specificity
   margin: 0; // 1
   font-family: $font-family-base;
   @include font-size($font-size-base);
