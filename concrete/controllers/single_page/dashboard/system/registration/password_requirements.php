@@ -4,6 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Registration;
 
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\User\Login\PasswordUpgrade;
 
 class PasswordRequirements extends DashboardPageController
 {
@@ -24,6 +25,12 @@ class PasswordRequirements extends DashboardPageController
         if (!array_key_exists('customRegex', $this->getSets())) {
             $this->set('customRegex', (array) array_get($config, 'custom_regex', []));
         }
+        $service = $this->app->make(PasswordUpgrade::class);
+        $this->set('defaultPasswordResetMessage', $service->getDefaultPasswordResetMessage($service::PASSWORD_RESET_KEY, false));
+        $this->set('passwordResetMessage', $service->getPasswordResetMessage($service::PASSWORD_RESET_KEY, false));
+        $this->set('defaultPasswordExpiredMessage', $service->getDefaultPasswordResetMessage($service::PASSWORD_EXPIRED_KEY, false));
+        $this->set('passwordExpiredMessage', $service->getPasswordResetMessage($service::PASSWORD_EXPIRED_KEY, false));
+        $this->set('passwordExpiredDaysPlaceholder', $service->getPasswordResetMessage($service::PASSWORD_EXPIRED_DAYSPLACEHOLDER, false));
     }
 
     public function save()
@@ -57,6 +64,10 @@ class PasswordRequirements extends DashboardPageController
         $regexRequirements = array_get($args, 'regexRequirements', []);
         $config->save($prefix . '.custom_regex', array_merge($regexWidthDesc, $regexRequirements));
 
+        $service = $this->app->make(PasswordUpgrade::class);
+        $service->setPasswordResetMessage($service::PASSWORD_RESET_KEY, (string) $this->request->request->get('passwordResetMessage'));
+        $service->setPasswordResetMessage($service::PASSWORD_EXPIRED_KEY, (string) $this->request->request->get('passwordExpiredMessage'));
+
         $this->flash('success', t('Password Options successfully saved.'));
 
         return $this->buildRedirect($this->action());
@@ -80,6 +91,10 @@ class PasswordRequirements extends DashboardPageController
         unset($item['minimum'], $item['maximum'], $item['required_special_characters'], $item['required_upper_case'], $item['required_lower_case'], $item['reuse'], $item['custom_regex']);
 
         $config->save($prefix, $item);
+
+        $service = $this->app->make(PasswordUpgrade::class);
+        $service->setPasswordResetMessage($service::PASSWORD_RESET_KEY, '');
+        $service->setPasswordResetMessage($service::PASSWORD_EXPIRED_KEY, '');
 
         $this->flash('success', t('Password Options successfully reset to default values.'));
 

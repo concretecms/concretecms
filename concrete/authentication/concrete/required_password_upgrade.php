@@ -8,8 +8,7 @@ defined('C5_EXECUTE') or die('Access denied.');
  * @var Concrete\Core\Error\ErrorList\ErrorList|null $callbackError (may be not set)
  * @var Concrete\Core\Authentication\AuthenticationType $authType
  * @var Concrete\Core\Validation\CSRF\Token $token
- * @var bool $askEmail
- * @var string|null $intro_msg (may be not set)
+ * @var string $intro_msg
  */
 
 if (isset($callbackError) && $callbackError->has()) {
@@ -23,25 +22,8 @@ if (isset($callbackError) && $callbackError->has()) {
         <h4><?= t('Required password upgrade') ?></h4>
         <div class="ccm-message"></div>
         <div class="help-block mb-3">
-            <?php
-            if (isset($intro_msg)) {
-                echo $intro_msg;
-            } elseif ($askEmail ?? true) {
-                echo t('Your user account is being upgraded and requires a new password. Please enter your email address below to create this now.');
-            } else {
-                echo t('Your user account is being upgraded and requires a new password. Please proceed to create this now.');
-            }
-            ?>
+            <?= nl2br(h($intro_msg)) ?>
         </div>
-        <?php
-        if ($askEmail) {
-            ?>
-            <div class="form-group">
-                <input name="uEmail" type="email" placeholder="<?= t('Email Address') ?>" class="form-control" required="required" />
-            </div>
-            <?php
-        }
-        ?>
         <div class="d-grid">
             <button name="required-password-upgrade" class="btn btn-primary"><?= t('Reset and Email Password') ?></button>
         </div>

@@ -1212,6 +1212,10 @@ return [
             'hash_cost_log2' => 12,
 
             'legacy_salt' => '',
+            'reset_message' => [
+                'password_reset' => '',
+                'password_expired' => '',
+            ]
         ],
         'email' => [
             'test_mx_record' => false,

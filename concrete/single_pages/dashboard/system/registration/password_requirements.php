@@ -13,6 +13,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var int $passwordReuse
  * @var int|null $maxAge
  * @var array $customRegex
+ * @var string $defaultPasswordResetMessage
+ * @var string $passwordResetMessage
+ * @var string $defaultPasswordExpiredMessage
+ * @var string $passwordExpiredMessage
+ * @var string $passwordExpiredDaysPlaceholder
  */
 
 $customRegexList = [];
@@ -74,6 +79,25 @@ foreach ($customRegex as $regex => $description) {
                 <?= $form->text('regex_desc[]', '', ['autocomplete' => 'off', 'v-model.trim' => 'regex.description', 'placeholder' => t('Description (optional)')]) ?>
                 <a href="#" class="btn btn-outline-danger" v-on:click.prevent="removeRegex(regexIndex)"><i class="fas fa-trash"></i></a>
             </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            <?= t('Password Change Message') ?>
+        </legend>
+        <p>
+            <?= t('These messages will be shown to users the next time they log in.') ?>
+        </p>
+        <div class="form-group">
+            <?= $form->label('passwordResetMessage', t('When their password has been reset')) ?>
+            <?= $form->textarea('passwordResetMessage', $passwordResetMessage, ['rows' => '4', 'placeholder' => $defaultPasswordResetMessage]) ?>
+        </div>
+
+        <div class="form-group">
+            <?= $form->label('passwordExpiredMessage', t('When their password has expired')) ?>
+            <?= $form->textarea('passwordExpiredMessage', $passwordExpiredMessage, ['rows' => '4', 'placeholder' => $defaultPasswordExpiredMessage]) ?>
+            <div class="small text-muted"><?= t('Please remark that you can use %s to represent the number of days.', '<code>' . h($passwordExpiredDaysPlaceholder) . '</code>') ?></div>
         </div>
     </fieldset>
 

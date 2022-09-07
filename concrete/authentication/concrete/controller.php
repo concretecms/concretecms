@@ -15,6 +15,7 @@ use Concrete\Core\User\Exception\UserException;
 use Concrete\Core\User\Exception\UserPasswordExpiredException;
 use Concrete\Core\User\Exception\UserPasswordResetException;
 use Concrete\Core\User\Login\LoginService;
+use Concrete\Core\User\Login\PasswordUpgrade;
 use Concrete\Core\User\PersistentAuthentication\CookieService;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfo;
@@ -29,6 +30,8 @@ use Throwable;
 
 class Controller extends AuthenticationTypeController
 {
+    protected const REQUIRED_PASSWORD_UPGRADE_SESSIONKEY = 'ccmPasswordReset';
+
     public $apiMethods = ['forgot_password', 'v', 'change_password', 'password_changed', 'email_validated', 'invalid_token', 'required_password_upgrade'];
 
     /**
@@ -156,42 +159,40 @@ class Controller extends AuthenticationTypeController
      */
     public function required_password_upgrade()
     {
-        $token = $this->app->make(Token::class);
-        $this->set('token', $token);
         $userInfo = null;
         $loginWithEmail = (bool) $this->app->make(Repository::class)->get('concrete.user.registration.email_registration');
-        if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
-            $uName = $this->app->make('session')->get('uPasswordResetUserName');
-            if (is_string($uName) && $uName !== '') {
-                if ($loginWithEmail) {
-                    $userInfo = $this->app->make(UserInfoRepository::class)->getByEmail($uName);
-                } else {
-                    $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
+        $session = $this->app->make(SessionValidatorInterface::class)->getActiveSession();
+        if ($session !== null) {
+            $data = $session->get(static::REQUIRED_PASSWORD_UPGRADE_SESSIONKEY);
+            if (is_array($data)) {
+                $type = $data['type'] ?? null;
+                if (in_array($type, [PasswordUpgrade::PASSWORD_RESET_KEY, PasswordUpgrade::PASSWORD_EXPIRED_KEY], true)) {
+                    $uName = $data['uName'] ?? null;
+                    if (is_string($uName) && $uName !== '') {
+                        if ($loginWithEmail) {
+                            $userInfo = $this->app->make(UserInfoRepository::class)->getByEmail($uName);
+                        } else {
+                            $userInfo = $this->app->make(UserInfoRepository::class)->getByName($uName);
+                        }
+                    }
                 }
             }
         }
         if ($userInfo === null) {
+            if ($session !== null) {
+                $session->remove(static::REQUIRED_PASSWORD_UPGRADE_SESSIONKEY);
+            }
             // We arrived at the required_password_upgrade step but the user didn't specify hasn't fulfilled the login/password form
             $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'view');
         }
+        $token = $this->app->make(Token::class);
+        $this->set('token', $token);
         if ($this->request->isMethod('POST')) {
             $error = $this->app->make('helper/validation/error');
-            if (!$loginWithEmail) {
-                $email = $this->request->request->get('uEmail');
-                $email = is_string($email) ? trim($email) : '';
-                if ($email === '') {
-                    $error->add(t('Please specify a valid email address'));
-                    $userInfo = null;
-                } elseif ($email !== $userInfo->getUserEmail()) {
-                    // The provided email address is not valid, but for security reasons we don't show any error message
-                    $userInfo = null;
-                }
-            }
-            $this->resetPassword($userInfo, $error, false);
+            $this->passwordUpgrade($userInfo, $error, false);
         }
         $this->set('authType', $this->getAuthenticationType());
-        $this->set('askEmail', $loginWithEmail ? false : true);
-        $this->set('intro_msg', $this->app->make('config/database')->get('concrete.password.reset.message'));
+        $this->set('intro_msg', $this->app->make(PasswordUpgrade::class)->getPasswordResetMessage($type));
     }
 
     /**
@@ -237,10 +238,10 @@ class Controller extends AuthenticationTypeController
                 }
             }
         }
-        $this->resetPassword($userInfo, $error, true);
+        $this->passwordUpgrade($userInfo, $error, true);
     }
 
-    protected function resetPassword(?UserInfo $userInfo, ErrorList $error, bool $isForgotPassword)
+    private function passwordUpgrade(?UserInfo $userInfo, ErrorList $error, bool $isForgotPassword)
     {
         $token = $this->app->make(Token::class);
         $this->set('authType', $this->getAuthenticationType());
@@ -250,7 +251,6 @@ class Controller extends AuthenticationTypeController
         }
         if (!$error->has() && $userInfo !== null) {
             $mh = $this->app->make('helper/mail');
-            //$mh->addParameter('uPassword', $oUser->resetUserPassword());
             if ($this->app->make(Repository::class)->get('concrete.user.registration.email_registration')) {
                 $mh->addParameter('uName', $userInfo->getUserEmail());
             } else {
@@ -295,8 +295,9 @@ class Controller extends AuthenticationTypeController
             }
         }
         if (!$error->has()) {
-            if ($this->app->make(SessionValidatorInterface::class)->hasActiveSession()) {
-                $this->app->make('session')->remove('uPasswordResetUserName');
+            $session = $this->app->make(SessionValidatorInterface::class)->getActiveSession();
+            if ($session !== null) {
+                $session->remove(static::REQUIRED_PASSWORD_UPGRADE_SESSIONKEY);
             }
             $this->redirect('/login', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'password_sent');
         }
@@ -397,10 +398,10 @@ class Controller extends AuthenticationTypeController
         try {
             $user = $loginService->login($uName, $uPassword);
         } catch (UserPasswordResetException $e) {
-            $this->app->make('session')->set('uPasswordResetUserName', $uName);
+            $this->app->make('session')->set(static::REQUIRED_PASSWORD_UPGRADE_SESSIONKEY, ['type' => PasswordUpgrade::PASSWORD_RESET_KEY, 'uName' => $uName]);
             $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
         } catch (UserPasswordExpiredException $e) {
-            Session::set('uPasswordResetUserName', $uName);
+            $this->app->make('session')->set(static::REQUIRED_PASSWORD_UPGRADE_SESSIONKEY, ['type' => PasswordUpgrade::PASSWORD_EXPIRED_KEY, 'uName' => $uName]);
             $this->redirect('/login/', $this->getAuthenticationType()->getAuthenticationTypeHandle(), 'required_password_upgrade');
         } catch (UserException $e) {
             $this->handleFailedLogin($loginService, $uName, $uPassword, $e);
