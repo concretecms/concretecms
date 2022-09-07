@@ -484,6 +484,7 @@ class Search extends DashboardPageController
             $headerMenu->set('canActivateUser', $this->canActivateUser);
             $headerMenu->set('canSignInAsUser', $this->canSignInAsUser);
             $headerMenu->set('canDeleteUser', $this->canDeleteUser);
+            $headerMenu->set('validateEmailRegistration', (bool) $this->app->make('config')->get('concrete.user.registration.validate_email'));
             $headerMenu->set('workflowRequestActions', $workflowRequestActions);
             $this->set('headerMenu', $headerMenu);
 
