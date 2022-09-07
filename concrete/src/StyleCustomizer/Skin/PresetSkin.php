@@ -74,6 +74,7 @@ class PresetSkin implements SkinInterface
         $path = $theme->getSkinDirectoryRecord()->getUrl();
         $stylesheet = $path . '/' . $this->getIdentifier() . '.css';
         $element = new Element('link', null);
+        $element->setIsSelfClosing(true);
         $element->rel('stylesheet')->type('text/css')->href($stylesheet);
         return $element;
     }

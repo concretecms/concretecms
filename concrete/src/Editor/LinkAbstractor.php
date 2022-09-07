@@ -201,14 +201,18 @@ class LinkAbstractor extends ConcreteObject
         $text = static::replacePlaceholder(
             $text,
             '{CCM:FID_([a-f0-9-]{36}|[0-9]+)}',
-            function ($fID) use ($entityManager) {
-                if ($fID > 0) {
-                    $f = $entityManager->find(File::class, $fID);
+            function ($fID) {
+                if ($fID) {
+                    if (uuid_is_valid($fID)) {
+                        $f = \Concrete\Core\File\File::getByUUID($fID);
+                    } else {
+                        $f = \Concrete\Core\File\File::getByID($fID);
+                    }
                     if ($f !== null) {
                         return $f->getURL();
                     }
                 }
-
+                
                 return '';
             }
         );

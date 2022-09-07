@@ -690,6 +690,7 @@ return [
 
         'feature/calendar/frontend' => [
             [
+                ['javascript', 'moment'],
                 ['javascript', 'feature/calendar/frontend'],
                 ['css', 'feature/calendar/frontend'],
             ],
