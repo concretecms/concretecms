@@ -176,9 +176,14 @@ return [
          */
         'extensions_denylist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
 
+        /*
+         * Numoer of maximum parallel uploads 
+         */
+        'parallel' => 4,
+
         'chunking' => [
             // Enable uploading files in chunks?
-            'enabled' => true,
+            'enabled' => false,
             // The chunk size (if empty we'll automatically determine it)
             'chunkSize' => null,
         ],
@@ -893,6 +898,18 @@ return [
          * @var int
          */
         'results' => 50,
+         /*
+          * The maximim width (in pixels) for the uploaded images
+          */
+        'restrict_max_width' => null,
+        /*
+         * The maximim height (in pixels) for the uploaded images
+         */
+        'restrict_max_height' => null,
+        /*
+         * Don't resize the files with these mime types (space-separated list)
+         */
+        'dont_resize_mimetypes' => 'image/gif',
     ],
 
     'search_users' => [
