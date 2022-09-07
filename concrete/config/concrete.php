@@ -183,7 +183,7 @@ return [
 
         'chunking' => [
             // Enable uploading files in chunks?
-            'enabled' => false,
+            'enabled' => true,
             // The chunk size (if empty we'll automatically determine it)
             'chunkSize' => null,
         ],
