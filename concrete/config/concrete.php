@@ -992,6 +992,7 @@ return [
             'developer' => 'https://documentation.concretecms.org/developers',
             'user' => 'https://documentation.concretecms.org/user-guide',
             'forum' => 'https://forums.concretecms.org',
+            'support' => 'https://www.concretecms.com/support/hiring-help',
             'remote_search' => 'https://documentation.concretecms.org/ccm/documentation/remote_search',
         ],
         'paths' => [
