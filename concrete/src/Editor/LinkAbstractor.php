@@ -212,7 +212,7 @@ class LinkAbstractor extends ConcreteObject
                         return $f->getURL();
                     }
                 }
-                
+
                 return '';
             }
         );
