@@ -44,7 +44,7 @@ class Scheduler
 
     public function createScheduledTask(TaskInterface $task, InputInterface $input, string $cronExpression)
     {
-        // Validate cron express
+        // Validate cron expression
         try {
             $expressionObject = new CronExpression($cronExpression);
         } catch (\Exception $e) {
