@@ -26,9 +26,6 @@ use Concrete\Core\View\View;
 /** @var string $eventListTitle */
 /** @var int $linkToPage */
 
-//There might be a better way to do this but i get an error when adding the block to the page when I have topics setup. @TMDesigns 
-$filterByTopicAttributeKeyID ="";
-
 $app = Application::getFacadeApplication();
 /** @var PageSelector $pageSelector */
 $pageSelector = $app->make(PageSelector::class);
