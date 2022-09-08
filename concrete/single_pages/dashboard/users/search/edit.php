@@ -234,7 +234,7 @@ if (count($languages) > 0) {
 
                                     <div class="form-group">
                                         <?php echo $form->label('uPasswordNew', t('New Password')); ?>
-                                        <password-input name="uPasswordNew"/>
+                                        <password-input name="uPasswordNew" :strength-meter="true"/>
                                     </div>
 
                                     <div class="form-group">

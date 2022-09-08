@@ -508,6 +508,15 @@ var ccmi18n_processes = ' . json_encode([
     'close' => t('Close'),
     'delete' => t('Delete'),
 ]) . ';
+
+var ccmi18n_passwordInput = ' . json_encode([
+    'invalid' => t('Invalid'),
+    'tooWeak' => t('Too Weak'),
+    'weak' => t('Weak'),
+    'medium' => t('Medium'),
+    'strong' => t('Strong'),
+    'veryStrong' => t('Very Strong'),
+]) . ';
         ';
 
         return $this->createJavascriptResponse($content);
