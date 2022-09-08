@@ -1204,6 +1204,7 @@ return [
             'required_lower_case' => 0,
             'required_upper_case' => 0,
             'reuse' => 0,
+            'max_age' => null, // Max age (in days) before users have to change their password
             'custom_regex' => [],
 
             /**
@@ -1229,6 +1230,10 @@ return [
             'hash_cost_log2' => 12,
 
             'legacy_salt' => '',
+            'reset_message' => [
+                'password_reset' => '',
+                'password_expired' => '',
+            ]
         ],
         'email' => [
             'test_mx_record' => false,
