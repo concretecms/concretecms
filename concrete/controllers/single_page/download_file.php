@@ -88,7 +88,7 @@ class DownloadFile extends PageController
             $mimeType = $file->getMimeType();
             if (is_string($mimeType) &&
                 (
-                    $mimeType === "text/plain" ||
+                    $mimeType === "text/plain" || $mimeType === "application/pdf" ||
                     (strpos($mimeType, "/") > 0 && in_array(explode("/", $mimeType)[0], ["image", "video"]))
                 )
             ) {
@@ -96,7 +96,7 @@ class DownloadFile extends PageController
                 echo $file->getFileContents();
                 $this->app->shutdown();
             } else {
-                return false;
+                $this->force_download($file);
             }
         }
     }
