@@ -6,8 +6,10 @@ use Concrete\Core\Command\Task\Input\InputInterface;
 use Concrete\Core\Command\Task\TaskInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Command\ScheduledTask;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Localization\Service\Date;
 use Concrete\Core\User\User;
+use Cron\CronExpression;
 use Doctrine\ORM\EntityManager;
 
 class Scheduler
@@ -42,6 +44,13 @@ class Scheduler
 
     public function createScheduledTask(TaskInterface $task, InputInterface $input, string $cronExpression)
     {
+        // Validate cron express
+        try {
+            $expressionObject = new CronExpression($cronExpression);
+        } catch (\Exception $e) {
+            throw new UserMessageException(t('Unable to parse supplied cron expression. Please ensure your cron expression is accurate in a standard format. You may validate your expression at https://crontab.guru'));
+        }
+
         $scheduledTask = new ScheduledTask();
         $scheduledTask->setDateScheduled($this->dateService->toDateTime()->getTimestamp());
         $user = new User();
