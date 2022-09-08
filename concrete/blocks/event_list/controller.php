@@ -48,6 +48,8 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('totalPerPage', 3);
         $this->set('filterByTopic', 'none');
         $this->set('titleFormat', 'h5');
+        $this->set('eventPeriod', 'future_events');
+        $this->set('eventOrder', 'most_recent_first');
     }
 
     protected function getCalendarOrCalendars()
