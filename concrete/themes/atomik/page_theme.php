@@ -44,6 +44,7 @@ class PageTheme extends Theme
             Features::IMAGERY,
             Features::FORMS,
             Features::SEARCH,
+            Features::STAGING,
             Features::TESTIMONIALS,
             Features::TAXONOMY,
         ];

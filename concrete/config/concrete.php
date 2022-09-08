@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '9.1.2RC3',
-    'version_installed' => '9.1.2RC3',
+    'version' => '9.2.0a1',
+    'version_installed' => '9.2.0a1',
     'version_db' => '20220908074900', // the key of the latest database migration
 
     /*
@@ -263,14 +263,14 @@ return [
          *
          * @var bool
          */
-        'overrides' => true,
+        'overrides' => false,
 
         /*
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => true,
+        'blocks' => false,
 
         /*
          * Cache Assets
@@ -493,6 +493,13 @@ return [
         'transports' => [
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncTransport',
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultSyncTransport', // used for tests and advanced configuration
+        ],
+
+        'failure' => [
+            'default_receiver' => 'failed',
+            'transports' => [
+                'Concrete\Core\Messenger\Transport\DefaultFailed\DefaultFailedTransport',
+            ],
         ],
 
         'consume' => [
@@ -1197,6 +1204,7 @@ return [
             'required_lower_case' => 0,
             'required_upper_case' => 0,
             'reuse' => 0,
+            'max_age' => null, // Max age (in days) before users have to change their password
             'custom_regex' => [],
 
             /**
@@ -1222,6 +1230,10 @@ return [
             'hash_cost_log2' => 12,
 
             'legacy_salt' => '',
+            'reset_message' => [
+                'password_reset' => '',
+                'password_expired' => '',
+            ]
         ],
         'email' => [
             'test_mx_record' => false,
@@ -1295,6 +1307,13 @@ return [
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
+            ],
+        ],
+        'production' => [
+            'mode' => 'production',
+            'staging' => [
+                // Whether to always show the staging notification bar, even for logged-out users.
+                'show_notification_to_unregistered_users' => false,
             ],
         ],
         'misc' => [

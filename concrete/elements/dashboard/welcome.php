@@ -22,6 +22,7 @@ $controller = new \Concrete\Controller\Panel\Page\CheckIn();
 $controller->setPageObject($c);
 $approveAction = $controller->action('submit');
 
+$config = app('config');
 ?>
 
 <nav class="ccm-dashboard-desktop-navbar navbar navbar-expand-md">

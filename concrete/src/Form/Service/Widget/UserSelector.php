@@ -170,6 +170,8 @@ EOL;
 
         $identifier = $idHelper->getString(32);
 
+        $miscFields['classes'] = '';
+
         /** @noinspection PhpComposerExtensionStubsInspection */
         /** @noinspection BadExpressionStatementJS */
         return sprintf(

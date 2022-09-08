@@ -82,7 +82,6 @@ class PreviewVersion extends AbstractController
 
     protected function prepareRequest(Page $page): void
     {
-        $this->request->setCustomRequestUser(-1);
         $this->request->setCurrentPage($page);
     }
 
@@ -94,6 +93,7 @@ class PreviewVersion extends AbstractController
     protected function preparePage(Page $page): ?Response
     {
         $controller = $page->getPageController();
+        $controller->disableEditing();
         $response = $controller->on_start();
         if ($response instanceof Response) {
             return $response;
