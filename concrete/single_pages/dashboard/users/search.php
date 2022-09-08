@@ -15,7 +15,6 @@ use Concrete\Core\User\Search\Result\ItemColumn;
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\User\Menu;
 use Concrete\Core\User\UserInfo;
-use Concrete\Core\User\Search\ColumnSet\Column\UsernameColumn;
 
 /** @var MenuInterface $menu */
 /** @var Result $result */
