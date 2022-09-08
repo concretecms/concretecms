@@ -24,7 +24,6 @@ class SimpleAttributeMessage implements MessageInterface
         $this->value = $value;
     }
 
-
     public function jsonSerialize()
     {
         $data = [

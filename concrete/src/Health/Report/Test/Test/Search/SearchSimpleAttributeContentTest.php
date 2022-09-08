@@ -2,7 +2,6 @@
 namespace Concrete\Core\Health\Report\Test\Test\Search;
 
 use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
-use Concrete\Core\Health\Report\Finding\Control\ButtonControl;
 use Concrete\Core\Health\Report\Finding\Control\DropdownControl;
 use Concrete\Core\Health\Report\Finding\Control\DropdownItemControl;
 use Concrete\Core\Health\Report\Finding\Control\FindingDetailControl;

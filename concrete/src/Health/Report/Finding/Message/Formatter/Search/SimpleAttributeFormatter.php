@@ -61,13 +61,13 @@ class SimpleAttributeFormatter implements FormatterInterface, MessageHasDetailsI
                 $version = $value->getVersion();
                 $objectID = $version->getFileID();
                 $objectName = $version->getFilename();
-                $text = 'File attribute "%s" on page %s (ID %s)';
+                $text = 'File attribute "%s" on file %s (ID %s)';
             }
             if ($value instanceof UserValue) {
                 $user = $value->getUser();
                 $objectID = $user->getUserID();
                 $objectName = $user->getUserInfoObject()->getUserDisplayName();
-                $text = 'User attribute "%s" on page %s (ID %s)';
+                $text = 'User attribute "%s" on user %s (ID %s)';
             }
 
             $message = t(
@@ -102,16 +102,16 @@ class SimpleAttributeFormatter implements FormatterInterface, MessageHasDetailsI
             return new Location($page->getCollectionLink(), t('View Page'));
         } elseif ($value instanceof FileValue) {
             $version = $value->getVersion();
-            return new Location(app('url')->to('/dashboard/files/details', $version->getFileID()), t('View File'));
+            return new Location(app('url/manager')->resolve(['/dashboard/files/details', $version->getFileID()]), t('View File'));
         } elseif ($value instanceof UserValue) {
             $user = $value->getUser();
-            return new Location(app('url')->to('/dashboard/users/search', 'edit', $user->getUserID()), t('View User'));
+            return new Location(app('url/manager')->resolve(['/dashboard/users/search', 'edit', $user->getUserID()]), t('View User'));
         } elseif ($value instanceof EventValue) {
             $event = $value->getVersion()->getEvent();
             /**
              * @var $event CalendarEvent
              */
-            return new Location(app('url')->to('/dashboard/calendar/event_list', 'view', $event->getCalendar()->getID()) . '?eventID=' . $event->getID(),
+            return new Location(app('url/manager')->resolve(['/dashboard/calendar/event_list', 'view', $event->getCalendar()->getID()]) . '?eventID=' . $event->getID(),
             t("View Event")
             );
         }

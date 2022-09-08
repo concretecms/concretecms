@@ -17,12 +17,12 @@ class FindingDetailFormatter implements FormatterInterface
     public function getFindingsListElement(ControlInterface $control, Finding $finding): Element
     {
         $token = app('token')->generate('view_finding_details');
-        $url = app('url')->to(
+        $url = app('url/manager')->resolve([
             '/dashboard/reports/health/details',
             'view_finding_details',
             $finding->getId(),
             $token
-        );
+        ]);
         $options = json_encode(['title' => t('View Content')]);
 
         $link = new Element('a', t('View Content'), ['href' => '#',

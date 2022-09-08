@@ -9,4 +9,4 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 ?>
 
-<pre><code><?=$details?></code></pre>
+<pre><code><?=h($details)?></code></pre>
