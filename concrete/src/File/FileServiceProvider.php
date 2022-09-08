@@ -85,5 +85,7 @@ class FileServiceProvider extends ServiceProvider
         $this->app->singleton(ChooserConfigurationInterface::class, function($app) {
             return $this->app->make(DefaultConfigurationFactory::class)->createConfiguration();
         });
+
+        $this->app->bindIf(Upload\ClientSideUploader::class, Upload\Dropzone::class);
     }
 }
