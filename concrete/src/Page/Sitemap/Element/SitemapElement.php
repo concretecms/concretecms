@@ -25,7 +25,7 @@ abstract class SitemapElement
      *
      * @var string
      */
-    const MULTILINGUAL_NAMESPACE_NAME = 'x';
+    const MULTILINGUAL_NAMESPACE_NAME = 'xhtml';
 
     /**
      * Returns the XML representation of this element.

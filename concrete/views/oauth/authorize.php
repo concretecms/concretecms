@@ -45,7 +45,7 @@ $image = (date('Ymd') - 7) . '.jpg';
                 </div>
             </div>
         </div>
-        <div class="row gx-5 login-page-content">
+        <div class="row login-page-content">
 
             <?php
             if (!$authorize) {
