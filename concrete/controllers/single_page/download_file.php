@@ -74,6 +74,10 @@ class DownloadFile extends PageController
     {
         if ($fID > 0 && $this->app->make('helper/validation/numbers')->integer($fID)) {
             $file = File::getByID($fID);
+            if (!is_object($file)) {
+                return false;
+            }
+
             $fp = new Permissions($file);
             if (!$fp->canViewFile()) {
                 return false;
