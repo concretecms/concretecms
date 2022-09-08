@@ -57,7 +57,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow implements Assignab
         foreach ($permissions as $pk) {
             $pk->setPermissionObject($this);
             $pt = $pk->getPermissionAssignmentObject();
-            $paID = $post['pkID'][$pk->getPermissionKeyID()];
+            $paID = $post['pkID'][$pk->getPermissionKeyID()] ?? null;
             $pt->clearPermissionAssignment();
             if ($paID > 0) {
                 $pa = PermissionAccess::getByID($paID, $pk);

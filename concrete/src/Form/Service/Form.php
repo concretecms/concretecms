@@ -435,11 +435,12 @@ class Form
      */
     public function __call($name, $args)
     {
-        if(!empty($args[2]) && is_array($args[2])){
-            return $this->inputType( $args[0], $name, $args[1], $args[2]);
-        }else{
-            return $this->inputType( $args[0], $name, $args[1],[]);
-        }
+        $key = $args[0];
+        $type = str_replace('_', '-', $name);
+        $valueOrMiscFields = $args[1] ?? null;
+        $miscFields = is_array($args[2] ?? null) ? $args[2] : [];
+
+        return $this->inputType($key, $type, $valueOrMiscFields, $miscFields);
     }
     
     

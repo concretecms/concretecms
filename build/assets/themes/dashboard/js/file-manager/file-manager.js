@@ -8,7 +8,8 @@
         options = $.extend({
             bulkParameterName: 'fID',
             folderID: 0,
-            highlightFolders: []
+            highlightFolders: [],
+            dropzone: {}
         }, options)
 
         my.$element = $element
@@ -134,7 +135,8 @@
         my.fileUploaderOptions = {
             folderID: function() {
                 return my.options.folderID
-            }
+            },
+            dropzone: my.options.dropzone
         }
 
         my.$element.parent().concreteFileUploader(my.fileUploaderOptions);
