@@ -10,7 +10,7 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
 <form method="post" action="<?= $view->action('submit') ?>" id="ccm-system-automation-settings" v-cloak>
     <div class="form-group">
-        <label class="control-label">
+        <label class="form-label">
             <?= t('Queue Listening') ?>
         </label>
         <div class="form-check">
@@ -35,7 +35,7 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
 
     <div class="form-group">
-        <label class="control-label">
+        <label class="form-label">
             <?= t('Logging') ?>
         </label>
         <div class="form-check">
@@ -53,7 +53,7 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
     </div>
 
     <div class="form-group" v-show="loggingMethod === 'file'">
-        <label class="control-label">
+        <label class="form-label">
             <?= t('Log Directory') ?>
         </label>
         <?= $form->input('logDirectory', $logDirectory) ?>
@@ -65,7 +65,7 @@ $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
 
     <div class="form-group">
-        <label class="control-label">
+        <label class="form-label">
             <?= t('Scheduler') ?>
         </label>
         <div class="form-check">

@@ -50,6 +50,14 @@
         <default value="h5" />
 		<notnull/>
     </field>
+    <field name="eventPeriod" type="string" size="255">
+        <default value="future_events" />
+		<notnull/>
+    </field>
+    <field name="eventOrder" type="string" size="255">
+        <default value="most_recent_first" />
+		<notnull/>
+    </field>
   </table>
 
 </schema>

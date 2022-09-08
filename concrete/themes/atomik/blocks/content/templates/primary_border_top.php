@@ -1,13 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
-
-use Concrete\Core\Block\View\BlockViewTemplate;
-$bvt = new BlockViewTemplate($b);
-$bvt->setBlockCustomTemplate(false);
 ?>
 
-<div class="border-top border-primary border-5 pt-5">
+<div class="border-top border-primary border-5 pt-5 ccm-block-content">
 <?php
-include($bvt->getTemplate());
+include(DIR_FILES_BLOCK_TYPES_CORE . '/content/view.php');
 ?>
 </div>

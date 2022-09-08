@@ -259,6 +259,7 @@ class CustomSkin implements \JsonSerializable, SkinInterface
     {
         $stylesheet = REL_DIR_FILES_UPLOADED_STANDARD . '/' . DIRNAME_STYLE_CUSTOMIZER_PRESETS . '/' . $this->getIdentifier() . '.css';
         $element = new Element('link', null);
+        $element->setIsSelfClosing(true);
         $element->rel('stylesheet')->type('text/css')->href($stylesheet);
         return $element;
     }

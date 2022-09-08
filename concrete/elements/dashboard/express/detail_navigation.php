@@ -12,7 +12,7 @@ $c = Page::getCurrentPage();
 ?>
 
 <div class="col-4">
-    <ul class="nav flex-column">
+    <ul class="nav flex-column nav-sidebar">
         <li class="nav-item">
             <a class="nav-link <?php echo ($c->getCollectionPath() === '/dashboard/system/express/entities' && $view->controller->getTask() === 'view_entity') ? ' active' : '' ?>"
                href="<?php echo (string)Url::to('/dashboard/system/express/entities', 'view_entity', $entity->getId()) ?>">
