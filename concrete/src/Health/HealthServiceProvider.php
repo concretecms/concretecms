@@ -10,14 +10,6 @@ class HealthServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton(CsvWriter::class, function() {
-            $config = $this->app->make('config');
-            return new CsvWriter(
-                $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
-                $config
-            );
-        });
-
         // This way we can add adapters to it at runtime.
         $this->app->singleton(ScriptTagSuite::class);
     }
