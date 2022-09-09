@@ -15,14 +15,14 @@ use Concrete\Core\Health\Report\Finding\Control\LocationInterface;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\FormatterInterface;
 use Concrete\Core\Health\Report\Finding\Message\MessageHasDetailsInterface;
 use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
-use Concrete\Core\Health\Report\Finding\Message\Search\SimpleAttributeMessage;
+use Concrete\Core\Health\Report\Finding\Message\Search\AttributeMessage;
 use Concrete\Core\Page\Page;
 
-class SimpleAttributeFormatter implements FormatterInterface, MessageHasDetailsInterface, HasLocationInterface
+class AttributeFormatter implements FormatterInterface, MessageHasDetailsInterface, HasLocationInterface
 {
 
     /**
-     * @param SimpleAttributeMessage $message
+     * @param AttributeMessage $message
      * @return string
      */
     public function getFindingsListMessage(MessageInterface $message, Finding $finding): string

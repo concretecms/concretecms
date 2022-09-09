@@ -2,12 +2,19 @@
 
 namespace Concrete\Core\Health\Search\Traits;
 
+use Concrete\Core\Block\Block;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Attribute\Key\ExpressKey;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
 use Concrete\Core\Entity\Health\Report\Finding;
 use Concrete\Core\Entity\Health\Report\SearchResult;
+use Concrete\Core\Health\Report\Finding\Control\ButtonControl;
+use Concrete\Core\Health\Report\Finding\Control\DropdownControl;
+use Concrete\Core\Health\Report\Finding\Control\DropdownItemControl;
+use Concrete\Core\Health\Report\Finding\Control\FindingDetailControl;
+use Concrete\Core\Health\Report\Finding\Message\Search\BlockMessage;
 use Concrete\Core\Health\Report\Runner;
 use Doctrine\DBAL\Query\QueryBuilder as DbalBuilder;
 use Doctrine\ORM\Query;
@@ -104,9 +111,8 @@ trait SearchContentTrait
      * @param string $idSelect
      * @param string[] $scanColumns
      * @param array[] $joins [[$joinTable, $fromTable, $alias, $criteria]]
-     * @param callable $findingFactory fn($item, $report): Finding
+     * @param callable $findingPopulator fn($item, $report)
      *
-     * @return \Generator|Finding[]
      */
     protected function auditDbal(
         Runner $report,
@@ -114,9 +120,10 @@ trait SearchContentTrait
         string $idSelect,
         array $scanColumns,
         array $joins,
-        callable $findingFactory
-    ): iterable {
-        $qb = $this->em->getConnection()->createQueryBuilder();
+        callable $findingPopulator
+    ) {
+        $db = app(Connection::class);
+        $qb = $db->createQueryBuilder();
         $qb->select($idSelect)->from($table, $table);
 
         if (!$this->applyQueryFilters($report, $qb)) {
@@ -140,13 +147,20 @@ trait SearchContentTrait
 
         // Iterate over the query and build findings to output
         foreach ($this->iterateQuery($qb) as $item) {
-            $result = $findingFactory($item, $report);
-
-            if ($result instanceof Finding) {
-                yield $result;
-            }
+            $findingPopulator($item, $report);
         }
     }
+
+    protected function addBlockWarning(Runner $report, Block $block, string $content = '')
+    {
+        $message = new BlockMessage($block->getBlockID(), $content);
+        $formatter = $message->getFormatter();
+        $location = $formatter->getLocation($message);
+        $detailsControl = new FindingDetailControl();
+        $report->warning($message, new DropdownControl([$detailsControl, new DropdownItemControl($location)]));
+    }
+
+
 
 
 

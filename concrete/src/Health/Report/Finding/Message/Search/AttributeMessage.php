@@ -4,14 +4,13 @@ namespace Concrete\Core\Health\Report\Finding\Message\Search;
 
 use Concrete\Core\Entity\Attribute\Value\AbstractValue;
 use Concrete\Core\Entity\Attribute\Value\Value\Value;
-use Concrete\Core\Filesystem\Element;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\FormatterInterface;
-use Concrete\Core\Health\Report\Finding\Message\Formatter\Search\SimpleAttributeFormatter;
+use Concrete\Core\Health\Report\Finding\Message\Formatter\Search\AttributeFormatter;
 use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class SimpleAttributeMessage implements MessageInterface
+class AttributeMessage implements MessageInterface
 {
 
     /**
@@ -61,11 +60,11 @@ class SimpleAttributeMessage implements MessageInterface
     }
 
     /**
-     * @return SimpleAttributeFormatter
+     * @return AttributeFormatter
      */
     public function getFormatter(): FormatterInterface
     {
-        return new SimpleAttributeFormatter();
+        return new AttributeFormatter();
     }
 
     public function denormalize(DenormalizerInterface $denormalizer, $data, string $format = null, array $context = [])

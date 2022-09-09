@@ -5,13 +5,13 @@ use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Concrete\Core\Health\Report\Finding\Control\DropdownControl;
 use Concrete\Core\Health\Report\Finding\Control\DropdownItemControl;
 use Concrete\Core\Health\Report\Finding\Control\FindingDetailControl;
-use Concrete\Core\Health\Report\Finding\Message\Search\SimpleAttributeMessage;
+use Concrete\Core\Health\Report\Finding\Message\Search\AttributeMessage;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 use Concrete\Core\Health\Search\Traits\SearchContentTrait;
 use Doctrine\ORM\EntityManager;
 
-class SearchSimpleAttributeContentTest implements TestInterface
+class SimpleAttributeContentTest implements TestInterface
 {
     use SearchContentTrait;
 
@@ -38,7 +38,7 @@ class SearchSimpleAttributeContentTest implements TestInterface
         foreach ($this->iterateQuery($qb->getQuery()) as $value) {
             // Turn the TextValue into a real attribute value. It's a convoluted process.
             $genericValue = $value->getGenericValue();
-            $message = new SimpleAttributeMessage($genericValue);
+            $message = new AttributeMessage($genericValue);
             $formatter = $message->getFormatter();
             $location = $formatter->getLocation($message);
             if ($location) {

@@ -3,23 +3,15 @@ namespace Concrete\Core\Health\Report\Test\Test\Search;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Database\Schema\Parser\Axmls;
-use Concrete\Core\Entity\Attribute\Value\Value\TextValue;
 use Concrete\Core\Entity\Block\BlockType\BlockType;
 use Concrete\Core\Filesystem\FileLocator;
 use Concrete\Core\Filesystem\FileLocator\PackageLocation;
-use Concrete\Core\Health\Report\Finding\Control\ButtonControl;
-use Concrete\Core\Health\Report\Finding\Control\DropdownControl;
-use Concrete\Core\Health\Report\Finding\Control\DropdownItemControl;
-use Concrete\Core\Health\Report\Finding\Control\FindingDetailControl;
-use Concrete\Core\Health\Report\Finding\Message\Search\SimpleAttributeMessage;
-use Concrete\Core\Health\Report\Finding\Message\Search\SimpleBlockMessage;
 use Concrete\Core\Health\Report\Runner;
 use Concrete\Core\Health\Report\Test\TestInterface;
 use Concrete\Core\Health\Search\Traits\SearchContentTrait;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
-class SearchSimpleBlockContentTest extends Axmls implements TestInterface
+class SimpleBlockContentTest extends Axmls implements TestInterface
 {
     use SearchContentTrait;
 
@@ -55,14 +47,6 @@ class SearchSimpleBlockContentTest extends Axmls implements TestInterface
         }
     }
 
-    /**
-     * Audit a table
-     *
-     * @param Report $report
-     * @param string $table
-     * @param array $columns
-     * @return Finding[]|iterable
-     */
     private function auditTable(Runner $report, string $table, array $columns): void
     {
         $qb = $this->em->getConnection()->createQueryBuilder();
@@ -111,11 +95,7 @@ class SearchSimpleBlockContentTest extends Axmls implements TestInterface
 
             if ($block instanceof Block) {
                 $content = $item['content'] ?? '';
-                $message = new SimpleBlockMessage($block->getBlockID(), $content);
-                $formatter = $message->getFormatter();
-                $location = $formatter->getLocation($message);
-                $detailsControl = new FindingDetailControl();
-                $report->warning($message, new DropdownControl([$detailsControl, new DropdownItemControl($location)]));
+                $this->addBlockWarning($report, $block, $content);
             }
         }
     }

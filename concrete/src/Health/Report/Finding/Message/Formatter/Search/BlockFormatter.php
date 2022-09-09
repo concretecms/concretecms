@@ -10,13 +10,13 @@ use Concrete\Core\Health\Report\Finding\Control\LocationInterface;
 use Concrete\Core\Health\Report\Finding\Message\Formatter\FormatterInterface;
 use Concrete\Core\Health\Report\Finding\Message\MessageHasDetailsInterface;
 use Concrete\Core\Health\Report\Finding\Message\MessageInterface;
-use Concrete\Core\Health\Report\Finding\Message\Search\SimpleBlockMessage;
+use Concrete\Core\Health\Report\Finding\Message\Search\BlockMessage;
 
-class SimpleBlockFormatter implements FormatterInterface, MessageHasDetailsInterface, HasLocationInterface
+class BlockFormatter implements FormatterInterface, MessageHasDetailsInterface, HasLocationInterface
 {
 
     /**
-     * @param SimpleBlockMessage $message
+     * @param BlockMessage $message
      * @return string
      */
     public function getFindingsListMessage(MessageInterface $message, Finding $finding): string
@@ -40,7 +40,7 @@ class SimpleBlockFormatter implements FormatterInterface, MessageHasDetailsInter
     }
 
     /**
-     * @param SimpleBlockMessage $message
+     * @param BlockMessage $message
      * @param Finding $finding
      * @return Element
      */
@@ -55,7 +55,7 @@ class SimpleBlockFormatter implements FormatterInterface, MessageHasDetailsInter
     }
 
     /**
-     * @param SimpleBlockMessage $message
+     * @param BlockMessage $message
      * @return LocationInterface|null
      */
     public function getLocation(MessageInterface $message): ?LocationInterface
