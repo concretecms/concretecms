@@ -19,7 +19,6 @@ use Concrete\Core\Health\Report\Runner;
 use Doctrine\DBAL\Query\QueryBuilder as DbalBuilder;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder as OrmBuilder;
-use Concrete\Core\Health\Search\SearchMap;
 
 /**
  * Helpful search methods

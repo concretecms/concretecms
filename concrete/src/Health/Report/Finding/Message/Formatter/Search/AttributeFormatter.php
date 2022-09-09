@@ -85,10 +85,15 @@ class AttributeFormatter implements FormatterInterface, MessageHasDetailsInterfa
     {
         return new Element(
             'dashboard/health/report/finding/message/search/details', [
-            'details' => $message->getDetails(),
+            'details' => $this->getDetailsString($message),
             'result' => $finding->getResult()
         ]
         );
+    }
+
+    public function getDetailsString(MessageInterface $message): string
+    {
+        return $message->getDetails();
     }
 
     public function getLocation(MessageInterface $message): ?LocationInterface

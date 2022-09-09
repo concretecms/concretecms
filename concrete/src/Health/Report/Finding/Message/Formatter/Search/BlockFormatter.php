@@ -48,11 +48,17 @@ class BlockFormatter implements FormatterInterface, MessageHasDetailsInterface, 
     {
         return new Element(
             'dashboard/health/report/finding/message/search/details', [
-            'details' => $message->getContent(),
+            'details' => $this->getDetailsString($message),
             'result' => $finding->getResult()
             ]
         );
     }
+
+    public function getDetailsString(MessageInterface $message): string
+    {
+        return $message->getContent();
+    }
+
 
     /**
      * @param BlockMessage $message

@@ -9,4 +9,5 @@ interface MessageHasDetailsInterface
 
     public function getDetailsElement(MessageInterface $message, Finding $finding): Element;
 
+    public function getDetailsString(MessageInterface $message): string;
 }

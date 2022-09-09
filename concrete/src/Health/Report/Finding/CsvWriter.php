@@ -34,10 +34,19 @@ class CsvWriter
         ];
         return new StreamedResponse(function() use ($bom, $result) {
             $this->writer->setOutputBOM($bom);
-            $headers = [t('Type'), t('Message')];
+            $exporter = $result->getFormatter()->getExporter();
+            $columns = $exporter->getColumns();
+            $headers = [];
+            foreach ($columns as $column) {
+                $headers[] = $column->getDisplayName();
+            }
             $this->writer->insertOne($headers);
             foreach ($result->getWeightedFindings() as $finding) {
-                $this->writer->insertOne([$finding->getFormatter()->getType(), $finding->getMessage()]);
+                $content = [];
+                foreach ($columns as $column) {
+                    $content[] = $exporter->getColumnValue($column, $finding);
+                }
+                $this->writer->insertOne($content);
             }
         }, 200, $headers);
     }
