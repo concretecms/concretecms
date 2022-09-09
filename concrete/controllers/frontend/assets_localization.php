@@ -510,12 +510,12 @@ var ccmi18n_processes = ' . json_encode([
 ]) . ';
 
 var ccmi18n_passwordInput = ' . json_encode([
-    'invalid' => t('Invalid'),
-    'tooWeak' => t('Too Weak'),
-    'weak' => t('Weak'),
-    'medium' => t('Medium'),
-    'strong' => t('Strong'),
-    'veryStrong' => t('Very Strong'),
+    'invalid' => tc('Password', 'Invalid'),
+    'tooWeak' => tc('Password', 'Too Weak'),
+    'weak' => tc('Password', 'Weak'),
+    'medium' => tc('Password', 'Medium'),
+    'strong' => tc('Password', 'Strong'),
+    'veryStrong' => tc('Password', 'Very Strong'),
 ]) . ';
         ';
 
