@@ -989,7 +989,7 @@ return [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
         'concrete_community' => 'https://community.concretecms.com',
-        'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
+        'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concretecms.com/get_image_data.php',

@@ -1650,7 +1650,9 @@
             </area>
 
         </page>
-
+        <page name="Site Health" path="/dashboard/welcome/health" filename="/dashboard/welcome/health.php" pagetype="" template=""
+              description="" package="">
+        </page>
     </singlepages>
     <pagetypes>
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>

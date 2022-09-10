@@ -32,6 +32,9 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Site Health" path="/dashboard/welcome/health" filename="/dashboard/welcome/health.php" pagetype="" template=""
+              description="" package="">
+        </page>
     </singlepages>
 
 </concrete5-cif>
