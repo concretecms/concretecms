@@ -2,19 +2,70 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Controller\SinglePage\Dashboard\Welcome\Health;
+
 /**
  * @var $results \Concrete\Core\Search\Pagination\Pagination|null
  * @var $reports \Concrete\Core\Entity\Automation\Task[]
+ * @var $productionStatus string
+ * @var $productionStatusClass string
  */
+
 ?>
 
-<div class="ccm-dashboard-desktop-content h-100">
+<div class="ccm-dashboard-desktop-content">
 
     <?php View::element('dashboard/welcome', ['showCustomizeButton' => false]); ?>
 
     <div class="container-fluid">
         <div class="row">
+            <div class="col-12">
+                <div class="card <?=$productionStatusClass?> mb-3">
+                    <div class="card-header d-flex align-items-center">
+                        <b><?=t('Production Status')?></b>
+                        <a href="<?=URL::to('/dashboard/system/basics/production_mode')?>" class="ms-auto btn btn-sm btn-dark"><?=t('Change Production Mode')?></a>
+
+                    </div>
+                    <div class="card-body">
+                        <?php if ($productionStatus === Health::SITE_MODE_DEVELOPMENT) { ?>
+                            <?=t('Your site is currently registered as a <b>development site</b>. This setting is for non-public sites. Please ensure this site is only use for local development and testing.')?>
+                        <?php } ?>
+                        <?php if ($productionStatus === Health::SITE_MODE_STAGING) { ?>
+                            <?=t('Your site is currently registered as a <b>staging site</b>. This setting is private or semi-public sites. Please ensure this site is not serving live traffic or publicly accessible.')?>
+                        <?php } ?>
+                        <?php if ($productionStatus === Health::SITE_MODE_PRODUCTION_NO_TEST) { ?>
+                            <?=t('Your site is currently registered as a <b>production site</b>, but has not run the "Check Site Production Status" health report. Production sites are meant to serve public traffic, and as such they should be tested for optimal performance and security configuration. Please run this report as soon as possible.')?>
+                        <?php } ?>
+                        <?php if ($productionStatus === Health::SITE_MODE_PRODUCTION_FAILING) { ?>
+                            <?=t('Your site is currently registered as a <b>production site</b>, but it has failed its latest "Check Site Production Status" report! Please make the recommended changes and re-test as soon as possible.')?>
+                        <?php } ?>
+                        <?php if ($productionStatus === Health::SITE_MODE_PRODUCTION_PASSING) { ?>
+                            <?=t('Your site is currently registered as a <b>production site</b>, and it has passed its latest "Check Site Production Status" report!')?>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
             <?php $view->inc('elements/result_messages.php'); ?>
+        </div>
+        <div data-vue="health">
+            <div v-if="runningProcesses.length" class="row mb-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <b><?=t('Currently Running')?></b>
+                        </div>
+                        <div class="card-body">
+                            <running-process-list @complete-process="completeProcess" format="empty" :processes="runningProcesses"></running-process-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-lg-6">
 
                 <div class="card h-100">
@@ -39,7 +90,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
                                         <p><?=$reportController->getDescription()?></p>
                                     </div>
                                     <div class="col-lg-3 text-end mb-3 mb-lg-0 d-flex align-items-center justify-content-center">
-                                        <button class="btn btn-sm btn-secondary" type="submit" name="task" value="<?=$report->getID()?>"><?=t('Run Report')?></button>
+                                        <?php if ($report->isRunning()) { ?>
+                                            <button class="btn btn-sm btn-secondary" disabled="disabled" type="submit"><?=t('Running...')?></button>
+                                        <?php } else { ?>
+                                            <button class="btn btn-sm btn-secondary" type="submit" name="task" value="<?=$report->getID()?>"><?=t('Run Report')?></button>
+                                        <?php } ?>
                                     </div>
                                 </div>
 
@@ -70,8 +125,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="col-lg-6">
 
                 <div class="card h-100">
-                    <div class="card-header">
+                    <div class="card-header d-flex">
                         <b><?=t('Latest Health Reports')?></b>
+                        <a href="javascript:void(0)" onclick="window.location.reload()" class="ms-auto ccm-hover-icon"><i class="fa fa-sync"></i></a>
                     </div>
                     <div class="card-body">
                         <?php if (isset($results) && $results->getTotalResults() > 0) { ?>
@@ -127,6 +183,29 @@ defined('C5_EXECUTE') or die("Access Denied.");
         </div>
     </div>
 
-    <?php View::element('dashboard/background_image'); ?>
 
 </div>
+<?php View::element('dashboard/background_image'); ?>
+
+<script type="text/javascript">
+    $(function() {
+        Concrete.Vue.activateContext('backend', function (Vue, config) {
+            new Vue({
+                el: 'div[data-vue=health]',
+                components: config.components,
+                data: {
+                    'runningProcesses': <?=json_encode($runningReportProcesses)?>,
+                },
+                methods: {
+                    completeProcess(process) {
+                        this.runningProcesses.forEach((runningProcess, i) => {
+                            if (runningProcess.id == process.id) {
+                                setTimeout(() => window.location.reload(), 1000)
+                            }
+                        })
+                    }
+                },
+            })
+        })
+    });
+</script>

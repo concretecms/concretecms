@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Health\Report\Result;
 
+use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Entity\OAuth\Client;
 use Concrete\Core\Search\ItemList\EntityItemList;
@@ -32,6 +33,12 @@ class ResultList extends EntityItemList
     {
         $this->query->select('result')->from(Result::class, 'result')
             ->andWhere('result.dateCompleted is not null');
+    }
+
+    public function filterByTask(Task $task)
+    {
+        $this->query->andWhere('result.task = :task');
+        $this->query->setParameter('task', $task);
     }
 
     protected function createPaginationObject()

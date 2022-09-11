@@ -4,21 +4,84 @@ namespace Concrete\Controller\SinglePage\Dashboard\Welcome;
 use Concrete\Core\Command\Task\Input\Input;
 use Concrete\Core\Command\Task\Runner\Context\ContextFactory;
 use Concrete\Core\Command\Task\TaskService;
+use Concrete\Core\Command\Task\Traits\DashboardTaskRunnerTrait;
+use Concrete\Core\Entity\Command\Process;
+use Concrete\Core\Entity\Health\Report\Result;
+use Concrete\Core\Health\Grade\PassFailGrade;
 use Concrete\Core\Health\Report\ReportControllerInterface;
 use Concrete\Core\Health\Report\Result\ResultList;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Production\Modes;
+use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PaginationFactory;
 
 class Health extends DashboardPageController
 {
+
+    use DashboardTaskRunnerTrait;
+
+    const SITE_MODE_DEVELOPMENT = 5;
+    const SITE_MODE_STAGING = 15;
+    const SITE_MODE_PRODUCTION_NO_TEST = 20;
+    const SITE_MODE_PRODUCTION_PASSING = 50;
+    const SITE_MODE_PRODUCTION_FAILING = 99;
 
     public function view()
     {
         $this->setThemeViewTemplate('desktop/empty.php');
         $this->loadlatestResults();
         $this->loadReports();
+        $this->loadRunningReportProcesses();
+        $this->loadProductionStatus();
     }
 
+    protected function loadProductionStatus()
+    {
+        $config = $this->app->make("config");
+        $productionStatus = $config->get('concrete.security.production.mode');
+        if ($productionStatus === Modes::MODE_DEVELOPMENT) {
+            $productionStatus = self::SITE_MODE_DEVELOPMENT;
+            $productionStatusClass = 'text-bg-info';
+        }
+        if ($productionStatus === Modes::MODE_STAGING) {
+            $productionStatus = self::SITE_MODE_STAGING;
+            $productionStatusClass = 'text-bg-info';
+        }
+        if ($productionStatus === Modes::MODE_PRODUCTION) {
+            // Let's see if we have a recent production test result.
+            $latestTestResult = null;
+            $task = $this->app->make(TaskService::class)->getByHandle('production_status');
+            if ($task) {
+                $list = new ResultList($this->entityManager);
+                $list->filterbyTask($task);
+                $list->setItemsPerPage(1);
+                $pagination = $this->app->make(PaginationFactory::class)->createPaginationObject($list);
+                /**
+                 * @var $pagination Pagination
+                 */
+                if ($pagination->getTotalResults() > 0) {
+                    $latestTestResult = $pagination->getCurrentPageResults()[0];
+                    /**
+                     * @var $grade PassFailGrade
+                     */
+                    $grade = $latestTestResult->getGrade();
+                    if ($grade->hasPassed()) {
+                        $productionStatus = self::SITE_MODE_PRODUCTION_PASSING;
+                        $productionStatusClass = 'text-bg-success';
+                    } else {
+                        $productionStatus = self::SITE_MODE_PRODUCTION_FAILING;
+                        $productionStatusClass = 'text-bg-danger';
+                    }
+                }
+            }
+            if (!$latestTestResult) {
+                $productionStatus = self::SITE_MODE_PRODUCTION_NO_TEST;
+                $productionStatusClass = 'text-bg-warning';
+            }
+        }
+        $this->set('productionStatus', $productionStatus);
+        $this->set('productionStatusClass', $productionStatusClass);
+    }
     protected function loadReports()
     {
         $reports = [];
@@ -39,6 +102,20 @@ class Health extends DashboardPageController
         $this->set('results', $pagination);
     }
 
+    protected function loadRunningReportProcesses()
+    {
+        $r = $this->entityManager->getRepository(Process::class);
+        $runningReportProcesses = [];
+        $runningProcesses = $r->findBy(['dateCompleted' => null], ['dateCompleted' => 'desc']);
+        foreach ($runningProcesses as $runningProcess) {
+            $controller = $runningProcess->getTask()->getController();
+            if ($controller instanceof ReportControllerInterface) {
+                $runningReportProcesses[] = $runningProcess;
+            }
+        }
+        $this->set('runningReportProcesses', $runningReportProcesses);
+    }
+
     public function run_report()
     {
         if (!$this->token->validate('run_report')) {
@@ -55,16 +132,8 @@ class Health extends DashboardPageController
         }
         if (!$this->error->has()) {
 
-            $runner = $controller->getTaskRunner($task, new Input());
-            $handler = $this->app->make($runner->getTaskRunnerHandler());
-            $handler->boot($runner);
+            $this->executeTask($task);
 
-            $contextFactory = $this->app->make(ContextFactory::class);
-            $context = $contextFactory->createDashboardContext($runner);
-
-            $handler->start($runner, $context);
-            $handler->run($runner, $context);
-            
             $this->flash('success', t('Report started successfully.'));
             return $this->buildRedirect($this->action('view'));
         }
