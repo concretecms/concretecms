@@ -18,5 +18,6 @@ if ($grade->hasPassed()) {
 ?>
 
 <div class="ms-auto me-auto">
-    <h1 class="display-1 <?=$textClass?>"><i class="bg-light rounded-circle p-5 <?=$icon?>"></i> <?=$title?></h1>
+    <h1 class="display-1 <?=$textClass?>"><i class="<?=$icon?>"></i></h1>
+    <h5 class="display-5 <?=$textClass?>"><?=$title?></h5>
 </div>

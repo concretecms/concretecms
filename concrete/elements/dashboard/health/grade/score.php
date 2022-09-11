@@ -16,11 +16,9 @@ if ($grade->getScore() >= 80) {
 $title = $grade->getScore();
 ?>
 
-<div class="ms-auto me-auto col-2">
-    <div class="card">
-        <div class="card-header"><h5><?=t('Result Score')?></h5></div>
-        <div class="card-body">
-            <h1 class="display-1 <?=$textClass?>"><?=$title?></h1>
-        </div>
+<div class="card">
+    <div class="card-header"><h5><?=t('Result Score')?></h5></div>
+    <div class="card-body">
+        <h1 class="display-1 <?=$textClass?>"><?=$title?></h1>
     </div>
 </div>

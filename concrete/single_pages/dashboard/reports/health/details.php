@@ -44,9 +44,9 @@ if (isset($pagination) && count($pagination)) { ?>
                 <div class="col-md-12">
 
                     <div class="mb-5 mt-5 text-center">
-
-                        <?=$gradeFormatter->getBannerElement()->render()?>
-
+                        <div class="ms-auto me-auto col-2">
+                            <?=$gradeFormatter->getBannerElement()->render()?>
+                        </div>
                     </div>
                 </div>
             </div>

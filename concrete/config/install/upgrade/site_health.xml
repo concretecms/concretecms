@@ -37,4 +37,15 @@
         </page>
     </singlepages>
 
+    <blocktypes>
+        <blocktype handle="desktop_latest_health_result" package=""/>
+    </blocktypes>
+
+    <blocktypesets>
+        <blocktypeset handle="core_desktop">
+            <blocktype handle="desktop_latest_health_result"/>
+        </blocktypeset>
+    </blocktypesets>
+
+
 </concrete5-cif>

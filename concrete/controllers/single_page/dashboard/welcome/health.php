@@ -52,15 +52,8 @@ class Health extends DashboardPageController
             $latestTestResult = null;
             $task = $this->app->make(TaskService::class)->getByHandle('production_status');
             if ($task) {
-                $list = new ResultList($this->entityManager);
-                $list->filterbyTask($task);
-                $list->setItemsPerPage(1);
-                $pagination = $this->app->make(PaginationFactory::class)->createPaginationObject($list);
-                /**
-                 * @var $pagination Pagination
-                 */
-                if ($pagination->getTotalResults() > 0) {
-                    $latestTestResult = $pagination->getCurrentPageResults()[0];
+                $latestTestResult = ResultList::getLatestResult($task);
+                if ($latestTestResult) {
                     /**
                      * @var $grade PassFailGrade
                      */

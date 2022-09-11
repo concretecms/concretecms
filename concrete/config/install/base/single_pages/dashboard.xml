@@ -1558,9 +1558,6 @@
                                     <block type="desktop_latest_form" name=""/>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_featured_addon" name=""/>
-                                </column>
-                                <column span="4" offset="0">
                                     <block type="desktop_site_activity" name="">
                                         <data>
                                             <type>form_submissions</type>
@@ -1571,6 +1568,9 @@
                                         </data>
                                     </block>
                                 </column>
+                                <column span="4" offset="0">
+                                    <block type="desktop_latest_health_result" name=""/>
+                                </column>
                             </columns>
                         </arealayout>
                     </block>
@@ -1579,7 +1579,7 @@
                             <columns>
 
                                 <column span="4" offset="0">
-                                    <block type="rss_displayer" name="">
+                                    <block type="rss_displayer" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
                                         <data table="btRssDisplay">
                                             <record>
                                                 <title>Tutorials</title>
@@ -1593,7 +1593,21 @@
                                     </block>
                                 </column>
                                 <column span="8" offset="0">
-                                    <block type="desktop_featured_theme" name=""/>
+                                    <block type="rss_displayer" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
+                                        <style>
+                                            <customClass>concrete-blog-stories</customClass>
+                                        </style>
+                                        <data table="btRssDisplay">
+                                            <record>
+                                                <title>News from concretecms.com</title>
+                                                <url>https://www.concretecms.com/rss/blog</url>
+                                                <dateFormat>longDate</dateFormat>
+                                                <itemsToDisplay>3</itemsToDisplay>
+                                                <showSummary>1</showSummary>
+                                                <launchInNewWindow>1</launchInNewWindow>
+                                            </record>
+                                        </data>
+                                    </block>
                                 </column>
                             </columns>
                         </arealayout>
@@ -1602,7 +1616,7 @@
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="4" offset="0">
-                                    <block type="desktop_concrete_latest" name="">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
                                         <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>A</slot>
@@ -1611,7 +1625,7 @@
                                     </block>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_concrete_latest" name="">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
                                         <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>B</slot>
@@ -1620,7 +1634,7 @@
                                     </block>
                                 </column>
                                 <column span="4" offset="0">
-                                    <block type="desktop_concrete_latest" name="">
+                                    <block type="desktop_concrete_latest" name="" cache-output="1" cache-output-on-post="1" cache-output-for-registered-users="1" cache-output-lifetime="7200">
                                         <data table="btDesktopConcreteLatest">
                                             <record>
                                                 <slot>C</slot>
@@ -1630,21 +1644,6 @@
                                 </column>
                             </columns>
                         </arealayout>
-                    </block>
-                    <block type="rss_displayer" name="">
-                        <style>
-                            <customClass>concrete-blog-stories</customClass>
-                        </style>
-                        <data table="btRssDisplay">
-                            <record>
-                                <title>News from concretecms.com</title>
-                                <url>https://www.concretecms.com/rss/blog</url>
-                                <dateFormat>longDate</dateFormat>
-                                <itemsToDisplay>3</itemsToDisplay>
-                                <showSummary>1</showSummary>
-                                <launchInNewWindow>1</launchInNewWindow>
-                            </record>
-                        </data>
                     </block>
                 </blocks>
             </area>

@@ -4,9 +4,9 @@ namespace Concrete\Core\Health\Report\Result;
 
 use Concrete\Core\Entity\Automation\Task;
 use Concrete\Core\Entity\Health\Report\Result;
-use Concrete\Core\Entity\OAuth\Client;
 use Concrete\Core\Search\ItemList\EntityItemList;
 use Concrete\Core\Search\Pagination\Pagination;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
@@ -58,6 +58,28 @@ class ResultList extends EntityItemList
     public function getTotalResults(): int
     {
         return $this->query->select('count(result)')->setMaxResults(1)->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Just a useful helper function
+     *
+     * @return Result|null
+     */
+    public static function getLatestResult(Task $task = null): ?Result
+    {
+        $list = app(self::class);
+        if ($task) {
+            $list->filterbyTask($task);
+        }
+        $list->setItemsPerPage(1);
+        $pagination = app(PaginationFactory::class)->createPaginationObject($list);
+        /**
+         * @var $pagination Pagination
+         */
+        if ($pagination->getTotalResults() > 0) {
+            return $pagination->getCurrentPageResults()[0];
+        }
+        return null;
     }
 
 }

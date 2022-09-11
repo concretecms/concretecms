@@ -11,7 +11,7 @@ class ProductionMode extends DashboardPageController
 {
 
     use DashboardTaskRunnerTrait;
-    
+
     public function submit()
     {
         if (!$this->token->validate('submit')) {

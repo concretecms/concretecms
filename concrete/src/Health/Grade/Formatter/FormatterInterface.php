@@ -7,6 +7,9 @@ use Concrete\Core\Filesystem\Element;
 interface FormatterInterface
 {
 
+    /**
+     * @return HtmlElement
+     */
     public function getResultsListIcon(): HtmlElement;
 
     /**
