@@ -30,27 +30,29 @@ if (!$images && $page && $page->isEditMode()) { ?>
         <?php
         /** @var File $image */
         foreach ($images as $image) {
-            $tag = (new Image($image['file']))->getTag();
-            $size = $image['displayChoices']['size']['value'] ?? null;
-            $caption = $image['displayChoices']['caption']['value'] ?? null;
-            $hoverCaption = $image['displayChoices']['hover_caption']['value'] ?? null;
-            $downloadLink = null;
-            $fileVersion = $image['file']->getApprovedVersion();
-            if ($includeDownloadLink && $fileVersion instanceof Version) {
-                $downloadLink = $fileVersion->getForceDownloadURL();
-            }
-            ?>
-            <a class="col-md-<?php echo $size === 'wide' ? '12' : '6' ?>"
-                 href="<?php echo h($image['file']->getThumbnailUrl(null)) ?>" data-gallery-lightbox="true"
-                 data-caption="<?=h($caption)?>"
-                 data-download-link="<?php echo h($downloadLink); ?>">
-                <div class="ccm-block-gallery-image"><?php echo $tag ?></div>
-                <div class="ccm-block-gallery-image-overlay">
-                    <div class="ccm-block-gallery-image-overlay-color"></div>
-                    <div class="ccm-block-gallery-image-overlay-text"><?=h($hoverCaption)?></div>
-                </div>
-            </a>
-            <?php
+			if($image['file'] != null) {
+				$tag = (new Image($image['file']))->getTag();
+				$size = $image['displayChoices']['size']['value'] ?? null;
+				$caption = $image['displayChoices']['caption']['value'] ?? null;
+				$hoverCaption = $image['displayChoices']['hover_caption']['value'] ?? null;
+				$downloadLink = null;
+				$fileVersion = $image['file']->getApprovedVersion();
+				if ($includeDownloadLink && $fileVersion instanceof Version) {
+					$downloadLink = $fileVersion->getForceDownloadURL();
+				}
+				?>
+				<a class="col-md-<?php echo $size === 'wide' ? '12' : '6' ?>"
+					 href="<?php echo h($image['file']->getThumbnailUrl(null)) ?>" data-gallery-lightbox="true"
+					 data-caption="<?=h($caption)?>"
+					 data-download-link="<?php echo h($downloadLink); ?>">
+					<div class="ccm-block-gallery-image"><?php echo $tag ?></div>
+					<div class="ccm-block-gallery-image-overlay">
+						<div class="ccm-block-gallery-image-overlay-color"></div>
+						<div class="ccm-block-gallery-image-overlay-text"><?=h($hoverCaption)?></div>
+					</div>
+				</a>
+				<?php
+			}
         }
         ?>
         </div>
