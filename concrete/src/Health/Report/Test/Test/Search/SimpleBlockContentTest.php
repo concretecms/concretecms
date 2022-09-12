@@ -17,15 +17,13 @@ class SimpleBlockContentTest extends Axmls implements TestInterface
 
     private $em;
     private $locator;
-
-    protected $scanTables = [
-        'btContentLocal' => ['bID', 'content']
-    ];
+    private $scanTables = [];
 
     public function __construct(EntityManagerInterface $em, FileLocator $locator)
     {
         $this->em = $em;
         $this->locator = $locator;
+        $this->scanTables['btContentLocal'] = ['bID', 'content'];
     }
 
     public function run(Runner $report): void
