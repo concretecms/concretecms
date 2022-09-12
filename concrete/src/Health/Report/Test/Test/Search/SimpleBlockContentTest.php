@@ -15,10 +15,10 @@ class SimpleBlockContentTest extends Axmls implements TestInterface
 {
     use SearchContentTrait;
 
-    private EntityManagerInterface $em;
-    private FileLocator $locator;
+    private $em;
+    private $locator;
 
-    protected array $scanTables = [
+    protected $scanTables = [
         'btContentLocal' => ['bID', 'content']
     ];
 
