@@ -5,6 +5,7 @@ namespace Concrete\Core\Cache\Command;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Area\GlobalArea;
 use Concrete\Core\Block\BlockType\BlockType;
+use Concrete\Core\Cache\FlushableInterface;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseManager;
 use Concrete\Core\Foundation\Environment;
