@@ -4,13 +4,7 @@ namespace Concrete\Core\Health\Search\Traits;
 
 use Concrete\Core\Block\Block;
 use Concrete\Core\Database\Connection\Connection;
-use Concrete\Core\Entity\Attribute\Key\ExpressKey;
-use Concrete\Core\Entity\Attribute\Key\Key;
-use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
-use Concrete\Core\Entity\Attribute\Value\Value\Value;
-use Concrete\Core\Entity\Health\Report\Finding;
 use Concrete\Core\Entity\Health\Report\SearchResult;
-use Concrete\Core\Health\Report\Finding\Control\ButtonControl;
 use Concrete\Core\Health\Report\Finding\Control\DropdownControl;
 use Concrete\Core\Health\Report\Finding\Control\DropdownItemControl;
 use Concrete\Core\Health\Report\Finding\Control\FindingDetailControl;
@@ -110,7 +104,7 @@ trait SearchContentTrait
      * @param string $idSelect
      * @param string[] $scanColumns
      * @param array[] $joins [[$joinTable, $fromTable, $alias, $criteria]]
-     * @param callable $findingPopulator fn($item, $report)
+     * @param callable $findingPopulator function($item, $report)
      *
      */
     protected function auditDbal(
@@ -131,7 +125,7 @@ trait SearchContentTrait
 
         // Add column select, if there are more than one columns just concat them together.
         if (count($scanColumns) > 1) {
-            $columns = collect($scanColumns)->map(fn($c) => "ifnull($c,'')")->implode(',');
+            $columns = collect($scanColumns)->map(function($c) { return "ifnull($c,'')"; })->implode(',');
             $qb->addSelect("concat({$columns}) as content");
         } else {
             $columns = head($scanColumns);
