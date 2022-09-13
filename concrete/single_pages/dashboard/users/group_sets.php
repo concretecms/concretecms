@@ -90,7 +90,7 @@ $form = $app->make(Form::class);
                         <?php echo t('Cancel') ?>
                     </button>
 
-                    <button class="btn btn-danger float-end" onclick="$('div[data-dialog=delete-set] form').submit()">
+                    <button class="btn btn-danger float-end" onclick="$('div[data-modal-content=delete-set] form').submit()">
                         <?php echo t('Delete Set') ?>
                     </button>
                 </div>

@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Calendar;
 
+use Concrete\Core\Calendar\Event\EventService;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Page\Controller\DashboardCalendarPageController;
 use Concrete\Core\Calendar\Calendar;
@@ -42,6 +43,14 @@ class EventList extends DashboardCalendarPageController
         
         if ($this->request->query->has('query')) {
             $list->filterByKeywords($this->request->query->get('query'));
+        }
+        if ($this->request->query->has('eventID')) {
+            $event = $this->app->make(EventService::class)->getByID($this->request->query->get('eventID'));
+            if ($event) {
+                $list->filterByEvent($event);
+            } else {
+                $list->getQueryObject()->andWhere('1 <> 1');
+            }
         }
         if ($this->request->query->has('topic_id')) {
             $topic = intval($this->request->query->get('topic_id'));

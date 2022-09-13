@@ -37,7 +37,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="mt-2 modal-title"><?= t('Task Options') ?></h4>
+                        <h4 class="modal-title"><?= t('Task Options') ?></h4>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
                     </div>
                     <div class="modal-body">

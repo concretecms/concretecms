@@ -101,6 +101,7 @@ return [
         'core_exporter' => '\Concrete\Core\Export\ExportServiceProvider',
         'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
         'core_feed' => '\Concrete\Core\Feed\FeedServiceProvider',
+        'core_health' => '\Concrete\Core\Health\HealthServiceProvider',
         'core_html' => '\Concrete\Core\Html\HtmlServiceProvider',
         'core_editor' => '\Concrete\Core\Editor\EditorServiceProvider',
         'core_mail' => '\Concrete\Core\Mail\MailServiceProvider',

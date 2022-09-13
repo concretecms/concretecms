@@ -23,6 +23,8 @@ $dark-blue: #005163;
 
 $primary: #4a90e2;
 
+$min-contrast-ratio: 3;
+
 /* typography */
 $body-color: $gray-700;
 $small-font-size: 0.9rem;
@@ -69,7 +71,7 @@ $form-label-font-weight: 600;
 
 /* cards */
 $card-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12);
-$card-border-width: 0;
+$card-border-width: 1px;
 
 /* transitions */
 $transition-base: all 0.25s ease-in-out;

@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.2.0a1',
     'version_installed' => '9.2.0a1',
-    'version_db' => '20220908074900', // the key of the latest database migration
+    'version_db' => '20220911000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -177,7 +177,7 @@ return [
         'extensions_denylist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
 
         /*
-         * Numoer of maximum parallel uploads 
+         * Numoer of maximum parallel uploads
          */
         'parallel' => 4,
 
@@ -989,7 +989,7 @@ return [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
         'concrete_community' => 'https://community.concretecms.com',
-        'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
+        'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concretecms.com/get_image_data.php',
