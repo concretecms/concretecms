@@ -79,7 +79,8 @@ function tc($context, $text, ...$args)
  */
 function h($input)
 {
-    return (new Text())->specialchars($input);
+    static $text;
+    return ($text ?? $text = new Text())->specialchars($input);
 }
 
 /**
