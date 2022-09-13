@@ -37,8 +37,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
     <p class="text-muted"><?= t('Tips to make your site easier to manage.') ?></p>
     <div class="ccm-panel-help-media">
         <div>
-            <i class="fas fa-play-circle"></i>
-            <?= t('Video Coming Soon') ?>
+            <a href="https://www.youtube.com/watch?v=SRVOcZyvFvE" data-lightbox="iframe">
+                <i class="fas fa-play-circle"></i>
+                <?= t('Watch Video') ?>
+            </a>
         </div>
     </div>
 </section>
