@@ -56,17 +56,14 @@ class SimpleBlockContentTest extends Axmls implements TestInterface
             return;
         }
 
-        // Convert "column" to "`table`.`column` and filter out bID
         $columns = collect($columns)
-            ->filter(function($column) { $column !== 'bID'; });
+            ->filter(function($column) { return $column !== 'bID'; });
 
         if (!$columns->count()) {
             return;
         }
 
-        $columns = $columns->map(function($column) use ($table) {
-            $column = "`{$table}`.`{$column}`";
-        });
+        $columns = $columns->map(function($column) use ($table) { return "`{$table}`.`{$column}`"; });
 
         // Add column select, if there are more than one columns just concat them together.
         if ($columns->count() > 1) {

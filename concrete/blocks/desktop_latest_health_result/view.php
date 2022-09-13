@@ -5,9 +5,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var $latestResult \Concrete\Core\Entity\Health\Report\Result|null
  */
-$grade = $latestResult->getGrade();
-if ($grade) {
-    $formatter = $grade->getFormatter();
+if (isset($latestResult)) {
+    $grade = $latestResult->getGrade();
+    if ($grade) {
+        $formatter = $grade->getFormatter();
+    }
 }
 ?>
 
