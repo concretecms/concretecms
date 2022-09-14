@@ -23,7 +23,7 @@ class DropdownFormatter implements FormatterInterface
 
         $toggler = new Element(
             'button',
-            t('<i class="fa fa-cog"></i> Actions'),
+            '<i class="fa fa-cog"></i> ' . t('Actions'),
             ['class' => 'btn btn-sm btn-secondary dropdown-toggle', 'data-bs-toggle' => 'dropdown']
         );
         $container = new Element('div');
