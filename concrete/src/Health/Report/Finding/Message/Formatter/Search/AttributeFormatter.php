@@ -35,47 +35,55 @@ class AttributeFormatter implements FormatterInterface, MessageHasDetailsInterfa
             $entry = $value->getEntry();
             $entity = $entry->getEntity();
             $message = t(
-                '"%s" attribute in %s object "%s" (ID %s)',
+                /* i18n: %1$s is the name of an attribute key, %2$s is the name of an entity, %3$s is the label of an entity entry, %4$s is the ID of the entry */
+                '"%1$s" attribute in %2$s object "%3$s" (ID %4$s)',
                 $keyName,
                 $entity->getEntityDisplayName('text'),
                 $entry->getLabel(),
                 $entry->getPublicIdentifier(),
             );
         } else {
-            $text = t('Unknown object');
-            $objectName = null;
-            $objectID = null;
+            $message = t('Unknown object');
             if ($value instanceof PageValue) {
                 $page = Page::getByID($value->getPageID());
-                $objectName = $page->getCollectionName();
-                $objectID = $value->getPageID();
-                $text = 'Page attribute "%s" on page %s (ID %s)';
+                $message = t(
+                    /* i18n: %1$s is the name of an attribute key, %2$s is the name of a page, %3$s is the ID of the page */
+                    'Page attribute "%1$s" on page %2$s (ID %3$s)',
+                    $keyName,
+                    $page->getCollectionName(),
+                    $value->getPageID()
+                );
             }
             if ($value instanceof EventValue) {
                 $event = $value->getVersion()->getEvent();
-                $objectID = $event->getID();
-                $objectName = $event->getName();
-                $text = 'Calendar event attribute "%s" on event %s (ID %s)';
+                $message = t(
+                    /* i18n: %1$s is the name of an attribute key, %2$s is the name of an event, %3$s is the ID of the event */
+                    'Calendar event attribute "%1$s" on event %2$s (ID %3$s)',
+                    $keyName,
+                    $event->getName(),
+                    $event->getID()
+                );
             }
             if ($value instanceof FileValue) {
                 $version = $value->getVersion();
-                $objectID = $version->getFileID();
-                $objectName = $version->getFilename();
-                $text = 'File attribute "%s" on file %s (ID %s)';
+                $message = t(
+                    /* i18n: %1$s is the name of an attribute key, %2$s is the name of a file, %3$s is the ID of the file */
+                    'File attribute "%1$s" on file %2$s (ID %3$s)',
+                    $keyName,
+                    $version->getFilename(),
+                    $version->getFileID()
+                );
             }
             if ($value instanceof UserValue) {
                 $user = $value->getUser();
-                $objectID = $user->getUserID();
-                $objectName = $user->getUserInfoObject()->getUserDisplayName();
-                $text = 'User attribute "%s" on user %s (ID %s)';
+                $message = t(
+                    /* i18n: %1$s is the name of an attribute key, %2$s is a username, %3$s is the ID of the user */
+                    'User attribute "%1$s" on user %2$s (ID %3$s)',
+                    $keyName,
+                    $user->getUserInfoObject()->getUserDisplayName(),
+                    $user->getUserID()
+                );
             }
-
-            $message = t(
-                $text,
-                $keyName,
-                $objectName,
-                $objectID
-            );
         }
 
         return $message;
