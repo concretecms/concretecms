@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = t('%s Report Ready' ,$reportName);
+$subject = t(/* i18n: %s is the name of the report */'%s Report Ready' ,$reportName);
 $body = t("
 
 The results for the report \"%s\" are now available. You can view the findings here:
