@@ -24,7 +24,7 @@ class PageCacheReportController extends ReportController
 
     public function getDescription(): string
     {
-        return t('Checks page cache settings globally and on every page to determine whether it is optimally configured for use in a live, production environment.');
+        return t('Checks page cache settings globally and on every page to determine whether they are optimally configured for use in a live, production environment.');
     }
 
     public function getTestSuite(): SuiteInterface
