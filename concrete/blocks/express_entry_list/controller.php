@@ -399,6 +399,8 @@ class Controller extends BlockController implements UsesFeatureInterface
             $data['enableKeywordSearch'] = 0;
         }
 
+        $data['displayLimit'] = (int) $data['displayLimit'];
+
         $entity = $this->entityManager->find('Concrete\Core\Entity\Express\Entity', $data['exEntityID']);
         if (is_object($entity) && is_array($this->request->request->get('column'))) {
             $provider = $this->app->make(SearchProvider::class, ['entity' => $entity, 'category' => $entity->getAttributeKeyCategory()]);
