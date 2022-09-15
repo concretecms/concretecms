@@ -488,7 +488,7 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @return \UserInfo|null
+     * @return \Concrete\Core\User\UserInfo|null
      */
     public function getUserInfoObject()
     {
