@@ -2,8 +2,9 @@
 namespace Concrete\Core\Messenger\Transport\Receiver;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Contracts\Service\ServiceProviderInterface;
 
-class ReceiverLocator implements ContainerInterface
+class ReceiverLocator implements ServiceProviderInterface
 {
 
     protected $receivers = [];
@@ -34,5 +35,10 @@ class ReceiverLocator implements ContainerInterface
     public function addReceiver(string $handle, callable $receiver)
     {
         $this->receivers[$handle] = $receiver;
+    }
+
+    public function getProvidedServices(): array
+    {
+        return $this->receivers;
     }
 }

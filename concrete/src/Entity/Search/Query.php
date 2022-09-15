@@ -116,10 +116,17 @@ class Query implements \JsonSerializable, DenormalizableInterface
         foreach($data['columnSet']['columns'] as $columnRecord) {
             $column = $all->getColumnByKey($columnRecord['columnKey']);
             $columnSet->addColumn($column);
-            if ($data['columnSet']['sortColumn'] == $columnRecord['columnKey']) {
-                $columnSet->setDefaultSortColumn($column);
+        }
+        if (isset($data['columnSet']['sortColumn'])) {
+            $sortColumn = $all->getColumnByKey($data['columnSet']['sortColumn']);
+            if ($sortColumn) {
+                $columnSet->setDefaultSortColumn($sortColumn);
+                if (isset($data['columnSet']['sortColumnDirection'])) {
+                    $sortColumn->setColumnSortDirection($data['columnSet']['sortColumnDirection'] === 'desc' ? 'desc' : 'asc');
+                }
             }
         }
+
         $this->setColumns($columnSet);
         $this->itemsPerPage = $data['itemsPerPage'];
     }

@@ -10,7 +10,12 @@ class DashboardContext extends AbstractContext
 
     public function dispatchCommand($command, array $stamps = null): void
     {
-        $stamps = [new OutputStamp($this->getOutput())];
+        $newStamps = [new OutputStamp($this->getOutput())];
+        if (!is_null($stamps)) {
+            $stamps = array_merge($newStamps, $stamps);
+        } else {
+            $stamps = $newStamps;
+        }
         $this->messageBus->dispatch($command, $stamps);
     }
 

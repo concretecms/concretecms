@@ -2,8 +2,9 @@
 namespace Concrete\Core\Messenger\Transport\Sender;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Contracts\Service\ServiceProviderInterface;
 
-class SenderLocator implements ContainerInterface
+class SenderLocator implements ServiceProviderInterface
 {
 
     protected $senders = [];
@@ -25,6 +26,11 @@ class SenderLocator implements ContainerInterface
     public function has($id)
     {
         return array_key_exists($id, $this->senders);
+    }
+
+    public function getProvidedServices(): array
+    {
+        return $this->senders;
     }
 
 

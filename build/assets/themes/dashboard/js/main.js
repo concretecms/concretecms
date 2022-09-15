@@ -134,6 +134,7 @@ var setupTooltips = function() {
     })
 };
 
+// Legacy - use BS modals instead (but really try not using modals at all.)
 var setupDialogs = function() {
     $('.dialog-launch').dialog();
 
@@ -167,6 +168,32 @@ var setupDialogs = function() {
     });
 
 };
+
+var setupModals = function() {
+
+    // sets up launchable modals (e.g. modals that open an external URL with options
+    $('div#ccm-dashboard-page').on('click', '[data-launch-modal]', function() {
+        if ($(this).attr('disabled')) {
+            return false;
+        }
+
+        const optionsString = $(this).attr('data-modal-options') ?? false
+        const options = optionsString ? JSON.parse(optionsString) : {}
+        const modal = new ConcreteModal()
+
+        try {
+            const url = new URL($(this).attr('data-launch-modal'))
+            modal.openExternal(url, options.title ?? null)
+        } catch (e) {
+            const element = $('div[data-modal-content=' + $(this).attr('data-launch-modal') + ']')
+            if (element.length) {
+                options.message = element.html()
+                modal.show(options)
+            }
+        }
+    });
+
+}
 
 var setupPrivacyPolicy = function() {
 
@@ -238,6 +265,7 @@ setupTooltips();
 setupResultMessages();
 setupSiteListMenuItem();
 setupDialogs();
+setupModals();
 setupDetailsURLs();
 setupFavorites();
 setupAdvancedSearchLinks();

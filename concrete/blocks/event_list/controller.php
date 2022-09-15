@@ -48,6 +48,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $this->set('totalPerPage', 3);
         $this->set('filterByTopic', 'none');
         $this->set('titleFormat', 'h5');
+        $this->set('filterByTopicAttributeKeyID', null);
         $this->set('eventPeriod', 'future_events');
         $this->set('eventOrder', 'most_recent_first');
     }
@@ -106,7 +107,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         if ($calendar) {
             $date = Core::make('date')->date('Y-m-d');
             $time = Core::make('date')->toDateTime($date . ' 00:00:00')->getTimestamp();
-            $list->filterByEndTimeAfter($time);
+            if ($this->eventPeriod == 'past_events') {
+              $list->filterByEndTimeBefore($time);
+            } elseif ($this->eventPeriod == 'future_events') {
+              $list->filterByEndTimeAfter($time);
+            }
+            //$list->filterByEndTimeAfter($time);
             $list->filterByCalendar($calendar);
             if ($this->filterByFeatured) {
                 $list->filterByAttribute('is_featured', true);
@@ -125,6 +131,13 @@ class Controller extends BlockController implements UsesFeatureInterface
                     $list->filterByTopic($topic[0]->getTreeNodeID());
                 }
             }
+
+            if ($this->eventOrder == 'most_recent_first') {
+              $list->sortBy('eo.startTime', 'desc');
+            } elseif ($this->eventOrder == 'oldest_first') {
+              $list->sortBy('eo.startTime', 'asc');
+            }
+
 
             $this->set('list', $list);
             $this->set('calendar', $calendar);

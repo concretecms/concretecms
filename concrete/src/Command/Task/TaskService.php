@@ -63,6 +63,18 @@ class TaskService
         return $tasks;
     }
 
+    public function getByID($id)
+    {
+        return $this->entityManager->find(Task::class, $id);
+    }
+
+    public function getByHandle($handle)
+    {
+        return $this->entityManager->getRepository(Task::class)
+            ->findOneByHandle($handle);
+    }
+
+
     protected function getCurrentUserEntity(): ?UserEntity
     {
         if ($this->user->isRegistered()) {

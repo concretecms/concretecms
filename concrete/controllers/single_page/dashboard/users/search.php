@@ -59,6 +59,11 @@ class Search extends DashboardPageController
     protected $headerSearch;
 
     /**
+     * @var bool
+     */
+    protected $canResetPassword;
+
+    /**
      * @return SearchProvider
      */
     protected function getSearchProvider()
@@ -285,6 +290,13 @@ class Search extends DashboardPageController
                     $this->redirect('/');
                 }
                 break;
+            case 'reset_password':
+                $this->setupUser($uID);
+                if ($this->canResetPassword && $this->app->make('helper/validation/token')->validate()) {
+                    $this->user->markAsPasswordReset();
+                    $this->flash('success', t('The user will have to change his password at next login.'));
+                    return $this->buildRedirect(['/dashboard/users/search', 'edit', $this->user->getUserID()]);
+                }
             case 'delete':
                 $this->setupUser($uID);
                 if ($this->canDeleteUser && $this->app->make('helper/validation/token')->validate()) {
@@ -483,7 +495,9 @@ class Search extends DashboardPageController
             $headerMenu = new \Concrete\Controller\Element\Dashboard\Users\Header($this->user);
             $headerMenu->set('canActivateUser', $this->canActivateUser);
             $headerMenu->set('canSignInAsUser', $this->canSignInAsUser);
+            $headerMenu->set('canResetPassword', $this->canResetPassword);
             $headerMenu->set('canDeleteUser', $this->canDeleteUser);
+            $headerMenu->set('validateEmailRegistration', (bool) $this->app->make('config')->get('concrete.user.registration.validate_email'));
             $headerMenu->set('workflowRequestActions', $workflowRequestActions);
             $this->set('headerMenu', $headerMenu);
 
@@ -634,6 +648,7 @@ class Search extends DashboardPageController
             $this->assignment = $pke->getMyAssignment();
             $this->canEdit = $up->canEditUser();
             $this->canActivateUser = $this->canEdit && $tp->canActivateUser() && $me->getUserID() != $ui->getUserID();
+            $this->canResetPassword = $this->canEdit && $tp->canActivateUser();
             $this->canEditAvatar = $this->canEdit && $this->assignment->allowEditAvatar();
             $this->canEditUserName = $this->canEdit && $this->assignment->allowEditUserName();
             $this->canEditLanguage = $this->canEdit && $this->assignment->allowEditDefaultLanguage();

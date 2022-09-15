@@ -14,18 +14,29 @@ $currentTime = $dh->formatCustom('Y-m-d H:i:s');
     </header>
     <form class="preview-panel-form">
         <div class="ccm-panel-content-inner" id="ccm-menu-page-attributes-list">
-            <label class="col-form-label"><?php echo t('Date / Time'); ?></label>
-            <div id="ccm-view-as-user-wrapper">
-                <?php echo $fdh->datetime('preview_as_user_datetime', $currentTime, false, true, 'dark-panel-calendar'); ?>
+            <div class="mb-3">
+                <label class="form-label" for="date"><?php echo t('Date'); ?></label>
+                <input type="date" id="preview-page-as-user-date" value="" class="form-control">
             </div>
-            <label class="col-form-label"><?php echo t('View As'); ?></label>
-            <div class="btn-group d-flex">
-                <button class="guest-button btn btn-secondary active"><?php echo t('Guest'); ?></button>
-                <button class="user-button btn btn-secondary"><?php echo t('Site User'); ?></button>
+            <div class="mb-3">
+                <label class="form-label" for="time"><?php echo t('Time'); ?></label>
+                <input type="time" id="preview-page-as-user-time"  value="" class="form-control">
             </div>
-            <div class="site-user" style="display:none">
+            <div class="mb-3">
+                <label class="form-label"><?php echo t('View As'); ?></label>
+                <div>
+                    <div class="btn-group btn-group-sm">
+                        <button class="guest-button btn btn-secondary active"><?php echo t('Guest'); ?></button>
+                        <button class="user-button btn btn-secondary"><?php echo t('Site User'); ?></button>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 site-user" style="display:none">
                 <label class="col-form-label"><?php echo t('User'); ?></label>
-                <input class="form-control custom-user" name="user" />
+                <?=$userSelector->quickSelect('custom-user')?>
+            </div>
+            <div class="mt-5 d-grid">
+                <button type="button" class="btn btn-primary" data-button="preview-page-as-user"><?=t('Preview')?></button>
             </div>
         </div>
     </form>

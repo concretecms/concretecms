@@ -101,6 +101,7 @@ return [
         'core_exporter' => '\Concrete\Core\Export\ExportServiceProvider',
         'core_multilingual' => '\Concrete\Core\Multilingual\MultilingualServiceProvider',
         'core_feed' => '\Concrete\Core\Feed\FeedServiceProvider',
+        'core_health' => '\Concrete\Core\Health\HealthServiceProvider',
         'core_html' => '\Concrete\Core\Html\HtmlServiceProvider',
         'core_editor' => '\Concrete\Core\Editor\EditorServiceProvider',
         'core_mail' => '\Concrete\Core\Mail\MailServiceProvider',
@@ -561,6 +562,10 @@ return [
             ['css', 'css/features/multilingual/frontend.css', ['minify' => false]],
         ],
 
+        'feature/staging/frontend' => [
+            ['css', 'css/features/staging/frontend.css', ['minify' => false]],
+        ],
+
         'tui-image-editor' => [
             [
                 'css',
@@ -767,6 +772,12 @@ return [
         'feature/search/frontend' => [
             [
                 ['css', 'feature/search/frontend'],
+            ],
+        ],
+
+        'feature/staging/frontend' => [
+            [
+                ['css', 'feature/staging/frontend'],
             ],
         ],
 

@@ -161,6 +161,27 @@ if (count($pageAttributeKeys)) {
     </div>
 
     <div class="mb-3">
+        <?php echo $form->label('eventPeriod', t('Event Period')); ?>
+        <?php
+        echo $form->select('eventPeriod', [
+            "future_events" => t("Future Events"),
+            "past_events" => t("Past Events"),
+            "all_events" => t("All Events")
+        ], $eventPeriod);
+        ?>
+    </div>
+
+    <div class="mb-3">
+        <?php echo $form->label('eventOrder', t('Event Order')); ?>
+        <?php
+        echo $form->select('eventOrder', [
+            "most_recent_first" => t("Most Recent First"),
+            "oldest_first" => t("Oldest First"),
+        ], $eventOrder);
+        ?>
+    </div>
+
+    <div class="mb-3">
         <?php echo $form->label('linkToPage', t('Link To More Events Calendar/Page')); ?>
         <?php echo $pageSelector->selectPage('linkToPage', $linkToPage ?? null) ?>
     </div>

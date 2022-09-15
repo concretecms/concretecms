@@ -566,7 +566,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface, AttributeObject
     }
 
     /**
-     * @return NodeType
+     * @return \Concrete\Core\Tree\Node\Type\FileFolder|null
      */
     public function getFileFolderObject()
     {

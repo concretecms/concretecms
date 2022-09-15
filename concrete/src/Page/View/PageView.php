@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\View;
 
+use Concrete\Core\Page\Controller\PageController;
 use Concrete\Core\Page\Template as PageTemplate;
 use Concrete\Core\Page\View\Preview\PageDesignPreviewRequest;
 use Concrete\Core\Page\View\Preview\PreviewRequestInterface;
@@ -40,6 +41,18 @@ class PageView extends View
     public function getPageTemplate()
     {
         return PageTemplate::getByID($this->pTemplateID);
+    }
+
+    /**
+     * Checks to see if page editing has been manually disabled through code. This does things like hide the toolbar
+     * etc...
+     */
+    public function isEditingDisabled(): bool
+    {
+        if ($this->controller instanceof PageController) {
+            return $this->controller->isEditingDisabled();
+        }
+        return false;
     }
 
     public function renderSinglePageByFilename($cFilename, $pkgHandle = null)

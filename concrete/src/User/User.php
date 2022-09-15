@@ -4,6 +4,7 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\Application\UserInterface\Dashboard\Navigation\NavigationCache;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Database\Query\LikeBuilder;
 use Concrete\Core\Entity\Notification\GroupSignupNotification;
 use Concrete\Core\Entity\User\GroupSignup;
@@ -23,6 +24,7 @@ use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\Group\GroupRole;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Encryption\PasswordHasher;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -227,6 +229,8 @@ class User extends ConcreteObject
                     } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
                         if ($row['uIsPasswordReset']) {
                             $this->loadError(USER_PASSWORD_RESET);
+                        } elseif ($this->isPasswordExpired($db, $config, $row['uLastPasswordChange'])) {
+                            $this->loadError(USER_PASSWORD_EXPIRED);
                         } else {
                             $this->uID = $row['uID'];
                             $this->uName = $row['uName'];
@@ -1098,5 +1102,28 @@ class User extends ConcreteObject
     public function logIn($cache_interface = true)
     {
         $this->persist($cache_interface);
+    }
+
+    /**
+     * @param string|null $uLastPasswordChange
+     * @return bool
+     */
+    private function isPasswordExpired(Connection $cn, Repository $config, $uLastPasswordChange)
+    {
+        if (!$uLastPasswordChange) {
+            return false;
+        }
+        $maxAge = (int) ($config->get('concrete.user.password.max_age') ?? 0);
+        if ($maxAge <= 0) {
+            return false;
+        }
+        $lastChangeDateTime = DateTimeImmutable::createFromFormat($cn->getDatabasePlatform()->getDateTimeFormatString(), $uLastPasswordChange);
+        if (!$lastChangeDateTime) {
+            return false;
+        }
+        $ageInSeconds = time() - $lastChangeDateTime->getTimestamp();
+        $ageInDays = floor($ageInSeconds / 86400);
+
+        return $ageInDays >= $maxAge;
     }
 }
