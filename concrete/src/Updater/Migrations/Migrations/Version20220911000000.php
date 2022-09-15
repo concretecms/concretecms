@@ -21,7 +21,7 @@ final class Version20220911000000 extends AbstractMigration implements Repeatabl
     public function upgradeDatabase()
     {
         $importer = new ContentImporter();
-        $this->output(t('Importing upgrade/site_health.xml'));
+        $this->output(t(/* i18n: %s is a file name */'Importing %s', 'upgrade/site_health.xml'));
         $importer->importContentFile(DIR_BASE_CORE . '/config/install/upgrade/site_health.xml');
 
         $this->refreshEntities(
