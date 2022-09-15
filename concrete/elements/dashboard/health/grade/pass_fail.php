@@ -8,11 +8,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 if ($grade->hasPassed()) {
     $textClass = 'text-success';
-    $title = t('PASS');
+    $title = tc('CheckResult', 'PASS');
     $icon = 'fa fa-thumbs-up';
 } else {
     $textClass = 'text-danger';
-    $title = t('FAIL');
+    $title = tc('CheckResult', 'FAIL');
     $icon = 'fa fa-exclamation-triangle';
 }
 ?>
