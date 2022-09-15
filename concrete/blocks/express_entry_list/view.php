@@ -10,7 +10,7 @@ if ($tableName) { ?>
     <p><?=$tableDescription?></p>
 <?php } 
 	
-if ($entity) { ?>
+if (isset($entity)) { ?>
     <?php if ($enableSearch) { ?>
         <form method="get" action="<?=$c->getCollectionLink()?>">
 

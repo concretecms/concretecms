@@ -320,12 +320,6 @@ class Groups extends DashboardPageController
             $this->error->add($valt->getErrorMessage());
         }
 
-        if ($_POST['gIsBadge']) {
-            if (!$this->post('gBadgeDescription')) {
-                $this->error->add(t('You must specify a description for this badge. It will be displayed publicly.'));
-            }
-        }
-
         foreach($cnta->validateRoles()->getList() as $error) {
             $this->error->add($error);
         }
