@@ -21,12 +21,12 @@ class CheckConfigErrorSettingsForProductionTest implements TestInterface
         if ($this->config->get('concrete.debug.display_errors')) {
             if ($this->config->get('concrete.debug.detail') == 'debug') {
                 $report->alert(
-                    'Debug Error Output is currently set to detail. Debug errors should be disabled and errors should not be displayed in-page.',
+                    t('Debug Error Output is currently set to detail. Debug errors should be disabled and errors should not be displayed in-page.'),
                     $report->button(new DebugSettingsLocation()),
                 );
             } else {
                 $report->warning(
-                    'Error output is being displayed in page. Please disable in-page error reporting.',
+                    t('Error output is being displayed in page. Please disable in-page error reporting.'),
                     $report->button(new DebugSettingsLocation()),
                 );
             }

@@ -27,14 +27,14 @@ class CheckConfigUrlSettingsForProductionTest implements TestInterface
 
         if (!$url) {
             $report->alert(
-                'No canonical URL set! You ought to set canonical URLs for all sites running in production.',
+                t('No canonical URL set! You ought to set canonical URLs for all sites running in production.'),
                 $report->button(new UrlSettingsLocation())
             );
         } else {
             $url = Url::createFromUrl($url);
             if ($url->getScheme() !== 'https') {
                 $report->warning(
-                    'Canonical URL set but not running SSL. SSL is strongly encouraged.',
+                    t('Canonical URL set but not running SSL. SSL is strongly encouraged.'),
                     $report->button(new UrlSettingsLocation())
                 );
             }

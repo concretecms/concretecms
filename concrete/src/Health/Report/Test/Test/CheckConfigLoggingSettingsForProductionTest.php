@@ -20,13 +20,13 @@ class CheckConfigLoggingSettingsForProductionTest implements TestInterface
     {
         if ($this->config->get('concrete.log.configuration.mode') === 'simple' && $this->config->get('concrete.log.configuration.simple.handler') === 'database') {
             $report->info(
-                'Log messages are being sent to the database. For increased security and performance, consider logging to a file instead.',
+                t('Log messages are being sent to the database. For increased security and performance, consider logging to a file instead.'),
                 $report->button(new LoggingSettingsLocation())
             );
         }
         if ($this->config->get('concrete.processes.logging.method') === 'none') {
             $report->info(
-                'Task process output is not being logged. Consider enabling logging on tasks.',
+                t('Task process output is not being logged. Consider enabling logging on tasks.'),
                 $report->button(new LoggingSettingsLocation())
             );
         }

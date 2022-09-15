@@ -20,7 +20,7 @@ class CheckConfigServerSentEventsSettingsForProductionTest implements TestInterf
     {
         if ($this->config->get('concrete.notification.server_sent_events')) {
             $report->success(
-                'Server-sent events are enabled for increased interactivity in the Dashboard. Note: please verify connectivity from the Dashboard page.',
+                t('Server-sent events are enabled for increased interactivity in the Dashboard. Note: please verify connectivity from the Dashboard page.'),
                 $report->button(new ServerSentEventsSettingsLocation())
             );
         }

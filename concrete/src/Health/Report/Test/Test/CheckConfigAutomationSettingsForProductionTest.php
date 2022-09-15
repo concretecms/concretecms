@@ -20,12 +20,12 @@ class CheckConfigAutomationSettingsForProductionTest implements TestInterface
     {
         if ($this->config->get('concrete.messenger.consume.method') === 'worker') {
             $report->success(
-                'Message queue consumer configured to run via the command line.',
+                t('Message queue consumer configured to run via the command line.'),
                 $report->button(new AutomationSettingsLocation())
             );
         } else {
             $report->info(
-                'Consider configuring your queue messenger to run via the command line for better efficiency and performance.',
+                t('Consider configuring your queue messenger to run via the command line for better efficiency and performance.'),
                 $report->button(new AutomationSettingsLocation())
             );
         }
