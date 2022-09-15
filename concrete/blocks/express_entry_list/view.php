@@ -10,7 +10,7 @@ if ($tableName) { ?>
     <p><?=$tableDescription?></p>
 <?php } 
 	
-if ($entity) { ?>
+if (isset($entity)) { ?>
     <?php if ($enableSearch) { ?>
         <form method="get" action="<?=$c->getCollectionLink()?>">
 
@@ -46,8 +46,8 @@ if ($entity) { ?>
                 </div>
             <?php } ?>
 
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary pull-right" name="search"><?=t('Search')?></button>
+            <div class="mb-3 clearfix">
+                <button type="submit" class="btn btn-primary float-end" name="search"><?=t('Search')?></button>
             </div>
         </form>
     <?php }

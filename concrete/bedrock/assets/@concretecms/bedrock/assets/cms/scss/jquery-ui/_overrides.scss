@@ -120,7 +120,8 @@ html.ccm-toolbar-visible {
 
   .ui-widget-overlay {
     opacity: 0;
-    transition: $transition-fade;
+    transition: opacity 0.2s linear;
+    will-change: opacity;
 
     &.ui-widget-overlay-active {
       background: $modal-backdrop-bg;

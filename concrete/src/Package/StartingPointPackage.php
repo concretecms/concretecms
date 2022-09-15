@@ -620,7 +620,7 @@ class StartingPointPackage extends Package
         }
 
         Config::save('concrete.version_installed', APP_VERSION);
-        Config::save('concrete.misc.login_redirect', 'DESKTOP');
+        Config::save('concrete.misc.login_redirect', 'HOMEPAGE');
 
         $dbConfig = \Core::make('config/database');
         $dbConfig->save('app.privacy_policy_accepted', $this->installerOptions->isPrivacyPolicyAccepted());

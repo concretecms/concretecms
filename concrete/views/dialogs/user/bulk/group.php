@@ -29,7 +29,7 @@ if (!is_array($users) || count($users) == 0) {
 		<?php echo $form->label('groupIDs', $label); ?>
 		<div class="form-group" data-form-row="user-groups">
 			<div style="width: 100%">
-				<?=$form->selectMultiple('groupIDs', $gArray, 0, ['style' => 'width: 100%']); ?>
+				<?=$form->selectMultiple('groupIDs', $gArray, 0, ['classes' => 'form-control', 'style' => 'width: 100%']); ?>
 			</div>
 		</div>
 
@@ -45,8 +45,8 @@ if (!is_array($users) || count($users) == 0) {
 		</div>
 
 		<div class="dialog-buttons">
-			<button class="btn btn-default pull-left" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
-			<button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?= $button; ?></button>
+			<button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
+			<button type="button" data-dialog-action="submit" class="btn btn-primary ms-auto"><?= $button; ?></button>
 		</div>
 
 	</form>

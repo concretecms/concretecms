@@ -369,8 +369,8 @@ class Entry implements \JsonSerializable, PermissionObjectInterface, AttributeOb
     public function getOwnedByEntry()
     {
         foreach ($this->associations as $association) {
-            if ($association->getAssociation()->isOwnedByAssociation()) {
-                return $association->getEntry();
+            if ($association->getAssociation()->isOwnedByAssociation() && $association instanceof OneAssociation) {
+                return $association->getSelectedEntry();
             }
         }
     }

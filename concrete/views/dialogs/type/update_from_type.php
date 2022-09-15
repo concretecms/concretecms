@@ -20,9 +20,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
     <div data-dialog-form-element="progress-bar"></div>
 
-    <div class="dialog-buttons">
-        <button class="btn btn-default pull-left" data-dialog-action="cancel"><?php echo t('Cancel')?></button>
-        <button class="btn btn-primary pull-right" data-dialog-action="submit"><?php echo t('Proceed')?></button>
+    <div class="dialog-buttons clearfix">
+        <button class="btn btn-secondary" data-dialog-action="cancel"><?php echo t('Cancel')?></button>
+        <button class="btn btn-primary float-end" data-dialog-action="submit"><?php echo t('Proceed')?></button>
     </div>
 
     </form>

@@ -3,13 +3,14 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
+ * @var $entity \Concrete\Core\Entity\Express\Entity
  * @var $associations \Concrete\Core\Entity\Express\Entry\Association[]
  */
 if (!isset($associations)) {
     $associations = [];
 }
 
-$formDisplayUrl = URL::to('/dashboard/reports/forms', 'view', $entity->getEntityResultsNodeId());
+$formDisplayUrl = $entity->getEntryListingUrl();
 
 $subject = t('Website Form Submission – %s', $formName);
 

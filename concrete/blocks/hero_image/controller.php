@@ -171,8 +171,6 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
                 if (!$checker->canViewFileInFileManager()) {
                     $e->add(t('Access Denied. You do not have access to that file.'));
                 }
-            } else {
-                $e->add(t('You must provide a valid file object.'));
             }
         }
 
@@ -183,6 +181,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     {
         list($imageLinkType, $imageLinkValue) = $this->app->make(DestinationPicker::class)->decode('imageLink', $this->getImageLinkPickers(), null, null, $args);
 
+        $args['image'] = is_numeric($args['image']) ? $args['image'] : 0;
         $args['buttonInternalLinkCID'] = $imageLinkType === 'page' ? $imageLinkValue : 0;
         $args['buttonFileLinkID'] = $imageLinkType === 'file' ? $imageLinkValue : 0;
         $args['buttonExternalLink'] = $imageLinkType === 'external_url' ? $imageLinkValue : '';

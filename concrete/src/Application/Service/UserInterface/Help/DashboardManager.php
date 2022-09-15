@@ -58,9 +58,23 @@ class DashboardManager extends AbstractManager
             '/dashboard/pages/themes' => implode('', [
                 '<h1>' . t("Themes change the overall design of your site's pages") . '</h1>',
                 '<p>' . t("Activating a theme will apply it to every page in your site. Preview allows you to see how your content will look when the new theme is applied. Inspect lists the Page Types a theme uses. Customize allows you to change certain properties of your theme's styles, if allowed.") . '</p>',
+                '<h5>' . t("Page Types & Templates") . '</h5>',
+                '<p class="text-muted">' . t("Learn more about how the relationship between the page types you use throughout your site and their templates.") . '</p>',
+                '<div class="ccm-panel-help-media"><div><a href="https://www.youtube.com/watch?v=1LZW_e4AUA8" data-lightbox="iframe"><i class="fas fa-play-circle"></i> ' . t("Watch Video") . '</a></div></div>',
             ]),
             '/dashboard/pages/types' => implode('', [
-                '<p>' . t("Page types display a page's blocks in different ways and can be thought of as 'templates' for your content: Left Sidebar, Full, etc. Page types correspond to specific themes. concrete5 will look for the specified page type in your active theme.") . '</p>',
+                '<h1>' . t('Page Types') . '</h1>',
+                '<p>' . t("Page types allow you to refer to your pages as the type of object they represent. Examples of page types include 'Basic Page', 'Blog Entry', 'Document List', etc...") . '</p>',
+                '<h5>' . t("Page Types & Templates") . '</h5>',
+                '<p class="text-muted">' . t("Learn more about how the relationship between the page types you use throughout your site and their templates.") . '</p>',
+                '<div class="ccm-panel-help-media"><div><a href="https://www.youtube.com/watch?v=1LZW_e4AUA8" data-lightbox="iframe"><i class="fas fa-play-circle"></i> ' . t("Watch Video") . '</a></div></div>',
+            ]),
+            '/dashboard/pages/templates' => implode('', [
+                '<h1>' . t('Page Templates') . '</h1>',
+                '<p>' . t("Most pages in Concrete CMS have a template. Page templates map directly to code files in your theme, which determine how your page appears. Examples of page templtaes include 'Left Sidebar', 'Full Width', etc...") . '</p>',
+                '<h5>' . t("Page Types & Templates") . '</h5>',
+                '<p class="text-muted">' . t("Learn more about how the relationship between the page types you use throughout your site and their templates.") . '</p>',
+                '<div class="ccm-panel-help-media"><div><a href="https://www.youtube.com/watch?v=1LZW_e4AUA8" data-lightbox="iframe"><i class="fas fa-play-circle"></i> ' . t("Watch Video") . '</a></div></div>',
             ]),
             '/dashboard/pages/attributes' => implode('', [
                 '<p>' . t('Control the types of information that can be saved about each page in your site.') . '</p>',

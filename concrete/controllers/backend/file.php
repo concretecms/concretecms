@@ -177,28 +177,32 @@ class File extends Controller
             if (!$token->validate()) {
                 throw new UserMessageException($token->getErrorMessage(), 401);
             }
-            if ($this->request->files->has('file')) {
-                $importedFileVersion = $this->handleUpload('file');
-                if ($importedFileVersion !== null) {
-                    $importedFileVersions[] = $importedFileVersion;
-                }
-            }
-            $postedFiles = $this->request->files->get('files');
-            if (is_array($postedFiles)) {
-                if (count($postedFiles) > 1 && $replacingFile !== null) {
-                    throw new UserMessageException(t('Only one file should be uploaded when replacing a file.'));
-                }
-                $importedFileVersions = [];
-                foreach (array_keys($postedFiles) as $i) {
-                    try {
-                        $importedFileVersion = $this->handleUpload('files', $i);
-                        if ($importedFileVersion !== null) {
-                            $importedFileVersions[] = $importedFileVersion;
-                        }
-                    } catch (UserMessageException $x) {
-                        $errors->add($x);
+            $receivedFiles = $this->getReceivedFiles();
+            switch (count($receivedFiles)) {
+                case 0:
+                    break;
+                case 1:
+                    $importedFileVersion = $this->handleUploadedFile($receivedFiles[0]);
+                    if ($importedFileVersion !== null) {
+                        $importedFileVersions[] = $importedFileVersion;
                     }
-                }
+                    break;
+                default:
+                    if ($replacingFile !== null) {
+                        throw new UserMessageException(t('Only one file should be uploaded when replacing a file.'));
+                    }
+                    $importedFileVersions = [];
+                    foreach ($receivedFiles as $receivedFile) {
+                        try {
+                            $importedFileVersion = $this->handleUploadedFile($receivedFile);
+                            if ($importedFileVersion !== null) {
+                                $importedFileVersions[] = $importedFileVersion;
+                            }
+                        } catch (UserMessageException $x) {
+                            $errors->add($x);
+                        }
+                    }
+                    break;
             }
         } catch (UserMessageException $e) {
             $errors->add($e);
@@ -593,6 +597,14 @@ class File extends Controller
         if (!$file instanceof UploadedFile) {
             throw new UserMessageException(Importer::getErrorMessage(Importer::E_FILE_INVALID));
         }
+        return $this->handleUploadedFile($file);
+    }
+
+    /**
+     * @throws \Concrete\Core\Error\UserMessageException
+     */
+    protected function handleUploadedFile(UploadedFile $file): ?FileVersionEntity
+    {
         if (!$file->isValid()) {
             throw new UserMessageException(Importer::getErrorMessage($file->getError()));
         }
@@ -941,9 +953,10 @@ class File extends Controller
         $deleteFile = false;
         $post = $this->request->request;
         $dzuuid = preg_replace('/[^a-z0-9\-]/i', '', $post->get('dzuuid'));
-        $dzIndex = max(0, $post->get('dzchunkindex'));
+        $dzIndex = $post->get('dzchunkindex');
         $dzTotalChunks = max(0, $post->get('dztotalchunkcount'));
-        if ($dzuuid && $dzIndex > 0 && $dzTotalChunks > 0) {
+        if ($dzuuid && !is_null($dzIndex) && $dzTotalChunks > 0) {
+            $dzIndex = (int) $dzIndex;
             $file->move($file->getPath(), $dzuuid . $dzIndex);
             if ($this->isFullChunkFilePresent($dzuuid, $file->getPath(), $dzTotalChunks)) {
                 $deleteFile = true;
@@ -1197,5 +1210,26 @@ class File extends Controller
         $editResponse->setAdditionalDataAttribute("incomingStorageLocation", $incomingStorageLocation);
 
         return $responseFactory->json($editResponse);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile[]
+     */
+    private function getReceivedFiles(): array
+    {
+        $receivedFiles = [];
+        foreach (['file', 'files'] as $fieldName) {
+            $fieldValue = $this->request->files->get($fieldName);
+            if ($fieldValue instanceof UploadedFile) {
+                $receivedFiles[] = $fieldValue;
+            } elseif (is_array($fieldValue)) {
+                foreach ($fieldValue as $fieldValueItem) {
+                    if ($fieldValueItem instanceof UploadedFile) {
+                        $receivedFiles[] = $fieldValueItem;
+                    }
+                }
+            }
+        }
+        return $receivedFiles;
     }
 }

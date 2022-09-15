@@ -129,12 +129,13 @@ div.ccm-area.ccm-menu-item-hover {
 }
 
 div.ccm-area-footer {
-  //bottom: -35px;
+  bottom: 0;
   left: 0;
   max-width: 100%;
   opacity: 0;
   padding-left: 20px;
   position: absolute;
+  transform: translateY(100%);
   transition: opacity 0.5 s cubic-bezier(0.19, 1, 0.22, 1);
   white-space: nowrap;
   //padding-top: 15px;
@@ -148,7 +149,6 @@ div.ccm-area-footer {
     color: #666;
     display: inline-block;
     font-size: $font-size-base !important;
-    height: 35px;
     max-width: 100%;
     padding: 8px 15px;
 
@@ -409,8 +409,11 @@ div.ccm-area-drag-area {
   outline-color: rgb(170, 255, 170);
   outline-style: solid;
   outline-width: 0;
-  text-indent: -10000em;
   transition: outline-width 0.5s cubic-bezier(0.19, 1, 0.22, 1), outline-color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+
+  span {
+    display: none;
+  }
 
   &.ccm-area-drag-area-contender {
     background-color: rgba(221, 255, 221, 0.5);
@@ -445,9 +448,12 @@ html.ccm-block-dragging {
 div.ccm-area[data-total-blocks='0'] {
   div.ccm-area-drag-area {
     color: #bbb;
+    display: block;
     padding: 24px;
     text-align: center !important; /* https://github.com/concrete5/concrete5/issues/10249 */
-    text-indent: 0;
+    span {
+      display: inline-block;
+    }
   }
 }
 
@@ -513,4 +519,12 @@ div.ccm-block-edit[data-block-type-handle=core_container] {
       opacity: 1;
     }
   }
+}
+
+/**
+ * Dragging performance. We have to change this because BS5 sets it to to smooth which botches drag operations. See
+ * issue https://github.com/concretecms/concretecms/issues/10701
+ */
+html.ccm-edit-mode {
+  scroll-behavior: auto;
 }

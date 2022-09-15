@@ -2264,7 +2264,13 @@ EOT
             $classes[] = 'page-template-' . str_replace('_', '-', $ptm->getPageTemplateHandle());
         }
 
-        return implode(' ', $classes);
+        /*
+         * Provide an opportunity for altering the CSS classes in the page wrapper.
+         */
+        $event = new Event($this);
+        $event->setArgument('classes', $classes);
+        Events::dispatch('on_get_page_wrapper_class', $event);
+        return implode(' ', $event->getArgument('classes'));
     }
 
     /**
@@ -2401,7 +2407,7 @@ EOT
                     foreach ($currentPageBlocks as $b) {
                         if (!in_array($b->getBlockID(), $oldMCBlockIDs)) {
                             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($b->getAreaHandle());
-                            $db->executeQuery('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)', [
+                            $db->executeQuery('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbRelationID, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
                                 $this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $b->getBlockRelationID(), $newBlockDisplayOrder, (int) ($b->isOriginal()), $b->overrideAreaPermissions(), $b->disableBlockVersioning(),
                             ]);
                         }

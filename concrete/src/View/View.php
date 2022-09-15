@@ -233,8 +233,21 @@ class View extends AbstractView
         // programmatically we already have a theme.
         $this->loadViewThemeObject();
         $env = Environment::get();
-        if (!$this->innerContentFile) { // will already be set in a legacy tools file
-            $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php', $this->viewPkgHandle));
+        if (!$this->innerContentFile) {
+            $innerContentFilePath = null;
+            // This modification allows us to have things like views/oauth/authorize.php within our packages/whatever_theme
+            // And override the core with it. This should _already_ work because of themeroutecollection but it wasn't
+            // being checked properly.
+            if (!isset($this->viewPkgHandle) && !empty($this->themePkgHandle)) {
+                $this->viewPkgHandle = $this->themePkgHandle;
+            }
+            $themeRec = $env->getRecord($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php', $this->viewPkgHandle);
+            if ($themeRec->exists()) {
+                $innerContentFilePath = $themeRec->file;
+            } else {
+                $innerContentFilePath = $env->getPath($this->viewRootDirectoryName.'/'.trim($this->viewPath, '/').'.php');
+            }
+            $this->setInnerContentFile($innerContentFilePath);
         }
         if ($this->themeHandle) {
             if (is_object($this->controller)) {

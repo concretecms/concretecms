@@ -98,10 +98,10 @@ $token = Core::make('token');
 
                 </div>
 
-                <div class="form-group">
+                <div class="form-group clearfix">
                     <hr/>
                     <button type="button" class="btn btn-secondary" data-action="cancel-edit"><?=t('Cancel'); ?></button>
-                    <button type="button" class="btn btn-primary pull-right" data-action="update-question"><?=t('Save Question'); ?></button>
+                    <button type="button" class="btn btn-primary float-end" data-action="update-question"><?=t('Save Question'); ?></button>
                 </div>
 
             </fieldset>

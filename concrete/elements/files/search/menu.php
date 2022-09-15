@@ -2,6 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Support\Facade\Url;
 
 /** @var $urlHelper Url */
@@ -104,8 +105,7 @@ use Concrete\Core\Support\Facade\Url;
 
         $('a[data-dialog=add-files]').on('click', function(e) {
             e.preventDefault();
-
-            $('table[data-search-results=files]').parent().concreteFileUploader().open();
+            $('table[data-search-results=files]').parent().concreteFileUploader(<?= json_encode(['dropzone' => app(Dropzone::class)->getConfigurationOptions()]) ?>).open();
         });
     });
 </script>

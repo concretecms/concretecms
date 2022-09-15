@@ -238,11 +238,11 @@ $text = $app->make(Text::class);
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?php echo $view->url('/dashboard/users/groups') ?>" class="btn btn-secondary pull-left">
+            <a href="<?php echo $view->url('/dashboard/users/groups') ?>" class="btn btn-secondary">
                 <?php echo t('Cancel') ?>
             </a>
 
-            <button class="btn float-end btn-primary" style="margin-left: 10px" type="submit">
+            <button class="btn btn-primary float-end ms-2" type="submit">
                 <?php echo t('Update Group') ?>
             </button>
 

@@ -44,7 +44,8 @@ $config = $site->getConfigRepository();
         }
     }
 }
-if ($request->matches('/login*')) {
+
+if ($request->matches('/login*') || $request->matches('/oauth/*')) {
     $bodyClass = 'body-page-login';
 }
 

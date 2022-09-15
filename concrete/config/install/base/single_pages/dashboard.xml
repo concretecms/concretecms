@@ -1000,6 +1000,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Upload Settings" path="/dashboard/system/files/uploads"
+              filename="/dashboard/system/files/uploads.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>files, upload, parallel, upload_max_filesize, post_max_size, limit, resize, chunk</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Automation" path="/dashboard/system/automation"
               filename="/dashboard/system/automation/view.php" pagetype="" description="Run and automate commands."
               package=""/>
@@ -1475,6 +1483,12 @@
         <page name="API" path="/dashboard/system/api" filename="/dashboard/system/api/view.php"
               pagetype="" description="" package="">
         </page>
+
+        <page name="API Integrations" path="/dashboard/system/api/integrations"
+              filename="/dashboard/system/api/integrations.php" pagetype=""
+              description="" package="">
+        </page>
+
         <page name="API Settings" path="/dashboard/system/api/settings"
               filename="/dashboard/system/api/settings.php" pagetype="" description="" package="">
             <attributes>
@@ -1483,20 +1497,6 @@
                 </attributekey>
             </attributes>
         </page>
-
-        <page name="API Integrations" path="/dashboard/system/api/integrations"
-              filename="/dashboard/system/api/integrations.php" pagetype=""
-              description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-        </page>
-
 
         <page name="Welcome" path="/dashboard/welcome" filename="/dashboard/welcome.php" description="" package="">
             <attributes>

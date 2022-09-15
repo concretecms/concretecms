@@ -97,7 +97,7 @@ echo $userInterface->tabs([
 
     <div class="tab-pane" id="filtering" role="tabpanel">
         <div data-container="search-field-selector">
-            <?php if ($searchFieldSelectorElement) { ?>
+            <?php if (isset($searchFieldSelectorElement)) { ?>
                 <?php $searchFieldSelectorElement->render() ?>
             <?php } else { ?>
                 <?php echo t('You must choose an entity before you can customize its filtering.') ?>
@@ -130,7 +130,7 @@ echo $userInterface->tabs([
         </div>
 
         <div data-container="customize-results">
-            <?php if ($customizeElement) { ?>
+            <?php if (isset($customizeElement)) { ?>
                 <?php $customizeElement->render() ?>
             <?php } else { ?>
                 <?php echo t('You must choose an entity before you can customize its search results.') ?>
@@ -253,11 +253,11 @@ echo $userInterface->tabs([
 <script>
     $(function(){
         Concrete.event.publish('block.express_entry_list.open', {
-            'searchProperties': <?php echo json_encode($searchProperties)?>,
-            'searchPropertiesSelected': <?php echo json_encode($searchPropertiesSelected)?>,
-            'searchAssociations': <?php echo json_encode($searchAssociations)?>,
-            'searchAssociationsSelected': <?php echo json_encode($searchAssociationsSelected)?>,
-            'linkedPropertiesSelected': <?php echo json_encode($linkedPropertiesSelected)?>
+            'searchProperties': <?php echo json_encode($searchProperties ?? null)?>,
+            'searchPropertiesSelected': <?php echo json_encode($searchPropertiesSelected ?? null)?>,
+            'searchAssociations': <?php echo json_encode($searchAssociations ?? null)?>,
+            'searchAssociationsSelected': <?php echo json_encode($searchAssociationsSelected ?? null)?>,
+            'linkedPropertiesSelected': <?php echo json_encode($linkedPropertiesSelected ?? null)?>
         });
     });
 </script>
