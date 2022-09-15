@@ -5,7 +5,7 @@ use Concrete\Core\Command\Task\Input\Input;
 use Concrete\Core\Command\Task\Runner\Context\ContextFactory;
 use Concrete\Core\Command\Task\TaskService;
 use Concrete\Core\Command\Task\Traits\DashboardTaskRunnerTrait;
-use Concrete\Core\Entity\Command\Process;
+use Concrete\Core\Entity\Command\TaskProcess;
 use Concrete\Core\Entity\Health\Report\Result;
 use Concrete\Core\Health\Grade\PassFailGrade;
 use Concrete\Core\Health\Report\ReportControllerInterface;
@@ -97,7 +97,7 @@ class Health extends DashboardPageController
 
     protected function loadRunningReportProcesses()
     {
-        $r = $this->entityManager->getRepository(Process::class);
+        $r = $this->entityManager->getRepository(TaskProcess::class);
         $runningReportProcesses = [];
         $runningProcesses = $r->findBy(['dateCompleted' => null], ['dateCompleted' => 'desc']);
         foreach ($runningProcesses as $runningProcess) {
