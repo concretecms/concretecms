@@ -6,7 +6,6 @@ use Concrete\Core\Block\Block;
 use Concrete\Core\View\View;
 
 /** @var Block $b */
-/** @var int $rcID */
 
 /** @noinspection PhpUnhandledExceptionInspection */
-View::element('permission/lists/block', ['b' => $b, 'rcID' => $rcID]);
+View::element('permission/lists/block', ['b' => $b]);

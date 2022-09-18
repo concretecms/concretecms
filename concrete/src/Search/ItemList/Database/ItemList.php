@@ -88,7 +88,7 @@ abstract class ItemList extends AbstractItemList
     protected function executeSanitizedSortBy($column, $direction = 'asc')
     {
         if (preg_match('/[^0-9a-zA-Z\$\.\_\x{0080}-\x{ffff}]+/u', $column) === 0) {
-            $this->executeSortBy($column, $direction);
+            $this->executeSortBy($column, (string) $direction);
         }
     }
 

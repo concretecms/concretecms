@@ -22,6 +22,11 @@ $controller = new \Concrete\Controller\Panel\Page\CheckIn();
 $controller->setPageObject($c);
 $approveAction = $controller->action('submit');
 
+$config = app('config');
+
+if (!isset($showCustomizeButton)) {
+    $showCustomizeButton = true;
+}
 ?>
 
 <nav class="ccm-dashboard-desktop-navbar navbar navbar-expand-md">
@@ -42,6 +47,7 @@ $approveAction = $controller->action('submit');
     </div>
 </nav>
 
+<?php if ($showCustomizeButton) { ?>
 <div class="ccm-dashboard-welcome-customize">
     <form method="post" data-form="check-in" action="<?=$approveAction?>">
         <?php if ($canEdit) { ?>
@@ -102,5 +108,5 @@ $approveAction = $controller->action('submit');
     });
 </script>
 
-
+<?php } ?>
 

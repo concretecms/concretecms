@@ -11,10 +11,10 @@ $uid = uniqid();
 $resolverManager = app(ResolverManagerInterface::class);
 $valt = app(Token::class);
 ?>
-<button class="btn btn-xs btn-secondary" type="button" id="ccm-permissions-list-copy-permissions-<?= $uid ?>"><?=t('Copy')?></button>
+<button class="btn btn-sm btn-secondary" type="button" id="ccm-permissions-list-copy-permissions-<?= $uid ?>"><?=t('Copy')?></button>
 <?php if (is_object($set) && $set->getPermissionKeyCategory() == $pkCategory->getPermissionKeyCategoryHandle()) {
     ?>
-	<button class="btn btn-xs btn-secondary" type="button" id="ccm-permissions-list-paste-permissions-<?= $uid ?>"><?=t('Paste')?></button>
+	<button class="btn btn-sm btn-secondary" type="button" id="ccm-permissions-list-paste-permissions-<?= $uid ?>"><?=t('Paste')?></button>
 <?php
 } ?>
 <input type="hidden" name="pkCategoryHandle" value="<?=$pkCategory->getPermissionKeyCategoryHandle()?>" />

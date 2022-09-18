@@ -91,7 +91,7 @@ if (isset($geolocator)) {
                     >
                         <td><?= $geolocator->getGeolocatorHandle(); ?></td>
                         <td><?= $geolocator->getGeolocatorDisplayName(); ?></td>
-                        <td><button class="btn btn-info btn-xs geolocator-test-launcher"><?= t('Test'); ?></button></td>
+                        <td><button class="btn btn-info btn-sm geolocator-test-launcher"><?= t('Test'); ?></button></td>
                     </tr>
                     <?php
                 } ?>

@@ -23,17 +23,17 @@
 	<p><?=t('To proceed with the upgrade, click below.')?></p>
 
 	<form method="post" action="<?=$controller->action('submit')?>">
-	<div class="well" style="text-align: left">
+	<div class="card card-body bg-light" style="text-align: left">
 	<input type="submit" name="do_upgrade" class="btn btn-primary" value="<?=t('Upgrade')?>"  />
 	</div>
 	</form>
 
 <?php } else { ?>
 
-	<div class="well" style="text-align: left">
+	<div class="card card-body bg-light" style="text-align: left">
 	<a href="<?=DIR_REL?>/" class="btn btn-primary"><?=t('Back to Home')?></a>
 	<?php if (!isset($hide_force) || !$hide_force) { ?>
-        <a href="<?=DIR_REL . '/' . DISPATCHER_FILENAME . '/ccm/system/upgrade?force=1'?>" class="btn btn-default btn-secondary"><?=t('Re-Run Upgrade Script')?></a>
+        <a href="<?=DIR_REL . '/' . DISPATCHER_FILENAME . '/ccm/system/upgrade?force=1'?>" class="btn btn-secondary"><?=t('Re-Run Upgrade Script')?></a>
         <?php } ?>
   	</div>
 	

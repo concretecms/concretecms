@@ -26,6 +26,9 @@ use Concrete\Core\View\View;
 /** @var string $eventListTitle */
 /** @var int $linkToPage */
 
+//There might be a better way to do this but i get an error when adding the block to the page when I have topics setup. @TMDesigns 
+$filterByTopicAttributeKeyID ="";
+
 $app = Application::getFacadeApplication();
 /** @var PageSelector $pageSelector */
 $pageSelector = $app->make(PageSelector::class);
@@ -59,7 +62,7 @@ if (count($pageAttributeKeys)) {
         <?php echo t('Filtering') ?>
     </legend>
 
-    <div class="form-group">
+    <div class="mb-3">
         <?php echo $form->label('filterByTopic', t('Filter By Topic')); ?>
 
         <div class="form-check">
@@ -79,14 +82,14 @@ if (count($pageAttributeKeys)) {
             </div>
 
             <div data-row="page-attribute">
-                <div class="form-group">
-                    <?php echo $form->text('filterByPageTopicAttributeKeyHandle', $pageTopicAttributeKeyHandles, $filterByPageTopicAttributeKeyHandle ?? null); ?>
+                <div class="mb-3">
+                    <?php echo $form->select('filterByPageTopicAttributeKeyHandle', $pageTopicAttributeKeyHandles, $filterByPageTopicAttributeKeyHandle ?? null); ?>
                 </div>
             </div>
         <?php } ?>
 
         <div data-row="specific-topic">
-            <div class="form-group">
+            <div class="mb-3">
                 <!--suppress HtmlFormInputWithoutLabel -->
                 <select class="form-select" name="filterByTopicAttributeKeyID">
                     <option value="">
@@ -105,13 +108,12 @@ if (count($pageAttributeKeys)) {
                 </select>
 
                 <?php echo $form->hidden("filterByTopicID", $filterByTopicID ?? null); ?>
-
-                <div id="ccm-block-event-list-topic-tree-wrapper"></div>
             </div>
+            <div id="ccm-block-event-list-topic-tree-wrapper"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <?php echo $form->label('filterByFeatured', t('Featured Events')); ?>
 
         <div class="form-check">
@@ -140,7 +142,7 @@ if (count($pageAttributeKeys)) {
         <?php echo t('Results') ?>
     </legend>
 
-    <div class="form-group">
+    <div class="mb-3">
         <?php echo $form->label('eventListTitle', t('Title')); ?>
 	    <div class="input-group">
         	<?php echo $form->text('eventListTitle', $eventListTitle) ?>
@@ -148,17 +150,38 @@ if (count($pageAttributeKeys)) {
 		</div>
 	</div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <?php echo $form->label('totalToRetrieve', t('Total Number of Events to Retrieve')); ?>
         <?php echo $form->text('totalToRetrieve', $totalToRetrieve); ?>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <?php echo $form->label('totalPerPage', t('Events to Display Per Page')); ?>
         <?php echo $form->text('totalPerPage', $totalPerPage); ?>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
+        <?php echo $form->label('eventPeriod', t('Event Period')); ?>
+        <?php
+        echo $form->select('eventPeriod', [
+            "future_events" => t("Future Events"),
+            "past_events" => t("Past Events"),
+            "all_events" => t("All Events")
+        ], $eventPeriod);
+        ?>
+    </div>
+
+    <div class="mb-3">
+        <?php echo $form->label('eventOrder', t('Event Order')); ?>
+        <?php
+        echo $form->select('eventOrder', [
+            "most_recent_first" => t("Most Recent First"),
+            "oldest_first" => t("Oldest First"),
+        ], $eventOrder);
+        ?>
+    </div>
+
+    <div class="mb-3">
         <?php echo $form->label('linkToPage', t('Link To More Events Calendar/Page')); ?>
         <?php echo $pageSelector->selectPage('linkToPage', $linkToPage ?? null) ?>
     </div>
@@ -182,9 +205,8 @@ if (count($pageAttributeKeys)) {
         }).trigger('change');
 
         $('select[name=filterByTopicAttributeKeyID]').on('change', function () {
-            let $tree = $('#ccm-block-event-list-topic-tree');
 
-            $tree.remove();
+            $('#ccm-block-event-list-topic-tree-wrapper').html('')
 
             let chosenTree = $(this).find('option:selected').attr('data-tree-id');
 
@@ -192,9 +214,9 @@ if (count($pageAttributeKeys)) {
                 return;
             }
 
-            $('#ccm-block-event-list-topic-tree-wrapper').append($('<div id=ccm-block-event-list-topic-tree>'));
+            $('#ccm-block-event-list-topic-tree-wrapper').append($('<div class="mb-3"><label class="form-label"><?=t('Choose Topic')?></label><div id="ccm-block-event-list-topic-tree"></div>'));
 
-            $tree.concreteTree({
+            $('#ccm-block-event-list-topic-tree').concreteTree({
                 'treeID': chosenTree,
                 'chooseNodeInForm': true,
                 <?php if (isset($filterByTopicID)) { ?>

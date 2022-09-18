@@ -11,13 +11,7 @@ class Settings extends DashboardPageController
     {
         $config = $this->app->make("config");
         $enable_api = (bool) $config->get('concrete.api.enabled');
-        if ($enable_api) {
-            $r = $this->app->make(ClientRepositoryInterface::class);
-            $clients = $r->findAll();
-            $this->set('clients', $clients);
-        }
         $this->set("enable_api", $enable_api);
-
         $grantTypes = (array) $config->get('concrete.api.grant_types');
         $this->set('grantTypes', $grantTypes);
         $this->set('availableGrantTypes', $this->getAvailableGrantTypes());

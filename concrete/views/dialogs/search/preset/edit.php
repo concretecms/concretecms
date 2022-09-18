@@ -9,9 +9,9 @@
             <?= $form->text('presetName', $searchPreset->getPresetName()); ?>
         </div>
 
-        <div class="dialog-buttons">
-            <button class="btn btn-default" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
-            <button class="btn btn-primary pull-right" data-dialog-action="submit" type="submit"><?= t('Save Search Preset'); ?></button>
+        <div class="dialog-buttons clearfix">
+            <button class="btn btn-secondary" data-dialog-action="cancel"><?= t('Cancel'); ?></button>
+            <button class="btn btn-primary float-end" data-dialog-action="submit" type="submit"><?= t('Save Search Preset'); ?></button>
         </div>
     </form>
 

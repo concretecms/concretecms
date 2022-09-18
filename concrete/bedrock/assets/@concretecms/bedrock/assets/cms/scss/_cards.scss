@@ -1,0 +1,7 @@
+.ccm-ui {
+  .card {
+    // Let's disable borders on the outside of the cards. We can't use the $card-border-width variable for this
+    // because it also disables borders between card headers and bodies and footers
+    border-width: 0;
+  }
+}

@@ -82,6 +82,7 @@ if (mix.inProduction()) {
     mix.copy('node_modules/@concretecms/bedrock/assets/imagery/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/imagery/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/maps/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/maps/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/multilingual/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/multilingual/scss');
+    mix.copy('node_modules/@concretecms/bedrock/assets/staging/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/staging/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/navigation/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/navigation/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/polls/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/polls/scss');
     mix.copy('node_modules/@concretecms/bedrock/assets/profile/scss', '../concrete/bedrock/assets/@concretecms/bedrock/assets/profile/scss');
@@ -302,6 +303,15 @@ mix
 mix
     .js('node_modules/@concretecms/bedrock/assets/multilingual/js/frontend.js', 'js/features/multilingual/frontend.js')
     .sass('node_modules/@concretecms/bedrock/assets/multilingual/scss/frontend.scss', 'css/features/multilingual/frontend.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    });
+
+mix
+    .sass('node_modules/@concretecms/bedrock/assets/staging/scss/frontend.scss', 'css/features/staging/frontend.css', {
         sassOptions: {
             includePaths: [
                 path.resolve(__dirname, './node_modules/')

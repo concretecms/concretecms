@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Theme\Theme;
 use PageType;
 use PageTemplate;
 use Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
@@ -49,6 +50,15 @@ class Add extends DashboardPageController
         if (!is_object($defaultTemplate)) {
             $this->error->add(t('You must choose a valid default page template.'));
         }
+
+        $defaultTheme = null;
+        if ($post->get('ptDefaultThemeID')) {
+            $defaultTheme = Theme::getByID($post->get('ptDefaultThemeID'));
+            if (!is_object($defaultTheme)) {
+                $this->error->add(t('You must choose a valid theme.'));
+            }
+        }
+
         $templates = array();
         if (is_array($post->get('ptPageTemplateID'))) {
             foreach ($post->get('ptPageTemplateID') as $pageTemplateID) {
@@ -84,6 +94,7 @@ class Add extends DashboardPageController
                 'handle' => $handle,
                 'name' => $name,
                 'defaultTemplate' => $defaultTemplate,
+                'defaultTheme' => $defaultTheme,
                 'ptLaunchInComposer' => $post->get('ptLaunchInComposer'),
                 'ptIsFrequentlyAdded' => $post->get('ptIsFrequentlyAdded'),
                 'allowedTemplates' => $post->get('ptAllowedPageTemplates'),

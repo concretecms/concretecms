@@ -105,10 +105,10 @@ class Update extends DashboardPageController
         $hLocaleName = h(\Punic\Language::getName($localeID));
         switch ($action) {
             case 'update':
-                $button = '<button class="btn btn-xs btn-primary ccm-install-package-locale" data-is-update="true" data-token="' . h($this->token->generate("install-package-locale-{$handle}@" . $localeID)) . '" data-action="' . h($this->action('install_package_locale', $handle, $localeID)) . '">' . t('Update') . '</button>';
+                $button = '<button class="btn btn-sm btn-primary ccm-install-package-locale" data-is-update="true" data-token="' . h($this->token->generate("install-package-locale-{$handle}@" . $localeID)) . '" data-action="' . h($this->action('install_package_locale', $handle, $localeID)) . '">' . t('Update') . '</button>';
                 break;
             case 'install':
-                $button = '<button class="btn btn-xs btn-info ccm-install-package-locale" data-token="' . h($this->token->generate("install-package-locale-{$handle}@" . $localeID)) . '" data-action="' . h($this->action('install_package_locale', $handle, $localeID)) . '">' . t('Install') . '</button>';
+                $button = '<button class="btn btn-sm btn-info ccm-install-package-locale" data-token="' . h($this->token->generate("install-package-locale-{$handle}@" . $localeID)) . '" data-action="' . h($this->action('install_package_locale', $handle, $localeID)) . '">' . t('Install') . '</button>';
                 break;
                 break;
             default:

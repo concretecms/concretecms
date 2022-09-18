@@ -21,6 +21,9 @@
     <field name="ptDefaultPageTemplateID" type="integer" size="10">
       <unsigned/>
     </field>
+    <field name="ptDefaultThemeID" type="integer" size="10">
+      <unsigned/>
+    </field>
     <field name="ptAllowedPageTemplates" type="string" size="1">
       <default value="A"/>
     </field>

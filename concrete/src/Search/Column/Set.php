@@ -99,6 +99,7 @@ class Set implements \JsonSerializable
         ];
         if ($this->getDefaultSortColumn()) {
             $data['sortColumn'] = $this->getDefaultSortColumn()->getColumnKey();
+            $data['sortColumnDirection'] = $this->getDefaultSortColumn()->getColumnSortDirection();
         }
         return $data;
     }

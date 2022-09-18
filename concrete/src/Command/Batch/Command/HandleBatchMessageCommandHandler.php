@@ -3,6 +3,7 @@
 namespace Concrete\Core\Command\Batch\Command;
 
 use Concrete\Core\Command\Batch\BatchUpdater;
+use Concrete\Core\Command\Batch\Stamp\BatchStamp;
 use Concrete\Core\Command\Process\Command\ProcessMessageInterface;
 use Concrete\Core\Command\Task\Output\OutputAwareInterface;
 use Concrete\Core\Command\Task\Output\OutputAwareTrait;
@@ -35,7 +36,10 @@ class HandleBatchMessageCommandHandler implements OutputAwareInterface
         $message = $command->getMessage();
         $stamps = [];
         if ($this->output) {
-            $stamps = [new OutputStamp($this->output)];
+            $stamps = [
+                new BatchStamp($command->getBatch()),
+                new OutputStamp($this->output)
+            ];
         }
         try {
             $this->messageBus->dispatch($message, $stamps);

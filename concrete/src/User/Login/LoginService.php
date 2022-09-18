@@ -17,6 +17,7 @@ use Concrete\Core\User\Exception\NotActiveException;
 use Concrete\Core\User\Exception\NotValidatedException;
 use Concrete\Core\User\Exception\SessionExpiredException;
 use Concrete\Core\User\Exception\UserDeactivatedException;
+use Concrete\Core\User\Exception\UserPasswordExpiredException;
 use Concrete\Core\User\Exception\UserPasswordResetException;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -256,6 +257,8 @@ class LoginService implements LoggerAwareInterface, ApplicationAwareInterface
                     'account and follow the link it contains.'));
             case USER_PASSWORD_RESET:
                 throw new UserPasswordResetException(t('This password has been reset.'));
+            case USER_PASSWORD_EXPIRED:
+                throw new UserPasswordExpiredException(t('This password has expired and must be changed.'));
             case USER_INVALID:
                 if ($this->config->get('concrete.user.registration.email_registration')) {
                     $message = t('Invalid email address or password.');

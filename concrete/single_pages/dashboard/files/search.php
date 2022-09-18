@@ -10,6 +10,7 @@ use Concrete\Core\Application\UserInterface\ContextMenu\DropdownMenu;
 use Concrete\Core\Application\UserInterface\ContextMenu\MenuInterface;
 use Concrete\Core\File\Search\ColumnSet\Column\NameColumn;
 use Concrete\Core\File\Search\Result\Result;
+use Concrete\Core\File\Upload\Dropzone;
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Legacy\FilePermissions;
 use Concrete\Core\Search\Result\Column;
@@ -192,7 +193,8 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
         (function ($) {
             $(function () {
                 $('table[data-search-results=files]').concreteFileManagerTable({
-                    'folderID': '<?php echo $folderID ?? null; ?>'
+                    folderID: '<?php echo $folderID ?? null; ?>',
+                    dropzone: <?= json_encode($app->make(Dropzone::class)->getConfigurationOptions(true)) ?>,
                 });
             });
         })(jQuery);

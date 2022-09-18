@@ -5,6 +5,7 @@ namespace Concrete\Core\Authentication;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
+use Concrete\Core\Http\Request;
 use Concrete\Core\User\User;
 use Page;
 use Controller;
@@ -18,11 +19,19 @@ abstract class AuthenticationTypeController extends Controller implements Logger
 
     use LoggerAwareTrait;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Logging\LoggerAwareInterface::getLoggerChannel()
+     */
     public function getLoggerChannel()
     {
         return Channels::CHANNEL_AUTHENTICATION;
     }
 
+    /**
+     * @return string
+     */
     abstract public function getAuthenticationTypeIconHTML();
 
     abstract public function view();
@@ -34,8 +43,12 @@ abstract class AuthenticationTypeController extends Controller implements Logger
     {
         $this->authenticationType = $type;
         $this->app = Application::getFacadeApplication();
+        $this->request = $this->app->make(Request::class);
     }
 
+    /**
+     * @return \Concrete\Core\Authentication\AuthenticationType
+     */
     public function getAuthenticationType()
     {
         if (!$this->authenticationType || !$this->authenticationType->getAuthenticationTypeID()) {
@@ -45,6 +58,11 @@ abstract class AuthenticationTypeController extends Controller implements Logger
         return $this->authenticationType;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Authentication\AuthenticationTypeControllerInterface::completeAuthentication()
+     */
     public function completeAuthentication(User $u)
     {
         $c = Page::getByPath('/login');

@@ -62,8 +62,8 @@ $publishDate = $v->getPublishDate();
                 <p><?= t('This will revert this page to draft page. This will delete this page from the sitemap then you can find it in the Drafts folder. This action cannot be undone. Are you sure?') ?></p>
             </form>
             <div class="dialog-buttons">
-                <button class="btn btn-secondary float-left" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
-                <button class="btn btn-danger float-right" data-dialog-revert-page="submit"><?= t('Revert Page to Draft') ?></button>
+                <button class="btn btn-secondary float-start" onclick="jQuery.fn.dialog.closeTop()"><?= t('Cancel') ?></button>
+                <button class="btn btn-danger float-end" data-dialog-revert-page="submit"><?= t('Revert Page to Draft') ?></button>
             </div>
         </div>
     </div>

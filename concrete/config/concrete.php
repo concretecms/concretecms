@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.1.1',
-    'version_installed' => '9.1.1',
-    'version_db' => '20220614180000', // the key of the latest database migration
+    'version' => '9.2.0a2',
+    'version_installed' => '9.2.0a2',
+    'version_db' => '20220911000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -176,9 +176,14 @@ return [
          */
         'extensions_denylist' => '*.php;*.php2;*.php3;*.php4;*.php5;*.php7;*.php8;*.phtml;*.phar;*.htaccess;*.pl;*.phpsh;*.pht;*.shtml;*.cgi',
 
+        /*
+         * Numoer of maximum parallel uploads
+         */
+        'parallel' => 4,
+
         'chunking' => [
             // Enable uploading files in chunks?
-            'enabled' => true,
+            'enabled' => false,
             // The chunk size (if empty we'll automatically determine it)
             'chunkSize' => null,
         ],
@@ -258,14 +263,14 @@ return [
          *
          * @var bool
          */
-        'overrides' => true,
+        'overrides' => false,
 
         /*
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => true,
+        'blocks' => false,
 
         /*
          * Cache Assets
@@ -488,6 +493,13 @@ return [
         'transports' => [
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncTransport',
             'Concrete\Core\Messenger\Transport\DefaultAsync\DefaultSyncTransport', // used for tests and advanced configuration
+        ],
+
+        'failure' => [
+            'default_receiver' => 'failed',
+            'transports' => [
+                'Concrete\Core\Messenger\Transport\DefaultFailed\DefaultFailedTransport',
+            ],
         ],
 
         'consume' => [
@@ -893,6 +905,18 @@ return [
          * @var int
          */
         'results' => 50,
+         /*
+          * The maximim width (in pixels) for the uploaded images
+          */
+        'restrict_max_width' => null,
+        /*
+         * The maximim height (in pixels) for the uploaded images
+         */
+        'restrict_max_height' => null,
+        /*
+         * Don't resize the files with these mime types (space-separated list)
+         */
+        'dont_resize_mimetypes' => 'image/gif',
     ],
 
     'search_users' => [
@@ -964,7 +988,8 @@ return [
     'urls' => [
         'concrete' => 'http://marketplace.concretecms.com',
         'concrete_secure' => 'https://marketplace.concretecms.com',
-        'background_feed' => '//backgroundimages.concretecms.com/wallpaper',
+        'concrete_community' => 'https://community.concretecms.com',
+        'background_feed' => 'https://backgroundimages.concretecms.com/wallpaper',
         'privacy_policy' => '//www.concretecms.com/about/legal/privacy-policy',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
         'background_info' => 'http://backgroundimages.concretecms.com/get_image_data.php',
@@ -974,6 +999,7 @@ return [
             'developer' => 'https://documentation.concretecms.org/developers',
             'user' => 'https://documentation.concretecms.org/user-guide',
             'forum' => 'https://forums.concretecms.org',
+            'support' => 'https://www.concretecms.com/support/hiring-help',
             'remote_search' => 'https://documentation.concretecms.org/ccm/documentation/remote_search',
         ],
         'paths' => [
@@ -1178,6 +1204,7 @@ return [
             'required_lower_case' => 0,
             'required_upper_case' => 0,
             'reuse' => 0,
+            'max_age' => null, // Max age (in days) before users have to change their password
             'custom_regex' => [],
 
             /**
@@ -1203,6 +1230,10 @@ return [
             'hash_cost_log2' => 12,
 
             'legacy_salt' => '',
+            'reset_message' => [
+                'password_reset' => '',
+                'password_expired' => '',
+            ]
         ],
         'email' => [
             'test_mx_record' => false,
@@ -1276,6 +1307,13 @@ return [
                 'enabled' => false,
                 // Time window (in seconds) for inactive users to be automatically logout
                 'time' => 300,
+            ],
+        ],
+        'production' => [
+            'mode' => 'production',
+            'staging' => [
+                // Whether to always show the staging notification bar, even for logged-out users.
+                'show_notification_to_unregistered_users' => false,
             ],
         ],
         'misc' => [
@@ -1439,6 +1477,17 @@ return [
          * @var bool
          */
         'server_sent_events' => false,
+
+        'mercure' => [
+            'jwt' => [
+                'publisher' => [
+                    'expires_at' => '+30 minutes',
+                ],
+                'subscriber' => [
+                    'expires_at' => '+30 minutes',
+                ],
+            ],
+        ],
 
     ],
 

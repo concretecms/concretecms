@@ -846,8 +846,9 @@ class Version implements ObjectInterface
             $extension = $this->getExtension();
             if ($extension) {
                 return tc(
+                    /* i18n: %1$s is a file extension (eg 'JPG'), %2$s is a file type (eg 'Image') */
                     'FileExtensionAndType',
-                    '%s %s',
+                    '%1$s %2$s',
                     strtoupper($extension),
                     $to->getGenericDisplayType()
                 );

@@ -127,30 +127,6 @@
       position: relative;
     }
 
-    .sp-dd {
-      display: none;
-    }
-
-    .sp-replacer {
-      border: 1px solid #444;
-      border-radius: 4px;
-      height: 28px;
-      margin-left: 10px;
-      padding: 0;
-      width: 28px;
-
-      .sp-preview {
-        border: 0;
-        height: 28px;
-        width: 28px;
-
-        .sp-preview-inner {
-          height: 28px;
-          width: 28px;
-        }
-      }
-    }
-
     h3 {
       font-size: $font-size-base;
       font-weight: bold;

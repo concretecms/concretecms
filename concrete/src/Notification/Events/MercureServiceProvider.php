@@ -43,8 +43,10 @@ class MercureServiceProvider extends ServiceProvider
             $key = new Key($keyString, '');
         }
 
+        $expires = new \DateTimeImmutable($config->get('concrete.notification.mercure.jwt.publisher.expires_at'));
         $token = $builder
             ->withClaim('mercure', ['publish' => ['*']])
+            ->expiresAt($expires)
             ->getToken(
                 $signer,
                 $key

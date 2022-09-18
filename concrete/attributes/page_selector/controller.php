@@ -8,6 +8,7 @@ use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Page\Page;
+use Core;
 
 class Controller extends AttributeTypeController
 {
@@ -42,6 +43,18 @@ class Controller extends AttributeTypeController
         }
         $this->set('value', $value);
         $this->set('page_selector', $this->app->make('helper/form/page_selector'));
+    }
+
+    public function searchForm($list)
+    {
+        $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), (int)$this->request('value'));
+        return $list;
+    }
+
+    public function search()
+    {
+        $page_selector = $this->app->make('helper/form/page_selector');
+        echo $page_selector->selectPage($this->field('value'), $this->request('value'));
     }
 
     public function getDisplayValue()
