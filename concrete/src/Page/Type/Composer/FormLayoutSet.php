@@ -20,6 +20,10 @@ class FormLayoutSet extends ConcreteObject
     {
         return $this->ptComposerFormLayoutSetDescription;
     }
+    public function getPageTypeComposerFormLayoutSetCollapseType()
+    {
+        return $this->ptComposerFormLayoutSetCollapseType;
+    }
     public function getPageTypeComposerFormLayoutSetDisplayOrder()
     {
         return $this->ptComposerFormLayoutSetDisplayOrder;
@@ -95,6 +99,7 @@ class FormLayoutSet extends ConcreteObject
         $node = $fxml->addChild('set');
         $node->addAttribute('name', $this->getPageTypeComposerFormLayoutSetName());
         $node->addAttribute('description', $this->getPageTypeComposerFormLayoutSetDescription());
+        $node->addAttribute('collapseType', $this->getPageTypeComposerFormLayoutSetCollapseType());
         $controls = FormLayoutSetControl::getList($this);
         foreach ($controls as $con) {
             $con->export($node);
@@ -117,6 +122,15 @@ class FormLayoutSet extends ConcreteObject
             $ptComposerFormLayoutSetDescription, $this->ptComposerFormLayoutSetID,
         ));
         $this->ptComposerFormLayoutSetDescription = $ptComposerFormLayoutSetDescription;
+    }
+
+    public function updateFormLayoutSetCollapseType($ptComposerFormLayoutSetCollapseType)
+    {
+        $db = Loader::db();
+        $db->Execute('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetCollapseType = ? where ptComposerFormLayoutSetID = ?', array(
+            $ptComposerFormLayoutSetCollapseType, $this->ptComposerFormLayoutSetID,
+        ));
+        $this->ptComposerFormLayoutSetCollapseType = $ptComposerFormLayoutSetCollapseType;
     }
 
     public function updateFormLayoutSetDisplayOrder($displayOrder)
