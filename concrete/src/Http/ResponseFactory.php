@@ -158,6 +158,12 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function controller(Controller $controller, $code = Response::HTTP_OK, $headers = [])
     {
+        $dl = $this->app->make('multilingual/detector');
+        $c = Page::getCurrentPage();
+        // if the page exists and is not in error
+        if ($c && !$c->isError()) {
+            $dl->setupSiteInterfaceLocalization($c);
+        }
         $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
         try {
             $request = $this->request;
