@@ -943,6 +943,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $cvID = $this->cvID;
         $c = Page::getByID($this->cID, $cvID);
         $cID = $c->getCollectionID();
+        $u = $app->make(\Concrete\Core\User\User::class);
 
         $q = "select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?";
         $r = $db->executeQuery($q, array(
@@ -992,6 +993,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
         $this->refreshCache();
 
         $ev = new Event($c);
+        $ev->setUser($u);
         $ev->setCollectionVersionObject($this);
         $app->make('director')->dispatch('on_page_version_delete', $ev);
     }
