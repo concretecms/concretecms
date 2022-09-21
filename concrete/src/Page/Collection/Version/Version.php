@@ -810,6 +810,7 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
             );
         }
         $ev = new Event($c);
+        $ev->setUser($u);
         $ev->setCollectionVersionObject($this);
         $app->make('director')->dispatch('on_page_version_approve', $ev);
 
