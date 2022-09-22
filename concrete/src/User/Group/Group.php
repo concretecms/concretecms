@@ -137,6 +137,9 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $this->rescanGroupPath();
 
         $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        if (!$node) {
+            return;
+        }
         $node->populateDirectChildrenOnly();
         foreach ($node->getChildNodes() as $child) {
             if ($child instanceof \Concrete\Core\Tree\Node\Type\Group) {
