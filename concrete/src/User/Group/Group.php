@@ -220,6 +220,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                     $subscription = $type->getSubscription($subject);
                     $users = $notifier->getUsersToNotify($subscription, $subject);
                     $notification = new GroupRoleChangeNotification($subject);
+                    $subject->getNotifications()->add($notification);
                     $notifier->notify($users, $notification);
                 }
 
