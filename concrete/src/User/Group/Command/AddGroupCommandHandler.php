@@ -94,6 +94,7 @@ class AddGroupCommandHandler
                 $subscription = $type->getSubscription($subject);
                 $users = $notifier->getUsersToNotify($subscription, $subject);
                 $notification = new GroupCreateNotification($subject);
+                $subject->getNotifications()->add($notification);
                 $notifier->notify($users, $notification);
             }
         }
