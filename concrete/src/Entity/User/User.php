@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Entity\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 
@@ -24,6 +26,8 @@ class User implements UserEntityInterface, \JsonSerializable
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\NotificationAlert", cascade={"remove"}, mappedBy="user")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID")
+     *
+     * @var \Doctrine\Common\Collections\Collection
      */
     protected $alerts;
 
@@ -142,6 +146,7 @@ class User implements UserEntityInterface, \JsonSerializable
 
     public function __construct()
     {
+        $this->alerts = new ArrayCollection();
         $this->uLastPasswordChange = new \DateTime();
         $this->uDateLastUpdated = new \DateTime();
         $this->uDateAdded = new \DateTime();
@@ -524,5 +529,13 @@ class User implements UserEntityInterface, \JsonSerializable
             'name' => $this->getUserName(),
             'email' => $this->getUserEmail(),
         ];
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\Notification\NotificationAlert[]
+     */
+    public function getAlerts(): Collection
+    {
+        return $this->alerts;
     }
 }
