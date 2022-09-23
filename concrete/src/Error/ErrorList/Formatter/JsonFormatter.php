@@ -29,6 +29,7 @@ class JsonFormatter extends AbstractFormatter
                 'error' => true,
                 'errors' => [],
                 'htmlErrorIndexes' => [],
+                'list' => [],
             ];
             $index = 0;
             foreach ($error->getList() as $error) {
@@ -36,6 +37,7 @@ class JsonFormatter extends AbstractFormatter
                 if ($error instanceof HtmlAwareErrorInterface && $error->messageContainsHtml()) {
                     $o['htmlErrorIndexes'][] = $index;
                 }
+                $o['list'][] = $error;
                 ++$index;
             }
             if (empty($o['htmlErrorIndexes'])) {
