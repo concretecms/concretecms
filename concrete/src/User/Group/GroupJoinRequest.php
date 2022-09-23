@@ -97,6 +97,7 @@ class GroupJoinRequest extends ConcreteObject implements SubjectInterface
                 $subscription = $type->getSubscription($subject);
                 $users = $notifier->getUsersToNotify($subscription, $subject);
                 $notification = new GroupSignupRequestDeclineNotification($subject);
+                $subject->getNotifications()->add($notification);
                 $notifier->notify($users, $notification);
             }
 
