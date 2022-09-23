@@ -793,6 +793,7 @@ class User extends ConcreteObject
                     $subscription = $type->getSubscription($subject);
                     $users = $notifier->getUsersToNotify($subscription, $subject);
                     $notification = new GroupSignupNotification($subject);
+                    $subject->getNotifications()->add($notification);
                     $notifier->notify($users, $notification);
                 }
             }
