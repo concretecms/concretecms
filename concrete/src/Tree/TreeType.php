@@ -96,4 +96,24 @@ class TreeType extends ConcreteObject
 
         return $list;
     }
+
+    public static function getList()
+    {
+        $db = Database::connection();
+        $list = array();
+        $r = $db->Execute('select treeTypeID from TreeTypes order by treeTypeID asc');
+        while ($row = $r->fetch()) {
+            $list[] = self::getByID($row['treeTypeID']);
+        }
+
+        return $list;
+    }
+
+    public function export(\SimpleXMLElement $node)
+    {
+        $node = $node->addChild('treetype');
+        $node->addAttribute('handle', $this->getTreeTypeHandle());
+        $node->addAttribute('package', $this->getPackageHandle());
+        return $node;
+    }
 }
