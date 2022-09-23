@@ -149,6 +149,7 @@ class RegistrationService implements RegistrationServiceInterface
             $subscription = $type->getSubscription($signup);
             $notified = $notifier->getUsersToNotify($subscription, $signup);
             $notification = $type->createNotification($signup);
+            $signup->getNotifications()->add($notification);
             $notifier->notify($notified, $notification);
         }
 
