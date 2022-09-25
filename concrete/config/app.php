@@ -127,7 +127,7 @@ return [
         'core_package' => '\Concrete\Core\Package\PackageServiceProvider',
         'core_url' => '\Concrete\Core\Url\UrlServiceProvider',
         'core_devices' => '\Concrete\Core\Device\DeviceServiceProvider',
-
+        'core_tree' => '\Concrete\Core\Tree\TreeServiceProvider',
         'core_user' => '\Concrete\Core\User\UserServiceProvider',
         'core_service_manager' => '\Concrete\Core\Service\Manager\ServiceManagerServiceProvider',
         'core_site' => '\Concrete\Core\Site\ServiceProvider',
@@ -193,6 +193,8 @@ return [
         'authentication_type',
         'block_type',
         'block_type_set',
+        'tree_type',
+        'tree_node_type',
         'express_entity',
         'captcha_library',
         'container',
@@ -227,6 +229,8 @@ return [
     'importer_routines' => [
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSiteTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportGroupsRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreeTypesRoutine',
+        'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportTreeNodeTypesRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportSinglePageStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportStacksStructureRoutine',
         'Concrete\Core\Backup\ContentImporter\Importer\Routine\ImportBlockTypesRoutine',
