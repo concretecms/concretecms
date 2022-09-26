@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\User\Group\Command;
 
+use Concrete\Core\Cache\Level\RequestCache;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\User\GroupCreate;
 use Concrete\Core\Entity\User\GroupSignup;
@@ -36,17 +37,24 @@ class DeleteGroupCommandHandler
      */
     protected $entityManager;
 
+    /**
+     * @var \Concrete\Core\Cache\Level\RequestCache
+     */
+    protected $requestCache;
+
     public function __construct(
         GroupRepository $groupRepository,
         Connection $connection,
         EventDispatcher $dispatcher,
-        EntityManager  $entityManager
+        EntityManager  $entityManager,
+        RequestCache $requestCache
     )
     {
         $this->groupRepository = $groupRepository;
         $this->connection = $connection;
         $this->dispatcher = $dispatcher;
         $this->entityManager = $entityManager;
+        $this->requestCache = $requestCache;
     }
 
     public function __invoke(DeleteGroupCommand $command)
@@ -108,6 +116,7 @@ class DeleteGroupCommandHandler
         $this->connection->query('DELETE FROM UserGroups WHERE gID = ?', [intval($groupID)]);
         $this->connection->query('DELETE FROM ' . $table . ' WHERE gID = ?', [(int) $groupID]);
         $this->connection->query('delete from GroupSelectedRoles where gID = ?', [(int) $groupID]);
+        $this->requestCache->delete('tree/node');
     }
 
 
