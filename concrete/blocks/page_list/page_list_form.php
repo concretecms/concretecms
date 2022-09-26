@@ -123,7 +123,7 @@ echo $userInterface->tabs([
         <fieldset>
             <div class="form-group">
                 <?php echo $form->label('num', t('Number of Pages to Display')); ?>
-                <?php echo $form->number("num", $num); ?>
+                <?php echo $form->number("num", $num, ['min' => 0]); ?>
             </div>
 
             <div class="form-group">
