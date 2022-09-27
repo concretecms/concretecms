@@ -78,13 +78,16 @@ class Register extends PageController
         $token = $this->app->make('token');
 
         if ($token->validate('register.do_register')) {
-            $username = $_POST['uName'];
+            if ($this->displayUserName) {
+                $username = $_POST['uName'];
+                // clean the username
+                $username = trim($username);
+                $username = preg_replace('/ +/', ' ', $username);
+            }
             $password = $_POST['uPassword'];
-            $passwordConfirm = $_POST['uPasswordConfirm'];
-
-            // clean the username
-            $username = trim($username);
-            $username = preg_replace('/ +/', ' ', $username);
+            if ($config->get('concrete.user.registration.display_confirm_password_field')) {
+                $passwordConfirm = $_POST['uPasswordConfirm'];
+            }
 
             if ($ip->isDenylisted()) {
                 $e->add($ip->getErrorMessage());
@@ -141,7 +144,9 @@ class Register extends PageController
                 $data['uName'] = $userService->generateUsernameFromEmail($_POST['uEmail']);
             }
             $data['uPassword'] = $password;
-            $data['uPasswordConfirm'] = $passwordConfirm;
+            if ($config->get('concrete.user.registration.display_confirm_password_field')) {
+                $data['uPasswordConfirm'] = $passwordConfirm;
+            }
 
             $process = $this->app->make('user/registration')->createFromPublicRegistration($data);
             if (is_object($process)) {
