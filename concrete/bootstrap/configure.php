@@ -314,9 +314,9 @@ const VIEW_CORE_THEME = 'concrete';
 /* -- Users -- */
 const USER_SUPER = 'admin';
 const USER_SUPER_ID = 1;
-const GUEST_GROUP_ID = '1';
-const REGISTERED_GROUP_ID = '2';
-const ADMIN_GROUP_ID = '3';
+const GUEST_GROUP_ID = 1;
+const REGISTERED_GROUP_ID = 2;
+const ADMIN_GROUP_ID = 3;
 const DEFAULT_GROUP_TYPE_ID = '1';
 const DEFAULT_GROUP_ROLE_ID = '1';
 
