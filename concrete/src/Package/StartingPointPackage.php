@@ -10,6 +10,7 @@ use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Concrete\Core\Package\Routine\AttachModeInstallRoutine;
@@ -495,19 +496,22 @@ class StartingPointPackage extends Package
         // insert the default groups
         // create the groups our site users
         // specify the ID's since auto increment may not always be +1
-        $g1 = Group::add(
-            tc('GroupName', 'Guest'),
-            tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'),
-            false,
-            false,
-            GUEST_GROUP_ID);
-        $g2 = Group::add(
-            tc('GroupName', 'Registered Users'),
-            tc('GroupDescription', 'The registered users group represents all user accounts.'),
-            false,
-            false,
-            REGISTERED_GROUP_ID);
-        $g3 = Group::add(tc('GroupName', 'Administrators'), '', false, false, ADMIN_GROUP_ID);
+        $command = new AddGroupCommand();
+        $this->app->executeCommand($command
+            ->setName(tc('GroupName', 'Guest'))
+            ->setDescription(tc('GroupDescription', 'The guest group represents unregistered visitors to your site.'))
+            ->setForcedNewGroupID(GUEST_GROUP_ID)
+        );
+        $this->app->executeCommand($command
+            ->setName(tc('GroupName', 'Registered Users'))
+            ->setDescription(tc('GroupDescription', 'The registered users group represents all user accounts.'))
+            ->setForcedNewGroupID(REGISTERED_GROUP_ID)
+        );
+        $this->app->executeCommand($command
+            ->setName(tc('GroupName', 'Administrators'))
+            ->setDescription('')
+            ->setForcedNewGroupID(ADMIN_GROUP_ID)
+        );
 
         $superuser = UserInfo::addSuperUser($this->installerOptions->getUserPasswordHash(), $this->installerOptions->getUserEmail());
         $u = User::getByUserID(USER_SUPER_ID, true, false);
