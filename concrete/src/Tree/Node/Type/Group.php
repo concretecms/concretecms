@@ -149,7 +149,7 @@ class Group extends TreeNode
     {
         $db = app(Connection::class);
         $row = $db->fetchAssociative(
-            'select * from TreeGroupNodes where treeNodeID = ?',
+            'SELECT * FROM TreeGroupNodes WHERE treeNodeID = ? LIMIT 1',
             [$this->treeNodeID]
         );
         if ($row !== false) {
@@ -212,19 +212,27 @@ class Group extends TreeNode
     public function getTreeNodeJSON()
     {
         $obj = parent::getTreeNodeJSON();
-        if (is_object($obj)) {
-            $obj->gID = $this->gID;
-            if (count($this->getTreeNodeGroupObject()->getChildGroups()) > 0) {
-                $obj->icon = 'fas fa-folder';
-            } else {
-                $obj->icon = 'fas fa-users';
-            }
-            if ($this->gID) {
-                $obj->title = $this->getTreeNodeDisplayName('text');
-            }
-
-            return $obj;
+        if (!$obj) {
+            return null;
         }
+        $obj->gID = $this->gID;
+        if (count($this->getTreeNodeGroupObject()->getChildGroups()) > 0) {
+            $obj->icon = 'fas fa-folder';
+        } else {
+            $obj->icon = 'fas fa-users';
+        }
+        $group = $this->getTreeNodeGroupObject();
+        if ($group !== null) {
+            foreach ($group->jsonSerialize() as $field => $value) {
+                $obj->{$field} = $value;
+            }
+            $obj->title = $group->getGroupDisplayName(false, false);
+        }
+        if ($this->treeNodeParentID == 0) {
+            $obj->title = t('All Groups');
+        }
+
+        return $obj;
     }
 
     public function setTreeNodeGroup(UserGroup $g)
