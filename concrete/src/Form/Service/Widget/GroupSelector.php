@@ -1,18 +1,18 @@
 <?php
+
 namespace Concrete\Core\Form\Service\Widget;
 
 use Concrete\Core\Form\Service\Form;
+use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Concrete\Core\Tree\Type\Group as GroupTree;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupList;
 use Concrete\Core\Utility\Service\Identifier;
-use Symfony\Component\HttpFoundation\Request;
 
 class GroupSelector
 {
-
     protected $assetGroup;
 
     protected $request;
@@ -24,25 +24,54 @@ class GroupSelector
     public function __construct(Form $formHelper, GroupList $groupList)
     {
         $this->assetGroup = ResponseAssetGroup::get();
-        $this->request = Request::createFromGlobals();
+        $this->request = Request::getInstance();
         $this->formHelper = $formHelper;
         $this->groupList = $groupList;
     }
 
+    /**
+     * @param string $field
+     * @param \Concrete\Core\User\Group\Group|int|mixed $group
+     * @param string|null $noneText
+     *
+     * @return string
+     */
     public function selectGroup($field, $group = null, $noneText = null)
     {
-        $selected = 0;
-        if ($group) {
-            $selected = ($group instanceof Group) ? $group->getGroupID() : $group;
+        if ($this->request->isMethod('POST') && $this->request->request->has($field)) {
+            $group = $this->request->request->get($field);
         }
-        if (!$noneText) {
-            $noneText = t('** Select Group');
+        if (is_numeric($group)) {
+            $groupID = max((int) $group, 0);
+        } elseif ($group instanceof Group) {
+            $groupID = (int) ($group->getGroupID() ?? 0);
+        } else {
+            $groupID = 0;
         }
-        $groups = ['' => $noneText];
-        foreach($this->groupList->getResults() as $groupResult) {
-            $groups[$groupResult->getGroupID()] = $groupResult->getGroupDisplayName();
+        $chooseText = (string) $noneText;
+        if ($chooseText === '') {
+            $chooseText = t('Choose a Group');
         }
-        print $this->formHelper->select($field, $groups, $selected);
+        $identifier = app(Identifier::class)->getString(32);
+        $htmlField = h($field);
+        $htmlChooseText = h($chooseText);
+
+        return <<<EOT
+<div data-concrete-group-input="{$identifier}">
+    <concrete-group-input :group-id="{$groupID}" choose-text="{$htmlChooseText}" input-name="{$htmlField}"></concrete-group-input>
+</div>
+<script>
+$(function() {
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-concrete-group-input="{$identifier}"]',
+            components: config.components,
+        })
+    })
+});
+</script>
+EOT
+        ;
     }
 
     public function getGroupFromGroupTreeRequestValue($value)
@@ -67,7 +96,7 @@ class GroupSelector
 
         if ($this->request->getRealMethod() == 'POST') {
             if ($this->request->request->has($field)) {
-                $selectedGroupID = intval($this->request->request->get($field));
+                $selectedGroupID = (int) $this->request->request->get($field);
             }
         } elseif ($group) {
             $selectedGroupID = ($group instanceof Group) ? $group->getGroupID() : $group;
@@ -89,7 +118,7 @@ class GroupSelector
         $registeredGroupNodeID = $registeredGroupNode->getTreeNodeID();
         $treeID = $tree->getTreeID();
 
-        $html = <<<EOL
+        return <<<EOL
 <input type="hidden" name="{$field}" value="{$selectedNodeID}">
 <div data-group-selector="{$identifier}"></div>
 <script type="text/javascript">
@@ -111,7 +140,5 @@ jQuery(function() {
 });
 </script>
 EOL;
-
-        return $html;
     }
 }
