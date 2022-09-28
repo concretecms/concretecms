@@ -3,6 +3,7 @@
 namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Permission\Checker;
@@ -18,7 +19,7 @@ class Group extends Controller
         $response = new EditResponse();
         try {
             $this->checkAccess(false);
-            $response->setGroups($this->getRequestGroups());
+            $response->setGroups($this->getRequestGroups($response->getError()));
         } catch (UserMessageException $x) {
             $response->getError()->addError($x);
         }
@@ -76,7 +77,7 @@ class Group extends Controller
     /**
      * @return \Concrete\Core\User\Group\Group[]
      */
-    protected function getRequestGroups(): array
+    protected function getRequestGroups(?ErrorList $errors = null): array
     {
         $groupIDs = $this->getRequestGroupsIDs();
         if ($groupIDs === []) {
@@ -86,7 +87,11 @@ class Group extends Controller
         $repository = $this->app->make(GroupRepository::class);
         foreach ($groupIDs as $groupID) {
             $group = $repository->getGroupById($groupID);
-            if ($group !== null) {
+            if ($group === null) {
+                if ($errors !== null) {
+                    $errors->add(t('Unable to find the group with ID %s', $groupID));
+                }
+            } else {
                 $groups[] = $group;
             }
         }
