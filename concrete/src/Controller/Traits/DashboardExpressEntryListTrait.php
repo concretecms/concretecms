@@ -266,7 +266,7 @@ trait DashboardExpressEntryListTrait
         $result = $this->createSearchResult($entity, $query);
         $entryList = $result->getItemListObject();
 
-        return StreamedResponse::create(function () use ($entity, $entryList, $bom, $datetime_format) {
+        return new StreamedResponse(function () use ($entity, $entryList, $bom, $datetime_format) {
             $writer = $this->app->make(CsvWriter::class, [
                 'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
                 'dateFormatter' => new Date(),

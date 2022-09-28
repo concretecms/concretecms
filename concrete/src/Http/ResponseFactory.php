@@ -56,7 +56,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function create($content, $code = Response::HTTP_OK, array $headers = [])
     {
-        return Response::create($content, $code, $headers);
+        return new Response($content, $code, $headers);
     }
 
     /**
@@ -64,7 +64,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function json($data, $code = Response::HTTP_OK, array $headers = [])
     {
-        return JsonResponse::create($data, $code, $headers);
+        return new JsonResponse($data, $code, $headers);
     }
 
     /**
@@ -135,7 +135,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function redirect($to, $code = Response::HTTP_MOVED_PERMANENTLY, $headers = [])
     {
-        return RedirectResponse::create($to, $code, $headers);
+        return new RedirectResponse($to, $code, $headers);
     }
 
     /**

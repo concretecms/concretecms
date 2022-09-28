@@ -146,7 +146,7 @@ class DefaultRunner implements RunInterface, ApplicationAwareInterface
                 $url = rtrim((string) $resolver->resolve([]), '/');
                 define('BASE_URL', $url);
             } catch (Exception $x) {
-                return Response::create($x->getMessage(), 500);
+                return new Response($x->getMessage(), 500);
             }
         }
     }

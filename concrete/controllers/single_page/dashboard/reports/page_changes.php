@@ -24,7 +24,7 @@ class PageChanges extends DashboardPageController
             return $this->view();
         }
 
-        return StreamedResponse::create(
+        return new StreamedResponse(
             function () {
                 $writer = $this->getWriter();
                 $writer->setUnloadDoctrineEveryTick(50);
