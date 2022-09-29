@@ -1,90 +1,53 @@
-<?php defined('C5_EXECUTE') or die('Access Denied.'); ?>
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
 
-<form action="<?php echo View::action('save'); ?>" method="post">
+/**
+ * @var Concrete\Core\Page\View\PageView $view
+ * @var Concrete\Core\Form\Service\Form $form
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Config\Repository\Repository $config
+ * @var Concrete\Core\Mail\SenderConfiguration $senderConfiguration
+ */?>
+
+<form action="<?= h($view->action('save')) ?>" method="POST">
     <?php
-    $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
-    $app->make('token')->output('addresses');
+    $token->output('addresses');
+    foreach ($senderConfiguration->getEntries() as $entry) {
+        $keyPrefix = $entry->getPackageHandle();
+        if ($keyPrefix !== '') {
+            $keyPrefix = "{$keyPrefix}::";
+        }
+        ?>
+        <fieldset>
+            <legend><?= h($entry->getName()) ?></legend>
+                <?php
+                if ($entry->getNameKey() !== '') {
+                    $fieldName = str_replace('.', '__', "name@{$keyPrefix}{$entry->getNameKey()}");
+                    $value = $config->get($keyPrefix . $entry->getNameKey());
+                    $attributes = ($entry->getRequired() & $entry::REQUIRED_EMAIL_AND_NAME) === $entry::REQUIRED_EMAIL_AND_NAME ? ['required' => 'required'] : [];
+                    ?>
+                    <div class="form-group">
+                        <?= $form->label($fieldName, t('Sender Name')) ?>
+                        <?= $form->text($fieldName, $value, $attributes) ?>
+                    </div>
+                    <?php
+                }
+                $fieldName = str_replace('.', '__', "address@{$keyPrefix}{$entry->getEmailKey()}");
+                $value = $config->get($keyPrefix . $entry->getEmailKey());
+                $attributes = $entry->getRequired() & $entry::REQUIRED_EMAIL === $entry::REQUIRED_EMAIL ? ['required' => 'required'] : [];
+                ?>
+                <div class="form-group">
+                    <?= $form->label($fieldName, t('Email Address')) ?>
+                    <?= $form->email($fieldName, $value, $attributes) ?>
+                </div>
+        </fieldset>
+        <?php
+    }
     ?>
-    <fieldset>
-        <legend><?php echo t('Default'); ?></legend>
-        <div class="form-group">
-            <?php echo $form->label('defaultName', t('Email From Name')); ?>
-            <?php echo $form->text('defaultName', $defaultName); ?>
-        </div>
-        <div class="form-group">
-            <?php echo $form->label('defaultAddress', t('Email Address')); ?>
-            <?php echo $form->email('defaultAddress', $defaultAddress); ?>
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Forgot Password'); ?></legend>
-        <div class="form-group">
-            <?php echo $form->label('forgotPasswordName', t('Email From Name')); ?>
-            <?php echo $form->text('forgotPasswordName', $forgotPasswordName); ?>
-        </div>
-        <div class="form-group">
-            <?php echo $form->label('forgotPasswordAddress', t('Email Address')); ?>
-            <?php echo $form->email('forgotPasswordAddress', $forgotPasswordAddress); ?>
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Form Block'); ?></legend>
-        <div class="form-group">
-            <?php echo $form->label('formBlockAddress', t('Email Address')); ?>
-            <?php echo $form->email('formBlockAddress', $formBlockAddress); ?>
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Spam Notification'); ?></legend>
-        <div class="form-group">
-            <?php echo $form->label('spamNotificationAddress', t('Email Address')); ?>
-            <?php echo $form->email('spamNotificationAddress', $spamNotificationAddress); ?>
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Website Registration Notification'); ?></legend>
-        <div class="form-group">
-            <?php echo $form->label('registerNotificationName', t('Email From Name')); ?>
-            <?php echo $form->text('registerNotificationName', $registerNotificationName); ?>
-        </div>
-        <div class="form-group">
-            <?php echo $form->label('registerNotificationAddress', t('Email Address')); ?>
-            <?php echo $form->email('registerNotificationAddress', $registerNotificationAddress); ?>
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Validate Registration'); ?></legend>
-        <div class="form-group">
-            <?php echo $form->label('validateRegistrationName', t('Email From Name')); ?>
-            <?php echo $form->text('validateRegistrationName', $validateRegistrationName); ?>
-        </div>
-        <div class="form-group">
-            <?php echo $form->label('validateRegistrationAddress', t('Email Address')); ?>
-            <?php echo $form->email('validateRegistrationAddress', $validateRegistrationAddress); ?>
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend><?php echo t('Workflow Notification'); ?></legend>
-        <div class="form-group">
-            <?php echo $form->label('workflowNotificationName', t('Email From Name')); ?>
-            <?php echo $form->text('workflowNotificationName', $workflowNotificationName); ?>
-        </div>
-        <div class="form-group">
-            <?php echo $form->label('workflowNotificationAddress', t('Email Address')); ?>
-            <?php echo $form->email('workflowNotificationAddress', $workflowNotificationAddress); ?>
-        </div>
-    </fieldset>
-
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
             <button class="float-end btn btn-primary">
-                <?php echo t('Save'); ?>
+                <?= t('Save') ?>
             </button>
         </div>
     </div>

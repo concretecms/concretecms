@@ -1,48 +1,80 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Concrete\Controller\SinglePage\Dashboard\System\Mail;
 
+use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Mail\SenderConfiguration;
+use Concrete\Core\Mail\SenderConfiguration\Entry;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Validator\String\EmailValidator;
+use Symfony\Component\HttpFoundation\Response;
 
 class Addresses extends DashboardPageController
 {
-    public function view()
+    public function view(): ?Response
     {
-        $config = $this->app->make('config');
-        $this->set('defaultName', $config->get('concrete.email.default.name'));
-        $this->set('defaultAddress', $config->get('concrete.email.default.address'));
-        $this->set('forgotPasswordName', $config->get('concrete.email.forgot_password.name'));
-        $this->set('forgotPasswordAddress', $config->get('concrete.email.forgot_password.address'));
-        $this->set('formBlockAddress', $config->get('concrete.email.form_block.address'));
-        $this->set('spamNotificationAddress', $config->get('concrete.spam.notify_email'));
-        $this->set('registerNotificationName', $config->get('concrete.email.register_notification.name'));
-        $this->set('registerNotificationAddress', $config->get('concrete.email.register_notification.address'));
-        $this->set('validateRegistrationName', $config->get('concrete.email.validate_registration.name'));
-        $this->set('validateRegistrationAddress', $config->get('concrete.email.validate_registration.address'));
-        $this->set('workflowNotificationName', $config->get('concrete.email.workflow_notification.name'));
-        $this->set('workflowNotificationAddress', $config->get('concrete.email.workflow_notification.address'));
+        $this->set('config', $this->app->make(Repository::class));
+        $this->set('senderConfiguration', $this->app->make(SenderConfiguration::class));
+
+        return null;
     }
 
-    public function save()
+    public function save(): ?Response
     {
         if (!$this->token->validate('addresses')) {
             $this->error->add(t('Invalid CSRF token. Please refresh and try again.'));
-            $this->view();
-        } else {
-            $config = $this->app->make('config');
-            $config->save('concrete.email.default.name', $this->request->post('defaultName'));
-            $config->save('concrete.email.default.address', $this->request->post('defaultAddress') ? $this->request->post('defaultAddress') : 'concrete-cms-noreply@concretecms');
-            $config->save('concrete.email.forgot_password.name', $this->request->post('forgotPasswordName'));
-            $config->save('concrete.email.forgot_password.address', $this->request->post('forgotPasswordAddress'));
-            $config->save('concrete.email.form_block.address', $this->request->post('formBlockAddress'));
-            $config->save('concrete.spam.notify_email', $this->request->post('spamNotificationAddress'));
-            $config->save('concrete.email.register_notification.name', $this->request->post('registerNotificationName'));
-            $config->save('concrete.email.register_notification.address', $this->request->post('registerNotificationAddress'));
-            $config->save('concrete.email.validate_registration.name', $this->request->post('validateRegistrationName'));
-            $config->save('concrete.email.validate_registration.address', $this->request->post('validateRegistrationAddress'));
-            $config->save('concrete.email.workflow_notification.name', $this->request->post('workflowNotificationName'));
-            $config->save('concrete.email.workflow_notification.address', $this->request->post('workflowNotificationAddress'));
-            $this->flash('message', t('Successfully saved system email addresses.'));
-            $this->redirect('/dashboard/system/mail/addresses');
+
+            return $this->view();
         }
+        $senderConfiguration = $this->app->make(SenderConfiguration::class);
+        $emailValidator = $this->app->make(EmailValidator::class, ['strict' => true]);
+        $keyValues = [];
+        foreach ($senderConfiguration->getEntries() as $entry) {
+            $keyValues += $this->processEntry($entry, $emailValidator);
+        }
+        if ($this->error->has()) {
+            return $this->view();
+        }
+        $config = $this->app->make(Repository::class);
+        foreach ($keyValues as $key => $value) {
+            $config->save($key, $value);
+        }
+        $this->flash('message', t('Successfully saved system email addresses.'));
+
+        return $this->buildRedirect('/dashboard/system/mail/addresses');
+    }
+
+    protected function processEntry(Entry $entry, EmailValidator $emailValidator): array
+    {
+        $post = $this->request->request;
+        $result = [];
+        $keyPrefix = $entry->getPackageHandle();
+        if ($keyPrefix !== '') {
+            $keyPrefix = "{$keyPrefix}::";
+        }
+        $key = $entry->getNameKey();
+        if ($key !== '') {
+            $value = trim((string) $post->get(str_replace('.', '__', 'name@' . $keyPrefix . $key)));
+            if ($value === '') {
+                if (($entry->getRequired() & $entry::REQUIRED_EMAIL_AND_NAME) === $entry::REQUIRED_EMAIL_AND_NAME) {
+                    $this->error->add(t('Please specify the sender name in the "%s" section.', $entry->getName()));
+                }
+            }
+            $result[$keyPrefix . $key] = $value;
+        }
+        $key = $entry->getEmailKey();
+        $value = trim((string) $post->get(str_replace('.', '__', 'address@' . $keyPrefix . $key)));
+        if ($value === '') {
+            if (($entry->getRequired() & $entry::REQUIRED_EMAIL) === $entry::REQUIRED_EMAIL) {
+                $this->error->add(t('Please specify the email address in the "%s" section.', $entry->getName()));
+            }
+        } elseif (!$emailValidator->isValid($value)) {
+            $this->error->add(t('The email address specified in the "%s" section is invalid.', $entry->getName()));
+        }
+        $result[$keyPrefix . $key] = $value;
+
+        return $result;
     }
 }
