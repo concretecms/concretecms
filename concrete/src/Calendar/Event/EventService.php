@@ -222,9 +222,10 @@ class EventService implements ApplicationAwareInterface
 
     public function delete(CalendarEvent $event)
     {
-        if ($event->getPageID() && $event->getRelatedPageRelationType() == 'C') {
-            $calendarPage = Page::getByID($this->cID);
-            if ($calendarPage && !$calendarPage->isError()) {
+        $version = $event->getSelectedVersion() ?: $event->getApprovedVersion();
+        if ($version && $version->getRelatedPageRelationType() === 'C') {
+            $calendarPage = $version->getPageObject();
+            if ($calendarPage) {
                 if ($this->config->get('concrete.misc.enable_trash_can')) {
                     $calendarPage->moveToTrash();
                 } else {
