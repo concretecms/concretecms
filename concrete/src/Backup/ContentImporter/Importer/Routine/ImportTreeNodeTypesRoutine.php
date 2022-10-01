@@ -14,8 +14,11 @@ class ImportTreeNodeTypesRoutine extends AbstractRoutine
     {
         if (isset($sx->treetypes)) {
             foreach ($sx->treenodetypes->treenodetype as $t) {
-                $pkg = static::getPackageObject((string) $t['package']);
-                NodeType::add((string) $t['handle'], $pkg);
+                $type = NodeType::getByHandle((string) $t['handle']);
+                if (!$type) {
+                    $pkg = static::getPackageObject((string)$t['package']);
+                    NodeType::add((string)$t['handle'], $pkg);
+                }
             }
         }
     }
