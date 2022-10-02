@@ -244,7 +244,7 @@ class PackageService
 
         $u = $this->application->make(User::class);
         $swapper = $p->getContentSwapper();
-        if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && $data['pkgDoFullContentSwap']) {
+        if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && isset($data['pkgDoFullContentSwap']) && $data['pkgDoFullContentSwap']) {
             $swapper->swapContent($p, $data);
             if (method_exists($p, 'on_after_swap_content')) {
                 $p->on_after_swap_content($data);
