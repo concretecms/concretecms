@@ -7,7 +7,6 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Command\Process\Menu\Item\RunningProcessesItem;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
-use Concrete\Core\Http\Service\Ajax;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
@@ -72,7 +71,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
-        if ($this->app->make(Ajax::class)->isAjaxRequest($this->request)) {
+        if ($this->request->isXmlHttpRequest()) {
             $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
                 'error' => t('Page not found'),
