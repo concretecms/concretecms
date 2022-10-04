@@ -98,11 +98,14 @@ class ErrorHandler extends PrettyPageHandler
             ]
         );
 
+        $extensions = collect(array_flip(get_loaded_extensions()))->map(function($value, string $ext) {
+            return phpversion($ext) ?: 'Unknown version';
+        });
         $this->addDataTable(
             'PHP',
             [
                 'Version' => PHP_VERSION,
-                'Extensions' => get_loaded_extensions(),
+                'Extensions' => $extensions->all(),
             ]
         );
 
