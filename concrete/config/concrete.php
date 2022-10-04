@@ -100,6 +100,7 @@ return [
                 'concrete.email.validate_registration.address',
                 'concrete.email.workflow_notification.address',
                 'concrete.debug.hide_keys',
+                'app.api_keys',
             ],
         ]
     ],

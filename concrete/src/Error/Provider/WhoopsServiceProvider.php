@@ -61,7 +61,7 @@ class WhoopsServiceProvider extends Provider
         return [
             '_ENV' => array_keys($_ENV),
             '_SERVER' => array_keys($_SERVER),
-            '_COOKIE' => array_keys($_SERVER),
+            '_COOKIE' => array_keys($_COOKIE),
         ];
     }
 }

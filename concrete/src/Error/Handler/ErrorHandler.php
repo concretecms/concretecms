@@ -94,6 +94,7 @@ class ErrorHandler extends PrettyPageHandler
             [
                 'Version' => Config::get('concrete.version'),
                 'Installed Version' => Config::get('concrete.version_installed'),
+                'Database Version' => Config::get('concrete.version_db'),
             ]
         );
 
@@ -101,15 +102,36 @@ class ErrorHandler extends PrettyPageHandler
             'PHP',
             [
                 'Version' => PHP_VERSION,
+                'Extensions' => get_loaded_extensions(),
             ]
         );
-        
-        /*
-         * Config
-         */
-        $this->addDataTable('Concrete Configuration', $this->flatConfig(Config::get('concrete'), 'concrete'));
+
+        $this->addDataTable('Concrete Configuration', [
+            'concrete' => $this->cleanedConfig(Config::get('concrete'), 'concrete'),
+            'app' => $this->cleanedConfig(Config::get('app'), 'app')
+        ]);
     }
 
+    protected function cleanedConfig(array $config, $group): array
+    {
+        $clean = [];
+        foreach ($config as $key => $value) {
+            $assembled = "{$group}.{$key}";
+            if (is_array($value)) {
+                $clean[$key] = $this->cleanedConfig($value, $assembled);
+            } elseif ($this->isKeyHidden($assembled)) {
+                $clean[$key] = str_repeat('*', is_string($value) ? strlen($value) : 3);
+            } else {
+                $clean[$key] = $value;
+            }
+        }
+
+        return $clean;
+    }
+
+    /**
+     * @deprecated Will be removed
+     */
     protected function flatConfig(array $config, $group)
     {
         $flat = [];
