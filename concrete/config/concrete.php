@@ -65,47 +65,13 @@ return [
         'error_reporting' => null,
 
         /**
-         * Hide specified superglobal keys and config items from whoops error output.
-         * If you wanted to hide an environment variable named "DB_PASSWORD", you'd specify it like this:
-         * ```
-         * '_ENV' => ['DB_PASSWORD'],
-         * ```
+         * Hide specified superglobal keys and config items from whoops error output
          *
-         * The same applies for all superglobals.
+         * By default, all _SERVER, _ENV, and _COOKIE values are hidden
          *
          * @var array<string, string[]>
          */
         'hide_keys' => [
-            /** @var string[] */
-            '_ENV' => [
-                // Likely database environment variables
-                'DB_PASSWORD',
-                'DB_USERNAME',
-                'DB_HOSTNAME',
-                'DB_HOST',
-                'DB_SERVER',
-                'DATABASE_PASSWORD',
-                'DATABASE_USERNAME',
-                'DATABASE_HOSTNAME',
-                'DATABASE_HOST',
-                'DATABASE_SERVER',
-            ],
-
-            /** @var string[] */
-            '_SERVER' => [
-                // Likely database environment variables
-                'DB_PASSWORD',
-                'DB_USERNAME',
-                'DB_HOSTNAME',
-                'DB_HOST',
-                'DB_SERVER',
-                'DATABASE_PASSWORD',
-                'DATABASE_USERNAME',
-                'DATABASE_HOSTNAME',
-                'DATABASE_HOST',
-                'DATABASE_SERVER',
-            ],
-
             /** @var string[] */
             '_GET' => [],
 
@@ -114,11 +80,6 @@ return [
 
             /** @var string[] */
             '_FILES' => [],
-
-            /** @var string[] */
-            '_COOKIE' => [
-                'CONCRETE',
-            ],
 
             /** @var string[] */
             '_SESSION' => [],
