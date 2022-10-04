@@ -31,6 +31,12 @@
     }
   }
 
+  &.is-invalid {
+    .btn {
+      border-color: $danger;
+    }
+  }
+
 }
 
 
