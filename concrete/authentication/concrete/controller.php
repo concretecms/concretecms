@@ -81,23 +81,23 @@ class Controller extends AuthenticationTypeController
      */
     public function verifyHash(User $u, $hash)
     {
+        if (!str_contains($hash, '@')) {
+            return false;
+        }
+        [$id, $token] = explode('@', $hash, 2);
+
+        $id = (int) $id;
         $uID = (int) $u->getUserID();
         $db = $this->app->make(Connection::class);
         $hasher = $this->app->make(PasswordHasher::class);
-        $validRow = false;
-        $validThrough = time();
-        $rows = $db->fetchAllAssociative('SELECT validThrough, token FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough > ? ORDER BY validThrough DESC', [$uID, $validThrough]);
-        foreach ($rows as $row) {
-            if ($hasher->checkPassword($hash, $row['token'])) {
-                $validRow = true;
-                break;
-            }
-        }
 
-        // delete all invalid entries for this user
-        $db->executeStatement('DELETE FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough < ?', [$uID, $validThrough]);
+        // Find valid hash with matching key and user
+        $hash = $db->fetchOne(
+            'SELECT token FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough > ? AND id=?',
+            [$uID, time(), $id]
+        );
 
-        return $validRow;
+        return $hasher->checkPassword($token, $hash);
     }
 
     /**
@@ -116,28 +116,42 @@ class Controller extends AuthenticationTypeController
      */
     public function buildHash(User $u, $test = 1)
     {
-        if ($test > 10) {
-            // This should only ever happen if by some stroke of divine intervention,
-            // we end up pulling 10 hashes that already exist. the chances of this are very very low.
-            throw new UserMessageException(t('There was a database error, try again.'));
-        }
         $db = $this->app->make(Connection::class);
 
         $validThrough = time() + (int) $this->app->make(Repository::class)->get('concrete.session.remember_me.lifetime');
-        $token = $this->app->make(Identifier::class)->getString(32);
         $hasher = $this->app->make(PasswordHasher::class);
-        try {
-            $db->insert('authTypeConcreteCookieMap', [
-                'token' => $hasher->hashPassword($token),
-                'uID' => $u->getUserID(),
-                'validThrough' => $validThrough,
-            ]);
-        } catch (\Exception $e) {
-            // HOLY CRAP.. SERIOUSLY?
-            $this->buildHash($u, ++$test);
-        }
 
-        return $token;
+        $tries = 10;
+        do {
+            $token = $this->app->make(Identifier::class)->getString(32);
+
+            try {
+                // Truncate the list down to 9 entries
+                $id = $db->fetchOne(
+                    'SELECT ID from authTypeConcreteCookieMap where uID = ? order by ID desc limit 1 offset 9',
+                    [$u->getUserID()]
+                );
+                $db->executeStatement(
+                    'DELETE from authTypeConcreteCookieMap where (uID = ? and ID <= ?) or validThrough < ?',
+                    [$u->getUserID(), $id ?: 0, time()]
+                );
+
+                $db->insert('authTypeConcreteCookieMap', [
+                    'token' => $hasher->hashPassword($token),
+                    'uID' => $u->getUserID(),
+                    'validThrough' => $validThrough,
+                ]);
+                $insertId = $db->lastInsertId();
+                break;
+            } catch (\Exception $e) {
+            }
+
+            if ($tries-- === 0) {
+                throw new UserMessageException(t('There was a database error, try again.'));
+            }
+        } while (1);
+
+        return $insertId . '@' . $token;
     }
 
     /**
