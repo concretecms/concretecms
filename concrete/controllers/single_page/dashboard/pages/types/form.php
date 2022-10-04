@@ -63,6 +63,7 @@ class Form extends DashboardPageController
         $sec = Loader::helper('security');
         $name = $sec->sanitizeString($this->post('ptComposerFormLayoutSetName'));
         $description = $sec->sanitizeString($this->post('ptComposerFormLayoutSetDescription'));
+        $collapseType = $sec->sanitizeString($this->post('ptComposerFormLayoutSetCollapseType'));
         if (!$this->token->validate('update_set')) {
             $this->error->add(t($this->token->getErrorMessage()));
         }
@@ -70,6 +71,7 @@ class Form extends DashboardPageController
         if (!$this->error->has()) {
             $set->updateFormLayoutSetName($name);
             $set->updateFormLayoutSetDescription($description);
+            $set->updateFormLayoutSetCollapseType($collapseType);
             $this->redirect('/dashboard/pages/types/form', $set->getPageTypeID(), 'layout_set_updated');
         }
     }
@@ -94,8 +96,9 @@ class Form extends DashboardPageController
         $sec = Loader::helper('security');
         $name = $sec->sanitizeString($this->post('ptComposerFormLayoutSetName'));
         $description = $sec->sanitizeString($this->post('ptComposerFormLayoutSetDescription'));
+        $collapseType = $sec->sanitizeString($this->post('ptComposerFormLayoutSetCollapseType'));
         if ($this->token->validate('add_set')) {
-            $set = $this->pagetype->addPageTypeComposerFormLayoutSet($name, $description);
+            $set = $this->pagetype->addPageTypeComposerFormLayoutSet($name, $description, $collapseType);
             $this->redirect('/dashboard/pages/types/form', $this->pagetype->getPageTypeID(), 'layout_set_added');
         }
     }

@@ -781,7 +781,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if (is_object($data['defaultTheme'])) {
             $ptDefaultThemeID = $data['defaultTheme']->getThemeID();
         }
-        
+
         $ptAllowedPageTemplates = 'A';
         if ($data['allowedTemplates']) {
             $ptAllowedPageTemplates = $data['allowedTemplates'];
@@ -1152,7 +1152,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
     }
 
-    public function addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName, $ptComposerFormLayoutSetDescription)
+    public function addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName, $ptComposerFormLayoutSetDescription, $collapseType = '')
     {
         $db = Loader::db();
         $displayOrder = $db->GetOne(
@@ -1163,10 +1163,11 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
             $displayOrder = 0;
         }
         $db->Execute(
-            'insert into PageTypeComposerFormLayoutSets (ptComposerFormLayoutSetName, ptComposerFormLayoutSetDescription, ptID, ptComposerFormLayoutSetDisplayOrder) values (?, ?, ?, ?)',
+            'insert into PageTypeComposerFormLayoutSets (ptComposerFormLayoutSetName, ptComposerFormLayoutSetDescription, ptComposerFormLayoutSetCollapseType, ptID, ptComposerFormLayoutSetDisplayOrder) values (?, ?, ?, ?, ?)',
             array(
                 $ptComposerFormLayoutSetName,
                 $ptComposerFormLayoutSetDescription,
+                $collapseType,
                 $this->ptID,
                 $displayOrder,
             )
