@@ -78,6 +78,7 @@ class AddGroupCommandHandler
         if (is_object($node)) {
             GroupNode::add($ng, $node);
         }
+        $ng->rescanGroupPath();
 
         $ge = new Event($ng);
         $this->dispatcher->dispatch('on_group_add', $ge);
@@ -97,8 +98,6 @@ class AddGroupCommandHandler
                 $notifier->notify($users, $notification);
             }
         }
-
-        $ng->rescanGroupPath();
 
         return $ng;
     }

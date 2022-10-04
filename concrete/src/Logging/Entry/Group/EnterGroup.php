@@ -13,7 +13,7 @@ class EnterGroup extends UserGroup
         return t('User %1$s (ID %2$s) was added to group %3$s (ID %4$s) by an automated process.',
             $this->user->getUserName(),
             $this->user->getUserID(),
-            $this->group->getGroupName(),
+            $this->group->getGroupPath(),
             $this->group->getGroupID()
         );
     }
@@ -23,7 +23,7 @@ class EnterGroup extends UserGroup
         return t('User %1$s (ID %2$s) was added to group %3$s (ID %4$s) by %5$s (ID %6$s).',
             $this->user->getUserName(),
             $this->user->getUserID(),
-            $this->group->getGroupName(),
+            $this->group->getGroupPath(),
             $this->group->getGroupID(),
             $this->applier->getUserName(),
             $this->applier->getUserID()
