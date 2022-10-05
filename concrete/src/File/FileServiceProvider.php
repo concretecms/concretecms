@@ -36,6 +36,7 @@ class FileServiceProvider extends ServiceProvider
         foreach ($singletons as $key => $value) {
             $this->app->singleton($key, $value);
         }
+        $this->app->alias('helper/image', Image\Thumbnail\ThumbnailerInterface::class);
 
         $this->app->singleton(\Concrete\Core\File\Image\Thumbnail\ThumbnailFormatService::class);
 
