@@ -57,8 +57,11 @@ class PageItem extends Item
     public function getURL(): string
     {
         $p = Page::getByID($this->pageID);
-        if ($p->isExternalLink()) { $url = $p->getCollectionPointerExternalLink(); } else { $url = $p->getCollectionLink(); }
-        
+        if ($p->isExternalLink()) {
+            $url = $p->getCollectionPointerExternalLink();
+        } else {
+            $url = $p->getCollectionLink();
+        }
         return $url;
     }
     
