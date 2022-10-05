@@ -78,9 +78,9 @@ class Register extends PageController
         $token = $this->app->make('token');
 
         if ($token->validate('register.do_register')) {
-            $username = $_POST['uName'];
-            $password = $_POST['uPassword'];
-            $passwordConfirm = $_POST['uPasswordConfirm'];
+            $username = $_POST['uName'] ?? '';
+            $password = $_POST['uPassword'] ?? '';
+            $passwordConfirm = $_POST['uPasswordConfirm'] ?? '';
 
             // clean the username
             $username = trim($username);
