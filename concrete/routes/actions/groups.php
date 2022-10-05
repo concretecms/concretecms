@@ -14,3 +14,4 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 $router->post('/chooser/tree', 'Group\Chooser::getTree');
 $router->post('/chooser/search', 'Group\Chooser::search');
+$router->all('/get_json', 'Group::getJSON');
