@@ -1096,7 +1096,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return [
             'gID' => $this->getGroupID(),
             'gName' => $this->getGroupName(),
-            'gDisplayName' => $this->getGroupDisplayName(false)
+            'gDisplayName' => $this->getGroupDisplayName(false),
         ];
     }
 
