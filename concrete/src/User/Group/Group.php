@@ -43,7 +43,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     public function getPermissionObjectIdentifier()
     {
-        return $this->gID;
+        return $this->getGroupID();
     }
 
     public function getPermissionResponseClassName()
@@ -112,7 +112,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = Database::connection();
         $path = '';
         // first, we get the group node for this group.
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         if (is_object($node)) {
             $parents = $node->getTreeNodeParentArray();
             $parents = array_reverse($parents);
@@ -129,14 +129,14 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $path .= '/' . $this->gName;
         $this->gPath = $path;
 
-        $db->executeQuery('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gPath = ? where gID = ?', [$path, $this->gID]);
+        $db->executeQuery('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gPath = ? where gID = ?', [$path, $this->getGroupID()]);
     }
 
     public function rescanGroupPathRecursive()
     {
         $this->rescanGroupPath();
 
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $node->populateDirectChildrenOnly();
         foreach ($node->getChildNodes() as $child) {
             if ($child instanceof \Concrete\Core\Tree\Node\Type\Group) {
@@ -175,7 +175,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
             /* @var Connection $db */
             $value = $db->fetchColumn(
                 'select ugEntered from UserGroups where gID = ? and uID = ?',
-                [$this->gID, $userID]
+                [$this->getGroupID(), $userID]
             );
             if ($value) {
                 $result = $value;
@@ -185,9 +185,12 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         return $result;
     }
 
+    /**
+     * @return int|null
+     */
     public function getGroupID()
     {
-        return $this->gID;
+        return $this->gID === null ? null : (int) $this->gID;
     }
 
     public function getOverrideGroupTypeSettings()
@@ -556,7 +559,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     public function getParentGroups()
     {
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $parentGroups = [];
         if (is_object($node)) {
             $parents = $node->getTreeNodeParentArray();
@@ -576,7 +579,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     public function getChildGroups()
     {
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $children = [];
         if (is_object($node)) {
             $node->populateDirectChildrenOnly();
@@ -596,7 +599,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
 
     public function getParentGroup()
     {
-        $node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+        $node = GroupTreeNode::getTreeNodeByGroupID($this->getGroupID());
         $parent = $node->getTreeNodeParentObject();
         if ($parent) {
             return $parent->getTreeNodeGroupObject();
@@ -826,12 +829,13 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
     public function update($gName, $gDescription)
     {
         $db = Database::connection();
-        if ($this->gID) {
-            CacheLocal::delete('group', $this->gID);
-            $v = [$gName, $gDescription, $this->gID];
+        $gID = $this->getGroupID();
+        if ($gID) {
+            CacheLocal::delete('group', $gID);
+            $v = [$gName, $gDescription, $gID];
             $r = $db->prepare('update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gName = ?, gDescription = ? where gID = ?');
             $db->Execute($r, $v);
-            $group = static::getByID($this->gID);
+            $group = static::getByID($gID);
             $group->rescanGroupPathRecursive();
 
             $ge = new Event($this);
@@ -983,7 +987,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = Database::connection();
         $db->executeQuery(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?',
-            [intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID]
+            [intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->getGroupID()]
         );
     }
 
@@ -1000,7 +1004,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
                 intval($gCheckAutomationOnRegister),
                 intval($gCheckAutomationOnLogin),
                 intval($gCheckAutomationOnJobRun),
-                $this->gID,
+                $this->getGroupID(),
             ]
         );
     }
@@ -1010,7 +1014,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $db = Database::connection();
         $db->executeQuery(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'SET_TIME\', gUserExpirationInterval = 0, gUserExpirationSetDateTime = ?, gUserExpirationAction = ? where gID = ?',
-            [$datetime, $action, $this->gID]
+            [$datetime, $action, $this->getGroupID()]
         );
     }
 
@@ -1020,7 +1024,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $interval = $minutes + ($hours * 60) + ($days * 1440);
         $db->executeQuery(
             'update ' . $db->getDatabasePlatform()->quoteSingleIdentifier('Groups') . ' set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'INTERVAL\', gUserExpirationSetDateTime = null, gUserExpirationInterval = ?, gUserExpirationAction = ? where gID = ?',
-            [$interval, $action, $this->gID]
+            [$interval, $action, $this->getGroupID()]
         );
     }
 
