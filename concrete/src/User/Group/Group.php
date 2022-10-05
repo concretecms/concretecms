@@ -3,6 +3,7 @@
 namespace Concrete\Core\User\Group;
 
 use CacheLocal;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Notification\GroupRoleChangeNotification;
 use Concrete\Core\Entity\Notification\GroupSignupRequestNotification;
@@ -20,7 +21,6 @@ use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\User\Group\Command\DeleteGroupCommand;
 use Concrete\Core\User\User;
 use Concrete\Core\User\UserInfoRepository;
-use Config;
 use Database;
 use Doctrine\DBAL\Exception;
 use Events;
@@ -611,17 +611,16 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         $return = '';
         if ($includePath) {
             $parentGroups = $this->getParentGroups();
-            if (count($parentGroups) > 0) {
+            if ($parentGroups !== []) {
+                $separator = app(Repository::class)->get('concrete.seo.group_name_separator');
                 if ($includeHTML) {
                     $return .= '<span class="ccm-group-breadcrumb">';
                 }
                 foreach ($parentGroups as $pg) {
-                    $return .= h(tc('GroupName', $pg->getGroupName()));
-                    $return .= ' ' . Config::get('concrete.seo.group_name_separator') . ' ';
+                    $return .= h(tc('GroupName', $pg->getGroupName())) . " {$separator} ";
                 }
-                $return = trim($return);
                 if ($includeHTML) {
-                    $return .= '</span> ';
+                    $return = rtrim($return) . '</span> ';
                 }
             }
         }
