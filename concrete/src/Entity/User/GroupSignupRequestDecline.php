@@ -1,9 +1,13 @@
 <?php
+
 namespace Concrete\Core\Entity\User;
 
 use Concrete\Core\Notification\Subject\SubjectInterface;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\UserInfo;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,90 +19,94 @@ use Doctrine\ORM\Mapping as ORM;
 class GroupSignupRequestDecline implements SubjectInterface
 {
     /**
-     * @var int
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned":true})
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int|null NULL if not yet flushed to the database
      */
     protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupSignupRequestDeclineNotification", mappedBy="signup", cascade={"remove"}),
+     *
+     * @var \Doctrine\Common\Collections\Collection
      */
     protected $notifications;
 
     /**
-     * @var int
      * @ORM\Column(type="integer", options={"unsigned":true})
+     *
+     * @var int
      */
     protected $gID;
 
     /**
-     * @var User
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="uID", referencedColumnName="uID", onDelete="SET NULL")
+     *
+     * @var \Concrete\Core\Entity\User\User|null
      */
     protected $user;
 
     /**
-     * @var User
      * @ORM\ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @ORM\JoinColumn(name="managerUID", referencedColumnName="uID", onDelete="SET NULL")
+     *
+     * @var \Concrete\Core\Entity\User\User|null
      */
     protected $manager;
 
     /**
-     * @var \DateTime
      * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
      */
-    protected $RequestDeclineed = null;
+    protected $RequestDeclineed;
 
     /**
-     * GroupSignupRequestDecline constructor.
-     * @param Group $group
-     * @param \Concrete\Core\User\User $user
-     * @param \Concrete\Core\User\User $manager
-     * @throws \Exception
+     * @param \Concrete\Core\User\Group\Group|null $group
+     * @param \Concrete\Core\User\User|null $user
+     * @param \Concrete\Core\User\User|null $manager
      */
     public function __construct($group = null, $user = null, $manager = null)
     {
+        $this->notifications = new ArrayCollection();
         if ($group instanceof Group) {
             $this->gID = $group->getGroupID();
         }
-
         if ($user instanceof \Concrete\Core\User\User) {
-            if ($user->getUserInfoObject() instanceof UserInfo) {
-                $this->user = $user->getUserInfoObject()->getEntityObject();
+            $userInfo = $user->getUserInfoObject();
+            if ($userInfo instanceof UserInfo) {
+                $this->user = $userInfo->getEntityObject();
             }
         }
-
         if ($manager instanceof \Concrete\Core\User\User) {
-            $this->manager = $user->getUserInfoObject()->getEntityObject();
+            $userInfo = $manager->getUserInfoObject();
+            if ($userInfo instanceof UserInfo) {
+                $this->manager = $userInfo->getEntityObject();
+            }
         }
-
-        $this->RequestDeclineed = new \DateTime();
+        $this->RequestDeclineed = new DateTime();
     }
 
-    /**
-     * @return User
-     */
-    public function getManager(): User
+    public function getManager(): ?User
     {
         return $this->manager;
     }
 
     /**
-     * @param User $manager
-     * @return GroupSignupRequestDecline
+     * @return $this
      */
-    public function setManager(User $manager): GroupSignupRequestDecline
+    public function setManager(User $manager): self
     {
         $this->manager = $manager;
+
         return $this;
     }
 
     /**
-     * @return Group
+     * @return \Concrete\Core\User\Group\Group|null
      */
     public function getGroup()
     {
@@ -106,79 +114,70 @@ class GroupSignupRequestDecline implements SubjectInterface
     }
 
     /**
-     * @return int
+     * @return int|null return NULL if not yet flushed to the database
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
-     * @return GroupSignupRequestDecline
+     * @return $this
      */
-    public function setId(int $id): GroupSignupRequestDecline
+    public function setId(?int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getGID(): int
     {
         return $this->gID;
     }
 
     /**
-     * @param int $gID
-     * @return GroupSignupRequestDecline
+     * @return $this
      */
-    public function setGID(int $gID): GroupSignupRequestDecline
+    public function setGID(int $gID): self
     {
         $this->gID = $gID;
+
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
     /**
-     * @param User $user
-     * @return GroupSignupRequestDecline
+     * @return $this
      */
-    public function setUser(User $user): GroupSignupRequestDecline
+    public function setUser(User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getRequestDeclineed(): \DateTime
+    public function getRequestDeclineed(): DateTime
     {
         return $this->RequestDeclineed;
     }
 
     /**
-     * @param \DateTime $RequestDeclineed
-     * @return GroupSignupRequestDecline
+     * @return $this
      */
-    public function setRequestDeclineed(\DateTime $RequestDeclineed): GroupSignupRequestDecline
+    public function setRequestDeclineed(DateTime $RequestDeclineed): self
     {
         $this->RequestDeclineed = $RequestDeclineed;
+
         return $this;
     }
 
     /**
-     * Get the date of this notification
+     * Get the date of this notification.
      *
      * @return \DateTime
      */
@@ -190,5 +189,13 @@ class GroupSignupRequestDecline implements SubjectInterface
     public function getUsersToExcludeFromNotification()
     {
         return [];
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\Notification\GroupSignupRequestDeclineNotification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
     }
 }

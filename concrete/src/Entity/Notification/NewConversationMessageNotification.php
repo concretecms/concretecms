@@ -1,10 +1,8 @@
 <?php
+
 namespace Concrete\Core\Entity\Notification;
 
-use Concrete\Core\Conversation\Message\NewMessage;
-use Concrete\Core\Entity\User\UserSignup;
 use Concrete\Core\Notification\Subject\SubjectInterface;
-use Concrete\Core\Notification\View\UserSignupListView;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,15 +13,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NewConversationMessageNotification extends Notification
 {
-
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
+     *
+     * @var int
      */
     protected $cnvMessageID;
 
     /**
-     * UserSignupNotification constructor.
-     * @param $message NewMessage
+     * @param \Concrete\Core\Conversation\Message\NewMessage $message
      */
     public function __construct(SubjectInterface $message)
     {
@@ -31,10 +29,13 @@ class NewConversationMessageNotification extends Notification
         parent::__construct($message);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Entity\Notification\Notification::getListView()
+     */
     public function getListView()
     {
-
+        return null;
     }
-
-
 }
