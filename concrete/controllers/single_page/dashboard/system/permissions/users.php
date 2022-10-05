@@ -14,6 +14,19 @@ class Users extends DashboardPageController
 
     public function view()
     {
+        // Get the pkID of permission keys we want to warn about
+        $sudo = PermissionKey::getByHandle('sudo');
+        $groupEdit = PermissionKey::getByHandle('edit_group_folder');
+
+        $this->set('permissionWarnings', [
+            $sudo->getPermissionKeyID() => t(
+                'Users with this permission can manage aspects of all users including elevating their own permissions.'
+            ),
+            $groupEdit->getPermissionKeyID() => t(
+                'Users who can edit groups can elevate their own permissions by moving groups.'
+            ),
+        ]);
+
         $tree = GroupTree::get();
         $root = $tree->getRootTreeNodeObject();
         $this->set('root', $root);
