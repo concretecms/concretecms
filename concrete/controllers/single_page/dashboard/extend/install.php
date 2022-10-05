@@ -221,7 +221,7 @@ class Install extends DashboardPageController
         }
 
         if (!$this->error->has()) {
-            return RedirectResponse::create($this->action('package_deleted'));
+            return new RedirectResponse($this->action('package_deleted'));
         }
     }
 

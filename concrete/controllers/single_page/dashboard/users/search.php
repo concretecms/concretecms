@@ -599,7 +599,7 @@ class Search extends DashboardPageController
 
         $result = $this->createSearchResult($query);
 
-        return StreamedResponse::create(
+        return new StreamedResponse(
             function () use ($app, $result, $bom) {
                 $writer = $app->make(
                     UserExporter::class,

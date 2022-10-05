@@ -547,7 +547,7 @@ class Stacks extends DashboardPageController
             $moveFolder->getPage()->move($destinationPage);
         }
 
-        return JsonResponse::create(
+        return new JsonResponse(
             t2('%d item has been moved under the folder %s', '%d items have been moved under the folder %s', count($sourceIDs), count($sourceIDs), h($destinationPage->getCollectionName()))
         );
     }

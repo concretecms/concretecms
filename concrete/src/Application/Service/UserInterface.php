@@ -357,7 +357,7 @@ class UserInterface
         $ve = new ErrorView($o);
         $contents = $ve->render($o);
 
-        return Response::create($contents, Response::HTTP_INTERNAL_SERVER_ERROR);
+        return new Response($contents, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
