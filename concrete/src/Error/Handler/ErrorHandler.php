@@ -37,6 +37,7 @@ class ErrorHandler extends PrettyPageHandler
         }
         if ($enabled) {
             if ($detail === 'debug') {
+                $this->registerHideList();
                 $this->addDetails();
                 $result = parent::handle();
             } else {
@@ -89,13 +90,31 @@ class ErrorHandler extends PrettyPageHandler
             [
                 'Version' => Config::get('concrete.version'),
                 'Installed Version' => Config::get('concrete.version_installed'),
+                'Database Version' => Config::get('concrete.version_db'),
             ]
         );
 
         /*
          * Config
          */
-        $this->addDataTable('Concrete Configuration', $this->flatConfig(Config::get('concrete'), 'concrete'));
+        $this->addDataTable('Concrete Configuration', $this->flatConfig($this->cleanedConfig(Config::get('concrete'), 'concrete'), 'concrete'));
+    }
+
+    protected function cleanedConfig(array $config, $group): array
+    {
+        $clean = [];
+        foreach ($config as $key => $value) {
+            $assembled = "{$group}.{$key}";
+            if (is_array($value)) {
+                $clean[$key] = $this->cleanedConfig($value, $assembled);
+            } elseif ($this->isKeyHidden($assembled)) {
+                $clean[$key] = str_repeat('*', is_string($value) ? strlen($value) : 3);
+            } else {
+                $clean[$key] = $value;
+            }
+        }
+
+        return $clean;
     }
 
     protected function flatConfig(array $config, $group)
@@ -112,5 +131,37 @@ class ErrorHandler extends PrettyPageHandler
         }
 
         return $flat;
+    }
+
+    protected function registerHideList(): void
+    {
+        foreach (\Concrete\Core\Support\Facade\Config::get('concrete.debug.hide_keys', []) as $superGlobal => $keys) {
+            if ($superGlobal === 'config') {
+                foreach ($keys as $key) {
+                    $this->hideConfigKeys[$key] = true;
+                }
+                continue;
+            }
+
+            foreach ((array) $keys as $key) {
+                $this->hideSuperglobalKey($superGlobal, $key);
+            }
+        }
+    }
+
+    private function isKeyHidden(string $key): bool
+    {
+        // We have to check each node to make sure it's not hidden:
+        $key = explode('.', $key);
+        $length = count($key);
+
+        do {
+            $tryKey = implode('.', array_slice($key, 0, $length));
+            if (isset($this->hideConfigKeys[$tryKey])) {
+                return true;
+            }
+        } while ($length-- > 1);
+
+        return false;
     }
 }

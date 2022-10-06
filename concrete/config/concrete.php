@@ -63,6 +63,46 @@ return [
          * @var int|null
          */
         'error_reporting' => null,
+
+        /**
+         * Hide specified superglobal keys and config items from whoops error output
+         *
+         * By default, all _SERVER, _ENV, and _COOKIE values are hidden
+         *
+         * @var array<string, string[]>
+         */
+        'hide_keys' => [
+            /** @var string[] */
+            '_GET' => [],
+
+            /** @var string[] */
+            '_POST' => [],
+
+            /** @var string[] */
+            '_FILES' => [],
+
+            /** @var string[] */
+            '_SESSION' => [],
+
+            /**
+             * Hide specified config keys from whoops error output
+             * `concrete.debug.display_errors` will hide that specific config item while `concrete.debug` will hide
+             * all items in the `concrete.debug` array.
+             *
+             * @var string[]
+             */
+            'config' => [
+                'concrete.proxy.password',
+                'concrete.mail.methods.smtp.password',
+                'concrete.email.default.address',
+                'concrete.email.form_block.address',
+                'concrete.email.forgot_password.address',
+                'concrete.email.validate_registration.address',
+                'concrete.email.workflow_notification.address',
+                'concrete.debug.hide_keys',
+                'app.api_keys',
+            ],
+        ]
     ],
 
     /*
