@@ -56,7 +56,7 @@ class GroupSelector
         $htmlField = h($field);
         $htmlChooseText = h($chooseText);
 
-        return <<<EOT
+        $selector = <<<EOT
 <div data-concrete-group-input="{$identifier}">
     <concrete-group-input :group-id="{$groupID}" choose-text="{$htmlChooseText}" input-name="{$htmlField}"></concrete-group-input>
 </div>
@@ -70,7 +70,9 @@ $(function() {
     })
 });
 </script>
-EOT
+EOT;
+
+        print $selector;
         ;
     }
 
