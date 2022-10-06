@@ -10,6 +10,19 @@ use TaskPermission;
 
 class Users extends DashboardPageController
 {
+
+    public function view()
+    {
+        // Get the pkID of permission keys we want to warn about
+        $sudo = PermissionKey::getByHandle('sudo');
+
+        $this->set('permissionWarnings', [
+            $sudo->getPermissionKeyID() => t(
+                'Users with this permission can manage aspects of all users including elevating their own permissions.'
+            )
+        ]);
+    }
+
     public function save()
     {
         if (Loader::helper('validation/token')->validate('save_permissions')) {
@@ -36,6 +49,7 @@ class Users extends DashboardPageController
 
     public function updated()
     {
+        $this->view();
         $this->set('success', t('Permissions updated successfully.'));
     }
 }
