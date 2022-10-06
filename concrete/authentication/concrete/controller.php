@@ -2,6 +2,7 @@
 namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Encryption\PasswordHasher;
 use Concrete\Core\Error\UserMessageException;
@@ -56,35 +57,23 @@ class Controller extends AuthenticationTypeController
 
     public function verifyHash(User $u, $hash)
     {
+        if (!str_contains($hash, '@')) {
+            return false;
+        }
+        [$id, $token] = explode('@', $hash, 2);
+
+        $id = (int) $id;
         $uID = (int) $u->getUserID();
         $db = $this->app->make(Connection::class);
         $hasher = $this->app->make(PasswordHasher::class);
-        $validRow = null;
-        foreach ($db->fetchAll('select validThrough, token from authTypeConcreteCookieMap WHERE uID = ? ORDER BY validThrough DESC', [$uID]) as $row) {
-            if ($hasher->checkPassword($hash, $row['token'])) {
-                $validRow = $row;
-                break;
-            }
-        }
-        if ($validRow === null) {
-            return;
-        }
-        $stillValid = time() < $validRow['validThrough'];
-        if ($stillValid) {
-            $newTime = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
-            $db->update(
-                'authTypeConcreteCookieMap',
-                ['validThrough' => $newTime],
-                ['uID' => $uID, 'token' => $row['token']]
-            );
-        } else {
-            $db->delete(
-                'authTypeConcreteCookieMap',
-                ['uID' => $uID, 'token' => $row['token']]
-            );
-        }
 
-        return $stillValid;
+        // Find valid hash with matching key and user
+        $hash = $db->fetchColumn(
+            'SELECT token FROM authTypeConcreteCookieMap WHERE uID = ? AND validThrough > ? AND id=?',
+            [$uID, time(), $id]
+        );
+
+        return $hasher->checkPassword($token, $hash);
     }
 
     public function view()
@@ -93,27 +82,42 @@ class Controller extends AuthenticationTypeController
 
     public function buildHash(User $u, $test = 1)
     {
-        if ($test > 10) {
-            // This should only ever happen if by some stroke of divine intervention,
-            // we end up pulling 10 hashes that already exist. the chances of this are very very low.
-            throw new \Exception(t('There was a database error, try again.'));
-        }
-        $db = Database::connection();
+        $db = $this->app->make(Connection::class);
 
-        $validThrough = time() + (int) $this->app->make('config')->get('concrete.session.remember_me.lifetime');
-        $token = $this->genString();
+        $validThrough = time() + (int) $this->app->make(Repository::class)->get('concrete.session.remember_me.lifetime');
         $hasher = $this->app->make(PasswordHasher::class);
-        try {
-            $db->executeQuery(
-                'INSERT INTO authTypeConcreteCookieMap (token, uID, validThrough) VALUES (?,?,?)',
-                [$hasher->hashPassword($token), $u->getUserID(), $validThrough]
-            );
-        } catch (\Exception $e) {
-            // HOLY CRAP.. SERIOUSLY?
-            $this->buildHash($u, ++$test);
-        }
 
-        return $token;
+        $tries = 10;
+        do {
+            $token = $this->genString(32);
+
+            try {
+                // Truncate the list down to 9 entries
+                $id = $db->fetchColumn(
+                    'SELECT ID from authTypeConcreteCookieMap where uID = ? order by ID desc limit 1 offset 9',
+                    [$u->getUserID()]
+                );
+                $db->executeUpdate(
+                    'DELETE from authTypeConcreteCookieMap where (uID = ? and ID <= ?) or validThrough < ?',
+                    [$u->getUserID(), $id ?: 0, time()]
+                );
+
+                $db->insert('authTypeConcreteCookieMap', [
+                    'token' => $hasher->hashPassword($token),
+                    'uID' => $u->getUserID(),
+                    'validThrough' => $validThrough,
+                ]);
+                $insertId = $db->lastInsertId();
+                break;
+            } catch (\Exception $e) {
+            }
+
+            if ($tries-- === 0) {
+                throw new UserMessageException(t('There was a database error, try again.'));
+            }
+        } while (1);
+
+        return $insertId . '@' . $token;
     }
 
     private function genString($a = 16)
