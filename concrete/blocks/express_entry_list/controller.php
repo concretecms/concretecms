@@ -306,9 +306,9 @@ class Controller extends BlockController implements UsesFeatureInterface
                 $columnSet = new DefaultSet($category);
             }
 
-            $query = $queryModifier->process($query);
             $query->setColumns($columnSet);
-
+            $query = $queryModifier->process($query);
+            
             $result = $resultFactory->createFromQuery($searchProvider, $query);
             $list = $result->getItemListObject();
             if (!isset($itemsPerPageSpecified)) {
