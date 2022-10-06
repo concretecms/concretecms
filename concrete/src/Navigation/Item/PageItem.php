@@ -28,7 +28,7 @@ class PageItem extends Item
         if ($page) {
             $this->pageID = $page->getCollectionID();
             $this->keywords = (string)$page->getAttribute("meta_keywords");
-            parent::__construct($page->getCollectionLink(), $page->getCollectionName(), $isActive);
+            parent::__construct($this->getURL(), $page->getCollectionName(), $isActive);
         }
         if ($this->keywords === null) {
             $this->keywords = '';
@@ -51,6 +51,20 @@ class PageItem extends Item
         $this->pageID = $pageID;
     }
 
+    /**
+     * @return string
+     */
+    public function getURL(): string
+    {
+        $p = Page::getByID($this->pageID);
+        if ($p->isExternalLink()) {
+            $url = $p->getCollectionPointerExternalLink();
+        } else {
+            $url = $p->getCollectionLink();
+        }
+        return $url;
+    }
+    
     /**
      * @return string
      */
@@ -86,6 +100,7 @@ class PageItem extends Item
             // We need to use the parent's getName method (it's in English)
             'name' => parent::getName(),
             'pageID' => $this->getPageID(),
+            'url' => $this->getURL(),
             'keywords' => $this->getKeywords(),
         ] + parent::jsonSerialize();
     }
