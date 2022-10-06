@@ -43,6 +43,7 @@ var ccmi18n = ' . json_encode([
     'changeBlockCSS' => t('Design'),
     'changeBlockTemplate' => t('Block Template'),
     'chooseFont' => t('Choose Font'),
+    'chooseGroup' => t('Choose a Group'),
     'chooseUser' => t('Choose a User'),
     'clear' => t('Clear'),
     'closeWindow' => t('Close'),
