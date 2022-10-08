@@ -33,8 +33,6 @@ class GroupSelector
      * @param string $field
      * @param \Concrete\Core\User\Group\Group|int|mixed $group
      * @param string|null $noneText
-     *
-     * @return string
      */
     public function selectGroup($field, $group = null, $noneText = null)
     {
@@ -73,7 +71,6 @@ $(function() {
 EOT;
 
         print $selector;
-        ;
     }
 
     public function getGroupFromGroupTreeRequestValue($value)
