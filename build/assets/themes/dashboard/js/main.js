@@ -128,7 +128,7 @@ var setupTooltips = function() {
     }
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('.launch-tooltip'))
     const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl, {
+        return bootstrap.Tooltip.getInstance(tooltipTriggerEl) || new bootstrap.Tooltip(tooltipTriggerEl, {
             container: '#ccm-tooltip-holder'
         })
     })
