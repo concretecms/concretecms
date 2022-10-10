@@ -182,7 +182,10 @@ class User extends ConcreteObject
             $r = $db->query($q, $v);
             if ($r) {
                 $row = $r->fetchRow();
-                $pw_is_valid_legacy = ($config->get('concrete.user.password.legacy_salt') && self::legacyEncryptPassword($password) == $row['uPassword']);
+                $pw_is_valid_legacy = false;
+                if ($config->get('concrete.user.password.legacy_salt')) {
+                    $pw_is_valid_legacy = self::legacyEncryptPassword($password) === $row['uPassword'];
+                }
                 $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
                 if ($row['uID'] && $row['uIsValidated'] === '0' && $config->get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
