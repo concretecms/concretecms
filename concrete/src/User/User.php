@@ -194,9 +194,10 @@ class User extends ConcreteObject
             if ($r) {
                 $row = $r->fetch();
                 if ($row) {
-                    $pw_is_valid_legacy = ($config->get(
-                            'concrete.user.password.legacy_salt'
-                        ) && self::legacyEncryptPassword($password) == $row['uPassword']);
+                    $pw_is_valid_legacy = false;
+                    if ($config->get('concrete.user.password.legacy_salt')) {
+                        $pw_is_valid_legacy = self::legacyEncryptPassword($password) === $row['uPassword'];
+                    }
 
                     $pw_is_valid = $pw_is_valid_legacy || $hasher->checkPassword($password, $row['uPassword']);
                     if ($pw_is_valid && $hasher->needsRehash($row['uPassword'])) {
