@@ -195,6 +195,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($user_id && $user_id > 0) {
             $user = User::loginByUserID($user_id);
             if ($user && !$user->isError()) {
+                $this->app->make('session')->migrate();
                 return $user;
             }
         }
