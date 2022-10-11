@@ -106,4 +106,12 @@ class ExternalConcrete5Service extends AbstractService
     {
         return self::AUTHORIZATION_METHOD_HEADER_BEARER;
     }
+
+    /**
+     * Always send through and verify "state" parameter
+     */
+    public function needsStateParameterInAuthUrl(): bool
+    {
+        return true;
+    }
 }

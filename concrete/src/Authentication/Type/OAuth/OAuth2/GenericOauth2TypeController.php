@@ -8,6 +8,7 @@ use OAuth\Common\Exception\Exception;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\OAuth2\Service\AbstractService;
 use Concrete\Core\User\User;
+use OAuth\OAuth2\Service\Exception\InvalidAuthorizationStateException;
 
 abstract class GenericOauth2TypeController extends GenericOauthTypeController
 {
@@ -33,11 +34,22 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
         }
 
         try {
+            $service = $this->getService();
             $code = \Request::getInstance()->get('code');
-            $token = $this->getService()->requestAccessToken($code);
+            $state = \Request::getInstance()->get('state') ?: null;
+
+            // If state is required update this variable to be never null
+            if ($service->needsStateParameterInAuthUrl()) {
+                $state = $state ?: '';
+            }
+
+            $token = $service->requestAccessToken($code, $state);
             $this->setToken($token);
         } catch (TokenResponseException $e) {
             $this->showError(t('Failed authentication: %s', $e->getMessage()));
+            exit;
+        } catch (InvalidAuthorizationStateException $e) {
+            $this->showError(t('Invalid state token provided, please try again.'));
             exit;
         }
 
@@ -81,10 +93,21 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
         }
 
         try {
+            $service = $this->getService();
             $code = \Request::getInstance()->get('code');
-            $token = $this->getService()->requestAccessToken($code);
+            $state = \Request::getInstance()->get('state') ?: null;
+
+            // If state is required update this variable to be never null
+            if ($service->needsStateParameterInAuthUrl()) {
+                $state = $state ?: '';
+            }
+
+            $token = $service->requestAccessToken($code, $state);
         } catch (TokenResponseException $e) {
             $this->showError(t('Failed authentication: %s', $e->getMessage()));
+            exit;
+        } catch (InvalidAuthorizationStateException $e) {
+            $this->showError(t('Invalid state token provided, please try again.'));
             exit;
         }
 
