@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
-use Doctrine\ORM\Mapping as ORM;
+use Concrete\Core\Api\Documentation\RedirectUriFactory;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 
@@ -154,14 +154,21 @@ class Client implements ClientEntityInterface
          * Note – An empty redirect URL will still trigger League's redirect URI check, because it's looking for
          * is_string() and this returns an empty string. So let's use the falsy check to turn even empty strings
          * into nulls.
+         *
+         * Additional note - I'm keeping the original comment above but this is NO LONGER THE CASE. League OAuth2
+         * 8.2+ requires a redirectUri on auth code flows. So the change to null isn't necessary but I'm going to
+         * keep it (AE)
          */
         $url = $this->redirectUri ? $this->redirectUri : null;
 
+        $urls = [];
+
         if (is_string($url) && strpos($url, '|') !== false) {
-            return explode('|', $url);
+            $urls[] = explode('|', $url);
         }
 
-        return $url;
+        $urls[] = app(RedirectUriFactory::class)->createDocumentationRedirectUri();
+        return $urls;
     }
 
     /**

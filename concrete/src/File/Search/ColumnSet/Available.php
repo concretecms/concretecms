@@ -2,6 +2,7 @@
 namespace Concrete\Core\File\Search\ColumnSet;
 
 use Concrete\Core\File\Search\ColumnSet\Column\FileIDColumn;
+use Concrete\Core\File\Search\ColumnSet\Column\FileVersionDateAddedColumn;
 use Concrete\Core\File\Search\ColumnSet\Column\FileVersionFilenameColumn;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Search\Column\Column;
@@ -75,5 +76,6 @@ class Available extends DefaultSet
             [self::class, 'getAuthorName'], false));
         $this->addColumn(new FileIDColumn());
         $this->addColumn(new FileVersionFilenameColumn());
+        $this->addColumn(new FileVersionDateAddedColumn());
     }
 }

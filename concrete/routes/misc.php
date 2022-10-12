@@ -42,6 +42,8 @@ $router->all('/ccm/system/country-stateprovince-link/get_stateprovinces', '\Conc
 $router->all('/ccm/system/country-data-link/all', '\Concrete\Controller\Frontend\CountryDataLink::getAll');
 
 $router->all('/ccm/system/dialog/process/activity/{viewToken}', '\Concrete\Controller\Dialog\Process\Activity::view');
+$router->all('/ccm/system/api/documentation/', '\Concrete\Controller\Api\Documentation::view');
+$router->all('/ccm/system/api/openapi.json', '\Concrete\Controller\Api\OpenApi::generate');
 $router->all('/ccm/system/messenger/consume', '\Concrete\Controller\Backend\Messenger::consume');
 $router->post('/ccm/system/processes/get_configuration', '\Concrete\Controller\Backend\Processes::getConfiguration');
 $router->all('/ccm/system/processes/poll', '\Concrete\Controller\Backend\Processes::poll');

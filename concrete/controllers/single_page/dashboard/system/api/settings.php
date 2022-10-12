@@ -33,6 +33,11 @@ class Settings extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
 
+        $defaultSite = $this->app->make('site')->getSite();
+        if (!$defaultSite->getSiteCanonicalURL()) {
+            $this->error->add(t('Your default site must define a canonical URL to enable the REST API.'));
+        }
+
         if (!$this->error->has()) {
             $enable_api = $this->request->request->get("enable_api") ? true : false;
             $config = $this->app->make('config');

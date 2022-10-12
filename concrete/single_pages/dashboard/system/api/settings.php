@@ -39,6 +39,14 @@ if ($enable_api) {
 
     </section>
 
+    <section class="mt-5">
+        <h3><?=t('API Documentation')?></h3>
+        <?=t('Access the automatically generated API documentation using the Swagger interactive API console. Click below to open the API console in a new window.')?>
+
+        <div class="text-center mt-4"><a target="_blank" href="<?=URL::to('/ccm/system/api/documentation')?>" class="btn-lg btn btn-secondary"><?=t('View API Documentation Console')?></a></div>
+
+    </section>
+
 <?php } ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">
