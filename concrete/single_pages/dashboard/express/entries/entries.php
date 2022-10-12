@@ -14,7 +14,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 <?php foreach ($result->getColumns() as $column) { ?>
                     <th class="<?=$column->getColumnStyleClass()?>">
                         <?php if ($column->isColumnSortable()) { ?>
-                            <a href="<?=$column->getColumnSortURL()?>"><?=$column->getColumnTitle()?></a>
+                            <a href="<?= h($column->getColumnSortURL()) ?>"><?=$column->getColumnTitle()?></a>
                         <?php } else { ?>
                             <span><?=$column->getColumnTitle()?></span>
                         <?php } ?>

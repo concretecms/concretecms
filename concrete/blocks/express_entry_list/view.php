@@ -8,8 +8,8 @@ if ($tableName) { ?>
 <?php } ?>
 <?php if ($tableDescription) { ?>
     <p><?=$tableDescription?></p>
-<?php } 
-	
+<?php }
+
 if (isset($entity)) { ?>
     <?php if ($enableSearch) { ?>
         <form method="get" action="<?=$c->getCollectionLink()?>">
@@ -87,7 +87,9 @@ if (isset($entity)) { ?>
             <thead>
                 <tr>
                 <?php foreach ($result->getColumns() as $column) { ?>
-                    <th class="<?=$column->getColumnStyleClass()?>"><a href="<?=$column->getColumnSortURL()?>"><?=$column->getColumnTitle()?></a></th>
+                    <th class="<?=$column->getColumnStyleClass()?>">
+                        <a href="<?=h($column->getColumnSortURL())?>"><?=$column->getColumnTitle()?></a>
+                    </th>
                 <?php } ?>
                 </tr>
             </thead>

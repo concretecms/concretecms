@@ -53,7 +53,7 @@ use Concrete\Core\User\UserInfo;
                 <?php /** @var Column $column */ ?>
                 <th class="<?php echo $column->getColumnStyleClass() ?>">
                     <?php if ($column->isColumnSortable()): ?>
-                        <a href="<?php echo $column->getColumnSortURL() ?>">
+                        <a href="<?php echo h($column->getColumnSortURL()) ?>">
                             <?php echo $column->getColumnTitle() ?>
                         </a>
                     <?php else: ?>
