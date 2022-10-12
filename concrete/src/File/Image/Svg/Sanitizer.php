@@ -79,7 +79,7 @@ class Sanitizer
      * @param \Concrete\Core\File\Image\Svg\SanitizerOptions|null $options the sanitizer options (if NULL, we'll use the default ones)
      *
      * @return array
-     * 
+     *
      * @example <pre><code>
      * [
      *     'attributes' => [
@@ -106,7 +106,7 @@ class Sanitizer
      * @param \Concrete\Core\File\Image\Svg\SanitizerOptions|null $options the sanitizer options (if NULL, we'll use the default ones)
      *
      * @return array
-     * 
+     *
      * @example <pre><code>
      * [
      *     'attributes' => [
@@ -123,7 +123,7 @@ class Sanitizer
     {
         $removedNodes = [];
         $this->sanitizeData($data, $options, $removedNodes);
-        
+
         return $removedNodes;
     }
 
@@ -257,7 +257,10 @@ class Sanitizer
         if (!is_string($data)) {
             throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_PARSE_XML);
         }
+
+        $disabled = libxml_disable_entity_loader(true);
         $xml = new DOMDocument();
+
         $error = null;
         try {
             $loaded = $xml->loadXML($data, $this->getLoadFlags());
@@ -265,7 +268,10 @@ class Sanitizer
             $error = $x;
         } catch (Throwable $x) {
             $error = $x;
+        } finally {
+            libxml_disable_entity_loader($disabled);
         }
+
         if ($error !== null || $loaded === false) {
             throw SanitizerException::create(SanitizerException::ERROR_FAILED_TO_PARSE_XML, $error ? $error->getMessage() : '');
         }
