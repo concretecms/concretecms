@@ -112,7 +112,7 @@ if (($modernIconFID = (int) $config->get('misc.modern_tile_thumbnail_fid')) && (
     $metaTags['msapplication-TileImage'] = sprintf('<meta name="msapplication-TileImage" content="%s"/>', $modernIconFile->getURL());
     $modernIconBGColor = (string) $config->get('misc.modern_tile_thumbnail_bgcolor');
     if ($modernIconBGColor !== '') {
-        $metaTags['msapplication-TileColor'] = sprintf('<meta name="msapplication-TileColor" content="%s"/>', $modernIconBGColor);
+        $metaTags['msapplication-TileColor'] = sprintf('<meta name="msapplication-TileColor" content="%s"/>', h($modernIconBGColor));
     }
 }
 $linkTags = [];
