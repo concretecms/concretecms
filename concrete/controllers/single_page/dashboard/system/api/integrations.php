@@ -107,6 +107,7 @@ class Integrations extends DashboardPageController
             $client = $this->get('client');
             $client->setName($this->request->request->get('name'));
             $client->setRedirectUri((string)$this->request->request->get('redirect'));
+            $client->setDocumentationEnabled($this->request->request->getBoolean('enableDocumentation', false));
 
             try {
                 $requestConsentType = $this->request->request->get('consentType');
@@ -179,7 +180,8 @@ class Integrations extends DashboardPageController
             $this->request->request->get('redirect'),
             [],
             $credentials->getKey(),
-            password_hash($credentials->getSecret(), PASSWORD_DEFAULT)
+            password_hash($credentials->getSecret(), PASSWORD_DEFAULT),
+            $this->request->request->getBoolean('enableDocumentation', false)
         );
 
         // Persist the new client to the database

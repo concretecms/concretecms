@@ -5,7 +5,7 @@ namespace Concrete\Core\Entity\OAuth;
 use Concrete\Core\Api\Documentation\RedirectUriFactory;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-
+use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="ClientRepository")
  * @ORM\Table(
@@ -56,6 +56,12 @@ class Client implements ClientEntityInterface
      * @ORM\Column(type="string")
      */
     protected $clientSecret;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $documentationEnabled = false;
 
     /**
      * The type of consent this client must get from the user
@@ -144,6 +150,18 @@ class Client implements ClientEntityInterface
     }
 
     /**
+     * Returns the actual redirect URI bound to the entity. This is a string (sometimes containing a | to explode
+     * into multiple.) We have a separate method because the getRedirectUri method below actually splits piped
+     * strings into arrays, and it also appends the Swagger UI doc redirectUri if docs are enabled on the client.
+     *
+     * @return string|null
+     */
+    public function getSpecifiedRedirectUri(): ?string
+    {
+        return $this->redirectUri;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \League\OAuth2\Server\Entities\ClientEntityInterface::getRedirectUri()
@@ -163,12 +181,24 @@ class Client implements ClientEntityInterface
 
         $urls = [];
 
-        if (is_string($url) && strpos($url, '|') !== false) {
-            $urls[] = explode('|', $url);
+        if (is_string($url)) {
+            if (strpos($url, '|') !== false) {
+                $urls[] = explode('|', $url);
+            } else {
+                $urls[] = $url;
+            }
         }
 
-        $urls[] = app(RedirectUriFactory::class)->createDocumentationRedirectUri();
-        return $urls;
+        if ($this->isDocumentationEnabled()) {
+            $urls[] = app(RedirectUriFactory::class)->createDocumentationRedirectUri();
+        }
+
+        if (count($urls)) {
+            return $urls;
+        } else {
+            // we could technically return just the array every time but this will keep tests working just as before
+            return $url;
+        }
     }
 
     /**
@@ -205,4 +235,22 @@ class Client implements ClientEntityInterface
 
         $this->consentType = $consentType;
     }
+
+    /**
+     * @return bool
+     */
+    public function isDocumentationEnabled(): bool
+    {
+        return $this->documentationEnabled;
+    }
+
+    /**
+     * @param bool $documentationEnabled
+     */
+    public function setDocumentationEnabled(bool $documentationEnabled): void
+    {
+        $this->documentationEnabled = $documentationEnabled;
+    }
+
+
 }

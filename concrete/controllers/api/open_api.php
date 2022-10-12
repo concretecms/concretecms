@@ -2,12 +2,14 @@
 namespace Concrete\Controller\Api;
 
 use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\OpenApi\Factory\ExpressEntitySpecFactory;
 use Concrete\Core\Api\OpenApi\SpecMerger;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Category\UserCategory;
+use Concrete\Core\Express\ObjectManager;
 use Concrete\Core\Permission\Checker;
 use OpenApi\Generator;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,14 +27,20 @@ class OpenApi implements ApplicationAwareInterface
      */
     protected $merger;
 
-    public function __construct(SpecMerger $merger)
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
+    public function __construct(ObjectManager $objectManager, SpecMerger $merger)
     {
+        $this->objectManager = $objectManager;
         $this->merger = $merger;
     }
 
     private function addExpressSpec(OpenApiAnnotation $openApi)
     {
-        $objects = $this->objectManager->getEntities();
+        $objects = $this->objectManager->getEntities(true)->findBy(['include_in_rest_api' => true]);
         foreach ($objects as $object) {
             $factory = new ExpressEntitySpecFactory();
             $spec = $factory->build($object);
@@ -94,7 +102,7 @@ class OpenApi implements ApplicationAwareInterface
             ]
         );
 
-        //$r = $this->addExpressSpec($r);
+        $r = $this->addExpressSpec($r);
         $r = $this->addCustomAttributesToModels($r);
         return $r;
     }

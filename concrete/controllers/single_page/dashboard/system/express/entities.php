@@ -60,6 +60,12 @@ class Entities extends DashboardPageController
                     $entity->setSupportsCustomDisplayOrder(true);
                 }
 
+                if ($this->app->make('config')->get('concrete.api.enabled')) {
+                    $entity->setIncludeInRestApi(
+                        $this->request->request->getBoolean('include_in_rest_api', false)
+                    );
+                }
+
                 $form = new Form();
                 $form->setEntity($entity);
                 $form->setName('Form');
@@ -379,6 +385,12 @@ class Entities extends DashboardPageController
 
             if ($this->request->request->get('supports_custom_display_order')) {
                 $entity->setSupportsCustomDisplayOrder(true);
+            }
+
+            if ($this->app->make('config')->get('concrete.api.enabled')) {
+                $entity->setIncludeInRestApi(
+                    $this->request->request->getBoolean('include_in_rest_api', false)
+                );
             }
 
             $this->entityManager->persist($entity);

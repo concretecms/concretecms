@@ -33,7 +33,7 @@ $consentType = $client->getConsentType();
     </div>
 
     <div class="form-group">
-        <label class="form-label"><?=t('Redirect URI')?></label>
+        <label class="form-label"><?=t('Redirect URI(s)')?></label>
         <?php
         $redirectUri = $client->getRedirectUri() ?: t('None provided');
         ?>
@@ -83,6 +83,20 @@ $consentType = $client->getConsentType();
     </div>
 
 </fieldset>
+
+<?php if ($client->isDocumentationEnabled()) { ?>
+
+
+    <fieldset>
+        <legend><?=t('API Documentation')?></legend>
+        <?=t('Access the automatically generated API documentation using the Swagger interactive API console. Click below to open the API console in a new window.')?>
+
+        <div class="text-center mt-4"><a target="_blank" href="<?=URL::to('/ccm/system/api/documentation', $client->getIdentifier())?>" class="btn-lg btn btn-secondary"><?=t('View API Documentation Console')?></a></div>
+
+    </fieldset>
+
+<?php } ?>
+
 
 <div style="display: none">
     <div data-dialog-wrapper="delete-client">

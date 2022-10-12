@@ -24,7 +24,7 @@ $consentType = $client->getConsentType();
         <div class="form-group">
             <label for="redirect"><?php echo t('Redirect'); ?></label>
             <div class="input-group">
-                <?php echo $form->url('redirect', implode('|', (array) $client->getRedirectUri()), array('autocomplete' => 'off')); ?>
+                <?php echo $form->url('redirect', $client->getSpecifiedRedirectUri(), array('autocomplete' => 'off')); ?>
                 <span class="input-group-text"><i class="fas fa-asterisk"></i></span>
             </div>
             <span class="help-block"><?= t('Separate multiple redirect urls using %s (pipe) characters', '<code>|</code>') ?></span>
@@ -45,11 +45,21 @@ $consentType = $client->getConsentType();
                 <?= t("Only disable user consent if you trust this integration fully. By disabling user consent, you remove the user's ability to deny access.") ?>
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="form-label" for="redirect"><?php echo t('Documentation'); ?></label>
+            <div class="form-check">
+                <?php echo $form->checkbox('enableDocumentation', 1, $client->isDocumentationEnabled()); ?>
+                <label class="form-check-label" for="enableDocumentation"><?=t('Enable interactive documentation.')?></label>
+            </div>
+            <div class="help-block"><?=t('When enabled, those with the `access_api` custom permission will be able to view interactive REST API documentation for the integration.')?></div>
+        </div>
+
     </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=URL::to('/dashboard/users/oauth2/view_client', $client->getIdentifier())?>" class="float-start btn btn-secondary"><?=t('Cancel')?></a>
+            <a href="<?=URL::to('/dashboard/system/api/integrations', 'view_client', $client->getIdentifier())?>" class="float-start btn btn-secondary"><?=t('Cancel')?></a>
             <button class="float-end btn btn-primary" type="submit" ><?=t('Update')?></button>
         </div>
     </div>

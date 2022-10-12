@@ -25,5 +25,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
             oauth2RedirectUrl: '<?=$oauth2RedirectUrl?>',
             layout: "StandaloneLayout"
         });
+        <?php if (isset($clientKey)) { ?>
+        window.ui.initOAuth({
+            clientId: "<?=h($clientKey)?>"
+        })
+        <?php } ?>
     };
 </script>
