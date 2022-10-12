@@ -75,7 +75,7 @@ class ImageUploading extends DashboardPageController
                 }
                 $response = $rf->create($error->getMessage(), Response::HTTP_SERVICE_UNAVAILABLE);
             } else {
-                $response = $rf->create($handle, Response::HTTP_SERVICE_UNAVAILABLE);
+                $response = $rf->create(h($handle), Response::HTTP_SERVICE_UNAVAILABLE);
             }
         } else {
             $response = $rf->create($this->token->getErrorMessage(), Response::HTTP_BAD_REQUEST);
