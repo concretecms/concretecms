@@ -70,9 +70,9 @@
             $('input[name=target_property_name]').val(value);
 
             if ($('select[name=type]').val() == 'ManyToMany' || $('select[name=type]').val() == 'ManyToOne') {
-                var value = '<?=$entity->getPluralHandle()?>';
+                var value = <?php echo json_encode((string) $entity->getPluralHandle()) ?>;
             } else {
-                var value = '<?=$entity->getHandle()?>';
+                var value = <?php echo json_encode((string) $entity->getHandle()) ?>;
             }
             $('input[name=inversed_property_name]').val(value);
 
