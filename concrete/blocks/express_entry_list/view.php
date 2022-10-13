@@ -66,7 +66,9 @@ if ($entity) { ?>
             <thead>
                 <tr>
                 <?php foreach ($result->getColumns() as $column) { ?>
-                    <th class="<?=$column->getColumnStyleClass()?>"><a href="<?=$column->getColumnSortURL()?>"><?=$column->getColumnTitle()?></a></th>
+                    <th class="<?=$column->getColumnStyleClass()?>">
+                        <a href="<?=h($column->getColumnSortURL())?>"><?=$column->getColumnTitle()?></a>
+                    </th>
                 <?php } ?>
                 </tr>
             </thead>
