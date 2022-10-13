@@ -68,7 +68,7 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
                         <?php
                         if ($column->isColumnSortable()) { ?>
                             <a href="<?php
-                            echo $column->getColumnSortURL() ?>">
+                            echo h($column->getColumnSortURL()) ?>">
                                 <?php
                                 echo $column->getColumnTitle() ?>
                             </a>
