@@ -2,8 +2,6 @@
 
 namespace Concrete\Core\Api;
 
-use Concrete\Core\Api\OAuth\Scope\ScopeRegistry;
-use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
 use Concrete\Core\Api\OAuth\Server\IdTokenResponse;
 use Concrete\Core\Api\OAuth\Validator\DefaultValidator;
 use Concrete\Core\Entity\OAuth\AccessToken;
@@ -55,10 +53,7 @@ class ApiServiceProvider extends ServiceProvider
             $list->loadRoutes($router);
             $this->registerAuthorizationServer();
         }
-        $this->app->singleton(ScopeRegistryInterface::class, function() {
-            return new ScopeRegistry();
-        });
-        
+
         // Provide our public key to the BearerTokenValidator
         $this->app->extend(BearerTokenValidator::class, function(BearerTokenValidator $validator) {
             if (method_exists($validator, 'setPublicKey')) {

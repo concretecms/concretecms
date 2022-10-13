@@ -25,6 +25,7 @@ namespace Concrete\Core\Api\Controller;
  *         tokenUrl="/oauth/2.0/token",
  *         flow="authorizationCode",
  *         scopes={
+ *             "openid": "Remotely authenticate into Concrete",
  *             "account:read": "Read your user object",
  *             "files:read": "Read files as your user",
  *             "files:add": "Add files",

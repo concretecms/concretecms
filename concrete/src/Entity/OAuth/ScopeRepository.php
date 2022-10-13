@@ -29,7 +29,7 @@ class ScopeRepository extends EntityRepository implements ScopeRepositoryInterfa
      *
      * @param ScopeEntityInterface[] $scopes
      * @param string $grantType
-     * @param ClientEntityInterface $clientEntity
+     * @param Client $clientEntity
      * @param null|string $userIdentifier
      *
      * @return ScopeEntityInterface[]
@@ -40,13 +40,20 @@ class ScopeRepository extends EntityRepository implements ScopeRepositoryInterfa
         ClientEntityInterface $clientEntity,
         $userIdentifier = null
     ) {
-        $allowedScopes = [];
-        foreach($this->findAll() as $scopeFromDb) {
-            $allowedScopes[] = $scopeFromDb->getIdentifier();
+        if (!$clientEntity->hasCustomScopes()) {
+            $allowedScopes = $this->findAll();
+        } else {
+            $allowedScopes = $clientEntity->getScopes();
         }
+
+        $allowedScopeIdentifiers = [];
+        foreach ($allowedScopes as $allowedScope) {
+            $allowedScopeIdentifiers[] = $allowedScope->getIdentifier();
+        }
+
         $winnowed = [];
         foreach ($scopes as $scope) {
-            if (in_array($scope->getIdentifier(), $allowedScopes)) {
+            if (in_array($scope->getIdentifier(), $allowedScopeIdentifiers)) {
                 $winnowed[] = $scope;
             }
         }

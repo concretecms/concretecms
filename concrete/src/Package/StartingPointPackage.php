@@ -3,7 +3,7 @@ namespace Concrete\Core\Package;
 
 use AuthenticationType;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
-use Concrete\Core\Api\OAuth\Scope\ScopeRegistryInterface;
+use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
 use Concrete\Core\Database\DatabaseStructureManager;
@@ -413,12 +413,8 @@ class StartingPointPackage extends Package
 
     protected function install_api()
     {
-        $scopes = $this->app->make(ScopeRegistryInterface::class)->getScopes();
-        $em = $this->app->make(EntityManager::class);
-        foreach ($scopes as $scope) {
-            $em->persist($scope);
-            $em->flush();
-        }
+        $command = new SynchronizeScopesCommand();
+        $this->app->executeCommand($command);
     }
 
     protected function install_database()

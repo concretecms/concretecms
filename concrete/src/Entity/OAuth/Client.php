@@ -3,6 +3,7 @@
 namespace Concrete\Core\Entity\OAuth;
 
 use Concrete\Core\Api\Documentation\RedirectUriFactory;
+use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     uniqueConstraints={@ORM\UniqueConstraint(name="client_idx", columns={"clientKey", "clientSecret"})}
  * )
  */
-class Client implements ClientEntityInterface
+class Client implements ClientEntityInterface, \JsonSerializable
 {
 
     /**
@@ -64,12 +65,35 @@ class Client implements ClientEntityInterface
     protected $documentationEnabled = false;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $hasCustomScopes = false;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Scope", inversedBy="clients")
+     * @ORM\JoinTable(name="OAuth2ClientScopes",
+     *      joinColumns={@ORM\JoinColumn(name="clientIdentifier", referencedColumnName="identifier")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="scopeIdentifier", referencedColumnName="identifier", unique=true)}
+     *      )
+     */
+    protected $scopes;
+
+    /**
      * The type of consent this client must get from the user
      *
      * @var int
      * @ORM\Column(type="integer", options={"unsigned": true})
      */
     protected $consentType = self::CONSENT_SIMPLE;
+
+    /**
+     * Client constructor.
+     */
+    public function __construct()
+    {
+        $this->scopes = new ArrayCollection();
+    }
 
     /**
      * {@inheritdoc}
@@ -252,5 +276,41 @@ class Client implements ClientEntityInterface
         $this->documentationEnabled = $documentationEnabled;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasCustomScopes(): bool
+    {
+        return $this->hasCustomScopes;
+    }
+
+    /**
+     * @param bool $hasCustomScopes
+     */
+    public function setHasCustomScopes(bool $hasCustomScopes): void
+    {
+        $this->hasCustomScopes = $hasCustomScopes;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getScopes()
+    {
+        return $this->scopes;
+    }
+
+    public function setScopes($scopes): void
+    {
+        $this->scopes = $scopes;
+    }
+
+
+    public function jsonSerialize()
+    {
+        return [
+            'identifier' => $this->getIdentifier(),
+        ];
+    }
 
 }

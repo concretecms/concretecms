@@ -103,6 +103,29 @@ final class Controller implements LoggerAwareInterface
     }
 
     /**
+     * Returns true if a) all scopes are allowed by the client or b) the scopes passed in the request
+     * are included in the allowed list of client scopes
+     *
+     * @param Client $client
+     * @param array $scopes
+     */
+    protected function validateScopesAgainstClient(Client $client, array $scopes)
+    {
+        if ($client->hasCustomScopes()) {
+            $clientScopeIdentifiers = [];
+            foreach ($client->getScopes() as $clientScope) {
+                $clientScopeIdentifiers[] = $clientScope->getIdentifier();
+            }
+            foreach ($scopes as $scope) {
+                if (!in_array($scope->getIdentifier(), $clientScopeIdentifiers)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * Route handler that deals with authorization
      *
      * @return \Psr\Http\Message\ResponseInterface|\Concrete\Core\Http\Response
@@ -114,6 +137,12 @@ final class Controller implements LoggerAwareInterface
         try {
             $request = $this->getAuthorizationRequest();
             $step = $this->determineStep($request);
+
+            $client = $request->getClient();
+            $scopes = $request->getScopes();
+            if (!$this->validateScopesAgainstClient($client, $scopes)) {
+                throw new \Exception(t('Invalid scope(s) requested. Please ensure only scopes allowed by the client are requested.'));
+            }
 
             // Handle login step
             if ($step === self::STEP_LOGIN) {
