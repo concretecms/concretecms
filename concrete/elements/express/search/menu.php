@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     ?>
                     <li data-items-per-page="<?= $itemsPerPageOption; ?>">
                         <a class="dropdown-item <?= ($itemsPerPageOption === $itemsPerPage) ? 'active' : ''; ?>"
-                           href="<?=$url?>"><?= $itemsPerPageOption; ?></a>
+                           href="<?= h($url) ?>"><?= $itemsPerPageOption; ?></a>
                     </li>
                 <?php } ?>
             </ul>
