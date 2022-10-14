@@ -217,11 +217,11 @@ class Client implements ClientEntityInterface, \JsonSerializable
             $urls[] = app(RedirectUriFactory::class)->createDocumentationRedirectUri($this);
         }
 
-        if (count($urls)) {
+        if (count($urls) > 1) {
             return $urls;
         } else {
             // we could technically return just the array every time but this will keep tests working just as before
-            return $url;
+            return $urls[0];
         }
     }
 
