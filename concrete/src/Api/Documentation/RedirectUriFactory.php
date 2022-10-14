@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Api\Documentation;
 
+use Concrete\Core\Entity\OAuth\Client;
 use Concrete\Core\Site\Service;
 
 class RedirectUriFactory
@@ -25,11 +26,9 @@ class RedirectUriFactory
     /**
      * @return string
      */
-    public function createDocumentationRedirectUri(): string
+    public function createDocumentationRedirectUri(Client $client): string
     {
-        $site = $this->siteService->getSite();
-        $baseUrl = rtrim($site->getSiteCanonicalUrl(), '/');
-        return $baseUrl . self::SWAGGER_OAUTH2_CALLBACK;
+        return \URL::to('/ccm/system/api/documentation/redirect', $client->getIdentifier());
     }
 
 }

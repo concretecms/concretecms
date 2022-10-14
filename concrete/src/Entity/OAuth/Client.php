@@ -214,7 +214,7 @@ class Client implements ClientEntityInterface, \JsonSerializable
         }
 
         if ($this->isDocumentationEnabled()) {
-            $urls[] = app(RedirectUriFactory::class)->createDocumentationRedirectUri();
+            $urls[] = app(RedirectUriFactory::class)->createDocumentationRedirectUri($this);
         }
 
         if (count($urls)) {
@@ -306,6 +306,7 @@ class Client implements ClientEntityInterface, \JsonSerializable
     }
 
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

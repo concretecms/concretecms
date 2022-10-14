@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Controller\Api;
+namespace Concrete\Controller\Api\Documentation;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Concrete\Core\Api\Documentation\RedirectUriFactory;
@@ -8,9 +8,9 @@ use Concrete\Core\Entity\OAuth\ClientRepository;
 use Concrete\Core\Permission\Checker;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
-class Documentation extends BackendInterfaceController
+class Redirect extends BackendInterfaceController
 {
-    protected $viewPath = '/api/documentation';
+    protected $viewPath = '/api/documentation/redirect';
 
     /**
      * @return bool
@@ -28,15 +28,10 @@ class Documentation extends BackendInterfaceController
          */
         $clientRepository = $this->app->make(ClientRepositoryInterface::class);
         $client = $clientRepository->findOneByIdentifier($clientId);
-        if ($client) {
-            $this->set('clientKey', $client->getClientKey());
-            $this->set(
-                'oauth2RedirectUrl',
-                $this->app->make(RedirectUriFactory::class)->createDocumentationRedirectUri($client)
-            );
-        } else {
+        if (!$client) {
             throw new \Exception(t('Invalid API client.'));
         }
     }
+
 
 }

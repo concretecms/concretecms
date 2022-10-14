@@ -43,6 +43,7 @@ $router->all('/ccm/system/country-data-link/all', '\Concrete\Controller\Frontend
 
 $router->all('/ccm/system/dialog/process/activity/{viewToken}', '\Concrete\Controller\Dialog\Process\Activity::view');
 $router->all('/ccm/system/api/documentation/{clientId}', '\Concrete\Controller\Api\Documentation::view');
+$router->all('/ccm/system/api/documentation/redirect/{clientId}', '\Concrete\Controller\Api\Documentation\Redirect::view');
 $router->all('/ccm/system/api/openapi.json', '\Concrete\Controller\Api\OpenApi::generate');
 $router->all('/ccm/system/messenger/consume', '\Concrete\Controller\Backend\Messenger::consume');
 $router->post('/ccm/system/processes/get_configuration', '\Concrete\Controller\Backend\Processes::getConfiguration');

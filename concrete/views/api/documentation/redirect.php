@@ -1,3 +1,9 @@
+<?php
+
+defined('C5_EXECUTE') or die('Access Denied.');
+
+?>
+
 <!doctype html>
 <html lang="en-US">
 <head>
@@ -21,17 +27,17 @@
         arr = qp.split("&");
         arr.forEach(function (v,i,_arr) { _arr[i] = '"' + v.replace('=', '":"') + '"';});
         qp = qp ? JSON.parse('{' + arr.join() + '}',
-                function (key, value) {
-                    return key === "" ? value : decodeURIComponent(value);
-                }
+            function (key, value) {
+                return key === "" ? value : decodeURIComponent(value);
+            }
         ) : {};
 
         isValid = qp.state === sentState;
 
         if ((
-          oauth2.auth.schema.get("flow") === "accessCode" ||
-          oauth2.auth.schema.get("flow") === "authorizationCode" ||
-          oauth2.auth.schema.get("flow") === "authorization_code"
+            oauth2.auth.schema.get("flow") === "accessCode" ||
+            oauth2.auth.schema.get("flow") === "authorizationCode" ||
+            oauth2.auth.schema.get("flow") === "authorization_code"
         ) && !oauth2.auth.code) {
             if (!isValid) {
                 oauth2.errCb({
