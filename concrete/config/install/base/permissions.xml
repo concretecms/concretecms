@@ -461,8 +461,10 @@
         </permissionkey>
 
         <permissionkey handle="access_api" name="Access API" package="" category="admin">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
         </permissionkey>
-
 
         <permissionkey handle="edit_topic_tree" name="Edit Topic Tree" package="" category="admin">
             <access>

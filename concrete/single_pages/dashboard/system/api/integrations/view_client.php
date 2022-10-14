@@ -27,13 +27,13 @@ $consentType = $client->getConsentType();
 <fieldset>
     <legend><?=t('Integration Details')?></legend>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label class="form-label"><?=t('Name')?></label>
         <div><?=$client->getName()?></div>
     </div>
 
-    <div class="form-group">
-        <label class="form-label"><?=t('Redirect URI')?></label>
+    <div class="mb-3">
+        <label class="form-label"><?=t('Redirect URI(s)')?></label>
         <?php
         $redirectUri = $client->getRedirectUri() ?: t('None provided');
         ?>
@@ -42,12 +42,12 @@ $consentType = $client->getConsentType();
         </ul>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label class="form-label"><?=t('Client ID')?></label>
         <input type="text" class="form-control" onclick="this.select()" value="<?=$client->getClientKey()?>">
     </div>
 
-    <div class="form-group <?= $clientSecret ? 'has-warning' : '' ?>">
+    <div class="mb-3 <?= $clientSecret ? 'has-warning' : '' ?>">
         <label class="form-label"><?=t('Client Secret')?></label>
         <input type="<?= $clientSecret ? 'text' : 'password' ?>" autocomplete="off" class="form-control" onclick="this.select()" value="<?= $clientSecret ?: str_repeat('*', 96) ?>" <?= $clientSecret ? '' : 'disabled' ?>>
         <div class="help-block">
@@ -61,28 +61,48 @@ $consentType = $client->getConsentType();
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label class="form-label"><?=t('User Consent Level')?></label>
-        <div class="form-check">
-            <input disabled type="radio" class="form-check-input" name="consentLevel"  value="<?= Client::CONSENT_SIMPLE ?>" <?= $consentType === Client::CONSENT_SIMPLE ? 'checked' : '' ?> >
-            <label class="form-check-label">
-                <?= t('Standard') ?>
-            </label>
-        </div>
-
-        <div class="form-check">
-            <input disabled type="radio" class="form-check-input"  name="consentLevel" value="<?= Client::CONSENT_NONE ?>" <?= $consentType === Client::CONSENT_NONE ? 'checked' : '' ?> >
-            <label class="form-check-label">
-                <?= t('None') ?>
-            </label>
-        </div>
-
+        <?php if ($consentType === Client::CONSENT_SIMPLE) { ?>
+            <div><?= t('Standard') ?></div>
+        <?php } else if ($consentType === Client::CONSENT_NONE) { ?>
+            <div><?= t('None') ?></div>
+        <?php } ?>
         <div class="consent-warning alert alert-danger mt-3 <?= $consentType !== Client::CONSENT_NONE ? 'd-none' : '' ?>" >
             <?= t("Only disable user consent if you trust this integration fully. By disabling user consent, you remove the user's ability to deny access.") ?>
         </div>
     </div>
 
+    <div class="mb-3">
+        <label class="form-label"><?=t('Scopes')?></label>
+        <?php if ($client->hasCustomScopes()) { ?>
+
+            <?php foreach ($client->getScopes() as $scope) { ?>
+                <div><?=$scope->getIdentifier()?></div>
+            <?php } ?>
+
+        <?php } else { ?>
+            <div><?= t('All') ?></div>
+        <?php } ?>
+
+    </div>
+
+
 </fieldset>
+
+<?php if ($client->isDocumentationEnabled()) { ?>
+
+
+    <fieldset>
+        <legend><?=t('API Documentation')?></legend>
+        <?=t('Access the automatically generated API documentation using the Swagger interactive API console. Click below to open the API console in a new window.')?>
+
+        <div class="text-center mt-4"><a target="_blank" href="<?=URL::to('/ccm/system/api/documentation', $client->getIdentifier())?>" class="btn-lg btn btn-secondary"><?=t('View API Documentation Console')?></a></div>
+
+    </fieldset>
+
+<?php } ?>
+
 
 <div style="display: none">
     <div data-dialog-wrapper="delete-client">

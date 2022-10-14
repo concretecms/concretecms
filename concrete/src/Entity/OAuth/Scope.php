@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Entity\OAuth;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
@@ -24,6 +25,16 @@ class Scope implements ScopeEntityInterface
      * @ORM\Column(type="string")
      */
     protected $description = '';
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Client", mappedBy="scopes")
+     */
+    protected $clients;
+
+    public function __construct()
+    {
+        $this->clients = new ArrayCollection();
+    }
 
     /**
      * {@inheritdoc}

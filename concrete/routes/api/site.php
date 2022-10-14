@@ -9,17 +9,14 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Routing\Router $router
  */
 
-/*
- * Base path: /ccm/api/v1
- * Namespace: <none>
- */
+$router->get('/sites', '\Concrete\Core\Api\Controller\Sites::listSites')
+    ->setScopes('sites:read')
+;
 
-$router->get('/site/trees', function () use ($app) {
-    $provider = $app->make(StandardSitemapProvider::class);
-    $collection = $provider->getTreeCollection();
+$router->get('/sites/default', '\Concrete\Core\Api\Controller\Sites::getDefault')
+    ->setScopes('sites:read')
+;
 
-    return new \League\Fractal\Resource\Item(
-        $collection,
-        new \Concrete\Core\Application\UserInterface\Sitemap\TreeCollection\TreeCollectionTransformer()
-    );
-})->setScopes('site:trees:read');
+$router->get('/sites/{siteID}', '\Concrete\Core\Api\Controller\Sites::read')
+    ->setScopes('sites:read')
+;

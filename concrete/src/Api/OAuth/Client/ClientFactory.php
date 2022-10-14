@@ -39,13 +39,15 @@ class ClientFactory
      * @param string[] $scopes The scopes this client is allowed to interact with
      * @param string $key The client's api key
      * @param string $secret This secret should be properly hashed with something like `password_hash`
+     * @param bool $enableDocumentation Whether to enable REST API documentation on this integration.
      * @return \Concrete\Core\Entity\OAuth\Client
      */
-    public function createClient($name, $redirect, array $scopes, $key, $secret)
+    public function createClient($name, $redirect, array $scopes, $key, $secret, $enableDocumentation = false)
     {
-        $client = $this->app->make(Client::class);
+        $client = new Client();
         $client->setName($name);
         $client->setRedirectUri($redirect);
+        $client->setDocumentationEnabled($enableDocumentation);
         // @TODO support scopes
         //$client->setScopes($scopes);
         $client->setClientKey($key);

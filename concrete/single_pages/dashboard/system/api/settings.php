@@ -38,7 +38,6 @@ if ($enable_api) {
         <?php } ?>
 
     </section>
-
 <?php } ?>
 
     <div class="ccm-dashboard-form-actions-wrapper">

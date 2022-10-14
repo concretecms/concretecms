@@ -4,11 +4,14 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Api;
 
 use Concrete\Core\Api\IntegrationList;
 use Concrete\Core\Api\OAuth\Client\ClientFactory;
+use Concrete\Core\Api\OAuth\Command\CreateOAuthClientCommand;
 use Concrete\Core\Api\OAuth\Command\DeleteOAuthClientCommand;
+use Concrete\Core\Api\OAuth\Command\UpdateOAuthClientCommand;
 use Concrete\Core\Entity\OAuth\AccessToken;
 use Concrete\Core\Entity\OAuth\AuthCode;
 use Concrete\Core\Entity\OAuth\Client;
 use Concrete\Core\Entity\OAuth\RefreshToken;
+use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Search\Pagination\PaginationFactory;
@@ -16,6 +19,7 @@ use Concrete\Core\Utility\Service\Validation\Strings;
 use InvalidArgumentException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\Url\Url;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Integrations extends DashboardPageController
 {
@@ -48,9 +52,19 @@ class Integrations extends DashboardPageController
         );
     }
 
+    private function setScopes()
+    {
+        $scopes = $this->entityManager->getRepository(Scope::class)
+            ->findAll();
+        $this->set('scopes', $scopes);
+    }
     public function add()
     {
-        $this->render('/dashboard/system/api/integrations/add');
+        $this->set('pageTitle', t('Add API Integration'));
+        $this->set('submitToken', $this->token->generate('create'));
+        $this->set('submitAction', $this->action('create'));
+        $this->setScopes();
+        $this->render('/dashboard/system/api/integrations/form');
     }
 
     protected function validateIntegrationRequest()
@@ -77,8 +91,12 @@ class Integrations extends DashboardPageController
 
     public function edit($clientID = null)
     {
+        $this->set('pageTitle', t('Update API Integration'));
+        $this->setScopes();
         $this->view_client($clientID);
-        $this->render('/dashboard/system/api/integrations/edit');
+        $this->set('submitToken', $this->token->generate('update'));
+        $this->set('submitAction', $this->action('update', $clientID));
+        $this->render('/dashboard/system/api/integrations/form');
     }
 
     public function view_client($clientId = null)
@@ -105,26 +123,26 @@ class Integrations extends DashboardPageController
         if (!$this->error->has()) {
             /** @var Client $client */
             $client = $this->get('client');
-            $client->setName($this->request->request->get('name'));
-            $client->setRedirectUri((string)$this->request->request->get('redirect'));
 
-            try {
-                $requestConsentType = $this->request->request->get('consentType');
-                if (!is_numeric($requestConsentType)) {
-                    $requestConsentType = Client::CONSENT_SIMPLE;
-                }
-
-                // Try setting the consent type
-                $client->setConsentType((int)$requestConsentType);
-            } catch (InvalidArgumentException $e) {
-                // Default to simple consent
-                $client->setConsentType(Client::CONSENT_SIMPLE);
+            $command = new UpdateOAuthClientCommand($client->getIdentifier());
+            $command->setName($this->request->request->get('name'));
+            $command->setRedirect($this->request->request->get('redirect'));
+            $command->setEnableDocumentation($this->request->request->getBoolean('enableDocumentation', false));
+            $command->setConsentType($this->request->request->get('consentType', null));
+            $hasCustomScopes = $this->request->request->getBoolean('hasCustomScopes', false);
+            if ($hasCustomScopes) {
+                $command->setHasCustomScopes(true);
+                $command->setCustomScopes((array) $this->request->request->get('customScopes'));
             }
 
-            $this->entityManager->persist($client);
-            $this->entityManager->flush();
-            $this->flash('success', t('Integration saved successfully.'));
-            return $this->redirect('/dashboard/system/api/integrations/', 'view_client', $client->getIdentifier());
+            $client = $this->app->executeCommand($command);
+
+            $this->flash('success', t('Integration updated successfully.'));
+
+            return new JsonResponse($client);
+
+        } else {
+            return new JsonResponse($this->error);
         }
     }
 
@@ -167,28 +185,27 @@ class Integrations extends DashboardPageController
         }
 
         if ($this->error->has()) {
-            return;
+            return new JsonResponse($this->error);
         }
 
-        $factory = $this->app->make(ClientFactory::class);
-        $credentials = $factory->generateCredentials();
+        $command = new CreateOAuthClientCommand();
+        $command->setName($this->request->request->get('name'));
+        $command->setRedirect($this->request->request->get('redirect'));
+        $command->setEnableDocumentation($this->request->request->getBoolean('enableDocumentation', false));
+        $command->setConsentType($this->request->request->get('consentType', null));
 
-        // Create a new client while hashing the new secret
-        $client = $factory->createClient(
-            $this->request->request->get('name'),
-            $this->request->request->get('redirect'),
-            [],
-            $credentials->getKey(),
-            password_hash($credentials->getSecret(), PASSWORD_DEFAULT)
-        );
+        $hasCustomScopes = $this->request->request->getBoolean('hasCustomScopes', false);
+        if ($hasCustomScopes) {
+            $command->setHasCustomScopes(true);
+            $command->setCustomScopes((array) $this->request->request->get('customScopes'));
+        }
 
-        // Persist the new client to the database
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        [$client, $credentials] = $this->app->executeCommand($command);
+
         $this->flash('success', t('Integration saved successfully.'));
         $this->flash('clientSecret', $credentials->getSecret());
 
-        return $this->redirect('/dashboard/system/api/integrations/', 'view_client', $client->getIdentifier());
+        return new JsonResponse($client);
     }
 
 }

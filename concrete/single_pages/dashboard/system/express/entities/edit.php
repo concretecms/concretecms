@@ -112,6 +112,21 @@ $form = $app->make(Form::class);
                         <?php echo $form->label("supports_custom_display_order", t('This entity supports custom display ordering via Dashboard interfaces.'), ["class" => "form-check-label"]) ?>
                     </div>
                 </div>
+
+                <?php
+                if (Config::get('concrete.api.enabled')) { ?>
+
+                <div class="form-group">
+                    <?php echo $form->label("include_in_rest_api_header", t('REST API')); ?>
+
+                    <div class="form-check">
+                        <?php echo $form->checkbox('include_in_rest_api', 1, $entity->getIncludeInRestApi()) ?>
+                        <?php echo $form->label("include_in_rest_api", t('Include this entity in REST API integrations.'), ["class" => "form-check-label"]) ?>
+                    </div>
+                </div>
+
+                <?php } ?>
+
             </fieldset>
 
             <fieldset>

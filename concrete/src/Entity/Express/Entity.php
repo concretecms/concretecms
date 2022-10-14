@@ -84,6 +84,11 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
     protected $is_published = true;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $include_in_rest_api = false;
+
+    /**
      * @ORM\Column(type="integer")
      */
     protected $entity_results_node_id;
@@ -640,4 +645,22 @@ class Entity implements CategoryObjectInterface, ObjectInterface, ExportableInte
         $this->default_view_form = null;
         $this->created_date = new \DateTime();
     }
+
+    /**
+     * @return bool
+     */
+    public function getIncludeInRestApi(): bool
+    {
+        return $this->include_in_rest_api;
+    }
+
+    /**
+     * @param bool $include_in_rest_api
+     */
+    public function setIncludeInRestApi(bool $include_in_rest_api): void
+    {
+        $this->include_in_rest_api = $include_in_rest_api;
+    }
+
+
 }
