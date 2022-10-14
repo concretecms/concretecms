@@ -48,7 +48,7 @@ if (isset($client) && $client->hasCustomScopes()) {
                 </div>
                 <div class="help-block"><?=t('When enabled, those with the `access_api` custom permission will be able to view interactive REST API documentation for the integration.')?></div>
             </div>
-
+            
             <div class="mb-3">
                 <label class="control-label form-label"><?=t('User Consent Level')?></label>
                 <div class="form-check">
@@ -60,7 +60,7 @@ if (isset($client) && $client->hasCustomScopes()) {
                     <label for="consent-type-none" class="form-check-label"><?= t('None') ?></label>
                 </div>
 
-                <div class="consent-warning alert alert-danger mt-3 <?= $consentType !== Client::CONSENT_NONE ? 'd-none' : '' ?>" >
+                <div :class="{'consent-warning': true, 'alert': true, 'alert-danger': true, 'mt-3': true, 'd-none': consentType == 1}" >
                     <?= t("Only disable user consent if you trust this integration fully. By disabling user consent, you remove the user's ability to deny access.") ?>
                 </div>
             </div>

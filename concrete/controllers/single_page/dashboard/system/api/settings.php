@@ -58,6 +58,7 @@ class Settings extends DashboardPageController
             $this->flash('success', t("API Settings updated successfully."));
             return $this->redirect('/dashboard/system/api/settings');
         }
+        $this->view();
     }
 
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91ee9220de9126b59a218be57766df50",
+    "content-hash": "ccc313f986bc9469b93518130019d84c",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -10748,10 +10748,6 @@
                 "rest",
                 "service discovery"
             ],
-            "support": {
-                "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/4.4.9"
-            },
             "time": "2022-09-11T20:51:43+00:00"
         }
     ],
@@ -11456,6 +11452,7 @@
             "keywords": [
                 "diff"
             ],
+            "abandoned": true,
             "time": "2020-10-14T08:39:05+00:00"
         },
         {
@@ -12698,5 +12695,5 @@
     "platform-overrides": {
         "php": "7.3"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "1.1.0"
 }
