@@ -32,6 +32,7 @@ class SpecRequestBody implements \JsonSerializable
         return $this->modelName;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [

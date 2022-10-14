@@ -17,6 +17,7 @@ class SpecPathCollection
         $this->paths[] = $path;
     }
 
+    #[\ReturnTypeWillChange]
     public function getPathsAsPathItems()
     {
         $pathArrays = [];

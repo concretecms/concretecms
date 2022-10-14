@@ -19,6 +19,7 @@ class SpecPropertyRef implements \JsonSerializable
         $this->ref = $ref;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -9,6 +9,7 @@ class SpecResponseList implements \JsonSerializable
      */
     protected $responses = [];
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [];

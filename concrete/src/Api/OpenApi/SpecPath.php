@@ -60,6 +60,7 @@ class SpecPath implements \JsonSerializable
         $this->summary = $summary;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $method = strtolower($this->method);

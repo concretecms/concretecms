@@ -56,6 +56,7 @@ class SpecResponse implements \JsonSerializable
         return $this->content;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [];

@@ -42,6 +42,7 @@ class SpecSecurity implements \JsonSerializable
         return $this->scopes;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [];

@@ -19,6 +19,7 @@ class JsonSchemaRefContent implements \JsonSerializable
         $this->ref = $ref;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

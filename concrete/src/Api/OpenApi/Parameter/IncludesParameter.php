@@ -15,6 +15,7 @@ class IncludesParameter implements ParameterInterface
         $this->includes = $includes;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -41,6 +41,7 @@ class SpecComponents implements \JsonSerializable
         return $this->requestBodies;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = [];

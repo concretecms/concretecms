@@ -72,7 +72,7 @@ class SpecParameter implements ParameterInterface
         return $this->schema;
     }
 
-
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

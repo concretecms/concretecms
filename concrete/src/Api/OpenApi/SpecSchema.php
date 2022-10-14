@@ -40,6 +40,7 @@ class SpecSchema implements \JsonSerializable
         return $this->format;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $data = ['type' => $this->getType()];
