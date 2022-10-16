@@ -59,6 +59,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     /** @var null|string  */
     protected $btTable = null;
     protected $btID;
+    /** @var array */
+    protected $requestArray;
 
     /**
      * @internal
