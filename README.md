@@ -1,5 +1,4 @@
 [![Github Actions Build Status](https://github.com/concretecms/concretecms/actions/workflows/phpunit.yml/badge.svg?branch=develop)](https://github.com/concretecms/concretecms/actions/workflows/phpunit.yml)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/concretecms/concretecms?branch=develop&svg=true)](https://ci.appveyor.com/project/concretecms/concretecms)
 
 Welcome to the official repository for Concrete CMS development! Concrete CMS is an open source CMS built by people from 
 around the world. Want to get involved? Check out our [contributor guide](https://github.com/concretecms/concretecms/blob/develop/CONTRIBUTING.md) for more info.
