@@ -24,16 +24,16 @@ $(function() {
         const me = this
         const params = arguments
         const dialog = $($('#access-warning-template').text())
+        dialog.find('button.accept').click(function() {
+            parentDragRequest.apply(me, params)
+            jQuery.fn.dialog.closeTop()
+        })
         jQuery.fn.dialog.open({
             title: "<?= t('Access Warning') ?>",
             element: dialog,
             modal: true,
             width: 500,
             height: 180
-        })
-        dialog.find('button.accept').click(function() {
-            parentDragRequest.apply(me, params)
-            jQuery.fn.dialog.closeTop()
         })
     }
 
