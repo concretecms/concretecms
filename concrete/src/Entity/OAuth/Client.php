@@ -211,6 +211,8 @@ class Client implements ClientEntityInterface, \JsonSerializable
             } else {
                 $urls[] = $url;
             }
+        } else {
+            $urls[] = '';
         }
 
         if ($this->isDocumentationEnabled()) {
@@ -219,9 +221,11 @@ class Client implements ClientEntityInterface, \JsonSerializable
 
         if (count($urls) > 1) {
             return $urls;
-        } else {
+        } else if (isset($urls[0])) {
             // we could technically return just the array every time but this will keep tests working just as before
             return $urls[0];
+        } else {
+            return '';
         }
     }
 

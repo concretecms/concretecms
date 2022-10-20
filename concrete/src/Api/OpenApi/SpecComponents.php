@@ -45,6 +45,8 @@ class SpecComponents implements \JsonSerializable
     public function jsonSerialize()
     {
         $data = [];
+        $data['schemas'] = [];
+        $data['requestBodies'] = [];
         foreach ($this->models as $model) {
             $data['schemas'][$model->getObjectName()] = $model;
         }

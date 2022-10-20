@@ -3,12 +3,15 @@
 namespace Concrete\Core\Api\OpenApi;
 
 use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Events\GenerateApiSpecEvent;
 use Concrete\Core\Api\OpenApi\Factory\ExpressEntitySpecFactory;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Attribute\Category\FileCategory;
 use Concrete\Core\Attribute\Category\PageCategory;
 use Concrete\Core\Attribute\Category\UserCategory;
+use Concrete\Core\Block\Events\BlockDelete;
+use Concrete\Core\Events\EventDispatcher;
 use Concrete\Core\Express\ObjectManager;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Generator;
@@ -28,10 +31,22 @@ class SpecGenerator implements ApplicationAwareInterface
      */
     protected $objectManager;
 
-    public function __construct(ObjectManager $objectManager, SpecMerger $merger)
+    /**
+     * @var SourceRegistry
+     */
+    protected $sourceRegistry;
+
+    /**
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
+
+    public function __construct(EventDispatcher $eventDispatcher, ObjectManager $objectManager, SpecMerger $merger, SourceRegistry $sourceRegistry)
     {
+        $this->eventDispatcher = $eventDispatcher;
         $this->objectManager = $objectManager;
         $this->merger = $merger;
+        $this->sourceRegistry = $sourceRegistry;
     }
 
     private function addExpressSpec(OpenApi $openApi)
@@ -90,17 +105,13 @@ class SpecGenerator implements ApplicationAwareInterface
 
     public function getSpec(): OpenApi
     {
-        $r = Generator::scan(
-            [
-                DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Api/Controller',
-                DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Api/Model',
-                DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Api/Response',
-            ]
-        );
-
+        $r = Generator::scan($this->sourceRegistry->getSources());
         $r = $this->addExpressSpec($r);
         $r = $this->addCustomAttributesToModels($r);
-        return $r;
+
+        $event = new GenerateApiSpecEvent($r);
+        $this->eventDispatcher->dispatch('on_api_spec_generate', $event);
+        return $event->getOpenApi();
     }
 
 }
