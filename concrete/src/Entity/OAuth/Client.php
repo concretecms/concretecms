@@ -74,7 +74,7 @@ class Client implements ClientEntityInterface, \JsonSerializable
      * @ORM\ManyToMany(targetEntity="Scope", inversedBy="clients")
      * @ORM\JoinTable(name="OAuth2ClientScopes",
      *      joinColumns={@ORM\JoinColumn(name="clientIdentifier", referencedColumnName="identifier")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="scopeIdentifier", referencedColumnName="identifier", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="scopeIdentifier", referencedColumnName="identifier", unique=true, onDelete="CASCADE")}
      *      )
      */
     protected $scopes;
