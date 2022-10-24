@@ -55,8 +55,6 @@ class SynchronizeScopesCommandHandler
             $key = array_search($scope, $existingScopes);
             if ($key !== false) {
                 unset($existingScopes[$key]);
-            } else {
-                print 'scope ' . $scope . 'is new';
             }
         }
 
