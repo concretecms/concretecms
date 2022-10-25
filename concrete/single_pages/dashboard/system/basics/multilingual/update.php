@@ -1,18 +1,22 @@
 <?php
+
 use Concrete\Core\Localization\Translation\PackageLocaleStatus;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var Concrete\Core\Validation\CSRF\Token $token */
-/* @var Concrete\Controller\SinglePage\Dashboard\System\Basics\Multilingual\Update $controller */
-/* @var Concrete\Core\Localization\Translation\LocaleStatus[] $data */
+/**
+ * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Controller\SinglePage\Dashboard\System\Basics\Multilingual\Update $controller
+ * @var Concrete\Core\Localization\Translation\LocaleStatus[] $data
+ * @var Concrete\Core\Page\View\PageView $view
+ */
 
 $someUpdateAvailable = false;
 $packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url'), '/');
 ?>
-<div class="panel-group" id="ccm-packages" role="tablist" aria-multiselectable="true">
+<div class="accordion" id="ccm-packages">
     <?php
-    $class = ' in';
+    $open = true;
     foreach ($data as $details) {
         if ($details instanceof PackageLocaleStatus) {
             $handle = $details->getPackage()->getPackageHandle();
@@ -22,28 +26,30 @@ $packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url
             $name = t('Concrete');
         }
         ?>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="ccm-package-<?= $handle ?>-header">
+        <div class="accordion-item">
+            <div class="accordion-header" id="ccm-package-<?= $handle ?>-header">
                 <h4 class="panel-title">
-                    <a role="button" data-bs-toggle="collapse" data-parent="#ccm-packages" href="#ccm-package-<?= $handle ?>-body" aria-expanded="true" aria-controls="ccm-package-<?= $handle ?>-body">
-                        <?= $name ?>
-                        <?php
-                        if (!empty($details->getInstalledOutdated())) {
-                            ?><span class="badge bg-light rounded-pill border"><?= count($details->getInstalledOutdated()) ?></span><?php
-                        }
-                        ?>
-                    </a>
+                    <button type="button" class="h2 accordion-button<?= $open ? '' : ' collapsed' ?>" data-bs-toggle="collapse" data-bs-target="#ccm-package-<?= $handle ?>-body" aria-expanded="<?= $open ? 'true' : 'false' ?>" aria-controls="ccm-package-<?= $handle ?>-body">
+                        <span class="position-relative">
+                            <?= $name ?>
+                            <?php
+                            if (!empty($details->getInstalledOutdated())) {
+                                ?><span class="position-absolute top-0 translate-middle badge rounded-pill bg-info ms-3 small"><?= count($details->getInstalledOutdated()) ?></span><?php
+                            }
+                            ?>
+                        </span>
+                    </button>
+                </h4>
+            </div>
+            <div id="ccm-package-<?= $handle ?>-body" class="accordion-collapse collapse<?= $open ? ' show' : '' ?>" aria-labelledby="ccm-package-<?= $handle ?>-header" data-bs-parent="#ccm-packages">
+                <div class="accordion-body">
                     <?php
                     if ($packageUrl) {
                         ?>
-                        <a target="_blank" class="float-end" href="<?= h("{$packageUrl}/{$handle}") ?>"><span class="label label-default" style="font-weight: normal"><?= t('more details') ?></span></a>
+                        <a target="_blank" class="float-end" href="<?= h("{$packageUrl}/{$handle}") ?>"><?= t('more details') ?></a>
                         <?php
                     }
                     ?>
-                </h4>
-            </div>
-            <div id="ccm-package-<?= $handle ?>-body" class="panel-collapse collapse<?= $class ?>" role="tabpanel" aria-labelledby="ccm-package-<?= $handle ?>-header">
-                <div class="panel-body">
                     <table class="table table-hover table-condensed">
                         <colgroup>
                             <col width="60" />
@@ -94,7 +100,7 @@ $packageUrl = rtrim(Config::get('concrete.i18n.community_translation.package_url
             </div>
         </div>
         <?php
-        $class = '';
+        $open = false;
     }
     ?>
 </div>
@@ -124,7 +130,7 @@ $(document).ready(function() {
                     .text($btn.data('is-update') ? <?= json_encode(t('Updated')) ?> : <?= json_encode(t('Installed')) ?>)
                     .attr('disabled', 'disabled')
                     .off('click')
-                    ;
+                ;
             }
         });
     });
