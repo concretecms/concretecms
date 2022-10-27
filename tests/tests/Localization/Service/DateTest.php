@@ -15,6 +15,15 @@ use Concrete\Tests\TestCase;
  */
 class DateTest extends TestCase
 {
+    /**
+     * Narrow No-Break Space (NNBSP).
+     *
+     * @see https://www.compart.com/en/unicode/U+202F
+     *
+     * @var string
+     */
+    private const UTF8_NARROW_NOBREAK_SPACE = "\xE2\x80\xAF";
+
     /** @var Localization */
     protected $localization;
     /** @var Liaison */
@@ -70,10 +79,34 @@ class DateTest extends TestCase
         $date = new Date();
         $timeZone = new \DateTimeZone('UTC');
         $dateTime = new \DateTime('2018-12-31 21:00:00', $timeZone);
-        $this->assertEquals('12/31/18, 9:00 PM', $date->formatDateTime($dateTime, false, false, 'UTC'));
-        $this->assertEquals('Dec 31, 2018, 9:00 PM', $date->formatDateTime($dateTime, true, false, 'UTC'));
-        $this->assertEquals('12/31/18, 9:00:00 PM', $date->formatDateTime($dateTime, false, true, 'UTC'));
-        $this->assertEquals('Dec 31, 2018, 9:00:00 PM', $date->formatDateTime($dateTime, true, true, 'UTC'));
+        $this->assertContainsEquals(
+            $date->formatDateTime($dateTime, false, false, 'UTC'),
+            [
+                '12/31/18, 9:00 PM',
+                '12/31/18, 9:00' . self::UTF8_NARROW_NOBREAK_SPACE . 'PM', // Since Punic 3.8.0 (that comes with CLDR v42 data) 
+            ]
+        );
+        $this->assertContainsEquals(
+            $date->formatDateTime($dateTime, true, false, 'UTC'),
+            [
+                'Dec 31, 2018, 9:00 PM',
+                'Dec 31, 2018, 9:00' . self::UTF8_NARROW_NOBREAK_SPACE . 'PM', // Since Punic 3.8.0 (that comes with CLDR v42 data)
+            ]
+        );
+        $this->assertContainsEquals(
+            $date->formatDateTime($dateTime, false, true, 'UTC'),
+            [
+                '12/31/18, 9:00:00 PM',
+                '12/31/18, 9:00:00' . self::UTF8_NARROW_NOBREAK_SPACE . 'PM', // Since Punic 3.8.0 (that comes with CLDR v42 data)
+            ]
+        );
+        $this->assertContainsEquals(
+            $date->formatDateTime($dateTime, true, true, 'UTC'),
+            [
+                'Dec 31, 2018, 9:00:00 PM',
+                'Dec 31, 2018, 9:00:00' . self::UTF8_NARROW_NOBREAK_SPACE . 'PM', // Since Punic 3.8.0 (that comes with CLDR v42 data)
+            ]
+        );
     }
 
     /**
@@ -84,8 +117,20 @@ class DateTest extends TestCase
         $date = new Date();
         $timeZone = new \DateTimeZone('UTC');
         $dateTime = new \DateTime('2018-12-31 21:00:00', $timeZone);
-        $this->assertEquals('9:00 PM', $date->formatTime($dateTime, false, 'UTC'));
-        $this->assertEquals('9:00:00 PM', $date->formatTime($dateTime, true, 'UTC'));
+        $this->assertContainsEquals(
+            $date->formatTime($dateTime, false, 'UTC'),
+            [
+                '9:00 PM',
+                '9:00' . self::UTF8_NARROW_NOBREAK_SPACE . 'PM', // Since Punic 3.8.0 (that comes with CLDR v42 data)
+            ]
+        );
+        $this->assertContainsEquals(
+            $date->formatTime($dateTime, true, 'UTC'),
+            [
+                '9:00:00 PM',
+                '9:00:00' . self::UTF8_NARROW_NOBREAK_SPACE . 'PM', // Since Punic 3.8.0 (that comes with CLDR v42 data)
+            ]
+        );
     }
 
     public function testGetDeltaDays()
