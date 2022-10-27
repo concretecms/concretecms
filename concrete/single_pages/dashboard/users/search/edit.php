@@ -102,6 +102,18 @@ if (count($languages) > 0) {
         <dd>
             <div><?= $user->getLastIPAddress() ? $user->getLastIPAddress() : t('None') ?></div>
         </dd>
+        <dt><?= t('Last Password Change') ?></dt>
+        <dd>
+            <div><?= $user->getUserLastPasswordChange() === null ? t('Never') : $dh->formatDateTime($user->getUserLastPasswordChange()) ?></div>
+        </dd>
+        <dt><?= t('Last Seen Online') ?></dt>
+        <dd>
+            <div><?= $user->getLastOnline() ? $dh->formatDateTime($user->getLastOnline()) : t('Never') ?></div>
+        </dd>
+        <dt><?= t('# Logins') ?></dt>
+        <dd>
+            <div><?= $user->getNumLogins() ?></div>
+        </dd>
         <?php
         if (Config::get('concrete.misc.user_timezones')) {
             $uTimezone = $user->getUserTimezone();
