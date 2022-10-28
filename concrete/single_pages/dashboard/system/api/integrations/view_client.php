@@ -29,7 +29,7 @@ $consentType = $client->getConsentType();
 
     <div class="mb-3">
         <label class="form-label"><?=t('Name')?></label>
-        <div><?=$client->getName()?></div>
+        <div><?=h($client->getName())?></div>
     </div>
 
     <div class="mb-3">
