@@ -1,3 +1,34 @@
+# 9.1.3
+
+## Behavioral Improvements
+
+* Made the legacy_salt functionality easier to read
+
+## Security Fixes
+See our [security release blog post](https://www.concretecms.org/about/project-news/security/concrete-cms-security-advisory-2022-10-31) for more information about security fixes.
+
+### Medium
+* [CVE-2022-43693](https://nvd.nist.gov/vuln/detail/CVE-2022-43693) Added "state" parameter to OAuth client by default to prevent CSRF. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43692](https://nvd.nist.gov/vuln/detail/CVE-2022-43692) Sanitized output to prevent XSS in dashboard search pages. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43694](https://nvd.nist.gov/vuln/detail/CVE-2022-43694) Sanitized output in API endpoint to prevent potential reflected XSS in the Image Manipulation Library. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43967](https://nvd.nist.gov/vuln/detail/CVE-2022-43967) Sanitized output in multilingual dashboard report to prevent reflected XSS. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43968](https://nvd.nist.gov/vuln/detail/CVE-2022-43968) Sanitized output on the icons dashboard page to prevent reflected XSS. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43686](https://nvd.nist.gov/vuln/detail/CVE-2022-43686) Improved performance of "forever" cookie to prevent DOS. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43691](https://nvd.nist.gov/vuln/detail/CVE-2022-43691) Hide `$_SERVER` and `$_ENV` output from whoops by default to prevent information disclosure. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43687](https://nvd.nist.gov/vuln/detail/CVE-2022-43687) Generate a new session ID when authenticating through OAuth to prevent session fixation. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* Sanitized dashboard breadcrumbs to prevent stored XSS. Thanks @_akbar_jafarli_for reporting HackerOne report #1696363.
+
+### Low
+* [CVE-2022-43695](https://nvd.nist.gov/vuln/detail/CVE-2022-43695) Sanitized entity names in entity association dashboard page to prevent stored XSS. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43690](https://nvd.nist.gov/vuln/detail/CVE-2022-43690) Use strict comparison when testing against legacy password algorithm to prevent against potential integer conversion. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43688](https://nvd.nist.gov/vuln/detail/CVE-2022-43688) Sanitize Microsoft tile icon to prevent stored XSS. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+* [CVE-2022-43689](https://nvd.nist.gov/vuln/detail/CVE-2022-43689) Disable entity expansion when sanitizing SVGs to prevent DNS based IP disclosure. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for reporting.
+
+
+### Not Ranked
+* Added a warning for admins when they are potentially giving more access than they expect when they set certain advanced permissions. Thanks Bogdan and Adrian Tiron from FORTBRIDGE for suggesting.
+* Added a warning when moving groups that permissions of the new parent group will be granted to the child group but the child group will retain all previous permissions.Thanks Bogdan and Adrian Tiron from FORTBRIDGE for suggesting.
+
 # 9.1.2
 
 ## New Features
