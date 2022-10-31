@@ -19,6 +19,16 @@ class WhoopsServiceProvider extends Provider
         $run = new Run();
 
         $handler = new ErrorHandler();
+
+        // Disallow all ENV, SERVER, and COOKIE keys
+        $disallow = $this->getDisallowedKeys();
+
+        foreach ($disallow as $global => $keys) {
+            foreach ($keys as $key) {
+                $handler->hideSuperglobalKey($global, $key);
+            }
+        }
+
         $run->pushHandler($handler);
 
         $json_handler = new JsonErrorHandler();
@@ -39,5 +49,19 @@ class WhoopsServiceProvider extends Provider
 
         $run->register();
         $this->app->instance(Run::class, $run);
+    }
+
+    /**
+     * Get the list of superglobal keys that should be masked in whoops output
+     *
+     * @return array<string, string[]> A list of disallowed superglobal keys [`_SERVER' => ['some_key']]
+     */
+    protected function getDisallowedKeys(): array
+    {
+        return [
+            '_ENV' => array_keys($_ENV),
+            '_SERVER' => array_keys($_SERVER),
+            '_COOKIE' => array_keys($_COOKIE),
+        ];
     }
 }

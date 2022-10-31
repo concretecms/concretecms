@@ -35,7 +35,7 @@ class PageReport extends DashboardSitePageController
                 break;
             }
         } else {
-            $sectionID = $_REQUEST['sectionID'];
+            $sectionID = (int) $_REQUEST['sectionID'];
         }
 
         if (!isset($_REQUEST['targets']) && (count($sections) > 1)) {
@@ -54,11 +54,16 @@ class PageReport extends DashboardSitePageController
             $targets = array();
         }
 
+        $cleanTargets = [];
         $targetList = array();
         foreach ($targets as $key => $value) {
-            $targetList[] = MultilingualSection::getByID($key);
+            $section = MultilingualSection::getByID((int) $key);
+            if ($section !== false) {
+                $targetList[] = $section;
+                $cleanTargets[(int) $key] = 1;
+            }
         }
-        $this->set('targets', $targets);
+        $this->set('targets', $cleanTargets);
         $this->set('targetList', $targetList);
         $this->set('sectionID', $sectionID);
         $this->set('fh', \Core::make('multilingual/interface/flag'));
