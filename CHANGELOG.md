@@ -1,3 +1,107 @@
+# 9.1.2
+
+## New Features
+
+* Added “Exclude Current Page” option to the Page List block (thanks ccmEnlil)
+* Added new “Upload Settings” Dashboard page to configure file upload settings, including chunking, chunk size, and parallel streams (thanks mlocati).
+
+## Behavioral Improvements
+
+* WebP images now supported by the file manager. WebP images will show up with the proper extension and thumbnail (assuming the browser supports them). File extension added to the file manager list view.
+* Many minor UI fixes throughout Dashboard pages and edit dialogs (thanks shahroq)
+* Improved display of Environment information Dashboard page: larger window of text.
+* Removed ability to approve versions of drafts – because they need to be published first.
+* If a folder is specified as the root folder of a document library, uploaded files will be placed in this folder if uploaded through the document library.
+* Nicer version history view in add-on update screen (thanks biplobice)
+* Much improved scrolling of page when dragging blocks into the page using the Atomik theme.
+* Fixed weird Chrome behavior where sometimes dialog windows would have a fully opaque black background.
+* Added the ability to toggle passwords when adding a user or change your user’s password (thanks shahroq)
+* API Integrations Dashboard page now more suitable for situations where many integrations exist. Supports search, pagination, etc…
+* Add a pull down menu to set datetime format for CSV exports (thanks hissy)
+* Hide username on edit profile when it is not required on registration (thanks hissy)
+* Allow for saving Hero Image Blocks without Image while avoiding the current datatype Exception (thanks haeflimi)
+* Mercure overhauled to default all Concrete events to private (for better security). 
+* Added additional configuration methods to Server-Sent Events (Mercure) to allow for more advanced configuration use cases.
+* Fixed display of CMS when wrapping areas in text-align styles.
+* Added environment hostname and name to Environment page (thanks shahroq)
+* Improvements to Event List block edit dialog.
+* Improved display of navigation in the Express Dashboard pages (thanks shahroq)
+* Improvements to the Concrete user input component (thanks mlocati)
+* By default, login will take you to the home page of your site (this can be changed from the Login Destination Dashboard page, if desired.)
+
+## Bug Fixes
+
+* Fixed bug where automated groups were not working properly.
+* Fixed bug where users could not change the custom template of a block in a Stack.
+* Fixed custom options forms not showing properly in third party Captcha packages
+* Fixed error editing Hero Image block in PHP 8+ when title format had not been set.
+* Fixed bugs under PHP 8+ when configuring advanced properties of advanced permissions.
+* Fixed: Background Color of a custom skin can no longer be cleared but destroy the custom skin itself
+* Fixed: Adding layout throws error in console "Cannot read properties of undefined (reading 'closest')" in v9.1.1
+* Fixed display issues and content issues in the Help panel.
+* Added some better content in the help panel.
+* Fixed bug where Copy languages feature copied all pages instead of only pages that have not been associated.
+* Fixed: Setting Atomik Top Navigation Bar Color to transparent breaks theme cusomiser
+* Fixed bug in Atomik sample content where blog posts weren’t showing up because they were going in with dates that were too old.
+* Fixed bug where only the super user could assign user groups or remove user groups through the bulk editing interface.
+* Fix/error in reindex contents task with Page Objects when pages are in the trash/don’t have a public date (thanks deek87)
+* Fixed error in breadcrumb block rendering when parent pages were unapproved (thanks hissy)
+* Fixed bug where editing block visibility at certain device breakpoints via custom design was not working (thanks deek87)
+* Fixed bug where clearing the site’s cache may lead to an error when using custom cache drivers like Redis (thanks chauve-dev)
+* Fixed bug where “page topics” filtering option in Event List block didn’t work and didn’t present a list of topics.
+* Fixed bug where large images added via the Content block would burst out of the Atomik theme.
+* Fixed bug where images saved in the database with UUID placeholders didn’t display properly (can happen when using the migration tool with version 9)
+* Fixed bug where calendar block would not display properly on older themes.
+* Fixed bug where pages would not validate in the w3c validator due to a closing `</link>` tag being present.
+* Fixed error when adding an Event List block where topic attributes were present under PHP 8.1 (thanks TMDesigns)
+* Fixed error when changing locale on Multilingual Setup page (thanks jocomail78)
+* File upload chunking now works again (if enabled) (thanks mlocati)
+* Fixed: “Your Computer” tab initially empty when swapping files in the file manager (thanks mlocati)
+* Fixed bug where filtering by topic tree in the Event List block didn’t show a topic tree to choose from.
+* Fixed miscellaneous bugs in Event List block edit dialog.
+* Fixed ability to edit certain content in the rich text editor in the Accordion block.
+* Fixed interaction where adding a layout and then cancelling would hide the area the layout was added to until the page was reloaded.
+* Fixed gallery block error where a gallery referencing a deleted image would cause an Exception (thanks JeffPaetkau)
+* Fixed: In php 8 when signed in as a non super user an error occurs when accessing the /dashboard/extend/update page due to $mi not being defined (thanks danklassen)
+* Fixed dialogs/block/design.php - Line 12 has an extra closing php tag (thanks ConcreteOwl)
+* Fixed Back button not taking you anywhere when viewing an Express entry that was owned by another Express entry.
+* Fixed bug on Organize page types Dashboard page under PHP 8.1.
+* Fixed error adding basic workflow in PHP 8.1.
+* Fixed error editing groups under PHP 8 (thanks hissy)
+* Fixed "An exception occurred while executing 'insert into CollectionVersionBlocks" when changing page template.
+* Fixed: When using PHP8 if you turn Advanced Permissions on then try to add Block Permissions you're met with this error.
+* Fixed: Setting nothing to Items Per Page option of Express Entry List causes an error
+* Fixed: Incorrect tag namespace for multilingual sitemap generation (thanks gregheafield)
+* Fixed: Page Selector Attribute - Search& Indexing broken (thanks haeflimi)
+* Bug fixes for Page List block under PHP 8.1 (thanks ccmEnlil)
+* Fixed: Express Form Block E-Mail notification doesn't respect form field Order
+* Fixed: Express Form Block E-Mail notification – URL to entries doen't work and leads to empty page 
+* Fixed error when updating file sets in PHP8+ (thanks ccmEnlil)
+* Fixed errors when using Server-Sent events introduced in 9.1.0
+* Fixed bug when using magic method in form helper to create previously undefined form input types (thanks JohnTheFish)
+* Fixed bug where page list block would offer the number of entries as the rss feed title if the block was being edited.
+* Fix LaminasCacheDriver does not set TTL properly (thanks hissy)
+* Fixed: Saving Page with Legacy Attribute Error with PHP8
+* Fixed ugly styling for authentication when logging in via Oauth2
+* Fixed community authentication (community.concretecms.com) - now it works again.
+
+## Backward Compatibility Notes
+
+* Tweaked Auto-Nav block controller to fix issue with Community Store breadcrumb custom template.
+
+## Developer Updates
+
+* Private properties in Select Attribute Controller updated to be protected (thanks biplobice)
+* MessageBusManager library improvements for extension
+* Update the URL of the Doctrine XML repository/GitHub Pages (thanks mlocati)
+* Any custom integrations using Mercure (likely very few, if any) should be checked over – Mercure system has been completed overhauled, including an update to Symfony Mercure 0.61.
+* Added `on_get_page_wrapper_class()` custom event to allow developers to customize classes delivered by this method (thanks JohnTheFish)
+* Let translators swap file extension and file type (thanks mlocati)
+* Added ability to pass class to tabs method (thanks shahroq)
+* Form helper __call magic method can now output form types that have dashes in them (thanks mlocati)
+* Add an option to the DeleteGroup command to skip deleting groups with users
+* Added application/pdf to the types of files that can be used with view_inline (thanks hissy)
+
 # 9.1.1
 
 ## Behavioral Improvements
