@@ -100,7 +100,7 @@ class ErrorHandler extends PrettyPageHandler
         $this->addDataTable('Concrete Configuration', $this->flatConfig($this->cleanedConfig(Config::get('concrete'), 'concrete'), 'concrete'));
     }
 
-    protected function cleanedConfig(array $config, $group): array
+    protected function cleanedConfig(array $config, $group)
     {
         $clean = [];
         foreach ($config as $key => $value) {
@@ -133,7 +133,7 @@ class ErrorHandler extends PrettyPageHandler
         return $flat;
     }
 
-    protected function registerHideList(): void
+    protected function registerHideList()
     {
         foreach (\Concrete\Core\Support\Facade\Config::get('concrete.debug.hide_keys', []) as $superGlobal => $keys) {
             if ($superGlobal === 'config') {
@@ -149,7 +149,7 @@ class ErrorHandler extends PrettyPageHandler
         }
     }
 
-    private function isKeyHidden(string $key): bool
+    private function isKeyHidden(string $key)
     {
         // We have to check each node to make sure it's not hidden:
         $key = explode('.', $key);
