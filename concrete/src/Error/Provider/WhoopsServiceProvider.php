@@ -56,7 +56,7 @@ class WhoopsServiceProvider extends Provider
      *
      * @return array<string, string[]> A list of disallowed superglobal keys [`_SERVER' => ['some_key']]
      */
-    protected function getDisallowedKeys(): array
+    protected function getDisallowedKeys()
     {
         return [
             '_ENV' => array_keys($_ENV),

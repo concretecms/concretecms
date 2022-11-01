@@ -1,3 +1,9 @@
+# 8.5.11
+
+## Bug Fixes
+
+* Restored support for PHP 5.6
+
 # 8.5.10
 
 ## Bug Fixes
