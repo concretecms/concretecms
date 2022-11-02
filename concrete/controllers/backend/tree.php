@@ -3,7 +3,7 @@ namespace Concrete\Controller\Backend;
 
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Multilingual\Page\Section\Section;
-use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Tree\Node\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -45,7 +45,7 @@ class Tree extends UserInterface
         }
 
         if ($this->request->request('cID') > 0) {
-            $c = Page::getByID($this->request->request('cID'));
+            $c = CorePage::getByID($this->request->request('cID'));
             $al = Section::getBySectionOfSite($c);
             if ($al !== null) {
                 $locale = $al->getLocale();

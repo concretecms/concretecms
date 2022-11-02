@@ -3,7 +3,7 @@
 namespace Concrete\Controller\Panel;
 
 use Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
-use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Page as CorePage;
 use Concrete\Core\Page\Type\Type;
 use Concrete\Core\Permission\Checker;
 
@@ -40,7 +40,7 @@ class Sitemap extends BackendInterfaceController
     public function view()
     {
         $this->requireAsset('core/sitemap');
-        $drafts = Page::getDrafts($this->site);
+        $drafts = CorePage::getDrafts($this->site);
         $mydrafts = [];
         foreach ($drafts as $d) {
             $dp = new Checker($d);
@@ -53,7 +53,7 @@ class Sitemap extends BackendInterfaceController
 
         $siteTreeID = 0;
         if ($this->request->query->has('cID')) {
-            $page = Page::getByID((int) ($this->request->query->get('cID')));
+            $page = CorePage::getByID((int) ($this->request->query->get('cID')));
             if ($page && !$page->isError()) {
                 $siteTreeID = $page->getSiteTreeID();
             }

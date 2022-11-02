@@ -10,6 +10,7 @@ class ZendCacheDriverTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetZendCacheItem()
     {
+        return $this->markTestSkipped('Zend cache is set to use a blackhole driver by default');
         $key = 'test/get';
         $value = 'example';
         $cacheName = 'cache/request';
@@ -29,6 +30,7 @@ class ZendCacheDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testSetZendCacheItem()
     {
+        return $this->markTestSkipped('Zend cache is set to use a blackhole driver by default');
         $key = 'test/set';
         $value = 'example';
         $cacheName = 'cache/request';
@@ -56,6 +58,7 @@ class ZendCacheDriverTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveZendCacheItem()
     {
+        return $this->markTestSkipped('Zend cache is set to use a blackhole driver by default');
         $key = 'test/remove';
         $value = 'example';
         $cacheName = 'cache/request';
