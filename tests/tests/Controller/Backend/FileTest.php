@@ -15,8 +15,11 @@ class FileTest extends \PHPUnit_Framework_TestCase
      * @dataProvider remoteUrlsToTry
      * @see File::checkRemoteURlsToImport()
      */
-    public function testCheckRemoteURlsToImport($urls, ...$exception)
+    public function testCheckRemoteURlsToImport()
     {
+        $exception = func_get_args();
+        $urls = array_shift($exception);
+
         $controller = new File();
 
         // Note odd capitalization of "URL" in this method name
@@ -26,7 +29,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
         // Expect an exception if one was provided, otherwise we expect to complete successfully
         if ($exception) {
-            $this->setExpectedExceptionRegExp(...$exception);
+            call_user_func_array([$this, 'setExpectedExceptionRegExp'], $exception);
         }
 
         $closure((array)$urls);
@@ -37,7 +40,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function remoteUrlsToTry(): iterable
+    public function remoteUrlsToTry()
     {
         // Local IP
         $simpleIp = '127.0.0.1';
