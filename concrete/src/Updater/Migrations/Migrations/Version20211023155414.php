@@ -71,7 +71,7 @@ final class Version20211023155414 extends AbstractMigration implements Repeatabl
         $value->setRed($legacyValueValueData['r']);
         $value->setGreen($legacyValueValueData['g']);
         $value->setBlue($legacyValueValueData['b']);
-        if ($legacyValueValueData['a']) {
+        if (isset($legacyValueValueData['a'])) {
             $value->setAlpha($legacyValueValueData['a']);
         } else {
             $value->setAlpha(1);
