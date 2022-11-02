@@ -1,0 +1,98 @@
+name: "PHPUnit"
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  phpunit:
+    name: "PHPUnit"
+    env:
+      LC_ALL: en_US.UTF-8
+      CODE_COVERAGE: n
+
+    runs-on: ${{ matrix.operating-system }}
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: concrete5_tests
+        ports:
+          - 3306:3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    strategy:
+      matrix:
+        php-version:
+          - "5.5"
+          - "5.6"
+          - "7.0"
+          - "7.1"
+          - "7.2"
+          - "7.3"
+          - "7.4"
+        dependencies:
+          - "locked"
+        operating-system:
+          - "ubuntu-latest"
+        composer:
+          - "composer:v1, prestissimo"
+
+        include:
+          - php-version: 7.4
+            operating-system: "ubuntu-latest"
+            dependencies: "highest"
+            composer: "composer:v1, prestissimo"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+        with:
+          fetch-depth: 2
+
+      - name: "Install PHP"
+        uses: shivammathur/setup-php@2.11.0
+        with:
+          php-version: "${{ matrix.php-version }}"
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
+          coverage: pcov
+          ini-values: memory_limit=-1, pcov.directory=concrete, pcov.exclude="~(vendor|tests|js|css|config)~"
+          tools: ${{matrix.composer}}
+
+      - name: "Prepare mysql user"
+        run: |
+          mysql -h127.0.0.1 -uroot -proot -e "CREATE USER 'travis'@'%' IDENTIFIED BY '';"
+          mysql -h127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'travis'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+      - name: Enable code coverage
+        if: matrix.php-version == '7.4' && startsWith(matrix.operating-system, 'ubuntu') && matrix.dependencies == 'locked'
+        run: printf 'CODE_COVERAGE=y\n' >> "$GITHUB_ENV"
+
+      - name: "Install lowest dependencies"
+        if: ${{ matrix.dependencies == 'lowest' }}
+        run: |
+          composer update --prefer-lowest --no-interaction --no-progress --no-suggest
+          # Run twice for mediawiki merge
+          composer update --prefer-lowest --no-interaction --no-progress --no-suggest
+      - name: "Install highest dependencies"
+        if: ${{ matrix.dependencies == 'highest' }}
+        run: |
+          composer update --no-interaction --no-progress --no-suggest
+      - name: "Install locked dependencies"
+        if: ${{ matrix.dependencies == 'locked' }}
+        run: |
+          composer install --no-interaction --no-progress --no-suggest
+
+      - name: "Tests"
+        if: env.CODE_COVERAGE == 'n'
+        run: php ./concrete/vendor/phpunit/phpunit/phpunit
+
+      - name: "Tests with coverage"
+        if: env.CODE_COVERAGE == 'y'
+        run: php ./concrete/vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.clover
+
+      - name: "Upload coverage"
+        if: env.CODE_COVERAGE == 'y'
+        run: |
+          wget --tries=5 https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover
