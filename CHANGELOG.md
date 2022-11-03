@@ -1,3 +1,10 @@
+# 8.5.12
+
+## Bug Fixes
+
+* More PHP 5 fixes (thanks mlocati)
+* Improved testing for PHP 5 compatibility
+
 # 8.5.11
 
 ## Bug Fixes
