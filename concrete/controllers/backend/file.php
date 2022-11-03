@@ -746,7 +746,7 @@ class File extends Controller
      *
      * @return string the local filename
      */
-    protected function downloadRemoteURL($url, $temporaryDirectory, string $ip = null)
+    protected function downloadRemoteURL($url, $temporaryDirectory, $ip = null)
     {
         $client = $this->app->make('http/client/curl');
 
@@ -796,7 +796,7 @@ class File extends Controller
             $fileHelper = $this->app->make('helper/file');
             throw new UserMessageException(t('The file extension "%s" is not valid.', $fileHelper->getExtension($filename)));
         }
-        
+
         $fullFilename = $temporaryDirectory . '/' . $filename;
         // write the downloaded file to a temporary location on disk
         $handle = fopen($fullFilename, 'wb');
@@ -821,7 +821,7 @@ class File extends Controller
                 }
                 break;
             default:
-                
+
         }
         $editResponse = new FileEditResponse();
         $editResponse->setError($errors);
