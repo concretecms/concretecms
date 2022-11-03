@@ -43,7 +43,7 @@ class SearchFieldSelector extends ElementController
     /**
      * @param string $addFieldAction
      */
-    public function setAddFieldAction(string $addFieldAction)
+    public function setAddFieldAction($addFieldAction)
     {
         $this->addFieldAction = $addFieldAction;
     }
