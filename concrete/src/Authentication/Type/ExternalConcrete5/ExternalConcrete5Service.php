@@ -110,7 +110,7 @@ class ExternalConcrete5Service extends AbstractService
     /**
      * Always send through and verify "state" parameter
      */
-    public function needsStateParameterInAuthUrl(): bool
+    public function needsStateParameterInAuthUrl()
     {
         return true;
     }

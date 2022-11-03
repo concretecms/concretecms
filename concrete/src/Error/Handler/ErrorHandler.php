@@ -149,7 +149,7 @@ class ErrorHandler extends PrettyPageHandler
         }
     }
 
-    private function isKeyHidden(string $key)
+    private function isKeyHidden($key)
     {
         // We have to check each node to make sure it's not hidden:
         $key = explode('.', $key);
