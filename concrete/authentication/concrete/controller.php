@@ -60,7 +60,7 @@ class Controller extends AuthenticationTypeController
         if (!str_contains($hash, '@')) {
             return false;
         }
-        [$id, $token] = explode('@', $hash, 2);
+        list($id, $token) = explode('@', $hash, 2);
 
         $id = (int) $id;
         $uID = (int) $u->getUserID();
