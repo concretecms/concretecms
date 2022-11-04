@@ -257,7 +257,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
             // checkbox list.  No new options.
             $options = [];
-            if (is_array($data['atSelectOptionValue'])) {
+            if (isset($data['atSelectOptionValue']) && is_array($data['atSelectOptionValue'])) {
                 foreach ($data['atSelectOptionValue'] as $optionID) {
                     $option = $this->getOptionByID($optionID);
                     if (is_object($option)) {
