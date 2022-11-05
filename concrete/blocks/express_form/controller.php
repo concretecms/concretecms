@@ -702,6 +702,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
      * @param ExpressKey $key
      * @param bool update
      *
+     * This method should always preserve the attribute's handle when updating
      */
     protected function runAttributeIndexer(Entity $entity, ExpressKey $key, $update = false)
     {
