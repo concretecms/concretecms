@@ -32,7 +32,7 @@ use Loader;
 use Page;
 use PageCache;
 use Permissions;
-use Stack;
+use Concrete\Core\Page\Stack\Stack;
 
 class Collection extends ConcreteObject implements TrackableInterface
 {
@@ -916,7 +916,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     /**
      * Get the IDs for blocks contained in all the global areas in this collection.
      *
-     * @return \Concrete\Core\Block\Block[]
+     * @return array Return a list of arrays, each one is a dictionary like ['bID' => <block ID>, 'arHandle' => <area handle>]
      */
     public function getGlobalBlockIDs()
     {
@@ -934,7 +934,7 @@ class Collection extends ConcreteObject implements TrackableInterface
     /**
      * Get all the global stacks loaded in this collection.
      *
-     * @return \Concrete\Core\Block\Block[]
+     * @return \Concrete\Core\Page\Stack\Stack[]
      */
     protected function getGlobalStacksForCollection()
     {
