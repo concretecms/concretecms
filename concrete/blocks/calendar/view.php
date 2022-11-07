@@ -50,7 +50,7 @@ if ($c->isEditMode()) {
 
                 eventRender: function(event, element) {
                     <?php if ($controller->supportsLightbox()) { ?>
-                        element.attr('href', '<?=rtrim(URL::route(array('/view_event', 'calendar'), $bID))?>/' + event.id).magnificPopup({
+                        element.attr('href', '<?=rtrim(URL::route(array('/view_event', 'calendar'), $bID), " \n\r\t\v\x00\/")?>/' + event.id).magnificPopup({
                             type: 'ajax',
                             callbacks: {
                                 beforeOpen: function () {
