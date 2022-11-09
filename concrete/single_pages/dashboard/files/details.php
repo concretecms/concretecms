@@ -141,7 +141,7 @@ if ($view->controller->getAction() == 'preview_version') { ?>
                         <?php
                     } else {
                         ?>
-                        <span><?= implode(', ', $tags) ?></span>
+                        <span><?= h(implode(', ', $tags)) ?></span>
                         <?php
                     }
                     ?>
