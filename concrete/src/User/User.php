@@ -158,7 +158,10 @@ class User extends ConcreteObject
         $now = time();
         $session = app('session');
         $session->set('uOnlineCheck', $now);
-        if (($now - $session->get('uLastOnline')) > (ONLINE_NOW_TIMEOUT / 2)) {
+        $activityThreshold = app(SessionValidator::class)->getUserActivityThreshold();
+        $saveThreshold = $activityThreshold / 2;
+        $elapsedTime = $now - $session->get('uLastOnline');
+        if ($elapsedTime > $saveThreshold) {
             $db = app(Connection::class);
             $db->update('Users', ['uLastOnline' => $now], ['uID' => $this->getUserID()]);
             $session->set('uLastOnline', $now);

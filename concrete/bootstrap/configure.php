@@ -325,6 +325,9 @@ const DEFAULT_GROUP_ROLE_ID = '1';
  */
 const USER_FOREVER_COOKIE_LIFETIME = 1209600; // 14 days
 const USER_CHANGE_PASSWORD_URL_LIFETIME = 7200;
+/**
+ * @deprecated use app(\Concrete\Core\Session\SessionValidator::class)->getUserActivityThreshold()
+ */
 const ONLINE_NOW_TIMEOUT = 300;
 const UVTYPE_REGISTER = 0;
 const UVTYPE_CHANGE_PASSWORD = 1;
