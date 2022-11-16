@@ -41,7 +41,7 @@
                         <table class="ccm-search-results-table ccm-search-presets-table">
                             <tbody>
                                 <?php foreach ($searchPresets as $searchPreset) { ?>
-                                    <tr data-search-preset-id="<?= $searchPreset->getId(); ?>" data-search-preset-name="<?= $searchPreset->getPresetName(); ?>" data-action="<?= $controller->getSavedSearchBaseURL($searchPreset); ?>">
+                                    <tr data-search-preset-id="<?= $searchPreset->getId(); ?>" data-search-preset-name="<?= h($searchPreset->getPresetName()); ?>" data-action="<?= $controller->getSavedSearchBaseURL($searchPreset); ?>">
                                         <td style="padding-left: 15px;"><?= h($searchPreset->getPresetName()); ?></td>
                                         <td valign="top" style="text-align: right; padding-right: 15px;">
                                             <div class="btn-group">
