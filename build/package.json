@@ -19,7 +19,7 @@
     "grunt": "^1.5.3",
     "grunt-env": "^1.0.1",
     "laravel-mix": "^5.0.5",
-    "resolve-url-loader": "^3.1.1",
+    "resolve-url-loader": "^5.0.0",
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
     "shelljs": "0.8.5",
