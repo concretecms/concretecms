@@ -24,7 +24,7 @@ $type = $workflow->getWorkflowTypeObject();
 
 <?php
 if ($type->getPackageID() > 0) {
-    @View::element('workflow/types/' . $type->getWorkflowTypeHandle()  . '/edit_type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+    @View::element('workflow/types/' . $type->getWorkflowTypeHandle()  . '/edit_type_form', array('type' => $type, 'workflow' => $workflow), $type->getPackageHandle());
 } else {
     @View::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/edit_type_form', array('type' => $type, 'workflow' => $workflow));
 }
