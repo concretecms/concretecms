@@ -17,7 +17,7 @@ if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
         <div class="form-check">
             <?=$form->checkbox($view->field('atSelectOptionValue') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptionIDs));
         ?>
-            <label class="form-check-label">
+            <label class="form-check-label" for="<?= $view->field('atSelectOptionValue') . '_' . $opt->getSelectAttributeOptionID(); ?>">
                 <?=$opt->getSelectAttributeOptionDisplayValue()?>
             </label>
         </div>
