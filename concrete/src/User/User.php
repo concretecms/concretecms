@@ -137,14 +137,7 @@ class User extends ConcreteObject
                     return false;
                 }
 
-                $session->set('uOnlineCheck', time());
-                if (($session->get('uOnlineCheck') - $session->get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2))) {
-                    // This code throttles the writing of uLastOnline to the database, so that we're not constantly
-                    // updating the Users table. If you need to have the exact up to date metric on when a session
-                    // last looked at a page, use uOnlineCheck.
-                    $db->query('update Users set uLastOnline = ? where uID = ?', [$session->get('uOnlineCheck'), $this->uID]);
-                    $session->set('uLastOnline', $session->get('uOnlineCheck'));
-                }
+                $this->updateOnlineCheck();
 
                 return true;
             } else {
@@ -153,6 +146,26 @@ class User extends ConcreteObject
         }
 
         return false;
+    }
+
+    /**
+     * This code throttles the writing of uLastOnline to the database, so that we're not constantly
+     * updating the Users table. If you need to have the exact up to date metric on when a session
+     * last looked at a page, use the uOnlineCheck session key.
+     */
+    public function updateOnlineCheck(): void
+    {
+        $now = time();
+        $session = app('session');
+        $session->set('uOnlineCheck', $now);
+        $activityThreshold = app(SessionValidator::class)->getUserActivityThreshold();
+        $saveThreshold = $activityThreshold / 2;
+        $elapsedTime = $now - $session->get('uLastOnline');
+        if ($elapsedTime > $saveThreshold) {
+            $db = app(Connection::class);
+            $db->update('Users', ['uLastOnline' => $now], ['uID' => $this->getUserID()]);
+            $session->set('uLastOnline', $now);
+        }
     }
 
     /**
