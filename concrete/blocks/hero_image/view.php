@@ -35,6 +35,8 @@ if ($image === null) {
  * Building the button
  */
 
+$buttonColor = $buttonColor ?? null; // Don't know why I need this but #11025
+
 if (isset($button)) {
 
     if ($buttonStyle == 'outline') {
