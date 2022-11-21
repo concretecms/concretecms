@@ -18,7 +18,7 @@ class SpecFragment
     /**
      * @var SpecSecurityScheme[]
      */
-    protected $securitySchemes;
+    protected $securitySchemes = [];
 
     public function addPath(SpecPath $path)
     {

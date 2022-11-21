@@ -121,6 +121,11 @@ abstract class Cache implements FlushableInterface
         return null;
     }
 
+    public function getPool()
+    {
+        return $this->pool;
+    }
+
     /**
      * Deletes an item from the cache.
      *

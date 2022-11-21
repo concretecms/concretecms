@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Api\OpenApi\Factory;
 
+use Concrete\Core\Api\OpenApi\Parameter\Parameter;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
 use Concrete\Core\Api\OpenApi\JsonSchemaRefArrayContent;
@@ -12,7 +13,6 @@ use Concrete\Core\Api\OpenApi\Parameter\LimitParameter;
 use Concrete\Core\Api\OpenApi\SpecComponents;
 use Concrete\Core\Api\OpenApi\SpecFragment;
 use Concrete\Core\Api\OpenApi\SpecModel;
-use Concrete\Core\Api\OpenApi\SpecParameter;
 use Concrete\Core\Api\OpenApi\SpecPath;
 use Concrete\Core\Api\OpenApi\SpecProperty;
 use Concrete\Core\Api\OpenApi\SpecPropertyRef;
@@ -192,7 +192,7 @@ class ExpressEntitySpecFactory
                 $handle,
                 t('Find a %s by its ID.', $object->getName())
             ))
-                ->addParameter(new SpecParameter('id', 'path', t('The ID of the object.')))
+                ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
                 ->addParameter(new IncludesParameter($includes))
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':read']))
                 ->addResponse(
@@ -250,7 +250,7 @@ class ExpressEntitySpecFactory
 
         $specPath
             ->setSecurity(new SpecSecurity('authorization', [$handle . ':update']))
-            ->addParameter(new SpecParameter('id', 'path', t('The ID of the object.')))
+            ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
             ->addResponse(
                 new SpecResponse(
                     200,
@@ -278,7 +278,7 @@ class ExpressEntitySpecFactory
                 $handle,
                 t('Delete a %s.', $object->getName())
             ))
-                ->addParameter(new SpecParameter('id', 'path', t('The ID of the object.')))
+                ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':delete']))
                 ->addResponse(
                     new SpecResponse(

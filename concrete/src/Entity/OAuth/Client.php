@@ -74,7 +74,7 @@ class Client implements ClientEntityInterface, \JsonSerializable
      * @ORM\ManyToMany(targetEntity="Scope", inversedBy="clients")
      * @ORM\JoinTable(name="OAuth2ClientScopes",
      *      joinColumns={@ORM\JoinColumn(name="clientIdentifier", referencedColumnName="identifier")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="scopeIdentifier", referencedColumnName="identifier", unique=true)}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="scopeIdentifier", referencedColumnName="identifier", onDelete="CASCADE")}
      *      )
      */
     protected $scopes;
@@ -211,6 +211,8 @@ class Client implements ClientEntityInterface, \JsonSerializable
             } else {
                 $urls[] = $url;
             }
+        } else {
+            $urls[] = '';
         }
 
         if ($this->isDocumentationEnabled()) {
@@ -219,9 +221,11 @@ class Client implements ClientEntityInterface, \JsonSerializable
 
         if (count($urls) > 1) {
             return $urls;
-        } else {
+        } else if (isset($urls[0])) {
             // we could technically return just the array every time but this will keep tests working just as before
             return $urls[0];
+        } else {
+            return '';
         }
     }
 

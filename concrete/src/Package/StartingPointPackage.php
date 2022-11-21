@@ -10,6 +10,7 @@ use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\File\Filesystem;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Messenger\Transport\DefaultAsync\DefaultAsyncConnection;
 use Concrete\Core\User\Group\Command\AddGroupCommand;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Mail\Importer\MailImporter;
@@ -458,6 +459,8 @@ class StartingPointPackage extends Package
         } catch (\Exception $e) {
             throw new \Exception(t('Unable to install database: %s', $e->getMessage()));
         }
+        $connection = $this->app->make(DefaultAsyncConnection::class)->getWrappedConnection();
+        $connection->setup();
     }
 
     protected function indexAdditionalDatabaseFields()
