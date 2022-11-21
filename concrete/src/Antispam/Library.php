@@ -96,7 +96,7 @@ class Library extends ConcreteObject
     {
         $db = Loader::db();
         $r = $db->GetRow('select saslHandle, saslIsActive, pkgID, saslName from SystemAntispamLibraries where saslHandle = ?', array($saslHandle));
-        if (is_array($r) && $r['saslHandle']) {
+        if (is_array($r) && isset($r['saslHandle']) && $r['saslHandle']) {
             $sc = new static();
             $sc->setPropertiesFromArray($r);
 
