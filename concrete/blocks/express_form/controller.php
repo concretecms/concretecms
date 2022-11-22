@@ -251,6 +251,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $key = $this->saveAttributeKeySettings($controller, $key, $post);
                         $entityManager->persist($key);
                         $entityManager->flush();
+                        
+                        $this->runAttributeIndexer($entity, $key);
+                        
                         $control->setAttributeKey($key);
                     }
                     break;
@@ -311,6 +314,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         if ($token->validate('update_control')) {
             $fieldSet = $this->getFormFieldSet();
             $post = $this->request->request->all();
+            $entity = $fieldSet->getForm()->getEntity();
             $controlId = $post['id'] ?? null;
             $entityManager = $this->app->make(EntityManagerInterface::class);
 
@@ -337,7 +341,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $key = $this->saveAttributeKeySettings($controller, $key, $post);
                         $entityManager->persist($key);
                         $entityManager->flush();
-                        $control->setAttributeKey($key);
+                        $this->runAttributeIndexer($entity, $key, true);
                         $control->setAttributeKey($key);
                     } else {
                         if ($control instanceof TextControl) {
@@ -692,7 +696,32 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $entityManager->persist($settings);
         return $key;
     }
+    
+    /**
+     * @param \Concrete\Core\Entity\Express\Entity $entity
+     * @param ExpressKey $key
+     * @param bool update
+     *
+     * This method should always preserve the attribute's handle when updating
+     */
+    protected function runAttributeIndexer(Entity $entity, ExpressKey $key, $update = false)
+    {
+        $category = $entity->getAttributeKeyCategory();
+        
+        if (is_object($category)) {
+            $indexer = $category->getSearchIndexer();
 
+            if (is_object($indexer)) {
+                if ($update) {
+                    // when updating we do not change the attribute Handle even if we change the Name
+                    $indexer->updateRepositoryColumns($category, $key, $key->getAttributeKeyHandle());
+                } else {
+                    $indexer->updateRepositoryColumns($category, $key);
+                }
+            }
+        }
+    }
+    
     public function edit()
     {
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());
