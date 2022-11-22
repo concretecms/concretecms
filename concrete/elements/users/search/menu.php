@@ -49,13 +49,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <?php endif; ?>
     <div class="col-auto">
         <ul class="ccm-dashboard-header-icons">
+            <?php if ($canExportUsers) { ?>
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('Export to CSV')) ?>"
                    href="<?=$exportURL?>">
                     <i class="fas fa-download" aria-hidden="true"></i>
                 </a>
             </li>
-
+            <?php } ?>
             <li>
                 <a class="ccm-hover-icon" title="<?php echo h(t('Add User')) ?>"
                    href="<?php echo (string)UrlFacade::to("/dashboard/users/add"); ?>">
