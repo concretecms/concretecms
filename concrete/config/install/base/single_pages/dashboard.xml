@@ -953,6 +953,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="URL Slug" path="/dashboard/system/seo/url_slug"
+              filename="/dashboard/system/seo/url_slug.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>url, slug</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Files" path="/dashboard/system/files" filename="/dashboard/system/files/view.php" pagetype=""
               description="" package=""/>
         <page name="Allowed File Types" path="/dashboard/system/files/filetypes"
