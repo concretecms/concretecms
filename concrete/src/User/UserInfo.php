@@ -875,6 +875,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
+     * @see \Concrete\Core\Entity\User\User::getUserLastPasswordChange()
+     */
+    public function getUserLastPasswordChange(): ?\DateTimeInterface
+    {
+        return $this->entity->getUserLastPasswordChange();
+    }
+
+    /**
      * @see \Concrete\Core\Entity\User\User::isUserActive()
      */
     public function isActive()
