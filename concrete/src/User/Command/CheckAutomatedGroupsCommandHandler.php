@@ -30,7 +30,7 @@ class CheckAutomatedGroupsCommandHandler implements OutputAwareInterface
 
     public function __invoke(CheckAutomatedGroupsCommand $command)
     {
-        $user = $this->userInfoRepository->getByID($command);
+        $user = $this->userInfoRepository->getByID($command->getUserID());
         if ($user) {
             $this->output->write(t('Checking user: %s (ID: %s)', $user->getUserName(), $user->getUserID()));
             $groupControllers = Group::getAutomatedOnJobRunGroupControllers($user);
