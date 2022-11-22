@@ -23,7 +23,7 @@ defined('C5_EXECUTE') or die('Access Denied');
         <div class="form-check">
             <?= $form->checkbox('enable_slug_asciify', '1', $enableSlugAsciify) ?>
             <label class="form-check-label"
-                   for="enable_slug_asciify"><?= t('Enable Asciify when generating USL slug') ?></label>
+                   for="enable_slug_asciify"><?= t('Enable Asciify when generating URL slug') ?></label>
             <p class="form-text"><?= t("Translate multibyte characters to ASCII characters when generating a URL slug (e.g. J'étudie le français to jetudie-le-francais).") ?><br>
             <?= t("Remove multibyte characters when this option is disabled (e.g. J'étudie le français to jtudie-le-franais).") ?></p>
         </div>
