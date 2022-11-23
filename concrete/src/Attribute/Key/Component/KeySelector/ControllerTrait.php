@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Category\CategoryInterface;
 use Concrete\Core\Attribute\Command\ClearAttributesCommand;
 use Concrete\Core\Attribute\Command\SaveAttributesCommand;
 use Concrete\Core\Attribute\ObjectInterface;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Validation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -26,7 +27,7 @@ trait ControllerTrait
 
     abstract public function canEditAttributeKey(int $akID): bool;
 
-    public function saveAttributes()
+    public function saveAttributes(): ?ErrorList
     {
         // Let's retrieve a list of attribute keys that we're trying to set.
         $selectedAttributes = (array) $this->request->request->get('selectedKeys', []);
@@ -78,8 +79,9 @@ trait ControllerTrait
 
             $this->app->executeCommand(new ClearAttributesCommand($attributesToClear, $object));
             $this->app->executeCommand(new SaveAttributesCommand($attributesToSave, $object));
-            return null;
         }
+
+        return null;
     }
 
     public function getAttribute()

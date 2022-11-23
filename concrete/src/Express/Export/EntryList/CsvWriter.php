@@ -100,7 +100,7 @@ class CsvWriter
         $result = [];
 
         foreach ($headerKeys as $key) {
-            $result[$key] = $entry[$key];
+            $result[$key] = $entry[$key] ?? null;
         }
 
         return $result;

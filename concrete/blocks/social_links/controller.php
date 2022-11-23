@@ -111,8 +111,10 @@ class Controller extends BlockController implements UsesFeatureInterface
     public function duplicate($newBlockID)
     {
         $db = Database::get();
+        $displayOrder = 0;
         foreach ($this->getSelectedLinks() as $link) {
-            $db->insert('btSocialLinks', ['bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $this->displayOrder]);
+            $db->insert('btSocialLinks', ['bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $displayOrder]);
+            $displayOrder++;
         }
     }
 
