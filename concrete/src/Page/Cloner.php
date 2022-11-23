@@ -152,6 +152,7 @@ class Cloner
                 'cPointerExternalLink' => $page->getCollectionPointerExternalLink(),
                 'cPointerExternalLinkNewWindow' => $page->openCollectionPointerExternalLinkInNewWindow(),
                 'cDisplayOrder' => $page->getCollectionDisplayOrder(),
+                'cIsDraft' => $page->isPageDraft() ? 1 : 0,
                 'pkgID' => $page->getPackageID(),
             ]);
 

@@ -9,11 +9,13 @@ use Concrete\Core\Csv\WriterFactory;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Search\SavedUserSearch;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Url;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
 use Concrete\Core\User\EditResponse as UserEditResponse;
@@ -577,43 +579,52 @@ class Search extends DashboardPageController
      */
     public function csv_export($searchMethod = null)
     {
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=concrete_users.csv',
-        ];
-        $app = $this->app;
-        $config = $this->app->make('config');
-        $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
+        $permissions = new Checker();
+        if ($permissions->canAccessUserSearchExport()) {
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename=concrete_users.csv',
+            ];
+            $app = $this->app;
+            $config = $this->app->make('config');
+            $bom = $config->get('concrete.export.csv.include_bom') ? $config->get('concrete.charset_bom') : '';
 
-        if ($searchMethod === 'advanced_search') {
-            $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
-                $this->getSearchProvider(),
-                $this->request,
-                Request::METHOD_GET
-            );
-        } else {
-            $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [
-                $this->getSearchKeywordsField()
-            ]);
-        }
-
-        $result = $this->createSearchResult($query);
-
-        return new StreamedResponse(
-            function () use ($app, $result, $bom) {
-                $writer = $app->make(
-                    UserExporter::class,
+            if ($searchMethod === 'advanced_search') {
+                $query = $this->getQueryFactory()->createFromAdvancedSearchRequest(
+                    $this->getSearchProvider(),
+                    $this->request,
+                    Request::METHOD_GET
+                );
+            } else {
+                $query = $this->getQueryFactory()->createQuery(
+                    $this->getSearchProvider(),
                     [
-                        'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                        $this->getSearchKeywordsField()
                     ]
                 );
-                echo $bom;
-                $writer->setUnloadDoctrineEveryTick(50);
-                $writer->insertHeaders();
-                $writer->insertList($result->getItemListObject());
-            },
-            200,
-            $headers);
+            }
+
+            $result = $this->createSearchResult($query);
+
+            return new StreamedResponse(
+                function () use ($app, $result, $bom) {
+                    $writer = $app->make(
+                        UserExporter::class,
+                        [
+                            'writer' => $this->app->make(WriterFactory::class)->createFromPath('php://output', 'w'),
+                        ]
+                    );
+                    echo $bom;
+                    $writer->setUnloadDoctrineEveryTick(50);
+                    $writer->insertHeaders();
+                    $writer->insertList($result->getItemListObject());
+                },
+                200,
+                $headers
+            );
+        } else {
+            throw new UserMessageException(t('Access Denied.'));
+        }
     }
 
     private function getFolderList()

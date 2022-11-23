@@ -48,6 +48,7 @@ class DashboardStacksBreadcrumbFactory implements ApplicationAwareInterface
     public function getBreadcrumb(Page $dashboardPage, $stackOrFolder = null, array $sections = null, $locale = ''): BreadcrumbInterface
     {
         $breadcrumb = $this->breadcrumbFactory->getBreadcrumb($dashboardPage);
+        $breadcrumb->setSanitizeName(false);
         if ($this->displayGlobalAreasLandingPage) {
             $breadcrumb->add(new Item(
                 $this->app->make('url')->to('/dashboard/blocks/stacks', 'view_global_areas'),
