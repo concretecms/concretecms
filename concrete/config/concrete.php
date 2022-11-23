@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.2.0a3',
     'version_installed' => '9.2.0a3',
-    'version_db' => '20221121152044', // the key of the latest database migration
+    'version_db' => '20221122000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -1342,6 +1342,7 @@ return [
     'seo' => [
         'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
+        'enable_slug_asciify' => true,
 
         /*
          * URL rewriting
