@@ -423,7 +423,7 @@ return [
         ],
 
         'moment' => [
-            ['javascript', 'js/moment.js', ['minify' => false, 'combine' => false, 'version' => '2.24.0']],
+            ['javascript', 'js/moment.js', ['minify' => false, 'combine' => false]],
             ['javascript-localized', '/ccm/assets/localization/moment/js'],
         ],
 
