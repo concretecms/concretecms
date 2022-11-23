@@ -19,6 +19,8 @@ class Alerts extends DashboardPageController
         }
         $this->set('key', $key);
         $this->set('permissionAccess', $permissionAccess);
+        $tp = new Checker();
+        $this->set('canAccessAlerts', $tp->canAccessTaskPermissions());
     }
 
     public function save()
