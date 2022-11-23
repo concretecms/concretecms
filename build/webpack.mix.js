@@ -99,6 +99,10 @@ if (mix.inProduction()) {
 
     // Fullcalendar
     mix.copy('node_modules/fullcalendar/dist', '../concrete/bedrock/assets/fullcalendar/dist');
+
+    // Moment JS
+    mix.copy('node_modules/moment/min/moment.min.js', '../concrete/js/moment.js');
+    mix.copy('node_modules/moment/min/moment.min.js.map', '../concrete/js/moment.min.js.map');
 }
 
 /**
