@@ -49,7 +49,7 @@ class Formatter extends DefaultFormatter
         AddressInterface $address,
         AddressFormat $addressFormat,
         array $options
-    ) {
+    ): array {
         $view = parent::buildView($address, $addressFormat, $options);
 
         if ($options['subdivision_names'] === true) {
