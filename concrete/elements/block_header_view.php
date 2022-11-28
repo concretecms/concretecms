@@ -56,8 +56,10 @@ if ($showMenu) {
     $arHandle = $a->getAreaHandle();
 
     $btw = BlockType::getByID($b->getBlockTypeID());
-    if (in_array($btw->getBlockTypeHandle(), [BLOCK_HANDLE_LAYOUT_PROXY, BLOCK_HANDLE_CONTAINER_PROXY])) {
+    if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
         $class = 'ccm-block-edit-layout ccm-block-edit';
+    } else if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_CONTAINER_PROXY) {
+        $class = 'ccm-block-edit-container ccm-block-edit';
     } else {
         $class = 'ccm-block-edit';
     }
@@ -81,8 +83,56 @@ if ($showMenu) {
     }
 
     ?>
+        <?php if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_CONTAINER_PROXY) { ?>
+        <div class="ccm-edit-mode-title-notch-wrapper ccm-ui">
+            <ul class="ccm-edit-mode-title-notch">
+                <li><?php
+                    $containerBlockController = $b->getController();
+                    if ($containerBlockController instanceof Concrete\Block\CoreContainer\Controller) {
+                        $containerBlockContainerInstance = $containerBlockController->getContainerInstanceObject();
+                        if ($containerBlockContainerInstance) {
+                            $containerBlockContainer = $containerBlockContainerInstance->getContainer();
+                            if ($containerBlockContainer) {
+                                print $containerBlockContainer->getContainerIconImage();
+                                print '<span>' . $containerBlockContainer->getContainerDisplayName() . '</span>';
+                            }
+                        }
+                    } ?>
+                </li>
+                <?php
+                $showContainerDesign = ($p->canEditBlockDesign() && Config::get('concrete.design.enable_custom') == true);
+                if ($showContainerDesign) { ?>
+                    <li><a data-container-block-id="<?= $b->getBlockID() ?>" data-inline-command="edit-container-design" href="#"><i class="fas fa-paint-brush"></i></a></li>
+                <?php } ?>
+                <?php if ($p->canEditBlock() && (!in_array($btw->getBlockTypeHandle(), [BLOCK_HANDLE_LAYOUT_PROXY]))) { ?>
+                    <li><a class="ccm-edit-mode-inline-command-move" data-inline-command="move-block" href="#"><i class="fas fa-arrows-alt"></i></a></li>
+                <?php } ?>
+                <?php if ($p->canDeleteBlock() && $btw->getBlockTypeHandle() == BLOCK_HANDLE_CONTAINER_PROXY) { ?>
+                    <li><a class="ccm-edit-mode-inline-command-delete" data-inline-command="delete-block" href="#"><i class="fas fa-trash"></i></a></li>
+                <?php } ?>
+            </ul>
+        </div>
 
-    <div
+        <?php } else if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?>
+
+            <div class="ccm-edit-mode-title-notch-wrapper ccm-ui">
+                <ul class="ccm-edit-mode-title-notch">
+                    <li><?php
+                        $layoutBlockController = $b->getController();
+                        if ($layoutBlockController instanceof Concrete\Block\CoreAreaLayout\Controller) {
+                            $layoutBlockLayout = $layoutBlockController->getAreaLayoutObject();
+                            if ($layoutBlockLayout) {
+                                print '<i class="fa fa-columns"></i>';
+                                print '<span>' . $layoutBlockLayout->getDisplayName() . '</span>';
+                            }
+                        } ?>
+                    </li>
+                </ul>
+            </div>
+
+        <?php } ?>
+
+        <div
         data-cID="<?=$c->getCollectionID()?>"
         data-area-id="<?=$a->getAreaID()?>"
         data-block-id="<?=$b->getBlockID()?>"
@@ -111,33 +161,12 @@ if ($showMenu) {
 }
     ?>
 
-        <ul class="<?php if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_CONTAINER_PROXY) { ?>ccm-edit-mode-inline-container<?php } ?> ccm-edit-mode-inline-commands ccm-ui">
-            <?php if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_CONTAINER_PROXY) { ?>
-            <li><span><?php
-                $containerBlockController = $b->getController();
-                if ($containerBlockController instanceof Concrete\Block\CoreContainer\Controller) {
-                    $containerBlockContainerInstance = $containerBlockController->getContainerInstanceObject();
-                    if ($containerBlockContainerInstance) {
-                        $containerBlockContainer = $containerBlockContainerInstance->getContainer();
-                        if ($containerBlockContainer) {
-                            print $containerBlockContainer->getContainerDisplayName();
-                        }
-                    }
-                } ?>
-                </span></li>
-                <?php
-                $showContainerDesign = ($p->canEditBlockDesign() && Config::get('concrete.design.enable_custom') == true);
-                if ($showContainerDesign) { ?>
-                    <li><a data-container-block-id="<?= $b->getBlockID() ?>" data-inline-command="edit-container-design" href="#"><i class="fas fa-paint-brush"></i></a></li>
-                <?php } ?>
-            <?php } ?>
-            <?php if ($p->canEditBlock() && (!in_array($btw->getBlockTypeHandle(), [BLOCK_HANDLE_LAYOUT_PROXY]))) { ?>
-                <li><a class="ccm-edit-mode-inline-command-move" data-inline-command="move-block" href="#"><i class="fas fa-arrows-alt"></i></a></li>
-            <?php } ?>
-            <?php if ($p->canDeleteBlock() && $btw->getBlockTypeHandle() == BLOCK_HANDLE_CONTAINER_PROXY) { ?>
-                <li><a class="ccm-edit-mode-inline-command-delete" data-inline-command="delete-block" href="#"><i class="fas fa-trash"></i></a></li>
-            <?php } ?>
+
+        <?php if ($p->canEditBlock() && (!in_array($btw->getBlockTypeHandle(), [BLOCK_HANDLE_LAYOUT_PROXY, BLOCK_HANDLE_CONTAINER_PROXY]))) { ?>
+        <ul class="ccm-edit-mode-inline-commands ccm-ui">
+            <li><a class="ccm-edit-mode-inline-command-move" data-inline-command="move-block" href="#"><i class="fas fa-arrows-alt"></i></a></li>
         </ul>
+        <?php } ?>
 
         <div class="ccm-ui">
             <?php
