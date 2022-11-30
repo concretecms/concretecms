@@ -52,52 +52,7 @@ $class = 'ccm-area-footer';
                     }
                     if ($canEditAreaPermissions) {
                         ?><a dialog-title="<?=t('Area Permissions')?>" class="dropdown-item dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?= URL::to('/ccm/system/dialogs/area/edit/permissions') ?>?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>"><?=t("Permissions")?></a><?php
-                    }
-                    if ($a instanceof SubArea) {
-                        $bx = $a->getSubAreaBlockObject();
-                        if ($bx->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
-                            $pk = PermissionKey::getByHandle('manage_layout_presets');
-                            $ax = $a->getSubAreaParentPermissionsObject();
-                            $axp = new Permissions($ax);
-                            if ($axp->canAddLayout()) {
-                                if (is_object($bx) && !$bx->isError()) {
-                                    ?>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="javascript:void(0)"
-                                           data-container-layout-block-id="<?= $bx->getBlockID() ?>"
-                                           data-menu-action="edit-container-layout"
-                                           data-area-grid-maximum-columns="<?= $a->getAreaGridMaximumColumns() ?>"><?= t("Edit Container Layout") ?></a>
-                                    <?php if ($showAreaDesign) { ?>
-                                        <a class="dropdown-item" href="javascript:void(0)"
-                                               data-container-layout-block-id="<?= $bx->getBlockID() ?>"
-                                               data-menu-action="edit-container-layout-style"><?= t("Edit Layout Design") ?></a>
-                                    <?php } ?>
-                                    <?php
-                                    if ($pk->validate()) {
-                                        $btc = $bx->getController();
-                                        $arLayout = $btc->getAreaLayoutObject();
-
-                                        if ($arLayout instanceof \Concrete\Core\Area\Layout\PresetLayout) { ?>
-                                            <a href="#" class="dropdown-item disabled"><?=t('Save Layout as Preset')?></a>
-                                        <?php } else { ?>
-                                        <a class="dropdown-item dialog-launch"
-                                               href="<?= URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID()) ?>"
-                                               dialog-title="<?= t('Save Layout as Preset') ?>" dialog-width="360"
-                                               dialog-height="300"
-                                               dialog-modal="true"><?= t("Save Layout as Preset") ?></a>
-                                        <?php } ?>
-                                        <a class="dropdown-item dialog-launch"
-                                               href="<?= URL::to('/ccm/system/dialogs/area/layout/presets/manage') ?>"
-                                               dialog-title="<?= t('Manage Presets') ?>" dialog-width="360"
-                                               dialog-height="240" dialog-modal="true"><?= t("Manage Presets") ?></a>
-
-                                        <?php
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    ?>
+                    } ?>
                 </div>
             </div>
         </div>

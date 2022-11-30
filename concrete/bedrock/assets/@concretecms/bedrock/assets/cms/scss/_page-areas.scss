@@ -1,8 +1,534 @@
+$concrete-element-spacing-y: 50px;
+
+$concrete-area-border: #e6e6e6;
+$concrete-area-border-active: $green;
+$concrete-area-handle-bg: #fff;
+$concrete-area-handle-active-bg: $green;
+$concrete-area-handle-hover-bg: $dropdown-link-hover-bg;
+$concrete-area-handle: #888;
+$concrete-area-handle-hover: $green;
+
+
+$concrete-global-area-border: rgba(168, 193, 205, 0.5);
+$concrete-global-area-border-active: $blue;
+$concrete-global-area-handle-bg: #e3f2f8;
+$concrete-global-area-handle-active-bg: $blue;
+$concrete-global-area-handle-hover: $blue;
+$concrete-global-area-handle-hover-bg: $concrete-area-handle-hover-bg;
+$concrete-global-area-handle-border-active: $blue;
+
+$concrete-layout-area-border-outer: #eee1d4;
+$concrete-layout-area-border: #eee1d4;
+$concrete-layout-area-border-active: #f8ae67;
+$concrete-layout-area-handle-bg: #faf2ec;
+$concrete-layout-area-handle-hover: #7f5023;
+$concrete-layout-area-handle-hover-bg: #fae8db;
+$concrete-layout-area-handle-active-bg: #f39b43;
+
+$concrete-container-area-border-outer: #e6ceef;
+$concrete-container-area-border: #e6ceef;
+$concrete-container-area-border-active: #b45fc6;
+$concrete-container-area-handle-bg: #fcf3ff;
+$concrete-container-area-handle-hover: #725278;
+$concrete-container-area-handle-hover-bg: #f6defc;
+$concrete-container-area-handle-active-bg: #b45fc6;
+
+$concrete-block-hover-bg: rgb(128, 128, 128);
+$concrete-block-active-border: #59ec59;
+$concrete-global-area-block-active-border: #80d0ec;
+$concrete-block-active-bg: #59ec59;
+$concrete-global-area-block-active-bg: rgb(128, 208, 236);
+
+$concrete-inline-icon-link: #666;
+$concrete-notch-box-shadow: 0 -1px 1px 0 rgba(65, 69, 73, 0.3), 0 -1px 3px 1px rgba(65, 69, 73, 0.15);
+$concrete-empty-area-highlight: #ffff76;
+$concrete-drag-area-bg: rgba(255, 255, 118, 0.4);
+$concrete-drag-area-active-bg: rgba(89, 236, 89, 0.4);
+$concrete-drag-area-active-border: $blue;
+/**
+ * Areas Basics
+  */
+div.ccm-area {
+  border: 2px solid $concrete-area-border;
+  border-radius: 2px;
+  margin-bottom: $concrete-element-spacing-y;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+
+  .ccm-area-block-list {
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  /**
+   * draggable blocks into area
+   */
+
+  .ccm-area-block-dropzone-active {
+    margin-bottom: -8px;
+    margin-top: -8px;
+
+    .ccm-area-block-dropzone-inner {
+      border: 2px solid rgba(0, 0, 0, 0);
+      height: 10px;
+      margin-bottom: 2px;
+      margin-top: 2px;
+    }
+  }
+
+  .ccm-area-block-dropzone-over {
+    .ccm-area-block-dropzone-inner {
+      border: 2px solid #0c6;
+    }
+  }
+
+}
+
+div.ccm-area-footer {
+  bottom: -2px;
+  left: 0;
+  max-width: 100%;
+  position: absolute;
+  text-align: center;
+  transform: translateY(100%);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  width: 100%;
+  z-index: $index-level-in-context-area-handle;
+
+  div.ccm-area-footer-handle {
+    background-color: #fff;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    box-shadow: $popover-box-shadow;
+    color: $concrete-area-handle;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    padding: 8px 12px;
+    text-transform: uppercase;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+
+    i {
+      margin-right: 6px;
+    }
+
+    &.ccm-menu-item-hover {
+      background-color: $concrete-area-handle-hover-bg;
+      color: $concrete-area-handle-hover;
+    }
+  }
+}
+
+div.ccm-global-area {
+  border-color: $concrete-global-area-border;
+
+  div.ccm-area-footer {
+    div.ccm-area-footer-handle {
+      background-color: $concrete-global-area-handle-bg;
+
+      &.ccm-menu-item-hover {
+        background-color: $concrete-global-area-handle-hover-bg;
+        color: $concrete-global-area-handle-hover;
+      }
+    }
+  }
+}
+
+/**
+ * Layout Basics
+ */
+div.ccm-block-edit.ccm-block-edit-layout {
+  margin-bottom: $concrete-element-spacing-y;
+  outline-color: $concrete-layout-area-border-outer;
+  padding: $concrete-element-spacing-y 0;
+}
+
+div.ccm-layout-area {
+  border-color: $concrete-layout-area-border;
+
+  div.ccm-area-footer {
+    div.ccm-area-footer-handle {
+      background-color: $concrete-layout-area-handle-bg;
+
+      &.ccm-menu-item-hover {
+        background-color: $concrete-layout-area-handle-hover-bg;
+        color: $concrete-layout-area-handle-hover;
+      }
+    }
+  }
+}
+
+/**
+ * Container Basics
+ */
+div.ccm-block-edit.ccm-block-edit-container {
+  margin-bottom: $concrete-element-spacing-y;
+  outline-color: $concrete-container-area-border-outer;
+  padding: $concrete-element-spacing-y 0;
+}
+
+div.ccm-container-area {
+  border-color: $concrete-container-area-border;
+
+  div.ccm-area-footer {
+    div.ccm-area-footer-handle {
+      background-color: $concrete-container-area-handle-bg;
+
+      &.ccm-menu-item-hover {
+        background-color: $concrete-container-area-handle-hover-bg;
+        color: $concrete-container-area-handle-hover;
+      }
+    }
+  }
+}
+
+/**
+ * Empty areas
+ */
+div.ccm-area[data-total-blocks='0'] {
+  min-height: $concrete-element-spacing-y;
+}
+
+div.ccm-area[data-total-blocks='0'].ccm-area-drag-block-type-over,
+div.ccm-area[data-total-blocks='0'].ccm-menu-item-hover {
+
+  border-color: $concrete-area-border-active;
+
+  div.ccm-area-footer-handle {
+    border-color: #0c6;
+
+    span {
+      opacity: 1 !important;
+    }
+  }
+
+  &.ccm-global-area {
+    border-color: $concrete-global-area-border-active;
+  }
+
+  &.ccm-layout-area {
+    border-color: $concrete-layout-area-border-active;
+  }
+
+  &.ccm-container-area {
+    border-color: $concrete-container-area-border-active;
+  }
+
+}
+
+/**
+ * Clicking on areas
+ */
+div.ccm-area.ccm-area-highlight {
+
+  border-color: $concrete-area-border-active;
+
+  .ccm-area-block-list {
+    opacity: 0.5;
+  }
+
+  > div.ccm-area-footer {
+    div.ccm-area-footer-handle {
+      background-color: $concrete-area-handle-active-bg;
+      color: white;
+    }
+  }
+}
+
+div.ccm-area.ccm-global-area.ccm-area-highlight {
+
+  border-color: $concrete-global-area-border-active !important;
+
+  > div.ccm-area-footer {
+    div.ccm-area-footer-handle {
+      background-color: $concrete-global-area-handle-active-bg !important;
+      color: white;
+    }
+  }
+}
+
+div.ccm-area.ccm-layout-area.ccm-area-highlight {
+
+  border-color: $concrete-layout-area-border-active !important;
+
+  > div.ccm-area-footer {
+    div.ccm-area-footer-handle {
+      background-color: $concrete-layout-area-handle-active-bg !important;
+      color: white;
+    }
+  }
+}
+
+div.ccm-area.ccm-container-area.ccm-area-highlight {
+
+  border-color: $concrete-container-area-border-active !important;
+
+  > div.ccm-area-footer {
+    div.ccm-area-footer-handle {
+      background-color: $concrete-container-area-handle-active-bg !important;
+      color: white;
+    }
+  }
+}
+
+div.ccm-area[data-total-blocks='0'].ccm-area-highlight {
+  border-color: $concrete-area-border-active;
+}
+
+div#ccm-menu-highlighter.ccm-area-highlight {
+  background-color: $concrete-empty-area-highlight;
+  opacity: 0.1;
+}
+
+
+/**
+ * Blocks with title notches (Layout, Container)
+ */
+
+div.ccm-edit-mode-title-notch-wrapper {
+  position: relative;
+  text-align: center;
+  top: -1px;
+}
+
+ul.ccm-edit-mode-title-notch {
+  background-color: #fff;
+  border-top-left-radius: $dropdown-border-radius;
+  border-top-right-radius: $dropdown-border-radius;
+  box-shadow: $concrete-notch-box-shadow;
+  color: $concrete-area-handle;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 12px;
+  list-style-type: none;
+  margin: $concrete-element-spacing-y 0 0 0;
+  padding: 8px 12px !important;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  user-select: none;
+  z-index: $index-level-in-context-area-handle;
+
+  &.ccm-edit-mode-title-notch-container {
+    background-color: $concrete-container-area-handle-bg;
+
+    &.ccm-menu-item-hover {
+      background-color: $concrete-container-area-handle-hover-bg;
+      color: $concrete-container-area-handle-hover;
+    }
+
+    &.ccm-edit-mode-title-notch-highlight {
+      background-color: $concrete-container-area-handle-active-bg !important;
+      color: white;
+
+      img {
+        filter: brightness(0) invert(1);
+      }
+
+      i {
+        color: white;
+      }
+    }
+  }
+
+  &.ccm-edit-mode-title-notch-layout {
+    background-color: $concrete-layout-area-handle-bg;
+
+    &.ccm-menu-item-hover {
+      background-color: $concrete-layout-area-handle-hover-bg;
+      color: $concrete-layout-area-handle-hover;
+    }
+
+    &.ccm-edit-mode-title-notch-highlight {
+      background-color: $concrete-layout-area-handle-active-bg !important;
+      color: white;
+    }
+  }
+
+
+  i {
+    font-size: 14px;
+  }
+
+  li {
+    display: flex;
+    line-height: 12px;
+    margin-right: 6px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    img { // container images
+      max-height: 12px;
+    }
+
+    span {
+      margin-left: 6px;
+      margin-right: 6px;
+      text-transform: uppercase;
+    }
+
+    a {
+      color: $concrete-inline-icon-link !important;
+      position: relative;
+      z-index: $index-level-inline-commands; // this ensures that the move icon in our notches comes above the click proxy for clicking on the notch
+
+      &.ccm-edit-mode-inline-command-move {
+        cursor: move;
+      }
+
+      &:hover {
+        color: $primary !important;
+      }
+    }
+  }
+}
+
+// Clicking on a notch for layout or container
+div.ccm-block-edit-container,
+div.ccm-block-edit-layout {
+  transition: outline-color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+
+  > * {
+    transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+}
+
+div.ccm-block-edit.ccm-block-edit-container.ccm-block-edit-container-highlight {
+  outline-color: $concrete-container-area-border-active !important;
+
+  > * {
+    opacity: 0.4;
+  }
+}
+
+div.ccm-block-edit.ccm-block-edit-layout.ccm-block-edit-layout-highlight {
+  outline-color: $concrete-layout-area-border-active !important;
+
+  > * {
+    opacity: 0.4;
+  }
+}
+
+
+// Hide the notch when doing inline design editing, because it loads a double notch into the page
+div.ccm-form-block-design {
+  div.ccm-edit-mode-title-notch-wrapper {
+    display: none;
+  }
+}
+
+/**
+ * Edit mode in-page controls for dragging, moving blocks around
+ */
+ul.ccm-edit-mode-inline-commands {
+  background-color: #fff;
+  border-radius: $dropdown-border-radius;
+  box-shadow: $popover-box-shadow;
+  font-size: 14px;
+  left: 50%;
+  list-style-type: none;
+  margin: auto;
+  opacity: 0;
+  padding: 0 !important;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: $index-level-inline-commands; // has to be over the click proxy
+  li {
+    align-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    span {
+      color: #888;
+      display: inline-block;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 12px;
+      padding-left: 4px;
+      padding-right: 4px;
+      text-transform: uppercase;
+    }
+
+    a {
+      color: $concrete-inline-icon-link !important;
+      display: inline-block;
+      font-weight: lighter;
+      padding: 3px 6px;
+      position: relative;
+      text-align: center;
+
+      &:hover {
+        color: $primary !important;
+      }
+
+      &.ccm-edit-mode-inline-command-move {
+        cursor: move;
+      }
+    }
+
+    a:hover {
+      text-decoration: none !important;
+    }
+  }
+}
+
+// Hovering over the move arrows icon itself
+ul.ccm-edit-mode-inline-commands:hover {
+  opacity: 1;
+}
+
+// Hovering over the move icon, in order to give the block/item itself a different shade of hover opacity in
+// preparation to move.
+div.ccm-block-edit.ccm-block-move-hover {
+  > div.ccm-block-cover {
+    background-color: $concrete-block-hover-bg;
+    opacity: 0.4;
+  }
+}
+
+/**
+ * Hovering over blocks in page to show controls
+ */
+div.ccm-block-edit.ccm-menu-item-hover,
+ul.ccm-edit-mode-inline-commands:hover {
+  .ccm-block-cover {
+    background-color: $concrete-block-hover-bg;
+    opacity: 0.2;
+  }
+
+  &.ccm-block-highlight {
+    .ccm-block-cover {
+      opacity: 0;
+    }
+  }
+}
+
+div.ccm-block-edit.ccm-menu-item-hover {
+  > div.ccm-custom-style-container > ul.ccm-edit-mode-inline-commands,
+  > ul.ccm-edit-mode-inline-commands {
+    opacity: 1;
+  }
+}
+
+// Hide the in-page block commands when the menu is visible
+div.ccm-block-edit.ccm-block-highlight {
+  > div.ccm-custom-style-container > ul.ccm-edit-mode-inline-commands,
+  > ul.ccm-edit-mode-inline-commands {
+    opacity: 0;
+  }
+}
+
+
+
 /* stylelint-disable value-no-vendor-prefix, function-url-quotes */
 /**
  * Highlighter
  */
-
 div#ccm-menu-click-proxy {
   background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
   cursor: pointer;
@@ -53,221 +579,24 @@ div.ccm-block-edit {
   @include clearfix();
   min-height: 16px;
   opacity: 1;
-  outline: 1px solid transparent;
+  outline: 2px solid transparent;
   outline-offset: -1px;
   position: relative;
-
-  transition: outline-color 0.5 s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: outline-color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 div.ccm-block-edit.ccm-menu-item-hover,
 div.ccm-block-edit.ccm-block-highlight {
-  outline: 1px solid #59ec59;
-
-  > div.ccm-custom-style-container > ul.ccm-edit-mode-inline-commands,
-  > ul.ccm-edit-mode-inline-commands {
-    float: none;
-    list-style-type: none;
-    margin: 0 !important;
-    opacity: 1;
-  }
+  outline-color: $concrete-block-active-border;
 }
 
 div.ccm-global-area {
   div.ccm-block-edit.ccm-menu-item-hover,
   div.ccm-block-edit.ccm-block-highlight {
-    outline: 1px solid #80d0ec;
+    outline-color: $concrete-global-area-block-active-border;
   }
 }
 
-/**
- * Areas
-  */
-
-div.ccm-area {
-  outline: 1px solid transparent;
-  outline-offset: -1px;
-  /* margin-bottom: 50px; */
-  transition: outline-color 0.5 s cubic-bezier(0.19, 1, 0.22, 1);
-
-  /**
-   * draggable blocks into area
-   */
-
-  .ccm-area-block-dropzone-active {
-    margin-bottom: -8px;
-    margin-top: -8px;
-
-    .ccm-area-block-dropzone-inner {
-      border: 2px solid rgba(0, 0, 0, 0);
-      height: 10px;
-      margin-bottom: 2px;
-      margin-top: 2px;
-    }
-  }
-
-  .ccm-area-block-dropzone-over {
-    .ccm-area-block-dropzone-inner {
-      border: 2px solid #0c6;
-    }
-  }
-
-}
-
-div.ccm-area:hover,
-div.ccm-area.ccm-parent-menu-item-hover,
-div.ccm-area.ccm-parent-menu-item-active,
-div.ccm-area.ccm-area-accepts-blocks,
-div.ccm-area.ccm-area-highlight,
-div.ccm-area.ccm-menu-item-hover {
-  outline: 1px solid #e6e6e6;
-
-  > div.ccm-area-footer {
-    display: block;
-    opacity: 1;
-  }
-}
-
-div.ccm-area-footer {
-  bottom: 0;
-  left: 0;
-  max-width: 100%;
-  opacity: 0;
-  padding-left: 20px;
-  position: absolute;
-  transform: translateY(100%);
-  transition: opacity 0.5 s cubic-bezier(0.19, 1, 0.22, 1);
-  white-space: nowrap;
-  //padding-top: 15px;
-  z-index: $index-level-in-context-area-handle;
-
-  div.ccm-area-footer-handle {
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    color: #666;
-    display: inline-block;
-    font-size: $font-size-base !important;
-    max-width: 100%;
-    padding: 8px 15px;
-
-    > span {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    i {
-      vertical-align: middle;
-    }
-  }
-}
-
-/**
- * Hovering over areas
- */
-div.ccm-menu-item-hover {
-  > div.ccm-area-footer {
-    > div.ccm-area-footer-handle {
-      span {
-        opacity: 1 !important;
-      }
-    }
-  }
-}
-
-/**
- * Empty areas
- */
-div.ccm-area[data-total-blocks='0'] {
-  min-height: 50px;
-
-  outline: 1px solid #e6e6e6;
-  outline-offset: -1px;
-
-}
-
-/**
- * Empty areas - firefox stupidity
- */
-@-moz-document url-prefix() {
-  div.ccm-area[data-total-blocks='0'] {
-    border: 1px solid #e6e6e6;
-    outline: none !important;
-  }
-}
-
-div.ccm-area[data-total-blocks='0'].ccm-area-drag-block-type-over,
-div.ccm-area[data-total-blocks='0'].ccm-menu-item-hover {
-
-  outline: 1px solid #0c6;
-
-  div.ccm-area-footer-handle {
-    border-color: #0c6;
-
-    span {
-      opacity: 1 !important;
-    }
-  }
-
-  &.ccm-global-area {
-    outline-color: #80d0ec;
-
-    div.ccm-area-footer-handle {
-      border-color: #80d0ec;
-
-    }
-  }
-}
-
-/**
- * Clicking on areas
- */
-div.ccm-area.ccm-area-highlight {
-
-  outline: 1px solid #59ec59;
-  outline-offset: -1px;
-
-  > div.ccm-area-footer {
-    div.ccm-area-footer-handle {
-      border-bottom: 1px solid #59ec59;
-      border-left: 1px solid #59ec59;
-      border-right: 1px solid #59ec59;
-      color: #000;
-    }
-  }
-
-  &.ccm-global-area-highlight {
-    outline: 1px solid #80d0ec;
-
-    > div.ccm-area-footer {
-      div.ccm-area-footer-handle {
-        border-bottom: 1px solid #80d0ec;
-        border-left: 1px solid #80d0ec;
-        border-right: 1px solid #80d0ec;
-        color: #000;
-      }
-    }
-  }
-}
-
-div.ccm-area[data-total-blocks='0'].ccm-area-highlight {
-  outline: 1px solid #59ec59;
-
-  &.ccm-global-area-highlight {
-    outline-color: #80d0ec;
-  }
-}
-
-div#ccm-menu-highlighter.ccm-area-highlight {
-  background-color: #ffff76;
-  opacity: 0.1;
-
-  &.ccm-global-area-highlight {
-    background-color: #93ffdb;
-  }
-}
 
 /**
  * Inline edit mode tweaks
@@ -289,7 +618,7 @@ div.ccm-area.ccm-area-inline-edit-disabled {
 
   div.ccm-block-edit-inline-active {
     opacity: 1;
-    outline: 1px solid #5eed5e;
+    outline: 2px solid $concrete-block-active-border;
     outline-offset: -1px;
   }
 
@@ -299,78 +628,15 @@ div.ccm-area.ccm-area-inline-edit-disabled {
  * Clicking on blocks
  */
 div#ccm-menu-highlighter.ccm-block-highlight {
-  background-color: #59ec59;
+  background-color: $concrete-block-active-bg;
   opacity: 0.4;
 
   &.ccm-global-area-block-highlight {
-    background-color: rgb(128, 208, 236);
-    outline: 1px solid #80d0ec;
+    background-color: $concrete-global-area-block-active-bg;
+    outline: 2px solid $concrete-global-area-border-active;
   }
 }
 
-/**
- * Inline commands
- */
-ul.ccm-edit-mode-inline-commands {
-  background-color: #fff;
-  border-bottom-left-radius: 3px;
-  box-shadow: $popover-box-shadow;
-  display: flex;
-  height: 25px;
-  list-style-type: none;
-  margin: 0 !important;
-  opacity: 0;
-  padding: 0 !important;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: $index-level-inline-commands; // has to be over the click proxy
-  li {
-    align-items: center;
-    display: flex;
-    margin: 0 !important;
-    padding: 0 !important;
-
-    span {
-      color: #888;
-      display: inline-block;
-      font-size: 12px;
-      font-weight: bold;
-      line-height: 12px;
-      padding-left: 4px;
-      padding-right: 4px;
-      text-transform: uppercase;
-    }
-
-    a {
-      color: #444 !important;
-      display: inline-block;
-      font-weight: lighter;
-      padding: 0;
-      position: relative;
-      text-align: center;
-      width: 25px !important;
-
-      &:hover {
-        color: $blue !important;
-      }
-
-      &.ccm-edit-mode-inline-command-move {
-        cursor: move;
-      }
-    }
-
-    a:hover {
-      text-decoration: none !important;
-    }
-
-  }
-
-}
-
-ul.ccm-edit-mode-inline-commands:hover {
-  opacity: 1;
-}
 
 /**
  * In page menus
@@ -394,52 +660,29 @@ ul.ccm-edit-mode-inline-commands:hover {
       border-bottom-left-radius: $dropdown-border-radius;
       border-bottom-right-radius: $dropdown-border-radius;
     }
-
-
-
   }
-
 }
 
-/*
- * Edit mode drag areas - The green hover state things
+/**
+ * Draggable blocks in edit mode
  */
 div.ccm-area-drag-area {
-  line-height: 0px;
-  outline-color: rgb(170, 255, 170);
-  outline-style: solid;
-  outline-width: 0;
-  transition: outline-width 0.5s cubic-bezier(0.19, 1, 0.22, 1), outline-color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  height: 0;
+  line-height: 0;
+  transition: none;
 
   span {
-    display: none;
+    display: none; // We have to hide "Empty Area" text by default.
   }
 
+  /*
+  // I'm not sure this is needed, so I'm commenting it out.
   &.ccm-area-drag-area-contender {
     background-color: rgba(221, 255, 221, 0.5);
     outline: solid 5px rgba(221, 255, 221, 0.7) !important;
   }
+   */
 
-  &.ccm-area-drag-area-selectable {
-    outline-width: 10px !important;
-  }
-}
-
-/* Global area color */
-div.ccm-global-area {
-  > .ccm-area-block-list {
-    > div.ccm-area-drag-area {
-      border-color: rgb(128, 208, 236);
-      outline-color: rgb(203, 234, 255);
-    }
-  }
-}
-
-html.ccm-panel-add-block,
-html.ccm-block-dragging {
-  div.ccm-area-drag-area {
-    outline-width: 2px;
-  }
 }
 
 /**
@@ -457,6 +700,24 @@ div.ccm-area[data-total-blocks='0'] {
   }
 }
 
+
+
+html.ccm-block-dragging {
+  div.ccm-area.ccm-area-accepts-block-drag-payload {
+    div.ccm-area-drag-area {
+      background-color: $concrete-drag-area-bg;
+      height: 32px;
+      transition: height 2s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.2s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+
+      &.ccm-area-drag-area-selectable {
+        background-color: $concrete-drag-area-active-bg;
+        color: #333;
+      }
+    }
+  }
+}
+
+// Handling the drag state of the icons in the add panel
 a.ccm-block-edit-drag,
 a.ccm-panel-add-block-draggable-block-type-dragger {
   bottom: 0;
@@ -485,6 +746,8 @@ body {
   }
 }
 
+
+
 /**
  * Disabled edit mode blocks
  */
@@ -503,22 +766,13 @@ div.ccm-block-edit {
   > div.ccm-block-cover {
     height: 100%;
     left: 0;
+    opacity: 0;
     position: absolute;
+    transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
     top: 0;
     width: 100%;
   }
-}
 
-/**
- * Containers. Hovering is a bit of a hack but there's no way to easily move or delete these things
- * without showing them on hover.
- */
-div.ccm-block-edit[data-block-type-handle=core_container] {
-  &:hover {
-    > ul.ccm-edit-mode-inline-commands {
-      opacity: 1;
-    }
-  }
 }
 
 /**
