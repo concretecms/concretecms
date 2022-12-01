@@ -45,6 +45,8 @@ $concrete-empty-area-highlight: #ffff76;
 $concrete-drag-area-bg: rgba(255, 255, 118, 0.4);
 $concrete-drag-area-active-bg: rgba(89, 236, 89, 0.4);
 $concrete-drag-area-active-border: $blue;
+$concrete-drag-area-active-shadow: rgba(74, 144, 226, 0.7);
+
 /**
  * Areas Basics
   */
@@ -707,10 +709,14 @@ html.ccm-block-dragging {
     div.ccm-area-drag-area {
       background-color: $concrete-drag-area-bg;
       height: 32px;
-      transition: height 2s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.2s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: height 2s cubic-bezier(0.19, 1, 0.22, 1),
+        background-color 0.2s cubic-bezier(0.19, 1, 0.22, 1),
+        border-color 0.2s cubic-bezier(0.19, 1, 0.22, 1),
+        box-shadow 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 
       &.ccm-area-drag-area-selectable {
         background-color: $concrete-drag-area-active-bg;
+        box-shadow: 0 0 30px 0 $concrete-drag-area-active-shadow;
         color: #333;
       }
     }
@@ -768,8 +774,8 @@ div.ccm-block-edit {
     left: 0;
     opacity: 0;
     position: absolute;
-    transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
     top: 0;
+    transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
     width: 100%;
   }
 
