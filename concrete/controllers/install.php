@@ -92,12 +92,11 @@ class Install extends Controller
 
         $config = $this->app->make('config');
         $this->set('pageTitle', t('Install Concrete CMS'));
-        $image = date('Ymd') . '.jpg';
         $this->set('concreteVersion', $config->get('concrete.version'));
 
         $locale = $this->request->request->get('locale');
         if ($locale) {
-            $loc = Localization::changeLocale($locale);
+            Localization::changeLocale($locale);
             $this->set('locale', $locale);
         }
         Cache::disableAll();
@@ -383,7 +382,6 @@ class Install extends Controller
         $options = $this->getInstallerOptions();
         $options->load();
         $options->setStartingPointHandle($pkgHandle);
-        $jsx = $this->app->make('helper/json');
         $js = new stdClass();
         try {
             $spl = $this->installer->getStartingPoint(false);
