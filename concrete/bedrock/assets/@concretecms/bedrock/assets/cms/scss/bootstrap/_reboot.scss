@@ -22,13 +22,23 @@
 
 body div.ccm-ui { // Added body for extra specificity
   margin: 0; // 1
-  font-family: $font-family-base;
-  @include font-size($font-size-base);
-  font-weight: $font-weight-base;
-  line-height: $line-height-base;
-  color: $body-color;
-  text-align: $body-text-align;
-  //background-color: $body-bg; // 2 Concrete can't have this
+  font-family: var(--#{$prefix}body-font-family);
+  // Concrete CMS
+  // I know this is not ideal – font size root is usually 1rem and then you use the browser defaults. However
+  // In the case of our CMS css intermingling with theme CSS, there are older theme frameworks that explicitly
+  // set font size on html (as in Bootstrap 3, etc...). In those cases, sometimes they set really low font sizes
+  // on html, which then in turn means the Concrete panels, etc... have tiny font sizes. For the CMS CSS to get
+  // around this we need to just be explicit about our root font size.
+  // And NO – before you ask – we cannot just change our $font-size-base to 16px in our variables.scss CMS file
+  // because a million Bootstrap things are derived from this, and they're all using 1rem and 1.2rem and
+  // !@#$! like that, so when they try to use 16px / 1.2rem or whatever they complain about mixing units.
+  font-size: 16px;
+  //@include font-size(var(--#{$prefix}body-font-size));
+  font-weight: var(--#{$prefix}body-font-weight);
+  line-height: var(--#{$prefix}body-line-height);
+  color: var(--#{$prefix}body-color);
+  // text-align: var(--#{$prefix}body-text-align); // Concrete can't have this
+  // background-color: var(--#{$prefix}body-bg); ; // 2 Concrete can't have this
   -webkit-text-size-adjust: 100%; // 3
   -webkit-tap-highlight-color: rgba($black, 0); // 4
 }
