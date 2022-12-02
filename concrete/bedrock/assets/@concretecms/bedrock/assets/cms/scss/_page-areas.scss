@@ -706,7 +706,7 @@ div.ccm-area[data-total-blocks='0'] {
 
 html.ccm-block-dragging {
   div.ccm-area.ccm-area-accepts-block-drag-payload {
-    div.ccm-area-drag-area {
+    > div.ccm-area-block-list > div.ccm-area-drag-area {
       background-color: $concrete-drag-area-bg;
       height: 32px;
       transition: height 2s cubic-bezier(0.19, 1, 0.22, 1),
