@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
 use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
+use Concrete\Core\Application\UserInterface\Welcome\Type\Manager;
 
 class ApplicationServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,16 @@ class ApplicationServiceProvider extends ServiceProvider
 
         $this->app->singleton('Concrete\Core\ConcreteCms\ActivityService');
         $this->app->singleton('Concrete\Core\Block\Menu\Manager');
+        $this->app->singleton('Concrete\Core\Application\UserInterface\Welcome\WelcomeService');
+
+        $this->app->singleton(
+            Manager::class,
+            function ($app) {
+                $manager = new Manager($app);
+                $manager->driver('introduction');
+                return $manager;
+            }
+        );
 
         foreach ($singletons as $key => $value) {
             $this->app->singleton($key, $value);

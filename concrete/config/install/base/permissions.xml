@@ -466,6 +466,12 @@
             </access>
         </permissionkey>
 
+        <permissionkey handle="view_welcome_content" name="View Welcome Content" package="Controls whether a user sees the Welcome Back modal interstitial, including upgrades and help." category="admin">
+            <access>
+                <group name="Administrators" description=""/>
+            </access>
+        </permissionkey>
+
         <permissionkey handle="edit_topic_tree" name="Edit Topic Tree" package="" category="admin">
             <access>
                 <group name="Administrators" description=""/>
