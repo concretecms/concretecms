@@ -23,6 +23,7 @@ jobs:
           - 3306:3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
+      continue-on-error: ${{ matrix.php-version == '8.2' }}
       matrix:
         php-version:
           - "7.3"
@@ -45,6 +46,9 @@ jobs:
             dependencies: "locked"
             composer: "composer:v1, prestissimo"
           - php-version: 8.1
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
+          - php-version: 8.2
             operating-system: "ubuntu-latest"
             dependencies: "locked"
 
