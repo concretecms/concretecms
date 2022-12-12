@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/concrete5-community/docker5:base
     strategy:
-      continue-on-error: ${{ matrix.php-version == '8.2' }}
       matrix:
         php-version:
           - "7.4"
