@@ -1,0 +1,34 @@
+/*!
+ * @copyright Copyright (c) 2017 IcoMoon.io
+ * @license   Licensed under MIT license
+ *            See https://github.com/Keyamoon/svgxuse
+ * @version   1.2.6
+ */
+
+/*!
+ * TOAST UI Color Picker
+ * @version 2.2.8
+ * @author NHN Cloud FE Development Team <dl_javascript@nhn.com>
+ * @license MIT
+ */
+
+/*!
+ * TOAST UI ImageEditor
+ * @version 3.15.3
+ * @license MIT
+ */
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+
+/*! @source http://purl.eligrey.com/github/classList.js/blob/master/classList.js */
+
+/*! Fabric.js Copyright 2008-2015, Printio (Juriy Zaytsev, Maxim Chernyak) */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+// @license RGB <-> HSV conversion utilities based off of http://www.cs.rit.edu/~ncs/color/t_convert.html

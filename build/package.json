@@ -4,13 +4,13 @@
     "git-skip": "node ./libraries/built-assets skip",
     "git-unskip": "node ./libraries/built-assets unskip",
     "git-revert": "node ./libraries/built-assets revert",
-    "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch-poll": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js --watch-poll",
-    "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "prod": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "dev": "mix",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "mix --production",
+    "production": "mix --production"
   },
   "devDependencies": {
     "@concretecms/bedrock": "github:concretecms/bedrock#1.4.x",
@@ -24,9 +24,11 @@
     "sass-loader": "^8.0.2",
     "shelljs": "0.8.5",
     "temp": "~0.8.1",
+    "vue-loader": "^15.10.1",
     "vue-template-compiler": "^2.6.12"
   },
   "dependencies": {
+    "path": "^0.12.7",
     "tui-image-editor": "^3.10.0"
   }
 }
