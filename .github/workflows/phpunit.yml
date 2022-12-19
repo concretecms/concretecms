@@ -39,11 +39,9 @@ jobs:
           - php-version: 8.0
             operating-system: "ubuntu-latest"
             dependencies: "highest"
-          # Lowest doesn't work at the moment. Test with composer version 1 on 7.3 only.
           - php-version: 7.3
             operating-system: "ubuntu-latest"
             dependencies: "locked"
-            composer: "composer:v1, prestissimo"
           - php-version: 8.1
             operating-system: "ubuntu-latest"
             dependencies: "locked"

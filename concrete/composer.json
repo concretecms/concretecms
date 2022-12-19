@@ -50,7 +50,8 @@
     "scssphp/scssphp": "^1.4",
     "doctrine/annotations": "^1.13.2",
     "doctrine/dbal": "^2.13.2",
-    "doctrine/orm": "^2.8.5",
+    "doctrine/orm": "^2.13 <2.14",
+    "doctrine/lexer": "^1.2.3",
     "doctrine/common": "^3.1.2",
     "doctrine/persistence": "^2.5.1",
     "doctrine/migrations": "^2",
@@ -136,7 +137,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "8.x-dev"
+      "dev-develop": "9.x-dev"
     }
   }
 }

@@ -35,6 +35,7 @@ class Design extends BackendUIPageController
 
         $pTemplateID = $c->getPageTemplateID();
         $templates = array();
+        $selectedTemplate = null;
         if ($pTemplateID) {
             $selectedTemplate = Template::getByID($pTemplateID);
             $templates[] = $selectedTemplate;
