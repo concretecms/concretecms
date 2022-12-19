@@ -4,7 +4,7 @@ namespace Concrete\Core\Entity\Attribute\Value\Value;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\MappedSuperClass
+ * @ORM\MappedSuperclass
  */
 abstract class AbstractValue
 {

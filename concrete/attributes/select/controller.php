@@ -247,11 +247,12 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $optionList = $keyType->getOptionList();
         if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
             // select list. Only one option possible. No new options.
-            $option = $this->getOptionByID($data['atSelectOptionValue']);
-            if (is_object($option)) {
-                return $this->createAttributeValue($option);
+            if (isset($data['atSelectOptionValue'])) {
+                $option = $this->getOptionByID($data['atSelectOptionValue']);
+                if (is_object($option)) {
+                    return $this->createAttributeValue($option);
+                }
             }
-
             return $this->createAttributeValue(null);
         }
         if ($akSelectAllowMultipleValues && !$akSelectAllowOtherValues) {
