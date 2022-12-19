@@ -143,8 +143,7 @@ class ActivateUserRequest extends UserRequest
             }
             $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
         } else {
-            $adminUser = UserInfo::getByID(USER_SUPER_ID);
-            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+            $mh->from(Config::get('concrete.email.default.address'), t('Website Registration Notification'));
         }
         $mh->addParameter('uID', $ui->getUserID());
         $mh->addParameter('user', $ui);
