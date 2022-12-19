@@ -616,7 +616,7 @@ return [
          */
         'enabled' => true,
         'default' => [
-            'address' => 'concrete-cms-noreply@concretecms',
+            'address' => '',
             'name' => '',
         ],
         'form_block' => [
