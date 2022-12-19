@@ -136,7 +136,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "8.x-dev"
+      "dev-develop": "9.x-dev"
     }
   }
 }
