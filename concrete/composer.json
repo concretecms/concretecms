@@ -50,7 +50,7 @@
     "scssphp/scssphp": "^1.4",
     "doctrine/annotations": "^1.13.2",
     "doctrine/dbal": "^2.13.2",
-    "doctrine/orm": "^2.13.5 <2.14",
+    "doctrine/orm": "^2.8.5 <2.14",
     "doctrine/lexer": "^1.2.3",
     "doctrine/common": "^3.1.2",
     "doctrine/persistence": "^2.5.1",
