@@ -3,6 +3,10 @@
  */
 let mix = require('laravel-mix');
 const path = require('path');
+mix.override((config) => {
+    delete config.watchOptions;
+});
+
 mix.webpackConfig({
     resolve: {
         symlinks: false
