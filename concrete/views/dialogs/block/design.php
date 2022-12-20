@@ -1,5 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<div class="ccm-form-block-design">
+
+<?php
 $set = $b->getCustomStyle();
 $btHandle = $b->getBlockTypeHandle();
 if ($btHandle === BLOCK_HANDLE_SCRAPBOOK_PROXY) {
@@ -67,3 +70,7 @@ else {
 
 $pt->registerAssets();
 $bv->render('view');
+
+?>
+
+</div>

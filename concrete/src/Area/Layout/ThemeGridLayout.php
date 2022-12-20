@@ -72,6 +72,11 @@ class ThemeGridLayout extends Layout
         return $this->gf;
     }
 
+    public function getDisplayName()
+    {
+        return t2('%s Column %s Layout', '%s Columns %s Layout', $this->getAreaLayoutNumColumns(), $this->getThemeGridFrameworkObject()->getPageThemeGridFrameworkName());
+    }
+
     /**
      * @return int
      */

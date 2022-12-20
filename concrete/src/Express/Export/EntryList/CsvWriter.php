@@ -122,7 +122,8 @@ class CsvWriter
         yield 'publicIdentifier' => $entry->getPublicIdentifier();
 
         // Resolve the site
-        $site = $this->getSiteService()->getSiteByExpressResultsNodeID($entry->getResultsNodeID());
+        $resultsNodeId = $entry->getResultsNodeID();
+        $site = $resultsNodeId ? $this->getSiteService()->getSiteByExpressResultsNodeID($resultsNodeId) : null;
         yield 'site' => $site instanceof Site ? $site->getSiteHandle() : null;
 
         $author = $entry->getAuthor();

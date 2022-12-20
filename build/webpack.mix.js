@@ -2,6 +2,11 @@
  * Import and configure laravel mix.
  */
 let mix = require('laravel-mix');
+const path = require('path');
+mix.override((config) => {
+    delete config.watchOptions;
+});
+
 mix.webpackConfig({
     resolve: {
         symlinks: false
@@ -11,7 +16,9 @@ mix.webpackConfig({
         bootstrap: true,
         vue: 'Vue',
         moment: 'moment'
-    },
+    }/*,
+    // NOTE: This doesn't work with Laravel Mix 6 so I'm commenting it out for now. Someone more versed in this
+    // will have to fix this if it's still required.
     // Override the default js compile settings to replace exclude with something that doesn't exclude node_modules.
     // @see node_modules/laravel-mix/src/components/JavaScript.js for the original
     module: {
@@ -27,7 +34,7 @@ mix.webpackConfig({
                 ]
             }
         ]
-    }
+    }*/
 });
 
 mix.options({
@@ -113,6 +120,7 @@ mix
     .copy('node_modules/fullcalendar/dist/fullcalendar.min.css', '../concrete/css/fullcalendar.css')
     .js('node_modules/@concretecms/bedrock/assets/calendar/js/vendor/fullcalendar.js', 'js/fullcalendar.js');
 
+
 // CKEditor
 mix
     .copy('node_modules/@concretecms/bedrock/assets/ckeditor/js/concrete/concretestyles/icons/snippet.png', '../concrete/js/ckeditor/plugins/concretestyles/icons/snippet.png')
@@ -125,6 +133,8 @@ mix
     })
     .js('node_modules/@concretecms/bedrock/assets/ckeditor/js/concrete.js', 'js/ckeditor/concrete.js');
 
+
+
 // TUI Image Editor
 mix
     .js('assets/tui-image-editor/tui-image-editor.js', 'js/tui-image-editor.js')
@@ -136,14 +146,15 @@ mix
         }
     });
 
+
 // Version Compare
 mix.sass('assets/htmldiff.scss', '../concrete/css/htmldiff.css');
 
 /**
  * Build Block Components
  */
-mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js');
-mix.js('assets/blocks/accordion/accordion.js', '../concrete/blocks/accordion/auto.js');
+mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js').vue()
+mix.js('assets/blocks/accordion/accordion.js', '../concrete/blocks/accordion/auto.js').vue()
 
 
 /**
@@ -157,7 +168,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/accordions/js/frontend.js', 'js/features/accordions/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/accordions/js/frontend.js', 'js/features/accordions/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/account/scss/frontend.scss', 'css/features/account/frontend.css', {
@@ -167,7 +178,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/account/js/frontend.js', 'js/features/account/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/account/js/frontend.js', 'js/features/account/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/profile/scss/frontend.scss', 'css/features/profile/frontend.css', {
@@ -185,8 +196,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/desktop/js/frontend.js', 'js/features/desktop/frontend.js');
-
+    .js('node_modules/@concretecms/bedrock/assets/desktop/js/frontend.js', 'js/features/desktop/frontend.js').vue()
 
 
 mix
@@ -197,10 +207,10 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/boards/js/frontend.js', 'js/features/boards/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/boards/js/frontend.js', 'js/features/boards/frontend.js').vue()
 
 mix
-    .js('node_modules/@concretecms/bedrock/assets/navigation/js/frontend.js', 'js/features/navigation/frontend.js')
+    .js('node_modules/@concretecms/bedrock/assets/navigation/js/frontend.js', 'js/features/navigation/frontend.js').vue()
     .sass('node_modules/@concretecms/bedrock/assets/navigation/scss/frontend.scss', 'css/features/navigation/frontend.css', {
         sassOptions: {
             includePaths: [
@@ -235,7 +245,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/imagery/js/frontend.js', 'js/features/imagery/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/imagery/js/frontend.js', 'js/features/imagery/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/calendar/scss/frontend.scss', 'css/features/calendar/frontend.css', {
@@ -245,7 +255,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/calendar/js/frontend.js', 'js/features/calendar/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/calendar/js/frontend.js', 'js/features/calendar/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/conversations/scss/frontend.scss', 'css/features/conversations/frontend.css', {
@@ -255,7 +265,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js', 'js/features/conversations/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/conversations/js/frontend.js', 'js/features/conversations/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/documents/scss/frontend.scss', 'css/features/documents/frontend.css', {
@@ -265,7 +275,8 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/documents/js/frontend.js', 'js/features/documents/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/documents/js/frontend.js', 'js/features/documents/frontend.js').vue()
+
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/basics/scss/frontend.scss', 'css/features/basics/frontend.css', {
@@ -302,10 +313,10 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/express/js/frontend.js', 'js/features/express/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/express/js/frontend.js', 'js/features/express/frontend.js').vue()
 
 mix
-    .js('node_modules/@concretecms/bedrock/assets/multilingual/js/frontend.js', 'js/features/multilingual/frontend.js')
+    .js('node_modules/@concretecms/bedrock/assets/multilingual/js/frontend.js', 'js/features/multilingual/frontend.js').vue()
     .sass('node_modules/@concretecms/bedrock/assets/multilingual/scss/frontend.scss', 'css/features/multilingual/frontend.css', {
         sassOptions: {
             includePaths: [
@@ -331,7 +342,7 @@ mix
             ]
         }
     })
-    .js('node_modules/@concretecms/bedrock/assets/maps/js/frontend.js', 'js/features/maps/frontend.js');
+    .js('node_modules/@concretecms/bedrock/assets/maps/js/frontend.js', 'js/features/maps/frontend.js').vue()
 
 mix
     .sass('node_modules/@concretecms/bedrock/assets/testimonials/scss/frontend.scss', 'css/features/testimonials/frontend.css', {
@@ -369,10 +380,10 @@ mix
             ]
         }
     })
-    .js('assets/cms.js', 'js/cms.js');
+    .js('assets/cms.js', 'js/cms.js').vue()
 
 // Elemental Theme
-mix.js('assets/themes/elemental/js/main.js', 'themes/elemental');
+mix.js('assets/themes/elemental/js/main.js', 'themes/elemental').vue()
 
 // Atomik Theme
 mix
@@ -390,7 +401,7 @@ mix
             ]
         }
     })
-    .js('assets/themes/atomik/js/main.js', 'themes/atomik');
+    .js('assets/themes/atomik/js/main.js', 'themes/atomik').vue()
 // Dashboard Theme
 mix
     .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard', {
@@ -400,7 +411,7 @@ mix
             ]
         }
     })
-    .js('assets/themes/dashboard/js/main.js', 'themes/dashboard');
+    .js('assets/themes/dashboard/js/main.js', 'themes/dashboard').vue()
 
 /**
  * Build core themes
@@ -414,7 +425,7 @@ mix
             ]
         }
     })
-    .js('assets/themes/concrete/js/main.js', 'themes/concrete');
+    .js('assets/themes/concrete/js/main.js', 'themes/concrete').vue()
 
 /**
  * Copy bedrock SVGs into our repository
@@ -425,6 +436,8 @@ mix.copy('node_modules/@concretecms/bedrock/assets/icons/sprites.svg', '../concr
  * Copy jquery ui icons into our repository
  */
 mix.copy('node_modules/jquery-ui/themes/base/images/ui-*', '../concrete/images/');
+
+
 
 /**
  * Turn off notifications

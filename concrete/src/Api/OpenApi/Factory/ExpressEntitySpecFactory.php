@@ -3,6 +3,7 @@
 namespace Concrete\Core\Api\OpenApi\Factory;
 
 use Concrete\Core\Api\OpenApi\Parameter\Parameter;
+use Concrete\Core\Api\OpenApi\SpecSchema;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
 use Concrete\Core\Api\OpenApi\JsonSchemaRefArrayContent;
@@ -192,7 +193,7 @@ class ExpressEntitySpecFactory
                 $handle,
                 t('Find a %s by its ID.', $object->getName())
             ))
-                ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
+                ->addParameter(new Parameter('id', 'path', t('The ID of the object.'), new SpecSchema('string', 'string')))
                 ->addParameter(new IncludesParameter($includes))
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':read']))
                 ->addResponse(
@@ -250,7 +251,7 @@ class ExpressEntitySpecFactory
 
         $specPath
             ->setSecurity(new SpecSecurity('authorization', [$handle . ':update']))
-            ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
+            ->addParameter(new Parameter('id', 'path', t('The ID of the object.'), new SpecSchema('string', 'string')))
             ->addResponse(
                 new SpecResponse(
                     200,
@@ -278,7 +279,7 @@ class ExpressEntitySpecFactory
                 $handle,
                 t('Delete a %s.', $object->getName())
             ))
-                ->addParameter(new Parameter('id', 'path', t('The ID of the object.')))
+                ->addParameter(new Parameter('id', 'path', t('The ID of the object.'), new SpecSchema('string', 'string')))
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':delete']))
                 ->addResponse(
                     new SpecResponse(
