@@ -42,7 +42,7 @@ $concrete-global-area-block-active-bg: rgb(128, 208, 236);
 $concrete-inline-icon-link: #666;
 $concrete-notch-box-shadow: 0 -1px 1px 0 rgba(65, 69, 73, 0.3), 0 -1px 3px 1px rgba(65, 69, 73, 0.15);
 $concrete-empty-area-highlight: #ffff76;
-$concrete-drag-area-bg: rgba(255, 255, 118, 0.4);
+$concrete-drag-area-bg: rgba(255, 255, 118, 0.3);
 $concrete-drag-area-active-bg: rgba(89, 236, 89, 0.4);
 $concrete-drag-area-active-border: $blue;
 $concrete-drag-area-active-shadow: rgba(74, 144, 226, 0.7);
@@ -142,13 +142,14 @@ div.ccm-global-area {
  * Layout Basics
  */
 div.ccm-block-edit.ccm-block-edit-layout {
-  margin-bottom: $concrete-element-spacing-y;
+  margin-bottom: $concrete-element-spacing-y / 2;
   outline-color: $concrete-layout-area-border-outer;
-  padding: $concrete-element-spacing-y 0;
+  padding: ($concrete-element-spacing-y / 2) 0;
 }
 
 div.ccm-layout-area {
   border-color: $concrete-layout-area-border;
+  margin-bottom: ($concrete-element-spacing-y / 2);
 
   div.ccm-area-footer {
     div.ccm-area-footer-handle {
@@ -166,13 +167,14 @@ div.ccm-layout-area {
  * Container Basics
  */
 div.ccm-block-edit.ccm-block-edit-container {
-  margin-bottom: $concrete-element-spacing-y;
+  margin-bottom: $concrete-element-spacing-y / 2;
   outline-color: $concrete-container-area-border-outer;
-  padding: $concrete-element-spacing-y 0;
+  padding: ($concrete-element-spacing-y / 2) 0;
 }
 
 div.ccm-container-area {
   border-color: $concrete-container-area-border;
+  margin-bottom: ($concrete-element-spacing-y / 2);
 
   div.ccm-area-footer {
     div.ccm-area-footer-handle {
@@ -708,8 +710,8 @@ html.ccm-block-dragging {
   div.ccm-area.ccm-area-accepts-block-drag-payload {
     > div.ccm-area-block-list > div.ccm-area-drag-area {
       background-color: $concrete-drag-area-bg;
-      height: 32px;
-      transition: height 2s cubic-bezier(0.19, 1, 0.22, 1),
+      height: 24px;
+      transition: height 1s cubic-bezier(0.19, 1, 0.22, 1),
         background-color 0.2s cubic-bezier(0.19, 1, 0.22, 1),
         border-color 0.2s cubic-bezier(0.19, 1, 0.22, 1),
         box-shadow 0.4s cubic-bezier(0.19, 1, 0.22, 1);
