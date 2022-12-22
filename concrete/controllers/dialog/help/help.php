@@ -11,7 +11,7 @@ class Help extends UserInterface
 
     public function view()
     {
-        $modal = new IntroductionModal();
+        $modal = $this->app->make(IntroductionModal::class);
         $this->set('modal', $modal);
     }
 

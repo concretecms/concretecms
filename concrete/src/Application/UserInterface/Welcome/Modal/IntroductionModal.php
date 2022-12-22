@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Application\UserInterface\Welcome\Modal;
 
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\View\View;
 
 class IntroductionModal extends AbstractBasicModal
@@ -14,10 +15,8 @@ class IntroductionModal extends AbstractBasicModal
 
     public function getBody(): string
     {
-        ob_start();
-        View::element('help/introduction');
-        $contents = ob_get_contents();
-        ob_end_clean();
-        return $contents;
+        return $this->app->make(ElementManager::class)
+            ->get('help/introduction')
+            ->getContents();
     }
 }

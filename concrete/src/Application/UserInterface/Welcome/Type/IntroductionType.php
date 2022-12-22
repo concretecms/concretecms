@@ -26,7 +26,7 @@ class IntroductionType extends Type
 
     public function getModal(): ModalInterface
     {
-        return new IntroductionModal();
+        return app(IntroductionModal::class);
     }
 
     /**

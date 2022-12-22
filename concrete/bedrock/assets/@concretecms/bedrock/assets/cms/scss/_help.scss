@@ -144,3 +144,12 @@ div#ccm-toolbar {
     padding: 10px 20px;
   }
 }
+
+.ccm-help-media {
+  display: flex;
+  margin-top: 0.5rem;
+
+  >div {
+    flex: 1;
+  }
+}

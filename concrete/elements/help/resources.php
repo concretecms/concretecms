@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 ?>
 
-<h3><?= t('More Help') ?></h3>
+<h3><?= t('Help Resources') ?></h3>
 
 <section>
 

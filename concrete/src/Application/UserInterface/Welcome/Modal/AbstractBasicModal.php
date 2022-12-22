@@ -2,10 +2,14 @@
 
 namespace Concrete\Core\Application\UserInterface\Welcome\Modal;
 
+use Concrete\Core\Application\ApplicationAwareInterface;
+use Concrete\Core\Application\ApplicationAwareTrait;
 use HtmlObject\Element;
 
-abstract class AbstractBasicModal implements BasicModalInterface
+abstract class AbstractBasicModal implements BasicModalInterface, ApplicationAwareInterface
 {
+
+    use ApplicationAwareTrait;
 
     public function getModalElement(): Element
     {
