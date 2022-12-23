@@ -29,7 +29,7 @@ class GroupRoleChange implements SubjectInterface
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupRoleChangeNotification", mappedBy="signup", cascade={"remove"}),
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupRoleChangeNotification", mappedBy="groupRoleChange", cascade={"remove"}),
      *
      * @var \Doctrine\Common\Collections\Collection
      */

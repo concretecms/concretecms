@@ -26,7 +26,7 @@ abstract class Finding
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Result")
+     * @ORM\ManyToOne(targetEntity="Result", inversedBy="findings")
      */
     protected $result;
 
