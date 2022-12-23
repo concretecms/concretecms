@@ -1,4 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
-<?=$modal?>
+
+<concrete-welcome-modal :modal='<?=json_encode($modal)?>'>
+</concrete-welcome-modal>

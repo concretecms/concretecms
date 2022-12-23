@@ -44,7 +44,8 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
      */
     if ($modal = $welcomeService->getModal()) { ?>
         <div data-wrapper="concrete-welcome-modal">
-            <?=$modal?>
+            <concrete-welcome-modal :modal='<?=json_encode($modal)?>'>
+            </concrete-welcome-modal>
         </div>
     <?php } ?>
 

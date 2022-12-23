@@ -13,6 +13,11 @@ class Manager extends CoreManager
         return $this->app->make(IntroductionType::class);
     }
 
+    public function createSiteInformationDriver()
+    {
+        return $this->app->make(SiteInformationType::class);
+    }
+
     public function __construct(Application $application)
     {
         parent::__construct($application);

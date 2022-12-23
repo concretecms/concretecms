@@ -2,7 +2,8 @@
 namespace Concrete\Controller\Dialog\Help;
 
 use Concrete\Controller\Backend\UserInterface;
-use Concrete\Core\Application\UserInterface\Welcome\Modal\IntroductionModal;
+use Concrete\Core\Application\UserInterface\Welcome\Modal\Modal;
+use Concrete\Core\Application\UserInterface\Welcome\Type\IntroductionType;
 use Concrete\Core\User\User;
 
 class Help extends UserInterface
@@ -11,7 +12,7 @@ class Help extends UserInterface
 
     public function view()
     {
-        $modal = $this->app->make(IntroductionModal::class);
+        $modal = new Modal($this->app->make(IntroductionType::class));
         $this->set('modal', $modal);
     }
 

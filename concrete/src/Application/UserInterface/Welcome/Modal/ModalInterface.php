@@ -2,13 +2,15 @@
 
 namespace Concrete\Core\Application\UserInterface\Welcome\Modal;
 
-use HtmlObject\Element;
+use Concrete\Core\Application\UserInterface\Welcome\Modal\Slide\SlideInterface;
 
-interface ModalInterface
+interface ModalInterface extends \JsonSerializable
 {
 
-    public function getModalElement(): Element;
+    /**
+     * @return SlideInterface[]
+     */
+    public function getSlides(): array;
 
-    public function __toString(): string;
 
 }

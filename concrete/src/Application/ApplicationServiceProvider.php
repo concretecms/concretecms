@@ -45,6 +45,7 @@ class ApplicationServiceProvider extends ServiceProvider
             Manager::class,
             function ($app) {
                 $manager = new Manager($app);
+                $manager->driver('site_information');
                 $manager->driver('introduction');
                 return $manager;
             }

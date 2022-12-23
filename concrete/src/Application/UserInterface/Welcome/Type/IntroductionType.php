@@ -2,14 +2,18 @@
 
 namespace Concrete\Core\Application\UserInterface\Welcome\Type;
 
-use Concrete\Core\Application\UserInterface\Welcome\Modal\IntroductionModal;
 use Concrete\Core\Application\UserInterface\Welcome\Modal\ModalInterface;
+use Concrete\Core\Application\UserInterface\Welcome\Modal\Slide\Slide;
+use Concrete\Core\Application\UserInterface\Welcome\Type\Traits\SingleSlideTrait;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\User\User;
 use Concrete\Core\User\User as ConcreteUser;
 
 class IntroductionType extends Type
 {
+
+    use SingleSlideTrait;
 
     /**
      * @var Repository
@@ -22,11 +26,6 @@ class IntroductionType extends Type
     public function __construct(Repository $config)
     {
         $this->config = $config;
-    }
-
-    public function getModal(): ModalInterface
-    {
-        return app(IntroductionModal::class);
     }
 
     /**
@@ -56,9 +55,18 @@ class IntroductionType extends Type
      * @param ConcreteUser $user
      * @param ModalInterface $modal
      */
-    public function trackModalDisplayed(User $user, ModalInterface $modal)
+    public function markModalAsViewed(User $user)
     {
         $user->saveConfig('MAIN_HELP_LAST_VIEWED', time());
     }
+
+    public function getSlide()
+    {
+        $body = $this->app->make(ElementManager::class)
+            ->get('help/introduction')
+            ->getContents();
+        return new Slide('concrete-welcome-content-help', ['body' => $body]);
+    }
+
 
 }

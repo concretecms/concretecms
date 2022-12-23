@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Application\UserInterface\Welcome;
 
-use Concrete\Core\Application\UserInterface\Welcome\Modal\IntroductionModal;
+use Concrete\Core\Application\UserInterface\Welcome\Modal\Modal;
 use Concrete\Core\Application\UserInterface\Welcome\Modal\ModalInterface;
 use Concrete\Core\Application\UserInterface\Welcome\Type\Manager;
 use Concrete\Core\Application\UserInterface\Welcome\Type\TypeInterface;
@@ -40,19 +40,20 @@ class WelcomeService
     public function getModal(bool $trackView = true): ?ModalInterface
     {
         if ($this->checker->canViewWelcomeContent()) {
+            $modal = new Modal();
             $drivers = $this->manager->getDrivers();
             foreach ($drivers as $driver) {
                 /**
                  * @var $driver TypeInterface
                  */
                 if ($driver->showModal($this->user, $drivers)) {
-                    $modal = $driver->getModal();
-                    if ($modal) {
-                        $driver->trackModalDisplayed($this->user, $modal);
-                        return $modal;
+                    $slides = $driver->getSlides();
+                    if (count($slides)) {
+                        $modal->addSlides($slides);
                     }
                 }
             }
+            return $modal;
         }
         return null;
     }

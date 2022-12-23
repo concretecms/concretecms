@@ -16,6 +16,8 @@ $router->all('/ccm/system/captcha/picture', '\Concrete\Core\Captcha\CaptchaWithP
 $router->all('/ccm/system/dialogs/language/update/details', '\Concrete\Controller\Dialog\Language\Update\Details::view');
 $router->all('/dashboard/blocks/stacks/list', '\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page');
 $router->all('/ccm/system/dialogs/help/help/', '\Concrete\Controller\Dialog\Help\Help::view');
+$router->post('/ccm/system/welcome/mark_as_viewed/{handle}', '\Concrete\Controller\Backend\Welcome::markAsViewed');
+$router->post('/ccm/system/welcome/site_information/submit', '\Concrete\Controller\Backend\Welcome\SiteInformation::submit');
 $router->all('/ccm/system/notification/alert/archive/', '\Concrete\Controller\Backend\Notification\Alert::archive');
 $router->all('/ccm/system/accept_privacy_policy/', '\Concrete\Controller\Backend\PrivacyPolicy::acceptPrivacyPolicy');
 $router->all('/ccm/system/account/remove_inbox_new_message_status', '\Concrete\Controller\Backend\Account::removeInboxNewMessageStatus');
