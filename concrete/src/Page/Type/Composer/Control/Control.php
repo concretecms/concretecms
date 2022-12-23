@@ -14,6 +14,7 @@ use HtmlObject\Element;
 
 abstract class Control extends ConcreteObject
 {
+    protected $page;
     protected $ptComposerControlIdentifier;
     protected $ptComposerControlName;
     protected $ptComposerControlIconSRC;
