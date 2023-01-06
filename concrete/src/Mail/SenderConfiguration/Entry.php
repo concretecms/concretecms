@@ -59,6 +59,11 @@ final class Entry
      */
     private $required = self::REQUIRED_NO;
 
+    /**
+     * @var string
+     */
+    private $notes = '';
+
     public function __construct(string $name, string $emailKey)
     {
         $this->name = $name;
@@ -153,5 +158,20 @@ final class Entry
     public function getRequired(): int
     {
         return $this->required;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setNotes(string $value): self
+    {
+        $this->notes = $value;
+        
+        return $this;
+    }
+    
+    public function getNotes(): string
+    {
+        return $this->notes;
     }
 }

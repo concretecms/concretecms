@@ -242,8 +242,7 @@ class Search extends DashboardPageController
                             }
                             $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
                         } else {
-                            $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+                            $mh->from(Config::get('concrete.email.default.address'), t('Website Registration Notification'));
                         }
                         $mh->addParameter('uID', $this->user->getUserID());
                         $mh->addParameter('user', $this->user);

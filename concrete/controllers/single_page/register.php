@@ -179,9 +179,9 @@ class Register extends PageController
                         }
                         $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
                     } else {
-                        $adminUser = UserInfo::getByID(USER_SUPER_ID);
-                        if (is_object($adminUser)) {
-                            $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+                        $fromEmail = (string) Config::get('concrete.email.default.address');
+                        if ($fromEmail !== '') {
+                            $mh->from($fromEmail, t('Website Registration Notification'));
                         }
                     }
 
