@@ -103,7 +103,7 @@ class PageBreadcrumbFactory
         /** @var Page $_page */
         foreach ($pages as $_page) {
             if (!$this->shouldExcludeFromNav($_page) && $this->canViewPage($_page)) {
-                $breadcrumb->add(new Item($_page->getCollectionLink(), (string) $_page->getCollectionName()));
+                $breadcrumb->add(new Item($this->getLink($_page), (string) $_page->getCollectionName()));
             }
             if ($this->shouldExcludeSubpagesFromNav($_page)) {
                 $this->setIncludeCurrent(false);
@@ -111,9 +111,22 @@ class PageBreadcrumbFactory
             }
         }
         if (!$this->shouldExcludeCurrentPageFromNav($page) && $this->canViewPage($page)) {
-            $breadcrumb->add(new Item($page->getCollectionLink(), $page->getCollectionName(), true));
+            $breadcrumb->add(new Item($this->getLink($page), $page->getCollectionName(), true));
         }
 
         return $breadcrumb;
+    }
+
+    protected function getLink(Page $page): string
+    {
+        $link = $page->getCollectionLink();
+        if ($page->getAttribute('replace_link_with_first_in_nav')) {
+            $child = $page->getFirstChild();
+            if ($child && !$child->isError()) {
+                $link = $child->getCollectionLink();
+            }
+        }
+
+        return $link;
     }
 }
