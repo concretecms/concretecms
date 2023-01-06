@@ -451,11 +451,9 @@ class Controller extends BlockController
 
             $questionAnswerPairs = [];
 
-            if (Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
-                $formFormEmailAddress = Config::get('concrete.email.form_block.address');
-            } else {
-                $adminUserInfo = UserInfo::getByID(USER_SUPER_ID);
-                $formFormEmailAddress = $adminUserInfo->getUserEmail();
+            $formFormEmailAddress = (string) Config::get('concrete.email.form_block.address');
+            if (strpos($formFormEmailAddress, '@') === false) {
+                $formFormEmailAddress = (string) Config::get('concrete.email.default.address');
             }
             $replyToEmailAddress = $formFormEmailAddress;
             //loop through each question and get the answers
@@ -545,11 +543,9 @@ class Controller extends BlockController
             }
 
             if ((int) ($this->notifyMeOnSubmission) > 0 && !$foundSpam) {
-                if (Config::get('concrete.email.form_block.address') && strstr(Config::get('concrete.email.form_block.address'), '@')) {
-                    $formFormEmailAddress = Config::get('concrete.email.form_block.address');
-                } else {
-                    $adminUserInfo = UserInfo::getByID(USER_SUPER_ID);
-                    $formFormEmailAddress = $adminUserInfo->getUserEmail();
+                $formFormEmailAddress = (string) Config::get('concrete.email.form_block.address');
+                if (strpos($formFormEmailAddress, '@') === false) {
+                    $formFormEmailAddress = (string) Config::get('concrete.email.default.address');
                 }
 
                 $mh = $this->app->make('helper/mail');

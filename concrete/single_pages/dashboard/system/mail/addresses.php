@@ -20,26 +20,33 @@ defined('C5_EXECUTE') or die('Access Denied.');
         ?>
         <fieldset>
             <legend><?= h($entry->getName()) ?></legend>
-                <?php
-                if ($entry->getNameKey() !== '') {
-                    $fieldName = str_replace('.', '__', "name@{$keyPrefix}{$entry->getNameKey()}");
-                    $value = $config->get($keyPrefix . $entry->getNameKey());
-                    $attributes = ($entry->getRequired() & $entry::REQUIRED_EMAIL_AND_NAME) === $entry::REQUIRED_EMAIL_AND_NAME ? ['required' => 'required'] : [];
-                    ?>
-                    <div class="form-group">
-                        <?= $form->label($fieldName, t('Sender Name')) ?>
-                        <?= $form->text($fieldName, $value, $attributes) ?>
-                    </div>
-                    <?php
-                }
-                $fieldName = str_replace('.', '__', "address@{$keyPrefix}{$entry->getEmailKey()}");
-                $value = $config->get($keyPrefix . $entry->getEmailKey());
-                $attributes = $entry->getRequired() & $entry::REQUIRED_EMAIL === $entry::REQUIRED_EMAIL ? ['required' => 'required'] : [];
+    		<?php
+            if ($entry->getNotes() !== '') {
+                ?>
+            	<div class="small text-muted mb-2">
+                	<?= $entry->getNotes() ?>
+            	</div>
+            	<?php
+            }
+            if ($entry->getNameKey() !== '') {
+                $fieldName = str_replace('.', '__', "name@{$keyPrefix}{$entry->getNameKey()}");
+                $value = $config->get($keyPrefix . $entry->getNameKey());
+                $attributes = ($entry->getRequired() & $entry::REQUIRED_EMAIL_AND_NAME) === $entry::REQUIRED_EMAIL_AND_NAME ? ['required' => 'required'] : [];
                 ?>
                 <div class="form-group">
-                    <?= $form->label($fieldName, t('Email Address')) ?>
-                    <?= $form->email($fieldName, $value, $attributes) ?>
+                    <?= $form->label($fieldName, t('Sender Name')) ?>
+                    <?= $form->text($fieldName, $value, $attributes) ?>
                 </div>
+                <?php
+            }
+            $fieldName = str_replace('.', '__', "address@{$keyPrefix}{$entry->getEmailKey()}");
+            $value = $config->get($keyPrefix . $entry->getEmailKey());
+            $attributes = $entry->getRequired() & $entry::REQUIRED_EMAIL === $entry::REQUIRED_EMAIL ? ['required' => 'required'] : [];
+            ?>
+            <div class="form-group">
+                <?= $form->label($fieldName, t('Email Address')) ?>
+                <?= $form->email($fieldName, $value, $attributes) ?>
+            </div>
         </fieldset>
         <?php
     }

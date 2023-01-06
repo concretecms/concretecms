@@ -285,12 +285,7 @@ class Controller extends AuthenticationTypeController
             $mh->addParameter('changePassURL', $changePassURL);
             $fromEmail = (string) $this->app->make(Repository::class)->get('concrete.email.forgot_password.address');
             if (!strpos($fromEmail, '@')) {
-                $adminUser = $this->app->make(UserInfoRepository::class)->getByID(USER_SUPER_ID);
-                if ($adminUser) {
-                    $fromEmail = $adminUser->getUserEmail();
-                } else {
-                    $fromEmail = '';
-                }
+                $fromEmail = (string) $this->app->make(Repository::class)->get('concrete.email.default.address');
             }
             if ($fromEmail !== '') {
                 $fromName = (string) $this->app->make(Repository::class)->get('concrete.email.forgot_password.name');
