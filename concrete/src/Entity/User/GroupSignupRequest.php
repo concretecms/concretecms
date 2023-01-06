@@ -28,7 +28,7 @@ class GroupSignupRequest implements SubjectInterface
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupSignupRequestNotification", mappedBy="signup", cascade={"remove"}),
+     * @ORM\OneToMany(targetEntity="\Concrete\Core\Entity\Notification\GroupSignupRequestNotification", mappedBy="signupRequest", cascade={"remove"}),
      *
      * @var \Doctrine\Common\Collections\Collection
      */
