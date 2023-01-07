@@ -3,7 +3,6 @@
 namespace Concrete\Core\Session;
 
 use Carbon\Carbon;
-use Concrete\Controller\SinglePage\Dashboard\System\Registration\AutomatedLogout;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Http\Request;
@@ -25,6 +24,18 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
  */
 class SessionValidator implements SessionValidatorInterface, LoggerAwareInterface
 {
+    public const CONFIGKEY_IP_MISMATCH = 'concrete.security.session.invalidate_on_ip_mismatch';
+    
+    public const CONFIGKEY_IP_MISMATCH_ALLOWLIST = 'concrete.security.session.ignored_ip_mismatches';
+    
+    public const CONFIGKEY_USERAGENT_MISMATCH = 'concrete.security.session.invalidate_on_user_agent_mismatch';
+    
+    public const CONFIGKEY_SESSION_INVALIDATE = 'concrete.session.valid_since';
+    
+    public const CONFIGKEY_INVALIDATE_INACTIVE_USERS = 'concrete.security.session.invalidate_inactive_users.enabled';
+    
+    public const CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME = 'concrete.security.session.invalidate_inactive_users.time';
+    
     use LoggerAwareTrait;
 
     /** @var \Concrete\Core\Application\Application */
@@ -81,7 +92,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         }
 
         // Validate against the `valid_since` config item
-        $validSinceTimestamp = (int) $this->config->get(AutomatedLogout::ITEM_SESSION_INVALIDATE);
+        $validSinceTimestamp = (int) $this->config->get(static::CONFIGKEY_SESSION_INVALIDATE);
         if ($validSinceTimestamp) {
             $validSince = Carbon::createFromTimestamp($validSinceTimestamp, 'utc');
             $created = Carbon::createFromTimestamp($session->getMetadataBag()->getCreated());
@@ -138,7 +149,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      */
     public function shouldValidateUserActivity(SymfonySession $session)
     {
-        return $this->config->get('concrete.security.session.invalidate_inactive_users.enabled') &&
+        return $this->config->get(static::CONFIGKEY_INVALIDATE_INACTIVE_USERS) &&
             $session->has('uID') && $session->get('uID') > 0 && $session->has('uOnlineCheck') &&
             $session->get('uOnlineCheck') > 0;
     }
@@ -148,7 +159,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      */
     public function getUserActivityThreshold()
     {
-        return $this->config->get('concrete.security.session.invalidate_inactive_users.time');
+        return $this->config->get(static::CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME);
     }
 
     /**
@@ -189,7 +200,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      */
     private function shouldCompareIP()
     {
-        return $this->config->get('concrete.security.session.invalidate_on_ip_mismatch', true);
+        return $this->config->get(static::CONFIGKEY_IP_MISMATCH, true);
     }
 
     private function considerIPChanged(AddressInterface $currentIP, ?AddressInterface $previousIP): bool
@@ -200,7 +211,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         if ((string) $currentIP === (string) $previousIP) {
             return false;
         }
-        foreach ((array) $this->config->get(AutomatedLogout::ITEM_IGNORED_IP) as $rangeString) {
+        foreach ((array) $this->config->get(self::CONFIGKEY_IP_MISMATCH_ALLOWLIST) as $rangeString) {
             $rangeObject = Factory::parseRangeString($rangeString);
             if ($rangeObject === null) {
                 continue;
@@ -218,7 +229,7 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      */
     private function shouldCompareAgent()
     {
-        return $this->config->get('concrete.security.session.invalidate_on_user_agent_mismatch', true);
+        return $this->config->get(static::CONFIGKEY_USERAGENT_MISMATCH, true);
     }
 
     /**
