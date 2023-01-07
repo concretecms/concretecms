@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
-    <themes>
-        <theme handle="elemental" package="" activated="1"/>
-    </themes>
     <thumbnailtypes>
         <thumbnailtype name="Small Image" handle="small" sizingMode="proportional" width="740"/>
         <thumbnailtype name="Medium Image" handle="medium" sizingMode="proportional" width="940"/>

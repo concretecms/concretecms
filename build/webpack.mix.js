@@ -8,6 +8,7 @@ mix.override((config) => {
 });
 
 mix.webpackConfig({
+    cache: false,
     resolve: {
         symlinks: false
     },

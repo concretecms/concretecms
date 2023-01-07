@@ -237,7 +237,12 @@ final class Controller implements LoggerAwareInterface
 
                 return new \RedirectResponse($this->request->getUri());
             } else {
-                $error->add(t('Invalid username or password.'));
+                if ($this->config->get('concrete.user.registration.email_registration')) {
+                    $message = t('Invalid email address or password.');
+                } else {
+                    $message = t('Invalid username or password.');
+                }
+                $error->add($message);
             }
 
             break;
