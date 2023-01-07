@@ -340,6 +340,7 @@ class StartingPointPackage extends Package
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/summary.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
+        // this remains for backward compatibility but no core themes use it.
         if (file_exists($this->getPackagePath() . '/themes.xml')) {
             $ci->importContentFile($this->getPackagePath() . '/themes.xml');
         }
