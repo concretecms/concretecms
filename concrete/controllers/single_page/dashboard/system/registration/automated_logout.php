@@ -9,10 +9,14 @@ use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 use Concrete\Core\Utility\Service\Validation\Numbers;
+use IPLib\Address\AddressInterface;
+use IPLib\Factory;
 
 class AutomatedLogout extends DashboardPageController
 {
     public const ITEM_IP = 'concrete.security.session.invalidate_on_ip_mismatch';
+
+    public const ITEM_IGNORED_IP = 'concrete.security.session.ignored_ip_mismatches';
 
     public const ITEM_USER_AGENT = 'concrete.security.session.invalidate_on_user_agent_mismatch';
 
@@ -60,6 +64,8 @@ class AutomatedLogout extends DashboardPageController
     {
         $this->set('trustedProxyUrl', $this->urls->resolve(['/dashboard/system/permissions/trusted_proxies']));
         $this->set('invalidateOnIPMismatch', (bool) $this->config->get(static::ITEM_IP));
+        $this->set('ignoredIPMismatches', (array) $this->config->get(static::ITEM_IGNORED_IP));
+        $this->set('myIPAddress', $this->app->make(AddressInterface::class));
         $this->set('invalidateOnUserAgentMismatch', (bool) $this->config->get(static::ITEM_USER_AGENT));
         $this->set('invalidateInactiveUsers', (bool) $this->config->get(static::ITEM_INVALIDATE_INACTIVE_USERS));
         $this->set('inactiveTime', ((int) $this->config->get(static::ITEM_INVALIDATE_INACTIVE_USERS_TIME)) ?: null);
@@ -79,6 +85,18 @@ class AutomatedLogout extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
 
+        $ignoredIPMismatches = [];
+        foreach (preg_split('/\s+/', (string) $post->get('ignoredIPMismatches'), -1, PREG_SPLIT_NO_EMPTY) as $ignoredIPMismatch) {
+            $range = Factory::parseRangeString($ignoredIPMismatch);
+            if ($range === null) {
+                $this->error->add(t('The IP address range %s is not valid.', $ignoredIPMismatch));
+            } else {
+                $range = (string) $range;
+                if (!in_array($range, $ignoredIPMismatches, true)) {
+                    $ignoredIPMismatches[] = $range;
+                }
+            }
+        }
         $invalidateInactiveUsers = (bool) $post->get('invalidateInactiveUsers');
         if ($invalidateInactiveUsers) {
             $inactiveTime = $post->get('inactiveTime');
@@ -94,6 +112,7 @@ class AutomatedLogout extends DashboardPageController
 
         // Save the posted settings
         $this->config->save(static::ITEM_IP, (bool) $post->get('invalidateOnIPMismatch'));
+        $this->config->save(static::ITEM_IGNORED_IP, $ignoredIPMismatches);
         $this->config->save(static::ITEM_USER_AGENT, (bool) $post->get('invalidateOnUserAgentMismatch'));
         $this->config->save(static::ITEM_INVALIDATE_INACTIVE_USERS, $invalidateInactiveUsers);
         if ($invalidateInactiveUsers) {

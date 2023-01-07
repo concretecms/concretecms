@@ -12,6 +12,8 @@ use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\User\PersistentAuthentication\CookieService;
+use IPLib\Address\AddressInterface;
+use IPLib\Factory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 
@@ -63,13 +65,11 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
      */
     public function handleSessionValidation(SymfonySession $session)
     {
-        $request_ip = (string) $this->ipService->getRequestIPAddress();
-
         $invalidate = false;
-
-        $ip = $session->get('CLIENT_REMOTE_ADDR');
-        $agent = $session->get('CLIENT_HTTP_USER_AGENT');
-        $request_agent = $this->request->server->get('HTTP_USER_AGENT');
+        $requestIP = $this->app->make(AddressInterface::class);
+        $requestAgent = $this->request->server->get('HTTP_USER_AGENT');
+        $previousIP = Factory::parseAddressString($session->get('CLIENT_REMOTE_ADDR'));
+        $previousAgent = $session->get('CLIENT_HTTP_USER_AGENT');
 
         // Validate against the current uOnlineCheck. This will determine if the user has been inactive for too long.
         if ($this->shouldValidateUserActivity($session)) {
@@ -82,11 +82,9 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
 
         // Validate against the `valid_since` config item
         $validSinceTimestamp = (int) $this->config->get(AutomatedLogout::ITEM_SESSION_INVALIDATE);
-
         if ($validSinceTimestamp) {
             $validSince = Carbon::createFromTimestamp($validSinceTimestamp, 'utc');
             $created = Carbon::createFromTimestamp($session->getMetadataBag()->getCreated());
-
             if ($created->lessThan($validSince)) {
                 $this->logger->notice('Session Invalidated. Session was created before "valid_since" setting.');
                 $invalidate = true;
@@ -94,44 +92,39 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         }
 
         // Validate the request IP
-        if ($this->shouldCompareIP() && $ip && $ip != $request_ip) {
+        if ($this->shouldCompareIP() && $this->considerIPChanged($requestIP, $previousIP)) {
             if ($this->logger) {
                 $this->logger->notice(
                     'Session Invalidated. Session IP "{session}" did not match provided IP "{client}".',
                     [
-                        'session' => $ip,
-                        'client' => $request_ip,
+                        'session' => $previousIP,
+                        'client' => (string) $requestIP,
                     ]
                 );
             }
-
             $invalidate = true;
         }
 
         // Validate the request user agent
-        if ($this->shouldCompareAgent() && $agent && $agent != $request_agent) {
+        if ($this->shouldCompareAgent() && $previousAgent && $previousAgent != $requestAgent) {
             if ($this->logger) {
                 $this->logger->notice(
                     'Session Invalidated. Session user agent "{session}" did not match provided agent "{client}"',
                     [
-                        'session' => $agent,
-                        'client' => $request_agent,
+                        'session' => $previousAgent,
+                        'client' => $requestAgent,
                     ]
                 );
             }
-
             $invalidate = true;
         }
 
         if ($invalidate) {
             $session->invalidate();
         } else {
-            if (!$ip && $request_ip) {
-                $session->set('CLIENT_REMOTE_ADDR', $request_ip);
-            }
-
-            if (!$agent && $request_agent) {
-                $session->set('CLIENT_HTTP_USER_AGENT', $request_agent);
+            $session->set('CLIENT_REMOTE_ADDR', (string) $requestIP);
+            if (!$previousAgent && $requestAgent) {
+                $session->set('CLIENT_HTTP_USER_AGENT', $requestAgent);
             }
         }
 
@@ -197,6 +190,27 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     private function shouldCompareIP()
     {
         return $this->config->get('concrete.security.session.invalidate_on_ip_mismatch', true);
+    }
+
+    private function considerIPChanged(AddressInterface $currentIP, ?AddressInterface $previousIP): bool
+    {
+        if ($previousIP === null) {
+            return false;
+        }
+        if ((string) $currentIP === (string) $previousIP) {
+            return false;
+        }
+        foreach ((array) $this->config->get(AutomatedLogout::ITEM_IGNORED_IP) as $rangeString) {
+            $rangeObject = Factory::parseRangeString($rangeString);
+            if ($rangeObject === null) {
+                continue;
+            }
+            if ($rangeObject->contains($currentIP) && $rangeObject->contains($previousIP)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
