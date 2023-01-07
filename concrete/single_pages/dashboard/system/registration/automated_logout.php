@@ -56,7 +56,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 '<code>127.0.0.1/24</code>',
                 '<code>::1/8</code>'
             ) ?><br />
-            <?= t('Your IP address:') ?> <code><?= h((string) $myIPAddress) ?><code>
+            <?= t('Your IP address:') ?> <code><?= h((string) $myIPAddress) ?></code>
         </div>
     </div>
 
