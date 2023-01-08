@@ -10,7 +10,6 @@ use Concrete\Core\Http\Request;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
-use Concrete\Core\Permission\IPService;
 use Concrete\Core\User\PersistentAuthentication\CookieService;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,17 +27,17 @@ use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 class SessionValidator implements SessionValidatorInterface, LoggerAwareInterface
 {
     public const CONFIGKEY_IP_MISMATCH = 'concrete.security.session.invalidate_on_ip_mismatch';
-    
+
     public const CONFIGKEY_IP_MISMATCH_ALLOWLIST = 'concrete.security.session.ignored_ip_mismatches';
-    
+
     public const CONFIGKEY_USERAGENT_MISMATCH = 'concrete.security.session.invalidate_on_user_agent_mismatch';
-    
+
     public const CONFIGKEY_SESSION_INVALIDATE = 'concrete.session.valid_since';
-    
+
     public const CONFIGKEY_INVALIDATE_INACTIVE_USERS = 'concrete.security.session.invalidate_inactive_users.enabled';
-    
+
     public const CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME = 'concrete.security.session.invalidate_inactive_users.time';
-    
+
     use LoggerAwareTrait;
 
     /** @var \Concrete\Core\Application\Application */
@@ -222,12 +221,16 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
                 $rangeStrings = array_unique(array_merge($rangeStrings, $userEntity->getIgnoredIPMismatches()));
             }
         }
+        $currentIPFound = false;
+        $previousIPFound = false;
         foreach ($rangeStrings as $rangeString) {
             $rangeObject = Factory::parseRangeString($rangeString);
             if ($rangeObject === null) {
                 continue;
             }
-            if ($rangeObject->contains($currentIP) && $rangeObject->contains($previousIP)) {
+            $currentIPFound = $currentIPFound || $rangeObject->contains($currentIP);
+            $previousIPFound = $previousIPFound || $rangeObject->contains($previousIP);
+            if ($currentIPFound && $previousIPFound) {
                 return false;
             }
         }
