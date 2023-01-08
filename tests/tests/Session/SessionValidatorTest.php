@@ -41,7 +41,12 @@ class SessionValidatorTest extends TestCase
 
         $this->request = Request::create('http://url.com/');
         $config = $this->app->make('config');
-        $this->validator = new SessionValidator($this->app, $this->app['config'], $this->request, $this->app->make(IPService::class, ['config' => $config, 'request' => $this->request]));
+        $this->validator = new SessionValidator(
+            $this->app,
+            $this->app['config'],
+            $this->request,
+            $this->app->make(IPService::class, ['config' => $config, 'request' => $this->request])
+        );
 
         $store = [];
         $mock = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\Session')
