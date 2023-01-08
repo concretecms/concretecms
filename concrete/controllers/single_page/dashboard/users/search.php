@@ -15,6 +15,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerFactory;
 use Concrete\Core\Navigation\Breadcrumb\Dashboard\DashboardUserBreadcrumbFactory;
 use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Url;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
@@ -42,6 +43,7 @@ use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Search\Result\ResultFactory;
+use IPLib\Factory;
 use Symfony\Component\HttpFoundation\Request;
 
 class Search extends DashboardPageController
@@ -377,6 +379,21 @@ class Search extends DashboardPageController
                 $data['uPasswordConfirm'] = $passwordNew;
                 $data['uPassword'] = $passwordNew;
             }
+            if ($this->canEditIgnoredIPMismatches()) {
+                $ignoredIPMismatches = [];
+                foreach (preg_split('/\s+/', (string) $this->request->request->get('ignoredIPMismatches'), -1, PREG_SPLIT_NO_EMPTY) as $ignoredIPMismatch) {
+                    $range = Factory::parseRangeString($ignoredIPMismatch);
+                    if ($range === null) {
+                        $error->add(t('The IP address range %s is not valid.', $ignoredIPMismatch));
+                    } else {
+                        $range = (string) $range;
+                        if (!in_array($range, $ignoredIPMismatches, true)) {
+                            $ignoredIPMismatches[] = $range;
+                        }
+                    }
+                }
+                $data['ignoredIPMismatches'] = $ignoredIPMismatches;
+            }
 
             $userMessage->setError($error);
             if (!$error->has()) {
@@ -690,6 +707,18 @@ class Search extends DashboardPageController
                 || $this->canEditLanguage || $this->canEditTimezone);
             $this->set('allowedEditAttributes', $this->allowedEditAttributes);
             $this->set('canAddGroup', $this->canAddGroup);
+            $this->set('canEditIgnoredIPMismatches', $this->canEditIgnoredIPMismatches());
         }
+    }
+
+    protected function canEditIgnoredIPMismatches(): bool
+    {
+        $page = Page::getByPath('/dashboard/system/registration/automated_logout');
+        if (!$page || $page->isError()) {
+            return false;
+        }
+        $permissions = new Checker($page);
+
+        return $permissions->canViewPage() ? true : false;
     }
 }

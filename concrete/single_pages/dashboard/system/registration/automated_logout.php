@@ -57,6 +57,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 '<code>::1/8</code>'
             ) ?><br />
             <?= t('Your IP address:') ?> <code><?= h((string) $myIPAddress) ?></code>
+            <?= t('Please remark that you may also define user-specific IP ranges.') ?>
         </div>
     </div>
 

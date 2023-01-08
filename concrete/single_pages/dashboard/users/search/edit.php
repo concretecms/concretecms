@@ -23,6 +23,7 @@ use Concrete\Core\Support\Facade\Application;
  * @var bool $canViewAccountModal
  * @var string[] $allowedEditAttributes
  * @var bool $canAddGroup
+ * @var bool $canEditIgnoredIPMismatches
  * @var string $groupsJSON
  * @var Doctrine\ORM\PersistentCollection $attributeSets
  * @var Concrete\Core\Entity\Attribute\Key\UserKey[] $unassigned
@@ -171,6 +172,20 @@ $userEntity = $user->getEntityObject();
                 <?php echo $userEntity->getHomeFileManagerFolderID() !== null && isset($folderList[$userEntity->getHomeFileManagerFolderID()]) ? $folderList[$userEntity->getHomeFileManagerFolderID()] : t('None') ?>
             </div>
         </dd>
+        <dt>
+            <?= t('Ignored IP changes for') ?>
+        </dt>
+        <dd>
+            <div>
+                <?php
+                if ($userEntity->getIgnoredIPMismatches() === []) {
+                    echo t('None');
+                } else {
+                    echo nl2br(htmlspecialchars(implode("\n", $userEntity->getIgnoredIPMismatches())));
+                }
+                ?>
+            </div>
+        </dd>
 
         <?php
         if (Config::get('concrete.user.registration.validate_email')) {
@@ -216,40 +231,71 @@ $userEntity = $user->getEntityObject();
                         <div class="modal-body">
                             <fieldset>
                                 <legend><?= t('Basic Information'); ?></legend>
-                                <?php if ($canEditUserName) { ?>
+                                <?php
+                                if ($canEditUserName) {
+                                    ?>
                                     <div class="form-group">
                                         <?= $form->label('uName', t('Username')); ?>
                                         <?= $form->text('uName', $userEntity->getUserName()); ?>
                                     </div>
-                                <?php } ?>
-                                <?php if ($canEditEmail) { ?>
+                                    <?php
+                                }
+                                if ($canEditEmail) {
+                                    ?>
                                     <div class="form-group">
                                         <?= $form->label('uEmail', t('Email')); ?>
                                         <?= $form->text('uEmail', $userEntity->getUserEmail()); ?>
                                     </div>
-                                <?php } ?>
-                                <?php if ($canEditTimezone) { ?>
-                                    <?php if (Config::get('concrete.misc.user_timezones')) { ?>
+                                    <?php
+                                }
+                                if ($canEditTimezone) {
+                                    if (Config::get('concrete.misc.user_timezones')) {
+                                        ?>
                                         <div class="form-group">
                                             <?= $form->label('uTimezone', t('Time Zone')); ?>
                                             <?= $form->select('uTimezone', $dh->getTimezones(), $userEntity->getUserTimezone() ?? date_default_timezone_get()); ?>
                                         </div>
-                                    <?php } ?>
-                                <?php } ?>
-                                <?php if ($canEditLanguage) { ?>
-                                    <?php if (is_array($locales) && count($locales)) { ?>
+                                        <?php
+                                    }
+                                }
+                                if ($canEditLanguage) {
+                                    if (is_array($locales) && count($locales)) {
+                                        ?>
                                         <div class="form-group">
                                             <?= $form->label('uDefaultLanguage', t('Language')); ?>
                                             <?= $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
                                         </div>
-                                    <?php } ?>
-                                <?php } ?>
-                                <?php if ($canEditHomeFileManagerFolderID) { ?>
+                                        <?php
+                                    }
+                                }
+                                if ($canEditHomeFileManagerFolderID) {
+                                    ?>
                                     <div class="form-group">
                                         <?php echo $form->label('uHomeFileManagerFolderID', t('Home Folder')); ?>
                                         <div id="folderSelectorDestinationContainer"></div>
                                     </div>
-                                <?php } ?>
+                                    <?php
+                                }
+                                if ($canEditIgnoredIPMismatches) {
+                                    ?>
+                                    <div class="form-group">
+                                        <?= $form->label('ignoredIPMismatches', t('Ignored IP changes for')) ?>
+                                        <?= $form->textarea('ignoredIPMismatches', implode("\n", $userEntity->getIgnoredIPMismatches())) ?>
+                                        <div class="small text-muted">
+                                            <?= t('Separate IP addresses with spaces or new lines.') ?><br />
+                                            <?= t(
+                                                'Accepted values are single addresses (IPv4 like %1$s, and IPv6 like %2$s) and ranges in subnet format (IPv4 like %3$s, and IPv6 like %4$s).',
+                                                '<code>127.0.0.1</code>',
+                                                '<code>::1</code>',
+                                                '<code>127.0.0.1/24</code>',
+                                                '<code>::1/8</code>'
+                                            ) ?><br />
+                                            <?= t('Please remark that you may also define global IP ranges.') ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
                             </fieldset>
                             <?php if ($canEditPassword) { ?>
                                 <fieldset>

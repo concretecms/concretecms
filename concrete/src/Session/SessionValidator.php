@@ -5,12 +5,15 @@ namespace Concrete\Core\Session;
 use Carbon\Carbon;
 use Concrete\Core\Application\Application;
 use Concrete\Core\Config\Repository\Repository;
+use Concrete\Core\Entity\User\User as UserEntity;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Logging\LoggerAwareTrait;
 use Concrete\Core\Permission\IPService;
 use Concrete\Core\User\PersistentAuthentication\CookieService;
+use Concrete\Core\User\User;
+use Doctrine\ORM\EntityManagerInterface;
 use IPLib\Address\AddressInterface;
 use IPLib\Factory;
 use Psr\Log\LoggerInterface;
@@ -47,15 +50,15 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     /** @var \Concrete\Core\Http\Request */
     private $request;
 
-    /** @var \Concrete\Core\Permission\IPService */
-    private $ipService;
+    /** @var \Doctrine\ORM\EntityManagerInterface */
+    private $em;
 
-    public function __construct(Application $app, Repository $config, Request $request, IPService $ipService, LoggerInterface $logger = null)
+    public function __construct(Application $app, Repository $config, Request $request, EntityManagerInterface $em, LoggerInterface $logger = null)
     {
         $this->app = $app;
         $this->config = $config;
         $this->request = $request;
-        $this->ipService = $ipService;
+        $this->em = $em;
         $this->logger = $logger;
     }
 
@@ -211,7 +214,15 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
         if ((string) $currentIP === (string) $previousIP) {
             return false;
         }
-        foreach ((array) $this->config->get(self::CONFIGKEY_IP_MISMATCH_ALLOWLIST) as $rangeString) {
+        $rangeStrings = (array) $this->config->get(self::CONFIGKEY_IP_MISMATCH_ALLOWLIST);
+        $user = $this->app->make(User::class);
+        if ($user->isRegistered()) {
+            $userEntity = $this->em->find(UserEntity::class, $user->getUserID());
+            if ($userEntity !== null) {
+                $rangeStrings = array_unique(array_merge($rangeStrings, $userEntity->getIgnoredIPMismatches()));
+            }
+        }
+        foreach ($rangeStrings as $rangeString) {
             $rangeObject = Factory::parseRangeString($rangeString);
             if ($rangeObject === null) {
                 continue;
