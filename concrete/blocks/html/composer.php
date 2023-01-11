@@ -1,5 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die('Access Denied.');
+/** @var \Concrete\Core\Form\Service\Form $form */
+/** @var \Concrete\Core\View\View $view */
+$label = $label ?? '';
+$description = $description ?? '';
+$content = $content ?? '';
+$class = $class ?? '';
 ?>
 
 <div class="form-group">
