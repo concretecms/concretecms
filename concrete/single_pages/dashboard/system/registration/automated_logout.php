@@ -7,6 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Controller\SinglePage\Dashboard\System\Registration\AutomatedLogout $controller
  * @var Concrete\Core\Url\UrlImmutable $trustedProxyUrl
  * @var bool $invalidateOnIPMismatch
+ * @var bool $enableUserSpecificIgnoredIPMismatches
  * @var bool $invalidateOnUserAgentMismatch
  * @var bool $invalidateInactiveUsers
  * @var int|null $inactiveTime
@@ -26,6 +27,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="form-check">
             <?= $form->checkbox('invalidateOnIPMismatch', '1', $invalidateOnIPMismatch) ?>
             <label class="form-check-label" for="invalidateOnIPMismatch"><?= t('Log users out if their IP changes') ?></label>
+        </div>
+        <div class="form-check">
+            <?= $form->checkbox('enableUserSpecificIgnoredIPMismatches', '1', $enableUserSpecificIgnoredIPMismatches) ?>
+            <label class="form-check-label" for="enableUserSpecificIgnoredIPMismatches"><?= t('Enable user-specific IP addresses to be ignored') ?></label>
         </div>
         <div class="form-check">
             <?= $form->checkbox('invalidateOnUserAgentMismatch', '1', $invalidateOnUserAgentMismatch) ?>
@@ -57,7 +62,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 '<code>::1/8</code>'
             ) ?><br />
             <?= t('Your IP address:') ?> <code><?= h((string) $myIPAddress) ?></code>
-            <?= t('Please remark that you may also define user-specific IP ranges.') ?>
         </div>
     </div>
 
@@ -87,7 +91,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 <script>
 $(document).ready(function() {
-
+    $('#invalidateOnIPMismatch')
+        .on('change', function() {
+            var enabled = $('#invalidateOnIPMismatch').is(':checked');
+            $('#enableUserSpecificIgnoredIPMismatches,#ignoredIPMismatches').attr('disabled', !enabled);
+        })
+        .trigger('change')
+    ;
     $('#invalidateInactiveUsers')
         .on('change', function() {
             $('#inactiveTime').attr('disabled', $(this).is(':checked') ? null : 'disabled');

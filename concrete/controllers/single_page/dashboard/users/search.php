@@ -6,6 +6,7 @@ use Concrete\Controller\Element\Search\Users\Header;
 use Concrete\Core\Attribute\Category\CategoryService;
 use Concrete\Core\Csv\Export\UserExporter;
 use Concrete\Core\Csv\WriterFactory;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Entity\Search\SavedUserSearch;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -43,6 +44,7 @@ use Concrete\Core\Search\Query\QueryFactory;
 use Concrete\Core\Search\Query\QueryModifier;
 use Concrete\Core\Search\Result\Result;
 use Concrete\Core\Search\Result\ResultFactory;
+use Concrete\Core\Session\SessionValidator;
 use IPLib\Factory;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -379,7 +381,7 @@ class Search extends DashboardPageController
                 $data['uPasswordConfirm'] = $passwordNew;
                 $data['uPassword'] = $passwordNew;
             }
-            if ($this->canEditIgnoredIPMismatches()) {
+            if ($this->shouldViewIgnoredIPMismatches() && $this->canEditIgnoredIPMismatches()) {
                 $ignoredIPMismatches = [];
                 foreach (preg_split('/\s+/', (string) $this->request->request->get('ignoredIPMismatches'), -1, PREG_SPLIT_NO_EMPTY) as $ignoredIPMismatch) {
                     $range = Factory::parseRangeString($ignoredIPMismatch);
@@ -707,8 +709,16 @@ class Search extends DashboardPageController
                 || $this->canEditLanguage || $this->canEditTimezone);
             $this->set('allowedEditAttributes', $this->allowedEditAttributes);
             $this->set('canAddGroup', $this->canAddGroup);
+            $this->set('shouldViewIgnoredIPMismatches', $this->shouldViewIgnoredIPMismatches());
             $this->set('canEditIgnoredIPMismatches', $this->canEditIgnoredIPMismatches());
         }
+    }
+
+    protected function shouldViewIgnoredIPMismatches(): bool
+    {
+        $config = $this->app->make(Repository::class);
+
+        return (bool) $config->get(SessionValidator::CONFIGKEY_IP_MISMATCH) && (bool) $config->get(SessionValidator::CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST);
     }
 
     protected function canEditIgnoredIPMismatches(): bool

@@ -78,6 +78,7 @@ class AutomatedLogout extends DashboardPageController
     {
         $this->set('trustedProxyUrl', $this->urls->resolve(['/dashboard/system/permissions/trusted_proxies']));
         $this->set('invalidateOnIPMismatch', (bool) $this->config->get(SessionValidator::CONFIGKEY_IP_MISMATCH));
+        $this->set('enableUserSpecificIgnoredIPMismatches', (bool) $this->config->get(SessionValidator::CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST));
         $this->set('ignoredIPMismatches', (array) $this->config->get(SessionValidator::CONFIGKEY_IP_MISMATCH_ALLOWLIST));
         $this->set('myIPAddress', $this->app->make(AddressInterface::class));
         $this->set('invalidateOnUserAgentMismatch', (bool) $this->config->get(SessionValidator::CONFIGKEY_USERAGENT_MISMATCH));
@@ -98,16 +99,18 @@ class AutomatedLogout extends DashboardPageController
         if (!$this->token->validate('save_automated_logout')) {
             $this->error->add($this->token->getErrorMessage());
         }
-
-        $ignoredIPMismatches = [];
-        foreach (preg_split('/\s+/', (string) $post->get('ignoredIPMismatches'), -1, PREG_SPLIT_NO_EMPTY) as $ignoredIPMismatch) {
-            $range = Factory::parseRangeString($ignoredIPMismatch);
-            if ($range === null) {
-                $this->error->add(t('The IP address range %s is not valid.', $ignoredIPMismatch));
-            } else {
-                $range = (string) $range;
-                if (!in_array($range, $ignoredIPMismatches, true)) {
-                    $ignoredIPMismatches[] = $range;
+        $invalidateOnIPMismatch = (bool) $post->get('invalidateOnIPMismatch');
+        if ($invalidateOnIPMismatch) {
+            $ignoredIPMismatches = [];
+            foreach (preg_split('/\s+/', (string) $post->get('ignoredIPMismatches'), -1, PREG_SPLIT_NO_EMPTY) as $ignoredIPMismatch) {
+                $range = Factory::parseRangeString($ignoredIPMismatch);
+                if ($range === null) {
+                    $this->error->add(t('The IP address range %s is not valid.', $ignoredIPMismatch));
+                } else {
+                    $range = (string) $range;
+                    if (!in_array($range, $ignoredIPMismatches, true)) {
+                        $ignoredIPMismatches[] = $range;
+                    }
                 }
             }
         }
@@ -125,10 +128,13 @@ class AutomatedLogout extends DashboardPageController
         }
 
         // Save the posted settings
-        $this->config->save(SessionValidator::CONFIGKEY_IP_MISMATCH, (bool) $post->get('invalidateOnIPMismatch'));
-        $this->config->save(SessionValidator::CONFIGKEY_IP_MISMATCH_ALLOWLIST, $ignoredIPMismatches);
+        $this->config->save(SessionValidator::CONFIGKEY_IP_MISMATCH, $invalidateOnIPMismatch);
         $this->config->save(SessionValidator::CONFIGKEY_USERAGENT_MISMATCH, (bool) $post->get('invalidateOnUserAgentMismatch'));
         $this->config->save(SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS, $invalidateInactiveUsers);
+        if ($invalidateOnIPMismatch) {
+            $this->config->save(SessionValidator::CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST, (bool) $post->get('enableUserSpecificIgnoredIPMismatches'));
+            $this->config->save(SessionValidator::CONFIGKEY_IP_MISMATCH_ALLOWLIST, $ignoredIPMismatches);
+        }
         if ($invalidateInactiveUsers) {
             $this->config->save(SessionValidator::CONFIGKEY_INVALIDATE_INACTIVE_USERS_TIME, $inactiveTime);
         }

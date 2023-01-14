@@ -30,6 +30,8 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
 
     public const CONFIGKEY_IP_MISMATCH_ALLOWLIST = 'concrete.security.session.ignored_ip_mismatches';
 
+    public const CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST = 'concrete.security.session.enable_user_specific_ignored_ip_mismatches';
+    
     public const CONFIGKEY_USERAGENT_MISMATCH = 'concrete.security.session.invalidate_on_user_agent_mismatch';
 
     public const CONFIGKEY_SESSION_INVALIDATE = 'concrete.session.valid_since';
@@ -49,15 +51,11 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
     /** @var \Concrete\Core\Http\Request */
     private $request;
 
-    /** @var \Doctrine\ORM\EntityManagerInterface */
-    private $em;
-
-    public function __construct(Application $app, Repository $config, Request $request, EntityManagerInterface $em, LoggerInterface $logger = null)
+    public function __construct(Application $app, Repository $config, Request $request, LoggerInterface $logger = null)
     {
         $this->app = $app;
         $this->config = $config;
         $this->request = $request;
-        $this->em = $em;
         $this->logger = $logger;
     }
 
@@ -214,11 +212,14 @@ class SessionValidator implements SessionValidatorInterface, LoggerAwareInterfac
             return false;
         }
         $rangeStrings = (array) $this->config->get(self::CONFIGKEY_IP_MISMATCH_ALLOWLIST);
-        $user = $this->app->make(User::class);
-        if ($user->isRegistered()) {
-            $userEntity = $this->em->find(UserEntity::class, $user->getUserID());
-            if ($userEntity !== null) {
-                $rangeStrings = array_unique(array_merge($rangeStrings, $userEntity->getIgnoredIPMismatches()));
+        if ($this->config->get(static::CONFIGKEY_ENABLE_USERSPECIFIC_IP_MISMATCH_ALLOWLIST)) {
+            $user = $this->app->make(User::class);
+            if ($user->isRegistered()) {
+                $em = $this->app->make(EntityManagerInterface::class);
+                $userEntity = $em->find(UserEntity::class, $user->getUserID());
+                if ($userEntity !== null) {
+                    $rangeStrings = array_unique(array_merge($rangeStrings, $userEntity->getIgnoredIPMismatches()));
+                }
             }
         }
         $currentIPFound = false;

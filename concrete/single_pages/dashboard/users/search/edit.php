@@ -23,6 +23,7 @@ use Concrete\Core\Support\Facade\Application;
  * @var bool $canViewAccountModal
  * @var string[] $allowedEditAttributes
  * @var bool $canAddGroup
+ * @var bool $shouldViewIgnoredIPMismatches
  * @var bool $canEditIgnoredIPMismatches
  * @var string $groupsJSON
  * @var Doctrine\ORM\PersistentCollection $attributeSets
@@ -172,22 +173,25 @@ $userEntity = $user->getEntityObject();
                 <?php echo $userEntity->getHomeFileManagerFolderID() !== null && isset($folderList[$userEntity->getHomeFileManagerFolderID()]) ? $folderList[$userEntity->getHomeFileManagerFolderID()] : t('None') ?>
             </div>
         </dd>
-        <dt>
-            <?= t('Ignored IP changes for') ?>
-        </dt>
-        <dd>
-            <div>
-                <?php
-                if ($userEntity->getIgnoredIPMismatches() === []) {
-                    echo t('None');
-                } else {
-                    echo nl2br(htmlspecialchars(implode("\n", $userEntity->getIgnoredIPMismatches())));
-                }
-                ?>
-            </div>
-        </dd>
-
         <?php
+        if ($shouldViewIgnoredIPMismatches) {
+            ?>
+            <dt>
+                <?= t('Ignored IP changes for') ?>
+            </dt>
+            <dd>
+                <div>
+                    <?php
+                    if ($userEntity->getIgnoredIPMismatches() === []) {
+                        echo t('None');
+                    } else {
+                        echo nl2br(htmlspecialchars(implode("\n", $userEntity->getIgnoredIPMismatches())));
+                    }
+                    ?>
+                </div>
+            </dd>
+            <?php
+        }
         if (Config::get('concrete.user.registration.validate_email')) {
             ?>
             <dt><?= t('Full Registration Record') ?></dt>
@@ -276,7 +280,7 @@ $userEntity = $user->getEntityObject();
                                     </div>
                                     <?php
                                 }
-                                if ($canEditIgnoredIPMismatches) {
+                                if ($shouldViewIgnoredIPMismatches && $canEditIgnoredIPMismatches) {
                                     ?>
                                     <div class="form-group">
                                         <?= $form->label('ignoredIPMismatches', t('Ignored IP changes for')) ?>

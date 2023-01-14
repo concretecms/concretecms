@@ -1266,6 +1266,8 @@ return [
 
             'ignored_ip_mismatches' => [],
 
+            'enable_user_specific_ignored_ip_mismatches' => false,
+
             'invalidate_inactive_users' => [
                 // Is the automatically logout inactive users setting enabled?
                 'enabled' => false,

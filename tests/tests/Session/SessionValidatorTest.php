@@ -40,14 +40,10 @@ class SessionValidatorTest extends TestCase
         $this->app['config'] = clone $this->app['config'];
 
         $this->request = Request::create('http://url.com/');
-        $em = $this->getMockBuilder(EntityManagerInterface::class)
-            ->getMock()
-        ;
         $this->validator = new SessionValidator(
             $this->app,
             $this->app['config'],
-            $this->request,
-            $em
+            $this->request
         );
 
         $store = [];
