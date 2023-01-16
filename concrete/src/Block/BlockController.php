@@ -249,8 +249,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      */
     public function getPermissionObject()
     {
-        $bp = new Permissions(Block::getByID($this->bID));
-
+        $bp = new Checker($this->block);
         return $bp;
     }
 
