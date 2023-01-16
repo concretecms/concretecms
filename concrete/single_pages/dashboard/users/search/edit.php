@@ -467,6 +467,9 @@ if (count($languages) > 0) {
          *
          * @todo: Create a vue version of file folder selector and replace this hacky workaround with the vue component
          */
-        $("#folderSelectorDestinationContainer").before($("#folderSelectorSourceContainer").removeClass("d-none"));
+        setTimeout(function() {
+            // setTimeout needed for https://github.com/concretecms/concretecms/issues/11152
+            $("#folderSelectorDestinationContainer").before($("#folderSelectorSourceContainer").removeClass("d-none"));
+        }, 500);
     });
 </script>
