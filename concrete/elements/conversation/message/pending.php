@@ -6,6 +6,10 @@ $cnvID = $message->getConversationID();
 $cnvMessageID = $message->getConversationMessageID();
 $author = $message->getConversationMessageAuthorObject();
 $formatter = $author->getFormatter();
+if (empty($dateFormat)) {
+    $dateFormat = 'default';
+}
+
 ?>
 
 <div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
