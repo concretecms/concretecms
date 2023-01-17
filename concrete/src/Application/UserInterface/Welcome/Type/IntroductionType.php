@@ -4,6 +4,7 @@ namespace Concrete\Core\Application\UserInterface\Welcome\Type;
 
 use Concrete\Core\Application\UserInterface\Welcome\Modal\ModalInterface;
 use Concrete\Core\Application\UserInterface\Welcome\Modal\Slide\Slide;
+use Concrete\Core\Application\UserInterface\Welcome\Modal\Slide\SlideInterface;
 use Concrete\Core\Application\UserInterface\Welcome\Type\Traits\SingleSlideTrait;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Filesystem\ElementManager;
@@ -60,7 +61,7 @@ class IntroductionType extends Type
         $user->saveConfig('MAIN_HELP_LAST_VIEWED', time());
     }
 
-    public function getSlide()
+    public function getSlide(): SlideInterface
     {
         $body = $this->app->make(ElementManager::class)
             ->get('help/introduction')
