@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.2.0a3',
     'version_installed' => '9.2.0a3',
-    'version_db' => '20221221224709', // the key of the latest database migration
+    'version_db' => '20230107185800', // the key of the latest database migration
 
     /*
      * Installation status
@@ -616,7 +616,7 @@ return [
          */
         'enabled' => true,
         'default' => [
-            'address' => 'concrete-cms-noreply@concretecms',
+            'address' => '',
             'name' => '',
         ],
         'form_block' => [
@@ -1264,6 +1264,10 @@ return [
             'invalidate_on_user_agent_mismatch' => true,
 
             'invalidate_on_ip_mismatch' => true,
+
+            'ignored_ip_mismatches' => [],
+
+            'enable_user_specific_ignored_ip_mismatches' => false,
 
             'invalidate_inactive_users' => [
                 // Is the automatically logout inactive users setting enabled?

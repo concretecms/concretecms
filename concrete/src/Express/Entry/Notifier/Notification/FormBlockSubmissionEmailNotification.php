@@ -3,7 +3,6 @@ namespace Concrete\Core\Express\Entry\Notifier\Notification;
 
 use Concrete\Core\Entity\Attribute\Value\ExpressValue;
 use Concrete\Core\Entity\Express\Entry;
-use Concrete\Core\User\UserInfoRepository;
 use Doctrine\ORM\EntityManager;
 
 class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNotification
@@ -16,18 +15,13 @@ class FormBlockSubmissionEmailNotification extends AbstractFormBlockSubmissionNo
     {
         if (!isset($this->from)) {
             $config = $this->app->make('config');
-            if ($entry && $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address') && strstr($config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address'), '@')) {
-                $this->from = $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address');
+            $this->from = (string) $config->get('concrete.email.form_block.'. $entry->getEntity()->getHandle() .'.address');
+            if (strpos($this->from, '@') === false) {
+                $this->from = (string) $config->get('concrete.email.form_block.address');
+                if (strpos($this->from, '@') === false) {
+                    $this->from = (string) $config->get('concrete.email.default.address');
+                }
             }
-            else{
-                if ($config->get('concrete.email.form_block.address') && strstr($config->get('concrete.email.form_block.address'), '@')) {
-                $this->from = $config->get('concrete.email.form_block.address');
-            } else {
-                $adminUserInfo = $this->app->make(UserInfoRepository::class)->getByID(USER_SUPER_ID);
-                $this->from = $adminUserInfo->getUserEmail();
-            }
-            }
-            
         }
 
         return $this->from;

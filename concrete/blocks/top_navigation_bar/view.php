@@ -60,17 +60,17 @@ $c = Page::getCurrentPage();
                              */
                             if (count($item->getChildren()) > 0) { ?>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle<?= $item->isActive() ? " active" : ""; ?>" data-concrete-toggle="dropdown" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?= $item->getUrl() ?>">
+                                    <a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?> dropdown-toggle<?= $item->isActive() ? " active" : ""; ?>" data-concrete-toggle="dropdown" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?= $item->getUrl() ?>">
                                         <?=$item->getName()?>
                                     </a>
                                     <ul class="dropdown-menu">
                                         <?php foreach ($item->getChildren() as $dropdownChild) { ?>
-                                            <li><a class="dropdown-item<?= $dropdownChild->isActive() ? " active" : ""; ?>" target="<?=$controller->getPageItemNavTarget($dropdownChild)?>" href="<?=$dropdownChild->getUrl()?>"><?=$dropdownChild->getName()?></a></li>
+                                            <li><a class="dropdown-item<?= $dropdownChild->isActive() ? " active" : ""; ?><?= $dropdownChild->isActiveParent() ? " nav-path-selected" : ""; ?>" target="<?=$controller->getPageItemNavTarget($dropdownChild)?>" href="<?=$dropdownChild->getUrl()?>"><?=$dropdownChild->getName()?></a></li>
                                         <?php } ?>
                                     </ul>
                                 </li>
                             <?php } else { ?>
-                                <li class="nav-item"><a class="nav-link<?= $item->isActive() ? " active" : ""; ?>" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?=$item->getUrl()?>"><?=$item->getName()?></a></li>
+                                <li class="nav-item"><a class="nav-link<?= $item->isActiveParent() ? " nav-path-selected" : ""; ?><?= $item->isActive() ? " active" : ""; ?>" target="<?=$controller->getPageItemNavTarget($item)?>" href="<?=$item->getUrl()?>"><?=$item->getName()?></a></li>
                             <?php } ?>
                         <?php } ?>
                     </ul>

@@ -6,6 +6,7 @@ use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
 use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
+use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Database\DatabaseStructureManager;
 use Concrete\Core\Entity\OAuth\Scope;
 use Concrete\Core\File\Filesystem;
@@ -339,6 +340,7 @@ class StartingPointPackage extends Package
         $ci = new ContentImporter();
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/summary.xml');
         $ci->importContentFile(DIR_BASE_CORE . '/config/install/base/themes.xml');
+        // this remains for backward compatibility but no core themes use it.
         if (file_exists($this->getPackagePath() . '/themes.xml')) {
             $ci->importContentFile($this->getPackagePath() . '/themes.xml');
         }
@@ -532,6 +534,12 @@ class StartingPointPackage extends Package
         $db->executeQuery('insert into GroupTypeSelectedRoles (gtID, grID) values (?,?)', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
         $db->executeQuery('update `Groups` set gtID = ?, gDefaultRoleID = ?', [DEFAULT_GROUP_TYPE_ID, DEFAULT_GROUP_ROLE_ID]);
         $db->executeQuery('update UserGroups set grID = ?', [DEFAULT_GROUP_ROLE_ID]);
+
+        $config = $this->app->make(Repository::class);
+        if (!$config->get('concrete.email.default.address')) {
+            $config->set('concrete.email.default.address', $this->installerOptions->getUserEmail());
+            $config->save('concrete.email.default.address', $this->installerOptions->getUserEmail());
+        }
     }
 
     protected function make_directories()

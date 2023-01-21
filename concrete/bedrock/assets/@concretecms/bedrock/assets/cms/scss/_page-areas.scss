@@ -366,6 +366,8 @@ ul.ccm-edit-mode-title-notch {
     }
 
     img { // container images
+      margin-bottom: 0 !important; // Just in case some theme styles are greedy
+      margin-top: 0 !important; // Just in case some theme styles are greedy
       max-height: 12px;
     }
 

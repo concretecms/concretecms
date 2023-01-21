@@ -33,7 +33,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     ?>
 
         <ul class="ccm-dashboard-header-icons">
-            <?php if ($manageURL) { ?>
+            <?php if (isset($manageURL)) { ?>
                 <li><a href="<?= $manageURL ?>" class="ccm-hover-icon launch-tooltip"
                        title="<?= t('Manage Object') ?>"
                     >

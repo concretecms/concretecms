@@ -71,7 +71,7 @@ class InstallCommand extends Command
             ->addOption('site', null, InputOption::VALUE_REQUIRED, 'Name of the site', 'Concrete Site')
             ->addOption('canonical-url', null, InputOption::VALUE_REQUIRED, 'Canonical URL', '')
             ->addOption('canonical-url-alternative', null, InputOption::VALUE_REQUIRED, 'Alternative canonical URL', '')
-            ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'elemental_blank')
+            ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'atomik_blank')
             ->addOption('session-handler', null, InputOption::VALUE_REQUIRED, 'Session Handler. Use "file" or "database".', '')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
@@ -516,10 +516,10 @@ EOT
             'canonical-url-alternative',
             [
                 'starting-point',
-                'elemental_blank',
+                'atomik_blank',
                 function (Question $question, InputInterface $input) {
                     $available = array_map(function($item) { return $item->getPackageHandle(); }, StartingPointPackage::getAvailableList());
-                    $available = array_unique(array_merge($available, ['elemental_blank', 'elemental_full']));
+                    $available = array_unique(array_merge($available, ['atomik_blank', 'elemental_full', 'atomik_full']));
 
                     return new ChoiceQuestion($question->getQuestion(), $available, $question->getDefault());
                 },

@@ -46,6 +46,7 @@ use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Workflow\Request\ActivateUserRequest as ActivateUserWorkflowRequest;
 use Concrete\Core\Workflow\Request\DeleteUserRequest as DeleteUserWorkflowRequest;
 use Core;
+use Doctrine\DBAL\Types\SimpleArrayType;
 use Doctrine\ORM\EntityManagerInterface;
 use Group;
 use Imagine\Image\ImageInterface;
@@ -543,9 +544,13 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
                     $result = null;
                 }
             }
+            if (is_array($data['ignoredIPMismatches'] ?? null)) {
+                $fields[] = 'ignoredIPMismatches = ?';
+                $values[] = (new SimpleArrayType())->convertToDatabaseValue($data['ignoredIPMismatches'], $this->connection->getDatabasePlatform());
+            }
             if ($result === true && !empty($fields)) {
                 $this->connection->executeQuery(
-                    'update Users set  ' . implode(', ', $fields) . 'where uID = ? limit 1',
+                    'update Users set  ' . implode(', ', $fields) . ' where uID = ? limit 1',
                     array_merge($values, [$uID])
                 );
                 if (!empty($nullFields)) {

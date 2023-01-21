@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <themes>
-        <theme handle="elemental" package="" activated="1"/>
+        <theme handle="atomik" package="" activated="1"/>
     </themes>
     <pagetemplates>
         <pagetemplate handle="full" name="Full" icon="full.png" package="" />

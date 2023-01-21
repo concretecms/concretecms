@@ -129,7 +129,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
         return $ids;
     }
 
-    protected function getNavigation(): Navigation
+    protected function getHomePage(): Page
     {
         $section = Section::getByLocale(\Localization::getInstance()->getLocale());
         if ($section instanceof Section) {
@@ -138,6 +138,12 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
             $site = $this->app->make('site')->getSite();
             $home = $site->getSiteHomePageObject();
         }
+        return $home;
+    }
+
+    protected function getNavigation(): Navigation
+    {
+        $home = $this->getHomePage();
         $children = $home->getCollectionChildren();
         $navigation = new Navigation();
 
@@ -172,9 +178,7 @@ class Controller extends BlockController implements UsesFeatureInterface, FileTr
 
     public function view()
     {
-        $site = $this->app->make('site')->getSite();
-        $home = $site->getSiteHomePageObject();
-
+        $home = $this->getHomePage();
         if ($this->brandingLogo) {
             $logo = File::getByID($this->brandingLogo);
             if ($logo) {

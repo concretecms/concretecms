@@ -1,8 +1,12 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 
+use Concrete\Core\Conversation\Command\HandleNewConversationMessageCommand;
+use Concrete\Core\Conversation\Command\SendEmailsToConversationMessageSubscribersCommand;
 use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Conversation\Rating\Type;
+use Concrete\Core\Notification\Subject\SubjectInterface;
+use Concrete\Core\Permission\ObjectInterface;
 use Config;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\Set as FileSet;
@@ -16,7 +20,7 @@ use Concrete\Core\User\UserInfo;
 use Concrete\Core\Utility\IPAddress;
 use Events;
 
-class Message extends ConcreteObject implements \Concrete\Core\Permission\ObjectInterface
+class Message extends ConcreteObject implements ObjectInterface, SubjectInterface
 {
     public $cnvMessageID;
     protected $cnvMessageDateCreated;
@@ -111,6 +115,16 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
         $this->cnvMessageFlagTypes = $flags;
 
         return $flags;
+    }
+
+    public function getNotificationDate()
+    {
+        return app()->make('date')->toDateTime($this->getConversationMessageDateTime());
+    }
+
+    public function getUsersToExcludeFromNotification()
+    {
+        return array();
     }
 
     public function getConversationMessageTotalRatingScore()
@@ -214,6 +228,8 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
         $cnv = $this->getConversationObject();
         if (is_object($cnv)) {
             $cnv->updateConversationSummary();
+            $command = new SendEmailsToConversationMessageSubscribersCommand($this);
+            app()->executeCommand($command);
         }
     }
 
@@ -574,30 +590,10 @@ class Message extends ConcreteObject implements \Concrete\Core\Permission\Object
 
         $message = static::getByID($cnvMessageID);
 
-        $event = new MessageEvent($message);
-        Events::dispatch('on_new_conversation_message', $event);
+        $command = new HandleNewConversationMessageCommand($message);
+        app()->executeCommand($command);
 
-        if ($cnv instanceof \Concrete\Core\Conversation\Conversation) {
-            $cnv->updateConversationSummary();
-            $users = $cnv->getConversationUsersToEmail();
-            $c = $cnv->getConversationPageObject();
-            if (is_object($c)) {
-                $formatter = new AuthorFormatter($author);
-                $cnvMessageBody = html_entity_decode($cnvMessageBody, ENT_QUOTES, APP_CHARSET);
-                foreach ($users as $ui) {
-                    $mail = Core::make('mail');
-                    $mail->to($ui->getUserEmail());
-                    $mail->addParameter('title', $c->getCollectionName());
-                    $mail->addParameter('link', $c->getCollectionLink(true));
-                    $mail->addParameter('poster', $formatter->getDisplayName());
-                    $mail->addParameter('body', Core::make('helper/text')->prettyStripTags($cnvMessageBody));
-                    $mail->load('new_conversation_message');
-                    $mail->sendMail();
-                }
-            }
-        }
-
-        return static::getByID($cnvMessageID);
+        return $message;
     }
 
     public function delete()

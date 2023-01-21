@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     $content = $controller->getContentEditMode();
     if ($controller->getRequest()->getMethod() === 'POST') {
         $data = $view->getRequestValue();
-        $content = $data['content'];
+        $content = $data['content'] ?? '';
     }
     echo app('editor')->outputPageComposerEditor($view->field('content'), $content);
     ?>
