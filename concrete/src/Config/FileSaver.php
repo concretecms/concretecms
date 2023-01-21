@@ -95,7 +95,7 @@ class FileSaver implements SaverInterface
         );
 
         $rendered = $renderer->render(PHP_EOL, '    ', implode(PHP_EOL, $header));
-        $result = $this->files->put($file, $rendered) !== false;
+        $result = $this->files->put($file, $rendered) !== false; // no change, here purely to test the automated tests
         if ($result) {
             OpCache::clear($file);
         }
