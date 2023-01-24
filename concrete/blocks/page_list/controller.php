@@ -588,6 +588,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             'paginate' => 0,
             'rss' => 0,
             'pfID' => 0,
+            'ptID' => 0,
             'filterDateOption' => 'all',
             'cParentID' => null,
         ];
