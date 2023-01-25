@@ -12,7 +12,7 @@ use OAuth\UserData\Extractor\LazyExtractor;
 
 class Extractor extends LazyExtractor
 {
-    const USER_PATH = '/ccm/api/v1/account/info';
+    const USER_PATH = '/ccm/api/1.0/account';
 
     protected $service;
 

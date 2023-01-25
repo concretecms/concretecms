@@ -166,7 +166,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         $type->setIsCheckedByDefault($akCheckedByDefault);
-        $type->setCheckboxLabel($data['akCheckboxLabel']);
+        $type->setCheckboxLabel($data['akCheckboxLabel'] ?? '');
 
         return $type;
     }
