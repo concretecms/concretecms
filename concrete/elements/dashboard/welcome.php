@@ -1,6 +1,7 @@
 <?php
 
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\User;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -10,6 +11,8 @@ $c = \Concrete\Core\Page\Page::getCurrentPage();
 $cp = new \Concrete\Core\Permission\Checker($c);
 $canEdit = $cp->canEditPageContents();
 $token = $app->make('token');
+
+$ui = $app->make(User::class)->getUserInfoObject();
 
 if ($c->getCollectionPath() != '/dashboard/welcome') {
     $welcome = Page::getByPath('/dashboard/welcome');
@@ -30,7 +33,10 @@ if (!isset($showCustomizeButton)) {
 ?>
 
 <nav class="ccm-dashboard-desktop-navbar navbar navbar-expand-md">
-    <span class="navbar-text"><?=$app->make('date')->formatDate('now', 'full')?></span>
+    <span class="navbar-text">
+        <?=$app->make('date')->formatDate('now', 'full')?>
+        <span class="ms-3 small opacity-75"><?=t('Last login on %s', $app->make('date')->formatDateTime($ui->getPreviousLogin(), 'long'))?></span>
+    </span>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarWelcomeBack" aria-controls="navbarWelcomeBack" aria-expanded="false" aria-label="<?=h(t('Toggle navigation'))?>">
         <span class="navbar-toggler-icon"></span>
     </button>
