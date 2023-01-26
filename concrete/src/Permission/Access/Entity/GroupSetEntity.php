@@ -7,6 +7,7 @@ use Config;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\Group\GroupSet;
 use UserInfo;
+use function count;
 
 class GroupSetEntity extends Entity
 {
@@ -32,13 +33,15 @@ class GroupSetEntity extends Entity
         foreach ($user->getUserGroups() as $key => $val) {
             $ingids[] = $key;
         }
-        $instr = implode(',', $ingids);
-        $peIDs = $db->GetCol('select peID from PermissionAccessEntityGroupSets paegs inner join GroupSetGroups gsg on paegs.gsID = gsg.gsID where gsg.gID in (' . $instr . ')');
-        if (is_array($peIDs)) {
-            foreach ($peIDs as $peID) {
-                $entity = Entity::getByID($peID);
-                if (is_object($entity)) {
-                    $entities[] = $entity;
+        if (count($ingids) > 0) {
+            $instr = implode(',', $ingids);
+            $peIDs = $db->GetCol('select peID from PermissionAccessEntityGroupSets paegs inner join GroupSetGroups gsg on paegs.gsID = gsg.gsID where gsg.gID in (' . $instr . ')');
+            if (is_array($peIDs)) {
+                foreach ($peIDs as $peID) {
+                    $entity = Entity::getByID($peID);
+                    if (is_object($entity)) {
+                        $entities[] = $entity;
+                    }
                 }
             }
         }
