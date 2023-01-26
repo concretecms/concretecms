@@ -159,6 +159,7 @@ abstract class AbstractCategory implements CategoryInterface, StandardSearchInde
         if (!$item->isMiss()) {
             $key = $item->get();
         } else {
+            $item->lock();
             $key = $this->getAttributeKeyByHandleUncached($handle);
             $cache->save($item->set($key));
         }
