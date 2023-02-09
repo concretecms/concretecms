@@ -16,7 +16,7 @@ class UserSelectInstance
 
     protected $accessToken;
 
-    protected bool $includeAvatar = true;
+    protected $includeAvatar = true;
 
     protected $labelFormat = UserSelectInstanceFactory::LABEL_FORMAT_AUTO;
 
