@@ -15,7 +15,7 @@
   "devDependencies": {
     "@concretecms/bedrock": "github:concretecms/bedrock#1.4.x",
     "cross-env": "^5.1.1",
-    "download": "~4.4.3",
+    "download": "~8.0.0",
     "grunt": "^1.5.3",
     "grunt-env": "^1.0.1",
     "laravel-mix": "^6.0.49",
