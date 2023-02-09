@@ -37,8 +37,18 @@
 .ccm-directory-selector-container {
   margin-top: 15px;
 
-  .dropdown-item {
+  .item {
+    i {
+      margin-right: 10px;
+    }
+  }
+
+  .option {
     padding-left: 204px; // We need this default in order to handle the many levels of sub-nodes.
+
+    i {
+      margin-right: 5px; // item and option require diferent margins because one is flexbox and the other is not
+    }
 
     &.level-1 {
       padding-left: 12px;

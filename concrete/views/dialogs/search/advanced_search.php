@@ -17,8 +17,6 @@
 
             <div class="tab-pane active" id="tab-content-fields">
 
-                <p class="mb-0"><small class="text-muted"><?=t('Add custom search fields based on your needs.')?></small></p>
-
                 <?php
                     print $searchFieldSelectorElement->render();
                 ?>
@@ -26,8 +24,6 @@
             </div>
 
             <div class="tab-pane" id="tab-content-columns">
-
-                <p><small class="text-muted"><?=t('Customize the columns, column order, sort and number of results for your search.')?></small></p>
 
                 <?php
                     print $customizeElement->render();

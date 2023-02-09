@@ -930,9 +930,8 @@ if ($style instanceof CustomStyle) {
                     },
                 },
                mounted(){
-                   $('#customClass').selectpicker({
-                       liveSearch: true,
-                       allowAdd: true
+                   new TomSelect($('#customClass').get(0), {
+                       create: true
                    })
                },
                watch: {

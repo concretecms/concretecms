@@ -30,7 +30,7 @@ class View extends AbstractView
         return $this->attributeValue;
     }
 
-    protected function getAttributeKey()
+    public function getAttributeKey()
     {
         return $this->attributeKey;
     }

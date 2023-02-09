@@ -50,7 +50,7 @@ use Concrete\Controller\SinglePage\Dashboard\Welcome\Health;
         <div class="row">
             <?php $view->inc('elements/result_messages.php'); ?>
         </div>
-        <div data-vue="health">
+        <div data-vue-app="health">
             <div v-if="runningProcesses.length" class="row mb-3">
                 <div class="col-12">
                     <div class="card">
@@ -191,7 +191,7 @@ use Concrete\Controller\SinglePage\Dashboard\Welcome\Health;
     $(function() {
         Concrete.Vue.activateContext('backend', function (Vue, config) {
             new Vue({
-                el: 'div[data-vue=health]',
+                el: 'div[data-vue-app=health]',
                 components: config.components,
                 data: {
                     'runningProcesses': <?=json_encode($runningReportProcesses)?>,
