@@ -88,16 +88,18 @@ if ($calendarAttributeKeyHandle) {
     <?php } ?>
 
     <div data-row="specific-calendar">
-        <div class="form-group">
+        <div class="form-group" data-vue="cms">
             <?php
             echo $form->label('calendarSelect', t('Calendar'));
-
-            if (isset($multiple) && $multiple) {
-                echo $form->selectMultiple('caID[]', $calendarSelect, $caID, ['id' => 'calendarSelect', 'name' => 'caID[]']);
-            } else {
-                echo $form->select('caID', $calendarSelect, $caID, ['id' => 'calendarSelect', 'name' => 'caID']);
-            }
             ?>
+            <concrete-select
+                    <?php if (isset($multiple) && $multiple) { ?>:multiple="true" name="caID[]" <?php } else { ?> name="caID" <?php } ?>
+                    :options='<?=json_encode($calendarSelect)?>'
+                    <?php if (isset($caID)) { ?>
+                        <?php if (isset($multiple) && $multiple) { ?>:value='<?=json_encode($caID)?>' <?php } else { ?>value='<?=$caID?>'<?php } ?>
+                    <?php } ?>
+            >
+            </concrete-select>
         </div>
     </div>
 </div>
@@ -105,11 +107,6 @@ if ($calendarAttributeKeyHandle) {
 <!--suppress EqualityComparisonWithCoercionJS -->
 <script>
     $(function () {
-        <?php if (isset($multiple) && $multiple) { ?>
-            $('#caID').selectpicker({
-                width: 'fit'
-            });
-        <?php } ?>
 
         $('input[name=chooseCalendar]').on('change', function () {
             let selected = $('input[name=chooseCalendar]:checked').val();

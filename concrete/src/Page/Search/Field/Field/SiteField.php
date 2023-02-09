@@ -15,6 +15,7 @@ class SiteField extends AbstractSiteField
      */
     public function filterList(ItemList $list)
     {
+        $site = null;
         if (!isset($this->data['siteID']) || $this->getData('siteID') === 'current') {
             $site = \Core::make('site')->getActiveSiteForEditing();
         } else if ($this->getData('siteID') === 'all') {

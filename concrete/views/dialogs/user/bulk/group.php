@@ -27,10 +27,8 @@ if (!is_array($users) || count($users) == 0) {
 ?>
 	<form method="post" data-dialog-form="save-file-set" action="<?= $controller->action('submit'); ?>">
 		<?php echo $form->label('groupIDs', $label); ?>
-		<div class="form-group" data-form-row="user-groups">
-			<div style="width: 100%">
-				<?=$form->selectMultiple('groupIDs', $gArray, 0, ['classes' => 'form-control', 'style' => 'width: 100%']); ?>
-			</div>
+		<div class="mb-3" data-vue="backend">
+            <concrete-select :multiple="true" name="groupIDs[]" :options='<?=json_encode($gArray)?>'></concrete-select>
 		</div>
 
 		<?php
@@ -50,13 +48,4 @@ if (!is_array($users) || count($users) == 0) {
 		</div>
 
 	</form>
-
-
-	<script type="text/javascript">
-		$(function() {
-			$('#groupIDs').removeClass('form-control').selectpicker({
-				width: '100%'
-			});
-		});
-	</script>
 <?php }

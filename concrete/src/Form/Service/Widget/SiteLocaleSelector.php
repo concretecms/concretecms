@@ -24,74 +24,20 @@ class SiteLocaleSelector
      */
     public function selectLocale($fieldName, Site $site, ?Locale $selectedLocale = null, array $options = [])
     {
-        $siteLocales = $site->getLocales()->toArray();
-
-        $allowNull = !empty($options['allowNull']);
-        $nullText = $options['noLocaleText'] ?? t('No Locale');
-        $displayLocaleCode = $this->shouldDisplayLocaleCode($options, $siteLocales);
-
-        if ($selectedLocale === null && !$allowNull) {
-            $selectedLocale = $site->getDefaultLocale();
-        }
-
-        $localeID = $selectedLocale ? $selectedLocale->getLocaleID() : '';
-
-        $identifier = (new Identifier())->getString(32);
-
-        $flag = $selectedLocale ? Flag::getLocaleFlagIcon($selectedLocale) : '';
-
+        $siteLocales = json_encode($site->getLocales()->toArray());
+        $selectedLocaleString = '';
         if ($selectedLocale) {
-            $label = h($selectedLocale->getLanguageText());
-            if ($displayLocaleCode) {
-                $label .= ' <span class="text-muted small">' . h($selectedLocale->getLocale()) . '</span>';
-            }
-        } else {
-            $label = $nullText;
+            $selectedLocaleString = ":selected-locale='{$selectedLocale->getLocaleID()}'";
         }
-
-        $localeHTML = '';
-        if ($allowNull) {
-            $localeHTML .= '<li><a href="#"' . ($selectedLocale === null ? ' data-locale="default"' : '') . ' data-select-locale="">' . $nullText . '</li>';
-        }
-        foreach ($siteLocales as $locale) {
-            $localeHTML .= '<li><a href="#" ';
-            if ($selectedLocale && $selectedLocale->getLocaleID() == $locale->getLocaleID()) {
-                $localeHTML .= 'data-locale="default"';
-            }
-            $localeHTML .= 'data-select-locale="' . $locale->getLocaleID() . '">';
-            $localeHTML .= Flag::getLocaleFlagIcon($locale) . ' ' . $locale->getLanguageText();
-            if ($displayLocaleCode) {
-                $localeHTML .= ' <span class="text-muted small">' . h($locale->getLocale()) . '</span>';
-            }
-            $localeHTML .= '</a></li>';
-        }
-
         return <<<EOL
-        <input type="hidden" name="{$fieldName}" value="{$localeID}">
-        <div class="btn-group" data-locale-selector="{$identifier}">
-            <button type="button" class="btn btn-secondary" data-bs-toggle="dropdown">
-                {$flag} {$label}
-            <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                {$localeHTML}
-            </ul>
+        <div class="mb-3" data-vue="cms">
+            <concrete-locale-select 
+                :locales='{$siteLocales}'
+                name="{$fieldName}"
+                {$selectedLocaleString}
+                >
+            </concrete-locale-select>
         </div>
-        <script type="text/javascript">
-            $(function() {
-                $('[data-bs-toggle=dropdown]').dropdown();
-                $('div[data-locale-selector={$identifier}]').on('click', 'a[data-select-locale]', function(e) {
-                    e.preventDefault();
-                    var localeID = $(this).attr('data-select-locale'),
-                        html = $(this).html() + ' <span class="caret"></span>',
-                        form = $(this).closest('form');
-
-                    form.find('input[name={$fieldName}]').val(localeID);
-                    form.find('div[data-locale-selector={$identifier}] > button').html(html);
-                });
-            });
-        </script>
-
 EOL;
     }
 
@@ -159,17 +105,9 @@ EOL;
 
         return <<<EOL
 
-<select id="{$identifierHtml}" name="{$fieldNameHtml}" multiple="multiple" class="ccm-sitelocaleselector">
+<select id="{$identifierHtml}" name="{$fieldNameHtml}" multiple="multiple" class="form-select ccm-sitelocaleselector">
     {$htmlOptions}
 </select>
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#' + {$identifierJS}).selectpicker({
-        liveSearch: true,
-		width: '100%'
-    });
-});
-</script>
 
 EOL;
     }

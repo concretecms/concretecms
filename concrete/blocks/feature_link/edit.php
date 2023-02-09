@@ -36,7 +36,7 @@ $icon = $icon ?? '';
         <label class="form-label" for="buttonText"><?=t('Button Text')?></label>
         <input type="text" name="buttonText" class="form-control" value="<?=$buttonText ?? null?>">
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <?php echo $form->label("buttonSize", t("Button Size")); ?>
         <?php echo $form->select("buttonSize", [
                 '' => t('Regular'),
@@ -45,7 +45,7 @@ $icon = $icon ?? '';
             ], $buttonSize ?? null);
         ?>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <?php echo $form->label("buttonStyle", t("Button Style")); ?>
         <?php echo $form->select("buttonStyle", [
             '' => t('Regular'),
@@ -55,17 +55,19 @@ $icon = $icon ?? '';
         ?>
     </div>
     <?php if ($themeColorCollection) { ?>
-        <label class="form-label" for="buttonColor"><?=t('Button Color')?></label>
-        <div data-vue="feature-link">
-            <concrete-theme-color-input
-                :color-collection='<?=json_encode($themeColorCollection)?>'
-                <?php if (isset($buttonColor)) { ?> color="<?=$buttonColor?>"<?php } ?>
-                input-name="buttonColor">
-            </concrete-theme-color-input>
+        <div class="mb-3">
+            <label class="form-label" for="buttonColor"><?=t('Button Color')?></label>
+            <div data-vue-app="feature-link">
+                <concrete-theme-color-input
+                    :color-collection='<?=json_encode($themeColorCollection)?>'
+                    <?php if (isset($buttonColor)) { ?> color="<?=$buttonColor?>"<?php } ?>
+                    input-name="buttonColor">
+                </concrete-theme-color-input>
+            </div>
         </div>
     <?php } ?>
 
-    <div class="form-group ccm-block-select-icon">
+    <div class="mb-3 ccm-block-select-icon">
         <?php echo $form->label('icon', t('Icon'))?>
         <div id="ccm-icon-selector-<?= h($bID) ?>">
             <icon-selector name="icon" selected="<?= h($icon) ?>" title="<?= t('Choose Icon') ?>" empty-option-label="<?= h(tc('Icon', '** None Selected')) ?>" />
@@ -92,7 +94,7 @@ $icon = $icon ?? '';
 
         Concrete.Vue.activateContext('cms', function (Vue, config) {
             new Vue({
-                el: 'div[data-vue=feature-link]',
+                el: 'div[data-vue-app=feature-link]',
                 components: config.components
             })
         })

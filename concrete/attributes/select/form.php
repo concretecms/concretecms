@@ -1,6 +1,8 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Attribute\Component\OptionSelectInstanceFactory;
+
 use HtmlObject\Element;
 
 $app = Application::getFacadeApplication();
@@ -73,62 +75,42 @@ if (!$akSelectAllowMultipleValues && !$akSelectAllowOtherValues && $akDisplayMul
 // Select2
 if ($akSelectAllowOtherValues) {
     $options = [];
-
     if (is_array($selectedOptionIDs) && count($selectedOptionIDs)) {
         $optionsList = $controller->getOptions();
         foreach ($optionsList as $opt) {
             if (in_array('SelectAttributeOption:' . $opt->getSelectAttributeOptionID(), $selectedOptionIDs)) {
-                $options['SelectAttributeOption:' . $opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionDisplayValue(true);
+                $options[] = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
             }
         }
     }
 
+    /**
+     * @var $view \Concrete\Core\Attribute\View
+     */
+    $key = $view->getAttributeKey();
+    $factory = app(OptionSelectInstanceFactory::class);
+    $instance = $factory->createInstance($key);
 
-    /*
-       Note: the form-control on here is NOT ideal, that's bootstrap 4 markup,
-       but bootstrap select doesn't understand form-select so if you don't give it form-control you won't get full width form controls here
-    */
-    echo (string) new Element(
-        'span',
-        $form->selectMultiple($view->field('atSelectOptionValue'), $options, count($selectedOptionIDs) ? $selectedOptionIDs : '', ['class' => 'form-control', 'data-select-and-add' => $akID]),
-        [
-            'class' => 'ccm-select-values-selector',
-            'id' => 'ccm-select-values-selector-' . $akID,
-        ]
-    );
+    if ($akSelectAllowMultipleValues) {
+        $inputName = $view->field('atSelectOptionValue') . '[]';
+    } else {
+        $inputName = $view->field('atSelectOptionValue');
+    }
+
     ?>
-    <script type="text/javascript">
-        $(function() {
-            $('select[data-select-and-add="<?=$akID?>"]').selectpicker(
-                {
-                    liveSearch: true,
-                    allowAdd: true,
-                }
-            ).ajaxSelectPicker(
-                {
-                    ajax: {
-                        url: "<?=$view->action('load_autocomplete_values'); ?>",
-                        data: {
-                            term: "{{{q}}}"
-                        },
-                    },
-                    locale: {
-                        currentlySelected: "<?=t('Currently Selected'); ?>",
-                        emptyTitle: "<?=t('Select and begin typing'); ?>",
-                        errorText: "<?=t('Unable to retrieve results'); ?>",
-                        searchPlaceholder: "<?=t('Search...'); ?>",
-                        statusInitialized: "<?=t('Start typing a search query'); ?>",
-                        statusNoResults: "<?=t('No Results'); ?>",
-                        statusSearching: "<?=t('Searching...'); ?>",
-                        statusTooShort: "<?=t('Please enter more characters'); ?>",
-                    },
-                    preserveSelected: true,
-                    clearOnEmpty: false,
-                    minLength: 2,
-                },
-            );
-        });
-    </script>
+
+    <div data-vue="cms">
+        <concrete-option-select
+            input-name="<?=$inputName?>"
+            data-source-url="<?=$instance->getDataSourceUrl()?>"
+            selected-options-url="<?=$instance->getSelectedOptionsUrl()?>"
+            attribute-key-id="<?=$key->getAttributeKeyID()?>"
+            access-token="<?=$instance->getAccessToken()?>"
+            :allow-multiple-values="<?=$akSelectAllowMultipleValues ? 'true' : 'false'?>"
+            :value='<?=json_encode($options)?>'
+        ></concrete-option-select>
+    </div>
+
 
 <?php
 }

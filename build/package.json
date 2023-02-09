@@ -28,6 +28,7 @@
     "vue-template-compiler": "^2.6.12"
   },
   "dependencies": {
+    "@vue/babel-preset-jsx": "^1.4.0",
     "path": "^0.12.7",
     "tui-image-editor": "^3.10.0"
   }

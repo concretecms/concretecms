@@ -52,4 +52,5 @@ $router->all('/ccm/system/dialogs/editor/settings/preview', 'Concrete\Controller
 $router->all('/ccm/system/dashboard/attribute/set/update_order', 'Concrete\Controller\Backend\Attribute\Set\UpdateOrder::view');
 $router->all('/ccm/system/heartbeat', '\Concrete\Controller\Frontend\Heartbeat::view');
 
-$router->all('/ccm/system/user/autocomplete', 'Concrete\Controller\Backend\User\Autocomplete::view');
+$router->post('/ccm/system/user/autocomplete', 'Concrete\Controller\Backend\User\Autocomplete::view');
+$router->post('/ccm/system/user/autocomplete/get_selected', 'Concrete\Controller\Backend\User\Autocomplete::getSelectedUsers');
