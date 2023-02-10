@@ -99,9 +99,9 @@ class Controller extends GenericOauth2TypeController
         $result = null;
         $binding = $this->getBindingForUser($user);
         if ($binding !== null) {
-            $concrete5UserID = (int) $binding;
-            if ($concrete5UserID !== 0) {
-                $result = "https://www.concrete5.org/profile/-/view/$concrete5UserID/";
+            $concreteUserID = (int) $binding;
+            if ($concreteUserID !== 0) {
+                $result = "https://community.concretecms.com/members/profile/{$concreteUserID}";
             }
         }
 
