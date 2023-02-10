@@ -7,7 +7,7 @@
   "homepage": "https://opensource.concretecms.org/",
   "support": {
     "docs": "https://documentation.concretecms.org/",
-    "source": "http://documentation.concretecms.org/api/",
+    "source": "https://documentation.concretecms.org/api/",
     "forum": "https://forums.concretecms.org/"
   },
   "minimum-stability": "stable",
