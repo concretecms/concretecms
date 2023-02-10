@@ -89,7 +89,6 @@ class Service
     {
         $tree = new SiteTree();
         $this->entityManager->persist($tree);
-        $this->entityManager->flush();
 
         $locale = new Locale();
         $locale->setCountry($country);
