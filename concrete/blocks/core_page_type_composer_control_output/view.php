@@ -26,4 +26,11 @@
         }
         ?>
 <?php
-    } ?>
+    } else { ?>
+
+    <div class="ccm-ui">
+        <div class="alert alert-warning">
+            <?=t('Deleted Page Type Composer Form Element (Block ID %s)')?>
+        </div>
+    </div>
+<?php }
