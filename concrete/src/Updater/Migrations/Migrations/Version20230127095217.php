@@ -22,7 +22,6 @@ final class Version20230127095217 extends AbstractMigration implements Repeatabl
         $this->refreshEntities([
             Key::class,
             AddressValue::class,
-            PagePath::class,
         ]);
     }
 }
