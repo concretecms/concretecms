@@ -7,7 +7,13 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Routing\Router $router
  */
 
-$objects = Express::getEntities();
+try {
+    $objects = Express::getEntities();
+} catch (\Exception $e) {
+    // Note - this might happen if proxies need to be rebuilt and this is the cleanest way to do it, although
+    // not ideal.
+    $objects = [];
+}
 
 foreach ($objects as $object) {
 
