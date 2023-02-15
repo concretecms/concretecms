@@ -365,7 +365,6 @@ mix
             ]
         }
     })
-
 // The CMS entry point
 mix
     .sass('assets/cms.scss', 'css/cms.css', {
@@ -428,7 +427,6 @@ mix.copy('node_modules/@concretecms/bedrock/assets/icons/sprites.svg', '../concr
 
 // Copy jquery ui icons into our repository
 mix.copy('node_modules/jquery-ui/themes/base/images/ui-*', '../concrete/images/');
-
 
 // Turn off notifications
 mix
