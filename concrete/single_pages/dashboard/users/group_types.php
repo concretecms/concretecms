@@ -131,7 +131,7 @@ $token = $app->make(Token::class);
         <?php foreach ($groupTypes as $groupType) { ?>
             <li>
                 <a href="<?php echo (string)Url::to('/dashboard/users/group_types', 'edit', $groupType->getId()); ?>">
-                    <?php echo $groupType->getName(); ?>
+                    <?php echo h($groupType->getName()); ?>
                 </a>
             </li>
         <?php } ?>
