@@ -76,7 +76,7 @@ use Concrete\Core\Support\Facade\Url;
 
             <% if (cvComments) { %>
                 <p class="ccm-panel-page-versions-description">
-                    <%-cvComments%>
+                    <%=cvComments%>
                 </p>
             <% } %>
 

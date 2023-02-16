@@ -135,6 +135,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                     $form.append(
                         renderAttribute(r)
                     );
+                    $form.find('[data-vue]').each(function() {
+                        $(this).concreteVue({ context: $(this).attr('data-vue') })
+                    })
                     $form.delay(1).queue(function () {
                         $('[data-attribute-key-id=' + r.akID + ']').removeClass('ccm-page-attribute-adding');
                         $(this).dequeue();
@@ -154,6 +157,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
         var selectedAttributes = <?=$selectedAttributes?>;
         _.each(selectedAttributes, function (attribute) {
             $form.append(renderAttribute(attribute));
+            $form.find('[data-vue]').each(function() {
+                $(this).concreteVue({ context: $(this).attr('data-vue') })
+            })
         });
         $form.on('click', 'a[data-remove-attribute-key]', function () {
             var akID = $(this).attr('data-remove-attribute-key');
