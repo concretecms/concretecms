@@ -1,16 +1,28 @@
 <?php
 namespace Concrete\Attribute\PageSelector;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\Fractal\Transformer\PageTransformer;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Page\Page;
 use Core;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceInterface;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
 {
     protected $searchIndexFieldDefinition = ['type' => 'integer', 'options' => ['default' => 0, 'notnull' => false]];
 
@@ -130,4 +142,30 @@ class Controller extends AttributeTypeController
 
         return $error;
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'number'
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        return $this->createAttributeValue($json);
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        if ($this->getAttributeValue()) {
+            $cID = $this->getAttributeValue()->getValue();
+            if ($cID) {
+                $page = Page::getByID($cID, 'ACTIVE');
+                return new Item($page, new PageTransformer(), Resources::RESOURCE_PAGES);
+            }
+        }
+    }
+
 }
