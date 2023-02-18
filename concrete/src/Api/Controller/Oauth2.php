@@ -27,6 +27,8 @@ namespace Concrete\Core\Api\Controller;
  *         scopes={
  *             "openid": "Remotely authenticate into Concrete",
  *             "account:read": "Read your user object",
+ *             "calendars:read": "Read calendars",
+ *             "calendar_events:read": "Read calendar events",
  *             "files:read": "Read files as your user",
  *             "files:add": "Add files",
  *             "files:update": "Update files",

@@ -166,6 +166,7 @@ class Controller extends AttributeTypeController implements
                 return new Item($page, new PageTransformer(), Resources::RESOURCE_PAGES);
             }
         }
+        return null;
     }
 
 }

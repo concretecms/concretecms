@@ -115,6 +115,7 @@ class Controller extends CoreAttributeController implements
         if ($site) {
             return new Item($site, new SiteTransformer(), Resources::RESOURCE_SITES);
         }
+        return null;
     }
 
 

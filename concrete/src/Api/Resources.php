@@ -15,5 +15,8 @@ class Resources
     const RESOURCE_LOCALES = 'locales';
     const RESOURCE_PAGE_VERSIONS = 'page_versions';
     const RESOURCE_CUSTOM_ATTRIBUTES = 'custom_attributes';
+    const RESOURCE_CALENDARS = 'calendars';
+    const RESOURCE_CALENDAR_EVENTS = 'calendar_events';
+    const RESOURCE_CALENDAR_EVENT_VERSIONS = 'calendar_event_versions';
 
 }
