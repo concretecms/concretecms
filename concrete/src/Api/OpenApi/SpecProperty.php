@@ -21,6 +21,11 @@ class SpecProperty implements \JsonSerializable
     protected $type;
 
     /**
+     * @var string|null
+     */
+    protected $format;
+
+    /**
      * @var mixed
      */
     protected $items;
@@ -30,11 +35,12 @@ class SpecProperty implements \JsonSerializable
      */
     protected $objectProperties;
 
-    public function __construct(string $propertyKey, string $title, $type, $items = null, $objectProperties = null)
+    public function __construct(string $propertyKey, string $title, $type, $format = null, $items = null, $objectProperties = null)
     {
         $this->propertyKey = $propertyKey;
         $this->title = $title;
         $this->type = $type;
+        $this->format = $format;
         $this->items = $items;
         $this->objectProperties = $objectProperties;
 
@@ -81,6 +87,9 @@ class SpecProperty implements \JsonSerializable
             $data = array_merge($this->type->jsonSerialize());
         } else {
             $data['type'] = $this->type;
+        }
+        if (isset($this->format)) {
+            $data['format'] = $this->format;
         }
         if ($this->items) {
             $data['items'] = $this->items;

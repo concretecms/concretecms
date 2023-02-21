@@ -2,13 +2,23 @@
 
 namespace Concrete\Attribute\Number;
 
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SimpleApiAttributeValueInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\OpenApi\SpecProperty;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Utility\Service\Validation\Numbers;
+use League\Fractal\TransformerAbstract;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    SimpleApiAttributeValueInterface
 {
     protected $searchIndexFieldDefinition = [
         'type' => 'decimal',
@@ -29,7 +39,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
     {
         $value = $this->attributeValue->getValue();
 
-        return $value === null ? '' : (float) $value;
+        return $value === null ? '' : (float)$value;
     }
 
     public function getAttributeValueClass()
@@ -39,8 +49,8 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
 
     public function searchForm($list)
     {
-        $numFrom = (int) ($this->request('from'));
-        $numTo = (int) ($this->request('to'));
+        $numFrom = (int)($this->request('from'));
+        $numTo = (int)($this->request('to'));
         if ($numFrom) {
             $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $numFrom, '>=');
         }
@@ -111,7 +121,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         if ($value === null) {
             $result = '';
         } else {
-            $result = (string) $value->getValue();
+            $result = (string)$value->getValue();
         }
 
         return $result;
@@ -137,9 +147,44 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                 $value->setValue($textRepresentation);
             }
         } else {
-            $warnings->add(t('"%1$s" is not a valid number for the attribute with handle %2$s', $textRepresentation, $this->attributeKey->getAttributeKeyHandle()));
+            $warnings->add(
+                t(
+                    '"%1$s" is not a valid number for the attribute with handle %2$s',
+                    $textRepresentation,
+                    $this->attributeKey->getAttributeKeyHandle()
+                )
+            );
         }
 
         return $value;
+    }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'number'
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        return $this->createAttributeValue($json);
+    }
+
+    public function getApiAttributeValue()
+    {
+        $value = $this->getAttributeValueObject();
+        if ($value === null) {
+            return null;
+        } else {
+            $intHelper = $this->app->make(Numbers::class);
+            if ($intHelper->integer($value->getValue())) {
+                return (int) $value->getValue();
+            } else {
+                return $value->getValue();
+            }
+        }
     }
 }

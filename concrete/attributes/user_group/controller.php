@@ -2,11 +2,17 @@
 
 namespace Concrete\Attribute\UserGroup;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\Fractal\Transformer\GroupTransformer;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\UserGroupSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
-use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Error\ErrorList\Field\AttributeField;
@@ -15,9 +21,15 @@ use Concrete\Core\Form\Service\Widget\GroupSelector;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\Group\Group;
 use Concrete\Core\User\Group\GroupList;
+use Concrete\Core\User\Group\GroupRepository;
 use Concrete\Core\User\User;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceInterface;
 
-class Controller extends AttributeTypeController
+class Controller extends AttributeTypeController implements
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
 {
     protected $akGroupSelectionMethod = false;
     protected $akDisplayGroupsBeneathSpecificParent = false;
@@ -370,4 +382,33 @@ class Controller extends AttributeTypeController
 
         return $group;
     }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        return $this->createAttributeValue($json);
+    }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'integer'
+        );
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        if ($this->getAttributeValue()) {
+            $group = $this->getAttributeValue()->getValue();
+            if ($group) {
+                return new Item($group, new GroupTransformer(), Resources::RESOURCE_GROUPS);
+            }
+        }
+        return null;
+    }
+
+
+
+
 }
