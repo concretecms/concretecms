@@ -36,7 +36,7 @@ class ExpressEntitySpecFactory
     {
         $model = new SpecModel(camelcase($object->getHandle()), t('%s model', $object->getName()));
         $model
-            ->addProperty(new SpecProperty('id', t('Entry ID'), 'integer'))
+            ->addProperty(new SpecProperty('id', t('Entry public identifier'), 'string'))
             ->addProperty(new SpecProperty('date_added', t('Date Added'), 'string', 'date'))
             ->addProperty(new SpecProperty('date_last_updated', t('Date Last Updated'), 'string', 'date'))
             ->addProperty(new SpecProperty('label', t('Label'), 'string'))
@@ -187,17 +187,17 @@ class ExpressEntitySpecFactory
     protected function addRead(SpecFragment $spec, Entity $object)
     {
         $handle = $object->getPluralHandle();
-        $path = self::API_PREFIX . '/' . $handle . '/{id}';
+        $path = self::API_PREFIX . '/' . $handle . '/{uuid}';
         $includes = $this->getIncludesForObject($object);
         $spec->addPath(
             (new SpecPath(
                 $path,
                 'GET',
                 $handle,
-                t('Find a %s by its ID.', $object->getName())
+                t('Find a %s by its public identifier.', $object->getName())
             ))
                 ->addParameter(
-                    new Parameter('id', 'path', t('The ID of the object.'), new SpecSchema('string', 'string'))
+                    new Parameter('uuid', 'path', t('The public identifier/uuid of the entry.'), new SpecSchema('string', 'string'))
                 )
                 ->addParameter(new IncludesParameter($includes))
                 ->setSecurity(new SpecSecurity('authorization', [$handle . ':read']))
@@ -245,7 +245,7 @@ class ExpressEntitySpecFactory
     protected function addUpdate(SpecFragment $spec, Entity $object)
     {
         $handle = $object->getPluralHandle();
-        $path = self::API_PREFIX . '/' . $handle . '/{id}';
+        $path = self::API_PREFIX . '/' . $handle . '/{uuid}';
 
         $specPath = (new SpecPath(
             $path,
@@ -276,7 +276,7 @@ class ExpressEntitySpecFactory
     protected function addDelete(SpecFragment $spec, Entity $object)
     {
         $handle = $object->getPluralHandle();
-        $path = self::API_PREFIX . '/' . $handle . '/{id}';
+        $path = self::API_PREFIX . '/' . $handle . '/{uuid}';
         $spec->addPath(
             (new SpecPath(
                 $path,

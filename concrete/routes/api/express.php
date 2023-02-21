@@ -28,18 +28,18 @@ foreach ($objects as $object) {
     ;
 
 
-    $router->get('/' . $object->getPluralHandle() . '/{entryID}', '\Concrete\Core\Api\Controller\Express::read')
+    $router->get('/' . $object->getPluralHandle() . '/{entryIdentifier}', '\Concrete\Core\Api\Controller\Express::read')
         ->setScopes($object->getPluralHandle() . ':read')
         ->setDefaults(['objectHandle' => $object->getHandle()])
     ;
 
-    $router->put('/' . $object->getPluralHandle() . '/{entryID}', '\Concrete\Core\Api\Controller\Express::update')
+    $router->put('/' . $object->getPluralHandle() . '/{entryIdentifier}', '\Concrete\Core\Api\Controller\Express::update')
         ->setScopes($object->getPluralHandle() . ':update')
         ->setDefaults(['objectHandle' => $object->getHandle()])
     ;
 
 
-    $router->delete('/' . $object->getPluralHandle() . '/{entryID}', '\Concrete\Core\Api\Controller\Express::delete')
+    $router->delete('/' . $object->getPluralHandle() . '/{entryIdentifier}', '\Concrete\Core\Api\Controller\Express::delete')
         ->setScopes($object->getPluralHandle() . ':delete')
         ->setDefaults(['objectHandle' => $object->getHandle()])
     ;

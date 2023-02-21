@@ -44,7 +44,7 @@ class ExpressEntryTransformer extends TransformerAbstract
     public function transform(Entry $entry)
     {
         return [
-            'id' => $entry->getID(),
+            'id' => $entry->getPublicIdentifier(),
             'date_added' => Carbon::make($entry->getDateCreated())->toAtomString(),
             'date_last_updated' => $entry->getDateModified() ?
                 Carbon::make($entry->getDateModified())->toAtomString() : null,
