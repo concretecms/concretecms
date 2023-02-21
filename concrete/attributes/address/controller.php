@@ -300,7 +300,7 @@ class Controller extends AttributeTypeController implements
             $av->setAddress3($address3);
         }
         if (isset($city)) {
-            $av->setAddress3($city);
+            $av->setCity($city);
         }
         if (isset($state_province)) {
             $av->setStateProvince($state_province);
