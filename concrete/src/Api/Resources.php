@@ -19,5 +19,7 @@ class Resources
     const RESOURCE_CALENDAR_EVENTS = 'calendar_events';
     const RESOURCE_CALENDAR_EVENT_VERSIONS = 'calendar_event_versions';
     const RESOURCE_OPTION_LIST_OPTIONS = 'list_options';
+    const RESOURCE_SOCIAL_LINKS = 'social_links';
+    const RESOURCE_TOPICS = 'topics';
 
 }

@@ -31,6 +31,6 @@ class OptionListOption
      * @var string
      */
     private $display_value;
-    
+
 
 }

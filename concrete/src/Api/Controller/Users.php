@@ -267,7 +267,7 @@ class Users extends ApiController
      *             format="int64"
      *         )
      *     ),
-     *     @OA\RequestBody(ref="#/components/requestBodies/UpdatedUserRequestBody"),
+     *     @OA\RequestBody(ref="#/components/requestBodies/UpdatedUser"),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
