@@ -21,7 +21,7 @@ class AttributeValueTransformer extends TransformerAbstract
                 $attributeValueResource = $controller->getApiValueResource();
                 if ($attributeValueResource) {
                     $fractal = app(Manager::class);
-                    return $fractal->createData($attributeValueResource)->toArray();
+                    $attributeValue = $fractal->createData($attributeValueResource)->toArray();
                 }
             } else if ($controller instanceof SimpleApiAttributeValueInterface) {
                 $attributeValue = $controller->getApiAttributeValue();

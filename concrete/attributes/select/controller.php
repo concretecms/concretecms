@@ -2,10 +2,17 @@
 
 namespace Concrete\Attribute\Select;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\Fractal\Transformer\OptionListOptionTransformer;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\Component\OptionSelectInstanceFactory;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
@@ -17,9 +24,16 @@ use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Database;
 use Doctrine\Common\Collections\ArrayCollection;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\ResourceAbstract;
+use League\Fractal\Resource\ResourceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements
+    SimpleTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
 {
     protected $searchIndexFieldDefinition = [
         'type' => 'text',
@@ -1022,4 +1036,42 @@ EOT
 
         return $options;
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'array',
+             null,
+            ['type' => 'integer'],
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        $type = $this->attributeKey->getAttributeKeySettings();
+        $r = $this->entityManager->getRepository(SelectValueOption::class);
+        $options = [];
+        if (is_array($json)) {
+            foreach ($json as $optionID) {
+                $option = $r->findOneBy(['list' => $type->getOptionList(), 'avSelectOptionID' => $optionID]);
+                if ($option) {
+                    $options[] = $option;
+                }
+            }
+        }
+        $av = new SelectValue();
+        $av->setSelectedOptions($options);
+        return $av;
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        $options = $this->getSelectedOptions();
+        return new Collection($options, new OptionListOptionTransformer(), Resources::RESOURCE_OPTION_LIST_OPTIONS);
+    }
+
+
+
 }

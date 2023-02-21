@@ -103,16 +103,6 @@ class ExpressEntitySpecFactory
             $controller = $attribute->getController();
             if ($controller instanceof OpenApiSpecifiableInterface) {
                 $attributeProperty = $controller->getOpenApiSpecProperty($attribute);
-                /* example:
-                $attributeProperty = new SpecProperty(
-                    $attribute->getAttributeKeyHandle(),
-                    $attribute->getAttributeKeyDisplayName(),
-                    'object'
-                );
-                $attributeProperty->addObjectProperty(
-                    new SpecProperty('id', t('Entry ID'), 'integer')
-                );
-                */
             } else {
                 $attributeProperty = new SpecProperty(
                     $attribute->getAttributeKeyHandle(),
