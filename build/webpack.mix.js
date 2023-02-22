@@ -17,7 +17,7 @@ mix.webpackConfig({
         bootstrap: true,
         vue: 'Vue',
         moment: 'moment'
-    }/*,
+    },
     // NOTE: This doesn't work with Laravel Mix 6 so I'm commenting it out for now. Someone more versed in this
     // will have to fix this if it's still required.
     // Override the default js compile settings to replace exclude with something that doesn't exclude node_modules.
@@ -35,7 +35,7 @@ mix.webpackConfig({
                 ]
             }
         ]
-    }*/
+    }
 });
 
 mix.options({
@@ -113,9 +113,7 @@ if (mix.inProduction()) {
     mix.copy('node_modules/moment/min/moment.min.js.map', '../concrete/js/moment.min.js.map');
 }
 
-/**
- * Build shared assets
- */
+// Build shared assets
 // Fullcalendar
 mix
     .copy('node_modules/fullcalendar/dist/fullcalendar.min.css', '../concrete/css/fullcalendar.css')
@@ -151,16 +149,12 @@ mix
 // Version Compare
 mix.sass('assets/htmldiff.scss', '../concrete/css/htmldiff.css');
 
-/**
- * Build Block Components
- */
+// Block components
 mix.js('assets/blocks/gallery/gallery.js', '../concrete/blocks/gallery/auto.js').vue()
 mix.js('assets/blocks/accordion/accordion.js', '../concrete/blocks/accordion/auto.js').vue()
 
 
-/**
- * Build accessory Features
- */
+// Accessory Features
 mix
     .sass('node_modules/@concretecms/bedrock/assets/accordions/scss/frontend.scss', 'css/features/accordions/frontend.css', {
         sassOptions: {
@@ -371,7 +365,6 @@ mix
             ]
         }
     })
-
 // The CMS entry point
 mix
     .sass('assets/cms.scss', 'css/cms.css', {
@@ -403,6 +396,8 @@ mix
         }
     })
     .js('assets/themes/atomik/js/main.js', 'themes/atomik').vue()
+
+
 // Dashboard Theme
 mix
     .sass('assets/themes/dashboard/scss/main.scss', 'themes/dashboard', {
@@ -414,10 +409,9 @@ mix
     })
     .js('assets/themes/dashboard/js/main.js', 'themes/dashboard').vue()
 
-/**
- * Build core themes
- */
+// Core Themes
 // Concrete Theme
+
 mix
     .sass('assets/themes/concrete/scss/main.scss', 'themes/concrete', {
         sassOptions: {
@@ -428,21 +422,13 @@ mix
     })
     .js('assets/themes/concrete/js/main.js', 'themes/concrete').vue()
 
-/**
- * Copy bedrock SVGs into our repository
- */
+// Copy bedrock
 mix.copy('node_modules/@concretecms/bedrock/assets/icons/sprites.svg', '../concrete/images/icons/bedrock/sprites.svg');
 
-/**
- * Copy jquery ui icons into our repository
- */
+// Copy jquery ui icons into our repository
 mix.copy('node_modules/jquery-ui/themes/base/images/ui-*', '../concrete/images/');
 
-
-
-/**
- * Turn off notifications
- */
+// Turn off notifications
 mix
     .disableNotifications()
     .options({

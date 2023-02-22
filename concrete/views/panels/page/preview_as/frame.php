@@ -40,7 +40,7 @@
 
         function handleChange() {
             var guest_button = form.find('button.guest-button'),
-                user_input = form.find('select#custom-user'),
+                user_input = form.find('input[name=custom-user]'),
                 customDate = form.find('#preview-page-as-user-date').val(),
                 customTime = form.find('#preview-page-as-user-time').val()
 

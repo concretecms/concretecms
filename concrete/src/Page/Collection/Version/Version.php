@@ -483,9 +483,9 @@ class Version extends ConcreteObject implements PermissionObjectInterface, Attri
      *
      * @return string|null
      */
-    public function getVersionComments()
+    public function getVersionComments($sanitize = true)
     {
-        return $this->cvComments;
+        return $sanitize ? h($this->cvComments) : $this->cvComments;
     }
 
     /**

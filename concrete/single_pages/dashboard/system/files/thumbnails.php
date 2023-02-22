@@ -134,7 +134,6 @@ if (isset($type)) {
                     $selectedFileSets[] = $fileSetID;
                 }
             }
-            $fileSetAttributes = ['classes' => 'form-control'];
             if (empty($selectedFileSets)) {
                 $fileSetOption = $controller::FILESETOPTION_ALL;
                 $fileSetAttributes['disabled'] = 'disabled';
@@ -146,10 +145,15 @@ if (isset($type)) {
                 <?= $form->label('fileSetOption', t('Conditional Thumbnails')) ?>
                 <?= $form->select('fileSetOption', $fileSetOptions, $fileSetOption, ['required' => 'required']) ?>
             </div>
-            <div>
+            <div data-wrapper="file-sets">
                 <?= $form->label('fileSets', 'File Sets') ?>
-                <div class="ccm-search-field-content">
-                    <?= $form->selectMultiple('fileSets', $fileSets, $selectedFileSets, $fileSetAttributes) ?>
+                <div class="ccm-search-field-content" data-vue="backend">
+                    <concrete-select
+                        :multiple="true"
+                        name="fileSets[]"
+                        :options='<?=json_encode($fileSets)?>'
+                        :value='<?=json_encode($selectedFileSets)?>'>
+                    </concrete-select>
                 </div>
             </div>
             <?php
@@ -192,18 +196,15 @@ if (isset($type)) {
 
         if ($allowConditionalThumbnails) {
             ?>
-            var $fileSets = $('#fileSets');
-            $fileSets.selectpicker({
-                width: '100%'
-            });
+            var $fileSets = $('div[data-wrapper=file-sets]');
+            console.log($fileSets)
             $('#fileSetOption')
                 .on('change', function() {
                     if ($(this).val() === <?= json_encode($controller::FILESETOPTION_ALL) ?>) {
-                        $fileSets.prop('disabled', true);
+                        $fileSets.hide()
                     } else {
-                        $fileSets.prop('disabled', false);
+                        $fileSets.show()
                     }
-                    $fileSets.selectpicker('refresh');
                 })
                 .trigger('change')
             ;

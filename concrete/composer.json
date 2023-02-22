@@ -7,7 +7,7 @@
   "homepage": "https://opensource.concretecms.org/",
   "support": {
     "docs": "https://documentation.concretecms.org/",
-    "source": "http://documentation.concretecms.org/api/",
+    "source": "https://documentation.concretecms.org/api/",
     "forum": "https://forums.concretecms.org/"
   },
   "minimum-stability": "stable",
@@ -50,7 +50,7 @@
     "scssphp/scssphp": "^1.4",
     "doctrine/annotations": "^1.13.2",
     "doctrine/dbal": "^2.13.2",
-    "doctrine/orm": "^2.13 <2.14",
+    "doctrine/orm": "^2.13",
     "doctrine/lexer": "^1.2.3",
     "doctrine/common": "^3.1.2",
     "doctrine/persistence": "^2.5.1",

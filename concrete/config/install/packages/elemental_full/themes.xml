@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <!-- Note: these are duplicated here and in the content.xml of the theme because in the case of sample content //-->
+    <!-- they have to be present before content is installed at all - otherwise the thumbnail content won't //-->
+    <!-- be populated properly and you'll have empty images in the theme. We had removed these but added them //-->
+    <!-- back because without them here no thumbnail types are present at file import time, leading to broken images. //-->
+    <thumbnailtypes>
+        <thumbnailtype name="Small Image" handle="small" sizingMode="proportional" width="740"/>
+        <thumbnailtype name="Medium Image" handle="medium" sizingMode="proportional" width="940"/>
+        <thumbnailtype name="Large Image" handle="large" sizingMode="proportional" width="1140"/>
+    </thumbnailtypes>
+</concrete5-cif>

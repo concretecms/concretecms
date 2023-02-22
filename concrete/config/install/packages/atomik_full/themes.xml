@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <!-- Note: these are duplicated here and in the content.xml of the theme because in the case of sample content //-->
+    <!-- they have to be present before content is installed at all - otherwise the thumbnail content won't //-->
+    <!-- be populated properly and you'll have empty images in the theme. We had removed these but added them //-->
+    <!-- back because without them here no thumbnail types are present at file import time, leading to broken images. //-->
+    <thumbnailtypes>
+        <thumbnailtype name="Resource List Entry" handle="resource_list_entry" sizingMode="proportional" width="510" height="510" />
+        <thumbnailtype name="Testimonial Circle" handle="testimonial_circle" sizingMode="exact" width="180" height="180" />
+        <thumbnailtype name="Stripe Column Image" handle="stripe_column" sizingMode="exact" width="850" height="650" />
+        <thumbnailtype name="Gallery" handle="atomik_gallery" sizingMode="exact" width="860" height="614" />
+        <thumbnailtype name="Blog Entry Thumbnail" handle="blog_entry_thumbnail" sizingMode="exact" width="660" height="428" />
+    </thumbnailtypes>
+</concrete5-cif>

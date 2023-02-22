@@ -53,23 +53,26 @@ class UserGroupField extends AbstractField
         $identifier = app()->make('helper/validation/identifier')->getString(12);
         $gl = new GroupList();
         $g1 = $gl->getResults();
-        $html = '<div class="form-group"><select multiple name="gID[' . $identifier . '][]" class="ccm-enhanced-select">';
+        $options = [];
+        $selected = [];
 
         foreach ($g1 as $g) {
             $gp = new \Permissions($g);
             if ($gp->canSearchUsersInGroup($g)) {
-                $html .= '<option value="' . $g->getGroupID() . '" ';
-
-                if (is_array($this->getData('gID')) && in_array($g->getGroupID(), $this->getData('gID'))) {
-                    $html .= 'selected="selected" ';
-                }
-                $html .= '>' . $g->getGroupDisplayName() . '</option>';
+                $options[$g->getGroupID()] = $g->getGroupDisplayName('text');
+            }
+            if (is_array($this->getData('gID')) && in_array($g->getGroupID(), $this->getData('gID'))) {
+                $selected[] = $g->getGroupID();
             }
         }
 
-        $html .= '</select></div><br/>';
 
-        $html .= '<div class="form-group"><select name="uGroupIn[' . $identifier . ']" class="form-select">';
+        $options = json_encode($options);
+        $selected = json_encode($selected);
+
+        $html = '<div class="mb-2" data-vue="cms"><concrete-select :multiple="true" :value=\'' . $selected . '\' name="gID[' . $identifier . '][]" :options=\'' . $options . '\'></concrete-select></div>';
+
+        $html .= '<div><select name="uGroupIn[' . $identifier . ']" class="form-select">';
         $html .= '<option value="in"' . ($this->getData('uGroupIn') == 'in' ? ' selected' : '') . '>' . t('Search for users in group(s)') . '</option>';
         $html .= '<option value="not"' . ($this->getData('uGroupIn') == 'not' ? ' selected' : '') . '>' . t('Search for users not included in group(s)') . '</option>';
         $html .= '</select></div>';

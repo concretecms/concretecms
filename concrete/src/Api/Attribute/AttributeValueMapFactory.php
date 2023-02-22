@@ -19,8 +19,10 @@ class AttributeValueMapFactory
                 } else {
                     $value = $controller->createAttributeValue((string) $data);
                 }
-                $entry = new AttributeValueMapEntry($attributeKey, $value);
-                $attributeValueMap->addEntry($entry);
+                if ($value) {
+                    $entry = new AttributeValueMapEntry($attributeKey, $value);
+                    $attributeValueMap->addEntry($entry);
+                }
             }
         }
         return $attributeValueMap;

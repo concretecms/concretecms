@@ -1,15 +1,21 @@
 <?php
 namespace Concrete\Attribute\CalendarEvent;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Fractal\Transformer\CalendarEventTransformer;
+use Concrete\Core\Api\Fractal\Transformer\CalendarTransformer;
+use Concrete\Core\Api\Resources;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
-use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
-use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
 use Concrete\Core\Calendar\Calendar;
 use Concrete\Core\Calendar\Event\Event;
-use Concrete\Core\Entity\Calendar\CalendarEvent;
-use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Calendar\Event\Formatter\LinkFormatter;
-class Controller extends \Concrete\Attribute\Number\Controller
+use Concrete\Core\Calendar\Event\Formatter\LinkFormatterInterface;
+use Concrete\Core\Entity\Attribute\Value\Value\NumberValue;
+use Concrete\Core\Entity\Calendar\CalendarEvent;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceInterface;
+
+class Controller extends \Concrete\Attribute\Number\Controller implements ApiResourceValueInterface
 {
     protected $helpers = ['form'];
     protected $calendar;
@@ -134,4 +140,26 @@ class Controller extends \Concrete\Attribute\Number\Controller
         $list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $eventID, '=');
         return $list;
     }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        $av = new NumberValue();
+        if ($json) {
+            $av->setValue($json);
+        } else {
+            $av->setValue(0);
+        }
+        return $av;
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        if ($event = $this->getValue()) {
+            $transformer = new CalendarEventTransformer();
+            $transformer->setDefaultIncludes(['custom_attributes', 'version']);
+            return new Item($event, $transformer, Resources::RESOURCE_CALENDAR_EVENTS);
+        }
+        return null;
+    }
+
 }

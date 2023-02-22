@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "@concretecms/bedrock": "github:concretecms/bedrock#feature/10838",
-    "download": "~4.4.3",
+    "cross-env": "^5.1.1",
+    "download": "~8.0.0",
     "grunt": "^1.5.3",
     "grunt-env": "^1.0.1",
     "laravel-mix": "^6.0.49",
@@ -25,6 +26,8 @@
     "vue-template-compiler": "^2.7.14"
   },
   "dependencies": {
+    "@vue/babel-preset-jsx": "^1.4.0",
+    "path": "^0.12.7",
     "tui-image-editor": "^3.10.0"
   }
 }

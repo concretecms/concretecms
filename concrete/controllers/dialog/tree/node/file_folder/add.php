@@ -66,6 +66,9 @@ class Add extends Node
         foreach ($storageLocations as $location) {
             if ($location->isDefault()) {
                 $locations[$location->getID()] = t('%s (default)', h($location->getName()));
+                if ($selectedLocationID === null) {
+                    $selectedLocationID = $location->getID();
+                }
             } else {
                 $locations[$location->getID()] = h($location->getName());
             }

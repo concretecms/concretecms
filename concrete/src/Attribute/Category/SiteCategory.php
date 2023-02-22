@@ -102,11 +102,9 @@ class SiteCategory extends AbstractStandardCategory
      */
     public function getAttributeValues($site)
     {
-        $values = $this->getAttributeValueRepository()->findBy([
+        return $this->getAttributeValueRepository()->findBy([
             'site' => $site,
         ]);
-
-        return $values;
     }
 
     /**
@@ -121,12 +119,12 @@ class SiteCategory extends AbstractStandardCategory
      */
     public function getAttributeValue(Key $key, $site)
     {
-        $r = $this->entityManager->getRepository('\Concrete\Core\Entity\Attribute\Value\SiteValue');
-        $value = $r->findOneBy([
+        $cacheKey = sprintf('attribute/value/%s/site/%d', $key->getAttributeKeyHandle(), $site->getSiteID());
+        $parameters = [
             'site' => $site,
             'attribute_key' => $key,
-        ]);
+        ];
 
-        return $value;
+        return $this->getAttributeValueEntity($cacheKey, $parameters);
     }
 }

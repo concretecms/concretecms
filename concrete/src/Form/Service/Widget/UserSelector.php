@@ -3,15 +3,13 @@
 namespace Concrete\Core\Form\Service\Widget;
 
 use Concrete\Core\Application\Application;
-use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\User\Component\UserSelectInstanceFactory;
 use Concrete\Core\User\UserInfoRepository;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\Utility\Service\Validation\Numbers;
-use Concrete\Core\Validation\CSRF\Token;
-use HtmlObject\Element;
 
 class UserSelector
 {
@@ -121,8 +119,13 @@ EOL;
      *
      * @param string $fieldName the name of the field
      * @param int|false $uID the ID of the user to be initially selected
-     * @param array $miscFields additional fields appended to the hidden input element (a hash array of attributes name => value), possibly including 'class'
-     *
+     * @param string $labelFormat The format of the results. Valid options are
+     * 'auto', 'username', 'email', 'username_email'
+     * 'auto': Use username and email if username is supported in the site. Otherwise use email.
+     * 'username': Use username only
+     * 'email': Use email only
+     * 'username_email': Username and email.
+     * @param bool $includeAvatar Whether to include user avatar in results.
      * @return string
      *
      * @example
@@ -132,20 +135,13 @@ EOL;
      *
      * @noinspection DuplicatedCode
      */
-    public function quickSelect($fieldName, $uID = false, $miscFields = [])
+    public function quickSelect($fieldName, $uID = false, $labelFormat = UserSelectInstanceFactory::LABEL_FORMAT_AUTO, $includeAvatar = true)
     {
-        $selectedUserId = null;
-
         /** @var Request $request */
         $request = $this->app->make(Request::class);
-        /** @var Token $valt */
-        $valt = $this->app->make(Token::class);
-        /** @var Identifier $idHelper */
-        $idHelper = $this->app->make(Identifier::class);
-        /** @var Form $form */
-        $form = $this->app->make(Form::class);
-
-        $resolverManager = $this->app->make(ResolverManagerInterface::class);
+        /** @var UserSelectInstanceFactory $userSelectInstanceFactory */
+        $userSelectInstanceFactory = $this->app->make(UserSelectInstanceFactory::class);
+        $userSelectInstance = $userSelectInstanceFactory->createInstance($labelFormat, $includeAvatar);
 
         if ($request->request->has($fieldName)) {
             $selectedUserId = $request->request->get($fieldName);
@@ -155,63 +151,36 @@ EOL;
             $selectedUserId = $uID;
         }
 
-        $userList = [];
-
         if ($selectedUserId && $this->app->make(Numbers::class)->integer($selectedUserId, 1)) {
             $userInfo = $this->app->make(UserInfoRepository::class)->getByID((int) $selectedUserId);
-            $userList[(int) $selectedUserId] = $userInfo->getUserDisplayName();
         } else {
             $userInfo = null;
         }
 
-        $selectedUserId = $userInfo ? $userInfo->getUserID() : null;
-
-        $token = $valt->generate('quick_user_select_' . $fieldName);
-
-        $identifier = $idHelper->getString(32);
-
-        $miscFields['classes'] = '';
-
-        /** @noinspection PhpComposerExtensionStubsInspection */
-        /** @noinspection BadExpressionStatementJS */
-        return sprintf(
-            "%s\n" .
-            "<script>\n" .
-            "$(function() {\n" .
-            " $('#ccm-quick-user-selector-{$identifier} select').selectpicker({liveSearch: true}).ajaxSelectPicker(%s);\n" .
-            "});\n" .
-            "</script>\n",
-            (string) new Element(
-                'span',
-                $form->select($fieldName, $userList, $selectedUserId, $miscFields),
-                [
-                    'class' => 'ccm-quick-user-selector',
-                    'id' => 'ccm-quick-user-selector-' . $identifier,
-                ]
-            ),
-            json_encode([
-                'ajax' => [
-                    'url' => (string) $resolverManager->resolve(['/ccm/system/user/autocomplete']),
-                    'data' => [
-                        'term' => '{{{q}}}',
-                        'key' => $fieldName,
-                        'token' => $token,
-                    ],
-                ],
-                'locale' => [
-                    'currentlySelected' => t('Currently Selected'),
-                    'emptyTitle' => t('Select and begin typing'),
-                    'errorText' => t('Unable to retrieve results'),
-                    'searchPlaceholder' => t('Search...'),
-                    'statusInitialized' => t('Start typing a search query'),
-                    'statusNoResults' => t('No Results'),
-                    'statusSearching' => t('Searching...'),
-                    'statusTooShort' => t('Please enter more characters'),
-                ],
-                'preserveSelected' => false,
-                'minLength' => 2,
-            ])
-        );
+        $selectedUserId = $userInfo ? $userInfo->getUserID() : 'null';
+        $identifier = $this->app->make(Identifier::class)->getString(32);
+        $html = <<<EOL
+<div data-concrete-select-user-input="{$identifier}">
+    <concrete-user-select 
+    access-token="{$userSelectInstance->getAccessToken()}" 
+    label-format="{$userSelectInstance->getLabelFormatPropValue()}"
+    :include-avatar="{$userSelectInstance->getIncludeAvatarPropValue()}" 
+    :user-id="{$selectedUserId}" 
+    input-name="{$fieldName}"
+    ></concrete-user-select>
+</div>
+<script type="text/javascript">
+$(function() {
+    Concrete.Vue.activateContext('cms', function (Vue, config) {
+        new Vue({
+            el: 'div[data-concrete-select-user-input="{$identifier}"]',
+            components: config.components
+        })
+    })
+});
+</script>
+EOL;
+        return $html;
     }
 
     /**

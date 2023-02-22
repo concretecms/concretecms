@@ -277,6 +277,7 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
     {
         $expressions = [
             $this->query->expr()->like('fv.fvFilename', ':keywords'),
+            $this->query->expr()->like('fv.fvTitle', ':keywords'),
             $this->query->expr()->like('fv.fvDescription', ':keywords'),
             $this->query->expr()->like('treeNodeName', ':keywords'),
             $this->query->expr()->like('fv.fvTags', ':keywords'),

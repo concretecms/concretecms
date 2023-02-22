@@ -2,16 +2,26 @@
 
 namespace Concrete\Attribute\Boolean;
 
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SimpleApiAttributeValueInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\OpenApi\SpecProperty;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\BooleanSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\BooleanValue;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
+use Concrete\Core\Utility\Service\Validation\Numbers;
 use Core;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    SimpleApiAttributeValueInterface
+
 {
     protected $searchIndexFieldDefinition = ['type' => 'boolean', 'options' => ['default' => 0, 'notnull' => false]];
 
@@ -166,7 +176,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         }
 
         $type->setIsCheckedByDefault($akCheckedByDefault);
-        $type->setCheckboxLabel($data['akCheckboxLabel']);
+        $type->setCheckboxLabel($data['akCheckboxLabel'] ?? '');
 
         return $type;
     }
@@ -259,4 +269,31 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         $this->set('akCheckboxLabel', $this->akCheckboxLabel);
         $this->set('akCheckedByDefault', $this->akCheckedByDefault);
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'boolean'
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        return $this->createAttributeValue($json);
+    }
+
+    public function getApiAttributeValue()
+    {
+        $value = $this->getAttributeValueObject();
+        if ($value === null || $value->getValue() === null) {
+            $result = false;
+        } else {
+            $result = $value->getValue();
+        }
+
+        return $result;
+    }
+
 }

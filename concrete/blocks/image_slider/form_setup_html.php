@@ -477,7 +477,7 @@ echo $userInterface->tabs([
         </div>
         <div data-field="entry-link-url" class="form-group hide-slide-link">
             <label class="control-label form-label"><?php echo t('URL:'); ?></label>
-            <textarea class="form-control" name="<?php echo $view->field('linkURL'); ?>[]"><%=link_url%></textarea>
+            <input type="text" class="form-control" name="<?php echo $view->field('linkURL'); ?>[]" value="<%=link_url%>"></input>
         </div>
         <div data-field="entry-link-page-selector" class="form-group hide-slide-link">
             <label class="control-label form-label"><?php echo t('Choose Page:'); ?></label>

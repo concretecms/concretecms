@@ -2,64 +2,66 @@
 
 namespace Concrete\Controller\Backend\Page;
 
+use Concrete\Controller\Backend\Page;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
+use Concrete\Core\Page\Component\PageSelectInstance;
+use Concrete\Core\Page\Component\PageSelectInstanceFactory;
 use Concrete\Core\Page\PageList;
+use Concrete\Core\Permission\Checker;
+use Concrete\Core\Search\Pagination\PaginationFactory;
 use Concrete\Core\Validation\CSRF\Token;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Concrete\Core\Page\Page as CorePage;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
 class Autocomplete extends AbstractController
 {
+    public function checkAccess(): PageSelectInstance
+    {
+        $instanceFactory = $this->app->make(PageSelectInstanceFactory::class);
+        $requestInstance = $instanceFactory->createInstanceFromRequest($this->request);
+
+        if (!$instanceFactory->instanceMatchesAccessToken($requestInstance, $this->request->request->get('accessToken') ?? '')) {
+            throw new UserMessageException($this->app->make('token')->getErrorMessage());
+        }
+
+        return $requestInstance;
+    }
+
     public function view(): Response
     {
-        $this->checkCSRF();
-        $pageList = $this->buildPageList();
-        $pageNames = $this->getPageNames($pageList);
-
-        return $this->app->make(ResponseFactoryInterface::class)->json($pageNames);
-    }
-
-    protected function checkCSRF(): void
-    {
-        $valt = $this->app->make(Token::class);
-        $key = $this->request->request->get('key', $this->request->query->get('key'));
-        $token = $this->request->request->get('token', $this->request->query->get('token'));
-        if (!$valt->validate("quick_page_select_{$key}", $token)) {
-            throw new UserMessageException($valt->getErrorMessage());
-        }
-    }
-
-    protected function buildPageList(): PageList
-    {
+        $requestInstance = $this->checkAccess();
+        $query = $this->request->request->get('query', $this->request->query->get('query'));
         $pageList = new PageList();
-        $term = $this->getTerm();
-        if ($term !== '') {
-            $pageList->filterByName($term);
+        $pageList->filterByName($query);
+        $factory = new PaginationFactory($this->request);
+        $pagination = $factory->createPaginationObject($pageList);
+        $results = [];
+        foreach ($pagination->getCurrentPageResults() as $c) {
+            $results[] = $requestInstance->createResultFromPage($c);
         }
 
-        return $pageList;
+        return new JsonResponse($results);
     }
 
-    protected function getTerm(): string
+    public function getSelectedPages(): JsonResponse
     {
-        $term = $this->request->request->get('term');
-
-        return is_string($term) ? $term : '';
-    }
-
-    protected function getPageNames(PageList $pageList): array
-    {
-        $pageNames = [];
-        foreach ($pageList->getPagination() as $c) {
-            $pageNames[] = [
-                'text' => $c->getCollectionName(),
-                'value' => $c->getCollectionID(),
-            ];
+        $requestInstance = $this->checkAccess();
+        $results = [];
+        foreach ((array) $this->request->request->get('pageId') as $cID) {
+            $page = CorePage::getByID($cID, 'ACTIVE');
+            $permissions = new Checker($page);
+            if (!$permissions->canViewPage()) {
+                throw new \Exception(t('Access Denied.'));
+            } else {
+                $results[] = $requestInstance->createResultFromPage($page);
+            }
         }
-
-        return $pageNames;
+        return new JsonResponse($results);
     }
+
 }

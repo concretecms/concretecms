@@ -3,6 +3,7 @@ namespace Concrete\Core\Config;
 
 use Illuminate\Filesystem\Filesystem;
 use Concrete\Core\Cache\OpCache;
+use Concrete\Core\Support\Facade\Config;
 
 class FileSaver implements SaverInterface
 {
@@ -60,7 +61,7 @@ class FileSaver implements SaverInterface
 
         $current = array();
         if ($this->files->exists($file)) {
-            if (\Config::get('concrete.config.temp_save', true)) {
+            if (Config::get('concrete.config.temp_save', true)) {
                 // Make sure that we miss cache.
                 $temp_file = tempnam($path, $group . '_');
                 $contents = $this->files->get($file);
@@ -95,8 +96,9 @@ class FileSaver implements SaverInterface
         );
 
         $rendered = $renderer->render(PHP_EOL, '    ', implode(PHP_EOL, $header));
-        $result = $this->files->put($file, $rendered) !== false;
+        $result = $this->files->replace($file, $rendered) !== false;
         if ($result) {
+            @chmod($file, Config::get('concrete.filesystem.permissions.file'));
             OpCache::clear($file);
         }
 

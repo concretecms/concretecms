@@ -111,7 +111,7 @@ class Controller extends GenericOauth2TypeController
         if ($binding !== null) {
             $concreteUserID = (int) $binding;
             if ($concreteUserID !== 0) {
-                $result = "https://community.concretecms.com/profile/-/view/{$concreteUserID}/";
+                $result = "https://community.concretecms.com/members/profile/{$concreteUserID}";
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 */
 (function(){CKEDITOR.plugins.add("autolink",{requires:"clipboard,textmatch,link",isSupportedEnvironment:function(){return!CKEDITOR.env.ie||CKEDITOR.env.edge},init:function(b){function e(a){a=CKEDITOR.tools.htmlDecodeAttr(a);var c=new CKEDITOR.dom.element("a"),d=a.replace(/"/g,"%22"),d=d.match(b.config.autolink_urlRegex)?d:"mailto:"+d;c.setText(a);c.setAttribute("href",d);a=CKEDITOR.plugins.link.parseLinkAttributes(b,c);a=CKEDITOR.plugins.link.getLinkAttributes(b,a);CKEDITOR.tools.isEmpty(a.set)||

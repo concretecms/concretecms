@@ -9,7 +9,9 @@ use Concrete\Core\Support\Facade\Url;
 ?>
 
 <div class="row row-cols-auto g-0 align-items-center">
-    <select id="favoriteFolderSelector" class="selectpicker me-3" data-live-search="true" title="<?php echo h(t("Favorite Folders")); ?>"></select>
+    <span data-vue="backend">
+        <file-manager-favorite-folder-selector></file-manager-favorite-folder-selector>
+    </span>
 
     <?php if (!empty($itemsPerPageOptions)) { ?>
         <div class="dropdown">
@@ -61,7 +63,7 @@ use Concrete\Core\Support\Facade\Url;
         </li>
 
         <li>
-            <a class="ccm-hover-icon launch-tooltip" title="<?php echo h(t('Upload Files')) ?>" href="javascript:void(0);" id="ccm-file-manager-upload" data-dialog="add-files">
+            <a class="ccm-hover-icon launch-tooltip" title="<?php echo h(t('Upload Files')) ?>" href="javascript:void(0);" id="ccm-file-manager-upload" data-launch="import-files">
                 <i class="fas fa-upload" aria-hidden="true"></i>
             </a>
         </li>
@@ -103,7 +105,7 @@ use Concrete\Core\Support\Facade\Url;
             });
         });
 
-        $('a[data-dialog=add-files]').on('click', function(e) {
+        $('a[data-launch=import-files]').on('click', function(e) {
             e.preventDefault();
             $('table[data-search-results=files]').parent().concreteFileUploader(<?= json_encode(['dropzone' => app(Dropzone::class)->getConfigurationOptions()]) ?>).open();
         });

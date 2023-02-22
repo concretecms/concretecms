@@ -44,7 +44,7 @@ class ExpressEntryTransformer extends TransformerAbstract
     public function transform(Entry $entry)
     {
         return [
-            'id' => $entry->getID(),
+            'id' => $entry->getPublicIdentifier(),
             'date_added' => Carbon::make($entry->getDateCreated())->toAtomString(),
             'date_last_updated' => $entry->getDateModified() ?
                 Carbon::make($entry->getDateModified())->toAtomString() : null,
@@ -77,7 +77,9 @@ class ExpressEntryTransformer extends TransformerAbstract
         foreach ($entry->getEntity()->getAttributes() as $attribute) {
             if ($attribute->getAttributeKeyHandle() == $attributeOrObjectHandle) {
                 $value = $entry->getAttributeValue($attribute);
-                return new Item($value, new AttributeValueTransformer(), Resources::RESOURCE_CUSTOM_ATTRIBUTES);
+                if ($value) {
+                    return new Item($value, new AttributeValueTransformer(), Resources::RESOURCE_CUSTOM_ATTRIBUTES);
+                }
             }
         }
         $associations = $entry->getAssociations();

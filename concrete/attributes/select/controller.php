@@ -2,22 +2,38 @@
 
 namespace Concrete\Attribute\Select;
 
+use Concrete\Core\Api\ApiResourceValueInterface;
+use Concrete\Core\Api\Attribute\OpenApiSpecifiableInterface;
+use Concrete\Core\Api\Attribute\SupportsAttributeValueFromJsonInterface;
+use Concrete\Core\Api\Fractal\Transformer\OptionListOptionTransformer;
+use Concrete\Core\Api\OpenApi\SpecProperty;
+use Concrete\Core\Api\Resources;
+use Concrete\Core\Attribute\Component\OptionSelectInstanceFactory;
 use Concrete\Core\Attribute\Controller as AttributeTypeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
+use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Key\Settings\SelectSettings;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValue;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueOptionList;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectValueUsedOption;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Core;
 use Database;
 use Doctrine\Common\Collections\ArrayCollection;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\ResourceAbstract;
+use League\Fractal\Resource\ResourceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Controller extends AttributeTypeController implements SimpleTextExportableAttributeInterface
+class Controller extends AttributeTypeController implements
+    SimpleTextExportableAttributeInterface,
+    OpenApiSpecifiableInterface,
+    SupportsAttributeValueFromJsonInterface,
+    ApiResourceValueInterface
 {
     protected $searchIndexFieldDefinition = [
         'type' => 'text',
@@ -270,18 +286,16 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
             return $this->createAttributeValue($options);
         }
         if (!$akSelectAllowMultipleValues && $akSelectAllowOtherValues) {
-            // The post comes through in the select2 format. Either a SelectAttributeOption:ID item
-            // or a new item.
             $option = false;
             if (isset($data['atSelectOptionValue'])) {
                 if (preg_match(
                     '/SelectAttributeOption\:(.+)/i',
-                    $data['atSelectOptionValue'][0],
+                    $data['atSelectOptionValue'],
                     $matches
                 )) {
                     $option = $this->getOptionByID($matches[1]);
                 } else {
-                    $option = $this->getOptionByValue(trim($data['atSelectOptionValue'][0]), $this->attributeKey);
+                    $option = $this->getOptionByValue(trim($data['atSelectOptionValue']), $this->attributeKey);
                     if (!is_object($option)) {
                         $displayOrder = 0;
                         if ($optionList) {
@@ -291,7 +305,7 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
                         $option->setOptionList($optionList);
                         $option->setIsEndUserAdded(true);
                         $option->setDisplayOrder($displayOrder);
-                        $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue'][0]));
+                        $option->setSelectAttributeOptionValue(trim($data['atSelectOptionValue']));
                     }
                 }
             }
@@ -540,19 +554,52 @@ class Controller extends AttributeTypeController implements SimpleTextExportable
         return [];
     }
 
+    public function action_select_autocomplete_values()
+    {
+        $this->load();
+        $componentInstanceFactory = $this->app->make(OptionSelectInstanceFactory::class);
+        $componentInstance = $componentInstanceFactory->createInstance($this->attributeKey);
+        if (!$componentInstanceFactory->instanceMatchesAccessToken(
+            $componentInstance,
+            $this->request->request->get('accessToken') ?? ''
+        )) {
+            throw new UserMessageException($this->app->make('token')->getErrorMessage());
+        }
+
+        $em = \Database::connection()->getEntityManager();
+        $r = $em->getRepository('\Concrete\Core\Entity\Attribute\Value\Value\SelectValueOption');
+        $type = $this->attributeKey->getAttributeKeySettings();
+        $results = [];
+        foreach ((array)$this->request->request->get('optionId') as $value) {
+            if (strpos($value, 'SelectAttributeOption:') === 0) {
+                $optionID = substr($value, 22);
+                $option = $r->findOneBy(['list' => $type->getOptionList(), 'avSelectOptionID' => $optionID]);
+                if ($option) {
+                    $results[] = $componentInstance->createResultFromOption($option);
+                }
+            }
+        }
+        return new JsonResponse($results);
+    }
+
     public function action_load_autocomplete_values()
     {
         $this->load();
+        $componentInstanceFactory = $this->app->make(OptionSelectInstanceFactory::class);
+        $componentInstance = $componentInstanceFactory->createInstance($this->attributeKey);
+        if (!$componentInstanceFactory->instanceMatchesAccessToken($componentInstance, $this->request->request->get('accessToken') ?? '')) {
+            throw new UserMessageException($this->app->make('token')->getErrorMessage());
+        }
+
+
+
         $values = [];
         // now, if the current instance of the attribute key allows us to do autocomplete, we return all the values
         if ($this->akSelectAllowOtherValues) {
-            $term = $this->request->request->get('term');
+            $term = $this->request->request->get('query');
             $options = $this->getOptions($term);
             foreach ($options as $opt) {
-                $o = new \stdClass();
-                $o->value = 'SelectAttributeOption:' . $opt->getSelectAttributeOptionID();
-                $o->text = $opt->getSelectAttributeOptionValue(false);
-                $values[] = $o;
+                $values[] = $componentInstance->createResultFromOption($opt);
             }
         }
 
@@ -989,4 +1036,43 @@ EOT
 
         return $options;
     }
+
+    public function getOpenApiSpecProperty(Key $key): SpecProperty
+    {
+        return new SpecProperty(
+            $key->getAttributeKeyHandle(),
+            $key->getAttributeKeyDisplayName(),
+            'array',
+             null,
+            ['type' => 'integer'],
+        );
+    }
+
+    public function createAttributeValueFromNormalizedJson($json)
+    {
+        $type = $this->attributeKey->getAttributeKeySettings();
+        $r = $this->entityManager->getRepository(SelectValueOption::class);
+        $options = [];
+        if (is_array($json)) {
+            foreach ($json as $optionID) {
+                $option = $r->findOneBy(['list' => $type->getOptionList(), 'avSelectOptionID' => $optionID]);
+                if ($option) {
+                    $options[] = $option;
+                }
+            }
+        }
+        $av = new SelectValue();
+        $av->setSelectedOptions($options);
+        return $av;
+    }
+
+    public function getApiValueResource(): ?ResourceInterface
+    {
+        $options = $this->getSelectedOptions();
+        return new Collection($options, new OptionListOptionTransformer(), Resources::RESOURCE_OPTION_LIST_OPTIONS);
+    }
+
+
+
+
 }

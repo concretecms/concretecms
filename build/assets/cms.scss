@@ -73,9 +73,6 @@
 
   // Utilities
   @import "bootstrap/scss/utilities/api";
-
-  // Plugins
-  @import "bootstrap-select/sass/bootstrap-select";
 }
 
 // Modal fixes - Bootstrap SCSS uses & selectors that append the parent class, but it adds .ccm-ui

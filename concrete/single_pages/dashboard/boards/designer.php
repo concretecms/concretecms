@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php foreach($elements as $element) {
             $name = t('(No Name)');
             if ($element->getElementName()) {
-                $name = $element->getElementName();
+                $name = h($element->getElementName());
             }
             $created = $element->getDateCreatedDateTime();
 
@@ -45,7 +45,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <?php foreach($drafts as $element) {
             $name = t('(No Name)');
             if ($element->getElementName()) {
-                $name = $element->getElementName();
+                $name = h($element->getElementName());
             }
             $created = $element->getDateCreatedDateTime();
 

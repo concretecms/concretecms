@@ -131,6 +131,10 @@ div#ccm-toolbar {
         padding: 0 17px;
         position: relative;
         text-decoration: none;
+
+        > .ts-wrapper {
+          width: 100%;
+        }
       }
 
     }
@@ -260,24 +264,11 @@ div#ccm-toolbar {
   div.ccm-menu-item-site-list-container {
     padding: 0 17px;
     text-align: left;
-    width: 240px;
-
-    &:hover {
-      background-color: transparent;
-    }
-
-    .btn {
-      padding-left: 9px;
-      padding-right: 9px;
-    }
+    width: 360px;
 
     i {
       margin-left: 0;
       margin-right: 8px;
-    }
-
-    .dropdown-menu {
-      max-height: 400px;
     }
 
   }

@@ -126,6 +126,11 @@ $userEntity = $user->getEntityObject();
         <dd>
             <div><?= $userEntity->getUserLastPasswordChange() === null ? t('Never') : $dh->formatDateTime($userEntity->getUserLastPasswordChange()) ?></div>
         </dd>
+        <dt><?= t('Last Login') ?></dt>
+        <dd>
+            <div><?= $userEntity->getUserLastLogin() ? $dh->formatDateTime($userEntity->getUserLastLogin()) : t('Never') ?></div>
+        </dd>
+
         <dt><?= t('Last Seen Online') ?></dt>
         <dd>
             <div><?= $userEntity->getUserLastOnline() ? $dh->formatDateTime($userEntity->getUserLastOnline()) : t('Never') ?></div>

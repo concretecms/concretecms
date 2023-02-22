@@ -26,7 +26,7 @@ class PreviewAsUser extends Controller
 
     public function preview_page()
     {
-        $page = Page::getByID(intval($_REQUEST['cID'], 10), 'RECENT');
+        $page = Page::getByID(intval($_REQUEST['cID'], 10), 'ACTIVE');
         if (!is_object($page) || $page->isError()) {
             throw new \InvalidArgumentException('Invalid collection ID');
         }
