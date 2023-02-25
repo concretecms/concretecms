@@ -27,6 +27,9 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
     protected $btExportTables = ['btGallery', 'btGalleryEntries', 'btGalleryEntryDisplayChoices'];
     protected $btExportFileColumns = ['fID'];
     protected $btCacheBlockRecord = false;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputOnPost = true;
     /** @var int */
     protected $includeDownloadLink;
     /** @var Connection|null */
