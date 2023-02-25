@@ -14,6 +14,17 @@ abstract class AbstractSurvey implements SurveyInterface
 
     abstract public function getSaverNamespace(): string;
 
+    public function getResult($question)
+    {
+        /**
+         * @var $question QuestionInterface|string
+         */
+        $saver = $this->getSaver();
+        $results = $saver->getResults();
+        $key = $question::getKey();
+        return $results[$key] ?? null;
+    }
+
     public function render(): string
     {
         $results = $this->getSaver()->getResults();

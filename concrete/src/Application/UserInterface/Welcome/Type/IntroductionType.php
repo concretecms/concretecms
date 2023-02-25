@@ -10,6 +10,7 @@ use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Filesystem\ElementManager;
 use Concrete\Core\User\User;
 use Concrete\Core\User\User as ConcreteUser;
+use Concrete\Core\Validation\CSRF\Token;
 
 class IntroductionType extends Type
 {
@@ -22,10 +23,22 @@ class IntroductionType extends Type
     protected $config;
 
     /**
+     * @var IntroductionItemFactory
+     */
+    protected $itemFactory;
+
+    /**
+     * @var Token
+     */
+    protected $token;
+
+    /**
      * @param Repository $config
      */
-    public function __construct(Repository $config)
+    public function __construct(Token $token, Repository $config, IntroductionItemFactory $itemFactory)
     {
+        $this->token = $token;
+        $this->itemFactory = $itemFactory;
         $this->config = $config;
     }
 
@@ -63,10 +76,10 @@ class IntroductionType extends Type
 
     public function getSlide(): SlideInterface
     {
-        $body = $this->app->make(ElementManager::class)
-            ->get('help/introduction')
-            ->getContents();
-        return new Slide('concrete-welcome-content-help', ['body' => $body]);
+        return new Slide('concrete-welcome-content-help', [
+            'itemAccessToken' => $this->token->generate('view_help'),
+            'items' => $this->itemFactory->getItems(),
+        ]);
     }
 
 

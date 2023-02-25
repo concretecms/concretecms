@@ -8,4 +8,6 @@ interface SurveyInterface
 
     public function getSaver(): SaverInterface;
 
+    public function getResult($question);
+
 }

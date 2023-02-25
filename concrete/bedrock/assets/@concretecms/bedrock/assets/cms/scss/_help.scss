@@ -18,6 +18,7 @@ div#ccm-toolbar {
 .ccm-ui {
   .ccm-help-tour {
     background-color: $help-tour-background-color;
+    border-color: $help-tour-background-color;
     font-size: 1rem;
     padding: $help-tour-padding;
 
@@ -127,9 +128,8 @@ div#ccm-toolbar {
         color: $help-tour-position-color !important;
         margin-left: 1rem;
 
-        &,
         &:hover {
-          text-decoration: none;
+          text-decoration: underline;
         }
       }
     }
@@ -149,7 +149,7 @@ div#ccm-toolbar {
   display: flex;
   margin-top: 0.5rem;
 
-  >div {
-    flex: 1;
+  > div {
+    margin-right: 1rem;
   }
 }

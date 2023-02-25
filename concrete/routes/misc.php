@@ -16,6 +16,7 @@ $router->all('/ccm/system/captcha/picture', '\Concrete\Core\Captcha\CaptchaWithP
 $router->all('/ccm/system/dialogs/language/update/details', '\Concrete\Controller\Dialog\Language\Update\Details::view');
 $router->all('/dashboard/blocks/stacks/list', '\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page');
 $router->all('/ccm/system/dialogs/help/help/', '\Concrete\Controller\Dialog\Help\Help::view');
+$router->all('/ccm/system/dialogs/help/get_items', '\Concrete\Controller\Dialog\Help\Help::getItems');
 $router->post('/ccm/system/welcome/mark_as_viewed/{handle}', '\Concrete\Controller\Backend\Welcome::markAsViewed');
 $router->post('/ccm/system/welcome/site_information/submit', '\Concrete\Controller\Backend\Welcome\SiteInformation::submit');
 $router->all('/ccm/system/notification/alert/archive/', '\Concrete\Controller\Backend\Notification\Alert::archive');

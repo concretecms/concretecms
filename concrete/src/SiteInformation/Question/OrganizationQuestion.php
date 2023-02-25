@@ -4,7 +4,7 @@ namespace Concrete\Core\SiteInformation\Question;
 class OrganizationQuestion extends AbstractSelectQuestion
 {
 
-    public function getKey(): string
+    public static function getKey(): string
     {
         return 'organization';
     }

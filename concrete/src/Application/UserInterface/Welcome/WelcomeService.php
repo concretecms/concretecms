@@ -37,7 +37,7 @@ class WelcomeService
         $this->user = $user;
     }
 
-    public function getModal(bool $trackView = true): ?ModalInterface
+    public function getModal(): ?ModalInterface
     {
         if ($this->checker->canViewWelcomeContent()) {
             $modal = new Modal();
@@ -53,7 +53,9 @@ class WelcomeService
                     }
                 }
             }
-            return $modal;
+            if (count($modal->getSlides()) > 0) {
+                return $modal;
+            }
         }
         return null;
     }

@@ -4,7 +4,12 @@ namespace Concrete\Core\SiteInformation\Question;
 class RoleQuestion extends AbstractSelectQuestion
 {
 
-    public function getKey(): string
+    const CONTENT_CREATOR = 'cc';
+    const DESIGNER = 'DE';
+    const PRODUCT_OWNER = 'M';
+    const DEVELOPER = 'DV';
+
+    public static function getKey(): string
     {
         return 'role';
     }
@@ -17,10 +22,10 @@ class RoleQuestion extends AbstractSelectQuestion
     public function getOptions(): array
     {
         return [
-            'CC' => t('Content Creator'),
-            'DE' => t('Designer'),
-            'M' => t('Product Owner/Management'),
-            'DV' => t('Developer'),
+            self::CONTENT_CREATOR => t('Content Creator'),
+            self::DESIGNER => t('Designer'),
+            self::PRODUCT_OWNER => t('Product Owner/Management'),
+            self::DEVELOPER => t('Developer'),
         ];
     }
 
