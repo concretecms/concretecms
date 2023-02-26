@@ -4,11 +4,13 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Foundation\Environment;
 use Concrete\Core\Foundation\Serializer\JsonSerializer;
 use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use Concrete\Core\Updater\Announcement\AnnouncementService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
 use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
 use Concrete\Core\Application\UserInterface\Welcome\Type\Manager;
+use Concrete\Core\Updater\Announcement\Manager as AnnouncementManager;
 
 class ApplicationServiceProvider extends ServiceProvider
 {
@@ -40,13 +42,14 @@ class ApplicationServiceProvider extends ServiceProvider
         $this->app->singleton('Concrete\Core\ConcreteCms\ActivityService');
         $this->app->singleton('Concrete\Core\Block\Menu\Manager');
         $this->app->singleton('Concrete\Core\Application\UserInterface\Welcome\WelcomeService');
-
+        $this->app->singleton(AnnouncementService::class);
         $this->app->singleton(
             Manager::class,
             function ($app) {
                 $manager = new Manager($app);
                 $manager->driver('site_information');
                 $manager->driver('introduction');
+                $manager->driver('show_update_information');
                 return $manager;
             }
         );

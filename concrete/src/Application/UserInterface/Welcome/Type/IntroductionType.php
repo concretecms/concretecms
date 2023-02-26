@@ -74,7 +74,7 @@ class IntroductionType extends Type
         $user->saveConfig('MAIN_HELP_LAST_VIEWED', time());
     }
 
-    public function getSlide(): SlideInterface
+    public function getSlide(User $user): SlideInterface
     {
         return new Slide('concrete-welcome-content-help', [
             'itemAccessToken' => $this->token->generate('view_help'),

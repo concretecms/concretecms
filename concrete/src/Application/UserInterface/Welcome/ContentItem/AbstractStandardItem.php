@@ -11,6 +11,7 @@ abstract class AbstractStandardItem implements ItemInterface
 
     abstract public function getActions(): array;
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

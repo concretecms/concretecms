@@ -36,7 +36,7 @@ class SiteInformationType extends Type
         return $this->app->make(SiteInformationSurvey::class);
     }
 
-    public function getSlide(): SlideInterface
+    public function getSlide(User $user): SlideInterface
     {
         return new Slide('concrete-welcome-content-site-information', ['survey' => $this->getSurvey()->render()]);
     }

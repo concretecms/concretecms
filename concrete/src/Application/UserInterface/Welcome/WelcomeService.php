@@ -47,7 +47,7 @@ class WelcomeService
                  * @var $driver TypeInterface
                  */
                 if ($driver->showModal($this->user, $drivers)) {
-                    $slides = $driver->getSlides();
+                    $slides = $driver->getSlides($this->user);
                     if (count($slides)) {
                         $modal->addSlides($slides);
                     }

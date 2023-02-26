@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Application\UserInterface\Welcome\Modal\Slide;
 
-class Slide implements SlideInterface
+class Slide extends AbstractSlide
 {
 
     /**
@@ -40,15 +40,6 @@ class Slide implements SlideInterface
     public function getComponentProps(): array
     {
         return $this->componentProps;
-    }
-
-    #[\ReturnTypeWillChange]
-    public function jsonSerialize()
-    {
-        return [
-            'component' => $this->getComponent(),
-            'componentProps' => $this->getComponentProps(),
-        ];
     }
 
 

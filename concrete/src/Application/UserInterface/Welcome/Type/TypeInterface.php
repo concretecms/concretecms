@@ -16,6 +16,6 @@ interface TypeInterface
     /**
      * @return SlideInterface[]
      */
-    public function getSlides(): array;
+    public function getSlides(User $user): array;
 
 }
