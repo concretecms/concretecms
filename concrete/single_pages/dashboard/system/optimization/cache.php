@@ -102,8 +102,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         </div>
                         <div class="form-check">
                             <?= $form->radio('FULL_PAGE_CACHE_BLOCK_LIFETIME', 1, $fullPageCacheLifetimeBlock ? 1 : 0, ['id' => 'FULL_PAGE_CACHE_LIFETIME_BLOCK-1']) ?>
-                            <label class="form-check-label" for="FULL_PAGE_CACHE_LIFETIME_BLOCK-1"><?= t('On - If some blocks on a page have a shorter cache lifetime, use that value instead of the global lifetime value.') ?></label>
+                            <label class="form-check-label" for="FULL_PAGE_CACHE_LIFETIME_BLOCK-1"><?= t('On - Change the lifetime for each page based on the block cache lifetime.') ?></label>
                         </div>
+                        <div class="help-block"><?= t('If you select "On," some pages may have a shorter cache lifetime if some blocks on a page allow a shorter cache lifetime than the global lifetime value.') ?></div>
                     </div>
                 </fieldset>
             </div>
