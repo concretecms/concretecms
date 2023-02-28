@@ -15,6 +15,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var bool $enableOverrideCache
  * @var string $fullPageCacheGlobal
  * @var string $fullPageCacheLifetime
+ * @var bool $fullPageCacheLifetimeBlock
  * @var int $defaultCacheLifetime
  * @var int|null $fullPageCacheCustomLifetime
  */
@@ -91,6 +92,17 @@ defined('C5_EXECUTE') or die('Access Denied.');
                         <div class="form-check">
                             <?= $form->radio('FULL_PAGE_CACHE_LIFETIME', 'custom', $fullPageCacheLifetime, ['id' => 'FULL_PAGE_CACHE_LIFETIME-custom']) ?>
                             <label class="form-check-label" for="FULL_PAGE_CACHE_LIFETIME-custom"><?= t('Every %s minutes', $form->number('FULL_PAGE_CACHE_LIFETIME_CUSTOM', $fullPageCacheCustomLifetime, ['min' => 1, 'class' => 'd-inline form-control-sm', 'style' => 'width: 5rem'])) ?></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label form-label"><?= t('Respect Block Cache Lifetime') ?></label>
+                        <div class="form-check">
+                            <?= $form->radio('FULL_PAGE_CACHE_BLOCK_LIFETIME', 0, $fullPageCacheLifetimeBlock ? 1 : 0, ['id' => 'FULL_PAGE_CACHE_LIFETIME_BLOCK-0']) ?>
+                            <label class="form-check-label" for="FULL_PAGE_CACHE_LIFETIME_BLOCK-0"><?= t('Off - Use same lifetime for all pages.') ?></label>
+                        </div>
+                        <div class="form-check">
+                            <?= $form->radio('FULL_PAGE_CACHE_BLOCK_LIFETIME', 1, $fullPageCacheLifetimeBlock ? 1 : 0, ['id' => 'FULL_PAGE_CACHE_LIFETIME_BLOCK-1']) ?>
+                            <label class="form-check-label" for="FULL_PAGE_CACHE_LIFETIME_BLOCK-1"><?= t('On - If some blocks on a page have a shorter cache lifetime, use that value instead of the global lifetime value.') ?></label>
                         </div>
                     </div>
                 </fieldset>
