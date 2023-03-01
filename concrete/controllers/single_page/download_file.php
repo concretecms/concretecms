@@ -248,7 +248,7 @@ class DownloadFile extends PageController
             return $this->responseFactory->redirect($fv->getURL(), Response::HTTP_TEMPORARY_REDIRECT)->send();
         } else {
             /** @noinspection PhpDeprecationInspection */
-            return $fv->forceDownload();
+            return $fv->buildNonpublicURLDownloadResponse();
         }
     }
 
@@ -268,7 +268,7 @@ class DownloadFile extends PageController
 
         if ($approvedVersion instanceof Version) {
             /** @noinspection PhpDeprecationInspection */
-            return $approvedVersion->forceDownload();
+            return $approvedVersion->buildForceDownloadResponse();
         }
     }
 }

@@ -1047,9 +1047,9 @@ class Version implements ObjectInterface
         $urlResolver = $app->make(ResolverManagerInterface::class);
 
         if ($this->hasFileUUID()) {
-            return $urlResolver->resolve(['/download_file', 'force',$this->getFileUUID(), $cID]);
+            return $urlResolver->resolve(['/download_file', 'force', $this->getFileUUID(), $cID]);
         } else {
-            return $urlResolver->resolve(['/download_file', 'force',$this->getFileID(), $cID]);
+            return $urlResolver->resolve(['/download_file', 'force', $this->getFileID(), $cID]);
         }
     }
 
@@ -1060,12 +1060,35 @@ class Version implements ObjectInterface
      */
     public function buildForceDownloadResponse()
     {
+        return $this->buildDownloadResponse(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+    }
+
+    /**
+     * Get a Response instance that will allow the browser to download
+     * a file and possibly display it. This is specifically useful
+     * when the file is in a storage location outside of the webroot
+     * and therefore cannot be directly accessed.
+     *
+     * @return \Concrete\Core\Http\Response
+     */
+    public function buildNonpublicURLDownloadResponse()
+    {
+        return $this->buildDownloadResponse(ResponseHeaderBag::DISPOSITION_INLINE);
+    }
+
+    /**
+     * Get a Response instance with configurable content disposition
+     *
+     * @return \Concrete\Core\Http\Response
+     */
+    private function buildDownloadResponse($contentDisposition)
+    {
         $fre = $this->getFileResource();
 
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $response = new FlysystemFileResponse($fre->getPath(), $fs);
 
-        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        $response->setContentDisposition($contentDisposition);
 
         return $response;
     }
