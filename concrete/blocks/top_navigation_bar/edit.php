@@ -58,22 +58,22 @@ if ($includeBrandText && $includeBrandLogo) {
         </div>
         <div class="mb-3" v-if="brandingMode == 'logoText' || brandingMode == 'text'">
             <label class="form-label" for="logo"><?=t('Text Branding')?></label>
-            <input type="text" name="brandingText" class="form-control" value="<?=$brandingText?>">
+            <input type="text" name="brandingText" class="form-control" value="<?=$brandingText ?? null ?>">
         </div>
         <div class="mb-3" v-if="brandingMode == 'logoText' || brandingMode == 'logo'">
             <label class="form-label" for="brandingLogo"><?=t('Logo')?></label>
-            <concrete-file-input choose-text="<?=t('Choose Logo')?>" input-name="brandingLogo" file-id="<?=$brandingLogo??null?>"></concrete-file-input>
+            <concrete-file-input choose-text="<?=t('Choose Logo')?>" input-name="brandingLogo" file-id="<?=$brandingLogo ?? null ?>"></concrete-file-input>
         </div>
         <div class="mb-3" v-if="includeTransparency && (brandingMode == 'logoText' || brandingMode == 'logo')">
             <label class="form-label" for="brandingTransparentLogo"><?=t('Transparent Logo')?></label>
-            <concrete-file-input choose-text="<?=t('Choose Logo')?>" input-name="brandingTransparentLogo" file-id="<?=$brandingTransparentLogo??null?>"></concrete-file-input>
+            <concrete-file-input choose-text="<?=t('Choose Logo')?>" input-name="brandingTransparentLogo" file-id="<?=$brandingTransparentLogo ?? null ?>"></concrete-file-input>
         </div>
     </fieldset>
     <fieldset v-if="includeSearchInput" class="border-top pt-3">
         <legend><?=t('Search')?></legend>
         <div class="mb-3">
             <label class="form-label" for="searchInputFormActionPageID"><?=t('Search Results Page')?></label>
-            <concrete-page-input choose-text="<?=t('Choose Page')?>" page-id="<?=$searchInputFormActionPageID??null?>" input-name="searchInputFormActionPageID"></concrete-page-input>
+            <concrete-page-input choose-text="<?=t('Choose Page')?>" page-id="<?=$searchInputFormActionPageID ?? null ?>" input-name="searchInputFormActionPageID"></concrete-page-input>
         </div>
     </fieldset>
 </div>
@@ -91,9 +91,9 @@ if ($includeBrandText && $includeBrandLogo) {
                 includeNavigationDropdowns: <?=$includeNavigationDropdowns ? 'true' : 'false'?>,
                 includeStickyNav: <?=$includeStickyNav ? 'true' : 'false'?>,
                 includeSearchInput: <?=$includeSearchInput ? 'true' : 'false'?>,
-                brandingLogo: <?=(int) ($brandingLogo??null)?>,
-                brandingTransparentLogo: <?=(int) ($brandingTransparentLogo??null)?>,
-                searchInputFormActionPageID: <?=(int) ($searchInputFormActionPageID??null)?>,
+                brandingLogo: <?=(int) ($brandingLogo ?? null)?>,
+                brandingTransparentLogo: <?=(int) ($brandingTransparentLogo ?? null)?>,
+                searchInputFormActionPageID: <?=(int) ($searchInputFormActionPageID ?? null)?>,
                 brandingMode: '<?=$brandingMode?>',
             }
         })
