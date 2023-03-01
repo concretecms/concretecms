@@ -2,7 +2,7 @@
 
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
-use Concrete\Core\Application\UserInterface\Welcome\WelcomeService;
+use Concrete\Core\Announcement\AnnouncementService;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -38,15 +38,15 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
         }
     }
 
-    $welcomeService = $app->make(WelcomeService::class);
+    $announcementService = $app->make(AnnouncementService::class);
     /**
-     * @var $welcomeService WelcomeService
+     * @var $announcementService AnnouncementService
      */
-    if ($modal = $welcomeService->getModal()) {
+    if ($broadcast = $announcementService->getBroadcast()) {
         ?>
-        <div data-wrapper="concrete-welcome-modal">
-            <concrete-welcome-modal :modal='<?=json_encode($modal, JSON_HEX_APOS)?>'>
-            </concrete-welcome-modal>
+        <div data-wrapper="concrete-announcement-broadcast">
+            <concrete-announcement-broadcast :broadcast='<?=json_encode($broadcast, JSON_HEX_APOS)?>'>
+            </concrete-announcement-broadcast>
         </div>
     <?php } ?>
 

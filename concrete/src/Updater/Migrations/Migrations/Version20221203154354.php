@@ -19,9 +19,9 @@ final class Version20221203154354 extends AbstractMigration implements Repeatabl
         if (!$pk instanceof Key) {
             Key::add('admin', 'access_api', 'Access API', '', false, false);
         }
-        $pk = Key::getByHandle('view_welcome_content');
+        $pk = Key::getByHandle('view_announcement_content');
         if (!$pk instanceof Key) {
-            Key::add('admin', 'view_welcome_content', 'View Welcome Content', 'Controls whether a user sees the Welcome Back modal interstitial, including upgrades and help.', false, false);
+            Key::add('admin', 'view_announcement_content', 'View Announcement Content', 'Controls whether a user sees the announcement modal interstitial, including upgrades and help, upon login.', false, false);
         }
 
         // Fix an oauth2 client bug (unrelated to the rest of the migration but here it is anyway)
