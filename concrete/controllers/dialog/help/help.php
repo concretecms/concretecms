@@ -3,7 +3,6 @@ namespace Concrete\Controller\Dialog\Help;
 
 use Concrete\Controller\Backend\UserInterface;
 use Concrete\Core\Announcement\Item\Factory\WelcomeItemFactory;
-use Concrete\Core\User\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Help extends UserInterface
@@ -12,9 +11,8 @@ class Help extends UserInterface
 
     public function view()
     {
-        throw new \exception('wat');
-        $modal = new Modal($this->app->make(IntroductionType::class));
-        $this->set('modal', $modal);
+        $welcomeItemFactory = $this->app->make(WelcomeItemFactory::class);
+        $this->set('items', $welcomeItemFactory->getItems());
     }
 
     /**
@@ -26,7 +24,7 @@ class Help extends UserInterface
     public function getItems(): JsonResponse
     {
         $welcomeItemFactory = $this->app->make(WelcomeItemFactory::class);
-        return new JsonResponse($welcomeItemFactory->getItems(false));
+        return new JsonResponse($welcomeItemFactory->getItems());
     }
 
     public function canAccess()

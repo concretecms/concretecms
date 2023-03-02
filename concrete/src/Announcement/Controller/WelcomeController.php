@@ -42,43 +42,11 @@ class WelcomeController extends AbstractController
         $this->config = $config;
     }
 
-    /**
-     * Determines whether the introduction modal should be displayed. Ported almost directly from the original
-     * `showHelpOverlay` method.
-     *
-     * @param User $user
-     * @param array $modalDrivers
-     * @return bool
-     */
-    public function showAnnouncement(User $user, array $announcements): bool
-    {
-        $result = false;
-        if ($this->config->get('concrete.misc.help_overlay')) {
-            $timestamp = $user->config('MAIN_HELP_LAST_VIEWED');
-            if (!$timestamp) {
-                $result = true;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Marks the modal as having been seen. Ported almost directly from the original `trackHelpOverlayDisplayed`
-     * method
-     *
-     * @param ConcreteUser $user
-     * @param ModalInterface $modal
-     */
-    public function markAnnouncementAsViewed(User $user)
-    {
-        $user->saveConfig('MAIN_HELP_LAST_VIEWED', time());
-    }
-
     public function getSlide(User $user): SlideInterface
     {
         return new Slide('concrete-announcement-welcome-slide', [
             'itemAccessToken' => $this->token->generate('view_help'),
-            'items' => $this->itemFactory->getItems(),
+            'items' => $this->itemFactory->getItems(true),
         ]);
     }
 

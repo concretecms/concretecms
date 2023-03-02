@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Backend\Announcement;
 
+use Concrete\Core\Announcement\AnnouncementService;
 use Concrete\Core\Announcement\Manager;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
@@ -18,7 +19,8 @@ class SiteInformation extends AbstractController
             $driver = $this->app->make(Manager::class)->driver('collect_site_information');
             $survey = $driver->getSurvey();
             $survey->getSaver()->saveFromRequest($this->request);
-            $driver->markAnnouncementAsViewed($u);
+            $announcementService = $this->app->make(AnnouncementService::class);
+            $announcementService->markAnnouncementAsViewed('collect_site_information', $u);
             return new JsonResponse(['viewed' => true]);
         }
         throw new UserMessageException(t('Access Denied.'));

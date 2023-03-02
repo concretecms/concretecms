@@ -614,8 +614,8 @@ class StartingPointPackage extends Package
 
         // Initiate announcements
         $announcementService = $this->app->make(AnnouncementService::class);
-        $announcementService->createAnnouncement('collect_site_information');
-        $announcementService->createAnnouncement('welcome');
+        $announcementService->createAnnouncementIfNotExists('collect_site_information');
+        $announcementService->createAnnouncementIfNotExists('welcome');
 
         // Clear cache
         $config->clearCache();

@@ -4,16 +4,14 @@ namespace Concrete\Core\Announcement;
 
 use Concrete\Core\Announcement\Broadcast\Broadcast;
 use Concrete\Core\Announcement\Broadcast\BroadcastInterface;
-use Concrete\Core\Announcement\Controller\ControllerInterface;
-use Concrete\Core\Announcement\Modal\Modal;
-use Concrete\Core\Announcement\Modal\ModalInterface;
 use Concrete\Core\Application\ApplicationAwareInterface;
 use Concrete\Core\Application\ApplicationAwareTrait;
+use Concrete\Core\Entity\Announcement\Announcement;
 use Concrete\Core\Entity\Announcement\Announcement as AnnouncementEntity;
+use Concrete\Core\Entity\Announcement\AnnouncementUserView;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\User\User;
 use Doctrine\ORM\EntityManager;
-use Concrete\Core\Announcement\Announcement\Announcement;
 
 class AnnouncementService implements ApplicationAwareInterface
 {
@@ -42,13 +40,16 @@ class AnnouncementService implements ApplicationAwareInterface
         $this->user = $user;
     }
 
-    public function createAnnouncement(string $handle): AnnouncementEntity
+    public function createAnnouncementIfNotExists(string $handle): AnnouncementEntity
     {
-        $announcement = new AnnouncementEntity();
-        $announcement->setHandle($handle);
-        $this->entityManager->persist($announcement);
-        $this->entityManager->flush();
-
+        $announcement = $this->entityManager->getRepository(AnnouncementEntity::class)
+            ->findOneByHandle($handle);
+        if (!$announcement) {
+            $announcement = new AnnouncementEntity();
+            $announcement->setHandle($handle);
+            $this->entityManager->persist($announcement);
+            $this->entityManager->flush();
+        }
         return $announcement;
     }
 
@@ -57,23 +58,27 @@ class AnnouncementService implements ApplicationAwareInterface
      */
     protected function getAnnouncementsForUser(User $user): array
     {
-        return $this->entityManager->getRepository(AnnouncementEntity::class)
-            ->findBy([], ['id' => 'asc']);
+        $db = $this->entityManager->getConnection();
+        // Return announcements that this user has NOT seen.
+        $r = $db->executeQuery('select id from Announcements a left join AnnouncementUserViews v on (a.id = v.announcement_id and v.uID = 1) where v.uID is null');
+        $announcements = [];
+        while ($row = $r->fetchAssociative()) {
+            $announcements[] = $this->entityManager->find(Announcement::class, $row['id']);
+        }
+        return $announcements;
     }
 
     public function getBroadcast(): ?BroadcastInterface
     {
         if ($this->checker->canViewAnnouncementContent()) {
             $broadcast = new Broadcast();
-            $announcements = $this->getAnnouncements();
+            $announcements = $this->getAnnouncementsForUser($this->user);
             foreach ($announcements as $announcement) {
                 $controller = $announcement->getController();
-                if ($controller->showAnnouncement($this->user, $announcements)) {
-                    $slides = $controller->getSlides($this->user);
-                    if (count($slides)) {
-                        $announcementComponent = $controller->createAnnouncementComponent($announcement, $slides);
-                        $broadcast->addAnnouncement($announcementComponent);
-                    }
+                $slides = $controller->getSlides($this->user);
+                if (count($slides)) {
+                    $announcementComponent = $controller->createAnnouncementComponent($announcement, $slides);
+                    $broadcast->addAnnouncement($announcementComponent);
                 }
             }
             if (count($broadcast->getAnnouncements()) > 0) {
@@ -84,8 +89,32 @@ class AnnouncementService implements ApplicationAwareInterface
 
     }
 
-    public function markAnnouncementAsViewed(AnnouncementEntity $announcement, User $user)
+    public function markAnnouncementAsViewed(string $announcementHandle, User $user)
     {
+        $announcement = $this->entityManager->getRepository(AnnouncementEntity::class)
+            ->findOneByHandle($announcementHandle);
+        $userEntity = $user->getUserInfoObject()->getEntityObject();
+        if ($announcement) {
+            $this->entityManager->createQueryBuilder()
+                ->delete(AnnouncementUserView::class, 'v')
+                ->andWhere('v.announcement = :announcement')
+                ->andWhere('v.user = :user')
+                ->setParameter('announcement', $announcement)
+                ->setParameter('user', $userEntity)
+                ->getQuery()
+                ->execute();
 
+            $viewed = new AnnouncementUserView();
+            $viewed->setUser($userEntity);
+            $viewed->setAnnouncement($announcement);
+            $this->entityManager->persist($viewed);
+            $this->entityManager->flush();
+
+            $announcementController = $announcement->getController();
+            $announcementController->onViewAnnouncement($user);
+
+        } else {
+            throw new \Exception(t('Unable to mark announcement as viewed - %s - no announcement found.', $announcementHandle));
+        }
     }
 }

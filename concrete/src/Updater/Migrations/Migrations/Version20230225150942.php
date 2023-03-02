@@ -23,7 +23,7 @@ final class Version20230225150942 extends AbstractMigration implements Repeatabl
             ]
         );
         $service = $this->app->make(AnnouncementService::class);
-        $service->createAnnouncement('concrete_version_920');
+        $service->createAnnouncementIfNotExists('concrete_version_920');
     }
 
 }

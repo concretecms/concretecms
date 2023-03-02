@@ -42,7 +42,7 @@ class WelcomeItemFactory implements ApplicationAwareInterface
      * another admin has registered) we DO want to return the default set of options. Hence the option
      * here
      */
-    public function getItems($returnNullIfSurveyUnfilled = true): ?array
+    public function getItems($returnNullIfSurveyUnfilled = false): ?array
     {
         $config = $this->app->make('config/database');
         if ($returnNullIfSurveyUnfilled && !$config->get('app.site_information.viewed')) {

@@ -14,18 +14,12 @@ class CollectSiteInformationController extends AbstractController
 
     use SingleSlideTrait;
 
-    public function showAnnouncement(User $user, array $announcements): bool
+    public function shouldDisplayAnnouncementToUser(User $user, array $announcements): bool
     {
-        if ($user->isSuperUser()) {
-            $config = $this->app->make('config/database');
-            if (!$config->get('app.site_information.viewed')) {
-                return true;
-            }
-        }
-        return false;
+        return $user->isSuperUser();
     }
 
-    public function markAnnouncementAsViewed(User $user)
+    public function onViewAnnouncement(User $user)
     {
         $config = $this->app->make('config/database');
         $config->save('app.site_information.viewed', true);

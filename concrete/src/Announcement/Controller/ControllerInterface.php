@@ -9,6 +9,13 @@ use Concrete\Core\User\User;
 interface ControllerInterface
 {
 
+    /**
+     * Allows for additional filtering of announcements
+     *
+     * @param User $user
+     * @param array $announcements
+     * @return bool
+     */
     public function shouldDisplayAnnouncementToUser(User $user, array $announcements): bool;
 
     public function onViewAnnouncement(User $user);

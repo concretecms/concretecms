@@ -13,16 +13,6 @@ use Concrete\Core\User\User;
 class Version920Controller extends AbstractController
 {
 
-    public function showAnnouncement(User $user, array $announcements): bool
-    {
-        return true;
-    }
-
-    public function markAnnouncementAsViewed(User $user)
-    {
-        return true;
-    }
-
     public function getSlides(User $user): array
     {
         return [

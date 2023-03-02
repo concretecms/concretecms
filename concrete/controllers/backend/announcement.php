@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Backend;
 
+use Concrete\Core\Announcement\AnnouncementService;
 use Concrete\Core\Announcement\Manager;
 use Concrete\Core\Controller\AbstractController;
 use Concrete\Core\Error\UserMessageException;
@@ -17,8 +18,8 @@ class Announcement extends AbstractController
         $u = $this->app->make(CoreUser::class);
         $checker = new Checker();
         if ($token->validate() && $checker->canViewAnnouncementContent()) {
-            $driver = $this->app->make(Manager::class)->driver($handle);
-            $driver->markAnnouncementAsViewed($u);
+            $announcementService = $this->app->make(AnnouncementService::class);
+            $announcementService->markAnnouncementAsViewed($handle, $u);
             return new JsonResponse(['viewed' => true]);
         }
         throw new UserMessageException(t('Access Denied.'));

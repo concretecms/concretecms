@@ -5,6 +5,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 /**
  * @var Concrete\Core\Config\Repository\Repository $config
  */
+$config = app('config');
 ?>
 
 <h3><?= t('Help Resources') ?></h3>
