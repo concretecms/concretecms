@@ -48,7 +48,7 @@ $app = \Concrete\Core\Support\Facade\Application::getFacadeApplication();
 
 <script>
     (function() {
-        const warnings = JSON.parse(<?= json_encode(json_encode($permissionWarnings ?? [])) ?>)
+        const warnings = JSON.parse(<?= json_encode(json_encode(isset($permissionWarnings) ? $permissionWarnings : [])) ?>)
         let skipWarnings = false
         function populateCache() {
             const cache = {}
