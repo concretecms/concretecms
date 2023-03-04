@@ -3,6 +3,7 @@ namespace Concrete\Core\Package;
 
 use AuthenticationType;
 use Concrete\Block\ExpressForm\Controller as ExpressFormBlockController;
+use Concrete\Core\Announcement\AnnouncementService;
 use Concrete\Core\Api\Command\SynchronizeScopesCommand;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Core\Config\Renderer;
@@ -610,6 +611,11 @@ class StartingPointPackage extends Package
 
         // Set the version_db as the version_db_installed
         $config->save('concrete.version_db_installed', $config->get('concrete.version_db'));
+
+        // Initiate announcements
+        $announcementService = $this->app->make(AnnouncementService::class);
+        $announcementService->createAnnouncementIfNotExists('collect_site_information');
+        $announcementService->createAnnouncementIfNotExists('welcome');
 
         // Clear cache
         $config->clearCache();

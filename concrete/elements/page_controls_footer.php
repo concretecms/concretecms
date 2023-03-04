@@ -2,6 +2,7 @@
 
 use Concrete\Core\Support\Facade\Url;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Announcement\AnnouncementService;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
@@ -37,7 +38,18 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
         }
     }
 
-    ?>
+    $announcementService = $app->make(AnnouncementService::class);
+    /**
+     * @var $announcementService AnnouncementService
+     */
+    if ($broadcast = $announcementService->getBroadcast()) {
+        ?>
+        <div data-wrapper="concrete-announcement-broadcast">
+            <concrete-announcement-broadcast :broadcast='<?=json_encode($broadcast, JSON_HEX_APOS)?>'>
+            </concrete-announcement-broadcast>
+        </div>
+    <?php } ?>
+
     <?=View::element('icons')?>
     <div id="ccm-page-controls-wrapper" class="ccm-ui">
         <div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
@@ -203,9 +215,10 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
                 ?>
                 <li data-guide-toolbar-action="help" class="float-end d-none d-md-block">
                     <a <?php if ($show_tooltips) { ?>class="launch-tooltip"<?php } ?> data-bs-toggle="tooltip"
-                       data-bs-placement="bottom" href="#"
-                       data-panel-url="<?= URL::to('/ccm/system/panels/help') ?>"
-                       title="<?= t('View help about the CMS.') ?>" data-launch-panel="help">
+                       data-launch="help-modal"
+                       data-bs-placement="bottom"
+                       href="<?= URL::to('/ccm/system/dialogs/help/help') ?>?ccm_token=<?=$valt->generate('view_help')?>"
+                       title="<?= t('View help about the CMS.') ?>">
                         <svg><use xlink:href="#icon-help" /></svg><span
                                 class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help') ?></span>
                     </a>

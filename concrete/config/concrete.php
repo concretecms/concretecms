@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.2.0a3',
-    'version_installed' => '9.2.0a3',
-    'version_db' => '20230127095217', // the key of the latest database migration
+    'version' => '9.2.0b1',
+    'version_installed' => '9.2.0b1',
+    'version_db' => '20230225150942', // the key of the latest database migration
 
     /*
      * Installation status
@@ -763,6 +763,7 @@ return [
          * @var string (now|async)
          */
         'basic_thumbnailer_generation_strategy' => 'now',
+        'help_overlay' => true,
         'require_version_comments' => false,
         /*
          * Control whether a block type can me moved to different block type sets

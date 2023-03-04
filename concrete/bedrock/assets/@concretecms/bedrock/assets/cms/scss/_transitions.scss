@@ -24,4 +24,17 @@
   opacity: 0;
 }
 
+/**
+ * General fade
+ */
+.concrete-fade-enter-active,
+.concrete-fade-leave-active {
+  transition: opacity 0.15s ease-out;
+}
+
+.concrete-fade-enter,
+.concrete-fade-leave-to {
+  opacity: 0;
+}
+
 

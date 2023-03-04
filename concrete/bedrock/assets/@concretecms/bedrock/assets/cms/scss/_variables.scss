@@ -45,6 +45,7 @@ $hr-opacity: 1;
 /* borders */
 $border-radius: 3px;
 $border-radius-sm: 2px;
+$border-color-translucent: rgba(#000, 0.075);
 
 /* buttons */
 $btn-font-weight: 600;
@@ -133,13 +134,21 @@ $dropdown-padding-y: 10px;
 $dropdown-box-shadow: 0 1px 1px 0 rgba(65, 69, 73, 0.3), 0 1px 3px 1px rgba(65, 69, 73, 0.15);
 
 /* popovers - these are used for in page menus, help menus */
-$popover-border-color: transparent;
+//$popover-border-color: transparent;
 $popover-border-radius: 5px;
 $popover-inner-border-radius: 5px;
-$popover-border-width: 0;
 $popover-box-shadow: 0 1px 1px 0 rgba(65, 69, 73, 0.3), 0 1px 3px 1px rgba(65, 69, 73, 0.15);
-$popover-arrow-width: 0;
-$popover-arrow-height: 0;
+// Originally I had set the following three items as well, but I can't do that. Why?
+// Setting these unintentionally removes the arrow from guide popovers (the walk throughs we launch
+// from the help dialog. The arrows are very important in that context so let's not globally disable them.
+// (Why does border width set those to zero? No idea. But I had to disable my setting of border width to
+// get this to work as well.)
+// So instead, in order to remove the arrow from the in-page popovers (which I think looks gauche) let's
+// Use separate CSS within the _popover.scss file, rather than globally removing them. Finally, let's
+// Get rid of the outer border around popovers by setting a transparent color rather than border width of 0.
+// $popover-border-width: 0;
+// $popover-arrow-width: 0;
+// $popover-arrow-height: 0;
 
 /* Links */
 $link-decoration: none;

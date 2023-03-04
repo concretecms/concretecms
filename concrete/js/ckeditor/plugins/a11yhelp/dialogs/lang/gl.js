@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 */
 CKEDITOR.plugins.setLang("a11yhelp","gl",{title:"Instrucións de accesibilidade",contents:"Axuda. Para pechar este diálogo prema ESC.",legend:[{name:"Xeral",items:[{name:"Barra de ferramentas do editor",legend:"Prema ${toolbarFocus} para navegar ata a barra de ferramentas. Movase ao grupo de barras de ferramentas seguinte e anterior con TAB e MAYÚS+TAB. Movase ao botón da barra de ferramentas seguinte e anterior coa frecha cara á dereita ou á esquerda. Prema ESPAZO ou INTRO para activar o botón da barra de ferramentas. O foco moverase de novo á área de edición ao activar o botón da barra de ferramentas."},

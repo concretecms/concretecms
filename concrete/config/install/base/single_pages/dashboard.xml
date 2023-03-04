@@ -716,6 +716,17 @@
                 </attributekey>
             </attributes>
         </page>
+
+        <page name="Site Information" path="/dashboard/system/basics/site_information"
+              filename="/dashboard/system/basics/site_information.php"
+              pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_search_index">
+                    <value>1</value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Social Links" path="/dashboard/system/basics/social" filename="/dashboard/system/basics/social.php"
               pagetype="" description="" package="">
             <attributes>
