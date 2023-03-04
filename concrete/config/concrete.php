@@ -269,6 +269,13 @@ return [
          */
         'full_page_lifetime' => 'default',
 
+        /**
+         * Respect lifetime of each block on the page
+         *
+         * @var bool
+         */
+        'full_page_lifetime_block' => false,
+
         /*
          * Custom lifetime value, only used if concrete.cache.full_page_lifetime is 'custom'
          *

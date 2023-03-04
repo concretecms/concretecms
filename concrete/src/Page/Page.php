@@ -3789,6 +3789,21 @@ EOT
             }
         }
 
+        // Let's check block output lifetime
+        if ($app['config']->get('concrete.cache.full_page_lifetime_block')) {
+            $blocks = $this->getBlocks();
+            $blocks = array_merge($this->getGlobalBlocks(), $blocks);
+            foreach ($blocks as $b) {
+                if ($b->cacheBlockOutput()) {
+                    $blockLifetime = $b->getBlockOutputCacheLifetime();
+                    // We should ignore 0 because it means forever
+                    if ($blockLifetime > 0 && $lifetime > $blockLifetime) {
+                        $lifetime = $blockLifetime;
+                    }
+                }
+            }
+        }
+
         return $lifetime;
     }
 
