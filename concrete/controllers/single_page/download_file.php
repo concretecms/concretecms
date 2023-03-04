@@ -47,6 +47,8 @@ class DownloadFile extends PageController
             }
         }
 
+        $this->set('fID', $fID); // ensure $fID is set to something for invalid requests
+
         // get the file
         if ($this->app->make('helper/validation/numbers')->integer($fID, 1)) {
             $file = File::getByID($fID);
@@ -102,7 +104,6 @@ class DownloadFile extends PageController
                     // otherwise show the form
                     $this->set('force', $this->force);
                     $this->set('rcID', $rcID);
-                    $this->set('fID', $fID);
                     $this->set('filename', $approvedVersion->getFilename());
 
                     try {
