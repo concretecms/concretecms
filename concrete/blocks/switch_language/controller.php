@@ -20,6 +20,9 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btInterfaceWidth = 500;
     protected $btInterfaceHeight = 150;
     protected $btTable = 'btSwitchLanguage';
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockOutputLifetime = 300;
 
     public $helpers = ['form'];
 
