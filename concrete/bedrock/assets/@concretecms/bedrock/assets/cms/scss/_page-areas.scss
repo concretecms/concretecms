@@ -461,15 +461,22 @@ ul.ccm-edit-mode-inline-commands {
     }
 
     a {
-      color: $concrete-inline-icon-link !important;
       display: inline-block;
       font-weight: lighter;
       padding: 3px 6px;
       position: relative;
       text-align: center;
 
+      i.fas { // https://github.com/concretecms/concretecms/issues/10184
+        background-color: transparent;
+        color: $concrete-inline-icon-link !important;
+        font-size: 14px; // https://github.com/concretecms/concretecms/issues/10184
+      }
+
       &:hover {
-        color: $primary !important;
+        i.fas { // https://github.com/concretecms/concretecms/issues/10184
+          color: $primary !important;
+        }
       }
 
       &.ccm-edit-mode-inline-command-move {
