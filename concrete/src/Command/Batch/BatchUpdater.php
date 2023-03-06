@@ -74,8 +74,7 @@ class BatchUpdater
             $batch = $entityManager->find(BatchEntity::class, $batchId);
             $entityManager->refresh($batch);
             $event = new BatchUpdatedEvent($batch);
-            $hub = $mercureService->getHub();
-            $hub->publish($event->getUpdate());
+            $mercureService->publish($event);
         }
     }
 

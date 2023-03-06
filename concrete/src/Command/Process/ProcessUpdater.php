@@ -75,8 +75,7 @@ class ProcessUpdater
         if ($this->mercureService->isEnabled()) {
             usleep(500000); // some fast-running tasks cause race conditions.
             $event = new ProcessClosedEvent($process->jsonSerialize(), $exitCode);
-            $hub = $this->mercureService->getHub();
-            $hub->publish($event->getUpdate());
+            $this->mercureService->publish($event);
         }
 
         $this->clearOldProcesses();
