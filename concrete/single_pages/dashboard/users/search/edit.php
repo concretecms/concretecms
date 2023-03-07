@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Form\Service\Widget\FileFolderSelector;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Support\Facade\Application;
-
+use Concrete\Core\User\Component\AvatarCropperInstanceFactory;
 
 /**
  * @var Concrete\Core\Page\View\PageView $view
@@ -56,11 +56,9 @@ $userEntity = $user->getEntityObject();
         <div class="ccm-user-detail-basics">
             <div class="ccm-user-detail-basics-avatar">
                 <?php if ($canEditAvatar) { ?>
-                    <avatar-cropper v-bind:height="<?= Config::get('concrete.icons.user_avatar.height') ?>"
-                                    v-bind:width="<?= Config::get('concrete.icons.user_avatar.width') ?>"
-                                    uploadurl="<?= $saveAvatarUrl ?>"
-                                    src="<?= $user->getUserAvatar()->getPath() ?>">
-                    </avatar-cropper>
+                    <a href="#"
+                       data-bs-toggle="modal" data-bs-target="#edit-avatar-modal"
+                       class="ccm-user-detail-basics-avatar-edit"><?= $user->getUserAvatar()->output() ?></a>
                 <?php } else { ?>
                     <?= $user->getUserAvatar()->output() ?>
                 <?php } ?>
@@ -226,6 +224,41 @@ $userEntity = $user->getEntityObject();
         ?>
 
     </dl>
+
+    <?php if ($canEditAvatar) {
+        $avatarUploadUrl = $view->action('update_avatar', $user->getUserID());
+        $cropper = app(AvatarCropperInstanceFactory::class)->createInstance();
+        $cropper->setUploadUrl($avatarUploadUrl);
+        $config = app('config');
+        $width = $config->get('concrete.icons.user_avatar.width');
+        $height = $config->get('concrete.icons.user_avatar.height');
+        ?>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="edit-avatar-modal">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><?= t('Edit Profile Picture') ?></h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?= t('Close') ?>"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center" v-if="avatar">
+                            <div class="mb-3">
+                                <div class="d-inline-block" style="max-width: <?=$width?>px; max-height: <?=$height?>px">
+                                    <?=$user->getUserAvatar()->output()?>
+                                </div>
+                            </div>
+                            <button @click="deleteAvatar" class="btn-danger btn"><?=t('Delete')?></button>
+                        </div>
+                        <div v-else>
+                            <?=$cropper->getTag()?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <?php } ?>
 
     <?php if ($canViewAccountModal) { ?>
 
@@ -463,11 +496,22 @@ $userEntity = $user->getEntityObject();
             new Vue({
                 components: config.components,
                 el: 'section[data-section=account]',
-                data: {},
-                mounted() {
-
+                data: {
+                    avatar: <?=$user->hasAvatar() ? json_encode(['path' => $user->getUserAvatar()->getPath()]) : 'null' ?>
                 },
                 methods: {
+                    deleteAvatar() {
+                        var data = []
+                        var my = this
+                        data.push({'name': 'ccm_token', 'value': '<?=$token->generate('delete_avatar')?>'})
+                        $.concreteAjax({
+                            url: "<?=$view->action('delete_avatar', $userEntity->getUserID())?>",
+                            data: data,
+                            success: function (r) {
+                                my.avatar = null
+                            }
+                        });
+                    },
                     saveAccount() {
                         var my = this
                         var data = $(this.$el).find("form").serializeArray()

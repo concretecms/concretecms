@@ -20,6 +20,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Permission\Checker;
 use Concrete\Core\Url\Url;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
+use Concrete\Core\User\Component\AvatarCropperInstanceFactory;
 use Concrete\Core\User\EditResponse as UserEditResponse;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Progress\UserProgress as UserWorkflowProgress;
@@ -195,13 +196,30 @@ class Search extends DashboardPageController
         return $this->app->make(DashboardUserBreadcrumbFactory::class);
     }
 
-    public function update_avatar($uID = false)
+    public function delete_avatar($uID = false)
     {
         $this->setupUser($uID);
         $token = $this->token;
-        if (!$token->validate('avatar/save_avatar', $this->request->query->get('ccm_token'))) {
+        if (!$token->validate('delete_avatar', $this->request->query->get('ccm_token'))) {
+            $this->error->add($token->getErrorMessage());
+        }
+        if ($this->error->has()) {
+            return new JsonResponse($this->error);
+        } else {
+            $service = $this->app->make('user/avatar');
+            $service->removeAvatar($this->user);
+            return new JsonResponse($this->user);
+        }
+    }
+
+    public function update_avatar($uID = false)
+    {
+        $this->setupUser($uID);
+        $instanceFactory = $this->app->make(AvatarCropperInstanceFactory::class);
+        $instance = $instanceFactory->createInstanceFromRequest($this->request);
+        if (!$instanceFactory->instanceMatchesAccessToken($instance, $this->request->get('accessToken') ?? '')) {
             $result['error'] = true;
-            $result['message'] = $token->getErrorMessage();
+            $result['message'] = $this->token->getErrorMessage();
             return new JsonResponse($result, 400);
         }
 
@@ -217,10 +235,9 @@ class Search extends DashboardPageController
                 $result['success'] = true;
                 $result['avatar'] = $this->user->getUserAvatar()->getPath() . '?' . time();
 
-            } elseif ($this->request->post('task') == 'clear') {
-                $this->user->update(['uHasAvatar' => 0]);
             }
 
+            $this->flash('success', t('Profile picture saved.'));
             return new JsonResponse($result, $result['success'] ? 200 : 400);
 
         } else {
@@ -559,13 +576,6 @@ class Search extends DashboardPageController
 
             $factory = $this->createBreadcrumbFactory();
             $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $ui));
-
-            $saveAvatarUrl = $this->app->make('url')->to($this->getPageObject(), 'update_avatar', $ui->getUserID());
-            $saveAvatarUrl = $saveAvatarUrl->setQuery(array(
-                'ccm_token' => $this->token->generate('avatar/save_avatar'),
-            ));
-
-            $this->set('saveAvatarUrl', $saveAvatarUrl);
             $this->render("/dashboard/users/search/edit");
         } else {
             return $this->buildRedirect('/dashboard/users/search');
@@ -577,8 +587,7 @@ class Search extends DashboardPageController
     public function view($uID = null, $status = false)
     {
         if (isset($uID)) {
-            $this->edit($uID, $status);
-            return;
+            return $this->edit($uID, $status);
         }
 
         $query = $this->getQueryFactory()->createQuery($this->getSearchProvider(), [

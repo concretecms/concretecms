@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage\Account;
 
 use Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
 use Concrete\Core\User\Command\UpdateUserAvatarCommand;
+use Concrete\Core\User\Component\AvatarCropperInstanceFactory;
 use Concrete\Core\User\UserInfo;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -11,7 +12,13 @@ class Avatar extends AccountProfileEditPageController
     public function view()
     {
         parent::view();
+        $instanceFactory = $this->app->make(AvatarCropperInstanceFactory::class);
+        $instance = $instanceFactory->createInstance();
+        $instance->setUploadUrl($this->action('save_avatar'));
+        $this->set('avatarCropperInstance', $instance);
         $this->set('token', $this->app->make('token'));
+        $this->set('width', $this->app->make('config')->get('concrete.icons.user_avatar.width'));
+        $this->set('height', $this->app->make('config')->get('concrete.icons.user_avatar.height'));
     }
 
     public function save_avatar()
@@ -21,14 +28,17 @@ class Avatar extends AccountProfileEditPageController
             'avatar' => null,
         ];
 
-        $this->view();
-        $token = $this->app->make('token');
-        if (!$token->validate('avatar/save_avatar', $this->request->query->get('ccm_token'))) {
+        /**
+         * @var $instanceFactory AvatarCropperInstanceFactory
+         */
+        $instanceFactory = $this->app->make(AvatarCropperInstanceFactory::class);
+        $instance = $instanceFactory->createInstanceFromRequest($this->request);
+        if (!$instanceFactory->instanceMatchesAccessToken($instance, $this->request->get('accessToken') ?? '')) {
             $result['error'] = true;
-            $result['message'] = $token->getErrorMessage();
-
+            $result['message'] = app('token')->getErrorMessage();
             return new JsonResponse($result, 400);
         }
+
 
         /** @var UserInfo */
         $profile = $this->get('profile');
@@ -48,33 +58,8 @@ class Avatar extends AccountProfileEditPageController
             $result['message'] = t('Error while uploading file.');
         }
 
+        $this->flash('success', t('Profile picture saved.'));
         return new JsonResponse($result, $result['success'] ? 200 : 400);
-    }
-
-    public function save_thumb()
-    {
-        $this->view();
-        $token = $this->app->make('token');
-
-        if (!$token->validate('avatar/save_thumb')) {
-            return false;
-        }
-
-        $profile = $this->get('profile');
-        if (!is_object($profile) || $profile->getUserID() < 1) {
-            return false;
-        }
-        $thumbnail = $this->request->request->get('thumbnail');
-
-        if ($thumbnail) {
-            $thumb = base64_decode($thumbnail);
-            $image = $this->app->make(ImagineInterface::class)->load($thumb);
-            $profile->updateUserAvatar($image);
-        } else {
-            return false;
-        }
-
-        $this->redirect('/account/avatar', 'saved');
     }
 
     public function saved()
