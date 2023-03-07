@@ -14,7 +14,7 @@ $view->inc('elements/header.php', ['bodyClass' => 'ccm-dashboard-account']);
 ?>
 
 <div id="ccm-dashboard-content-regular">
-    <div class="ccm-dashboard-desktop-content">
+    <div class="ccm-dashboard-desktop-content ccm-page-account">
         <nav class="ccm-dashboard-desktop-navbar navbar navbar-dark navbar-expand-md">
             <span class="navbar-text">
                 <?php echo $c->getCollectionName() ?>

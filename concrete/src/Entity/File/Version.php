@@ -1673,9 +1673,8 @@ class Version implements ObjectInterface
             /** @var MercureService $mercureService */
             $mercureService = $app->make(MercureService::class);
             if ($mercureService->isEnabled()) {
-                $hub = $mercureService->getHub();
                 $event = new ThumbnailGeneratedEvent($this, $type);
-                $hub->publish($event->getUpdate());
+                $mercureService->publish($event);
             }
         }
     }

@@ -4,7 +4,6 @@ namespace Concrete\Core\Notification\Events;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Cookie\ResponseCookieJar;
-use Concrete\Core\Notification\Events\ServerEvent\ServerEventInterface;
 use Concrete\Core\Notification\Events\Topic\TopicInterface;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;

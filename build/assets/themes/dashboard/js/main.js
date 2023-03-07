@@ -7,7 +7,7 @@ import '@concretecms/bedrock/assets/bedrock/js/frontend';
 
 // Import the CMS components and the backend components.
 // We need the avatar component because we use it in the Dashboard user view.
-import AvatarCropper from '@concretecms/bedrock/assets/account/js/frontend/components/Avatar/Cropper.vue'
+import AvatarCropper from '@concretecms/bedrock/assets/account/js/frontend/components/AvatarCropper.vue'
 import FileManagerFavoriteFolderSelector from './file-manager/FileManagerFavoriteFolderSelector.vue'
 const backendComponents = {
     AvatarCropper,
@@ -17,6 +17,9 @@ Concrete.Vue.createContext('backend', backendComponents, 'cms')
 
 // Desktops and waiting for me
 import '@concretecms/bedrock/assets/desktop/js/frontend';
+
+// My Account as rendered by Dashboard theme
+import './account';
 
 // Calendar
 import '@concretecms/bedrock/assets/calendar/js/backend';

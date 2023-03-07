@@ -829,9 +829,10 @@ return [
             'height' => 500,
         ],
         'user_avatar' => [
-            'width' => 80,
-            'height' => 80,
+            'width' => 120,
+            'height' => 120,
             'default' => ASSETS_URL_IMAGES . '/avatar_none.png',
+            'resolution' => '2', // Set this to 1 if you want width and height to match in the cropper exactly.
         ],
     ],
 
