@@ -23,7 +23,7 @@ $pagination = $list->getPagination();
 $pagination->setMaxPerPage($totalToRetrieve);
 $events = $pagination->getCurrentPageResults();
 
-$service = Core::make('helper/date');
+$service = app('helper/date');
 $numEvents = count($events);
 ?>
 <div class="ccm-block-calendar-event-list-wrapper widget-featured-events unbound" data-page="<?= $totalPerPage ?: 3 ?>">
