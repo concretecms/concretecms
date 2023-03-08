@@ -226,4 +226,30 @@ class ImageEditorService
             }
         }
     }
+
+    /**
+     * @param Version $fileVersion
+     */
+    public function renderActiveThumbnailEditor(
+        $fileVersion
+    )
+    {
+        if ($fileVersion instanceof Version) {
+            $activeEditor = $this->getActiveEditor();
+            /** @var ElementManager $elementManager */
+            $elementManager = $this->app->make(ElementManager::class);
+
+            $element = $elementManager->get(
+                'files/edit/image_editor/' . $activeEditor->getHandle() . '_thumbnail',
+                null,
+                null,
+                $activeEditor->getPackageHandle()
+            );
+
+            if ($element instanceof Element) {
+                $element->getElementController()->set("fileVersion", $fileVersion);
+                $element->render();
+            }
+        }
+    }
 }
