@@ -1418,13 +1418,11 @@ class Page extends Collection implements CategoryMemberInterface,
     /**
      * Returns full url for the current page.
      *
-     * @param bool $appendBaseURL UNUSED
-     *
      * @return string
      */
-    public function getCollectionLink($appendBaseURL = false)
+    public function getCollectionLink()
     {
-        return Core::make('helper/navigation')->getLinkToCollection($this, $appendBaseURL);
+        return Core::make('helper/navigation')->getLinkToCollection($this);
     }
 
     /**
