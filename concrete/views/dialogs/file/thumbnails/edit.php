@@ -10,5 +10,5 @@ use Concrete\Core\ImageEditor\ImageEditorService;
  */
 
 /** @var ImageEditorService $editorService */
-$editorService = $app->make(ImageEditorService::class);
-$editorService->renderActiveThumbnailEditor($fv);
+/** @var \Concrete\Core\File\Image\Thumbnail\Type\Version $thumbnailTypeVersion */
+$editorService->renderActiveThumbnailEditor($fv, $thumbnailTypeVersion);
