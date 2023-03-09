@@ -309,6 +309,7 @@ var ccmi18n_filemanager = ' . json_encode([
     'sets' => t('Sets'),
     'specifyName' => t('Please enter a name...'),
     'thumbnailImages' => t('Thumbnail Images'),
+    'thumbnailImageSaved' => t('Thumbnail image saved successfully.'),
     'title' => t('File Manager'),
     'upload' => t('Upload'),
     'uploadComplete' => t('Upload Complete'),

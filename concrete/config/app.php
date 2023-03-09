@@ -103,6 +103,7 @@ return [
         'core_health' => '\Concrete\Core\Health\HealthServiceProvider',
         'core_html' => '\Concrete\Core\Html\HtmlServiceProvider',
         'core_editor' => '\Concrete\Core\Editor\EditorServiceProvider',
+        'core_image_editor' => '\Concrete\Core\ImageEditor\ImageEditorServiceProvider',
         'core_mail' => '\Concrete\Core\Mail\MailServiceProvider',
         'core_application' => '\Concrete\Core\Application\ApplicationServiceProvider',
         'core_utility' => '\Concrete\Core\Utility\UtilityServiceProvider',

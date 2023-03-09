@@ -58,7 +58,6 @@ $i = 1;
                             <a
                                 href="<?php echo (string)Url::to('/ccm/system/dialogs/file/thumbnails/edit')->setQuery([
                                     'fID' => $version->getFileID(),
-                                    'fvID' => $version->getFileVersionID(),
                                     'thumbnail' => $type->getHandle(),
                                 ]) ?>"
                                dialog-width="90%"
