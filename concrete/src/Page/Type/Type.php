@@ -893,12 +893,12 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         if (isset($data['handle']) && $data['handle']) {
             $ptHandle = $data['handle'];
         }
-        if (is_object($data['defaultTemplate'])) {
+        if (isset($data['defaultTemplate']) && is_object($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
         } elseif (!empty($data['defaultTemplate'])) {
             $ptDefaultPageTemplateID = PageTemplate::getByHandle($data['defaultTemplate'])->getPageTemplateID();
         }
-        if (is_object($data['defaultTheme'])) {
+        if (isset($data['defaultTheme']) && is_object($data['defaultTheme'])) {
             $ptDefaultThemeID = $data['defaultTheme']->getThemeID();
         } else {
             $ptDefaultThemeID = null;
@@ -917,7 +917,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         }
 
         $templates = $this->getPageTypePageTemplateObjects();
-        if (is_array($data['templates'])) {
+        if (isset($data['templates']) && is_array($data['templates'])) {
             $templates = $data['templates'];
         }
         $ptIsInternal = $this->isPageTypeInternal();
