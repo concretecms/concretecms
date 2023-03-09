@@ -887,10 +887,10 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         $ptLaunchInComposer = $this->doesPageTypeLaunchInComposer();
         $ptDisplayOrder = $this->getPageTypeDisplayOrder();
 
-        if ($data['name']) {
+        if (isset($data['name']) && $data['name']) {
             $ptName = $data['name'];
         }
-        if ($data['handle']) {
+        if (isset($data['handle']) && $data['handle']) {
             $ptHandle = $data['handle'];
         }
         if (is_object($data['defaultTemplate'])) {
@@ -903,7 +903,7 @@ class Type extends ConcreteObject implements \Concrete\Core\Permission\ObjectInt
         } else {
             $ptDefaultThemeID = null;
         }
-        if ($data['allowedTemplates']) {
+        if (isset($data['allowedTemplates'])) {
             $ptAllowedPageTemplates = $data['allowedTemplates'];
         }
         if (isset($data['ptLaunchInComposer'])) {
