@@ -49,7 +49,7 @@ final class SenderConfiguration
     }
 
     /**
-     * @throws \RuntimeException in case of duplicared configuration keys
+     * @throws \RuntimeException in case of duplicated configuration keys
      *
      * @return $this
      */
