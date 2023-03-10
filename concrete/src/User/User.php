@@ -1078,6 +1078,7 @@ class User extends ConcreteObject
 
         /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
         $session = $app['session'];
+	$session->migrate();
         $session->set('uID', $this->getUserID());
         $session->set('uName', $this->getUserName());
         $session->set('uBlockTypesSet', false);
