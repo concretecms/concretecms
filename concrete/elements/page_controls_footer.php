@@ -344,6 +344,18 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard()) && !$view->isEd
                                 'buttons' => $buttons,
                             ]);
                         }
+                        $publishEndDate = $vo->getPublishEndDate();
+                        if ($publishEndDate && $dateHelper->toDateTime() > $dateHelper->toDateTime($publishEndDate)) {
+                            $date = $dateHelper->formatDate($publishEndDate);
+                            $time = $dateHelper->formatTime($publishEndDate);
+                            $message = t(/*i18n: %1$s is a date, %2$s is a time */'This version of the page was closed on %1$s at %2$s', $date, $time);
+                            echo $cih->notify([
+                                'title' => t('Closed Page.'),
+                                'text' => $message,
+                                'type' => 'info',
+                                'icon' => 'fas fa-cog',
+                            ]);
+                        }
                     }
                 }
             }
