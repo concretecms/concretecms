@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         </div>
         <div class="form-group">
             <?= $form->label('canonical_url', t('Canonical URL'), ['class' => 'launch-tooltip form-label', 'title' => t('The full URL at which this site will live. e.g. http://www.my-website.com')]) ?>
-            <?= $form->text('canonical_url', '') ?>
+            <?= $form->url('canonical_url', '') ?>
         </div>
         <div class="form-group">
             <?= $form->label('timezone', t('Default Timezone'), ['class' => 'launch-tooltip form-label', 'data-bs-placement' => 'right', 'title' => t('This will control the default timezone that will be used to display date/times.')]) ?>
