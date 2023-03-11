@@ -243,10 +243,10 @@ EOT
                             } else {
                                 if ($question['inputType'] == 'text') {
                                     echo '<td>' . $text->entities(
-                                            $answerSet['answers'][$questionId]['answerLong']) . '</td>';
+                                            $answerSet['answers'][$questionId]['answerLong'] ?? '') . '</td>';
                                 } else {
                                     echo '<td>' . $text->entities(
-                                            $answerSet['answers'][$questionId]['answer']) . '</td>';
+                                            $answerSet['answers'][$questionId]['answer'] ?? '') . '</td>';
                                 }
                             }
                         }
