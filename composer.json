@@ -61,7 +61,7 @@
       "merge-extra": false
     },
     "allow-subpatches": [
-      "concrete5/dependency-patches"
+      "concretecms/dependency-patches"
     ]
   },
   "autoload-dev": {
