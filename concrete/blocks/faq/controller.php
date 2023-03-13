@@ -9,6 +9,11 @@ use Concrete\Core\Feature\UsesFeatureInterface;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $blockTitle;
+
     protected $btInterfaceWidth = 600;
     protected $btInterfaceHeight = 465;
     protected $btTable = 'btFaq';

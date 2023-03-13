@@ -14,13 +14,6 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
-    public $helpers = ['form', 'form/page_selector'];
-
-    /**
-     * @var int|null
-     */
-    public $topicTreeID;
-
     /**
      * @var string|null
      */
@@ -32,7 +25,12 @@ class Controller extends BlockController implements UsesFeatureInterface
     public $topicAttributeKeyHandle;
 
     /**
-     * @var int|null
+     * @var int|string|null
+     */
+    public $topicTreeID;
+
+    /**
+     * @var int|string|null
      */
     public $cParentID;
 
@@ -40,6 +38,13 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string|null
      */
     public $title;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
+    public $helpers = ['form', 'form/page_selector'];
 
     protected $btInterfaceWidth = 400;
 

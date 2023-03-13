@@ -280,6 +280,13 @@ class Version implements ObjectInterface
     protected $fvHasDetailThumbnail = false;
 
     /**
+     * @deprecated What's deprecates is the "public" part.
+     *
+     * @var int|null
+     */
+    public $fvGenericType;
+
+    /**
      * The currently loaded Image instance.
      *
      * @var \Imagine\Image\ImageInterface|false|null null: still not loaded; false: load failed; ImageInterface otherwise

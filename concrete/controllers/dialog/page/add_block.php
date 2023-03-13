@@ -20,6 +20,13 @@ class AddBlock extends BackendInterfacePageController
 {
     protected $viewPath = '/dialogs/page/add_block';
 
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Area\Area
+     */
+    public $area;
+
     public function on_start()
     {
         parent::on_start();

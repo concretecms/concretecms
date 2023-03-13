@@ -8,6 +8,13 @@ use Concrete\Controller\Backend\UserInterface\Page as BackendPageController;
 
 class Design extends BackendPageController
 {
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Area\Area
+     */
+    public $area;
+
     protected $viewPath = '/dialogs/area/design';
 
     public function on_start()

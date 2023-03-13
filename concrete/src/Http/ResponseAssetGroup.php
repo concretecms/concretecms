@@ -25,6 +25,20 @@ class ResponseAssetGroup
     protected $outputAssets = array();
 
     /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Asset\AssetGroup
+     */
+    public $requiredAssetGroup;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Asset\AssetGroup
+     */
+    public $providedAssetGroup;
+
+    /**
      * Get an instance of this singleton.
      *
      * @return self
@@ -152,8 +166,6 @@ class ResponseAssetGroup
                 } else {
                     return 0;
                 }
-                
-
             });
 
             foreach ($assets as $object) {

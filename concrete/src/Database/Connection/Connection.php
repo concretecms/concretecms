@@ -103,9 +103,9 @@ class Connection extends \Doctrine\DBAL\Connection
         $args = func_get_args();
         if (isset($args) && isset($args[1]) && (is_string($args[1]) || is_array($args[1]))) {
             return $this->executeQuery($args[0], $args[1]);
-        } else {
-            return call_user_func_array('parent::query', $args);
         }
+
+        return parent::query(... $args);
     }
 
     /**
