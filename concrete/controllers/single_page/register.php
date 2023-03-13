@@ -172,14 +172,14 @@ class Register extends PageController
                     $mh->addParameter('siteName', tc('SiteName', \Core::make('site')->getSite()->getSiteName()));
 
                     if ($config->get('concrete.email.register_notification.address')) {
-                        if (Config::get('concrete.email.register_notification.name')) {
-                            $fromName = Config::get('concrete.email.register_notification.name');
+                        if ($config->get('concrete.email.register_notification.name')) {
+                            $fromName = $config->get('concrete.email.register_notification.name');
                         } else {
                             $fromName = t('Website Registration Notification');
                         }
-                        $mh->from(Config::get('concrete.email.register_notification.address'), $fromName);
+                        $mh->from($config->get('concrete.email.register_notification.address'), $fromName);
                     } else {
-                        $fromEmail = (string) Config::get('concrete.email.default.address');
+                        $fromEmail = (string) $config->get('concrete.email.default.address');
                         if ($fromEmail !== '') {
                             $mh->from($fromEmail, t('Website Registration Notification'));
                         }
