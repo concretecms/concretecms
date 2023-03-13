@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ccc313f986bc9469b93518130019d84c",
+    "content-hash": "03a4aaebe19d2391ae7f1851c8e26ea3",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -190,100 +190,6 @@
             "time": "2022-01-17T14:14:24+00:00"
         },
         {
-            "name": "concrete5/dependency-patches",
-            "version": "1.7.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/concretecms/dependency-patches.git",
-                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/ec219a55e89c2552efb7368175c65e68cd2a3de0",
-                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0",
-                "shasum": ""
-            },
-            "require": {
-                "mlocati/composer-patcher": "^1.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "patches": {
-                    "doctrine/annotations:1.2.7": {
-                        "Fix access array offset on value of type null": "doctrine/annotations/access-array-offset-on-null.patch"
-                    },
-                    "doctrine/orm:2.5.14": {
-                        "Fix UnitOfWork::createEntity()": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
-                        "Fix access array offset on value of type null": "doctrine/orm/access-array-offset-on-null.patch"
-                    },
-                    "egulias/email-validator:1.2.15": {
-                        "Fix access array offset on value of type null": "egulias/email-validator/access-array-offset-on-null.patch"
-                    },
-                    "zendframework/zend-stdlib:2.7.7": {
-                        "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
-                    },
-                    "sunra/php-simple-html-dom-parser:1.5.2": {
-                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
-                        "Add PHP 8.1 compatibility": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch"
-                    },
-                    "phpunit/phpunit:4.8.36": {
-                        "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
-                    },
-                    "tedivm/jshrink:1.1.0": {
-                        "Fix continue switch in Minifier": "tedivm/jshrink/fix-minifier-loop.patch",
-                        "Update to upstream version 1.3.2": "tedivm/jshrink/update-upstream-1.3.2.patch"
-                    },
-                    "zendframework/zend-code:2.6.3": {
-                        "Fix continue switch in FileGenerator and MethodReflection": "zendframework/zend-code/switch-continue.patch"
-                    },
-                    "zendframework/zend-http:2.6.0": {
-                        "Remove support for the X-Original-Url and X-Rewrite-Url headers": "zendframework/zend-http/no-x-original-url-x-rewrite.patch"
-                    },
-                    "zendframework/zend-mail:2.7.3": {
-                        "Fix idn_to_ascii deprecation warning": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch"
-                    },
-                    "zendframework/zend-validator:2.8.2": {
-                        "Fix idn_to_ascii/idn_to_utf8 deprecation warning": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch"
-                    },
-                    "lcobucci/jwt:3.4.5": {
-                        "Add PHP 8 compatibility": "lcobucci/jwt/php8-compatibility.patch"
-                    },
-                    "lcobucci/jwt:3.4.6": {
-                        "Add PHP 8 compatibility": "lcobucci/jwt/php8-compatibility.patch"
-                    },
-                    "league/url:3.3.5": {
-                        "Add PHP 8.1 compatibility": "league/url/php8.1-compatibility.patch"
-                    },
-                    "laminas/laminas-code:3.4.1": {
-                        "Add PHP 8.1 compatibility": "laminas/laminas-code/php8.1-compatibility.patch"
-                    },
-                    "anahkiasen/html-object:1.4.4": {
-                        "Add PHP 8.1 compatibility": "anahkiasen/html-object/php8.1-compatibility.patch"
-                    }
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michele Locati",
-                    "email": "michele@locati.it",
-                    "homepage": "https://mlocati.github.io",
-                    "role": "author"
-                }
-            ],
-            "description": "Patches required for concrete5 dependencies",
-            "homepage": "https://github.com/concrete5/dependency-patches",
-            "support": {
-                "issues": "https://github.com/concretecms/dependency-patches/issues",
-                "source": "https://github.com/concretecms/dependency-patches/tree/1.7.2"
-            },
-            "abandoned": "concretecms/dependency-patches",
-            "time": "2022-03-31T17:52:31+00:00"
-        },
-        {
             "name": "concrete5/doctrine-xml",
             "version": "1.2.0",
             "source": {
@@ -460,6 +366,99 @@
                 "source": "https://github.com/concrete5-forks/PHPoAuthUserData/tree/master"
             },
             "time": "2017-10-29T23:05:04+00:00"
+        },
+        {
+            "name": "concretecms/dependency-patches",
+            "version": "1.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/concretecms/dependency-patches.git",
+                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/ec219a55e89c2552efb7368175c65e68cd2a3de0",
+                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0",
+                "shasum": ""
+            },
+            "require": {
+                "mlocati/composer-patcher": "^1.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "patches": {
+                    "doctrine/annotations:1.2.7": {
+                        "Fix access array offset on value of type null": "doctrine/annotations/access-array-offset-on-null.patch"
+                    },
+                    "doctrine/orm:2.5.14": {
+                        "Fix UnitOfWork::createEntity()": "doctrine/orm/UnitOfWork-createEntity-continue.patch",
+                        "Fix access array offset on value of type null": "doctrine/orm/access-array-offset-on-null.patch"
+                    },
+                    "egulias/email-validator:1.2.15": {
+                        "Fix access array offset on value of type null": "egulias/email-validator/access-array-offset-on-null.patch"
+                    },
+                    "zendframework/zend-stdlib:2.7.7": {
+                        "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
+                    },
+                    "sunra/php-simple-html-dom-parser:1.5.2": {
+                        "Fix minus in regular expressions": "sunra/php-simple-html-dom-parser/minus-in-regular-expressions.patch",
+                        "Add PHP 8.1 compatibility": "sunra/php-simple-html-dom-parser/php8.1-compatibility.patch"
+                    },
+                    "phpunit/phpunit:4.8.36": {
+                        "Avoid each() in Getopt": "phpunit/phpunit/Getopt-each.patch"
+                    },
+                    "tedivm/jshrink:1.1.0": {
+                        "Fix continue switch in Minifier": "tedivm/jshrink/fix-minifier-loop.patch",
+                        "Update to upstream version 1.3.2": "tedivm/jshrink/update-upstream-1.3.2.patch"
+                    },
+                    "zendframework/zend-code:2.6.3": {
+                        "Fix continue switch in FileGenerator and MethodReflection": "zendframework/zend-code/switch-continue.patch"
+                    },
+                    "zendframework/zend-http:2.6.0": {
+                        "Remove support for the X-Original-Url and X-Rewrite-Url headers": "zendframework/zend-http/no-x-original-url-x-rewrite.patch"
+                    },
+                    "zendframework/zend-mail:2.7.3": {
+                        "Fix idn_to_ascii deprecation warning": "zendframework/zend-mail/fix-idn_to_ascii-deprecation-warning.patch"
+                    },
+                    "zendframework/zend-validator:2.8.2": {
+                        "Fix idn_to_ascii/idn_to_utf8 deprecation warning": "zendframework/zend-validator/fix-idn_to_-deprecation-warning.patch"
+                    },
+                    "lcobucci/jwt:3.4.5": {
+                        "Add PHP 8 compatibility": "lcobucci/jwt/php8-compatibility.patch"
+                    },
+                    "lcobucci/jwt:3.4.6": {
+                        "Add PHP 8 compatibility": "lcobucci/jwt/php8-compatibility.patch"
+                    },
+                    "league/url:3.3.5": {
+                        "Add PHP 8.1 compatibility": "league/url/php8.1-compatibility.patch"
+                    },
+                    "laminas/laminas-code:3.4.1": {
+                        "Add PHP 8.1 compatibility": "laminas/laminas-code/php8.1-compatibility.patch"
+                    },
+                    "anahkiasen/html-object:1.4.4": {
+                        "Add PHP 8.1 compatibility": "anahkiasen/html-object/php8.1-compatibility.patch"
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "michele@locati.it",
+                    "homepage": "https://mlocati.github.io",
+                    "role": "author"
+                }
+            ],
+            "description": "Patches required for concrete5 dependencies",
+            "homepage": "https://github.com/concrete5/dependency-patches",
+            "support": {
+                "issues": "https://github.com/concretecms/dependency-patches/issues",
+                "source": "https://github.com/concretecms/dependency-patches/tree/1.7.2"
+            },
+            "time": "2022-03-31T17:52:31+00:00"
         },
         {
             "name": "container-interop/container-interop",
