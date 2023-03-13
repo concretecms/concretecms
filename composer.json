@@ -12,8 +12,7 @@
     ]
   },
   "require": {
-    "wikimedia/composer-merge-plugin": "~1.3",
-    "concrete5/dependency-patches": "^1.5.0"
+    "wikimedia/composer-merge-plugin": "~1.3"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.2",
@@ -44,7 +43,7 @@
       "merge-extra": false
     },
     "allow-subpatches": [
-      "concrete5/dependency-patches"
+      "concretecms/dependency-patches"
     ]
   },
   "autoload-dev": {
