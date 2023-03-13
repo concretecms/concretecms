@@ -88,8 +88,10 @@ class Controller extends BlockController
     {
         if (!isset($this->passthruController)) {
             $b = Block::getByID($this->bOriginalID);
+            $b->setProxyBlock($this->getBlockObject());
             $bc = ($b) ? $b->getInstance() : false;
             $this->passthruController = $bc;
+            $this->passthruController->setAreaObject($this->getAreaObject());
         }
 
         return $this->passthruController;
