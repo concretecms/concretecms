@@ -98,6 +98,9 @@ class Service
             foreach ($additionalArgs as $key => $value) {
                 $args[$key] = $value;
             }
+            if (!isset($args['type']) {
+                $args['type'] = $type;
+            }
             if (isset($args['user']) && is_object($args['user'])) {
                 $u = $args['user'];
             } else {
