@@ -595,7 +595,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $submittedData .= $value->getPlainTextValue() . "\r\n\r\n";
                     }
 
-                    if (!$antispam->check($submittedData, 'form_block')) {
+                    if (!$antispam->check($submittedData, 'express_form_block')) {
                         // Remove the entry and silently fail.
                         $entityManager->refresh($entry);
                         $entityManager->remove($entry);
