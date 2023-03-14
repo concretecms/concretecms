@@ -427,6 +427,13 @@ div.ccm-form-block-design {
   }
 }
 
+// If the popover is inline in the page it adds unintentional height after the title notches and area tabs
+// Let's fix this by making them absolutely positioned.
+div.ccm-edit-mode-title-notch-wrapper > .popover,
+div.ccm-area-footer > .popover {
+  position: absolute;
+}
+
 /**
  * Edit mode in-page controls for dragging, moving blocks around
  */
