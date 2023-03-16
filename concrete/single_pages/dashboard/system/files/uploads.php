@@ -15,6 +15,7 @@ use Punic\Unit;
  * @var int|null $chunkSize
  * @var int|null $phpMaxUploadSize
  * @var int $parallelUploads
+ * @var bool $enableFilenameAsciify
  * @var Concrete\Core\Page\Page|null $maxImageSizePage
  */
 $units = [
@@ -99,6 +100,19 @@ foreach (array_reverse(array_keys($units)) as $unit) {
         <?php
     }
     ?>
+
+    <fieldset class="mt-4">
+        <legend><?= t('Sanitize Filename') ?></legend>
+        <p class="form-text"><?= t('Translate multibyte characters to ASCII characters when generating a file name (e.g. Bänke & Sitzbänke.jpg to Banke_and_Sitzbanke.jpg).') ?><br>
+            <?= t('Remove multibyte characters when this option is disabled (e.g. Concrete CMS ロゴ.jpg to Concrete_CMS_.jpg). It may be better for some languages especially using Kanji characters.') ?></p>
+        <div class="form-group">
+            <div class="form-check">
+                <?= $form->checkbox('enableFilenameAsciify', 1, $enableFilenameAsciify) ?>
+                <?= $form->label('enableFilenameAsciify', t('Enable asciify to sanitize the name of the uploaded file
+')) ?>
+            </div>
+        </div>
+    </fieldset>
 
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
