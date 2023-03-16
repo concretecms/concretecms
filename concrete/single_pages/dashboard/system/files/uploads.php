@@ -108,8 +108,7 @@ foreach (array_reverse(array_keys($units)) as $unit) {
         <div class="form-group">
             <div class="form-check">
                 <?= $form->checkbox('enableFilenameAsciify', 1, $enableFilenameAsciify) ?>
-                <?= $form->label('enableFilenameAsciify', t('Enable asciify to sanitize the name of the uploaded file
-')) ?>
+                <?= $form->label('enableFilenameAsciify', t('Enable asciify to sanitize the name of the uploaded file')) ?>
             </div>
         </div>
     </fieldset>
