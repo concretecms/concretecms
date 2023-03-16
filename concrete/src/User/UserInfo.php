@@ -440,9 +440,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
             $mh->addParameter('myPrivateMessagesURL', $urlManager->resolve(['/account/messages']));
             if ($siteConfig->get('user.profiles_enabled')) {
                 $mh->addParameter('profileURL', $this->getUserPublicProfileUrl());
-                if ($this->getAttribute('profile_private_messages_enabled')) {
-                    $mh->addParameter('replyToMessageURL', $urlManager->resolve(['/account/messages', 'reply', 'inbox', $msgID]));
-                }
+            }
+            if ($this->getAttribute('profile_private_messages_enabled')) {
+                $mh->addParameter('replyToMessageURL', $urlManager->resolve(['/account/messages', 'reply', 'inbox', $msgID]));
             }
             $mh->to($recipient->getUserEmail());
 
