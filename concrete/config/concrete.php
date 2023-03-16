@@ -888,6 +888,10 @@ return [
          * Don't resize the files with these mime types (space-separated list)
          */
         'dont_resize_mimetypes' => 'image/gif',
+        /**
+         * Enable asciify to sanitize name of uploaded files
+         */
+        'enable_filename_asciify' => true,
     ],
 
     'search_users' => [
