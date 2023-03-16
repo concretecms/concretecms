@@ -47,15 +47,16 @@ final class Version20210216184000 extends AbstractMigration implements Repeatabl
             GroupCreate::class,
         ]);
 
-        if (Category::getByHandle("group_folder") === null) {
+        $groupFolderCategory = Category::getByHandle('group_folder');
+        if (!$groupFolderCategory) {
             $groupFolderCategory = Category::add("group_folder");
-
-            // add permission access entity types to the category
-            $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group'));
-            $groupFolderCategory->associateAccessEntityType(Type::getByHandle('user'));
-            $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group_set'));
-            $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group_combination'));
         }
+
+        // add permission access entity types to the category
+        $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group'));
+        $groupFolderCategory->associateAccessEntityType(Type::getByHandle('user'));
+        $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group_set'));
+        $groupFolderCategory->associateAccessEntityType(Type::getByHandle('group_combination'));
 
         $key = Key::getByHandle('search_group_folder');
         if (!$key) {

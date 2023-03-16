@@ -1017,7 +1017,7 @@ class Group extends ConcreteObject implements \Concrete\Core\Permission\ObjectIn
         );
     }
 
-    public function setGroupExpirationByInterval($days, $hours, $minutes, $action)
+    public function setGroupExpirationByInterval(int $days, int $hours, int $minutes, $action)
     {
         $db = Database::connection();
         $interval = $minutes + ($hours * 60) + ($days * 1440);

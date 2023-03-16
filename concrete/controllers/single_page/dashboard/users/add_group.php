@@ -157,7 +157,7 @@ class AddGroup extends DashboardPageController
                     $g->setGroupExpirationByDateTime($date->translate('gUserExpirationSetDateTime'), $this->request->post('gUserExpirationAction'));
                     break;
                 case 'INTERVAL':
-                    $g->setGroupExpirationByInterval($this->request->post('gUserExpirationIntervalDays'), $this->request->post('gUserExpirationIntervalHours'), $this->request->post('gUserExpirationIntervalMinutes'), $this->request->post('gUserExpirationAction'));
+                    $g->setGroupExpirationByInterval($this->request->request->getInt('gUserExpirationIntervalDays'), $this->request->request->getInt('gUserExpirationIntervalHours'), $this->request->request->getInt('gUserExpirationIntervalMinutes'), $this->request->post('gUserExpirationAction'));
                     break;
             }
         } else {
