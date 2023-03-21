@@ -435,7 +435,7 @@ mix.then((stats) => {
     if (!stats?.compilation?.assets) {
         return;
     }
-    const UTF8_BOM = '\xEF\xBB\xBF';
+    const UTF8_BOM = new Uint8Array([0xEF, 0xBB, 0xBF]);
     const outputPath = stats.compilation.compiler.outputPath.replace(/[\/\\]$/, '') + path.sep;
     for (const relativePath in stats.compilation.assets) {
         if (!/\.(js|css|md|html|txt|php|ts)$/i.test(relativePath)) {
@@ -444,12 +444,13 @@ mix.then((stats) => {
             }
         }
         const absolutePath = outputPath + relativePath.replace(/^[\/\\]/, '');
-        let fileContents = fs.readFileSync(absolutePath, {encoding: 'utf-8'});
+        let fileContents = fs.readFileSync(absolutePath);
         let changed = false;
-        if (fileContents.startsWith(UTF8_BOM)) {
-            fileContents = fileContents.substring(UTF8_BOM.length);
+        if (fileContents.length >= UTF8_BOM.length && fileContents.compare(UTF8_BOM, 0, UTF8_BOM.length, 0, UTF8_BOM.length) === 0) {
+            fileContents = fileContents.subarray(UTF8_BOM.length);
             changed = true;
         }
+        fileContents = fileContents.toString('utf8')
         if (fileContents.includes('\r')) {
             fileContents = fileContents.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
             changed = true;
