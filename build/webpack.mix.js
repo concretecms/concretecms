@@ -435,6 +435,7 @@ mix.then((stats) => {
     if (!stats?.compilation?.assets) {
         return;
     }
+    const UTF8_BOM = '\xEF\xBB\xBF';
     const outputPath = stats.compilation.compiler.outputPath.replace(/[\/\\]$/, '') + path.sep;
     for (const relativePath in stats.compilation.assets) {
         if (!/\.(js|css|md|html|txt|php|ts)$/i.test(relativePath)) {
@@ -444,10 +445,18 @@ mix.then((stats) => {
         }
         const absolutePath = outputPath + relativePath.replace(/^[\/\\]/, '');
         let fileContents = fs.readFileSync(absolutePath, {encoding: 'utf-8'});
-        if (!fileContents.includes('\r\n')) {
+        let changed = false;
+        if (fileContents.startsWith(UTF8_BOM)) {
+            fileContents = fileContents.substring(UTF8_BOM.length);
+            changed = true;
+        }
+        if (fileContents.includes('\r')) {
+            fileContents = fileContents.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            changed = true;
+        }
+        if (!changed) {
             continue;
         }
-        fileContents = fileContents.replace(/\r\n/g, '\n');
         fs.writeFileSync(absolutePath, fileContents);
     }
 });
