@@ -3,6 +3,8 @@
  */
 let mix = require('laravel-mix');
 const path = require('path');
+const fs = require('fs');
+
 mix.override((config) => {
     delete config.watchOptions;
 });
@@ -427,6 +429,28 @@ mix.copy('node_modules/@concretecms/bedrock/assets/icons/sprites.svg', '../concr
 
 // Copy jquery ui icons into our repository
 mix.copy('node_modules/jquery-ui/themes/base/images/ui-*', '../concrete/images/');
+
+// Fix line endings
+mix.then((stats) => {
+    if (!stats?.compilation?.assets) {
+        return;
+    }
+    const outputPath = stats.compilation.compiler.outputPath.replace(/[\/\\]$/, '') + path.sep;
+    for (const relativePath in stats.compilation.assets) {
+        if (!/\.(js|css|md|html|txt|php|ts)$/i.test(relativePath)) {
+            if (!/[\/\\](license|readme)$/i.test(relativePath)) {
+                continue;
+            }
+        }
+        const absolutePath = outputPath + relativePath.replace(/^[\/\\]/, '');
+        let fileContents = fs.readFileSync(absolutePath, {encoding: 'utf-8'});
+        if (!fileContents.includes('\r\n')) {
+            continue;
+        }
+        fileContents = fileContents.replace(/\r\n/g, '\n');
+        fs.writeFileSync(absolutePath, fileContents);
+    }
+});
 
 // Turn off notifications
 mix
