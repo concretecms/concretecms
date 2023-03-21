@@ -1,0 +1,50 @@
+name: Build assets
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  build-assets:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            nodejs-version: 18
+    name: Build assets (node ${{ matrix.nodejs-version }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs-version }}
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install NodeJS dependencies
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm ci
+      - name: Build assets (dev)
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm run-script dev
+      - name: Tell git to ignore the built files
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm run-script git-skip
+      - name: Check that git thinks the repo is clean
+        run: |
+          cd "${{ github.workspace }}"
+          git diff --exit-code --name-status
+      - name: Revert changed files
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm run-script git-revert
+      - name: Check that git thinks the repo is clean
+        run: |
+          cd "${{ github.workspace }}"
+          git diff --exit-code --name-status
+      - name: Build assets (prod)
+        run: |
+          cd "${{ github.workspace }}/build"
+          npm run-script prod
