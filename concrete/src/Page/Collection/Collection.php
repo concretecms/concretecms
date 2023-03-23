@@ -138,7 +138,7 @@ class Collection extends ConcreteObject implements TrackableInterface
         /** @var Connection $db */
         $db = $app->make(Connection::class);
         $qb = $db->createQueryBuilder();
-        $qb->select('c.cID', 'p.cID')
+        $qb->select('c.cID', 'p.cID AS pcID')
             ->from('Collections', 'c')
             ->leftJoin('c', 'Pages', 'p', 'c.cID = p.cID')
             ->where('c.cHandle = :cHandle')
