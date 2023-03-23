@@ -58,7 +58,7 @@ class ItemSegmenter implements LoggerAwareInterface
                 $qb->orderBy('item.relevantDate', 'desc');
                 break;
         }
-        $qb->setParameter('currentTime', time());
+        $qb->setParameter('currentTime', new \DateTime());
 
         $items = $qb->getQuery()->execute();
         $this->logger->debug(t('%s items returned from item segmenter', count($items)));
