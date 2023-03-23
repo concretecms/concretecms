@@ -112,7 +112,6 @@ class SlotFilterer
         PossibleContentObjectCollection $possibleContentObjectCollection,
         int $slot
     ) {
-        $planner = $plannedInstance->getInstance()->getBoard()->getTemplate()->getDriver()->getLayoutPlanner();
         $objectCollection = new ObjectCollection();
         foreach($possibleContentObjectCollection->getArray() as $slot => $contentObjects) {
             if (!empty($contentObjects[0])) {
