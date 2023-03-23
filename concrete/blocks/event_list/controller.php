@@ -17,6 +17,71 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $caID;
+
+    /**
+     * @var string|null
+     */
+    public $calendarAttributeKeyHandle;
+
+    /**
+     * @var int|string|null
+     */
+    public $totalToRetrieve;
+
+    /**
+     * @var int|string|null
+     */
+    public $totalPerPage;
+
+    /**
+     * @var int|string|null
+     */
+    public $filterByTopicAttributeKeyID;
+
+    /**
+     * @var int|string|null
+     */
+    public $filterByTopicID;
+
+    /**
+     * @var string|null
+     */
+    public $filterByPageTopicAttributeKeyHandle;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $filterByFeatured;
+
+    /**
+     * @var string|null
+     */
+    public $eventListTitle;
+
+    /**
+     * @var int|string|null
+     */
+    public $linkToPage;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
+    /**
+     * @var string|null
+     */
+    public $eventPeriod;
+
+    /**
+     * @var string|null
+     */
+    public $eventOrder;
+
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 500;

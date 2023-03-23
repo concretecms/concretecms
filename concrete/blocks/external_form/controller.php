@@ -5,6 +5,11 @@ use Concrete\Core\Block\BlockController;
 
 class Controller extends BlockController
 {
+    /**
+     * @var string|null
+     */
+    public $filename;
+
     public $helpers = ['file', 'form'];
     protected $btTable = 'btExternalForm';
     protected $btInterfaceWidth = 420;

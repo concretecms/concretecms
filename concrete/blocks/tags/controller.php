@@ -10,6 +10,31 @@ use Page;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var int|string|null
+     */
+    public $targetCID;
+
+    /**
+     * @var string|null
+     */
+    public $displayMode = 'page';
+
+    /**
+     * @var int|string|null
+     */
+    public $cloudCount = 10;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     protected $btTable = 'btTags';
     protected $btInterfaceWidth = "450";
     protected $btInterfaceHeight = "439";
@@ -23,8 +48,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btWrapperClass = 'ccm-ui';
 
     public $attributeHandle = 'tags';
-    public $displayMode = 'page';
-    public $cloudCount = 10;
     public $helpers = array('navigation');
 
     /**

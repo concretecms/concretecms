@@ -100,8 +100,6 @@ class Board implements ObjectInterface, AssignableObjectInterface, \JsonSerializ
     public function __construct()
     {
         $this->data_sources = new ArrayCollection();
-        $this->items = new ArrayCollection();
-        $this->batches = new ArrayCollection();
         $this->instances = new ArrayCollection();
         $this->custom_slot_templates = new ArrayCollection();
     }

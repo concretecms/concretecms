@@ -61,6 +61,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btID;
     /** @var array */
     protected $requestArray;
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     * @var string|null
+     */
+    public $btCachedBlockRecord;
 
     /**
      * @internal
@@ -74,6 +79,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
      * @var bool
      */
     protected $supportSavingNullValues = false;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Area\Area|null
+     */
+    public $area;
 
     public function getBlockTypeInSetName()
     {

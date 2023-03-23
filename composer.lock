@@ -323,16 +323,16 @@
         },
         {
             "name": "concretecms/dependency-patches",
-            "version": "1.7.2",
+            "version": "1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concretecms/dependency-patches.git",
-                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0"
+                "reference": "8dbbdcbfe0ed7aae3dcfb0883ea00e1a0554cb7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/ec219a55e89c2552efb7368175c65e68cd2a3de0",
-                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/8dbbdcbfe0ed7aae3dcfb0883ea00e1a0554cb7a",
+                "reference": "8dbbdcbfe0ed7aae3dcfb0883ea00e1a0554cb7a",
                 "shasum": ""
             },
             "require": {
@@ -391,6 +391,9 @@
                     },
                     "anahkiasen/html-object:1.4.4": {
                         "Add PHP 8.1 compatibility": "anahkiasen/html-object/php8.1-compatibility.patch"
+                    },
+                    "wikimedia/less.php:1.8.2": {
+                        "Add PHP 8.2 compatibility": "wikimedia/less.php/fix-php-8.2-compatibility.patch"
                     }
                 }
             },
@@ -406,13 +409,13 @@
                     "role": "author"
                 }
             ],
-            "description": "Patches required for concrete5 dependencies",
-            "homepage": "https://github.com/concrete5/dependency-patches",
+            "description": "Patches required for concrete5 and Concrete CMS dependencies",
+            "homepage": "https://github.com/concretecms/dependency-patches",
             "support": {
                 "issues": "https://github.com/concretecms/dependency-patches/issues",
-                "source": "https://github.com/concretecms/dependency-patches/tree/1.7.2"
+                "source": "https://github.com/concretecms/dependency-patches/tree/1.7.4"
             },
-            "time": "2022-03-31T17:52:31+00:00"
+            "time": "2023-03-14T20:25:27+00:00"
         },
         {
             "name": "concretecms/doctrine-xml",

@@ -36,6 +36,7 @@ class FailedTransportManager extends TransportManager
         return new class($this->failureRoutes, $this->senders) implements ContainerInterface {
 
             protected $routes;
+            protected $senders;
 
             public function __construct($routes, $senders)
             {

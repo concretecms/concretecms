@@ -9,7 +9,7 @@ use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 abstract class AbstractPageStructureRoutine extends AbstractRoutine
 {
 
-    public function setupPageNodeOrder($pageNodeA, $pageNodeB)
+    public static function setupPageNodeOrder($pageNodeA, $pageNodeB)
     {
         $pathA = (string) $pageNodeA['path'];
         $pathB = (string) $pageNodeB['path'];

@@ -35,7 +35,9 @@ class ImportPageStructureRoutine extends AbstractPageStructureRoutine implements
                 $nodes[] = $p;
                 ++$i;
             }
-            usort($nodes, array('static', 'setupPageNodeOrder'));
+            usort($nodes, static function($nodeA, $nodeB): int {
+                return static::setupPageNodeOrder($nodeA, $nodeB);
+            });
             if (isset($this->home)) {
                 $home = $this->home;
                 $siteTree = $this->home->getSiteTreeObject();

@@ -14,6 +14,41 @@ use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $filterByParent;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $redirectToResults;
+
+    /**
+     * @var int|string|null
+     */
+    protected $cParentID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $cTargetID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $ptID;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
+    /**
      * @var int
      */
     protected $btInterfaceWidth = 400;
@@ -39,16 +74,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btTable = 'btDateNavigation';
 
     /**
-     * @var int|null
-     */
-    protected $cTargetID;
-
-    /**
-     * @var int|null
-     */
-    protected $ptID;
-
-    /**
      * @var string|int|null
      */
     protected $selectedYear;
@@ -57,11 +82,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string|int|null
      */
     protected $selectedMonth;
-
-    /**
-     * @var int|null
-     */
-    protected $cParentID;
 
     /**
      * @return string[]

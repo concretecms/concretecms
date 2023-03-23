@@ -45,6 +45,9 @@ jobs:
           - php-version: 8.1
             operating-system: "ubuntu-latest"
             dependencies: "locked"
+          - php-version: 8.2
+            operating-system: "ubuntu-latest"
+            dependencies: "locked"
 
     steps:
       - name: Enable code coverage
