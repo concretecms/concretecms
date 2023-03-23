@@ -51,13 +51,14 @@ class ItemSegmenter implements LoggerAwareInterface
         switch ($board->getSortBy()) {
             case $board::ORDER_BY_RELEVANT_DATE_ASC:
                 $qb->orderBy('item.relevantDate', 'asc');
-                $qb->andWhere($qb->expr()->gte('item.relevantDate', time()));
+                $qb->andWhere($qb->expr()->gte('item.relevantDate', ':currentTime'));
                 break;
             default:
-                $qb->andWhere($qb->expr()->lte('item.relevantDate', time()));
+                $qb->andWhere($qb->expr()->lte('item.relevantDate', ':currentTime'));
                 $qb->orderBy('item.relevantDate', 'desc');
                 break;
         }
+        $qb->setParameter('currentTime', new \DateTime());
 
         $items = $qb->getQuery()->execute();
         $this->logger->debug(t('%s items returned from item segmenter', count($items)));
