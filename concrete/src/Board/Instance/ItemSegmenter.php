@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Board\Instance;
 
 use Concrete\Core\Entity\Board\Instance;
@@ -54,9 +53,9 @@ class ItemSegmenter implements LoggerAwareInterface
                 $qb->orderBy('item.relevantDate', 'asc');
                 $qb->andWhere($qb->expr()->gte('item.relevantDate', ':currentTime'));
                 break;
-                default:
-                $qb->orderBy('item.relevantDate', 'desc');
+            default:
                 $qb->andWhere($qb->expr()->lte('item.relevantDate', ':currentTime'));
+                $qb->orderBy('item.relevantDate', 'desc');
                 break;
         }
         $qb->setParameter('currentTime', time());
@@ -89,7 +88,7 @@ class ItemSegmenter implements LoggerAwareInterface
     protected function filterItemsByDataSource(Instance $instance, array $items)
     {
         $configuredDataSources = $instance->getBoard()->getDataSources();
-        foreach ($configuredDataSources as $configuredDataSource) {
+        foreach($configuredDataSources as $configuredDataSource) {
             $configuration = $configuredDataSource->getConfiguration();
             $dataSource = $configuredDataSource->getDataSource();
             $dataSourceDriver = $dataSource->getDriver();
@@ -100,4 +99,6 @@ class ItemSegmenter implements LoggerAwareInterface
         }
         return $items;
     }
+
+
 }
