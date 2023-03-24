@@ -34,14 +34,14 @@ $buttonText = t("Add");
                     <div class="form-check">
                         <?=$form->radio('sortBy', 'relevant_date_asc', $sortBy)?>
                         <label class="form-check-label" for="sortBy1">
-                            <?=t('Ascending Date.')?>
+                            <?=t('Ascending Date.') . ' '. t('(Older then now are not visible)')?>
                         </label>
                     </div>
 
                     <div class="form-check">
                         <?=$form->radio('sortBy', 'relevant_date_desc', $sortBy)?>
                         <label class="form-check-label" for="sortBy2">
-                            <?=t('Descending Date.')?>
+                            <?=t('Descending Date.') . ' '. t('(Newer then now are not visible)')?>
                         </label>
                     </div>
                 </div>
