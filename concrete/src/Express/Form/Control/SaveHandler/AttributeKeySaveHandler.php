@@ -13,6 +13,9 @@ class AttributeKeySaveHandler implements SaveHandlerInterface
     {
         $controller = $control->getAttributeKey()->getController();
         $controller->setAttributeKey($control->getAttributeKey());
+        if (method_exists($controller, 'setAttributeObject')) {
+            $controller->setAttributeObject($entry);
+        }
         $value = $controller->createAttributeValueFromRequest();
         $entry->setAttribute($control->getAttributeKey(), $value);
     }

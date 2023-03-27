@@ -162,6 +162,9 @@ class CollectionAttributeControl extends Control
         $ak = $this->getAttributeKeyObject();
         if (is_object($ak)) {
             $controller = $ak->getController();
+            if (method_exists($controller, 'setAttributeObject')) {
+                $controller->setAttributeObject($c->getVersionObject());
+            }
             $value = $controller->createAttributeValueFromRequest();
             $c->setAttribute($ak, $value);
         }

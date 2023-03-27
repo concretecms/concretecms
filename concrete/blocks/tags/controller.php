@@ -167,6 +167,9 @@ class Controller extends BlockController implements UsesFeatureInterface
             if (!$this->isValidStack($c)) {
                 $nvc = $c->getVersionToModify();
                 $controller = $ak->getController();
+                if (method_exists($controller, 'setAttributeObject')) {
+                    $controller->setAttributeObject($nvc);
+                }
                 $value = $controller->createAttributeValueFromRequest();
                 $nvc->setAttribute($ak, $value);
                 $nvc->refreshCache();
