@@ -3,7 +3,7 @@
 namespace Concrete\Core\Support\CodingStyle;
 
 use PhpCsFixer\FixerFactory;
-use PhpCsFixer\RuleSet;
+use PhpCsFixer\RuleSet\RuleSet;
 use PhpCsFixer\WhitespacesFixerConfig;
 
 class PhpFixerRuleResolver
@@ -92,6 +92,9 @@ class PhpFixerRuleResolver
 
         // Pre- or post-increment and decrement operators should be used if possible.
         'increment_style' => ['style' => 'post'],
+        
+        // Changes spaces and semicolons in inline PHP tags.
+        'ConcreteCMS/inline_tag' => true,
 
         // Replaces `is_null($var)` expression with `null === $var`.
         'is_null' => ['use_yoda_style' => false],
@@ -474,6 +477,12 @@ class PhpFixerRuleResolver
             // Replaces `dirname(__FILE__)` expression with equivalent `__DIR__` constant.
             'dir_constant' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '5.3') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
 
+            // Replaces short-echo `<?=` with long format `<?php echo`/`<?php print` syntax, or vice-versa.
+            'echo_tag_syntax' => [
+                'format' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '5.4') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? 'long' : 'short',
+                'long_function' => 'echo',
+            ],
+
             // Add curly braces to indirect variables to make them clear to understand. Requires PHP >= 7.0.
             'explicit_indirect_variable' => ($minimumPhpVersion !== '' && version_compare($minimumPhpVersion, '7.0') < 0) || $hasFlag(PhpFixer::FLAG_OLDPHP) ? false : true,
 
@@ -538,7 +547,7 @@ class PhpFixerRuleResolver
     public function getFixers(array $rules)
     {
         return $this->getFixerFactory()
-            ->useRuleSet(RuleSet::create($rules))
+            ->useRuleSet(new RuleSet($rules))
             ->setWhitespacesConfig(new WhitespacesFixerConfig())
             ->getFixers()
         ;
@@ -550,7 +559,12 @@ class PhpFixerRuleResolver
     protected function getFixerFactory()
     {
         if (empty($this->fixerFactory->getFixers())) {
-            $this->fixerFactory->registerBuiltInFixers();
+            $this->fixerFactory
+                ->registerBuiltInFixers()
+                ->registerCustomFixers([
+                    new Fixer\InlineTagFixer(),
+                ])
+            ;
         }
 
         return $this->fixerFactory;
