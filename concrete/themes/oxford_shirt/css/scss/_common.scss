@@ -1,0 +1,71 @@
+// Resides within Abstracts directory but has to be imported first so that we can import bedrock before the rest of the theme. 
+@import "abstracts/shared-variables";
+
+// This comes after shared variables so we can do things like define new button types in _shared-variables.scss which bootstrap will automatically create
+@import "@concretecms/bedrock/assets/bedrock/scss/frontend";
+
+/* Abstracts - contains no actual styles, just Sass mechanisms that help define styles in other directories (sometimes called "helpers"). This includes things like global variables, functions, and mixins. Each of these categories should be placed in their own appropriately-named partial file. */
+@import "abstracts/headings";
+
+/* Base - contains boilerplate used throughout an entire site. This includes project-wide typography styles, and stylesheets that universally reset or normalize default CSS. */
+@import "base/font-smoothing";
+@import "base/headings";
+@import "base/page";
+
+/* Assets - Styles for small, reusable pieces of the site should reside here (think blocks and block templates, navigation, buttons, forms, images, etc. Import Base Assets when required, before custom styles in the order */
+@import "assets/account/navigation";
+@import "assets/accordions/accordion";
+@import "assets/basics/feature";
+@import "assets/basics/feature-link";
+@import "assets/basics/feature_link/top-link";
+@import "assets/basics/page-title";
+@import "assets/basics/page_title/byline";
+@import "assets/calendar/calendar-event";
+@import "assets/calendar/calendar";
+@import "assets/content/content";
+@import "@concretecms/bedrock/assets/conversations/scss/frontend/frontend"; // Import base Conversation stylesheets before custom conversation styles
+@import "assets/conversations/core-conversation";
+@import "@concretecms/bedrock/assets/desktop/scss/frontend/frontend";
+@import "@concretecms/bedrock/assets/documents/scss/frontend/frontend"; // Import base Documents stylesheets before adding additional styles below
+@import "assets/documents/document-library";
+@import "assets/express_forms/express-forms";
+@import "assets/express_forms/express-forms/simple-form";
+@import "assets/faq/faq";
+@import "@concretecms/bedrock/assets/imagery/scss/frontend/frontend"; // Import base Imagery stylesheets before custom imagery code
+@import "assets/imagery/figure";
+@import "assets/imagery/gallery";
+@import "assets/imagery/gallery/magnific_popup";
+@import "assets/imagery/hero-image";
+@import "assets/imagery/hero-image/offset-title";
+@import "assets/imagery/image-slider";
+@import "assets/imagery/image-slider/default-v2";
+@import "assets/navigation/breadcrumb";
+@import "assets/navigation/next-previous";
+@import "assets/navigation/next_previous/simple-next-prev";
+@import "assets/navigation/next_previous/no-thumb-next-prev";
+@import "assets/navigation/page_list/blog-entry-grid";
+@import "assets/navigation/page_list/page-list-simple";
+@import "assets/navigation/pagination";
+@import "assets/navigation/top-navigation-bar";
+@import "assets/search/search";
+@import "assets/social/share-this-page";
+@import "assets/social/survey";
+@import "@concretecms/bedrock/assets/testimonials/scss/frontend/frontend"; // Import base Testimonail stylesheets before custom testimonial code
+@import "assets/testimonials/testimonial";
+@import "assets/testimonials/testimonial/large-avatar";
+
+/* Layout - contains styles for different aspects of the site's structural layout (think of areas like headers, footers, containers, etc.) */
+@import "layout/body";
+@import "layout/breadcrumbs";
+@import "layout/containers/shared";
+@import "layout/containers/light-stripe";
+@import "layout/containers/two-column-light";
+@import "layout/footer";
+@import "layout/header";
+
+/* Pages - is where page-specific styles reside. For instance, if a project contained several style rules that are only ever used on the "Contact Us" page, they'd live here in a _contact.scss file. */
+@import "pages/blog/blog-entry";
+@import "pages/blog/blog";
+@import "@concretecms/bedrock/assets/profile/scss/frontend/frontend"; // Import base Profile stylesheets before custom styles
+@import "pages/profile/profile";
+@import "pages/profile/directory";

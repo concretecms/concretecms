@@ -1,0 +1,24 @@
+div.theme-oxford-shirt {
+  div.ccm-block-next-previous.simple-next-prev {
+    display: flex;
+    justify-content: space-between;
+    .ccm-block-next-previous-previous-link {
+      width: 47.5%;
+      .btn-light {
+        content: 'Prev';
+      }
+      @include media-breakpoint-up(md) {
+        width: 35%;
+        .btn-light {
+          content: 'Previous';
+        }
+      }
+    }
+    .ccm-block-next-previous-next-link {
+      width: 47.5%;
+      @include media-breakpoint-up(md) {
+        width: 60%; 
+      }
+    }
+  }
+}

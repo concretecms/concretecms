@@ -1,0 +1,26 @@
+div.theme-oxford-shirt {
+    .ccm-block-page-list-wrapper.simple-page-list {
+        .ccm-block-page-list-pages {
+            .ccm-block-page-list-page-entry {
+                display: flex;
+                margin-bottom: 1rem;
+                border-bottom: 1px solid $grey-accent;
+                .ccm-block-page-list-page-entry-text {
+                    margin-bottom: 1rem;
+                    .ccm-block-page-list-title {
+                        @extend h3;
+                        @include rfs(1.25rem);
+                        font-weight: 700;
+                    }
+                    .ccm-block-page-list-description {
+                        color: $dim;
+                    }
+                }
+                .ccm-block-page-list-page-entry-read-more {
+                    display: flex;
+                    justify-content: end;
+                }
+            }
+        }
+    }
+}

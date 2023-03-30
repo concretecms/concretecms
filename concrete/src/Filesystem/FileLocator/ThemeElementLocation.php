@@ -20,7 +20,7 @@ class ThemeElementLocation extends ThemeLocation
                 . $this->themeHandle
                 . '/'
                 . DIRNAME_ELEMENTS;
-        } else if ($this->themeHandle === 'elemental' || $this->themeHandle === 'atomik') {
+        } else if ($this->themeHandle === 'elemental' || $this->themeHandle === 'atomik' || $this->themeHandle === 'oxford_shirt') {
             return DIR_BASE_CORE
                 . '/'
                 . DIRNAME_THEMES
@@ -59,7 +59,7 @@ class ThemeElementLocation extends ThemeLocation
             . $this->themeHandle
             . '/'
             . DIRNAME_ELEMENTS;
-        } else if ($this->themeHandle === 'elemental' || $this->themeHandle === 'atomik') {
+        } else if ($this->themeHandle === 'elemental' || $this->themeHandle === 'atomik' || $this->themeHandle === 'oxford_shirt') {
             return ASSETS_URL
                 . '/'
                 . DIRNAME_THEMES
