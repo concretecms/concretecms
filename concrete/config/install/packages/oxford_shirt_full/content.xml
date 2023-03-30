@@ -1366,7 +1366,7 @@
                                              <data table="btDocumentLibrary">
                                                   <record>
                                                        <setIds><![CDATA[[]]]></setIds>
-                                                       <folderID>{ccm:export:filefolder:/Documents}</folderID>
+                                                       <folderID>{ccm:export:filefolder:/}</folderID>
                                                        <setMode><![CDATA[any]]></setMode>
                                                        <onlyCurrentUser><![CDATA[0]]></onlyCurrentUser>
                                                        <tags><![CDATA[]]></tags>
