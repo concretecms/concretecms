@@ -1,0 +1,19 @@
+div.theme-oxford-shirt {
+    div.ccm-block-page-title-byline {
+        text-align: left;
+        @include media-breakpoint-up(sm) {
+            text-align: center;
+        }
+        .author-date-wrapper  {
+            display: flex;
+            @include media-breakpoint-up(sm) {
+                justify-content: center;
+            }
+        }
+        .author-byline-author {
+            text-transform: capitalize;
+        }
+    }
+}
+  
+  
