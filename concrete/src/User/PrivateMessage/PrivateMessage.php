@@ -24,7 +24,7 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
     public $msgDateCreated;
     public $msgSubject;
     public $msgBody;
-    
+
     public function getNotificationDate()
     {
         return \Core::make('date')->toDateTime($this->getMessageDateAdded());
