@@ -553,6 +553,6 @@ class PhpFixerRuleResolver
             $this->fixerFactory->registerBuiltInFixers();
         }
 
-        return $this->fixerFactory;
+        return clone $this->fixerFactory;
     }
 }
