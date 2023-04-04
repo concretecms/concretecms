@@ -2,12 +2,15 @@
 namespace Concrete\Core\Form\Service;
 
 use Concrete\Core\Application\Application;
+use Concrete\Core\Feature\Features;
+use Concrete\Core\Feature\Traits\HandleRequiredFeaturesTrait;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Localization\Service\CountryList;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Utility\Service\Arrays as ArraysService;
 use Concrete\Core\Utility\Service\Text as TextService;
+use Concrete\Core\Page\Page;
 
 /**
  * Helpful functions for working with forms. Includes HTML input tags and the like.
@@ -22,6 +25,9 @@ use Concrete\Core\Utility\Service\Text as TextService;
  */
 class Form
 {
+
+    use HandleRequiredFeaturesTrait;
+
     /**
      * Internal counter used to generate unique IDs for radio inputs with the same name.
      *
@@ -592,6 +598,11 @@ class Form
         $str .= '</select>';
         if ($configuration['linkStateProvinceField']) {
             $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $miscFields['id'] ?? $key);
+
+            $c = Page::getCurrentPage();
+            $theme = $c->getCollectionThemeObject();
+            $this->requireFeaturesIfNotPresentInTheme([Features::FORMS], $theme);
+
             $config = [
                 'hideUnusedStateProvinceField' => (bool) $configuration['hideUnusedStateProvinceField'],
                 'clearStateProvinceOnChange' => (bool) $configuration['clearStateProvinceOnChange'],
