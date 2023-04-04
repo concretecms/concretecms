@@ -99,7 +99,9 @@ class Controller extends AbstractController implements AttributeInterface
     }
 
     /**
-     * @param ObjectInterface $object
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\AttributeInterface::setAttributeObject()
      */
     public function setAttributeObject(ObjectInterface $object)
     {

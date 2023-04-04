@@ -109,4 +109,9 @@ interface AttributeInterface
      * @return string
      */
     public function getAttributeValueClass();
+
+    /**
+     * Set the subject for which the value is being managed.
+     */
+    public function setAttributeObject(ObjectInterface $object);
 }
