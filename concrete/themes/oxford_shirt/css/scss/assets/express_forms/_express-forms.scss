@@ -1,0 +1,125 @@
+div.ccm-page.theme-oxford-shirt {
+    .ccm-block-express-form {
+        // Captcha 
+        .form-group.captcha {
+            #ccm-captcha-code.form-control {
+                background-color: $form-control-bg;
+            }
+        }
+        //Buttons 
+        .btn-primary {
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+        .btn-secondary {
+            color: #fff;
+        }
+        // Form
+        .ccm-dashboard-express-form {
+            fieldset {
+                .form-check-input, .form-control, .form-select {
+                    background-color: $form-control-bg;
+                    &:focus {
+                        border-color: $secondary;
+                        box-shadow: 0 0 0 0.25rem rgba($secondary, 0.25);
+                    }
+                }
+                .form-label {
+                    font-family: $display-font-family;
+                    @include font-size($font-size-base);
+                    color: $default-fc;
+                    font-weight: 500;
+                    letter-spacing: -0.2px;
+                }
+                .form-check {
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    .form-check-input {
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        border: 1px solid $grey-accent;
+                        &:checked {
+                            background-color: $secondary;
+                            border-color: $secondary;
+                        }
+                        &:checked[type=radio] {
+                            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3e%3cpath d='M12.0007 1.66668L4.00065 9.66668L0.333984 6.00002L1.27398 5.06002L4.00065 7.78002L11.0607 0.726685L12.0007 1.66668Z' fill='%23FFF'/%3e%3c/svg%3e");
+                            background-size: 12px 12px;
+                        }
+                        &:focus {
+                            box-shadow: 0 0 0 0.25rem rgba($secondary, 0.25);
+                        }
+                    }
+                    .form-check-label {
+                        margin-left: 1rem;
+                    }
+                }
+                //Input Group Text 
+                .input-group-text {
+                    background-color: $form-control-bg;
+                }
+                // Rating Stars
+                .fa-star {
+                    font-size: 1.4rem;
+                    color: $primary;
+                }
+                .fa-star.fas {
+                    color: $primary;
+                }
+                //Rich Text Editor
+                .cke_reset {
+                    background-color: $form-control-bg;
+                }
+                .cke {
+                    border-radius: 0.75rem;
+                    overflow: hidden;
+                    .cke_inner {
+                        border-radius: 0.75rem;
+                        .cke_top {
+                            background-color: $secondary;
+                            //color: #fff;
+                            a.cke_button_off:hover, a.cke_button_off:focus, a.cke_button_off:active {
+                                background: $secondary;
+                                border-color: $dark;
+                                border-radius: 4px;
+                            }
+                            a.cke_button_on {
+                                background: $secondary;
+                                border-color: $dark;
+                                border-radius: 4px;
+                            }
+                            .cke_combo_on a.cke_combo_button, .cke_combo_off a.cke_combo_button:hover, .cke_combo_off a.cke_combo_button:focus, .cke_combo_off a.cke_combo_button:active {
+                                background: $secondary;
+                                border-color: $dark;
+                                border-radius: 4px;
+                            }
+                            .cke_toolgroup a.cke_button:last-child:after, .cke_toolgroup a.cke_button.cke_button_disabled:hover:last-child:after, .cke_combo:after {
+                                border-color: $dark;
+                            }
+                            .cke_toolbox {
+                                .cke_toolbar {
+                                    .cke_button_label {
+                                        color: $dark;
+                                        font-family: $display-font-family;
+                                    }
+                                    .cke_combo_text {
+                                        color: $dark;
+                                        font-family: $display-font-family;
+                                    }
+                                    .cke_combo_arrow {
+                                        border-top: 3px solid $dark;
+                                    }
+                                }
+                            }
+                        }
+                        .cke_bottom {
+                            border-top: none;
+                            background-color: transparent;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

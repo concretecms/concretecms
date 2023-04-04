@@ -1,0 +1,149 @@
+div.theme-oxford-shirt {
+  .ccm-block-document-library-wrapper-707 {
+    overflow: scroll;
+  }
+  // Header 
+  .ccm-block-document-library {
+    .ccm-document-library-search {
+      background-color: $form-control-bg;
+      &::placeholder {
+        font-style: normal;
+      }
+    }
+  }
+  // Advanced Search
+  .ccm-block-document-library-advanced-search-fields {
+    .form-control, .form-select {
+      background-color: $form-control-bg;
+    }
+    
+    #type.form-select, #extension.form-select {
+      width: 220px!important;
+    }
+  }
+  // Buttons
+  a.ccm-block-document-library-advanced-search::after {
+    display: none;
+  }
+  a.ccm-block-document-library-add-files::after {
+    display: none;
+  }
+  a.ccm-block-document-library-add-files {
+    color: #fff;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  a.ccm-block-document-library-advanced-search{
+    margin-bottom: 0.5rem;
+    @include media-breakpoint-up(sm) {
+      margin-bottom: 0;
+    }
+    @include media-breakpoint-up(lg) {
+      width: auto;
+    }
+  }
+  a.ccm-block-document-library-advanced-search, a.ccm-block-document-library-add-files {
+    float: none;
+    margin-left: 0;
+    width: 100%;
+    @include media-breakpoint-up(lg) {
+      width: auto;
+    }
+  }
+  a.ccm-block-document-library-add-files::before {
+    content: '+';
+    margin-right: 0.5rem;
+  }
+  a.ccm-block-document-library-advanced-search-open::after {
+    border-color: transparent transparent $primary;
+  }
+  a.ccm-block-document-library-add-files-open::after {
+    border-color: transparent transparent $white;
+  }
+  // Breadcrumb 
+  nav {
+    .breadcrumb {
+      .breadcrumb-item {
+        margin-right: 0;
+        &:before {
+          display: none;
+        }
+      }
+    }
+  }
+  //Table
+  table {
+    thead {
+      border-bottom: 1px solid $grey-accent;
+      th.ccm-block-document-library-active-sort-asc a::after, th.ccm-block-document-library-active-sort-asc span::after {
+        border-color: transparent transparent $grey-accent;
+      }
+      th.ccm-block-document-library-active-sort-desc a::after, th.ccm-block-document-library-active-sort-desc span::after {
+        border-color: $grey-accent transparent transparent;
+      }
+      th {
+        border-bottom: none;
+        @include media-breakpoint-down(sm) {
+          display: none;
+        }
+        a {
+          color: $dim;
+          font-weight: 500;
+          transition: 0.2s;
+          &:hover {
+            color: $link-color;
+            transition: 0.2s;
+          }
+        }
+      }
+    }
+    tbody {
+      tr {
+        vertical-align: middle;
+        border-bottom: transparent;
+        a {
+          color: $default-fc;
+          transition: 0.2s;
+          &:hover {
+            color: $link-color;
+            transition: 0.2s;
+          }
+        }
+        td {
+          display: -webkit-box;
+          @include media-breakpoint-up(sm) {
+            display: table-cell;
+          }
+          .ccm-block-document-library-icon-folder {
+            padding: 1rem;
+            font-size: 1.5rem;
+            color: $secondary;
+            background-color: #ECF6F8;
+            border-radius: 8px;
+            border-bottom: 0;
+            border-bottom-width: 0;
+      
+          }
+        }
+      }
+    }
+    img {
+      border-radius: 8px;
+      width: 56px;
+      height: 56px;
+      overflow-clip-margin: content-box;
+      overflow: clip;
+      object-fit: cover;
+    }
+  }
+  th.ccm-block-document-library-column-thumbnail {
+    span {
+      display: none;
+    }
+  }
+}
+
+// Date Picker Font Color
+.ui-datepicker .ui-datepicker-title {
+  color: $dark;
+}

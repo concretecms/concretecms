@@ -1,0 +1,21 @@
+div.theme-oxford-shirt {
+    div.ccm-block-next-previous.no-thumbnail {
+        .ccm-block-next-previous-header {
+            h4 {
+                transition: 0.3s;
+                color: $secondary;
+            }
+            
+            &:hover {
+                h4 {
+                    transition: 0.3s;
+                    color: var(--bs-link-hover-color);
+                }
+            }
+        }
+        .ccm-block-next-previous-previous, .ccm-block-next-previous-next {
+            max-width: 200px;
+          }
+    }
+}
+  

@@ -1,0 +1,131 @@
+<concrete5-cif version="1.0">
+    <area name="Main">
+        <blocks>
+            <block type="core_theme_documentation_breadcrumb" name="">
+                <style>
+                    <backgroundColor/>
+                    <backgroundRepeat/>
+                    <backgroundSize/>
+                    <backgroundPosition/>
+                    <borderWidth/>
+                    <borderColor/>
+                    <borderStyle/>
+                    <borderRadius/>
+                    <baseFontSize/>
+                    <alignment/>
+                    <textColor/>
+                    <linkColor/>
+                    <paddingTop/>
+                    <paddingBottom/>
+                    <paddingLeft/>
+                    <paddingRight/>
+                    <marginTop/>
+                    <marginBottom/>
+                    <marginLeft/>
+                    <marginRight/>
+                    <rotate/>
+                    <boxShadowHorizontal/>
+                    <boxShadowVertical/>
+                    <boxShadowBlur/>
+                    <boxShadowSpread/>
+                    <boxShadowColor/>
+                    <customClass>mt-5</customClass>
+                    <customID/>
+                    <customElementAttribute/>
+                    <hideOnExtraSmallDevice/>
+                    <hideOnSmallDevice/>
+                    <hideOnMediumDevice/>
+                    <hideOnLargeDevice/>
+                </style>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h1>Calendar & Events</h1>
+
+<p class="lead">Turn your site into a collaborative calendar with the following block types.</p>
+<p>(Note: you will have to modify the existing block types within this documentation to point to your installed calendar and its events.</p>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Calendar</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="calendar" name="">
+                <data table="btCalendar">
+                    <record>
+                        <caID><![CDATA[0]]></caID>
+                        <chooseCalendar><![CDATA[]]></chooseCalendar>
+                        <calendarAttributeKeyHandle><![CDATA[]]></calendarAttributeKeyHandle>
+                        <filterByTopicAttributeKeyID><![CDATA[0]]></filterByTopicAttributeKeyID>
+                        <filterByTopicID><![CDATA[0]]></filterByTopicID>
+                        <viewTypes><![CDATA[["month","basicWeek","basicDay"]]]></viewTypes>
+                        <viewTypesOrder>
+                            <![CDATA[["month_Month","basicWeek_Week","basicDay_Day"]]]></viewTypesOrder>
+                        <defaultView><![CDATA[month]]></defaultView>
+                        <navLinks><![CDATA[0]]></navLinks>
+                        <eventLimit><![CDATA[0]]></eventLimit>
+                        <lightboxProperties><![CDATA[[]]]></lightboxProperties>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Event List</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="event_list" name="">
+                <data table="btEventList">
+                    <record>
+                        <caID><![CDATA[0]]></caID>
+                        <chooseCalendar><![CDATA[]]></chooseCalendar>
+                        <calendarAttributeKeyHandle><![CDATA[]]></calendarAttributeKeyHandle>
+                        <totalToRetrieve><![CDATA[9]]></totalToRetrieve>
+                        <totalPerPage><![CDATA[3]]></totalPerPage>
+                        <filterByTopicAttributeKeyID><![CDATA[0]]></filterByTopicAttributeKeyID>
+                        <filterByTopic>none</filterByTopic>
+                        <filterByTopicID><![CDATA[0]]></filterByTopicID>
+                        <filterByPageTopicAttributeKeyHandle><![CDATA[]]></filterByPageTopicAttributeKeyHandle>
+                        <filterByFeatured><![CDATA[0]]></filterByFeatured>
+                        <eventListTitle><![CDATA[Featured Events]]></eventListTitle>
+                        <linkToPage><![CDATA[0]]></linkToPage>
+                        <titleFormat><![CDATA[h5]]></titleFormat>
+                    </record>
+                </data>
+            </block>
+            <block type="content" name="">
+                <data table="btContentLocal">
+                    <record>
+                        <content><![CDATA[<h2 class="text-primary">Calendar Event</h2>
+]]></content>
+                    </record>
+                </data>
+            </block>
+            <block type="calendar_event" name="">
+                <data table="btCalendarEvent">
+                    <record>
+                        <mode><![CDATA[S]]></mode>
+                        <calendarEventAttributeKeyHandle><![CDATA[]]></calendarEventAttributeKeyHandle>
+                        <calendarID><![CDATA[0]]></calendarID>
+                        <eventID><![CDATA[0]]></eventID>
+                        <displayEventAttributes><![CDATA[[]]]></displayEventAttributes>
+                        <allowExport>1</allowExport>
+                        <enableLinkToPage><![CDATA[0]]></enableLinkToPage>
+                        <displayEventName>1</displayEventName>
+                        <displayEventDate>1</displayEventDate>
+                        <displayEventDescription>1</displayEventDescription>
+                    </record>
+                </data>
+            </block>
+        </blocks>
+    </area>
+</concrete5-cif>
