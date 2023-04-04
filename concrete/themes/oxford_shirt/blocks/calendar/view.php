@@ -35,7 +35,7 @@ if ($c->isEditMode()) {
                 header: {
                     left: 'prev title next today',
                     center: '',
-                    right: '<?//= $viewTypeString ?: ''; ?>'
+                    right: ''
                 },
                 locale: <?= json_encode(Localization::activeLanguage()); ?>,
                 views: {
