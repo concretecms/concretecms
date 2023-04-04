@@ -14,6 +14,16 @@ class PrivateMessage extends ConcreteObject implements SubjectInterface
     protected $authorName = false;
     protected $mailbox;
     protected $attachments = [];
+    public $uID;
+    public $msgIsUnread;
+    public $msgIsNew;
+    public $msgIsReplied;
+    public $msgID;
+    public $uAuthorID;
+    public $uToID;
+    public $msgDateCreated;
+    public $msgSubject;
+    public $msgBody;
 
     public function getNotificationDate()
     {

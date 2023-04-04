@@ -113,31 +113,33 @@ class Controller extends BlockController implements UsesFeatureInterface
             $controller = $type->getController();
             $controller->setAttributeKey($ak);
             $items = $controller->getOptions();
-            if ($this->cloudCount > 0 && count($items) > 0) {
-                $i = 1;
-                foreach ($items as $item) {
-                    $options[] = $item;
-                    if ($i >= $this->cloudCount) {
-                        break;
-                    }
-                    ++$i;
-                }
-            } else {
-                $options = $items;
-            }
         } else {
             $c = Page::getCurrentPage();
             $av = $c->getAttributeValueObject($ak);
             $controller = $ak->getController();
             $attributeValue = $c->getAttribute($ak->getAttributeKeyHandle());
             if (is_object($attributeValue)) {
-                $options = $attributeValue->getSelectedOptions();
+                $items = $attributeValue->getSelectedOptions();
             }
         }
 
         if ($this->targetCID > 0) {
             $target = Page::getByID($this->targetCID);
             $this->set('target', $target);
+        }
+
+        $options = [];
+        if ($this->cloudCount > 0 && count($items) > 0) {
+            $i = 1;
+            foreach ($items as $item) {
+                $options[] = $item;
+                if ($i >= $this->cloudCount) {
+                    break;
+                }
+                ++$i;
+            }
+        } else {
+            $options = $items;
         }
 
         // grab selected tag, if we're linking to a page with a tag block on it.

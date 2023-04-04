@@ -524,6 +524,10 @@ return [
             ['css', 'css/features/faq/frontend.css', ['minify' => false]],
         ],
 
+        'feature/forms/frontend' => [
+            ['javascript', 'js/features/forms/frontend.js', ['minify' => false]],
+        ],
+
         'feature/basics/frontend' => [
             ['css', 'css/features/basics/frontend.css', ['minify' => false]],
         ],
@@ -726,6 +730,12 @@ return [
         'feature/faq/frontend' => [
             [
                 ['css', 'feature/faq/frontend'],
+            ],
+        ],
+
+        'feature/forms/frontend' => [
+            [
+                ['javascript', 'feature/forms/frontend'],
             ],
         ],
 

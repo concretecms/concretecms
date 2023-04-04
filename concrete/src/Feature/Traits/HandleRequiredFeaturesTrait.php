@@ -21,26 +21,38 @@ trait HandleRequiredFeaturesTrait
      */
     protected function handleRequiredFeatures($controller, Theme $theme): void
     {
-        $logger = app(LoggerFactory::class)->createLogger(Channels::CHANNEL_CONTENT);
         if ($controller instanceof UsesFeatureInterface) {
-            $assetList = AssetList::getInstance();
-            $assetResponse = ResponseAssetGroup::get();
-            foreach ($controller->getRequiredFeatures() as $feature) {
-                if (!in_array($feature, $theme->getThemeSupportedFeatures())) {
-                    $assetHandle = "feature/{$feature}/frontend";
-                    if ($assetList->getAssetGroup($assetHandle)) {
-                        $assetResponse->requireAsset($assetHandle);
-                    } else {
-                        $logger->info(
-                            t(
-                                "Block type requested required feature '%s' but it was not registered.",
-                                $assetHandle
-                            )
-                        );
-                    }
+            $this->requireFeaturesIfNotPresentInTheme($controller->getRequiredFeatures(), $theme);
+        }
+    }
+
+    /**
+     * Requires one or more features if not present in theme.
+     *
+     * @param array $features
+     * @param Theme $theme
+     */
+    protected function requireFeaturesIfNotPresentInTheme(array $features, Theme $theme): void
+    {
+        $assetList = AssetList::getInstance();
+        $assetResponse = ResponseAssetGroup::get();
+        $logger = app(LoggerFactory::class)->createLogger(Channels::CHANNEL_CONTENT);
+        foreach ($features as $feature) {
+            if (!in_array($feature, $theme->getThemeSupportedFeatures())) {
+                $assetHandle = "feature/{$feature}/frontend";
+                if ($assetList->getAssetGroup($assetHandle)) {
+                    $assetResponse->requireAsset($assetHandle);
+                } else {
+                    $logger->info(
+                        t(
+                            "Block type requested required feature '%s' but it was not registered.",
+                            $assetHandle
+                        )
+                    );
                 }
             }
         }
+
     }
 
 }
