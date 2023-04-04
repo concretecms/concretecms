@@ -32,7 +32,7 @@ class CheckConfigUrlSettingsForProductionTest implements TestInterface
             );
         } else {
             $url = Url::createFromUrl($url);
-            if ($url->getScheme() !== 'https') {
+            if ((string) $url->getScheme() !== 'https') {
                 $report->warning(
                     t('Canonical URL set but not running SSL. SSL is strongly encouraged.'),
                     $report->button(new UrlSettingsLocation())
