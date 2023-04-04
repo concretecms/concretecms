@@ -316,7 +316,7 @@ class Search extends DashboardPageController
                 $this->setupUser($uID);
                 if ($this->canResetPassword && $this->app->make('helper/validation/token')->validate()) {
                     $this->user->markAsPasswordReset();
-                    $this->flash('success', t('The user will have to change his password at next login.'));
+                    $this->flash('success', t('The user will have to change their password at next login.'));
                     return $this->buildRedirect(['/dashboard/users/search', 'edit', $this->user->getUserID()]);
                 }
             case 'delete':
