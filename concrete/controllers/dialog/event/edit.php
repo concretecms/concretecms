@@ -179,9 +179,7 @@ class Edit extends BackendInterfaceController
                 $keys = $set->getAttributeKeys();
                 foreach($keys as $ak) {
                     $controller = $ak->getController();
-                    if (method_exists($controller, 'setAttributeObject')) {
-                        $controller->setAttributeObject($eventVersion);
-                    }
+                    $controller->setAttributeObject($eventVersion);
                     $value = $controller->createAttributeValueFromRequest();
                     $eventVersion->setAttribute($ak, $value);
                 }
