@@ -1014,6 +1014,7 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     {
         foreach ($attributes as $uak) {
             $controller = $uak->getController();
+            $controller->setAttributeObject($this);
             $value = $controller->createAttributeValueFromRequest();
             $this->setAttribute($uak, $value);
         }
