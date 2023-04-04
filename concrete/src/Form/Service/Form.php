@@ -600,8 +600,10 @@ class Form
             $escapedID = preg_replace('/[!"#$%&\'()*+,.\\/:;<=>?@\\[\\]^`{|}~\\\\]/', '\\\\$0', $miscFields['id'] ?? $key);
 
             $c = Page::getCurrentPage();
-            $theme = $c->getCollectionThemeObject();
-            $this->requireFeaturesIfNotPresentInTheme([Features::FORMS], $theme);
+            if ($c) {
+                $theme = $c->getCollectionThemeObject();
+                $this->requireFeaturesIfNotPresentInTheme([Features::FORMS], $theme);
+            }
 
             $config = [
                 'hideUnusedStateProvinceField' => (bool) $configuration['hideUnusedStateProvinceField'],
