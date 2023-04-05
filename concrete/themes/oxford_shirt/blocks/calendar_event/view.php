@@ -78,12 +78,14 @@ $user = UserInfo::getByID($page->getCollectionUserID());
         <?php if (!empty($event->getAttribute('event_thumbnail'))); { 
             
             $thumbnail = $event->getAttribute('event_thumbnail');
-            $thumbnailURL = $thumbnail->getURL();
+            if ($thumbnail) {
+                $thumbnailURL = $thumbnail->getURL();
 
-            ?>
-            <div class="ccm-block-event-attribute-thumbnail mb-3 mb-md-5">
-                <img src="<?php echo $thumbnailURL; ?>" class="img-fluid">
-            </div>
+                ?>
+                <div class="ccm-block-event-attribute-thumbnail mb-3 mb-md-5">
+                    <img src="<?php echo $thumbnailURL; ?>" class="img-fluid">
+                </div>
+            <?php } ?>
         <?php } ?>
 
         <div class="ccm-block-event-details-small mb-3 mb-md-4">
