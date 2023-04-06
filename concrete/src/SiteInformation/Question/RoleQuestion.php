@@ -4,7 +4,7 @@ namespace Concrete\Core\SiteInformation\Question;
 class RoleQuestion extends AbstractSelectQuestion
 {
 
-    const CONTENT_CREATOR = 'cc';
+    const CONTENT_CREATOR = 'CC';
     const DESIGNER = 'DE';
     const PRODUCT_OWNER = 'M';
     const DEVELOPER = 'DV';
