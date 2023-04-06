@@ -69,7 +69,7 @@ class DefaultSet extends ColumnSet
         $this->addColumn(new TypeColumn());
         $this->addColumn(new DateModifiedColumn());
         $this->addColumn(new SizeColumn());
-        $type = $this->getColumnByKey('type');
+        $type = $this->getColumnByKey('name');
         $this->setDefaultSortColumn($type, 'asc');
     }
 }
