@@ -50,8 +50,8 @@ class ScheduleBoardInstanceRuleCommandHandler
         $logger = $this->loggerFactory->createLogger(Channels::CHANNEL_BOARD);
         $logger->info(t('Instance rule {ruleID} successfully scheduled for start date {startDate} and end date {endDate} in slot {slot}.'), [
             'slot' => $command->getSlot(),
-            'startDate' => $startDateTimestamp,
-            'endDate' => $endDateTimestamp,
+            'startDate' => $startDateTime->getTimestamp(),
+            'endDate' => $endDateTime->getTimestamp(),
         ]);
         return $rule;
     }
