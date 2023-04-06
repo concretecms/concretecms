@@ -10,6 +10,13 @@ class CustomStyle extends AbstractCustomStyle
     protected $set;
     protected $theme;
 
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Block\Block
+     */
+    public $block;
+
     public function __construct(StyleSet $set = null, Block $b, $theme = null)
     {
         $this->block = $b;

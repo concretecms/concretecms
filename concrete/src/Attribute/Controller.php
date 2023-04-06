@@ -20,6 +20,13 @@ class Controller extends AbstractController implements AttributeInterface
     protected $entityManager;
 
     /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var \Concrete\Core\Entity\Attribute\Type|null
+     */
+    public $attributeType;
+
+    /**
      * @var \Concrete\Core\Entity\Attribute\Key\Key|null
      */
     protected $attributeKey;
@@ -92,7 +99,9 @@ class Controller extends AbstractController implements AttributeInterface
     }
 
     /**
-     * @param ObjectInterface $object
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Attribute\AttributeInterface::setAttributeObject()
      */
     public function setAttributeObject(ObjectInterface $object)
     {

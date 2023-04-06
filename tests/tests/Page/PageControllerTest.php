@@ -114,7 +114,7 @@ class PageControllerTest extends PageTestCase
         $p->setPackageID(1);
         SinglePage::add('/testerson/foo', $p);
         $fooPage = Page::getByPath('/testerson/foo');
-        $fooPage->pkgHandle = 'awesome_package';
+        self::setNonPublicPropertyValue($fooPage, 'pkgHandle', 'awesome_package');
         $controller = $fooPage->getPageController();
 
         $fs = new Filesystem();
@@ -142,7 +142,7 @@ class PageControllerTest extends PageTestCase
 
         SinglePage::add('/testerson/foo', $pkg);
         $fooPage = Page::getByPath('/testerson/foo');
-        $fooPage->pkgHandle = 'awesome_package';
+        self::setNonPublicPropertyValue($fooPage, 'pkgHandle', 'awesome_package');
         $controller = $fooPage->getPageController();
         $fooPage->delete();
 

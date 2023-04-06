@@ -190,52 +190,6 @@
             "time": "2022-01-17T14:14:24+00:00"
         },
         {
-            "name": "concrete5/doctrine-xml",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/concretecms/doctrine-xml.git",
-                "reference": "03f1209d42477070a58d29e5af15688b96c66b56"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/doctrine-xml/zipball/03f1209d42477070a58d29e5af15688b96c66b56",
-                "reference": "03f1209d42477070a58d29e5af15688b96c66b56",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "doctrine/dbal": "2.5.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "DoctrineXml\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Define database structure via XML using Doctrine data types",
-            "homepage": "https://github.com/concrete5/doctrine-xml",
-            "keywords": [
-                "database",
-                "doctrine",
-                "schema",
-                "structure",
-                "xml"
-            ],
-            "support": {
-                "issues": "https://github.com/concretecms/doctrine-xml/issues",
-                "source": "https://github.com/concretecms/doctrine-xml/tree/1.2.0"
-            },
-            "abandoned": "concretecms/doctrine-xml",
-            "time": "2018-10-05T16:44:04+00:00"
-        },
-        {
             "name": "concrete5/monolog-cascade",
             "version": "0.6.0",
             "source": {
@@ -369,16 +323,16 @@
         },
         {
             "name": "concretecms/dependency-patches",
-            "version": "1.7.2",
+            "version": "1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concretecms/dependency-patches.git",
-                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0"
+                "reference": "8dbbdcbfe0ed7aae3dcfb0883ea00e1a0554cb7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/ec219a55e89c2552efb7368175c65e68cd2a3de0",
-                "reference": "ec219a55e89c2552efb7368175c65e68cd2a3de0",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/8dbbdcbfe0ed7aae3dcfb0883ea00e1a0554cb7a",
+                "reference": "8dbbdcbfe0ed7aae3dcfb0883ea00e1a0554cb7a",
                 "shasum": ""
             },
             "require": {
@@ -437,6 +391,9 @@
                     },
                     "anahkiasen/html-object:1.4.4": {
                         "Add PHP 8.1 compatibility": "anahkiasen/html-object/php8.1-compatibility.patch"
+                    },
+                    "wikimedia/less.php:1.8.2": {
+                        "Add PHP 8.2 compatibility": "wikimedia/less.php/fix-php-8.2-compatibility.patch"
                     }
                 }
             },
@@ -452,13 +409,58 @@
                     "role": "author"
                 }
             ],
-            "description": "Patches required for concrete5 dependencies",
-            "homepage": "https://github.com/concrete5/dependency-patches",
+            "description": "Patches required for concrete5 and Concrete CMS dependencies",
+            "homepage": "https://github.com/concretecms/dependency-patches",
             "support": {
                 "issues": "https://github.com/concretecms/dependency-patches/issues",
-                "source": "https://github.com/concretecms/dependency-patches/tree/1.7.2"
+                "source": "https://github.com/concretecms/dependency-patches/tree/1.7.4"
             },
-            "time": "2022-03-31T17:52:31+00:00"
+            "time": "2023-03-14T20:25:27+00:00"
+        },
+        {
+            "name": "concretecms/doctrine-xml",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/concretecms/doctrine-xml.git",
+                "reference": "089ec9d37eeeaddb156ca4e783e58db5f6cdf19a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/concretecms/doctrine-xml/zipball/089ec9d37eeeaddb156ca4e783e58db5f6cdf19a",
+                "reference": "089ec9d37eeeaddb156ca4e783e58db5f6cdf19a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "doctrine/dbal": "2.5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DoctrineXml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Define database structure via XML using Doctrine data types",
+            "homepage": "https://github.com/concretecms/doctrine-xml",
+            "keywords": [
+                "database",
+                "doctrine",
+                "schema",
+                "structure",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/concretecms/doctrine-xml/issues",
+                "source": "https://github.com/concretecms/doctrine-xml/tree/1.3.0"
+            },
+            "time": "2022-07-07T22:35:21+00:00"
         },
         {
             "name": "container-interop/container-interop",

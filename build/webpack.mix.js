@@ -233,6 +233,9 @@ mix
     })
 
 mix
+    .js('node_modules/@concretecms/bedrock/assets/forms/js/frontend.js', 'js/features/forms/frontend.js').vue()
+
+mix
     .sass('node_modules/@concretecms/bedrock/assets/imagery/scss/frontend.scss', 'css/features/imagery/frontend.css', {
         sassOptions: {
             includePaths: [

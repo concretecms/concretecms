@@ -12,6 +12,36 @@ use Core;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    protected $icon;
+
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
+     * @var string|null
+     */
+    public $paragraph;
+
+    /**
+     * @var string|null
+     */
+    public $externalLink;
+
+    /**
+     * @var int|string|null
+     */
+    public $internalLinkCID;
+
+    /**
+     * @var string|null
+     */
+    public $titleFormat;
+
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
@@ -21,10 +51,6 @@ class Controller extends BlockController implements UsesFeatureInterface
     protected $btExportPageColumns = array('internalLinkCID');
     protected $btInterfaceHeight = 520;
     protected $btTable = 'btFeature';
-
-    protected $icon;
-
-    public $paragraph;
 
     public function getBlockTypeDescription()
     {

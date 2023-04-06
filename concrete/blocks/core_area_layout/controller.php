@@ -26,6 +26,11 @@ use Concrete\Core\Support\Facade\Url;
 class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
+     * @var int|string|null
+     */
+    public $arLayoutID;
+
+    /**
      * @var \Concrete\Core\Area\Layout\CustomLayout|\Concrete\Core\Area\Layout\PresetLayout|\Concrete\Core\Area\Layout\ThemeGridLayout|null
      */
     public $arLayout;
@@ -59,11 +64,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string[]
      */
     protected $requiredFeatures = [];
-
-    /**
-     * @var Area|null
-     */
-    protected $area;
 
     /**
      * @return bool

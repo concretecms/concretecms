@@ -10,6 +10,41 @@ use Concrete\Core\File\File;
 class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
+     * @var int|string|null
+     */
+    protected $webmfID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $oggfID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $posterfID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $mp4fID;
+
+    /**
+     * @var int|string|null
+     */
+    protected $videoSize;
+
+    /**
+     * @var int|string|null
+     */
+    protected $width;
+
+    /**
+     * @var string|null
+     */
+    public $title;
+
+    /**
      * @var int
      */
     protected $btInterfaceWidth = 450;
@@ -43,36 +78,6 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @var string
      */
     protected $btWrapperClass = 'ccm-ui';
-
-    /**
-     * @var int|null
-     */
-    protected $mp4fID;
-
-    /**
-     * @var int|null
-     */
-    protected $webmfID;
-
-    /**
-     * @var int|null
-     */
-    protected $oggfID;
-
-    /**
-     * @var int|null
-     */
-    protected $posterfID;
-
-    /**
-     * @var int|null
-     */
-    protected $videoSize;
-
-    /**
-     * @var int|null
-     */
-    protected $width;
 
     /**
      * @var string[]

@@ -138,7 +138,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
                 </div>
                 <div class="modal-body">
                     <?= $token_validator->output() ?>
-                    <?= t('Are you sure you force the user to change his password at next login?') ?>
+                    <?= t('Are you sure you force the user to change their password at next login?') ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= t('Close') ?></button>

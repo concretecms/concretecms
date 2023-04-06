@@ -159,6 +159,118 @@ class Page extends Collection implements CategoryMemberInterface,
     protected $siteTreeID;
 
     /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $pkgID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|false|null
+     */
+    public $pkgHandle;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cPointerID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|bool|null
+     */
+    public $cIsDraft;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|bool|null
+     */
+    public $cIsActive;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $cFilename;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $ptID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cDisplayOrder;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $cInheritPermissionsFrom;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var bool|int|null
+     */
+    public $cOverrideTemplatePermissions;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|bool|null
+     */
+    public $cIsTemplate;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $uID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var string|null
+     */
+    public $cPath;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cParentID;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cChildren;
+
+    /**
+     * @deprecated What's deprecated is the "public" part.
+     *
+     * @var int|null
+     */
+    public $cCacheFullPageContent;
+
+    /**
      * The custom name of the alias page.
      *
      * @var string|null NULL if the page is not an alias, empty string if we should use the name of the aliased page, the custom alias name otherwise.
@@ -1310,7 +1422,7 @@ class Page extends Collection implements CategoryMemberInterface,
      */
     public function getCollectionPath()
     {
-        return isset($this->cPath) ? $this->cPath : null;
+        return $this->cPath;
     }
 
     /**

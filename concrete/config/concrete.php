@@ -6,8 +6,8 @@ return [
      *
      * @var string
      */
-    'version' => '9.2.0RC1',
-    'version_installed' => '9.2.0RC1',
+    'version' => '9.2.0RC2',
+    'version_installed' => '9.2.0RC2',
     'version_db' => '20230308163514', // the key of the latest database migration
 
     /*
@@ -888,6 +888,10 @@ return [
          * Don't resize the files with these mime types (space-separated list)
          */
         'dont_resize_mimetypes' => 'image/gif',
+        /**
+         * Enable asciify to sanitize name of uploaded files
+         */
+        'enable_filename_asciify' => true,
     ],
 
     'search_users' => [

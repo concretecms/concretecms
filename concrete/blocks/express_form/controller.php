@@ -47,19 +47,67 @@ use Concrete\Core\Permission\Checker;
 
 class Controller extends BlockController implements NotificationProviderInterface, UsesFeatureInterface
 {
+    /**
+     * @var string|null
+     */
+    public $exFormID;
+
+    /**
+     * @var string|null
+     */
+    public $submitLabel;
+
+    /**
+     * @var string|null
+     */
+    public $thankyouMsg;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $notifyMeOnSubmission;
+
+    /**
+     * @var string|null
+     */
+    public $recipientEmail;
+
+    /**
+     * @var int|string|null
+     */
+    public $displayCaptcha;
+
+    /**
+     * @var bool|int|string|null
+     */
+    public $storeFormSubmission = 1;
+
+    /**
+     * @var int|string|null
+     */
+    public $redirectCID;
+
+    /**
+     * @var string|null
+     */
+    public $replyToEmailControlID;
+
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToSet;
+
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToFolder;
+
     protected $btInterfaceWidth = 640;
     protected $btInterfaceHeight = 700;
     protected $btCacheBlockOutput = false;
     protected $btTable = 'btExpressForm';
     protected $btExportPageColumns = ['redirectCID'];
     protected $btCopyWhenPropagate = true;
-
-    public $notifyMeOnSubmission;
-    public $recipientEmail;
-    public $replyToEmailControlID;
-    public $storeFormSubmission = 1;
-    public $exFormID;
-    public $addFilesToFolder;
 
     const FORM_RESULTS_CATEGORY_NAME = 'Forms';
 
@@ -251,9 +299,9 @@ class Controller extends BlockController implements NotificationProviderInterfac
                         $key = $this->saveAttributeKeySettings($controller, $key, $post);
                         $entityManager->persist($key);
                         $entityManager->flush();
-                        
+
                         $this->runAttributeIndexer($entity, $key);
-                        
+
                         $control->setAttributeKey($key);
                     }
                     break;
@@ -696,7 +744,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
         $entityManager->persist($settings);
         return $key;
     }
-    
+
     /**
      * @param \Concrete\Core\Entity\Express\Entity $entity
      * @param ExpressKey $key
@@ -707,7 +755,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
     protected function runAttributeIndexer(Entity $entity, ExpressKey $key, $update = false)
     {
         $category = $entity->getAttributeKeyCategory();
-        
+
         if (is_object($category)) {
             $indexer = $category->getSearchIndexer();
 
@@ -721,7 +769,7 @@ class Controller extends BlockController implements NotificationProviderInterfac
             }
         }
     }
-    
+
     public function edit()
     {
         $this->set('formSubmissionConfig', $this->getFormSubmissionConfigValue());

@@ -103,6 +103,26 @@ class AccordionEntry implements \JsonSerializable
 class Controller extends BlockController implements UsesFeatureInterface
 {
     /**
+     * @var string|null
+     */
+    public $initialState;
+
+    /**
+     * @var string|null
+     */
+    public $itemHeadingFormat;
+
+    /**
+     * @var int|string|null
+     */
+    public $alwaysOpen;
+
+    /**
+     * @var int|string|null
+     */
+    public $flush;
+
+    /**
      * @var int
      */
     protected $btInterfaceWidth = 720;

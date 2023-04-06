@@ -20,6 +20,51 @@ use FileImporter;
 
 class Controller extends BlockController
 {
+    /**
+     * @var int|string|null
+     */
+    public $questionSetId;
+    
+    /**
+     * @var string|null
+     */
+    public $surveyName;
+    
+    /**
+     * @var string|null
+     */
+    public $submitText = '';
+    
+    /**
+     * @var string|null
+     */
+    public $thankyouMsg = '';
+    
+    /**
+     * @var bool|int|string|null
+     */
+    public $notifyMeOnSubmission;
+    
+    /**
+     * @var string|null
+     */
+    public $recipientEmail;
+    
+    /**
+     * @var int|string|null
+     */
+    public $displayCaptcha;
+    
+    /**
+     * @var int|string|null
+     */
+    public $redirectCID;
+    
+    /**
+     * @var int|string|null
+     */
+    public $addFilesToSet;
+
     public $btTable = 'btForm';
 
     public $btQuestionsTablename = 'btFormQuestions';
@@ -31,10 +76,6 @@ class Controller extends BlockController
     public $btInterfaceWidth = '525';
 
     public $btInterfaceHeight = '550';
-
-    public $thankyouMsg = '';
-
-    public $submitText = '';
 
     public $noSubmitFormRedirect = 0;
 

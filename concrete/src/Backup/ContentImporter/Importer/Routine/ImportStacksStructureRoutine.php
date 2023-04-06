@@ -36,7 +36,9 @@ class ImportStacksStructureRoutine extends AbstractPageStructureRoutine implemen
                 $nodes[] = $p;
                 ++$i;
             }
-            usort($nodes, array('static', 'setupPageNodeOrder'));
+            usort($nodes, static function($nodeA, $nodeB): int {
+                return static::setupPageNodeOrder($nodeA, $nodeB);
+            });
 
             foreach ($nodes as $p) {
 
