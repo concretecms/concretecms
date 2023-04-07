@@ -12,7 +12,7 @@ use Concrete\Core\Tree\Node\Type\FileFolder;
 class Controller extends StartingPointPackage
 {
     protected $pkgHandle = 'oxford_shirt_full';
-    protected $pkgContentProvidesFileThumbnails = true;
+    protected $pkgContentProvidesFileThumbnails = false;
 
     public function getPackageName()
     {
@@ -30,15 +30,13 @@ class Controller extends StartingPointPackage
         // Create documents node in file manager
         $filesystem = new Filesystem();
         $root = $filesystem->getRootFolder();
-        $documents = $filesystem->addFolder($root, 'Documents');
         $brand = $filesystem->addFolder($root, 'Brand');
-        $blog = $filesystem->addFolder($root, 'Blog');
+        $collaboration = $filesystem->addFolder($root, 'Image Slider');
+        $documents = $filesystem->addFolder($root, 'Documents');
         $gallery = $filesystem->addFolder($root, 'Gallery');
-        $collaboration = $filesystem->addFolder($root, 'Collaboration Slider');
         $heroes = $filesystem->addFolder($root, 'Hero Images');
-        $logoSlider = $filesystem->addFolder($root, 'Logo Slider');
-        $stripes = $filesystem->addFolder($root, 'Stripes');
         $team = $filesystem->addFolder($root, 'Team');
+        $video = $filesystem->addFolder($root, 'Video');
     }
 
     public function install_config()
@@ -60,14 +58,12 @@ class Controller extends StartingPointPackage
 
         // Now move the files
         $importer->moveFilesByName(['oxford_shirt_logo_light.svg', 'oxford_shirt_logo_dark.svg'], 'Brand');
-        $importer->moveFilesByName(['blog-01.jpg', 'blog-02.jpg', 'blog-03.jpg', 'blog-04.jpg', 'blog-05.jpg', 'blog-06.jpg'], 'Blog');
-        $importer->moveFilesByName(['collaboration-01.jpg', 'collaboration-02.jpg', 'collaboration-03.jpg'], 'Collaboration Slider');
+        $importer->moveFilesByName(['collaboration-01.jpg', 'collaboration-02.jpg', 'collaboration-03.jpg'], 'Image Slider');
         $importer->moveFilesByName(['dummy.pdf'], 'Documents');
-        $importer->moveFilesByName(['gallery-headphones.jpg', 'gallery-shoes.jpg', 'gallery-shoes2.jpg', 'gallery-skincare.jpg', 'gallery-watch.jpg', 'gallery-watch2.jpg'], 'Gallery');
-        $importer->moveFilesByName(['hands-01.jpg', 'laptops-01.jpg', 'laptops-02.jpg', 'people-01.jpg', 'testimonial-01.jpg', 'testimonial-bg.jpg'], 'Stripes');
-        $importer->moveFilesByName(['hero-01.jpg', 'hero-resources.jpg'], 'Hero Images');
-        $importer->moveFilesByName(['logo-01.png', 'logo-02.png', 'logo-03.png', 'logo-04.png'], 'Logo Slider');
-        $importer->moveFilesByName(['team-01.jpg', 'team-02.jpg', 'team-03.jpg', 'team-04.jpg', 'team-05.jpg', 'team-06.jpg'], 'Team');
+        $importer->moveFilesByName(['gallery-headphones.jpg', 'gallery-shoes.jpg', 'gallery-shoes2.jpg', 'gallery-skincare.jpg', 'gallery-watch.jpg', 'gallery-watch2.jpg', 'oil_paint.png', 'abstract.jpg', 'Rectangle_84.jpg', 'Rectangle_85.jpg'], 'Gallery');
+        $importer->moveFilesByName(['red_sculpture.jpg', 'corner_building.jpg'], 'Hero Images');
+        $importer->moveFilesByName(['testimonial-large.jpg', 'malikah_haney.png'], 'Team');
+        $importer->moveFilesByName(['video-thumbnail.jpg', 'atomik-documentation-video.mp4'], 'Video');
 
     }
 }

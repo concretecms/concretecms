@@ -1,10 +1,13 @@
 div.theme-oxford-shirt {
     nav {
         ol.breadcrumb {
+            margin-top: 1rem;
+            margin-bottom: 0;
             li {
                 padding-right: 1rem;
                 margin-right: 0.5rem;
                 position: relative;
+                font-size: 0.75rem;
                 &:after {
                     content: '>';
                     position: absolute;

@@ -2779,31 +2779,6 @@
                          <pagetemplate handle="profile">
                               <page name="" path="" public-date="2023-03-28 12:14:51" filename="" pagetype="page" template="profile" user="katalysis" description="" package="" root="true"/>
                          </pagetemplate>
-                         <pagetemplate handle="resource_detail">
-                              <page name="" path="" public-date="2023-03-28 11:10:14" filename="" pagetype="page" template="resource_detail" user="katalysis" description="" package="" root="true">
-                                   <area name="Page Header">
-                                        <blocks/>
-                                   </area>
-                                   <area name="Resource Thumbnail">
-                                        <blocks/>
-                                   </area>
-                                   <area name="Resource Title">
-                                        <blocks/>
-                                   </area>
-                                   <area name="Resource Content">
-                                        <blocks/>
-                                   </area>
-                                   <area name="Resource Data">
-                                        <blocks/>
-                                   </area>
-                                   <area name="Page Footer">
-                                        <blocks/>
-                                   </area>
-                                   <area name="Discussion Popup">
-                                        <blocks/>
-                                   </area>
-                              </page>
-                         </pagetemplate>
                          <pagetemplate handle="right_sidebar">
                               <page name="" path="" public-date="2023-03-28 11:10:11" filename="" pagetype="page" template="right_sidebar" user="katalysis" description="" package="" root="true">
                                    <area name="Page Header">
