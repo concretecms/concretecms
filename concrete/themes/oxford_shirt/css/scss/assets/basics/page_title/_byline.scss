@@ -4,8 +4,12 @@ div.theme-oxford-shirt {
         @include media-breakpoint-up(sm) {
             text-align: center;
         }
+        .byline-description {
+            font-size: 0.875rem;
+        }
         .author-date-wrapper  {
             display: flex;
+            font-size: 0.875rem;
             @include media-breakpoint-up(sm) {
                 justify-content: center;
             }
