@@ -6,13 +6,13 @@ use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Concrete\Core\Entity\Block\BlockType\BlockType as BlockTypeEntity;
-use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Search\Field\Field\ContainsBlockTypeField;
 use Concrete\Core\Page\Search\SearchProvider;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Validation\Numbers;
@@ -171,14 +171,22 @@ EOT
             );
         }
         $provider = $this->app->make(SearchProvider::class);
-        $query = new Query();
-        $field = new ContainsBlockTypeField(['btID' => $btID]);
-        $query->setFields([$field]);
-        $query->setColumns($provider->getDefaultColumnSet());
-        $provider->setSessionCurrentQuery($query);
+        $field = new ContainsBlockTypeField();
+        $columnSet = $provider->getDefaultColumnSet();
+        $qs = [
+            'field' => [$field->getKey()],
+            'btID' => $bt->getBlockTypeID(),
+            'column' => array_map(static function (Column $column): string {
+                return $column->getColumnKey();
+            }, $columnSet->getColumns()),
+            'fSearchDefaultSort' => $columnSet->getDefaultSortColumn()->getColumnKey(),
+            'fSearchDefaultSortDirection' => $columnSet->getDefaultSortColumn()->getColumnSortDirection(),
+        ];
+        $url = $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/sitemap/search/advanced_search']);
+        $url = $url->setQuery($qs);
 
         return $this->app->make(ResponseFactoryInterface::class)->redirect(
-            $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/sitemap/search']),
+            $url,
             302
         );
     }
