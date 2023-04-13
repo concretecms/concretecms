@@ -2,10 +2,11 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
+use Concrete\Core\Install\AbstractListablePrecondition;
 use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 
-class PdoMysqlExtension implements PreconditionInterface
+class PdoMysqlExtension extends AbstractListablePrecondition
 {
     /**
      * {@inheritdoc}

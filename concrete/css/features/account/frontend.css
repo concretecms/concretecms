@@ -1,1 +1,81 @@
-.ccm-page-account .ccm-page-account-navigation{background-color:#f8f9fa;padding:1rem}.ccm-page-account .ccm-page-account-navigation a.active{font-weight:700}div.ccm-page-account img.u-avatar{height:auto;max-width:100%}div.ccm-account-avatar-cropper .card-body{align-items:center;display:flex;height:400px;padding:0;position:relative;width:100%}div.ccm-account-avatar-cropper div.ccm-account-avatar-cropper-drop{cursor:pointer;height:100%;position:absolute;transition:all .1s linear;width:100%;z-index:100}div.ccm-account-avatar-cropper div.ccm-account-avatar-cropper-drop input[type=file]{display:none}div.ccm-account-avatar-cropper div.ccm-account-avatar-cropper-drop.ccm-account-avatar-crop-drop-hover,div.ccm-account-avatar-cropper div.ccm-account-avatar-cropper-drop:hover{background-color:rgba(13,110,253,.1)}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-focus{margin-left:auto;margin-right:auto}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-icon{height:120px;margin-left:auto;margin-right:auto;width:120px}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-text{color:#6c757d}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls{left:20px;position:absolute;top:50%;transform:translateY(-50%)}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls a{align-items:center;background-color:rgba(0,0,0,.8);cursor:pointer;display:flex;height:40px;margin-bottom:10px;text-align:center;width:40px}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls a:last-child{margin-bottom:0}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls a:hover{background-color:#0d6efd}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls a svg{margin-left:auto;margin-right:auto}div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-save{bottom:20px;left:20px;position:absolute;right:20px}
+/* stylelint-disable selector-class-pattern */
+.ccm-page-account .ccm-page-account-navigation {
+  background-color: #f8f9fa;
+  padding: 1rem;
+}
+.ccm-page-account .ccm-page-account-navigation a.active {
+  font-weight: bold;
+}
+
+div.ccm-page-account img.u-avatar {
+  height: auto;
+  max-width: 100%;
+}
+
+div.ccm-account-avatar-cropper .card-body {
+  align-items: center;
+  display: flex;
+  height: 400px;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+div.ccm-account-avatar-cropper div.ccm-account-avatar-cropper-drop {
+  cursor: pointer;
+  height: 100%;
+  position: absolute;
+  transition: all 0.1s linear;
+  width: 100%;
+  z-index: 100;
+}
+div.ccm-account-avatar-cropper div.ccm-account-avatar-cropper-drop input[type=file] {
+  display: none;
+}
+div.ccm-account-avatar-cropper div.ccm-account-avatar-cropper-drop.ccm-account-avatar-crop-drop-hover, div.ccm-account-avatar-cropper div.ccm-account-avatar-cropper-drop:hover {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-focus {
+  margin-left: auto;
+  margin-right: auto;
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-icon {
+  height: 120px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 120px;
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-text {
+  color: #6c757d;
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls {
+  left: 20px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls a {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  margin-bottom: 10px;
+  text-align: center;
+  width: 40px;
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls a:last-child {
+  margin-bottom: 0;
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls a:hover {
+  background-color: #0d6efd;
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-controls a svg {
+  margin-left: auto;
+  margin-right: auto;
+}
+div.ccm-account-avatar-cropper .ccm-account-avatar-cropper-save {
+  bottom: 20px;
+  left: 20px;
+  position: absolute;
+  right: 20px;
+}

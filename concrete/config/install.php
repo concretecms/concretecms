@@ -3,12 +3,12 @@
 return [
     'preconditions' => [
         'php_version' => Concrete\Core\Install\Preconditions\PhpVersion::class,
-        'javascript' => Concrete\Core\Install\Preconditions\Javascript::class,
         'pdo_mysql_extension' => Concrete\Core\Install\Preconditions\PdoMysqlExtension::class,
         'request_urls' => Concrete\Core\Install\Preconditions\RequestUrls::class,
         'json_extension' => Concrete\Core\Install\Preconditions\JsonExtension::class,
         'dom_extension' => Concrete\Core\Install\Preconditions\DomExtension::class,
-        'no_asp_style_tags' => Concrete\Core\Install\Preconditions\NoAspStyleTags::class,
+        // Note: ASP style tags have been removed in PHP 7.
+        // 'no_asp_style_tags' => Class Removed',
         'fileinfo_extension' => Concrete\Core\Install\Preconditions\FileinfoExtension::class,
         'image_manipulation' => Concrete\Core\Install\Preconditions\ImageManipulation::class,
         'xml_support' => Concrete\Core\Install\Preconditions\XmlSupport::class,

@@ -34,11 +34,10 @@ class HandlersLocator implements HandlersLocatorInterface
      */
     protected $entityManager;
 
-    public function __construct(Application $app, Repository $config, EntityManager $entityManager)
+    public function __construct(Application $app, Repository $config)
     {
         $this->app = $app;
         $this->config = $config;
-        $this->entityManager = $entityManager;
     }
 
     public function getHandlers(Envelope $envelope): iterable
@@ -67,9 +66,12 @@ class HandlersLocator implements HandlersLocatorInterface
                 $batchStamp = $envelope->last(BatchStamp::class);
                 if ($batchStamp) {
                     /**
+                     * We can't pass this in because it breaks install before the DB connection is ready.
+                     *
                      * @var $batchStamp BatchStamp
                      */
-                    $batch = $this->entityManager->find(Batch::class, $batchStamp->getBatchId());
+                    $batch = $this->app->make(EntityManager::class)
+                        ->find(Batch::class, $batchStamp->getBatchId());
                     if ($batch) {
                         $builtClass->setBatch($batch);
                     }

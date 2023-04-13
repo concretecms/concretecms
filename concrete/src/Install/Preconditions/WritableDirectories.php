@@ -2,11 +2,12 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
+use Concrete\Core\Install\AbstractListablePrecondition;
 use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 use Illuminate\Filesystem\Filesystem;
 
-class WritableDirectories implements PreconditionInterface
+class WritableDirectories extends AbstractListablePrecondition
 {
     /**
      * The Filesystem to be used to check directories.

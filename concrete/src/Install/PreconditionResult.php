@@ -5,7 +5,7 @@ namespace Concrete\Core\Install;
 /**
  * The result of a precondition check.
  */
-class PreconditionResult
+class PreconditionResult implements \JsonSerializable
 {
     /**
      * Precondition result: passed.
@@ -123,5 +123,15 @@ class PreconditionResult
         $this->message = trim((string) $value);
 
         return $this;
+    }
+
+
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return [
+            'message' => $this->getMessage(),
+            'state' => $this->getState(),
+        ];
     }
 }
