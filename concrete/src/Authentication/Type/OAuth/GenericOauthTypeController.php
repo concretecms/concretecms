@@ -549,7 +549,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     {
         $user = $this->app->make(User::class);
         if (!$user->isRegistered()) {
-            $response = new RedirectResponse(\URL::to('/login'), 302);
+            $response = new \RedirectResponse(\URL::to('/login'), 302);
             $response->send();
             exit;
         }
