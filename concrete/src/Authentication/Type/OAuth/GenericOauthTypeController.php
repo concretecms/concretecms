@@ -22,7 +22,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     protected $service;
 
     /**
-     * @var Extractor
+     * @var Extractor|null
      */
     protected $extractor;
 
@@ -299,7 +299,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
     protected function isValid()
     {
-        return $this->extractor->supportsUniqueId();
+        return $this->getExtractor()->supportsUniqueId();
     }
 
     /**
