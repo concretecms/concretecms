@@ -1,1 +1,132 @@
-(()=>{var e={8152:()=>{!function(e,i){var s=i(".ccm-responsive-navigation");i(".ccm-responsive-overlay").length||i("body").append('<div class="ccm-responsive-overlay"></div>');var n=s.clone();i(n).removeClass("original"),i(n).find("*").each((function(){var e=i(this).attr("id");null!=e&&""!==e&&i(this).attr("id","cloned-ccm-ro_"+e)})),i(".ccm-responsive-overlay").append(n),i(".ccm-responsive-menu-launch").click((function(){i(".ccm-responsive-menu-launch").toggleClass("responsive-button-close"),i(".ccm-responsive-overlay").slideToggle()})),i(".ccm-responsive-overlay ul li").children("ul").hide(),i(".ccm-responsive-overlay li").each((function(e){i(this).children("ul").length>0?i(this).addClass("parent-ul"):i(this).addClass("last-li")})),i(".ccm-responsive-overlay .parent-ul a").click((function(e){i(this).parent("li").hasClass("last-li")||(i(this).parent("li").siblings().children("ul").hide(),i(this).parent("li").children("ul").is(":visible")||(i(this).next("ul").show(),e.preventDefault()))}))}(window,$)}},i={};function s(n){var r=i[n];if(void 0!==r)return r.exports;var l=i[n]={exports:{}};return e[n](l,l.exports,s),l.exports}s.n=e=>{var i=e&&e.__esModule?()=>e.default:()=>e;return s.d(i,{a:i}),i},s.d=(e,i)=>{for(var n in i)s.o(i,n)&&!s.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:i[n]})},s.o=(e,i)=>Object.prototype.hasOwnProperty.call(e,i),(()=>{"use strict";s(8152)})()})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./assets/themes/elemental/js/responsive-navigation.js":
+/*!*************************************************************!*\
+  !*** ./assets/themes/elemental/js/responsive-navigation.js ***!
+  \*************************************************************/
+/***/ (() => {
+
+(function (global, $) {
+  var originalNav = $('.ccm-responsive-navigation');
+  if (!$('.ccm-responsive-overlay').length) {
+    $('body').append('<div class="ccm-responsive-overlay"></div>');
+  }
+  var clonedNavigation = originalNav.clone();
+  $(clonedNavigation).removeClass('original');
+  $(clonedNavigation).find('*').each(function () {
+    var t = $(this).attr('id');
+    if (t !== undefined && t !== null && t !== '') {
+      $(this).attr('id', 'cloned-ccm-ro_' + t);
+    }
+  });
+  $('.ccm-responsive-overlay').append(clonedNavigation);
+  $('.ccm-responsive-menu-launch').click(function () {
+    $('.ccm-responsive-menu-launch').toggleClass('responsive-button-close'); // slide out mobile nav
+    $('.ccm-responsive-overlay').slideToggle();
+  });
+  $('.ccm-responsive-overlay ul li').children('ul').hide();
+  $('.ccm-responsive-overlay li').each(function (index) {
+    if ($(this).children('ul').length > 0) {
+      $(this).addClass('parent-ul');
+    } else {
+      $(this).addClass('last-li');
+    }
+  });
+  $('.ccm-responsive-overlay .parent-ul a').click(function (event) {
+    if (!$(this).parent('li').hasClass('last-li')) {
+      $(this).parent('li').siblings().children('ul').hide();
+      if ($(this).parent('li').children('ul').is(':visible')) {} else {
+        $(this).next('ul').show();
+        event.preventDefault();
+      }
+    }
+  });
+})(window, $);
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+/*!********************************************!*\
+  !*** ./assets/themes/elemental/js/main.js ***!
+  \********************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _responsive_navigation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./responsive-navigation */ "./assets/themes/elemental/js/responsive-navigation.js");
+/* harmony import */ var _responsive_navigation__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_responsive_navigation__WEBPACK_IMPORTED_MODULE_0__);
+// Navigation feature support for old custom template
+
+})();
+
+/******/ })()
+;

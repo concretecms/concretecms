@@ -1,1 +1,21 @@
-del.diffdel img,del.diffmod img,ins.diffins img,ins.diffmod img{border-style:dashed;border-width:4px}ins.diffins,ins.diffmod{background:#b9ffd8}ins.diffins img,ins.diffmod img{border-color:#29bd67}del.diffdel,del.diffmod{background:#ffb9b9;text-decoration:line-through;text-decoration-color:#fa2525}del.diffdel img,del.diffmod img{border-color:#fa2525}
+ins.diffmod img, ins.diffins img,
+del.diffmod img, del.diffdel img {
+  border-width: 4px;
+  border-style: dashed;
+}
+
+ins.diffmod, ins.diffins {
+  background: #b9ffd8;
+}
+ins.diffmod img, ins.diffins img {
+  border-color: #29bd67;
+}
+
+del.diffmod, del.diffdel {
+  text-decoration: line-through;
+  text-decoration-color: #fa2525;
+  background: #ffb9b9;
+}
+del.diffmod img, del.diffdel img {
+  border-color: #fa2525;
+}

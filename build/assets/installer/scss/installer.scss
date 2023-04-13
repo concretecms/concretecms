@@ -1,0 +1,35 @@
+
+div#ccm-page-install {
+  div.ccm-install-title {
+    position: fixed;
+    z-index: 1200;
+    top: 10px;
+    left: 80px;
+    font-size: 20px;
+
+    ul.breadcrumb {
+      margin: 0px;
+      padding: 0px;
+      background-color: transparent;
+    }
+  }
+
+  div.ccm-install-version {
+    position: fixed;
+    color: #999;
+    top: 10px;
+    right: 10px;
+    z-index: 1200;
+  }
+
+  // Transition between states
+  .install-step-enter-active, .install-step-leave-active {
+    transition: all 0.2s;
+  }
+  .install-step-enter, .install-step-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+
+}

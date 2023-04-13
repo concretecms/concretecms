@@ -1,4 +1,7 @@
+@import "variables";
+
 @import "@concretecms/bedrock/assets/bedrock/scss/frontend";
+
 
 // Import the basics from the CMS foundation because the toolbar sits atop our theme.
 @import "@concretecms/bedrock/assets/cms/scss/bootstrap/reboot";
@@ -8,12 +11,13 @@
 @import "@concretecms/bedrock/assets/cms/scss/buttons";
 @import "@concretecms/bedrock/assets/cms/scss/forms";
 @import "@concretecms/bedrock/assets/cms/scss/login-page";
+@import "@concretecms/bedrock/assets/cms/scss/vue";
 
 @import "./features/account/account";
 @import "./features/desktop/desktop";
 
 @import "container";
-@import "install";
 @import "background-image";
 @import "account";
+@import "cards";
 

@@ -3,10 +3,11 @@
 namespace Concrete\Core\Install\Preconditions;
 
 use Concrete\Core\Foundation\Environment\FunctionInspector;
+use Concrete\Core\Install\AbstractListablePrecondition;
 use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 
-class FileinfoExtension implements PreconditionInterface
+class FileinfoExtension extends AbstractListablePrecondition
 {
     /**
      * The FunctionInspector instance.

@@ -3,12 +3,13 @@
 namespace Concrete\Core\Install\Preconditions;
 
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Install\AbstractPrecondition;
 use Concrete\Core\Install\ConnectionOptionsPreconditionInterface;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Install\PreconditionResult;
 use Exception;
 
-class InnoDB implements ConnectionOptionsPreconditionInterface
+class InnoDB extends AbstractPrecondition implements ConnectionOptionsPreconditionInterface
 {
     /**
      * @var \Concrete\Core\Install\InstallerOptions|null

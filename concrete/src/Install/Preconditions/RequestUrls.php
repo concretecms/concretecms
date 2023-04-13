@@ -2,11 +2,11 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
-use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Install\AbstractListablePrecondition;
 use Concrete\Core\Install\WebPreconditionInterface;
 use Concrete\Core\Url\Resolver\Manager\ResolverManager;
 
-class RequestUrls implements WebPreconditionInterface
+class RequestUrls extends AbstractListablePrecondition implements WebPreconditionInterface
 {
     /**
      * The URL resolver.
@@ -68,58 +68,29 @@ class RequestUrls implements WebPreconditionInterface
     /**
      * {@inheritdoc}
      *
-     * @see WebPreconditionInterface::getInitialMessage()
-     */
-    public function getInitialMessage()
-    {
-        return '';
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see WebPreconditionInterface::getHtml()
-     */
-    public function getHtml()
-    {
-        $url = json_encode((string) $this->resolver->resolve(['/install', 'web_precondition', 'request_urls', '20']));
-        $errorMessage = json_encode(t('Concrete cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.'));
-        $ajaxFailErrorMessage = json_encode(t('Request failed: unable to verify support for request URLs'));
-        $myIdentifier = json_encode($this->getUniqueIdentifier());
-
-        return <<<EOT
-<script>
-$(document).ready(function() {
-    $.ajax({
-        cache: false,
-        dataType: 'json',
-        method: 'GET',
-        url: {$url}
-    })
-    .done(function(data) {
-        if (data.response === 400) {
-            setWebPreconditionResult({$myIdentifier}, true);
-        } else {
-            setWebPreconditionResult({$myIdentifier}, false, {$errorMessage});
-        }
-    })
-    .fail(function(xhr, textStatus, errorThrown) {
-        setWebPreconditionResult({$myIdentifier}, false, {$ajaxFailErrorMessage});
-    });
-});
-</script>
-EOT
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @see \Concrete\Core\Install\PreconditionInterface::performCheck()
      */
     public function performCheck()
     {
-        throw new UserMessageException('This precondition does not have PHP checks');
+        return null;
+    }
+
+    public function getComponent(): string
+    {
+        return 'request-urls-precondition';
+    }
+
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        $data = parent::jsonSerialize();
+        $url = (string) $this->resolver->resolve(['/install', 'web_precondition', 'request_urls', '20']);
+        $errorMessage = t('Concrete cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.');
+        $ajaxFailErrorMessage = json_encode(t('Request failed: unable to verify support for request URLs'));
+        $data['ajax_url'] = $url;
+        $data['error_message'] = $errorMessage;
+        $data['ajax_fail_message'] = $ajaxFailErrorMessage;
+        return $data;
     }
 
     /**
@@ -135,4 +106,5 @@ EOT
             'response' => $i === null ? null : $i * $i,
         ];
     }
+
 }

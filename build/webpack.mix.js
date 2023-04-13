@@ -113,6 +113,7 @@ if (mix.inProduction()) {
     mix.copy('node_modules/moment/min/moment.min.js.map', '../concrete/js/moment.min.js.map');
 }
 
+/*
 // Build shared assets
 // Fullcalendar
 mix
@@ -368,6 +369,20 @@ mix
             ]
         }
     })
+*/
+
+// Installer
+mix
+    .sass('assets/installer/scss/installer.scss', 'css/installer.css', {
+        sassOptions: {
+            includePaths: [
+                path.resolve(__dirname, './node_modules/')
+            ]
+        }
+    })
+    .js('assets/installer/js/installer.js', 'js/installer.js').vue()
+
+/*
 // The CMS entry point
 mix
     .sass('assets/cms.scss', 'css/cms.css', {
@@ -411,7 +426,7 @@ mix
         }
     })
     .js('assets/themes/dashboard/js/main.js', 'themes/dashboard').vue()
-
+*/
 // Core Themes
 // Concrete Theme
 

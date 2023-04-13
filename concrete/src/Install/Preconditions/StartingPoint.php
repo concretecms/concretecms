@@ -2,12 +2,13 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
+use Concrete\Core\Install\AbstractPrecondition;
 use Concrete\Core\Install\InstallerOptions;
 use Concrete\Core\Install\OptionsPreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Package\StartingPointPackage;
 
-class StartingPoint implements OptionsPreconditionInterface
+class StartingPoint extends AbstractPrecondition implements OptionsPreconditionInterface
 {
     /**
      * @var \Concrete\Core\Application\Application

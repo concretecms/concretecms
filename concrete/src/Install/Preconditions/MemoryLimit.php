@@ -2,11 +2,12 @@
 
 namespace Concrete\Core\Install\Preconditions;
 
+use Concrete\Core\Install\AbstractListablePrecondition;
 use Concrete\Core\Install\PreconditionInterface;
 use Concrete\Core\Install\PreconditionResult;
 use Concrete\Core\Utility\Service\Number;
 
-class MemoryLimit implements PreconditionInterface
+class MemoryLimit extends AbstractListablePrecondition
 {
     /**
      * The minimum memory limit (in bytes).
