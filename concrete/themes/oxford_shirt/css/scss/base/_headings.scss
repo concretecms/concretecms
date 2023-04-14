@@ -8,6 +8,9 @@
     font-family: $display-font-family;
     text-transform: uppercase;
   }
+  h1 {
+    @include rfs(3rem);
+  }
   .subtitle-big {
     font-family: $display-font-family;
     @include font-size($font-size-base);
