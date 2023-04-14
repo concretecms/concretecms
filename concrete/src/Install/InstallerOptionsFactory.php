@@ -41,6 +41,7 @@ class InstallerOptionsFactory implements ApplicationAwareInterface
             ->setUserEmail($environment->getEmail())
             ->setUserPasswordHash($hasher->hashPassword($environment->getPassword()))
             ->setSiteName($environment->getSiteName())
+            ->setStartingPointHandle($environment->getStartingPoint())
             ->setSiteLocaleId($environment->getSiteLocaleLanguage() . '_' . $environment->getSiteLocaleCountry())
             ->setUiLocaleId($environment->getLocale())
             ->setServerTimeZoneId($environment->getTimezone());

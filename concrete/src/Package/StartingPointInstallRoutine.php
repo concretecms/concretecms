@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Package;
 
-class StartingPointInstallRoutine
+class StartingPointInstallRoutine implements \JsonSerializable
 {
     /**
      * @deprecated What's deprecated is the "public" part.
@@ -44,5 +44,15 @@ class StartingPointInstallRoutine
     public function getProgress()
     {
         return $this->progress;
+    }
+
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
+    {
+        return [
+            'method' => $this->getMethod(),
+            'progress' => $this->getProgress(),
+            'text' => $this->getText(),
+        ];
     }
 }
