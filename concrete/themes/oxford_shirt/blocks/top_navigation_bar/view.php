@@ -30,7 +30,7 @@ $c = Page::getCurrentPage();
                 <span class="icon-text">Search</span>
             </button>
             <div class="collapse search-collapse" id="top-search-bar-<?= $bID ?>">
-                <div class="container-fluid d-flex h-100 align-items-center">
+                <div class="container-fluid d-flex align-items-center">
                     <form method="get" action="<?= $searchAction ?>">
                         <div class="input-group flex-nowrap">
                             <span class="input-group-append">
