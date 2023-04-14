@@ -418,6 +418,23 @@ mix
     })
     .js('assets/themes/atomik/js/main.js', 'themes/atomik').vue()
 
+// Oxford Shirt Theme
+mix
+.sass('../concrete/themes/oxford_shirt/css/presets/default/main.scss', 'themes/oxford_shirt/css/skins/default.css', {
+    sassOptions: {
+        includePaths: [
+            path.resolve(__dirname, './node_modules/')
+        ]
+    }
+})
+.sass('../concrete/themes/oxford_shirt/css/presets/dark/main.scss', 'themes/oxford_shirt/css/skins/dark.css', {
+    sassOptions: {
+        includePaths: [
+            path.resolve(__dirname, './node_modules/')
+        ]
+    }
+})
+.js('assets/themes/oxford_shirt/js/main.js', 'themes/oxford_shirt').vue()
 
 // Dashboard Theme
 mix

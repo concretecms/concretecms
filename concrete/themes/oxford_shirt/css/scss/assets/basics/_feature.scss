@@ -1,0 +1,55 @@
+div.theme-oxford-shirt {
+  .ccm-block-feature-item {
+    display: block; // in case the element is an anchor link
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: $feature-bg;
+    p {
+      text-align: justify;
+    }
+    @include media-breakpoint-up(sm) {
+      p {
+        text-align: center;
+      }
+    }
+    @include media-breakpoint-up(md) {
+      padding:3rem 2rem;
+    }
+    @include media-breakpoint-up(lg) {
+      padding: 4rem;
+    }
+    > i {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.2s;
+      color: $link-color;
+      background-color: #fff;
+      border-radius: 50%;
+      padding: 2rem 2.5rem;
+      text-align: center;
+    }
+    > h1, h2, h3, h4, h5, h6 {
+      margin-bottom: 1.5rem;
+      text-align: center
+    }
+    > h2 {
+      @include rfs(2rem);
+    }
+    > p {
+      margin-bottom: 3rem;
+      color: var(--bs-body-color);
+    }
+    a {
+      text-align: center;
+    }
+  }
+  a.ccm-block-feature-item {
+    &:hover {
+      > i {
+        color: $link-color;
+      }
+    }
+  }
+}
+  
+  

@@ -1,0 +1,151 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+// Modify theme colors sass map
+$custom-colors: (
+    "light-accent": $light-accent,
+    "grey-accent": $grey-accent,
+    "dim": $dim,
+);
+
+
+// Grid Gutters
+$grid-gutter-width: 1.875rem;
+
+// Grids - remove xxl breakpoint
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1440px
+);
+
+$container-max-widths: (
+    xs: 320px,
+    sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 1140px,
+    xxl: 1320px
+);
+
+
+// Typography
+$lead-font-weight: 400;
+$lead-line-height: 2em;
+$lead-font-size: 1rem;
+$headings-font-weight: 800;
+
+// Cards
+$enable-shadows: true;
+$card-box-shadow: 0 5px 8px 5px rgba($secondary, .15);
+$card-border-width: 0;
+$card-bg: transparent;
+
+// Spacers - we need to make 5 less huge, and add some additional
+$spacers: (
+    0: 0,
+    1: $spacer * .25,
+    2: $spacer * .5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 2,
+    6: $spacer * 2.5,
+    7: $spacer * 3,
+    8: $spacer * 4,
+    9: $spacer * 6,
+    10: $spacer * 7,
+);
+
+// Gutters - I don't know why I have to do this
+$gutters: (
+    0: 0,
+    1: $spacer * .25,
+    2: $spacer * .5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 2,
+    6: $spacer * 2.5,
+    7: $spacer * 3,
+    8: $spacer * 4,
+    9: $spacer * 5,
+    10: $spacer * 7,
+);
+
+// Modals
+$modal-content-border-radius: $border-radius;
+$modal-content-border-width: 0;
+$modal-header-border-width: 0;
+$modal-footer-border-width: 0;
+
+// Buttons
+$btn-padding-x: 1.25rem;
+$btn-padding-x-lg: 1.75rem;
+
+// Merge our bootstrap threme colors and our custom colors
+$theme-colors: map-merge($theme-colors, $custom-colors);
+// It's weird that I have to do this –I'm just copying these from Bootstrap but without doing this my custom
+// colors aren't included in certain utilities because the map that those utilities are built with doesn't
+// include them.
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+$utilities-colors: map-merge(
+    $theme-colors-rgb,
+    (
+            "black": to-rgb($black),
+            "white": to-rgb($white),
+            "body":  to-rgb($body-color)
+    )
+);
+// Shouldn't these two utilities be set from my custom utilities color map above?
+// Shouldn't my custom utilities color map be already populated by my custom theme-colors-rgb? Shouldn't my
+// custom theme-colors-rgb be already populated by my custom merged theme-colors?
+
+$utilities-text-colors: map-loop($utilities-colors, rgba-css-var, "$key", "text");
+$utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
+
+// Top Navigation Bar
+$navbar-padding-y: 1rem;
+$navbar-nav-link-padding-y: 1.25rem;
+$navbar-nav-link-padding-x: 1.25rem;
+$dropdown-padding-y: 2rem;
+$dropdown-padding-x: 0;
+$dropdown-item-padding-x: 1.25rem;
+$dropdown-item-padding-y: 0.75rem;
+$dropdown-border-radius: 0;
+$dropdown-border-width: 0;
+$dropdown-inner-border-radius: 0;
+$dropdown-item-padding-y: 0.5rem;
+$navbar-dark-toggler-icon-bg:       url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#000' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#fff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-light-toggler-border-color: transparent;
+$navbar-dark-toggler-border-color: transparent;
+$navbar-toggler-focus-width: 0;
+$transition-collapse:         height .4s ease;
+
+// Badges
+$badge-font-size:                   0.625rem;
+$badge-font-weight:                 $font-weight-bold;
+$badge-border-radius:               50%;
+
+//Forms 
+$component-active-bg: $secondary;
+
+//Select 
+//$form-select-font-family:           $display-font-family;
+//$form-select-color:                 $link-color;
+$selection-color: #fff;
+$selection-bg: $primary;
+
+// Offcanvas 
+$offcanvas-padding-y:               1rem;
+$offcanvas-padding-x:               1rem;
+$offcanvas-horizontal-width:        500px;
+
+// Tables 
+$table-border-color:          $grey-accent;
+
+// Conversation Small Screen Toggle
+$dot-size: 5px;
+$dot-border-radius: $dot-size / 2;

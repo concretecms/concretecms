@@ -1,0 +1,64 @@
+.mfp-bg {
+    opacity: 0.4;
+}
+.mfp-container {
+    padding: 8px 90px;
+    .mfp-figure:after {
+        display:none;
+    }
+    .mfp-bottom-bar {
+        margin-top: 0;
+        .mfp-title {
+            display: none;
+        }
+        .mfp-counter {
+            position: relative;
+            text-align: center;
+            color: white;
+        }
+    }
+    .mfp-close {
+        display:none;
+    }
+    .mfp-arrow {
+        opacity: 1;
+        &:hover {
+            &:before {
+                background-color: $secondary;
+            }
+            &:after {
+                color: white;
+            }
+        }
+        &:before {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease-in-out;
+            background-color: white;
+            height: 48px;
+            width: 48px;
+            border-radius: 48px;
+            margin: 31px 22px;
+            border: none;
+            opacity:1;
+        }
+        &:after {
+            content: "\f061";
+            display: inline-block;
+            font-family: "Font Awesome 5 Free";
+            transition: all 0.4s ease-in-out;
+            font-size: 20px;
+            color: $link-color;
+            font-weight: 600;
+            text-decoration: inherit;
+            vertical-align: middle;
+            border: none;
+            margin: 32px 37px;
+        }
+        &.mfp-arrow-left:after {
+            content: "\f060";
+            margin: 32px 37px;
+        }
+    }
+}

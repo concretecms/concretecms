@@ -1,0 +1,106 @@
+// Top Navigation Bar
+$top-navbar-bg: #FFFFFF !default;
+
+// Colors - custom for theme
+$primary: #C82D35 !default;
+$secondary: #42AAB8 !default;
+$light: #F9FBFC !default;
+$light-accent: #F6F6F6 !default;
+$grey-accent: #E0E0E0 !default;
+$dark: #131214 !default;
+$dim: #828282!default;
+
+// Body Font
+$font-family-base: "Basier Circle" !default;
+$font-size-base: 1rem;
+$body-color: $dark!default;
+
+// Skin Font Colours
+$default-fc: $dark;
+
+// Wrapper Colour
+$wrapper-background: #FFFFFF !default;
+
+// Feature & Feature Link
+$feature-bg: $light;
+
+// Hero Image
+$hero-image-title-color: #fff !default;
+$hero-image-title-font-size: 3rem !default;
+$hero-image-cover-bg: rgba(0, 0, 0, 0.4) !default;
+
+// Image Slider
+$image-slider-cover-bg: rgba(58, 58, 58, .86) !default;
+$image-slider-arrow-bg: $light !default;
+$image-slider-cover-color: rgb(255, 255, 255) !default;
+
+// Stripes/Containers
+$stripe-padding-y: 1rem;
+$stripe-highlight-bg: $light;
+
+// Footer
+$theme-footer-bg: $dark !default;
+$theme-footer-color: #FFFFFF !default;
+$theme-footer-link-color: #FFFFFF !default;
+
+//Accordion
+$accordion-bg:                            transparent;
+$accordion-button-bg:                     transparent;
+$accordion-button-active-bg:              transparent;
+$accordion-button-active-color:           $body-color;
+$accordion-icon-color:                    $grey-accent;
+$accordion-icon-active-color:             $secondary;
+$accordion-border-color:                  $grey-accent;
+$accordion-button-focus-box-shadow:       none;
+$accordion-padding-x:                     1rem;
+$accordion-button-icon:         url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$accordion-icon-color}'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>");
+
+// Pagination
+$pagination-color:                  $dim;
+$pagination-border-width:           0;
+$pagination-active-color:           $primary;
+$pagination-active-bg:              transparent;
+$pagination-active-border-color:    $primary;
+$pagination-disabled-color:         $dim;
+
+// Offcanvas
+$modal-content-bg:          #fff;
+
+// Share This Page
+$share-link-bg: $light;
+
+// Top Navigation Bar
+$icon-bar-bg: $dark;
+$navbar-collapse-bg: #fff;
+$navbar-collapse-font-color: $dark;
+$nav-link-color: $dark;
+$dropdown-menu-bg: $light;
+$dropdown-link-color: $dark;
+$dropdown-link-hover-color:  $dim;
+$search-collapse-bg: #fff;
+
+// Calendar 
+$calendar-weekend-bg: $light;
+$calendar-font-color: $dark;
+$calendar-button-bg: #fff;
+$calendar-view-select-bg: #fff;
+$calendar-icon-color: $dark;
+$calendar-list-item-hover: $grey-accent;
+$calendar-popup-background: #fff;
+$calendar-popup-border-color: transparent;
+$calendar-popup-close-color: $dark;
+
+// Conversation
+$conversation-dropdown-menu-bg: $light;
+$conversation-toggle-icon-bg: $dim;
+$conversation-textarea-bg: $light;
+$conversation-select-color: $dark;
+$conversation-select-bg: $light;
+$conversation-select-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23131214' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+
+// Form Elements
+$form-control-bg: $light;
+$form-check-input-bg: $light;
+
+// Tables
+$table-striped-bg: $light;

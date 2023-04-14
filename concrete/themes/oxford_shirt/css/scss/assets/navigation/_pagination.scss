@@ -1,0 +1,16 @@
+div.ccm-pagination-wrapper {
+    ul.pagination {
+        li.page-item {
+            .page-link {
+                font-family: $display-font-family;
+                font-weight: 500;
+                border-radius: 4px;
+            }
+        }
+        .active>.page-link, .page-link.active {
+            border-bottom: 2px solid $primary;
+            border-radius: 0!important;
+            font-weight: 700!important;
+        }
+    }
+} 

@@ -1,0 +1,14 @@
+.theme-oxford-shirt {
+  div.stripe.one-column.bg-light {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    @include media-breakpoint-up(sm) {
+      padding-bottom: 3rem;
+      padding-top: 3rem;
+    }
+    background-color: $stripe-highlight-bg;
+    h2 {
+      color: $secondary;
+    }
+  }
+}

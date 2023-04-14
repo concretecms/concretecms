@@ -1,0 +1,55 @@
+div.theme-oxford-shirt {
+  div.ccm-block-next-previous {
+    h3 {
+      @include rfs(1.25rem);
+      font-weight: 700;
+    }
+    h4 {
+      color: $default-fc;
+    }
+    .ccm-block-next-previous-previous, .ccm-block-next-previous-next {
+      max-width: 350px;
+    }
+    .ccm-block-next-previous-header {
+      margin-bottom: 1rem;
+      i {
+        transition: 0.3s;
+        color: $secondary;
+      }
+      &:hover {
+        i {
+          transition: 0.3s;
+          color: var(--bs-link-hover-color);
+          transform: scale(1.05);
+        }
+      }
+    }
+    .ccm-block-next-previous-thumbnail {
+      margin-bottom: 1rem;
+      max-width: 300px;
+    }
+    .ccm-block-next-previous-date {
+      font-size: $font-size-sm;
+      color: $dim;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+    .ccm-block-next-previous-previous-link,
+    .ccm-block-next-previous-next-link {
+      @extend .h6;
+      .btn-secondary {
+        color: #fff;
+      }
+      .btn-light {
+        color: $link-color;
+      }
+      a {
+        color: $default-fc;
+      }
+    }
+    .ccm-block-next-previous-previous-link +
+    .ccm-block-next-previous-header {
+      margin-top: 2rem;
+    }
+  }
+}
