@@ -22,14 +22,39 @@ div#ccm-page-install {
     z-index: 1200;
   }
 
+  .ccm-install-actions {
+    align-items: center;
+    background-color: var(--bs-gray-100);
+    bottom: 0;
+    display: flex;
+    height: 80px;
+    left: 0;
+    opacity: 1;
+    padding: 0 1rem;
+    position: fixed;
+    transition: all 0.1s;
+    width: 100%;
+  }
+
   // Transition between states
   .install-step-enter-active, .install-step-leave-active {
     transition: all 0.2s;
+    .ccm-install-actions {
+      opacity: 0;
+    }
   }
+
   .install-step-enter, .install-step-leave-to {
     opacity: 0;
     transform: translateY(30px);
   }
+
+  .install-step-leave-to {
+    .ccm-install-actions {
+      display: none;
+    }
+  }
+
 
 
 }

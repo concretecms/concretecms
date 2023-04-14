@@ -3,6 +3,7 @@
 return [
     'routes' => [
         '/install' => ['\Concrete\Controller\Install::view'],
+        '/install/begin_installation' => ['\Concrete\Controller\Install::begin_installation'],
         '/install/validate_environment' => ['\Concrete\Controller\Install::validate_environment'],
         '/install/select_language' => ['\Concrete\Controller\Install::select_language'],
         '/install/get_site_locale_countries/{viewLocaleID}/{languageID}/{preselectedCountryID}' => ['\Concrete\Controller\Install::get_site_locale_countries'],

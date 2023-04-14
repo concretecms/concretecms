@@ -19,6 +19,11 @@ class InstallEnvironment
     /**
      * @var string
      */
+    protected $startingPoint;
+
+    /**
+     * @var string
+     */
     protected $siteName;
 
     /**
@@ -233,6 +238,22 @@ class InstallEnvironment
     public function setAcceptPrivacyPolicy(bool $acceptPrivacyPolicy): void
     {
         $this->acceptPrivacyPolicy = $acceptPrivacyPolicy;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStartingPoint(): string
+    {
+        return $this->startingPoint;
+    }
+
+    /**
+     * @param string $startingPoint
+     */
+    public function setStartingPoint(string $startingPoint): void
+    {
+        $this->startingPoint = $startingPoint;
     }
 
     /**

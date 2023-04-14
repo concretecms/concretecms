@@ -1,53 +1,59 @@
 <template>
-    <form class="w-100">
-        <div class="card mb-3" v-if="requiredPreconditionsLeft.length">
-            <div class="card-header">{{ i18n.requiredPreconditions }}</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <preconditions-list @precondition-failed="preconditionFailed" :preconditions="requiredPreconditionsLeft" />
-                    </div>
-                    <div class="col-md-6">
-                        <preconditions-list @precondition-failed="preconditionFailed" :preconditions="requiredPreconditionsRight" />
-                    </div>
+    <form>
+    <div class="text-center">
+        <img :src="logo" style="max-height: 48px" class="bg-primary rounded-circle">
+    </div>
+    <div>
+        <h3 class="text-center mb-4 mt-3">{{  i18n.stepRequirements }}</h3>
+    </div>
+    <div class="card mb-5" v-if="requiredPreconditionsLeft.length">
+        <div class="card-header">{{ i18n.requiredPreconditions }}</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <preconditions-list @precondition-failed="preconditionFailed" :preconditions="requiredPreconditionsLeft" />
+                </div>
+                <div class="col-md-6">
+                    <preconditions-list @precondition-failed="preconditionFailed" :preconditions="requiredPreconditionsRight" />
                 </div>
             </div>
         </div>
-        <div class="card" v-if="optionalPreconditionsLeft.length">
-            <div class="card-header">{{ i18n.optionalPreconditions }}</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <preconditions-list @precondition-failed="preconditionFailed" :preconditions="optionalPreconditionsLeft" />
-                    </div>
-                    <div class="col-md-6">
-                        <preconditions-list @precondition-failed="preconditionFailed" :preconditions="optionalPreconditionsRight" />
-                    </div>
+    </div>
+    <div class="card" v-if="optionalPreconditionsLeft.length">
+        <div class="card-header">{{ i18n.optionalPreconditions }}</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <preconditions-list @precondition-failed="preconditionFailed" :preconditions="optionalPreconditionsLeft" />
+                </div>
+                <div class="col-md-6">
+                    <preconditions-list @precondition-failed="preconditionFailed" :preconditions="optionalPreconditionsRight" />
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="alert alert-danger mt-3" v-if="showInstallErrors">
-            {{i18n.installErrors}}
-            <span v-html="i18n.installErrorsTrouble"></span>
-        </div>
+    <div class="alert alert-danger mt-3" v-if="showInstallErrors">
+        {{i18n.installErrors}}
+        <span v-html="i18n.installErrorsTrouble"></span>
+    </div>
 
-        <div v-if="showInstallErrors" class="mt-3 text-center">
-            <button class="btn btn-danger btn-lg" type="button" @click="reloadPreconditions">
-                {{i18n.runTestsAgain}}
-            </button>
-        </div>
-        <div v-else class="mt-3">
-            <button class="float-start btn btn-secondary btn-lg" type="button" @click="$emit('previous')">
-                {{i18n.back}}
-            </button>
+    <div v-if="showInstallErrors" class="ccm-install-actions">
+        <button class="btn btn-danger" type="button" @click="reloadPreconditions">
+            {{i18n.runTestsAgain}}
+        </button>
+    </div>
+    <div v-else class="ccm-install-actions">
+        <button class="me-auto btn btn-secondary" type="button" @click="$emit('previous')">
+            {{i18n.back}}
+        </button>
 
-            <button class="float-end btn btn-primary btn-lg" type="button" @click="$emit('next')">
-                {{i18n.next}}
-            </button>
-        </div>
+        <button class="ms-auto btn btn-primary" type="button" @click="$emit('next')">
+            {{i18n.next}}
+        </button>
+    </div>
 
-    </form>
+</form>
 </template>
 <script>
 import PreconditionsList from "./PreconditionsList";
@@ -99,6 +105,10 @@ export default {
         },
     },
     props: {
+        logo: {
+            type: String,
+            required: true
+        },
         reloadPreconditionsUrl: {
             type: String,
             required: true

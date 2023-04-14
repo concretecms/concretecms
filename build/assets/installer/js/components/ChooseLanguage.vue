@@ -1,7 +1,13 @@
 <template>
-    <form class="w-100">
+    <form>
+        <div class="text-center">
+            <img :src="logo" style="max-height: 144px" class="bg-primary rounded-circle">
+        </div>
+        <div>
+            <h1 class="text-center mb-4 mt-4">{{  lang.title }}</h1>
+        </div>
         <div class="form-group">
-            <p class="lead">{{ i18n.chooseLanguage }}</p>
+            <h5>{{ i18n.chooseLanguage }}</h5>
             <div class="input-group-lg input-group">
                 <select v-model="selectedLocale" class="form-select form-select-lg">
                     <optgroup :label="i18n.installedLanguages" v-if="Object.entries(locales).length">
@@ -36,6 +42,7 @@ export default {
                     my.$emit('set-locale', my.selectedLocale)
                     my.$emit('set-language-strings', r.i18n)
                     my.$emit('set-preconditions', r.preconditions)
+                    my.$emit('set-starting-points', r.starting_points)
                     my.$emit('next')
                 },
                 complete() {
@@ -48,6 +55,10 @@ export default {
 
     },
     props: {
+        logo: {
+            type: String,
+            required: true
+        },
         loadStringsUrl: {
             type: String,
             required: true

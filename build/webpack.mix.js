@@ -8,7 +8,7 @@ mix.override((config) => {
 });
 
 mix.webpackConfig({
-    cache: false,
+    /* cache: false,*/ // Uncomment if you're working with changes in node_modules like developing bedrock
     resolve: {
         symlinks: false
     },
@@ -57,16 +57,19 @@ if (mix.inProduction()) {
 } else {
     mix.copy('node_modules/vue/dist/vue.js', '../concrete/js/vue.js');
 }
-mix.copy('node_modules/jquery/dist/jquery.min.js', '../concrete/js/jquery.js');
-mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css/webfonts');
-mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
-mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', '../concrete/js/bootstrap.js');
-mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js.map', '../concrete/js/bootstrap.bundle.min.js.map');
-mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
-mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
 
 // Copy Bedrock assets so that themes can include them for style customization, etc...
 if (mix.inProduction()) {
+
+    mix.copy('node_modules/jquery/dist/jquery.min.js', '../concrete/js/jquery.js');
+    mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts', '../concrete/css/webfonts');
+    mix.copy('node_modules/@fortawesome/fontawesome-free/css/all.css', '../concrete/css/fontawesome/all.css');
+    mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js', '../concrete/js/bootstrap.js');
+    mix.copy('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js.map', '../concrete/js/bootstrap.bundle.min.js.map');
+    mix.copy('node_modules/ckeditor4', '../concrete/js/ckeditor');
+    mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
+
+
     // Note: this should only copy SCSS assets if possible, because the only reason we're copying them is because
     // we need to include them in our theme customizer.
 

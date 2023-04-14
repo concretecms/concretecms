@@ -1,22 +1,25 @@
 <template>
     <div class="ccm-ui">
         <div class="ccm-install-version">
-            <span class="badge bg-info">{{ concreteVersion }}</span>
-        </div>
-        <div class="ccm-install-title">
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item">{{ i18n.title }}</li>
-                <li class="breadcrumb-item active">{{ stepTitle }}</li>
-            </ul>
+            <small>{{ concreteVersion }}</small>
         </div>
 
-        <div class="alert alert-danger" v-if="environmentErrors.length > 0">
+        <div class="alert alert-danger mb-5" v-if="environmentErrors.length > 0">
             <span v-html="environmentErrors.join('<br>')"></span>
+        </div>
+
+        <div class="alert alert-warning mb-5" v-if="environmentWarnings.length > 0">
+            <span v-html="environmentWarnings.join('<br>')"></span>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="ignoreWarnings" v-model="ignoreWarnings">
+                <label class="form-check-label" for="ignoreWarnings">{{ i18n.ignoreWarnings }}</label>
+            </div>
         </div>
 
         <transition name="install-step" mode="out-in">
             <choose-language
                 v-if="step === 'language'"
+                :logo="logo"
                 :load-strings-url="loadStringsUrl"
                 :locales="locales"
                 :locale="locale"
@@ -25,20 +28,34 @@
                 @set-locale="setLocale"
                 @set-language-strings="setLanguageStrings"
                 @set-preconditions="setPreconditions"
+                @set-starting-points="setStartingPoints"
                 @next="next"
             />
             <preconditions
                 v-else-if="step === 'requirements'"
                 :locale="selectedLocale"
+                :logo="logo"
                 :lang="lang"
                 :preconditions="loadedPreconditions"
                 :reload-preconditions-url="reloadPreconditionsUrl"
                 @previous="previous"
                 @next="next"
             />
+            <starting-point
+                v-else-if="step === 'starting_point'"
+                :locale="selectedLocale"
+                :lang="lang"
+                :logo="logo"
+                :starting-points="loadedStartingPoints"
+                :default-starting-point="defaultStartingPoint"
+                @select-starting-point="selectStartingPoint"
+                @previous="previous"
+            />
+
             <environment
                 v-else-if="step === 'environment'"
                 :lang="lang"
+                :logo="logo"
                 :languages="languages"
                 :site-locale-language="siteLocaleLanguage"
                 :site-locale-country="siteLocaleCountry"
@@ -46,10 +63,22 @@
                 :timezone="timezone"
                 :timezones="timezones"
                 @previous="previous"
-                @next="validateEnvironment"
+                @update-install-options="updateInstallOptions"
+                @next="validateInstallOptions(true)"
             />
-            <starting-point
-                v-else-if="step === 'starting_point'"
+            <perform-installation
+                v-else-if="step === 'perform_installation'"
+                :begin-installation-url="beginInstallationUrl"
+                :lang="lang"
+                :logo="logo"
+                :install-options="installOptions"
+                :starting-point-routine-url="startingPointRoutineUrl"
+                @installation-complete="step='installation_complete'"
+            />
+            <installation-complete
+                :logo="logo"
+                :installation-complete-url="installationCompleteUrl"
+                v-else-if="step === 'installation_complete'"
                 :lang="lang"
             />
         </transition>
@@ -57,24 +86,61 @@
     </div>
 </template>
 <script>
-import ChooseLanguage from "./ChooseLanguage";
-import Preconditions from "./Preconditions";
-import Environment from "./Environment";
-import StartingPoint from "./StartingPoint";
+import ChooseLanguage from "./ChooseLanguage"
+import Preconditions from "./Preconditions"
+import Environment from "./Environment"
+import StartingPoint from "./StartingPoint"
+import PerformInstallation from "./PerformInstallation"
+import InstallationComplete from "./InstallationComplete"
+
 export default {
     components: {
         ChooseLanguage,
         Preconditions,
         Environment,
-        StartingPoint
+        StartingPoint,
+        PerformInstallation,
+        InstallationComplete
+    },
+    watch: {
+        environmentErrors: function() {
+            window.scrollTo(0, 0)
+        },
+        environmentWarnings: function(warnings) {
+            if (warnings.length) {
+                window.scrollTo(0, 0)
+            }
+        }
     },
     methods: {
-        mergeEnvironment(environment) {
-            environment.locale = this.selectedLocale
-            return environment
+        selectStartingPoint(startingPoint) {
+            this.startingPoint = startingPoint
+            this.next()
         },
-        validateEnvironment(environment) {
-            environment = this.mergeEnvironment(environment)
+        translateOptionPreconditionsToErrorsAndWarnings() {
+            this.environmentWarnings = []
+            this.optionsPreconditions.forEach((precondition) => {
+                if (precondition.result.state === 4) { // failed
+                    if (precondition.precondition.is_optional) {
+                        if (!this.ignoreWarnings) {
+                            this.environmentWarnings.push(precondition.result.message)
+                        }
+                    } else {
+                        this.environmentErrors.push(precondition.result.message)
+                    }
+                } else if (precondition.result.state === 2) { // warning
+                    if (!this.ignoreWarnings) {
+                        this.environmentWarnings.push(precondition.result.message)
+                    }
+                }
+            })
+        },
+        updateInstallOptions(options) {
+            this.installOptions = options
+            this.installOptions.locale = this.selectedLocale
+            this.installOptions.startingPoint = this.startingPoint
+        },
+        validateInstallOptions(proceedToNextStep) {
             var my = this
             $.fn.dialog.showLoader()
 
@@ -82,15 +148,21 @@ export default {
                 cache: false,
                 dataType: 'json',
                 method: 'post',
-                data: environment,
+                data: this.installOptions,
                 url: my.validateEnvironmentUrl,
                 success(r) {
                     $.fn.dialog.hideLoader()
                     if (r.error && r.error.error) {
-                        window.scrollTo(0, 0)
                         my.environmentErrors = r.error.errors
                     } else {
                         my.environmentErrors = []
+                    }
+                    my.optionsPreconditions = r.preconditions
+                    my.translateOptionPreconditionsToErrorsAndWarnings()
+                    if (proceedToNextStep) {
+                        if (!my.environmentErrors.length && (!my.environmentWarnings.length || my.ignoreWarnings)) {
+                            my.next()
+                        }
                     }
                 },
                 complete() {
@@ -107,21 +179,32 @@ export default {
         setPreconditions(preconditions) {
             this.loadedPreconditions = preconditions
         },
-        previous() {
-            if (this.step === 'requirements') {
-                this.step = 'language'
-            } else if (this.step === 'environment') {
-                this.step = 'requirements'
-            }
+        setStartingPoints(startingPoints) {
+            this.loadedStartingPoints = startingPoints
         },
-        next() {
+        previous() {
             if (this.step === 'environment') {
                 this.step = 'starting_point'
-            } else if (this.step === 'requirements') {
-                this.step = 'environment'
-            } else if (this.step === 'language') {
+            } else if (this.step === 'starting_point') {
                 this.step = 'requirements'
+            } else if (this.step === 'requirements') {
+                this.step = 'language'
             }
+            this.environmentWarnings = []
+            this.environmentErrors = []
+        },
+        next() {
+            if (this.step === 'language') {
+                this.step = 'requirements'
+            } else if (this.step === 'requirements') {
+                this.step = 'starting_point'
+            } else if (this.step === 'starting_point') {
+                this.step = 'environment'
+            } else if (this.step === 'environment') {
+                this.step = 'perform_installation'
+            }
+            this.environmentWarnings = []
+            this.environmentErrors = []
         },
         returnSortedPreconditions(column, required) {
             let preconditions = []
@@ -147,6 +230,15 @@ export default {
     },
     computed: {
         stepTitle() {
+            if (this.step === 'installation_complete') {
+                return this.i18n.stepInstallationComplete
+            }
+            if (this.step === 'perform_installation') {
+                return this.i18n.stepPerformInstallation
+            }
+            if (this.step === 'starting_point') {
+                return this.i18n.stepStartingPoint
+            }
             if (this.step === 'language') {
                 return this.i18n.stepLanguage
             }
@@ -159,6 +251,18 @@ export default {
         }
     },
     props: {
+        installationCompleteUrl: {
+            type: String,
+            required: true
+        },
+        logo: {
+            type: String,
+            required: true
+        },
+        defaultStartingPoint: {
+            type: String,
+            required: false
+        },
         timezones: {
             type: Object,
             required: true
@@ -175,6 +279,14 @@ export default {
             type: String,
             required: true
         },
+        beginInstallationUrl: {
+            type: String,
+            required: true
+        },
+        startingPointRoutineUrl: {
+            type: String,
+            required: true
+        },
         reloadPreconditionsUrl: {
             type: String,
             required: true
@@ -186,6 +298,10 @@ export default {
         concreteVersion: {
             type: String,
             required: true
+        },
+        startingPoints: {
+            type: Array,
+            required: false
         },
         preconditions: {
             type: Array,
@@ -226,13 +342,22 @@ export default {
         selectedLocale: null,
         i18n: {},
         loadedPreconditions: [],
-        environmentErrors: []
+        loadedStartingPoints: [],
+        environmentWarnings: [],
+        environmentErrors: [],
+        optionsPreconditions: [],
+        ignoreWarnings: false,
+        startingPoint: null,
+        installOptions: {}
     }),
     mounted() {
         this.selectedLocale = this.locale
         this.i18n = this.lang
         if (this.preconditions) {
             this.loadedPreconditions = this.preconditions
+        }
+        if (this.startingPoints) {
+            this.loadedStartingPoints = this.startingPoints
         }
         if (!this.locale) {
             this.step = 'language'
