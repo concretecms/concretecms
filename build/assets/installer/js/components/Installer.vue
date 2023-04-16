@@ -41,13 +41,14 @@
                 @previous="previous"
                 @next="next"
             />
-            <starting-point
-                v-else-if="step === 'starting_point'"
+            <choose-content
+                v-else-if="step === 'content'"
                 :locale="selectedLocale"
                 :lang="lang"
                 :logo="logo"
-                :starting-points="loadedStartingPoints"
-                :default-starting-point="defaultStartingPoint"
+                :featured-starting-points="loadedFeaturedStartingPoints"
+                :other-starting-points="loadedOtherStartingPoints"
+                :starting-point="startingPoint"
                 @select-starting-point="selectStartingPoint"
                 @previous="previous"
             />
@@ -89,7 +90,7 @@
 import ChooseLanguage from "./ChooseLanguage"
 import Preconditions from "./Preconditions"
 import Environment from "./Environment"
-import StartingPoint from "./StartingPoint"
+import ChooseContent from "./ChooseContent"
 import PerformInstallation from "./PerformInstallation"
 import InstallationComplete from "./InstallationComplete"
 
@@ -98,7 +99,7 @@ export default {
         ChooseLanguage,
         Preconditions,
         Environment,
-        StartingPoint,
+        ChooseContent,
         PerformInstallation,
         InstallationComplete
     },
@@ -180,12 +181,13 @@ export default {
             this.loadedPreconditions = preconditions
         },
         setStartingPoints(startingPoints) {
-            this.loadedStartingPoints = startingPoints
+            this.loadedFeaturedStartingPoints = startingPoints.featured_starting_points
+            this.loadedOtherStartingPoints = startingPoints.other_starting_points
         },
         previous() {
             if (this.step === 'environment') {
-                this.step = 'starting_point'
-            } else if (this.step === 'starting_point') {
+                this.step = 'content'
+            } else if (this.step === 'content') {
                 this.step = 'requirements'
             } else if (this.step === 'requirements') {
                 this.step = 'language'
@@ -197,8 +199,8 @@ export default {
             if (this.step === 'language') {
                 this.step = 'requirements'
             } else if (this.step === 'requirements') {
-                this.step = 'starting_point'
-            } else if (this.step === 'starting_point') {
+                this.step = 'content'
+            } else if (this.step === 'content') {
                 this.step = 'environment'
             } else if (this.step === 'environment') {
                 this.step = 'perform_installation'
@@ -236,8 +238,8 @@ export default {
             if (this.step === 'perform_installation') {
                 return this.i18n.stepPerformInstallation
             }
-            if (this.step === 'starting_point') {
-                return this.i18n.stepStartingPoint
+            if (this.step === 'content') {
+                return this.i18n.stepContent
             }
             if (this.step === 'language') {
                 return this.i18n.stepLanguage
@@ -299,7 +301,11 @@ export default {
             type: String,
             required: true
         },
-        startingPoints: {
+        featuredStartingPoints: {
+            type: Array,
+            required: false
+        },
+        otherStartingPoints: {
             type: Array,
             required: false
         },
@@ -342,7 +348,8 @@ export default {
         selectedLocale: null,
         i18n: {},
         loadedPreconditions: [],
-        loadedStartingPoints: [],
+        loadedFeaturedStartingPoints: [],
+        loadedOtherStartingPoints: [],
         environmentWarnings: [],
         environmentErrors: [],
         optionsPreconditions: [],
@@ -356,8 +363,14 @@ export default {
         if (this.preconditions) {
             this.loadedPreconditions = this.preconditions
         }
-        if (this.startingPoints) {
-            this.loadedStartingPoints = this.startingPoints
+        if (this.featuredStartingPoints) {
+            this.loadedFeaturedStartingPoints = this.featuredStartingPoints
+        }
+        if (this.otherStartingPoints) {
+            this.loadedOtherStartingPoints = this.otherStartingPoints
+        }
+        if (this.defaultStartingPoint) {
+            this.startingPoint = this.defaultStartingPoint
         }
         if (!this.locale) {
             this.step = 'language'

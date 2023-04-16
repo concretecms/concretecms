@@ -42,7 +42,10 @@ export default {
                     my.$emit('set-locale', my.selectedLocale)
                     my.$emit('set-language-strings', r.i18n)
                     my.$emit('set-preconditions', r.preconditions)
-                    my.$emit('set-starting-points', r.starting_points)
+                    my.$emit('set-starting-points', {
+                        'featured_starting_points': r.featured_starting_points,
+                        'other_starting_points': r.other_starting_points
+                    })
                     my.$emit('next')
                 },
                 complete() {
