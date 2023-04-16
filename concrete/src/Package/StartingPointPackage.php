@@ -102,8 +102,6 @@ class StartingPointPackage extends Package
         $this->installerOptions = $installerOptions;
     }
 
-    // default routines
-
     public static function hasCustomList()
     {
         $fh = Core::make('helper/file');
@@ -115,49 +113,6 @@ class StartingPointPackage extends Package
         }
 
         return false;
-    }
-
-    public static function getAvailableList()
-    {
-        $fh = Core::make('helper/file');
-        // first we check the root install directory. If it exists, then we only include stuff from there. Otherwise we get it from the core.
-        $available = [];
-        if (is_dir(DIR_STARTING_POINT_PACKAGES)) {
-            $available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES);
-        }
-        if (count($available) == 0) {
-            $available = $fh->getDirectoryContents(DIR_STARTING_POINT_PACKAGES_CORE);
-        }
-        $availableList = [];
-        foreach ($available as $pkgHandle) {
-            $cl = static::getClass($pkgHandle);
-            if ($cl !== null) {
-                $availableList[] = $cl;
-            }
-        }
-
-        return $availableList;
-    }
-
-    /**
-     * @param string $pkgHandle
-     *
-     * @return static|null
-     */
-    public static function getClass($pkgHandle)
-    {
-        if (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $pkgHandle)) {
-            $class = '\\Application\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
-        } else {
-            $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
-        }
-        if (class_exists($class, true)) {
-            $cl = Core::build($class);
-        } else {
-            $cl = null;
-        }
-
-        return $cl;
     }
 
     /**

@@ -75,7 +75,8 @@ class Install extends Controller
         if ($locale) {
             Localization::changeLocale($locale);
             $this->set('preconditions', $this->getPreconditions());
-            $this->set('startingPoints', $this->app->make(StartingPointService::class)->getStartingPoints());
+            $this->set('featuredStartingPoints', $this->app->make(StartingPointService::class)->getFeaturedStartingPoints());
+            $this->set('otherStartingPoints', $this->app->make(StartingPointService::class)->getOtherStartingPoints());
             $this->set('locale', $locale);
         }
         $config = $this->app->make('config');
@@ -154,7 +155,8 @@ class Install extends Controller
         $data = [];
         $data['i18n'] = $this->getStrings();
         $data['preconditions'] = $this->getPreconditions();
-        $data['starting_points'] = $this->app->make(StartingPointService::class)->getStartingPoints();
+        $data['featured_starting_points'] = $this->app->make(StartingPointService::class)->getFeaturedStartingPoints();
+        $data['other_starting_points'] = $this->app->make(StartingPointService::class)->getOtherStartingPoints();
         return new JsonResponse($data);
     }
 
@@ -181,7 +183,6 @@ class Install extends Controller
             'stepEnvironment' => t('Environment'),
             'stepRequirements' => t('System Requirements'),
             'stepContent' => t('Site Content'),
-            'stepStartingPoint' => t('Choose a Starting Point'),
             'stepPerformInstallation' => t('Installation in Progress'),
             'stepInstallationComplete' => t('Installation Complete'),
             'installationCompleteMessage' => t(
@@ -190,6 +191,8 @@ class Install extends Controller
             ),
             'installedLanguages' => t('Installed Languages'),
             'availableLanguages' => t('Available Languages'),
+            'select' => t('Select'),
+            'selected' => t('Selected'),
             'requiredPreconditions' => t('Required'),
             'optionalPreconditions' => t('Optional'),
             'installErrors' => t(
@@ -223,7 +226,7 @@ class Install extends Controller
             ),
             'editYourSite' => t('Edit Your Site'),
             'installationComplete' => t('Installation complete.'),
-            'startingPoint' => t('Choose a Starting Point'),
+            'otherStartingPoints' => t('Other Starting Points'),
             'advancedOptions' => t('Advanced Options'),
             'urls' => t('URLS & Session'),
             'urlPlaceholder' => t('%s or %s', 'http://...', 'https://...'),

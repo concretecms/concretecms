@@ -30,25 +30,27 @@ class DeleteAll extends BackendInterfaceController
 
     public function submit()
     {
-        /** @var ResponseFactory $responseFactory */
-        $responseFactory = $this->app->make(ResponseFactory::class);
-        /** @var EditResponse $editResponse */
-        $editResponse = new EditResponse();
+        if ($this->validateAction()) {
+            /** @var ResponseFactory $responseFactory */
+            $responseFactory = $this->app->make(ResponseFactory::class);
+            /** @var EditResponse $editResponse */
+            $editResponse = new EditResponse();
 
-        if ($this->canAccess()) {
-            /** @var Connection $db */
-            $db = $this->app->make(Connection::class);
+            if ($this->canAccess()) {
+                /** @var Connection $db */
+                $db = $this->app->make(Connection::class);
 
-            /** @noinspection PhpUnhandledExceptionInspection */
-            /** @noinspection SqlDialectInspection */
-            /** @noinspection SqlNoDataSourceInspection */
-            $db->executeQuery("TRUNCATE TABLE Logs");
+                /** @noinspection PhpUnhandledExceptionInspection */
+                /** @noinspection SqlDialectInspection */
+                /** @noinspection SqlNoDataSourceInspection */
+                $db->executeQuery("TRUNCATE TABLE Logs");
 
-            $editResponse->setMessage(t('Log cleared successfully.'));
-        } else {
-            $editResponse->setMessage(t('Access denied'));
+                $editResponse->setMessage(t('Log cleared successfully.'));
+            } else {
+                $editResponse->setMessage(t('Access denied'));
+            }
+
+            return $responseFactory->json($editResponse->getJSONObject());
         }
-
-        return $responseFactory->json($editResponse->getJSONObject());
     }
 }
