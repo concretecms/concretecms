@@ -75,7 +75,10 @@ class Install extends Controller
         if ($locale) {
             Localization::changeLocale($locale);
             $this->set('preconditions', $this->getPreconditions());
-            $this->set('featuredStartingPoints', $this->app->make(StartingPointService::class)->getFeaturedStartingPoints());
+            $this->set(
+                'featuredStartingPoints',
+                $this->app->make(StartingPointService::class)->getFeaturedStartingPoints()
+            );
             $this->set('otherStartingPoints', $this->app->make(StartingPointService::class)->getOtherStartingPoints());
             $this->set('locale', $locale);
         }
@@ -183,6 +186,7 @@ class Install extends Controller
             'stepEnvironment' => t('Environment'),
             'stepRequirements' => t('System Requirements'),
             'stepContent' => t('Site Content'),
+            'stepConfirm' => t('Confirm Installation'),
             'stepPerformInstallation' => t('Installation in Progress'),
             'stepInstallationComplete' => t('Installation Complete'),
             'installationCompleteMessage' => t(
@@ -226,36 +230,55 @@ class Install extends Controller
             ),
             'editYourSite' => t('Edit Your Site'),
             'installationComplete' => t('Installation complete.'),
+            'startingPoint' => t('Starting Point'),
             'otherStartingPoints' => t('Other Starting Points'),
             'advancedOptions' => t('Advanced Options'),
             'urls' => t('URLS & Session'),
             'urlPlaceholder' => t('%s or %s', 'http://...', 'https://...'),
-            'mainCanonicalUrl' => t('Set main canonical URL'),
-            'alternativeCanonicalUrl' => t('Set alternative canonical URL'),
+            'mainCanonicalUrl' => t('Canonical URL'),
+            'alternativeCanonicalUrl' => t('Alternative Canonical URL'),
             'sessionHandler' => t('Session Handler'),
             'sessionHandlerDefault' => t('Default Handler (Recommended)'),
             'sessionHandlerDatabase' => t('Database'),
-            'language' => t('Language'),
-            'country' => t('Country'),
+            'locale' => t('Concrete CMS Locale'),
+            'language' => t('Site Locale Language'),
+            'country' => t('Site Locale Country'),
             'timezone' => t('Time Zone'),
             'ignoreWarnings' => t('Ignore warnings and proceed with installation.'),
             'loadingInstallationRoutines' => t('Loading installation routines...'),
             'interstitial' => [
                 'whileYouWait' => t('While You Wait'),
                 'forums' => t('Forums'),
-                'forumsMessage' => t('<a href="%s" target="_blank">The forums</a> on concretecms.org are full of helpful community members that make Concrete so great.',
-                      $config->get('concrete.urls.help.forum')),
+                'forumsMessage' => t(
+                    '<a href="%s" target="_blank">The forums</a> on concretecms.org are full of helpful community members that make Concrete so great.',
+                    $config->get('concrete.urls.help.forum')
+                ),
                 'userDocumentation' => t('User Documentation'),
-                'userDocumentationMessage' => t('Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with Concrete CMS.',
-                    $config->get('concrete.urls.help.user')),
+                'userDocumentationMessage' => t(
+                    'Read the <a href="%s" target="_blank">User Documentation</a> to learn editing and site management with Concrete CMS.',
+                    $config->get('concrete.urls.help.user')
+                ),
                 'screencasts' => t('Screencasts'),
-                'screencastsMessage' => t('The Concrete <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use Concrete CMS.',
-                      $config->get('concrete.urls.videos')),
+                'screencastsMessage' => t(
+                    'The Concrete <a href="%s" target="_blank">YouTube Channel</a> is full of useful videos covering how to use Concrete CMS.',
+                    $config->get('concrete.urls.videos')
+                ),
                 'developerDocumentation' => t('Developer Documentation'),
-                'developerDocumentationMessage' => t('The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom Concrete development.',
-                      $config->get('concrete.urls.help.developer'))
-          ]
-    ];
+                'developerDocumentationMessage' => t(
+                    'The <a href="%s" target="_blank">Developer Documentation</a> covers theming, building add-ons and custom Concrete development.',
+                    $config->get('concrete.urls.help.developer')
+                )
+            ],
+            'confirm' => [
+                'site' => t('Site'),
+                'content' => t('Site Content'),
+                'database' => t('Database'),
+                'adminUser' => t('Administrator User'),
+                'session' => t('Session'),
+                'localization' => t('Localization'),
+                'beginInstallation' => t('Install Concrete CMS'),
+            ],
+        ];
 
         return $lang;
     }

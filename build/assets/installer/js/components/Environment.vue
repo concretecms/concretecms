@@ -185,16 +185,8 @@ export default {
             type: Object,
             required: true
         },
-        timezone: {
-            type: String,
-            required: false
-        },
-        siteLocaleLanguage: {
-            type: String,
-            required: false
-        },
-        siteLocaleCountry: {
-            type: String,
+        installOptions: {
+            type: Object,
             required: false
         },
         languages: {
@@ -240,10 +232,21 @@ export default {
         }
     }),
     mounted() {
-        this.localization.siteLocaleLanguage = this.siteLocaleLanguage
-        this.localization.siteLocaleCountry = this.siteLocaleCountry
-        this.localization.timezone = this.timezone
-        this.localization.timezone = 'America/Los_Angeles' // remove
+        if (this.installOptions.site) {
+            this.site = this.installOptions.site
+        }
+        if (this.installOptions.adminUser) {
+            this.adminUser = this.installOptions.adminUser
+        }
+        if (this.installOptions.database) {
+            this.database = this.installOptions.database
+        }
+        if (this.installOptions.session) {
+            this.session = this.installOptions.session
+        }
+        if (this.installOptions.localization) {
+            this.localization = this.installOptions.localization
+        }
     }
 }
 </script>
