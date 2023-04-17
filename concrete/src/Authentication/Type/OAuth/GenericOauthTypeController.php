@@ -4,6 +4,7 @@ namespace Concrete\Core\Authentication\Type\OAuth;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use Concrete\Core\Database\Connection\Connection;
+use Concrete\Core\Routing\RedirectResponse;
 use Concrete\Core\User\User;
 use OAuth\Common\Exception\Exception;
 use OAuth\Common\Service\AbstractService;
@@ -94,7 +95,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($error) {
             $this->markError($error);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
+        id(new RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
     }
 
     public function markError($error)
@@ -118,7 +119,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($message) {
             $this->markSuccess($message);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
+        id(new RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
     }
 
     public function markSuccess($message)
