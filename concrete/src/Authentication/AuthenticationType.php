@@ -97,7 +97,7 @@ class AuthenticationType extends ConcreteObject
         $prefix = $r->override ? true : $this->getPackageHandle();
         $authTypeHandle = Core::make('helper/text')->camelcase($this->authTypeHandle);
         $class = core_class('Authentication\\' . $authTypeHandle . '\\Controller', $prefix);
-        $this->controller = Core::make($class, [$this]);
+        $this->controller = Core::make($class, ['type' => $this]);
     }
 
     /**
