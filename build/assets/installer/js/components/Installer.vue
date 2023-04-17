@@ -58,15 +58,23 @@
                 :lang="lang"
                 :logo="logo"
                 :languages="languages"
-                :site-locale-language="siteLocaleLanguage"
-                :site-locale-country="siteLocaleCountry"
                 :countries="countries"
-                :timezone="timezone"
                 :timezones="timezones"
+                :install-options="installOptions"
                 @previous="previous"
                 @update-install-options="updateInstallOptions"
                 @next="validateInstallOptions(true)"
             />
+
+            <confirm-installation
+                v-else-if="step === 'confirm'"
+                :lang="lang"
+                :logo="logo"
+                :install-options="installOptions"
+                @previous="previous"
+                @next="next"
+            />
+
             <perform-installation
                 v-else-if="step === 'perform_installation'"
                 :begin-installation-url="beginInstallationUrl"
@@ -92,6 +100,7 @@ import Preconditions from "./Preconditions"
 import Environment from "./Environment"
 import ChooseContent from "./ChooseContent"
 import PerformInstallation from "./PerformInstallation"
+import ConfirmInstallation from "./ConfirmInstallation"
 import InstallationComplete from "./InstallationComplete"
 
 export default {
@@ -101,6 +110,7 @@ export default {
         Environment,
         ChooseContent,
         PerformInstallation,
+        ConfirmInstallation,
         InstallationComplete
     },
     watch: {
@@ -185,7 +195,9 @@ export default {
             this.loadedOtherStartingPoints = startingPoints.other_starting_points
         },
         previous() {
-            if (this.step === 'environment') {
+            if (this.step === 'confirm') {
+                this.step = 'environment'
+            } else if (this.step === 'environment') {
                 this.step = 'content'
             } else if (this.step === 'content') {
                 this.step = 'requirements'
@@ -203,6 +215,8 @@ export default {
             } else if (this.step === 'content') {
                 this.step = 'environment'
             } else if (this.step === 'environment') {
+                this.step = 'confirm'
+            } else if (this.step === 'confirm') {
                 this.step = 'perform_installation'
             }
             this.environmentWarnings = []
@@ -376,6 +390,13 @@ export default {
             this.step = 'language'
         } else {
             this.step = 'requirements'
+        }
+        this.installOptions = {
+            localization: {
+                siteLocaleLanguage: this.siteLocaleLanguage,
+                siteLocaleCountry: this.siteLocaleCountry,
+                timezone: this.timezone
+            }
         }
     }
 }
