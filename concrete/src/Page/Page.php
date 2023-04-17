@@ -4218,7 +4218,7 @@ EOT
                 $b = Block::getByID($row['bID'], $mc, $row['arHandle']);
                 if ($cAcquireComposerOutputControls || !in_array($b->getBlockTypeHandle(), ['core_page_type_composer_control_output'])) {
                     if ($row['btCopyWhenPropagate']) {
-                        $b->duplicate($nc, true);
+                        $b->duplicate($nc, 'duplicate_master');
                     } else {
                         $b->alias($nc);
                     }

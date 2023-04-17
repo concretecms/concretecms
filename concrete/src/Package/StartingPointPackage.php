@@ -435,12 +435,10 @@ class StartingPointPackage extends Package
         $cba = AuthenticationType::add('concrete', 'Standard');
         $coa = AuthenticationType::add('community', 'community.concretecms.com');
         $fba = AuthenticationType::add('facebook', 'Facebook');
-        $twa = AuthenticationType::add('twitter', 'Twitter');
         $gat = AuthenticationType::add('google', 'Google');
         $ext = AuthenticationType::add('external_concrete', 'External Concrete Site');
 
         $fba->disable();
-        $twa->disable();
         $coa->disable();
         $gat->disable();
         $ext->disable();

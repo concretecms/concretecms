@@ -107,6 +107,7 @@ class Controller extends AuthenticationTypeController
      */
     public function view()
     {
+        $this->set('user', $this->app->make(User::class));
     }
 
     /**

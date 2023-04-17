@@ -24,18 +24,12 @@ if (!isset($authTypeParams)) {
 
 $attribute_mode = (isset($required_attributes) && count($required_attributes));
 
-// See if we have a user object and if that user is registered
-$loggedIn = !$attribute_mode && isset($user) && $user->isRegistered();
-
 // Determine login header title
 $title = t('Please sign in here.');
-$alreadyLoggedInMessage = t('You are already logged in.');
 if ($attribute_mode) {
     $title = t('Required Attributes');
-}
-
-if ($loggedIn) {
-    $title = $alreadyLoggedInMessage;
+} elseif (isset($user) && $user->isRegistered()) {
+    $title = t('You are already logged in.');
 }
 ?>
 
@@ -56,49 +50,45 @@ if ($loggedIn) {
             <div class="row">
                 <div class="col-12">
                     <h2 class="login-page-title">
-                        <?php if (!$attribute_mode) {
-                ?>
-                            <?=t('Welcome back!'); ?>
                         <?php
-            }?>
+                        if (!$attribute_mode) {
+                            echo t('Welcome back!');
+                        }
+                        ?>
                         <?= $title; ?>
                     </h2>
                 </div>
             </div>
         </div>
 
-        <?php if ($attribute_mode) {
-                $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute(); ?>
+        <?php
+        if ($attribute_mode) {
+            $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute();
+            ?>
             <div class="row login-page-content attribute-mode">
                 <form action="<?= View::action('fill_attributes'); ?>" method="POST">
                     <div data-handle="required_attributes"
                     class="authentication-type authentication-type-required-attributes">
-                    <div class="ccm-required-attribute-form">
-                        <?php
-                        foreach ($required_attributes as $key) {
-                            echo $attribute_helper->display($key, true);
-                        } ?>
-                    </div>
-                    <div class="form-group clearfix">
-                        <button class="btn btn-primary float-end"><?= t('Submit'); ?></button>
-                    </div>
+                        <div class="ccm-required-attribute-form">
+                            <?php
+                            foreach ($required_attributes as $key) {
+                                echo $attribute_helper->display($key, true);
+                            }
+                            ?>
+                        </div>
+                        <div class="form-group clearfix">
+                            <button class="btn btn-primary float-end"><?= t('Submit'); ?></button>
+                        </div>
 
-                </div>
-            </form>
-        </div>
-        <?php
-            } else {
-                ?>
-        <div class="row login-page-content">
-            <div class="col-12">
-                <?php if ($loggedIn) {
-                    ?>
-                    <div class="text-center">
-                        <h3><?=$alreadyLoggedInMessage; ?></h3>
-                        <?= Core::make('helper/navigation')->getLogInOutLink(); ?>
                     </div>
-                <?php
-                } else {
+                </form>
+            </div>
+            <?php
+        } else {
+            ?>
+            <div class="row login-page-content">
+                <div class="col-12">
+                    <?php
                     $i = 0;
                     foreach ($activeAuths as $auth) {
                         ?>
@@ -115,11 +105,11 @@ if ($loggedIn) {
                         }
                         ++$i;
                     }
-                } ?>
+                    ?>
+                </div>
             </div>
-        </div>
-        <?php
-            } // END OPENING IF STATEMENT
+            <?php
+        } // END OPENING IF STATEMENT
     ?>
     </div>
 </div>
