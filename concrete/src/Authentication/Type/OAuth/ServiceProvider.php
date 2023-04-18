@@ -9,6 +9,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Routing\RouterInterface;
 use OAuth\ServiceFactory;
 use OAuth\UserData\ExtractorFactory;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class ServiceProvider extends Provider
@@ -39,36 +40,41 @@ class ServiceProvider extends Provider
         $this->app->make(RouterInterface::class)->register(
             '/ccm/system/authentication/oauth2/{type}/{action}',
             function ($type, $action) {
-                try {
-                    $type = AuthenticationType::getByHandle($type);
-                } catch (Throwable $_) {
-                    $type = null;
-                }
-                if (!is_object($type) || $type->isError()) {
-                    throw new UserMessageException(t('Invalid OAuth2 authentication type'));
-                }
-                try {
-                    $controller = $type->getController();
-                    if ($controller instanceof GenericOauthTypeController) {
-                        switch ($action) {
-                            case 'attempt_auth':
-                                return $controller->handle_authentication_attempt();
-                            case 'callback':
-                                return $controller->handle_authentication_callback();
-                            case 'attempt_attach':
-                                return $controller->handle_attach_attempt();
-                            case 'attach_callback':
-                                return $controller->handle_attach_callback();
-                            case 'attempt_detach':
-                                return $controller->handle_detach_attempt();
-                        }
-                    }
-                } catch (Throwable $e) {
-                    $logger = $this->app->make('log/factory')->createLogger(Channels::CHANNEL_AUTHENTICATION);
-                    $logger->notice(t('OAuth Error: %s', $e->getMessage()));
-                    throw $e;
-                }
+                return $this->handle($type, $action);
             }
         );
+    }
+
+    private function handle(string $type, string $action): Response
+    {
+        try {
+            $type = AuthenticationType::getByHandle($type);
+        } catch (Throwable $_) {
+            $type = null;
+        }
+        if (!is_object($type) || $type->isError()) {
+            throw new UserMessageException(t('Invalid OAuth2 authentication type'));
+        }
+        try {
+            $controller = $type->getController();
+            if ($controller instanceof GenericOauthTypeController) {
+                switch ($action) {
+                    case 'attempt_auth':
+                        return $controller->handle_authentication_attempt();
+                    case 'callback':
+                        return $controller->handle_authentication_callback();
+                    case 'attempt_attach':
+                        return $controller->handle_attach_attempt();
+                    case 'attach_callback':
+                        return $controller->handle_attach_callback();
+                    case 'attempt_detach':
+                        return $controller->handle_detach_attempt();
+                }
+            }
+        } catch (Throwable $e) {
+            $logger = $this->app->make('log/factory')->createLogger(Channels::CHANNEL_AUTHENTICATION);
+            $logger->notice(t('OAuth Error: %s', $e->getMessage()));
+            throw $e;
+        }
     }
 }
