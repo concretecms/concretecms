@@ -1031,7 +1031,7 @@ class User extends ConcreteObject
      */
     public function refreshCollectionEdit(&$c)
     {
-        if ($this->isLoggedIn() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
+        if ($this->isRegistered() && $c->getCollectionCheckedOutUserID() == $this->getUserID()) {
             $app = Application::getFacadeApplication();
             $db = $app['database']->connection();
             $cID = $c->getCollectionID();
