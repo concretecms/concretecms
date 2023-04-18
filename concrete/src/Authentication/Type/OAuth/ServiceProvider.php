@@ -57,19 +57,22 @@ class ServiceProvider extends Provider
         }
         try {
             $controller = $type->getController();
-            if ($controller instanceof GenericOauthTypeController) {
-                switch ($action) {
-                    case 'attempt_auth':
-                        return $controller->handle_authentication_attempt();
-                    case 'callback':
-                        return $controller->handle_authentication_callback();
-                    case 'attempt_attach':
-                        return $controller->handle_attach_attempt();
-                    case 'attach_callback':
-                        return $controller->handle_attach_callback();
-                    case 'attempt_detach':
-                        return $controller->handle_detach_attempt();
-                }
+            if (!$controller instanceof GenericOauthTypeController) {
+                throw new UserMessageException(t('Invalid OAuth2 controller'));
+            }
+            switch ($action) {
+                case 'attempt_auth':
+                    return $controller->handle_authentication_attempt();
+                case 'callback':
+                    return $controller->handle_authentication_callback();
+                case 'attempt_attach':
+                    return $controller->handle_attach_attempt();
+                case 'attach_callback':
+                    return $controller->handle_attach_callback();
+                case 'attempt_detach':
+                    return $controller->handle_detach_attempt();
+                default:
+                    throw new UserMessageException(t('Invalid OAuth2 action'));
             }
         } catch (Throwable $e) {
             $logger = $this->app->make('log/factory')->createLogger(Channels::CHANNEL_AUTHENTICATION);
