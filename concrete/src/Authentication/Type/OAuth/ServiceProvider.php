@@ -1,70 +1,74 @@
 <?php
+
 namespace Concrete\Core\Authentication\Type\OAuth;
 
+use Concrete\Core\Authentication\AuthenticationType;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\Service\Provider;
 use Concrete\Core\Logging\Channels;
+use Concrete\Core\Routing\RouterInterface;
 use OAuth\ServiceFactory;
 use OAuth\UserData\ExtractorFactory;
+use Throwable;
 
 class ServiceProvider extends Provider
 {
     public function register()
     {
-        $this->app->bind('oauth/factory/service', function ($app) {
+        $this->app->bind('oauth/factory/service', static function ($app) {
             $factory = new ServiceFactory();
             $factory->setHttpClient($app->make(HttpClient::class));
 
             return $factory;
         });
-        $this->app->bindShared('oauth/factory/extractor', function () {
+        $this->app->singleton('oauth/factory/extractor', static function () {
             return new ExtractorFactory();
         });
-
-        $this->app->bind('oauth_extractor', function ($app, $params = array()) {
+        $this->app->bind('oauth_extractor', static function ($app, $params = []) {
             if (!is_array($params)) {
-                $params = array($params);
+                $params = [$params];
             }
-
             if (!$service = head($params)) {
                 throw new \InvalidArgumentException('No Service given.');
             }
-
             $extractor_factory = $app->make('oauth/factory/extractor');
 
             return $extractor_factory->get($service);
         });
 
-        \Route::register(
+        $this->app->make(RouterInterface::class)->register(
             '/ccm/system/authentication/oauth2/{type}/{action}',
             function ($type, $action) {
                 try {
-                    $type = \AuthenticationType::getByHandle($type);
-                    if ($type && is_object($type) && !$type->isError()) {
-                        $controller = $type->getController();
-                        if ($controller instanceof GenericOauthTypeController) {
-                            switch ($action) {
-                                case 'attempt_auth':
-                                    return $controller->handle_authentication_attempt();
-                                    break;
-                                case 'callback':
-                                    return $controller->handle_authentication_callback();
-                                    break;
-                                case 'attempt_attach':
-                                    return $controller->handle_attach_attempt();
-                                    break;
-                                case 'attach_callback':
-                                    return $controller->handle_attach_callback();
-                                    break;
-                                case 'attempt_detach':
-                                    return $controller->handle_detach_attempt();
-                                    break;
-                            }
+                    $type = AuthenticationType::getByHandle($type);
+                } catch (Throwable $_) {
+                    $type = null;
+                }
+                if (!is_object($type) || $type->isError()) {
+                    throw new UserMessageException(t('Invalid OAuth2 authentication type'));
+                }
+                try {
+                    $controller = $type->getController();
+                    if ($controller instanceof GenericOauthTypeController) {
+                        switch ($action) {
+                            case 'attempt_auth':
+                                return $controller->handle_authentication_attempt();
+                            case 'callback':
+                                return $controller->handle_authentication_callback();
+                            case 'attempt_attach':
+                                return $controller->handle_attach_attempt();
+                            case 'attach_callback':
+                                return $controller->handle_attach_callback();
+                            case 'attempt_detach':
+                                return $controller->handle_detach_attempt();
                         }
                     }
-                } catch (\Exception $e) {
+                } catch (Throwable $e) {
                     $logger = $this->app->make('log/factory')->createLogger(Channels::CHANNEL_AUTHENTICATION);
                     $logger->notice(t('OAuth Error: %s', $e->getMessage()));
+                    throw $e;
                 }
-            });
+            }
+        );
     }
 }
