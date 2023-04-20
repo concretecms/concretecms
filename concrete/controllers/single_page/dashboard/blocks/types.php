@@ -10,9 +10,7 @@ use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Http\ResponseFactoryInterface;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Page\Search\Field\Field\ContainsBlockTypeField;
-use Concrete\Core\Page\Search\SearchProvider;
 use Concrete\Core\Permission\Checker;
-use Concrete\Core\Search\Column\Column;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\User\User;
 use Concrete\Core\Utility\Service\Validation\Numbers;
@@ -170,17 +168,10 @@ EOT
                 302
             );
         }
-        $provider = $this->app->make(SearchProvider::class);
         $field = new ContainsBlockTypeField();
-        $columnSet = $provider->getDefaultColumnSet();
         $qs = [
             'field' => [$field->getKey()],
             'btID' => $bt->getBlockTypeID(),
-            'column' => array_map(static function (Column $column): string {
-                return $column->getColumnKey();
-            }, $columnSet->getColumns()),
-            'fSearchDefaultSort' => $columnSet->getDefaultSortColumn()->getColumnKey(),
-            'fSearchDefaultSortDirection' => $columnSet->getDefaultSortColumn()->getColumnSortDirection(),
         ];
         $url = $this->app->make(ResolverManagerInterface::class)->resolve(['/dashboard/sitemap/search/advanced_search']);
         $url = $url->setQuery($qs);
