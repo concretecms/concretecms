@@ -40,7 +40,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             }
 
             $user = $this->app->make(User::class);
-            if ($user && !$user->isError() && $user->isLoggedIn()) {
+            if ($user && !$user->isError() && $user->isRegistered()) {
                 // We should NOT allow you to complete the authentication flow and potentially rebind the
                 // logged-in user here. Instead we halt the authentication flow.
                 $this->showError(t('You are already logged in.'));
@@ -169,6 +169,6 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
      */
     public function isAuthenticated(User $u)
     {
-        return $u->isLoggedIn();
+        return $u->isRegistered();
     }
 }
